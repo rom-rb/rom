@@ -2,11 +2,6 @@ require 'spec_helper'
 
 describe ::Session::Session do
   class Mapper
-    def initialize
-      @mapping = {
-      }
-    end
-
     def dump(object)
       { :default => object.value }
     end
