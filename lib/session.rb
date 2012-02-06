@@ -17,23 +17,16 @@ module Session
       @updates[object]=true
     end
 
-    def load(query)
-      objects = []
-      @mapper.affected_repo_names(query).each do |name|
-        adapter = @adapters.fetch(name)
-        dumps = adapter.read(query)
-        dumps.each do |dump| 
-          dump = { name => dump }
-          p dump
-          objects << @mapper.load(dump)
-        end
+    def query(query)
+      dumps = @adapter.read(query)
+      dumps.map do |dump| 
+        self.load(dump)
       end
-      objects
     end
 
     def commit
-      # TODO add some tsorting to save in 
-      # correct order.
+      # TODO add some tsorting to do actions in 
+      # correct order. Dependency source?
       do_removes
       do_updates
       do_inserts
@@ -67,38 +60,35 @@ module Session
       clean_dump?(object,@mapper.dump(object))
     end
     
+  protected
+
     def clean_dump?(object,dump)
       assert_loaded(object)
       load_dump = @loaded.fetch(object)
       dump == load_dump
     end
 
-  private
+    def load(dump,object=nil)
+      object ||= @mapper.load(dump)
+      @loaded[object]=dump
+      object
+    end
 
     def initialize(options)
       @mapper = options.fetch(:mapper) do
         raise ArgumentError,'missing :mapper in +options+'
       end
-      @adapters = options.fetch(:adapters) do
+      @adapter = options.fetch(:adapter) do
         raise ArgumentError,'missing :adapter in +options+'
       end
       @loaded,@inserts,@updates,@removes = {},{},{},{}
     end
 
-    def adapter_for(key)
-      @adapters.fetch(key) do 
-        raise "no adapter for #{key.inspect} is configured"
-      end
-    end
-
     def do_insert(object)
-      dumped = @mapper.dump(object)
-      dumped.each do |key,data|
-        adapter = adapter_for(key)
-        adapter.insert(data)
-      end
-      @loaded[object]=dumped
-       @inserts.delete(object)
+      dump = @mapper.dump(object)
+      @adapter.insert(dump)
+      load(dump,object)
+      @inserts.delete(object)
     end
 
     def do_inserts
@@ -110,11 +100,8 @@ module Session
     def do_update(object)
       dump = @mapper.dump(object)
       if dirty_dump?(object,dump)
-        dump.each do |adapter_name,data|
-          adapter = adapter_for(adapter_name)
-          adapter.update(data)
-        end
-        @loaded[object]=dump
+        @adapter.update(dump)
+        load(dump,object)
       end
       @updates.delete(object)
     end
@@ -130,10 +117,7 @@ module Session
       if dirty_dump?(object,dump)
         raise 'cannot remove dirty object'
       end
-      dump.each do |key,data|
-        adapter = adapter_for(key)
-        adapter.remove(data)
-      end
+      @adapter.remove(dump)
       @loaded.delete(object)
     end
 

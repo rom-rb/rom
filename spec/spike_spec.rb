@@ -1,29 +1,29 @@
 require 'spec_helper'
 
 describe ::Session::Session do
+  # This is a mock using the intermediate format interface 
+  # of my mapper experiments http://github.com/mbj/mapper
+  #
   class DummyMapper
-    def dump(object)
-      { :default => dump_value(object) }
-    end
-
-    def affected_repo_names(query)
-      [:default]
-    end
 
     def dump_key(object)
       {
         :domain_objects => {
-          :value => object.value_a
+            :value_a => object.value_a
         }
       }
     end
 
     def load_key(object)
+      values = object.fetch(:domain_objects)
       {
+        :domain_objects => {
+          :value_a => values.fetch(:value_a)
+        }
       }
     end
 
-    def dump_value(object)
+    def dump(object)
       {
         :domain_objects => {
           :value_a => object.value_a,
@@ -32,9 +32,8 @@ describe ::Session::Session do
       }
     end
 
-    def load(object)
-      repo       = object.fetch(:default)
-      values = repo.fetch(:domain_objects)
+    def load(dump)
+      values = dump.fetch(:domain_objects)
 
       DomainObject.new(
         values.fetch(:value_a),
@@ -85,19 +84,18 @@ describe ::Session::Session do
   let(:session) do 
     ::Session::Session.new(
       :mapper => mapper,
-      :adapters => { 
-        :default => adapter
-#       :alt => alt_adapter
-      }
+      :adapter => adapter
     )
   end
 
-  context 'when loading objects' do
+  context 'when queriing objects' do
+
+    subject { session.query(finder) }
 
     context 'when object could not be found' do
       let(:finder) { lambda { [] } }
 
-      subject { session.load(finder) }
+      subject { session.query(finder) }
 
       it 'should return empty array' do
         should == []
@@ -105,8 +103,6 @@ describe ::Session::Session do
     end
 
     shared_examples_for 'a one object read' do
-      subject { session.load(finder) }
-     
       it 'should return array of length 1' do
         subject.length.should == 1
       end
@@ -119,15 +115,13 @@ describe ::Session::Session do
     context 'when object was NOT loaded before' do
 
       context 'when one object is read' do
-        let(:finder) { lambda { [mapper.dump_value(a)] } }
+        let(:finder) { lambda { [mapper.dump(a)] } }
      
         it_should_behave_like 'a one object read'
       end
 
       context 'when many objects where read' do
-        let(:finder) { lambda { [a,b,c].map { |o| mapper.dump_value(o) } } }
-
-        subject { session.load(finder) }
+        let(:finder) { lambda { [a,b,c].map { |o| mapper.dump(o) } } }
 
         it 'should return array of objects' do
           subject.length.should == 3
@@ -148,9 +142,7 @@ describe ::Session::Session do
       end
 
       context 'when loaded object is read' do
-        let(:finder) { lambda { [mapper.dump_value(a)] } }
-
-        subject { session.load(finder) }
+        let(:finder) { lambda { [mapper.dump(a)] } }
 
         it_should_behave_like 'a one object read'
 
@@ -174,7 +166,7 @@ describe ::Session::Session do
       end
 
       it 'should remove via adapter' do
-        adapter.removes.should == [mapper.dump_value(a)]
+        adapter.removes.should == [mapper.dump(a)]
       end
 
       it 'should unload the object' do
@@ -280,7 +272,7 @@ describe ::Session::Session do
         context 'on commit' do
           it_should_behave_like 'a successful update commit' do
             it 'should update via the adapter' do
-              adapter.updates.should == [mapper.dump_value(a)]
+              adapter.updates.should == [mapper.dump(a)]
             end
 
             it 'should mark the object as not dirty' do
@@ -318,8 +310,8 @@ describe ::Session::Session do
      
         it 'should send dumped objects to adapter' do
           adapter.inserts.should == [
-            mapper.dump_value(a),
-            mapper.dump_value(b)
+            mapper.dump(a),
+            mapper.dump(b)
           ]
         end
        
