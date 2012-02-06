@@ -3,45 +3,60 @@ require 'spec_helper'
 describe ::Session::Session do
   # This is a mock using the intermediate format interface 
   # of my mapper experiments http://github.com/mbj/mapper
+  # Currently not compatible since expanded for keys!
   #
   class DummyMapper
 
-    def dump_key(object)
-      {
-        :domain_objects => {
-            :value_a => object.value_a
-        }
-      }
-    end
-
-    def load_key(object)
-      values = object.fetch(:domain_objects)
-      {
-        :domain_objects => {
-          :value_a => values.fetch(:value_a)
-        }
-      }
-    end
-
+    # Dumps an object into intermediate representation.
+    # Two level hash, first level is collection, second the 
+    # values for the entry.
+    # So you can map to multiple collection entries.
+    # Currently im only specing AR pattern, but time will change!
+    #
     def dump(object)
       {
         :domain_objects => {
-          :value_a => object.value_a,
-          :value_b => object.value_b
+          :key_attribute => object.key_attribute,
+          :other_attribute => object.other_attribute
         }
       }
     end
 
+    # Loads an object from intermediate represenation.
+    # Same format as dump but operation is reversed.
+    # Construction of objects can be don in a ORM-Model component
+    # specific subclass (Virtus?)
+    #
     def load(dump)
       values = dump.fetch(:domain_objects)
 
       DomainObject.new(
-        values.fetch(:value_a),
-        values.fetch(:value_b)
+        values.fetch(:key_attribute),
+        values.fetch(:other_attribute)
       )
+    end
+
+    # Dumps a key intermediate representation from object
+    def dump_key(object)
+      {
+        :domain_objects => {
+          :key_attribute => object.key_attribute
+        }
+      }
+    end
+
+    # Loads a key intermediate representation from dump
+    def load_key(dump)
+      values = dump.fetch(:domain_objects)
+      {
+        :domain_objects => {
+          :key_attribute => values.fetch(:key_attribute)
+        }
+      }
     end
   end
 
+  # Dummy adapter that records interactions. 
   class DummyAdapter
     attr_reader :inserts,:removes,:updates
 
@@ -53,29 +68,40 @@ describe ::Session::Session do
       @inserts << object
     end
 
-    def remove(object)
-      @removes << object
+    def remove(dump_key)
+      @removes << dump_key
     end
 
-    def update(object)
-      @updates << object
+    # This is the most complex. 
+    # I basically whant adapter to get all information without 
+    # any dependencies to the session. hash of hashes for speciying 
+    # key should be sufficent. This interface is fluid and will be speced more 
+    #
+    # FIXME: Needs to change since per mapped collection keys are needed!
+    def update(key_dump,new_dump,old_dump)
+      @updates << [key_dump,new_dump,old_dump]
     end
 
+    # Returns arrays of intermediate representations of matched models.
+    # Adapters do not have to deal with creating model instances etc.
     def read(query)
       query.call
     end
   end
 
+  # The keylike behaviour of :key_attribute is defined by mapping. 
+  # The key_ prefix is only cosmetic here!
+  # Simple PORO, but could also be a virtus model, but I'd like to 
+  # make sure I do not couple to its API.
   class DomainObject
-    attr_accessor :value_a,:value_b
-    def initialize(value_a,value_b)
-      @value_a,@value_b = value_a,value_b
+    attr_accessor :key_attribute,:other_attribute
+    def initialize(key_attribute,other_attribute)
+      @key_attribute,@other_attribute = key_attribute,other_attribute
     end
   end
 
   let(:mapper) { DummyMapper.new }
   let(:adapter) { DummyAdapter.new }
-  #let(:alt_adapter) { DummyAdapter.new }
 
   let(:a) { DomainObject.new(:a,"some value a") }
   let(:b) { DomainObject.new(:b,"some value b") }
@@ -88,7 +114,7 @@ describe ::Session::Session do
     )
   end
 
-  context 'when queriing objects' do
+  context 'when quering objects' do
 
     subject { session.query(finder) }
 
@@ -120,7 +146,7 @@ describe ::Session::Session do
         it_should_behave_like 'a one object read'
       end
 
-      context 'when many objects where read' do
+      context 'when many objects are read' do
         let(:finder) { lambda { [a,b,c].map { |o| mapper.dump(o) } } }
 
         it 'should return array of objects' do
@@ -194,7 +220,7 @@ describe ::Session::Session do
     context 'when record is loaded dirty and NOT staged for update' do
       it 'should raise on commit' do
         expect do
-          a.value_a = :c
+          a.key_attribute = :c
           session.remove(a)
           session.commit
         end.to raise_error(RuntimeError,'cannot remove dirty object')
@@ -262,20 +288,44 @@ describe ::Session::Session do
       end
 
       context 'and object was dirty' do
+        let!(:object) { DomainObject.new(:a,"some value") }
+        let!(:dump_before) { mapper.dump(object) }
+
         before do
-          a.value_a = :b
+          object.other_attribute = :b
           session.update(a)
         end
 
         it_should_behave_like 'a successful update registration'
 
+        shared_examples_for 'an update on adapter' do
+          let(:update)   { adapter.updates.first }
+          let(:key)      { update[0] }
+          let(:new_dump) { update[1] }
+          let(:old_dump) { update[2] }
+
+          it 'should use the correct key' do
+            key.should == mapper.load_key(dump_before)
+          end
+
+          it 'should use the correct old dump' do
+            old_dump.should == dump_before
+          end
+
+          it 'should use the correct new dump' do
+            new_dump.should == new_dump
+          end
+        end
+
         context 'on commit' do
           it_should_behave_like 'a successful update commit' do
+
+
             it 'should update via the adapter' do
               adapter.updates.should == [mapper.dump(a)]
             end
 
-            it 'should mark the object as not dirty' do
+            it 'should tack the object as NON dirty' do
               session.dirty?(a).should be_false
             end
           end
