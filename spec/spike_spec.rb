@@ -191,7 +191,7 @@ describe ::Session::Session do
       session.commit
     end
 
-    shared_examples 'a successful remove' do
+    shared_examples 'a remove' do
       before do
         session.remove(object)
         session.commit
@@ -220,7 +220,7 @@ describe ::Session::Session do
         session.remove?(object).should be_true
       end
 
-      it_should_behave_like 'a successful remove'
+      it_should_behave_like 'a remove'
     end
 
     context 'when record is loaded dirty and NOT staged for update' do
@@ -240,7 +240,7 @@ describe ::Session::Session do
 
       it 'should raise' do
         expect do
-          session.remove(b)
+          session.remove(object)
         end.to raise_error
       end
     end
@@ -255,17 +255,7 @@ describe ::Session::Session do
       end
     end
 
-    shared_examples_for 'a successful update commit' do
-      before do
-        session.commit
-      end
-
-      it 'should unregister update' do
-        session.update?(object).should be_false
-      end
-    end
-
-    shared_examples_for 'a successful update registration' do
+    shared_examples_for 'a update registration' do
       it 'should register an update' do
         session.update?(object).should be_true
       end
@@ -273,9 +263,20 @@ describe ::Session::Session do
 
     context 'when object was loaded' do
       let!(:object) { DomainObject.new(:a,"some value") }
+
       before do
         session.insert(object)
         session.commit
+      end
+
+      shared_examples_for 'a update commit' do
+        before do
+          session.commit
+        end
+     
+        it 'should unregister update' do
+          session.update?(object).should be_false
+        end
       end
 
       context 'and object was not dirty' do
@@ -283,10 +284,10 @@ describe ::Session::Session do
           session.update(object)
         end
 
-        it_should_behave_like 'a successful update registration'
+        it_should_behave_like 'a update registration'
 
         context 'on commit' do
-          it_should_behave_like 'a successful update commit' do
+          it_should_behave_like 'a update commit' do
             it 'should NOT update via the adapter' do
               adapter.updates.should == []
             end
@@ -302,38 +303,40 @@ describe ::Session::Session do
           session.update(object)
         end
 
-        it_should_behave_like 'a successful update registration'
+        it_should_behave_like 'a update registration'
 
         shared_examples_for 'an update on adapter' do
-          let(:update)   { adapter.updates.first }
-          let(:key)      { update[0] }
-          let(:new_dump) { update[1] }
-          let(:old_dump) { update[2] }
+          before do
+            session.commit
+          end
+
+          let(:update)     { adapter.updates.first }
+
+          let(:collection) { update[0] }
+          let(:key)        { update[1] }
+          let(:new_dump)   { update[2] }
+          let(:old_dump)   { update[3] }
+
+          it 'should use the correct collection' do
+            collection.should == dump_before.keys.first
+          end
 
           it 'should use the correct key' do
-            key.should == mapper.load_key(dump_before)
+            key.should == mapper.load_key(dump_before).fetch(:domain_objects)
           end
 
           it 'should use the correct old dump' do
-            old_dump.should == dump_before
+            old_dump.should == dump_before.fetch(:domain_objects)
           end
 
           it 'should use the correct new dump' do
-            new_dump.should == new_dump
+            new_dump.should == mapper.dump(object).fetch(:domain_objects)
           end
         end
 
         context 'on commit' do
-          it_should_behave_like 'a successful update commit' do
-
-            it 'should update via the adapter' do
-              adapter.updates.should == [mapper.dump(object)]
-            end
-
-            it 'should tack the object as NON dirty' do
-              session.dirty?(object).should be_false
-            end
-          end
+          it_should_behave_like 'a update commit'
+          it_should_behave_like 'an update on adapter'
         end
       end
     end

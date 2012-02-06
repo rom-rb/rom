@@ -118,7 +118,15 @@ module Session
     def do_update(object)
       dump = @mapper.dump(object)
       if dirty_dump?(object,dump)
-        @adapter.update(dump)
+        old_dump = @loaded.fetch(object)
+        old_key  = @mapper.load_key(old_dump) 
+        updates = dump.keys | old_dump.keys
+        updates.each do |update|
+          update_key = old_key.fetch(update,{})
+          old_record = old_dump.fetch(update,{})
+          new_record = dump.fetch(update,{})
+          @adapter.update(update,update_key,new_record,old_record)
+        end
         load(dump,object)
       end
       @updates.delete(object)
