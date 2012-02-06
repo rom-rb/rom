@@ -1,15 +1,5 @@
 module Session
   class Session
-    def initialize(options)
-      @mapper = options.fetch(:mapper) do
-        raise ArgumentError,'missing :mapper in +options+'
-      end
-      @adapters = options.fetch(:adapters) do
-        raise ArgumentError,'missing :adapter in +options+'
-      end
-      @loaded,@inserts,@updates,@removes = {},{},{},{}
-    end
-
     def insert(object)
       assert_not_loaded(object)
       @inserts[object]=true
@@ -21,15 +11,97 @@ module Session
       @removes[object]=true
     end
 
+    def update(object)
+      assert_loaded(object)
+      assert_not_remove(object)
+      @updates[object]=true
+    end
+
+    def load(query)
+      objects = []
+      @mapper.affected_repo_names(query).each do |name|
+        adapter = @adapters.fetch(name)
+        dumps = adapter.read(query)
+        dumps.each do |dump| 
+          objects << @mapper.load(name => dump)
+        end
+      end
+      objects
+    end
+
+    def commit
+      # TODO add some tsorting to save in 
+      # correct order.
+      do_removes
+      do_updates
+      do_inserts
+    end
+
+    def update?(object)
+      @updates.key?(object)
+    end
+
+    def new?(object)
+      @inserts.key?(object)
+    end
+
+    def remove?(object)
+      @removes.key?(object)
+    end
+
+    def loaded?(object)
+      @loaded.key?(object)
+    end
+
+    def dirty_dump?(object,dump)
+      !clean_dump?(object,dump)
+    end
+
+    def dirty?(object)
+      !clean?(object)
+    end
+
+    def clean?(object)
+      clean_dump?(object,@mapper.dump(object))
+    end
+    
+    def clean_dump?(object,dump)
+      assert_loaded(object)
+      load_dump = @loaded.fetch(object)
+      dump == load_dump
+    end
+
+  private
+
+    def initialize(options)
+      @mapper = options.fetch(:mapper) do
+        raise ArgumentError,'missing :mapper in +options+'
+      end
+      @adapters = options.fetch(:adapters) do
+        raise ArgumentError,'missing :adapter in +options+'
+      end
+      @loaded,@inserts,@updates,@removes = {},{},{},{}
+    end
+
+    def adapter_for(key)
+      @adapters.fetch(key) do 
+        raise "no adapter for #{key.inspect} is configured"
+      end
+    end
+
+    def do_insert(object)
+      dumped = @mapper.dump(object)
+      dumped.each do |key,data|
+        adapter = adapter_for(key)
+        adapter.insert(data)
+      end
+      @loaded[object]=dumped
+       @inserts.delete(object)
+    end
+
     def do_inserts
       @inserts.keys.each do |object|
-        dumped = @mapper.dump(object)
-        dumped.each do |key,data|
-          adapter = adapter_for(key)
-          adapter.insert(data)
-        end
-        @loaded[object]=dumped
-        @inserts.delete(object)
+        do_insert(object)
       end
     end
 
@@ -69,51 +141,6 @@ module Session
       end
     end
 
-    def adapter_for(key)
-      @adapters.fetch(key) do 
-        raise "no adapter for #{key.inspect} is configured"
-      end
-    end
-
-    def commit
-      do_removes
-      do_updates
-      do_inserts
-    end
-
-    def update?(object)
-      @updates.key?(object)
-    end
-
-    def new?(object)
-      @inserts.key?(object)
-    end
-
-    def remove?(object)
-      @removes.key?(object)
-    end
-
-    def load(query)
-      objects = []
-      @adapters.each do |name,adapter|
-        data = adapter.read(query)
-        if data
-          objects << @mapper.load({name => data})
-        end
-      end
-      objects.compact
-    end
-
-    def loaded?(object)
-      @loaded.key?(object)
-    end
-
-    def update(object)
-      assert_loaded(object)
-      assert_not_remove(object)
-      @updates[object]=true
-    end
-
     def assert_loaded(object)
       unless loaded?(object)
         raise "object #{object.inspect} is not loaded"
@@ -138,22 +165,5 @@ module Session
       end
     end
 
-    def dirty_dump?(object,dump)
-      !clean_dump?(object,dump)
-    end
-
-    def dirty?(object)
-      !clean?(object)
-    end
-
-    def clean?(object)
-      clean_dump?(object,@mapper.dump(object))
-    end
-    
-    def clean_dump?(object,dump)
-      assert_loaded(object)
-      load_dump = @loaded.fetch(object)
-      dump == load_dump
-    end
   end
 end

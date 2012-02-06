@@ -6,6 +6,10 @@ describe ::Session::Session do
       { :default => dump_value(object) }
     end
 
+    def affected_repo_names(query)
+      [:default]
+    end
+
     def dump_value(object)
       {
         :domain_objects => {
@@ -30,10 +34,10 @@ describe ::Session::Session do
   end
 
   class DummyAdapter
-    attr_reader :inserts,:removes,:updates,:data
+    attr_reader :inserts,:removes,:updates
 
     def initialize
-      @data,@removes,@inserts,@updates = [],[],[],[]
+      @removes,@inserts,@updates = [],[],[]
     end
 
     def insert(object)
@@ -49,7 +53,7 @@ describe ::Session::Session do
     end
 
     def read(query)
-      query.call(@data)
+      query.call
     end
   end
 
@@ -62,7 +66,7 @@ describe ::Session::Session do
 
   let(:mapper) { DummyMapper.new }
   let(:adapter) { DummyAdapter.new }
-  let(:alt_adapter) { DummyAdapter.new }
+  #let(:alt_adapter) { DummyAdapter.new }
 
   let(:a) { DomainObject.new(:a,"some value a") }
   let(:b) { DomainObject.new(:b,"some value b") }
@@ -72,21 +76,16 @@ describe ::Session::Session do
     ::Session::Session.new(
       :mapper => mapper,
       :adapters => { 
-        :default => adapter ,
-        :alt => alt_adapter
+        :default => adapter
+#       :alt => alt_adapter
       }
     )
   end
 
   context 'when loading objects' do
-    before do
-      adapter.data << mapper.dump_value(a)
-      adapter.data << mapper.dump_value(b)
-      adapter.data << mapper.dump_value(c)
-    end
 
     context 'when object could not be found' do
-      let(:finder) { lambda { |data| nil } }
+      let(:finder) { lambda { [] } }
 
       subject { session.load(finder) }
 
@@ -95,23 +94,28 @@ describe ::Session::Session do
       end
     end
 
+    shared_examples_for 'a one object read' do
+      subject { session.load(finder) }
+     
+      it 'should return array of length 1' do
+        subject.length.should == 1
+      end
+     
+      it 'should return object' do
+        mapper.dump(subject.first).should == mapper.dump(a)
+      end
+    end
+
     context 'when object was NOT loaded before' do
-      context 'when one object was read' do
-        let(:finder) { lambda { |data| data.first } }
+
+      context 'when one object is read' do
+        let(:finder) { lambda { [mapper.dump_value(a)] } }
      
-        subject { session.load(finder) }
-     
-        it 'should return array of length 1' do
-          subject.length.should == 1
-        end
-     
-        it 'should return object' do
-          mapper.dump(subject.first).should == mapper.dump(a)
-        end
+        it_should_behave_like 'a one object read'
       end
 
       context 'when many objects where read' do
-        let(:finder) { lambda { |data| data } }
+        let(:finder) { lambda { [a,b,c].map { |o| mapper.dump_value(o) } } }
 
         subject { session.load(finder) }
 
@@ -123,6 +127,25 @@ describe ::Session::Session do
           mapper.dump(subject[0]).should == mapper.dump(a)
           mapper.dump(subject[1]).should == mapper.dump(b)
           mapper.dump(subject[2]).should == mapper.dump(c)
+        end
+      end
+    end
+
+    context 'when object was loaded before' do
+      before do
+        session.insert(a)
+        session.commit
+      end
+
+      context 'when loaded object is read' do
+        let(:finder) { lambda { [mapper.dump_value(a)] } }
+
+        subject { session.load(finder) }
+
+        it_should_behave_like 'a one object read'
+
+        it 'should return the loaded object' do
+          subject.first.should == a
         end
       end
     end
