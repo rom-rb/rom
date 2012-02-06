@@ -36,7 +36,7 @@ module Session
       @updates.key?(object)
     end
 
-    def new?(object)
+    def insert?(object)
       @inserts.key?(object)
     end
 
@@ -69,9 +69,15 @@ module Session
     end
 
     def load(dump,object=nil)
-      object ||= @mapper.load(dump)
-      @loaded[object]=dump
-      object
+      key = @mapper.load_key(dump)
+      unless @identity_map.key?(key)
+        object ||= @mapper.load(dump)
+        @loaded[object]=dump
+        @identity_map[key]=object
+        object
+      else
+        @identity_map.fetch(key)
+      end
     end
 
     def initialize(options)
@@ -81,7 +87,8 @@ module Session
       @adapter = options.fetch(:adapter) do
         raise ArgumentError,'missing :adapter in +options+'
       end
-      @loaded,@inserts,@updates,@removes = {},{},{},{}
+      # this looks dump
+      @identity_map,@loaded,@inserts,@updates,@removes = {},{},{},{},{}
     end
 
     def do_insert(object)
@@ -150,6 +157,5 @@ module Session
         raise
       end
     end
-
   end
 end

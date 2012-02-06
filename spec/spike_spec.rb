@@ -291,10 +291,10 @@ describe ::Session::Session do
         session.insert(b)
       end
      
-      it 'should mark the records as new' do
-        session.new?(a).should be_true
-        session.new?(b).should be_true
-        session.new?(c).should be_false
+      it 'should mark the records as insert' do
+        session.insert?(a).should be_true
+        session.insert?(b).should be_true
+        session.insert?(c).should be_false
       end
      
       it 'should not allow to update the records' do
@@ -316,9 +316,9 @@ describe ::Session::Session do
         end
        
         it 'should unmark the records as new' do
-          session.new?(a).should be_false
-          session.new?(b).should be_false
-          session.new?(c).should be_false
+          session.insert?(a).should be_false
+          session.insert?(b).should be_false
+          session.insert?(c).should be_false
         end
      
         it 'should mark the records as loaded' do
