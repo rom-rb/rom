@@ -76,6 +76,9 @@ module Session
         @identity_map[key]=object
         object
       else
+        # here we can check loaded dump 
+        # against current dump and take action 
+        # should we?
         @identity_map.fetch(key)
       end
     end
@@ -88,7 +91,15 @@ module Session
         raise ArgumentError,'missing :adapter in +options+'
       end
       # this looks dump
+      # @identity_map tracks intermediate key representation to objects
+      # @loaded tacks objects to intermediate representation
       @identity_map,@loaded,@inserts,@updates,@removes = {},{},{},{},{}
+    end
+
+    def do_inserts
+      @inserts.each_key do |object|
+        do_insert(object)
+      end
     end
 
     def do_insert(object)
@@ -98,9 +109,9 @@ module Session
       @inserts.delete(object)
     end
 
-    def do_inserts
-      @inserts.keys.each do |object|
-        do_insert(object)
+    def do_updates
+      @updates.each_key do |object|
+        do_update(object)
       end
     end
 
@@ -111,12 +122,6 @@ module Session
         load(dump,object)
       end
       @updates.delete(object)
-    end
-
-    def do_updates
-      @updates.keys.each do |object|
-        do_update(object)
-      end
     end
 
     def do_remove(object)
