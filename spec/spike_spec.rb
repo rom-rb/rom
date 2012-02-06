@@ -95,17 +95,35 @@ describe ::Session::Session do
       end
     end
 
-    context 'when one object was read' do
-      let(:finder) { lambda { |data| data.first } }
-
-      subject { session.load(finder) }
-
-      it 'should return array of length 1' do
-        subject.length.should == 1
+    context 'when object was NOT loaded before' do
+      context 'when one object was read' do
+        let(:finder) { lambda { |data| data.first } }
+     
+        subject { session.load(finder) }
+     
+        it 'should return array of length 1' do
+          subject.length.should == 1
+        end
+     
+        it 'should return object' do
+          mapper.dump(subject.first).should == mapper.dump(a)
+        end
       end
 
-      it 'should return object' do
-        mapper.dump(subject.first).should == mapper.dump(a)
+      context 'when many objects where read' do
+        let(:finder) { lambda { |data| data } }
+
+        subject { session.load(finder) }
+
+        it 'should return array of objects' do
+          subject.length.should == 3
+        end
+
+        it 'should return objects' do
+          mapper.dump(subject[0]).should == mapper.dump(a)
+          mapper.dump(subject[1]).should == mapper.dump(b)
+          mapper.dump(subject[2]).should == mapper.dump(c)
+        end
       end
     end
   end
