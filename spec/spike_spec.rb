@@ -1,9 +1,15 @@
 require 'spec_helper'
+# This is a WIP and still unstructured. But I plan to use it in one of my apps. 
 
 describe ::Session::Session do
   # This is a mock using the intermediate format interface 
   # of my mapper experiments http://github.com/mbj/mapper
   # Currently not compatible since expanded for keys!
+  #
+  # keys:
+  #
+  #   A key is any hash that identifies the database record/document/row
+  #   where the operation should be performed. The key is created by mapping.
   #
   class DummyMapper
 
@@ -11,7 +17,8 @@ describe ::Session::Session do
     # Two level hash, first level is collection, second the 
     # values for the entry.
     # So you can map to multiple collection entries.
-    # Currently im only specing AR pattern, but time will change!
+    # Currently im only specing AR pattern in this test, 
+    # but time will change!
     #
     def dump(object)
       {
@@ -68,18 +75,18 @@ describe ::Session::Session do
       @inserts << object
     end
 
-    def remove(dump_key)
-      @removes << dump_key
+    def remove(dump)
+      @removes << dump
     end
 
-    # This is the most complex. 
-    # I basically whant adapter to get all information without 
-    # any dependencies to the session. hash of hashes for speciying 
-    # key should be sufficent. This interface is fluid and will be speced more 
+    # TODO: 4 params? Am I dump?
+    # @param [Symbol] the collectio where the update should happen
+    # @param [Hash] update_key the key to update the record under
+    # @param [Hash] new_record the updated record (all fields!)
+    # @param [Hash] old_record the old record (all fields!)
     #
-    # FIXME: Needs to change since per mapped collection keys are needed!
-    def update(key_dump,new_dump,old_dump)
-      @updates << [key_dump,new_dump,old_dump]
+    def update(collection,update_key,new_record,old_record)
+      @updates << [collection,update_key,new_record,old_record]
     end
 
     # Returns arrays of intermediate representations of matched models.
@@ -103,9 +110,8 @@ describe ::Session::Session do
   let(:mapper) { DummyMapper.new }
   let(:adapter) { DummyAdapter.new }
 
-  let(:a) { DomainObject.new(:a,"some value a") }
-  let(:b) { DomainObject.new(:b,"some value b") }
-  let(:c) { DomainObject.new(:c,"some value c") }
+  let(:object)       { DomainObject.new(:key_value,"some value") }
+  let(:other_object) { DomainObject.new(:other_key,"other value") }
 
   let(:session) do 
     ::Session::Session.new(
@@ -134,46 +140,46 @@ describe ::Session::Session do
       end
      
       it 'should return object' do
-        mapper.dump(subject.first).should == mapper.dump(a)
+        mapper.dump(subject.first).should == mapper.dump(object)
       end
     end
 
     context 'when object was NOT loaded before' do
 
+      let(:objects) { [object,other_object] }
+
       context 'when one object is read' do
-        let(:finder) { lambda { [mapper.dump(a)] } }
+        let(:finder) { lambda { [mapper.dump(object)] } }
      
         it_should_behave_like 'a one object read'
       end
 
       context 'when many objects are read' do
-        let(:finder) { lambda { [a,b,c].map { |o| mapper.dump(o) } } }
+        let(:finder) { lambda { objects.map { |o| mapper.dump(o) } } }
 
         it 'should return array of objects' do
-          subject.length.should == 3
+          subject.length.should == objects.length
         end
 
         it 'should return objects' do
-          mapper.dump(subject[0]).should == mapper.dump(a)
-          mapper.dump(subject[1]).should == mapper.dump(b)
-          mapper.dump(subject[2]).should == mapper.dump(c)
+          subject.map { |o| mapper.dump(o) }.should == objects.map { |o| mapper.dump(o) }
         end
       end
     end
 
     context 'when object was loaded before' do
       before do
-        session.insert(a)
+        session.insert(object)
         session.commit
       end
 
       context 'when loaded object is read' do
-        let(:finder) { lambda { [mapper.dump(a)] } }
+        let(:finder) { lambda { [mapper.dump(object)] } }
 
         it_should_behave_like 'a one object read'
 
         it 'should return the loaded object' do
-          subject.first.should == a
+          subject.first.should == object
         end
       end
     end
@@ -181,22 +187,22 @@ describe ::Session::Session do
 
   context 'when removing records' do
     before do
-      session.insert(a)
+      session.insert(object)
       session.commit
     end
 
     shared_examples 'a successful remove' do
       before do
-        session.remove(a)
+        session.remove(object)
         session.commit
       end
 
       it 'should remove via adapter' do
-        adapter.removes.should == [mapper.dump(a)]
+        adapter.removes.should == [mapper.dump(object)]
       end
 
       it 'should unload the object' do
-        session.loaded?(a).should be_false
+        session.loaded?(object).should be_false
       end
     end
 
@@ -210,8 +216,8 @@ describe ::Session::Session do
 
     context 'when object is loaded and not dirty' do
       it 'should mark the object to be removed' do
-        session.remove(a)
-        session.remove?(a).should be_true
+        session.remove(object)
+        session.remove?(object).should be_true
       end
 
       it_should_behave_like 'a successful remove'
@@ -220,8 +226,8 @@ describe ::Session::Session do
     context 'when record is loaded dirty and NOT staged for update' do
       it 'should raise on commit' do
         expect do
-          a.key_attribute = :c
-          session.remove(a)
+          object.key_attribute = :c
+          session.remove(object)
           session.commit
         end.to raise_error(RuntimeError,'cannot remove dirty object')
       end
@@ -229,7 +235,7 @@ describe ::Session::Session do
 
     context 'when record is loaded and staged for update' do
       before do
-        session.update(a)
+        session.update(object)
       end
 
       it 'should raise' do
@@ -244,7 +250,7 @@ describe ::Session::Session do
     context 'when object was not loaded' do 
       it 'should raise' do
         expect do
-          session.update(a)
+          session.update(object)
         end.to raise_error
       end
     end
@@ -255,25 +261,26 @@ describe ::Session::Session do
       end
 
       it 'should unregister update' do
-        session.update?(a).should be_false
+        session.update?(object).should be_false
       end
     end
 
     shared_examples_for 'a successful update registration' do
       it 'should register an update' do
-        session.update?(a).should be_true
+        session.update?(object).should be_true
       end
     end
 
     context 'when object was loaded' do
+      let!(:object) { DomainObject.new(:a,"some value") }
       before do
-        session.insert(a)
+        session.insert(object)
         session.commit
       end
 
       context 'and object was not dirty' do
         before do
-          session.update(a)
+          session.update(object)
         end
 
         it_should_behave_like 'a successful update registration'
@@ -288,12 +295,11 @@ describe ::Session::Session do
       end
 
       context 'and object was dirty' do
-        let!(:object) { DomainObject.new(:a,"some value") }
         let!(:dump_before) { mapper.dump(object) }
 
         before do
           object.other_attribute = :b
-          session.update(a)
+          session.update(object)
         end
 
         it_should_behave_like 'a successful update registration'
@@ -320,13 +326,12 @@ describe ::Session::Session do
         context 'on commit' do
           it_should_behave_like 'a successful update commit' do
 
-
             it 'should update via the adapter' do
-              adapter.updates.should == [mapper.dump(a)]
+              adapter.updates.should == [mapper.dump(object)]
             end
 
             it 'should tack the object as NON dirty' do
-              session.dirty?(a).should be_false
+              session.dirty?(object).should be_false
             end
           end
         end
@@ -337,19 +342,17 @@ describe ::Session::Session do
   context 'when inserting' do
     context 'when object is new' do
       before do
-        session.insert(a)
-        session.insert(b)
+        session.insert(object)
       end
      
       it 'should mark the records as insert' do
-        session.insert?(a).should be_true
-        session.insert?(b).should be_true
-        session.insert?(c).should be_false
+        session.insert?(object).should be_true
+        session.insert?(other_object).should be_false
       end
      
       it 'should not allow to update the records' do
         expect do
-          session.update(a)
+          session.update(object)
         end.to raise_error
       end
      
@@ -360,21 +363,17 @@ describe ::Session::Session do
      
         it 'should send dumped objects to adapter' do
           adapter.inserts.should == [
-            mapper.dump(a),
-            mapper.dump(b)
+            mapper.dump(object)
           ]
         end
        
-        it 'should unmark the records as new' do
-          session.insert?(a).should be_false
-          session.insert?(b).should be_false
-          session.insert?(c).should be_false
+        it 'should unmark the records as inserts' do
+          session.insert?(object).should be_false
         end
      
         it 'should mark the records as loaded' do
-          session.loaded?(a).should be_true
-          session.loaded?(b).should be_true
-          session.loaded?(c).should be_false
+          session.loaded?(object).should be_true
+          session.loaded?(other_object).should be_false
         end
       end
     end
