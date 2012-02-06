@@ -10,22 +10,32 @@ describe ::Session::Session do
       [:default]
     end
 
+    def dump_key(object)
+      {
+        :domain_objects => {
+          :value => object.value_a
+        }
+      }
+    end
+
+    def load_key(object)
+      {
+      }
+    end
+
     def dump_value(object)
       {
         :domain_objects => {
-          :values => { 
-             :value_a => object.value_a,
-             :value_b => object.value_b
-          }, 
-          :keys => [:value_a] 
+          :value_a => object.value_a,
+          :value_b => object.value_b
         }
       }
     end
 
     def load(object)
-      repo = object.fetch(:default)
-      collection = repo.fetch(:domain_objects)
-      values = collection.fetch(:values)
+      repo       = object.fetch(:default)
+      values = repo.fetch(:domain_objects)
+
       DomainObject.new(
         values.fetch(:value_a),
         values.fetch(:value_b)

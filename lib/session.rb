@@ -23,7 +23,9 @@ module Session
         adapter = @adapters.fetch(name)
         dumps = adapter.read(query)
         dumps.each do |dump| 
-          objects << @mapper.load(name => dump)
+          dump = { name => dump }
+          p dump
+          objects << @mapper.load(dump)
         end
       end
       objects
