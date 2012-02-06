@@ -7,15 +7,11 @@ module Session
       @adapters = options.fetch(:adapters) do
         raise ArgumentError,'missing :adapter in +options+'
       end
-      clean
-    end
-
-    def clean
       @loaded,@inserts,@updates,@removes = {},{},{},{}
     end
 
     def insert(object)
-      assert_not_update(object)
+      assert_not_loaded(object)
       @inserts[object]=true
     end
 
@@ -38,8 +34,8 @@ module Session
     end
 
     def do_update(object)
-      if dirty?(object)
-        dump = @mapper.dump(object)
+      dump = @mapper.dump(object)
+      if dirty_dump?(object,dump)
         dump.each do |adapter_name,data|
           adapter = adapter_for(adapter_name)
           adapter.update(data)
@@ -56,10 +52,10 @@ module Session
     end
 
     def do_remove(object)
-      if dirty?(object)
+      dump = @mapper.dump(object)
+      if dirty_dump?(object,dump)
         raise 'cannot remove dirty object'
       end
-      dump = @mapper.dump(object)
       dump.each do |key,data|
         adapter = adapter_for(key)
         adapter.remove(data)
@@ -97,6 +93,17 @@ module Session
       @removes.key?(object)
     end
 
+    def load(query)
+      objects = []
+      @adapters.each do |name,adapter|
+        data = adapter.read(query)
+        if data
+          objects << @mapper.load({name => data})
+        end
+      end
+      objects.compact
+    end
+
     def loaded?(object)
       @loaded.key?(object)
     end
@@ -125,13 +132,26 @@ module Session
       end
     end
 
+    def assert_not_loaded(object)
+      if loaded?(object)
+        raise
+      end
+    end
+
+    def dirty_dump?(object,dump)
+      !clean_dump?(object,dump)
+    end
+
     def dirty?(object)
       !clean?(object)
     end
 
     def clean?(object)
+      clean_dump?(object,@mapper.dump(object))
+    end
+    
+    def clean_dump?(object,dump)
       assert_loaded(object)
-      dump = @mapper.dump(object)
       load_dump = @loaded.fetch(object)
       dump == load_dump
     end
