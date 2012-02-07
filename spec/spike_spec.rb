@@ -10,7 +10,6 @@ describe ::Session::Session do
   #
   #   A key is any hash that identifies the database record/document/row
   #   where the operation should be performed. The key is created by mapping.
-  #
   class DummyMapper
 
     # Dumps an object into intermediate representation.
@@ -21,11 +20,14 @@ describe ::Session::Session do
     # but time will change!
     #
     def dump(object)
+      { :domain_objects => dump_value(object) }
+    end
+
+    # Used internally
+    def dump_value(object)
       {
-        :domain_objects => {
-          :key_attribute => object.key_attribute,
-          :other_attribute => object.other_attribute
-        }
+        :key_attribute => object.key_attribute,
+        :other_attribute => object.other_attribute
       }
     end
 
@@ -64,6 +66,7 @@ describe ::Session::Session do
   end
 
   # Dummy adapter that records interactions. 
+  # The idea is to support the most basic crud operations.
   class DummyAdapter
     attr_reader :inserts,:removes,:updates
 
@@ -71,18 +74,25 @@ describe ::Session::Session do
       @removes,@inserts,@updates = [],[],[]
     end
 
-    def insert(object)
-      @inserts << object
+    # TODO: Some way to return generated keys?
+    # @param [Symbol] collectio the collection where the record should be inserted
+    # @param [Hash] the record to be inserted
+    #
+    def insert(collection,dump)
+      @inserts << [collection,dump]
     end
 
-    # @param [Symbol] collection the collection where the update should happen
-    # @param [Hash] remove_key the key identifying the remove
+    # @param [Symbol] collection the collection where the remove should happen
+    # @param [Hash] remove_key the key identifying the record to remove
     #
     def remove(collection,remove_key)
       @removes << [collection,remove_key]
     end
 
     # TODO: 4 params? Am I dump?
+    # I need the old and the new record representation to generate some 
+    # advanced mongo udpates.
+    #
     # @param [Symbol] collection the collection where the update should happen
     # @param [Hash] update_key the key to update the record under
     # @param [Hash] new_record the updated record (all fields!)
@@ -94,6 +104,8 @@ describe ::Session::Session do
 
     # Returns arrays of intermediate representations of matched models.
     # Adapters do not have to deal with creating model instances etc.
+    #
+    # @param [Object] query the query currently not specified...
     def read(query)
       query.call
     end
@@ -385,7 +397,7 @@ describe ::Session::Session do
      
         it 'should send dumped objects to adapter' do
           adapter.inserts.should == [
-            mapper.dump(object)
+            [:domain_objects,mapper.dump_value(object)]
           ]
         end
        

@@ -135,7 +135,9 @@ module Session
 
     def do_insert(object)
       dump = @mapper.dump(object)
-      @adapter.insert(dump)
+      dump.each do |collection,record|
+        @adapter.insert(collection,record)
+      end
       load(dump,object)
       @inserts.delete(object)
     end
