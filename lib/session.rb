@@ -1,5 +1,25 @@
 module Session
   class Session
+    # I need these {remove,update,insert,update}_now methods for mongo 
+    # where these # whole UoW does make "less sense" but the 
+    # externalized state and dirtiness tracking is very 
+    # valuable.
+    #
+    def remove_now(object)
+      remove(object)
+      commit
+    end
+
+    def update_now(object)
+      update(object)
+      commit
+    end
+
+    def insert_now(object)
+      insert(object)
+      commit
+    end
+
     def insert(object)
       assert_not_loaded(object)
       @inserts[object]=true
@@ -17,6 +37,17 @@ module Session
       @updates[object]=true
     end
 
+    # This does not support multi collection mapping
+    # I need an idea how to transform the query according to
+    # multiple collections. Especially there is need for some 
+    # kind of master collection to identify records in 
+    # "dependant collections".
+    #
+    # IMHO this query method should take two args, one to identify 
+    # the mapping and the second the query. 
+    # The mapping can be used to identify the master collection. 
+    # But since the session should basically pass the plain query for
+    # decoupling I need some more thought here...
     def query(query)
       dumps = @adapter.read(query)
       dumps.map do |dump| 
@@ -115,29 +146,44 @@ module Session
       end
     end
 
+    # If you map your resource to "multiple" collections 
+    # each colleciton level update will be passed isolated.
+    # The adpaters do not know about the mapping.
+    #
     def do_update(object)
+
       dump = @mapper.dump(object)
-      if dirty_dump?(object,dump)
-        old_dump = @loaded.fetch(object)
-        old_key  = @mapper.load_key(old_dump) 
-        updates = dump.keys | old_dump.keys
-        updates.each do |update|
-          update_key = old_key.fetch(update,{})
-          old_record = old_dump.fetch(update,{})
-          new_record = dump.fetch(update,{})
-          @adapter.update(update,update_key,new_record,old_record)
+      old_dump = @loaded.fetch(object)
+      old_key  = @mapper.load_key(old_dump) 
+
+      # This is totally unspeced behaviour I need a multi collection 
+      # mapping spec...
+      dump.each_key do |collection|
+        update_key = old_key.fetch(collection)
+        old_record = old_dump.fetch(collection)
+        new_record = dump.fetch(collection)
+        # noop if no change
+        unless new_record == old_record
+          @adapter.update(collection,update_key,new_record,old_record)
         end
-        load(dump,object)
       end
+      load(dump,object)
       @updates.delete(object)
     end
 
     def do_remove(object)
       dump = @mapper.dump(object)
+
       if dirty_dump?(object,dump)
         raise 'cannot remove dirty object'
       end
-      @adapter.remove(dump)
+
+      key = @mapper.load_key(dump)
+
+      key.each do |collection,dump|
+        @adapter.remove(collection,dump)
+      end
+
       @loaded.delete(object)
     end
 

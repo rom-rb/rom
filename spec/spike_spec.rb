@@ -75,12 +75,15 @@ describe ::Session::Session do
       @inserts << object
     end
 
-    def remove(dump)
-      @removes << dump
+    # @param [Symbol] collection the collection where the update should happen
+    # @param [Hash] remove_key the key identifying the remove
+    #
+    def remove(collection,remove_key)
+      @removes << [collection,remove_key]
     end
 
     # TODO: 4 params? Am I dump?
-    # @param [Symbol] the collectio where the update should happen
+    # @param [Symbol] collection the collection where the update should happen
     # @param [Hash] update_key the key to update the record under
     # @param [Hash] new_record the updated record (all fields!)
     # @param [Hash] old_record the old record (all fields!)
@@ -198,7 +201,7 @@ describe ::Session::Session do
       end
 
       it 'should remove via adapter' do
-        adapter.removes.should == [mapper.dump(object)]
+        adapter.removes.should == [[:domain_objects,mapper.dump_key(object).fetch(:domain_objects)]]
       end
 
       it 'should unload the object' do
@@ -295,48 +298,64 @@ describe ::Session::Session do
         end
       end
 
+      shared_examples_for 'an update on adapter' do
+        before do
+          session.commit
+        end
+
+        let(:update)     { adapter.updates.first }
+
+        let(:collection) { update[0] }
+        let(:key)        { update[1] }
+        let(:new_dump)   { update[2] }
+        let(:old_dump)   { update[3] }
+
+        it 'should use the correct collection' do
+          collection.should == dump_before.keys.first
+        end
+
+        it 'should use the correct key' do
+          key.should == mapper.load_key(dump_before).fetch(:domain_objects)
+        end
+
+        it 'should use the correct old dump' do
+          old_dump.should == dump_before.fetch(:domain_objects)
+        end
+
+        it 'should use the correct new dump' do
+          new_dump.should == mapper.dump(object).fetch(:domain_objects)
+        end
+      end
+
       context 'and object was dirty' do
         let!(:dump_before) { mapper.dump(object) }
 
-        before do
-          object.other_attribute = :b
-          session.update(object)
-        end
-
-        it_should_behave_like 'a update registration'
-
-        shared_examples_for 'an update on adapter' do
+        context 'on non key' do
           before do
-            session.commit
+            object.other_attribute = :b
+            session.update(object)
           end
-
-          let(:update)     { adapter.updates.first }
-
-          let(:collection) { update[0] }
-          let(:key)        { update[1] }
-          let(:new_dump)   { update[2] }
-          let(:old_dump)   { update[3] }
-
-          it 'should use the correct collection' do
-            collection.should == dump_before.keys.first
-          end
-
-          it 'should use the correct key' do
-            key.should == mapper.load_key(dump_before).fetch(:domain_objects)
-          end
-
-          it 'should use the correct old dump' do
-            old_dump.should == dump_before.fetch(:domain_objects)
-          end
-
-          it 'should use the correct new dump' do
-            new_dump.should == mapper.dump(object).fetch(:domain_objects)
+         
+          it_should_behave_like 'a update registration'
+         
+          context 'on commit' do
+            it_should_behave_like 'a update commit'
+            it_should_behave_like 'an update on adapter'
           end
         end
 
-        context 'on commit' do
-          it_should_behave_like 'a update commit'
-          it_should_behave_like 'an update on adapter'
+        context 'on key' do
+          before do
+            object.key_attribute = :b
+            session.update(object)
+          end
+         
+          it_should_behave_like 'a update registration'
+         
+          context 'on commit' do
+            it_should_behave_like 'a update commit'
+            it_should_behave_like 'an update on adapter'
+          end
         end
       end
     end
