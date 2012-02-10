@@ -1,5 +1,7 @@
 module Session
   class Session
+    attr_reader :adapter
+
     # I need these {remove,update,insert,update}_now methods for mongo 
     # where these # whole UoW does make "less sense" but the 
     # externalized state and dirtiness tracking is very 
@@ -8,33 +10,45 @@ module Session
     def remove_now(object)
       remove(object)
       commit
+
+      self
     end
 
     def update_now(object)
       update(object)
       commit
+
+      self
     end
 
     def insert_now(object)
       insert(object)
       commit
+
+      self
     end
 
     def insert(object)
       assert_not_loaded(object)
       @inserts[object]=true
+
+      self
     end
 
     def remove(object)
       assert_loaded(object)
       assert_not_update(object)
       @removes[object]=true
+
+      self
     end
 
     def update(object)
       assert_loaded(object)
       assert_not_remove(object)
       @updates[object]=true
+
+      self
     end
 
     # This does not support multi collection mapping
@@ -48,11 +62,24 @@ module Session
     # The mapping can be used to identify the master collection. 
     # But since the session should basically pass the plain query for
     # decoupling I need some more thought here...
-    def query(query)
-      dumps = @adapter.read(query)
+    def all(model,query)
+      dumps = @adapter.all(query)
       dumps.map do |dump| 
-        self.load(dump)
+        self.load(model,dump)
       end
+    end
+
+    # Does not support multi collection mapping...
+    # Also pretty dump, but I need it for my app
+    def first(model,query)
+      mapper = @mapper.for_model(model)
+      data = @adapter.first(mapper.name,query)
+      return unless data
+      load(model,{ mapper.name => data })
+    end
+
+    def get(model,key)
+      mapper = @mapper.for_model(model)
     end
 
     def commit
@@ -61,6 +88,8 @@ module Session
       do_removes
       do_updates
       do_inserts
+
+      self
     end
 
     def update?(object)
@@ -79,6 +108,10 @@ module Session
       @loaded.key?(object)
     end
 
+    def empty?
+      @updates.empty? && @inserts.empty? && @removes.empty?
+    end
+
     def dirty_dump?(object,dump)
       !clean_dump?(object,dump)
     end
@@ -90,6 +123,15 @@ module Session
     def clean?(object)
       clean_dump?(object,@mapper.dump(object))
     end
+
+    def clear
+      # this looks dump
+      # @identity_map tracks intermediate key representation to objects
+      # @loaded tacks objects to intermediate representation
+      @identity_map,@loaded,@inserts,@updates,@removes = {},{},{},{},{}
+
+      self
+    end
     
   protected
 
@@ -99,10 +141,10 @@ module Session
       dump == load_dump
     end
 
-    def load(dump,object=nil)
-      key = @mapper.load_key(dump)
+    def load(model,dump,object=nil)
+      key = @mapper.for_model(model).load_key(dump)
       unless @identity_map.key?(key)
-        object ||= @mapper.load(dump)
+        object ||= @mapper.for_model(model).load(dump)
         @loaded[object]=dump
         @identity_map[key]=object
         object
@@ -121,10 +163,7 @@ module Session
       @adapter = options.fetch(:adapter) do
         raise ArgumentError,'missing :adapter in +options+'
       end
-      # this looks dump
-      # @identity_map tracks intermediate key representation to objects
-      # @loaded tacks objects to intermediate representation
-      @identity_map,@loaded,@inserts,@updates,@removes = {},{},{},{},{}
+      clear
     end
 
     def do_inserts
@@ -138,7 +177,7 @@ module Session
       dump.each do |collection,record|
         @adapter.insert(collection,record)
       end
-      load(dump,object)
+      load(object.class,dump,object)
       @inserts.delete(object)
     end
 
@@ -169,7 +208,7 @@ module Session
           @adapter.update(collection,update_key,new_record,old_record)
         end
       end
-      load(dump,object)
+      load(object.class,dump,object)
       @updates.delete(object)
     end
 
