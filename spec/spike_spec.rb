@@ -140,7 +140,7 @@ describe ::Session::Session do
     )
   end
 
-  # need to rething queriing per se..
+  # broken design
   pending 'when quering objects' do
 
     subject { session.query(finder) }
