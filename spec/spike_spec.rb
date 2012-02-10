@@ -23,6 +23,11 @@ describe ::Session::Session do
       { :domain_objects => dump_value(object) }
     end
 
+    # This is needed to find mapper for model
+    def for_model(model)
+      self
+    end
+
     # Used internally
     def dump_value(object)
       {
@@ -135,7 +140,8 @@ describe ::Session::Session do
     )
   end
 
-  context 'when quering objects' do
+  # need to rething queriing per se..
+  pending 'when quering objects' do
 
     subject { session.query(finder) }
 
