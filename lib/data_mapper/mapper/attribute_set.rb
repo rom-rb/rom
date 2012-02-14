@@ -14,14 +14,14 @@ module DataMapper
       # @api private
       def header
         @header ||= @_attributes.values.map do |attribute|
-          [ attribute.map_to, attribute.type ]
+          [ attribute.field, attribute.type ]
         end
       end
 
       # @api private
       def map(tuple)
         @_attributes.values.each_with_object({}) do |attribute, attributes|
-          attributes[attribute.name] = tuple[attribute.map_to]
+          attributes[attribute.name] = tuple[attribute.field]
         end
       end
 

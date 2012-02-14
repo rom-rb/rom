@@ -14,13 +14,13 @@ module DataMapper
         attr_reader :type
 
         # @api private
-        attr_reader :map_to
+        attr_reader :field
 
         # @api private
         def initialize(name, options = {})
-          @name   = name
-          @map_to = options.fetch(:to, @name)
-          @type   = options.fetch(:type, Object)
+          @name  = name
+          @field = options.fetch(:to, @name)
+          @type  = options.fetch(:type, Object)
         end
 
       end # class Attribute
