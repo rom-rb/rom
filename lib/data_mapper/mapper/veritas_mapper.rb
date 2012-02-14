@@ -10,22 +10,6 @@ module DataMapper
       attr_reader :relation
 
       # @api public
-      def self.find(query=nil)
-        mapper = new(gateway(base_relation))
-
-        if query
-          mapper.find(query)
-        else
-          mapper
-        end
-      end
-
-      # @api private
-      def self.gateway(relation)
-        Veritas::Relation::Gateway.new(DATABASE_ADAPTER, relation)
-      end
-
-      # @api private
       def self.base_relation
         @base_relation ||= Veritas::Relation::Base.new(name, attributes.header)
       end
@@ -38,17 +22,7 @@ module DataMapper
       #
       # @api public
       def initialize(relation)
-        @relation = relation || self.class.base_relation
-      end
-
-      # @api public
-      def find(conditions)
-        conditions.each do |key, value|
-          @relation = relation.restrict do |r|
-            r.send(self.class.attributes[key].map_to).eq(value)
-          end
-        end
-        self
+        @relation = relation
       end
 
       # @api public

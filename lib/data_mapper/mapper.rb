@@ -13,7 +13,7 @@ module DataMapper
       @model ||= model
     end
 
-    # Set or return the model for this mapper
+    # Set or return the name of this mapper's relation
     #
     # @api public
     def self.name(name=nil)

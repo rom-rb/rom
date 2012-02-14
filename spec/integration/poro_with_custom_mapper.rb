@@ -8,6 +8,10 @@ describe 'PORO with a custom mapper' do
     insert_user 2, 'Jane'
   end
 
+  let(:relation) do
+    Veritas::Relation::Gateway.new(DATABASE_ADAPTER, User::Mapper.base_relation)
+  end
+
   class User
     attr_reader :id, :name
 
@@ -25,17 +29,13 @@ describe 'PORO with a custom mapper' do
   end
 
   it 'finds all users' do
-    mapper = User::Mapper.find
-    users  = mapper.to_a
-    user   = users.first
+    user = User::Mapper.new(relation).first
 
     user.should be_instance_of(User)
   end
 
   it 'finds users matching name' do
-    mapper = User::Mapper.find(:name => 'John')
-    users  = mapper.to_a
-    user   = users.first
+    user = User::Mapper.new(relation.restrict { |r| r.username.eq('John') }).first
 
     user.should be_instance_of(User)
     user.name.should eql('John')
