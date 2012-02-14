@@ -113,6 +113,8 @@ module Session
 
       self
     end
+
+
     
   protected
 
@@ -135,6 +137,10 @@ module Session
         # should we?
         @identity_map.fetch(key)
       end
+    end
+
+    def load_key(model,intermediate)
+      @mapper.load_key(model,intermediate)
     end
 
     def initialize(options)
