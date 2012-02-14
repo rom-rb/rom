@@ -40,8 +40,9 @@ def setup_db
 
   connection.create_command(<<-SQL.gsub(/\s+/, ' ').strip).execute_non_query
     CREATE TABLE "users"
-      ( "id"   SERIAL      NOT NULL PRIMARY KEY
-      , "username" VARCHAR(50) NOT NULL
+      ( "id"       SERIAL      NOT NULL PRIMARY KEY,
+        "username" VARCHAR(50) NOT NULL,
+        "age"      SMALLINT    NOT NULL
       )
   SQL
 
@@ -50,17 +51,17 @@ end
 
 def seed
   connection = DataObjects::Connection.new(DATABASE_URI)
-  MAX_RELATION_SIZE.times { |n| insert_user(n + 1, Randgen.name, connection) }
+  MAX_RELATION_SIZE.times { |n| insert_user(n + 1, Randgen.name, n*3, connection) }
   connection.close
 end
 
-def insert_user(id, name, connection = nil)
+def insert_user(id, name, age, connection = nil)
   connection ||= DataObjects::Connection.new(DATABASE_URI)
 
   insert_users = connection.create_command(
-    'INSERT INTO "users" ("id", "username") VALUES (?, ?)')
+    'INSERT INTO "users" ("id", "username", "age") VALUES (?, ?, ?)')
 
-  insert_users.execute_non_query(id, name)
+  insert_users.execute_non_query(id, name, age)
 
   connection.close
 end
