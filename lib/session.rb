@@ -51,37 +51,6 @@ module Session
       self
     end
 
-    # This does not support multi collection mapping
-    # I need an idea how to transform the query according to
-    # multiple collections. Especially there is need for some 
-    # kind of master collection to identify records in 
-    # "dependant collections".
-    #
-    # IMHO this query method should take two args, one to identify 
-    # the mapping and the second the query. 
-    # The mapping can be used to identify the master collection. 
-    # But since the session should basically pass the plain query for
-    # decoupling I need some more thought here...
-    def all(model,query)
-      dumps = @adapter.all(query)
-      dumps.map do |dump| 
-        self.load(model,dump)
-      end
-    end
-
-    # Does not support multi collection mapping...
-    # Also pretty dump, but I need it for my app
-    def first(model,query)
-      mapper = @mapper.for_model(model)
-      data = @adapter.first(mapper.name,query)
-      return unless data
-      load(model,{ mapper.name => data })
-    end
-
-    def get(model,key)
-      mapper = @mapper.for_model(model)
-    end
-
     def commit
       # TODO add some tsorting to do actions in 
       # correct order. Dependency source?
@@ -118,6 +87,18 @@ module Session
 
     def dirty?(object)
       !clean?(object)
+    end
+
+    def unregister(object)
+      @updates.delete(object)
+      @removes.delete(object)
+      @inserts.delete(object)
+      if loaded?(object)
+        intermediate = @loaded.delete(object)
+        @identity_map.delete(load_key(object.class,intermediate))
+      end
+
+      self
     end
 
     def clean?(object)
