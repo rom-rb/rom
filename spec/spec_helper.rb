@@ -1,4 +1,5 @@
 require 'backports'
+require 'backports/basic_object'
 require 'rubygems'
 
 begin
@@ -11,14 +12,11 @@ end
 require 'veritas'
 require 'veritas/optimizer'
 require 'veritas-do-adapter'
-
 require 'virtus'
-
-require 'data_mapper/mapper'
-require 'data_mapper/veritas_mapper'
-
 require 'do_postgres'
 require 'randexp'
+
+require 'dm-mapper'
 
 ENV['TZ'] = 'UTC'
 
