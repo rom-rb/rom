@@ -37,12 +37,23 @@ def setup_db
   connection = DataObjects::Connection.new(DATABASE_URI)
 
   connection.create_command('DROP TABLE IF EXISTS "users"').execute_non_query
+  connection.create_command('DROP TABLE IF EXISTS "addresses"').execute_non_query
 
   connection.create_command(<<-SQL.gsub(/\s+/, ' ').strip).execute_non_query
     CREATE TABLE "users"
       ( "id"       SERIAL      NOT NULL PRIMARY KEY,
         "username" VARCHAR(50) NOT NULL,
         "age"      SMALLINT    NOT NULL
+      )
+  SQL
+
+  connection.create_command(<<-SQL.gsub(/\s+/, ' ').strip).execute_non_query
+    CREATE TABLE "addresses"
+      ( "id"       SERIAL      NOT NULL PRIMARY KEY,
+        "user_id"  INTEGER     NOT NULL,
+        "street"   VARCHAR(50) NOT NULL,
+        "zipcode"  VARCHAR(10) NOT NULL,
+        "city"     VARCHAR(50) NOT NULL
       )
   SQL
 
@@ -62,6 +73,17 @@ def insert_user(id, name, age, connection = nil)
     'INSERT INTO "users" ("id", "username", "age") VALUES (?, ?, ?)')
 
   insert_users.execute_non_query(id, name, age)
+
+  connection.close
+end
+
+def insert_address(id, user_id, street, zipcode, city, connection = nil)
+  connection ||= DataObjects::Connection.new(DATABASE_URI)
+
+  insert_users = connection.create_command(
+    'INSERT INTO "addresses" ("id", "user_id", "street", "zipcode", "city") VALUES (?, ?, ?, ?, ?)')
+
+  insert_users.execute_non_query(id, user_id, street, zipcode, city)
 
   connection.close
 end
