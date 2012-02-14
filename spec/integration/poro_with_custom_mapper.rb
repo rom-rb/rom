@@ -15,7 +15,7 @@ describe 'PORO with a custom mapper' do
       @id, @name = attributes.values_at(:id, :name)
     end
 
-    class Mapper < DataMapper::VeritasMapper
+    class Mapper < DataMapper::Mapper::VeritasMapper
       map :id, :type => Integer
       map :name, :to => :username, :type => String
 
