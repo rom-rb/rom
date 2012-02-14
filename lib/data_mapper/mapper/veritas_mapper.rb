@@ -7,12 +7,20 @@ module DataMapper
     class VeritasMapper < Mapper
 
       # @api public
-      attr_reader :relation
-
-      # @api public
       def self.base_relation
         @base_relation ||= Veritas::Relation::Base.new(name, attributes.header)
       end
+
+      # @api private
+      attr_reader :relation
+
+      # @api private
+      attr_reader :model
+
+      # @api private
+      attr_reader :attributes
+
+      private :relation, :model, :attributes
 
       # Initialize a veritas mapper instance
       #
@@ -22,7 +30,9 @@ module DataMapper
       #
       # @api public
       def initialize(relation)
-        @relation = relation
+        @relation   = relation
+        @attributes = self.class.attributes
+        @model      = self.class.model
       end
 
       # @api public
@@ -35,18 +45,6 @@ module DataMapper
       # @api private
       def load(tuple)
         model.new(attributes.map(tuple))
-      end
-
-    private
-
-      # @api private
-      def attributes
-        self.class.attributes
-      end
-
-      # @api private
-      def model
-        self.class.model
       end
 
     end # class VeritasMapper
