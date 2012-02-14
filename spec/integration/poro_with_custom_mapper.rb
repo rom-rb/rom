@@ -9,7 +9,8 @@ describe 'PORO with a custom mapper' do
   end
 
   let(:relation) do
-    Veritas::Relation::Gateway.new(DATABASE_ADAPTER, User::Mapper.base_relation)
+    DataMapper.relation_registry << User::Mapper.base_relation
+    Veritas::Relation::Gateway.new(DATABASE_ADAPTER, DataMapper.relation_registry[:users])
   end
 
   class User
@@ -24,7 +25,7 @@ describe 'PORO with a custom mapper' do
       map :name, :to => :username, :type => String
 
       model User
-      name 'users'
+      name :users
     end
   end
 
