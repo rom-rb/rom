@@ -2,38 +2,37 @@ module Session
   class Session
     attr_reader :adapter
 
-    # I need these {delete,update,insert,update}_now methods for mongo 
-    # where these # whole UoW does make "less sense" but the 
-    # externalized state and dirtiness tracking is very 
-    # valuable.
+    # Update domain object and commit this session
+    #
+    # @param [Object] object the object to be updated
     #
     def delete_now(object)
       delete(object)
       commit
-
+      
       self
     end
 
-    def update_now(object)
-      update(object)
+    # Delete domain object and commit this session
+    #
+    # @param [Object] object the object to be deleted
+    #
+    def delete_now(object)
+      delete(object)
       commit
-
+      
       self
     end
 
+    # Insert domain object and commit this session
+    #
+    # @param [Object] object the object to be inserted
+    #
     def insert_now(object)
       insert(object)
       commit
-
+      
       self
-    end
-
-    def persist_now(object)
-      if loaded?(object)
-        update_now(object)
-      else
-        insert_now(object)
-      end
     end
 
     # Register a domain object for beeing inserted # on commit of this session
@@ -193,6 +192,10 @@ module Session
 
     # Clears this sessions. All information about loaded objects and registred 
     # actions are lost.
+    #
+    # TODO: Using hashes<Object,Boolean> as action registry is a poor 
+    # man solution. A ruby set class can do the job also.
+    #
     def clear
       @identity_map,@loaded,@inserts,@updates,@deletes = {},{},{},{},{}
 
@@ -282,8 +285,9 @@ module Session
       old_dump = @loaded.fetch(object)
       old_key  = @mapper.load_key(object.class,old_dump) 
 
+      # TODO:
       # This is totally unspeced behaviour I need a multi collection 
-      # mapping spec...
+      # mapping spec... 
       dump.each_key do |collection|
         update_key = old_key.fetch(collection)
         old_record = old_dump.fetch(collection)
@@ -327,19 +331,19 @@ module Session
 
     def assert_not_delete(object)
       if delete?(object)
-        raise
+        raise "object #{object.inspect} is registred to be deleted"
       end
     end
 
     def assert_not_update(object)
       if update?(object)
-        raise 
+        raise "object #{object.inspect} is registred to be updated"
       end
     end
 
     def assert_not_loaded(object)
       if loaded?(object)
-        raise
+        raise "object #{object.inspect} is loaded"
       end
     end
   end
