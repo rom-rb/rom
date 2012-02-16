@@ -2,13 +2,13 @@ module Session
   class Session
     attr_reader :adapter
 
-    # I need these {remove,update,insert,update}_now methods for mongo 
+    # I need these {delete,update,insert,update}_now methods for mongo 
     # where these # whole UoW does make "less sense" but the 
     # externalized state and dirtiness tracking is very 
     # valuable.
     #
-    def remove_now(object)
-      remove(object)
+    def delete_now(object)
+      delete(object)
       commit
 
       self
@@ -28,6 +28,14 @@ module Session
       self
     end
 
+    def persist_now(object)
+      if loaded?(object)
+        update_now(object)
+      else
+        insert_now(object)
+      end
+    end
+
     def insert(object)
       assert_not_loaded(object)
       @inserts[object]=true
@@ -35,17 +43,17 @@ module Session
       self
     end
 
-    def remove(object)
+    def delete(object)
       assert_loaded(object)
       assert_not_update(object)
-      @removes[object]=true
+      @deletes[object]=true
 
       self
     end
 
     def update(object)
       assert_loaded(object)
-      assert_not_remove(object)
+      assert_not_delete(object)
       @updates[object]=true
 
       self
@@ -54,7 +62,7 @@ module Session
     def commit
       # TODO add some tsorting to do actions in 
       # correct order. Dependency source?
-      do_removes
+      do_deletes
       do_updates
       do_inserts
 
@@ -69,8 +77,8 @@ module Session
       @inserts.key?(object)
     end
 
-    def remove?(object)
-      @removes.key?(object)
+    def delete?(object)
+      @deletes.key?(object)
     end
 
     def loaded?(object)
@@ -78,7 +86,7 @@ module Session
     end
 
     def empty?
-      @updates.empty? && @inserts.empty? && @removes.empty?
+      @updates.empty? && @inserts.empty? && @deletes.empty?
     end
 
     def dirty_dump?(object,dump)
@@ -91,7 +99,7 @@ module Session
 
     def unregister(object)
       @updates.delete(object)
-      @removes.delete(object)
+      @deletes.delete(object)
       @inserts.delete(object)
       if loaded?(object)
         intermediate = @loaded.delete(object)
@@ -109,13 +117,11 @@ module Session
       # this looks dump
       # @identity_map tracks intermediate key representation to objects
       # @loaded tacks objects to intermediate representation
-      @identity_map,@loaded,@inserts,@updates,@removes = {},{},{},{},{}
+      @identity_map,@loaded,@inserts,@updates,@deletes = {},{},{},{},{}
 
       self
     end
 
-
-    
   protected
 
     def clean_dump?(object,dump)
@@ -125,9 +131,9 @@ module Session
     end
 
     def load(model,dump,object=nil)
-      key = @mapper.for_model(model).load_key(dump)
+      key = load_key(model,dump)
       unless @identity_map.key?(key)
-        object ||= @mapper.for_model(model).load(dump)
+        object ||= @mapper.load(model,dump)
         @loaded[object]=dump
         @identity_map[key]=object
         object
@@ -182,7 +188,7 @@ module Session
 
       dump = @mapper.dump(object)
       old_dump = @loaded.fetch(object)
-      old_key  = @mapper.load_key(old_dump) 
+      old_key  = load_key(object.class,old_dump) 
 
       # This is totally unspeced behaviour I need a multi collection 
       # mapping spec...
@@ -193,31 +199,33 @@ module Session
         # noop if no change
         unless new_record == old_record
           @adapter.update(collection,update_key,new_record,old_record)
+        else
+          puts :noop
         end
       end
       load(object.class,dump,object)
       @updates.delete(object)
     end
 
-    def do_remove(object)
+    def do_delete(object)
       dump = @mapper.dump(object)
 
       if dirty_dump?(object,dump)
-        raise 'cannot remove dirty object'
+        raise 'cannot delete dirty object'
       end
 
-      key = @mapper.load_key(dump)
+      key = load_key(object.class,dump)
 
       key.each do |collection,dump|
-        @adapter.remove(collection,dump)
+        @adapter.delete(collection,dump)
       end
 
       @loaded.delete(object)
     end
 
-    def do_removes
-      @removes.keys.each do |object|
-        do_remove(object)
+    def do_deletes
+      @deletes.keys.each do |object|
+        do_delete(object)
       end
     end
 
@@ -227,8 +235,8 @@ module Session
       end
     end
 
-    def assert_not_remove(object)
-      if remove?(object)
+    def assert_not_delete(object)
+      if delete?(object)
         raise
       end
     end

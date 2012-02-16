@@ -23,11 +23,6 @@ describe ::Session::Session do
       { :domain_objects => dump_value(object) }
     end
 
-    # This is needed to find mapper for model
-    def for_model(model)
-      self
-    end
-
     # Used internally
     def dump_value(object)
       {
@@ -41,7 +36,8 @@ describe ::Session::Session do
     # Construction of objects can be don in a ORM-Model component
     # specific subclass (Virtus?)
     #
-    def load(dump)
+    def load(model,dump)
+      raise unless model == DomainObject
       values = dump.fetch(:domain_objects)
 
       DomainObject.new(
@@ -60,7 +56,8 @@ describe ::Session::Session do
     end
 
     # Loads a key intermediate representation from dump
-    def load_key(dump)
+    def load_key(model,dump)
+      raise unless model == DomainObject
       values = dump.fetch(:domain_objects)
       {
         :domain_objects => {
@@ -73,10 +70,10 @@ describe ::Session::Session do
   # Dummy adapter that records interactions. 
   # The idea is to support the most basic crud operations.
   class DummyAdapter
-    attr_reader :inserts,:removes,:updates
+    attr_reader :inserts,:deletes,:updates
 
     def initialize
-      @removes,@inserts,@updates = [],[],[]
+      @deletes,@inserts,@updates = [],[],[]
     end
 
     # TODO: Some way to return generated keys?
@@ -87,11 +84,11 @@ describe ::Session::Session do
       @inserts << [collection,dump]
     end
 
-    # @param [Symbol] collection the collection where the remove should happen
-    # @param [Hash] remove_key the key identifying the record to remove
+    # @param [Symbol] collection the collection where the delete should happen
+    # @param [Hash] delete_key the key identifying the record to delete
     #
-    def remove(collection,remove_key)
-      @removes << [collection,remove_key]
+    def delete(collection,delete_key)
+      @deletes << [collection,delete_key]
     end
 
     # TODO: 4 params? Am I dump?
@@ -212,14 +209,14 @@ describe ::Session::Session do
       session.commit
     end
 
-    shared_examples 'a remove' do
+    shared_examples 'a delete' do
       before do
-        session.remove(object)
+        session.delete(object)
         session.commit
       end
 
-      it 'should remove via adapter' do
-        adapter.removes.should == [[:domain_objects,mapper.dump_key(object).fetch(:domain_objects)]]
+      it 'should delete via adapter' do
+        adapter.deletes.should == [[:domain_objects,mapper.dump_key(object).fetch(:domain_objects)]]
       end
 
       it 'should unload the object' do
@@ -230,27 +227,27 @@ describe ::Session::Session do
     context 'when object is not loaded' do
       it 'should raise' do
         expect do
-          session.remove(b)
+          session.delete(b)
         end.to raise_error
       end
     end
 
     context 'when object is loaded and not dirty' do
-      it 'should mark the object to be removed' do
-        session.remove(object)
-        session.remove?(object).should be_true
+      it 'should mark the object to be deleted' do
+        session.delete(object)
+        session.delete?(object).should be_true
       end
 
-      it_should_behave_like 'a remove'
+      it_should_behave_like 'a delete'
     end
 
     context 'when record is loaded dirty and NOT staged for update' do
       it 'should raise on commit' do
         expect do
           object.key_attribute = :c
-          session.remove(object)
+          session.delete(object)
           session.commit
-        end.to raise_error(RuntimeError,'cannot remove dirty object')
+        end.to raise_error(RuntimeError,'cannot delete dirty object')
       end
     end
 
@@ -261,7 +258,7 @@ describe ::Session::Session do
 
       it 'should raise' do
         expect do
-          session.remove(object)
+          session.delete(object)
         end.to raise_error
       end
     end
@@ -333,7 +330,7 @@ describe ::Session::Session do
         end
 
         it 'should use the correct key' do
-          key.should == mapper.load_key(dump_before).fetch(:domain_objects)
+          key.should == mapper.load_key(DomainObject,dump_before).fetch(:domain_objects)
         end
 
         it 'should use the correct old dump' do
