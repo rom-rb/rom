@@ -52,8 +52,8 @@ def setup_db
       ( "id"       SERIAL      NOT NULL PRIMARY KEY,
         "user_id"  INTEGER     NOT NULL,
         "street"   VARCHAR(50) NOT NULL,
-        "zipcode"  VARCHAR(10) NOT NULL,
-        "city"     VARCHAR(50) NOT NULL
+        "city"     VARCHAR(50) NOT NULL,
+        "zipcode"  VARCHAR(10) NOT NULL
       )
   SQL
 
@@ -77,13 +77,13 @@ def insert_user(id, name, age, connection = nil)
   connection.close
 end
 
-def insert_address(id, user_id, street, zipcode, city, connection = nil)
+def insert_address(id, user_id, street, city, zipcode, connection = nil)
   connection ||= DataObjects::Connection.new(DATABASE_URI)
 
   insert_users = connection.create_command(
-    'INSERT INTO "addresses" ("id", "user_id", "street", "zipcode", "city") VALUES (?, ?, ?, ?, ?)')
+    'INSERT INTO "addresses" ("id", "user_id", "street", "city", "zipcode") VALUES (?, ?, ?, ?, ?)')
 
-  insert_users.execute_non_query(id, user_id, street, zipcode, city)
+  insert_users.execute_non_query(id, user_id, street, city, zipcode)
 
   connection.close
 end
