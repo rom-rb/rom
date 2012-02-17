@@ -139,10 +139,22 @@ module Session
     # @param [Object] object the object to be examined
     #
     # @return [true|false] 
-    #   returns true when there is uncomitted work
+    #   returns true when there is uncommitted work
     #   false otherwitse
     #
-    def empty?
+    def uncommitted?
+      !committed?
+    end
+
+    # Returns whether this session is fully commited
+    #
+    # @param [Object] object the object to be examined
+    #
+    # @return [true|false] 
+    #   returns true when there is no uncommitted work
+    #   false otherwitse
+    #
+    def committed?
       @updates.empty? && @inserts.empty? && @deletes.empty?
     end
 
@@ -171,7 +183,7 @@ module Session
       clean_dump?(object,mapper.dump(object))
     end
 
-    # Do not track a domain object anymore. Any uncomitted work on this 
+    # Do not track a domain object anymore. Any uncommitted work on this 
     # object is lost.
     #
     # Does nothing if this object was not known
