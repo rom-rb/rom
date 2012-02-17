@@ -93,7 +93,7 @@ module Session
     # @param [Object] object the object to be examined
     #
     # @return [true|false] 
-    #   returns true when object was registred for update 
+    #   returns true when object was marked as to be updated
     #   false otherwitse
     #
     def update?(object)
@@ -105,7 +105,7 @@ module Session
     # @param [Object] object the object to be examined
     #
     # @return [true|false] 
-    #   returns true when object was registred for insert 
+    #   returns true when object was marked as to be inserted
     #   false otherwitse
     #
     def insert?(object)
@@ -117,7 +117,7 @@ module Session
     # @param [Object] object the object to be examined
     #
     # @return [true|false] 
-    #   returns true when object was registred for delete 
+    #   returns true when object was marked as to be deleted
     #   false otherwitse
     #
     def delete?(object)
@@ -129,26 +129,26 @@ module Session
     # @param [Object] object the object to be examined
     #
     # @return [true|false] 
-    #   returns true when object was registred for delete 
+    #   returns true when object is tracked
     #   false otherwitse
     #
     def track?(object)
       @track.key?(object)
     end
 
-    # Returns whether the sessions has any pending changes registred
+    # Returns whether this session has any uncommited work
     #
     # @param [Object] object the object to be examined
     #
     # @return [true|false] 
-    #   returns true when there are pending changes
+    #   returns true when there is uncomitted work
     #   false otherwitse
     #
     def empty?
       @updates.empty? && @inserts.empty? && @deletes.empty?
     end
 
-    # Returns whether a domain object has changes since it was track
+    # Returns whether a domain object has changes since tracking begun
     #
     # @param [Object] object the object to be examined
     #
@@ -160,7 +160,7 @@ module Session
       !clean?(object)
     end
 
-    # Returns whether a domain object has NO changes since it was track
+    # Returns whether a domain object has NO changes since tracking begun
     #
     # @param [Object] object the object to be examined
     #
@@ -172,11 +172,12 @@ module Session
       clean_dump?(object,@mapper.dump(object))
     end
 
-    # Unregisters a domain object from this session. Pending changes are lost.
+    # Do not track a domain object anymore. Any uncomitted work on this 
+    # object is lost.
     #
     # Does nothing if this object was not known
     #
-    # @param [Object] object the object to be unregistred
+    # @param [Object] object the object to be untracked
     #
     def unregister(object)
       @updates.delete(object)
@@ -190,8 +191,8 @@ module Session
       self
     end
 
-    # Clears this sessions. All information about track objects and registred 
-    # actions are lost.
+    # Clears this sessions. All information about track objects and uncommitted 
+    # work is lost
     #
     # TODO: Using hashes<Object,Boolean> as action registry is a poor 
     # man solution. A ruby set class can do the job also.
@@ -344,19 +345,19 @@ module Session
 
     def assert_track(object)
       unless track?(object)
-        raise "object #{object.inspect} is not track"
+        raise "object #{object.inspect} is not tracked"
       end
     end
 
     def assert_not_delete(object)
       if delete?(object)
-        raise "object #{object.inspect} is registred to be deleted"
+        raise "object #{object.inspect} is marked as to be deleted"
       end
     end
 
     def assert_not_update(object)
       if update?(object)
-        raise "object #{object.inspect} is registred to be updated"
+        raise "object #{object.inspect} is marked as to be updated"
       end
     end
 
