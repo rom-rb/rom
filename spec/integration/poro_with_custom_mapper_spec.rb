@@ -21,7 +21,7 @@ describe 'PORO with a custom mapper' do
     end
 
     class Mapper < DataMapper::Mapper::VeritasMapper
-      map :id, :type => Integer
+      map :id, :key => true, :type => Integer
       map :name, :to => :username, :type => String
       map :age, :type => Integer
 

@@ -21,6 +21,12 @@ module DataMapper
           @name  = name
           @field = options.fetch(:to, @name)
           @type  = options.fetch(:type, Object)
+          @key   = options.fetch(:key, false)
+        end
+
+        # @api public
+        def key?
+          @key
         end
 
       end # class Attribute

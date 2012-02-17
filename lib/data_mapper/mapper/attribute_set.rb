@@ -36,6 +36,11 @@ module DataMapper
         @attributes[name]
       end
 
+      # @api private
+      def key
+        @attributes.map(&:key?)
+      end
+
     end # class AttributeSet
   end # class Mapper
 end # module DataMapper
