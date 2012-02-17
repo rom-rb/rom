@@ -6,8 +6,8 @@ module Session
     #
     # @param [Object] object the object to be updated
     #
-    def delete_now(object)
-      delete(object)
+    def update_now(object)
+      update(object)
       commit
       
       self
@@ -40,7 +40,7 @@ module Session
     # @param [Object] object the object to be inserted
     #
     def insert(object)
-      assert_not_loaded(object)
+      assert_not_tracked(object)
       @inserts[object]=true
 
       self
@@ -51,7 +51,7 @@ module Session
     # @param [Object] object the object to be deleted
     #
     def delete(object)
-      assert_loaded(object)
+      assert_tracked(object)
       assert_not_update(object)
       @deletes[object]=true
 
@@ -66,7 +66,7 @@ module Session
     # @param [Object] object the object to be updated
     #
     def update(object)
-      assert_loaded(object)
+      assert_tracked(object)
       assert_not_delete(object)
       @updates[object]=true
 
@@ -124,7 +124,7 @@ module Session
       @deletes.key?(object)
     end
 
-    # Returns whether an domain object is loaded in this session
+    # Returns whether an domain object is tracked in this session
     #
     # @param [Object] object the object to be examined
     #
@@ -132,8 +132,8 @@ module Session
     #   returns true when object was registred for delete 
     #   false otherwitse
     #
-    def loaded?(object)
-      @loaded.key?(object)
+    def tracked?(object)
+      @tracked.key?(object)
     end
 
     # Returns whether the sessions has any pending changes registred
@@ -148,7 +148,7 @@ module Session
       @updates.empty? && @inserts.empty? && @deletes.empty?
     end
 
-    # Returns whether a domain object has changes since it was loaded
+    # Returns whether a domain object has changes since it was tracked
     #
     # @param [Object] object the object to be examined
     #
@@ -160,7 +160,7 @@ module Session
       !clean?(object)
     end
 
-    # Returns whether a domain object has NO changes since it was loaded
+    # Returns whether a domain object has NO changes since it was tracked
     #
     # @param [Object] object the object to be examined
     #
@@ -182,22 +182,26 @@ module Session
       @updates.delete(object)
       @deletes.delete(object)
       @inserts.delete(object)
-      if loaded?(object)
-        intermediate = @loaded.delete(object)
+      if tracked?(object)
+        intermediate = @tracked.delete(object)
         @identity_map.delete(@mapper.load_key(object.class,intermediate))
       end
 
       self
     end
 
-    # Clears this sessions. All information about loaded objects and registred 
+    # Clears this sessions. All information about tracked objects and registred 
     # actions are lost.
     #
     # TODO: Using hashes<Object,Boolean> as action registry is a poor 
     # man solution. A ruby set class can do the job also.
     #
     def clear
-      @identity_map,@loaded,@inserts,@updates,@deletes = {},{},{},{},{}
+      @identity_map = {}
+      @tracked       = {}
+      @inserts      = {}
+      @updates      = {}
+      @deletes      = {}
 
       self
     end
@@ -219,14 +223,14 @@ module Session
     end
 
     # Returns whester a dumped object representation of an domain object is
-    # still the same since it was loaded
+    # still the same since it was tracked
     #
     # @param [Object] object the object to be tested
     # @param [Object] the dumped representaion of object
     #
     def clean_dump?(object,dump)
-      assert_loaded(object)
-      stored_dump = @loaded.fetch(object)
+      assert_tracked(object)
+      stored_dump = @tracked.fetch(object)
       dump == stored_dump
     end
 
@@ -235,14 +239,29 @@ module Session
     # The objects identity based on mapped key and the objects dumped state are
     # tracked from now.
     #
-    # @param [Object] the object to be loaded
+    # @param [Object] the object to be tracked
     #
     def track(object)
-      @loaded[object]=@mapper.dump(object)
+      @tracked[object]=@mapper.dump(object)
       key = @mapper.dump_key(object)
       @identity_map[key]=object
 
       self
+    end
+
+    # Loads and creates an object form dump
+    # If dump contains an identity mapped object the 
+    # object will not be created.
+    #
+    def load(model,dump)
+      key = @mapper.load_key(model,dump)
+      if @identity_map.key?(key)
+        @identity_map.fetch(key)
+      else
+        object = @mapper.load(model,dump)
+        track(object)
+        object
+      end
     end
 
     def initialize(options)
@@ -282,7 +301,7 @@ module Session
     #
     def do_update(object)
       dump = @mapper.dump(object)
-      old_dump = @loaded.fetch(object)
+      old_dump = @tracked.fetch(object)
       old_key  = @mapper.load_key(object.class,old_dump) 
 
       # TODO:
@@ -314,7 +333,7 @@ module Session
         @adapter.delete(collection,dump)
       end
 
-      @loaded.delete(object)
+      @tracked.delete(object)
     end
 
     def do_deletes
@@ -323,9 +342,9 @@ module Session
       end
     end
 
-    def assert_loaded(object)
-      unless loaded?(object)
-        raise "object #{object.inspect} is not loaded"
+    def assert_tracked(object)
+      unless tracked?(object)
+        raise "object #{object.inspect} is not tracked"
       end
     end
 
@@ -341,9 +360,9 @@ module Session
       end
     end
 
-    def assert_not_loaded(object)
-      if loaded?(object)
-        raise "object #{object.inspect} is loaded"
+    def assert_not_tracked(object)
+      if tracked?(object)
+        raise "object #{object.inspect} is tracked"
       end
     end
   end
