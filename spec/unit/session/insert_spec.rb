@@ -20,7 +20,7 @@ describe Session::Session, '#insert(object)' do
       object.insert?(domain_object).should be_true
     end
 
-    it 'should NOT track object' do
+    it 'should NOT track domain object' do
       subject
       object.track?(domain_object).should be_false
     end
@@ -34,13 +34,13 @@ describe Session::Session, '#insert(object)' do
     end
   end
 
-  context 'with new object' do
+  context 'with new domain object' do
     context 'when was NOT registred as insert' do
       it 'it should NOT be marked as insert' do
         object.insert?(domain_object).should be_false
       end
 
-      it 'should NOT track object' do
+      it 'should NOT track domain object' do
         object.track?(domain_object).should be_false
       end
 
