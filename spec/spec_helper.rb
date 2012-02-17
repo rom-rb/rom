@@ -14,6 +14,8 @@ require 'veritas/optimizer'
 require 'veritas-do-adapter'
 require 'virtus'
 require 'do_postgres'
+require 'do_mysql'
+require 'do_sqlite3'
 require 'randexp'
 
 require 'dm-mapper'
@@ -29,6 +31,8 @@ end
 
 MAX_RELATION_SIZE = 10
 DATABASE_URI      = 'postgres://localhost/test'.freeze
+# DATABASE_URI      = 'mysql:/ocalhost/test'.freeze
+# DATABASE_URI      = 'sqlite3://tmp/test.db'.freeze
 DATABASE_ADAPTER  = Veritas::Adapter::DataObjects.new(DATABASE_URI)
 
 def setup_db
