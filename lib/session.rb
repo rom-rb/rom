@@ -79,7 +79,7 @@ module Session
     # transactions.
     #
     def commit
-      # TODO add some tsorting to do actions in 
+      # TODO add some tsorting to do actions on domain objects in 
       # correct order. Dependency source?
       do_deletes
       do_updates
