@@ -5,8 +5,20 @@ Dir.glob('spec/examples/**/*.rb').each { |file| require File.expand_path(file) }
 require 'session'
 require 'rspec'
 
-class DummyMapper
+# This could be some kind of adapter to dm-mapper
+class DummyMapperRoot
+  def initialize(mapper)
+    @mapper = mapper
+  end
 
+  def determine_mapper(object)
+    raise unless object.kind_of?(DomainObject)
+    @mapper
+  end
+end
+
+
+class DummyMapper
   # Dumps an object into intermediate representation.
   # Two level hash, first level is collection, second the 
   # values for the entry.
@@ -51,8 +63,7 @@ class DummyMapper
   end
 
   # Loads a key intermediate representation from dump
-  def load_key(model,dump)
-    raise unless model == DomainObject
+  def load_key(dump)
     values = dump.fetch(:domain_objects)
     {
       :domain_objects => {
@@ -60,11 +71,7 @@ class DummyMapper
       }
     }
   end
-end
 
-# Dummy adapter that records interactions. 
-# The idea is to support the most basic crud operations.
-class DummyAdapter
   attr_reader :inserts,:deletes,:updates
 
   def initialize
@@ -75,28 +82,27 @@ class DummyAdapter
   # @param [Symbol] collectio the collection where the record should be inserted
   # @param [Hash] the record to be inserted
   #
-  def insert(collection,dump)
-    @inserts << [collection,dump]
+  def insert(object)
+    @inserts << object
   end
 
   # @param [Symbol] collection the collection where the delete should happen
   # @param [Hash] delete_key the key identifying the record to delete
   #
-  def delete(collection,delete_key)
-    @deletes << [collection,delete_key]
+  def delete(object)
+    @deletes << object
   end
 
-  # TODO: 4 params? Am I dump?
-  # I need the old and the new record representation to generate some 
-  # advanced mongo udpates.
+  # The old and the new dump can be used to generate nice updates.
+  # Especially useful for advanced mongo udpates.
   #
   # @param [Symbol] collection the collection where the update should happen
   # @param [Hash] update_key the key to update the record under
   # @param [Hash] new_record the updated record (all fields!)
   # @param [Hash] old_record the old record (all fields!)
   #
-  def update(collection,update_key,new_record,old_record)
-    @updates << [collection,update_key,new_record,old_record]
+  def update(key,object,old_dump)
+    @updates << [key,object,old_dump]
   end
 
   # Returns arrays of intermediate representations of matched models.

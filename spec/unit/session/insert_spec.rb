@@ -1,12 +1,12 @@
 require 'spec_helper'
 
 describe Session::Session, '#insert(object)' do
-  let(:adapter) { DummyAdapter.new }
   let(:mapper)  { DummyMapper.new  }
+  let(:root)    { DummyMapperRoot.new(mapper)  }
+
   let(:object) do 
     described_class.new(
-      :adapter => adapter,
-      :mapper => mapper
+      :root => root
     )
   end
 

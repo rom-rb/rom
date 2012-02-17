@@ -1,7 +1,5 @@
 module Session
   class Session
-    attr_reader :adapter
-
     # Update domain object and commit this session
     #
     # @param [Object] object the object to be updated
@@ -169,7 +167,8 @@ module Session
     #   false otherwise
     #
     def clean?(object)
-      clean_dump?(object,@mapper.dump(object))
+      mapper = mapper_for(object)
+      clean_dump?(object,mapper.dump(object))
     end
 
     # Do not track a domain object anymore. Any uncomitted work on this 
@@ -179,13 +178,15 @@ module Session
     #
     # @param [Object] object the object to be untracked
     #
-    def unregister(object)
+    def untrack(object)
       @updates.delete(object)
       @deletes.delete(object)
       @inserts.delete(object)
+
       if track?(object)
-        intermediate = @track.delete(object)
-        @identity_map.delete(@mapper.load_key(object.class,intermediate))
+        dump = @track.delete(object)
+        mapper = mapper_for(object)
+        @identity_map.delete(mapper.load_key(dump))
       end
 
       self
@@ -209,10 +210,9 @@ module Session
 
   protected
 
-    # Returns whether a dumped object representation of an domain object is 
-    # dirty
+    # Returns whether a domain object is dirty from mappers point of view.
     #
-    # @param [Object] object the domain object to be tested
+    # @param [Object] object the domain object to be tested for dirtiness
     # @param [Object] the dumped representation of object
     #
     # @return [true|false]
@@ -223,8 +223,7 @@ module Session
       !clean_dump?(object,dump)
     end
 
-    # Returns whester a dumped object representation of an domain object is
-    # still the same since it was track
+    # Returns whester a domain object is NOT dirty from mappers point of view.
     #
     # @param [Object] object the object to be tested
     # @param [Object] the dumped representaion of object
@@ -235,7 +234,7 @@ module Session
       dump == stored_dump
     end
 
-    # Track an object 
+    # Track an object in this session
     #
     # The objects identity based on mapped key and the objects dumped state are
     # track from now.
@@ -243,57 +242,75 @@ module Session
     # @param [Object] the object to be track
     #
     def track(object)
-      @track[object]=@mapper.dump(object)
-      key = @mapper.dump_key(object)
+      mapper = mapper_for(object)
+      @track[object]=mapper.dump(object)
+      key = mapper.dump_key(object)
       @identity_map[key]=object
 
       self
     end
 
-    # Loads and creates an object form dump
-    # If dump contains an identity mapped object the 
-    # object will not be created.
+    # Load and create an object form dump this method checks identity map 
+    # using the identity in dump to make sure it creates no duplicate
     #
-    def load(model,dump)
-      key = @mapper.load_key(model,dump)
+    # @param [Mapper] mapper of object
+    # @param [Object] dump of object
+    #
+    # @return [Object] domain object
+    #
+    def load(mapper,dump)
+      key = mapper.load_key(dump)
       if @identity_map.key?(key)
         @identity_map.fetch(key)
       else
-        object = @mapper.load(model,dump)
+        object = mapper.load(dump)
         track(object)
         object
       end
     end
 
     def initialize(options)
-      @mapper = options.fetch(:mapper) do
-        raise ArgumentError,'missing :mapper in +options+'
-      end
-      @adapter = options.fetch(:adapter) do
-        raise ArgumentError,'missing :adapter in +options+'
+      @root = options.fetch(:root) do
+        raise ArgumentError,'missing :root in +options+'
       end
       clear
+    end
+
+    def do_deletes
+      @deletes.keys.each do |object|
+        do_delete(object)
+      end
+
+      self
     end
 
     def do_inserts
       @inserts.each_key do |object|
         do_insert(object)
       end
+
+      self
     end
 
     def do_insert(object)
-      dump = @mapper.dump(object)
-      dump.each do |collection,record|
-        @adapter.insert(collection,record)
-      end
+      mapper = mapper_for(object)
+      mapper.insert(object)
       track(object)
       @inserts.delete(object)
+
+      self
+    end
+
+    def mapper_for(object)
+      @root.determine_mapper(object)
     end
 
     def do_updates
       @updates.each_key do |object|
         do_update(object)
       end
+
+      self
     end
 
     # If you map your resource to "multiple" collections 
@@ -301,70 +318,70 @@ module Session
     # The adpaters do not know about the mapping.
     #
     def do_update(object)
-      dump = @mapper.dump(object)
-      old_dump = @track.fetch(object)
-      old_key  = @mapper.load_key(object.class,old_dump) 
+      mapper = mapper_for(object)
 
-      # TODO:
-      # This is totally unspeced behaviour I need a multi collection 
-      # mapping spec... 
-      dump.each_key do |collection|
-        update_key = old_key.fetch(collection)
-        old_record = old_dump.fetch(collection)
-        new_record = dump.fetch(collection)
-        # noop if no change
-        unless new_record == old_record
-          @adapter.update(collection,update_key,new_record,old_record)
-        end
+      old_dump = @track.fetch(object)
+
+      new_dump = mapper.dump(object)
+
+      unless new_dump == old_dump
+        old_key  = mapper.load_key(old_dump) 
+        mapper.update(old_key,object,old_dump)
+        @identity_map.delete(old_key)
+        track(object)
       end
-      track(object)
+
       @updates.delete(object)
+
+      self
     end
 
     def do_delete(object)
-      dump = @mapper.dump(object)
+      mapper = mapper_for(object)
 
-      if dirty_dump?(object,dump)
+      if dirty?(object)
         raise 'cannot delete dirty object'
       end
 
-      key = @mapper.load_key(object.class,dump)
+      key = mapper.dump_key(object)
 
-      key.each do |collection,dump|
-        @adapter.delete(collection,dump)
-      end
+      mapper.delete(object)
 
-      @track.delete(object)
-    end
+      untrack(object)
 
-    def do_deletes
-      @deletes.keys.each do |object|
-        do_delete(object)
-      end
+      self
     end
 
     def assert_track(object)
       unless track?(object)
         raise "object #{object.inspect} is not tracked"
       end
+      
+      self
     end
 
     def assert_not_delete(object)
       if delete?(object)
         raise "object #{object.inspect} is marked as to be deleted"
       end
+
+      self
     end
 
     def assert_not_update(object)
       if update?(object)
         raise "object #{object.inspect} is marked as to be updated"
       end
+
+      self
     end
 
     def assert_not_track(object)
       if track?(object)
         raise "object #{object.inspect} is tracked"
       end
+
+      self
     end
   end
 end
