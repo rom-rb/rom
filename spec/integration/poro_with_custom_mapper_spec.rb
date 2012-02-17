@@ -25,8 +25,8 @@ describe 'PORO with a custom mapper' do
       map :name, :to => :username, :type => String
       map :age, :type => Integer
 
-      model User
-      name :users
+      model         User
+      relation_name :users
     end
   end
 

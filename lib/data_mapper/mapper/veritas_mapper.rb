@@ -8,19 +8,8 @@ module DataMapper
 
       # @api public
       def self.base_relation
-        @base_relation ||= Veritas::Relation::Base.new(name, attributes.header)
+        @base_relation ||= Veritas::Relation::Base.new(relation_name, attributes.header)
       end
-
-      # @api private
-      attr_reader :relation
-
-      # @api private
-      attr_reader :model
-
-      # @api private
-      attr_reader :attributes
-
-      private :relation, :model, :attributes
 
       # Initialize a veritas mapper instance
       #
@@ -38,13 +27,13 @@ module DataMapper
       # @api public
       def each
         return to_enum unless block_given?
-        relation.each { |tuple| yield load(tuple) }
+        @relation.each { |tuple| yield load(tuple) }
         self
       end
 
       # @api private
       def load(tuple)
-        model.new(attributes.map(tuple))
+        @model.new(@attributes.map(tuple))
       end
 
     end # class VeritasMapper
