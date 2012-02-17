@@ -39,7 +39,7 @@ describe 'Two PORO mappers' do
       map :city,    :type => String
 
       model Address
-      name :addresses
+      relation_name :addresses
     end
   end
 
@@ -56,7 +56,7 @@ describe 'Two PORO mappers' do
       map :age, :type => Integer
 
       model User
-      name :users
+      relation_name :users
     end
   end
 
