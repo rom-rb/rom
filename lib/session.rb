@@ -40,7 +40,7 @@ module Session
     # @param [Object] object the object to be inserted
     #
     def insert(object)
-      assert_not_tracked(object)
+      assert_not_track(object)
       @inserts[object]=true
 
       self
@@ -51,7 +51,7 @@ module Session
     # @param [Object] object the object to be deleted
     #
     def delete(object)
-      assert_tracked(object)
+      assert_track(object)
       assert_not_update(object)
       @deletes[object]=true
 
@@ -66,7 +66,7 @@ module Session
     # @param [Object] object the object to be updated
     #
     def update(object)
-      assert_tracked(object)
+      assert_track(object)
       assert_not_delete(object)
       @updates[object]=true
 
@@ -124,7 +124,7 @@ module Session
       @deletes.key?(object)
     end
 
-    # Returns whether an domain object is tracked in this session
+    # Returns whether an domain object is track in this session
     #
     # @param [Object] object the object to be examined
     #
@@ -132,8 +132,8 @@ module Session
     #   returns true when object was registred for delete 
     #   false otherwitse
     #
-    def tracked?(object)
-      @tracked.key?(object)
+    def track?(object)
+      @track.key?(object)
     end
 
     # Returns whether the sessions has any pending changes registred
@@ -148,7 +148,7 @@ module Session
       @updates.empty? && @inserts.empty? && @deletes.empty?
     end
 
-    # Returns whether a domain object has changes since it was tracked
+    # Returns whether a domain object has changes since it was track
     #
     # @param [Object] object the object to be examined
     #
@@ -160,7 +160,7 @@ module Session
       !clean?(object)
     end
 
-    # Returns whether a domain object has NO changes since it was tracked
+    # Returns whether a domain object has NO changes since it was track
     #
     # @param [Object] object the object to be examined
     #
@@ -182,15 +182,15 @@ module Session
       @updates.delete(object)
       @deletes.delete(object)
       @inserts.delete(object)
-      if tracked?(object)
-        intermediate = @tracked.delete(object)
+      if track?(object)
+        intermediate = @track.delete(object)
         @identity_map.delete(@mapper.load_key(object.class,intermediate))
       end
 
       self
     end
 
-    # Clears this sessions. All information about tracked objects and registred 
+    # Clears this sessions. All information about track objects and registred 
     # actions are lost.
     #
     # TODO: Using hashes<Object,Boolean> as action registry is a poor 
@@ -198,7 +198,7 @@ module Session
     #
     def clear
       @identity_map = {}
-      @tracked       = {}
+      @track       = {}
       @inserts      = {}
       @updates      = {}
       @deletes      = {}
@@ -223,26 +223,26 @@ module Session
     end
 
     # Returns whester a dumped object representation of an domain object is
-    # still the same since it was tracked
+    # still the same since it was track
     #
     # @param [Object] object the object to be tested
     # @param [Object] the dumped representaion of object
     #
     def clean_dump?(object,dump)
-      assert_tracked(object)
-      stored_dump = @tracked.fetch(object)
+      assert_track(object)
+      stored_dump = @track.fetch(object)
       dump == stored_dump
     end
 
     # Track an object 
     #
     # The objects identity based on mapped key and the objects dumped state are
-    # tracked from now.
+    # track from now.
     #
-    # @param [Object] the object to be tracked
+    # @param [Object] the object to be track
     #
     def track(object)
-      @tracked[object]=@mapper.dump(object)
+      @track[object]=@mapper.dump(object)
       key = @mapper.dump_key(object)
       @identity_map[key]=object
 
@@ -301,7 +301,7 @@ module Session
     #
     def do_update(object)
       dump = @mapper.dump(object)
-      old_dump = @tracked.fetch(object)
+      old_dump = @track.fetch(object)
       old_key  = @mapper.load_key(object.class,old_dump) 
 
       # TODO:
@@ -333,7 +333,7 @@ module Session
         @adapter.delete(collection,dump)
       end
 
-      @tracked.delete(object)
+      @track.delete(object)
     end
 
     def do_deletes
@@ -342,9 +342,9 @@ module Session
       end
     end
 
-    def assert_tracked(object)
-      unless tracked?(object)
-        raise "object #{object.inspect} is not tracked"
+    def assert_track(object)
+      unless track?(object)
+        raise "object #{object.inspect} is not track"
       end
     end
 
@@ -360,8 +360,8 @@ module Session
       end
     end
 
-    def assert_not_tracked(object)
-      if tracked?(object)
+    def assert_not_track(object)
+      if track?(object)
         raise "object #{object.inspect} is tracked"
       end
     end
