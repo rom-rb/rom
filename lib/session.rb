@@ -182,8 +182,7 @@ module Session
     #   false otherwise
     #
     def clean?(object)
-      mapper = mapper_for(object)
-      clean_dump?(object,mapper.dump(object))
+      clean_dump?(object,@mapper.dump(object))
     end
 
     # Do not track a domain object anymore. Any uncommitted work on this 
@@ -200,8 +199,7 @@ module Session
 
       if track?(object)
         dump = @track.delete(object)
-        mapper = mapper_for(object)
-        @identity_map.delete(mapper.load_key(dump))
+        @identity_map.delete(@mapper.load_object_key(object,dump))
       end
 
       self
@@ -257,9 +255,8 @@ module Session
     # @param [Object] the object to be track
     #
     def track(object)
-      mapper = mapper_for(object)
-      @track[object]=mapper.dump(object)
-      key = mapper.dump_key(object)
+      @track[object]=@mapper.dump(object)
+      key = @mapper.dump_key(object)
       @identity_map[key]=object
 
       self
@@ -274,8 +271,7 @@ module Session
     # @return [Object] domain object
     #
     def load(model,dump)
-      mapper = @root.determine_mapper(model)
-      key = mapper.load_key(dump)
+      key = mapper.load_model_key(model,dump)
       if @identity_map.key?(key)
         @identity_map.fetch(key)
       else
@@ -285,10 +281,8 @@ module Session
       end
     end
 
-    def initialize(options)
-      @root = options.fetch(:root) do
-        raise ArgumentError,'missing :root in +options+'
-      end
+    def initialize(mapper)
+      @mapper = mapper
       clear
     end
 
@@ -309,16 +303,11 @@ module Session
     end
 
     def do_insert(object)
-      mapper = mapper_for(object)
-      mapper.insert(object)
+      @mapper.insert(object)
       track(object)
       @inserts.delete(object)
 
       self
-    end
-
-    def mapper_for(object)
-      @root.determine_mapper(object)
     end
 
     def do_updates
@@ -334,15 +323,13 @@ module Session
     # The adpaters do not know about the mapping.
     #
     def do_update(object)
-      mapper = mapper_for(object)
-
       old_dump = @track.fetch(object)
 
-      new_dump = mapper.dump(object)
+      new_dump = @mapper.dump(object)
 
       unless new_dump == old_dump
-        old_key  = mapper.load_key(old_dump) 
-        mapper.update(old_key,object,old_dump)
+        old_key  = @mapper.load_object_key(object,old_dump) 
+        @mapper.update(object,old_key,old_dump)
         @identity_map.delete(old_key)
         track(object)
       end
@@ -353,15 +340,13 @@ module Session
     end
 
     def do_delete(object)
-      mapper = mapper_for(object)
-
       if dirty?(object)
         raise 'cannot delete dirty object'
       end
 
-      key = mapper.dump_key(object)
+      key = @mapper.dump_key(object)
 
-      mapper.delete(object)
+      @mapper.delete(object)
 
       untrack(object)
 

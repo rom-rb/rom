@@ -1,16 +1,14 @@
 require 'spec_helper'
 
 describe ::Session::Session do
-  let(:mapper) { DummyMapper.new }
-  let(:root) { DummyMapperRoot.new(mapper) }
+  let(:mapper)       { DummyMapper.new }
+  let(:root_mapper)  { DummyMapperRoot.new(mapper) }
 
   let(:object)       { DomainObject.new(:key_value,"some value") }
   let(:other_object) { DomainObject.new(:other_key,"other value") }
 
   let(:session) do 
-    ::Session::Session.new(
-      :root => root
-    )
+    ::Session::Session.new(root_mapper)
   end
 
   context 'when removing records' do
@@ -132,8 +130,8 @@ describe ::Session::Session do
 
         it 'should use the correct update' do
           mapper.updates.should == [[
-            mapper.load_key(dump_before),
             object,
+            mapper.load_key(dump_before),
             dump_before
           ]]
         end

@@ -5,14 +5,54 @@ Dir.glob('spec/examples/**/*.rb').each { |file| require File.expand_path(file) }
 require 'session'
 require 'rspec'
 
+# The keylike behaviour of :key_attribute is defined by mapping. 
+# The key_ prefix is only cosmetic here!
+# Simple PORO, but could also be a virtus model, but I'd like to 
+# make sure I do not couple to its API.
+class DomainObject
+  attr_accessor :key_attribute,:other_attribute
+  def initialize(key_attribute=:a,other_attribute=:b)
+    @key_attribute,@other_attribute = key_attribute,other_attribute
+  end
+end
+
 # This could be some kind of adapter to dm-mapper
 class DummyMapperRoot
   def initialize(mapper)
     @mapper = mapper
   end
 
-  def determine_mapper(object)
-    raise unless object.kind_of?(DomainObject)
+  def delete(object)
+    mapper_for_object(object).delete(object)
+  end
+
+  def update(object,old_key,old_dump)
+    mapper_for_object(object).update(object,old_key,old_dump)
+  end
+
+  def insert(object)
+    mapper_for_object(object).insert(object)
+  end
+
+  def dump(object)
+    mapper_for_object(object).dump(object)
+  end
+
+  def dump_key(object)
+    mapper_for_object(object).dump_key(object)
+  end
+
+  def load_object_key(object,dump)
+    mapper_for_object(object).load_key(dump)
+  end
+
+  def mapper_for_model(model)
+    raise unless model == DomainObject
+    @mapper
+  end
+
+  def mapper_for_object(object)
+    raise unless object.class == DomainObject
     @mapper
   end
 end
@@ -114,13 +154,3 @@ class DummyMapper
   end
 end
 
-# The keylike behaviour of :key_attribute is defined by mapping. 
-# The key_ prefix is only cosmetic here!
-# Simple PORO, but could also be a virtus model, but I'd like to 
-# make sure I do not couple to its API.
-class DomainObject
-  attr_accessor :key_attribute,:other_attribute
-  def initialize(key_attribute=:a,other_attribute=:b)
-    @key_attribute,@other_attribute = key_attribute,other_attribute
-  end
-end

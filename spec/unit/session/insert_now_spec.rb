@@ -2,8 +2,9 @@ require 'spec_helper'
 
 describe Session::Session,'#insert_now' do
   let(:mapper) { DummyMapper.new }
-  let(:root)   { DummyMapperRoot.new(mapper) }
-  let(:object) { described_class.new(:root => root) }
+  let(:mapper_root)   { DummyMapperRoot.new(mapper) }
+
+  let(:object) { described_class.new(mapper_root) }
 
   let(:domain_object) { DomainObject.new }
 

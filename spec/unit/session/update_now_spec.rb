@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe Session::Session,'#update_now' do
   let(:mapper) { DummyMapper.new }
-  let(:root)   { DummyMapperRoot.new(mapper) }
-  let(:object) { described_class.new(:root => root) }
+  let(:mapper_root)   { DummyMapperRoot.new(mapper) }
+  let(:object) { described_class.new(mapper_root) }
 
   let(:domain_object) { DomainObject.new }
 
@@ -25,8 +25,8 @@ describe Session::Session,'#update_now' do
 
     it 'should update object' do
       mapper.updates.should == [[
-        mapper.dump_key(domain_object),
         domain_object,
+        mapper.dump_key(domain_object),
         dump_before
       ]]
     end
