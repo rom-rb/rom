@@ -5,6 +5,7 @@ module Session
     # @param [Object] object the object to be updated
     #
     def update_now(object)
+      assert_committed
       update(object)
       commit
       
@@ -16,6 +17,7 @@ module Session
     # @param [Object] object the object to be deleted
     #
     def delete_now(object)
+      assert_committed
       delete(object)
       commit
       
@@ -27,6 +29,7 @@ module Session
     # @param [Object] object the object to be inserted
     #
     def insert_now(object)
+      assert_committed
       insert(object)
       commit
       
@@ -270,7 +273,8 @@ module Session
     #
     # @return [Object] domain object
     #
-    def load(mapper,dump)
+    def load(model,dump)
+      mapper = @root.determine_mapper(model)
       key = mapper.load_key(dump)
       if @identity_map.key?(key)
         @identity_map.fetch(key)
@@ -371,6 +375,15 @@ module Session
       
       self
     end
+
+    def assert_committed
+      unless committed?
+        raise 'session is not comitted'
+      end
+
+      self
+    end
+
 
     def assert_not_delete(object)
       if delete?(object)
