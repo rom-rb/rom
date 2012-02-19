@@ -271,11 +271,11 @@ module Session
     # @return [Object] domain object
     #
     def load(model,dump)
-      key = mapper.load_model_key(model,dump)
+      key = @mapper.load_model_key(model,dump)
       if @identity_map.key?(key)
         @identity_map.fetch(key)
       else
-        object = mapper.load(dump)
+        object = @mapper.load_model(model,dump)
         track(object)
         object
       end
