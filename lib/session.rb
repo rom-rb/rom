@@ -1,3 +1,5 @@
+require 'set'
+
 module Session
   class Session
     # Update domain object and commit this session
@@ -42,7 +44,7 @@ module Session
     #
     def insert(object)
       assert_not_track(object)
-      @inserts[object]=true
+      @inserts.add(object)
 
       self
     end
@@ -54,7 +56,7 @@ module Session
     def delete(object)
       assert_track(object)
       assert_not_update(object)
-      @deletes[object]=true
+      @deletes.add(object)
 
       self
     end
@@ -69,7 +71,7 @@ module Session
     def update(object)
       assert_track(object)
       assert_not_delete(object)
-      @updates[object]=true
+      @updates.add(object)
 
       self
     end
@@ -80,8 +82,6 @@ module Session
     # transactions.
     #
     def commit
-      # TODO add some tsorting to do actions on domain objects in 
-      # correct order. Dependency source?
       do_deletes
       do_updates
       do_inserts
@@ -98,7 +98,7 @@ module Session
     #   false otherwitse
     #
     def update?(object)
-      @updates.key?(object)
+      @updates.member?(object)
     end
 
     # Returns whether an domain object registered for insert
@@ -110,7 +110,7 @@ module Session
     #   false otherwitse
     #
     def insert?(object)
-      @inserts.key?(object)
+      @inserts.member?(object)
     end
 
     # Returns whether an domain object registered for delete
@@ -122,7 +122,7 @@ module Session
     #   false otherwitse
     #
     def delete?(object)
-      @deletes.key?(object)
+      @deletes.member?(object)
     end
 
     # Returns whether an domain object is track in this session
@@ -134,7 +134,7 @@ module Session
     #   false otherwitse
     #
     def track?(object)
-      @track.key?(object)
+      @track.member?(object)
     end
 
     # Returns whether this session has any uncommited work
@@ -213,10 +213,10 @@ module Session
     #
     def clear
       @identity_map = {}
-      @track       = {}
-      @inserts      = {}
-      @updates      = {}
-      @deletes      = {}
+      @track        = {}
+      @inserts      = Set.new
+      @updates      = Set.new
+      @deletes      = Set.new
 
       self
     end
@@ -287,7 +287,7 @@ module Session
     end
 
     def do_deletes
-      @deletes.keys.each do |object|
+      @deletes.each do |object|
         do_delete(object)
       end
 
@@ -295,7 +295,7 @@ module Session
     end
 
     def do_inserts
-      @inserts.each_key do |object|
+      @inserts.each do |object|
         do_insert(object)
       end
 
@@ -311,7 +311,7 @@ module Session
     end
 
     def do_updates
-      @updates.each_key do |object|
+      @updates.each do |object|
         do_update(object)
       end
 
