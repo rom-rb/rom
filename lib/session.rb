@@ -61,6 +61,19 @@ module Session
       self
     end
 
+    # Register a domain object for beeing inserted or updated
+    #
+    # @param [Object] object the object to be persisted
+    def persist(object)
+      if track?(object)
+        update(object)
+      else
+        insert(object)
+      end
+
+      self
+    end
+
     # Register a domain object for beeing updated on commit of this session 
     #
     # If the object has changes on commit these changes will be written to 
