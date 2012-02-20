@@ -2,6 +2,18 @@ require 'set'
 
 module Session
   class Session
+    # Persist domain object and commit this session
+    #
+    # @param [Object] object the object to be updated
+    #
+    def persist_now(object)
+      assert_committed
+      persist(object)
+      commit
+      
+      self
+    end
+
     # Update domain object and commit this session
     #
     # @param [Object] object the object to be updated
