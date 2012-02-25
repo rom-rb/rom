@@ -10,6 +10,8 @@ describe Session::Session,'#delete_now' do
   subject { object.delete_now(domain_object) }
 
   context 'when session is committed' do
+    let!(:key_before) { mapper.dump_key(domain_object) }
+
     before do
       object.insert_now(domain_object)
       subject
@@ -20,7 +22,7 @@ describe Session::Session,'#delete_now' do
     end
 
     it 'should delete object' do
-      mapper.deletes.should == [domain_object]
+      mapper.deletes.should == [[domain_object,key_before]]
     end
   end
 

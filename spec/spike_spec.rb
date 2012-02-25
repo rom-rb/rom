@@ -18,13 +18,15 @@ describe ::Session::Session do
     end
 
     shared_examples 'a delete' do
+      let!(:key_before) { mapper.dump_key(object) }
+
       before do
         session.delete(object)
         session.commit
       end
 
       it 'should delete via mapper' do
-        mapper.deletes.should == [object]
+        mapper.deletes.should == [[object,key_before]]
       end
 
       it 'should unload the object' do

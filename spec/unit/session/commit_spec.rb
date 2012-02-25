@@ -113,12 +113,13 @@ describe Session::Session,'#commit' do
     end
 
     context 'and commit was called' do
+      let!(:key_before) { mapper.dump_key(domain_object) }
       before { subject }
 
       it_should_behave_like 'a committed session'
 
       it 'should forward the delete to mapper' do
-        mapper.deletes.should == [domain_object]
+        mapper.deletes.should == [[domain_object,key_before]]
       end
     end
   end

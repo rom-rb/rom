@@ -23,8 +23,8 @@ class DummyMapperRoot
     @mapper = mapper
   end
 
-  def delete(object)
-    mapper_for_object(object).delete(object)
+  def delete(object,key)
+    mapper_for_object(object).delete(object,key)
   end
 
   def update(object,old_key,old_dump)
@@ -130,8 +130,8 @@ class DummyMapper
   # @param [Symbol] collection the collection where the delete should happen
   # @param [Hash] delete_key the key identifying the record to delete
   #
-  def delete(object)
-    @deletes << object
+  def delete(object,key)
+    @deletes << [object,key]
   end
 
   # The old and the new dump can be used to generate nice updates.
