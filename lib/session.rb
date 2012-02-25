@@ -298,6 +298,7 @@ module Session
     def load(model,dump)
       key = @mapper.load_model_key(model,dump)
       if @identity_map.key?(key)
+        p :imh
         @identity_map.fetch(key)
       else
         object = @mapper.load_model(model,dump)
@@ -371,7 +372,7 @@ module Session
 
       key = @mapper.dump_key(object)
 
-      @mapper.delete(object)
+      @mapper.delete(object,key)
 
       untrack(object)
 
