@@ -280,8 +280,17 @@ module Session
     # @param [Object] the object to be track
     #
     def track(object)
-      @track[object]=@mapper.dump(object)
-      key = @mapper.dump_key(object)
+     #@track[object]=@mapper.dump(object)
+     #key = @mapper.dump_key(object)
+     #@identity_map[key]=object
+      track_dump(object,@mapper.dump(object),@mapper.dump_key(object))
+
+      self
+    end
+
+    # Track an object with known dump
+    def track_dump(object,dump,key)
+      @track[object]=dump
       @identity_map[key]=object
 
       self
@@ -301,7 +310,7 @@ module Session
         @identity_map.fetch(key)
       else
         object = @mapper.load_model(model,dump)
-        track(object)
+        track_dump(object,dump,@mapper.dump_key(object))
         object
       end
     end
