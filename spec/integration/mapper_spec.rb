@@ -17,8 +17,10 @@ describe 'mapper integration' do
   end
 
   let(:db) do
-    host = ENV.fetch('MONGO_HOST','localhost:27017')
-    connection = ::Mongo::Connection.new(host,
+    host = ENV.fetch('MONGO_HOST','localhost')
+    connection = ::Mongo::Connection.new(
+      host,
+      27017
       :safe => true
     )
     db = ENV.fetch('MONGO_DB','session_test')
