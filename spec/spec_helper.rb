@@ -23,15 +23,15 @@ class DummyMapperRoot
     @mapper = mapper
   end
 
-  def delete(object,key)
+  def delete_object_key(object,key)
     mapper_for_object(object).delete(object,key)
   end
 
-  def update(object,old_key,old_dump)
+  def update_object(object,old_key,old_dump)
     mapper_for_object(object).update(object,old_key,old_dump)
   end
 
-  def insert(object)
+  def insert_object(object)
     mapper_for_object(object).insert(object)
   end
 

@@ -2,6 +2,27 @@ require 'set'
 
 module Session
   class Session
+    def all(model,query)
+      mapper = @mapper.for(model)
+      dumps = mapper.read_dumps(query)
+      Enumerator.new do |yielder|
+        yielder.yield load(model,dumps.next)
+      end
+    end
+
+    def first(model,query)
+      mapper = @mapper.for(model)
+      key = mapper.extract_key_from_query(query)
+      if @identity_map.key?(key)
+        @identity_map.fetch(key)
+      else
+        dump = mapper.first_dump(query)
+        if dump
+          load(model,dump)
+        end
+      end
+    end
+
     # Persist domain object and commit this session
     #
     # @param [Object] object the object to be updated
@@ -337,7 +358,7 @@ module Session
     end
 
     def do_insert(object)
-      @mapper.insert(object)
+      @mapper.insert_object(object)
       track(object)
       @inserts.delete(object)
 
@@ -352,19 +373,12 @@ module Session
       self
     end
 
-    # If you map your resource to "multiple" collections 
-    # each colleciton level update will be passed isolated.
-    # The adpaters do not know about the mapping.
-    #
     def do_update(object)
-      old_dump = @track.fetch(object)
-
-      new_dump = @mapper.dump(object)
-
-      unless new_dump == old_dump
+      if dirty?(object)
+        old_dump = @track.fetch(object)
         old_key  = @mapper.load_object_key(object,old_dump) 
-        @mapper.update(object,old_key,old_dump)
-        @identity_map.delete(old_key)
+        @mapper.update_object(object,old_key,old_dump)
+        untrack(object)
         track(object)
       end
 
@@ -380,7 +394,7 @@ module Session
 
       key = @mapper.dump_key(object)
 
-      @mapper.delete(object,key)
+      @mapper.delete_object_key(object,key)
 
       untrack(object)
 
