@@ -21,7 +21,8 @@ describe 'mapper integration' do
     connection = ::Mongo::Connection.new(
       host,
       27017,
-      :safe => true
+      :safe => true,
+      :logger => Logger.new($stderr,Logger::DEBUG)
     )
     db = ENV.fetch('MONGO_DB','session_test')
     if ENV.key?('MONGO_AUTH')
