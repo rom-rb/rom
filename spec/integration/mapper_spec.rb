@@ -17,13 +17,18 @@ describe 'mapper integration' do
   end
 
   let(:db) do
+    host = ENV.fetch('MONGO_HOST','localhost:27017')
     connection = ::Mongo::ReplSetConnection.new(
-      ['helium:27017'],
+      [host],
       :safe => true,
       :logger => Logger.new($stdout,Logger::DEBUG)
     )
-    connection.add_auth('mapper_development','mapper_development','TIdXLOHf9isf83PHzdu3wohk')
-    connection.db('mapper_development')
+    db = ENV.fetch('MONGO_DB','session_test')
+    if ENV.key?('MONGO_AUTH')
+      user,password = ENV.fetch('MONGO_AUTH')
+      connection.add_auth(db,user,password)
+    end
+    connection.db(db)
   end
 
   let(:people_collection) do
