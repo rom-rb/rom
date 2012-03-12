@@ -20,7 +20,7 @@ describe 'mapper integration' do
     host = ENV.fetch('MONGO_HOST','localhost')
     connection = ::Mongo::Connection.new(
       host,
-      27017
+      27017,
       :safe => true
     )
     db = ENV.fetch('MONGO_DB','session_test')
