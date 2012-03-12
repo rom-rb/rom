@@ -1,13 +1,3 @@
-if RUBY_VERSION < '1.9'
-  require 'backports'
-end
-
-require 'set'
-
-module Session; end
-
-require 'session/session'
-
 module Session
   class Session
     def all(model,query)

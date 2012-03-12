@@ -25,7 +25,7 @@ describe 'mapper integration' do
     )
     db = ENV.fetch('MONGO_DB','session_test')
     if ENV.key?('MONGO_AUTH')
-      user,password = ENV.fetch('MONGO_AUTH')
+      user,password = ENV.fetch('MONGO_AUTH').split(':',2)
       connection.add_auth(db,user,password)
     end
     connection.db(db)
@@ -39,7 +39,7 @@ describe 'mapper integration' do
     Mapper::Mapper::Virtus.new(
       Person,
       [
-        Mapper::Mapper::Attribute.new(:id,:as => '_id'),
+        Mapper::Mapper::Attribute.new(:id,:as => :_id, :key => true),
         Mapper::Mapper::Attribute.new(:firstname),
         Mapper::Mapper::Attribute.new(:lastname),
       ]
