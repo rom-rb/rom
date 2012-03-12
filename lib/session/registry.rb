@@ -18,6 +18,10 @@ module Session
       self.for(object.class)
     end
 
+    def load_model(model,dump)
+      self.for(model).load(dump)
+    end
+
     def load_model_key(model,dump)
       self.for(model).load_key(dump)
     end
