@@ -18,10 +18,8 @@ describe 'mapper integration' do
 
   let(:db) do
     host = ENV.fetch('MONGO_HOST','localhost:27017')
-    connection = ::Mongo::ReplSetConnection.new(
-      [host],
-      :safe => true,
-      :logger => Logger.new($stdout,Logger::DEBUG)
+    connection = ::Mongo::Connection.new(host,
+      :safe => true
     )
     db = ENV.fetch('MONGO_DB','session_test')
     if ENV.key?('MONGO_AUTH')
