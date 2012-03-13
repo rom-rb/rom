@@ -109,4 +109,16 @@ describe 'mapper integration' do
 
     session.all(Example::Person,:firstname => person.firstname).to_a.should == [person]
   end
+
+  specify 'allows to stream objects' do
+    session.insert(person).commit
+
+    yields = []
+
+    session.all(Example::Person,{}).each do |person|
+      yields << person
+    end
+
+    yields.should == [person]
+  end
 end
