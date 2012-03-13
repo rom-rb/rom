@@ -104,21 +104,31 @@ describe 'mapper integration' do
     session.first(Example::Person,:firstname => person.firstname).should equal(person)
   end
 
+  let(:other_person) do
+    Example::Person.new(:firstname => 'Suzan', :lastname => 'Doe')
+  end
+
   specify 'allows to find objects' do
     session.insert(person).commit
+    session.insert(other_person).commit
 
-    session.all(Example::Person,:firstname => person.firstname).to_a.should == [person]
+    people = session.all(Example::Person,{}).to_a
+    people.sort_by!(&:firstname)
+    people.should == [person,other_person].sort_by(&:firstname)
   end
 
   specify 'allows to stream objects' do
     session.insert(person).commit
+    session.insert(other_person).commit
 
-    yields = []
+    people = []
 
     session.all(Example::Person,{}).each do |person|
-      yields << person
+      people << person
     end
 
-    yields.should == [person]
+    people.sort_by!(&:firstname)
+
+    people.should == [person,other_person].sort_by(&:firstname)
   end
 end

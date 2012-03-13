@@ -4,7 +4,9 @@ module Session
       mapper = @mapper.for(model)
       dumps = mapper.read_dumps(query)
       Enumerator.new do |yielder|
-        yielder.yield load(model,dumps.next)
+        dumps.each do |dump|
+          yielder.yield load(model,dump)
+        end
       end
     end
 
