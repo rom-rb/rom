@@ -9,13 +9,6 @@ require 'mapper/mongo'
 require 'logger'
 
 describe 'mapper integration' do
-  class Person
-    include Virtus
-    attribute :id,BSON::ObjectId, :default => proc { BSON::ObjectId.new }
-    attribute :firstname,String
-    attribute :lastname,String
-  end
-
   let(:db) do
     host = ENV.fetch('MONGO_HOST','localhost')
     connection = ::Mongo::Connection.new(
@@ -38,7 +31,7 @@ describe 'mapper integration' do
 
   let(:person_mapper) do
     Mapper::Mapper::Virtus.new(
-      Person,
+      Example::Person,
       [
         Mapper::Mapper::Attribute.new(:id,:as => :_id, :key => true),
         Mapper::Mapper::Attribute.new(:firstname),
@@ -56,7 +49,7 @@ describe 'mapper integration' do
 
   let(:mapper) do
     mapper = Session::Registry.new
-    mapper.register(Person,mongo_person_mapper)
+    mapper.register(Example::Person,mongo_person_mapper)
   end
 
   let(:session) do
@@ -64,7 +57,7 @@ describe 'mapper integration' do
   end
 
   let(:person) do
-    Person.new(:firstname => 'John', :lastname => 'Doe')
+    Example::Person.new(:firstname => 'John', :lastname => 'Doe')
   end
 
   before do
@@ -108,12 +101,12 @@ describe 'mapper integration' do
   specify 'allows to find object' do
     session.insert(person).commit
 
-    session.first(Person,:firstname => person.firstname).should equal(person)
+    session.first(Example::Person,:firstname => person.firstname).should equal(person)
   end
 
   specify 'allows to find objects' do
     session.insert(person).commit
 
-    session.all(Person,:firstname => person.firstname).to_a.should == [person]
+    session.all(Example::Person,:firstname => person.firstname).to_a.should == [person]
   end
 end

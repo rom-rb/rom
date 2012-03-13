@@ -6,6 +6,21 @@ Dir.glob('spec/**/*_shared.rb').each { |file| require File.expand_path(file) }
 require 'session'
 require 'rspec'
 
+require 'bson'
+require 'virtus'
+
+module Example
+  class Person
+    include Virtus
+    attribute :id,BSON::ObjectId, :default => proc { BSON::ObjectId.new }
+    attribute :firstname,String
+    attribute :lastname,String
+  end
+end
+
+
+
+
 # The keylike behaviour of :key_attribute is defined by mapping. 
 # The key_ prefix is only cosmetic here!
 # Simple PORO, but could also be a virtus model, but I'd like to 

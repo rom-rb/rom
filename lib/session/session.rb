@@ -325,8 +325,6 @@ module Session
     #
     def load(model,dump)
       key = @mapper.load_model_key(model,dump)
-      p dump
-      p key
       if @identity_map.key?(key)
         @identity_map.fetch(key)
       else
