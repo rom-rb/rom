@@ -98,10 +98,11 @@ describe 'mapper integration' do
     people_collection.count.should be_zero
   end
 
-  specify 'allows to find object' do
+  specify 'allows to find single object' do
     session.insert(person).commit
 
-    session.first(Example::Person,:firstname => person.firstname).should equal(person)
+    session.first(Example::Person,:firstname => person.firstname).
+      should equal(person)
   end
 
   let(:other_person) do
@@ -130,5 +131,13 @@ describe 'mapper integration' do
     people.sort_by!(&:firstname)
 
     people.should == [person,other_person].sort_by(&:firstname)
+  end
+
+  specify 'allows to noop in case updating non dirty resource' do
+    session.insert(person).commit
+
+    people_collection.should_not_receive(:update)
+
+    session.update(person).commit
   end
 end
