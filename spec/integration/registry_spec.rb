@@ -44,7 +44,7 @@ describe 'mapper registry' do
   end
 
   specify 'allows to load with model and dump' do
-    object = registry.load(Example::Person, dump)
+    object = registry.load_model(Example::Person, dump)
     object.attributes.should == person.attributes
   end
 
