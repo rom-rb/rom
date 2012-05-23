@@ -51,10 +51,6 @@ module Session
       self.for_object(object).dump_key(object)
     end
 
-    def load(model,dump)
-      self.for(model).load(dump)
-    end
-
     def load_key(model,dump)
       self.for(model).load_key(dump)
     end
