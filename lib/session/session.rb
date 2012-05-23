@@ -13,9 +13,7 @@ module Session
     def first(model,query)
       mapper = @mapper.for(model)
       key = mapper.extract_key_from_query(query)
-      if @identity_map.key?(key)
-        @identity_map.fetch(key)
-      else
+      @identity_map.fetch(key) do
         dump = mapper.first_dump(query)
         if dump
           load(model,dump)
@@ -327,9 +325,7 @@ module Session
     #
     def load(model,dump)
       key = @mapper.load_model_key(model,dump)
-      if @identity_map.key?(key)
-        @identity_map.fetch(key)
-      else
+      @identity_map.fetch(key) do
         object = @mapper.load_model(model,dump)
         track_dump(object,dump,@mapper.dump_key(object))
         object
