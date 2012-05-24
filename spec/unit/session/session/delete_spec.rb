@@ -21,7 +21,7 @@ describe Session::Session, '#delete(object)' do
 
   shared_examples_for 'a failing delete registration' do
     it 'should raise error' do
-      expect { subject }.to raise_error
+      expect { subject }.to raise_error(RuntimeError,"#{domain_object.inspect} is not tracked")
     end
   end
 
@@ -50,7 +50,8 @@ describe Session::Session, '#delete(object)' do
       it_should_behave_like 'a delete registration'
 
       it 'should unregister update' do
-        object.update?(domain_object).should be_true
+        subject
+        object.update?(domain_object).should be_false
       end
     end
   end

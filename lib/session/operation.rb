@@ -1,10 +1,18 @@
 module Session
   # Base class for an operation
   class Operation
-    attr_reader :registry,:object
+    attr_reader :object
 
-    def initialize(registry,object)
-      @registry,@object = registry,object
+    def initialize(session,object)
+      @session,@object =session,object
+    end
+
+    def registry
+      @session.instance_variable_get(:@registry)
+    end
+
+    def identity_map
+      @session.instance_variable_get(:@identity_map)
     end
 
     def run
@@ -28,8 +36,8 @@ module Session
     class Update < Operation
       attr_reader :old_dump
 
-      def initialize(registry,object,old_dump)
-        super(registry,object)
+      def initialize(session,object,old_dump)
+        super(session,object)
         @old_dump = old_dump
       end
 
@@ -38,7 +46,7 @@ module Session
       end
 
       def dump
-        @dump ||= registry.dump_object(object)
+        @dump ||= mapper.dump(object)
       end
 
       def old_key
@@ -47,6 +55,19 @@ module Session
 
       def run
         mapper.update(old_key,dump,old_dump)
+        update_identity_map
+      end
+
+      def new_key
+        mapper.dump_key(object)
+      end
+
+      def update_identity_map
+        identity_map = self.identity_map
+        identity_map.delete(old_key)
+        identity_map[new_key]=object
+
+        self
       end
     end
   end

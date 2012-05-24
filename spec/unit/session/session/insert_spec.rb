@@ -8,14 +8,6 @@ describe Session::Session, '#insert(object)' do
 
   subject { object.insert(domain_object) }
 
-  shared_examples_for 'a failing insert registration' do
-    it 'should raise error' do
-      expect do
-        subject
-      end.to raise_error
-    end
-  end
-
   context 'with new domain object' do
     context 'when was NOT registred as insert' do
       it 'it should NOT be marked as insert' do
@@ -43,6 +35,8 @@ describe Session::Session, '#insert(object)' do
       object.insert(domain_object).commit
     end
 
-    it_should_behave_like 'a failing insert registration'
+    it 'should raise error' do
+      expect { subject }.to raise_error(RuntimeError,"#{domain_object.inspect} is already tracked and cannot be marked for insert")
+    end
   end
 end

@@ -8,14 +8,10 @@ describe Session::Session, '#update(object)' do
 
   subject { object.update(domain_object) }
 
-  shared_examples_for 'a failing update registration' do
-    it 'should raise error' do
-      expect { subject }.to raise_error
-    end
-  end
-
   context 'when domain object was not tracked' do
-    it_should_behave_like 'a failing update registration'
+    it 'should raise error' do
+      expect { subject }.to raise_error(RuntimeError,"#{domain_object.inspect} is not tracked")
+    end
   end
 
   context 'when domain object was tracked' do

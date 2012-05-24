@@ -7,7 +7,7 @@ module Session
     #
     def insert(object)
       if track?(object)
-        raise "object #{object.inspect} is tracked already and cannot be marked for insert"
+        raise "#{object.inspect} is already tracked and cannot be marked for insert"
       end
 
       @inserts.add(object)
@@ -261,7 +261,8 @@ module Session
 
     def do_update(object)
       old_dump = tracked_dump(object)
-      Operation::Update.run(@registry,object,old_dump)
+
+      Operation::Update.run(self,object,old_dump)
 
       @updates.delete(object)
 
@@ -280,7 +281,7 @@ module Session
 
     def assert_track(object)
       unless track?(object)
-        raise "object #{object.inspect} is not tracked"
+        raise "#{object.inspect} is not tracked"
       end
       
       self
