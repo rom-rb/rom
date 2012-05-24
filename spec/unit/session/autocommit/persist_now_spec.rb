@@ -1,12 +1,16 @@
 require 'spec_helper'
 
-describe Session::Session,'#persist_now' do
-  let(:mapper) { DummyMapper.new }
-  let(:mapper_root)   { DummyMapperRoot.new(mapper) }
+describe Session::Autocommit,'#persist_now' do
+  let(:described_class) do
+    Class.new(Session::Session) do
+      include Session::Autocommit
+    end
+  end
 
-  let(:object) { described_class.new(mapper_root) }
-
-  let(:domain_object) { DomainObject.new }
+  let(:mapper)        { registry.resolve_model(DomainObject) }
+  let(:registry)      { DummyRegistry.new                    }
+  let(:domain_object) { DomainObject.new                     }
+  let(:object)        { described_class.new(registry)        }
 
   subject { object.persist_now(domain_object) }
 
@@ -19,7 +23,7 @@ describe Session::Session,'#persist_now' do
     context 'when domain object was new' do
       it 'should insert object' do
         subject
-        mapper.inserts.should == [domain_object]
+        mapper.inserts.should == [mapper.dump(domain_object)]
       end
     end
 
@@ -34,8 +38,8 @@ describe Session::Session,'#persist_now' do
       it 'should update object' do
         subject
         mapper.updates.should == [[
-          domain_object,
-          mapper.dump_key(domain_object),
+          mapper.load_key(dump_before),
+          mapper.dump(domain_object),
           dump_before
         ]]
       end

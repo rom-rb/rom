@@ -1,14 +1,10 @@
 require 'spec_helper'
 
 describe Session::Session, '#insert(object)' do
-  let(:mapper)       { DummyMapper.new  }
-  let(:mapper_root)  { DummyMapperRoot.new(mapper)  }
-
-  let(:object) do 
-    described_class.new(mapper_root)
-  end
-
-  let(:domain_object) { DomainObject.new }
+  let(:mapper)        { registry.resolve_model(DomainObject) }
+  let(:registry)      { DummyRegistry.new                    }
+  let(:domain_object) { DomainObject.new                     }
+  let(:object)        { described_class.new(registry)        }
 
   subject { object.insert(domain_object) }
 
@@ -44,7 +40,7 @@ describe Session::Session, '#insert(object)' do
 
   context 'with object that was tracked before' do
     before do
-      object.insert_now(domain_object)
+      object.insert(domain_object).commit
     end
 
     it_should_behave_like 'a failing insert registration'

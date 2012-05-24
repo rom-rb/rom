@@ -1,17 +1,24 @@
 require 'spec_helper'
 
-describe Session::Session,'#update_now' do
-  let(:mapper) { DummyMapper.new }
-  let(:mapper_root)   { DummyMapperRoot.new(mapper) }
-  let(:object) { described_class.new(mapper_root) }
+describe Session::Autocommit,'#update_now' do
+  let(:described_class) do
+    Class.new(Session::Session) do
+      include Session::Autocommit
+    end
+  end
 
-  let(:domain_object) { DomainObject.new }
+  let(:mapper)        { registry.resolve_model(DomainObject) }
+  let(:registry)      { DummyRegistry.new                    }
+  let(:domain_object) { DomainObject.new                     }
+  let(:object)        { described_class.new(registry)        }
+
 
   subject { object.update_now(domain_object) }
 
   context 'when session is committed' do
 
     let!(:dump_before) { mapper.dump(domain_object) }
+    let!(:key_before) { mapper.dump_key(domain_object) }
 
     before do 
       object.insert_now(domain_object)
@@ -25,8 +32,8 @@ describe Session::Session,'#update_now' do
 
     it 'should update object' do
       mapper.updates.should == [[
-        domain_object,
-        mapper.dump_key(domain_object),
+        key_before,
+        mapper.dump(domain_object),
         dump_before
       ]]
     end

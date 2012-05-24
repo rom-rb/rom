@@ -1,11 +1,16 @@
 require 'spec_helper'
 
-describe Session::Session,'#delete_now' do
-  let(:mapper) { DummyMapper.new }
-  let(:mapper_root)   { DummyMapperRoot.new(mapper) }
-  let(:object) { described_class.new(mapper_root) }
+describe Session::Autocommit,'#delete_now' do
+  let(:described_class) do
+    Class.new(Session::Session) do
+      include Session::Autocommit
+    end
+  end
 
-  let(:domain_object) { DomainObject.new }
+  let(:mapper)        { registry.resolve_model(DomainObject) }
+  let(:registry)      { DummyRegistry.new                    }
+  let(:domain_object) { DomainObject.new                     }
+  let(:object)        { described_class.new(registry)        }
 
   subject { object.delete_now(domain_object) }
 
@@ -22,7 +27,7 @@ describe Session::Session,'#delete_now' do
     end
 
     it 'should delete object' do
-      mapper.deletes.should == [[domain_object,key_before]]
+      mapper.deletes.should == [key_before]
     end
   end
 

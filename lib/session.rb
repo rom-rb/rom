@@ -6,4 +6,6 @@ require 'set'
 
 module Session; end
 
+require 'session/operation'
 require 'session/session'
+require 'session/autocommit'

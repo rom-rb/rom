@@ -1,10 +1,17 @@
+begin
+  require 'rspec'  # try for RSpec 2
+rescue LoadError
+  require 'spec'   # try for RSpec 1
+  RSpec = Spec::Runner
+end
+
 $LOAD_PATH << File.expand_path('../lib', __FILE__)
 
 Dir.glob('spec/examples/**/*.rb').each { |file| require File.expand_path(file) }
 Dir.glob('spec/**/*_shared.rb').each { |file| require File.expand_path(file) }
 
 require 'session'
-require 'rspec'
+require 'session/registry'
 
 require 'bson'
 require 'virtus'
@@ -32,62 +39,9 @@ class DomainObject
   end
 end
 
-# This could be some kind of adapter to dm-mapper
-class DummyMapperRoot
-  def initialize(mapper)
-    @mapper = mapper
-  end
-
-  def delete_object_key(object,key)
-    mapper_for_object(object).delete(object,key)
-  end
-
-  def update_object(object,old_key,old_dump)
-    mapper_for_object(object).update(object,old_key,old_dump)
-  end
-
-  def insert_object(object)
-    mapper_for_object(object).insert(object)
-  end
-
-  def dump(object)
-    mapper_for_object(object).dump(object)
-  end
-
-  def dump_key(object)
-    mapper_for_object(object).dump_key(object)
-  end
-
-  def load_object_key(object,dump)
-    mapper_for_object(object).load_key(dump)
-  end
-
-  def mapper_for_model(model)
-    raise unless model == DomainObject
-    @mapper
-  end
-
-  def mapper_for_object(object)
-    raise unless object.class == DomainObject
-    @mapper
-  end
-end
-
-
+# A test double for a mapper that records commands.
 class DummyMapper
-  # Dumps an object into intermediate representation.
-  # Two level hash, first level is collection, second the 
-  # values for the entry.
-  # So you can map to multiple collection entries.
-  # Currently im only specing AR pattern in this test, 
-  # but time will change!
-  #
   def dump(object)
-    { :domain_objects => dump_value(object) }
-  end
-
-  # Used internally
-  def dump_value(object)
     {
       :key_attribute => object.key_attribute,
       :other_attribute => object.other_attribute
@@ -99,9 +53,8 @@ class DummyMapper
   # Construction of objects can be don in a ORM-Model component
   # specific subclass (Virtus?)
   #
-  def load(model,dump)
+  def load(dump)
     raise unless model == DomainObject
-    values = dump.fetch(:domain_objects)
 
     DomainObject.new(
       values.fetch(:key_attribute),
@@ -111,21 +64,12 @@ class DummyMapper
 
   # Dumps a key intermediate representation from object
   def dump_key(object)
-    {
-      :domain_objects => {
-        :key_attribute => object.key_attribute
-      }
-    }
+    object.key_attribute
   end
 
   # Loads a key intermediate representation from dump
   def load_key(dump)
-    values = dump.fetch(:domain_objects)
-    {
-      :domain_objects => {
-        :key_attribute => values.fetch(:key_attribute)
-      }
-    }
+    dump.fetch(:key_attribute)
   end
 
   attr_reader :inserts,:deletes,:updates
@@ -134,19 +78,25 @@ class DummyMapper
     @deletes,@inserts,@updates = [],[],[]
   end
 
-  # TODO: Some way to return generated keys?
-  # @param [Symbol] collectio the collection where the record should be inserted
-  # @param [Hash] the record to be inserted
+  # Inserting an object
   #
-  def insert(object)
-    @inserts << object
+  # @param [Object] the object to be inserted
+  #
+  def insert_object(object)
+    insert_dump(dump(object))
   end
 
-  # @param [Symbol] collection the collection where the delete should happen
-  # @param [Hash] delete_key the key identifying the record to delete
+  # Inserting a dump
   #
-  def delete(object,key)
-    @deletes << [object,key]
+  # @param [Hash] the dump to be inserted
+  def insert_dump(dump)
+    @inserts << dump
+  end
+
+  # @param [Hash] key the key identifying the record to delete
+  #
+  def delete(key)
+    @deletes << key
   end
 
   # The old and the new dump can be used to generate nice updates.
@@ -170,3 +120,9 @@ class DummyMapper
   end
 end
 
+class DummyRegistry < Session::Registry
+  def initialize(*)
+    super
+    register(DomainObject,DummyMapper.new)
+  end
+end

@@ -1,80 +1,15 @@
 module Session
+  # A class to represent a database session.
   class Session
-    def all(model,query)
-      mapper = @mapper.for(model)
-      dumps = mapper.read_dumps(query)
-      Enumerator.new do |yielder|
-        dumps.each do |dump|
-          yielder.yield load(model,dump)
-        end
-      end
-    end
-
-    def first(model,query)
-      mapper = @mapper.for(model)
-      key = mapper.extract_key_from_query(query)
-      @identity_map.fetch(key) do
-        dump = mapper.first_dump(query)
-        if dump
-          load(model,dump)
-        end
-      end
-    end
-
-    # Persist domain object and commit this session
-    #
-    # @param [Object] object the object to be updated
-    #
-    def persist_now(object)
-      assert_committed
-      persist(object)
-      commit
-      
-      self
-    end
-
-    # Update domain object and commit this session
-    #
-    # @param [Object] object the object to be updated
-    #
-    def update_now(object)
-      assert_committed
-      update(object)
-      commit
-      
-      self
-    end
-
-    # Delete domain object and commit this session
-    #
-    # @param [Object] object the object to be deleted
-    #
-    def delete_now(object)
-      assert_committed
-      delete(object)
-      commit
-      
-      self
-    end
-
-    # Insert domain object and commit this session
-    #
-    # @param [Object] object the object to be inserted
-    #
-    def insert_now(object)
-      assert_committed
-      insert(object)
-      commit
-      
-      self
-    end
-
     # Register a domain object for beeing inserted # on commit of this session
     #
     # @param [Object] object the object to be inserted
     #
     def insert(object)
-      assert_not_track(object)
+      if track?(object)
+        raise "object #{object.inspect} is tracked already and cannot be marked for insert"
+      end
+
       @inserts.add(object)
 
       self
@@ -86,7 +21,8 @@ module Session
     #
     def delete(object)
       assert_track(object)
-      assert_not_update(object)
+
+      @updates.delete(object)
       @deletes.add(object)
 
       self
@@ -114,7 +50,8 @@ module Session
     #
     def update(object)
       assert_track(object)
-      assert_not_delete(object)
+
+      @deletes.delete(object)
       @updates.add(object)
 
       self
@@ -226,7 +163,7 @@ module Session
     #   false otherwise
     #
     def clean?(object)
-      clean_dump?(object,@mapper.dump(object))
+      tracked_dump(object) == @registry.dump_object(object)
     end
 
     # Do not track a domain object anymore. Any uncommitted work on this 
@@ -243,53 +180,13 @@ module Session
 
       if track?(object)
         dump = @track.delete(object)
-        @identity_map.delete(@mapper.load_object_key(object,dump))
+        @identity_map.delete(@registry.load_object_key(object,dump))
       end
 
       self
     end
 
-    # Clears this sessions. All information about track objects and uncommitted 
-    # work is lost
-    #
-    # TODO: Using hashes<Object,Boolean> as action registry is a poor 
-    # man solution. A ruby set class can do the job also.
-    #
-    def clear
-      @identity_map = {}
-      @track        = {}
-      @inserts      = Set.new
-      @updates      = Set.new
-      @deletes      = Set.new
-
-      self
-    end
-
   protected
-
-    # Returns whether a domain object is dirty from mappers point of view.
-    #
-    # @param [Object] object the domain object to be tested for dirtiness
-    # @param [Object] the dumped representation of object
-    #
-    # @return [true|false]
-    #   return true if the current dumped representation does not match the 
-    #   provided representation
-    #
-    def dirty_dump?(object,dump)
-      !clean_dump?(object,dump)
-    end
-
-    # Returns whester a domain object is NOT dirty from mappers point of view.
-    #
-    # @param [Object] object the object to be tested
-    # @param [Object] the dumped representaion of object
-    #
-    def clean_dump?(object,dump)
-      assert_track(object)
-      stored_dump = @track.fetch(object)
-      dump == stored_dump
-    end
 
     # Track an object in this session
     #
@@ -299,10 +196,10 @@ module Session
     # @param [Object] the object to be track
     #
     def track(object)
-     #@track[object]=@mapper.dump(object)
-     #key = @mapper.dump_key(object)
-     #@identity_map[key]=object
-      track_dump(object,@mapper.dump(object),@mapper.dump_key(object))
+      dump = @registry.dump_object(object)
+      key  = @registry.dump_object_key(object)
+
+      track_dump(object,dump,key)
 
       self
     end
@@ -315,26 +212,19 @@ module Session
       self
     end
 
-    # Load and create an object form dump this method checks identity map 
-    # using the identity in dump to make sure it creates no duplicate
-    #
-    # @param [Mapper] mapper of object
-    # @param [Object] dump of object
-    #
-    # @return [Object] domain object
-    #
-    def load(model,dump)
-      key = @mapper.load_model_key(model,dump)
-      @identity_map.fetch(key) do
-        object = @mapper.load_model(model,dump)
-        track_dump(object,dump,@mapper.dump_key(object))
-        object
-      end
+    def tracked_dump(object)
+      @track.fetch(object)
     end
 
     def initialize(mapper)
-      @mapper = mapper
-      clear
+      @registry = mapper
+      @identity_map = {}
+      @track        = {}
+      @inserts      = Set.new
+      @updates      = Set.new
+      @deletes      = Set.new
+
+      self
     end
 
     def do_deletes
@@ -354,7 +244,7 @@ module Session
     end
 
     def do_insert(object)
-      @mapper.insert_object(object)
+      @registry.insert_object(object)
       track(object)
       @inserts.delete(object)
 
@@ -370,13 +260,8 @@ module Session
     end
 
     def do_update(object)
-      if dirty?(object)
-        old_dump = @track.fetch(object)
-        old_key  = @mapper.load_object_key(object,old_dump) 
-        @mapper.update_object(object,old_key,old_dump)
-        untrack(object)
-        track(object)
-      end
+      old_dump = tracked_dump(object)
+      Operation::Update.run(@registry,object,old_dump)
 
       @updates.delete(object)
 
@@ -384,13 +269,9 @@ module Session
     end
 
     def do_delete(object)
-      if dirty?(object)
-        raise 'cannot delete dirty object'
-      end
+      key = @registry.dump_object_key(object)
 
-      key = @mapper.dump_key(object)
-
-      @mapper.delete_object_key(object,key)
+      @registry.delete_object_key(object,key)
 
       untrack(object)
 
@@ -405,37 +286,5 @@ module Session
       self
     end
 
-    def assert_committed
-      unless committed?
-        raise 'session is not comitted'
-      end
-
-      self
-    end
-
-
-    def assert_not_delete(object)
-      if delete?(object)
-        raise "object #{object.inspect} is marked as to be deleted"
-      end
-
-      self
-    end
-
-    def assert_not_update(object)
-      if update?(object)
-        raise "object #{object.inspect} is marked as to be updated"
-      end
-
-      self
-    end
-
-    def assert_not_track(object)
-      if track?(object)
-        raise "object #{object.inspect} is tracked"
-      end
-
-      self
-    end
   end
 end

@@ -9,6 +9,10 @@ require 'mapper/mongo'
 require 'logger'
 
 describe 'mapper integration' do
+  before do
+    pending unless ENV['TEST_MONGO'] or ENV['TRAVIS_CI']
+  end
+
   let(:db) do
     host = ENV.fetch('MONGO_HOST','localhost')
     connection = ::Mongo::Connection.new(

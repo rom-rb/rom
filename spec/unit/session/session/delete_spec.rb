@@ -1,18 +1,14 @@
 require 'spec_helper'
 
 describe Session::Session, '#delete(object)' do
-  let(:mapper)  { DummyMapper.new  }
-  let(:mapper_root)    { DummyMapperRoot.new(mapper) }
-
-  let(:object) do 
-    described_class.new(mapper_root)
-  end
-
-  let(:domain_object) { DomainObject.new }
+  let(:mapper)        { registry.resolve_model(DomainObject) }
+  let(:registry)      { DummyRegistry.new                    }
+  let(:domain_object) { DomainObject.new                     }
+  let(:object)        { described_class.new(registry)        }
 
   subject { object.delete(domain_object) }
 
-  shared_examples_for 'an delete registration' do
+  shared_examples_for 'a delete registration' do
     it 'should mark domain object as to be deleted' do
       subject
       object.delete?(domain_object).should be_true
@@ -35,7 +31,7 @@ describe Session::Session, '#delete(object)' do
 
   context 'when domain object was tracked' do
     before do
-      object.insert_now(domain_object)
+      object.insert(domain_object).commit
     end
 
     context 'when was NOT marked as delete' do
@@ -43,14 +39,19 @@ describe Session::Session, '#delete(object)' do
         object.delete?(domain_object).should be_false
       end
 
-      it_should_behave_like 'an delete registration'
+      it_should_behave_like 'a delete registration'
     end
 
     context 'when was marked as update' do
       before do
         object.update(domain_object)
       end
-      it_should_behave_like 'a failing delete registration'
+
+      it_should_behave_like 'a delete registration'
+
+      it 'should unregister update' do
+        object.update?(domain_object).should be_true
+      end
     end
   end
 end

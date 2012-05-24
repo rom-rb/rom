@@ -1,14 +1,10 @@
 require 'spec_helper'
 
 describe Session::Session,'#commit' do
-  let(:mapper)  { DummyMapper.new  }
-  let(:mapper_root)    { DummyMapperRoot.new(mapper)  }
-
-  let(:object) do 
-    described_class.new(mapper_root)
-  end
-
-  let(:domain_object) { DomainObject.new } 
+  let(:mapper)        { registry.resolve_model(DomainObject) }
+  let(:registry)      { DummyRegistry.new                    }
+  let(:domain_object) { DomainObject.new                     }
+  let(:object)        { described_class.new(registry)        }
 
   subject { object.commit }
 
@@ -54,8 +50,8 @@ describe Session::Session,'#commit' do
 
         it 'should update with the correct key' do
           mapper.updates.should == [[
-            domain_object,
             key_before,
+            mapper.dump(domain_object),
             dump_before
           ]]
         end
@@ -63,7 +59,7 @@ describe Session::Session,'#commit' do
 
       context 'and key did not change' do
         before do
-          object.insert_now(domain_object)
+          object.insert(domain_object).commit
           domain_object.other_attribute = :mutated_value
           object.update(domain_object)
         end
@@ -82,7 +78,7 @@ describe Session::Session,'#commit' do
 
     context 'when domain object was NOT modified' do
       before do
-        object.insert_now(domain_object)
+        object.insert(domain_object).commit
         object.update(domain_object)
       end
      
@@ -104,7 +100,7 @@ describe Session::Session,'#commit' do
 
   context 'when a domain object was marked as delete' do
     before do
-      object.insert_now(domain_object)
+      object.insert(domain_object).commit
       object.delete(domain_object)
     end
 
@@ -114,12 +110,13 @@ describe Session::Session,'#commit' do
 
     context 'and commit was called' do
       let!(:key_before) { mapper.dump_key(domain_object) }
+
       before { subject }
 
       it_should_behave_like 'a committed session'
 
       it 'should forward the delete to mapper' do
-        mapper.deletes.should == [[domain_object,key_before]]
+        mapper.deletes.should == [key_before]
       end
     end
   end
@@ -139,7 +136,7 @@ describe Session::Session,'#commit' do
       it_should_behave_like 'a committed session'
 
       it 'should forward the insert to mapper' do
-        mapper.inserts.should == [domain_object]
+        mapper.inserts.should == [mapper.dump(domain_object)]
       end
     end
   end

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Session::Session,'#untrack' do
   let(:mapper)       { DummyMapper.new  }
-  let(:mapper_root)  { DummyMapperRoot.new(mapper)  }
+  let(:mapper_root)  { REGISTRY.new(mapper)  }
 
   let(:object) do 
     described_class.new(mapper_root)
