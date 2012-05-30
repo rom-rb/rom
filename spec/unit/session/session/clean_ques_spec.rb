@@ -10,7 +10,7 @@ describe Session::Session,'#clean?(object)' do
 
   context 'when domain object is tracked' do
     before do 
-      object.insert(domain_object).commit
+      object.insert(domain_object)
     end
 
     context 'and domain object is NOT clean' do

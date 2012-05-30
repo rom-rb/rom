@@ -10,20 +10,8 @@ describe Session::Session,'#untrack(object)' do
 
   subject { object.untrack(domain_object) }
 
-  shared_examples_for 'a complete untrack' do
-    it 'should remove inserts' do
-      object.insert?(domain_object).should be_false
-    end
-
-    it 'should remove updates' do
-      object.update?(domain_object).should be_false
-    end
-
-    it 'should remove deletes' do
-      object.delete?(domain_object).should be_false
-    end
-
-    it 'should remove track mark' do
+  shared_examples_for 'an untrack operation' do
+    it 'should remove state' do
       object.track?(domain_object).should be_false
     end
 
@@ -34,11 +22,11 @@ describe Session::Session,'#untrack(object)' do
 
   context 'when domain object is tracked' do
     before do 
-      object.insert(domain_object).commit
+      object.insert(domain_object)
       subject
     end
 
-    it_should_behave_like 'a complete untrack'
+    it_should_behave_like 'an untrack operation'
   end
 
   context 'when domain object is NOT tracked' do
@@ -46,35 +34,6 @@ describe Session::Session,'#untrack(object)' do
       subject
     end
 
-    it_should_behave_like 'a complete untrack'
-  end
-
-  context 'when domain object is marked as insert' do
-    before do
-      object.insert(domain_object)
-      subject
-    end
-
-    it_should_behave_like 'a complete untrack'
-  end
-
-  context 'when domain object is marked as update' do
-    before do
-      object.insert(domain_object).commit
-      object.update(domain_object)
-      subject
-    end
-
-    it_should_behave_like 'a complete untrack'
-  end
-
-  context 'when domain object is marked as delete' do
-    before do
-      object.insert(domain_object).commit
-      object.delete(domain_object)
-      subject
-    end
-
-    it_should_behave_like 'a complete untrack'
+    it_should_behave_like 'an untrack operation'
   end
 end

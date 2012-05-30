@@ -4,6 +4,9 @@ end
 
 require 'set'
 
-require 'session/operation'
+# Namespace module for session library
+module Session
+end
+
 require 'session/session'
-require 'session/autocommit'
+require 'session/object_state'

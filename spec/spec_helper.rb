@@ -13,21 +13,6 @@ Dir.glob('spec/**/*_shared.rb').each { |file| require File.expand_path(file) }
 require 'session'
 require 'session/registry'
 
-require 'bson'
-require 'virtus'
-
-module Example
-  class Person
-    include Virtus
-    attribute :id,BSON::ObjectId, :default => proc { BSON::ObjectId.new }
-    attribute :firstname,String
-    attribute :lastname,String
-  end
-end
-
-
-
-
 # The keylike behaviour of :key_attribute is defined by mapping. 
 # The key_ prefix is only cosmetic here!
 # Simple PORO, but could also be a virtus model, but I'd like to 
@@ -109,14 +94,6 @@ class DummyMapper
   #
   def update(key,object,old_dump)
     @updates << [key,object,old_dump]
-  end
-
-  # Returns arrays of intermediate representations of matched models.
-  # Adapters do not have to deal with creating model instances etc.
-  #
-  # @param [Object] query the query currently not specified...
-  def read(query)
-    query.call
   end
 end
 

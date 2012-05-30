@@ -8,37 +8,23 @@ describe Session::Session, '#persist(object)' do
 
   subject { object.persist(domain_object) }
 
-  context 'with new domain object' do
-    it_should_behave_like 'an insert registration'
-   
-    context 'when was regstistred as insert' do
-      before do
-        object.insert(domain_object)
-      end
-   
-      it_should_behave_like 'an insert registration'
+  context 'with untracked domain object' do
+    # this tests implemenation but feels so nice
+    it 'should behave like #insert(object)' do
+      object.should_receive(:insert).with(domain_object)
+      subject
     end
   end
 
-  context 'with persisted domain object' do
-    context 'with object that was tracked before' do
-      before do
-        object.insert(domain_object).commit
-      end
-   
-      it_should_behave_like 'an update registration'
+  context 'with tracked domain object' do
+    before do
+      object.insert(domain_object)
     end
 
-    context 'that was registred for delete' do
-      before do
-        object.insert(domain_object).commit
-        object.delete(domain_object)
-      end
-
-      it 'should unregister delete' do
-        subject
-        object.delete?(domain_object).should be_false
-      end
+    # this tests implemenation but feels so nice
+    it 'should behave like #update(object)' do
+      object.should_receive(:update).with(domain_object)
+      subject
     end
   end
 end
