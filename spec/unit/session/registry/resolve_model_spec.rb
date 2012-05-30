@@ -19,7 +19,7 @@ describe Session::Registry,'#resolve_model' do
 
   context 'when mapper was NOT registred' do
     it 'should raise error' do
-      expect { subject }.to raise_error
+      expect { subject }.to raise_error(ArgumentError,"mapper for #{model.inspect} is not registred")
     end
   end
 end

@@ -34,7 +34,7 @@ describe Session::Session,'#insert' do
     end
 
     it 'should raise error' do
-      expect { subject }.to raise_error(RuntimeError,"#{domain_object.inspect} is already tracked and cannot be inserted")
+      expect { subject }.to raise_error(Session::StateError,"#{domain_object.inspect} is already tracked and cannot be inserted")
     end
   end
 end

@@ -33,7 +33,7 @@ describe Session::Session,'#delete' do
 
   context 'when domain object is NOT tracked' do
     it 'should raise error' do
-      expect { subject }.to raise_error(RuntimeError,"#{domain_object.inspect} is not tracked")
+      expect { subject }.to raise_error(Session::StateError,"#{domain_object.inspect} is not tracked")
     end
   end
 end

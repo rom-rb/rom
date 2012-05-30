@@ -24,7 +24,7 @@ module Session
     #
     def resolve_model(model)
       @data.fetch(model) do
-        raise ArgumentError,"model #{model.inspect} is not registred"
+        raise ArgumentError,"mapper for #{model.inspect} is not registred"
       end
     end
 

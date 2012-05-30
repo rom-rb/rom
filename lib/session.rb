@@ -6,6 +6,7 @@ require 'set'
 
 # Namespace module for session library
 module Session
+  class StateError < RuntimeError; end
 end
 
 require 'session/session'

@@ -9,7 +9,7 @@ module Session
     #
     def insert(object)
       if track?(object)
-        raise "#{object.inspect} is already tracked and cannot be inserted"
+        raise StateError,"#{object.inspect} is already tracked and cannot be inserted"
       end
 
       state = new_state(ObjectState::New,object)
@@ -127,7 +127,7 @@ module Session
 
     def state(object)
       @track.fetch(object) do
-        raise "#{object.inspect} is not tracked"
+        raise StateError,"#{object.inspect} is not tracked"
       end
     end
 
