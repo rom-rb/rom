@@ -221,7 +221,7 @@ module Session
       # @api private
       #
       def update_identity_map(identity_map)
-        identity_map[key]=@object
+        identity_map[@remote_key]=@object
 
         self
       end
@@ -259,8 +259,7 @@ module Session
       # @api private
       #
       def store_remote
-        @remote_key = @mapper.dump_key(@object)
-        @remote_dump = @mapper.dump(@object)
+        @remote_key,@remote_dump = key,dump
 
         self
       end
