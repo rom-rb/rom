@@ -7,9 +7,7 @@ module Session
     # @param [Object] object the object to be inserted
     #
     def insert(object)
-      # FIXME: not using #track?(object) here fixes reek SimulatedPolymorphism
-      # Needs to be decided.
-      if @track.key?(object)
+      if track?(object)
         raise "#{object.inspect} is already tracked and cannot be inserted"
       end
 
@@ -26,10 +24,7 @@ module Session
     # @param [Object] object the object to be deleted
     #
     def delete(object)
-      state = state(object)
-      state.delete
-
-      untrack_state(state)
+      track_state(state(object).delete)
 
       self
     end
@@ -57,11 +52,10 @@ module Session
     # @param [Object] object the object to be persisted
     #
     def persist(object)
-      if track?(object)
-        update(object)
-      else
-        insert(object)
+      state = @track.fetch(object) do
+        new_state(ObjectState::New,object)
       end
+      track_state(state.persist)
 
       self
     end
@@ -104,19 +98,12 @@ module Session
       state(object).clean?
     end
 
-    # Do not track a domain object anymore. Any uncommitted work on this 
-    # object is lost.
-    #
-    # Does nothing if this object was not tracked before
+    # Do not track a domain object anymore. (Nice for batch operations).
     #
     # @param [Object] object the object to be untracked
     #
     def untrack(object)
-      state = @track[object]
-
-      if state
-        untrack_state(state)
-      end
+      track_state(state(object).abandon)
 
       self
     end
@@ -132,14 +119,8 @@ module Session
     end
 
     def track_state(state)
-      object = state.object
-      @track[object]=state
-      @identity_map[state.remote_key]=object
-    end
-
-    def untrack_state(state)
-      @track.delete(state.object)
-      @identity_map.delete(state.remote_key)
+      state.update_track(@track)
+      state.update_identity_map(@identity_map)
     end
 
     def state(object)

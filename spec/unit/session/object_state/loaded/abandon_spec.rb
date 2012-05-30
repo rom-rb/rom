@@ -1,16 +1,11 @@
 require 'spec_helper'
 
-describe Session::ObjectState::Loaded,'#delete' do
+describe Session::ObjectState::Loaded,'#abandon' do
   let(:object)        { described_class.new(mapper,domain_object) }
   let(:mapper)        { DummyMapper.new                           }
   let(:domain_object) { DomainObject.new(:foo,:bar) }
 
-  subject { object.delete }
-
-  it 'should delete object' do
-    subject
-    mapper.deletes.should == [object.remote_key]
-  end
+  subject { object.abandon }
 
   it 'should return ObjectState::Abandoned' do
     state = subject

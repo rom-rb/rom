@@ -7,7 +7,7 @@ describe Session::ObjectState::Loaded,'#update' do
 
   subject { object.update }
 
-  shared_examples_for 'an update' do
+  shared_examples_for 'object state loaded update' do
     it 'should return self' do
       should == object
     end
@@ -46,7 +46,7 @@ describe Session::ObjectState::Loaded,'#update' do
       let(:expected_update_dump) { { :key_attribute => :modified, :other_attribute => :bar } }
       let(:expected_old_dump)    { { :key_attribute => :foo,      :other_attribute => :bar } }
 
-      it_should_behave_like 'an update'
+      it_should_behave_like 'object state loaded update'
     end
 
     context 'and key was NOT updated' do
@@ -58,7 +58,7 @@ describe Session::ObjectState::Loaded,'#update' do
       let(:expected_update_dump) { { :key_attribute => :foo,      :other_attribute => :modified } }
       let(:expected_old_dump)    { { :key_attribute => :foo,      :other_attribute => :bar      } }
 
-      it_should_behave_like 'an update'
+      it_should_behave_like 'object state loaded update'
     end
   end
 end

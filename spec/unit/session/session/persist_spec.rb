@@ -9,10 +9,9 @@ describe Session::Session, '#persist(object)' do
   subject { object.persist(domain_object) }
 
   context 'with untracked domain object' do
-    # this tests implemenation but feels so nice
     it 'should behave like #insert(object)' do
-      object.should_receive(:insert).with(domain_object)
       subject
+      mapper.inserts.should == [mapper.dump(domain_object)]
     end
   end
 
@@ -23,8 +22,8 @@ describe Session::Session, '#persist(object)' do
 
     # this tests implemenation but feels so nice
     it 'should behave like #update(object)' do
-      object.should_receive(:update).with(domain_object)
       subject
+      mapper.updates.should == []
     end
   end
 end
