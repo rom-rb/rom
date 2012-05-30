@@ -1,7 +1,6 @@
 module Session
   # An objects persistance state
   class ObjectState
-    # Mabe use Virtus::ValueObject to get equalizer on @object and @mapper for free?
     attr_reader :object
 
     # Return dumped representation of object. The dump is not cached.

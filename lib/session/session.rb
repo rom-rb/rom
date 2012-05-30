@@ -2,6 +2,7 @@
 module Session
   # Represent a simple non UoW database session
   class Session
+
     # Insert domain object in database.
     #
     # @param [Object] object the object to be inserted
@@ -14,7 +15,6 @@ module Session
       state = new_state(ObjectState::New,object)
       state = state.insert
       track_state(state)
-
 
       self
     end
@@ -121,6 +121,8 @@ module Session
     def track_state(state)
       state.update_track(@track)
       state.update_identity_map(@identity_map)
+
+      self
     end
 
     def state(object)
