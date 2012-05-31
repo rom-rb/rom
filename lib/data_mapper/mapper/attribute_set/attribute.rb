@@ -25,6 +25,11 @@ module DataMapper
         end
 
         # @api public
+        def header
+          [ @field, @type ]
+        end
+
+        # @api public
         def key?
           @key
         end

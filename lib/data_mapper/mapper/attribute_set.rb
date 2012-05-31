@@ -5,29 +5,35 @@ module DataMapper
     #
     # @api private
     class AttributeSet
+      include Enumerable
 
       # @api private
       def initialize
         @attributes = {}
       end
 
-      # @api private
-      def header
-        @header ||= @attributes.values.map do |attribute|
-          [ attribute.field, attribute.type ]
-        end
+      # @api public
+      def each
+        return to_enum unless block_given?
+        @attributes.each_value { |attribute| yield attribute }
+        self
       end
 
       # @api private
-      def map(tuple)
-        @attributes.values.each_with_object({}) do |attribute, attributes|
+      def header
+        @header ||= map(&:header)
+      end
+
+      # @api private
+      def load(tuple)
+        each_with_object({}) do |attribute, attributes|
           attributes[attribute.name] = tuple[attribute.field]
         end
       end
 
       # @api private
       def add(*args)
-        @attributes[args[0]] = Attribute.new(args[0], args[1]||{})
+        @attributes[args.first] = Attribute.new(*args)
         self
       end
 
@@ -38,7 +44,7 @@ module DataMapper
 
       # @api private
       def key
-        @attributes.map(&:key?)
+        map(&:key?)
       end
 
     end # class AttributeSet

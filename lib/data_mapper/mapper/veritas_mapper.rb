@@ -33,7 +33,7 @@ module DataMapper
 
       # @api private
       def load(tuple)
-        @model.new(@attributes.map(tuple))
+        @model.new(@attributes.load(tuple))
       end
 
     end # class VeritasMapper
