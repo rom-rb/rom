@@ -10,53 +10,53 @@ describe 'PORO with an embedded value' do
     insert_address 1, 1, 'Street 1/2', 'Chicago', '12345'
     insert_address 2, 2, 'Street 2/4', 'Boston',  '67890'
 
+    class Address
+      attr_reader :street, :city, :zipcode
+
+      def initialize(*attributes)
+        @street, @city, @zipcode = attributes
+      end
+
+      class Mapper < DataMapper::Mapper::VeritasMapper
+        map :id,      :type => Integer, :key => true
+        map :user_id, :type => Integer
+        map :street,  :type => String
+        map :city,    :type => String
+        map :zipcode, :type => String
+
+        model         Address
+        relation_name :addresses
+      end
+    end
+
+    class User
+      attr_reader :id, :name, :age, :address
+
+      def initialize(attributes)
+        @id, @name, @age = attributes.values_at(:id, :name, :age)
+        @address = Address.new(*attributes.values_at(:street, :city, :zipcode))
+      end
+
+      class Mapper < DataMapper::Mapper::VeritasMapper
+        map :id,   :type => Integer, :key => true
+        map :name, :type => String,  :to  => :username
+        map :age,  :type => Integer
+
+        # address attributes
+        map :street,  :type => String
+        map :city,    :type => String
+        map :zipcode, :type => String
+
+        model         User
+        relation_name :users
+      end
+    end
+
     DataMapper.relation_registry << Veritas::Relation::Gateway.new(
       DATABASE_ADAPTER, Address::Mapper.base_relation)
 
     DataMapper.relation_registry << Veritas::Relation::Gateway.new(
       DATABASE_ADAPTER, User::Mapper.base_relation)
-  end
-
-  class Address
-    attr_reader :street, :city, :zipcode
-
-    def initialize(*attributes)
-      @street, @city, @zipcode = attributes
-    end
-
-    class Mapper < DataMapper::Mapper::VeritasMapper
-      map :id,      :type => Integer, :key => true
-      map :user_id, :type => Integer
-      map :street,  :type => String
-      map :city,    :type => String
-      map :zipcode, :type => String
-
-      model         Address
-      relation_name :addresses
-    end
-  end
-
-  class User
-    attr_reader :id, :name, :age, :address
-
-    def initialize(attributes)
-      @id, @name, @age = attributes.values_at(:id, :name, :age)
-      @address = Address.new(*attributes.values_at(:street, :city, :zipcode))
-    end
-
-    class Mapper < DataMapper::Mapper::VeritasMapper
-      map :id,   :type => Integer, :key => true
-      map :name, :type => String,  :to  => :username
-      map :age,  :type => Integer
-
-      # address attributes
-      map :street,  :type => String
-      map :city,    :type => String
-      map :zipcode, :type => String
-
-      model         User
-      relation_name :users
-    end
   end
 
   let(:operation) do

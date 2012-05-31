@@ -91,3 +91,10 @@ def insert_address(id, user_id, street, city, zipcode, connection = nil)
 
   connection.close
 end
+
+RSpec.configure do |config|
+  config.before(:all) do
+    Object.send(:remove_const, :User)    if defined?(User)
+    Object.send(:remove_const, :Address) if defined?(Address)
+  end
+end
