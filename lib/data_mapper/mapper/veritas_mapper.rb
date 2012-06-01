@@ -36,6 +36,13 @@ module DataMapper
         @model.new(@attributes.load(tuple))
       end
 
+      # @api public
+      def dump(object)
+        @attributes.each_with_object({}) do |attribute, attributes|
+          attributes[attribute.field] = object.send(attribute.name)
+        end
+      end
+
     end # class VeritasMapper
   end # class Mapper
 end # module DataMapper

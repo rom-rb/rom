@@ -46,5 +46,12 @@ module DataMapper
       raise NotImplementedError, "#{self.class}#load is not implemented"
     end
 
+    # Dump a domain object
+    #
+    # @api private
+    def dump(object)
+      raise NotImplementedError, "#{self.class}#dump is not implemented"
+    end
+
   end # class Mapper
 end # module DataMapper
