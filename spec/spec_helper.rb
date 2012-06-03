@@ -33,17 +33,29 @@ class DummyMapper
     }
   end
 
+  def dumps=(dumps)
+    @dumps = dumps
+  end
+
+  def dumps
+    @dumps || raise('no stored dumps')
+  end
+
+  def new_query(query,&block)
+    dumps.map do |dump|
+      block.call(dump)
+    end
+  end
+
   # Loads an object from intermediate represenation.
   # Same format as dump but operation is reversed.
   # Construction of objects can be don in a ORM-Model component
   # specific subclass (Virtus?)
   #
   def load(dump)
-    raise unless model == DomainObject
-
     DomainObject.new(
-      values.fetch(:key_attribute),
-      values.fetch(:other_attribute)
+      dump.fetch(:key_attribute),
+      dump.fetch(:other_attribute)
     )
   end
 

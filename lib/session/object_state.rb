@@ -240,6 +240,23 @@ module Session
         self
       end
 
+      # Build object state from mapper and dump
+      #
+      # @param [Mapper] mapper
+      #   the mapper used to build domain object
+      #
+      # @param [Object] object
+      #
+      # @return [ObjectState::Loader]
+      #
+      # @api private
+      #
+      def self.build(mapper,dump)
+        object = mapper.load(dump)
+        # TODO: pass dump to mapper to avoid dump => load => dump (#store_dump)
+        new(mapper,object)
+      end
+
     protected
 
       # Return abandoned object state derived from this instance

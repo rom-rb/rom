@@ -2,6 +2,32 @@
 module Session
   # Represent a simple non UoW database session
   class Session
+    # Read objects from database
+    #
+    # This method returns a mapper defined container that might be 
+    # chainable. 
+    # The container can use the passed block to load objects guarded by identity map.
+    #
+    # @example
+    #   people = session.all(Person,:lastname => 'Doe')
+    #
+    # @param [Model] model
+    #   the model to be queried
+    #
+    # @param [Object] query
+    #   the query
+    #
+    # @return [Object] 
+    #   the loaded objects wrapped by mapper defined query
+    #
+    # @api public
+    #
+    def read(model,query)
+      mapper = @registry.resolve_model(model)
+      mapper.new_query(query) do |dump|
+        load(mapper,dump)
+      end
+    end
 
     # Delete a domain object from database an untrack
     #
@@ -164,6 +190,28 @@ module Session
       @track        = {}
 
       self
+    end
+
+    # Load a domain object from dump and track
+    #
+    # @param [Mapper] mapper
+    #   the mapper to load domain object with
+    #
+    # @param [Object] dump
+    #   the dump representing domain object
+    #
+    # @return [Object]
+    #   the loaded domain object
+    #
+    # @api private
+    #
+    def load(mapper,dump)
+      key = mapper.load_key(dump)
+      @identity_map.fetch(key) do
+        state = ObjectState::Loaded.build(mapper,dump)
+        track_state(state)
+        state.object
+      end
     end
 
     # Track object state in this session
