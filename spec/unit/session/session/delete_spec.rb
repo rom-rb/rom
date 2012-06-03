@@ -14,7 +14,7 @@ describe Session::Session,'#delete' do
 
   context 'when domain object is tracked' do
     before do
-      object.insert(domain_object)
+      object.persist(domain_object)
       subject
     end
 

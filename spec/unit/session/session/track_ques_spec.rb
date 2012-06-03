@@ -10,7 +10,7 @@ describe Session::Session,'#track?(object)' do
 
   context 'when domain object is tracked' do
     before do 
-      object.insert(domain_object)
+      object.persist(domain_object)
     end
 
     it { should be_true }

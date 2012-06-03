@@ -17,7 +17,7 @@ describe Session::Session, '#persist(object)' do
 
   context 'with tracked domain object' do
     before do
-      object.insert(domain_object)
+      object.persist(domain_object)
     end
 
     # this tests implemenation but feels so nice

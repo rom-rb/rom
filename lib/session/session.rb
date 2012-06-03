@@ -3,31 +3,6 @@ module Session
   # Represent a simple non UoW database session
   class Session
 
-    # Insert domain object in database
-    #
-    # @example
-    #   person = Person.new('John','Doe')
-    #   session.insert(person)
-    #
-    # @param [Object] object 
-    #   the domain object to be inserted
-    #
-    # @return [self]
-    #
-    # @api public
-    #
-    def insert(object)
-      if track?(object)
-        raise StateError,"#{object.inspect} is already tracked and cannot be inserted"
-      end
-
-      state = new_state(ObjectState::New,object)
-      state = state.insert
-      track_state(state)
-
-      self
-    end
-
     # Delete a domain object from database an untrack
     #
     # @example
@@ -95,7 +70,7 @@ module Session
     #
     def persist(object)
       state = @track.fetch(object) do
-        new_state(ObjectState::New,object)
+        new_state(object)
       end
       track_state(state.persist)
 
@@ -222,18 +197,17 @@ module Session
       end
     end
 
-    # Initialize new object state for domain object
+    # Initialize a ObjectState::New for domain object
     #
-    # @param [ObjectState] the object state class to be instanciated
     # @param [Object] the domain object to be wrapped
     #
-    # @return [ObjectState]
+    # @return [ObjectState::New]
     #
     # @api private
     #
-    def new_state(state,object)
+    def new_state(object)
       mapper = @registry.resolve_object(object)
-      state.new(mapper,object)
+      ObjectState::New.new(mapper,object)
     end
   end
 end

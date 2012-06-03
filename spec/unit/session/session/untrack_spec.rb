@@ -11,7 +11,7 @@ describe Session::Session,'#untrack(object)' do
   subject { object.untrack(domain_object) }
 
   before do 
-    object.insert(domain_object)
+    object.persist(domain_object)
     subject
   end
 

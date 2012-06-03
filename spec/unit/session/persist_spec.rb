@@ -20,7 +20,7 @@ describe Session::Session,'#persist' do
       let!(:dump_before) { mapper.dump(domain_object) }
 
       before do
-        object.insert(domain_object)
+        object.persist(domain_object)
         domain_object.other_attribute = :modified
       end
 
