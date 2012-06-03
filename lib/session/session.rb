@@ -9,7 +9,7 @@ module Session
     # The container can use the passed block to load objects guarded by identity map.
     #
     # @example
-    #   people = session.all(Person,:lastname => 'Doe')
+    #   people = session.read(Person,:lastname => 'Doe')
     #
     # @param [Model] model
     #   the model to be queried
