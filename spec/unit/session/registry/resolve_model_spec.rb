@@ -13,7 +13,7 @@ describe Session::Registry,'#resolve_model' do
     end
 
     it 'should return mapper' do
-      should == mapper
+      should be(mapper)
     end
   end
 

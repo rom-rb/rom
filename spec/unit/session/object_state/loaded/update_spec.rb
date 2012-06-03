@@ -9,7 +9,7 @@ describe Session::ObjectState::Loaded,'#update' do
 
   shared_examples_for 'object state loaded update' do
     it 'should return self' do
-      should == object
+      should be(object)
     end
 
     it 'should store remote key' do
@@ -25,7 +25,7 @@ describe Session::ObjectState::Loaded,'#update' do
 
   context 'when domain object is unchanged' do
     it 'should return self' do
-      should == object
+      should be(object)
     end
 
     it 'should not do update on mapper' do

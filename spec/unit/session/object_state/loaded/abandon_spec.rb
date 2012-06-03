@@ -10,6 +10,6 @@ describe Session::ObjectState::Loaded,'#abandon' do
   it 'should return ObjectState::Abandoned' do
     state = subject
     state.should be_kind_of(Session::ObjectState::Abandoned)
-    state.object.should == domain_object
+    state.object.should be(domain_object)
   end
 end

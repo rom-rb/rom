@@ -53,7 +53,7 @@ describe Session::Session,'#update' do
         end
 
         it 'should track the domain object under new key' do
-          identity_map.fetch(mapper.dump_key(domain_object)).should == domain_object
+          identity_map.fetch(mapper.dump_key(domain_object)).should be(domain_object)
         end
 
         it 'should NOT track the domain object under old key' do

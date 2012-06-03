@@ -8,6 +8,6 @@ describe Session::ObjectState::Abandoned,'#object' do
   subject { object.object }
 
   it 'should return domain object' do
-    should == domain_object
+    should be(domain_object)
   end
 end

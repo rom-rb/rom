@@ -17,8 +17,8 @@ describe Session::ObjectState::New,'#insert' do
   it 'should return loaded state' do
     state = subject
     state.should be_kind_of(Session::ObjectState::Loaded)
-    state.object.should == domain_object
-    state.instance_variable_get(:@mapper).should == mapper
+    state.object.should be(domain_object)
+    state.instance_variable_get(:@mapper).should be(mapper)
   end
 end
 

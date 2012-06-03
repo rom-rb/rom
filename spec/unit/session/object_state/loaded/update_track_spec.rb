@@ -15,6 +15,6 @@ describe Session::ObjectState::Loaded,'#update_track' do
   end
 
   it 'should return self' do
-    subject.should == object
+    should be(object)
   end
 end
