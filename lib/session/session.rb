@@ -81,6 +81,8 @@ module Session
       self
     end
 
+    alias :<< :persist
+
     # Returns whether an domain object is tracked in this session
     #
     # @example 
