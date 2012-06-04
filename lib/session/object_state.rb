@@ -168,8 +168,8 @@ module Session
       #
       # @api private
       #
-      def clean?(dump=self.dump)
-        @remote_dump == dump
+      def dirty?(dump=self.dump)
+        @remote_dump != dump
       end
 
       # Invoke transition to forgotten object state
@@ -205,7 +205,7 @@ module Session
       def persist
         dump = self.dump
 
-        unless clean?(dump)
+        if dirty?(dump)
           @mapper.update(@remote_key,dump,@remote_dump)
           store_remote
         end

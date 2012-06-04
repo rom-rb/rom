@@ -1,29 +1,29 @@
 require 'spec_helper'
 
-describe Session::ObjectState::Loaded,'#clean?' do
+describe Session::ObjectState::Loaded,'#dirty?' do
   let!(:object)        { described_class.new(mapper,domain_object) }
   let(:mapper)        { DummyMapper.new                           }
   let!(:domain_object) { DomainObject.new(:foo,:bar) }
 
   context 'with dump provided' do
-    subject { object.clean?(dump) }
+    subject { object.dirty?(dump) }
 
     context 'when dump matches objects dump' do
       let(:dump) { { :key_attribute => :foo,:other_attribute => :bar } }
-      it { should be_true }
+      it { should be_false }
     end
 
     context 'when dump does NOT match object dump' do
       let(:dump) { { :foo => :bar } }
-      it { should be_false }
+      it { should be_true }
     end
   end
 
   context 'without dump provided' do
-    subject { object.clean? }
+    subject { object.dirty? }
 
     context 'and domain object is unchanged' do
-      it { should be_true }
+      it { should be_false }
     end
 
     context 'and domain object is changed' do
@@ -31,7 +31,7 @@ describe Session::ObjectState::Loaded,'#clean?' do
         domain_object.other_attribute = :modification
       end
 
-      it { should be_false }
+      it { should be_true }
     end
   end
 end

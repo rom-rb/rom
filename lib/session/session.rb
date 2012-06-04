@@ -144,7 +144,7 @@ module Session
     # @api public
     #
     def dirty?(object)
-      !state(object).clean?
+      state(object).dirty?
     end
 
     # Do not track a domain object anymore. 
