@@ -35,6 +35,20 @@ module Session
       @mapper.dump_key(@object)
     end
 
+    # Empty identity map
+    #
+    # Noop default implementation for all states.
+    #
+    # @param [Object] identitymap
+    #
+    # @return [self]
+    #
+    # @api private
+    #
+    def empty_identity_map(identity_map)
+      self
+    end
+
   private
 
     # Initialize object state instance
@@ -75,13 +89,11 @@ module Session
       #
       # @api private
       #
-      def insert
+      def persist
         @mapper.insert_dump(dump)
 
         transition(Loaded)
       end
-
-      alias :persist :insert
     end
 
     # An ObjectState that represents a forgotten domain object. It is no longer state tracked.
@@ -191,7 +203,7 @@ module Session
       #
       # @api private
       #
-      def update
+      def persist
         dump = self.dump
 
         unless clean?(dump)
@@ -201,8 +213,6 @@ module Session
 
         self
       end
-
-      alias :persist :update
 
       # Insert domain object into identity map
       #
@@ -215,6 +225,20 @@ module Session
       def update_identity_map(identity_map)
         identity_map[@remote_key]=@object
 
+        self
+      end
+
+      # Delete object from identity map
+      #
+      # @param [Hash] identity map
+      #
+      # @return [ſelf]
+      #
+      # @api private
+      #
+      def empty_identity_map(identity_map)
+        identity_map.delete(@remote_key)
+      
         self
       end
 

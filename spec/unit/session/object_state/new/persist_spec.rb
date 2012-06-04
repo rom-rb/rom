@@ -1,11 +1,11 @@
 require 'spec_helper'
 
-describe Session::ObjectState::New,'#insert' do
+describe Session::ObjectState::New,'#persist' do
   let(:object)        { described_class.new(mapper,domain_object) }
   let(:mapper)        { DummyMapper.new                           }
   let(:domain_object) { DomainObject.new(:foo,:bar) }
 
-  subject { object.insert }
+  subject { object.persist }
 
   it 'should insert with mapper' do
     subject

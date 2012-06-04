@@ -1,11 +1,11 @@
 require 'spec_helper'
 
-describe Session::ObjectState::Loaded,'#update' do
+describe Session::ObjectState::Loaded,'#persist' do
   let!(:object)        { described_class.new(mapper,domain_object) }
   let!(:domain_object) { DomainObject.new(:foo,:bar) }
   let(:mapper)        { DummyMapper.new                           }
 
-  subject { object.update }
+  subject { object.persist }
 
   shared_examples_for 'object state loaded update' do
     it 'should return self' do

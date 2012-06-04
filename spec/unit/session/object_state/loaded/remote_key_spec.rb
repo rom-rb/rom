@@ -25,7 +25,7 @@ describe Session::ObjectState::Loaded,'#remote_key' do
   context 'when domain object key is changed by domain model modification with update' do
     it 'should return key stored on last sync' do
       domain_object.key_attribute = :modified
-      object.update
+      object.persist
       should == :modified
     end
   end

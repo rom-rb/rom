@@ -48,30 +48,6 @@ module Session
       self
     end
 
-    # Update a domain object in database
-    #
-    # If the object has changes these changes will be written to 
-    # database. If the object is unchanged it is a noop.
-    #
-    # @example
-    #   person = session.first(Person)
-    #   person.lastname = 'Doe'
-    #   session.update(person) # updates person via person mapper
-    #
-    # @param [Object] object the object to be updated
-    #
-    # @return [self]
-    #
-    # @api public
-    #
-    def update(object)
-      state = state(object)
-      @identity_map.delete(state.remote_key)
-      track_state(state.update)
-
-      self
-    end
-
     # Insert or update a domain object depending on state
     #
     # Will behave like #insert if object is NOT tracked.
@@ -98,6 +74,7 @@ module Session
       state = @track.fetch(object) do
         new_state(object)
       end
+      state.empty_identity_map(@identity_map)
       track_state(state.persist)
 
       self
