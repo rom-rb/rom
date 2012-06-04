@@ -12,3 +12,6 @@ end
 
 require 'session/session'
 require 'session/object_state'
+require 'session/object_state/new'
+require 'session/object_state/forgotten'
+require 'session/object_state/loaded'
