@@ -149,14 +149,16 @@ module Session
 
     # Do not track a domain object anymore. 
     #
-    # Should be used in batch operations to unregister unneded objects to safe memory.
+    # Should be used in batch operations to unregister objects that are not needed anymore.
+    #
+    # In case you iterate about to many objects using the same session all iterated objects 
+    # stay referenced in the identity map and state tracking.
     #
     # @example
-    #   session.all(Person).each do |person|
+    #   session.read(Person).each do |person|
     #     person.mutate
-    #     session.track?(person) # => true
+    #     # This will allow ruby to gc person.
     #     session.forget(person)
-    #     session.track?(person) # => false
     #   end
     #
     # @param [Object] object 
