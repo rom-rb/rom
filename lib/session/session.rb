@@ -65,7 +65,8 @@ module Session
     #   person = Person.new('John','Doe')
     #   session.persist(person)
     #
-    # @param [Object] object the object to be persisted
+    # @param [Object] object 
+    #   the object to be persisted
     #
     # @return [self]
     #
@@ -81,7 +82,24 @@ module Session
       self
     end
 
-    alias :<< :persist
+    # Alias for #persist
+    #
+    # @see #persist
+    #
+    # @example
+    #   person = Person.new
+    #   session << person
+    #
+    # @param [Object] object
+    #   the object to be persisted
+    #
+    # @return [self]
+    #
+    # @api public
+    #
+    def <<(object)
+      persist(object)
+    end
 
     # Returns whether an domain object is tracked in this session
     #
