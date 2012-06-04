@@ -132,8 +132,6 @@ module Session
     #
     def initialize(mapper,object)
       @mapper,@object = mapper,object
-
-      self
     end
   end
 end
