@@ -69,12 +69,9 @@ module Session
       def persist
         dump = self.dump
 
-        if dirty?(dump)
-          @mapper.update(@remote_key,dump,@remote_dump)
-          store_remote
-        end
-
-        self
+        return self unless dirty?(dump)
+        @mapper.update(@remote_key,dump,@remote_dump)
+        store_remote
       end
 
       # Insert domain object into identity map
