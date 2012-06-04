@@ -35,6 +35,19 @@ module Session
       @mapper.dump_key(@object)
     end
 
+    # Update identity map
+    #
+    # Noop default implementation for all states.
+    #
+    # @param [Object] identitymap
+    #
+    # @return [self]
+    #
+    # @api private
+    #
+    def update_identity_map(identity_map)
+      self
+    end
     # Empty identity map
     #
     # Noop default implementation for all states.
@@ -66,20 +79,6 @@ module Session
       self
     end
 
-    # Create a derived object state with
-    #
-    # @param [Class<ObjectState>] class
-    #   the class of the new object state
-    #
-    # @return [ObjectState]
-    #   the new object state.
-    #
-    # @api private
-    #
-    def transition(klass)
-      klass.new(@mapper,@object)
-    end
-
     # An ObjectState that represents a new unpersisted domain object.
     class New < ObjectState
 
@@ -92,7 +91,7 @@ module Session
       def persist
         @mapper.insert_dump(dump)
 
-        transition(Loaded)
+        Loaded.new(@mapper,@object)
       end
     end
 
