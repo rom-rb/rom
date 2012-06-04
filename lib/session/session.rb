@@ -6,6 +6,7 @@ module Session
     #
     # This method returns a mapper defined container that might be 
     # chainable. 
+    #
     # The container can use the passed block to load objects guarded by identity map.
     #
     # @example
@@ -50,17 +51,17 @@ module Session
 
     # Insert or update a domain object depending on state
     #
-    # Will behave like #insert if object is NOT tracked.
-    # Will behave like #update if object is tracked.
+    # Will insert object if NOT tracked.
+    # Will update object if tracked.
     #
     # @example 
-    #   # acts as #update
+    #   # acts as update
     #   person = session.first(Person)
     #   person.firstname = 'John'
     #   session.persist(person)
     #
     # @example
-    #   # acts as #insert
+    #   # acts as insert
     #   person = Person.new('John','Doe')
     #   session.persist(person)
     #
@@ -102,7 +103,7 @@ module Session
 
     # Returns whether a domain object has changes since last sync with the database
     #
-    # You normally should avoid calls to #clean? in favor of using #persist.
+    # You normally should avoid calls to #dirty? in favor of using #persist.
     #
     # @example
     #   person = Person.new(:firstname => 'John',:lastname => 'Doe')
@@ -128,7 +129,7 @@ module Session
 
     # Do not track a domain object anymore. 
     #
-    # Should be used in batch operations to #unregister unneded objects to safe memory.
+    # Should be used in batch operations to unregister unneded objects to safe memory.
     #
     # @example
     #   session.all(Person).each do |person|
@@ -170,6 +171,8 @@ module Session
     end
 
     # Load a domain object from dump and track
+    #
+    # Will return already tracked object in case of identity map collision.
     #
     # @param [Mapper] mapper
     #   the mapper to load domain object with
