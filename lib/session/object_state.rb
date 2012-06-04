@@ -35,7 +35,7 @@ module Session
       @mapper.dump_key(@object)
     end
 
-  protected
+  private
 
     # Initialize object state instance
     #
@@ -85,15 +85,7 @@ module Session
     end
 
     # An ObjectState that represents a forgotten domain object. It is no longer state tracked.
-    class Forgotten 
-      # Return the wrapped domain object
-      #
-      # @return [Object]
-      #
-      # @api private
-      #
-      attr_reader :object
-
+    class Forgotten < ObjectState
       # Initialized forgotten object state
       #
       # @param [Object] object the forgotten domain object
@@ -257,7 +249,7 @@ module Session
         new(mapper,object)
       end
 
-    protected
+    private
 
       # Store the current remote representation in this instance for later comparison
       #
