@@ -45,7 +45,7 @@ module Session
     #
     # @api private
     #
-    def update_identity_map(identity_map)
+    def update_identity(identity_map)
       self
     end
     # Empty identity map
@@ -58,7 +58,7 @@ module Session
     #
     # @api private
     #
-    def empty_identity_map(identity_map)
+    def delete_identity(identity_map)
       self
     end
 
@@ -116,7 +116,7 @@ module Session
       #
       # @api private
       #
-      def update_identity_map(identity_map)
+      def update_identity(identity_map)
         identity_map.delete(@remote_key)
 
         self
@@ -221,7 +221,7 @@ module Session
       #
       # @api private
       #
-      def update_identity_map(identity_map)
+      def update_identity(identity_map)
         identity_map[@remote_key]=@object
 
         self
@@ -235,7 +235,7 @@ module Session
       #
       # @api private
       #
-      def empty_identity_map(identity_map)
+      def delete_identity(identity_map)
         identity_map.delete(@remote_key)
       
         self

@@ -76,7 +76,7 @@ module Session
       state = @track.fetch(object) do
         new_state(object)
       end
-      state.empty_identity_map(@identity_map)
+      state.delete_identity(@identity_map)
       track_state(state.persist)
 
       self
@@ -225,7 +225,7 @@ module Session
     #
     def track_state(state)
       state.update_track(@track)
-      state.update_identity_map(@identity_map)
+      state.update_identity(@identity_map)
 
       self
     end
