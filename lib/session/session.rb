@@ -134,7 +134,7 @@ module Session
     #   session.all(Person).each do |person|
     #     person.mutate
     #     session.track?(person) # => true
-    #     session.unregister(person)
+    #     session.forget(person)
     #     session.track?(person) # => false
     #   end
     #
