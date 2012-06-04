@@ -41,7 +41,7 @@ class DummyMapper
     @dumps || raise('no stored dumps')
   end
 
-  def new_query(query,&block)
+  def wrap_query(query,&block)
     dumps.map do |dump|
       block.call(dump)
     end

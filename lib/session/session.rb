@@ -24,7 +24,7 @@ module Session
     #
     def read(model,query)
       mapper = @registry.resolve_model(model)
-      mapper.new_query(query) do |dump|
+      mapper.wrap_query(query) do |dump|
         load(mapper,dump)
       end
     end
