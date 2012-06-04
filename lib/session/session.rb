@@ -29,7 +29,7 @@ module Session
       end
     end
 
-    # Delete a domain object from database an untrack
+    # Delete a domain object from database and forget it
     #
     # @example
     #   person = session.first(Person)
@@ -162,14 +162,14 @@ module Session
     #   end
     #
     # @param [Object] object 
-    #   the domain object to be untracked
+    #   the domain object to be forgotten
     #
     # @return [self]
     #
     # @api public
     #
-    def untrack(object)
-      track_state(state(object).abandon)
+    def forget(object)
+      track_state(state(object).forget)
 
       self
     end

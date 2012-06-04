@@ -12,9 +12,9 @@ describe Session::ObjectState::Loaded,'#delete' do
     mapper.deletes.should == [object.remote_key]
   end
 
-  it 'should return ObjectState::Abandoned' do
+  it 'should return ObjectState::Forgotten' do
     state = subject
-    state.should be_kind_of(Session::ObjectState::Abandoned)
+    state.should be_kind_of(Session::ObjectState::Forgotten)
     state.object.should be(domain_object)
   end
 end

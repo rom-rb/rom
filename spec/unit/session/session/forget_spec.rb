@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Session::Session,'#untrack(object)' do
+describe Session::Session,'#forget(object)' do
   let(:mapper)        { registry.resolve_model(DomainObject) }
   let(:registry)      { DummyRegistry.new                    }
   let(:domain_object) { DomainObject.new                     }
@@ -8,7 +8,7 @@ describe Session::Session,'#untrack(object)' do
 
   let(:identity_map)  { object.instance_variable_get(:@identity_map) }
 
-  subject { object.untrack(domain_object) }
+  subject { object.forget(domain_object) }
 
   before do 
     object.persist(domain_object)

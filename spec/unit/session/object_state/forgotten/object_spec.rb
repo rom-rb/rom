@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Session::ObjectState::Abandoned,'#object' do
+describe Session::ObjectState::Forgotten,'#object' do
   let(:object)        { described_class.new(domain_object,key) }
   let(:key)           { mock                                   }
   let(:domain_object) { DomainObject.new(:foo,:bar)            }

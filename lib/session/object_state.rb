@@ -84,8 +84,8 @@ module Session
       alias :persist :insert
     end
 
-    # An ObjectState that represents a abandoned domain object. It is no longer state tracked.
-    class Abandoned 
+    # An ObjectState that represents a forgotten domain object. It is no longer state tracked.
+    class Forgotten 
       # Return the wrapped domain object
       #
       # @return [Object]
@@ -94,9 +94,9 @@ module Session
       #
       attr_reader :object
 
-      # Initialized abandoned object state
+      # Initialized forgotten object state
       #
-      # @param [Object] object the abandoned domain object
+      # @param [Object] object the forgotten domain object
       # @param [Object] remote_key the last remote key
       #
       # @api private
@@ -169,26 +169,26 @@ module Session
         @remote_dump == dump
       end
 
-      # Invoke transition to abandoned object state
+      # Invoke transition to forgotten object state
       #
-      # @return [ObjectState::Abandoned]
+      # @return [ObjectState::Forgotten]
       #
       # @api private
       #
-      def abandon
-        transition_to_abandoned
+      def forget
+        Forgotten.new(@object,@remote_key)
       end
 
-      # Invoke transition to abandoned object state after deleting via mapper
+      # Invoke transition to forgotten object state after deleting via mapper
       #
-      # @return [ObjectState::Abandoned]
+      # @return [ObjectState::Forgotten]
       #
       # @api private
       #
       def delete
         @mapper.delete(@remote_key)
 
-        transition_to_abandoned
+        forget
       end
 
       # Persist changes to wrapped domain object
@@ -258,16 +258,6 @@ module Session
       end
 
     protected
-
-      # Return abandoned object state derived from this instance
-      #
-      # @return [ObjectState::Abandoned] 
-      #
-      # @api private
-      #
-      def transition_to_abandoned
-        Abandoned.new(@object,@remote_key)
-      end
 
       # Store the current remote representation in this instance for later comparison
       #
