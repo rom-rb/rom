@@ -23,9 +23,10 @@ module Session
     #
     # @api public
     #
-    def read(model,query)
+    def read(model,*args,&block)
       mapper = @registry.resolve_model(model)
-      mapper.wrap_query(query) do |dump|
+      args << block if block
+      mapper.wrap_query(*args) do |dump|
         load(mapper,dump)
       end
     end

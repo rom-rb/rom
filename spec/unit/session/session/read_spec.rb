@@ -9,6 +9,24 @@ describe Session::Session,'#read' do
   let(:query)         { mock }
 
   subject { object.read(DomainObject,query) }
+  
+
+  context 'with arguments' do
+    it 'should pass arguments to Mapper#wrap_query' do
+      mapper.should_receive(:wrap_query).with(query)
+      subject
+    end
+  end
+
+  context 'with block' do
+    let(:block) { proc {} }
+
+    subject { object.read(DomainObject,&block) }
+    it 'should pass block to Mapper#wrap_query' do
+      mapper.should_receive(:wrap_query).with(block)
+      subject
+    end
+  end
 
   context 'when no dumps are selected' do
     before do
