@@ -16,7 +16,7 @@ describe Session::Session,'#forget(object)' do
   end
 
   it 'should remove state' do
-    object.track?(domain_object).should be_false
+    object.include?(domain_object).should be_false
   end
 
   it 'should remove from identity map' do

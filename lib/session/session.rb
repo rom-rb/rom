@@ -104,9 +104,9 @@ module Session
     # Returns whether an domain object is tracked in this session
     #
     # @example 
-    #   session.track?(Object.new) # => false
+    #   session.include?(Object.new) # => false
     #   person = session.first(Person)
-    #   session.track?(person)     # => true
+    #   session.include?(person)     # => true
     #
     # @param [Object] object 
     #   the domain object to be tested
@@ -117,7 +117,7 @@ module Session
     #
     # @api public
     #
-    def track?(object)
+    def include?(object)
       @track.key?(object)
     end
 

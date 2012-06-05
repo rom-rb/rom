@@ -23,7 +23,7 @@ describe Session::Session,'#delete' do
     end
 
     it 'should not track object anymore' do
-      object.track?(domain_object).should be_false
+      object.include?(domain_object).should be_false
     end
 
     it 'should remove domain object from identity_map' do
