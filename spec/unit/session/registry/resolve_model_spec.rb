@@ -6,6 +6,7 @@ describe Session::Registry,'#resolve_model' do
   let(:object) { described_class.new }
 
   subject { object.resolve_model(model) }
+  
 
   context 'when mapper for model was registred' do
     before do
@@ -15,6 +16,8 @@ describe Session::Registry,'#resolve_model' do
     it 'should return mapper' do
       should be(mapper)
     end
+
+    it_should_behave_like 'an idempotent method'
   end
 
   context 'when mapper was NOT registred' do

@@ -8,6 +8,8 @@ describe Session::Session,'#include?(object)' do
 
   subject { object.include?(domain_object) }
 
+  it_should_behave_like 'an idempotent method'
+
   context 'when domain object is tracked' do
     before do 
       object.persist(domain_object)

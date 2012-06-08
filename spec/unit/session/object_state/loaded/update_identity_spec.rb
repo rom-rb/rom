@@ -9,6 +9,8 @@ describe Session::ObjectState::Loaded,'#update_identity' do
 
   subject { object.update_identity(identity_map) }
 
+  it_should_behave_like 'a command method'
+
   it 'should add object to identity_map' do
     subject
     identity_map.should == { mapper.dump_key(domain_object) => domain_object }

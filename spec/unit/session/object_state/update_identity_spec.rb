@@ -9,6 +9,8 @@ describe Session::ObjectState,'#update_identity' do
 
   subject { object.update_identity(identity_map) }
 
+  it_should_behave_like 'a command method'
+
   it 'should not touch identity map' do
     subject
   end

@@ -9,6 +9,8 @@ describe Session::ObjectState::Loaded,'#delete_identity' do
 
   subject { object.delete_identity(identity_map) }
 
+  it_should_behave_like 'a command method'
+
   it 'should remove object from identity_map' do
     subject
     identity_map.should == {}

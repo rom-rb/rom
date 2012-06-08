@@ -8,6 +8,8 @@ describe Session::Session, '#<<(object)' do
 
   subject { object << domain_object }
 
+  it_should_behave_like 'a command method'
+
   it 'should delegate to #persist' do
     object.should_receive(:persist).with(domain_object)
     subject

@@ -8,13 +8,17 @@ describe Session::Session,'#dirty?(object)' do
 
   subject { object.dirty?(domain_object) }
 
+
   context 'when domain object is tracked' do
     before do 
       object.persist(domain_object)
     end
 
+
     context 'and domain object is NOT dirty' do
       it { should be_false }
+
+      it_should_behave_like 'an idempotent method'
     end
 
     context 'and domain object is dirty' do
@@ -23,6 +27,8 @@ describe Session::Session,'#dirty?(object)' do
       end
 
       it { should be_true }
+
+      it_should_behave_like 'an idempotent method'
     end
   end
 

@@ -8,6 +8,8 @@ describe Session::ObjectState,'#delete_identity' do
   let(:identity_map)         { { mapper.dump_key(domain_object) => domain_object }.freeze }
 
   subject { object.delete_identity(identity_map) }
+  
+  it_should_behave_like 'a command method'
 
   it 'should not touch identity map' do
     subject

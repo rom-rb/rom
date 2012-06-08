@@ -8,22 +8,30 @@ describe Session::ObjectState::Loaded,'#dirty?' do
   context 'with dump provided' do
     subject { object.dirty?(dump) }
 
+
     context 'when dump matches objects dump' do
       let(:dump) { { :key_attribute => :foo,:other_attribute => :bar } }
       it { should be_false }
+
+      it_should_behave_like 'an idempotent method'
     end
 
     context 'when dump does NOT match object dump' do
       let(:dump) { { :foo => :bar } }
       it { should be_true }
+
+      it_should_behave_like 'an idempotent method'
     end
   end
 
   context 'without dump provided' do
     subject { object.dirty? }
 
+    it_should_behave_like 'an idempotent method'
+
     context 'and domain object is unchanged' do
       it { should be_false }
+      it_should_behave_like 'an idempotent method'
     end
 
     context 'and domain object is changed' do
@@ -31,6 +39,7 @@ describe Session::ObjectState::Loaded,'#dirty?' do
         domain_object.other_attribute = :modification
       end
 
+      it_should_behave_like 'an idempotent method'
       it { should be_true }
     end
   end

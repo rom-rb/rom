@@ -7,6 +7,8 @@ describe Session::ObjectState::Forgotten,'#object' do
 
   subject { object.object }
 
+  it_should_behave_like 'an idempotent method'
+
   it 'should return domain object' do
     should be(domain_object)
   end

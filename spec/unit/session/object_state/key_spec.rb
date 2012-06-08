@@ -9,6 +9,8 @@ describe Session::ObjectState,'#key' do
     object.key
   end
 
+  it_should_behave_like 'an idempotent method'
+
   it 'should return dumped key representation' do
     should == :foo
   end

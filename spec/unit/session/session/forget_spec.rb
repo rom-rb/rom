@@ -10,6 +10,8 @@ describe Session::Session,'#forget(object)' do
 
   subject { object.forget(domain_object) }
 
+  it_should_behave_like 'a command method'
+
   before do 
     object.persist(domain_object)
     subject

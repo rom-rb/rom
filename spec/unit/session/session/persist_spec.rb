@@ -8,11 +8,14 @@ describe Session::Session, '#persist(object)' do
 
   subject { object.persist(domain_object) }
 
+
   context 'with untracked domain object' do
     it 'should insert update' do
       subject
       mapper.inserts.should == [mapper.dump(domain_object)]
     end
+
+    it_should_behave_like 'a command method'
   end
 
   context 'with tracked domain object' do
@@ -32,6 +35,7 @@ describe Session::Session, '#persist(object)' do
 
       context 'and key did NOT change' do
 
+        it_should_behave_like 'a command method'
 
         it 'should update domain object under remote key' do
           subject
@@ -49,6 +53,8 @@ describe Session::Session, '#persist(object)' do
           domain_object.key_attribute = :dirty
           subject
         end
+
+        it_should_behave_like 'a command method'
 
         it 'should update domain object under remote key' do
           mapper.updates.should == [[
@@ -73,6 +79,8 @@ describe Session::Session, '#persist(object)' do
         subject
         mapper.updates.should == []
       end
+      
+      it_should_behave_like 'a command method'
     end
   end
 end

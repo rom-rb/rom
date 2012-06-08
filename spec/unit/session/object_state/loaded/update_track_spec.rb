@@ -9,6 +9,8 @@ describe Session::ObjectState::Loaded,'#update_track' do
 
   subject { object.update_track(track) }
 
+  it_should_behave_like 'a command method'
+
   it 'should add object to track' do
     subject
     track.should == { domain_object => object }

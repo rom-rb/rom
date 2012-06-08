@@ -10,6 +10,8 @@ describe Session::ObjectState::Forgotten,'#update_track' do
 
   subject { object.update_track(track) }
 
+  it_should_behave_like 'a command method'
+
   it 'should delete object from track' do
     subject
     track.should == {}

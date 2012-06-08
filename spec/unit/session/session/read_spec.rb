@@ -10,7 +10,6 @@ describe Session::Session,'#read' do
 
   subject { object.read(DomainObject,query) }
   
-
   context 'with arguments' do
     it 'should pass arguments to Mapper#wrap_query' do
       mapper.should_receive(:wrap_query).with(query)
