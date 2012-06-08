@@ -24,4 +24,6 @@ describe Session::Session,'#forget(object)' do
   it 'should remove from identity map' do
     identity_map.should_not have_key(mapper.dump_key(domain_object))
   end
+
+  it_should_behave_like 'a command method'
 end

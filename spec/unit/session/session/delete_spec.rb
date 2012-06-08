@@ -12,6 +12,7 @@ describe Session::Session,'#delete' do
 
   let!(:key) { mapper.dump_key(domain_object) }
 
+
   context 'when domain object is tracked' do
     before do
       object.persist(domain_object)
@@ -29,6 +30,8 @@ describe Session::Session,'#delete' do
     it 'should remove domain object from identity_map' do
       identity_map.should_not have_key(key)
     end
+
+    it_should_behave_like 'a command method'
   end
 
   context 'when domain object is NOT tracked' do

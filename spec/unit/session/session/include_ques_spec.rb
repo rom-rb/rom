@@ -8,7 +8,6 @@ describe Session::Session,'#include?(object)' do
 
   subject { object.include?(domain_object) }
 
-  it_should_behave_like 'an idempotent method'
 
   context 'when domain object is tracked' do
     before do 
@@ -16,9 +15,13 @@ describe Session::Session,'#include?(object)' do
     end
 
     it { should be_true }
+
+    it_should_behave_like 'an idempotent method'
   end
 
   context 'when domain object is NOT tracked' do
     it { should be_false }
+
+    it_should_behave_like 'an idempotent method'
   end
 end
