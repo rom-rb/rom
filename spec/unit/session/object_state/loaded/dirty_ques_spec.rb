@@ -11,14 +11,14 @@ describe Session::ObjectState::Loaded,'#dirty?' do
 
     context 'when dump matches objects dump' do
       let(:dump) { { :key_attribute => :foo,:other_attribute => :bar } }
-      it { should be_false }
+      it { should be(false) }
 
       it_should_behave_like 'an idempotent method'
     end
 
     context 'when dump does NOT match object dump' do
       let(:dump) { { :foo => :bar } }
-      it { should be_true }
+      it { should be(true) }
 
       it_should_behave_like 'an idempotent method'
     end
@@ -30,7 +30,7 @@ describe Session::ObjectState::Loaded,'#dirty?' do
     it_should_behave_like 'an idempotent method'
 
     context 'and domain object is unchanged' do
-      it { should be_false }
+      it { should be(false) }
       it_should_behave_like 'an idempotent method'
     end
 
@@ -40,7 +40,7 @@ describe Session::ObjectState::Loaded,'#dirty?' do
       end
 
       it_should_behave_like 'an idempotent method'
-      it { should be_true }
+      it { should be(true) }
     end
   end
 end

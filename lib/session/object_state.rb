@@ -53,7 +53,7 @@ module Session
     #
     # Noop default implementation for all states.
     #
-    # @param [Object] identitymap
+    # @param [Object] identity_map
     #
     # @return [self]
     #
@@ -67,7 +67,7 @@ module Session
     #
     # Noop default implementation for all states.
     #
-    # @param [Object] identitymap
+    # @param [Object] identity_map
     #
     # @return [self]
     #

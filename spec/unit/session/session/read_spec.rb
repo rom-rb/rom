@@ -53,7 +53,7 @@ describe Session::Session,'#read' do
       end
 
       it 'should track loaded domain object' do
-        object.include?(subject.first).should be_true
+        object.include?(subject.first).should be(true)
       end
     end
 

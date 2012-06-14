@@ -14,13 +14,13 @@ describe Session::Session,'#include?(object)' do
       object.persist(domain_object)
     end
 
-    it { should be_true }
+    it { should be(true) }
 
     it_should_behave_like 'an idempotent method'
   end
 
   context 'when domain object is NOT tracked' do
-    it { should be_false }
+    it { should be(false) }
 
     it_should_behave_like 'an idempotent method'
   end

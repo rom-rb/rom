@@ -76,7 +76,7 @@ module Session
 
       # Insert domain object into identity map
       #
-      # @param [Hash] identity map 
+      # @param [Hash] identity_map 
       #
       # @return [self]
       #
@@ -90,9 +90,9 @@ module Session
 
       # Delete object from identity map
       #
-      # @param [Hash] identity map
+      # @param [Hash] identity_map
       #
-      # @return [ſelf]
+      # @return [self]
       #
       # @api private
       #
@@ -121,7 +121,7 @@ module Session
       # @param [Mapper] mapper
       #   the mapper used to build domain object
       #
-      # @param [Object] object
+      # @param [Object] dump
       #
       # @return [ObjectState::Loader]
       #

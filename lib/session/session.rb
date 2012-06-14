@@ -15,9 +15,6 @@ module Session
     # @param [Model] model
     #   the model to be queried
     #
-    # @param [Object] query
-    #   the query
-    #
     # @return [Object] 
     #   the loaded objects wrapped by mapper defined query
     #
@@ -250,7 +247,7 @@ module Session
 
     # Initialize a ObjectState::New for domain object
     #
-    # @param [Object] the domain object to be wrapped
+    # @param [Object] object 
     #
     # @return [ObjectState::New]
     #

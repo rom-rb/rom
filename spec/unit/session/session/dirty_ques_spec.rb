@@ -16,7 +16,7 @@ describe Session::Session,'#dirty?(object)' do
 
 
     context 'and domain object is NOT dirty' do
-      it { should be_false }
+      it { should be(false) }
 
       it_should_behave_like 'an idempotent method'
     end
@@ -26,7 +26,7 @@ describe Session::Session,'#dirty?(object)' do
         domain_object.other_attribute = :modified
       end
 
-      it { should be_true }
+      it { should be(true) }
 
       it_should_behave_like 'an idempotent method'
     end
