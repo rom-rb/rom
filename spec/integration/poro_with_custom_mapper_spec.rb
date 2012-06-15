@@ -78,4 +78,13 @@ describe 'PORO with a custom mapper' do
     user1.name.should eql('Jane')
     user2.name.should eql('John')
   end
+
+  it 'restricts collection' do
+    users = User::Mapper.new(relation)
+    users = users.restrict { |r| r.username.eq('Jane') }.to_a
+
+    user = users.first
+    user.should be_instance_of(User)
+    user.name.should eql('Jane')
+  end
 end

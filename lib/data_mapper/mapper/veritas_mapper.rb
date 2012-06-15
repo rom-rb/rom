@@ -41,6 +41,11 @@ module DataMapper
         self.class.new(@relationships[name].join(@relation))
       end
 
+      # @api public
+      def restrict(&block)
+        self.class.new(@relation.restrict(&block))
+      end
+
       # @api private
       def load(tuple)
         @model.new(
