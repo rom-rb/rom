@@ -1,21 +1,21 @@
 module DataMapper
   class Mapper
 
-    # AttributeSet
+    # relationshipset
     #
     # @api private
-    class AttributeSet
+    class RelationshipSet
       include Enumerable
 
       # @api private
       def initialize
-        @attributes = {}
+        @relationships = {}
       end
 
       # @api public
       def each
         return to_enum unless block_given?
-        @attributes.each_value { |attribute| yield attribute }
+        @relationships.each_value { |attribute| yield attribute }
         self
       end
 
@@ -26,20 +26,20 @@ module DataMapper
 
       # @api private
       def load(tuple)
-        each_with_object({}) do |attribute, attributes|
-          attributes[attribute.name] = attribute.load(tuple[attribute.field])
+        each_with_object({}) do |relationship, relationships|
+          relationships[relationship.name] = relationship.load(tuple)
         end
       end
 
       # @api private
-      def add(*args)
-        @attributes[args.first] = Attribute.new(*args)
+      def add(name, options = {})
+        @relationships[name] = options[:type].new(name, options)
         self
       end
 
       # @api private
       def [](name)
-        @attributes[name]
+        @relationships[name]
       end
 
       # @api private
@@ -47,6 +47,6 @@ module DataMapper
         map(&:key?)
       end
 
-    end # class AttributeSet
+    end # class relationshipset
   end # class Mapper
 end # module DataMapper

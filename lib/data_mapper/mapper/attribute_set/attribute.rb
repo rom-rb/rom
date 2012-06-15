@@ -24,12 +24,17 @@ module DataMapper
           @key   = options.fetch(:key, false)
         end
 
-        # @api public
+        # @api private
+        def load(value)
+          value
+        end
+
+        # @api private
         def header
           [ @field, @type ]
         end
 
-        # @api public
+        # @api private
         def key?
           @key
         end

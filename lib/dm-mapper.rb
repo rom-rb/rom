@@ -3,6 +3,8 @@ require 'data_mapper/mapper'
 require 'data_mapper/mapper/veritas_mapper'
 require 'data_mapper/mapper/attribute_set'
 require 'data_mapper/mapper/attribute_set/attribute'
+require 'data_mapper/mapper/relationship_set'
+require 'data_mapper/mapper/relationship_set/relationship'
 
 module DataMapper
 

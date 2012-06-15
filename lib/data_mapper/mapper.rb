@@ -20,7 +20,7 @@ module DataMapper
       @relation_name ||= name
     end
 
-    # Configure mapping of an attribute
+    # Configure mapping of an attribute or a relationship
     #
     # @example
     #
@@ -29,14 +29,20 @@ module DataMapper
     #   end
     #
     # @api public
-    def self.map(*args)
-      attributes.add(*args)
+    def self.map(name, options = {})
+      mapping_set = options[:type] < Relationship ? relationships : attributes
+      mapping_set.add(name, options)
       self
     end
 
     # @api private
     def self.attributes
       @attributes ||= AttributeSet.new
+    end
+
+    # @api private
+    def self.relationships
+      @relationships ||= RelationshipSet.new
     end
 
     # Load a domain object
