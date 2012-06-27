@@ -86,4 +86,12 @@ describe 'PORO with a custom mapper' do
     user1.name.should eql('Jane')
     user2.name.should eql('Piotr')
   end
+
+  it 'yields users when you iterate on the mapper' do
+    names = %w(John Jane Piotr)
+
+    mapper.each_with_index do |user, index|
+      user.name.should eql(names[index])
+    end
+  end
 end
