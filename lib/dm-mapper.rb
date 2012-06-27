@@ -9,6 +9,16 @@ require 'data_mapper/mapper/relationship_set/relationship'
 module DataMapper
 
   # @api public
+  def self.setup(name, uri)
+    adapters[name.to_sym] = Veritas::Adapter::DataObjects.new(uri)
+  end
+
+  # @api public
+  def self.adapters
+    @adapters ||= {}
+  end
+
+  # @api public
   def self.relation_registry
     @_relation_registry ||= RelationRegistry.new
   end

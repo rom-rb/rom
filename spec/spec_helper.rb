@@ -22,23 +22,22 @@ require 'dm-mapper'
 
 ENV['TZ'] = 'UTC'
 
-# require spec support files and shared behavior
-Dir[File.expand_path('../**/shared/**/*.rb', __FILE__)].each { |file| require file }
+ROOT = File.expand_path('../..', __FILE__)
 
-RSpec.configure do |config|
-  # noop for now
+CONFIG = YAML.load_file("#{ROOT}/config/database.yml")
+
+CONFIG.each do |name, uri|
+  DataMapper.setup(name, uri)
 end
 
+DATABASE_ADAPTER = DataMapper.adapters[:postgres]
+
 MAX_RELATION_SIZE = 10
-DATABASE_URI      = 'postgres://localhost/test'.freeze
-# DATABASE_URI      = 'mysql:/ocalhost/test'.freeze
-# DATABASE_URI      = 'sqlite3://tmp/test.db'.freeze
-DATABASE_ADAPTER  = Veritas::Adapter::DataObjects.new(DATABASE_URI)
 
 def setup_db
   DataObjects.logger.set_log('log/do.log', :debug)
 
-  connection = DataObjects::Connection.new(DATABASE_URI)
+  connection = DataObjects::Connection.new(CONFIG['postgres'])
 
   connection.create_command('DROP TABLE IF EXISTS "users"').execute_non_query
   connection.create_command('DROP TABLE IF EXISTS "addresses"').execute_non_query
@@ -65,13 +64,13 @@ def setup_db
 end
 
 def seed
-  connection = DataObjects::Connection.new(DATABASE_URI)
+  connection = DataObjects::Connection.new(CONFIG['postgres'])
   MAX_RELATION_SIZE.times { |n| insert_user(n + 1, Randgen.name, n*3, connection) }
   connection.close
 end
 
 def insert_user(id, name, age, connection = nil)
-  connection ||= DataObjects::Connection.new(DATABASE_URI)
+  connection ||= DataObjects::Connection.new(CONFIG['postgres'])
 
   insert_users = connection.create_command(
     'INSERT INTO "users" ("id", "username", "age") VALUES (?, ?, ?)')
@@ -82,7 +81,7 @@ def insert_user(id, name, age, connection = nil)
 end
 
 def insert_address(id, user_id, street, city, zipcode, connection = nil)
-  connection ||= DataObjects::Connection.new(DATABASE_URI)
+  connection ||= DataObjects::Connection.new(CONFIG['postgres'])
 
   insert_users = connection.create_command(
     'INSERT INTO "addresses" ("id", "user_id", "street", "city", "zipcode") VALUES (?, ?, ?, ?, ?)')
@@ -91,6 +90,9 @@ def insert_address(id, user_id, street, city, zipcode, connection = nil)
 
   connection.close
 end
+
+# require spec support files and shared behavior
+Dir[File.expand_path('../**/shared/**/*.rb', __FILE__)].each { |file| require file }
 
 RSpec.configure do |config|
   config.before(:all) do
