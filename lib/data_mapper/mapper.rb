@@ -1,3 +1,5 @@
+require 'virtus/support/descendants_tracker'
+
 module DataMapper
 
   # Abstract Mapper class
@@ -5,6 +7,7 @@ module DataMapper
   # @abstract
   class Mapper
     include Enumerable
+    extend Virtus::DescendantsTracker
 
     # Set or return the model for this mapper
     #
@@ -18,6 +21,19 @@ module DataMapper
     # @api public
     def self.relation_name(name=nil)
       @relation_name ||= name
+    end
+
+    # Set or return the name of this mapper's default repository
+    #
+    # @api public
+    def self.repository(name=nil)
+      @repository ||= name
+    end
+
+    # @api public
+    def self.finalize
+      DataMapper.relation_registry << base_relation
+      self
     end
 
     # Configure mapping of an attribute or a relationship

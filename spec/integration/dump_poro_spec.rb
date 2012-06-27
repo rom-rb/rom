@@ -21,19 +21,15 @@ describe 'Dump a PORO' do
 
         model         User
         relation_name :users
+        repository    :postgres
       end
     end
   end
 
-  let(:relation) do
-    DataMapper.relation_registry << User::Mapper.base_relation
-    Veritas::Relation::Gateway.new(DATABASE_ADAPTER, DataMapper.relation_registry[:users])
-  end
+  let(:mapper) { DataMapper.mapper_registry[User] }
 
   it 'dumps a poro object' do
-    mapper = User::Mapper.new(relation)
-    user   = mapper.first
-
+    user = mapper.first
     mapper.dump(user).should eql({ :id => 1, :username => 'John', :age => 18 })
   end
 end

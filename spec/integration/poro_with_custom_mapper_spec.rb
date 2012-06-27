@@ -21,23 +21,21 @@ describe 'PORO with a custom mapper' do
 
         model         User
         relation_name :users
+        repository    :postgres
       end
     end
   end
 
-  let(:relation) do
-    DataMapper.relation_registry << User::Mapper.base_relation
-    Veritas::Relation::Gateway.new(DATABASE_ADAPTER, DataMapper.relation_registry[:users])
+  let(:mapper) do
+    DataMapper.mapper_registry[User]
   end
 
   it 'finds all users' do
-    user = User::Mapper.new(relation).first
-
-    user.should be_instance_of(User)
+    mapper.first.should be_instance_of(User)
   end
 
   it 'finds users matching one name' do
-    users = User::Mapper.new(relation.restrict { |r| r.username.eq('John') }).to_a
+    users = mapper.restrict { |r| r.username.eq('John') }.to_a
 
     users.should have(1).item
 
@@ -47,7 +45,7 @@ describe 'PORO with a custom mapper' do
   end
 
   it 'finds users matching two names' do
-    users = User::Mapper.new(relation.restrict { |r| r.username.eq('John').or(r.username.eq('Jane')) }).to_a
+    users = mapper.restrict { |r| r.username.eq('John').or(r.username.eq('Jane')) }.to_a
 
     users.should have(2).item
 
@@ -61,7 +59,7 @@ describe 'PORO with a custom mapper' do
   end
 
   it 'finds users matching name and age' do
-    users = User::Mapper.new(relation.restrict { |r| r.username.eq('Jane').and(r.age.gt(18)) }).to_a
+    users = mapper.restrict { |r| r.username.eq('Jane').and(r.age.gt(18)) }.to_a
 
     users.should have(1).item
 
@@ -71,20 +69,13 @@ describe 'PORO with a custom mapper' do
   end
 
   it 'sorts by name, age and id' do
+    pending
+
     users = User::Mapper.new(relation.sort_by { |r| [ r.username, r.age, r.id ] }).to_a
 
     user1, user2 = users
 
     user1.name.should eql('Jane')
     user2.name.should eql('John')
-  end
-
-  it 'restricts collection' do
-    users = User::Mapper.new(relation)
-    users = users.restrict { |r| r.username.eq('Jane') }.to_a
-
-    user = users.first
-    user.should be_instance_of(User)
-    user.name.should eql('Jane')
   end
 end

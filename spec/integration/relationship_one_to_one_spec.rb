@@ -27,6 +27,7 @@ describe 'Relationship - One To One' do
 
         model         Address
         relation_name :addresses
+        repository    :postgres
       end
     end
 
@@ -45,32 +46,26 @@ describe 'Relationship - One To One' do
 
         model         User
         relation_name :users
+        repository    :postgres
       end
     end
   end
 
-  let(:user_relation) do
-    DataMapper.relation_registry << User::Mapper.base_relation
-    Veritas::Relation::Gateway.new(
-      DATABASE_ADAPTER, DataMapper.relation_registry[:users])
+  let(:user_mapper) do
+    DataMapper.mapper_registry[User]
   end
 
-  let(:address_relation) do
-    DataMapper.relation_registry << Address::Mapper.base_relation
-    Veritas::Relation::Gateway.new(
-      DATABASE_ADAPTER, DataMapper.relation_registry[:addresses])
+  let(:address_mapper) do
+    DataMapper.mapper_registry[Address]
   end
 
   it 'loads associated object' do
     User::Mapper.map :address,
       :type   => DataMapper::Mapper::Relationship::OneToOne,
-      :mapper => Address::Mapper.new(address_relation)
+      :mapper => address_mapper
 
-    user_mapper = User::Mapper.new(user_relation)
-    user        = user_mapper.include(:address).first
-
-    address_mapper = Address::Mapper.new(address_relation)
-    address        = address_mapper.first
+    user    = user_mapper.include(:address).first
+    address = address_mapper.first
 
     user.address.should be_instance_of(Address)
     user.address.id.should eql(address.id)

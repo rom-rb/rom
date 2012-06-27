@@ -99,4 +99,8 @@ RSpec.configure do |config|
     Object.send(:remove_const, :User)    if defined?(User)
     Object.send(:remove_const, :Address) if defined?(Address)
   end
+
+  config.before do
+    DataMapper.finalize
+  end
 end

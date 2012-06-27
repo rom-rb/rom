@@ -26,6 +26,7 @@ describe 'Two PORO mappers' do
 
         model Address
         relation_name :addresses
+        repository :postgres
       end
     end
 
@@ -43,15 +44,9 @@ describe 'Two PORO mappers' do
 
         model User
         relation_name :users
+        repository :postgres
       end
     end
-
-    DataMapper.relation_registry << Veritas::Relation::Gateway.new(
-      DATABASE_ADAPTER, Address::Mapper.base_relation)
-
-    DataMapper.relation_registry << Veritas::Relation::Gateway.new(
-      DATABASE_ADAPTER, User::Mapper.base_relation)
-
   end
 
   let(:operation) do
