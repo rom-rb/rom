@@ -52,11 +52,11 @@ describe 'Relationship - One To One' do
   end
 
   let(:user_mapper) do
-    DataMapper.mapper_registry[User]
+    DataMapper[User]
   end
 
   let(:address_mapper) do
-    DataMapper.mapper_registry[Address]
+    DataMapper[Address]
   end
 
   it 'loads associated object' do

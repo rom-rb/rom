@@ -26,7 +26,7 @@ describe 'Dump a PORO' do
     end
   end
 
-  let(:mapper) { DataMapper.mapper_registry[User] }
+  let(:mapper) { DataMapper[User] }
 
   it 'dumps a poro object' do
     user = mapper.first

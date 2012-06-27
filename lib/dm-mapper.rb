@@ -10,6 +10,11 @@ require 'data_mapper/mapper/relationship_set/relationship'
 module DataMapper
 
   # @api public
+  def self.[](model)
+    mapper_registry[model]
+  end
+
+  # @api public
   def self.setup(name, uri)
     adapters[name.to_sym] = Veritas::Adapter::DataObjects.new(uri)
   end
@@ -30,6 +35,8 @@ module DataMapper
   end
 
   # @api public
+  #
+  # TODO: implement handling of dependencies between mappers
   def self.finalize
     Mapper::VeritasMapper.descendants.each do |mapper|
       mapper_registry << mapper.finalize

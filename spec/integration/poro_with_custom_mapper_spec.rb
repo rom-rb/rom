@@ -27,7 +27,7 @@ describe 'PORO with a custom mapper' do
   end
 
   let(:mapper) do
-    DataMapper.mapper_registry[User]
+    DataMapper[User]
   end
 
   it 'finds all users' do
