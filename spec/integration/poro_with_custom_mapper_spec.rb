@@ -69,9 +69,7 @@ describe 'PORO with a custom mapper' do
   end
 
   it 'sorts by name, age and id' do
-    pending
-
-    users = User::Mapper.new(relation.sort_by { |r| [ r.username, r.age, r.id ] }).to_a
+    users = mapper.sort_by { |r| [ r.username, r.age, r.id ] }.to_a
 
     user1, user2 = users
 

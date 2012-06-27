@@ -46,6 +46,11 @@ module DataMapper
         self.class.new(@relation.restrict(&block))
       end
 
+      # @api public
+      def sort_by(&block)
+        self.class.new(@relation.sort_by(&block))
+      end
+
       # @api private
       def load(tuple)
         @model.new(
