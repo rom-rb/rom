@@ -4,8 +4,9 @@ describe 'PORO with a custom mapper' do
   before(:all) do
     setup_db
 
-    insert_user 1, 'John', 18
-    insert_user 2, 'Jane', 21
+    insert_user 1, 'John',  18
+    insert_user 2, 'Jane',  21
+    insert_user 3, 'Piotr', 20
 
     class User
       attr_reader :id, :name, :age
@@ -75,5 +76,14 @@ describe 'PORO with a custom mapper' do
 
     user1.name.should eql('Jane')
     user2.name.should eql('John')
+  end
+
+  it 'restricts and sorts by' do
+    users = mapper.restrict { |r| r.age.gt(18) }.sort_by { |r| [ r.username, r.age, r.id ] }.to_a
+
+    user1, user2 = users
+
+    user1.name.should eql('Jane')
+    user2.name.should eql('Piotr')
   end
 end
