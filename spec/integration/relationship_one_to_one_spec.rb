@@ -68,4 +68,15 @@ describe 'Relationship - One To One' do
     user.address.should be_instance_of(Address)
     user.address.id.should eql(address.id)
   end
+
+  it 'finds users with matching address' do
+    users = user_mapper.include(:address).restrict { |r| r.city.eq('Boston') }.to_a
+
+    users.should have(1).item
+
+    user = users.first
+
+    user.name.should eql('Jane')
+    user.address.city.should eql('Boston')
+  end
 end
