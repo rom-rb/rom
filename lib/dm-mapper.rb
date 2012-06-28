@@ -1,11 +1,15 @@
 require 'data_mapper/mapper_registry'
 require 'data_mapper/relation_registry'
+
 require 'data_mapper/mapper'
 require 'data_mapper/mapper/veritas_mapper'
+
+require 'data_mapper/mapper/attribute'
 require 'data_mapper/mapper/attribute_set'
-require 'data_mapper/mapper/attribute_set/attribute'
+
+require 'data_mapper/mapper/relationship'
+require 'data_mapper/mapper/relationship/one_to_one'
 require 'data_mapper/mapper/relationship_set'
-require 'data_mapper/mapper/relationship_set/relationship'
 
 require 'data_mapper/support/inflector/inflections'
 require 'data_mapper/support/inflector/methods'
