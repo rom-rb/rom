@@ -65,6 +65,11 @@ module DataMapper
       end
     end
 
+    # @api public
+    def self.belongs_to(model_name, options = {})
+      map(model_name, options.merge(:type => Relationship::ManyToOne))
+    end
+
     # @api private
     def self.attributes
       @attributes ||= AttributeSet.new
