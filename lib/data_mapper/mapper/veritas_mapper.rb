@@ -7,6 +7,20 @@ module DataMapper
     class VeritasMapper < Mapper
 
       # @api public
+      def self.one(conditions = {})
+        relation = DataMapper[model].relation
+
+        conditions.each do |attribute, value|
+          relation = relation.restrict do |r|
+            field = attributes[attribute].field
+            r.send(field).eq(value)
+          end
+        end
+
+        new(relation).first
+      end
+
+      # @api public
       def self.base_relation
         @base_relation ||= Veritas::Relation::Base.new(
           relation_name, attributes.header)
