@@ -44,6 +44,8 @@ describe 'Relationship - One To One' do
         map :name, :type => String,  :to  => :username
         map :age,  :type => Integer
 
+        has 1, :address, :model_name => 'Address'
+
         model         User
         relation_name :users
         repository    :postgres
@@ -60,8 +62,6 @@ describe 'Relationship - One To One' do
   end
 
   it 'loads associated object' do
-    User::Mapper.has(1, :address, :mapper => address_mapper)
-
     user    = user_mapper.include(:address).first
     address = address_mapper.first
 

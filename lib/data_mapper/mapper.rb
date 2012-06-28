@@ -36,6 +36,11 @@ module DataMapper
       self
     end
 
+    # @api private
+    def self.finalize_relationships
+      relationships.each { |relationship| relationship.finalize }
+    end
+
     # Configure mapping of an attribute or a relationship
     #
     # @example

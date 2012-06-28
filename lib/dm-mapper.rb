@@ -7,6 +7,10 @@ require 'data_mapper/mapper/attribute_set/attribute'
 require 'data_mapper/mapper/relationship_set'
 require 'data_mapper/mapper/relationship_set/relationship'
 
+require 'data_mapper/support/inflector/inflections'
+require 'data_mapper/support/inflector/methods'
+require 'data_mapper/support/inflections'
+
 module DataMapper
 
   # @api public
@@ -38,9 +42,12 @@ module DataMapper
   #
   # TODO: implement handling of dependencies between mappers
   def self.finalize
-    Mapper::VeritasMapper.descendants.each do |mapper|
-      mapper_registry << mapper.finalize
-    end
+    mappers = Mapper::VeritasMapper.descendants
+
+    mappers.each { |mapper| mapper_registry << mapper.finalize }
+    mappers.each { |mapper| mapper.finalize_relationships }
+
+    self
   end
 
 end # module DataMapper
