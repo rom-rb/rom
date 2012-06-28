@@ -8,6 +8,25 @@ module DataMapper
 
       # @api public
       def self.one(conditions = {})
+        find(conditions).first
+      end
+
+      # @api public
+      def self.find(conditions = {})
+        relation = DataMapper[model].relation
+
+        conditions.each do |attribute, value|
+          relation = relation.restrict do |r|
+            field = attributes[attribute].field
+            r.send(field).eq(value)
+          end
+        end
+
+        new(relation)
+      end
+
+      # @api public
+      def self.one(conditions = {})
         relation = DataMapper[model].relation
 
         conditions.each do |attribute, value|
