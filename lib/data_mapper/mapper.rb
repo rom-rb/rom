@@ -51,6 +51,15 @@ module DataMapper
       self
     end
 
+    # @api public
+    def self.has(cardinality, model_name, options = {})
+      if cardinality == 1
+        map(model_name, options.merge(:type => Relationship::OneToOne))
+      else
+        raise "Relationship not supported"
+      end
+    end
+
     # @api private
     def self.attributes
       @attributes ||= AttributeSet.new

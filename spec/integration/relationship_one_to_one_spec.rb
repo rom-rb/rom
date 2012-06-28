@@ -60,9 +60,7 @@ describe 'Relationship - One To One' do
   end
 
   it 'loads associated object' do
-    User::Mapper.map :address,
-      :type   => DataMapper::Mapper::Relationship::OneToOne,
-      :mapper => address_mapper
+    User::Mapper.has(1, :address, :mapper => address_mapper)
 
     user    = user_mapper.include(:address).first
     address = address_mapper.first
