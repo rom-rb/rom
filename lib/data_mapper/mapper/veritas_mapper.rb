@@ -14,7 +14,7 @@ module DataMapper
       end
 
       # @api private
-      attr_reader :relation
+      attr_reader :relation, :attributes
 
       # Initialize a veritas mapper instance
       #
@@ -38,11 +38,11 @@ module DataMapper
       end
 
       # @api public
-      def find(options, &block)
+      def find(options)
         query = options.dup
         order = query.delete(:order)
 
-        restriction = @relation.restrict do |r|
+        restriction = relation.restrict do |r|
           query.inject(TAUTOLOGY) do |predicate, (attribute, value)|
             predicate.and(r.send(@attributes.field_name(attribute)).eq(value))
           end
@@ -56,9 +56,7 @@ module DataMapper
           end
         end
 
-        restriction = restrict(&block) if block_given?
-
-        self.class.new(restriction)
+        self.class.new(restriction.optimize)
       end
 
       # @api public
@@ -75,7 +73,7 @@ module DataMapper
 
       # @api public
       def include(name)
-        self.class.new(@relationships[name].join(@relation))
+        @relationships[name].call(@relation)
       end
 
       # @api public
@@ -90,8 +88,7 @@ module DataMapper
 
       # @api private
       def load(tuple)
-        @model.new(
-          @attributes.load(tuple).merge(@relationships.load(tuple)))
+        @model.new(@attributes.load(tuple))
       end
 
       # @api public

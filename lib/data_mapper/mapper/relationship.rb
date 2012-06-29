@@ -8,15 +8,27 @@ module DataMapper
       attr_reader :name
 
       def initialize(name, options)
-        @name       = name
-        @model_name = options.fetch(:model_name) { Inflector.classify(@name.to_s) }
-        @mapper     = options[:mapper]
+        @name         = name
+        @model_name   = options.fetch(:model_name) { Inflector.classify(name) }
+        @options      = options
+        @mapper_class = options[:mapper]
+        @operation    = options[:operation]
       end
 
+      # @api public
       def finalize
-        @model    = Inflector.constantize(@model_name)
-        @mapper ||= DataMapper[@model]
-        @relation = @mapper.relation
+        @child_relation = DataMapper[Inflector.constantize(@model_name)].relation
+        self
+      end
+
+      # @apu public
+      def call(parent_relation)
+        @mapper_class.new(@operation.call(parent_relation, @child_relation))
+      end
+
+      # @api public
+      def field_name(name)
+        @mapper.attributes.field_name(name)
       end
 
     end # class Relationship

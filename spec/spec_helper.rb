@@ -96,8 +96,14 @@ Dir[File.expand_path('../**/shared/**/*.rb', __FILE__)].each { |file| require fi
 
 RSpec.configure do |config|
   config.before(:all) do
-    Object.send(:remove_const, :User)    if defined?(User)
-    Object.send(:remove_const, :Address) if defined?(Address)
+    User.send(:remove_const, :Mapper)               if defined?(User::Mapper)
+    User.send(:remove_const, :UserAddressMapper)    if defined?(User::UserAddressMapper)
+    Address.send(:remove_const, :Mapper)            if defined?(Address::Mapper)
+    Address.send(:remove_const, :AddressUserMapper) if defined?(Address::AddressUserMapper)
+    Object.send(:remove_const, :User)               if defined?(User)
+    Object.send(:remove_const, :Address)            if defined?(Address)
+    DataMapper::Mapper.instance_variable_set('@descendants', [])
+    DataMapper::Mapper::VeritasMapper.instance_variable_set('@descendants', [])
   end
 
   config.before do

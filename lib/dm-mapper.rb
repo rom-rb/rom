@@ -49,7 +49,8 @@ module DataMapper
   def self.finalize
     mappers = Mapper::VeritasMapper.descendants
 
-    mappers.each { |mapper| mapper_registry << mapper.finalize }
+    mappers.each { |mapper| mapper_registry << mapper.finalize if mapper.relation_name }
+    mappers.each { |mapper| mapper.finalize_attributes }
     mappers.each { |mapper| mapper.finalize_relationships }
 
     self

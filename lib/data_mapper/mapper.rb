@@ -37,37 +37,35 @@ module DataMapper
     end
 
     # @api private
+    def self.finalize_attributes
+      attributes.each { |attribute| attribute.finalize }
+    end
+
+    # @api private
     def self.finalize_relationships
       relationships.each { |relationship| relationship.finalize }
     end
 
-    # Configure mapping of an attribute or a relationship
-    #
-    # @example
-    #
-    #   class User::Mapper < DataMapper::Mapper
-    #     map :name, :to => :username
-    #   end
-    #
     # @api public
     def self.map(name, options = {})
-      mapping_set = options[:type] < Relationship ? relationships : attributes
-      mapping_set.add(name, options)
+      attributes.add(name, options)
       self
     end
 
     # @api public
-    def self.has(cardinality, model_name, options = {})
+    def self.has(cardinality, model_name, options = {}, &operation)
       if cardinality == 1
-        map(model_name, options.merge(:type => Relationship::OneToOne))
+        relationships.add(model_name, options.merge(
+          :type => Relationship::OneToOne, :operation => operation))
       else
         raise "Relationship not supported"
       end
     end
 
     # @api public
-    def self.belongs_to(model_name, options = {})
-      map(model_name, options.merge(:type => Relationship::ManyToOne))
+    def self.belongs_to(model_name, options = {}, &operation)
+      relationships.add(model_name, options.merge(
+        :type => Relationship::ManyToOne, :operation => operation))
     end
 
     # @api private

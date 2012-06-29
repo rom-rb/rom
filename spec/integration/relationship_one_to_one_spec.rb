@@ -4,11 +4,13 @@ describe 'Relationship - One To One' do
   before(:all) do
     setup_db
 
-    insert_user 1, 'John', 18
-    insert_user 2, 'Jane', 21
+    insert_user 1, 'John',  18
+    insert_user 2, 'Jane',  21
+    insert_user 3, 'Piotr', 29
 
-    insert_address 1, 1, 'Street 1/2', 'Chicago', '12345'
-    insert_address 2, 2, 'Street 2/4', 'Boston',  '67890'
+    insert_address 1, 3, 'Street 1/2', 'Krakow',  '12345'
+    insert_address 2, 2, 'Street 1/2', 'Chicago', '54321'
+    insert_address 3, 1, 'Street 2/4', 'Boston',  '67890'
 
     class Address
       attr_reader :id, :street, :city, :zipcode
@@ -31,6 +33,7 @@ describe 'Relationship - One To One' do
       end
     end
 
+
     class User
       attr_reader :id, :name, :age, :address
 
@@ -39,16 +42,27 @@ describe 'Relationship - One To One' do
         @address = attributes[:address]
       end
 
+      class UserAddressMapper < DataMapper::Mapper::VeritasMapper
+        model User
+
+        map :user_id, :type => Integer, :to => :id, :key => true
+        map :name,    :type => String,  :to => :username
+        map :age,     :type => Integer
+        map :address, :type => Address
+      end
+
       class Mapper < DataMapper::Mapper::VeritasMapper
+        model         User
+        relation_name :users
+        repository    :postgres
+
         map :id,   :type => Integer, :key => true
         map :name, :type => String,  :to  => :username
         map :age,  :type => Integer
 
-        has 1, :address, :model_name => 'Address'
-
-        model         User
-        relation_name :users
-        repository    :postgres
+        has 1, :address, :model_name => 'Address', :mapper => UserAddressMapper do |users, addresses|
+          users.rename(:id => :user_id).join(addresses)
+        end
       end
     end
   end
@@ -62,21 +76,23 @@ describe 'Relationship - One To One' do
   end
 
   it 'loads associated object' do
-    user    = user_mapper.include(:address).first
-    address = address_mapper.first
+    user = user_mapper.include(:address).to_a.last
+    address = user.address
 
-    user.address.should be_instance_of(Address)
-    user.address.id.should eql(address.id)
+    address.should be_instance_of(Address)
+    address.id.should eql(3)
+    address.city.should eql('Boston')
   end
 
   it 'finds users with matching address' do
-    users = user_mapper.include(:address).restrict { |r| r.city.eq('Boston') }.to_a
+    users = user_mapper.include(:address).restrict { |r| r.city.eq('Krakow') }.to_a
 
     users.should have(1).item
 
     user = users.first
 
-    user.name.should eql('Jane')
-    user.address.city.should eql('Boston')
+    user.name.should eql('Piotr')
+    user.address.id.should eql(1)
+    user.address.city.should eql('Krakow')
   end
 end

@@ -13,6 +13,11 @@ module DataMapper
       end
 
       # @api public
+      def finalize
+        each { |attribute| attribute.finalize }
+      end
+
+      # @api public
       def field_name(attribute_name)
         self[attribute_name].field
       end
@@ -26,13 +31,13 @@ module DataMapper
 
       # @api private
       def header
-        @header ||= map(&:header)
+        @header ||= select(&:primitive?).map(&:header)
       end
 
       # @api private
       def load(tuple)
         each_with_object({}) do |attribute, attributes|
-          attributes[attribute.name] = attribute.load(tuple[attribute.field])
+          attributes[attribute.name] = attribute.load(tuple)
         end
       end
 

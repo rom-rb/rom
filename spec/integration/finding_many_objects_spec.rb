@@ -8,6 +8,31 @@ describe 'Finding Many Objects' do
     insert_user 2, 'Jane',  21
     insert_user 3, 'Jane',  22
     insert_user 4, 'Piotr', 20
+    insert_user 5, 'Dan',   20
+
+    insert_address 1, 1, 'Street 1/2', 'Chicago', '12345'
+    insert_address 2, 5, 'Street 2/4', 'Boston',  '67890'
+
+    class Address
+      attr_reader :id, :street, :city, :zipcode
+
+      def initialize(attributes)
+        @id, @street, @city, @zipcode = attributes.values_at(
+          :id, :street, :city, :zipcode)
+      end
+
+      class Mapper < DataMapper::Mapper::VeritasMapper
+        map :id,      :type => Integer, :key => true
+        map :user_id, :type => Integer
+        map :street,  :type => String
+        map :city,    :type => String
+        map :zipcode, :type => String
+
+        model         Address
+        relation_name :addresses
+        repository    :postgres
+      end
+    end
 
     class User
       attr_reader :id, :name, :age
@@ -20,6 +45,8 @@ describe 'Finding Many Objects' do
         map :id, :key => true, :type => Integer
         map :name, :to => :username, :type => String
         map :age, :type => Integer
+
+        has 1, :address, :model_name => 'Address'
 
         model         User
         relation_name :users
@@ -55,6 +82,20 @@ describe 'Finding Many Objects' do
     user2.should be_instance_of(User)
     user1.name.should eql('Jane')
     user2.age.should eql(22)
+  end
+
+  it 'finds objects matching criteria from joined relation' do
+    pending
+
+    users = DataMapper[User].find(:age => 20, :address => { :city => 'Boston' }).to_a
+
+    users.should have(1).item
+
+    user = users.first
+
+    user.should be_instance_of(User)
+    user.name.should eql('Dan')
+    user.age.should eql(20)
   end
 
 end

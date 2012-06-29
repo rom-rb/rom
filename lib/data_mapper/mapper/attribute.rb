@@ -14,6 +14,8 @@ module DataMapper
       # @api private
       attr_reader :field
 
+      PRIMITIVES = Veritas::Attribute.descendants.map(&:primitive).freeze
+
       # @api private
       def initialize(name, options = {})
         @name  = name
@@ -22,14 +24,28 @@ module DataMapper
         @key   = options.fetch(:key, false)
       end
 
+      # @api public
+      def finalize
+        @mapper = DataMapper[type]
+      end
+
       # @api private
-      def load(value)
-        value
+      def load(tuple)
+        if @mapper
+          @mapper.load(tuple)
+        else
+          tuple[field]
+        end
       end
 
       # @api private
       def header
         [ @field, @type ]
+      end
+
+      # @api private
+      def primitive?
+        PRIMITIVES.include?(type)
       end
 
       # @api private
