@@ -25,17 +25,6 @@ module DataMapper
       end
 
       # @api private
-      def load(tuple)
-        each_with_object({}) do |relationship, relationships|
-          begin
-            relationships[relationship.name] = relationship.load(tuple)
-          rescue => e
-            # FIXME: find a way to ask tuple if the key exists
-          end
-        end
-      end
-
-      # @api private
       def add(name, options = {})
         @relationships[name] = options[:type].new(name, options)
         self
