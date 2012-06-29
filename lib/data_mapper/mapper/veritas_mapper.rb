@@ -5,19 +5,18 @@ module DataMapper
     #
     # @api public
     class VeritasMapper < Mapper
+      TAUTOLOGY = Veritas::Function::Proposition::Tautology.instance
 
       # @api public
       def self.find(conditions = {})
-        relation = DataMapper[model].relation
-
-        conditions.each do |attribute, value|
-          relation = relation.restrict do |r|
+        restriction = relation.restrict do |r|
+          conditions.inject(TAUTOLOGY) do |predicate, (attribute, value)|
             field = attributes[attribute].field
-            r.send(field).eq(value)
+            predicate.and(r.send(field).eq(value))
           end
         end
 
-        new(relation)
+        new(restriction)
       end
 
       # @api public
@@ -30,6 +29,10 @@ module DataMapper
           # TODO: add custom error class
           raise "#{self}.one returned more than one result"
         end
+      end
+
+      def self.relation
+        @relation ||= DataMapper[model].relation
       end
 
       # @api public
