@@ -7,11 +7,6 @@ module DataMapper
     class VeritasMapper < Mapper
 
       # @api public
-      def self.one(conditions = {})
-        find(conditions).first
-      end
-
-      # @api public
       def self.find(conditions = {})
         relation = DataMapper[model].relation
 
@@ -27,16 +22,14 @@ module DataMapper
 
       # @api public
       def self.one(conditions = {})
-        relation = DataMapper[model].relation
+        results = find(conditions).to_a
 
-        conditions.each do |attribute, value|
-          relation = relation.restrict do |r|
-            field = attributes[attribute].field
-            r.send(field).eq(value)
-          end
+        if results.size == 1
+          results.first
+        else
+          # TODO: add custom error class
+          raise "#{self}.one returned more than one result"
         end
-
-        new(relation).first
       end
 
       # @api public

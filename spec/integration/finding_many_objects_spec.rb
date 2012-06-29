@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'Finding One Object' do
+describe 'Finding Many Objects' do
   before(:all) do
     setup_db
 
@@ -28,17 +28,19 @@ describe 'Finding One Object' do
     end
   end
 
-  it 'finds one object matching search criteria' do
-    user = User::Mapper.one(:name => 'Jane', :age => 22)
+  it 'finds many object matching search criteria' do
+    users = User::Mapper.find(:name => 'Jane').to_a
 
-    user.should be_instance_of(User)
-    user.name.should eql('Jane')
-    user.age.should eql(22)
-  end
+    users.should have(2).items
 
-  it 'raises an exception if more than one objects were found' do
-    expect { User::Mapper.one(:name => 'Jane') }.to raise_error(
-      "User::Mapper.one returned more than one result")
+    user1, user2 = users
+
+    user1.should be_instance_of(User)
+    user1.name.should eql('Jane')
+    user1.age.should eql(21)
+
+    user2.should be_instance_of(User)
+    user2.age.should eql(22)
   end
 
 end
