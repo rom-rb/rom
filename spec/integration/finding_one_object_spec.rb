@@ -29,7 +29,7 @@ describe 'Finding One Object' do
   end
 
   it 'finds one object matching search criteria' do
-    user = User::Mapper.one(:name => 'Jane', :age => 22)
+    user = DataMapper[User].one(:name => 'Jane', :age => 22)
 
     user.should be_instance_of(User)
     user.name.should eql('Jane')
@@ -37,8 +37,8 @@ describe 'Finding One Object' do
   end
 
   it 'raises an exception if more than one objects were found' do
-    expect { User::Mapper.one(:name => 'Jane') }.to raise_error(
-      "User::Mapper.one returned more than one result")
+    expect { DataMapper[User].one(:name => 'Jane') }.to raise_error(
+      "#{DataMapper[User]}.one returned more than one result")
   end
 
 end

@@ -8,44 +8,6 @@ module DataMapper
       TAUTOLOGY = Veritas::Function::Proposition::Tautology.instance
 
       # @api public
-      def self.find(conditions = {})
-        query = conditions.dup
-        order = query.delete(:order)
-
-        restriction = relation.restrict do |r|
-          query.inject(TAUTOLOGY) do |predicate, (attribute, value)|
-            predicate.and(r.send(attributes.field_name(attribute)).eq(value))
-          end
-        end
-
-        if order
-          restriction = restriction.sort_by do |r|
-            # TODO: automatically fill in missing attributes as veritas requires
-            #       all attributes from the header
-            order.map { |attribute| r.send(attributes.field_name(attribute)) }
-          end
-        end
-
-        new(restriction)
-      end
-
-      # @api public
-      def self.one(conditions = {})
-        results = find(conditions).to_a
-
-        if results.size == 1
-          results.first
-        else
-          # TODO: add custom error class
-          raise "#{self}.one returned more than one result"
-        end
-      end
-
-      def self.relation
-        @relation ||= DataMapper[model].relation
-      end
-
-      # @api public
       def self.base_relation
         @base_relation ||= Veritas::Relation::Base.new(
           relation_name, attributes.header)
@@ -73,6 +35,42 @@ module DataMapper
         return to_enum unless block_given?
         @relation.each { |tuple| yield load(tuple) }
         self
+      end
+
+      # @api public
+      def find(options, &block)
+        query = options.dup
+        order = query.delete(:order)
+
+        restriction = @relation.restrict do |r|
+          query.inject(TAUTOLOGY) do |predicate, (attribute, value)|
+            predicate.and(r.send(@attributes.field_name(attribute)).eq(value))
+          end
+        end
+
+        if order
+          restriction = restriction.sort_by do |r|
+            # TODO: automatically fill in missing attributes as veritas requires
+            #       all attributes from the header
+            order.map { |attribute| r.send(@attributes.field_name(attribute)) }
+          end
+        end
+
+        restriction = restrict(&block) if block_given?
+
+        self.class.new(restriction)
+      end
+
+      # @api public
+      def one(options = {})
+        results = find(options).to_a
+
+        if results.size == 1
+          results.first
+        else
+          # TODO: add custom error class
+          raise "#{self}.one returned more than one result"
+        end
       end
 
       # @api public

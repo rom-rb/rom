@@ -29,7 +29,7 @@ describe 'Finding Many Objects' do
   end
 
   it 'finds many object matching search criteria' do
-    users = User::Mapper.find(:name => 'Jane').to_a
+    users = DataMapper[User].find(:name => 'Jane').to_a
 
     users.should have(2).items
 
@@ -44,7 +44,7 @@ describe 'Finding Many Objects' do
   end
 
   it 'finds and sorts objects' do
-    users = User::Mapper.find(:name => 'Jane', :order => [ :age, :name, :id ]).to_a
+    users = DataMapper[User].find(:name => 'Jane', :order => [ :age, :name, :id ]).to_a
 
     user1, user2 = users
 
