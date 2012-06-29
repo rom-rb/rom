@@ -9,10 +9,20 @@ module DataMapper
 
       # @api public
       def self.find(conditions = {})
+        query = conditions.dup
+        order = query.delete(:order)
+
         restriction = relation.restrict do |r|
-          conditions.inject(TAUTOLOGY) do |predicate, (attribute, value)|
-            field = attributes[attribute].field
-            predicate.and(r.send(field).eq(value))
+          query.inject(TAUTOLOGY) do |predicate, (attribute, value)|
+            predicate.and(r.send(attributes.field_name(attribute)).eq(value))
+          end
+        end
+
+        if order
+          restriction = restriction.sort_by do |r|
+            # TODO: automatically fill in missing attributes as veritas requires
+            #       all attributes from the header
+            order.map { |attribute| r.send(attributes.field_name(attribute)) }
           end
         end
 

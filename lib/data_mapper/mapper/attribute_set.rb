@@ -13,6 +13,11 @@ module DataMapper
       end
 
       # @api public
+      def field_name(attribute_name)
+        self[attribute_name].field
+      end
+
+      # @api public
       def each
         return to_enum unless block_given?
         @attributes.each_value { |attribute| yield attribute }

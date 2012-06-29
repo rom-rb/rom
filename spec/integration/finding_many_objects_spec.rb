@@ -4,7 +4,7 @@ describe 'Finding Many Objects' do
   before(:all) do
     setup_db
 
-    insert_user 1, 'John',  18
+    insert_user 1, 'John',  23
     insert_user 2, 'Jane',  21
     insert_user 3, 'Jane',  22
     insert_user 4, 'Piotr', 20
@@ -40,6 +40,20 @@ describe 'Finding Many Objects' do
     user1.age.should eql(21)
 
     user2.should be_instance_of(User)
+    user2.age.should eql(22)
+  end
+
+  it 'finds and sorts objects' do
+    users = User::Mapper.find(:name => 'Jane', :order => [ :age, :name, :id ]).to_a
+
+    user1, user2 = users
+
+    user1.should be_instance_of(User)
+    user1.name.should eql('Jane')
+    user1.age.should eql(21)
+
+    user2.should be_instance_of(User)
+    user1.name.should eql('Jane')
     user2.age.should eql(22)
   end
 
