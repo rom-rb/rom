@@ -46,8 +46,6 @@ describe 'Finding Many Objects' do
         map :name, :to => :username, :type => String
         map :age, :type => Integer
 
-        has 1, :address, :model_name => 'Address'
-
         model         User
         relation_name :users
         repository    :postgres

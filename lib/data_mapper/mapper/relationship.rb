@@ -9,7 +9,6 @@ module DataMapper
 
       def initialize(name, options)
         @name         = name
-        @model_name   = options.fetch(:model_name) { Inflector.classify(name) }
         @options      = options
         @parent       = options[:parent]
         @mapper_class = options[:mapper]
@@ -18,8 +17,17 @@ module DataMapper
 
       # @api public
       def finalize
-        @base_relation = DataMapper[Inflector.constantize(@model_name)].relation
+        @base_relation = child_mapper.relation
         self
+      end
+
+      # @api public
+      def child_mapper
+        @child_mapper ||= if @parent
+                            @parent.child_mapper
+                          else
+                            DataMapper[@mapper_class.attributes[@name].type]
+                          end
       end
 
       # @api public

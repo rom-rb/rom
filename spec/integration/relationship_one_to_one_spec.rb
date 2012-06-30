@@ -60,7 +60,7 @@ describe 'Relationship - One To One' do
         map :name, :type => String,  :to  => :username
         map :age,  :type => Integer
 
-        has 1, :address, :model_name => 'Address', :mapper => UserAddressMapper do |users, addresses|
+        has 1, :address, :mapper => UserAddressMapper do |users, addresses|
           users.rename(:id => :user_id).join(addresses)
         end
 
