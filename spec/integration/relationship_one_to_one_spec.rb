@@ -64,7 +64,7 @@ describe 'Relationship - One To One' do
           rename(:id => :user_id).join(address)
         end
 
-        has 1, :home_address, :parent => :address do
+        has 1, :home_address, :through => :address do
           restrict { |r| r.city.eq('Krakow') }
         end
       end

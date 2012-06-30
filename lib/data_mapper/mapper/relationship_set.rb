@@ -13,6 +13,11 @@ module DataMapper
       end
 
       # @api public
+      def add_through(source, name, &operation)
+        self << self[source].inherit(name, operation)
+      end
+
+      # @api public
       def each
         return to_enum unless block_given?
         @relationships.each_value { |attribute| yield attribute }

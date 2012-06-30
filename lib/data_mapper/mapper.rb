@@ -55,10 +55,10 @@ module DataMapper
     # @api public
     def self.has(cardinality, name, options = {}, &operation)
       if cardinality == 1
-        parent = options[:parent]
+        source = options[:through]
 
-        if options[:parent]
-          relationships << relationships[parent].inherit(name, operation)
+        if source
+          relationships.add_through(source, name, &operation)
         else
           relationships.add(name, options.merge(
             :type => Relationship::OneToOne, :operation => operation))

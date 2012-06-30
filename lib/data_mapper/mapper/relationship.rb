@@ -10,7 +10,7 @@ module DataMapper
       def initialize(name, options)
         @name         = name
         @options      = options
-        @parent       = options[:parent]
+        @source       = options[:source]
         @mapper_class = options[:mapper]
         @operation    = options[:operation]
       end
@@ -32,8 +32,8 @@ module DataMapper
 
       # @api public
       def child_mapper
-        @child_mapper ||= if @parent
-                            @parent.child_mapper
+        @child_mapper ||= if @source
+                            @source.child_mapper
                           else
                             DataMapper[@mapper_class.attributes[name].type]
                           end
@@ -41,8 +41,8 @@ module DataMapper
 
       # @api public
       def parent_mapper
-        @parent_mapper ||= if @parent
-                            @parent.call
+        @parent_mapper ||= if @source
+                            @source.call
                           else
                             DataMapper[@mapper_class.model]
                           end
@@ -50,7 +50,7 @@ module DataMapper
 
       # @api public
       def inherit(name, operation)
-        self.class.new(name, @options.merge(:parent => self, :operation => operation))
+        self.class.new(name, @options.merge(:source => self, :operation => operation))
       end
 
     end # class Relationship
