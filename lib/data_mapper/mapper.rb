@@ -53,10 +53,16 @@ module DataMapper
     end
 
     # @api public
-    def self.has(cardinality, model_name, options = {}, &operation)
+    def self.has(cardinality, name, options = {}, &operation)
       if cardinality == 1
-        relationships.add(model_name, options.merge(
-          :type => Relationship::OneToOne, :operation => operation))
+        parent = options[:parent]
+
+        if options[:parent]
+          relationships << relationships[parent].inherit(name, operation)
+        else
+          relationships.add(name, options.merge(
+            :type => Relationship::OneToOne, :operation => operation))
+        end
       else
         raise "Relationship not supported"
       end

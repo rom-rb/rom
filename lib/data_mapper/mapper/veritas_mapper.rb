@@ -73,7 +73,7 @@ module DataMapper
 
       # @api public
       def include(name)
-        @relationships[name].call(@relation)
+        @relationships[name].mapper(@relation)
       end
 
       # @api public

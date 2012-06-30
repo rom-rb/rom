@@ -45,7 +45,7 @@ describe 'Relationship - One To One' do
       class UserAddressMapper < DataMapper::Mapper::VeritasMapper
         model User
 
-        map :user_id, :type => Integer, :to => :id, :key => true
+        map :id,      :type => Integer, :to => :user_id, :key => true
         map :name,    :type => String,  :to => :username
         map :age,     :type => Integer
         map :address, :type => Address
@@ -62,6 +62,10 @@ describe 'Relationship - One To One' do
 
         has 1, :address, :model_name => 'Address', :mapper => UserAddressMapper do |users, addresses|
           users.rename(:id => :user_id).join(addresses)
+        end
+
+        has 1, :home_address, :parent => :address do |users, address|
+          address.restrict { |r| r.city.eq('Krakow') }
         end
       end
     end
@@ -82,6 +86,15 @@ describe 'Relationship - One To One' do
     address.should be_instance_of(Address)
     address.id.should eql(3)
     address.city.should eql('Boston')
+  end
+
+  it 'loads restricted association' do
+    user = user_mapper.include(:home_address).to_a.last
+    address = user.address
+
+    address.should be_instance_of(Address)
+    address.id.should eql(1)
+    address.city.should eql('Krakow')
   end
 
   it 'finds users with matching address' do

@@ -30,6 +30,11 @@ module DataMapper
         self
       end
 
+      # @api public
+      def <<(relationship)
+        @relationships[relationship.name] = relationship
+      end
+
       # @api private
       def [](name)
         @relationships[name]

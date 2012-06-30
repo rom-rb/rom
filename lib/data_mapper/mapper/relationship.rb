@@ -11,24 +11,41 @@ module DataMapper
         @name         = name
         @model_name   = options.fetch(:model_name) { Inflector.classify(name) }
         @options      = options
+        @parent       = options[:parent]
         @mapper_class = options[:mapper]
         @operation    = options[:operation]
       end
 
       # @api public
       def finalize
-        @child_relation = DataMapper[Inflector.constantize(@model_name)].relation
+        @base_relation = DataMapper[Inflector.constantize(@model_name)].relation
         self
       end
 
+      # @api public
+      def mapper(parent_relation)
+        @mapper_class.new(relation(parent_relation).optimize)
+      end
+
       # @apu public
-      def call(parent_relation)
-        @mapper_class.new(@operation.call(parent_relation, @child_relation))
+      def relation(parent_relation)
+        @operation.call(parent_relation, child_relation(parent_relation))
       end
 
       # @api public
-      def field_name(name)
-        @mapper.attributes.field_name(name)
+      def inherit(name, operation)
+        self.class.new(name, @options.merge(:parent => self, :operation => operation))
+      end
+
+    private
+
+      # @api private
+      def child_relation(parent_relation)
+        if @parent
+          @parent.relation(parent_relation)
+        else
+          @base_relation
+        end
       end
 
     end # class Relationship
