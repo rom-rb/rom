@@ -73,7 +73,7 @@ module DataMapper
 
       # @api public
       def include(name)
-        @relationships[name].mapper(@relation)
+        @relationships[name].call
       end
 
       # @api public
@@ -84,6 +84,16 @@ module DataMapper
       # @api public
       def sort_by(&block)
         self.class.new(@relation.sort_by(&block))
+      end
+
+      # @api public
+      def rename(mapping, &block)
+        self.class.new(@relation.rename(mapping, &block))
+      end
+
+      # @api public
+      def join(other)
+        self.class.new(@relation.join(other.relation))
       end
 
       # @api private

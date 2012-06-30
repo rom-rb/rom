@@ -17,8 +17,17 @@ module DataMapper
 
       # @api public
       def finalize
-        @base_relation = child_mapper.relation
         self
+      end
+
+      # @api public
+      def call
+        @mapper_class.new(relation)
+      end
+
+      # @api public
+      def relation
+        parent_mapper.instance_exec(child_mapper, &@operation).relation.optimize
       end
 
       # @api public
@@ -26,34 +35,22 @@ module DataMapper
         @child_mapper ||= if @parent
                             @parent.child_mapper
                           else
-                            DataMapper[@mapper_class.attributes[@name].type]
+                            DataMapper[@mapper_class.attributes[name].type]
                           end
       end
 
       # @api public
-      def mapper(parent_relation)
-        @mapper_class.new(relation(parent_relation).optimize)
-      end
-
-      # @apu public
-      def relation(parent_relation)
-        @operation.call(parent_relation, child_relation(parent_relation))
+      def parent_mapper
+        @parent_mapper ||= if @parent
+                            @parent.call
+                          else
+                            DataMapper[@mapper_class.model]
+                          end
       end
 
       # @api public
       def inherit(name, operation)
         self.class.new(name, @options.merge(:parent => self, :operation => operation))
-      end
-
-    private
-
-      # @api private
-      def child_relation(parent_relation)
-        if @parent
-          @parent.relation(parent_relation)
-        else
-          @base_relation
-        end
       end
 
     end # class Relationship

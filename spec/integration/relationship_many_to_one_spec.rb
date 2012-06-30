@@ -55,8 +55,8 @@ describe 'Relationship - Many To One' do
         map :city,    :type => String
         map :zipcode, :type => String
 
-        belongs_to :user, :mapper => AddressUserMapper do |addresses, users|
-          addresses.rename(:id => :address_id).join(users)
+        belongs_to :user, :mapper => AddressUserMapper do |users|
+          rename(:id => :address_id).join(users)
         end
 
         model         Address

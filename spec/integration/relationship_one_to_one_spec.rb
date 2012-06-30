@@ -60,12 +60,12 @@ describe 'Relationship - One To One' do
         map :name, :type => String,  :to  => :username
         map :age,  :type => Integer
 
-        has 1, :address, :mapper => UserAddressMapper do |users, addresses|
-          users.rename(:id => :user_id).join(addresses)
+        has 1, :address, :mapper => UserAddressMapper do |address|
+          rename(:id => :user_id).join(address)
         end
 
-        has 1, :home_address, :parent => :address do |users, address|
-          address.restrict { |r| r.city.eq('Krakow') }
+        has 1, :home_address, :parent => :address do
+          restrict { |r| r.city.eq('Krakow') }
         end
       end
     end
