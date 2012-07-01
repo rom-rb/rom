@@ -5,7 +5,7 @@ module DataMapper
     #
     # @api private
     class Relationship
-      attr_reader :name
+      attr_reader :name, :relation, :child_mapper
 
       def initialize(name, options)
         @name         = name
@@ -17,6 +17,9 @@ module DataMapper
 
       # @api public
       def finalize
+        finalize_parent_mapper
+        finalize_child_mapper
+        finalize_relation
         self
       end
 
@@ -26,31 +29,33 @@ module DataMapper
       end
 
       # @api public
-      def relation
-        parent_mapper.instance_exec(child_mapper, &@operation).relation.optimize
-      end
-
-      # @api public
-      def child_mapper
-        @child_mapper ||= if @source
-                            @source.child_mapper
-                          else
-                            DataMapper[@mapper_class.attributes[name].type]
-                          end
-      end
-
-      # @api public
-      def parent_mapper
-        @parent_mapper ||= if @source
-                            @source.call
-                          else
-                            DataMapper[@mapper_class.model]
-                          end
-      end
-
-      # @api public
       def inherit(name, operation)
         self.class.new(name, @options.merge(:source => self, :operation => operation))
+      end
+
+    private
+
+      # @api private
+      def finalize_relation
+        @relation = @parent_mapper.instance_exec(@child_mapper, &@operation).relation.optimize
+      end
+
+      # @api private
+      def finalize_child_mapper
+        @child_mapper = if @source
+                          @source.finalize.child_mapper
+                        else
+                          DataMapper[@mapper_class.attributes[name].type]
+                        end
+      end
+
+      # @api private
+      def finalize_parent_mapper
+        @parent_mapper = if @source
+                           @source.finalize.call
+                         else
+                           DataMapper[@mapper_class.model]
+                         end
       end
 
     end # class Relationship
