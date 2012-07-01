@@ -39,10 +39,7 @@ module DataMapper
 
       # @api public
       def find(options)
-        query = options.dup
-        order = query.delete(:order)
-
-        query = query.each_with_object({}) do |(attribute, value), mapped|
+        query = options.each_with_object({}) do |(attribute, value), mapped|
           mapped[@attributes.field_name(attribute)] = value
         end
 
@@ -52,7 +49,7 @@ module DataMapper
       end
 
       # @api public
-      def order(options)
+      def order(*order)
         sorted = relation.sort_by do |r|
           # TODO: automatically fill in missing attributes as veritas requires
           #       all attributes from the header
