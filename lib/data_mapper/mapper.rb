@@ -53,6 +53,14 @@ module DataMapper
     end
 
     # @api public
+    def self.has_many(name, options = {}, &operation)
+      options[:mapper] ||= self
+
+      relationships.add(name, options.merge(
+        :type => Relationship::OneToMany, :operation => operation))
+    end
+
+    # @api public
     def self.has(cardinality, name, options = {}, &operation)
       if cardinality == 1
         source = options[:through]

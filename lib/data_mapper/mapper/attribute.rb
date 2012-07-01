@@ -18,10 +18,11 @@ module DataMapper
 
       # @api private
       def initialize(name, options = {})
-        @name  = name
-        @field = options.fetch(:to, @name)
-        @type  = options.fetch(:type, Object)
-        @key   = options.fetch(:key, false)
+        @name         = name
+        @field        = options.fetch(:to, @name)
+        @type         = options.fetch(:type, Object)
+        @key          = options.fetch(:key, false)
+        @relationship = options.fetch(:relationship, false)
       end
 
       # @api public
@@ -30,9 +31,15 @@ module DataMapper
       end
 
       # @api private
+      #
+      # TODO: introduce attribute subclasses and get rid of those ifs
       def load(tuple)
         if @mapper
-          @mapper.load(tuple)
+          if relationship?
+            tuple[field].map { |t| @mapper.load(t) }
+          else
+            @mapper.load(tuple)
+          end
         else
           tuple[field]
         end
@@ -46,6 +53,11 @@ module DataMapper
       # @api private
       def primitive?
         PRIMITIVES.include?(type)
+      end
+
+      # @api private
+      def relationship?
+        @relationship
       end
 
       # @api private

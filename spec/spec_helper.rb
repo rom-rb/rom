@@ -41,6 +41,7 @@ def setup_db
 
   connection.create_command('DROP TABLE IF EXISTS "users"').execute_non_query
   connection.create_command('DROP TABLE IF EXISTS "addresses"').execute_non_query
+  connection.create_command('DROP TABLE IF EXISTS "orders"').execute_non_query
 
   connection.create_command(<<-SQL.gsub(/\s+/, ' ').strip).execute_non_query
     CREATE TABLE "users"
@@ -57,6 +58,14 @@ def setup_db
         "street"   VARCHAR(50) NOT NULL,
         "city"     VARCHAR(50) NOT NULL,
         "zipcode"  VARCHAR(10) NOT NULL
+      )
+  SQL
+
+  connection.create_command(<<-SQL.gsub(/\s+/, ' ').strip).execute_non_query
+    CREATE TABLE "orders"
+      ( "id"       SERIAL      NOT NULL PRIMARY KEY,
+        "user_id"  INTEGER     NOT NULL,
+        "product"  VARCHAR(50) NOT NULL
       )
   SQL
 
@@ -87,6 +96,17 @@ def insert_address(id, user_id, street, city, zipcode, connection = nil)
     'INSERT INTO "addresses" ("id", "user_id", "street", "city", "zipcode") VALUES (?, ?, ?, ?, ?)')
 
   insert_users.execute_non_query(id, user_id, street, city, zipcode)
+
+  connection.close
+end
+
+def insert_order(id, user_id, product, connection = nil)
+  connection ||= DataObjects::Connection.new(CONFIG['postgres'])
+
+  insert_users = connection.create_command(
+    'INSERT INTO "orders" ("id", "user_id", "product") VALUES (?, ?, ?)')
+
+  insert_users.execute_non_query(id, user_id, product)
 
   connection.close
 end

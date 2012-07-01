@@ -9,6 +9,7 @@ require 'data_mapper/mapper/attribute_set'
 
 require 'data_mapper/mapper/relationship'
 require 'data_mapper/mapper/relationship/one_to_one'
+require 'data_mapper/mapper/relationship/one_to_many'
 require 'data_mapper/mapper/relationship/many_to_one'
 require 'data_mapper/mapper/relationship_set'
 

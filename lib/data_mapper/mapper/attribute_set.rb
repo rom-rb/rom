@@ -59,7 +59,7 @@ module DataMapper
 
       # @api private
       def key
-        map(&:key?)
+        select(&:key?)
       end
 
     end # class AttributeSet
