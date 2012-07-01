@@ -39,9 +39,9 @@ module DataMapper
 
       # @api public
       def find(options)
-        query = options.each_with_object({}) do |(attribute, value), mapped|
+        query = options.each_with_object({}) { |(attribute, value), mapped|
           mapped[@attributes.field_name(attribute)] = value
-        end
+        }
 
         restriction = @relation.restrict(query)
 
@@ -50,11 +50,12 @@ module DataMapper
 
       # @api public
       def order(*order)
-        sorted = relation.sort_by do |r|
-          # TODO: automatically fill in missing attributes as veritas requires
-          #       all attributes from the header
-          order.map { |attribute| r.send(@attributes.field_name(attribute)) }
-        end
+        attributes = order.map { |attribute| @attributes.field_name(attribute) }
+        attributes = attributes.concat(@attributes.fields).uniq
+
+        sorted = relation.sort_by { |r|
+          attributes.map { |attribute| r.send(attribute) }
+        }
 
         self.class.new(sorted)
       end

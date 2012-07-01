@@ -69,7 +69,7 @@ describe 'Finding Many Objects' do
   end
 
   it 'finds and sorts objects' do
-    users = DataMapper[User].find(:name => 'Jane').order(:age, :name, :id).to_a
+    users = DataMapper[User].find(:name => 'Jane').order(:age, :name).to_a
 
     user1, user2 = users
 

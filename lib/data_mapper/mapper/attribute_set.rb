@@ -35,6 +35,11 @@ module DataMapper
       end
 
       # @api private
+      def fields
+        header.map(&:first)
+      end
+
+      # @api private
       def load(tuple)
         each_with_object({}) do |attribute, attributes|
           attributes[attribute.name] = attribute.load(tuple)
