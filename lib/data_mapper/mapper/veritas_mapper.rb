@@ -42,11 +42,11 @@ module DataMapper
         query = options.dup
         order = query.delete(:order)
 
-        restriction = relation.restrict do |r|
-          query.inject(TAUTOLOGY) do |predicate, (attribute, value)|
-            predicate.and(r.send(@attributes.field_name(attribute)).eq(value))
-          end
+        query = query.each_with_object({}) do |(attribute, value), mapped|
+          mapped[@attributes.field_name(attribute)] = value
         end
+
+        restriction = @relation.restrict(query)
 
         if order
           restriction = restriction.sort_by do |r|
