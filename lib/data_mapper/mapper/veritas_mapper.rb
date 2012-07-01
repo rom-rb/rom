@@ -48,15 +48,18 @@ module DataMapper
 
         restriction = @relation.restrict(query)
 
-        if order
-          restriction = restriction.sort_by do |r|
-            # TODO: automatically fill in missing attributes as veritas requires
-            #       all attributes from the header
-            order.map { |attribute| r.send(@attributes.field_name(attribute)) }
-          end
+        self.class.new(restriction.optimize)
+      end
+
+      # @api public
+      def order(options)
+        sorted = relation.sort_by do |r|
+          # TODO: automatically fill in missing attributes as veritas requires
+          #       all attributes from the header
+          order.map { |attribute| r.send(@attributes.field_name(attribute)) }
         end
 
-        self.class.new(restriction.optimize)
+        self.class.new(sorted)
       end
 
       # @api public
