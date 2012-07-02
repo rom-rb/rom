@@ -31,11 +31,9 @@ module DataMapper
 
       # @api private
       def initialize(name, options = {})
-        @name         = name
-        @field        = options.fetch(:to, @name)
-        @type         = options.fetch(:type, Object)
-        @key          = options.fetch(:key, false)
-        @relationship = options.fetch(:relationship, false)
+        @name  = name
+        @field = options.fetch(:to, @name)
+        @key   = options.fetch(:key, false)
       end
 
       # @api public
