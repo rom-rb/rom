@@ -16,6 +16,8 @@ require 'data_mapper/mapper/relationship/one_to_many'
 require 'data_mapper/mapper/relationship/many_to_one'
 require 'data_mapper/mapper/relationship_set'
 
+require 'data_mapper/mapper/query'
+
 require 'data_mapper/support/inflector/inflections'
 require 'data_mapper/support/inflector/methods'
 require 'data_mapper/support/inflections'

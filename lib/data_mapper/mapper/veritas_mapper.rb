@@ -39,12 +39,7 @@ module DataMapper
 
       # @api public
       def find(options)
-        query = options.each_with_object({}) { |(attribute, value), mapped|
-          mapped[@attributes.field_name(attribute)] = value
-        }
-
-        restriction = @relation.restrict(query)
-
+        restriction = @relation.restrict(Query.new(options, @attributes))
         self.class.new(restriction.optimize)
       end
 
