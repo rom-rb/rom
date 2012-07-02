@@ -5,6 +5,9 @@ require 'data_mapper/mapper'
 require 'data_mapper/mapper/veritas_mapper'
 
 require 'data_mapper/mapper/attribute'
+require 'data_mapper/mapper/attribute/primitive'
+require 'data_mapper/mapper/attribute/mapper'
+require 'data_mapper/mapper/attribute/collection'
 require 'data_mapper/mapper/attribute_set'
 
 require 'data_mapper/mapper/relationship'

@@ -31,7 +31,14 @@ module DataMapper
 
       # @api private
       def header
-        @header ||= select(&:primitive?).map(&:header)
+        @header ||= primitives.map(&:header)
+      end
+
+      # @api private
+      def primitives
+        @primitives ||= select { |attribute|
+          attribute.kind_of?(Attribute::Primitive)
+        }
       end
 
       # @api private
@@ -48,7 +55,7 @@ module DataMapper
 
       # @api private
       def add(*args)
-        @attributes[args.first] = Attribute.new(*args)
+        @attributes[args.first] = Attribute.build(*args)
         self
       end
 

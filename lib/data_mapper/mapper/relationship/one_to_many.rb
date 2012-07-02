@@ -16,11 +16,13 @@ module DataMapper
 
             tuples     = @relation.to_a
             parent_key = @attributes.key
-            name       = @attributes.detect { |attribute| attribute.relationship? }.name
+            name       = @attributes.detect { |attribute|
+              attribute.kind_of?(Attribute::Collection)
+            }.name
 
             parents = tuples.each_with_object({}) do |tuple, hash|
               key = parent_key.map { |attribute| tuple[attribute.field] }
-              hash[key] ||= @attributes.select(&:primitive?).each_with_object({}) { |attribute, parent|
+              hash[key] ||= @attributes.primitives.each_with_object({}) { |attribute, parent|
                 parent[attribute.field] = tuple[attribute.field]
               }
             end

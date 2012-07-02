@@ -40,7 +40,7 @@ describe 'Relationship - Onet To Many' do
       map :id,     :type => Integer, :to => :user_id, :key => true
       map :name,   :type => String,  :to => :username
       map :age,    :type => Integer
-      map :orders, :type => Order, :relationship => true
+      map :orders, :type => Order, :collection => true
 
       model User
     end

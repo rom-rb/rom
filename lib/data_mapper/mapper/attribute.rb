@@ -16,6 +16,19 @@ module DataMapper
 
       PRIMITIVES = Veritas::Attribute.descendants.map(&:primitive).freeze
 
+      # @api public
+      def self.build(name, options = {})
+        klass = if PRIMITIVES.include?(options[:type])
+                  Attribute::Primitive
+                elsif options[:collection]
+                  Attribute::Collection
+                else
+                  Attribute::Mapper
+                end
+
+        klass.new(name, options)
+      end
+
       # @api private
       def initialize(name, options = {})
         @name         = name
@@ -27,37 +40,19 @@ module DataMapper
 
       # @api public
       def finalize
-        @mapper = DataMapper[type]
+        # noop
       end
 
       # @api private
       #
       # TODO: introduce attribute subclasses and get rid of those ifs
       def load(tuple)
-        if @mapper
-          if relationship?
-            tuple[field].map { |t| @mapper.load(t) }
-          else
-            @mapper.load(tuple)
-          end
-        else
-          tuple[field]
-        end
+        raise NotImplementedError, "#{self.class} must implement #load"
       end
 
       # @api private
       def header
         [ @field, @type ]
-      end
-
-      # @api private
-      def primitive?
-        PRIMITIVES.include?(type)
-      end
-
-      # @api private
-      def relationship?
-        @relationship
       end
 
       # @api private
