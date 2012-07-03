@@ -55,9 +55,8 @@ module DataMapper
     # @api public
     def self.has_many(name, options = {}, &operation)
       options[:mapper] ||= self
-
-      relationships.add(name, options.merge(
-        :type => Relationship::OneToMany, :operation => operation))
+      type = options[:through] ? Relationship::ManyToMany : Relationship::OneToMany
+      relationships.add(name, options.merge(:type => type, :operation => operation))
     end
 
     # @api public

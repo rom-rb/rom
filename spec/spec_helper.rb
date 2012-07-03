@@ -42,6 +42,9 @@ def setup_db
   connection.create_command('DROP TABLE IF EXISTS "users"').execute_non_query
   connection.create_command('DROP TABLE IF EXISTS "addresses"').execute_non_query
   connection.create_command('DROP TABLE IF EXISTS "orders"').execute_non_query
+  connection.create_command('DROP TABLE IF EXISTS "songs"').execute_non_query
+  connection.create_command('DROP TABLE IF EXISTS "song_tags"').execute_non_query
+  connection.create_command('DROP TABLE IF EXISTS "tags"').execute_non_query
 
   connection.create_command(<<-SQL.gsub(/\s+/, ' ').strip).execute_non_query
     CREATE TABLE "users"
@@ -66,6 +69,28 @@ def setup_db
       ( "id"       SERIAL      NOT NULL PRIMARY KEY,
         "user_id"  INTEGER     NOT NULL,
         "product"  VARCHAR(50) NOT NULL
+      )
+  SQL
+
+  connection.create_command(<<-SQL.gsub(/\s+/, ' ').strip).execute_non_query
+    CREATE TABLE "songs"
+      ( "id"    SERIAL NOT NULL PRIMARY KEY,
+        "title" VARCHAR(50) NOT NULL
+      )
+  SQL
+
+  connection.create_command(<<-SQL.gsub(/\s+/, ' ').strip).execute_non_query
+    CREATE TABLE "tags"
+      ( "id"   SERIAL NOT NULL PRIMARY KEY,
+        "name" VARCHAR(50) NOT NULL
+      )
+  SQL
+
+  connection.create_command(<<-SQL.gsub(/\s+/, ' ').strip).execute_non_query
+    CREATE TABLE "song_tags"
+      ( "id"   SERIAL NOT NULL PRIMARY KEY,
+        "song_id" INTEGER NOT NULL,
+        "tag_id"  INTEGER NOT NULL
       )
   SQL
 
@@ -107,6 +132,39 @@ def insert_order(id, user_id, product, connection = nil)
     'INSERT INTO "orders" ("id", "user_id", "product") VALUES (?, ?, ?)')
 
   insert_users.execute_non_query(id, user_id, product)
+
+  connection.close
+end
+
+def insert_song(id, title, connection = nil)
+  connection ||= DataObjects::Connection.new(CONFIG['postgres'])
+
+  insert_users = connection.create_command(
+    'INSERT INTO "songs" ("id", "title") VALUES (?, ?)')
+
+  insert_users.execute_non_query(id, title)
+
+  connection.close
+end
+
+def insert_tag(id, name, connection = nil)
+  connection ||= DataObjects::Connection.new(CONFIG['postgres'])
+
+  insert_users = connection.create_command(
+    'INSERT INTO "tags" ("id", "name") VALUES (?, ?)')
+
+  insert_users.execute_non_query(id, name)
+
+  connection.close
+end
+
+def insert_song_tag(id, song_id, tag_id, connection = nil)
+  connection ||= DataObjects::Connection.new(CONFIG['postgres'])
+
+  insert_users = connection.create_command(
+    'INSERT INTO "song_tags" ("id", "song_id", "tag_id") VALUES (?, ?, ?)')
+
+  insert_users.execute_non_query(id, song_id, tag_id)
 
   connection.close
 end

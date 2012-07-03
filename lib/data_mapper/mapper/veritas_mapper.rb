@@ -89,7 +89,9 @@ module DataMapper
 
       # @api public
       def join(other)
-        self.class.new(@relation.join(other.relation))
+        # FIXME: somehow...:)
+        other_relation = other.kind_of?(Mapper) ? other.relation : other
+        self.class.new(@relation.join(other_relation))
       end
 
       # @api private
