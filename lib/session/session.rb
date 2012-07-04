@@ -2,6 +2,9 @@
 module Session
   # Represent a simple non UoW database session
   class Session
+    include Veritas::Immutable
+    extend Veritas::Aliasable
+
     # Read objects from database
     #
     # This method returns a mapper defined container that might be 
@@ -80,24 +83,7 @@ module Session
       self
     end
 
-    # Alias for #persist
-    #
-    # @see #persist
-    #
-    # @example
-    #   person = Person.new
-    #   session << person
-    #
-    # @param [Object] object
-    #   the object to be persisted
-    #
-    # @return [self]
-    #
-    # @api public
-    #
-    def <<(object)
-      persist(object)
-    end
+    inheritable_alias(:<< => :persist)
 
     # Returns whether an domain object is tracked in this session
     #

@@ -3,23 +3,21 @@ module Session
   class ObjectState
     # An ObjectState that represents a loaded domain object.
     class Loaded < ObjectState
-      # Return remote key
-      #
-      # @return [Object]
-      #
-      # @api private
-      #
-      attr_reader :remote_key
-
       # Initialize loaded object state
+      #
+      # @param [Object] mapper
+      # @param [Object] object
+      # @param [Object] remote_dump
+      # @param [Object] remote_key
       #
       # @see Session::ObjectState#new
       #
       # @api private
       #
-      def initialize(*)
-        super
-        store_remote
+      def initialize(mapper,object,remote_dump=Undefined,remote_key=Undefined)
+        super(mapper,object)
+        @remote_dump = remote_dump == Undefined ? dump : remote_dump
+        @remote_key  = remote_key  == Undefined ? key  : remote_key
       end
 
       # Returns whether wrapped domain object is dirty
@@ -69,9 +67,12 @@ module Session
       def persist
         dump = self.dump
 
-        return self unless dirty?(dump)
-        @mapper.update(@remote_key,dump,@remote_dump)
-        store_remote
+        if dirty?(dump)
+          @mapper.update(@remote_key,dump,@remote_dump)
+          return self.class.new(@mapper,@object,dump)
+        end
+
+        self
       end
 
       # Insert domain object into identity map
@@ -131,20 +132,6 @@ module Session
         object = mapper.load(dump)
         # TODO: pass dump to mapper to avoid dump => load => dump (#store_dump)
         new(mapper,object)
-      end
-
-    private
-
-      # Store the current remote representation in this instance for later comparison
-      #
-      # @return [ſelf]
-      #
-      # @api private
-      #
-      def store_remote
-        @remote_key,@remote_dump = key,dump
-
-        self
       end
     end
   end

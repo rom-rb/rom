@@ -8,13 +8,13 @@ describe Session::ObjectState::Loaded,'#persist' do
   subject { object.persist }
 
   shared_examples_for 'object state loaded update' do
-    it 'should return self' do
-      should be(object)
+    it 'should return loaded state' do
+      should be_kind_of(described_class)
     end
 
     it 'should store remote key' do
       subject
-      object.remote_key.should == expected_remote_key
+      subject.instance_variable_get(:@remote_key).should == expected_remote_key
     end
 
     it 'should update using the correct key and dump' do

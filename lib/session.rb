@@ -1,11 +1,11 @@
-if RUBY_VERSION < '1.9'
-  require 'backports'
-end
-
+require 'backports'
 require 'set'
+require 'veritas'
 
 # Namespace module for session library
 module Session
+  # An undefined argument
+  Undefined = Object.new.freeze
   # Exception thrown on illegal domain object states
   class StateError < RuntimeError; end
 end
