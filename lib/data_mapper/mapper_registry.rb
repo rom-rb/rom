@@ -16,16 +16,7 @@ module DataMapper
 
     # @api public
     def <<(mapper)
-      @_mappers[mapper.model] = mapper.new(gateway_for(mapper))
-    end
-
-  private
-
-    # @api private
-    def gateway_for(mapper)
-      Veritas::Relation::Gateway.new(
-        DataMapper.adapters[mapper.repository],
-        DataMapper.relation_registry[mapper.relation_name])
+      @_mappers[mapper.class.model] = mapper
     end
 
   end # class MapperRegistry

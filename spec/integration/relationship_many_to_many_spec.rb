@@ -13,13 +13,10 @@ describe 'Relationship - Many To Many' do
     insert_song_tag 1, 2, 1
     insert_song_tag 2, 1, 2
 
-    song_tags_base_relation = Veritas::Relation::Base.new(:song_tags,
-      [ [ :song_id, Integer ], [ :tag_id, Integer ] ])
-
-    DataMapper.relation_registry << song_tags_base_relation
-
-    SONG_TAGS_RELATION = Veritas::Relation::Gateway.new(
-      DATABASE_ADAPTER, DataMapper.relation_registry[:song_tags])
+    # setup relation gateway to the join table as we don't need to map it to objects
+    DataMapper.setup_relation_gateway(:postgres, :song_tags,
+                                      [ [ :song_id, Integer ],
+                                        [ :tag_id, Integer ] ])
 
     class Song
       attr_reader :id, :title, :tags
@@ -60,7 +57,7 @@ describe 'Relationship - Many To Many' do
 
       has_many :tags, :mapper => SongTagMapper, :through => :song_tags do |tags|
         # TODO: add a global gateway registry so we can access song_tags easily
-        rename(:id => :song_id).join(SONG_TAGS_RELATION).join(tags)
+        rename(:id => :song_id).join(DataMapper.gateway_registry[:song_tags]).join(tags)
       end
 
       model         Song
