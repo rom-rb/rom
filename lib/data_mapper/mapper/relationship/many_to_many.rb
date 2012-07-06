@@ -8,6 +8,15 @@ module DataMapper
 
       class ManyToMany < OneToMany
 
+        def initialize(name, options)
+          super
+          @join_relation = DataMapper.gateway_registry[options[:through]]
+        end
+
+        def finalize_child_mapper
+          @child_mapper = super.join(@join_relation)
+        end
+
       end # class ManyToMany
 
     end # class Relationship

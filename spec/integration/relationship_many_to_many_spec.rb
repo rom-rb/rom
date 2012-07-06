@@ -56,8 +56,7 @@ describe 'Relationship - Many To Many' do
       map :title, :type => String
 
       has_many :tags, :mapper => SongTagMapper, :through => :song_tags do |tags|
-        # TODO: add a global gateway registry so we can access song_tags easily
-        rename(:id => :song_id).join(DataMapper.gateway_registry[:song_tags]).join(tags)
+        rename(:id => :song_id).join(tags)
       end
 
       model         Song
