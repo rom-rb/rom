@@ -10,13 +10,13 @@ module Session
       #
       # @api private
       #
-      def initialize(object,remote_key)
-        @object,@remote_key = object,remote_key
+      def initialize(object, remote_key)
+        @object, @remote_key = object,remote_key
       end
 
       # Remove object from identity map
       #
-      # @param [Hash] identity_map 
+      # @param [Hash] identity_map
       #
       # @return [self]
       #
@@ -28,9 +28,9 @@ module Session
         self
       end
 
-      # Remove object from tracking 
+      # Remove object from tracking
       #
-      # @param [Hash] track 
+      # @param [Hash] track
       #
       # @return [self]
       #

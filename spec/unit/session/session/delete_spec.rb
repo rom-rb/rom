@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Session::Session,'#delete' do
+describe Session::Session, '#delete' do
   let(:mapper)        { registry.resolve_model(DomainObject) }
   let(:registry)      { DummyRegistry.new                    }
   let(:domain_object) { DomainObject.new                     }
@@ -36,7 +36,7 @@ describe Session::Session,'#delete' do
 
   context 'when domain object is NOT tracked' do
     it 'should raise error' do
-      expect { subject }.to raise_error(Session::StateError,"#{domain_object.inspect} is not tracked")
+      expect { subject }.to raise_error(Session::StateError, "#{domain_object.inspect} is not tracked")
     end
   end
 end

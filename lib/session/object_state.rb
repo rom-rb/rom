@@ -11,11 +11,11 @@ module Session
     #
     attr_reader :object
 
-    # Return dumped representation of object 
+    # Return dumped representation of object
     #
     # The dump is not cached.
     #
-    # @return [Object] 
+    # @return [Object]
     #   the dumped representation
     #
     # @api private
@@ -28,8 +28,8 @@ module Session
     #
     # The key is not cached.
     #
-    # @return [Object] 
-    #   the key 
+    # @return [Object]
+    #   the key
     #
     # @api private
     #
@@ -90,7 +90,7 @@ module Session
     # @api private
     #
     def delete
-      raise StateError,"#{self.class.name} cannot be deleted"
+      raise StateError, "#{self.class.name} cannot be deleted"
     end
 
     # Forget domain object
@@ -104,7 +104,7 @@ module Session
     # @api private
     #
     def forget
-      raise StateError,"#{self.class.name} cannot be forgotten"
+      raise StateError, "#{self.class.name} cannot be forgotten"
     end
 
     # Persist domain object
@@ -118,7 +118,7 @@ module Session
     # @api private
     #
     def persist
-      raise StateError,"#{self.class.name} cannot be persisted"
+      raise StateError, "#{self.class.name} cannot be persisted"
     end
 
   private
@@ -132,8 +132,8 @@ module Session
     #
     # @api private
     #
-    def initialize(mapper,object)
-      @mapper,@object = mapper,object
+    def initialize(mapper, object)
+      @mapper, @object = mapper,object
     end
   end
 end

@@ -1,15 +1,15 @@
 require 'spec_helper'
 
-describe Session::ObjectState::New,'#persist' do
-  let(:object)        { described_class.new(mapper,domain_object) }
+describe Session::ObjectState::New, '#persist' do
+  let(:object)        { described_class.new(mapper, domain_object) }
   let(:mapper)        { DummyMapper.new                           }
-  let(:domain_object) { DomainObject.new(:foo,:bar) }
+  let(:domain_object) { DomainObject.new(:foo, :bar) }
 
   subject { object.persist }
 
   it 'should insert with mapper' do
     subject
-    mapper.inserts.should == [:key_attribute => :foo,:other_attribute => :bar]
+    mapper.inserts.should == [:key_attribute => :foo, :other_attribute => :bar]
   end
 
   # Use Virtus::Value object to equalize on mapper and object?

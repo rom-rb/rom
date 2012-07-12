@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Session::Session,'#read' do
+describe Session::Session, '#read' do
   let(:mapper)        { registry.resolve_model(DomainObject)   }
   let(:registry)      { DummyRegistry.new                      }
   let(:domain_object) { DomainObject.new                       }
@@ -8,8 +8,8 @@ describe Session::Session,'#read' do
   let(:mapper)        { registry.resolve_object(domain_object) }
   let(:query)         { mock }
 
-  subject { object.read(DomainObject,query) }
-  
+  subject { object.read(DomainObject, query) }
+
   context 'with arguments' do
     it 'should pass arguments to Mapper#wrap_query' do
       mapper.should_receive(:wrap_query).with(query)
@@ -20,7 +20,7 @@ describe Session::Session,'#read' do
   context 'with block' do
     let(:block) { proc {} }
 
-    subject { object.read(DomainObject,&block) }
+    subject { object.read(DomainObject, &block) }
     it 'should pass block to Mapper#wrap_query' do
       mapper.should_receive(:wrap_query).with(block)
       subject
@@ -58,7 +58,7 @@ describe Session::Session,'#read' do
     end
 
     context 'and dumps are tracked' do
-      let(:tracked) { object.read(DomainObject,query).first }
+      let(:tracked) { object.read(DomainObject, query).first }
 
       it 'should return already tracked domain object' do
         subject.first.should be(tracked)

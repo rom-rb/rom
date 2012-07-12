@@ -1,14 +1,14 @@
 require 'spec_helper'
 
-describe Session::ObjectState,'#delete_identity' do
-  let(:object)        { described_class.new(mapper,domain_object) }
+describe Session::ObjectState, '#delete_identity' do
+  let(:object)        { described_class.new(mapper, domain_object) }
   let(:mapper)        { DummyMapper.new                           }
-  let(:domain_object) { DomainObject.new(:foo,:bar) }
+  let(:domain_object) { DomainObject.new(:foo, :bar) }
 
   let(:identity_map)         { { mapper.dump_key(domain_object) => domain_object }.freeze }
 
   subject { object.delete_identity(identity_map) }
-  
+
   it_should_behave_like 'a command method'
 
   it 'should not touch identity map' do

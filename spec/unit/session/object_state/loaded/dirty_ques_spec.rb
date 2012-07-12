@@ -1,16 +1,16 @@
 require 'spec_helper'
 
-describe Session::ObjectState::Loaded,'#dirty?' do
-  let!(:object)        { described_class.new(mapper,domain_object) }
+describe Session::ObjectState::Loaded, '#dirty?' do
+  let!(:object)        { described_class.new(mapper, domain_object) }
   let(:mapper)        { DummyMapper.new                           }
-  let!(:domain_object) { DomainObject.new(:foo,:bar) }
+  let!(:domain_object) { DomainObject.new(:foo, :bar) }
 
   context 'with dump provided' do
     subject { object.dirty?(dump) }
 
 
     context 'when dump matches objects dump' do
-      let(:dump) { { :key_attribute => :foo,:other_attribute => :bar } }
+      let(:dump) { { :key_attribute => :foo, :other_attribute => :bar } }
       it { should be(false) }
 
       it_should_behave_like 'an idempotent method'

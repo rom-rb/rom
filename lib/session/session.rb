@@ -7,27 +7,27 @@ module Session
 
     # Read objects from database
     #
-    # This method returns a mapper defined container that might be 
-    # chainable. 
+    # This method returns a mapper defined container that might be
+    # chainable.
     #
     # The container can use the passed block to load objects guarded by identity map.
     #
     # @example
-    #   people = session.read(Person,:lastname => 'Doe')
+    #   people = session.read(Person, :lastname => 'Doe')
     #
     # @param [Model] model
     #   the model to be queried
     #
-    # @return [Object] 
+    # @return [Object]
     #   the loaded objects wrapped by mapper defined query
     #
     # @api public
     #
-    def read(model,*args,&block)
+    def read(model, *args,&block)
       mapper = @registry.resolve_model(model)
       args << block if block
       mapper.wrap_query(*args) do |dump|
-        load(mapper,dump)
+        load(mapper, dump)
       end
     end
 
@@ -37,7 +37,7 @@ module Session
     #   person = session.first(Person)
     #   session.delete(person) # deletes person via person mapper
     #
-    # @param [Object] object 
+    # @param [Object] object
     #   the domain object to be deleted
     #
     # @return [self]
@@ -55,7 +55,7 @@ module Session
     # Will insert object if NOT tracked.
     # Will update object if tracked.
     #
-    # @example 
+    # @example
     #   # acts as update
     #   person = session.first(Person)
     #   person.firstname = 'John'
@@ -63,10 +63,10 @@ module Session
     #
     # @example
     #   # acts as insert
-    #   person = Person.new('John','Doe')
+    #   person = Person.new('John', 'Doe')
     #   session.persist(person)
     #
-    # @param [Object] object 
+    # @param [Object] object
     #   the object to be persisted
     #
     # @return [self]
@@ -87,15 +87,15 @@ module Session
 
     # Returns whether an domain object is tracked in this session
     #
-    # @example 
+    # @example
     #   session.include?(Object.new) # => false
     #   person = session.first(Person)
     #   session.include?(person)     # => true
     #
-    # @param [Object] object 
+    # @param [Object] object
     #   the domain object to be tested
     #
-    # @return [true|false] 
+    # @return [true|false]
     #   returns true when object is tracked
     #   false otherwitse
     #
@@ -110,7 +110,7 @@ module Session
     # You normally should avoid calls to #dirty? in favor of using #persist.
     #
     # @example
-    #   person = Person.new(:firstname => 'John',:lastname => 'Doe')
+    #   person = Person.new(:firstname => 'John', :lastname => 'Doe')
     #   session.insert(person)
     #   session.dirty?(person) # => false
     #   person.firstname = 'Foo'
@@ -118,7 +118,7 @@ module Session
     #
     # @see #persist
     #
-    # @param [Object] object 
+    # @param [Object] object
     #   the domain object to be examined
     #
     # @return [true|false]
@@ -131,11 +131,11 @@ module Session
       state(object).dirty?
     end
 
-    # Do not track a domain object anymore. 
+    # Do not track a domain object anymore.
     #
     # Should be used in batch operations to unregister objects that are not needed anymore.
     #
-    # In case you iterate about to many objects using the same session all iterated objects 
+    # In case you iterate about to many objects using the same session all iterated objects
     # stay referenced in the identity map and state tracking.
     #
     # @example
@@ -145,7 +145,7 @@ module Session
     #     session.forget(person)
     #   end
     #
-    # @param [Object] object 
+    # @param [Object] object
     #   the domain object to be forgotten
     #
     # @return [self]
@@ -162,9 +162,9 @@ module Session
 
     # Initialize session with registry
     #
-    # @param [Registry] registry 
+    # @param [Registry] registry
     #
-    # @return [self] 
+    # @return [self]
     #
     # @api private
     #
@@ -191,10 +191,10 @@ module Session
     #
     # @api private
     #
-    def load(mapper,dump)
+    def load(mapper, dump)
       key = mapper.load_key(dump)
       @identity_map.fetch(key) do
-        state = ObjectState::Loaded.build(mapper,dump)
+        state = ObjectState::Loaded.build(mapper, dump)
         track_state(state)
         state.object
       end
@@ -202,10 +202,10 @@ module Session
 
     # Track object state in this session
     #
-    # @param [ObjectState] state 
+    # @param [ObjectState] state
     #   the object state to be tracked.
     #
-    # @return [self] 
+    # @return [self]
     #
     # @api private
     #
@@ -216,9 +216,9 @@ module Session
       self
     end
 
-    # Return object state for domain object 
+    # Return object state for domain object
     #
-    # @param [Object] object 
+    # @param [Object] object
     # @raise [StateError] in case object is not tracked
     #
     # @return [ObjectState]
@@ -227,13 +227,13 @@ module Session
     #
     def state(object)
       @track.fetch(object) do
-        raise StateError,"#{object.inspect} is not tracked"
+        raise StateError, "#{object.inspect} is not tracked"
       end
     end
 
     # Initialize a ObjectState::New for domain object
     #
-    # @param [Object] object 
+    # @param [Object] object
     #
     # @return [ObjectState::New]
     #
@@ -241,7 +241,7 @@ module Session
     #
     def new_state(object)
       mapper = @registry.resolve_object(object)
-      ObjectState::New.new(mapper,object)
+      ObjectState::New.new(mapper, object)
     end
   end
 end

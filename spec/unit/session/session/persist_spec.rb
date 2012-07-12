@@ -40,8 +40,8 @@ describe Session::Session, '#persist(object)' do
         it 'should update domain object under remote key' do
           subject
           mapper.updates.should == [[
-            key_before,
-            mapper.dump(domain_object),
+            key_before, 
+            mapper.dump(domain_object), 
             dump_before
           ]]
         end
@@ -58,8 +58,8 @@ describe Session::Session, '#persist(object)' do
 
         it 'should update domain object under remote key' do
           mapper.updates.should == [[
-            key_before,
-            mapper.dump(domain_object),
+            key_before, 
+            mapper.dump(domain_object), 
             dump_before
           ]]
         end
@@ -79,7 +79,7 @@ describe Session::Session, '#persist(object)' do
         subject
         mapper.updates.should == []
       end
-      
+
       it_should_behave_like 'a command method'
     end
   end

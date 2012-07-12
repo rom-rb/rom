@@ -8,19 +8,19 @@ end
 $LOAD_PATH << File.expand_path('../lib', __FILE__)
 
 Dir.glob('spec/examples/**/*.rb').each { |file| require File.expand_path(file) }
-Dir[File.expand_path('../{support,shared}/**/*.rb', __FILE__)].each { |f| require f }
+Dir[File.expand_path('../{support, shared}/**/*.rb', __FILE__)].each { |f| require f }
 
 require 'session'
 require 'session/registry'
 
-# The keylike behaviour of :key_attribute is defined by mapping. 
+# The keylike behaviour of :key_attribute is defined by mapping.
 # The key_ prefix is only cosmetic here!
-# Simple PORO, but could also be a virtus model, but I'd like to 
+# Simple PORO, but could also be a virtus model, but I'd like to
 # make sure I do not couple to its API.
 class DomainObject
-  attr_accessor :key_attribute,:other_attribute
-  def initialize(key_attribute=:a,other_attribute=:b)
-    @key_attribute,@other_attribute = key_attribute,other_attribute
+  attr_accessor :key_attribute, :other_attribute
+  def initialize(key_attribute=:a, other_attribute=:b)
+    @key_attribute, @other_attribute = key_attribute,other_attribute
   end
 end
 
@@ -28,7 +28,7 @@ end
 class DummyMapper
   def dump(object)
     {
-      :key_attribute => object.key_attribute,
+      :key_attribute => object.key_attribute, 
       :other_attribute => object.other_attribute
     }
   end
@@ -41,7 +41,7 @@ class DummyMapper
     @dumps || raise('no stored dumps')
   end
 
-  def wrap_query(*,&block)
+  def wrap_query(*, &block)
     dumps.map do |dump|
       block.call(dump)
     end
@@ -54,7 +54,7 @@ class DummyMapper
   #
   def load(dump)
     DomainObject.new(
-      dump.fetch(:key_attribute),
+      dump.fetch(:key_attribute), 
       dump.fetch(:other_attribute)
     )
   end
@@ -69,10 +69,10 @@ class DummyMapper
     dump.fetch(:key_attribute)
   end
 
-  attr_reader :inserts,:deletes,:updates
+  attr_reader :inserts, :deletes,:updates
 
   def initialize
-    @deletes,@inserts,@updates = [],[],[]
+    @deletes, @inserts,@updates = [],[],[]
   end
 
   # Inserting an object
@@ -104,14 +104,14 @@ class DummyMapper
   # @param [Hash] new_record the updated record (all fields!)
   # @param [Hash] old_record the old record (all fields!)
   #
-  def update(key,object,old_dump)
-    @updates << [key,object,old_dump]
+  def update(key, object,old_dump)
+    @updates << [key, object,old_dump]
   end
 end
 
 class DummyRegistry < Session::Registry
   def initialize(*)
     super
-    register(DomainObject,DummyMapper.new)
+    register(DomainObject, DummyMapper.new)
   end
 end

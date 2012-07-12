@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe Session::ObjectState::Loaded,'#persist' do
-  let!(:object)        { described_class.new(mapper,domain_object) }
-  let!(:domain_object) { DomainObject.new(:foo,:bar) }
+describe Session::ObjectState::Loaded, '#persist' do
+  let!(:object)        { described_class.new(mapper, domain_object) }
+  let!(:domain_object) { DomainObject.new(:foo, :bar) }
   let(:mapper)        { DummyMapper.new                           }
 
   subject { object.persist }
@@ -19,7 +19,7 @@ describe Session::ObjectState::Loaded,'#persist' do
 
     it 'should update using the correct key and dump' do
       subject
-      mapper.updates.should == [[expected_update_key,expected_update_dump,expected_old_dump]]
+      mapper.updates.should == [[expected_update_key, expected_update_dump,expected_old_dump]]
     end
   end
 
@@ -44,7 +44,7 @@ describe Session::ObjectState::Loaded,'#persist' do
 
       let(:expected_remote_key)  { :modified }
       let(:expected_update_dump) { { :key_attribute => :modified, :other_attribute => :bar } }
-      let(:expected_old_dump)    { { :key_attribute => :foo,      :other_attribute => :bar } }
+      let(:expected_old_dump)    { { :key_attribute => :foo, :other_attribute => :bar } }
 
       it_should_behave_like 'object state loaded update'
     end
@@ -55,8 +55,8 @@ describe Session::ObjectState::Loaded,'#persist' do
       end
 
       let(:expected_remote_key)  { :foo }
-      let(:expected_update_dump) { { :key_attribute => :foo,      :other_attribute => :modified } }
-      let(:expected_old_dump)    { { :key_attribute => :foo,      :other_attribute => :bar      } }
+      let(:expected_update_dump) { { :key_attribute => :foo, :other_attribute => :modified } }
+      let(:expected_old_dump)    { { :key_attribute => :foo, :other_attribute => :bar      } }
 
       it_should_behave_like 'object state loaded update'
     end

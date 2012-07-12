@@ -14,8 +14,8 @@ module Session
       #
       # @api private
       #
-      def initialize(mapper,object,remote_dump=Undefined,remote_key=Undefined)
-        super(mapper,object)
+      def initialize(mapper, object,remote_dump=Undefined,remote_key=Undefined)
+        super(mapper, object)
         @remote_dump = remote_dump == Undefined ? dump : remote_dump
         @remote_key  = remote_key  == Undefined ? key  : remote_key
       end
@@ -41,7 +41,7 @@ module Session
       # @api private
       #
       def forget
-        Forgotten.new(@object,@remote_key)
+        Forgotten.new(@object, @remote_key)
       end
 
       # Invoke transition to forgotten object state after deleting via mapper
@@ -68,8 +68,8 @@ module Session
         dump = self.dump
 
         if dirty?(dump)
-          @mapper.update(@remote_key,dump,@remote_dump)
-          return self.class.new(@mapper,@object,dump)
+          @mapper.update(@remote_key, dump,@remote_dump)
+          return self.class.new(@mapper, @object,dump)
         end
 
         self
@@ -77,7 +77,7 @@ module Session
 
       # Insert domain object into identity map
       #
-      # @param [Hash] identity_map 
+      # @param [Hash] identity_map
       #
       # @return [self]
       #
@@ -99,7 +99,7 @@ module Session
       #
       def delete_identity(identity_map)
         identity_map.delete(@remote_key)
-      
+
         self
       end
 
@@ -128,10 +128,10 @@ module Session
       #
       # @api private
       #
-      def self.build(mapper,dump)
+      def self.build(mapper, dump)
         object = mapper.load(dump)
         # TODO: pass dump to mapper to avoid dump => load => dump (#store_dump)
-        new(mapper,object)
+        new(mapper, object)
       end
     end
   end

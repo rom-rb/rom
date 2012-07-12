@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Session::Session,'#forget(object)' do
+describe Session::Session, '#forget(object)' do
   let(:mapper)        { registry.resolve_model(DomainObject) }
   let(:registry)      { DummyRegistry.new                    }
   let(:domain_object) { DomainObject.new                     }
@@ -12,7 +12,7 @@ describe Session::Session,'#forget(object)' do
 
   it_should_behave_like 'a command method'
 
-  before do 
+  before do
     object.persist(domain_object)
     subject
   end
