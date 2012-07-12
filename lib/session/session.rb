@@ -131,7 +131,7 @@ module Session
       state(object).dirty?
     end
 
-    # Do not track a domain object anymore.
+    # Do not track a domain object anymore
     #
     # Should be used in batch operations to unregister objects that are not needed anymore.
     #

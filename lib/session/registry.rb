@@ -58,7 +58,7 @@ module Session
       end
     end
 
-    # Resolve a mapper for a given domain object.
+    # Resolve a mapper for a given domain object
     #
     # Uses objects class as model. @see #resolve_model
     #
