@@ -32,7 +32,7 @@ module DataMapper
 
     # @api public
     def self.finalize
-      DataMapper.relation_registry << base_relation
+      # noop
       self
     end
 

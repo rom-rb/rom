@@ -10,7 +10,7 @@ module DataMapper
 
         def initialize(name, options)
           super
-          @join_relation = DataMapper.gateway_registry[options.fetch(:through)]
+          @join_relation = DataMapper.relation_registry[options.fetch(:through)]
         end
 
         def finalize_child_mapper

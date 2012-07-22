@@ -1,6 +1,5 @@
 require 'data_mapper/mapper_registry'
 require 'data_mapper/relation_registry'
-require 'data_mapper/gateway_registry'
 
 require 'data_mapper/mapper'
 require 'data_mapper/mapper/veritas_mapper'
@@ -37,22 +36,18 @@ module DataMapper
   end
 
   # @api public
-  def self.setup_relation(name, header)
-    relation_registry << Veritas::Relation::Base.new(name, header)
-    self
-  end
-
-  # @api public
-  def self.setup_gateway(repository, relation_name)
-    adapter  = adapters[repository]
-    relation = relation_registry[relation_name]
-    gateway_registry << Veritas::Relation::Gateway.new(adapter, relation)
-    self
+  def self.setup_gateway(repository, relation)
+    relation_registry << Veritas::Relation::Gateway.new(adapters[repository], relation)
   end
 
   # @api public
   def self.setup_relation_gateway(repository, name, header)
-    setup_relation(name, header).setup_gateway(repository, name)
+    setup_gateway(repository, base_relation(name, header))
+  end
+
+  # @api public
+  def self.base_relation(name, header)
+    Veritas::Relation::Base.new(name, header)
   end
 
   # @api public
@@ -71,11 +66,6 @@ module DataMapper
   end
 
   # @api public
-  def self.gateway_registry
-    @_gateway_registry ||= GatewayRegistry.new
-  end
-
-  # @api public
   #
   # TODO: implement handling of dependencies between mappers
   def self.finalize
@@ -85,12 +75,11 @@ module DataMapper
       if mapper_class.relation_name
         mapper_class.finalize
 
-        relation_name = mapper_class.relation_name
-        repository    = mapper_class.repository
+        repository = mapper_class.repository
+        relation   = mapper_class.base_relation
+        gateway    = setup_gateway(repository, relation)
 
-        setup_gateway(repository, relation_name)
-
-        mapper_registry << mapper_class.new(gateway_registry[relation_name])
+        mapper_registry << mapper_class.new(gateway)
       end
     end
 
