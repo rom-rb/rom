@@ -11,6 +11,8 @@ module DataMapper
         module Iterator
 
           # @api public
+          #
+          # TODO: simplify this when veritas starts supporting tuple grouping
           def each
             return to_enum unless block_given?
 
@@ -22,7 +24,7 @@ module DataMapper
 
             parents = tuples.each_with_object({}) do |tuple, hash|
               key = parent_key.map { |attribute| tuple[attribute.field] }
-              hash[key] ||= @attributes.primitives.each_with_object({}) { |attribute, parent|
+              hash[key] = @attributes.primitives.each_with_object({}) { |attribute, parent|
                 parent[attribute.field] = tuple[attribute.field]
               }
             end
