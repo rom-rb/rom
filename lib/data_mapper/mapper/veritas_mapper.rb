@@ -5,7 +5,6 @@ module DataMapper
     #
     # @api public
     class VeritasMapper < Mapper
-      TAUTOLOGY = Veritas::Function::Proposition::Tautology.instance
 
       # @api public
       def self.base_relation
