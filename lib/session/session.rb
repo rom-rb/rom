@@ -88,6 +88,17 @@ module Session
     # @param [Object] object
     #   the object to be persisted
     #
+    # @example
+    #   # acts as update
+    #   person = session.first(Person)
+    #   person.firstname = 'John'
+    #   session << person
+    #
+    # @example
+    #   # acts as insert
+    #   person = Person.new('John', 'Doe')
+    #   session << person
+    #
     # @api public
     #
     # @return [self]
