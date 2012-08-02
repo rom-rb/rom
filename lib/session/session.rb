@@ -81,36 +81,6 @@ module Session
       self
     end
 
-    # Insert or update using the shift operator
-    #
-    # @see #persist
-    #
-    # @param [Object] object
-    #   the object to be persisted
-    #
-    # @example
-    #   # acts as update
-    #   person = session.first(Person)
-    #   person.firstname = 'John'
-    #   session << person
-    #
-    # @example
-    #   # acts as insert
-    #   person = Person.new('John', 'Doe')
-    #   session << person
-    #
-    # @api public
-    #
-    # @return [self]
-    #
-    # FIXME: 
-    #   Use inheritable alias again when 
-    #   Veritas::Aliasable is packaged as gem
-    #
-    def <<(object)
-      persist(object)
-    end
-
     # Returns whether an domain object is tracked in this session
     #
     # @example

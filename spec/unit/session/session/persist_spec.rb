@@ -1,13 +1,12 @@
 require 'spec_helper'
 
 describe Session::Session, '#persist(object)' do
+  subject { object.persist(domain_object) }
+
   let(:mapper)        { registry.resolve_model(DomainObject) }
   let(:registry)      { DummyRegistry.new                    }
   let(:domain_object) { DomainObject.new                     }
   let(:object)        { described_class.new(registry)        }
-
-  subject { object.persist(domain_object) }
-
 
   context 'with untracked domain object' do
     it 'should insert update' do
