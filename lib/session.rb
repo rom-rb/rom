@@ -1,6 +1,6 @@
 require 'backports'
 require 'set'
-require 'veritas'
+require 'immutable'
 
 # Namespace module for session library
 module Session

@@ -1,7 +1,7 @@
 module Session
   # An objects persistance state
   class ObjectState
-    include Veritas::Immutable
+    include Immutable
 
     # Return wrapped domain object
     #
