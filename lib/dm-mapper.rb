@@ -1,3 +1,6 @@
+require 'veritas'
+require 'veritas-optimizer'
+
 require 'data_mapper/mapper_registry'
 require 'data_mapper/relation_registry'
 
