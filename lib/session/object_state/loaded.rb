@@ -14,7 +14,7 @@ module Session
       #
       # @api private
       #
-      def initialize(mapper, object,remote_dump=Undefined,remote_key=Undefined)
+      def initialize(mapper, object, remote_dump=Undefined, remote_key=Undefined)
         super(mapper, object)
         @remote_dump = remote_dump == Undefined ? dump : remote_dump
         @remote_key  = remote_key  == Undefined ? key  : remote_key
@@ -68,8 +68,8 @@ module Session
         dump = self.dump
 
         if dirty?(dump)
-          @mapper.update(@remote_key, dump,@remote_dump)
-          return self.class.new(@mapper, @object,dump)
+          @mapper.update(@remote_key, dump, @remote_dump)
+          return self.class.new(@mapper, @object, dump)
         end
 
         self
