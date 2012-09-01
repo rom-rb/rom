@@ -21,7 +21,7 @@ module DataMapper
 
     # @api public
     def self.relation_registry
-      @_relation_registry ||= RelationRegistry.new
+      @relation_registry ||= RelationRegistry.new
     end
 
     # Set or return the model for this mapper
