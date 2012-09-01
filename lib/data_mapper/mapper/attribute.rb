@@ -43,7 +43,6 @@ module DataMapper
 
       # @api private
       #
-      # TODO: introduce attribute subclasses and get rid of those ifs
       def load(tuple)
         raise NotImplementedError, "#{self.class} must implement #load"
       end
