@@ -17,9 +17,10 @@ module DataMapper
         each { |attribute| attribute.finalize }
       end
 
-      # @api public
-      def field_name(attribute_name)
-        self[attribute_name].field
+      # @api private
+      def add(*args)
+        @attributes[args.first] = Attribute.build(*args)
+        self
       end
 
       # @api public
@@ -27,6 +28,11 @@ module DataMapper
         return to_enum unless block_given?
         @attributes.each_value { |attribute| yield attribute }
         self
+      end
+
+      # @api public
+      def field_name(attribute_name)
+        self[attribute_name].field
       end
 
       # @api private
@@ -51,12 +57,6 @@ module DataMapper
         each_with_object({}) do |attribute, attributes|
           attributes[attribute.name] = attribute.load(tuple)
         end
-      end
-
-      # @api private
-      def add(*args)
-        @attributes[args.first] = Attribute.build(*args)
-        self
       end
 
       # @api private
