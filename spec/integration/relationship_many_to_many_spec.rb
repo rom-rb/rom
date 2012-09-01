@@ -66,6 +66,8 @@ describe 'Relationship - Many To Many' do
   end
 
   it 'loads associated object' do
+    pending if RUBY_VERSION < '1.9'
+
     mapper = DataMapper[Song]
     songs = mapper.include(:tags).to_a
 
