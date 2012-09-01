@@ -48,11 +48,6 @@ module DataMapper
       end
 
       # @api private
-      def header
-        [ @field, @type ]
-      end
-
-      # @api private
       def key?
         @key
       end

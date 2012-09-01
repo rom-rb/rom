@@ -9,6 +9,11 @@ module DataMapper
           @type = options.fetch(:type, Object)
         end
 
+        # @api private
+        def header
+          [ field, type ]
+        end
+
         # @api public
         def load(tuple)
           tuple[field]
