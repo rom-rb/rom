@@ -3,10 +3,11 @@ module DataMapper
     class Attribute
 
       class Mapper < Attribute
+        MissingTypeOptionError = Class.new(StandardError)
 
         def initialize(name, options = {})
           super
-          @type = options.fetch(:type)
+          @type = options.fetch(:type) { raise(MissingTypeOptionError) }
         end
 
         # @api public

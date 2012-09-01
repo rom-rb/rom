@@ -35,3 +35,5 @@ RSpec.configure do |config|
     @_mocked_models.each { |name| Object.send(:remove_const, name) }
   end
 end
+
+Dir[File.expand_path('../shared/**/*.rb', __FILE__)].each { |file| require file }
