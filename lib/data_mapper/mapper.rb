@@ -9,6 +9,21 @@ module DataMapper
     include Enumerable
     extend Virtus::DescendantsTracker
 
+    # @api public
+    def self.[](model)
+      mapper_registry[model]
+    end
+
+    # @api public
+    def self.mapper_registry
+      @mapper_registry ||= MapperRegistry.new
+    end
+
+    # @api public
+    def self.relation_registry
+      @_relation_registry ||= RelationRegistry.new
+    end
+
     # Set or return the model for this mapper
     #
     # @api public

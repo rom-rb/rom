@@ -1,10 +1,10 @@
 require 'veritas'
 require 'veritas-optimizer'
 
-require 'data_mapper/mapper_registry'
-require 'data_mapper/relation_registry'
-
 require 'data_mapper/mapper'
+require 'data_mapper/mapper/mapper_registry'
+require 'data_mapper/mapper/relation_registry'
+
 require 'data_mapper/mapper/veritas_mapper'
 
 require 'data_mapper/mapper/attribute'
@@ -30,7 +30,12 @@ module DataMapper
 
   # @api public
   def self.[](model)
-    mapper_registry[model]
+    Mapper[model]
+  end
+
+  # @api public
+  def self.mapper_registry
+    Mapper.mapper_registry
   end
 
   # @api public
@@ -40,7 +45,7 @@ module DataMapper
 
   # @api public
   def self.setup_gateway(repository, relation)
-    relation_registry << Veritas::Relation::Gateway.new(adapters[repository], relation)
+    Mapper.relation_registry << Veritas::Relation::Gateway.new(adapters[repository], relation)
   end
 
   # @api public
@@ -56,16 +61,6 @@ module DataMapper
   # @api public
   def self.adapters
     @adapters ||= {}
-  end
-
-  # @api public
-  def self.mapper_registry
-    @mapper_registry ||= MapperRegistry.new
-  end
-
-  # @api public
-  def self.relation_registry
-    @_relation_registry ||= RelationRegistry.new
   end
 
   # @api public
