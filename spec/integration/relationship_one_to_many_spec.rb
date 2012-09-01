@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'spec_helper_integration'
 
 describe 'Relationship - Onet To Many' do
   before(:all) do

@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'spec_helper_integration'
 
 describe 'Two PORO mappers' do
   before(:all) do

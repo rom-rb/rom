@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'spec_helper_integration'
 
 describe 'Relationship - One To One - Explicit Loading' do
   before(:all) do
