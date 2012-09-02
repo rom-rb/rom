@@ -20,6 +20,11 @@ module DataMapper
           @mapper.load(tuple)
         end
 
+        # @api private
+        def primitive?
+          false
+        end
+
       end # class Mapper
 
     end # class Attribute

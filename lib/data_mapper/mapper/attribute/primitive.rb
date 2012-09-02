@@ -19,6 +19,11 @@ module DataMapper
           tuple[field]
         end
 
+        # @api private
+        def primitive?
+          true
+        end
+
       end # class Primitive
 
     end # class Attribute

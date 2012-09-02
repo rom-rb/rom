@@ -17,10 +17,19 @@ module DataMapper
         each { |attribute| attribute.finalize }
       end
 
+      def <<(attribute)
+        @attributes[attribute.name] = attribute
+        self
+      end
+
       # @api private
       def add(*args)
-        @attributes[args.first] = Attribute.build(*args)
-        self
+        self << Attribute.build(*args)
+      end
+
+      # @api private
+      def [](name)
+        @attributes[name]
       end
 
       # @api public
@@ -42,9 +51,7 @@ module DataMapper
 
       # @api private
       def primitives
-        @primitives ||= select { |attribute|
-          attribute.kind_of?(Attribute::Primitive)
-        }
+        @primitives ||= select(&:primitive?)
       end
 
       # @api private
@@ -57,11 +64,6 @@ module DataMapper
         each_with_object({}) do |attribute, attributes|
           attributes[attribute.name] = attribute.load(tuple)
         end
-      end
-
-      # @api private
-      def [](name)
-        @attributes[name]
       end
 
       # @api private

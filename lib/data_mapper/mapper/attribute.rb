@@ -52,6 +52,11 @@ module DataMapper
         @key
       end
 
+      # @api private
+      def primitive?
+        false
+      end
+
     end # class Attribute
   end # class Mapper
 end # module DataMapper
