@@ -53,7 +53,7 @@ module DataMapper
 
     # @api private
     def self.finalize_attributes
-      attributes.each { |attribute| attribute.finalize }
+      attributes.finalize
     end
 
     # @api private
