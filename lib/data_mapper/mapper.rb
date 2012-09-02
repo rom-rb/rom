@@ -109,14 +109,14 @@ module DataMapper
     #
     # @api private
     def load(tuple)
-      raise NotImplementedError, "#{self.class}#load is not implemented"
+      raise NotImplementedError, "#{self.class} must implement #load"
     end
 
     # Dump a domain object
     #
     # @api private
     def dump(object)
-      raise NotImplementedError, "#{self.class}#dump is not implemented"
+      raise NotImplementedError, "#{self.class} must implement #dump"
     end
 
   end # class Mapper
