@@ -1,4 +1,5 @@
 require 'virtus/support/descendants_tracker'
+require 'data_mapper/mapper/relationship_dsl'
 
 module DataMapper
 
@@ -8,6 +9,7 @@ module DataMapper
   class Mapper
     include Enumerable
     extend Virtus::DescendantsTracker
+    extend RelationshipDsl
 
     # @api public
     def self.[](model)
@@ -65,34 +67,6 @@ module DataMapper
     def self.map(name, options = {})
       attributes.add(name, options)
       self
-    end
-
-    # @api public
-    def self.has_many(name, options = {}, &operation)
-      type = options[:through] ? Relationship::ManyToMany : Relationship::OneToMany
-      relationships.add(name, options.merge(:type => type, :operation => operation))
-    end
-
-    # @api public
-    def self.has(cardinality, name, options = {}, &operation)
-      if cardinality == 1
-        source = options[:through]
-
-        if source
-          relationships.add_through(source, name, &operation)
-        else
-          relationships.add(name, options.merge(
-            :type => Relationship::OneToOne, :operation => operation))
-        end
-      else
-        raise "Relationship not supported"
-      end
-    end
-
-    # @api public
-    def self.belongs_to(model_name, options = {}, &operation)
-      relationships.add(model_name, options.merge(
-        :type => Relationship::ManyToOne, :operation => operation))
     end
 
     # @api private
