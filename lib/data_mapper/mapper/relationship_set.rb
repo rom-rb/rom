@@ -8,8 +8,8 @@ module DataMapper
       include Enumerable
 
       # @api private
-      def initialize
-        @relationships = {}
+      def initialize(relationships = {})
+        @relationships = relationships
       end
 
       # @api public
