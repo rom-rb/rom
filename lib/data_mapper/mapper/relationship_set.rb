@@ -13,6 +13,13 @@ module DataMapper
       end
 
       # @api public
+      def each
+        return to_enum unless block_given?
+        @relationships.each_value { |relationship| yield relationship }
+        self
+      end
+
+      # @api public
       def finalize
         each { |relationship| relationship.finalize }
       end
@@ -20,18 +27,6 @@ module DataMapper
       # @api public
       def add_through(source, name, &operation)
         self << self[source].inherit(name, operation)
-      end
-
-      # @api public
-      def each
-        return to_enum unless block_given?
-        @relationships.each_value { |attribute| yield attribute }
-        self
-      end
-
-      # @api private
-      def header
-        @header ||= map(&:header)
       end
 
       # @api private
@@ -51,11 +46,6 @@ module DataMapper
         @relationships[name]
       end
 
-      # @api private
-      def key
-        map(&:key?)
-      end
-
-    end # class relationshipset
+    end # class RelationshipSet
   end # class Mapper
 end # module DataMapper
