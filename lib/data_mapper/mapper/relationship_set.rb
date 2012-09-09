@@ -13,6 +13,11 @@ module DataMapper
       end
 
       # @api public
+      def finalize
+        each { |relationship| relationship.finalize }
+      end
+
+      # @api public
       def add_through(source, name, &operation)
         self << self[source].inherit(name, operation)
       end
@@ -38,6 +43,7 @@ module DataMapper
       # @api public
       def <<(relationship)
         @relationships[relationship.name] = relationship
+        self
       end
 
       # @api private

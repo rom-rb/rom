@@ -60,7 +60,7 @@ module DataMapper
 
     # @api private
     def self.finalize_relationships
-      relationships.each { |relationship| relationship.finalize }
+      relationships.finalize
     end
 
     # @api public
