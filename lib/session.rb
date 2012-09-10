@@ -1,12 +1,14 @@
 require 'backports'
 require 'set'
 require 'immutable'
+require 'abstract_class'
 
-# Namespace module for session library
+# Namespace module 
 module Session
   # An undefined argument
   Undefined = Object.new.freeze
-  # Exception thrown on illegal domain object states
+
+  # Exception thrown on illegal domain object state
   class StateError < RuntimeError; end
 end
 

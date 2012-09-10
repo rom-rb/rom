@@ -1,7 +1,7 @@
 module Session
   # An objects persistance state
   class ObjectState
-    include Immutable
+    include AbstractClass, Immutable
 
     # Return wrapped domain object
     #
