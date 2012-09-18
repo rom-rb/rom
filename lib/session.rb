@@ -13,6 +13,7 @@ module Session
 end
 
 require 'session/session'
+require 'session/registry'
 require 'session/object_state'
 require 'session/object_state/new'
 require 'session/object_state/forgotten'
