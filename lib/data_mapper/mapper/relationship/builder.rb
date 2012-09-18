@@ -3,19 +3,27 @@ module DataMapper
     class Relationship
 
       class Builder
+
+        module CollectionBehavior
+
+          def target_model_attribute_options
+            super.merge(:collection => true)
+          end
+        end
+
         attr_reader :name
         attr_reader :source_mapper
         attr_reader :target_model
         attr_reader :source_key
         attr_reader :target_key
 
-        def initialize(name, source_mapper, options)
-          @name          = name
+        def initialize(source_mapper, options)
+          @name          = options.name
           @source_mapper = source_mapper.class
-          @target_model  = options[:target_model]
-          @source_key    = options[:source_key] ||= default_source_key
-          @target_key    = options[:target_key] ||= default_target_key
-          @renamings     = options[:rename]     ||= {}
+          @target_model  = options.target_model
+          @source_key    = options.source_key
+          @target_key    = options.target_key
+          @renamings     = options.renamings
         end
 
         def mapper_class
@@ -46,18 +54,6 @@ module DataMapper
 
         def target_model_attribute_options
           { :type => target_model }
-        end
-
-        def foreign_key_name
-          "#{@name}_id".to_sym
-        end
-
-        def default_source_key
-          raise NotImplementedError, "#{self.class}##{__method__} must be implemented"
-        end
-
-        def default_target_key
-          raise NotImplementedError, "#{self.class}##{__method__} must be implemented"
         end
       end
     end

@@ -8,9 +8,9 @@ module DataMapper
 
       class ManyToMany < OneToMany
 
-        def initialize(name, options)
+        def initialize(options)
           super
-          @join_relation = DataMapper.relation_registry[options.fetch(:through)]
+          @join_relation = DataMapper.relation_registry[options.through]
         end
 
         def finalize_child_mapper

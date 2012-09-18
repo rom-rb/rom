@@ -5,12 +5,14 @@ module DataMapper
 
         class OneToMany < self
 
+          include CollectionBehavior
+
           def operation
             lambda do |targets, relationship|
               source_key = relationship.source_key
               target_key = relationship.target_key
 
-              rename(relationship.options[:rename].merge({
+              rename(relationship.options[:renamings].merge({
                 source_key => target_key
               })).join(targets)
             end
@@ -23,20 +25,8 @@ module DataMapper
               source_key => target_key,
             })
           end
-
-          def target_model_attribute_options
-            super.merge(:collection => true)
-          end
-
-          def default_source_key
-            :id
-          end
-
-          def default_target_key
-            foreign_key_name
-          end
-        end
-      end
-    end
-  end
-end
+        end # class OneToMany
+      end # class Builder
+    end # class Relationship
+  end # class Mapper
+end # module DataMapper

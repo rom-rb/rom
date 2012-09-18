@@ -12,29 +12,16 @@ module DataMapper
       attr_reader :target_key
       attr_reader :options
 
-      def initialize(name, options)
-        @name         = name
-        @options      = default_options.merge(options)
-        @source       = @options[:source]
-        @mapper_class = @options[:mapper]
-        @operation    = @options[:operation]
-
-        @source_key   = @options[:source_key]
-        @target_key   = @options[:target_key]
-
-        @source_model =
-          if @mapper_class
-            @mapper_class.model
-          else
-            @options[:source_model]
-          end
-
-        @target_model =
-          if @mapper_class
-            @mapper_class.attributes[@name].type
-          else
-            @options[:target_model]
-          end
+      def initialize(options)
+        @options      = options
+        @name         = @options.name
+        @source       = @options.source
+        @mapper_class = @options.mapper_class
+        @operation    = @options.operation
+        @source_key   = @options.source_key
+        @target_key   = @options.target_key
+        @source_model = @options.source_model
+        @target_model = @options.target_model
       end
 
       # @api public
@@ -53,7 +40,7 @@ module DataMapper
 
       # @api public
       def inherit(name, operation)
-        self.class.new(name, @options.merge(:source => self, :operation => operation))
+        self.class.new(@options.inherit(name, :source => self, :operation => operation))
       end
 
     private
@@ -61,7 +48,7 @@ module DataMapper
       # @api private
       def finalize_mapper_class
         unless @mapper_class
-          builder       = relationship_builder.new(name, @parent_mapper, @options)
+          builder       = relationship_builder.new(@parent_mapper, @options)
           @mapper_class = builder.mapper_class
           @operation    = builder.operation unless @operation
         end
@@ -90,25 +77,7 @@ module DataMapper
                          end
       end
 
-      def default_options
-        {
-          :source_key => default_source_key,
-          :target_key => default_target_key
-        }
-      end
-
-      def foreign_key_name
-        "#{@name}_id".to_sym
-      end
-
-      def default_source_key
-        raise NotImplementedError, "#{self.class}##{__method__} must be implemented"
-      end
-
-      def default_target_key
-        raise NotImplementedError, "#{self.class}##{__method__} must be implemented"
-      end
-
+      # @api private
       def relationship_builder
         raise NotImplementedError, "#{self.class}##{__method__} must be implemented"
       end

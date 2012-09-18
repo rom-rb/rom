@@ -5,37 +5,38 @@ module DataMapper
 
       # @api public
       def has_many(name, *args, &operation)
-        model   = extract_model(args)
-        options = extract_options(args)
+        source_model = model
+        target_model = extract_model(args)
+        options      = extract_options(args).merge(:operation => operation)
 
-        options[:source_model] = self.model
-        options[:target_model] = model ? model : options.delete(:model)
+        options_class = if options[:through]
+          Relationship::Options::ManyToMany
+        else
+          Relationship::Options::OneToMany
+        end
 
-        type = options[:through] ? Relationship::ManyToMany : Relationship::OneToMany
+        options = options_class.new(name, source_model, target_model, options)
 
-        relationships.add(name, options.merge(
-          :type      => type,
-          :operation => operation
-        ))
+        relationships.add(name, options)
       end
 
       # @api public
       def has(cardinality, name, *args, &operation)
         if cardinality == 1
-          model   = extract_model(args)
           options = extract_options(args)
-          source  = options[:through]
 
-          if source
+          if source = options[:through]
             relationships.add_through(source, name, &operation)
           else
-            options[:source_model] = self.model
-            options[:target_model] = model ? model : options.delete(:model)
+            source_model = model
+            target_model = extract_model(args)
 
-            relationships.add(name, options.merge(
-              :type => Relationship::OneToOne,
-              :operation => operation
-            ))
+            options = options.merge(:operation => operation)
+            options = Relationship::Options::OneToOne.new(
+              name, source_model, target_model, options
+            )
+
+            relationships.add(name, options)
           end
         else
           raise "Relationship not supported"
@@ -44,16 +45,15 @@ module DataMapper
 
       # @api public
       def belongs_to(name, *args, &operation)
-        model   = extract_model(args)
-        options = extract_options(args)
+        source_model = model
+        target_model = extract_model(args)
 
-        options[:source_model] = self.model
-        options[:target_model] = model ? model : options.delete(:model)
+        options = extract_options(args).merge(:operation => operation)
+        options = Relationship::Options::ManyToOne.new(
+          name, source_model, target_model, options
+        )
 
-        relationships.add(name, options.merge(
-          :type      => Relationship::ManyToOne,
-          :operation => operation
-        ))
+        relationships.add(name, options)
       end
 
       private

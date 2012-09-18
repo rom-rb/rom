@@ -1,13 +1,15 @@
 module DataMapper
   class Mapper
     class Relationship
-      class Builder
+      class Options
 
-        # TODO implement
         class ManyToMany < self
-          include CollectionBehavior
+
+          def type
+            Relationship::ManyToMany
+          end
         end # class ManyToMany
-      end # class Builder
+      end # class Options
     end # class Relationship
   end # class Mapper
 end # module DataMapper

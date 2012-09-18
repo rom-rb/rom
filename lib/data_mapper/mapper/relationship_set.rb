@@ -30,8 +30,8 @@ module DataMapper
       end
 
       # @api private
-      def add(name, options = {})
-        @relationships[name] = options.fetch(:type).new(name, options)
+      def add(name, options)
+        @relationships[name] = options.type.new(options)
         self
       end
 
