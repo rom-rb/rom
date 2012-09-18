@@ -35,20 +35,22 @@ describe 'Relationship - One To One' do
 
 
     class User
-      attr_reader :id, :name, :age, :address
+      attr_reader :id, :name, :age, :address, :home_address
 
       def initialize(attributes)
         @id, @name, @age = attributes.values_at(:id, :name, :age)
-        @address = attributes[:address]
+        @address         = attributes[:address]
+        @home_address    = attributes[:home_address]
       end
 
       class UserAddressMapper < DataMapper::Mapper::VeritasMapper
         model User
 
-        map :id,      :type => Integer, :to => :user_id, :key => true
-        map :name,    :type => String,  :to => :username
-        map :age,     :type => Integer
-        map :address, :type => Address
+        map :id,           :type => Integer, :to => :user_id, :key => true
+        map :name,         :type => String,  :to => :username
+        map :age,          :type => Integer
+        map :address,      :type => Address
+        map :home_address, :type => Address
       end
 
       class Mapper < DataMapper::Mapper::VeritasMapper
@@ -90,7 +92,7 @@ describe 'Relationship - One To One' do
 
   it 'loads restricted association' do
     user = user_mapper.include(:home_address).to_a.last
-    address = user.address
+    address = user.home_address
 
     address.should be_instance_of(Address)
     address.id.should eql(1)
