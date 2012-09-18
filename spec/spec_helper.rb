@@ -110,8 +110,7 @@ class DummyMapper
 end
 
 class DummyRegistry < Session::Registry
-  def initialize(*)
-    super
-    register(DomainObject, DummyMapper.new)
+  def initialize
+    super(DomainObject => DummyMapper.new)
   end
 end
