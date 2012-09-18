@@ -20,15 +20,22 @@ module DataMapper
       end
 
       # @api public
-      def has(cardinality, name, options = {}, &operation)
+      def has(cardinality, name, *args, &operation)
         if cardinality == 1
-          source = options[:through]
+          model   = extract_model(args)
+          options = extract_options(args)
+          source  = options[:through]
 
           if source
             relationships.add_through(source, name, &operation)
           else
+            options[:source_model] = self.model
+            options[:target_model] = model ? model : options.delete(:model)
+
             relationships.add(name, options.merge(
-              :type => Relationship::OneToOne, :operation => operation))
+              :type => Relationship::OneToOne,
+              :operation => operation
+            ))
           end
         else
           raise "Relationship not supported"
