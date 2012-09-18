@@ -43,7 +43,11 @@ module DataMapper
     #
     # @api public
     def self.model(model=nil)
-      @model ||= model
+      if model
+        @model = model
+      else
+        @model
+      end
     end
 
     # Set or return the name of this mapper's default relation
