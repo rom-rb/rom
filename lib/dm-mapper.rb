@@ -24,6 +24,10 @@ require 'data_mapper/mapper/veritas_mapper'
 
 require 'data_mapper/mapper/query'
 
+require 'data_mapper/support/inflector/inflections'
+require 'data_mapper/support/inflector/methods'
+require 'data_mapper/support/inflections'
+
 module DataMapper
 
   # @api public
