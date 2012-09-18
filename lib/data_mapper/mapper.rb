@@ -11,6 +11,19 @@ module DataMapper
     extend Virtus::DescendantsTracker
     extend RelationshipDsl
 
+    def self.inherited(descendant)
+      super
+
+      descendant.model(model)
+      descendant.repository(repository)
+      attributes.each do |attribute|
+        descendant.attributes << attribute
+      end
+      relationships.each do |relationship|
+        descendant.relationships << relationship
+      end
+    end
+
     # @api public
     def self.[](model)
       mapper_registry[model]
@@ -77,6 +90,16 @@ module DataMapper
     # @api private
     def self.relationships
       @relationships ||= RelationshipSet.new
+    end
+
+    # @api private
+    def self.unique_alias(name, key)
+      "#{key}__#{name}_alias#{[name, key].join.hash}".to_sym
+    end
+
+    # @api private
+    def unique_alias(name, key)
+      self.class.unique_alias(name, key)
     end
 
     # Load a domain object

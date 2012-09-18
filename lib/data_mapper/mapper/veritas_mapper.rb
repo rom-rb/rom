@@ -12,6 +12,10 @@ module DataMapper
           relation_name, attributes.header)
       end
 
+      def self.relation
+        @relation ||= base_relation
+      end
+
       # @api private
       attr_reader :relation, :attributes
 
@@ -22,8 +26,8 @@ module DataMapper
       # @return [undefined]
       #
       # @api public
-      def initialize(relation)
-        @relation      = relation
+      def initialize(relation = nil)
+        @relation      = relation || self.class.relation
         @attributes    = self.class.attributes
         @relationships = self.class.relationships
         @model         = self.class.model

@@ -1,12 +1,6 @@
 require 'veritas'
 require 'veritas-optimizer'
 
-require 'data_mapper/mapper'
-require 'data_mapper/mapper/mapper_registry'
-require 'data_mapper/mapper/relation_registry'
-
-require 'data_mapper/mapper/veritas_mapper'
-
 require 'data_mapper/mapper/attribute'
 require 'data_mapper/mapper/attribute/primitive'
 require 'data_mapper/mapper/attribute/mapper'
@@ -18,7 +12,15 @@ require 'data_mapper/mapper/relationship/one_to_one'
 require 'data_mapper/mapper/relationship/one_to_many'
 require 'data_mapper/mapper/relationship/many_to_one'
 require 'data_mapper/mapper/relationship/many_to_many'
+require 'data_mapper/mapper/relationship/builder'
+require 'data_mapper/mapper/relationship/builder/many_to_one'
+require 'data_mapper/mapper/relationship/builder/one_to_many'
 require 'data_mapper/mapper/relationship_set'
+
+require 'data_mapper/mapper/mapper_registry'
+require 'data_mapper/mapper/relation_registry'
+require 'data_mapper/mapper'
+require 'data_mapper/mapper/veritas_mapper'
 
 require 'data_mapper/mapper/query'
 

@@ -4,9 +4,19 @@ module DataMapper
     module RelationshipDsl
 
       # @api public
-      def has_many(name, options = {}, &operation)
+      def has_many(name, *args, &operation)
+        model   = extract_model(args)
+        options = extract_options(args)
+
+        options[:source_model] = self.model
+        options[:target_model] = model ? model : options.delete(:model)
+
         type = options[:through] ? Relationship::ManyToMany : Relationship::OneToMany
-        relationships.add(name, options.merge(:type => type, :operation => operation))
+
+        relationships.add(name, options.merge(
+          :type      => type,
+          :operation => operation
+        ))
       end
 
       # @api public
@@ -26,11 +36,33 @@ module DataMapper
       end
 
       # @api public
-      def belongs_to(model_name, options = {}, &operation)
-        relationships.add(model_name, options.merge(
-          :type => Relationship::ManyToOne, :operation => operation))
+      def belongs_to(name, *args, &operation)
+        model   = extract_model(args)
+        options = extract_options(args)
+
+        options[:source_model] = self.model
+        options[:target_model] = model ? model : options.delete(:model)
+
+        relationships.add(name, options.merge(
+          :type      => Relationship::ManyToOne,
+          :operation => operation
+        ))
       end
 
+      private
+
+      # @api private
+      def extract_model(args)
+        model = args.first
+        return nil if model.is_a?(Hash)
+        model
+      end
+
+      # @api private
+      def extract_options(args)
+        options = args.last
+        options.respond_to?(:to_hash) ? options.to_hash.dup : {}
+      end
     end # module RelationshipDsl
 
   end # class Mapper

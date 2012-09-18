@@ -49,6 +49,21 @@ module DataMapper
           @mapper_class.send(:include, Iterator)
         end
 
+        private
+
+        def default_source_key
+          :id
+        end
+
+        def default_target_key
+          foreign_key_name
+        end
+
+        # @api private
+        def relationship_builder
+          Builder::OneToMany
+        end
+
       end # class OneToMany
 
     end # class Relationship

@@ -5,20 +5,43 @@ module DataMapper
     #
     # @api private
     class Relationship
-      attr_reader :name, :relation, :child_mapper
+      attr_reader :name
+      attr_reader :relation
+      attr_reader :child_mapper
+      attr_reader :source_key
+      attr_reader :target_key
+      attr_reader :options
 
       def initialize(name, options)
         @name         = name
-        @options      = options
-        @source       = options[:source]
-        @mapper_class = options[:mapper]
-        @operation    = options[:operation]
+        @options      = default_options.merge(options)
+        @source       = @options[:source]
+        @mapper_class = @options[:mapper]
+        @operation    = @options[:operation]
+
+        @source_key   = @options[:source_key]
+        @target_key   = @options[:target_key]
+
+        @source_model =
+          if @mapper_class
+            @mapper_class.model
+          else
+            @options[:source_model]
+          end
+
+        @target_model =
+          if @mapper_class
+            @mapper_class.attributes[@name].type
+          else
+            @options[:target_model]
+          end
       end
 
       # @api public
       def finalize
         finalize_parent_mapper
         finalize_child_mapper
+        finalize_mapper_class
         finalize_relation
         self
       end
@@ -36,8 +59,17 @@ module DataMapper
     private
 
       # @api private
+      def finalize_mapper_class
+        unless @mapper_class
+          builder       = relationship_builder.new(name, @parent_mapper, @options)
+          @mapper_class = builder.mapper_class
+          @operation    = builder.operation unless @operation
+        end
+      end
+
+      # @api private
       def finalize_relation
-        @relation = @parent_mapper.instance_exec(@child_mapper, &@operation).relation.optimize
+        @relation = @parent_mapper.instance_exec(@child_mapper, self, &@operation).relation.optimize
       end
 
       # @api private
@@ -45,7 +77,7 @@ module DataMapper
         @child_mapper = if @source
                           @source.finalize.child_mapper
                         else
-                          DataMapper[@mapper_class.attributes[name].type]
+                          DataMapper[@target_model]
                         end
       end
 
@@ -54,10 +86,32 @@ module DataMapper
         @parent_mapper = if @source
                            @source.finalize.call
                          else
-                           DataMapper[@mapper_class.model]
+                           DataMapper[@source_model]
                          end
       end
 
+      def default_options
+        {
+          :source_key => default_source_key,
+          :target_key => default_target_key
+        }
+      end
+
+      def foreign_key_name
+        "#{@name}_id".to_sym
+      end
+
+      def default_source_key
+        raise NotImplementedError, "#{self.class}##{__method__} must be implemented"
+      end
+
+      def default_target_key
+        raise NotImplementedError, "#{self.class}##{__method__} must be implemented"
+      end
+
+      def relationship_builder
+        raise NotImplementedError, "#{self.class}##{__method__} must be implemented"
+      end
     end # class Relationship
   end # class Mapper
 end # module DataMapper
