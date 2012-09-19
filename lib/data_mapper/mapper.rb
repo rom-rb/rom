@@ -105,13 +105,13 @@ module DataMapper
     end
 
     # @api private
-    def self.unique_alias(name, key)
-      "#{key}__#{name}_alias#{[name, key].join.hash}".to_sym
+    def self.unique_alias(name, scope)
+      "#{name}__#{scope}_alias#{[name, scope].join.hash}".to_sym
     end
 
     # @api private
-    def unique_alias(name, key)
-      self.class.unique_alias(name, key)
+    def unique_alias(name, scope)
+      self.class.unique_alias(name, scope)
     end
 
     # Load a domain object
