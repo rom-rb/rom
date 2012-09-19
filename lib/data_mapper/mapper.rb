@@ -54,7 +54,11 @@ module DataMapper
     #
     # @api public
     def self.relation_name(name=nil)
-      @relation_name ||= name
+      if name
+        @relation_name = name
+      else
+        @relation_name
+      end
     end
 
     # Set or return the name of this mapper's default repository
