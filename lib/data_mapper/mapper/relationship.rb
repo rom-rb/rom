@@ -56,7 +56,7 @@ module DataMapper
 
       # @api private
       def finalize_relation
-        @relation = @parent_mapper.instance_exec(@child_mapper, self, &@operation).relation.optimize
+        @relation = @parent_mapper.instance_exec(*operation_context, &@operation).relation.optimize
       end
 
       # @api private
@@ -80,6 +80,20 @@ module DataMapper
       # @api private
       def relationship_builder
         raise NotImplementedError, "#{self.class}##{__method__} must be implemented"
+      end
+
+      def operation_context
+        case @operation.arity
+        when 0
+          []
+        when 1
+          [@child_mapper]
+        when -1, 2
+          [@child_mapper, self]
+        else
+          # TODO raise a more appropriate/descriptive error?
+          raise ArgumentError, "Wrong number of block parameters"
+        end
       end
     end # class Relationship
   end # class Mapper
