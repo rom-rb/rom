@@ -22,13 +22,13 @@ RSpec.configure do |config|
   end
 
   def mock_mapper(model_class)
-    Class.new(DataMapper::Mapper) do
-      model model_class
-
+    klass = Class.new(DataMapper::Mapper) do
       def inspect
-        "#<#{self.class.model}Mapper:#{object_id} model=#{self.class.model}>"
+        "#<#{self.class.model}Mapper:#{object_id} model=#{self.class.model.inspect}>"
       end
     end
+    klass.model model_class
+    klass
   end
 
   def clear_mocked_models
