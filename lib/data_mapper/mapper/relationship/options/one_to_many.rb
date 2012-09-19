@@ -21,4 +21,3 @@ module DataMapper
     end # class Relationship
   end # class Mapper
 end # module DataMapper
-
