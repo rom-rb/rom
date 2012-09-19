@@ -1,6 +1,6 @@
 require 'spec_helper_integration'
 
-describe 'Relationship - Onet To Many' do
+describe 'Relationship - One To Many' do
   before(:all) do
     setup_db
 
