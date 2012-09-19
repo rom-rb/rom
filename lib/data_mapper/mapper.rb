@@ -65,7 +65,11 @@ module DataMapper
     #
     # @api public
     def self.repository(name=nil)
-      @repository ||= name
+      if name
+        @repository = name
+      else
+        @repository
+      end
     end
 
     # @api public
