@@ -8,24 +8,18 @@ module DataMapper
 
       class ManyToMany < OneToMany
 
-        def initialize(options)
-          super
-          @join_relation = DataMapper.relation_registry[options.through]
-        end
+        attr_reader :via
+        attr_reader :join_relation
 
-        def finalize_child_mapper
-          @child_mapper = super.join(@join_relation)
+        def finalize_relation
+          through        = options.through
+          @via           = @mapper_class.relationships[through]
+          @join_relation = DataMapper.relation_registry[through]
+
+          super
         end
 
         private
-
-        def default_source_key
-          :id
-        end
-
-        def default_target_key
-          foreign_key_name
-        end
 
         # @api private
         def relationship_builder

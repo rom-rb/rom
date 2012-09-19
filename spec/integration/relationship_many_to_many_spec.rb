@@ -55,8 +55,9 @@ describe 'Relationship - Many To Many' do
       map :id,    :type => Integer, :key => true
       map :title, :type => String
 
-      has_many :tags, :mapper => SongTagMapper, :through => :song_tags do |tags|
-        rename(:id => :song_id).join(tags)
+      has_many :tags, :mapper => SongTagMapper, :through => :song_tags do |tags, relationship|
+        song_tags = relationship.join_relation
+        rename(:id => :song_id).join(song_tags).join(tags)
       end
 
       model         Song
