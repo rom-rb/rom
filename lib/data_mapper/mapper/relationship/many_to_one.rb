@@ -9,7 +9,9 @@ module DataMapper
       class ManyToOne < Relationship
 
         def finalize_aliases
-          @source_aliases = super.merge(target_key => unique_alias(target_key, name))
+          @source_aliases = super.merge(
+            target_key => unique_alias(target_key, name)
+          )
         end
 
         private
