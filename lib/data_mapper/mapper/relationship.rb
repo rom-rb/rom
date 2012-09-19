@@ -12,6 +12,8 @@ module DataMapper
       attr_reader :target_key
       attr_reader :options
 
+      attr_reader :source_aliases
+
       def initialize(options)
         @options      = options
         @name         = @options.name
@@ -29,6 +31,7 @@ module DataMapper
         finalize_parent_mapper
         finalize_child_mapper
         finalize_mapper_class
+        finalize_aliases
         finalize_relation
         self
       end
@@ -52,6 +55,12 @@ module DataMapper
           @mapper_class = builder.mapper_class
           @operation    = builder.operation unless @operation
         end
+      end
+
+      def finalize_aliases
+        @source_aliases = options[:renamings].merge(
+          source_key => target_key
+        )
       end
 
       # @api private
@@ -94,6 +103,10 @@ module DataMapper
           # TODO raise a more appropriate/descriptive error?
           raise ArgumentError, "Wrong number of block parameters"
         end
+      end
+
+      def unique_alias(name, scope)
+        DataMapper::Mapper.unique_alias(name, scope)
       end
     end # class Relationship
   end # class Mapper

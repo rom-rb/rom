@@ -34,7 +34,9 @@ module DataMapper
         end
 
         def operation
-          raise NotImplementedError, "#{self.class}##{__method__} must be implemented"
+          lambda do |targets, relationship|
+            rename(relationship.source_aliases).join(targets)
+          end
         end
 
         private

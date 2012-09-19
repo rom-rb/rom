@@ -10,7 +10,6 @@ module DataMapper
 
         attr_reader :via
         attr_reader :join_relation
-        attr_reader :source_aliases
         attr_reader :join_aliases
 
         def finalize_aliases
@@ -35,11 +34,6 @@ module DataMapper
           end
         end
 
-        def finalize_relation
-          finalize_aliases
-          super
-        end
-
         private
 
         # @api private
@@ -47,9 +41,6 @@ module DataMapper
           Builder::ManyToMany
         end
 
-        def unique_alias(name, key)
-          DataMapper::Mapper.unique_alias(name, key)
-        end
       end # class ManyToMany
 
     end # class Relationship

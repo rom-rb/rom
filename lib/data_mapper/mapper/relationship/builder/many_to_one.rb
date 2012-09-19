@@ -4,20 +4,6 @@ module DataMapper
       class Builder
 
         class ManyToOne < self
-
-          def operation
-            lambda do |targets, relationship|
-              name       = relationship.name
-              source_key = relationship.source_key
-              target_key = relationship.target_key
-
-              rename(relationship.options[:renamings].merge({
-                source_key => target_key,
-                target_key => unique_alias(target_key, name)
-              })).join(targets)
-            end
-          end
-
           private
 
           def fields

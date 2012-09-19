@@ -5,8 +5,6 @@ module DataMapper
 
         class ManyToMany < OneToMany
 
-          attr_reader :via
-
           def initialize(source_mapper, options)
             super
             @via = @source_mapper.relationships[options[:through]]
@@ -20,8 +18,10 @@ module DataMapper
             end
           end
 
+          private
+
           def fields
-            @renamings.merge(via.source_key => via.target_key)
+            @renamings.merge(@via.source_key => @via.target_key)
           end
         end # class ManyToMany
       end # class Builder
