@@ -27,7 +27,9 @@ module DataMapper
 
               join_renamings = Hash[via_key.zip(target_key)]
               target_key.each do |attribute_name|
-                join_renamings[attribute_name] = unique_alias(relationship.name, attribute_name)
+                if join_relation.header.include?(attribute_name)
+                  join_renamings[attribute_name] = unique_alias(relationship.name, attribute_name)
+                end
               end
 
               rename(source_renamings).
