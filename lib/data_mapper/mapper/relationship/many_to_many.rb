@@ -16,7 +16,7 @@ module DataMapper
           through         = options.through
           @via            = @mapper_class.relationships[through]
           @join_relation  = DataMapper.relation_registry[through]
-          @source_aliases = options[:renamings]
+          @source_aliases = options.aliases
 
           if @via
             @source_aliases = @source_aliases.merge(@via.source_key => @via.target_key)

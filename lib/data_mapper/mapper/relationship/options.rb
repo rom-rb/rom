@@ -10,7 +10,7 @@ module DataMapper
         attr_reader :target_model
         attr_reader :source_key
         attr_reader :target_key
-        attr_reader :renamings
+        attr_reader :aliases
         attr_reader :through
 
         attr_accessor :source
@@ -34,7 +34,7 @@ module DataMapper
 
           @source_key = options[:source_key] || default_source_key
           @target_key = options[:target_key] || default_target_key
-          @renamings  = options[:rename]     || {}
+          @aliases    = options[:rename]     || {}
         end
 
         def inherit(name, options)

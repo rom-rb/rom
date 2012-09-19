@@ -16,6 +16,7 @@ module DataMapper
         attr_reader :target_model
         attr_reader :source_key
         attr_reader :target_key
+        attr_reader :aliases
 
         def initialize(source_mapper, options)
           @name          = options.name
@@ -23,7 +24,7 @@ module DataMapper
           @target_model  = options.target_model
           @source_key    = options.source_key
           @target_key    = options.target_key
-          @renamings     = options.renamings
+          @aliases       = options.aliases
         end
 
         def mapper_class
@@ -51,7 +52,7 @@ module DataMapper
         end
 
         def fields
-          @renamings
+          @aliases
         end
 
         def target_model_attribute_options

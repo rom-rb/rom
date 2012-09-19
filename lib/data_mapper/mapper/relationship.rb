@@ -58,7 +58,7 @@ module DataMapper
       end
 
       def finalize_aliases
-        @source_aliases = options[:renamings].merge(
+        @source_aliases = options.aliases.merge(
           source_key => target_key
         )
       end

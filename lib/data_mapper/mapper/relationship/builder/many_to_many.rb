@@ -21,7 +21,7 @@ module DataMapper
           private
 
           def fields
-            @renamings.merge(@via.source_key => @via.target_key)
+            aliases.merge(@via.source_key => @via.target_key)
           end
         end # class ManyToMany
       end # class Builder
