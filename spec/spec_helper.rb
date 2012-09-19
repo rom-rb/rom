@@ -24,7 +24,7 @@ RSpec.configure do |config|
   def mock_mapper(model_class)
     klass = Class.new(DataMapper::Mapper) do
       def inspect
-        "#<#{self.class.model}Mapper:#{object_id} model=#{self.class.model.inspect}>"
+        "#<#{self.class.model}Mapper:#{object_id} model=#{self.class.model}>"
       end
     end
     klass.model model_class
