@@ -9,7 +9,7 @@ module DataMapper
           def fields
             super.merge({
               source_key => target_key,
-              target_key => source_mapper.unique_alias(target_key, name)
+              target_key => DataMapper::Mapper.unique_alias(target_key, name)
             })
           end
         end # class ManyToOne
