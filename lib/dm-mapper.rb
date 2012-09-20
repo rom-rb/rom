@@ -72,6 +72,8 @@ end # module DataMapper
 require 'veritas'
 require 'veritas-optimizer'
 
+require 'data_mapper/support/utils'
+
 require 'data_mapper/mapper/attribute'
 require 'data_mapper/mapper/attribute/primitive'
 require 'data_mapper/mapper/attribute/mapper'
