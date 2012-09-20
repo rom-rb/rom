@@ -35,8 +35,8 @@ describe 'Relationship - Many To Many' do
     end
 
     class TagMapper < DataMapper::Mapper::VeritasMapper
-      map :id,   :type => Integer, :to => :tag_id, :key => true
-      map :name, :type => String
+      map :id,   Integer, :to => :tag_id, :key => true
+      map :name, String
 
       model         Tag
       relation_name :tags
@@ -44,16 +44,16 @@ describe 'Relationship - Many To Many' do
     end
 
     class SongTagMapper < DataMapper::Mapper::VeritasMapper
-      map :id,    :type => Integer, :to => :song_id, :key => true
-      map :title, :type => String
-      map :tags,  :type => Tag, :collection => true
+      map :id,    Integer, :to => :song_id, :key => true
+      map :title, String
+      map :tags,  Tag, :collection => true
 
       model Song
     end
 
     class SongMapper < DataMapper::Mapper::VeritasMapper
-      map :id,    :type => Integer, :key => true
-      map :title, :type => String
+      map :id,    Integer, :key => true
+      map :title, String
 
       has_many :tags, :mapper => SongTagMapper, :through => :song_tags do |tags, relationship|
         song_tags = relationship.join_relation

@@ -15,9 +15,9 @@ describe 'Dump a PORO' do
       end
 
       class Mapper < DataMapper::Mapper::VeritasMapper
-        map :id, :key => true, :type => Integer
-        map :name, :to => :username, :type => String
-        map :age, :type => Integer
+        map :id,   Integer, :key => true
+        map :name, String,  :to  => :username
+        map :age,  Integer
 
         model         User
         relation_name :users

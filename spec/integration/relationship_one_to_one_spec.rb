@@ -21,11 +21,11 @@ describe 'Relationship - One To One' do
       end
 
       class Mapper < DataMapper::Mapper::VeritasMapper
-        map :id,      :type => Integer, :key => true
-        map :user_id, :type => Integer
-        map :street,  :type => String
-        map :city,    :type => String
-        map :zipcode, :type => String
+        map :id,      Integer, :key => true
+        map :user_id, Integer
+        map :street,  String
+        map :city,    String
+        map :zipcode, String
 
         model         Address
         relation_name :addresses
@@ -46,11 +46,11 @@ describe 'Relationship - One To One' do
       class UserAddressMapper < DataMapper::Mapper::VeritasMapper
         model User
 
-        map :id,           :type => Integer, :to => :user_id, :key => true
-        map :name,         :type => String,  :to => :username
-        map :age,          :type => Integer
-        map :address,      :type => Address
-        map :home_address, :type => Address
+        map :id,           Integer, :to => :user_id, :key => true
+        map :name,         String,  :to => :username
+        map :age,          Integer
+        map :address,      Address
+        map :home_address, Address
       end
 
       class Mapper < DataMapper::Mapper::VeritasMapper
@@ -58,9 +58,9 @@ describe 'Relationship - One To One' do
         relation_name :users
         repository    :postgres
 
-        map :id,   :type => Integer, :key => true
-        map :name, :type => String,  :to  => :username
-        map :age,  :type => Integer
+        map :id,   Integer, :key => true
+        map :name, String,  :to  => :username
+        map :age,  Integer
 
         has 1, :address, :mapper => UserAddressMapper do |address|
           rename(:id => :user_id).join(address)

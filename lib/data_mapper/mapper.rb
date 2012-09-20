@@ -89,7 +89,11 @@ module DataMapper
     end
 
     # @api public
-    def self.map(name, options = {})
+    def self.map(name, *args)
+      type    = Utils.extract_type(args)
+      options = Utils.extract_options(args)
+      options = options.merge(:type => type) if type
+
       attributes.add(name, options)
       self
     end

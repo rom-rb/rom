@@ -38,8 +38,8 @@ describe 'Relationship - Many To Many with generated mappers' do
     end
 
     class TagMapper < DataMapper::Mapper::VeritasMapper
-      map :id,   :type => Integer, :key => true
-      map :name, :type => String
+      map :id,   Integer, :key => true
+      map :name, String
 
       model         Tag
       relation_name :tags
@@ -47,8 +47,8 @@ describe 'Relationship - Many To Many with generated mappers' do
     end
 
     class SongTagMapper < DataMapper::Mapper::VeritasMapper
-      map :song_id, :type => Integer
-      map :tag_id,  :type => Integer
+      map :song_id, Integer
+      map :tag_id,  Integer
 
       model SongTag
       relation_name :song_tags
@@ -60,8 +60,8 @@ describe 'Relationship - Many To Many with generated mappers' do
       relation_name :songs
       repository    :postgres
 
-      map :id,    :type => Integer, :key => true
-      map :title, :type => String
+      map :id,    Integer, :key => true
+      map :title, String
 
       has_many :song_tags, SongTag, :target_key => :song_id
       has_many :tags, Tag, :through => :song_tags

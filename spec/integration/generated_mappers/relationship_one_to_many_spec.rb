@@ -28,8 +28,8 @@ describe 'Relationship - One To Many with generated mapper' do
     end
 
     class OrderMapper < DataMapper::Mapper::VeritasMapper
-      map :id,      :type => Integer, :key => true
-      map :product, :type => String
+      map :id,      Integer, :key => true
+      map :product, String
 
       model         Order
       relation_name :orders
@@ -42,9 +42,9 @@ describe 'Relationship - One To Many with generated mapper' do
       relation_name :users
       repository    :postgres
 
-      map :id,     :type => Integer, :key => true
-      map :name,   :type => String,  :to => :username
-      map :age,    :type => Integer
+      map :id,     Integer, :key => true
+      map :name,   String,  :to => :username
+      map :age,    Integer
 
       has_many :orders, Order
     end

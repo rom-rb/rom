@@ -28,8 +28,8 @@ describe 'Relationship - One To Many' do
     end
 
     class OrderMapper < DataMapper::Mapper::VeritasMapper
-      map :id,      :type => Integer, :key => true
-      map :product, :type => String
+      map :id,      Integer, :key => true
+      map :product, String
 
       model         Order
       relation_name :orders
@@ -37,18 +37,18 @@ describe 'Relationship - One To Many' do
     end
 
     class UserOrderMapper < DataMapper::Mapper::VeritasMapper
-      map :id,     :type => Integer, :to => :user_id, :key => true
-      map :name,   :type => String,  :to => :username
-      map :age,    :type => Integer
-      map :orders, :type => Order, :collection => true
+      map :id,     Integer, :to => :user_id, :key => true
+      map :name,   String,  :to => :username
+      map :age,    Integer
+      map :orders, Order, :collection => true
 
       model User
     end
 
     class UserMapper < DataMapper::Mapper::VeritasMapper
-      map :id,     :type => Integer, :key => true
-      map :name,   :type => String,  :to => :username
-      map :age,    :type => Integer
+      map :id,     Integer, :key => true
+      map :name,   String,  :to => :username
+      map :age,    Integer
 
       has_many :orders, :mapper => UserOrderMapper do |orders|
         rename(:id => :user_id).join(orders)

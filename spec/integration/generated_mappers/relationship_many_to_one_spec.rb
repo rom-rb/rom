@@ -19,9 +19,9 @@ describe 'Relationship - Many To One with generated mapper' do
       end
 
       class Mapper < DataMapper::Mapper::VeritasMapper
-        map :id,   :type => Integer, :key => true
-        map :name, :type => String,  :to  => :username
-        map :age,  :type => Integer
+        map :id,   Integer, :key => true
+        map :name, String,  :to  => :username
+        map :age,  Integer
 
         model         User
         relation_name :users
@@ -42,11 +42,11 @@ describe 'Relationship - Many To One with generated mapper' do
         relation_name :addresses
         repository    :postgres
 
-        map :id,      :type => Integer, :key => true
-        map :user_id, :type => Integer
-        map :street,  :type => String
-        map :city,    :type => String
-        map :zipcode, :type => String
+        map :id,      Integer, :key => true
+        map :user_id, Integer
+        map :street,  String
+        map :city,    String
+        map :zipcode, String
 
         belongs_to :user, User
       end

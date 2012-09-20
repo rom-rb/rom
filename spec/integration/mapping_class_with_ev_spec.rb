@@ -18,11 +18,11 @@ describe 'PORO with an embedded value' do
       end
 
       class Mapper < DataMapper::Mapper::VeritasMapper
-        map :id,      :type => Integer, :key => true
-        map :user_id, :type => Integer
-        map :street,  :type => String
-        map :city,    :type => String
-        map :zipcode, :type => String
+        map :id,      Integer, :key => true
+        map :user_id, Integer
+        map :street,  String
+        map :city,    String
+        map :zipcode, String
 
         model         Address
         relation_name :addresses
@@ -39,14 +39,14 @@ describe 'PORO with an embedded value' do
       end
 
       class Mapper < DataMapper::Mapper::VeritasMapper
-        map :id,   :type => Integer, :key => true
-        map :name, :type => String,  :to  => :username
-        map :age,  :type => Integer
+        map :id,   Integer, :key => true
+        map :name, String,  :to  => :username
+        map :age,  Integer
 
         # address attributes
-        map :street,  :type => String
-        map :city,    :type => String
-        map :zipcode, :type => String
+        map :street,  String
+        map :city,    String
+        map :zipcode, String
 
         model         User
         relation_name :users

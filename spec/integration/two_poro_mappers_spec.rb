@@ -18,11 +18,11 @@ describe 'Two PORO mappers' do
       end
 
       class Mapper < DataMapper::Mapper::VeritasMapper
-        map :id,      :type => Integer
-        map :user_id, :type => Integer
-        map :street,  :type => String
-        map :zipcode, :type => String
-        map :city,    :type => String
+        map :id,      Integer
+        map :user_id, Integer
+        map :street,  String
+        map :zipcode, String
+        map :city,    String
 
         model Address
         relation_name :addresses
@@ -38,9 +38,9 @@ describe 'Two PORO mappers' do
       end
 
       class Mapper < DataMapper::Mapper::VeritasMapper
-        map :id, :type => Integer
-        map :name, :to => :username, :type => String
-        map :age, :type => Integer
+        map :id,   Integer
+        map :name, String, :to => :username
+        map :age,  Integer
 
         model User
         relation_name :users
