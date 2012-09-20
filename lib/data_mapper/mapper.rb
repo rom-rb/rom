@@ -24,21 +24,6 @@ module DataMapper
       end
     end
 
-    # @api public
-    def self.[](model)
-      mapper_registry[model]
-    end
-
-    # @api public
-    def self.mapper_registry
-      @mapper_registry ||= MapperRegistry.new
-    end
-
-    # @api public
-    def self.relation_registry
-      @relation_registry ||= RelationRegistry.new
-    end
-
     # Set or return the model for this mapper
     #
     # @api public
@@ -73,6 +58,41 @@ module DataMapper
     end
 
     # @api public
+    def self.map(name, *args)
+      type    = Utils.extract_type(args)
+      options = Utils.extract_options(args)
+      options = options.merge(:type => type) if type
+
+      attributes.add(name, options)
+      self
+    end
+
+    # @api public
+    def self.[](model)
+      mapper_registry[model]
+    end
+
+    # @api private
+    def self.attributes
+      @attributes ||= AttributeSet.new
+    end
+
+    # @api private
+    def self.relationships
+      @relationships ||= RelationshipSet.new
+    end
+
+    # @api public
+    def self.mapper_registry
+      @mapper_registry ||= MapperRegistry.new
+    end
+
+    # @api public
+    def self.relation_registry
+      @relation_registry ||= RelationRegistry.new
+    end
+
+    # @api public
     def self.finalize
       # noop
       self
@@ -86,26 +106,6 @@ module DataMapper
     # @api private
     def self.finalize_relationships
       relationships.finalize
-    end
-
-    # @api public
-    def self.map(name, *args)
-      type    = Utils.extract_type(args)
-      options = Utils.extract_options(args)
-      options = options.merge(:type => type) if type
-
-      attributes.add(name, options)
-      self
-    end
-
-    # @api private
-    def self.attributes
-      @attributes ||= AttributeSet.new
-    end
-
-    # @api private
-    def self.relationships
-      @relationships ||= RelationshipSet.new
     end
 
     # @api private
