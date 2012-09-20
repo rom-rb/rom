@@ -1,7 +1,7 @@
 module DataMapper
   class Mapper
 
-    # relationshipset
+    # RelationshipSet
     #
     # @api private
     class RelationshipSet

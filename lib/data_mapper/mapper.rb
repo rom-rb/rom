@@ -1,6 +1,3 @@
-require 'virtus/support/descendants_tracker'
-require 'data_mapper/mapper/relationship_dsl'
-
 module DataMapper
 
   # Abstract Mapper class
@@ -9,7 +6,7 @@ module DataMapper
   class Mapper
     include Enumerable
     extend Virtus::DescendantsTracker
-    extend RelationshipDsl
+    extend Relationship::Dsl
 
     def self.inherited(descendant)
       super
