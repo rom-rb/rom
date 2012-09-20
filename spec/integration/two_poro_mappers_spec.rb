@@ -19,9 +19,9 @@ describe 'Two PORO mappers' do
 
       class Mapper < DataMapper::Mapper::VeritasMapper
 
-        model Address
+        model         Address
         relation_name :addresses
-        repository :postgres
+        repository    :postgres
 
         map :id,      Integer
         map :user_id, Integer
@@ -40,9 +40,9 @@ describe 'Two PORO mappers' do
 
       class Mapper < DataMapper::Mapper::VeritasMapper
 
-        model User
+        model         User
         relation_name :users
-        repository :postgres
+        repository    :postgres
 
         map :id,   Integer
         map :name, String, :to => :username
