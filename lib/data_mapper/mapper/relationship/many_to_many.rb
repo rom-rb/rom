@@ -22,9 +22,8 @@ module DataMapper
             @source_aliases = @source_aliases.merge(@via.source_key => @via.target_key)
           end
 
-          target_model  = options[:target_model]
-          via_key       = [DataMapper::Inflector.foreign_key(target_model.name).to_sym]
-          target_key    = @child_mapper.attributes.key.map(&:name)
+          via_key    = [DataMapper::Inflector.foreign_key(options.target_model.name).to_sym]
+          target_key = @child_mapper.attributes.key.map(&:name)
 
           @join_aliases = Hash[via_key.zip(target_key)]
           target_key.each do |attribute_name|

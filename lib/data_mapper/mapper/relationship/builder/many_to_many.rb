@@ -7,7 +7,7 @@ module DataMapper
 
           def initialize(source_mapper, options)
             super
-            @via = @source_mapper.relationships[options[:through]]
+            @via = @source_mapper.relationships[options.through]
           end
 
           def operation
