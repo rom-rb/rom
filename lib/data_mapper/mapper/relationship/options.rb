@@ -29,12 +29,12 @@ module DataMapper
             @target_model = @mapper_class.attributes[@name].type
           else
             @source_model = source_model
-            @target_model = target_model || options.delete(:model)
+            @target_model = target_model || options.fetch(:model)
           end
 
-          @source_key = options[:source_key] || default_source_key
-          @target_key = options[:target_key] || default_target_key
-          @aliases    = options[:rename]     || {}
+          @source_key = options.fetch(:source_key, default_source_key)
+          @target_key = options.fetch(:target_key, default_target_key)
+          @aliases    = options.fetch(:rename,     {})
         end
 
         def inherit(name, options)
