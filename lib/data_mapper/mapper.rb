@@ -42,33 +42,33 @@ module DataMapper
     # Set or return the model for this mapper
     #
     # @api public
-    def self.model(model=nil)
-      if model
-        @model = model
-      else
+    def self.model(model = Undefined)
+      if model.equal?(Undefined)
         @model
+      else
+        @model = model
       end
     end
 
     # Set or return the name of this mapper's default relation
     #
     # @api public
-    def self.relation_name(name=nil)
-      if name
-        @relation_name = name
-      else
+    def self.relation_name(name = Undefined)
+      if name.equal?(Undefined)
         @relation_name
+      else
+        @relation_name = name
       end
     end
 
     # Set or return the name of this mapper's default repository
     #
     # @api public
-    def self.repository(name=nil)
-      if name
-        @repository = name
-      else
+    def self.repository(name = Undefined)
+      if name.equal?(Undefined)
         @repository
+      else
+        @repository = name
       end
     end
 
