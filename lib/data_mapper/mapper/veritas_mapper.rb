@@ -48,7 +48,10 @@ module DataMapper
 
       # @api public
       def order(*order)
-        attributes = order.map { |attribute| @attributes.field_name(attribute) }
+        attributes = order.map { |attribute|
+          @attributes.field_name(attribute)
+        }
+
         attributes = attributes.concat(@attributes.fields).uniq
 
         sorted = relation.sort_by { |r|

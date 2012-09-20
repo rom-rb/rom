@@ -25,7 +25,8 @@ module DataMapper
 
   # @api public
   def self.setup_gateway(repository, relation)
-    Mapper.relation_registry << Veritas::Relation::Gateway.new(adapters[repository], relation)
+    gateway = Veritas::Relation::Gateway.new(adapters[repository], relation)
+    Mapper.relation_registry << gateway
   end
 
   # @api public

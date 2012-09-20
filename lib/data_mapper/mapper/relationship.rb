@@ -65,25 +65,29 @@ module DataMapper
 
       # @api private
       def finalize_relation
-        @relation = @parent_mapper.instance_exec(*operation_context, &@operation).relation.optimize
+        @relation = @parent_mapper.instance_exec(
+          *operation_context, &@operation
+        ).relation.optimize
       end
 
       # @api private
       def finalize_child_mapper
-        @child_mapper = if @source
-                          @source.finalize.child_mapper
-                        else
-                          DataMapper[@target_model]
-                        end
+        @child_mapper =
+          if @source
+            @source.finalize.child_mapper
+          else
+            DataMapper[@target_model]
+          end
       end
 
       # @api private
       def finalize_parent_mapper
-        @parent_mapper = if @source
-                           @source.finalize.call
-                         else
-                           DataMapper[@source_model]
-                         end
+        @parent_mapper =
+          if @source
+            @source.finalize.call
+          else
+            DataMapper[@source_model]
+          end
       end
 
       # @api private

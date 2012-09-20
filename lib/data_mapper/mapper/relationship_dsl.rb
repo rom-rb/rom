@@ -10,10 +10,10 @@ module DataMapper
         options      = Utils.extract_options(args).merge(:operation => operation)
 
         options_class = if options[:through]
-          Relationship::Options::ManyToMany
-        else
-          Relationship::Options::OneToMany
-        end
+            Relationship::Options::ManyToMany
+          else
+            Relationship::Options::OneToMany
+          end
 
         options = options_class.new(name, source_model, target_model, options)
 
