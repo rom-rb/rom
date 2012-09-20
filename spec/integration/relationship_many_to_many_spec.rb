@@ -35,23 +35,30 @@ describe 'Relationship - Many To Many' do
     end
 
     class TagMapper < DataMapper::Mapper::VeritasMapper
-      map :id,   Integer, :to => :tag_id, :key => true
-      map :name, String
 
       model         Tag
       relation_name :tags
       repository    :postgres
+
+      map :id,   Integer, :to => :tag_id, :key => true
+      map :name, String
     end
 
     class SongTagMapper < DataMapper::Mapper::VeritasMapper
+
+      model Song
+
       map :id,    Integer, :to => :song_id, :key => true
       map :title, String
       map :tags,  Tag, :collection => true
-
-      model Song
     end
 
     class SongMapper < DataMapper::Mapper::VeritasMapper
+
+      model         Song
+      relation_name :songs
+      repository    :postgres
+
       map :id,    Integer, :key => true
       map :title, String
 
@@ -59,10 +66,6 @@ describe 'Relationship - Many To Many' do
         song_tags = relationship.join_relation
         rename(:id => :song_id).join(song_tags).join(tags)
       end
-
-      model         Song
-      relation_name :songs
-      repository    :postgres
     end
   end
 

@@ -21,15 +21,16 @@ describe 'Relationship - One To One - Explicit Loading' do
       end
 
       class Mapper < DataMapper::Mapper::VeritasMapper
+
+        model         Address
+        relation_name :addresses
+        repository    :postgres
+
         map :id,      Integer, :key => true
         map :user_id, Integer
         map :street,  String
         map :city,    String
         map :zipcode, String
-
-        model         Address
-        relation_name :addresses
-        repository    :postgres
       end
     end
 
@@ -43,13 +44,14 @@ describe 'Relationship - One To One - Explicit Loading' do
       end
 
       class Mapper < DataMapper::Mapper::VeritasMapper
-        map :id,   Integer, :key => true
-        map :name, String,  :to  => :username
-        map :age,  Integer
 
         model         User
         relation_name :users
         repository    :postgres
+
+        map :id,   Integer, :key => true
+        map :name, String,  :to  => :username
+        map :age,  Integer
       end
     end
   end

@@ -19,13 +19,14 @@ describe 'Relationship - Many To One' do
       end
 
       class Mapper < DataMapper::Mapper::VeritasMapper
-        map :id,   Integer, :key => true
-        map :name, String,  :to  => :username
-        map :age,  Integer
 
         model         User
         relation_name :users
         repository    :postgres
+
+        map :id,   Integer, :key => true
+        map :name, String,  :to  => :username
+        map :age,  Integer
       end
     end
 
@@ -49,6 +50,11 @@ describe 'Relationship - Many To One' do
       end
 
       class Mapper < DataMapper::Mapper::VeritasMapper
+
+        model         Address
+        relation_name :addresses
+        repository    :postgres
+
         map :id,      Integer, :key => true
         map :user_id, Integer
         map :street,  String
@@ -58,10 +64,6 @@ describe 'Relationship - Many To One' do
         belongs_to :user, :mapper => AddressUserMapper do |users|
           rename(:id => :address_id).join(users)
         end
-
-        model         Address
-        relation_name :addresses
-        repository    :postgres
       end
     end
   end

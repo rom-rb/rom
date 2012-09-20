@@ -21,15 +21,16 @@ describe 'Relationship - One To One' do
       end
 
       class Mapper < DataMapper::Mapper::VeritasMapper
+
+        model         Address
+        relation_name :addresses
+        repository    :postgres
+
         map :id,      Integer, :key => true
         map :user_id, Integer
         map :street,  String
         map :city,    String
         map :zipcode, String
-
-        model         Address
-        relation_name :addresses
-        repository    :postgres
       end
     end
 
@@ -44,6 +45,7 @@ describe 'Relationship - One To One' do
       end
 
       class UserAddressMapper < DataMapper::Mapper::VeritasMapper
+
         model User
 
         map :id,           Integer, :to => :user_id, :key => true
@@ -54,6 +56,7 @@ describe 'Relationship - One To One' do
       end
 
       class Mapper < DataMapper::Mapper::VeritasMapper
+
         model         User
         relation_name :users
         repository    :postgres

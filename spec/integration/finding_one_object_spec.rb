@@ -17,13 +17,14 @@ describe 'Finding One Object' do
       end
 
       class Mapper < DataMapper::Mapper::VeritasMapper
-        map :id,   Integer, :key => true
-        map :name, String,  :to  => :username
-        map :age,  Integer
 
         model         User
         relation_name :users
         repository    :postgres
+
+        map :id,   Integer, :key => true
+        map :name, String,  :to  => :username
+        map :age,  Integer
       end
     end
   end
