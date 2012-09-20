@@ -26,8 +26,8 @@ module DataMapper
       # @return [undefined]
       #
       # @api public
-      def initialize(relation = nil)
-        @relation      = relation || self.class.relation
+      def initialize(relation = self.class.relation)
+        @relation      = relation
         @attributes    = self.class.attributes
         @relationships = self.class.relationships
         @model         = self.class.model
