@@ -55,7 +55,7 @@ module DataMapper
       end
 
       # @api private
-      def relationship_builder
+      def builder_class
         Builder::OneToMany
       end
 

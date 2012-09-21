@@ -31,7 +31,7 @@ module DataMapper
       private
 
       # @api private
-      def relationship_builder
+      def builder_class
         Builder::ManyToMany
       end
     end # class ManyToMany

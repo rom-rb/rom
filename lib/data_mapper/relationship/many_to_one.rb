@@ -22,7 +22,7 @@ module DataMapper
       end
 
       # @api private
-      def relationship_builder
+      def builder_class
         Builder::ManyToOne
       end
     end # class ManyToOne
