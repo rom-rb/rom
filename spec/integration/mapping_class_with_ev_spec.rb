@@ -17,7 +17,7 @@ describe 'PORO with an embedded value' do
         @street, @city, @zipcode = attributes
       end
 
-      class Mapper < DataMapper::Mapper::VeritasMapper
+      class Mapper < DataMapper::Mapper::Relation::Base
 
         model         Address
         relation_name :addresses
@@ -39,7 +39,7 @@ describe 'PORO with an embedded value' do
         @address = Address.new(*attributes.values_at(:street, :city, :zipcode))
       end
 
-      class Mapper < DataMapper::Mapper::VeritasMapper
+      class Mapper < DataMapper::Mapper::Relation::Base
 
         model         User
         relation_name :users

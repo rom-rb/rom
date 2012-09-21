@@ -48,26 +48,14 @@ module DataMapper
   #
   # TODO: implement handling of dependencies between mappers
   def self.finalize
-    mappers = Mapper::VeritasMapper.descendants
+    mappers = Mapper.descendants
 
-    mappers.each do |mapper_class|
-      if mapper_class.relation_name
-        mapper_class.finalize
-
-        repository = mapper_class.repository
-        relation   = mapper_class.base_relation
-        gateway    = setup_gateway(repository, relation)
-
-        mapper_registry << mapper_class.new(gateway)
-      end
-    end
-
+    mappers.each { |mapper| mapper.finalize }
     mappers.each { |mapper| mapper.finalize_attributes }
     mappers.each { |mapper| mapper.finalize_relationships }
 
     self
   end
-
 end # module DataMapper
 
 require 'veritas'
@@ -90,7 +78,8 @@ require 'data_mapper/mapper/attribute/mapper'
 require 'data_mapper/mapper/attribute/collection'
 require 'data_mapper/mapper/attribute_set'
 require 'data_mapper/mapper'
-require 'data_mapper/mapper/veritas_mapper'
+require 'data_mapper/mapper/relation'
+require 'data_mapper/mapper/relation/base'
 
 require 'data_mapper/relationship'
 require 'data_mapper/relationship/options'

@@ -1,19 +1,29 @@
 module DataMapper
   class Mapper
 
-    # VeritasMapper
+    # Relation
     #
     # @api public
-    class VeritasMapper < Mapper
+    class Relation < self
 
+      def self.inherited(descendant)
+        super
+        descendant.repository(repository)
+      end
+
+      # Set or return the name of this mapper's default repository
+      #
       # @api public
-      def self.base_relation
-        @base_relation ||= Veritas::Relation::Base.new(
-          relation_name, attributes.header)
+      def self.repository(name = Undefined)
+        if name.equal?(Undefined)
+          @repository
+        else
+          @repository = name
+        end
       end
 
       def self.relation
-        @relation ||= base_relation
+        @relation ||= Veritas::Relation::Empty.new(attributes.header)
       end
 
       # @api private
@@ -112,6 +122,6 @@ module DataMapper
         end
       end
 
-    end # class VeritasMapper
+    end # class Relation
   end # class Mapper
 end # module DataMapper

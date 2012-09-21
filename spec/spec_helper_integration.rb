@@ -189,7 +189,7 @@ RSpec.configure do |config|
     Object.send(:remove_const, :OrderMapper)        if defined?(OrderMapper)
     Object.send(:remove_const, :UserMapper)         if defined?(UserMapper)
     DataMapper::Mapper.instance_variable_set('@descendants', [])
-    DataMapper::Mapper::VeritasMapper.instance_variable_set('@descendants', [])
+    DataMapper::Mapper::Relation::Base.instance_variable_set('@descendants', [])
   end
 
   config.before do

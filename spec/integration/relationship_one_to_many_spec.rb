@@ -27,7 +27,7 @@ describe 'Relationship - One To Many' do
       end
     end
 
-    class OrderMapper < DataMapper::Mapper::VeritasMapper
+    class OrderMapper < DataMapper::Mapper::Relation::Base
 
       model         Order
       relation_name :orders
@@ -37,7 +37,7 @@ describe 'Relationship - One To Many' do
       map :product, String
     end
 
-    class UserOrderMapper < DataMapper::Mapper::VeritasMapper
+    class UserOrderMapper < DataMapper::Mapper::Relation
 
       model User
 
@@ -47,7 +47,7 @@ describe 'Relationship - One To Many' do
       map :orders, Order, :collection => true
     end
 
-    class UserMapper < DataMapper::Mapper::VeritasMapper
+    class UserMapper < DataMapper::Mapper::Relation::Base
 
       model         User
       relation_name :users

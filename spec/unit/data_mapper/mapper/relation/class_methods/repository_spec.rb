@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe DataMapper::Mapper, '.repository' do
+describe DataMapper::Mapper::Relation, '.repository' do
   let(:name) { :postgres }
 
   context "with a name" do

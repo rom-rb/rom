@@ -20,7 +20,7 @@ describe 'Relationship - One To One' do
           :id, :street, :city, :zipcode)
       end
 
-      class Mapper < DataMapper::Mapper::VeritasMapper
+      class Mapper < DataMapper::Mapper::Relation::Base
 
         model         Address
         relation_name :addresses
@@ -44,7 +44,7 @@ describe 'Relationship - One To One' do
         @home_address    = attributes[:home_address]
       end
 
-      class UserAddressMapper < DataMapper::Mapper::VeritasMapper
+      class UserAddressMapper < DataMapper::Mapper::Relation
 
         model User
 
@@ -55,7 +55,7 @@ describe 'Relationship - One To One' do
         map :home_address, Address
       end
 
-      class Mapper < DataMapper::Mapper::VeritasMapper
+      class Mapper < DataMapper::Mapper::Relation::Base
 
         model         User
         relation_name :users
