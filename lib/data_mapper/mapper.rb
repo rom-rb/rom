@@ -8,18 +8,6 @@ module DataMapper
     extend Virtus::DescendantsTracker
     extend Relationship::Dsl
 
-    def self.inherited(descendant)
-      super
-
-      descendant.model(model)
-      attributes.each do |attribute|
-        descendant.attributes << attribute
-      end
-      relationships.each do |relationship|
-        descendant.relationships << relationship
-      end
-    end
-
     def self.from(other)
       klass = Class.new(self)
       klass.model(other.model)

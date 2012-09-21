@@ -4,11 +4,6 @@ module DataMapper
 
       class Base < self
 
-        def self.inherited(descendant)
-          super
-          descendant.relation_name(relation_name)
-        end
-
         def self.from(other)
           klass = super
           klass.relation_name(other.relation_name)

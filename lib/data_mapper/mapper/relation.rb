@@ -6,11 +6,6 @@ module DataMapper
     # @api public
     class Relation < self
 
-      def self.inherited(descendant)
-        super
-        descendant.repository(repository)
-      end
-
       def self.from(other)
         klass = super
         klass.repository(other.repository)
