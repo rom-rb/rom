@@ -10,6 +10,7 @@ module DataMapper
         source  = options[:through]
 
         min, max = extract_min_max(cardinality, name)
+        options.update(:min => min, :max => max)
 
         if max == 1 && source
           return relationships.add_through(source, name, &operation)

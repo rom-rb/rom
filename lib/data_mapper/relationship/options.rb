@@ -11,6 +11,8 @@ module DataMapper
       attr_reader :target_key
       attr_reader :aliases
       attr_reader :through
+      attr_reader :min
+      attr_reader :max
 
       attr_accessor :source
       attr_accessor :operation
@@ -34,6 +36,9 @@ module DataMapper
         @source_key = options.fetch(:source_key, default_source_key)
         @target_key = options.fetch(:target_key, default_target_key)
         @aliases    = options.fetch(:rename,     {})
+
+        @min = options.fetch(min, 1)
+        @max = options.fetch(max, 1)
       end
 
       def inherit(name, options)
