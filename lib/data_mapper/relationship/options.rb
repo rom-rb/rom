@@ -24,12 +24,11 @@ module DataMapper
         @through      = options[:through]
         @mapper_class = options[:mapper]
         @operation    = options[:operation]
+        @source_model = source_model
 
         if @mapper_class
-          @source_model = @mapper_class.model
           @target_model = @mapper_class.attributes[@name].type
         else
-          @source_model = source_model
           @target_model = target_model || options.fetch(:model)
         end
 
