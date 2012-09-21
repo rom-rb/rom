@@ -5,7 +5,7 @@ module DataMapper
   # @abstract
   class Mapper
     include Enumerable
-    extend Virtus::DescendantsTracker
+    extend DescendantsTracker
     extend Relationship::Dsl
 
     def self.from(other)

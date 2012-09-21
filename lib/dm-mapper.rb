@@ -60,7 +60,8 @@ end # module DataMapper
 
 require 'veritas'
 require 'veritas-optimizer'
-require 'virtus/support/descendants_tracker'
+
+require 'descendants_tracker'
 
 require 'data_mapper/support/utils'
 require 'data_mapper/support/inflector/inflections'
