@@ -11,6 +11,12 @@ module DataMapper
         descendant.repository(repository)
       end
 
+      def self.from(other)
+        klass = super
+        klass.repository(other.repository)
+        klass
+      end
+
       # Set or return the name of this mapper's default repository
       #
       # @api public

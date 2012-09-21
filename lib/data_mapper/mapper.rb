@@ -20,6 +20,18 @@ module DataMapper
       end
     end
 
+    def self.from(other)
+      klass = Class.new(self)
+      klass.model(other.model)
+      other.attributes.each do |attribute|
+        klass.attributes << attribute
+      end
+      other.relationships.each do |relationship|
+        klass.relationships << relationship
+      end
+      klass
+    end
+
     # Set or return the model for this mapper
     #
     # @api public

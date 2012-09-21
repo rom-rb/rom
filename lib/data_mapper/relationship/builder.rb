@@ -19,7 +19,7 @@ module DataMapper
       end
 
       def mapper_class
-        klass = remap_fields(Class.new(source_mapper))
+        klass = remap_fields(Mapper::Relation.from(source_mapper))
         klass.map(name, target_model_attribute_options)
         klass.finalize_attributes
         klass

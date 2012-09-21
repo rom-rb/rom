@@ -9,6 +9,12 @@ module DataMapper
           descendant.relation_name(relation_name)
         end
 
+        def self.from(other)
+          klass = super
+          klass.relation_name(other.relation_name)
+          klass
+        end
+
         # Set or return the name of this mapper's default relation
         #
         # @api public
