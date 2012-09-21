@@ -62,7 +62,7 @@ describe 'Relationship - Many To Many' do
       map :id,    Integer, :key => true
       map :title, String
 
-      has_many :tags, :mapper => SongTagMapper, :through => :song_tags do |tags, relationship|
+      has n, :tags, :mapper => SongTagMapper, :through => :song_tags do |tags, relationship|
         song_tags = relationship.join_relation
         rename(:id => :song_id).join(song_tags).join(tags)
       end

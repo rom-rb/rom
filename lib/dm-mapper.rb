@@ -3,6 +3,8 @@ module DataMapper
   # Represent an undefined argument
   Undefined = Object.new.freeze
 
+  Infinity  = 1.0 / 0
+
   # @api public
   def self.[](model)
     Mapper[model]

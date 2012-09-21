@@ -47,7 +47,7 @@ describe 'Relationship - One To Many with generated mapper' do
       map :name,   String,  :to => :username
       map :age,    Integer
 
-      has_many :orders, Order
+      has n, :orders, Order
     end
 
   end
