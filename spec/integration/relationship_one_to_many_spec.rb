@@ -57,7 +57,7 @@ describe 'Relationship - One To Many' do
       map :name,   String,  :to => :username
       map :age,    Integer
 
-      has n, :orders, :mapper => UserOrderMapper do |orders|
+      has 0..n, :orders, :mapper => UserOrderMapper do |orders|
         rename(:id => :user_id).join(orders)
       end
     end

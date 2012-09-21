@@ -65,8 +65,8 @@ describe 'Relationship - Many To Many with generated mappers' do
       map :id,    Integer, :key => true
       map :title, String
 
-      has n, :song_tags, SongTag, :target_key => :song_id
-      has n, :tags, Tag, :through => :song_tags
+      has 0..n, :song_tags, SongTag, :target_key => :song_id
+      has 0..n, :tags, Tag, :through => :song_tags
     end
   end
 

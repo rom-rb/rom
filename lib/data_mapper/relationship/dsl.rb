@@ -9,7 +9,9 @@ module DataMapper
         options = Utils.extract_options(args)
         source  = options[:through]
 
-        if cardinality == 1 && source
+        min, max = extract_min_max(cardinality, name)
+
+        if max == 1 && source
           return relationships.add_through(source, name, &operation)
         end
 
@@ -18,7 +20,7 @@ module DataMapper
         target_model = Utils.extract_type(args)
 
         options_class =
-          if cardinality > 1
+          if max > 1
             if source
               Relationship::Options::ManyToMany
             else
@@ -48,6 +50,22 @@ module DataMapper
 
       def n
         Infinity
+      end
+
+      def extract_min_max(cardinality, name = nil)
+        case cardinality
+        when Integer  then [ cardinality,       cardinality      ]
+        when Range    then [ cardinality.first, cardinality.last ]
+        else
+          message = "must be Integer or Range but was #{cardinality.class}"
+
+          if name
+            source  = "#{self}.has(#{cardinality}, #{name.inspect}, ...)"
+            message = "#{source}: #{message}"
+          end
+
+          raise ArgumentError, message
+        end
       end
     end # module Dsl
   end # class Relationship
