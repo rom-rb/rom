@@ -8,14 +8,22 @@ module DataMapper
     extend DescendantsTracker
 
     def self.from(other)
-      klass = Class.new(self)
+      klass = Class.new(self) {
+        def self.name
+          "#{model}Mapper"
+        end
+      }
+
       klass.model(other.model)
+
       other.attributes.each do |attribute|
         klass.attributes << attribute
       end
+
       other.relationships.each do |relationship|
         klass.relationships << relationship
       end
+
       klass
     end
 

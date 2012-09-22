@@ -52,6 +52,11 @@ module DataMapper
       end
 
       # @api public
+      def inspect
+        "<##{self.class.name}:#{object_id} @model=#{@model} @repository=#{self.class.repository} @relation=#{@relation}>"
+      end
+
+      # @api public
       def find(options)
         restriction = @relation.restrict(Query.new(options, @attributes))
         self.class.new(restriction.optimize)
