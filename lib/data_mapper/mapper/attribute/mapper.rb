@@ -16,6 +16,11 @@ module DataMapper
         end
 
         # @api public
+        def inspect
+          "<##{self.class.name} @name=#{name} @mapper=#{@mapper}>"
+        end
+
+        # @api public
         def load(tuple)
           @mapper.load(tuple)
         end

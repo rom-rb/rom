@@ -9,6 +9,11 @@ module DataMapper
           @type = options.fetch(:type, Object)
         end
 
+        # @api public
+        def inspect
+          "<##{self.class.name} @name=#{name} @type=#{type} @field=#{field} @key=#{key?}>"
+        end
+
         # @api private
         def header
           [ field, type ]
