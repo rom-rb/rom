@@ -20,45 +20,50 @@ describe 'Relationship - One To One' do
           :id, :street, :city, :zipcode)
       end
 
-      class Mapper < DataMapper::Mapper::VeritasMapper
-        map :id,      :type => Integer, :key => true
-        map :user_id, :type => Integer
-        map :street,  :type => String
-        map :city,    :type => String
-        map :zipcode, :type => String
+      class Mapper < DataMapper::Mapper::Relation::Base
 
         model         Address
         relation_name :addresses
         repository    :postgres
+
+        map :id,      Integer, :key => true
+        map :user_id, Integer
+        map :street,  String
+        map :city,    String
+        map :zipcode, String
       end
     end
 
 
     class User
-      attr_reader :id, :name, :age, :address
+      attr_reader :id, :name, :age, :address, :home_address
 
       def initialize(attributes)
         @id, @name, @age = attributes.values_at(:id, :name, :age)
-        @address = attributes[:address]
+        @address         = attributes[:address]
+        @home_address    = attributes[:home_address]
       end
 
-      class UserAddressMapper < DataMapper::Mapper::VeritasMapper
+      class UserAddressMapper < DataMapper::Mapper::Relation
+
         model User
 
-        map :id,      :type => Integer, :to => :user_id, :key => true
-        map :name,    :type => String,  :to => :username
-        map :age,     :type => Integer
-        map :address, :type => Address
+        map :id,           Integer, :to => :user_id, :key => true
+        map :name,         String,  :to => :username
+        map :age,          Integer
+        map :address,      Address
+        map :home_address, Address
       end
 
-      class Mapper < DataMapper::Mapper::VeritasMapper
+      class Mapper < DataMapper::Mapper::Relation::Base
+
         model         User
         relation_name :users
         repository    :postgres
 
-        map :id,   :type => Integer, :key => true
-        map :name, :type => String,  :to  => :username
-        map :age,  :type => Integer
+        map :id,   Integer, :key => true
+        map :name, String,  :to  => :username
+        map :age,  Integer
 
         has 1, :address, :mapper => UserAddressMapper do |address|
           rename(:id => :user_id).join(address)
@@ -90,7 +95,7 @@ describe 'Relationship - One To One' do
 
   it 'loads restricted association' do
     user = user_mapper.include(:home_address).to_a.last
-    address = user.address
+    address = user.home_address
 
     address.should be_instance_of(Address)
     address.id.should eql(1)

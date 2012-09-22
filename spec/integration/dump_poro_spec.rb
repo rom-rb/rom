@@ -14,14 +14,15 @@ describe 'Dump a PORO' do
         @id, @name, @age = attributes.values_at(:id, :name, :age)
       end
 
-      class Mapper < DataMapper::Mapper::VeritasMapper
-        map :id, :key => true, :type => Integer
-        map :name, :to => :username, :type => String
-        map :age, :type => Integer
+      class Mapper < DataMapper::Mapper::Relation::Base
 
         model         User
         relation_name :users
         repository    :postgres
+
+        map :id,   Integer, :key => true
+        map :name, String,  :to  => :username
+        map :age,  Integer
       end
     end
   end

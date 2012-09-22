@@ -34,34 +34,38 @@ describe 'Relationship - Many To Many' do
       end
     end
 
-    class TagMapper < DataMapper::Mapper::VeritasMapper
-      map :id,   :type => Integer, :to => :tag_id, :key => true
-      map :name, :type => String
+    class TagMapper < DataMapper::Mapper::Relation::Base
 
       model         Tag
       relation_name :tags
       repository    :postgres
+
+      map :id,   Integer, :to => :tag_id, :key => true
+      map :name, String
     end
 
-    class SongTagMapper < DataMapper::Mapper::VeritasMapper
-      map :id,    :type => Integer, :to => :song_id, :key => true
-      map :title, :type => String
-      map :tags,  :type => Tag, :collection => true
+    class SongTagMapper < DataMapper::Mapper::Relation
 
       model Song
+
+      map :id,    Integer, :to => :song_id, :key => true
+      map :title, String
+      map :tags,  Tag, :collection => true
     end
 
-    class SongMapper < DataMapper::Mapper::VeritasMapper
-      map :id,    :type => Integer, :key => true
-      map :title, :type => String
-
-      has_many :tags, :mapper => SongTagMapper, :through => :song_tags do |tags|
-        rename(:id => :song_id).join(tags)
-      end
+    class SongMapper < DataMapper::Mapper::Relation::Base
 
       model         Song
       relation_name :songs
       repository    :postgres
+
+      map :id,    Integer, :key => true
+      map :title, String
+
+      has 0..n, :tags, :mapper => SongTagMapper, :through => :song_tags do |tags, relationship|
+        song_tags = relationship.join_relation
+        rename(:id => :song_id).join(song_tags).join(tags)
+      end
     end
   end
 

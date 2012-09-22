@@ -18,14 +18,15 @@ describe 'Relationship - Many To One' do
         @address = attributes[:address]
       end
 
-      class Mapper < DataMapper::Mapper::VeritasMapper
-        map :id,   :type => Integer, :key => true
-        map :name, :type => String,  :to  => :username
-        map :age,  :type => Integer
+      class Mapper < DataMapper::Mapper::Relation::Base
 
         model         User
         relation_name :users
         repository    :postgres
+
+        map :id,   Integer, :key => true
+        map :name, String,  :to  => :username
+        map :age,  Integer
       end
     end
 
@@ -37,31 +38,32 @@ describe 'Relationship - Many To One' do
           :id, :street, :city, :zipcode, :user)
       end
 
-      class AddressUserMapper < DataMapper::Mapper::VeritasMapper
+      class AddressUserMapper < DataMapper::Mapper::Relation
         model Address
 
-        map :address_id, :type => Integer, :to => :id
-        map :user_id,    :type => Integer
-        map :street,     :type => String
-        map :city,       :type => String
-        map :zipcode,    :type => String
-        map :user,       :type => User
+        map :address_id, Integer, :to => :id
+        map :user_id,    Integer
+        map :street,     String
+        map :city,       String
+        map :zipcode,    String
+        map :user,       User
       end
 
-      class Mapper < DataMapper::Mapper::VeritasMapper
-        map :id,      :type => Integer, :key => true
-        map :user_id, :type => Integer
-        map :street,  :type => String
-        map :city,    :type => String
-        map :zipcode, :type => String
-
-        belongs_to :user, :mapper => AddressUserMapper do |users|
-          rename(:id => :address_id).join(users)
-        end
+      class Mapper < DataMapper::Mapper::Relation::Base
 
         model         Address
         relation_name :addresses
         repository    :postgres
+
+        map :id,      Integer, :key => true
+        map :user_id, Integer
+        map :street,  String
+        map :city,    String
+        map :zipcode, String
+
+        belongs_to :user, :mapper => AddressUserMapper do |users|
+          rename(:id => :address_id).join(users)
+        end
       end
     end
   end

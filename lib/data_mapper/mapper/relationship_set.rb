@@ -1,7 +1,7 @@
 module DataMapper
   class Mapper
 
-    # relationshipset
+    # RelationshipSet
     #
     # @api private
     class RelationshipSet
@@ -22,17 +22,6 @@ module DataMapper
       # @api public
       def finalize
         each { |relationship| relationship.finalize }
-      end
-
-      # @api public
-      def add_through(source, name, &operation)
-        self << self[source].inherit(name, operation)
-      end
-
-      # @api private
-      def add(name, options = {})
-        @relationships[name] = options.fetch(:type).new(name, options)
-        self
       end
 
       # @api public

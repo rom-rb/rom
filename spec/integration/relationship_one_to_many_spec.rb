@@ -1,6 +1,6 @@
 require 'spec_helper_integration'
 
-describe 'Relationship - Onet To Many' do
+describe 'Relationship - One To Many' do
   before(:all) do
     setup_db
 
@@ -27,36 +27,39 @@ describe 'Relationship - Onet To Many' do
       end
     end
 
-    class OrderMapper < DataMapper::Mapper::VeritasMapper
-      map :id,      :type => Integer, :key => true
-      map :product, :type => String
+    class OrderMapper < DataMapper::Mapper::Relation::Base
 
       model         Order
       relation_name :orders
       repository    :postgres
+
+      map :id,      Integer, :key => true
+      map :product, String
     end
 
-    class UserOrderMapper < DataMapper::Mapper::VeritasMapper
-      map :id,     :type => Integer, :to => :user_id, :key => true
-      map :name,   :type => String,  :to => :username
-      map :age,    :type => Integer
-      map :orders, :type => Order, :collection => true
+    class UserOrderMapper < DataMapper::Mapper::Relation
 
       model User
+
+      map :id,     Integer, :to => :user_id, :key => true
+      map :name,   String,  :to => :username
+      map :age,    Integer
+      map :orders, Order, :collection => true
     end
 
-    class UserMapper < DataMapper::Mapper::VeritasMapper
-      map :id,     :type => Integer, :key => true
-      map :name,   :type => String,  :to => :username
-      map :age,    :type => Integer
-
-      has_many :orders, :mapper => UserOrderMapper do |orders|
-        rename(:id => :user_id).join(orders)
-      end
+    class UserMapper < DataMapper::Mapper::Relation::Base
 
       model         User
       relation_name :users
       repository    :postgres
+
+      map :id,     Integer, :key => true
+      map :name,   String,  :to => :username
+      map :age,    Integer
+
+      has 0..n, :orders, :mapper => UserOrderMapper do |orders|
+        rename(:id => :user_id).join(orders)
+      end
     end
 
   end

@@ -17,16 +17,17 @@ describe 'PORO with an embedded value' do
         @street, @city, @zipcode = attributes
       end
 
-      class Mapper < DataMapper::Mapper::VeritasMapper
-        map :id,      :type => Integer, :key => true
-        map :user_id, :type => Integer
-        map :street,  :type => String
-        map :city,    :type => String
-        map :zipcode, :type => String
+      class Mapper < DataMapper::Mapper::Relation::Base
 
         model         Address
         relation_name :addresses
         repository    :postgres
+
+        map :id,      Integer, :key => true
+        map :user_id, Integer
+        map :street,  String
+        map :city,    String
+        map :zipcode, String
       end
     end
 
@@ -38,19 +39,20 @@ describe 'PORO with an embedded value' do
         @address = Address.new(*attributes.values_at(:street, :city, :zipcode))
       end
 
-      class Mapper < DataMapper::Mapper::VeritasMapper
-        map :id,   :type => Integer, :key => true
-        map :name, :type => String,  :to  => :username
-        map :age,  :type => Integer
-
-        # address attributes
-        map :street,  :type => String
-        map :city,    :type => String
-        map :zipcode, :type => String
+      class Mapper < DataMapper::Mapper::Relation::Base
 
         model         User
         relation_name :users
         repository    :postgres
+
+        map :id,   Integer, :key => true
+        map :name, String,  :to  => :username
+        map :age,  Integer
+
+        # address attributes
+        map :street,  String
+        map :city,    String
+        map :zipcode, String
       end
     end
   end
@@ -63,8 +65,6 @@ describe 'PORO with an embedded value' do
   end
 
   it 'loads a user with an address' do
-    pending
-
     mapper = User::Mapper.new(operation.optimize)
     users  = mapper.to_a
 

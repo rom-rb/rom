@@ -1,6 +1,3 @@
-require 'virtus/support/descendants_tracker'
-require 'data_mapper/mapper/relationship_dsl'
-
 module DataMapper
 
   # Abstract Mapper class
@@ -8,12 +5,82 @@ module DataMapper
   # @abstract
   class Mapper
     include Enumerable
-    extend Virtus::DescendantsTracker
-    extend RelationshipDsl
+    extend DescendantsTracker
+
+    def self.from(other)
+      klass = Class.new(self) {
+        def self.name
+          "#{model}Mapper"
+        end
+      }
+
+      klass.model(other.model)
+
+      other.attributes.each do |attribute|
+        klass.attributes << attribute
+      end
+
+      other.relationships.each do |relationship|
+        klass.relationships << relationship
+      end
+
+      klass
+    end
+
+    # Set or return the model for this mapper
+    #
+    # @api public
+    def self.model(model = Undefined)
+      if model.equal?(Undefined)
+        @model
+      else
+        @model = model
+      end
+    end
+
+    # @api public
+    def self.map(name, *args)
+      type    = Utils.extract_type(args)
+      options = Utils.extract_options(args)
+      options = options.merge(:type => type) if type
+
+      attributes.add(name, options)
+      self
+    end
+
+    def self.has(cardinality, name, *args, &op)
+      relationship = Relationship::Builder::Has.build(
+        self, cardinality, name, *args, &op
+      )
+
+      relationships << relationship
+    end
+
+    def self.belongs_to(name, *args, &op)
+      relationship = Relationship::Builder::BelongsTo.build(
+        self, name, *args, &op
+      )
+
+      relationships << relationship
+    end
+
+    def self.n
+      Infinity
+    end
 
     # @api public
     def self.[](model)
       mapper_registry[model]
+    end
+
+    # @api private
+    def self.attributes
+      @attributes ||= AttributeSet.new
+    end
+
+    # @api private
+    def self.relationships
+      @relationships ||= RelationshipSet.new
     end
 
     # @api public
@@ -24,27 +91,6 @@ module DataMapper
     # @api public
     def self.relation_registry
       @relation_registry ||= RelationRegistry.new
-    end
-
-    # Set or return the model for this mapper
-    #
-    # @api public
-    def self.model(model=nil)
-      @model ||= model
-    end
-
-    # Set or return the name of this mapper's default relation
-    #
-    # @api public
-    def self.relation_name(name=nil)
-      @relation_name ||= name
-    end
-
-    # Set or return the name of this mapper's default repository
-    #
-    # @api public
-    def self.repository(name=nil)
-      @repository ||= name
     end
 
     # @api public
@@ -63,20 +109,14 @@ module DataMapper
       relationships.finalize
     end
 
-    # @api public
-    def self.map(name, options = {})
-      attributes.add(name, options)
-      self
+    # @api private
+    def self.unique_alias(name, scope)
+      "#{name}__#{scope}_alias#{[name, scope].join.hash}".to_sym
     end
 
     # @api private
-    def self.attributes
-      @attributes ||= AttributeSet.new
-    end
-
-    # @api private
-    def self.relationships
-      @relationships ||= RelationshipSet.new
+    def unique_alias(name, scope)
+      self.class.unique_alias(name, scope)
     end
 
     # Load a domain object

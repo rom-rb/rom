@@ -19,12 +19,12 @@ module DataMapper
       # @api public
       def self.build(name, options = {})
         klass = if PRIMITIVES.include?(options[:type])
-                  Attribute::Primitive
-                elsif options[:collection]
-                  Attribute::Collection
-                else
-                  Attribute::Mapper
-                end
+            Attribute::Primitive
+          elsif options[:collection]
+            Attribute::EmbeddedCollection
+          else
+            Attribute::EmbeddedValue
+          end
 
         klass.new(name, options)
       end

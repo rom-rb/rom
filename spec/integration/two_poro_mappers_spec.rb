@@ -17,16 +17,17 @@ describe 'Two PORO mappers' do
         @id, @street, @zipcode, @city = attributes.values_at(:id, :name, :zipcode, :city)
       end
 
-      class Mapper < DataMapper::Mapper::VeritasMapper
-        map :id,      :type => Integer
-        map :user_id, :type => Integer
-        map :street,  :type => String
-        map :zipcode, :type => String
-        map :city,    :type => String
+      class Mapper < DataMapper::Mapper::Relation::Base
 
-        model Address
+        model         Address
         relation_name :addresses
-        repository :postgres
+        repository    :postgres
+
+        map :id,      Integer
+        map :user_id, Integer
+        map :street,  String
+        map :zipcode, String
+        map :city,    String
       end
     end
 
@@ -37,14 +38,15 @@ describe 'Two PORO mappers' do
         @id, @name, @age = attributes.values_at(:id, :name, :age)
       end
 
-      class Mapper < DataMapper::Mapper::VeritasMapper
-        map :id, :type => Integer
-        map :name, :to => :username, :type => String
-        map :age, :type => Integer
+      class Mapper < DataMapper::Mapper::Relation::Base
 
-        model User
+        model         User
         relation_name :users
-        repository :postgres
+        repository    :postgres
+
+        map :id,   Integer
+        map :name, String, :to => :username
+        map :age,  Integer
       end
     end
   end
@@ -57,8 +59,6 @@ describe 'Two PORO mappers' do
   end
 
   it 'finds user with a specific address' do
-    pending 'this does not work yet'
-
     users = User::Mapper.new(operation.restrict { |r| r.city.eq('Boston') }.optimize).to_a
     user  = users.first
 
