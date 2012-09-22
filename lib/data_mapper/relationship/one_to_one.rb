@@ -14,7 +14,7 @@ module DataMapper
       end
 
       # @api private
-      def builder_class
+      def mapper_builder_class
         Mapper::Builder::Relationship::OneToOne
       end
     end # class OneToOne
