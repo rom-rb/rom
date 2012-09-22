@@ -15,6 +15,10 @@ module DataMapper
         def default_target_key
           :id
         end
+
+        def validator_class
+          Validator::ManyToOne
+        end
       end # class ManyToOne
     end # class Options
   end # class Relationship

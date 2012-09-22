@@ -31,6 +31,8 @@ module DataMapper
 
       # @api private
       def add(name, options)
+        options.validate
+
         @relationships[name] = options.type.new(options)
         self
       end

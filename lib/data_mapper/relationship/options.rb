@@ -60,10 +60,19 @@ module DataMapper
         nil
       end
 
+      def validate
+        validator_class.new(self).validate
+      end
+
       private
 
       def foreign_key_name(class_name)
         DataMapper::Inflector.foreign_key(class_name).to_sym
+      end
+
+      # @api private
+      def validator_class
+        raise NotImplementedError, "#{self.class}##{__method__} must be implemented"
       end
     end # class Options
   end # class Relationship

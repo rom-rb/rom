@@ -15,6 +15,10 @@ module DataMapper
         def default_target_key
           foreign_key_name(source_model.name)
         end
+
+        def validator_class
+          Validator::OneToOne
+        end
       end # class OneToOne
     end # class Options
   end # class Relationship
