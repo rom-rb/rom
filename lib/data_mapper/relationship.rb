@@ -42,7 +42,8 @@ module DataMapper
 
     # @api public
     def inherit(name, operation)
-      self.class.new(@options.inherit(name, :source => self, :operation => operation))
+      self.class.new(
+        @options.inherit(name, :source => self, :operation => operation))
     end
 
   private
@@ -57,9 +58,7 @@ module DataMapper
     end
 
     def finalize_aliases
-      @source_aliases = options.aliases.merge(
-        source_key => target_key
-      )
+      @source_aliases = options.aliases.merge(source_key => target_key)
     end
 
     # @api private
@@ -99,9 +98,9 @@ module DataMapper
       when 0
         []
       when 1
-        [@child_mapper]
+        [ @child_mapper ]
       when -1, 2
-        [@child_mapper, self]
+        [ @child_mapper, self ]
       else
         # TODO raise a more appropriate/descriptive error?
         raise ArgumentError, "Wrong number of block parameters"
