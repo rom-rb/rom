@@ -32,7 +32,7 @@ module DataMapper
 
       # @api private
       def builder_class
-        Builder::ManyToMany
+        Mapper::Builder::Relationship::ManyToMany
       end
     end # class ManyToMany
   end # class Relationship
