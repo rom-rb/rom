@@ -25,7 +25,7 @@ describe 'Relationship - Many To Many with generated mappers' do
       attr_reader :id, :name
 
       def initialize(attributes)
-        @id, @name, = attributes.values_at(:id, :name)
+        @id, @name = attributes.values_at(:id, :name)
       end
     end
 
