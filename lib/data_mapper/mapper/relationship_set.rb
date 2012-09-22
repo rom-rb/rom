@@ -25,19 +25,6 @@ module DataMapper
       end
 
       # @api public
-      def add_through(source, name, &operation)
-        self << self[source].inherit(name, operation)
-      end
-
-      # @api private
-      def add(name, options)
-        options.validate
-
-        @relationships[name] = options.type.new(options)
-        self
-      end
-
-      # @api public
       def <<(relationship)
         @relationships[relationship.name] = relationship
         self
