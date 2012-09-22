@@ -5,7 +5,7 @@ module DataMapper
     # @api private
     def self.extract_type(args)
       type = args.first
-      return nil if type.is_a?(Hash)
+      return if type.is_a?(Hash)
       type
     end
 
