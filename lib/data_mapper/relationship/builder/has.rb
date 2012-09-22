@@ -38,6 +38,8 @@ module DataMapper
 
           options = options_class.new(name, source.model, target_model, options)
 
+          options.validate
+
           @relationship = options.type.new(options)
         end
 
