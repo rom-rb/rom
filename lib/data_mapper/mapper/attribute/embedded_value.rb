@@ -2,7 +2,7 @@ module DataMapper
   class Mapper
     class Attribute
 
-      class Mapper < Attribute
+      class EmbeddedValue < Attribute
         MissingTypeOptionError = Class.new(StandardError)
 
         def initialize(name, options = {})
@@ -29,9 +29,7 @@ module DataMapper
         def primitive?
           false
         end
-
-      end # class Mapper
-
+      end # class EmbeddedValue
     end # class Attribute
   end # class Mapper
 end # module DataMapper

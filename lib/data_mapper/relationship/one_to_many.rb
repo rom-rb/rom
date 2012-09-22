@@ -14,7 +14,7 @@ module DataMapper
           tuples     = @relation.to_a
           parent_key = @attributes.key
           name       = @attributes.detect { |attribute|
-            attribute.kind_of?(Mapper::Attribute::Collection)
+            attribute.kind_of?(Mapper::Attribute::EmbeddedCollection)
           }.name
 
           parents = tuples.each_with_object({}) do |tuple, hash|

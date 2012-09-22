@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe DataMapper::Mapper::Attribute::Collection, '#load' do
+describe DataMapper::Mapper::Attribute::EmbeddedCollection, '#load' do
   subject { attribute.load(tuple) }
 
   let(:attribute)      { described_class.new(:books, :type => model, :collection => true) }

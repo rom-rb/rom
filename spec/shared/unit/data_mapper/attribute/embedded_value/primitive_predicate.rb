@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-share_examples_for "DataMapper::Mapper::Attribute::Mapper#primitive?" do
+share_examples_for "DataMapper::Mapper::Attribute::EmbeddedValue#primitive?" do
   subject { attribute.primitive? }
 
   let(:type)      { stub('type') }

@@ -21,9 +21,9 @@ module DataMapper
         klass = if PRIMITIVES.include?(options[:type])
             Attribute::Primitive
           elsif options[:collection]
-            Attribute::Collection
+            Attribute::EmbeddedCollection
           else
-            Attribute::Mapper
+            Attribute::EmbeddedValue
           end
 
         klass.new(name, options)

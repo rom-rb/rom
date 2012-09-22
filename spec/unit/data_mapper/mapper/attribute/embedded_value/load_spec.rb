@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe DataMapper::Mapper::Attribute::Mapper, '#load' do
+describe DataMapper::Mapper::Attribute::EmbeddedValue, '#load' do
   subject { attribute.load(tuple) }
 
   let(:attribute) { described_class.new(:title, :type => model) }

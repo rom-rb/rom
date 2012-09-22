@@ -17,13 +17,13 @@ describe DataMapper::Mapper::Attribute, '.build' do
     let(:type)       { mock_model(:TestModel) }
     let(:collection) { false }
 
-    it { should be_instance_of(described_class::Mapper) }
+    it { should be_instance_of(described_class::EmbeddedValue) }
   end
 
   context "when collection is set" do
     let(:type)       { mock_model(:TestModel) }
     let(:collection) { true }
 
-    it { should be_instance_of(described_class::Collection) }
+    it { should be_instance_of(described_class::EmbeddedCollection) }
   end
 end
