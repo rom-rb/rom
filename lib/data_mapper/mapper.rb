@@ -6,7 +6,6 @@ module DataMapper
   class Mapper
     include Enumerable
     extend DescendantsTracker
-    extend Relationship::Dsl
 
     def self.from(other)
       klass = Class.new(self)
@@ -39,6 +38,26 @@ module DataMapper
 
       attributes.add(name, options)
       self
+    end
+
+    def self.has(cardinality, name, *args, &op)
+      relationship = Relationship::Builder::Has.build(
+        self, cardinality, name, *args, &op
+      )
+
+      relationships << relationship
+    end
+
+    def self.belongs_to(name, *args, &op)
+      relationship = Relationship::Builder::BelongsTo.build(
+        self, name, *args, &op
+      )
+
+      relationships << relationship
+    end
+
+    def self.n
+      Infinity
     end
 
     # @api public
