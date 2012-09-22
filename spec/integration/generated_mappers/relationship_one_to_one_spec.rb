@@ -99,4 +99,18 @@ describe 'Relationship - One To One with generated mapper' do
     user.address.id.should eql(1)
     user.address.city.should eql('Krakow')
   end
+
+  it 'finds users with matching address using mapper query API' do
+    pending "Query doesn't support nested conditions"
+
+    users = user_mapper.include(:address).find(:address => { :city => "Krakow" })
+
+    users.should have(1).item
+
+    user = users.first
+
+    user.name.should eql('Piotr')
+    user.address.id.should eql(1)
+    user.address.city.should eql('Krakow')
+  end
 end
