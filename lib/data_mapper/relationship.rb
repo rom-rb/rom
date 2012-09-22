@@ -50,7 +50,7 @@ module DataMapper
     # @api private
     def finalize_mapper_class
       unless @mapper_class
-        builder       = mapper_builder_class.new(@parent_mapper, @options)
+        builder       = mapper_builder.new(@parent_mapper, @options)
         @mapper_class = builder.mapper_class
         @operation    = builder.operation unless @operation
       end
@@ -90,7 +90,7 @@ module DataMapper
     end
 
     # @api private
-    def mapper_builder_class
+    def mapper_builder
       raise NotImplementedError, "#{self.class}##{__method__} must be implemented"
     end
 
