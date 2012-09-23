@@ -44,6 +44,11 @@ module DataMapper
         self[attribute_name].field
       end
 
+      # @api public
+      def key_names
+        key.map(&:name)
+      end
+
       # @api private
       def header
         @header ||= primitives.map(&:header)

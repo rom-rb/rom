@@ -18,7 +18,7 @@ module DataMapper
         end
 
         via_key    = [DataMapper::Inflector.foreign_key(options.target_model.name).to_sym]
-        target_key = @child_mapper.attributes.key.map(&:name)
+        target_key = @child_mapper.attributes.key_names
 
         @join_aliases = Hash[via_key.zip(target_key)]
         target_key.each do |attribute_name|
