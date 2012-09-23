@@ -50,12 +50,7 @@ module DataMapper
   #
   # TODO: implement handling of dependencies between mappers
   def self.finalize
-    mappers = Mapper.descendants
-
-    mappers.each { |mapper| mapper.finalize }
-    mappers.each { |mapper| mapper.finalize_attributes }
-    mappers.each { |mapper| mapper.finalize_relationships }
-
+    Finalizer.run
     self
   end
 end # module DataMapper
@@ -110,3 +105,5 @@ require 'data_mapper/relationship/many_to_one'
 require 'data_mapper/relationship/many_to_many'
 
 require 'data_mapper/query'
+
+require 'data_mapper/finalizer'
