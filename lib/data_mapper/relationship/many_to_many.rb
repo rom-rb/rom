@@ -22,6 +22,7 @@ module DataMapper
 
         @join_aliases = Hash[via_key.zip(target_key)]
         target_key.each do |attribute_name|
+          # FIXME: handle it better when header#include? is available in veritas
           if (@join_relation.header[attribute_name] rescue false)
             @join_aliases[attribute_name] = unique_alias(attribute_name, name)
           end
