@@ -18,10 +18,11 @@ module DataMapper
         end
 
         via_key    = [DataMapper::Inflector.foreign_key(options.target_model.name).to_sym]
-        target_key = @child_mapper.attributes.key.map(&:name)
+        target_key = @child_mapper.attributes.key_names
 
         @join_aliases = Hash[via_key.zip(target_key)]
         target_key.each do |attribute_name|
+          # FIXME: handle it better when header#include? is available in veritas
           if (@join_relation.header[attribute_name] rescue false)
             @join_aliases[attribute_name] = unique_alias(attribute_name, name)
           end
