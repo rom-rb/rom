@@ -13,10 +13,12 @@ describe 'Relationship - Many To Many' do
     insert_song_tag 1, 2, 1
     insert_song_tag 2, 1, 2
 
-    # setup relation gateway to the join table as we don't need to map it to objects
-    DataMapper.setup_relation_gateway(:postgres, :song_tags,
-                                      [ [ :song_id, Integer ],
-                                        [ :tag_id, Integer ] ])
+    # Register the join table relation as we don't need to map it to objects
+    DataMapper.register_relation(:postgres, :song_tags,
+      [
+        [ :song_id, Integer ],
+        [ :tag_id,  Integer ]
+      ])
 
     class Song
       attr_reader :id, :title, :tags

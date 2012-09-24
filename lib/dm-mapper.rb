@@ -26,19 +26,9 @@ module DataMapper
   end
 
   # @api public
-  def self.setup_gateway(repository, relation)
-    gateway = Veritas::Relation::Gateway.new(adapters[repository], relation)
-    Mapper.relation_registry << gateway
-  end
-
-  # @api public
-  def self.setup_relation_gateway(repository, name, header)
-    setup_gateway(repository, base_relation(name, header))
-  end
-
-  # @api public
-  def self.base_relation(name, header)
-    Veritas::Relation::Base.new(name, header)
+  def self.register_relation(repository, name, header)
+    base_relation = Veritas::Relation::Base.new(name, header)
+    Mapper.register_relation(repository, base_relation)
   end
 
   def self.generate_mapper_for(model, &block)
