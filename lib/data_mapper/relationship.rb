@@ -11,6 +11,9 @@ module DataMapper
     attr_reader :target_key
     attr_reader :options
 
+    attr_reader :source_model
+    attr_reader :target_model
+
     attr_reader :source_aliases
 
     def initialize(options)

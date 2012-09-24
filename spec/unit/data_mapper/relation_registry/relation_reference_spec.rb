@@ -5,7 +5,9 @@ describe DataMapper::RelationRegistry, '#[]' do
 
   let(:name)     { 'users' }
   let(:relation) { mock('relation', :name => name) }
-  let(:registry) { described_class.new(:users => relation) }
+  let(:registry) { described_class.new }
+
+  before { registry << relation }
 
   it { should be(relation) }
 end
