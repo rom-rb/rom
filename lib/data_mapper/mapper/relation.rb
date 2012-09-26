@@ -5,6 +5,7 @@ module DataMapper
     #
     # @api public
     class Relation < self
+      alias_method :all, :to_a
 
       def self.from(other)
         klass = super

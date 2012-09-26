@@ -44,7 +44,12 @@ module DataMapper
       options = Utils.extract_options(args)
       options = options.merge(:type => type) if type
 
-      attributes.add(name, options)
+      if attributes[name]
+        attributes << attributes[name].clone(options)
+      else
+        attributes.add(name, options)
+      end
+
       self
     end
 

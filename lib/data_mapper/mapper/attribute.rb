@@ -57,6 +57,11 @@ module DataMapper
         false
       end
 
+      # @api private
+      def clone(options)
+        self.class.build(name, options.merge(:type => type))
+      end
+
     end # class Attribute
   end # class Mapper
 end # module DataMapper

@@ -41,6 +41,30 @@ module DataMapper
     Veritas::Relation::Base.new(name, header)
   end
 
+  def self.generate_mapper_for(model, &block)
+    mapper = Class.new(Mapper::Relation::Base) do
+      def self.name
+        "#{model.name}Mapper"
+      end
+
+      def self.inspect
+        "<##{name}:#{object_id}>"
+      end
+    end
+
+    mapper.model(model)
+    mapper.relation_name(Inflector.tableize(model.name))
+    mapper.repository :postgres
+
+    model.attribute_set.each do |attribute|
+      mapper.map attribute.name, attribute.options[:primitive]
+    end
+
+    mapper.instance_eval(&block)
+
+    mapper
+  end
+
   # @api public
   def self.adapters
     @adapters ||= {}
@@ -105,5 +129,6 @@ require 'data_mapper/relationship/many_to_one'
 require 'data_mapper/relationship/many_to_many'
 
 require 'data_mapper/query'
+require 'data_mapper/model'
 
 require 'data_mapper/finalizer'

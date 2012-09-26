@@ -32,6 +32,12 @@ module DataMapper
           gateway = DataMapper.setup_gateway(repository, relation)
           DataMapper.mapper_registry << new(gateway)
         end
+
+        def self.key(names)
+          Array(names).each do |name|
+            attributes << attributes[name].clone(:key => true)
+          end
+        end
       end # class Base
     end # class Relation
   end # class Mapper
