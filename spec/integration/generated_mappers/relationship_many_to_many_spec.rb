@@ -110,8 +110,6 @@ describe 'Relationship - Many To Many with generated mappers' do
 
     song = songs.first
 
-    puts song.inspect
-
     song.title.should eql('bar')
     song.good_tags.should have(1).item
     song.good_tags.first.name.should eql('good')
