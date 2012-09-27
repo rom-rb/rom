@@ -3,7 +3,7 @@ module DataMapper
   class Finalizer
 
     def self.run
-      new(Mapper.descendants).run
+      new(Mapper.descendants.select { |mapper| mapper.model }).run
     end
 
     def initialize(mappers)
