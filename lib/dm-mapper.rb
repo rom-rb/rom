@@ -57,7 +57,11 @@ module DataMapper
     mapper.repository :postgres
 
     model.attribute_set.each do |attribute|
-      mapper.map attribute.name, attribute.options[:primitive]
+      if attribute.options[:member_type]
+        mapper.map attribute.name, attribute.options[:member_type], :collection => true
+      else
+        mapper.map attribute.name, attribute.options[:primitive]
+      end
     end
 
     mapper.instance_eval(&block)

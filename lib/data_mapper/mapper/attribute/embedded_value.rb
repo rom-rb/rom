@@ -5,6 +5,8 @@ module DataMapper
       class EmbeddedValue < Attribute
         MissingTypeOptionError = Class.new(StandardError)
 
+        attr_reader :mapper
+
         def initialize(name, options = {})
           super
           @type = options.fetch(:type) { raise(MissingTypeOptionError) }
@@ -17,13 +19,13 @@ module DataMapper
 
         # @api public
         def inspect
-          "<##{self.class.name} @name=#{name} @mapper=#{@mapper}>"
+          "<##{self.class.name} @name=#{name} @mapper=#{mapper}>"
         end
 
         # @api public
         def load(tuple)
           begin
-            @mapper.load(tuple)
+            mapper.load(tuple)
           rescue
             # FIXME: remove this when tuple#include? is implemented
             nil
