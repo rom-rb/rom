@@ -22,7 +22,12 @@ module DataMapper
 
         # @api public
         def load(tuple)
-          @mapper.load(tuple)
+          begin
+            @mapper.load(tuple)
+          rescue
+            # FIXME: remove this when tuple#include? is implemented
+            nil
+          end
         end
 
         # @api private

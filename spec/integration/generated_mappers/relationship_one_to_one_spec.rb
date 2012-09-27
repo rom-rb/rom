@@ -70,6 +70,15 @@ describe 'Relationship - One To One with generated mapper' do
     DataMapper[Address]
   end
 
+  it 'loads the object without association' do
+    user = user_mapper.all.first
+
+    user.should be_instance_of(User)
+    user.id.should eql(1)
+    user.name.should eql('John')
+    user.age.should eql(18)
+  end
+
   it 'loads associated object' do
     user = user_mapper.include(:address).to_a.last
     address = user.address
