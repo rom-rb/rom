@@ -7,12 +7,16 @@ module DataMapper
     include Enumerable
     extend DescendantsTracker
 
-    def self.from(other)
-      klass = Class.new(self) {
+    def self.from(other, name)
+      mapper_name = name ? name : "#{other.model}Mapper"
+
+      klass = Class.new(self)
+
+      klass.class_eval <<-RUBY
         def self.name
-          "#{model}Mapper"
+          #{mapper_name.inspect}
         end
-      }
+      RUBY
 
       klass.model(other.model)
 
