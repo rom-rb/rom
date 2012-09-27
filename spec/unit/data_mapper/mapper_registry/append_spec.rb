@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe DataMapper::MapperRegistry, '#<<' do
-  let(:model)    { mock('model') }
+  let(:model)    { mock_model('TestModel') }
   let(:mapper)   { mock_mapper(model).new }
   let(:registry) { described_class.new }
 

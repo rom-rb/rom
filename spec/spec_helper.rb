@@ -22,11 +22,12 @@ RSpec.configure do |config|
   end
 
   def mock_mapper(model_class)
-    Class.new(DataMapper::Mapper) do
-      model model_class
+    Class.new(DataMapper::Mapper::Relation) do
+      model      model_class
+      repository DataMapper::Inflector.tableize(model_class.name)
 
-      def inspect
-        "#<#{self.class.model}Mapper:#{object_id} model=#{self.class.model}>"
+      def self.name
+        "#{model_class.name}Mapper"
       end
     end
   end
