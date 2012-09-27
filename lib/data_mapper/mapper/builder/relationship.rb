@@ -20,10 +20,14 @@ module DataMapper
         end
 
         def mapper_class
-          klass = remap_fields(Mapper::Relation.from(source_mapper))
+          klass = remap_fields(Mapper::Relation.from(source_mapper, mapper_name))
           klass.map(name, target_model_attribute_options)
           klass.finalize_attributes
           klass
+        end
+
+        def mapper_name
+          "#{source_mapper.model.name}#{Inflector.classify(name.to_s)}Mapper"
         end
 
         def operation
