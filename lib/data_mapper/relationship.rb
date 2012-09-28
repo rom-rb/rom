@@ -33,7 +33,7 @@ module DataMapper
     def finalize
       finalize_parent_mapper
       finalize_child_mapper
-      finalize_mapper_class
+      finalize_mapper_class unless @mapper_class
       finalize_aliases
       finalize_relation
       self
@@ -54,11 +54,9 @@ module DataMapper
 
     # @api private
     def finalize_mapper_class
-      unless @mapper_class
-        builder       = mapper_builder.new(@parent_mapper, @options)
-        @mapper_class = builder.mapper_class
-        @operation    = builder.operation unless @operation
-      end
+      builder       = mapper_builder.new(@parent_mapper, @options)
+      @mapper_class = builder.mapper_class
+      @operation    = builder.operation unless @operation
     end
 
     def finalize_aliases
