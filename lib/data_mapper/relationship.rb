@@ -46,8 +46,8 @@ module DataMapper
 
     # @api public
     def inherit(name, operation)
-      self.class.new(
-        @options.inherit(name, :source => self, :operation => operation))
+      options = { :source => self, :operation => operation }
+      self.class.new(@options.inherit(name, options))
     end
 
   private
