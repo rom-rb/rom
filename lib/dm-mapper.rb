@@ -84,6 +84,16 @@ require 'data_mapper/support/inflector/methods'
 require 'data_mapper/support/inflections'
 
 require 'data_mapper/relation_registry'
+require 'data_mapper/relation_registry/node'
+require 'data_mapper/relation_registry/node/builder'
+require 'data_mapper/relation_registry/edge'
+require 'data_mapper/relation_registry/edge/side'
+require 'data_mapper/relation_registry/edge/builder'
+require 'data_mapper/relation_registry/edge/builder/single_hop'
+require 'data_mapper/relation_registry/edge/builder/multi_hop'
+require 'data_mapper/relation_registry/edge_set'
+require 'data_mapper/relation_registry/connector'
+
 require 'data_mapper/mapper_registry'
 
 require 'data_mapper/mapper/relationship_set'

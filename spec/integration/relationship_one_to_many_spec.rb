@@ -34,6 +34,7 @@ describe 'Relationship - One To Many' do
       repository    :postgres
 
       map :id,      Integer, :key => true
+      map :user_id, Integer
       map :product, String
     end
 

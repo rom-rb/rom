@@ -32,20 +32,7 @@ module DataMapper
     def finalize_relation_registry
       @mappers.each do |mapper|
         mapper.relationships.each do |relationship|
-          name = relationship.name
-
-          if relationship.is_a?(Relationship::ManyToMany)
-            # TODO implement
-          end
-
-          source_relation = DataMapper[relationship.source_model].relation
-          target_relation = DataMapper[relationship.target_model].relation
-
-          relation = RelationRegistry::Edge::Relation
-          source = relation.new(source_relation, relationship.source_key)
-          target = relation.new(target_relation, relationship.target_key)
-
-          Mapper.relation_registry.add_edge(name, source, target)
+          RelationRegistry::Edge::Builder.build(relationship)
         end
       end
     end

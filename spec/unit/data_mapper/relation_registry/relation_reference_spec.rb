@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe DataMapper::RelationRegistry, '#[]' do
-  subject { registry['users'] }
+  subject { registry[name] }
 
   let(:name)     { 'users' }
   let(:relation) { mock('relation', :name => name) }

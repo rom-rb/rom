@@ -32,6 +32,41 @@ module Veritas
   end
 end
 
+module SpecHelper
+
+  def self.print_relation_registry(print_sql = true)
+    puts
+    DataMapper::Mapper.relation_registry.nodes.each do |node|
+      puts '+'*80
+      puts "SOURCE: #{node.name}:"
+      puts '-'*80
+      count = 0
+      edges = node.connectors.map do |name, connector|
+
+        connector_name = connector.node.name.inspect
+        header         = connector.relation.header.map(&:name).inspect
+
+        puts
+        puts "EDGE (#{count += 1})"
+        puts "--------"
+        puts "name:   #{connector_name}"
+        puts "header: #{header}"
+
+        if print_sql
+          uri        = DataMapper.adapters[:postgres].instance_variable_get(:@uri)
+          connection = DataObjects::Connection.new(uri)
+          relation   = connector.relation.send(:relation)
+          statement  = Veritas::Adapter::DataObjects::Statement.new(connection, relation)
+          sql        = statement.to_s
+
+          puts sql
+        end
+      end
+      puts '+'*80
+    end
+  end
+end # module SpecHelper
+
 ENV['TZ'] = 'UTC'
 
 # require spec support files and shared behavior
