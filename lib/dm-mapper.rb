@@ -31,32 +31,8 @@ module DataMapper
     Mapper.register_relation(repository, base_relation)
   end
 
-  def self.generate_mapper_for(model, &block)
-    mapper = Class.new(Mapper::Relation::Base) do
-      def self.name
-        "#{model.name}Mapper"
-      end
-
-      def self.inspect
-        "<##{name}:#{object_id}>"
-      end
-    end
-
-    mapper.model(model)
-    mapper.relation_name(Inflector.tableize(model.name))
-    mapper.repository :postgres
-
-    model.attribute_set.each do |attribute|
-      if attribute.options[:member_type]
-        mapper.map attribute.name, attribute.options[:member_type], :collection => true
-      else
-        mapper.map attribute.name, attribute.options[:primitive]
-      end
-    end
-
-    mapper.instance_eval(&block)
-
-    mapper
+  def self.generate_mapper_for(model, repository, &block)
+    Mapper::Builder::Class.create(model, repository, &block)
   end
 
   # @api public
@@ -96,6 +72,7 @@ require 'data_mapper/mapper'
 require 'data_mapper/mapper/relation'
 require 'data_mapper/mapper/relation/base'
 
+require 'data_mapper/mapper/builder/class'
 require 'data_mapper/mapper/builder/relationship'
 require 'data_mapper/mapper/builder/relationship/collection_behavior'
 require 'data_mapper/mapper/builder/relationship/one_to_one'
