@@ -1,6 +1,7 @@
 module DataMapper
   class RelationRegistry
 
+    # Abstract
     class Node
 
       attr_reader :name
@@ -8,9 +9,8 @@ module DataMapper
       attr_reader :connectors
       attr_reader :edges
 
-      def initialize(relation, name)
+      def initialize(relation)
         @relation   = relation
-        @name       = name
         @connectors = {}
         @edges      = EdgeSet.new
         @hash       = @relation.hash

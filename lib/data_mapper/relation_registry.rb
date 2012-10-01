@@ -32,11 +32,10 @@ module DataMapper
     end
 
     def <<(relation)
-      name = relation.respond_to?(:name) ? relation.name : nil
-      node = Node.new(relation, name)
+      node = Node::Relation::Base.new(relation)
 
       @nodes << node
-      @index[node.name.to_sym] = node
+      @index[node.name] = node
 
       relation
     end
