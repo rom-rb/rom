@@ -201,15 +201,13 @@ module Session
     # @param [State] state
     #   the object state to be tracked.
     #
-    # @return [self]
+    # @return [undefined]
     #
     # @api private
     #
     def track_state(state)
       state.update_track(@track)
       state.update_identity(@identity_map)
-
-      self
     end
 
     # Return object state for domain object
