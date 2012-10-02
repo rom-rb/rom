@@ -12,7 +12,7 @@ module Session
     #   otherwise value returned from block
     #
     def get(object)
-      @track.fetch(object) { yield }
+      @states.fetch(object) { yield }
     end
 
     # Test if object is tracked
@@ -26,7 +26,7 @@ module Session
     # @api private
     #
     def include?(object)
-      @track.key?(object)
+      @states.key?(object)
     end
 
     # Store object state
@@ -39,7 +39,7 @@ module Session
     # @api private
     #
     def store(object, state)
-      @track[object]=state
+      @states[object]=state
       self
     end
 
@@ -52,7 +52,7 @@ module Session
     # @api private
     #
     def delete(object)
-      @track.delete(object)
+      @states.delete(object)
       self
     end
 
@@ -65,7 +65,7 @@ module Session
     # @api private
     #
     def initialize
-      @track = {}
+      @states = {}
     end
   end
 end
