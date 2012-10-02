@@ -24,7 +24,7 @@ module Session
       # @api private
       #
       def forget
-        Forgotten.new(mapper, object)
+        Forgotten.new(mapping)
       end
 
       # Invoke transition to forgotten object state after deleting via mapper
@@ -48,16 +48,13 @@ module Session
       # @api private
       #
       def persist
-        if dirty?
-          new_dump = mapper.dump(object)
-          new_key  = mapper.dump_key(object)
+        return self unless dirty?
+        new_dump = mapper.dump(object)
+        new_key  = mapper.dump_key(object)
 
-          mapper.update(key, new_dump, dump)
+        mapper.update(key, new_dump, dump)
 
-          return self.class.new(mapper, object)
-        end
-
-        self
+        Loaded.new(mapping)
       end
 
       # Insert domain object into identity map

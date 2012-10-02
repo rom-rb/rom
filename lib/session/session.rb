@@ -191,7 +191,8 @@ module Session
       key = mapper.load_key(dump)
       @identity_map.fetch(key) do
         object = mapper.load(dump)
-        state = State::Loaded.new(mapper, object)
+        mapping = Mapping.new(mapper, object)
+        state = State::Loaded.new(mapping)
         track_state(state)
         state.object
       end
@@ -236,7 +237,7 @@ module Session
     #
     def new_state(object)
       mapper = @registry.resolve_object(object)
-      State::New.new(mapper, object)
+      State::New.new(Mapping.new(mapper, object))
     end
   end
 end

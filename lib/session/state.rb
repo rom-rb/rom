@@ -9,7 +9,9 @@ module Session
     #
     # @api private
     #
-    attr_reader :object
+    def object
+      mapping.object
+    end
 
     # Return mapper
     #
@@ -17,7 +19,17 @@ module Session
     #
     # @api private
     #
-    attr_reader :mapper
+    def mapper
+      mapping.mapper
+    end
+
+    # Return mapping
+    #
+    # @return [Mapping]
+    #
+    # @api private
+    #
+    attr_reader :mapping
 
     # Return dumped representation of object
     #
@@ -132,10 +144,10 @@ module Session
     #
     # @api private
     #
-    def initialize(mapper, object)
-      @mapper, @object = mapper,object
-      @key = mapper.dump_key(@object)
-      @dump = mapper.dump(@object)
+    def initialize(mapping)
+      @mapping = mapping
+      @key  = mapping.key
+      @dump = mapping.dump
     end
   end
 end

@@ -12,7 +12,7 @@ module Session
       def persist
         mapper.insert_dump(dump)
 
-        Loaded.new(mapper, object)
+        Loaded.new(mapping)
       end
 
     end

@@ -14,6 +14,7 @@ module Session
 end
 
 require 'session/session'
+require 'session/mapping'
 require 'session/tracker'
 require 'session/registry'
 require 'session/state'
