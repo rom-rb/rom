@@ -1,8 +1,7 @@
 module Session
-  # An objects persistance state
   class State
     # An State that represents a loaded domain object.
-    class Loaded < State
+    class Loaded < self
       # Initialize loaded object state
       #
       # @param [Object] mapper

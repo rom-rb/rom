@@ -1,8 +1,7 @@
 module Session
-  # An objects persistance state
   class State
     # An State that represents a new unpersisted domain object.
-    class New < State
+    class New < self
       # Insert via mapper and return loaded object state
       #
       # @return [State::Loaded]

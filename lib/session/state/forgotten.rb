@@ -1,8 +1,7 @@
 module Session
-  # An objects persistance state
   class State
     # An State that represents a forgotten domain object. It is no longer state tracked.
-    class Forgotten < State
+    class Forgotten < self
       # Initialized forgotten object state
       #
       # @param [Object] object the forgotten domain object
