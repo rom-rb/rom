@@ -9,9 +9,12 @@ describe Session::Session, '#persist' do
   let(:object)        { described_class.new(registry)                }
   let(:identity_map)  { object.instance_variable_get(:@tracker).instance_variable_get(:@identities) }
   let(:mapping)       { Session::Mapping.new(mapper, domain_object)  }
+  let(:new_key)       { mapper.dump_key(domain_object)               }
   let!(:old_key)      { mapper.dump_key(domain_object)               }
   let!(:old_dump)     { mapper.dump(domain_object)                   }
   let!(:old_state)    { Session::State::Loaded.new(mapping)          }
+  let!(:old_identity) { Session::Identity.new(DomainObject, old_key) }
+  let!(:new_identity) { Session::Identity.new(DomainObject, new_key) }
 
   context 'with untracked domain object' do
     it 'should insert update' do
@@ -47,14 +50,14 @@ describe Session::Session, '#persist' do
 
       it 'should track the domain object under new key' do
         subject
-        identity_map.fetch(new_key).object.should be(domain_object)
+        identity_map.fetch(new_identity).object.should be(domain_object)
       end
 
       it 'should NOT track the domain object under old key' do
         subject
 
         if old_key != new_key
-          identity_map.should_not have_key(old_key)
+          identity_map.should_not have_key(old_identity)
         end
       end
 
@@ -85,6 +88,7 @@ describe Session::Session, '#persist' do
       end
 
       context 'and key did change' do
+        let(:new_key) { :dirty }
 
         before do
           domain_object.key_attribute = :dirty

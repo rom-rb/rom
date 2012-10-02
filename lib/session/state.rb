@@ -85,6 +85,17 @@ module Session
     #
     abstract_method :persist
 
+    # Return identity of object
+    #
+    # @return [Object]
+    # 
+    # @api private
+    #
+    def identity
+      Identity.new(object.class, key)
+    end
+    memoize :identity
+
   private
 
     # Initialize object 

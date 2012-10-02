@@ -16,6 +16,7 @@ end
 require 'session/session'
 require 'session/mapping'
 require 'session/tracker'
+require 'session/identity'
 require 'session/registry'
 require 'session/state'
 require 'session/state/new'

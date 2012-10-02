@@ -44,7 +44,7 @@ module Session
     # @api private
     #
     def load(state)
-      state = identity(state.key) do
+      state = identity(state.identity) do
         store(state.loaded)
       end
       
@@ -90,7 +90,7 @@ module Session
     #
     def delete(state)
       @objects.delete(state.object)
-      @identities.delete(state.key)
+      @identities.delete(state.identity)
 
       self
     end
@@ -117,7 +117,7 @@ module Session
     #
     def store(state)
       @objects[state.object]=state
-      @identities[state.key]=state
+      @identities[state.identity]=state
 
       state
     end
