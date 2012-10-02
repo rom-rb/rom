@@ -190,7 +190,8 @@ module Session
     def load(mapper, dump)
       key = mapper.load_key(dump)
       @identity_map.fetch(key) do
-        state = State::Loaded.build(mapper, dump)
+        object = mapper.load(dump)
+        state = State::Loaded.new(mapper, object)
         track_state(state)
         state.object
       end

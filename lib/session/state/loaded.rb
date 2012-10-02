@@ -2,18 +2,6 @@ module Session
   class State
     # An State that represents a loaded domain object.
     class Loaded < self
-      # Initialize loaded object state
-      #
-      # @param [Object] mapper
-      # @param [Object] object
-      #
-      # @see Session::State#new
-      #
-      # @api private
-      #
-      def initialize(mapper, object)
-        super(mapper, object)
-      end
 
       # Returns whether wrapped domain object is dirty
       #
@@ -26,7 +14,7 @@ module Session
       # @api private
       #
       def dirty?
-        dump != @mapper.dump(@object)
+        dump != mapper.dump(object)
       end
 
       # Invoke transition to forgotten object state
@@ -36,7 +24,7 @@ module Session
       # @api private
       #
       def forget
-        Forgotten.new(@object, key)
+        Forgotten.new(mapper, object)
       end
 
       # Invoke transition to forgotten object state after deleting via mapper
@@ -46,7 +34,7 @@ module Session
       # @api private
       #
       def delete
-        @mapper.delete(key)
+        mapper.delete(key)
 
         forget
       end
@@ -61,12 +49,12 @@ module Session
       #
       def persist
         if dirty?
-          new_dump = @mapper.dump(@object)
-          new_key  = @mapper.dump_key(@object)
+          new_dump = mapper.dump(object)
+          new_key  = mapper.dump_key(object)
 
-          @mapper.update(key, new_dump, dump)
+          mapper.update(key, new_dump, dump)
 
-          return self.class.new(@mapper, @object)
+          return self.class.new(mapper, object)
         end
 
         self
@@ -81,8 +69,7 @@ module Session
       # @api private
       #
       def update_identity(identity_map)
-        identity_map[key]=@object
-
+        identity_map[key]=object
         self
       end
 
@@ -96,7 +83,6 @@ module Session
       #
       def delete_identity(identity_map)
         identity_map.delete(key)
-
         self
       end
 
@@ -110,26 +96,9 @@ module Session
       #
       def update_tracker(tracker)
         tracker.store(object, self)
-
         self
       end
 
-      # Build object state from mapper and dump
-      #
-      # @param [Mapper] mapper
-      #   the mapper used to build domain object
-      #
-      # @param [Object] dump
-      #
-      # @return [State::Loader]
-      #
-      # @api private
-      #
-      def self.build(mapper, dump)
-        object = mapper.load(dump)
-        # TODO: pass dump to mapper to avoid dump => load => dump (#store_dump)
-        new(mapper, object)
-      end
     end
   end
 end
