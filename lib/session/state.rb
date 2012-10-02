@@ -21,29 +21,21 @@ module Session
 
     # Return dumped representation of object
     #
-    # The dump is not cached.
-    #
     # @return [Object]
     #   the dumped representation
     #
     # @api private
     #
-    def dump
-      @mapper.dump(@object)
-    end
+    attr_reader :dump
 
     # Return dumped key representation of object
-    #
-    # The key is not cached.
     #
     # @return [Object]
     #   the key
     #
     # @api private
     #
-    def key
-      @mapper.dump_key(@object)
-    end
+    attr_reader :key
 
     # Update track
     #
@@ -142,6 +134,8 @@ module Session
     #
     def initialize(mapper, object)
       @mapper, @object = mapper,object
+      @key = mapper.dump_key(@object)
+      @dump = mapper.dump(@object)
     end
   end
 end

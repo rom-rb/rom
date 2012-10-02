@@ -6,17 +6,13 @@ module Session
       #
       # @param [Object] mapper
       # @param [Object] object
-      # @param [Object] remote_dump
-      # @param [Object] remote_key
       #
       # @see Session::State#new
       #
       # @api private
       #
-      def initialize(mapper, object, remote_dump=Undefined, remote_key=Undefined)
+      def initialize(mapper, object)
         super(mapper, object)
-        @remote_dump = remote_dump == Undefined ? dump : remote_dump
-        @remote_key  = remote_key  == Undefined ? key  : remote_key
       end
 
       # Returns whether wrapped domain object is dirty
@@ -29,8 +25,8 @@ module Session
       #
       # @api private
       #
-      def dirty?(dump=self.dump)
-        @remote_dump != dump
+      def dirty?
+        dump != @mapper.dump(@object)
       end
 
       # Invoke transition to forgotten object state
@@ -40,7 +36,7 @@ module Session
       # @api private
       #
       def forget
-        Forgotten.new(@object, @remote_key)
+        Forgotten.new(@object, key)
       end
 
       # Invoke transition to forgotten object state after deleting via mapper
@@ -50,7 +46,7 @@ module Session
       # @api private
       #
       def delete
-        @mapper.delete(@remote_key)
+        @mapper.delete(key)
 
         forget
       end
@@ -64,11 +60,13 @@ module Session
       # @api private
       #
       def persist
-        dump = self.dump
+        if dirty?
+          new_dump = @mapper.dump(@object)
+          new_key  = @mapper.dump_key(@object)
 
-        if dirty?(dump)
-          @mapper.update(@remote_key, dump, @remote_dump)
-          return self.class.new(@mapper, @object, dump)
+          @mapper.update(key, new_dump, dump)
+
+          return self.class.new(@mapper, @object)
         end
 
         self
@@ -83,7 +81,7 @@ module Session
       # @api private
       #
       def update_identity(identity_map)
-        identity_map[@remote_key]=@object
+        identity_map[key]=@object
 
         self
       end
@@ -97,7 +95,7 @@ module Session
       # @api private
       #
       def delete_identity(identity_map)
-        identity_map.delete(@remote_key)
+        identity_map.delete(key)
 
         self
       end
