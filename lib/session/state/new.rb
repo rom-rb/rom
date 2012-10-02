@@ -1,11 +1,11 @@
 module Session
   # An objects persistance state
-  class ObjectState
-    # An ObjectState that represents a new unpersisted domain object.
-    class New < ObjectState
+  class State
+    # An State that represents a new unpersisted domain object.
+    class New < State
       # Insert via mapper and return loaded object state
       #
-      # @return [ObjectState::Loaded]
+      # @return [State::Loaded]
       #
       # @api private
       #

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Session::ObjectState, '#persist' do
+describe Session::State, '#persist' do
   subject { object.persist }
 
   let(:class_under_test) do

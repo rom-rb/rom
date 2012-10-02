@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Session::ObjectState::Loaded, '.build' do
+describe Session::State::Loaded, '.build' do
   let(:object)        { described_class                      }
   let(:mapper)        { registry.resolve_model(DomainObject) }
   let(:registry)      { DummyRegistry.new                    }

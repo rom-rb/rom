@@ -1,6 +1,7 @@
 require 'backports'
 require 'set'
 require 'immutable'
+require 'equalizer'
 require 'abstract_class'
 
 # Namespace module 
@@ -14,7 +15,7 @@ end
 
 require 'session/session'
 require 'session/registry'
-require 'session/object_state'
-require 'session/object_state/new'
-require 'session/object_state/forgotten'
-require 'session/object_state/loaded'
+require 'session/state'
+require 'session/state/new'
+require 'session/state/forgotten'
+require 'session/state/loaded'

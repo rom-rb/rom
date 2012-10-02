@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Session::ObjectState::Loaded, '#dirty?' do
+describe Session::State::Loaded, '#dirty?' do
   let!(:object)        { described_class.new(mapper, domain_object) }
   let(:mapper)        { DummyMapper.new                           }
   let!(:domain_object) { DomainObject.new(:foo, :bar) }

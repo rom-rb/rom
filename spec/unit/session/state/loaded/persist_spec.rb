@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Session::ObjectState::Loaded, '#persist' do
+describe Session::State::Loaded, '#persist' do
   let!(:object)        { described_class.new(mapper, domain_object) }
   let!(:domain_object) { DomainObject.new(:foo, :bar) }
   let(:mapper)        { DummyMapper.new                           }

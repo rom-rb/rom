@@ -190,7 +190,7 @@ module Session
     def load(mapper, dump)
       key = mapper.load_key(dump)
       @identity_map.fetch(key) do
-        state = ObjectState::Loaded.build(mapper, dump)
+        state = State::Loaded.build(mapper, dump)
         track_state(state)
         state.object
       end
@@ -198,7 +198,7 @@ module Session
 
     # Track object state in this session
     #
-    # @param [ObjectState] state
+    # @param [State] state
     #   the object state to be tracked.
     #
     # @return [self]
@@ -217,7 +217,7 @@ module Session
     # @param [Object] object
     # @raise [StateError] in case object is not tracked
     #
-    # @return [ObjectState]
+    # @return [State]
     #
     # @api private
     #
@@ -227,17 +227,17 @@ module Session
       end
     end
 
-    # Initialize a ObjectState::New for domain object
+    # Initialize a State::New for domain object
     #
     # @param [Object] object
     #
-    # @return [ObjectState::New]
+    # @return [State::New]
     #
     # @api private
     #
     def new_state(object)
       mapper = @registry.resolve_object(object)
-      ObjectState::New.new(mapper, object)
+      State::New.new(mapper, object)
     end
   end
 end

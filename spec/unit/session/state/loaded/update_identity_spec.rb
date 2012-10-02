@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Session::ObjectState::Loaded, '#update_identity' do
+describe Session::State::Loaded, '#update_identity' do
   let(:object)        { described_class.new(mapper, domain_object) }
   let(:mapper)        { DummyMapper.new                           }
   let(:domain_object) { DomainObject.new(:foo, :bar) }

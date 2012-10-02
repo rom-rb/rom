@@ -1,8 +1,8 @@
 module Session
   # An objects persistance state
-  class ObjectState
-    # An ObjectState that represents a loaded domain object.
-    class Loaded < ObjectState
+  class State
+    # An State that represents a loaded domain object.
+    class Loaded < State
       # Initialize loaded object state
       #
       # @param [Object] mapper
@@ -10,7 +10,7 @@ module Session
       # @param [Object] remote_dump
       # @param [Object] remote_key
       #
-      # @see Session::ObjectState#new
+      # @see Session::State#new
       #
       # @api private
       #
@@ -36,7 +36,7 @@ module Session
 
       # Invoke transition to forgotten object state
       #
-      # @return [ObjectState::Forgotten]
+      # @return [State::Forgotten]
       #
       # @api private
       #
@@ -46,7 +46,7 @@ module Session
 
       # Invoke transition to forgotten object state after deleting via mapper
       #
-      # @return [ObjectState::Forgotten]
+      # @return [State::Forgotten]
       #
       # @api private
       #
@@ -124,7 +124,7 @@ module Session
       #
       # @param [Object] dump
       #
-      # @return [ObjectState::Loader]
+      # @return [State::Loader]
       #
       # @api private
       #

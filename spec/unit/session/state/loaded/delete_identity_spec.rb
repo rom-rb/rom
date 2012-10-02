@@ -1,19 +1,19 @@
 require 'spec_helper'
 
-describe Session::ObjectState::Loaded, '#update_track' do
+describe Session::State::Loaded, '#delete_identity' do
   let(:object)        { described_class.new(mapper, domain_object) }
   let(:mapper)        { DummyMapper.new                           }
   let(:domain_object) { DomainObject.new(:foo, :bar) }
 
-  let(:track)         { {} }
+  let(:identity_map)         { { mapper.dump_key(domain_object) => domain_object } }
 
-  subject { object.update_track(track) }
+  subject { object.delete_identity(identity_map) }
 
   it_should_behave_like 'a command method'
 
-  it 'should add object to track' do
+  it 'should remove object from identity_map' do
     subject
-    track.should == { domain_object => object }
+    identity_map.should == {}
   end
 
   it 'should return self' do

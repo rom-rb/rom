@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Session::ObjectState, '#key' do
+describe Session::State, '#key' do
   subject { object.key }
 
   let(:class_under_test) { Class.new(described_class) }

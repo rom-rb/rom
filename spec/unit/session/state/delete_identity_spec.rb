@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Session::ObjectState, '#delete_identity' do
+describe Session::State, '#delete_identity' do
   subject { object.delete_identity(identity_map) }
 
   let(:class_under_test) { Class.new(described_class)                                 }

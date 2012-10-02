@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Session::ObjectState, '#update_track' do
+describe Session::State, '#update_track' do
   subject { object.update_track(track) }
 
   let(:class_under_test) { Class.new(described_class)                  }

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Session::ObjectState, '#object' do
+describe Session::State, '#object' do
   let(:object)        { class_under_test.new(mapper, domain_object) }
   let(:mapper)        { DummyMapper.new                             }
   let(:domain_object) { DomainObject.new(:foo, :bar) }

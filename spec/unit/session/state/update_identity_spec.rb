@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Session::ObjectState, '#update_identity' do
+describe Session::State, '#update_identity' do
   subject { object.update_identity(identity_map) }
 
   let(:class_under_test) do

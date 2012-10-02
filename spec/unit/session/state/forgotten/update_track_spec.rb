@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Session::ObjectState::Forgotten, '#update_track' do
+describe Session::State::Forgotten, '#update_track' do
   let(:key)           { mapper.dump_key(domain_object)         }
   let(:object)        { described_class.new(domain_object, key) }
   let(:mapper)        { DummyMapper.new                        }
