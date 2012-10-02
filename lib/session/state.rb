@@ -15,7 +15,7 @@ module Session
 
     # Return mapper
     #
-    # @return [Object]
+    # @return [Mapper]
     #
     # @api private
     #
@@ -59,9 +59,7 @@ module Session
     #
     # @api private
     #
-    def delete
-      raise StateError, "#{self.class.name} cannot be deleted"
-    end
+    abstract_method :delete
 
     # Forget domain object
     #
@@ -73,9 +71,7 @@ module Session
     #
     # @api private
     #
-    def forget
-      raise StateError, "#{self.class.name} cannot be forgotten"
-    end
+    abstract_method :forget
 
     # Persist domain object
     #
@@ -87,13 +83,11 @@ module Session
     #
     # @api private
     #
-    def persist
-      raise StateError, "#{self.class.name} cannot be persisted"
-    end
+    abstract_method :persist
 
   private
 
-    # Initialize object state instance
+    # Initialize object 
     #
     # @param [State|Mapping] context
     #

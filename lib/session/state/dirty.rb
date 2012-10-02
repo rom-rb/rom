@@ -22,10 +22,10 @@ module Session
       #
       # @api private
       #
-      def dirty?
-        dump != old.dump
+      def clean?
+        dump == old.dump
       end
-      memoize :dirty?
+      memoize :clean?
 
       # Persist changes to dirty object (if any)
       #
@@ -35,7 +35,8 @@ module Session
       #
       def persist
         old = self.old
-        return old unless dirty?
+
+        return old if clean?
 
         mapper.update(self, old)
 

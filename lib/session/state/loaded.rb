@@ -13,6 +13,20 @@ module Session
         Forgotten.new(self)
       end
 
+      # Test if object is dirty
+      #
+      # @return [true]
+      #   if object is dirty
+      #
+      # @return [false]
+      #   otherwise
+      #
+      # @api privateo
+      #
+      def dirty?
+        !dirty.clean?
+      end
+
       # Invoke transition to forgotten object state after deleting via mapper
       #
       # @return [State::Forgotten]
