@@ -26,7 +26,26 @@ describe Session::Session, '#persist(object)' do
       object.persist(domain_object)
     end
 
-    context 'and object is dirty' do
+    context 'and object is dirty from dump representation change' do
+      let(:new_dump) { { :some => :change } }
+
+      before do
+        mapper.stub(:dump => new_dump)
+      end
+
+      it 'should should update domain object' do
+        subject
+        mapper.updates.should == [[
+          key_before, 
+          new_dump,
+          dump_before
+        ]]
+      end
+
+      it_should_behave_like 'a command method'
+    end
+
+    context 'and object is dirty from attribute change' do
 
       before do
         domain_object.other_attribute = :dirty
