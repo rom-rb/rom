@@ -172,7 +172,7 @@ module Session
       self
     end
 
-    # Load a domain object from dump and track
+    # Load a domain object from dump and track it
     #
     # Will return already tracked object in case of identity map collision.
     #
