@@ -11,6 +11,8 @@ module Session
     # @return [Object]
     #   otherwise value returned from block
     #
+    # @api private
+    #
     def get(object)
       @states.fetch(object) { yield }
     end

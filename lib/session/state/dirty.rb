@@ -12,6 +12,16 @@ module Session
       #
       attr_reader :old
 
+      # Test if object is dirty
+      #
+      # @return [true]
+      #   if object is dirty
+      #
+      # @return [false]
+      #   otherwise
+      #
+      # @api private
+      #
       def dirty?
         dump != old.dump
       end
