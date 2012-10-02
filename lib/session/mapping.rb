@@ -46,6 +46,8 @@ module Session
     #
     # @return [Mapping]
     #
+    # @api private
+    #
     def mapping
       self
     end
