@@ -104,14 +104,14 @@ module Session
 
       # Insert object state into tracking
       #
-      # @param [Hash] track the tracking object state will be inserted in.
+      # @param [Tracker] tracker
       #
       # @return [self]
       #
       # @api private
       #
-      def update_track(track)
-        track[object]=self
+      def update_tracker(tracker)
+        tracker.store(object, self)
 
         self
       end

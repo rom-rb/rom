@@ -29,14 +29,14 @@ module Session
 
       # Remove object from tracking
       #
-      # @param [Hash] track
+      # @param [Tracker] tracker
       #
       # @return [self]
       #
       # @api private
       #
-      def update_track(track)
-        track.delete(@object)
+      def update_tracker(tracker)
+        tracker.delete(@object)
 
         self
       end

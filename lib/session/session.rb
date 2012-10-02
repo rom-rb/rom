@@ -72,7 +72,7 @@ module Session
     # @api public
     #
     def persist(object)
-      state = @track.fetch(object) do
+      state = @tracker.get(object) do
         new_state(object)
       end
       state.delete_identity(@identity_map)
@@ -98,7 +98,7 @@ module Session
     # @api public
     #
     def include?(object)
-      @track.key?(object)
+      @tracker.include?(object)
     end
 
     # Returns whether a domain object has changes since last sync with the database
@@ -167,7 +167,7 @@ module Session
     def initialize(registry)
       @registry     = registry
       @identity_map = {}
-      @track        = {}
+      @tracker      = Tracker.new
 
       self
     end
@@ -206,7 +206,7 @@ module Session
     # @api private
     #
     def track_state(state)
-      state.update_track(@track)
+      state.update_tracker(@tracker)
       state.update_identity(@identity_map)
     end
 
@@ -220,7 +220,7 @@ module Session
     # @api private
     #
     def state(object)
-      @track.fetch(object) do
+      @tracker.get(object) do
         raise StateError, "#{object.inspect} is not tracked"
       end
     end

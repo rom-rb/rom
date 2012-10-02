@@ -49,13 +49,13 @@ module Session
     #
     # Noop default implementation for all states.
     #
-    # @param [Object] track
+    # @param [Tracker] tracker
     #
     # @return [self]
     #
     # @api private
     #
-    def update_track(track)
+    def update_tracker(tracker)
       self
     end
 
