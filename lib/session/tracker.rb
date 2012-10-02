@@ -38,8 +38,8 @@ module Session
     #
     # @api private
     #
-    def store(object, state)
-      @states[object]=state
+    def store(state)
+      @states[state.object]=state
       self
     end
 

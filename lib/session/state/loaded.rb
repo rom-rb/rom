@@ -96,7 +96,7 @@ module Session
       # @api private
       #
       def update_tracker(tracker)
-        tracker.store(object, self)
+        tracker.store(self)
         self
       end
 
