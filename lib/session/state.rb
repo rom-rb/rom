@@ -49,48 +49,6 @@ module Session
     #
     attr_reader :key
 
-    # Update track
-    #
-    # Noop default implementation for all states.
-    #
-    # @param [Tracker] tracker
-    #
-    # @return [self]
-    #
-    # @api private
-    #
-    def update_tracker(tracker)
-      self
-    end
-
-    # Update identity map
-    #
-    # Noop default implementation for all states.
-    #
-    # @param [Object] identity_map
-    #
-    # @return [self]
-    #
-    # @api private
-    #
-    def update_identity(identity_map)
-      self
-    end
-
-    # Empty identity map
-    #
-    # Noop default implementation for all states.
-    #
-    # @param [Object] identity_map
-    #
-    # @return [self]
-    #
-    # @api private
-    #
-    def delete_identity(identity_map)
-      self
-    end
-
     # Delete domain object
     #
     # Default implementation for all subclasses.

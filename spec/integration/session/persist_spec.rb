@@ -7,7 +7,7 @@ describe Session::Session, '#persist' do
   let(:registry)      { DummyRegistry.new                            }
   let(:domain_object) { DomainObject.new                             }
   let(:object)        { described_class.new(registry)                }
-  let(:identity_map)  { object.instance_variable_get(:@identity_map) }
+  let(:identity_map)  { object.instance_variable_get(:@tracker).instance_variable_get(:@identities) }
   let(:mapping)       { Session::Mapping.new(mapper, domain_object)  }
   let!(:old_key)      { mapper.dump_key(domain_object)               }
   let!(:old_dump)     { mapper.dump(domain_object)                   }
@@ -47,12 +47,13 @@ describe Session::Session, '#persist' do
 
       it 'should track the domain object under new key' do
         subject
-        identity_map.fetch(new_key).should be(domain_object)
+        identity_map.fetch(new_key).object.should be(domain_object)
       end
 
       it 'should NOT track the domain object under old key' do
+        subject
+
         if old_key != new_key
-          subject
           identity_map.should_not have_key(old_key)
         end
       end

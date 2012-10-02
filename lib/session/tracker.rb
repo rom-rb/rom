@@ -5,8 +5,10 @@ module Session
 
     # Return state for object
     #
+    # @param [Object] object
+    #
     # @return [State]
-    #   if object is found
+    #   if object has tracked state
     #
     # @return [Object]
     #   otherwise value returned from block
@@ -14,7 +16,54 @@ module Session
     # @api private
     #
     def get(object)
-      @states.fetch(object) { yield }
+      @objects.fetch(object) { yield }
+    end
+
+    # Return state for identity
+    #
+    # @param [Object] identity
+    #
+    # @api private
+    #
+    # @return [State]
+    #   if identity has tracked state
+    #
+    # @return [Object]
+    #   otherwise value returned from block
+    #
+    def identity(identity)
+      @identities.fetch(identity) { yield }
+    end
+
+    # Load state
+    #
+    # @param [State]
+    #
+    # @return [Object]
+    #
+    # @api private
+    #
+    def load(state)
+      state = identity(state.key) do
+        store(state.loaded)
+      end
+      
+      state.object
+    end
+
+    # Persist state
+    #
+    # @param [State] state
+    #
+    # @return [self]
+    #
+    # @api private
+    #
+    def persist(state)
+      delete(state)
+      store(state.persist)
+
+      self
     end
 
     # Test if object is tracked
@@ -28,33 +77,21 @@ module Session
     # @api private
     #
     def include?(object)
-      @states.key?(object)
+      @objects.key?(object)
     end
 
-    # Store object state
+    # Delete object state
     #
-    # @param [Object] object
     # @param [State] state
     #
     # @return [self]
     #
     # @api private
     #
-    def store(state)
-      @states[state.object]=state
-      self
-    end
+    def delete(state)
+      @objects.delete(state.object)
+      @identities.delete(state.key)
 
-    # Delete object state
-    #
-    # @param [Object] object
-    #
-    # @return [self]
-    #
-    # @api private
-    #
-    def delete(object)
-      @states.delete(object)
       self
     end
 
@@ -67,7 +104,22 @@ module Session
     # @api private
     #
     def initialize
-      @states = {}
+      @objects, @identities = {}, {} 
+    end
+
+    # Store object state
+    #
+    # @param [State] state
+    #
+    # @return [State]
+    #
+    # @api private
+    #
+    def store(state)
+      @objects[state.object]=state
+      @identities[state.key]=state
+
+      state
     end
   end
 end

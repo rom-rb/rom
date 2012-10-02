@@ -6,7 +6,7 @@ describe Session::Session, '#forget(object)' do
   let(:domain_object) { DomainObject.new                     }
   let(:object)        { described_class.new(registry)        }
 
-  let(:identity_map)  { object.instance_variable_get(:@identity_map) }
+  let(:identity_map)  { object.instance_variable_get(:@tracker).instance_variable_get(:@identities) }
 
   subject { object.forget(domain_object) }
 

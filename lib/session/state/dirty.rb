@@ -34,6 +34,7 @@ module Session
       # @api private
       #
       def persist
+        old = self.old
         return old unless dirty?
 
         mapper.update(self, old)

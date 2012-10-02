@@ -43,7 +43,11 @@ module Session
     # @api public
     #
     def delete(object)
-      track_state(state(object).delete)
+      state = state(object)
+
+      state.delete
+
+      @tracker.delete(state)
 
       self
     end
@@ -75,8 +79,8 @@ module Session
       state = @tracker.get(object) do
         new_state(object)
       end
-      state.delete_identity(@identity_map)
-      track_state(state.persist)
+
+      @tracker.persist(state)
 
       self
     end
@@ -149,7 +153,9 @@ module Session
     # @api public
     #
     def forget(object)
-      track_state(state(object).forget)
+      state = state(object)
+
+      @tracker.delete(state)
 
       self
     end
@@ -166,7 +172,6 @@ module Session
     #
     def initialize(registry)
       @registry     = registry
-      @identity_map = {}
       @tracker      = Tracker.new
 
       self
@@ -190,25 +195,7 @@ module Session
     def load(mapper, dump)
       state = State::Loading.new(mapper, dump)
 
-      @identity_map.fetch(state.key) do
-        state = state.loaded
-        track_state(state)
-        state.object
-      end
-    end
-
-    # Track object state in this session
-    #
-    # @param [State] state
-    #   the object state to be tracked.
-    #
-    # @return [undefined]
-    #
-    # @api private
-    #
-    def track_state(state)
-      state.update_tracker(@tracker)
-      state.update_identity(@identity_map)
+      @tracker.load(state)
     end
 
     # Return object state for domain object

@@ -7,7 +7,7 @@ describe Session::Session, '#delete' do
   let(:object)        { described_class.new(registry)                }
   let(:mapping)       { Session::Mapping.new(mapper, domain_object)  }
 
-  let(:identity_map)  { object.instance_variable_get(:@identity_map) }
+  let(:identity_map)  { object.instance_variable_get(:@tracker).instance_variable_get(:@identities) }
 
   subject { object.delete(domain_object) }
 
@@ -16,10 +16,10 @@ describe Session::Session, '#delete' do
   context 'when domain object is tracked' do
     before do
       object.persist(domain_object)
-      subject
     end
 
     it 'should delete object' do
+      subject
       mapper.deletes.should == [Session::State::Loaded.new(mapping)]
     end
 
@@ -31,10 +31,12 @@ describe Session::Session, '#delete' do
     end
 
     it 'should not track object anymore' do
+      subject
       object.include?(domain_object).should be(false)
     end
 
     it 'should remove domain object from identity_map' do
+      subject
       identity_map.should_not have_key(key)
     end
 
