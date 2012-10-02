@@ -10,7 +10,7 @@ module Session
       # @api private
       #
       def persist
-        mapper.insert_dump(dump)
+        mapper.insert(self)
 
         Loaded.new(self)
       end

@@ -24,6 +24,17 @@ class DomainObject
   end
 end
 
+# A test double for states
+class DummyState
+  include Equalizer.new(:mapping, :key, :dump)
+
+  attr_reader :mapping, :key, :dump
+
+  def initialize(mapping, key, dump)
+    @mapping, @key, @dump = mapping, key, dump
+  end
+end
+
 # A test double for a mapper that records commands.
 class DummyMapper
   def dump(object)
@@ -75,37 +86,31 @@ class DummyMapper
     @deletes, @inserts,@updates = [],[],[]
   end
 
-  # Inserting an object
+  # Insert 
   #
-  # @param [Object] the object to be inserted
+  # @param [State]
   #
-  def insert_object(object)
-    insert_dump(dump(object))
+  # @api private
+  #
+  def insert(state)
+    @inserts << state
   end
 
-  # Inserting a dump
+  # Delete
   #
-  # @param [Hash] the dump to be inserted
-  def insert_dump(dump)
-    @inserts << dump
+  # @param [STate] 
+  #
+  def delete(state)
+    @deletes << state
   end
 
-  # @param [Hash] key the key identifying the record to delete
+  # Update
   #
-  def delete(key)
-    @deletes << key
-  end
-
-  # The old and the new dump can be used to generate nice updates.
-  # Especially useful for advanced mongo udpates.
+  # @param [State] new_state
+  # @param [State] old_state
   #
-  # @param [Symbol] collection the collection where the update should happen
-  # @param [Hash] update_key the key to update the record under
-  # @param [Hash] new_record the updated record (all fields!)
-  # @param [Hash] old_record the old record (all fields!)
-  #
-  def update(key, object,old_dump)
-    @updates << [key, object,old_dump]
+  def update(new_state, old_state)
+    @updates << [new_state, old_state]
   end
 end
 

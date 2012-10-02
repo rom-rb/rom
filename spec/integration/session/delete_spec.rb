@@ -1,10 +1,11 @@
 require 'spec_helper'
 
 describe Session::Session, '#delete' do
-  let(:mapper)        { registry.resolve_model(DomainObject) }
-  let(:registry)      { DummyRegistry.new                    }
-  let(:domain_object) { DomainObject.new                     }
-  let(:object)        { described_class.new(registry)        }
+  let(:mapper)        { registry.resolve_model(DomainObject)         }
+  let(:registry)      { DummyRegistry.new                            }
+  let(:domain_object) { DomainObject.new                             }
+  let(:object)        { described_class.new(registry)                }
+  let(:mapping)       { Session::Mapping.new(mapper, domain_object)  }
 
   let(:identity_map)  { object.instance_variable_get(:@identity_map) }
 
@@ -19,7 +20,7 @@ describe Session::Session, '#delete' do
     end
 
     it 'should delete object' do
-      mapper.deletes.should == [key]
+      mapper.deletes.should == [Session::State::Loaded.new(mapping)]
     end
 
     it 'should not dump' do

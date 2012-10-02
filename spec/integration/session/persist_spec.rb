@@ -1,19 +1,24 @@
 require 'spec_helper'
 
-
-
-describe Session::Session, '#persist(object)' do
+describe Session::Session, '#persist' do
   subject { object.persist(domain_object) }
 
-  let(:mapper)        { registry.resolve_model(DomainObject) }
-  let(:registry)      { DummyRegistry.new                    }
-  let(:domain_object) { DomainObject.new                     }
-  let(:object)        { described_class.new(registry)        }
+  let(:mapper)        { registry.resolve_model(DomainObject)         }
+  let(:registry)      { DummyRegistry.new                            }
+  let(:domain_object) { DomainObject.new                             }
+  let(:object)        { described_class.new(registry)                }
+  let(:identity_map)  { object.instance_variable_get(:@identity_map) }
+  let(:mapping)       { Session::Mapping.new(mapper, domain_object)  }
+  let!(:old_key)      { mapper.dump_key(domain_object)               }
+  let!(:old_dump)     { mapper.dump(domain_object)                   }
+  let!(:old_state)    { Session::State::Loaded.new(mapping)          }
 
   context 'with untracked domain object' do
     it 'should insert update' do
       subject
-      mapper.inserts.should == [mapper.dump(domain_object)]
+      mapper.inserts.should == [
+        Session::State::New.new(mapping)
+      ]
     end
 
     it_should_behave_like 'a command method'
@@ -22,14 +27,42 @@ describe Session::Session, '#persist(object)' do
   end
 
   context 'with tracked domain object' do
-    let!(:key_before) { mapper.dump_key(domain_object) }
-    let!(:dump_before) { mapper.dump(domain_object) }
-    let(:identity_map) { object.instance_variable_get(:@identity_map) }
+    let(:new_dump)     { mapper.dump(domain_object) }
+    let(:new_key)      { mapper.dump_key(domain_object) }
 
     before do
       object.persist(domain_object)
     end
 
+    shared_examples_for 'an update' do
+      it 'should should update domain object' do
+        subject
+        mapper.updates.should eql([[
+          Session::State::Dirty.new(mapping),
+          old_state
+        ]])
+      end
+
+      it_should_behave_like 'an operation that dumps once'
+
+      it 'should track the domain object under new key' do
+        subject
+        identity_map.fetch(new_key).should be(domain_object)
+      end
+
+      it 'should NOT track the domain object under old key' do
+        if old_key != new_key
+          subject
+          identity_map.should_not have_key(old_key)
+        end
+      end
+
+      it_should_behave_like 'a command method'
+    end
+
+    # This is a differend test case than the attribute change. 
+    # We have to make sure we cache the loaded dump and compare this to 
+    # future dumps without storing a dump of an object we just loaded.
     context 'and object is dirty from dump representation change' do
       let(:new_dump) { { :some => :change } }
 
@@ -37,23 +70,7 @@ describe Session::Session, '#persist(object)' do
         mapper.stub(:dump => new_dump)
       end
 
-      it 'should should update domain object' do
-        subject
-        mapper.updates.should == [[
-          key_before, 
-          new_dump,
-          dump_before
-        ]]
-      end
-
-      it_should_behave_like 'an operation that dumps once'
-
-      it 'should dump only once' do
-        mapper.should_receive(:dump).once.and_return(new_dump)
-        subject
-      end
-
-      it_should_behave_like 'a command method'
+      it_should_behave_like 'an update'
     end
 
     context 'and object is dirty from attribute change' do
@@ -63,17 +80,7 @@ describe Session::Session, '#persist(object)' do
       end
 
       context 'and key did NOT change' do
-
-        it_should_behave_like 'a command method'
-
-        it 'should update domain object under remote key' do
-          subject
-          mapper.updates.should == [[
-            key_before, 
-            mapper.dump(domain_object), 
-            dump_before
-          ]]
-        end
+        it_should_behave_like 'an update'
       end
 
       context 'and key did change' do
@@ -82,28 +89,7 @@ describe Session::Session, '#persist(object)' do
           domain_object.key_attribute = :dirty
         end
 
-        it_should_behave_like 'a command method'
-
-        it_should_behave_like 'an operation that dumps once'
-
-        it 'should update domain object under remote key' do
-          subject
-          mapper.updates.should == [[
-            key_before, 
-            mapper.dump(domain_object), 
-            dump_before
-          ]]
-        end
-
-        it 'should track the domain object under new key' do
-          subject
-          identity_map.fetch(mapper.dump_key(domain_object)).should be(domain_object)
-        end
-
-        it 'should NOT track the domain object under old key' do
-          subject
-          identity_map.should_not have_key(key_before)
-        end
+        it_should_behave_like 'an update'
       end
     end
 

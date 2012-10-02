@@ -36,7 +36,8 @@ module Session
       def persist
         return old unless dirty?
 
-        mapper.update(old.key, dump, old.dump)
+        mapper.update(self, old)
+
         Loaded.new(self)
       end
 

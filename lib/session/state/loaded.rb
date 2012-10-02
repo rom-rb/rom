@@ -34,7 +34,7 @@ module Session
       # @api private
       #
       def delete
-        mapper.delete(key)
+        mapper.delete(self)
 
         forget
       end

@@ -1,7 +1,7 @@
 module Session
   # Abstract base class for object state
   class State
-    include AbstractClass, Immutable
+    include AbstractClass, Immutable, Equalizer.new(:mapping, :dump, :key)
 
     # Return domain object
     #
