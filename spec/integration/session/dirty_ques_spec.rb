@@ -18,6 +18,7 @@ describe Session::Session, '#dirty?' do
       it { should be(false) }
 
       it_should_behave_like 'an idempotent method'
+      it_should_behave_like 'an operation that dumps once'
     end
 
     context 'and domain object is dirty' do
@@ -28,6 +29,7 @@ describe Session::Session, '#dirty?' do
       it { should be(true) }
 
       it_should_behave_like 'an idempotent method'
+      it_should_behave_like 'an operation that dumps once'
     end
   end
 

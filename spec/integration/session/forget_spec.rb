@@ -17,6 +17,11 @@ describe Session::Session, '#forget(object)' do
     subject
   end
 
+  it 'should not dump' do
+    mapper.should_not_receive(:dump)
+    mapper.should_not_receive(:dump_key)
+  end
+
   it 'should remove state' do
     object.include?(domain_object).should be(false)
   end

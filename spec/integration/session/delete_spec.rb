@@ -12,7 +12,6 @@ describe Session::Session, '#delete' do
 
   let!(:key) { mapper.dump_key(domain_object) }
 
-
   context 'when domain object is tracked' do
     before do
       object.persist(domain_object)
@@ -21,6 +20,13 @@ describe Session::Session, '#delete' do
 
     it 'should delete object' do
       mapper.deletes.should == [key]
+    end
+
+    it 'should not dump' do
+      mapper.should_not_receive(:dump)
+      mapper.should_not_receive(:dump_key)
+
+      subject
     end
 
     it 'should not track object anymore' do

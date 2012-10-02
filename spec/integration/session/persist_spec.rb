@@ -10,16 +10,6 @@ describe Session::Session, '#persist(object)' do
   let(:domain_object) { DomainObject.new                     }
   let(:object)        { described_class.new(registry)        }
 
-  shared_examples_for 'an efficient dump' do
-    it 'should dump only once' do
-      dump = mapper.dump(domain_object)
-      key  = mapper.dump_key(domain_object)
-      mapper.should_receive(:dump).once.and_return(dump)
-      mapper.should_receive(:dump_key).once.and_return(key)
-      subject
-    end
-  end
-
   context 'with untracked domain object' do
     it 'should insert update' do
       subject
@@ -28,7 +18,7 @@ describe Session::Session, '#persist(object)' do
 
     it_should_behave_like 'a command method'
 
-    it_should_behave_like 'an efficient dump'
+    it_should_behave_like 'an operation that dumps once'
   end
 
   context 'with tracked domain object' do
@@ -56,7 +46,7 @@ describe Session::Session, '#persist(object)' do
         ]]
       end
 
-      it_should_behave_like 'an efficient dump'
+      it_should_behave_like 'an operation that dumps once'
 
       it 'should dump only once' do
         mapper.should_receive(:dump).once.and_return(new_dump)
@@ -94,7 +84,7 @@ describe Session::Session, '#persist(object)' do
 
         it_should_behave_like 'a command method'
 
-        it_should_behave_like 'an efficient dump'
+        it_should_behave_like 'an operation that dumps once'
 
         it 'should update domain object under remote key' do
           subject
@@ -123,7 +113,7 @@ describe Session::Session, '#persist(object)' do
         mapper.updates.should == []
       end
 
-      it_should_behave_like 'an efficient dump'
+      it_should_behave_like 'an operation that dumps once'
 
       it_should_behave_like 'a command method'
     end
