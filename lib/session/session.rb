@@ -188,11 +188,10 @@ module Session
     # @api private
     #
     def load(mapper, dump)
-      key = mapper.load_key(dump)
-      @identity_map.fetch(key) do
-        object = mapper.load(dump)
-        mapping = Mapping.new(mapper, object)
-        state = State::Loaded.new(mapping)
+      state = State::Loading.new(mapper, dump)
+
+      @identity_map.fetch(state.key) do
+        state = state.loaded
         track_state(state)
         state.object
       end
