@@ -39,6 +39,16 @@ module Session
         forget
       end
 
+      # Return dirty state
+      #
+      # @return [State::Dirty]
+      #
+      # @api private
+      #
+      def dirty
+        Dirty.new(self)
+      end
+
       # Persist changes to wrapped domain object
       #
       # Noop when not dirty.
@@ -48,13 +58,7 @@ module Session
       # @api private
       #
       def persist
-        return self unless dirty?
-        new_dump = mapper.dump(object)
-        new_key  = mapper.dump_key(object)
-
-        mapper.update(key, new_dump, dump)
-
-        Loaded.new(mapping)
+        dirty.persist
       end
 
       # Insert domain object into identity map

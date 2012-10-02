@@ -46,7 +46,7 @@ module Session
     #
     # @return [Mapping]
     #
-    def to_mapping
+    def mapping
       self
     end
 

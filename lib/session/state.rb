@@ -137,17 +137,16 @@ module Session
 
     # Initialize object state instance
     #
-    # @param [Mapper] mapper the mapper for wrapped domain object
-    # @param [Object] object the wrapped domain object
+    # @param [State|Mapping] context
     #
     # @return [self]
     #
     # @api private
     #
-    def initialize(mapping)
-      @mapping = mapping
-      @key  = mapping.key
-      @dump = mapping.dump
+    def initialize(context)
+      @key     = context.key
+      @dump    = context.dump
+      @mapping = context.mapping
     end
   end
 end

@@ -1,6 +1,6 @@
 module Session
   class State
-    # An State that represents a new unpersisted domain object.
+    # State for unpersisted objects
     class New < self
 
       # Insert via mapper and return loaded object state
@@ -12,7 +12,7 @@ module Session
       def persist
         mapper.insert_dump(dump)
 
-        Loaded.new(mapping)
+        Loaded.new(self)
       end
 
     end
