@@ -1,15 +1,23 @@
 module Session
-  # An objects persistance state
+  # Abstract base class for object state
   class State
     include AbstractClass, Immutable
 
-    # Return wrapped domain object
+    # Return domain object
     #
     # @return [Object]
     #
     # @api private
     #
     attr_reader :object
+
+    # Return mapper
+    #
+    # @return [Object]
+    #
+    # @api private
+    #
+    attr_reader :mapper
 
     # Return dumped representation of object
     #
