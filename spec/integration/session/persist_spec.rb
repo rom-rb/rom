@@ -42,6 +42,11 @@ describe Session::Session, '#persist(object)' do
         ]]
       end
 
+      it 'should dump only once' do
+        mapper.should_receive(:dump).and_return(new_dump)
+        subject
+      end
+
       it_should_behave_like 'a command method'
     end
 
