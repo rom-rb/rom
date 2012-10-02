@@ -3,16 +3,6 @@ module Session
     # An State that represents a loaded domain object.
     class Loaded < self
 
-      # Invoke transition to forgotten object state
-      #
-      # @return [State::Forgotten]
-      #
-      # @api private
-      #
-      def forget
-        Forgotten.new(self)
-      end
-
       # Test if object is dirty
       #
       # @return [true]
@@ -29,14 +19,12 @@ module Session
 
       # Invoke transition to forgotten object state after deleting via mapper
       #
-      # @return [State::Forgotten]
+      # @return [undefined]
       #
       # @api private
       #
       def delete
         mapper.delete(self)
-
-        forget
       end
 
       # Return dirty state
