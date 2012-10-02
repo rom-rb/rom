@@ -44,11 +44,9 @@ module Session
     # @api private
     #
     def load(state)
-      state = identity(state.identity) do
+      identity(state.identity) do
         store(state.loaded)
-      end
-      
-      state.object
+      end.object
     end
 
     # Persist state
