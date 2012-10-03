@@ -1,4 +1,4 @@
-module Session
+module DataMapper
   # Abstract base class for object state
   class State
     include AbstractClass, Immutable, Equalizer.new(:mapping, :dump, :key)

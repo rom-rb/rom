@@ -1,4 +1,4 @@
-module Session
+module DataMapper
   class State
     # An State that represents a loaded domain object.
     class Loaded < self

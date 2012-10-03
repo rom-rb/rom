@@ -1,4 +1,4 @@
-module Session
+module DataMapper
 
   # Abstract base class for database operations
   class Command

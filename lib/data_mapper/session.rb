@@ -1,5 +1,5 @@
-module Session
-  # Represent a simple non UoW database session
+module DataMapper
+  # A simple non UoW database session
   class Session
     include Immutable
 

@@ -1,4 +1,4 @@
-module Session
+module DataMapper
   # Represent an object with its mapper
   class Mapping
     include Immutable, Equalizer.new(:mapper, :object)

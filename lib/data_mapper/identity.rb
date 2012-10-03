@@ -1,4 +1,4 @@
-module Session
+module DataMapper
   # Identity used for identity map
   #
   # This class scopes the key to model. This is needed to ensure

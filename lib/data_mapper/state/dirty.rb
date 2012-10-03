@@ -1,4 +1,4 @@
-module Session
+module DataMapper
   class State
 
     # Persistance state that is potentially dirty

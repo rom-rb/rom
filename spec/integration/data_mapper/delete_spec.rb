@@ -1,11 +1,11 @@
 require 'spec_helper'
 
-describe Session::Session, '#delete' do
+describe DataMapper::Session, '#delete' do
   let(:mapper)        { registry.resolve_model(DomainObject)         }
   let(:registry)      { DummyRegistry.new                            }
   let(:domain_object) { DomainObject.new                             }
   let(:object)        { described_class.new(registry)                }
-  let(:mapping)       { Session::Mapping.new(mapper, domain_object)  }
+  let(:mapping)       { DataMapper::Mapping.new(mapper, domain_object)  }
 
   let(:identity_map)  { object.instance_variable_get(:@tracker).instance_variable_get(:@identities) }
 
@@ -20,7 +20,7 @@ describe Session::Session, '#delete' do
 
     it 'should delete object' do
       subject
-      mapper.deletes.should == [Session::State::Loaded.new(mapping)]
+      mapper.deletes.should == [DataMapper::State::Loaded.new(mapping)]
     end
 
     it 'should not dump' do
@@ -45,7 +45,7 @@ describe Session::Session, '#delete' do
 
   context 'when domain object is NOT tracked' do
     it 'should raise error' do
-      expect { subject }.to raise_error(Session::StateError, "#{domain_object.inspect} is not tracked")
+      expect { subject }.to raise_error(DataMapper::StateError, "#{domain_object.inspect} is not tracked")
     end
   end
 end

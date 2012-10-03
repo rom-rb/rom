@@ -10,8 +10,7 @@ $LOAD_PATH << File.expand_path('../lib', __FILE__)
 Dir.glob('spec/examples/**/*.rb').each { |file| require File.expand_path(file) }
 Dir[File.expand_path('../{support,shared}/**/*.rb', __FILE__)].each { |f| require f }
 
-require 'session'
-require 'session/registry'
+require 'dm-session'
 
 # The keylike behaviour of :key_attribute is defined by mapping.
 # The key_ prefix is only cosmetic here!
@@ -114,7 +113,7 @@ class DummyMapper
   end
 end
 
-class DummyRegistry < Session::Registry
+class DummyRegistry < DataMapper::Registry
   def initialize
     super(DomainObject => DummyMapper.new)
   end

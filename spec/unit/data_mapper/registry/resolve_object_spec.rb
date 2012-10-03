@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Session::Registry, '#resolve_object' do
+describe DataMapper::Registry, '#resolve_object' do
   let(:model)         { DomainObject                         }
   let(:mapper)        { DummyMapper                          }
   let(:object)        { described_class.new(model => mapper) }

@@ -1,4 +1,4 @@
-module Session
+module DataMapper
 
   # Mapper that intercepts operations and registres the to UoW
   class Interceptor

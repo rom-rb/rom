@@ -1,4 +1,4 @@
-module Session
+module DataMapper
   # A registry for mappers session uses to find mappers
   class Registry
     include Immutable

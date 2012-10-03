@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Session::Session, '#persist' do
+describe DataMapper::Session, '#persist' do
   subject { object.persist(domain_object) }
 
   let(:mapper)        { registry.resolve_model(DomainObject)         }
@@ -8,19 +8,19 @@ describe Session::Session, '#persist' do
   let(:domain_object) { DomainObject.new                             }
   let(:object)        { described_class.new(registry)                }
   let(:identity_map)  { object.instance_variable_get(:@tracker).instance_variable_get(:@identities) }
-  let(:mapping)       { Session::Mapping.new(mapper, domain_object)  }
+  let(:mapping)       { DataMapper::Mapping.new(mapper, domain_object)  }
   let(:new_key)       { mapper.dump_key(domain_object)               }
   let!(:old_key)      { mapper.dump_key(domain_object)               }
   let!(:old_dump)     { mapper.dump(domain_object)                   }
-  let!(:old_state)    { Session::State::Loaded.new(mapping)          }
-  let!(:old_identity) { Session::Identity.new(DomainObject, old_key) }
-  let!(:new_identity) { Session::Identity.new(DomainObject, new_key) }
+  let!(:old_state)    { DataMapper::State::Loaded.new(mapping)          }
+  let!(:old_identity) { DataMapper::Identity.new(DomainObject, old_key) }
+  let!(:new_identity) { DataMapper::Identity.new(DomainObject, new_key) }
 
   context 'with untracked domain object' do
     it 'should insert update' do
       subject
       mapper.inserts.should == [
-        Session::State::New.new(mapping)
+        DataMapper::State::New.new(mapping)
       ]
     end
 
@@ -41,7 +41,7 @@ describe Session::Session, '#persist' do
       it 'should should update domain object' do
         subject
         mapper.updates.should eql([[
-          Session::State::Dirty.new(mapping),
+          DataMapper::State::Dirty.new(mapping),
           old_state
         ]])
       end

@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-describe Session::Session, 'with unit of work' do
+describe DataMapper::Session, 'with unit of work' do
 
   let(:mapper)        { registry.resolve_model(DomainObject) }
   let(:object)        { described_class.new(work)            }
-  let(:work)          { Session::Work.new(registry)          }
+  let(:work)          { DataMapper::Work.new(registry)          }
   let(:registry)      { DummyRegistry.new                    }
   let(:domain_object) { DomainObject.new                     }
 

@@ -1,4 +1,4 @@
-module Session
+module DataMapper
   class State
     # State for unpersisted objects
     class New < self

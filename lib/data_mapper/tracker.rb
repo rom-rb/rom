@@ -1,4 +1,4 @@
-module Session
+module DataMapper
 
   # Object state tracker that uses a simple hash
   class Tracker

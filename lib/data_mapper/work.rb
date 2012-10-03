@@ -1,4 +1,4 @@
-module Session
+module DataMapper
 
   # A unit of (database) work that is executed at once
   class Work

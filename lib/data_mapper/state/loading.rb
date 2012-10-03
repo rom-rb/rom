@@ -1,4 +1,4 @@
-module Session
+module DataMapper
   class State
     # State for dumps that are loaded
     class Loading < State
