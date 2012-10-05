@@ -52,7 +52,7 @@ module DataMapper
 
       # TODO clean up this mess somehow
       def target_model_attribute_options
-        if @connector.relationship.is_a?(Relationship::ManyToMany)
+        if @connector.relationship.via
 
           names          = DataMapper[@connector.target_model].class.attributes.map(&:field)
           aliased_names  = @connector.target_side.node.aliased(names)

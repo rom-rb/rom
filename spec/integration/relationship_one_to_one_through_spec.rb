@@ -53,7 +53,7 @@ describe 'Relationship - One To One through with generated mappers' do
   end
 
   it 'loads associated tag' do
-    pending '1:1 through is not supported yet'
+    pending if RUBY_VERSION < '1.9'
 
     mapper = DataMapper[Song].include(:tag)
     songs = mapper.to_a

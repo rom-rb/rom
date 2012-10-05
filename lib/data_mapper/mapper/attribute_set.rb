@@ -23,8 +23,7 @@ module DataMapper
 
         aliases.each do |name, field|
           attribute = for_field(name)
-          # FIXME: why attribute would be nil here sometimes?
-          instance << attribute.clone(:to => field) if attribute
+          instance << attribute.clone(:to => field)
         end
 
         instance
