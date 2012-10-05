@@ -12,6 +12,15 @@ module DataMapper
           @aliasing = aliasing
           @name     = @aliasing.node_name
         end
+
+        def aliases(edge_side)
+          aliasing.aliases(edge_side)
+        end
+
+        # TODO find a better name
+        def aliased(attribute_names)
+          aliasing.aliased(attribute_names)
+        end
       end # class Relation
     end # class Node
   end # class RelationRegistry

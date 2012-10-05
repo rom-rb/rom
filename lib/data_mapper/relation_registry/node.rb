@@ -20,14 +20,18 @@ module DataMapper
         @connectors[name]
       end
 
-      def add_edge(new_edge, new_node, name = nil)
+      def add_edge(new_edge, new_node, relationship = nil)
         edge = @edges << new_edge
 
-        if name
-          @connectors[name] = Connector.new(name, edge, new_node)
+        if relationship
+          add_connector(relationship, edge, new_node)
         end
 
         self
+      end
+
+      def base_relation?
+        false
       end
 
       attr_reader :hash
@@ -39,6 +43,13 @@ module DataMapper
       def ==(other)
         return false unless self.class <=> other.class
         @relation == other.relation
+      end
+
+      private
+
+      def add_connector(relationship, edge, node)
+        connector = Connector.new(self, node, edge, relationship)
+        @connectors[relationship.name] = connector
       end
     end # class Node
   end # class RelationRegistry

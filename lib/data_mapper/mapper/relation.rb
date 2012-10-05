@@ -38,11 +38,16 @@ module DataMapper
       # @return [undefined]
       #
       # @api public
-      def initialize(relation = self.class.relation)
+      def initialize(relation = self.class.relation, attributes = self.class.attributes)
         @relation      = relation
-        @attributes    = self.class.attributes
+        @attributes    = attributes
         @relationships = self.class.relationships
         @model         = self.class.model
+      end
+
+      # TODO find a better name
+      def remap(aliases)
+        self.class.new(@relation, @attributes.remap(aliases))
       end
 
       # @api public
@@ -92,7 +97,7 @@ module DataMapper
 
       # @api public
       def include(name)
-        @relationships[name].call
+        Mapper.mapper_registry[self.class.model, name]
       end
 
       # @api public

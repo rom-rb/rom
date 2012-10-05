@@ -20,7 +20,7 @@ module DataMapper
             source = edge_side.new(source_node, relationship.source_key)
             target = edge_side.new(target_node, relationship.target_key)
 
-            Mapper.relation_registry.add_edge(source, target, relationship.name)
+            Mapper.relation_registry.add_edge(source, target, relationship)
           end
         end # class SingleHop
       end # class Builder

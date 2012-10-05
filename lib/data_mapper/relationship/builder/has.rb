@@ -11,19 +11,13 @@ module DataMapper
         end
 
         def initialize(source, cardinality, name, *args, &op)
-          options = Utils.extract_options(args)
-          via     = options[:through]
-
-          min, max = extract_min_max(cardinality, name)
-          options.update(:min => min, :max => max)
-
-          if max == 1 && via
-            @relationship = source.relationships[via].inherit(name, op)
-            return
-          end
-
-          options      = options.merge(:operation => op)
+          options      = Utils.extract_options(args)
           target_model = Utils.extract_type(args)
+
+          via      = options[:through]
+          min, max = extract_min_max(cardinality, name)
+
+          options.update(:min => min, :max => max, :operation => op)
 
           options_class =
             if max > 1

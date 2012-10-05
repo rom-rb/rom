@@ -1,6 +1,6 @@
 require 'spec_helper_integration'
 
-describe 'Relationship - Many To Many' do
+describe 'Relationship - Many To Many with generated mappers' do
   before(:all) do
     setup_db
 
@@ -13,18 +13,13 @@ describe 'Relationship - Many To Many' do
     insert_song_tag 1, 2, 1
     insert_song_tag 2, 1, 2
 
-    # Register the join table relation as we don't need to map it to objects
-    DataMapper.register_relation(:postgres, :song_tags,
-      [
-        [ :song_id, Integer ],
-        [ :tag_id,  Integer ]
-      ])
-
     class Song
-      attr_reader :id, :title, :tags
+      attr_reader :id, :title, :tags, :good_tags
 
       def initialize(attributes)
-        @id, @title, @tags = attributes.values_at(:id, :title, :tags)
+        @id, @title, @tags, @good_tags = attributes.values_at(
+          :id, :title, :tags, :good_tags
+        )
       end
     end
 
@@ -32,7 +27,15 @@ describe 'Relationship - Many To Many' do
       attr_reader :id, :name
 
       def initialize(attributes)
-        @id, @name, = attributes.values_at(:id, :name)
+        @id, @name = attributes.values_at(:id, :name)
+      end
+    end
+
+    class SongTag
+      attr_reader :song_id, :tag_id
+
+      def initialize(attributes)
+        @song_id, @tag_id = attributes.values_at(:song_id, :tag_id)
       end
     end
 
@@ -42,21 +45,21 @@ describe 'Relationship - Many To Many' do
       relation_name :tags
       repository    :postgres
 
-      map :id,   Integer, :to => :tag_id, :key => true
+      map :id,   Integer, :key => true
       map :name, String
     end
 
-    class SongTagMapper < DataMapper::Mapper::Relation
+    class SongTagMapper < DataMapper::Mapper::Relation::Base
 
-      model Song
+      model         SongTag
+      relation_name :song_tags
+      repository    :postgres
 
-      map :id,    Integer, :to => :song_id, :key => true
-      map :title, String
-      map :tags,  Tag, :collection => true
+      map :song_id, Integer, :key => true
+      map :tag_id,  Integer, :key => true
     end
 
     class SongMapper < DataMapper::Mapper::Relation::Base
-
       model         Song
       relation_name :songs
       repository    :postgres
@@ -64,18 +67,26 @@ describe 'Relationship - Many To Many' do
       map :id,    Integer, :key => true
       map :title, String
 
-      has 0..n, :tags, :mapper => SongTagMapper, :through => :song_tags do |tags, relationship|
-        song_tags = relationship.join_relation
-        rename(:id => :song_id).join(song_tags).join(tags)
+      has 0..n, :song_tags, SongTag
+
+      # TODO debug
+      if RUBY_VERSION >= '1.9'
+
+        has 0..n, :tags, Tag, :through => :song_tags
+
+        has 0..n, :good_tags, Tag, :through => :song_tags do
+          restrict { |r| r.song_tags_X_tags__tags__name.eq('good') }
+        end
+
       end
     end
   end
 
-  it 'loads associated object' do
+  it 'loads associated tags' do
     pending if RUBY_VERSION < '1.9'
 
-    mapper = DataMapper[Song]
-    songs = mapper.include(:tags).to_a
+    mapper = DataMapper[Song].include(:tags)
+    songs = mapper.to_a
 
     songs.should have(2).items
 
@@ -88,5 +99,20 @@ describe 'Relationship - Many To Many' do
     song2.title.should eql('foo')
     song2.tags.should have(1).item
     song2.tags.first.name.should eql('bad')
+  end
+
+  it 'loads associated tags with name = good' do
+    pending if RUBY_VERSION < '1.9'
+
+    mapper = DataMapper[Song]
+    songs = mapper.include(:good_tags).to_a
+
+    songs.should have(1).item
+
+    song = songs.first
+
+    song.title.should eql('bar')
+    song.good_tags.should have(1).item
+    song.good_tags.first.name.should eql('good')
   end
 end

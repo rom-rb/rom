@@ -8,6 +8,7 @@ module DataMapper
 
         attr_reader :a
         attr_reader :b
+        attr_reader :join_aliases
         attr_reader :node_name
 
         def initialize(edge)
@@ -28,7 +29,11 @@ module DataMapper
           @b = aliases(b)
         end
 
-        private
+        def each
+          return to_enum unless block_given?
+          @a.merge(@b).each { |name, field| yield(name, field) }
+          self
+        end
 
         def aliases(edge_side)
           node            = edge_side.node
@@ -39,6 +44,14 @@ module DataMapper
             aliases[name.to_sym] = attribute_alias(node, join_attributes, name)
           }
         end
+
+        def aliased(attribute_names)
+          Array(attribute_names).map { |name|
+            a.fetch(name) { b.fetch(name, "#{@node_name}__#{name}") }
+          }
+        end
+
+        private
 
         def attribute_alias(node, join_attributes, name)
           if join_attributes.include?(name)

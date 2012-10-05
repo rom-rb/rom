@@ -17,6 +17,22 @@ module DataMapper
         each { |attribute| attribute.finalize }
       end
 
+      # TODO find a better name and implementation
+      def remap(aliases)
+        instance = self.class.new
+
+        aliases.each do |name, field|
+          instance << for_field(name).clone(:to => field)
+        end
+
+        instance
+      end
+
+      # TODO find a better name and implementation
+      def for_field(field)
+        detect { |attribute| attribute.field == field }
+      end
+
       def <<(attribute)
         @attributes[attribute.name] = attribute
         self
@@ -75,7 +91,6 @@ module DataMapper
       def key
         select(&:key?)
       end
-
     end # class AttributeSet
   end # class Mapper
 end # module DataMapper

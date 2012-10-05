@@ -1,6 +1,6 @@
 require 'spec_helper_integration'
 
-describe 'Relationship - Many To One' do
+describe 'Relationship - Many To One with generated mapper' do
   before(:all) do
     setup_db
 
@@ -38,19 +38,7 @@ describe 'Relationship - Many To One' do
           :id, :street, :city, :zipcode, :user)
       end
 
-      class AddressUserMapper < DataMapper::Mapper::Relation
-        model Address
-
-        map :address_id, Integer, :to => :id
-        map :user_id,    Integer
-        map :street,     String
-        map :city,       String
-        map :zipcode,    String
-        map :user,       User
-      end
-
       class Mapper < DataMapper::Mapper::Relation::Base
-
         model         Address
         relation_name :addresses
         repository    :postgres
@@ -61,9 +49,7 @@ describe 'Relationship - Many To One' do
         map :city,    String
         map :zipcode, String
 
-        belongs_to :user, :mapper => AddressUserMapper do |users|
-          rename(:id => :address_id).join(users)
-        end
+        belongs_to :user, User
       end
     end
   end

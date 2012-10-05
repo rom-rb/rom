@@ -3,12 +3,6 @@ module DataMapper
 
     class ManyToOne < self
 
-      def finalize_aliases
-        @source_aliases = super.merge(
-          target_key => unique_alias(target_key, name)
-        )
-      end
-
       private
 
       # @api private
@@ -19,11 +13,6 @@ module DataMapper
       # @api private
       def default_target_key
         :id
-      end
-
-      # @api private
-      def mapper_builder
-        Mapper::Builder::Relationship::ManyToOne
       end
     end # class ManyToOne
   end # class Relationship

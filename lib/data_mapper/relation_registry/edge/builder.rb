@@ -7,15 +7,7 @@ module DataMapper
         def self.build(relationship)
           return super if self < Builder
 
-          builder =
-            # TODO unify this
-            if relationship.source || relationship.options[:through] ||
-               (relationship.respond_to?(:via) && relationship.via)
-              MultiHop
-            else
-              SingleHop
-            end
-
+          builder = relationship.via ? MultiHop : SingleHop
           builder.new(relationship).build
         end
 

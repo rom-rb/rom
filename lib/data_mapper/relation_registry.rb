@@ -11,13 +11,13 @@ module DataMapper
       @edges = EdgeSet.new
     end
 
-    def add_edge(source, target, name)
-      edge = edges.add(source, target)
+    def add_edge(source, target, relationship)
+      edge = edges.add(source, target, relationship.operation)
       node = Node::Builder.build(edge)
 
-      Mapper.relation_registry << node
+      add_node(node)
 
-      source.node.add_edge(edge, node, name)
+      source.node.add_edge(edge, node, relationship)
       target.node.add_edge(edge, node)
 
       node
@@ -31,12 +31,15 @@ module DataMapper
       end
     end
 
-    def <<(relation)
-      node = Node::Relation::Base.new(relation)
-
+    def add_node(node)
       @nodes << node
       @index[node.name] = node
+      self
+    end
 
+    def <<(relation)
+      node = Node::Relation::Base.new(relation)
+      add_node(node)
       relation
     end
 
@@ -46,6 +49,14 @@ module DataMapper
 
     def [](name)
       node(name).relation
+    end
+
+    def relation_nodes
+      @nodes.select { |node| !node.base_relation? }
+    end
+
+    def base_relation_nodes
+      @nodes.select { |node| node.base_relation? }
     end
 
     private

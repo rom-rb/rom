@@ -19,8 +19,8 @@ module DataMapper
         @entries.add?(edge) ? edge : find(edge)
       end
 
-      def add(source, target)
-        edge = Edge.new(source, target)
+      def add(source, target, op)
+        edge = Edge.new(source, target, op)
         self << edge
       end
 

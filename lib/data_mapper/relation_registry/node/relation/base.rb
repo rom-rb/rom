@@ -1,7 +1,7 @@
 module DataMapper
   class RelationRegistry
     class Node
-      class Relation < Node
+      class Relation < self
 
         class Base < Node
 
@@ -9,6 +9,10 @@ module DataMapper
             super
 
             @name = relation.name.to_sym
+          end
+
+          def base_relation?
+            true
           end
         end # class Base
       end # class Relation

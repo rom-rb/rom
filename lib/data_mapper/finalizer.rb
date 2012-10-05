@@ -38,7 +38,15 @@ module DataMapper
     end
 
     def finalize_relationship_mappers
-      @mappers.each { |mapper| mapper.finalize_relationships }
+      mapper_registry = Mapper.mapper_registry
+      Mapper.relation_registry.nodes.each do |node|
+        node.connectors.each do |name, connector|
+          unless mapper_registry.include?(connector.source_model, name)
+            mapper = Mapper::Builder.build(connector)
+            mapper_registry.register(mapper, name)
+          end
+        end
+      end
     end
   end # class Finalizer
 end # module DataMapper

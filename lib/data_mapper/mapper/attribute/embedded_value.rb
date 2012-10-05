@@ -9,12 +9,16 @@ module DataMapper
 
         def initialize(name, options = {})
           super
-          @type = options.fetch(:type) { raise(MissingTypeOptionError) }
+          @type    = options.fetch(:type) { raise(MissingTypeOptionError) }
+          @aliases = options.fetch(:aliases, {})
         end
 
         # @api public
         def finalize
-          @mapper = DataMapper[type]
+          mapper = DataMapper[type]
+          mapper = mapper.remap(@aliases) if @aliases.any?
+
+          @mapper = mapper
         end
 
         # @api public
