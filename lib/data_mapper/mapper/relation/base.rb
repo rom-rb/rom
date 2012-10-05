@@ -33,8 +33,8 @@ module DataMapper
           Mapper.mapper_registry << new(gateway_relation)
         end
 
-        def self.key(names)
-          Array(names).each do |name|
+        def self.key(*names)
+          names.each do |name|
             attributes << attributes[name].clone(:key => true)
           end
         end
