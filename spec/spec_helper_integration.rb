@@ -102,6 +102,7 @@ RSpec.configure do |config|
     Object.send(:remove_const, :UserMapper)            if defined?(UserMapper)
     Object.send(:remove_const, :OrderMapper)           if defined?(OrderMapper)
 
+    Object.send(:remove_const, :InfoMapper)            if defined?(InfoMapper)
     Object.send(:remove_const, :TagMapper)             if defined?(TagMapper)
     Object.send(:remove_const, :SongTagMapper)         if defined?(SongTagMapper)
     Object.send(:remove_const, :SongMapper)            if defined?(SongMapper)
@@ -112,6 +113,7 @@ RSpec.configure do |config|
     Object.send(:remove_const, :Song)                  if defined?(Song)
     Object.send(:remove_const, :SongTag)               if defined?(SongTag)
     Object.send(:remove_const, :Tag)                   if defined?(Tag)
+    Object.send(:remove_const, :Info)                  if defined?(Info)
     Object.send(:remove_const, :Order)                 if defined?(Order)
 
     DataMapper::Mapper.instance_variable_set('@descendants', [])
