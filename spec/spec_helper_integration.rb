@@ -90,7 +90,7 @@ Dir[File.expand_path('../**/shared/**/*.rb', __FILE__)].each { |file| require fi
 RSpec.configure do |config|
   config.before(:all) do
 
-    DataMapper::Mapper.mapper_registry.clear
+    DataMapper::Mapper.mapper_registry.instance_variable_set(:@_mappers, {})
     DataMapper::Mapper.relation_registry.instance_variable_set(:@index, {})
     DataMapper::Mapper.relation_registry.instance_variable_set(:@nodes, Set.new)
     DataMapper::Mapper.relation_registry.instance_variable_set(:@edges, DataMapper::RelationRegistry::EdgeSet.new)

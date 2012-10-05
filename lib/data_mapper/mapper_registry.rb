@@ -55,10 +55,5 @@ module DataMapper
     def <<(mapper, relationships = [])
       register(mapper, relationships)
     end
-
-    def clear
-      @_mappers.clear
-    end
-
   end # class MapperRegistry
 end # module DataMapper
