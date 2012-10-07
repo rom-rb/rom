@@ -15,7 +15,6 @@ module DataMapper
       attr_reader :source_model
       attr_reader :target_model
       attr_reader :source_aliases
-      attr_reader :target_aliases
 
       def initialize(source_node, target_node, edge, relationship)
         @source_node  = source_node
@@ -35,7 +34,25 @@ module DataMapper
         @target_side = @edge.target_side(source_relation)
 
         @source_aliases = @target_node.aliases(@source_side)
-        @target_aliases = @target_node.aliases(@target_side)
+      end
+
+      # TODO clean up this mess somehow
+      def target_aliases
+        @target_aliases ||= begin
+          if @relationship.via
+
+            # The target_aliases can't be initialized in the constructor
+            # because of the need to access the finalized base relation
+            # mappers below
+            fields         = DataMapper[@target_model].attributes.fields
+            aliased_fields = @target_side.node.aliased(fields)
+            aliased_fields = @target_node.aliased(aliased_fields)
+
+            Hash[fields.zip(aliased_fields)]
+          else
+            @target_node.aliases(@target_side)
+          end
+        end
       end
 
       def collection_target?
