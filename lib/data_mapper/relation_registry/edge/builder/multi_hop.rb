@@ -29,8 +29,7 @@ module DataMapper
             source = edge_side.new(source_node, source_key)
             target = edge_side.new(target_node, target_key)
 
-            intermediary_node =
-              Mapper.relation_registry.add_edge(source, target, intermediary)
+            intermediary_node = Mapper.relation_registry.add_edge(source, target)
 
             # -------------------------------------------------------------------------
 

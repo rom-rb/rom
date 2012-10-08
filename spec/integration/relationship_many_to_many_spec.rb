@@ -14,11 +14,11 @@ describe 'Relationship - Many To Many with generated mappers' do
     insert_song_tag 2, 1, 2
 
     class Song
-      attr_reader :id, :title, :tags, :good_tags
+      attr_reader :id, :title, :song_tags, :tags, :good_tags
 
       def initialize(attributes)
-        @id, @title, @tags, @good_tags = attributes.values_at(
-          :id, :title, :tags, :good_tags
+        @id, @title, @song_tags, @tags, @good_tags = attributes.values_at(
+          :id, :title, :song_tags, :tags, :good_tags
         )
       end
     end
@@ -80,6 +80,27 @@ describe 'Relationship - Many To Many with generated mappers' do
 
       end
     end
+  end
+
+  it 'loads associated song_tags' do
+    pending if RUBY_VERSION < '1.9'
+
+    mapper = DataMapper[Song].include(:song_tags)
+    songs = mapper.to_a
+
+    songs.should have(2).items
+
+    song1, song2 = songs
+
+    song1.title.should eql('bar')
+    song1.song_tags.should have(1).item
+    song1.song_tags.first.song_id.should eql(song1.id)
+    song1.song_tags.first.tag_id.should eql(1)
+
+    song2.title.should eql('foo')
+    song2.song_tags.should have(1).item
+    song2.song_tags.first.song_id.should eql(song2.id)
+    song2.song_tags.first.tag_id.should eql(2)
   end
 
   it 'loads associated tags' do

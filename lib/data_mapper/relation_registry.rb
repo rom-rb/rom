@@ -11,8 +11,8 @@ module DataMapper
       @edges = EdgeSet.new
     end
 
-    def add_edge(source, target, relationship)
-      edge = edges.add(source, target, relationship.operation)
+    def add_edge(source, target, relationship = nil)
+      edge = edges.add(source, target, relationship ? relationship.operation : nil)
       node = Node::Builder.build(edge)
 
       add_node(node)
