@@ -13,15 +13,18 @@ describe 'Relationship - Many To Many with generated mappers' do
     insert_info 1, 1, "really good"
     insert_info 2, 2, "really bad"
 
+    insert_info_content 1, 1, "really, really good"
+    insert_info_content 2, 2, "really, really bad"
+
     insert_song_tag 1, 1, 1
     insert_song_tag 2, 2, 2
 
     class Song
-      attr_reader :id, :title, :tags, :infos
+      attr_reader :id, :title, :tags, :infos, :info_contents
 
       def initialize(attributes)
-        @id, @title, @tags, @infos = attributes.values_at(
-          :id, :title, :tags, :infos
+        @id, @title, @tags, @infos, @info_contents = attributes.values_at(
+          :id, :title, :tags, :infos, :info_contents
         )
       end
     end
@@ -39,6 +42,14 @@ describe 'Relationship - Many To Many with generated mappers' do
 
       def initialize(attributes)
         @id, @text = attributes.values_at(:id, :text)
+      end
+    end
+
+    class InfoContent
+      attr_reader :id, :content
+
+      def initialize(attributes)
+        @id, @content = attributes.values_at(:id, :content)
       end
     end
 
@@ -71,6 +82,17 @@ describe 'Relationship - Many To Many with generated mappers' do
       map :text,   String
     end
 
+    class InfoContentMapper < DataMapper::Mapper::Relation::Base
+
+      model         InfoContent
+      relation_name :info_contents
+      repository    :postgres
+
+      map :id,      Integer, :key => true
+      map :info_id, Integer
+      map :content, String
+    end
+
     class SongTagMapper < DataMapper::Mapper::Relation::Base
 
       model         SongTag
@@ -98,13 +120,14 @@ describe 'Relationship - Many To Many with generated mappers' do
 
         has 0..n, :infos, Info, :through => :tags
 
+        has 0..n, :info_contents, InfoContent, :through => :infos
+
       end
     end
   end
 
   it 'loads associated tag infos' do
     pending if RUBY_VERSION < '1.9'
-    pending "ManyToMany through is not yet supported"
 
     mapper = DataMapper[Song].include(:infos)
     songs = mapper.to_a
@@ -121,5 +144,26 @@ describe 'Relationship - Many To Many with generated mappers' do
     song2.title.should eql('bar')
     song2.infos.should have(1).item
     song2.infos.first.text.should eql('really bad')
+  end
+
+  it 'loads associated tag info contents' do
+    pending if RUBY_VERSION < '1.9'
+    pending "ManyToMany through is not yet supported"
+
+    mapper = DataMapper[Song].include(:info_contents)
+    songs = mapper.to_a
+
+    songs.should have(2).items
+
+    song1, song2 = songs
+
+    song1.title.should eql('foo')
+
+    song1.info_contents.should have(1).item
+    song1.info_contents.first.text.should eql('really, really good')
+
+    song2.title.should eql('bar')
+    song2.info_contents.should have(1).item
+    song2.info_contents.first.text.should eql('really, really bad')
   end
 end
