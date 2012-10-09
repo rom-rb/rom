@@ -4,21 +4,19 @@ module DataMapper
 
       class Aliasing
 
-        RELATION_SEPARATOR = '_X_'.freeze
-
         attr_reader :a
         attr_reader :b
         attr_reader :join_aliases
         attr_reader :node_name
 
-        def initialize(edge)
-          a = edge.a
-          b = edge.b
+        def initialize(edge, id)
+          a  = edge.a
+          b  = edge.b
 
           name_a = a.node.name.to_s
           name_b = b.node.name.to_s
 
-          @node_name = [name_a, name_b].sort.join(RELATION_SEPARATOR).to_sym
+          @node_name = "node_#{id}".to_sym
 
           join_aliases_a = join_attribute_aliases(a.join_attributes)
           join_aliases_b = join_attribute_aliases(b.join_attributes)
@@ -47,7 +45,7 @@ module DataMapper
 
         def aliased(attribute_names)
           Array(attribute_names).map { |name|
-            a.fetch(name) { b.fetch(name, "#{@node_name}__#{name}") }
+            a.fetch(name) { b.fetch(name) { "#{@node_name}__#{name}" }}
           }
         end
 
@@ -62,7 +60,11 @@ module DataMapper
         end
 
         def unique_attribute_alias(node, name)
-          "#{node.name}__#{name}".to_sym
+          if node.base_relation?
+            "#{node.name}__#{name}".to_sym
+          else
+            name.to_sym
+          end
         end
 
         def join_attribute_aliases(join_attributes)

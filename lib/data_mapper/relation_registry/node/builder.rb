@@ -4,6 +4,12 @@ module DataMapper
 
       class Builder
 
+        @counter = 0
+
+        def self.counter
+          @counter += 1
+        end
+
         def self.build(edge)
           new(edge).node
         end
@@ -15,7 +21,7 @@ module DataMapper
           b  = edge.b
           op = edge.op
 
-          aliasing  = Aliasing.new(edge)
+          aliasing  = Aliasing.new(edge, self.class.counter)
           aliased_a = a.relation.rename(aliasing.a)
           aliased_b = b.relation.rename(aliasing.b)
 
