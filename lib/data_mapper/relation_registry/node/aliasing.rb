@@ -13,9 +13,6 @@ module DataMapper
           a  = edge.a
           b  = edge.b
 
-          name_a = a.node.name.to_s
-          name_b = b.node.name.to_s
-
           @node_name = "node_#{id}".to_sym
 
           join_aliases_a = join_attribute_aliases(a.join_attributes)
