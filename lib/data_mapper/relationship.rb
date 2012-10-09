@@ -25,6 +25,8 @@ module DataMapper
       @target_key   = @options.target_key
       @source_model = @options.source_model
       @target_model = @options.target_model
+
+      @hash = @name.hash ^ @source_model.hash
     end
 
     # @api public
@@ -34,6 +36,18 @@ module DataMapper
 
     def collection_target?
       false
+    end
+
+    attr_reader :hash
+
+    def eql?(other)
+      return false unless instance_of?(other.class)
+      @name.eql?(other.name) && @source_model.eql?(other.source_model)
+    end
+
+    def ==(other)
+      return false unless self.class <=> other.class
+      @name == other.name && @source_model == other.source_model
     end
   end # class Relationship
 end # module DataMapper

@@ -23,6 +23,14 @@ module DataMapper
       node
     end
 
+    def contains?(relationship)
+      nodes.any? { |node|
+        node.connectors.any? { |name, connector|
+          connector.relationship == relationship
+        }
+      }
+    end
+
     def node_for(relation)
       if relation.respond_to?(:name)
         node(relation.name)

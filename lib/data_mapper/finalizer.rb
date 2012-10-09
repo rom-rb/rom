@@ -32,7 +32,9 @@ module DataMapper
     def finalize_relation_registry
       @mappers.each do |mapper|
         mapper.relationships.each do |relationship|
-          RelationRegistry::Edge::Builder.build(relationship)
+          unless Mapper.relation_registry.contains?(relationship)
+            RelationRegistry::Edge::Builder.build(relationship)
+          end
         end
       end
     end
