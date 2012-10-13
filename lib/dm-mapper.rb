@@ -53,6 +53,8 @@ require 'veritas'
 require 'veritas-optimizer'
 
 require 'descendants_tracker'
+require 'equalizer'
+require 'data_mapper/support/graph'
 
 require 'data_mapper/support/utils'
 require 'data_mapper/support/inflector/inflections'
