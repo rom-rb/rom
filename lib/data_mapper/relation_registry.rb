@@ -1,14 +1,11 @@
 module DataMapper
 
-  class RelationRegistry
-
-    attr_reader :nodes
-    attr_reader :edges
+  class RelationRegistry < Graph
 
     def initialize
-      @index = {}
-      @nodes = Set.new
+      super
       @edges = EdgeSet.new
+      @index = {}
     end
 
     def add_edge(source, target, relationship = nil)
@@ -21,6 +18,12 @@ module DataMapper
       target.node.add_edge(edge, node)
 
       node
+    end
+
+    def add_node(node)
+      super
+      @index[node.name] = node
+      self
     end
 
     def contains?(relationship)
@@ -37,12 +40,6 @@ module DataMapper
       else
         find_node(relation)
       end
-    end
-
-    def add_node(node)
-      @nodes << node
-      @index[node.name] = node
-      self
     end
 
     def <<(relation)
