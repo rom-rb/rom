@@ -1,6 +1,6 @@
 require 'backports'
 require 'set'
-require 'immutable'
+require 'adamantium'
 require 'equalizer'
 require 'abstract_class'
 

@@ -42,7 +42,7 @@ module DataMapper
       def loaded
         Loaded.new(self)
       end
-      memoize :load
+      memoize :loaded
 
       # Return object
       #

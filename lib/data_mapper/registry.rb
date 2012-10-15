@@ -1,7 +1,7 @@
 module DataMapper
   # A registry for mappers session uses to find mappers
   class Registry
-    include Immutable
+    include Adamantium
 
     # Initialize an empty mapper registry
     #

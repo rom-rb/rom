@@ -1,7 +1,7 @@
 module DataMapper
   # Represent an object with its mapper
   class Mapping
-    include Immutable, Equalizer.new(:mapper, :object)
+    include Adamantium, Equalizer.new(:mapper, :object)
 
     # Return mapper
     #

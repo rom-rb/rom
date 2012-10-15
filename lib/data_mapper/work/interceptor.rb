@@ -2,7 +2,7 @@ module DataMapper
 
   # Mapper that intercepts operations and registres the to UoW
   class Interceptor
-    include Immutable
+    include Adamantium
 
     # Delegate boring mapper methods
     %w(load dump dump_key).each do |name|

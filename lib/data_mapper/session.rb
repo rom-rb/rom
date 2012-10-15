@@ -1,7 +1,7 @@
 module DataMapper
   # A simple non UoW database session
   class Session
-    include Immutable
+    include Adamantium
 
     # Read objects from database
     #
