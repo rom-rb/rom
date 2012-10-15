@@ -25,6 +25,8 @@ module DataMapper
       end
     end
 
+    include Enumerable
+
     # @api public
     def initialize(mappers = {})
       @_mappers = mappers

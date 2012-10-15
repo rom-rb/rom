@@ -3,7 +3,7 @@ module DataMapper
 
     class Builder
 
-      def self.call(connector)
+      def self.build(connector)
         new(connector).build
       end
 
@@ -23,9 +23,7 @@ module DataMapper
       private
 
       def mapper_class
-        klass = Mapper::Relation.from(@source_mapper, mapper_name)
-
-        remap_fields(klass)
+        klass = remap_fields(Mapper::Relation.from(@source_mapper, mapper_name))
 
         klass.map(@name, @target_model, target_model_attribute_options)
 
@@ -39,25 +37,13 @@ module DataMapper
       end
 
       def remap_fields(mapper)
-        source_aliases.each do |field, alias_name|
-          attribute = mapper.attributes.for_field(field)
-          if attribute
-            mapper.map(attribute.name, attribute.type, :key => attribute.key?, :to => alias_name)
+        @connector.source_aliases.each do |name, field|
+          if original = mapper.attributes.for_field(name)
+            mapper.map(original.name, original.type, :key => original.key?, :to => field)
           end
         end
 
         mapper
-      end
-
-      def source_aliases
-        if @connector.via?
-          via_connector = DataMapper.relation_registry.edges.detect { |connector|
-            connector.name == @connector.via
-          }
-          via_connector.source_aliases
-        else
-          @connector.source_aliases
-        end
       end
 
       def mapper_name

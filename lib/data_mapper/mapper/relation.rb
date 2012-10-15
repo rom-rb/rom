@@ -7,6 +7,8 @@ module DataMapper
     class Relation < self
       alias_method :all, :to_a
 
+      attr_reader :relationships
+
       def self.from(other, name = nil)
         klass = super
         klass.repository(other.repository)
@@ -97,7 +99,7 @@ module DataMapper
 
       # @api public
       def include(name)
-        Mapper.mapper_registry[self.class.model, name]
+        Mapper.mapper_registry[self.class.model, @relationships[name]]
       end
 
       # @api public
@@ -132,6 +134,10 @@ module DataMapper
         @attributes.each_with_object({}) do |attribute, attributes|
           attributes[attribute.field] = object.send(attribute.name)
         end
+      end
+
+      def aliases
+        AliasSet.new(DataMapper::Inflector.singularize(relation.name), attributes)
       end
 
     end # class Relation

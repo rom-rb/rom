@@ -14,6 +14,9 @@ module DataMapper
       # @api private
       attr_reader :field
 
+      # @api private
+      attr_reader :options
+
       PRIMITIVES = Veritas::Attribute.descendants.map(&:primitive).freeze
 
       # @api public
@@ -31,9 +34,10 @@ module DataMapper
 
       # @api private
       def initialize(name, options = {})
-        @name  = name
-        @field = options.fetch(:to, @name)
-        @key   = options.fetch(:key, false)
+        @name    = name
+        @field   = options.fetch(:to, @name)
+        @key     = options.fetch(:key, false)
+        @options = options.dup.freeze
       end
 
       # @api public
@@ -58,7 +62,7 @@ module DataMapper
       end
 
       # @api private
-      def clone(options)
+      def clone(options = {})
         self.class.build(name, options.merge(:type => type))
       end
 

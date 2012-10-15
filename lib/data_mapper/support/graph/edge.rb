@@ -1,7 +1,5 @@
 class Graph
   class Edge
-    include Equalizer.new(:name)
-
     attr_reader :name
 
     attr_reader :left

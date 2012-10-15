@@ -32,22 +32,20 @@ module DataMapper
     def finalize_relation_registry
       @mappers.each do |mapper|
         mapper.relationships.each do |relationship|
-          unless Mapper.relation_registry.contains?(relationship)
-            RelationRegistry::Edge::Builder.build(relationship)
-          end
+          RelationRegistry::RelationConnector::Builder.call(
+            DataMapper.mapper_registry,
+            DataMapper.relation_registry,
+            relationship
+          )
         end
       end
     end
 
     def finalize_relationship_mappers
-      mapper_registry = Mapper.mapper_registry
-      Mapper.relation_registry.nodes.each do |node|
-        node.connectors.each do |name, connector|
-          unless mapper_registry.include?(connector.source_model, name)
-            mapper = Mapper::Builder.build(connector)
-            mapper_registry.register(mapper, name)
-          end
-        end
+      Mapper.relation_registry.edges.each do |connector|
+        Mapper.mapper_registry.register(
+          Mapper::Builder.call(connector), connector.relationship
+        )
       end
     end
   end # class Finalizer

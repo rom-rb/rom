@@ -55,9 +55,9 @@ describe 'Relationship - One To One with generated mapper' do
 
         has 1, :address, Address
 
-        has 1, :home_address, Address do
-          restrict { |r| r.addresses__city.eq('Krakow') }
-        end
+        #has 1, :home_address, Address do
+          #restrict { |r| r.address_city.eq('Krakow') }
+        #end
       end
     end
   end
@@ -80,7 +80,7 @@ describe 'Relationship - One To One with generated mapper' do
   end
 
   it 'loads associated object' do
-    user = user_mapper.include(:address).to_a.last
+    user    = user_mapper.include(:address).to_a.last
     address = user.address
 
     address.should be_instance_of(Address)
@@ -89,6 +89,8 @@ describe 'Relationship - One To One with generated mapper' do
   end
 
   it 'loads restricted association' do
+    pending
+
     user = user_mapper.include(:home_address).to_a.last
     address = user.home_address
 
@@ -98,7 +100,8 @@ describe 'Relationship - One To One with generated mapper' do
   end
 
   it 'finds users with matching address' do
-    users = user_mapper.include(:address).restrict { |r| r.addresses__city.eq('Krakow') }.to_a
+    user_address_mapper = user_mapper.include(:address)
+    users               = user_address_mapper.restrict { |r| r.address_city.eq('Krakow') }.to_a
 
     users.should have(1).item
 

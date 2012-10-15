@@ -49,7 +49,7 @@ module DataMapper
       end
 
       def default_target_key
-        foreign_key_name
+        @options.foreign_key_name(@target_model)
       end
     end # class OneToMany
   end # class Relationship

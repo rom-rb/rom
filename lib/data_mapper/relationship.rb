@@ -21,10 +21,10 @@ module DataMapper
       @name         = @options.name
       @via          = @options.via
       @operation    = @options.operation
-      @source_key   = @options.source_key
-      @target_key   = @options.target_key
       @source_model = @options.source_model
       @target_model = @options.target_model
+      @source_key   = @options.source_key || default_source_key
+      @target_key   = @options.target_key || default_target_key
 
       @hash = @name.hash ^ @source_model.hash
     end

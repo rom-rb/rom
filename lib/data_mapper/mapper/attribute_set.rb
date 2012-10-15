@@ -23,8 +23,12 @@ module DataMapper
 
         aliases.each do |name, field|
           attribute = for_field(name)
-          instance << attribute.clone(:to => field)
+          if attribute
+            instance << attribute.clone(:to => field)
+          end
         end
+
+        each { |attribute| instance << attribute.clone unless instance[attribute.name] }
 
         instance
       end
@@ -42,6 +46,11 @@ module DataMapper
       # @api private
       def add(*args)
         self << Attribute.build(*args)
+      end
+
+      # @api private
+      def includes?(attribute)
+        ! self[attribute.name].nil?
       end
 
       # @api private

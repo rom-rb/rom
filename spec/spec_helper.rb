@@ -1,3 +1,4 @@
+require 'ostruct'
 require 'dm-mapper'
 
 begin
@@ -22,7 +23,7 @@ RSpec.configure do |config|
   end
 
   def mock_mapper(model_class)
-    Class.new(DataMapper::Mapper::Relation) do
+    Class.new(DataMapper::Mapper::Relation::Base) do
       model      model_class
       repository DataMapper::Inflector.tableize(model_class.name)
 
@@ -32,9 +33,21 @@ RSpec.configure do |config|
     end
   end
 
+  def mock_relation(name, header = [])
+    Veritas::Relation::Base.new(name, header)
+  end
+
+  def mock_relationship(name, attributes = {})
+    OpenStruct.new({ :name => name }.merge(attributes))
+  end
+
   def clear_mocked_models
-    @_mocked_models.each { |name| Object.send(:remove_const, name) }
+    @_mocked_models.each do |name|
+      Object.send(:remove_const, name) if Object.const_defined?(name)
+    end
   end
 end
 
 Dir[File.expand_path('../shared/**/*.rb', __FILE__)].each { |file| require file }
+
+include DataMapper

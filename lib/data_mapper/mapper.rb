@@ -102,10 +102,16 @@ module DataMapper
       @relation_registry ||= RelationRegistry.new
     end
 
-    def self.register_relation(repository, relation)
-      adapter = DataMapper.adapters[repository]
+    def self.register_relation(repository, relation, attributes)
+      adapter          = DataMapper.adapters[repository]
       gateway_relation = Veritas::Relation::Gateway.new(adapter, relation)
-      relation_registry << gateway_relation
+
+      name     = relation.name
+      aliases  = AliasSet.new(DataMapper::Inflector.singularize(name), attributes)
+
+      relation_registry.new_node(name, gateway_relation, aliases)
+
+      gateway_relation
     end
 
     # @api public

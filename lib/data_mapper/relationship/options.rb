@@ -13,7 +13,7 @@ module DataMapper
       attr_reader :max
       attr_reader :operation
 
-      def initialize(name, source_model, target_model, options)
+      def initialize(name, source_model, target_model, options = {})
         @name         = name.to_sym
         @options      = options
         @via          = options[:through]
@@ -46,8 +46,6 @@ module DataMapper
       def validate
         validator_class.new(self).validate
       end
-
-      private
 
       def foreign_key_name(class_name)
         DataMapper::Inflector.foreign_key(class_name).to_sym
