@@ -52,8 +52,8 @@ describe 'Two PORO mappers' do
   end
 
   let(:operation) do
-    left  = DataMapper.relation_registry[:users]
-    right = DataMapper.relation_registry[:addresses].restrict { |r| r.city.eq('Boston') }
+    left  = DataMapper.relation_registry[:users].relation
+    right = DataMapper.relation_registry[:addresses].relation.restrict { |r| r.city.eq('Boston') }
 
     left.join(right)
   end
