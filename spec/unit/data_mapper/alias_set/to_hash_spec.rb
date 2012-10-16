@@ -10,5 +10,5 @@ describe AliasSet, '#to_hash' do
   let(:name)       { Mapper::Attribute.build(:name, :type => String, :to => :username) }
   let(:attributes) { Mapper::AttributeSet.new << id << name }
 
-  it { should eql(:username => :user_username) }
+  it { should eql(:id => :user_id, :username => :user_username) }
 end
