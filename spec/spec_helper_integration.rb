@@ -95,8 +95,8 @@ RSpec.configure do |config|
     DataMapper::Mapper.relation_registry.instance_variable_set(:@edges, Set.new)
 
     # explicitly defined mappers
-    User.send(:remove_const, :Mapper)                  if defined?(User::Mapper)
-    Address.send(:remove_const, :Mapper)               if defined?(Address::Mapper)
+    User.send(:remove_const, :Mapper)                  if User.const_get('Mapper')    rescue false
+    Address.send(:remove_const, :Mapper)               if Address.const_get('Mapper') rescue false
 
     Object.send(:remove_const, :UserMapper)            if defined?(UserMapper)
     Object.send(:remove_const, :OrderMapper)           if defined?(OrderMapper)
