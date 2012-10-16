@@ -28,10 +28,10 @@ describe Mapper::Builder, '#mapper' do
     )
   }
 
-  let(:source_attributes)   { [ Mapper::Attribute.build(:id, :type => Integer), Mapper::Attribute.build(:name, :type => String, :to => :username) ] }
+  let(:source_attributes)   { Mapper::AttributeSet.new << Mapper::Attribute.build(:id, :type => Integer) << Mapper::Attribute.build(:name, :type => String, :to => :username) }
   let(:source_mapper_class) { mock_mapper(source_model, source_attributes) }
 
-  let(:target_attributes)   { [ Mapper::Attribute.build(:id, :type => Integer), Mapper::Attribute.build(:user_id, :type => Integer), Mapper::Attribute.build(:product, :type => String) ] }
+  let(:target_attributes)   { Mapper::AttributeSet.new << Mapper::Attribute.build(:id, :type => Integer) << Mapper::Attribute.build(:user_id, :type => Integer) << Mapper::Attribute.build(:product, :type => String) }
   let(:target_mapper_class) { mock_mapper(target_model, target_attributes)}
 
   before do
@@ -71,7 +71,7 @@ describe Mapper::Builder, '#mapper' do
     let(:other_relation) { mock('other_relation') }
 
     let(:other_target_model)        { mock_model('UserOrderInfo')  }
-    let(:other_target_attributes)   { [ Mapper::Attribute.build(:user_id, :type => Integer), Mapper::Attribute.build(:order_id, :type => Integer) ] }
+    let(:other_target_attributes)   { Mapper::AttributeSet.new << Mapper::Attribute.build(:user_id, :type => Integer) << Mapper::Attribute.build(:order_id, :type => Integer) }
     let(:other_target_mapper_class) { mock_mapper(other_target_model, other_target_attributes) }
 
     let(:other_connector) {
