@@ -12,6 +12,13 @@ module DataMapper
         @attributes = {}
       end
 
+      def merge(other)
+        instance = self.class.new
+        each       { |attribute| instance << attribute.clone(:to => attribute.field) }
+        other.each { |attribute| instance << attribute.clone(:to => attribute.field) }
+        instance
+      end
+
       # @api public
       def finalize
         each { |attribute| attribute.finalize }

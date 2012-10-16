@@ -12,23 +12,23 @@ module DataMapper
         @aliases  = aliases || AliasSet.new(name)
       end
 
-      def join_via(relationship)
-        self.class.new(name, relation, aliases.exclude(relationship.target_key))
+      def for_relationship(relationship)
+        clone(aliases.merge(aliases_for_relationship(relationship)))
+      end
+
+      def clone(aliases = nil)
+        self.class.new(name, relation, aliases)
       end
 
       def join(other, relationship)
         relation.rename(aliases).join(other.relation_for_join(relationship)).optimize
       end
 
-      def key_aliases(relationship)
-        { relationship.source_key => relationship.target_key }
-      end
-
       def relation_for_join(relationship)
-        relation.rename(aliases_for_join(relationship)).optimize
+        relation.rename(aliases_for_relationship(relationship)).optimize
       end
 
-      def aliases_for_join(relationship)
+      def aliases_for_relationship(relationship)
         aliases.exclude(relationship.target_key)
       end
 

@@ -3,6 +3,12 @@ module DataMapper
     include Enumerable
     include Adamantium
 
+    attr_reader :prefix
+
+    attr_reader :attributes
+
+    attr_reader :excluded
+
     def initialize(prefix, attributes = [], excluded = [])
       @prefix     = prefix
       @attributes = attributes
@@ -17,11 +23,13 @@ module DataMapper
     end
 
     def exclude(*names)
-      self.class.new(@prefix, @attributes, @excluded.dup.concat(names))
+      self.class.new(prefix, attributes, excluded.dup.concat(names))
     end
 
     def merge(other)
-      to_hash.merge(other)
+      attributes = @attributes.merge(other.attributes)
+      excluded   = @excluded.dup.concat(other.excluded)
+      self.class.new(prefix, attributes, excluded)
     end
 
     def empty?

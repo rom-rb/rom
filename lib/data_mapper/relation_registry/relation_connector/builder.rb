@@ -11,7 +11,7 @@ module DataMapper
           left_node =
             if relationship.via
               via_relationship = left_mapper.relationships[relationship.via]
-              via_edge         = call(mappers, relations, via_relationship).join_via(relationship)
+              via_edge         = call(mappers, relations, via_relationship).for_relationship(relationship)
               name             = :"#{relationship.name}_#{via_relationship.name}"
 
               relations.new_node(name, via_edge.relation).nodes.to_a.last
@@ -21,7 +21,7 @@ module DataMapper
 
           right_node =
             if via_relationship
-              relations.node_for(right_mapper.relation).join_via(via_relationship)
+              relations.node_for(right_mapper.relation).for_relationship(via_relationship)
             else
               relations.node_for(right_mapper.relation)
             end

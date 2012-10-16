@@ -11,40 +11,40 @@ module DataMapper
       end
 
       def relation
-        @left.join(@right, @relationship)
+        left.join(right, relationship)
       end
 
-      def join_via(relationship)
-        aliases = target_aliases.exclude(relationship.target_key)
-        self.class.new(relationship, left, @right.class.new(@right.name, @right.relation, aliases))
+      def for_relationship(relationship)
+        aliases = right.aliases_for_relationship(relationship).merge(target_aliases)
+        self.class.new(relationship, left, right.clone(aliases))
       end
 
       def source_model
-        @relationship.source_model
+        relationship.source_model
       end
 
       def target_model
-        @relationship.target_model
-      end
-
-      def via?
-        ! @relationship.via.nil?
-      end
-
-      def via
-        @relationship.via
-      end
-
-      def collection_target?
-        @relationship.collection_target?
+        relationship.target_model
       end
 
       def source_aliases
-        @left.aliases
+        left.aliases
       end
 
       def target_aliases
-        @right.aliases.exclude(@relationship.target_key)
+        right.aliases_for_relationship(relationship)
+      end
+
+      def via?
+        ! relationship.via.nil?
+      end
+
+      def via
+        relationship.via
+      end
+
+      def collection_target?
+        relationship.collection_target?
       end
 
     end # class RelationConnector
