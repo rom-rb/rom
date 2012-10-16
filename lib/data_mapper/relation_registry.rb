@@ -4,27 +4,66 @@ module DataMapper
   #
   class RelationRegistry < Graph
 
+    # Return node class for this graph
+    #
+    # @return [Class]
+    #
+    # @api private
     def self.node_class
       RelationNode
     end
 
+    # Return edge class for this graph
+    #
+    # @return [Class]
+    #
+    # @api private
     def self.edge_class
       RelationConnector
     end
 
-    def new_node(*args)
-      add_node(self.class.node_class.new(*args))
+    # Add new relation node to the graph
+    #
+    # @param [String,Symbol,#to_sym] name
+    # @param [Veritas::Relation] relation
+    # @param [AliasSet,nil] aliases
+    #
+    # @return [self]
+    #
+    # @api private
+    def new_node(name, relation, aliases = nil)
+      add_node(self.class.node_class.new(name.to_sym, relation, aliases))
     end
 
+    # Add new relation node to the graph
+    #
+    # @param [Veritas::Relation] relation
+    #
+    # @return [self]
+    #
+    # @api private
     def <<(relation)
-      add_node(self.class.node_class.new(relation.name.to_sym, relation))
-      self
+      new_node(relation.name, relation)
     end
 
+    # Return relation node with the given name
+    #
+    # @param [Symbol] name of the relation
+    #
+    # @return [DataMapper::RelationRegistry::RelationNode]
+    #
+    # @api private
     def [](name)
       @nodes.detect { |node| node.name == name }
     end
 
+    # Return relation node for the given relation
+    #
+    # @param [Veritas::Relation] relation
+    #
+    # @return [DataMapper::RelationRegistry::RelationNode]
+    #
+    # @api private
     def node_for(relation)
       self[relation.name.to_sym]
     end
