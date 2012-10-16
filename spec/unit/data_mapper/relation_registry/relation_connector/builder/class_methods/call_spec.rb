@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe RelationRegistry::RelationConnector::Builder, '.call', type: :unit do
+describe RelationRegistry::RelationConnector::Builder, '.call', :type => :unit do
   subject { described_class.call(mappers, relations, relationship) }
 
   let(:parent_relation) { mock_relation(:users) }
