@@ -43,9 +43,9 @@ module DataMapper
 
     def finalize_relationship_mappers
       Mapper.relation_registry.edges.each do |connector|
-        Mapper.mapper_registry.register(
-          Mapper::Builder.call(connector), connector.relationship
-        )
+        source_mapper_class = Mapper.mapper_registry[connector.source_model].class
+        mapper              = Mapper::Builder.call(connector, source_mapper_class)
+        Mapper.mapper_registry.register(mapper, connector.relationship)
       end
     end
   end # class Finalizer

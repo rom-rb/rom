@@ -3,20 +3,20 @@ module DataMapper
 
     class Builder
 
-      def self.call(connector)
-        new(connector).build
+      def self.call(connector, source_mapper_class)
+        new(connector, source_mapper_class).mapper
       end
 
-      def initialize(connector)
+      def initialize(connector, source_mapper_class)
         @connector     = connector
         @source_model  = @connector.source_model
         @target_model  = @connector.target_model
-        @source_mapper = DataMapper[@source_model].class
+        @source_mapper = source_mapper_class
 
         @name = @connector.name
       end
 
-      def build
+      def mapper
         mapper_class.new(@connector.relation)
       end
 

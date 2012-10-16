@@ -22,8 +22,8 @@ RSpec.configure do |config|
     Object.const_set(type, Class.new(OpenStruct))
   end
 
-  def mock_mapper(model_class)
-    Class.new(DataMapper::Mapper::Relation::Base) do
+  def mock_mapper(model_class, attributes = [])
+    klass = Class.new(DataMapper::Mapper::Relation::Base) do
       model      model_class
       repository DataMapper::Inflector.tableize(model_class.name)
 
@@ -31,6 +31,12 @@ RSpec.configure do |config|
         "#{model.name}Mapper"
       end
     end
+
+    attributes.each do |attribute|
+      klass.attributes << attribute
+    end
+
+    klass
   end
 
   def mock_relation(name, header = [])
@@ -39,6 +45,10 @@ RSpec.configure do |config|
 
   def mock_relationship(name, attributes = {})
     OpenStruct.new({ :name => name }.merge(attributes))
+  end
+
+  def mock_connector(attributes)
+    OpenStruct.new(attributes)
   end
 
   def clear_mocked_models
