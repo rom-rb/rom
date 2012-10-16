@@ -1,7 +1,6 @@
 module DataMapper
   class AliasSet
     include Enumerable
-    include Adamantium
 
     attr_reader :prefix
 
