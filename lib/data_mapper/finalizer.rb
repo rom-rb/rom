@@ -45,6 +45,9 @@ module DataMapper
       Mapper.relation_registry.edges.each do |connector|
         source_mapper_class = Mapper.mapper_registry[connector.source_model].class
         mapper              = Mapper::Builder.call(connector, source_mapper_class)
+
+        next if Mapper.mapper_registry[connector.source_model, connector.relationship]
+
         Mapper.mapper_registry.register(mapper, connector.relationship)
       end
     end

@@ -51,12 +51,21 @@ module DataMapper
 
       def source_aliases
         if @connector.via?
-          via_connector = DataMapper.relation_registry.edges.detect { |connector|
-            connector.name == @connector.via
-          }
-          via_connector.source_aliases
+          determine_source_aliases(@connector)
         else
           @connector.source_aliases
+        end
+      end
+
+      def determine_source_aliases(connector)
+        via_connector = DataMapper.relation_registry.edges.detect { |current|
+          current.name == connector.via
+        }
+
+        if via_connector.via?
+          determine_source_aliases(via_connector)
+        else
+          via_connector.source_aliases
         end
       end
 

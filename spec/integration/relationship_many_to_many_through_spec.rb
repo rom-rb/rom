@@ -130,37 +130,44 @@ describe 'Relationship - Many To Many with generated mappers' do
     pending if RUBY_VERSION < '1.9'
 
     # TODO: make it work with the actual mapper
-    mapper = DataMapper[Song].include(:infos).relation
+    mapper = DataMapper[Song].include(:infos)
+
     songs = mapper.to_a
 
     songs.should have(2).items
 
     song1, song2 = songs
 
-    song1[:title].should eql('foo')
+    song1.title.should eql('foo')
 
-    song1[:info_text].should eql('really good')
+    song1.infos.should have(1).item
+    song1.infos.first.text.should eql('really good')
 
-    song2[:song_title].should eql('bar')
-    song1[:info_text].should eql('really bad')
+    song2.title.should eql('bar')
+
+    song2.infos.should have(1).item
+    song2.infos.first.text.should eql('really bad')
   end
 
   it 'loads associated tag info contents' do
     pending if RUBY_VERSION < '1.9'
 
     # TODO: make it work with the actual mapper
-    mapper = DataMapper[Song].include(:info_contents).relation
+    mapper = DataMapper[Song].include(:info_contents)
     songs = mapper.to_a
 
     songs.should have(2).items
 
     song1, song2 = songs
 
-    song1[:song_title].should eql('foo')
+    song1.title.should eql('foo')
 
-    song1[:info_content_content].should eql('really, really good')
+    song1.info_contents.should have(1).item
+    song1.info_contents.first.content.should eql('really, really good')
 
-    song2[:song_title].should eql('bar')
-    song2[:info_content_content].should eql('really, really bad')
+    song2.title.should eql('bar')
+
+    song2.info_contents.should have(1).item
+    song2.info_contents.first.content.should eql('really, really bad')
   end
 end
