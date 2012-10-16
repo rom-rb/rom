@@ -30,9 +30,10 @@ describe 'Relationship - One To One through with generated mappers' do
     class Song
       include DataMapper::Model
 
-      attribute :id,    Integer
-      attribute :title, String
-      attribute :tag,   Tag
+      attribute :id,       Integer
+      attribute :title,    String
+      attribute :tag,      Tag
+      attribute :good_tag, Tag
     end
 
     DataMapper.generate_mapper_for(Tag, :postgres) do
@@ -47,8 +48,16 @@ describe 'Relationship - One To One through with generated mappers' do
       key :id
 
       has 1, :song_tag, SongTag
-      # TODO debug
-      has 1, :tag, Tag, :through => :song_tag if RUBY_VERSION >= '1.9'
+
+      if RUBY_VERSION >= '1.9' # TODO debug
+
+        has 1, :tag, Tag, :through => :song_tag
+
+        has 1, :good_tag, Tag, :through => :song_tag do
+          restrict { |r| r.tag_name.eq('good') }
+        end
+
+      end
     end
   end
 
@@ -67,5 +76,19 @@ describe 'Relationship - One To One through with generated mappers' do
 
     song2.title.should eql('foo')
     song2.tag.name.should eql('bad')
+  end
+
+  it 'loads associated restricted tag' do
+    pending if RUBY_VERSION < '1.9'
+
+    mapper = DataMapper[Song].include(:tag)
+    songs = mapper.to_a
+
+    songs.should have(1).item
+
+    song = songs.first
+
+    song.title.should eql('bar')
+    song.good_tag.name.should eql('good')
   end
 end
