@@ -13,50 +13,67 @@ describe 'Relationship - One To One through with generated mappers' do
     insert_song_tag 1, 2, 1
     insert_song_tag 2, 1, 2
 
-    class Tag
-      include DataMapper::Model
+    class Song
+      attr_reader :id, :title, :song_tag, :tag, :good_tag
 
-      attribute :id,   Integer
-      attribute :name, String
+      def initialize(attributes)
+        @id, @title, @song_tag, @tag, @good_tag = attributes.values_at(
+          :id, :title, :song_tag, :tag, :good_tag
+        )
+      end
+    end
+
+    class Tag
+      attr_reader :id, :name
+
+      def initialize(attributes)
+        @id, @name = attributes.values_at(:id, :name)
+      end
     end
 
     class SongTag
-      include DataMapper::Model
+      attr_reader :song_id, :tag_id
 
-      attribute :song_id, Integer
-      attribute :tag_id,  Integer
+      def initialize(attributes)
+        @song_id, @tag_id = attributes.values_at(:song_id, :tag_id)
+      end
     end
 
-    class Song
-      include DataMapper::Model
+    class TagMapper < DataMapper::Mapper::Relation::Base
 
-      attribute :id,       Integer
-      attribute :title,    String
-      attribute :tag,      Tag
-      attribute :good_tag, Tag
+      model         Tag
+      relation_name :tags
+      repository    :postgres
+
+      map :id,   Integer, :key => true
+      map :name, String
     end
 
-    DataMapper.generate_mapper_for(Tag, :postgres) do
-      key :id
+    class SongTagMapper < DataMapper::Mapper::Relation::Base
+
+      model         SongTag
+      relation_name :song_tags
+      repository    :postgres
+
+      map :id,      Integer, :key => true
+      map :song_id, Integer
+      map :tag_id,  Integer
     end
 
-    DataMapper.generate_mapper_for(SongTag, :postgres) do
-      key :song_id, :tag_id
-    end
+    class SongMapper < DataMapper::Mapper::Relation::Base
+      model         Song
+      relation_name :songs
+      repository    :postgres
 
-    DataMapper.generate_mapper_for(Song, :postgres) do
-      key :id
+      map :id,    Integer, :key => true
+      map :title, String
 
       has 1, :song_tag, SongTag
 
-      if RUBY_VERSION >= '1.9' # TODO debug
+      has 1, :tag, Tag, :through => :song_tag, :target_key => :tag_id
 
-        has 1, :tag, Tag, :through => :song_tag
-
-        has 1, :good_tag, Tag, :through => :song_tag do
-          restrict { |r| r.tag_name.eq('good') }
-        end
-
+      has 1, :good_tag, Tag, :through => :tag do
+        restrict { |r| r.tag_name.eq('good') }
       end
     end
   end
@@ -81,7 +98,7 @@ describe 'Relationship - One To One through with generated mappers' do
   it 'loads associated restricted tag' do
     pending if RUBY_VERSION < '1.9'
 
-    mapper = DataMapper[Song].include(:tag)
+    mapper = DataMapper[Song].include(:good_tag)
     songs = mapper.to_a
 
     songs.should have(1).item

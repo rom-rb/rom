@@ -8,7 +8,7 @@ module DataMapper
 
     attr_reader :excluded
 
-    def initialize(prefix, attributes = [], excluded = [])
+    def initialize(prefix, attributes = Mapper::AttributeSet.new, excluded = [])
       @prefix     = prefix
       @attributes = attributes
       @excluded   = excluded
@@ -42,7 +42,7 @@ module DataMapper
     private
 
     def initialize_index(attributes)
-      @index = attributes.each_with_object({}) do |attribute, fields|
+      @index = attributes.primitives.each_with_object({}) do |attribute, fields|
         next if excluded?(attribute)
         field = attribute.field
         fields[field] = alias_for(field)
