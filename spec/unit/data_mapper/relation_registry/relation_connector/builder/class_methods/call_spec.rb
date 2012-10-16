@@ -1,9 +1,7 @@
 require 'spec_helper'
 
 describe RelationRegistry::RelationConnector::Builder, '.call', type: :unit do
-  subject { described_class.call(mappers, relations, relationship).edges }
-
-  let(:connector) { subject.first }
+  subject { described_class.call(mappers, relations, relationship) }
 
   let(:parent_relation) { mock_relation(:users) }
   let(:parent_model)    { mock_model('User') }
@@ -19,17 +17,17 @@ describe RelationRegistry::RelationConnector::Builder, '.call', type: :unit do
 
   let(:relations) { RelationRegistry.new << parent_relation << child_relation }
 
-  it { should have(1).item }
+  it { should be_kind_of(RelationRegistry::RelationConnector) }
 
   it "sets connector name" do
-    connector.name.should be(relationship.name)
+    subject.name.should be(relationship.name)
   end
 
   it "connects left side relation" do
-    connector.left.relation.should be(parent_relation)
+    subject.left.relation.should be(parent_relation)
   end
 
   it "connects right side relation" do
-    connector.right.relation.should be(child_relation)
+    subject.right.relation.should be(child_relation)
   end
 end
