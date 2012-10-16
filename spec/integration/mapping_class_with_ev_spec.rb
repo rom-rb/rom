@@ -58,8 +58,8 @@ describe 'PORO with an embedded value' do
   end
 
   let(:operation) do
-    left  = DataMapper.relation_registry[:users]
-    right = DataMapper.relation_registry[:addresses]
+    left  = DataMapper.relation_registry[:users].relation
+    right = DataMapper.relation_registry[:addresses].relation
 
     left.join(right).restrict { |r| r.id.eq(r.user_id) }
   end
