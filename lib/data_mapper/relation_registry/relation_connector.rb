@@ -5,13 +5,18 @@ module DataMapper
 
       attr_reader :relationship
 
-      def initialize(relationship, left, right)
+      attr_reader :operation
+
+      def initialize(relationship, left, right, operation = nil)
         super(relationship.name, left, right)
         @relationship = relationship
+        @operation    = operation
       end
 
       def relation
-        left.join(right, relationship)
+        join = left.join(right, relationship)
+        join = join.instance_eval(&operation) if operation
+        join
       end
 
       def for_relationship(relationship)
