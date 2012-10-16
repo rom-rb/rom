@@ -20,11 +20,11 @@ describe 'Relationship - Many To Many with generated mappers' do
     insert_song_tag 2, 2, 2
 
     class Song
-      attr_reader :id, :title, :tags, :infos, :info_contents
+      attr_reader :id, :title, :tags, :infos, :info_contents, :good_info_contents
 
       def initialize(attributes)
-        @id, @title, @tags, @infos, @info_contents = attributes.values_at(
-          :id, :title, :tags, :infos, :info_contents
+        @id, @title, @tags, @infos, @info_contents, @good_info_contents = attributes.values_at(
+          :id, :title, :tags, :infos, :info_contents, :good_info_contents
         )
       end
     end
@@ -122,6 +122,10 @@ describe 'Relationship - Many To Many with generated mappers' do
 
         has 0..n, :info_contents, InfoContent, :through => :infos
 
+        has 0..n, :good_info_contents, InfoContent, :through => :infos do
+          restrict { |r| r.info_content_content.eq('really, really good') }
+        end
+
       end
     end
   end
@@ -167,5 +171,21 @@ describe 'Relationship - Many To Many with generated mappers' do
 
     song2.info_contents.should have(1).item
     song2.info_contents.first.content.should eql('really, really bad')
+  end
+
+  it 'loads associated restricted tag info contents' do
+    pending if RUBY_VERSION < '1.9'
+
+    mapper = DataMapper[Song].include(:good_info_contents)
+    songs = mapper.to_a
+
+    songs.should have(1).item
+
+    song1 = songs.first
+
+    song1.title.should eql('foo')
+
+    song1.good_info_contents.should have(1).item
+    song1.good_info_contents.first.content.should eql('really, really good')
   end
 end
