@@ -17,7 +17,7 @@ module DataMapper
     end
 
     def <<(relation)
-      add_node(self.class.node_class.new(relation.name, relation))
+      add_node(self.class.node_class.new(relation.name.to_sym, relation))
       self
     end
 
@@ -26,7 +26,7 @@ module DataMapper
     end
 
     def node_for(relation)
-      self[relation.name]
+      self[relation.name.to_sym]
     end
 
   end # class RelationRegistry

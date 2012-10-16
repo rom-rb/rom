@@ -28,7 +28,7 @@ RSpec.configure do |config|
       repository DataMapper::Inflector.tableize(model_class.name)
 
       def self.name
-        "#{model_class.name}Mapper"
+        "#{model.name}Mapper"
       end
     end
   end

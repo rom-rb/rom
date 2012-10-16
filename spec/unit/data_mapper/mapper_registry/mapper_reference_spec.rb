@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe DataMapper::MapperRegistry, '#[]' do
+describe DataMapper::MapperRegistry, '#[]', :type => :unit do
   subject { registry[model] }
 
   let(:model)    { mock_model('TestModel') }
