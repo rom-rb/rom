@@ -181,11 +181,11 @@ describe 'Relationship - Many To Many with generated mappers' do
 
     songs.should have(1).item
 
-    song1 = songs.first
+    song = songs.first
 
-    song1.title.should eql('foo')
+    song.title.should eql('foo')
 
-    song1.good_info_contents.should have(1).item
-    song1.good_info_contents.first.content.should eql('really, really good')
+    song.good_info_contents.should have(1).item
+    song.good_info_contents.first.content.should eql('really, really good')
   end
 end
