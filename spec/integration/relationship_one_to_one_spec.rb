@@ -55,9 +55,9 @@ describe 'Relationship - One To One with generated mapper' do
 
         has 1, :address, Address
 
-        #has 1, :home_address, Address do
-          #restrict { |r| r.address_city.eq('Krakow') }
-        #end
+        has 1, :home_address, Address do
+          restrict { |r| r.address_city.eq('Krakow') }
+        end
       end
     end
   end
@@ -89,7 +89,6 @@ describe 'Relationship - One To One with generated mapper' do
   end
 
   it 'loads restricted association' do
-    pending
 
     user = user_mapper.include(:home_address).to_a.last
     address = user.home_address
