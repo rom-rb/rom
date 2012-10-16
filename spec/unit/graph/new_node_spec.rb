@@ -5,7 +5,7 @@ describe Graph, '#add_node' do
 
   let(:object) { described_class.new }
   let(:name)   { 'node 1' }
-  let(:node)   { mock('node', name: name) }
+  let(:node)   { mock('node', :name => name) }
 
   before do
     Graph::Node.should_receive(:new).with(name).and_return(node)
