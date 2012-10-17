@@ -27,7 +27,7 @@ module DataMapper
       end
 
       def self.relation
-        @relation ||= Veritas::Relation::Empty.new(attributes.header)
+        nil # overwrite this for mappers with custom relations
       end
 
       # @api private

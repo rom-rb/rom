@@ -35,7 +35,7 @@ describe Mapper::Builder, '#mapper' do
   let(:target_mapper_class) { mock_mapper(target_model, target_attributes)}
 
   before do
-    DataMapper.mapper_registry << target_mapper_class.new
+    DataMapper.mapper_registry << target_mapper_class.new(relation)
   end
 
   context "when connector is not via other" do
@@ -88,7 +88,7 @@ describe Mapper::Builder, '#mapper' do
     }
 
     before do
-      DataMapper.mapper_registry << other_target_mapper_class.new
+      DataMapper.mapper_registry << other_target_mapper_class.new(other_relation)
       DataMapper.relation_registry.edges << other_connector
     end
 

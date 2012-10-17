@@ -4,7 +4,8 @@ describe DataMapper::MapperRegistry, '#[]', :type => :unit do
   subject { registry[model] }
 
   let(:model)    { mock_model('TestModel') }
-  let(:mapper)   { mock_mapper(model).new  }
+  let(:relation) { mock('relation') }
+  let(:mapper)   { mock_mapper(model).new(relation)  }
   let(:registry) { described_class.new     }
 
   before { registry << mapper }
