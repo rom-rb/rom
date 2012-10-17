@@ -29,7 +29,7 @@ module DataMapper
         end
 
         def self.aliases
-          @aliases ||= AliasSet.new(DataMapper::Inflector.singularize(relation_name), attributes)
+          @aliases ||= AliasSet.new(Inflector.singularize(relation_name), attributes)
         end
 
         def self.finalize

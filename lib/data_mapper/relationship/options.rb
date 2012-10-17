@@ -48,7 +48,7 @@ module DataMapper
       end
 
       def foreign_key_name(class_name)
-        DataMapper::Inflector.foreign_key(class_name).to_sym
+        Inflector.foreign_key(class_name).to_sym
       end
 
       # @api private

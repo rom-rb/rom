@@ -54,12 +54,14 @@ require 'veritas-optimizer'
 
 require 'descendants_tracker'
 require 'equalizer'
+
+require 'inflector'
+# TODO remove this once inflector includes it
+require 'data_mapper/support/inflections'
+
 require 'data_mapper/support/graph'
 
 require 'data_mapper/support/utils'
-require 'data_mapper/support/inflector/inflections'
-require 'data_mapper/support/inflector/methods'
-require 'data_mapper/support/inflections'
 
 require 'data_mapper/alias_set'
 

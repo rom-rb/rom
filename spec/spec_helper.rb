@@ -24,9 +24,9 @@ RSpec.configure do |config|
 
   def mock_mapper(model_class, attributes = [])
     klass = Class.new(DataMapper::Mapper::Relation::Base) do
-      model      model_class
-      repository DataMapper::Inflector.tableize(model_class.name)
-      relation_name DataMapper::Inflector.tableize(model_class.name)
+      model         model_class
+      repository    Inflector.tableize(model_class.name)
+      relation_name Inflector.tableize(model_class.name)
 
       def self.name
         "#{model.name}Mapper"
