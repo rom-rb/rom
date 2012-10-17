@@ -19,7 +19,7 @@ module DataMapper
         join
       end
 
-      def for_relationship(relationship)
+      def aliased_for(relationship)
         aliases = right.aliases_for_relationship(relationship).merge(target_aliases)
         self.class.new(relationship, left, right.clone_for(relationship, aliases))
       end

@@ -40,7 +40,7 @@ module DataMapper
         self.class.new(name, relation.sort_by(&block), aliases)
       end
 
-      def for_relationship(relationship)
+      def aliased_for(relationship)
         clone_for(relationship, aliases.merge(aliases_for_relationship(relationship)))
       end
 

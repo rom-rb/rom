@@ -17,7 +17,7 @@ module DataMapper
                 if relations[via_name]
                   relations[via_name]
                 else
-                  call(mappers, relations, via_relationship).for_relationship(relationship)
+                  call(mappers, relations, via_relationship).aliased_for(relationship)
                 end.relation
 
               relations.build_node(via_name, via_relation)
@@ -27,7 +27,7 @@ module DataMapper
 
           right_node =
             if via_relationship
-              relations.node_for(right_mapper.relation).for_relationship(via_relationship)
+              relations.node_for(right_mapper.relation).aliased_for(via_relationship)
             else
               relations.node_for(right_mapper.relation)
             end

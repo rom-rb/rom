@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe RelationRegistry::RelationConnector, '#for_relationship' do
-  subject { object.for_relationship(via_relationship) }
+describe RelationRegistry::RelationConnector, '#aliased_for' do
+  subject { object.aliased_for(via_relationship) }
 
   let(:object) { described_class.new(relationship, songs_node, song_tags_node) }
 
