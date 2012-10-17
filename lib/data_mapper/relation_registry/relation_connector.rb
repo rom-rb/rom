@@ -14,7 +14,7 @@ module DataMapper
       end
 
       def relation
-        join = left.join(right, relationship)
+        join = left.join(right.relation_for_join(relationship))
         join = join.instance_eval(&operation) if operation
         join
       end

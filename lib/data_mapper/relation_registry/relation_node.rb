@@ -20,8 +20,8 @@ module DataMapper
         self.class.new(name, relation, aliases)
       end
 
-      def join(other, relationship)
-        relation.rename(aliases).join(other.relation_for_join(relationship)).optimize
+      def join(other)
+        relation.rename(aliases).join(other).optimize
       end
 
       def relation_for_join(relationship)
