@@ -62,7 +62,7 @@ describe RelationRegistry::RelationConnector::Builder, '.call', :type => :unit d
     }
 
     let(:tags_node) {
-      registry[:tags]
+      registry[:tags_song_tags]
     }
 
     before do

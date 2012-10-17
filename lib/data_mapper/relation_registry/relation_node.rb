@@ -13,11 +13,11 @@ module DataMapper
       end
 
       def for_relationship(relationship)
-        clone(aliases.merge(aliases_for_relationship(relationship)))
+        clone_for(relationship, aliases.merge(aliases_for_relationship(relationship)))
       end
 
-      def clone(aliases = nil)
-        self.class.new(name, relation, aliases)
+      def clone_for(relationship, aliases = nil)
+        self.class.new(:"#{name}_#{relationship.name}", relation, aliases)
       end
 
       def join(other)

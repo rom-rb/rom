@@ -36,6 +36,8 @@ module DataMapper
             raise ArgumentError, "Missing left and/or right nodes for #{relationship.inspect}"
           end
 
+          relations.add_node(right_node) unless relations[right_node.name]
+
           relations.new_edge(
             relationship, left_node, right_node, relationship.operation
           ).edges.to_a.last
