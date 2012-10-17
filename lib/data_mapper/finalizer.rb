@@ -17,6 +17,8 @@ module DataMapper
       @mapper_registry   = Mapper.mapper_registry
       @connector_builder = RelationRegistry::RelationConnector::Builder
       @mapper_builder    = Mapper::Builder
+
+      @base_relation_mappers = @mappers.select { |mapper| mapper.respond_to?(:relation_name) }
     end
 
     def run
@@ -34,16 +36,17 @@ module DataMapper
     end
 
     def finalize_relation_registry
-      mappers.each do |mapper|
-        next unless mapper.relation.respond_to?(:name) # FIXME: wtf, why do we have empty relations here?
+      @base_relation_mappers.each do |mapper|
+        name     = mapper.relation.name
+        relation = mapper.gateway_relation
+        aliases  = mapper.aliases
 
-        relation_registry.new_node(
-          mapper.relation.name, mapper.gateway_relation, mapper.aliases)
+        relation_registry.new_node(name, relation, aliases)
 
         mapper.finalize
       end
 
-      mappers.each do |mapper|
+      @base_relation_mappers.each do |mapper|
         mapper.relationships.each do |relationship|
           connector_builder.call(mapper_registry, relation_registry, relationship)
         end
