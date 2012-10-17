@@ -22,7 +22,7 @@ module DataMapper
     end
 
     def run
-      finalize_relation_registry
+      finalize_base_relation_mappers
       finalize_attribute_mappers
       finalize_relationship_mappers
 
@@ -35,7 +35,7 @@ module DataMapper
       mappers.each { |mapper| mapper.finalize_attributes }
     end
 
-    def finalize_relation_registry
+    def finalize_base_relation_mappers
       @base_relation_mappers.each do |mapper|
         name     = mapper.relation.name
         relation = mapper.gateway_relation
