@@ -28,6 +28,10 @@ module DataMapper
           )
         end
 
+        def self.aliases
+          @aliases ||= AliasSet.new(DataMapper::Inflector.singularize(relation_name), attributes)
+        end
+
         def self.finalize
           Mapper.mapper_registry << new(Mapper.relation_registry.node_for(relation_gateway))
         end

@@ -110,10 +110,6 @@ module DataMapper
       @adapter ||= DataMapper.adapters[repository]
     end
 
-    def self.aliases
-      AliasSet.new(DataMapper::Inflector.singularize(relation.name), attributes)
-    end
-
     def self.relation_gateway
       @relation_gateway ||= Veritas::Relation::Gateway.new(adapter, relation)
     end

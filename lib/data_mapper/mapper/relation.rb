@@ -134,10 +134,6 @@ module DataMapper
         end
       end
 
-      def aliases
-        AliasSet.new(DataMapper::Inflector.singularize(relation.name), attributes)
-      end
-
     end # class Relation
   end # class Mapper
 end # module DataMapper
