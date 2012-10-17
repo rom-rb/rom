@@ -38,7 +38,7 @@ module DataMapper
         next unless mapper.relation.respond_to?(:name) # FIXME: wtf, why do we have empty relations here?
 
         relation_registry.new_node(
-          mapper.relation.name, mapper.relation_gateway, mapper.aliases)
+          mapper.relation.name, mapper.gateway_relation, mapper.aliases)
 
         mapper.finalize
       end
