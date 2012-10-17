@@ -39,11 +39,14 @@ module DataMapper
           relations.add_node(left_node)  unless relations[left_node.name]
           relations.add_node(right_node) unless relations[right_node.name]
 
-          connector = relations.build_edge(
-            relationship, left_node, right_node, relationship.operation
-          )
+          connector = relations.edges.detect { |e| e.name == relationship.name }
 
-          relations.add_edge(connector)
+          unless connector
+            connector = relations.build_edge(
+              relationship, left_node, right_node, relationship.operation
+            )
+            relations.add_edge(connector)
+          end
 
           connector
         end
