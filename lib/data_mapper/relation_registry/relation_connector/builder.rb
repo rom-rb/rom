@@ -20,7 +20,7 @@ module DataMapper
                   call(mappers, relations, via_relationship).for_relationship(relationship)
                 end.relation
 
-              relations.new_node(via_name, via_relation).nodes.to_a.last
+              relations.build_node(via_name, via_relation)
             else
               relations.node_for(left_mapper.relation)
             end
@@ -36,11 +36,16 @@ module DataMapper
             raise ArgumentError, "Missing left and/or right nodes for #{relationship.inspect}"
           end
 
+          relations.add_node(left_node)  unless relations[left_node.name]
           relations.add_node(right_node) unless relations[right_node.name]
 
-          relations.new_edge(
+          connector = relations.build_edge(
             relationship, left_node, right_node, relationship.operation
-          ).edges.to_a.last
+          )
+
+          relations.add_edge(connector)
+
+          connector
         end
 
       end # class Builder

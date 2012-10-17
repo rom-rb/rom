@@ -24,15 +24,44 @@ module DataMapper
 
     # Add new relation node to the graph
     #
+    # @return [self]
+    #
+    # @api private
+    def new_node(*args)
+      add_node(build_node(*args))
+    end
+
+    # Build a new node
+    #
     # @param [String,Symbol,#to_sym] name
+    #
     # @param [Veritas::Relation] relation
+    #
     # @param [AliasSet,nil] aliases
+    #
+    # @return [RelationRegistry::RelationNode]
+    #
+    # @api private
+    def build_node(name, relation, aliases = nil)
+      self.class.node_class.new(name.to_sym, relation, aliases)
+    end
+
+    # Add new relation connector to the graph
     #
     # @return [self]
     #
     # @api private
-    def new_node(name, relation, aliases = nil)
-      add_node(self.class.node_class.new(name.to_sym, relation, aliases))
+    def new_edge(*args)
+      add_edge(build_edge(*args))
+    end
+
+    # Build a new edge
+    #
+    # @return [RelationRegistry::RelationConnector]
+    #
+    # @api private
+    def build_edge(*args)
+      self.class.edge_class.new(*args)
     end
 
     # Add new relation node to the graph
