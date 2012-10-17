@@ -104,6 +104,8 @@ describe 'Relationship - Many To Many with generated mappers' do
   end
 
   it 'loads associated tags' do
+    pending if RUBY_VERSION < '1.9'
+
     mapper = DataMapper[Song].include(:tags)
     songs = mapper.to_a
 
@@ -121,6 +123,8 @@ describe 'Relationship - Many To Many with generated mappers' do
   end
 
   it 'loads associated tags with name = good' do
+    pending if RUBY_VERSION < '1.9'
+
     mapper = DataMapper[Song]
     songs = mapper.include(:good_tags).to_a
 
