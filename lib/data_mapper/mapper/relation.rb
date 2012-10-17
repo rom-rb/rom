@@ -27,7 +27,7 @@ module DataMapper
       end
 
       def self.relation
-        nil # overwrite this for mappers with custom relations
+        raise NotImplementedError, "#{self}.#{__method__} must be implemented"
       end
 
       # @api private
