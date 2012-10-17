@@ -20,12 +20,12 @@ class Graph
     @nodes = Set.new
   end
 
-  def new_node(name)
-    add_node(self.class.node_class.new(name))
+  def new_node(*args)
+    add_node(self.class.node_class.new(*args))
   end
 
-  def new_edge(name, left, right)
-    add_edge(self.class.edge_class.new(name, left, right))
+  def new_edge(*args)
+    add_edge(self.class.edge_class.new(*args))
     self
   end
 

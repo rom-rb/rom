@@ -51,6 +51,16 @@ RSpec.configure do |config|
     OpenStruct.new(attributes)
   end
 
+  def mock_alias_set(prefix, attributes)
+    attribute_set = Mapper::AttributeSet.new
+
+    attributes.each do |name, type|
+      attribute_set << Mapper::Attribute.build(name, :type => type)
+    end
+
+    AliasSet.new(prefix, attribute_set)
+  end
+
   def clear_mocked_models
     @_mocked_models.each do |name|
       Object.send(:remove_const, name) if Object.const_defined?(name)

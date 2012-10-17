@@ -35,16 +35,6 @@ module DataMapper
       add_node(self.class.node_class.new(name.to_sym, relation, aliases))
     end
 
-    # Add a new edge (relation connector) to the graph
-    #
-    # @return [self]
-    #
-    # @api private
-    def new_edge(*args)
-      @edges << self.class.edge_class.new(*args)
-      self
-    end
-
     # Add new relation node to the graph
     #
     # @param [Veritas::Relation] relation
