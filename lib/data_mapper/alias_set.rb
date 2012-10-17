@@ -31,10 +31,6 @@ module DataMapper
       self.class.new(prefix, attributes, excluded)
     end
 
-    def empty?
-      @index.keys.any?
-    end
-
     def to_hash
       @index
     end
