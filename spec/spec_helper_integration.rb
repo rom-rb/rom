@@ -90,10 +90,6 @@ Dir[File.expand_path('../**/shared/**/*.rb', __FILE__)].each { |file| require fi
 RSpec.configure do |config|
   config.before(:all) do
 
-    DataMapper::Mapper.mapper_registry.instance_variable_set(:@_mappers, {})
-    DataMapper::Mapper.relation_registry.instance_variable_set(:@nodes, Set.new)
-    DataMapper::Mapper.relation_registry.instance_variable_set(:@edges, Set.new)
-
     # explicitly defined mappers
     User.send(:remove_const, :Mapper)                  if User.const_get('Mapper')    rescue false
     Address.send(:remove_const, :Mapper)               if Address.const_get('Mapper') rescue false
@@ -122,6 +118,10 @@ RSpec.configure do |config|
   end
 
   config.before do
+    DataMapper::Mapper.mapper_registry.instance_variable_set(:@_mappers, {})
+    DataMapper::Mapper.relation_registry.instance_variable_set(:@nodes, Set.new)
+    DataMapper::Mapper.relation_registry.instance_variable_set(:@edges, Set.new)
+
     DataMapper.finalize
   end
 end
