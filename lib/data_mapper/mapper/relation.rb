@@ -67,7 +67,7 @@ module DataMapper
       # @api public
       def find(options)
         restriction = @relation.restrict(Query.new(options, @attributes))
-        self.class.new(restriction.optimize)
+        self.class.new(restriction)
       end
 
       # @api public

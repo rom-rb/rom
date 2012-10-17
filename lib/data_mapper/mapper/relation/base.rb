@@ -29,7 +29,7 @@ module DataMapper
         end
 
         def self.finalize
-          Mapper.mapper_registry << new(relation_gateway)
+          Mapper.mapper_registry << new(Mapper.relation_registry.node_for(relation_gateway))
         end
 
         def self.key(*names)
