@@ -10,8 +10,8 @@ describe 'Relationship - Many To Many with generated mappers' do
     insert_tag 1, 'good'
     insert_tag 2, 'bad'
 
-    insert_song_tag 1, 2, 1
-    insert_song_tag 2, 1, 2
+    insert_song_tag 1, 1, 1
+    insert_song_tag 2, 2, 2
 
     class Song
       attr_reader :id, :title, :song_tags, :tags, :good_tags
@@ -69,22 +69,15 @@ describe 'Relationship - Many To Many with generated mappers' do
 
       has 0..n, :song_tags, SongTag
 
-      # TODO debug
-      if RUBY_VERSION >= '1.9'
+      has 0..n, :tags, Tag, :through => :song_tags
 
-        has 0..n, :tags, Tag, :through => :song_tags
-
-        has 0..n, :good_tags, Tag, :through => :song_tags do
-          restrict { |r| r.tag_name.eq('good') }
-        end
-
+      has 0..n, :good_tags, Tag, :through => :song_tags do
+        restrict { |r| r.tag_name.eq('good') }
       end
     end
   end
 
   it 'loads associated song_tags' do
-    pending if RUBY_VERSION < '1.9'
-
     mapper = DataMapper[Song].include(:song_tags)
     songs  = mapper.to_a
 
@@ -92,20 +85,18 @@ describe 'Relationship - Many To Many with generated mappers' do
 
     song1, song2 = songs
 
-    song1.title.should eql('bar')
+    song1.title.should eql('foo')
     song1.song_tags.should have(1).item
     song1.song_tags.first.song_id.should eql(song1.id)
     song1.song_tags.first.tag_id.should eql(1)
 
-    song2.title.should eql('foo')
+    song2.title.should eql('bar')
     song2.song_tags.should have(1).item
     song2.song_tags.first.song_id.should eql(song2.id)
     song2.song_tags.first.tag_id.should eql(2)
   end
 
   it 'loads associated tags' do
-    pending if RUBY_VERSION < '1.9'
-
     mapper = DataMapper[Song].include(:tags)
     songs = mapper.to_a
 
@@ -113,18 +104,16 @@ describe 'Relationship - Many To Many with generated mappers' do
 
     song1, song2 = songs
 
-    song1.title.should eql('bar')
+    song1.title.should eql('foo')
     song1.tags.should have(1).item
     song1.tags.first.name.should eql('good')
 
-    song2.title.should eql('foo')
+    song2.title.should eql('bar')
     song2.tags.should have(1).item
     song2.tags.first.name.should eql('bad')
   end
 
   it 'loads associated tags with name = good' do
-    pending if RUBY_VERSION < '1.9'
-
     mapper = DataMapper[Song]
     songs = mapper.include(:good_tags).to_a
 
@@ -132,7 +121,7 @@ describe 'Relationship - Many To Many with generated mappers' do
 
     song = songs.first
 
-    song.title.should eql('bar')
+    song.title.should eql('foo')
     song.good_tags.should have(1).item
     song.good_tags.first.name.should eql('good')
   end
