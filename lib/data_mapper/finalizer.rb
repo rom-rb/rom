@@ -31,10 +31,6 @@ module DataMapper
 
     private
 
-    def finalize_attribute_mappers
-      mappers.each { |mapper| mapper.finalize_attributes }
-    end
-
     def finalize_base_relation_mappers
       @base_relation_mappers.each do |mapper|
         name     = mapper.relation.name
@@ -51,6 +47,10 @@ module DataMapper
           connector_builder.call(mapper_registry, relation_registry, relationship)
         end
       end
+    end
+
+    def finalize_attribute_mappers
+      mappers.each { |mapper| mapper.finalize_attributes }
     end
 
     def finalize_relationship_mappers
