@@ -20,7 +20,7 @@ module DataMapper
       end
 
       def aliased_for(relationship)
-        aliases = right.aliases_for_relationship(relationship).merge(target_aliases)
+        aliases = right.aliases_for(relationship).merge(target_aliases)
         self.class.new(relationship, left, right.clone_for(relationship, aliases))
       end
 
@@ -37,7 +37,7 @@ module DataMapper
       end
 
       def target_aliases
-        right.aliases_for_relationship(relationship)
+        right.aliases_for(relationship)
       end
 
       def via?

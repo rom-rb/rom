@@ -41,10 +41,10 @@ module DataMapper
       end
 
       def aliased_for(relationship)
-        clone_for(relationship, aliases.merge(aliases_for_relationship(relationship)))
+        clone_for(relationship, aliases.merge(aliases_for(relationship)))
       end
 
-      def aliases_for_relationship(relationship)
+      def aliases_for(relationship)
         aliases.exclude(relationship.target_key)
       end
 
@@ -53,7 +53,7 @@ module DataMapper
       end
 
       def relation_for_join(relationship)
-        relation.rename(aliases_for_relationship(relationship))
+        relation.rename(aliases_for(relationship))
       end
 
     end # class RelationNode
