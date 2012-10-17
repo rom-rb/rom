@@ -82,6 +82,10 @@ module DataMapper
       mapper_registry[model]
     end
 
+    def self.relation
+      raise NotImplementedError, "#{self.class}.relation must be implemented"
+    end
+
     # @api private
     def self.attributes
       @attributes ||= AttributeSet.new
@@ -102,16 +106,16 @@ module DataMapper
       @relation_registry ||= RelationRegistry.new
     end
 
-    def self.register_relation(repository, relation, attributes)
-      adapter          = DataMapper.adapters[repository]
-      gateway_relation = Veritas::Relation::Gateway.new(adapter, relation)
+    def self.adapter
+      @adapter ||= DataMapper.adapters[repository]
+    end
 
-      name     = relation.name
-      aliases  = AliasSet.new(DataMapper::Inflector.singularize(name), attributes)
+    def self.aliases
+      AliasSet.new(DataMapper::Inflector.singularize(relation.name), attributes)
+    end
 
-      relation_registry.new_node(name, gateway_relation, aliases)
-
-      gateway_relation
+    def self.relation_gateway
+      @relation_gateway ||= Veritas::Relation::Gateway.new(adapter, relation)
     end
 
     # @api public

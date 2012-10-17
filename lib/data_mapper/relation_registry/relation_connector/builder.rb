@@ -33,7 +33,7 @@ module DataMapper
             end
 
           unless left_node && right_node
-            raise ArgumentError, "Missing left and/or right nodes for #{relationship.inspect}"
+            raise ArgumentError, "Missing left and/or right nodes for #{relationship.name} left: #{left_node.inspect} right: #{right_node.inspect}"
           end
 
           relations.add_node(left_node)  unless relations[left_node.name]

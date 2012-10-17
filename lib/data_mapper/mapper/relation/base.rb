@@ -29,8 +29,7 @@ module DataMapper
         end
 
         def self.finalize
-          gateway_relation = Mapper.register_relation(repository, relation, attributes)
-          Mapper.mapper_registry << new(gateway_relation)
+          Mapper.mapper_registry << new(relation_gateway)
         end
 
         def self.key(*names)
