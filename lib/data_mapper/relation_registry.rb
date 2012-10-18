@@ -23,6 +23,7 @@ module DataMapper
 
     # @api private
     def freeze
+      super
       @edges.freeze
       @nodes.freeze
       @connectors.freeze
