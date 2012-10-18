@@ -12,7 +12,7 @@ module DataMapper
 
       # @api private
       def relation_node_class
-        RelationRegistry::RelationNode
+        RelationRegistry::RelationNode::VeritasRelation
       end
 
       # @api private

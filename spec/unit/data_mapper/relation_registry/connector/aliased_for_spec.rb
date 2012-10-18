@@ -10,9 +10,9 @@ describe RelationRegistry::Connector, '#aliased_for' do
 
   let(:song_tags_aliases) { mock_alias_set(:song_tag, :tag_id => Integer) }
 
-  let(:songs_node)     { RelationRegistry::RelationNode.new(songs.name, songs) }
-  let(:song_tags_node) { RelationRegistry::RelationNode.new(song_tags.name, song_tags, song_tags_aliases) }
-  let(:edge)           { RelationRegistry::RelationEdge.new(:song_song_tags, songs_node, song_tags_node) }
+  let(:songs_node)     { TEST_ENGINE.relation_node_class.new(songs.name, songs) }
+  let(:song_tags_node) { TEST_ENGINE.relation_node_class.new(song_tags.name, song_tags, song_tags_aliases) }
+  let(:edge)           { TEST_ENGINE.relation_edge_class.new(:song_song_tags, songs_node, song_tags_node) }
 
   let(:relationship)     { mock_relationship(:song_tags, :source_key => :id, :target_key => :song_id) }
   let(:via_relationship) { mock_relationship(:tags,      :source_key => :id, :target_key => :tag_id) }
