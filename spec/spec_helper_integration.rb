@@ -72,7 +72,12 @@ RSpec.configure do |config|
       engine.instance_variable_set(:@relations, engine.relations.reset)
     end
 
+    DataMapper::Mapper.descendants.each do |mapper|
+      mapper.instance_variable_set(:@relations, nil)
+    end
+
     DataMapper.mapper_registry.instance_variable_set(:@mappers, {})
+
     DataMapper.finalize
   end
 end

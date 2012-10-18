@@ -21,6 +21,13 @@ module DataMapper
       self.class.new(engine)
     end
 
+    # @api private
+    def freeze
+      @edges.freeze
+      @nodes.freeze
+      @connectors.freeze
+    end
+
     # Add new relation node to the graph
     #
     # @return [self]
