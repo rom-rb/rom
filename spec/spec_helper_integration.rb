@@ -71,6 +71,7 @@ RSpec.configure do |config|
     DataMapper::Mapper.mapper_registry.instance_variable_set(:@_mappers, {})
     DataMapper::Mapper.relation_registry.instance_variable_set(:@nodes, Set.new)
     DataMapper::Mapper.relation_registry.instance_variable_set(:@edges, Set.new)
+    DataMapper::Mapper.relation_registry.instance_variable_set(:@connectors, {})
 
     DataMapper.finalize
   end
