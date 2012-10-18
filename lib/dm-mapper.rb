@@ -67,8 +67,9 @@ require 'data_mapper/alias_set'
 
 require 'data_mapper/relation_registry'
 require 'data_mapper/relation_registry/relation_node'
-require 'data_mapper/relation_registry/relation_connector'
-require 'data_mapper/relation_registry/relation_connector/builder'
+require 'data_mapper/relation_registry/relation_edge'
+require 'data_mapper/relation_registry/connector'
+require 'data_mapper/relation_registry/connector/builder'
 
 require 'data_mapper/mapper_registry'
 

@@ -15,7 +15,7 @@ module DataMapper
       @mappers           = mappers
       @relation_registry = Mapper.relation_registry
       @mapper_registry   = Mapper.mapper_registry
-      @connector_builder = RelationRegistry::RelationConnector::Builder
+      @connector_builder = RelationRegistry::Connector::Builder
       @mapper_builder    = Mapper::Builder
 
       @base_relation_mappers = @mappers.select { |mapper| mapper.respond_to?(:relation_name) }
@@ -54,7 +54,8 @@ module DataMapper
     end
 
     def finalize_relationship_mappers
-      relation_registry.edges.each do |connector|
+      relation_registry.edges.each do |edge|
+        connector           = relation_registry.connectors[edge.name]
         source_mapper_class = mapper_registry[connector.source_model].class
         mapper              = mapper_builder.call(connector, source_mapper_class)
 

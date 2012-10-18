@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe RelationRegistry::RelationConnector::Builder, '.call', :type => :unit do
+describe RelationRegistry::Connector::Builder, '.call', :type => :unit do
   let(:songs_relation) { mock_relation(:songs) }
   let(:song_model)     { mock_model('Song') }
   let(:song_mapper)    { mock_mapper(song_model).new(songs_relation) }
@@ -39,18 +39,18 @@ describe RelationRegistry::RelationConnector::Builder, '.call', :type => :unit d
   context "with one-to-many" do
     subject { described_class.call(mappers, relations, song_tags_relationship) }
 
-    it { should be_kind_of(RelationRegistry::RelationConnector) }
+    it { should be_kind_of(RelationRegistry::Connector) }
 
     it "sets connector name" do
       subject.name.should be(:song_tags)
     end
 
     it "connects left side relation" do
-      subject.left.relation.should be(songs_relation)
+      subject.source_node.relation.should be(songs_relation)
     end
 
     it "connects right side relation" do
-      subject.right.relation.should be(song_tags_relation)
+      subject.target_node.relation.should be(song_tags_relation)
     end
   end
 
@@ -70,18 +70,18 @@ describe RelationRegistry::RelationConnector::Builder, '.call', :type => :unit d
       described_class.call(mappers, relations, song_tags_relationship)
     end
 
-    it { should be_kind_of(RelationRegistry::RelationConnector) }
+    it { should be_kind_of(RelationRegistry::Connector) }
 
     it "sets connector name" do
       subject.name.should be(:tags)
     end
 
     it "connects left side relation" do
-      subject.left.relation.should be(via_node.relation)
+      subject.source_node.relation.should be(via_node.relation)
     end
 
     it "connects right side relation" do
-      subject.right.relation.should be(tags_node.relation)
+      subject.target_node.relation.should be(tags_node.relation)
     end
   end
 end

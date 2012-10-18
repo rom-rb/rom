@@ -3,6 +3,7 @@ module DataMapper
   # Graph representation of finalized relations
   #
   class RelationRegistry < Graph
+    attr_reader :connectors
 
     # Return node class for this graph
     #
@@ -19,7 +20,12 @@ module DataMapper
     #
     # @api private
     def self.edge_class
-      RelationConnector
+      RelationEdge
+    end
+
+    def initialize(*args)
+      super
+      @connectors = {}
     end
 
     # Add new relation node to the graph
@@ -62,6 +68,11 @@ module DataMapper
     # @api private
     def build_edge(*args)
       self.class.edge_class.new(*args)
+    end
+
+    # @api private
+    def add_connector(connector)
+      @connectors[connector.name] = connector
     end
 
     # Add new relation node to the graph

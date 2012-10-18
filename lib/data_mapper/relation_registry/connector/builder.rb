@@ -1,6 +1,6 @@
 module DataMapper
   class RelationRegistry
-    class RelationConnector < Graph::Edge
+    class Connector
 
       class Builder
 
@@ -39,14 +39,16 @@ module DataMapper
           relations.add_node(left_node)  unless relations[left_node.name]
           relations.add_node(right_node) unless relations[right_node.name]
 
-          connector = relations.edges.detect { |e| e.name == relationship.name }
+          edge = relations.edges.detect { |e| e.name == relationship.name }
 
-          unless connector
-            connector = relations.build_edge(
-              relationship, left_node, right_node, relationship.operation
-            )
-            relations.add_edge(connector)
+          unless edge
+            edge = relations.build_edge(relationship.name, left_node, right_node)
+            relations.add_edge(edge)
           end
+
+          connector = Connector.new(edge, relationship)
+
+          relations.add_connector(connector)
 
           connector
         end
