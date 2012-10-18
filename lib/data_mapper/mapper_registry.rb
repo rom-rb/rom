@@ -29,28 +29,28 @@ module DataMapper
 
     # @api public
     def initialize(mappers = {})
-      @_mappers = mappers
+      @mappers = mappers
     end
 
     def each
       return to_enum unless block_given?
-      @_mappers.each { |identifier, mapper| yield(identifier, mapper) }
+      @mappers.each { |identifier, mapper| yield(identifier, mapper) }
 
       self
     end
 
     def include?(model, relationships = [])
-      @_mappers.key?(Identifier.new(model, relationships))
+      @mappers.key?(Identifier.new(model, relationships))
     end
 
     # @api public
     def [](model, relationships = [])
-      @_mappers[Identifier.new(model, relationships)]
+      @mappers[Identifier.new(model, relationships)]
     end
 
     # @api public
     def register(mapper, relationships = [])
-      @_mappers[Identifier.new(mapper.class.model, relationships)] = mapper
+      @mappers[Identifier.new(mapper.class.model, relationships)] = mapper
     end
 
     # @api public
