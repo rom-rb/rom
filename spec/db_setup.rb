@@ -4,8 +4,6 @@ CONFIG.each do |name, uri|
   DataMapper.setup(name, uri)
 end
 
-DATABASE_ADAPTER = DataMapper.adapters[:postgres]
-
 MAX_RELATION_SIZE = 10
 
 def setup_db

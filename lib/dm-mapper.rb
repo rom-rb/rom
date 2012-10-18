@@ -21,14 +21,15 @@ module DataMapper
   end
 
   # @api public
-  def self.setup(name, uri)
-    adapters[name.to_sym] = Veritas::Adapter::DataObjects.new(uri)
+  def self.setup(name, uri, engine = Engine::VeritasEngine)
+    engines[name.to_sym] = engine.new(uri)
   end
 
   # @api public
   def self.register_relation(repository, name, header)
-    base_relation = Veritas::Relation::Base.new(name, header)
-    Mapper.register_relation(repository, base_relation)
+    Mapper.register_relation(
+      repository, engines[repository].base_relation(name, header)
+    )
   end
 
   def self.generate_mapper_for(model, repository, &block)
@@ -36,8 +37,8 @@ module DataMapper
   end
 
   # @api public
-  def self.adapters
-    @adapters ||= {}
+  def self.engines
+    @engines ||= {}
   end
 
   # @api public
@@ -58,10 +59,11 @@ require 'equalizer'
 require 'inflector'
 # TODO remove this once inflector includes it
 require 'data_mapper/support/inflections'
-
 require 'data_mapper/support/graph'
-
 require 'data_mapper/support/utils'
+
+require 'data_mapper/engine'
+require 'data_mapper/engine/veritas_engine'
 
 require 'data_mapper/alias_set'
 

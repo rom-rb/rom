@@ -106,12 +106,8 @@ module DataMapper
       @relation_registry ||= RelationRegistry.new
     end
 
-    def self.adapter
-      @adapter ||= DataMapper.adapters[repository]
-    end
-
     def self.gateway_relation
-      @gateway_relation ||= Veritas::Relation::Gateway.new(adapter, relation)
+      @gateway_relation ||= engine.gateway_relation(relation)
     end
 
     # @api public
