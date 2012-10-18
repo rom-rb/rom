@@ -3,15 +3,22 @@ module DataMapper
   # Graph representation of finalized relations
   #
   class RelationRegistry < Graph
+    attr_reader :engine
     attr_reader :node_class
     attr_reader :edge_class
     attr_reader :connectors
 
     def initialize(engine)
       super()
+      @engine     = engine
       @node_class = engine.relation_node_class
       @edge_class = engine.relation_edge_class
       @connectors = {}
+    end
+
+    # @api private
+    def reset
+      self.class.new(engine)
     end
 
     # Add new relation node to the graph

@@ -65,6 +65,10 @@ module DataMapper
           mapper_registry.register(mapper, connector.relationship)
         end
       end
+
+      @base_relation_mappers.each do |mapper|
+        mapper.relations.freeze unless mapper.relations.frozen?
+      end
     end
   end # class Finalizer
 end # module DataMapper

@@ -68,10 +68,8 @@ RSpec.configure do |config|
   end
 
   config.before do
-    DataMapper.mapper_registry.each do |id, mapper|
-      mapper.class.relations.instance_variable_set(:@nodes, Set.new)
-      mapper.class.relations.instance_variable_set(:@edges, Set.new)
-      mapper.class.relations.instance_variable_set(:@connectors, {})
+    DataMapper.engines.each do |name, engine|
+      engine.instance_variable_set(:@relations, engine.relations.reset)
     end
 
     DataMapper.mapper_registry.instance_variable_set(:@mappers, {})
