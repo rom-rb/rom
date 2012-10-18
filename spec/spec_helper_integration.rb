@@ -37,6 +37,29 @@ ENV['TZ'] = 'UTC'
 # require spec support files and shared behavior
 Dir[File.expand_path('../**/shared/**/*.rb', __FILE__)].each { |file| require file }
 
+module SpecHelper
+
+  def self.draw_relation_registry(file_name = 'graph.png')
+
+    require 'graphviz'
+
+    # Create a new graph
+    g = GraphViz.new( :G, :type => :digraph )
+
+    graph = DataMapper.engines[:postgres].relations
+
+    graph.edges.each do |edge|
+      left  = g.add_nodes(edge.left.name.to_s)
+      right = g.add_nodes(edge.right.name.to_s)
+
+      g.add_edges(left, right)
+    end
+
+    # Generate output image
+    g.output( :png => file_name )
+  end
+end
+
 RSpec.configure do |config|
   config.before(:all) do
 
