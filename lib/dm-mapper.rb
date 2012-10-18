@@ -16,29 +16,18 @@ module DataMapper
   end
 
   # @api public
-  def self.relation_registry
-    Mapper.relation_registry
-  end
-
-  # @api public
   def self.setup(name, uri, engine = Engine::VeritasEngine)
     engines[name.to_sym] = engine.new(uri)
   end
 
   # @api public
-  def self.register_relation(repository, name, header)
-    Mapper.register_relation(
-      repository, engines[repository].base_relation(name, header)
-    )
-  end
-
-  def self.generate_mapper_for(model, repository, &block)
-    Mapper::Builder::Class.create(model, repository, &block)
+  def self.engines
+    @engines ||= {}
   end
 
   # @api public
-  def self.engines
-    @engines ||= {}
+  def self.generate_mapper_for(model, repository, &block)
+    Mapper::Builder::Class.create(model, repository, &block)
   end
 
   # @api public

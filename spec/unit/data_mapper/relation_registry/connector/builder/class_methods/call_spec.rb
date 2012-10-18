@@ -33,7 +33,7 @@ describe RelationRegistry::Connector::Builder, '.call', :type => :unit do
     )
   }
 
-  let!(:registry)  { RelationRegistry.new }
+  let!(:registry)  { RelationRegistry.new(TEST_ENGINE) }
   let!(:relations) { registry << songs_relation << song_tags_relation << tags_relation }
 
   context "with one-to-many" do

@@ -26,6 +26,11 @@ module DataMapper
         end
       end
 
+      # @api private
+      def self.engine
+        @engine ||= DataMapper.engines[repository]
+      end
+
       def self.relation
         raise NotImplementedError, "#{self}.#{__method__} must be implemented"
       end

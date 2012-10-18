@@ -3,7 +3,7 @@ require 'spec_helper'
 describe RelationRegistry, '#[]' do
   subject { object[name.to_sym] }
 
-  let(:object)   { described_class.new }
+  let(:object)   { described_class.new(TEST_ENGINE) }
   let(:name)     { 'users' }
   let(:relation) { mock_relation(name) }
   let(:node)     { object.nodes.first }

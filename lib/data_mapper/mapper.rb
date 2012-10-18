@@ -102,8 +102,8 @@ module DataMapper
     end
 
     # @api public
-    def self.relation_registry
-      @relation_registry ||= RelationRegistry.new
+    def self.relations
+      @relations ||= engine.relations
     end
 
     def self.gateway_relation

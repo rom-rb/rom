@@ -35,18 +35,13 @@ module DataMapper
         end
 
         # @api private
-        def self.engine
-          @engine ||= DataMapper.engines[repository]
-        end
-
-        # @api private
         def self.aliases
           @aliases ||= AliasSet.new(Inflector.singularize(relation_name), attributes)
         end
 
         # @api private
         def self.finalize
-          Mapper.mapper_registry << new(Mapper.relation_registry.node_for(gateway_relation))
+          Mapper.mapper_registry << new(relations.node_for(gateway_relation))
         end
 
       end # class Base

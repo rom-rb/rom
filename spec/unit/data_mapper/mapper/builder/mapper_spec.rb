@@ -89,7 +89,7 @@ describe Mapper::Builder, '#mapper' do
 
     before do
       DataMapper.mapper_registry << other_target_mapper_class.new(other_relation)
-      DataMapper.relation_registry.add_connector(other_connector)
+      source_mapper_class.relations.add_connector(other_connector)
     end
 
     it { should be_kind_of(Mapper::Relation) }

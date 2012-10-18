@@ -25,7 +25,7 @@ RSpec.configure do |config|
   def mock_mapper(model_class, attributes = [])
     klass = Class.new(DataMapper::Mapper::Relation::Base) do
       model         model_class
-      repository    Inflector.tableize(model_class.name)
+      repository    :test
       relation_name Inflector.tableize(model_class.name)
 
       def self.name
@@ -61,6 +61,15 @@ RSpec.configure do |config|
 
     AliasSet.new(prefix, attribute_set)
   end
+
+  class TestEngine < DataMapper::Engine::VeritasEngine
+    def initialize(uri)
+      @relations = DataMapper::RelationRegistry.new(self)
+    end
+  end
+
+  TEST_ENGINE = TestEngine.new('db://localhost/test')
+  DataMapper.engines[:test] = TEST_ENGINE
 
   def clear_mocked_models
     @_mocked_models.each do |name|

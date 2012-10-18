@@ -1,7 +1,6 @@
 module DataMapper
 
   class Finalizer
-    attr_reader :relation_registry
     attr_reader :mapper_registry
     attr_reader :connector_builder
     attr_reader :mapper_builder
@@ -13,7 +12,6 @@ module DataMapper
 
     def initialize(mappers)
       @mappers           = mappers
-      @relation_registry = Mapper.relation_registry
       @mapper_registry   = Mapper.mapper_registry
       @connector_builder = RelationRegistry::Connector::Builder
       @mapper_builder    = Mapper::Builder
@@ -37,14 +35,14 @@ module DataMapper
         relation = mapper.gateway_relation
         aliases  = mapper.aliases
 
-        relation_registry.new_node(name, relation, aliases)
+        mapper.relations.new_node(name, relation, aliases)
 
         mapper.finalize
       end
 
       @base_relation_mappers.each do |mapper|
         mapper.relationships.each do |relationship|
-          connector_builder.call(mapper_registry, relation_registry, relationship)
+          connector_builder.call(mapper_registry, mapper.relations, relationship)
         end
       end
     end
@@ -54,14 +52,18 @@ module DataMapper
     end
 
     def finalize_relationship_mappers
-      relation_registry.edges.each do |edge|
-        connector           = relation_registry.connectors[edge.name]
-        source_mapper_class = mapper_registry[connector.source_model].class
-        mapper              = mapper_builder.call(connector, source_mapper_class)
+      @base_relation_mappers.each do |mapper|
+        relations = mapper.relations
 
-        next if mapper_registry[connector.source_model, connector.relationship]
+        relations.edges.each do |edge|
+          connector           = relations.connectors[edge.name]
+          source_mapper_class = mapper_registry[connector.source_model].class
+          mapper              = mapper_builder.call(connector, source_mapper_class)
 
-        mapper_registry.register(mapper, connector.relationship)
+          next if mapper_registry[connector.source_model, connector.relationship]
+
+          mapper_registry.register(mapper, connector.relationship)
+        end
       end
     end
   end # class Finalizer

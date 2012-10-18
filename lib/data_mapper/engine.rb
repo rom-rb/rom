@@ -1,9 +1,11 @@
 module DataMapper
   class Engine
     attr_reader :adapter
+    attr_reader :relations
 
     def initialize(uri)
-      @uri = uri
+      @uri       = uri
+      @relations = RelationRegistry.new(self)
     end
 
     # @api private

@@ -5,7 +5,7 @@ describe RelationRegistry, '#new_node' do
 
   let(:name)     { 'users' }
   let(:relation) { mock_relation(name) }
-  let(:registry) { described_class.new }
+  let(:registry) { described_class.new(TEST_ENGINE) }
 
   context "without aliases" do
     let(:aliases) { nil }

@@ -11,6 +11,16 @@ module DataMapper
       end
 
       # @api private
+      def relation_node_class
+        RelationRegistry::RelationNode
+      end
+
+      # @api private
+      def relation_edge_class
+        RelationRegistry::RelationEdge
+      end
+
+      # @api private
       def base_relation(name, header)
         Veritas::Relation::Base.new(name, header)
       end
