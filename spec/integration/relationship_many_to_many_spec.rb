@@ -24,10 +24,10 @@ describe 'Relationship - Many To Many with generated mappers' do
     end
 
     class Tag
-      attr_reader :id, :name
+      attr_reader :id, :name, :songs
 
       def initialize(attributes)
-        @id, @name = attributes.values_at(:id, :name)
+        @id, @name, @songs = attributes.values_at(:id, :name, :songs)
       end
     end
 
@@ -47,6 +47,9 @@ describe 'Relationship - Many To Many with generated mappers' do
 
       map :id,   Integer, :key => true
       map :name, String
+
+      has 0..n, :song_tags, SongTag, :target_key => :tag_id
+      has 0..n, :songs,     Song,    :through    => :song_tags
     end
 
     class SongTagMapper < DataMapper::Mapper::Relation::Base
@@ -124,5 +127,22 @@ describe 'Relationship - Many To Many with generated mappers' do
     song.title.should eql('foo')
     song.good_tags.should have(1).item
     song.good_tags.first.name.should eql('good')
+  end
+
+  it 'loads associated songs' do
+    mapper = DataMapper[Tag].include(:songs)
+    tags   = mapper.to_a
+
+    tags.should have(2).item
+
+    tag1, tag2 = tags
+
+    tag1.name.should eql('good')
+    tag1.songs.should have(1).item
+    tag1.songs.first.title.should eql('foo')
+
+    tag2.name.should eql('bad')
+    tag2.songs.should have(1).item
+    tag2.songs.first.title.should eql('bar')
   end
 end
