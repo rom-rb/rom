@@ -13,7 +13,7 @@ describe Mapper::Builder, '#mapper' do
   let(:is_collection_target) { true  }
 
   let(:relation)     { mock('relation') }
-  let(:relationship) { mock('relationship', name: :orders) }
+  let(:relationship) { mock('relationship', :name => :orders) }
 
   let(:source_attributes)   { Mapper::AttributeSet.new << Mapper::Attribute.build(:id, :type => Integer) << Mapper::Attribute.build(:name, :type => String, :to => :username) }
   let(:source_mapper_class) { mock_mapper(source_model, source_attributes) }
