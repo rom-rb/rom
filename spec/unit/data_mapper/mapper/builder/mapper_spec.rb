@@ -71,7 +71,7 @@ describe Mapper::Builder, '#mapper' do
   end
 
   context "when connector is via other" do
-    let(:via_relationship) { mock('relationship', name: via) }
+    let(:via_relationship) { mock('relationship', :name => via) }
 
     let(:is_via)         { true }
     let(:via)            { :user_order_infos }
