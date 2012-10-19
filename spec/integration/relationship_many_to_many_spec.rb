@@ -71,7 +71,7 @@ describe 'Relationship - Many To Many with generated mappers' do
 
       has 0..n, :tags, Tag, :through => :song_tags
 
-      has 0..n, :good_tags, Tag, :through => :song_tags do
+      has 0..n, :good_tags, Tag, :through => :tags do
         restrict { |r| r.tag_name.eq('good') }
       end
     end
@@ -98,7 +98,7 @@ describe 'Relationship - Many To Many with generated mappers' do
 
   it 'loads associated tags' do
     mapper = DataMapper[Song].include(:tags)
-    songs = mapper.to_a
+    songs  = mapper.to_a
 
     songs.should have(2).items
 

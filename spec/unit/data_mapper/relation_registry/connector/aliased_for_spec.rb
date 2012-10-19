@@ -3,7 +3,7 @@ require 'spec_helper'
 describe RelationRegistry::Connector, '#aliased_for' do
   subject { object.aliased_for(via_relationship) }
 
-  let(:object) { described_class.new(edge, relationship) }
+  let(:object) { described_class.new(:song_X_songs_tags, edge, relationship) }
 
   let(:songs)      { mock_relation(:songs, [[:id, Integer], [:title, String]]) }
   let(:song_tags)  { mock_relation(:song_tags, [[:id, Integer], [:song_id, Integer], [:tag_id, Integer]]) }

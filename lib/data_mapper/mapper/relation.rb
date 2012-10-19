@@ -104,7 +104,7 @@ module DataMapper
 
       # @api public
       def include(name)
-        Mapper.mapper_registry[self.class.model, @relationships[name]]
+        Mapper.mapper_registry[self.class.model, name]
       end
 
       # @api public

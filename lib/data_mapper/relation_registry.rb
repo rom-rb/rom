@@ -74,6 +74,7 @@ module DataMapper
     # @api private
     def add_connector(connector)
       @connectors[connector.name] = connector
+      self
     end
 
     # Add new relation node to the graph

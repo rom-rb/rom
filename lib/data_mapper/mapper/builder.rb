@@ -13,7 +13,7 @@ module DataMapper
         @target_model  = @connector.target_model
         @source_mapper = source_mapper_class
 
-        @name = @connector.name
+        @name = @connector.relationship.name
       end
 
       def mapper
@@ -58,7 +58,7 @@ module DataMapper
       end
 
       def determine_source_aliases(connector)
-        via_connector = @source_mapper.relations.connectors[connector.via]
+        via_connector = @source_mapper.relations.connectors[connector.source_name]
 
         if via_connector.via?
           determine_source_aliases(via_connector)

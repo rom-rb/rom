@@ -9,12 +9,12 @@ module DataMapper
       attr_reader :relationship
       attr_reader :operation
 
-      def initialize(edge, relationship)
+      def initialize(name, edge, relationship)
+        @name         = name
         @edge         = edge
         @source_node  = edge.left
         @target_node  = edge.right
         @relationship = relationship
-        @name         = relationship.name
         @operation    = relationship.operation
       end
 
@@ -25,7 +25,9 @@ module DataMapper
       end
 
       def aliased_for(relationship)
-        self.class.new(edge.aliased_for(relationship, target_aliases), relationship)
+        self.class.new(
+          name, edge.aliased_for(relationship, target_aliases), relationship
+        )
       end
 
       def source_model
@@ -42,6 +44,14 @@ module DataMapper
 
       def target_aliases
         target_node.aliases_for(relationship)
+      end
+
+      def source_name
+        source_node.name
+      end
+
+      def target_name
+        target_node.name
       end
 
       def via?

@@ -31,6 +31,8 @@ module DataMapper
 
     def finalize_base_relation_mappers
       @base_relation_mappers.each do |mapper|
+        next if mapper_registry[mapper.model]
+
         name     = mapper.relation.name
         relation = mapper.gateway_relation
         aliases  = mapper.aliases
@@ -52,17 +54,18 @@ module DataMapper
     end
 
     def finalize_relationship_mappers
-      @base_relation_mappers.each do |mapper|
-        relations = mapper.relations
+      @base_relation_mappers.map(&:relations).uniq.each do |relations|
+        relations.connectors.each_value do |connector|
+          model        = connector.source_model
+          relationship = connector.relationship.name
+          mapper_class = mapper_registry[model].class
+          mapper       = mapper_builder.call(connector, mapper_class)
 
-        relations.edges.each do |edge|
-          connector           = relations.connectors[edge.name]
-          source_mapper_class = mapper_registry[connector.source_model].class
-          mapper              = mapper_builder.call(connector, source_mapper_class)
-
-          next if mapper_registry[connector.source_model, connector.relationship]
-
-          mapper_registry.register(mapper, connector.relationship)
+          if mapper_registry[model, relationship]
+            next
+          else
+            mapper_registry.register(mapper, relationship)
+          end
         end
       end
 

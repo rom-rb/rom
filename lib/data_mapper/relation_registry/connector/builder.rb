@@ -8,11 +8,13 @@ module DataMapper
         attr_reader :mappers
         attr_reader :relations
         attr_reader :relationship
+
         attr_reader :connector
+        attr_reader :node
 
         # @api public
         def self.call(*args)
-          new(*args).connector
+          new(*args)
         end
 
         # @api private
@@ -26,16 +28,20 @@ module DataMapper
 
         # @api private
         def initialize_connector
-          left_node  = build_left_node
-          right_node = build_right_node
-
           unless left_node && right_node
             raise ArgumentError, "Missing left and/or right nodes for #{relationship.name} left: #{left_node.inspect} right: #{right_node.inspect}"
           end
 
-          @connector = Connector.new(build_edge(left_node, right_node), relationship)
+          @connector = Connector.new(name, build_edge, relationship)
+          @node      = relations.build_node(name, @connector.relation)
 
           relations.add_connector(@connector)
+          relations.add_node(@node)
+        end
+
+        # @api private
+        def name
+          @name ||= :"#{left_node.name}_X_#{relationship.name}"
         end
 
         # @api private
@@ -46,6 +52,11 @@ module DataMapper
         # @api private
         def right_mapper
           @right_mapper ||= mappers[relationship.target_model]
+        end
+
+        # @api private
+        def via_mapper
+          @via_mapper ||= mappers[via_relationship.target_model]
         end
 
         # @api private
@@ -60,47 +71,64 @@ module DataMapper
 
         # @api private
         def via_name
-          @via_name ||= :"#{left_mapper.relation.name}_#{via_relationship.name}"
+          @via_name ||= via_relationship.name
         end
 
         # @api private
-        def via_relation
-          @via_relation ||=
-            if relations[via_name]
-              relations[via_name]
-            else
-              self.class.call(mappers, relations, via_relationship).aliased_for(relationship)
-            end.relation
+        def via_connector_name
+          @via_connector_name ||= :"#{left_mapper.class.relation_name}_X_#{via_name}"
         end
 
         # @api private
-        def build_left_node
-          if via?
-            node = relations.build_node(via_name, via_relation)
-            relations.add_node(node)
-            node
-          else
-            relations.node_for(left_mapper.relation)
-          end
+        def left_node
+          @left_node ||= (via? ? via_node : relations.node_for(left_mapper.relation))
         end
 
         # @api private
-        def build_right_node
-          if via?
-            node = relations.node_for(right_mapper.relation).aliased_for(via_relationship)
-            relations.add_node(node)
-            node
-          else
-            relations.node_for(right_mapper.relation)
-          end
+        def right_node
+          @right_node ||=
+            begin
+              right_node = relations.node_for(right_mapper.relation)
+
+              if via?
+                right_node.aliased_for(via_relationship)
+              else
+                right_node
+              end
+            end
         end
 
         # @api private
-        def build_edge(left, right)
-          edge = relations.edges.detect { |e| e.name == relationship.name }
+        def via_connector
+          relations.connectors[via_connector_name]
+        end
+
+        # @api private
+        def via_node
+          @via_node ||=
+            begin
+              if via_connector
+                relations.build_node(
+                  via_connector.name,
+                  via_connector.aliased_for(relationship).relation
+                )
+              else
+                build_via_node
+              end
+            end
+        end
+
+        # @api private
+        def build_via_node
+          self.class.call(mappers, relations, via_relationship).node.aliased_for(relationship)
+        end
+
+        # @api private
+        def build_edge
+          edge = relations.edges.detect { |e| e.connects?(left_node) }
 
           unless edge
-            edge = relations.build_edge(relationship.name, left, right)
+            edge = relations.build_edge(relationship.name, left_node, right_node)
             relations.add_edge(edge)
           end
 

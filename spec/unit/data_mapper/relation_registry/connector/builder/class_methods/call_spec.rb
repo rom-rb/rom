@@ -26,12 +26,14 @@ describe RelationRegistry::Connector::Builder, '.call', :type => :unit do
 
   let(:tags_relationship) {
     mock_relationship(
-      :tags,
+      :super_tags,
       :source_model => song_model,
       :target_model => tag_model,
       :via          => :song_tags
     )
   }
+
+  let(:connector) { subject.connector }
 
   let!(:registry)  { RelationRegistry.new(TEST_ENGINE) }
   let!(:relations) { registry << songs_relation << song_tags_relation << tags_relation }
@@ -39,18 +41,24 @@ describe RelationRegistry::Connector::Builder, '.call', :type => :unit do
   context "with one-to-many" do
     subject { described_class.call(mappers, relations, song_tags_relationship) }
 
-    it { should be_kind_of(RelationRegistry::Connector) }
+    it { should be_kind_of(described_class) }
 
     it "sets connector name" do
-      subject.name.should be(:song_tags)
+      connector.name.should be(:songs_X_song_tags)
     end
 
     it "connects left side relation" do
-      subject.source_node.relation.should be(songs_relation)
+      connector.source_node.relation.should be(songs_relation)
     end
 
     it "connects right side relation" do
-      subject.target_node.relation.should be(song_tags_relation)
+      connector.target_node.relation.should be(song_tags_relation)
+    end
+
+    it "adds connector's relation to the registry" do
+      node = relations[connector.name]
+      node.should_not be_nil
+      node.relation.should eql(connector.relation)
     end
   end
 
@@ -58,30 +66,29 @@ describe RelationRegistry::Connector::Builder, '.call', :type => :unit do
     subject { described_class.call(mappers, relations, tags_relationship) }
 
     let(:via_node) {
-      registry[:songs_song_tags]
+      registry[:songs_X_song_tags]
     }
 
     let(:tags_node) {
-      registry[:tags_song_tags]
+      registry[:tags]
     }
 
     before do
       song_mapper.stub!(:relationships).and_return(:song_tags => song_tags_relationship)
-      described_class.call(mappers, relations, song_tags_relationship)
     end
 
-    it { should be_kind_of(RelationRegistry::Connector) }
+    it { should be_kind_of(described_class) }
 
     it "sets connector name" do
-      subject.name.should be(:tags)
+      connector.name.should be(:songs_X_song_tags_X_super_tags)
     end
 
     it "connects left side relation" do
-      subject.source_node.relation.should be(via_node.relation)
+      connector.source_node.relation.should eql(via_node.relation)
     end
 
     it "connects right side relation" do
-      subject.target_node.relation.should be(tags_node.relation)
+      connector.target_node.relation.should eql(tags_node.relation)
     end
   end
 end
