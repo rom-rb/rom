@@ -12,9 +12,12 @@ module DataMapper
         attr_reader :connector
         attr_reader :node
 
+        SEPARATOR = 'X'.freeze
+
         # @api public
-        def self.call(*args)
-          new(*args)
+        def self.call(mappers, relations, relationship)
+          klass = relationship.via ? ViaConnector : Builder
+          klass.new(mappers, relations, relationship)
         end
 
         # @api private
@@ -23,8 +26,6 @@ module DataMapper
           initialize_connector
           freeze
         end
-
-        private
 
         # @api private
         def initialize_connector
@@ -41,7 +42,27 @@ module DataMapper
 
         # @api private
         def name
-          @name ||= :"#{left_node.name}_X_#{relationship.name}"
+          @name ||= :"#{left_name}_#{SEPARATOR}_#{right_name}"
+        end
+
+        # @api private
+        def left_name
+          left_node.name
+        end
+
+        # @api private
+        def right_name
+          relationship.name
+        end
+
+        # @api private
+        def left_node
+          @left_node ||= relations.node_for(left_mapper.relation)
+        end
+
+        # @api private
+        def right_node
+          @right_node ||= relations.node_for(right_mapper.relation)
         end
 
         # @api private
@@ -52,75 +73,6 @@ module DataMapper
         # @api private
         def right_mapper
           @right_mapper ||= mappers[relationship.target_model]
-        end
-
-        # @api private
-        def via_mapper
-          @via_mapper ||= mappers[via_relationship.target_model]
-        end
-
-        # @api private
-        def via?
-          relationship.via
-        end
-
-        # @api private
-        def via_relationship
-          @via_relationship ||= left_mapper.relationships[relationship.via]
-        end
-
-        # @api private
-        def via_name
-          @via_name ||= via_relationship.name
-        end
-
-        # @api private
-        def via_connector_name
-          @via_connector_name ||= :"#{left_mapper.class.relation_name}_X_#{via_name}"
-        end
-
-        # @api private
-        def left_node
-          @left_node ||= (via? ? via_node : relations.node_for(left_mapper.relation))
-        end
-
-        # @api private
-        def right_node
-          @right_node ||=
-            begin
-              right_node = relations.node_for(right_mapper.relation)
-
-              if via?
-                right_node.aliased_for(via_relationship)
-              else
-                right_node
-              end
-            end
-        end
-
-        # @api private
-        def via_connector
-          relations.connectors[via_connector_name]
-        end
-
-        # @api private
-        def via_node
-          @via_node ||=
-            begin
-              if via_connector
-                relations.build_node(
-                  via_connector.name,
-                  via_connector.aliased_for(relationship).relation
-                )
-              else
-                build_via_node
-              end
-            end
-        end
-
-        # @api private
-        def build_via_node
-          self.class.call(mappers, relations, via_relationship).node.aliased_for(relationship)
         end
 
         # @api private

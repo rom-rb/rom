@@ -62,6 +62,7 @@ require 'data_mapper/relation_registry/relation_node/veritas_relation'
 require 'data_mapper/relation_registry/relation_edge'
 require 'data_mapper/relation_registry/connector'
 require 'data_mapper/relation_registry/connector/builder'
+require 'data_mapper/relation_registry/connector/builder/via_connector'
 
 require 'data_mapper/mapper_registry'
 
