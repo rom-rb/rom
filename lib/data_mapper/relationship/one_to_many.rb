@@ -42,8 +42,6 @@ module DataMapper
         true
       end
 
-      private
-
       def default_source_key
         :id
       end

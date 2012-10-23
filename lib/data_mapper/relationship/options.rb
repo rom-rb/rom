@@ -12,6 +12,7 @@ module DataMapper
       attr_reader :min
       attr_reader :max
       attr_reader :operation
+      attr_reader :options
 
       def initialize(name, source_model, target_model, options = {})
         @name         = name.to_sym
@@ -20,8 +21,8 @@ module DataMapper
         @operation    = options[:operation]
         @source_model = source_model
         @target_model = target_model || options.fetch(:model)
-        @source_key   = options.fetch(:source_key, default_source_key)
-        @target_key   = options.fetch(:target_key, default_target_key)
+        @source_key   = options[:source_key] || default_source_key
+        @target_key   = options[:target_key] || default_target_key
 
         @min = options.fetch(min, 1)
         @max = options.fetch(max, 1)

@@ -39,7 +39,7 @@ module DataMapper
       end
 
       def source_aliases
-        source_node.aliases
+        source_node.aliases_for(relationship)
       end
 
       def target_aliases

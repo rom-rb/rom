@@ -50,11 +50,11 @@ module DataMapper
       end
 
       def source_aliases
-        if @connector.via?
-          determine_source_aliases(@connector)
-        else
+        #if @connector.via?
+          #determine_source_aliases(@connector)
+        #else
           @connector.source_aliases
-        end
+        #end
       end
 
       def determine_source_aliases(connector)

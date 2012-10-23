@@ -57,7 +57,7 @@ module DataMapper
 
         # @api private
         def left_node
-          @left_node ||= relations.node_for(left_mapper.relation)
+          @left_node ||= relations.node_for(left_mapper.relation).aliased_for(relationship)
         end
 
         # @api private

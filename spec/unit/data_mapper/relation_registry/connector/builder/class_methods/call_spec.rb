@@ -20,7 +20,7 @@ describe RelationRegistry::Connector::Builder, '.call', :type => :unit do
       :song_tags,
       :source_model => song_model,
       :target_model => song_tag_model,
-      :via          => nil
+      :through      => nil
     )
   }
 
@@ -29,7 +29,7 @@ describe RelationRegistry::Connector::Builder, '.call', :type => :unit do
       :super_tags,
       :source_model => song_model,
       :target_model => tag_model,
-      :via          => :song_tags
+      :through      => :song_tags
     )
   }
 
@@ -66,11 +66,7 @@ describe RelationRegistry::Connector::Builder, '.call', :type => :unit do
     subject { described_class.call(mappers, relations, tags_relationship) }
 
     let(:via_node) {
-      registry[:songs_X_song_tags]
-    }
-
-    let(:tags_node) {
-      registry[:tags]
+      registry[:tags_X_song_tags]
     }
 
     before do
@@ -80,15 +76,15 @@ describe RelationRegistry::Connector::Builder, '.call', :type => :unit do
     it { should be_kind_of(described_class) }
 
     it "sets connector name" do
-      connector.name.should be(:songs_X_song_tags_X_super_tags)
+      connector.name.should be(:songs_X_super_tags_X_song_tags)
     end
 
     it "connects left side relation" do
-      connector.source_node.relation.should eql(via_node.relation)
+      connector.source_node.relation.should eql(songs_relation)
     end
 
     it "connects right side relation" do
-      connector.target_node.relation.should eql(tags_node.relation)
+      connector.target_node.relation.should eql(via_node.relation)
     end
   end
 end
