@@ -55,7 +55,7 @@ module DataMapper
       end
 
       def via?
-        ! relationship.via.nil?
+        ! via.nil?
       end
 
       def via
