@@ -38,8 +38,4 @@ class Graph
     @edges << edge
     self
   end
-
-  def edges_for(node)
-    edges.select { |edge| edge.connects?(node) }
-  end
 end
