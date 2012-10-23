@@ -19,15 +19,9 @@ module DataMapper
       end
 
       def relation
-        join = source_node.join(target_node.relation_for_join(relationship))
+        join = source_node.join(target_node).relation
         join = join.instance_eval(&operation) if operation
         join
-      end
-
-      def aliased_for(relationship)
-        self.class.new(
-          name, edge.aliased_for(relationship, target_aliases), relationship
-        )
       end
 
       def source_model
@@ -43,7 +37,7 @@ module DataMapper
       end
 
       def target_aliases
-        target_node.aliases_for(relationship)
+        target_node.aliases
       end
 
       def source_name

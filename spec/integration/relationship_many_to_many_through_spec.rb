@@ -115,11 +115,11 @@ describe 'Relationship - Many To Many with generated mappers' do
 
       has 0..n, :tags, Tag, :through => :song_tags
 
-      has 0..n, :infos, Info, :through => :tags
+      has 0..n, :infos, Info, :through => :tags, :target_key => :tag_id
 
       # FIXME: wtf ruby 1.8.7? also, this works when run in isolation
       unless RUBY_VERSION < '1.9'
-        has 0..n, :info_contents, InfoContent, :through => :infos
+        has 0..n, :info_contents, InfoContent, :through => :infos, :target_key => :info_id
 
         has 0..n, :good_info_contents, InfoContent, :through => :infos do
           restrict { |r| r.info_content_content.eq('really, really good') }

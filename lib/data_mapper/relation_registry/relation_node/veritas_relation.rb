@@ -18,11 +18,15 @@ module DataMapper
         end
 
         def rename(new_aliases)
-          self.class.new(name, relation.rename(new_aliases), aliases)
+          self.class.new(name, relation, aliases.merge(new_aliases))
+        end
+
+        def aliased
+          self.class.new(name, relation.rename(aliases), aliases)
         end
 
         def join(other)
-          relation.rename(aliases).join(other)
+          self.class.new(name, relation.rename(aliases).join(other.aliased.relation))
         end
 
         def header
@@ -35,22 +39,6 @@ module DataMapper
 
         def sort_by(&block)
           self.class.new(name, relation.sort_by(&block), aliases)
-        end
-
-        def aliased_for(relationship)
-          clone(aliases.merge(aliases_for(relationship)))
-        end
-
-        def aliases_for(relationship)
-          aliases.exclude(relationship.target_key)
-        end
-
-        def clone(aliases)
-          self.class.new(name, relation, aliases)
-        end
-
-        def relation_for_join(relationship)
-          relation.rename(aliases_for(relationship))
         end
 
       end # class VeritasRelation

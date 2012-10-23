@@ -14,7 +14,7 @@ module DataMapper
 
           # @api private
           def right_node
-            @right_node ||= relations.node_for(right_mapper.relation).aliased_for(via_relationship)
+            @right_node ||= relations.node_for(right_mapper.relation)
           end
 
           # @api private
@@ -44,14 +44,12 @@ module DataMapper
 
           # @api private
           def build_via_node
-            relation = via_connector.aliased_for(relationship).relation
-            name     = via_connector.name
-            relations.build_node(name, relation)
+            relations.build_node(via_connector.name, via_connector.relation)
           end
 
           # @api private
           def add_via_node
-            self.class.call(mappers, relations, via_relationship).node.aliased_for(relationship)
+            self.class.call(mappers, relations, via_relationship).node
           end
 
         end # class ViaConnector

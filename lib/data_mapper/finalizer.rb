@@ -27,15 +27,34 @@ module DataMapper
       self
     end
 
+    # @api private
+    def target_keys_for(model)
+      relationships_for_target(model).map(&:target_key).uniq
+    end
+
+    # @api private
+    def relationships_for_target(model)
+      @base_relation_mappers.map { |mapper|
+        relationships     = mapper.relationships.select { |relationship| relationship.target_model == model }
+        names             = relationships.map(&:name)
+        via_relationships = mapper.relationships.select { |relationship| names.include?(relationship.via) }
+
+        relationships + via_relationships
+      }.flatten
+    end
+
     private
 
     def finalize_base_relation_mappers
       @base_relation_mappers.each do |mapper|
-        next if mapper_registry[mapper.model]
+        model = mapper.model
+
+        next if mapper_registry[model]
 
         name     = mapper.relation.name
         relation = mapper.gateway_relation
-        aliases  = mapper.aliases
+        keys     = target_keys_for(model)
+        aliases  = mapper.aliases.exclude(*keys)
 
         mapper.relations.new_node(name, relation, aliases)
 
