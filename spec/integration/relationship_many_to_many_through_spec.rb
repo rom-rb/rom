@@ -126,7 +126,7 @@ describe 'Relationship - Many To Many with generated mappers' do
   end
 
   it 'loads associated tag infos' do
-    pending "This passes when run in isolation so it's a post-run clean up issue" if RUBY_VERSION < '1.9'
+    pending
 
     mapper = DataMapper[Song].include(:infos)
 
@@ -148,7 +148,7 @@ describe 'Relationship - Many To Many with generated mappers' do
   end
 
   it 'loads associated tag info contents' do
-    pending "This passes when run in isolation so it's a post-run clean up issue" if RUBY_VERSION < '1.9'
+    pending
 
     mapper = DataMapper[Song].include(:info_contents)
     songs = mapper.to_a
@@ -169,7 +169,7 @@ describe 'Relationship - Many To Many with generated mappers' do
   end
 
   it 'loads associated restricted tag info contents' do
-    pending "This passes when run in isolation so it's a post-run clean up issue" if RUBY_VERSION < '1.9'
+    pending
 
     mapper = DataMapper[Song].include(:good_info_contents)
     songs = mapper.to_a

@@ -63,7 +63,8 @@ describe 'Relationship - Many To One with generated mapper' do
   end
 
   it 'loads associated object' do
-    address = address_mapper.include(:user).first
+    mapper  = address_mapper.include(:user)
+    address = mapper.first
     user    = user_mapper.first
 
     address.user.should be_instance_of(User)

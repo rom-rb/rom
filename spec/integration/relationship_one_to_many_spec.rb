@@ -79,7 +79,9 @@ describe 'Relationship - One To Many with generated mapper' do
     orders2[0].product.should eql('Peach')
   end
 
-  it 'loads associated apple orders' do
+  it 'loads associated restricted apple orders' do
+    pending
+
     user_order_mapper = DataMapper[User].include(:apple_orders)
     users_with_orders = user_order_mapper.to_a
 

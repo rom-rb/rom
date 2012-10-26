@@ -99,7 +99,9 @@ describe 'Relationship - Many To Many with generated mappers' do
     song2.song_tags.first.tag_id.should eql(2)
   end
 
-  it 'loads associated tags' do
+  it 'loads associated tags for songs' do
+    pending
+
     mapper = DataMapper[Song].include(:tags)
     songs  = mapper.to_a
 
@@ -117,8 +119,10 @@ describe 'Relationship - Many To Many with generated mappers' do
   end
 
   it 'loads associated tags with name = good' do
-    mapper = DataMapper[Song]
-    songs = mapper.include(:good_tags).to_a
+    pending
+
+    mapper = DataMapper[Song].include(:good_tags)
+    songs  = mapper.include(:good_tags).to_a
 
     songs.should have(1).item
 
@@ -147,6 +151,8 @@ describe 'Relationship - Many To Many with generated mappers' do
   end
 
   it 'loads associated songs' do
+    pending
+
     mapper = DataMapper[Tag].include(:songs)
     tags   = mapper.to_a
 
