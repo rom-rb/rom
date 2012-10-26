@@ -20,64 +20,72 @@ module DataMapper
       def initialize(relations, mappers, relationship)
         @relations, @mappers, @relationship = relations, mappers, relationship
 
-        left_name = mappers[relationship.source_model].class.relation_name
+        left_name  = mappers[relationship.source_model].class.relation_name
+        right_name = mappers[relationship.target_model].class.relation_name
+
+        relations_map = mappers.each_with_object({}) { |(id, mapper), hash|
+          hash[mapper.class.model] = mapper.class.relation_name
+        }
 
         @node_names = if relationship.via
-                        NodeNameSet.new(relationship, mappers[relationship.source_model].relationships)
+                        NodeNameSet.new(relationship, mappers[relationship.source_model].relationships, relations_map)
                       else
-                        [ NodeName.new(left_name, relationship.name) ]
+                        [ NodeName.new(left_name, right_name, relationship.name) ]
                       end
 
-        relationship_relations = build_relations
+        build_relations
 
-        node = if relationship.via
-          right_name = @node_names.last.left_of(left_name)
-          right_node = relations[right_name]
-          left_node  = relations[left_name]
+        left_node  = relations[left_name]
+        right_node = relations[relationship.via ? @node_names.last : @node_names.last.right]
 
-          node_name = NodeName.new(left_name, right_name)
-          edge      = relations.build_edge(node_name, left_node, right_node)
-          relation  = edge.relation
+        node_name = if relationship.via
+                      NodeName.new(left_name, @node_names.last.to_connector_name)
+                    else
+                      @node_names.last.to_connector_name
+                    end
 
-          if relationship.operation
-            relation = relation.instance_eval(&relationship.operation)
-          end
+        edge = relations.edge_for(left_node, right_node)
 
-          node = relations.build_node(node_name, relation)
-          relations.add_edge(edge).add_node(node)
-          node
-        else
-          relationship_relations.first
+        unless edge
+          edge = relations.build_edge(node_name, left_node, right_node)
+          relations.add_edge(edge)
         end
 
-        connector_name = @node_names.last
-        @connector     = RelationRegistry::Connector.new(
-          connector_name.to_sym, node, relationship, relations)
+        relation = edge.relation
 
-        relations.add_connector(connector_name, @connector)
+        if relationship.operation
+          relation = relation.instance_eval(&relationship.operation)
+        end
+
+        unless relations[node_name]
+          node = relations.build_node(node_name, relation)
+          relations.add_node(node)
+        else
+          node = relations[node_name]
+        end
+
+        @connector = RelationRegistry::Connector.new(node_name.to_sym, node, relationship, relations)
+
+        relations.add_connector(@connector)
       end
 
       def build_relations
-        @node_names.map do |node_name|
+        @node_names.each do |node_name|
           left  = node_name.left
           right = node_name.right
 
-          left_node  = relations[left]  || relations[mappers[relationship.source_model].class.relation_name]
-          right_node = relations[right] || relations[mappers[relationship.target_model].class.relation_name]
+          left_node  = relations[left]
+          right_node = relations[right]
 
           unless relations[node_name]
-            edge     = relations.build_edge(node_name, left_node, right_node)
-            relation = edge.relation
+            edge = relations.edges.detect { |e| e.name == node_name.to_sym }
 
-            if @node_names.is_a?(Array) && relationship.operation
-              relation = relation.instance_eval(&relationship.operation)
+            unless edge
+              edge = relations.build_edge(node_name, left_node, right_node)
+              relations.add_edge(edge)
             end
 
-            node = relations.build_node(node_name, relation)
-            relations.add_edge(edge).add_node(node)
-            node
-          else
-            relations[node_name]
+            relations.new_node(node_name, edge.relation)
           end
         end
       end

@@ -9,13 +9,15 @@ module DataMapper
 
         attr_reader :left
         attr_reader :right
+        attr_reader :relationship_name
 
         # @api private
         def initialize(*args)
-          if args.size == 2
-            @left, @right = args.map(&:to_sym)
-          else
-            @left, @right = args.first.split(SEPARATOR).map(&:to_sym)
+          @left, @right = args[0..1]
+          @relationship_name = args.last if args.size == 3
+
+          unless @left && @right
+            raise ArgumentError, "+left+ and +right+ must be defined"
           end
         end
 
@@ -36,12 +38,13 @@ module DataMapper
 
         # @api private
         def to_ary
-          [ left, right ]
+          [ left.to_sym, right.to_sym ]
         end
 
         # @api private
-        def left_of(name)
-          (to_ary - [ name ]).join(SEPARATOR).to_sym
+        def to_connector_name
+          left_name = left.respond_to?(:to_connector_name) ? left.to_connector_name : left.to_sym
+          [ left_name, relationship_name ].join(SEPARATOR).to_sym
         end
 
       end # class NodeName

@@ -7,9 +7,11 @@ module DataMapper
       class NodeNameSet
         include Enumerable
 
+        attr_reader :relations
+
         # @api private
-        def initialize(relationship, registry)
-          @relationship, @registry = relationship, registry
+        def initialize(relationship, registry, relations)
+          @relationship, @registry, @relations = relationship, registry, relations
         end
 
         # @api private
@@ -17,6 +19,16 @@ module DataMapper
           to_enum unless block_given?
           names.each(&block)
           self
+        end
+
+        # @api private
+        def connector_names
+          map(&:to_connector_name)
+        end
+
+        # @api private
+        def first
+          to_a.first
         end
 
         # @api private
@@ -28,9 +40,9 @@ module DataMapper
         def names(relationships = relationship_map, joins = [])
           relationships.each do |right, left|
             if left.is_a?(Hash)
-              joins << NodeName.new(names(left, joins)[joins.size-1], right)
+              joins << NodeName.new(names(left, joins)[joins.size-1], *right)
             else
-              joins << NodeName.new(left, right)
+              joins << NodeName.new(left, *right)
             end
           end
 
@@ -39,14 +51,15 @@ module DataMapper
 
         # @api private
         def relationship_map(relationship = @relationship, registry = @registry, map = {})
-          name             = relationship.name
+          name             = relations[relationship.target_model]
+          key              = [ name, relationship.name ]
           via_relationship = registry[relationship.via]
 
           if via_relationship.via
-            map[name] = {}
-            relationship_map(via_relationship, registry, map[name])
+            map[key] = {}
+            relationship_map(via_relationship, registry, map[key])
           else
-            map.merge!(name => via_relationship.name)
+            map.merge!(key => relations[via_relationship.target_model])
           end
 
           map

@@ -91,7 +91,7 @@ describe RelationRegistry::Builder, '#relations' do
     end
 
     it "adds super_tags relation edge" do
-      relations.edge_for(relations[:songs], relations[:song_tags_X_super_tags]).should be_instance_of(RelationRegistry::RelationEdge)
+      relations.edge_for(relations[:songs], relations[:song_tags_X_tags]).should be_instance_of(RelationRegistry::RelationEdge)
     end
   end
 
@@ -112,7 +112,7 @@ describe RelationRegistry::Builder, '#relations' do
     end
 
     it "adds infos relation edge" do
-      relations.edge_for(relations[:songs], relations[:song_tags_X_super_tags_X_infos]).should be_instance_of(RelationRegistry::RelationEdge)
+      relations.edge_for(relations[:songs], relations[:song_tags_X_tags_X_infos]).should be_instance_of(RelationRegistry::RelationEdge)
     end
   end
 end

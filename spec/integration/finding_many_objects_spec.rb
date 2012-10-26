@@ -85,7 +85,7 @@ describe 'Finding Many Objects' do
   end
 
   it 'finds objects matching criteria from joined relation' do
-    pending
+    pending "Nested query conditions is not yet implemented"
 
     users = DataMapper[User].find(:age => 20, :address => { :city => 'Boston' }).to_a
 

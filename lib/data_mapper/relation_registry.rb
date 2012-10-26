@@ -17,8 +17,8 @@ module DataMapper
     end
 
     # @api private
-    def add_connector(name, connector)
-      @connectors[name] = connector
+    def add_connector(connector)
+      @connectors[connector.name] = connector
     end
 
     # @api private
@@ -72,8 +72,8 @@ module DataMapper
     # @return [RelationRegistry::RelationConnector]
     #
     # @api private
-    def build_edge(*args)
-      edge_class.new(*args)
+    def build_edge(name, left, right)
+      edge_class.new(name.to_sym, left, right)
     end
 
     # Add new relation node to the graph

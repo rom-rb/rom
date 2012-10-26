@@ -44,7 +44,7 @@ describe Mapper::Builder, '#mapper' do
 
     before do
       DataMapper.mapper_registry << target_mapper_class.new(relation)
-      source_mapper_class.relations.add_connector(connector.name, connector)
+      source_mapper_class.relations.add_connector(connector)
     end
 
     it { should be_kind_of(Mapper::Relation) }
@@ -124,8 +124,8 @@ describe Mapper::Builder, '#mapper' do
       DataMapper.mapper_registry << target_mapper_class.new(relation)
       DataMapper.mapper_registry << via_source_mapper_class.new(other_relation)
 
-      source_mapper_class.relations.add_connector(connector.name, connector)
-      source_mapper_class.relations.add_connector(via_connector.name, via_connector)
+      source_mapper_class.relations.add_connector(connector)
+      source_mapper_class.relations.add_connector(via_connector)
     end
 
     it { should be_kind_of(Mapper::Relation) }

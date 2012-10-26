@@ -79,8 +79,6 @@ describe 'Relationship - One To One through with generated mappers' do
   end
 
   it 'loads associated tag' do
-    pending
-
     mapper = DataMapper[Song].include(:tag)
     songs  = mapper.to_a
 
@@ -96,8 +94,6 @@ describe 'Relationship - One To One through with generated mappers' do
   end
 
   it 'loads associated restricted tag' do
-    pending
-
     mapper = DataMapper[Song].include(:good_tag)
     songs = mapper.to_a
 

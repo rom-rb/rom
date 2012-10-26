@@ -67,10 +67,12 @@ describe 'Finalizer' do
       map :title, String
 
       has 0..n, :song_tags, SongTag
-
       has 0..n, :tags, Tag, :through => :song_tags
 
-      has 1, :good_tag, Tag, :through => :song_tags do
+      has 1, :song_tag, SongTag
+      has 1, :tag,      Tag, :through => :song_tag
+
+      has 1, :good_tag, Tag, :through => :song_tag do
         restrict { |r| r.tag_name.eq('good') }
       end
 
@@ -164,13 +166,13 @@ describe 'Finalizer' do
     edge.relation.should eql(relation.relation)
   end
 
-  it 'finalizes songs-have-one-good_tag-through-tags relation' do
+  it 'finalizes songs-have-one-good_tag-through-song_tag relation' do
     relation = relations[:songs_X_song_tags_X_good_tag]
 
     relation.should be_instance_of(RelationRegistry::RelationNode::VeritasRelation)
     relation.should_not be_base
 
-    edge = relations.edge_for(relations[:songs], relations[:song_tags_X_good_tag])
+    edge = relations.edge_for(relations[:songs], relations[:song_tags_X_tags])
 
     edge.relation.should eql(relation.relation)
   end
@@ -203,7 +205,7 @@ describe 'Finalizer' do
     relation.should be_instance_of(RelationRegistry::RelationNode::VeritasRelation)
     relation.should_not be_base
 
-    edge = relations.edge_for(relations[:songs], relations[:song_tags_X_tags_X_infos_X_good_info_contents])
+    edge = relations.edge_for(relations[:songs], relations[:song_tags_X_tags_X_infos_X_info_contents])
 
     edge.relation.should eql(relation.relation)
   end
