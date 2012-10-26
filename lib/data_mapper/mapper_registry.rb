@@ -3,25 +3,15 @@ module DataMapper
   class MapperRegistry
 
     class Identifier
+      include Equalizer.new(:model, :relationships)
+
       attr_reader :model
       attr_reader :relationships
 
       def initialize(model, relationships = [])
         @model         = model
         @relationships = Array(relationships)
-        @hash          = @model.hash ^ @relationships.hash
-      end
-
-      attr_reader :hash
-
-      def eql?(other)
-        return false unless instance_of?(other.class)
-        @model.eql?(other.model) && @relationships.eql?(other.relationships)
-      end
-
-      def ==(other)
-        return false unless self.class <=> other.class
-        @model == other.model && @relationships == other.relationships
+        freeze
       end
     end
 
@@ -32,6 +22,7 @@ module DataMapper
       @mappers = mappers
     end
 
+    # @api public
     def each
       return to_enum unless block_given?
       @mappers.each { |identifier, mapper| yield(identifier, mapper) }
@@ -39,6 +30,7 @@ module DataMapper
       self
     end
 
+    # @api public
     def include?(model, relationships = [])
       @mappers.key?(Identifier.new(model, relationships))
     end
