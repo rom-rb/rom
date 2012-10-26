@@ -77,11 +77,11 @@ module DataMapper
 
     def finalize_relationship_mappers
       @base_relation_mappers.map(&:relations).uniq.each do |relations|
-        relations.edges.each do |edge|
-          model        = edge.source_model
-          relationship = edge.relationship
+        relations.connectors.each_value do |connector|
+          model        = connector.source_model
+          relationship = connector.relationship
           mapper_class = mapper_registry[model].class
-          mapper       = mapper_builder.call(edge, mapper_class)
+          mapper       = mapper_builder.call(connector, mapper_class)
 
           mapper_registry.register(mapper, relationship)
         end

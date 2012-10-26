@@ -80,8 +80,6 @@ describe 'Relationship - One To Many with generated mapper' do
   end
 
   it 'loads associated restricted apple orders' do
-    pending
-
     user_order_mapper = DataMapper[User].include(:apple_orders)
     users_with_orders = user_order_mapper.to_a
 

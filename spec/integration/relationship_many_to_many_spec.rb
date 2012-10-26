@@ -100,8 +100,6 @@ describe 'Relationship - Many To Many with generated mappers' do
   end
 
   it 'loads associated tags for songs' do
-    pending
-
     mapper = DataMapper[Song].include(:tags)
     songs  = mapper.to_a
 
@@ -119,8 +117,6 @@ describe 'Relationship - Many To Many with generated mappers' do
   end
 
   it 'loads associated tags with name = good' do
-    pending
-
     mapper = DataMapper[Song].include(:good_tags)
     songs  = mapper.include(:good_tags).to_a
 
@@ -151,8 +147,6 @@ describe 'Relationship - Many To Many with generated mappers' do
   end
 
   it 'loads associated songs' do
-    pending
-
     mapper = DataMapper[Tag].include(:songs)
     tags   = mapper.to_a
 
@@ -170,6 +164,8 @@ describe 'Relationship - Many To Many with generated mappers' do
   end
 
   it 'uses the same join relation for both sides' do
+    pending "reversing joins to re-use existing relation nodes is not implemented yet"
+
     relation_a = DataMapper[Song].include(:tags).relation
     relation_b = DataMapper[Tag].include(:songs).relation
 

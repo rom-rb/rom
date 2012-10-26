@@ -70,9 +70,9 @@ describe 'Finalizer' do
 
       has 0..n, :tags, Tag, :through => :song_tags
 
-      #has 1, :good_tag, Tag, :through => :song_tags do
-        #restrict { tag_name.eq('good') }
-      #end
+      has 1, :good_tag, Tag, :through => :song_tags do
+        restrict { |r| r.tag_name.eq('good') }
+      end
 
       has 0..n, :infos, Info, :through => :tags, :target_key => :tag_id
 
@@ -165,14 +165,12 @@ describe 'Finalizer' do
   end
 
   it 'finalizes songs-have-one-good_tag-through-tags relation' do
-    pending
-
-    relation = relations[:songs_X_song_tags_X_tags_X_good_tag]
+    relation = relations[:songs_X_song_tags_X_good_tag]
 
     relation.should be_instance_of(RelationRegistry::RelationNode::VeritasRelation)
     relation.should_not be_base
 
-    edge = relations.edge_for(relations[:songs], relations[:song_tags_X_tags_X_good_tag])
+    edge = relations.edge_for(relations[:songs], relations[:song_tags_X_good_tag])
 
     edge.relation.should eql(relation.relation)
   end
@@ -200,8 +198,6 @@ describe 'Finalizer' do
   end
 
   it 'finalizes songs-have-many-good_info_contents-through-infos relation' do
-    pending
-
     relation = relations[:songs_X_song_tags_X_tags_X_infos_X_good_info_contents]
 
     relation.should be_instance_of(RelationRegistry::RelationNode::VeritasRelation)
@@ -271,7 +267,6 @@ describe 'Finalizer' do
   end
 
   it 'finalizes song-good-info-contents mapper' do
-    pending
     DataMapper[Song].include(:good_info_contents).relation.should be(relations[:songs_X_song_tags_X_tags_X_infos_X_good_info_contents])
   end
 end

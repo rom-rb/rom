@@ -49,7 +49,7 @@ RSpec.configure do |config|
     Relationship::OneToMany.new(options)
   end
 
-  def mock_edge(attributes)
+  def mock_connector(attributes)
     OpenStruct.new(attributes)
   end
 
