@@ -11,7 +11,7 @@ module DataMapper
       def initialize(name, relation, aliases = nil)
         super(name)
         @relation = relation
-        @aliases  = aliases || AliasSet.new(name)
+        @aliases  = aliases || {}
       end
 
     end # class RelationNode

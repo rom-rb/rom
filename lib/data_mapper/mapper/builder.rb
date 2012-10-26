@@ -3,21 +3,21 @@ module DataMapper
 
     class Builder
 
-      def self.call(connector, source_mapper_class)
-        new(connector, source_mapper_class).mapper
+      def self.call(edge, source_mapper_class)
+        new(edge, source_mapper_class).mapper
       end
 
-      def initialize(connector, source_mapper_class)
-        @connector     = connector
-        @source_model  = @connector.source_model
-        @target_model  = @connector.target_model
+      def initialize(edge, source_mapper_class)
+        @edge          = edge
+        @source_model  = @edge.source_model
+        @target_model  = @edge.target_model
         @source_mapper = source_mapper_class
 
-        @name = @connector.relationship.name
+        @name = @edge.name
       end
 
       def mapper
-        mapper_class.new(@connector.relation)
+        mapper_class.new(@edge.relation)
       end
 
       private
@@ -29,7 +29,7 @@ module DataMapper
 
         klass.map(@name, @target_model, target_model_attribute_options)
 
-        if @connector.collection_target?
+        if @edge.collection_target?
           klass.send(:include, Relationship::OneToMany::Iterator)
         end
 
@@ -50,31 +50,35 @@ module DataMapper
       end
 
       def source_aliases
-        if @connector.via?
-          determine_source_aliases(@connector)
+        @edge.source_aliases
+      end
+
+      def target_aliases
+        if @edge.via?
+          determine_target_aliases(@edge)
         else
-          @connector.source_aliases
+          @edge.target_aliases
         end
       end
 
-      def determine_source_aliases(connector)
-        via_connector = @source_mapper.relations.connectors[connector.source_name]
+      def determine_target_aliases(edge)
+        via_edge = @source_mapper.relations.edges.detect { |e| e.name == edge.via }
 
-        if via_connector.via?
-          determine_source_aliases(via_connector)
+        if via_edge.via?
+          determine_target_aliases(via_edge)
         else
-          via_connector.source_aliases
+          via_edge.target_aliases
         end
       end
 
       def mapper_name
-        "#{@source_model.name}_X_#{Inflector.camelize(@connector.name.to_s)}_Mapper"
+        "#{Inflector.camelize(@edge.left.name.to_s)}_X_#{Inflector.camelize(@edge.right.name.to_s)}_Mapper"
       end
 
       def target_model_attribute_options
         {
-          :collection => @connector.collection_target?,
-          :aliases    => @connector.target_aliases
+          :collection => @edge.collection_target?,
+          :aliases    => target_aliases
         }
       end
     end # class Builder

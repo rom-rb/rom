@@ -17,12 +17,16 @@ module DataMapper
           self
         end
 
+        def base?
+          ! relation.respond_to?(:operand)
+        end
+
         def rename(new_aliases)
           self.class.new(name, relation, aliases.merge(new_aliases))
         end
 
         def aliased
-          self.class.new(name, relation.rename(aliases), aliases)
+          self.class.new(name, relation.rename(aliases))
         end
 
         def join(other)

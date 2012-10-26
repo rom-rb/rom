@@ -6,14 +6,12 @@ module DataMapper
     attr_reader :engine
     attr_reader :node_class
     attr_reader :edge_class
-    attr_reader :connectors
 
     def initialize(engine)
       super()
       @engine     = engine
       @node_class = engine.relation_node_class
       @edge_class = engine.relation_edge_class
-      @connectors = {}
     end
 
     # @api private
@@ -71,12 +69,6 @@ module DataMapper
       edge_class.new(*args)
     end
 
-    # @api private
-    def add_connector(connector)
-      @connectors[connector.name] = connector
-      self
-    end
-
     # Add new relation node to the graph
     #
     # @param [Veritas::Relation] relation
@@ -96,7 +88,7 @@ module DataMapper
     #
     # @api private
     def [](name)
-      @nodes.detect { |node| node.name == name }
+      @nodes.detect { |node| node.name == name.to_sym }
     end
 
     # Return relation node for the given relation
@@ -108,6 +100,11 @@ module DataMapper
     # @api private
     def node_for(relation)
       self[relation.name.to_sym]
+    end
+
+    # @api private
+    def edge_for(left, right)
+      edges.detect { |edge| edge.left == left && edge.right == right }
     end
 
   end # class RelationRegistry

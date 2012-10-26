@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Mapper::Builder, '#mapper' do
   subject { object.mapper }
 
-  let(:object) { described_class.new(connector, source_mapper_class) }
+  let(:object) { described_class.new(edge, source_mapper_class) }
 
   let(:source_model) { mock_model('User')  }
   let(:target_model) { mock_model('Order') }
@@ -21,10 +21,12 @@ describe Mapper::Builder, '#mapper' do
   let(:target_attributes)   { Mapper::AttributeSet.new << Mapper::Attribute.build(:id, :type => Integer) << Mapper::Attribute.build(:user_id, :type => Integer) << Mapper::Attribute.build(:product, :type => String) }
   let(:target_mapper_class) { mock_mapper(target_model, target_attributes)}
 
-  context "when connector is not via other" do
-    let(:connector) {
-      mock_connector(
-        :name               => :users_X_orders,
+  context "when edge is not via other" do
+    let(:edge) {
+      mock_edge(
+        :name               => :orders,
+        :left               => mock_node(:users),
+        :right              => mock_node(:orders),
         :source_model       => source_model,
         :target_model       => target_model,
         :source_name        => :users,
@@ -41,7 +43,7 @@ describe Mapper::Builder, '#mapper' do
 
     before do
       DataMapper.mapper_registry << target_mapper_class.new(relation)
-      source_mapper_class.relations.add_connector(connector)
+      source_mapper_class.relations.add_edge(edge)
     end
 
     it { should be_kind_of(Mapper::Relation) }
@@ -70,7 +72,7 @@ describe Mapper::Builder, '#mapper' do
     end
   end
 
-  context "when connector is via other" do
+  context "when edge is via other" do
     let(:via_relationship) { mock('relationship', :name => via) }
 
     let(:is_via)         { true }
@@ -81,14 +83,16 @@ describe Mapper::Builder, '#mapper' do
     let(:other_target_attributes)   { Mapper::AttributeSet.new << Mapper::Attribute.build(:user_id, :type => Integer) << Mapper::Attribute.build(:order_id, :type => Integer) }
     let(:other_target_mapper_class) { mock_mapper(other_target_model, other_target_attributes) }
 
-    let(:connector) {
-      mock_connector(
-        :name               => :users_X_user_order_infos_X_orders,
+    let(:edge) {
+      mock_edge(
+        :name               => :orders,
+        :left               => mock_node(:users),
+        :right              => mock_node(:user_order_infos_X_orders),
         :source_model       => source_model,
         :target_model       => target_model,
-        :source_name        => :users_X_user_order_infos,
-        :target_name        => :orders,
-        :source_aliases     => AliasSet.new(:user, source_attributes),
+        :source_name        => :users,
+        :target_name        => :user_order_infos_X_orders,
+        :source_aliases     => AliasSet.new(:user, source_attributes, [ :name ]),
         :target_aliases     => AliasSet.new(:order, target_attributes, [ :user_id ]),
         :via?               => true,
         :via                => via,
@@ -98,14 +102,16 @@ describe Mapper::Builder, '#mapper' do
       )
     }
 
-    let(:via_connector) {
-      mock_connector(
-        :name               => :users_X_user_order_infos,
-        :source_name        => :users,
-        :target_name        => :users_order_infos,
+    let(:via_edge) {
+      mock_edge(
+        :name               => :user_order_infos,
+        :left               => mock_node(:orders),
+        :right              => mock_node(:user_order_infos),
+        :source_name        => :orders,
+        :target_name        => :user_order_infos,
         :source_model       => source_model,
         :target_model       => other_target_model,
-        :source_aliases     => AliasSet.new(:user, source_attributes, [ :name ]),
+        :source_aliases     => AliasSet.new(:order, source_attributes, [ :product ]),
         :target_aliases     => AliasSet.new(:user_order_info, other_target_attributes, [ :user_id, :order_id ]),
         :via?               => false,
         :relationship       => via_relationship,
@@ -118,14 +124,14 @@ describe Mapper::Builder, '#mapper' do
       DataMapper.mapper_registry << target_mapper_class.new(relation)
       DataMapper.mapper_registry << other_target_mapper_class.new(other_relation)
 
-      source_mapper_class.relations.add_connector(connector)
-      source_mapper_class.relations.add_connector(via_connector)
+      source_mapper_class.relations.add_edge(edge)
+      source_mapper_class.relations.add_edge(via_edge)
     end
 
     it { should be_kind_of(Mapper::Relation) }
 
-    it "remaps source model attributes using via connector aliases" do
-      subject.attributes[:name].field.should eql(:username)
+    it "remaps target model attributes using via edge aliases" do
+      subject.attributes[:orders].mapper.attributes[:product].field.should eql(:product)
     end
   end
 end

@@ -72,7 +72,7 @@ describe 'Relationship - One To One through with generated mappers' do
 
       has 1, :tag, Tag, :through => :song_tag, :target_key => :tag_id
 
-      has 1, :good_tag, Tag, :through => :tag do
+      has 1, :good_tag, Tag, :through => :song_tag do
         restrict { |r| r.tag_name.eq('good') }
       end
     end
@@ -80,7 +80,7 @@ describe 'Relationship - One To One through with generated mappers' do
 
   it 'loads associated tag' do
     mapper = DataMapper[Song].include(:tag)
-    songs = mapper.to_a
+    songs  = mapper.to_a
 
     songs.should have(2).items
 

@@ -89,9 +89,8 @@ describe 'Relationship - One To One with generated mapper' do
   end
 
   it 'loads restricted association' do
-
-    user = user_mapper.include(:home_address).to_a.last
-    address = user.home_address
+    mapper  = user_mapper.include(:home_address)
+    address = mapper.to_a.first.home_address
 
     address.should be_instance_of(Address)
     address.id.should eql(1)

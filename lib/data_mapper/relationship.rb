@@ -15,6 +15,7 @@ module DataMapper
     attr_reader :target_key
     attr_reader :source_model
     attr_reader :target_model
+    attr_reader :hash
 
     def initialize(options)
       @options      = options
@@ -26,7 +27,7 @@ module DataMapper
       @source_key   = @options.source_key || default_source_key
       @target_key   = @options.target_key || default_target_key
 
-      @hash = @name.hash ^ @source_model.hash
+      @hash = @name.hash ^ @source_model.hash ^ @target_model.hash
     end
 
     # @api public
@@ -37,8 +38,6 @@ module DataMapper
     def collection_target?
       false
     end
-
-    attr_reader :hash
 
     def eql?(other)
       return false unless instance_of?(other.class)

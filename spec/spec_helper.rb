@@ -45,11 +45,16 @@ RSpec.configure do |config|
   end
 
   def mock_relationship(name, attributes = {})
-    OpenStruct.new({ :name => name }.merge(attributes))
+    options = Relationship::Options.new(name, attributes[:source_model], attributes[:target_model], attributes)
+    Relationship::OneToMany.new(options)
   end
 
-  def mock_connector(attributes)
+  def mock_edge(attributes)
     OpenStruct.new(attributes)
+  end
+
+  def mock_node(name)
+    OpenStruct.new(:name => name)
   end
 
   def mock_alias_set(prefix, attributes)
