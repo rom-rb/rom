@@ -6,10 +6,12 @@ module DataMapper
     attr_reader :mapper_builder
     attr_reader :mappers
 
+    # @api public
     def self.run
       new(Mapper.descendants.select { |mapper| mapper.model }).run
     end
 
+    # @api private
     def initialize(mappers)
       @mappers         = mappers
       @mapper_registry = Mapper.mapper_registry
@@ -19,6 +21,7 @@ module DataMapper
       @base_relation_mappers = @mappers.select { |mapper| mapper.respond_to?(:relation_name) }
     end
 
+    # @api private
     def run
       finalize_base_relation_mappers
       finalize_attribute_mappers
@@ -26,6 +29,8 @@ module DataMapper
 
       self
     end
+
+    private
 
     # @api private
     def target_keys_for(model)
@@ -42,8 +47,6 @@ module DataMapper
         relationships + via_relationships
       }.flatten
     end
-
-    private
 
     def finalize_base_relation_mappers
       @base_relation_mappers.each do |mapper|

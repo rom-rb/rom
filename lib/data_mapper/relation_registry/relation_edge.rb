@@ -11,7 +11,7 @@ module DataMapper
       def initialize(relationship, left, right)
         super(relationship.name, left, right)
         @relationship = relationship
-        @operation    = operation
+        @operation    = relationship.operation
         @source_node  = left
         @target_node  = right
       end

@@ -18,7 +18,8 @@ module DataMapper
         end
 
         def base?
-          ! relation.respond_to?(:operand)
+          veritas_relation = relation.respond_to?(:relation) ? relation.send(:relation) : relation
+          veritas_relation.instance_of?(Veritas::Relation::Base)
         end
 
         def rename(new_aliases)

@@ -17,7 +17,7 @@ module DataMapper
       end
 
       def mapper
-        mapper_class.new(@edge.relation)
+        mapper_class.new(@source_mapper.relations.nodes.detect { |n| n.relation == @edge.relation })
       end
 
       private
