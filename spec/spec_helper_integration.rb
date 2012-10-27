@@ -52,7 +52,7 @@ module SpecHelper
       left  = g.add_nodes(edge.left.name.to_s)
       right = g.add_nodes(edge.right.name.to_s)
 
-      g.add_edges(left, right)
+      g.add_edges(left, right, :label => edge.name)
     end
 
     # Generate output image
