@@ -19,6 +19,14 @@ module DataMapper
       # @api private
       def initialize(relations, mappers, relationship)
         @relations, @mappers, @relationship = relations, mappers, relationship
+        initialize_nodes
+
+        edge     = build_edge
+        relation = build_relation(edge)
+        node     = build_node(name, relation)
+
+        @connector = RelationRegistry::Connector.new(name, node, relationship, relations)
+        relations.add_connector(@connector)
       end
 
       # @api private
@@ -42,6 +50,11 @@ module DataMapper
       end
 
       private
+
+      # @api private
+      def initialize_nodes
+        # no-op
+      end
 
       # @api private
       def build_relation(edge, relationship = relationship)
