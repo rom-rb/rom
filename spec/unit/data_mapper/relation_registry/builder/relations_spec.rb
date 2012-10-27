@@ -20,10 +20,13 @@ describe RelationRegistry::Builder, '#relations' do
   let(:info_mapper)    { mock_mapper(info_model).new(infos_relation) }
 
   let(:mappers) do
-    { song_model     => song_mapper,
-      song_tag_model => song_tag_mapper,
-      tag_model      => tag_mapper,
-      info_model     => info_mapper }
+    mapper_registry = MapperRegistry.new
+
+    [ song_mapper, song_tag_mapper, tag_mapper, info_mapper ].each do |mapper|
+      mapper_registry.register(mapper)
+    end
+
+    mapper_registry
   end
 
   let(:song_tags_relationship) {

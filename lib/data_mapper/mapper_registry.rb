@@ -31,6 +31,11 @@ module DataMapper
     end
 
     # @api public
+    def relation_map
+      @mappers.values.each_with_object({}) { |mapper, h| h[mapper.model] = mapper.relation_name }
+    end
+
+    # @api public
     def include?(model, relationships = [])
       @mappers.key?(Identifier.new(model, relationships))
     end

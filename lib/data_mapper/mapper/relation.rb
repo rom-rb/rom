@@ -65,6 +65,16 @@ module DataMapper
       end
 
       # @api public
+      def relation_name
+        self.class.relation_name
+      end
+
+      # @api public
+      def model
+        self.class.model
+      end
+
+      # @api public
       def inspect
         "<##{self.class.name}:#{object_id} @model=#{@model} @repository=#{self.class.repository} @relation=#{@relation}>"
       end

@@ -21,14 +21,10 @@ module DataMapper
 
         # @api private
         def initialize_nodes
-          relations_map = mappers.each_with_object({}) { |(id, mapper), map|
-            map[mapper.class.model] = mapper.class.relation_name
-          }
-
           @node_names = NodeNameSet.new(
             relationship,
             mappers[relationship.source_model].relationships,
-            relations_map
+            mappers.relation_map
           )
 
           build_relations
