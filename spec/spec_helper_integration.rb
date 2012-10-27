@@ -11,13 +11,13 @@ rescue LoadError
   RSpec = Spec::Runner
 end
 
-require 'veritas'
-require 'veritas/optimizer'
 require 'veritas-do-adapter'
 require 'virtus'
+
 require 'do_postgres'
 require 'do_mysql'
 require 'do_sqlite3'
+
 require 'randexp'
 
 require 'dm-mapper'

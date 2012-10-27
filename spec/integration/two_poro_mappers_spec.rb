@@ -59,7 +59,7 @@ describe 'Two PORO mappers' do
   end
 
   it 'finds user with a specific address' do
-    users = User::Mapper.new(operation.restrict { |r| r.city.eq('Boston') }.optimize).to_a
+    users = User::Mapper.new(operation.restrict { |r| r.city.eq('Boston') }).to_a
     user  = users.first
 
     users.should have(1).item

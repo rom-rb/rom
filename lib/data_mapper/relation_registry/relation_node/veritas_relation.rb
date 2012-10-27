@@ -1,3 +1,5 @@
+require 'veritas'
+
 module DataMapper
   class RelationRegistry
     class RelationNode < Graph::Node

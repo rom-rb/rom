@@ -39,9 +39,6 @@ module DataMapper
   end
 end # module DataMapper
 
-require 'veritas'
-require 'veritas-optimizer'
-
 require 'descendants_tracker'
 require 'equalizer'
 

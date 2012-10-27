@@ -65,7 +65,7 @@ describe 'PORO with an embedded value' do
   end
 
   it 'loads a user with an address' do
-    mapper = User::Mapper.new(operation.optimize)
+    mapper = User::Mapper.new(operation)
     users  = mapper.to_a
 
     user1, user2 = users
