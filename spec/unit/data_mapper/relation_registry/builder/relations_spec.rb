@@ -1,9 +1,7 @@
 require 'spec_helper'
 
 describe RelationRegistry::Builder, '#relations' do
-  subject { object.build_relations }
-
-  let(:object) { described_class.new(relations, mappers, relationship) }
+  subject { described_class.call(relations, mappers, relationship) }
 
   let(:songs_relation) { mock_relation(:songs) }
   let(:song_model)     { mock_model('Song') }

@@ -8,7 +8,7 @@ module DataMapper
       attr_reader :relations
 
       def initialize(name, node, relationship, relations)
-        @name         = name
+        @name         = name.to_sym
         @node         = node
         @relationship = relationship
         @relations    = relations
