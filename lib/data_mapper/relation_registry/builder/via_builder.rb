@@ -43,8 +43,8 @@ module DataMapper
             left_node  = relations[left]
             right_node = relations[right]
 
-            edge     = build_edge(node_name, left_node, right_node)
             node_rel = mappers[relationship.source_model].relationships[node_name.relationship_name]
+            edge     = build_edge(relationship.name, left_node, right_node)
             relation = build_relation(edge, node_rel)
 
             build_node(node_name, relation)

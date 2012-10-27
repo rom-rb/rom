@@ -75,7 +75,7 @@ module DataMapper
       end
 
       # @api private
-      def build_edge(name = name, left = left_node, right = right_node)
+      def build_edge(name = relationship.name, left = left_node, right = right_node)
         edge = relations.edge_for(left, right)
 
         unless edge
