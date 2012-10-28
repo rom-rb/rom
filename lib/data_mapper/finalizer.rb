@@ -91,7 +91,7 @@ module DataMapper
       end
 
       @base_relation_mappers.each do |mapper|
-        mapper.relations.freeze unless mapper.relations.frozen?
+        mapper.relations.freeze
       end
     end
 
