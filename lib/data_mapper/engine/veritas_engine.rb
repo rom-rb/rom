@@ -1,3 +1,6 @@
+require 'veritas'
+require 'veritas-do-adapter'
+
 module DataMapper
   class Engine
 
@@ -8,6 +11,7 @@ module DataMapper
       # TODO: add specs
       def initialize(uri)
         super
+        # TODO: add support for other adapters based on uri
         @adapter = Veritas::Adapter::DataObjects.new(uri)
       end
 

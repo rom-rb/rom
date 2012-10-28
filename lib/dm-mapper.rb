@@ -1,3 +1,4 @@
+# Main DataMapper module with methods to setup and manage the environment
 module DataMapper
 
   # Represent an undefined argument
@@ -5,36 +6,86 @@ module DataMapper
 
   Infinity  = 1.0 / 0
 
-  # @api public
-  def self.[](model)
-    Mapper[model]
-  end
-
-  # @api public
-  def self.mapper_registry
-    Mapper.mapper_registry
-  end
-
+  # Setups a connection with a database
+  #
+  # @example
+  #   DataMapper.setup(:default, 'postgres://localhost/test')
+  #
+  # @param [String,Symbol,#to_sym] repository name
+  # @param [String] database connection URI
+  # @param [DataMapper::Engine] backend engine that should be used for mappers
+  #
+  # @return [self]
+  #
   # @api public
   def self.setup(name, uri, engine = Engine::VeritasEngine)
     engines[name.to_sym] = engine.new(uri)
+    self
   end
 
+  # Returns hash with all engines that were initialized
+  #
+  # @example
+  #   DataMapper.engines # => {:default=>#<Engine::VeritasEngine:0x108168bf0..>}
+  #
   # @api public
   def self.engines
     @engines ||= {}
   end
 
+  # Generates mappers class
+  #
+  # @example
+  #
+  #   class User
+  #     include DataMapper::Model
+  #
+  #     attribute :id,   Integer
+  #     attribute :name, String
+  #   end
+  #
+  #   DataMapper.generate_mapper_for(User, :default) do
+  #     key :id
+  #   end
+  #
+  # @param [DataMapper::Model] model
+  # @param [Symbol] repository name
+  #
+  # @return [DataMapper::Mapper::Relation::Base]
+  #
   # @api public
   def self.generate_mapper_for(model, repository, &block)
     Mapper::Builder::Class.create(model, repository, &block)
   end
 
+  # Finalize the environment after all mappers were defined
+  #
+  # @example
+  #
+  #   DataMapper.finalize
+  #
+  # @return [self]
+  #
   # @api public
   def self.finalize
     Finalizer.run
     self
   end
+
+  # @see DataMapper::Mapper.[]
+  #
+  # @api public
+  def self.[](model)
+    Mapper[model]
+  end
+
+  # @see DataMapper::Mapper.mapper_registry
+  #
+  # @api public
+  def self.mapper_registry
+    Mapper.mapper_registry
+  end
+
 end # module DataMapper
 
 require 'descendants_tracker'
