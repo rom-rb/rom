@@ -82,6 +82,10 @@ module DataMapper
       mapper_registry[model]
     end
 
+    def self.relation
+      raise NotImplementedError, "#{self.class}.relation must be implemented"
+    end
+
     # @api private
     def self.attributes
       @attributes ||= AttributeSet.new
@@ -98,14 +102,12 @@ module DataMapper
     end
 
     # @api public
-    def self.relation_registry
-      @relation_registry ||= RelationRegistry.new
+    def self.relations
+      @relations ||= engine.relations
     end
 
-    def self.register_relation(repository, relation)
-      adapter = DataMapper.adapters[repository]
-      gateway_relation = Veritas::Relation::Gateway.new(adapter, relation)
-      relation_registry << gateway_relation
+    def self.gateway_relation
+      @gateway_relation ||= engine.gateway_relation(relation)
     end
 
     # @api public
@@ -122,16 +124,6 @@ module DataMapper
     # @api private
     def self.finalize_relationships
       relationships.finalize
-    end
-
-    # @api private
-    def self.unique_alias(name, scope)
-      "#{name}__#{scope}_alias#{[name, scope].join.hash}".to_sym
-    end
-
-    # @api private
-    def unique_alias(name, scope)
-      self.class.unique_alias(name, scope)
     end
 
     # Load a domain object

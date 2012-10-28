@@ -17,6 +17,43 @@ module DataMapper
         each { |attribute| attribute.finalize }
       end
 
+      # @api public
+      def alias_index(prefix, excluded = [])
+        primitives.each_with_object({}) { |attribute, index|
+          next if excluded.include?(attribute.name)
+          index[attribute.field] = attribute.aliased_field(prefix)
+        }
+      end
+
+      # @api private
+      def merge(other)
+        instance = self.class.new
+        each       { |attribute| instance << attribute.clone(:to => attribute.field) }
+        other.each { |attribute| instance << attribute.clone(:to => attribute.field) }
+        instance
+      end
+
+      # TODO find a better name and implementation
+      def remap(aliases)
+        instance = self.class.new
+
+        aliases.each do |name, field|
+          attribute = for_field(name)
+          if attribute
+            instance << attribute.clone(:to => field)
+          end
+        end
+
+        each { |attribute| instance << attribute.clone unless instance[attribute.name] }
+
+        instance
+      end
+
+      # TODO find a better name and implementation
+      def for_field(field)
+        detect { |attribute| attribute.field == field }
+      end
+
       def <<(attribute)
         @attributes[attribute.name] = attribute
         self
@@ -25,6 +62,11 @@ module DataMapper
       # @api private
       def add(*args)
         self << Attribute.build(*args)
+      end
+
+      # @api private
+      def includes?(attribute)
+        ! self[attribute.name].nil?
       end
 
       # @api private
@@ -75,7 +117,6 @@ module DataMapper
       def key
         select(&:key?)
       end
-
     end # class AttributeSet
   end # class Mapper
 end # module DataMapper

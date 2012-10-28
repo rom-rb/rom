@@ -16,28 +16,18 @@ module DataMapper
   end
 
   # @api public
-  def self.relation_registry
-    Mapper.relation_registry
+  def self.setup(name, uri, engine = Engine::VeritasEngine)
+    engines[name.to_sym] = engine.new(uri)
   end
 
   # @api public
-  def self.setup(name, uri)
-    adapters[name.to_sym] = Veritas::Adapter::DataObjects.new(uri)
+  def self.engines
+    @engines ||= {}
   end
 
   # @api public
-  def self.register_relation(repository, name, header)
-    base_relation = Veritas::Relation::Base.new(name, header)
-    Mapper.register_relation(repository, base_relation)
-  end
-
   def self.generate_mapper_for(model, repository, &block)
     Mapper::Builder::Class.create(model, repository, &block)
-  end
-
-  # @api public
-  def self.adapters
-    @adapters ||= {}
   end
 
   # @api public
@@ -49,17 +39,31 @@ module DataMapper
   end
 end # module DataMapper
 
-require 'veritas'
-require 'veritas-optimizer'
-
 require 'descendants_tracker'
+require 'equalizer'
 
-require 'data_mapper/support/utils'
-require 'data_mapper/support/inflector/inflections'
-require 'data_mapper/support/inflector/methods'
+require 'inflector'
+# TODO remove this once inflector includes it
 require 'data_mapper/support/inflections'
+require 'data_mapper/support/graph'
+require 'data_mapper/support/utils'
+
+require 'data_mapper/engine'
+require 'data_mapper/engine/veritas_engine'
+
+require 'data_mapper/alias_set'
 
 require 'data_mapper/relation_registry'
+require 'data_mapper/relation_registry/relation_node'
+require 'data_mapper/relation_registry/relation_node/veritas_relation'
+require 'data_mapper/relation_registry/relation_edge'
+require 'data_mapper/relation_registry/builder'
+require 'data_mapper/relation_registry/builder/base_builder'
+require 'data_mapper/relation_registry/builder/via_builder'
+require 'data_mapper/relation_registry/builder/node_name'
+require 'data_mapper/relation_registry/builder/node_name_set'
+require 'data_mapper/relation_registry/connector'
+
 require 'data_mapper/mapper_registry'
 
 require 'data_mapper/mapper/relationship_set'
@@ -72,13 +76,8 @@ require 'data_mapper/mapper'
 require 'data_mapper/mapper/relation'
 require 'data_mapper/mapper/relation/base'
 
+require 'data_mapper/mapper/builder'
 require 'data_mapper/mapper/builder/class'
-require 'data_mapper/mapper/builder/relationship'
-require 'data_mapper/mapper/builder/relationship/collection_behavior'
-require 'data_mapper/mapper/builder/relationship/one_to_one'
-require 'data_mapper/mapper/builder/relationship/one_to_many'
-require 'data_mapper/mapper/builder/relationship/many_to_one'
-require 'data_mapper/mapper/builder/relationship/many_to_many'
 
 require 'data_mapper/relationship'
 require 'data_mapper/relationship/options'

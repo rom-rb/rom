@@ -38,27 +38,17 @@ module DataMapper
         end
       end # module Iterator
 
-      # @api public
-      def finalize
-        super
-        @mapper_class.send(:include, Iterator)
+      def collection_target?
+        true
       end
-
-      private
 
       def default_source_key
         :id
       end
 
       def default_target_key
-        foreign_key_name
+        @options.foreign_key_name(@target_model)
       end
-
-      # @api private
-      def mapper_builder
-        Mapper::Builder::Relationship::OneToMany
-      end
-
     end # class OneToMany
   end # class Relationship
 end # module DataMapper

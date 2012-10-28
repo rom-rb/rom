@@ -58,14 +58,14 @@ describe 'PORO with an embedded value' do
   end
 
   let(:operation) do
-    left  = DataMapper.relation_registry[:users]
-    right = DataMapper.relation_registry[:addresses]
+    left  = User::Mapper.relations[:users].relation
+    right = Address::Mapper.relations[:addresses].relation
 
     left.join(right).restrict { |r| r.id.eq(r.user_id) }
   end
 
   it 'loads a user with an address' do
-    mapper = User::Mapper.new(operation.optimize)
+    mapper = User::Mapper.new(operation)
     users  = mapper.to_a
 
     user1, user2 = users

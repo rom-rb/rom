@@ -4,6 +4,7 @@ module DataMapper
 
       class Base < self
 
+        # @api private
         def self.from(other)
           klass = super
           klass.relation_name(other.relation_name)
@@ -23,21 +24,26 @@ module DataMapper
 
         # @api public
         def self.relation
-          @relation ||= Veritas::Relation::Base.new(
-            relation_name, attributes.header
-          )
+          @relation ||= engine.base_relation(relation_name, attributes.header)
         end
 
-        def self.finalize
-          gateway_relation = Mapper.register_relation(repository, relation)
-          Mapper.mapper_registry << new(gateway_relation)
-        end
-
-        def self.key(names)
-          Array(names).each do |name|
+        # @api public
+        def self.key(*names)
+          names.each do |name|
             attributes << attributes[name].clone(:key => true)
           end
         end
+
+        # @api private
+        def self.aliases
+          @aliases ||= AliasSet.new(Inflector.singularize(relation_name), attributes)
+        end
+
+        # @api private
+        def self.finalize
+          Mapper.mapper_registry << new(relations.node_for(gateway_relation))
+        end
+
       end # class Base
     end # class Relation
   end # class Mapper

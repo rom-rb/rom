@@ -5,4 +5,3 @@ module DataMapper
     end # module Builder
   end # class Relationship
 end # module DataMapper
-

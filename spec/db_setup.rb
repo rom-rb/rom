@@ -4,8 +4,6 @@ CONFIG.each do |name, uri|
   DataMapper.setup(name, uri)
 end
 
-DATABASE_ADAPTER = DataMapper.adapters[:postgres]
-
 MAX_RELATION_SIZE = 10
 
 def setup_db
@@ -19,6 +17,8 @@ def setup_db
   connection.create_command('DROP TABLE IF EXISTS "songs"').execute_non_query
   connection.create_command('DROP TABLE IF EXISTS "song_tags"').execute_non_query
   connection.create_command('DROP TABLE IF EXISTS "tags"').execute_non_query
+  connection.create_command('DROP TABLE IF EXISTS "infos"').execute_non_query
+  connection.create_command('DROP TABLE IF EXISTS "info_contents"').execute_non_query
 
   connection.create_command(<<-SQL.gsub(/\s+/, ' ').strip).execute_non_query
     CREATE TABLE "users"
@@ -57,6 +57,22 @@ def setup_db
     CREATE TABLE "tags"
       ( "id"   SERIAL NOT NULL PRIMARY KEY,
         "name" VARCHAR(50) NOT NULL
+      )
+  SQL
+
+  connection.create_command(<<-SQL.gsub(/\s+/, ' ').strip).execute_non_query
+    CREATE TABLE "infos"
+      ( "id"     SERIAL NOT NULL PRIMARY KEY,
+        "tag_id" INTEGER NOT NULL,
+        "text"   VARCHAR(50) NOT NULL
+      )
+  SQL
+
+  connection.create_command(<<-SQL.gsub(/\s+/, ' ').strip).execute_non_query
+    CREATE TABLE "info_contents"
+      ( "id"      SERIAL NOT NULL PRIMARY KEY,
+        "info_id" INTEGER NOT NULL,
+        "content" VARCHAR(50) NOT NULL
       )
   SQL
 
@@ -128,6 +144,28 @@ def insert_tag(id, name, connection = nil)
     'INSERT INTO "tags" ("id", "name") VALUES (?, ?)')
 
   insert_users.execute_non_query(id, name)
+
+  connection.close
+end
+
+def insert_info(id, tag_id, text, connection = nil)
+  connection ||= DataObjects::Connection.new(CONFIG['postgres'])
+
+  insert_users = connection.create_command(
+    'INSERT INTO "infos" ("id", "tag_id", "text") VALUES (?, ?, ?)')
+
+  insert_users.execute_non_query(id, tag_id, text)
+
+  connection.close
+end
+
+def insert_info_content(id, info_id, content, connection = nil)
+  connection ||= DataObjects::Connection.new(CONFIG['postgres'])
+
+  insert_info_contents = connection.create_command(
+    'INSERT INTO "info_contents" ("id", "info_id", "content") VALUES (?, ?, ?)')
+
+  insert_info_contents.execute_non_query(id, info_id, content)
 
   connection.close
 end

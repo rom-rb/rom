@@ -9,12 +9,16 @@ module DataMapper
 
         def initialize(name, options = {})
           super
-          @type = options.fetch(:type) { raise(MissingTypeOptionError) }
+          @type    = options.fetch(:type) { raise(MissingTypeOptionError) }
+          @aliases = options.fetch(:aliases, {})
         end
 
         # @api public
         def finalize
-          @mapper = DataMapper[type]
+          mapper = DataMapper[type]
+          mapper = mapper.remap(@aliases) if @aliases.any?
+
+          @mapper = mapper
         end
 
         # @api public
@@ -24,12 +28,7 @@ module DataMapper
 
         # @api public
         def load(tuple)
-          begin
-            mapper.load(tuple)
-          rescue
-            # FIXME: remove this when tuple#include? is implemented
-            nil
-          end
+          mapper.load(tuple)
         end
 
         # @api private

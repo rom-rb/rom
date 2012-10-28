@@ -7,6 +7,8 @@ module DataMapper
     class Relation < self
       alias_method :all, :to_a
 
+      attr_reader :relationships
+
       def self.from(other, name = nil)
         klass = super
         klass.repository(other.repository)
@@ -24,8 +26,13 @@ module DataMapper
         end
       end
 
+      # @api private
+      def self.engine
+        @engine ||= DataMapper.engines[repository]
+      end
+
       def self.relation
-        @relation ||= Veritas::Relation::Empty.new(attributes.header)
+        raise NotImplementedError, "#{self}.#{__method__} must be implemented"
       end
 
       # @api private
@@ -38,11 +45,16 @@ module DataMapper
       # @return [undefined]
       #
       # @api public
-      def initialize(relation = self.class.relation)
+      def initialize(relation = self.class.relation, attributes = self.class.attributes)
         @relation      = relation
-        @attributes    = self.class.attributes
+        @attributes    = attributes
         @relationships = self.class.relationships
         @model         = self.class.model
+      end
+
+      # TODO find a better name
+      def remap(aliases)
+        self.class.new(@relation, @attributes.remap(aliases))
       end
 
       # @api public
@@ -53,6 +65,16 @@ module DataMapper
       end
 
       # @api public
+      def relation_name
+        self.class.relation_name
+      end
+
+      # @api public
+      def model
+        self.class.model
+      end
+
+      # @api public
       def inspect
         "<##{self.class.name}:#{object_id} @model=#{@model} @repository=#{self.class.repository} @relation=#{@relation}>"
       end
@@ -60,7 +82,7 @@ module DataMapper
       # @api public
       def find(options)
         restriction = @relation.restrict(Query.new(options, @attributes))
-        self.class.new(restriction.optimize)
+        self.class.new(restriction)
       end
 
       # @api public
@@ -92,7 +114,7 @@ module DataMapper
 
       # @api public
       def include(name)
-        @relationships[name].call
+        Mapper.mapper_registry[self.class.model, relationships[name]]
       end
 
       # @api public
@@ -112,9 +134,7 @@ module DataMapper
 
       # @api public
       def join(other)
-        # FIXME: somehow...:)
-        other_relation = other.kind_of?(Mapper) ? other.relation : other
-        self.class.new(@relation.join(other_relation))
+        self.class.new(@relation.join(other.relation))
       end
 
       # @api private
