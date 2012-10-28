@@ -1,19 +1,28 @@
 module DataMapper
   class Mapper
 
+    # Builds relationship mappers
+    #
     class Builder
 
+      # Builds a mapper based on a connector and source mapper class
+      #
+      # @param [RelationRegistry::Connector] connector
+      # @param [Class] source mapper
+      #
+      # @return [Class]
+      #
+      # @api public
       def self.call(connector, source_mapper_class)
         new(connector, source_mapper_class).mapper
       end
 
       def initialize(connector, source_mapper_class)
-        @connector          = connector
-        @source_model  = @connector.source_model
-        @target_model  = @connector.target_model
+        @connector     = connector
+        @source_model  = connector.source_model
+        @target_model  = connector.target_model
         @source_mapper = source_mapper_class
-
-        @name = @connector.relationship.name
+        @name          = connector.relationship.name
       end
 
       def mapper
