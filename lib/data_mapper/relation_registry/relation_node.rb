@@ -20,7 +20,7 @@ module DataMapper
 
       # @api public
       def <<(object)
-        @relation.<<(object)
+        @relation << object
       end
 
     end # class RelationNode
