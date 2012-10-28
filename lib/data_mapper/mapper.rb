@@ -126,6 +126,11 @@ module DataMapper
       relationships.finalize
     end
 
+    # @api public
+    def relations
+      self.class.relations
+    end
+
     # Load a domain object
     #
     # @api private
