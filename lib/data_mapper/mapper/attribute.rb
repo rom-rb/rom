@@ -4,6 +4,7 @@ module DataMapper
     #
     # @api private
     class Attribute
+      include Equalizer.new(:name, :type, :field, :options)
 
       # @api private
       attr_reader :name
