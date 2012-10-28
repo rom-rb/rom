@@ -10,12 +10,12 @@ module DataMapper
 
     # @api private
     def base_relation(name, header)
-      raise NotImplementedError, "#{self.class}#base_relation must be implemented"
+      raise NotImplementedError, "#{self.class}##{__method__} must be implemented"
     end
 
     # @api private
     def gateway_relation(relation)
-      raise NotImplementedError, "#{self.class}#gateway_relation must be implemented"
+      raise NotImplementedError, "#{self.class}##{__method__} must be implemented"
     end
   end
 end
