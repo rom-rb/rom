@@ -1,13 +1,11 @@
 class Graph
   class Edge
     attr_reader :name
-
     attr_reader :left
-
     attr_reader :right
 
     def initialize(name, left, right)
-      @name  = name
+      @name  = name.to_sym
       @left  = left
       @right = right
       @nodes = Set.new([ @left, @right ])

@@ -55,8 +55,8 @@ module DataMapper
     # @return [RelationRegistry::RelationNode]
     #
     # @api private
-    def build_node(name, relation, aliases = nil)
-      node_class.new(name.to_sym, relation, aliases)
+    def build_node(*args)
+      node_class.new(*args)
     end
 
     # Add new relation connector to the graph
@@ -73,8 +73,8 @@ module DataMapper
     # @return [RelationRegistry::RelationConnector]
     #
     # @api private
-    def build_edge(name, left, right)
-      edge_class.new(name.to_sym, left, right)
+    def build_edge(*args)
+      edge_class.new(*args)
     end
 
     # Add new relation node to the graph
