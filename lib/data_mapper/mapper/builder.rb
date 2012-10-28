@@ -58,7 +58,7 @@ module DataMapper
       end
 
       def mapper_name
-        "#{@source_mapper.name}_X_#{Inflector.camelize(@connector.name.to_s)}_Mapper"
+        "#{@source_mapper.name}_X_#{Inflector.camelize(@connector.name)}_Mapper"
       end
 
       def target_model_attribute_options
