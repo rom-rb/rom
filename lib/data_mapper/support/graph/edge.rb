@@ -8,7 +8,7 @@ class Graph
       @name  = name.to_sym
       @left  = left
       @right = right
-      @nodes = Set.new([ @left, @right ])
+      @nodes = Set[ left, right ]
     end
 
     def connects?(node)
