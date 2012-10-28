@@ -13,6 +13,16 @@ module DataMapper
         @aliases  = aliases || {}
       end
 
+      # @api public
+      def each(&block)
+        @relation.each(&block)
+      end
+
+      # @api public
+      def <<(object)
+        @relation.<<(object)
+      end
+
     end # class RelationNode
 
   end # class RelationRegistry
