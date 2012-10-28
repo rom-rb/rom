@@ -12,11 +12,11 @@ module DataMapper
     end
 
     # @api private
-    def initialize(mappers)
+    def initialize(mappers, edge_builder = RelationRegistry::Builder, mapper_builder = Mapper::Builder)
       @mappers         = mappers
       @mapper_registry = Mapper.mapper_registry
-      @edge_builder    = RelationRegistry::Builder
-      @mapper_builder  = Mapper::Builder
+      @edge_builder    = edge_builder
+      @mapper_builder  = mapper_builder
 
       @base_relation_mappers = @mappers.select { |mapper| mapper.respond_to?(:relation_name) }
     end
