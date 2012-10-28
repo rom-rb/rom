@@ -3,19 +3,30 @@ module DataMapper
     attr_reader :adapter
     attr_reader :relations
 
-    def initialize(uri)
+    # @api private
+    def initialize(uri = nil)
       @uri       = uri
       @relations = RelationRegistry.new(self)
     end
 
-    # @api private
-    def base_relation(name, header)
+    # @api public
+    def relation_node_class
+      RelationRegistry::RelationNode
+    end
+
+    # @api public
+    def relation_edge_class
+      RelationRegistry::RelationNode
+    end
+
+    # @api public
+    def base_relation(name)
       raise NotImplementedError, "#{self.class}##{__method__} must be implemented"
     end
 
-    # @api private
+    # @api public
     def gateway_relation(relation)
-      raise NotImplementedError, "#{self.class}##{__method__} must be implemented"
+      relation
     end
   end
 end
