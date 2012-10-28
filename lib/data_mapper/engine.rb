@@ -16,7 +16,7 @@ module DataMapper
 
     # @api public
     def relation_edge_class
-      RelationRegistry::RelationNode
+      RelationRegistry::RelationEdge
     end
 
     # @api public
