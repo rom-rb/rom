@@ -48,6 +48,7 @@ module DataMapper
       }.flatten
     end
 
+    # @api private
     def finalize_base_relation_mappers
       @base_relation_mappers.each do |mapper|
         model = mapper.model
@@ -71,10 +72,12 @@ module DataMapper
       end
     end
 
+    # @api private
     def finalize_attribute_mappers
-      mappers.each { |mapper| mapper.finalize_attributes }
+      mappers.each(&:finalize_attributes)
     end
 
+    # @api private
     def finalize_relationship_mappers
       @base_relation_mappers.map(&:relations).uniq.each do |relations|
         relations.connectors.each_value do |connector|
@@ -91,5 +94,6 @@ module DataMapper
         mapper.relations.freeze unless mapper.relations.frozen?
       end
     end
+
   end # class Finalizer
 end # module DataMapper
