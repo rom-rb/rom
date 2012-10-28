@@ -27,11 +27,13 @@ module DataMapper
         end
 
         # @api private
+        # TODO: add specs
         def first
           to_a.first
         end
 
         # @api private
+        # TODO: add specs
         def last
           to_a.last
         end

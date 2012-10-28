@@ -1,5 +1,6 @@
 module DataMapper
 
+  # TODO: split this giant into smaller objects and add proper unit specs
   class Finalizer
     attr_reader :mapper_registry
     attr_reader :edge_builder

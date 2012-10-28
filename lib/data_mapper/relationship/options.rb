@@ -1,6 +1,8 @@
 module DataMapper
   class Relationship
 
+    # TODO: Options with validators seems to be an overkill - why not moving
+    #       this to relationship sub-classes?
     class Options
 
       attr_reader :name

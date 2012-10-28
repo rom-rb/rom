@@ -65,6 +65,7 @@ module DataMapper
       end
 
       # @api private
+      # TODO: add specs
       def includes?(attribute)
         ! self[attribute.name].nil?
       end

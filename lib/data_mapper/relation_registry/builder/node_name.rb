@@ -12,6 +12,7 @@ module DataMapper
         attr_reader :relationship_name
 
         # @api private
+        # TODO: add specs
         def initialize(*args)
           @left, @right = args[0..1]
           @relationship_name = args.last if args.size == 3
@@ -22,6 +23,7 @@ module DataMapper
         end
 
         # @api private
+        # TODO: add specs
         def each(&block)
           to_ary.each(&block)
         end

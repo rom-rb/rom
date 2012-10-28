@@ -7,7 +7,7 @@ module DataMapper
 
         # @api public
         #
-        # TODO: simplify this when veritas starts supporting tuple grouping
+        # TODO: refactor this and add support for multi-include
         def each
           return to_enum unless block_given?
 
@@ -38,14 +38,17 @@ module DataMapper
         end
       end # module Iterator
 
+      # TODO: add spec
       def collection_target?
         true
       end
 
+      # TODO: add spec
       def default_source_key
         :id
       end
 
+      # TODO: add spec
       def default_target_key
         @options.foreign_key_name(@target_model)
       end

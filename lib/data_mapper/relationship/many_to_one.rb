@@ -6,11 +6,13 @@ module DataMapper
       private
 
       # @api private
+      # TODO: add specs
       def default_source_key
         foreign_key_name
       end
 
       # @api private
+      # TODO: add specs
       def default_target_key
         :id
       end

@@ -23,11 +23,13 @@ module DataMapper
     end
 
     # @api private
+    # TODO: add specs
     def reset
       self.class.new(engine)
     end
 
     # @api private
+    # TODO: add specs
     def freeze
       super
       @edges.freeze
@@ -64,6 +66,7 @@ module DataMapper
     # @return [self]
     #
     # @api private
+    # TODO: add specs
     def new_edge(*args)
       add_edge(build_edge(*args))
     end

@@ -7,6 +7,7 @@ module DataMapper
     include Enumerable
     extend DescendantsTracker
 
+    # TODO: refactor, add specs, use Mapper::Builder::Class
     def self.from(other, name)
       mapper_name = name ? name : "#{other.model}Mapper"
 
@@ -57,6 +58,7 @@ module DataMapper
       self
     end
 
+    # TODO: add specs
     def self.has(cardinality, name, *args, &op)
       relationship = Relationship::Builder::Has.build(
         self, cardinality, name, *args, &op
@@ -65,6 +67,7 @@ module DataMapper
       relationships << relationship
     end
 
+    # TODO: add specs
     def self.belongs_to(name, *args, &op)
       relationship = Relationship::Builder::BelongsTo.build(
         self, name, *args, &op
@@ -73,6 +76,7 @@ module DataMapper
       relationships << relationship
     end
 
+    # TODO: add specs
     def self.n
       Infinity
     end
@@ -82,6 +86,7 @@ module DataMapper
       mapper_registry[model]
     end
 
+    # TODO: add specs
     def self.relation
       raise NotImplementedError, "#{self.class}.relation must be implemented"
     end
@@ -106,6 +111,7 @@ module DataMapper
       @relations ||= engine.relations
     end
 
+    # TODO: add specs
     def self.gateway_relation
       @gateway_relation ||= engine.gateway_relation(relation)
     end
@@ -127,6 +133,7 @@ module DataMapper
     end
 
     # @api public
+    # TODO: add specs
     def relations
       self.class.relations
     end

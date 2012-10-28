@@ -26,6 +26,7 @@ module DataMapper
               "#{model.name}Mapper"
             end
 
+            # TODO: add specs
             def self.inspect
               "<##{name}:#{object_id}>"
             end

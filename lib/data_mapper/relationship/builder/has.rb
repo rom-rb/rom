@@ -3,13 +3,14 @@ module DataMapper
     module Builder
 
       class Has
-
         include Builder
 
+        # TODO: add specs
         def self.build(source, cardinality, name, *args, &op)
           new(source, cardinality, name, *args, &op).relationship
         end
 
+        # TODO: add specs
         def initialize(source, cardinality, name, *args, &op)
           options      = Utils.extract_options(args)
           target_model = Utils.extract_type(args)
@@ -39,6 +40,7 @@ module DataMapper
 
         private
 
+        # TODO: refactor
         def extract_min_max(cardinality, name = nil)
           case cardinality
           when Integer  then [ cardinality,       cardinality      ]

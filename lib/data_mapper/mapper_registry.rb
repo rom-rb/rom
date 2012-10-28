@@ -23,6 +23,7 @@ module DataMapper
     end
 
     # @api public
+    # TODO: add specs
     def each
       return to_enum unless block_given?
       @mappers.each { |identifier, mapper| yield(identifier, mapper) }
@@ -36,6 +37,7 @@ module DataMapper
     end
 
     # @api public
+    # TODO: add specs
     def include?(model, relationships = [])
       @mappers.key?(Identifier.new(model, relationships))
     end

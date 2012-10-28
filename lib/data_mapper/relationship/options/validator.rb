@@ -4,10 +4,12 @@ module DataMapper
 
       class Validator
 
+        # TODO: add spec
         def initialize(options)
           @options = options
         end
 
+        # TODO: add spec
         def validate
           # TODO implement (in subclasses)
         end
