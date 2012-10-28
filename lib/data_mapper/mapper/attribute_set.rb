@@ -12,17 +12,25 @@ module DataMapper
         @attributes = {}
       end
 
+      # @api public
+      def finalize
+        each { |attribute| attribute.finalize }
+      end
+
+      # @api public
+      def alias_index(prefix, excluded = [])
+        primitives.each_with_object({}) { |attribute, index|
+          next if excluded.include?(attribute.name)
+          index[attribute.field] = attribute.aliased_field(prefix)
+        }
+      end
+
       # @api private
       def merge(other)
         instance = self.class.new
         each       { |attribute| instance << attribute.clone(:to => attribute.field) }
         other.each { |attribute| instance << attribute.clone(:to => attribute.field) }
         instance
-      end
-
-      # @api public
-      def finalize
-        each { |attribute| attribute.finalize }
       end
 
       # TODO find a better name and implementation

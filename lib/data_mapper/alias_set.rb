@@ -11,7 +11,7 @@ module DataMapper
       @prefix     = prefix
       @attributes = attributes
       @excluded   = excluded
-      initialize_index(attributes)
+      @index      = attributes.alias_index(prefix, excluded)
     end
 
     # @api private
@@ -38,25 +38,5 @@ module DataMapper
       @index
     end
 
-    private
-
-    # @api private
-    def initialize_index(attributes)
-      @index = attributes.primitives.each_with_object({}) do |attribute, fields|
-        next if excluded?(attribute)
-        field = attribute.field
-        fields[field] = alias_for(field)
-      end
-    end
-
-    # @api private
-    def excluded?(attribute)
-      @excluded.include?(attribute.name)
-    end
-
-    # @api private
-    def alias_for(field)
-      :"#{@prefix}_#{field}"
-    end
-  end
-end
+  end # class AliasSet
+end # module DataMapper

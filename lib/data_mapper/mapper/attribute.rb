@@ -45,6 +45,11 @@ module DataMapper
         # noop
       end
 
+      # @api public
+      def aliased_field(prefix)
+        :"#{prefix}_#{field}"
+      end
+
       # @api private
       #
       def load(tuple)
