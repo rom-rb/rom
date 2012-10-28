@@ -18,7 +18,7 @@ module DataMapper
       # @api private
       attr_reader :options
 
-      PRIMITIVES = Veritas::Attribute.descendants.map(&:primitive).freeze
+      PRIMITIVES = [ String, Time, Integer, Float, BigDecimal, DateTime, Date, Class, TrueClass, Numeric, Object ].freeze
 
       # @api public
       def self.build(name, options = {})
