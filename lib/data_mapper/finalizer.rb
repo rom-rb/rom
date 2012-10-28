@@ -40,7 +40,7 @@ module DataMapper
     # @api private
     def relationships_for_target(model)
       @base_relation_mappers.map { |mapper|
-        relationships     = mapper.relationships.select { |relationship| relationship.target_model == model }
+        relationships     = mapper.relationships.select { |relationship| relationship.target_model.equal?(model) }
         names             = relationships.map(&:name)
         via_relationships = mapper.relationships.select { |relationship| names.include?(relationship.via) }
 
