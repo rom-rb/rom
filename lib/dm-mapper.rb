@@ -31,8 +31,6 @@ module DataMapper
   end
 
   # @api public
-  #
-  # TODO: implement handling of dependencies between mappers
   def self.finalize
     Finalizer.run
     self
