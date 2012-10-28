@@ -28,13 +28,7 @@ module DataMapper
 
         # @api public
         def load(tuple)
-          begin
-            mapper.load(tuple)
-          rescue => e
-            warn "AAA: #{e.message}"
-            # FIXME: remove this when tuple#include? is implemented
-            nil
-          end
+          mapper.load(tuple)
         end
 
         # @api private
