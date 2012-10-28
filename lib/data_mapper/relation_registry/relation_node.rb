@@ -2,9 +2,7 @@ module DataMapper
   class RelationRegistry
 
     class RelationNode < Graph::Node
-      include Enumerable
-
-      include Equalizer.new(:name, :relation)
+      include Enumerable, Equalizer.new(:name, :relation)
 
       attr_reader :relation
       attr_reader :aliases
