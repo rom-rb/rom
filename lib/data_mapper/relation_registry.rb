@@ -8,6 +8,7 @@ module DataMapper
     attr_reader :edge_class
     attr_reader :connectors
 
+    # @api private
     def initialize(engine)
       super()
       @engine     = engine
@@ -95,7 +96,8 @@ module DataMapper
     #
     # @api private
     def [](name)
-      @nodes.detect { |node| node.name == name.to_sym }
+      name = name.to_sym
+      @nodes.detect { |node| node.name == name }
     end
 
     # Return relation node for the given relation
