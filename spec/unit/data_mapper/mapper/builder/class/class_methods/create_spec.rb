@@ -19,7 +19,7 @@ describe DataMapper::Mapper::Builder::Class, '.create' do
 
     its(:name)          { should eql("TestModelMapper") }
     its(:model)         { should be(model) }
-    its(:relation_name) { should eql("test_models") }
+    its(:relation_name) { should eql(:test_models) }
     its(:repository)    { should be(repository) }
   end
 

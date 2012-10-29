@@ -7,19 +7,9 @@ module DataMapper
     include Enumerable
     extend DescendantsTracker
 
-    # TODO: refactor, add specs, use Mapper::Builder::Class
+    # TODO: refactor, add specs
     def self.from(other, name)
-      mapper_name = name ? name : "#{other.model}Mapper"
-
-      klass = Class.new(self)
-
-      klass.class_eval <<-RUBY
-        def self.name
-          #{mapper_name.inspect}
-        end
-      RUBY
-
-      klass.model(other.model)
+      klass = Builder::Class.define_for(other.model, self, name)
 
       other.attributes.each do |attribute|
         klass.attributes << attribute

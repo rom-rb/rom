@@ -53,9 +53,10 @@ module DataMapper
         # @return [Class]
         #
         # @api public
-        def self.define_for(model)
-          name  = name_for(model)
-          klass = ::Class.new(Mapper::Relation::Base)
+        def self.define_for(model, parent = Mapper::Relation::Base, name = nil)
+          name  ||= name_for(model)
+
+          klass = ::Class.new(parent)
           klass.model(model)
 
           klass.class_eval <<-RUBY, __FILE__, __LINE__ + 1
@@ -64,7 +65,7 @@ module DataMapper
             end
 
             def self.inspect
-              "<#\#{name} @model=\#{model.name} @repository=\#{repository} @relation_name=\#{relation_name}>"
+              "<#\#{name} @model=\#{model.name}>"
             end
           RUBY
 

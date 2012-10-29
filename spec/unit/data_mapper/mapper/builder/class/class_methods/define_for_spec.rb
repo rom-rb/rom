@@ -6,14 +6,23 @@ describe DataMapper::Mapper::Builder::Class, '.define_for' do
   let(:model) { mock_model("TestModel") }
 
   describe "created class" do
-    before do
-      subject.repository(:test)
-      subject.relation_name(:test_models)
+    its(:name)    { should eql("TestModelMapper") }
+    its(:inspect) { should eql("<#TestModelMapper @model=TestModel>") }
+
+    context "without a parent" do
+      it { should < Mapper::Relation::Base }
     end
 
-    it { should < Mapper::Relation::Base }
+    context "with a parent" do
+      subject { described_class.define_for(model, Mapper) }
 
-    its(:name)    { should eql("TestModelMapper") }
-    its(:inspect) { should eql("<#TestModelMapper @model=TestModel @repository=test @relation_name=test_models>") }
+      it { should < Mapper }
+    end
+
+    context "with a name" do
+      subject { described_class.define_for(model, Mapper, 'TestModel_Mapper') }
+
+      its(:name) { should eql('TestModel_Mapper') }
+    end
   end
 end
