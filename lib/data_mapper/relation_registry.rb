@@ -114,9 +114,16 @@ module DataMapper
       self[relation.name.to_sym]
     end
 
+    # Returns an edge for the given left/right nodes
+    #
+    # @param [DataMapper::RelationRegistry::RelationNode] left relation node
+    # @param [DataMapper::RelationRegistry::RelationNode] right relation node
+    #
+    # @return [DataMapper::RelationRegistry::RelationEdge, nil]
+    #
     # @api private
     def edge_for(left, right)
-      edges.detect { |edge| edge.left == left && edge.right == right }
+      edges.detect { |edge| edge.left.equal?(left) && edge.right.equal?(right) }
     end
 
   end # class RelationRegistry
