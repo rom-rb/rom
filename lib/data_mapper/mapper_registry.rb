@@ -1,7 +1,10 @@
 module DataMapper
 
+  # Mapper registry
+  #
   class MapperRegistry
 
+    # Identifier used for mapper hash
     class Identifier
       include Equalizer.new(:model, :relationships)
 
@@ -17,44 +20,80 @@ module DataMapper
 
     include Enumerable
 
+    # Initializes an empty mapper registry
+    #
+    # @param [Hash] mappers
+    #
+    # @return [undefined]
+    #
     # @api public
     def initialize(mappers = {})
       @mappers = mappers
     end
 
+    # Iterate on mappers
+    #
+    # @yield [DataMapper::MapperRegistry::Identifier, DataMapper::Mapper]
+    #
     # @api public
-    # TODO: add specs
     def each
       return to_enum unless block_given?
       @mappers.each { |identifier, mapper| yield(identifier, mapper) }
-
       self
     end
 
+    # Returns a model => relation_name map
+    #
+    # @return [Hash]
+    #
     # @api public
     def relation_map
       @mappers.values.each_with_object({}) { |mapper, h| h[mapper.model] = mapper.relation_name }
     end
 
+    # Checks if the given model has a mapper
+    #
+    # @param [Class]
+    # @param [DataMapper::Relationship]
+    #
+    # @return [Boolean]
+    #
     # @api public
-    # TODO: add specs
     def include?(model, relationships = [])
       @mappers.key?(Identifier.new(model, relationships))
     end
 
+    # Accesses mapper instance by a given model or model and its relationship
+    #
+    # @param [Class]
+    # @param [DataMapper::Relationship]
+    #
+    # @return [DataMapper::Mapper]
+    #
     # @api public
     def [](model, relationships = [])
       @mappers[Identifier.new(model, relationships)]
     end
 
+    # Registers a new mapper instance
+    #
+    # @param [DataMapper::Mapper]
+    # @param [DataMapper::Relationship]
+    #
+    # @return [self]
+    #
     # @api public
     def register(mapper, relationships = [])
       @mappers[Identifier.new(mapper.class.model, relationships)] = mapper
+      self
     end
 
+    # @see [DataMapper::MapperRegistry#register]
+    #
     # @api public
     def <<(mapper, relationships = [])
       register(mapper, relationships)
     end
+
   end # class MapperRegistry
 end # module DataMapper
