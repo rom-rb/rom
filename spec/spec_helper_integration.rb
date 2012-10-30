@@ -1,7 +1,7 @@
 ROOT = File.expand_path('../..', __FILE__)
 
 require 'backports'
-require 'backports/basic_object'
+require 'backports/basic_object' unless defined?(BasicObject)
 require 'rubygems'
 
 begin
