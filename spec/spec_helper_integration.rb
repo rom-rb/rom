@@ -92,7 +92,7 @@ RSpec.configure do |config|
 
   config.before do
     DataMapper.engines.each do |name, engine|
-      engine.instance_variable_set(:@relations, engine.relations.reset)
+      engine.instance_variable_set(:@relations, engine.relations.class.new(engine))
     end
 
     DataMapper::Mapper.descendants.each do |mapper|

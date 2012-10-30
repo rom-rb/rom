@@ -3,11 +3,41 @@ module DataMapper
   # Graph representation of finalized relations
   #
   class RelationRegistry < Graph
+
+    # Engine used in this registry
+    #
+    # @return [DataMapper::Engine]
+    #
+    # @api public
     attr_reader :engine
+
+    # Relation node class that is used in this registry
+    #
+    # @return [Class]
+    #
+    # @api public
     attr_reader :node_class
+
+    # Relation edge class that is used in this registry
+    #
+    # @return [Class]
+    #
+    # @api public
     attr_reader :edge_class
+
+    # Connector hash
+    #
+    # @return [Hash]
+    #
+    # @api public
     attr_reader :connectors
 
+    # Initialize a new relation registry object
+    #
+    # @param [DataMapper::Engine]
+    #
+    # @return [undefined]
+    #
     # @api private
     def initialize(engine)
       super()
@@ -17,24 +47,29 @@ module DataMapper
       @connectors = {}
     end
 
+    # Register a new connector
+    #
+    # @param [DataMapper::RelationRegistry::Connector]
+    #
+    # @return [self]
+    #
     # @api private
     def add_connector(connector)
       @connectors[connector.name] = connector
+      self
     end
 
+    # Freezes entire graph
+    #
+    # @return [self]
+    #
     # @api private
-    # TODO: add specs
-    def reset
-      self.class.new(engine)
-    end
-
-    # @api private
-    # TODO: add specs
     def freeze
       super
       @edges.freeze
       @nodes.freeze
       @connectors.freeze
+      self
     end
 
     # Add new relation node to the graph
