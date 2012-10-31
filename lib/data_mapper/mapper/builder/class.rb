@@ -17,9 +17,14 @@ module DataMapper
         #   mapper.repository    #=> :default
         #   mapper.relation_name #=> :users
         #
-        # @param [::Class] model
-        # @param [Symbol] repository name
-        # @param [Proc] block that will be evaled in the context of created class
+        # @param [Model, ::Class(.name, .attribute_set)] model
+        #   the model used by the generated mapper
+        #
+        # @param [Symbol] repository
+        #   the repository name to use for the generated mapper
+        #
+        # @param [Proc, nil] block
+        #   a block to be class_eval'ed in the context of the generated mapper
         #
         # @return [Mapper::Relation]
         #

@@ -7,14 +7,17 @@ module DataMapper
   # Represent a positive, infinitely large Float number
   Infinity  = 1.0 / 0
 
-  # Setups a connection with a database
+  # Setup a connection with a database
   #
   # @example
   #   DataMapper.setup(:default, 'postgres://localhost/test')
   #
-  # @param [String, Symbol, #to_sym] repository name
-  # @param [String] database connection URI
-  # @param [Engine] backend engine that should be used for mappers
+  # @param [String, Symbol, #to_sym] name
+  #   the repository name
+  # @param [String] uri
+  #   the database connection URI
+  # @param [Engine] engine
+  #   the backend engine that should be used for mappers
   #
   # @return [self]
   #
@@ -28,6 +31,9 @@ module DataMapper
   #
   # @example
   #   DataMapper.engines # => {:default=>#<Engine::VeritasEngine:0x108168bf0..>}
+  #
+  # @return [Hash<Symbol, Engine>]
+  #   a hash mapping a repository name to the engine used for that name
   #
   # @api public
   def self.engines
@@ -51,8 +57,14 @@ module DataMapper
   #     key :id
   #   end
   #
-  # @param [Model] model
-  # @param [Symbol] repository name
+  # @param [Model, ::Class(.name, .attribute_set)] model
+  #   the model used by the generated mapper
+  #
+  # @param [Symbol] repository
+  #   the repository name to use for the generated mapper
+  #
+  # @param [Proc, nil] &block
+  #   a block to be class_eval'ed in the context of the generated mapper
   #
   # @return [Mapper::Relation]
   #
@@ -62,6 +74,8 @@ module DataMapper
   end
 
   # Finalize the environment after all mappers were defined
+  #
+  # @see Finalizer#run
   #
   # @example
   #
