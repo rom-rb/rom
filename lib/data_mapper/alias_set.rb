@@ -6,15 +6,21 @@ module DataMapper
 
     # Prefix used for aliasing
     #
+    # @return [Symbol]
+    #
     # @api private
     attr_reader :prefix
 
     # AttributeSet instance from a mapper
     #
+    # @return [AttributeSet]
+    #
     # @api private
     attr_reader :attributes
 
     # An array of attributes that should be excluded from aliasing
+    #
+    # @return [Array<Symbol>]
     #
     # @api private
     attr_reader :excluded
@@ -36,6 +42,8 @@ module DataMapper
     end
 
     # Iterate on alias index
+    #
+    # @return [self]
     #
     # @api private
     def each(&block)
