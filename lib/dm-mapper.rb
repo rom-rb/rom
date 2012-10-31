@@ -4,6 +4,7 @@ module DataMapper
   # Represent an undefined argument
   Undefined = Object.new.freeze
 
+  # Represent a positive, infinitely large Float number
   Infinity  = 1.0 / 0
 
   # Setups a connection with a database
