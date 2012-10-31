@@ -22,7 +22,7 @@ module DataMapper
         #
         # @return [undefined]
         #
-        # @raises [DataMapper::Relationship::Options::Validator::InvalidOptionException]
+        # @raise [DataMapper::Relationship::Options::Validator::InvalidOptionException]
         #
         # @abstract
         #

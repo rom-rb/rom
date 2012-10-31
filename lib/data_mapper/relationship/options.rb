@@ -103,7 +103,7 @@ module DataMapper
 
       # Return type of the options object
       #
-      # @raises [NotImplementedError]
+      # @raise [NotImplementedError]
       #
       # @abstract
       #
@@ -143,7 +143,7 @@ module DataMapper
 
       # Validates this options object using a specialized validator
       #
-      # @raises [DataMapper::Relationship::Validator::InvalidOptionException]
+      # @raise [DataMapper::Relationship::Validator::InvalidOptionException]
       #
       # @api private
       def validate
@@ -152,7 +152,7 @@ module DataMapper
 
       # Returns validator class for this options object
       #
-      # @raises [NotImplementedError]
+      # @raise [NotImplementedError]
       #
       # @abstract
       #
