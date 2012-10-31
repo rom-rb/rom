@@ -6,12 +6,14 @@ module DataMapper
 
     # Engine used in this registry
     #
-    # @return [DataMapper::Engine]
+    # @return [Engine]
     #
     # @api public
     attr_reader :engine
 
     # Relation node class that is used in this registry
+    #
+    # @see Engine#relation_node_class
     #
     # @return [Class]
     #
@@ -19,6 +21,8 @@ module DataMapper
     attr_reader :node_class
 
     # Relation edge class that is used in this registry
+    #
+    # @see Engine#relation_edge_class
     #
     # @return [Class]
     #
@@ -34,7 +38,7 @@ module DataMapper
 
     # Initialize a new relation registry object
     #
-    # @param [DataMapper::Engine]
+    # @param [Engine]
     #
     # @return [undefined]
     #
@@ -49,7 +53,7 @@ module DataMapper
 
     # Register a new connector
     #
-    # @param [DataMapper::RelationRegistry::Connector]
+    # @param [Connector]
     #
     # @return [self]
     #
@@ -89,14 +93,14 @@ module DataMapper
     #
     # @param [AliasSet,nil] aliases
     #
-    # @return [RelationRegistry::RelationNode]
+    # @return [RelationNode]
     #
     # @api private
     def build_node(*args)
       node_class.new(*args)
     end
 
-    # Add new relation connector to the graph
+    # Add new relation edge to the graph
     #
     # @return [self]
     #
@@ -108,7 +112,7 @@ module DataMapper
 
     # Build a new edge
     #
-    # @return [RelationRegistry::RelationConnector]
+    # @return [RelationEdge]
     #
     # @api private
     def build_edge(*args)
@@ -130,7 +134,7 @@ module DataMapper
     #
     # @param [Symbol] name of the relation
     #
-    # @return [DataMapper::RelationRegistry::RelationNode]
+    # @return [RelationNode]
     #
     # @api private
     def [](name)
@@ -142,7 +146,7 @@ module DataMapper
     #
     # @param [Veritas::Relation] relation
     #
-    # @return [DataMapper::RelationRegistry::RelationNode]
+    # @return [RelationNode]
     #
     # @api private
     def node_for(relation)
@@ -151,10 +155,10 @@ module DataMapper
 
     # Returns an edge for the given left/right nodes
     #
-    # @param [DataMapper::RelationRegistry::RelationNode] left relation node
-    # @param [DataMapper::RelationRegistry::RelationNode] right relation node
+    # @param [RelationNode] left relation node
+    # @param [RelationNode] right relation node
     #
-    # @return [DataMapper::RelationRegistry::RelationEdge, nil]
+    # @return [RelationEdge, nil]
     #
     # @api private
     def edge_for(left, right)

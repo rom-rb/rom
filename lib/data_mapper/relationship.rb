@@ -17,7 +17,7 @@ module DataMapper
 
     # Initialize a relationship object
     #
-    # @param [DataMapper::Relationship::Options]
+    # @param [Options]
     #
     # @return [undefined]
     #

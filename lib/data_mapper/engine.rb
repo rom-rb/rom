@@ -12,7 +12,7 @@ module DataMapper
 
     # Returns a relation registry used by the engine
     #
-    # @return [DataMapper::RelationRegistry]
+    # @return [RelationRegistry]
     #
     # @api public
     attr_reader :relations

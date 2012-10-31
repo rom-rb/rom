@@ -124,7 +124,7 @@ module DataMapper
 
     # Returns infinity constant
     #
-    # @return [Class]
+    # @return [Float]
     #
     # @api public
     def self.n
@@ -139,7 +139,7 @@ module DataMapper
     #
     # @param [Class] model class
     #
-    # @return [DataMapper::Mapper]
+    # @return [Mapper]
     #
     # @api public
     def self.[](model)
@@ -148,7 +148,7 @@ module DataMapper
 
     # Returns attribute set for this mapper class
     #
-    # @return [DataMapper::Mapper::AttributeSet]
+    # @return [AttributeSet]
     #
     # @api private
     def self.attributes
@@ -157,7 +157,7 @@ module DataMapper
 
     # Returns relationship set for this mapper class
     #
-    # @return [DataMapper::Mapper::RelationshipSet]
+    # @return [RelationshipSet]
     #
     # @api private
     def self.relationships
@@ -166,7 +166,7 @@ module DataMapper
 
     # Returns mapper registry for this mapper class
     #
-    # @return [DataMapper::MapperRegistry]
+    # @return [MapperRegistry]
     #
     # @api private
     def self.mapper_registry

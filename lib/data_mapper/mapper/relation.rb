@@ -9,7 +9,7 @@ module DataMapper
 
       attr_reader :relation
 
-      # @see [DataMapper::Mapper.from]
+      # @see Mapper.from
       def self.from(other, name = nil)
         klass = super
         klass.repository(other.repository)
@@ -19,7 +19,7 @@ module DataMapper
 
       # Returns engine for this mapper
       #
-      # @return [DataMapper::Engine]
+      # @return [Engine]
       #
       # @api private
       def self.engine
@@ -28,7 +28,7 @@ module DataMapper
 
       # Returns relation registry for this mapper class
       #
-      # @return [DataMapper::RelationRegistry]
+      # @return [RelationRegistry]
       #
       # @api public
       def self.relations

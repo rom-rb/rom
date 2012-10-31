@@ -12,9 +12,11 @@ module DataMapper
 
         # Initializes a node name set
         #
-        # @param [DataMapper::Relationship]
-        # @param [DataMapper::Mapper::RelationshipSet] set of source model relationships
-        # @param [Hash<Class => Symbol>] a mode => relation_name map returned by mapper registry
+        # @param [Relationship] relationship
+        # @param [Mapper::RelationshipSet] registry
+        #   set of source model relationships
+        # @param [Hash{Class => Symbol}] relations
+        #   a model => relation_name map returned by mapper registry
         #
         # @return [undefined]
         #
@@ -44,7 +46,7 @@ module DataMapper
 
         # Return the first name
         #
-        # @return [DataMapper::RelationRegistry::Builder::NodeName,Symbol]
+        # @return [NodeName, Symbol]
         #
         # @api private
         def first
@@ -53,7 +55,7 @@ module DataMapper
 
         # Return the last name
         #
-        # @return [DataMapper::RelationRegistry::Builder::NodeName,Symbol]
+        # @return [NodeName, Symbol]
         #
         # @api private
         def last
@@ -64,7 +66,7 @@ module DataMapper
 
         # Generates an array of unique relation node names used to build a join
         #
-        # @return [Array<DataMapper::RelationRegistry::Builder::NodeName]
+        # @return [Array<NodeName>]
         #
         # @api private
         def initialize_names(relationships = relationship_map, joins = [])

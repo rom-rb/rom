@@ -17,11 +17,11 @@ module DataMapper
         #   mapper.repository    #=> :default
         #   mapper.relation_name #=> :users
         #
-        # @param [Class] model
+        # @param [::Class] model
         # @param [Symbol] repository name
         # @param [Proc] block that will be evaled in the context of created class
         #
-        # @return [Class]
+        # @return [Mapper::Relation]
         #
         # @api public
         def self.create(model, repository, &block)
@@ -48,9 +48,9 @@ module DataMapper
         #   mapper.model #=> User
         #   mapper.name  #=> UserMapper
         #
-        # @param [Class] model
+        # @param [::Class] model
         #
-        # @return [Class]
+        # @return [Mapper::Relation]
         #
         # @api public
         def self.define_for(model, parent = Mapper::Relation, name = nil)
@@ -83,10 +83,10 @@ module DataMapper
 
         # Copies all attributes for the given mapper
         #
-        # @param [Class] mapper
-        # @param [DataMapper::Mapper::AttributeSet] attributes
+        # @param [Mapper] mapper
+        # @param [AttributeSet] attributes
         #
-        # @return [Class] mapper
+        # @return [Mapper] mapper
         #
         # @api private
         def self.copy_attributes(mapper, attributes)

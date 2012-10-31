@@ -4,27 +4,27 @@ module DataMapper
 
       class ManyToOne < self
 
-        # @see [DataMapper::Relationship::Options#type]
+        # @see Options#type
         #
-        # @return [DataMapper::Relationship::ManyToOne]
+        # @return [ManyToOne]
         def type
           Relationship::ManyToOne
         end
 
-        # @see [DataMapper::Relationship::Options#validator_class]
+        # @see Options#validator_class
         #
-        # @return [DataMapper::Relationship::Validator::ManyToOne]
+        # @return [Validator::ManyToOne]
         def validator_class
           Validator::ManyToOne
         end
 
-        # @see [DataMapper::Relationship::Options#default_source_key]
+        # @see Options#default_source_key
         #
         def default_source_key
           foreign_key_name(source_model.name)
         end
 
-        # @see [DataMapper::Relationship::Options#target_source_key]
+        # @see Options#default_target_key
         #
         def default_target_key
           :id

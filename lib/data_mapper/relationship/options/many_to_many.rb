@@ -6,16 +6,16 @@ module DataMapper
       #
       class ManyToMany < self
 
-        # @see [DataMapper::Relationship::Options#type]
+        # @see Options#type
         #
-        # @return [DataMapper::Relationship::ManyToMany]
+        # @return [ManyToMany]
         def type
           Relationship::ManyToMany
         end
 
-        # @see [DataMapper::Relationship::Options#validator_class]
+        # @see Options#validator_class
         #
-        # @return [DataMapper::Relationship::Validator::ManyToMany]
+        # @return [Validator::ManyToMany]
         def validator_class
           Validator::ManyToMany
         end

@@ -33,7 +33,7 @@ module DataMapper
 
     # Iterate on mappers
     #
-    # @yield [DataMapper::MapperRegistry::Identifier, DataMapper::Mapper]
+    # @yield [Identifier, Mapper]
     #
     # @api public
     def each
@@ -54,7 +54,7 @@ module DataMapper
     # Checks if the given model has a mapper
     #
     # @param [Class]
-    # @param [DataMapper::Relationship]
+    # @param [Relationship]
     #
     # @return [Boolean]
     #
@@ -66,9 +66,9 @@ module DataMapper
     # Accesses mapper instance by a given model or model and its relationship
     #
     # @param [Class]
-    # @param [DataMapper::Relationship]
+    # @param [Relationship]
     #
-    # @return [DataMapper::Mapper]
+    # @return [Mapper]
     #
     # @api public
     def [](model, relationships = [])
@@ -77,8 +77,8 @@ module DataMapper
 
     # Registers a new mapper instance
     #
-    # @param [DataMapper::Mapper]
-    # @param [DataMapper::Relationship]
+    # @param [Mapper]
+    # @param [Relationship]
     #
     # @return [self]
     #
@@ -88,7 +88,7 @@ module DataMapper
       self
     end
 
-    # @see [DataMapper::MapperRegistry#register]
+    # @see #register
     #
     # @api public
     def <<(mapper, relationships = [])

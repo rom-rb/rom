@@ -12,9 +12,9 @@ module DataMapper
   # @example
   #   DataMapper.setup(:default, 'postgres://localhost/test')
   #
-  # @param [String,Symbol,#to_sym] repository name
+  # @param [String, Symbol, #to_sym] repository name
   # @param [String] database connection URI
-  # @param [DataMapper::Engine] backend engine that should be used for mappers
+  # @param [Engine] backend engine that should be used for mappers
   #
   # @return [self]
   #
@@ -36,6 +36,8 @@ module DataMapper
 
   # Generates mappers class
   #
+  # @see Mapper::Builder::Class.create
+  #
   # @example
   #
   #   class User
@@ -49,10 +51,10 @@ module DataMapper
   #     key :id
   #   end
   #
-  # @param [DataMapper::Model] model
+  # @param [Model] model
   # @param [Symbol] repository name
   #
-  # @return [DataMapper::Mapper::Relation::Base]
+  # @return [Mapper::Relation]
   #
   # @api public
   def self.generate_mapper_for(model, repository, &block)
@@ -75,14 +77,14 @@ module DataMapper
     self
   end
 
-  # @see DataMapper::Mapper.[]
+  # @see Mapper.[]
   #
   # @api public
   def self.[](model)
     Mapper[model]
   end
 
-  # @see DataMapper::Mapper.mapper_registry
+  # @see Mapper.mapper_registry
   #
   # @api public
   def self.mapper_registry

@@ -6,27 +6,27 @@ module DataMapper
       #
       class OneToMany < self
 
-        # @see [DataMapper::Relationship::Options#type]
+        # @see Options#type
         #
-        # @return [DataMapper::Relationship::OneToMany]
+        # @return [OneToMany]
         def type
           Relationship::OneToMany
         end
 
-        # @see [DataMapper::Relationship::Options#validator_class]
+        # @see Options#validator_class
         #
-        # @return [DataMapper::Relationship::Validator::OneToMany]
+        # @return [Validator::OneToMany]
         def validator_class
           Validator::OneToMany
         end
 
-        # @see [DataMapper::Relationship::Options#default_source_key]
+        # @see Options#default_source_key
         #
         def default_source_key
           :id
         end
 
-        # @see [DataMapper::Relationship::Options#target_source_key]
+        # @see Options#default_target_key
         #
         def default_target_key
           foreign_key_name(source_model.name)

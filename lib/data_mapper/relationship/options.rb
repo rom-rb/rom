@@ -143,7 +143,7 @@ module DataMapper
 
       # Validates this options object using a specialized validator
       #
-      # @raise [DataMapper::Relationship::Validator::InvalidOptionException]
+      # @raise [Validator::InvalidOptionException]
       #
       # @api private
       def validate

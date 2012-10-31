@@ -22,7 +22,7 @@ module DataMapper
     # Initialize an alias set instance
     #
     # @param [Symbol] prefix used for aliasing
-    # @param [DataMapper::Mapper::AttributeSet] attributes
+    # @param [Mapper::AttributeSet] attributes
     # @param [Array] list of excluded attribute names
     #
     # @return [undefined]
@@ -46,7 +46,7 @@ module DataMapper
 
     # Returns a new alias set with excluded attribute names
     #
-    # @return [DataMapper::AliasSet]
+    # @return [AliasSet]
     #
     # @api private
     def exclude(*names)
@@ -55,7 +55,7 @@ module DataMapper
 
     # Returns a new alias set merged with the given one
     #
-    # @return [DataMapper::AliasSet]
+    # @return [AliasSet]
     #
     # @api private
     def merge(other)
