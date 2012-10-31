@@ -18,7 +18,7 @@ describe 'Relationship - Many To One with generated mapper' do
         @address = attributes[:address]
       end
 
-      class Mapper < DataMapper::Mapper::Relation::Base
+      class Mapper < DataMapper::Mapper::Relation
 
         model         User
         relation_name :users
@@ -38,7 +38,7 @@ describe 'Relationship - Many To One with generated mapper' do
           :id, :street, :city, :zipcode, :user)
       end
 
-      class Mapper < DataMapper::Mapper::Relation::Base
+      class Mapper < DataMapper::Mapper::Relation
         model         Address
         relation_name :addresses
         repository    :postgres

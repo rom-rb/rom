@@ -7,15 +7,53 @@ module DataMapper
     class Relation < self
       alias_method :all, :to_a
 
-      attr_reader :relationships
+      attr_reader :relation
 
+      # @see [DataMapper::Mapper.from]
       def self.from(other, name = nil)
         klass = super
         klass.repository(other.repository)
+        klass.relation_name(other.relation_name)
         klass
       end
 
-      # Set or return the name of this mapper's default repository
+      # Returns engine for this mapper
+      #
+      # @return [DataMapper::Engine]
+      #
+      # @api private
+      def self.engine
+        @engine ||= DataMapper.engines[repository]
+      end
+
+      # Returns relation registry for this mapper class
+      #
+      # @return [DataMapper::RelationRegistry]
+      #
+      # @api public
+      def self.relations
+        @relations ||= engine.relations
+      end
+
+      # Returns base relation for this mapper
+      #
+      # @return [Object]
+      #
+      # @api public
+      def self.relation
+        @relation ||= engine.base_relation(relation_name, attributes.header)
+      end
+
+      # Returns gateway relation for this mapper class
+      #
+      # @return [Object]
+      #
+      # @api private
+      def self.gateway_relation
+        @gateway_relation ||= engine.gateway_relation(relation)
+      end
+
+      # Sets or returns the name of this mapper's repository
       #
       # @api public
       def self.repository(name = Undefined)
@@ -26,17 +64,33 @@ module DataMapper
         end
       end
 
-      # @api private
-      def self.engine
-        @engine ||= DataMapper.engines[repository]
+      # Sets or returns the name of this mapper's relation
+      #
+      # @api public
+      def self.relation_name(name = Undefined)
+        if name.equal?(Undefined)
+          @relation_name
+        else
+          @relation_name = name
+        end
       end
 
-      def self.relation
-        raise NotImplementedError, "#{self}.#{__method__} must be implemented"
+      # @api public
+      def self.key(*names)
+        names.each do |name|
+          attributes << attributes[name].clone(:key => true)
+        end
       end
 
       # @api private
-      attr_reader :relation, :attributes
+      def self.aliases
+        @aliases ||= AliasSet.new(Inflector.singularize(relation_name), attributes)
+      end
+
+      # @api private
+      def self.finalize
+        Mapper.mapper_registry << new(relations.node_for(gateway_relation))
+      end
 
       # Initialize a veritas mapper instance
       #
@@ -46,10 +100,9 @@ module DataMapper
       #
       # @api public
       def initialize(relation = self.class.relation, attributes = self.class.attributes)
-        @relation      = relation
-        @attributes    = attributes
-        @relationships = self.class.relationships
-        @model         = self.class.model
+        super()
+        @relation   = relation
+        @attributes = attributes
       end
 
       # TODO find a better name
@@ -135,18 +188,6 @@ module DataMapper
       # @api public
       def join(other)
         self.class.new(@relation.join(other.relation))
-      end
-
-      # @api private
-      def load(tuple)
-        @model.new(@attributes.load(tuple))
-      end
-
-      # @api public
-      def dump(object)
-        @attributes.each_with_object({}) do |attribute, attributes|
-          attributes[attribute.field] = object.send(attribute.name)
-        end
       end
 
     end # class Relation

@@ -68,7 +68,9 @@ module DataMapper
   #
   # @api public
   def self.finalize
+    return if @finalized
     Finalizer.run
+    @finalized = true
     self
   end
 
@@ -121,9 +123,9 @@ require 'data_mapper/mapper/attribute/primitive'
 require 'data_mapper/mapper/attribute/embedded_value'
 require 'data_mapper/mapper/attribute/embedded_collection'
 require 'data_mapper/mapper/attribute_set'
+
 require 'data_mapper/mapper'
 require 'data_mapper/mapper/relation'
-require 'data_mapper/mapper/relation/base'
 
 require 'data_mapper/mapper/builder'
 require 'data_mapper/mapper/builder/class'

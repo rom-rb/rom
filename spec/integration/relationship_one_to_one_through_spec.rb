@@ -39,7 +39,7 @@ describe 'Relationship - One To One through with generated mappers' do
       end
     end
 
-    class TagMapper < DataMapper::Mapper::Relation::Base
+    class TagMapper < DataMapper::Mapper::Relation
 
       model         Tag
       relation_name :tags
@@ -49,7 +49,7 @@ describe 'Relationship - One To One through with generated mappers' do
       map :name, String
     end
 
-    class SongTagMapper < DataMapper::Mapper::Relation::Base
+    class SongTagMapper < DataMapper::Mapper::Relation
 
       model         SongTag
       relation_name :song_tags
@@ -60,7 +60,7 @@ describe 'Relationship - One To One through with generated mappers' do
       map :tag_id,  Integer
     end
 
-    class SongMapper < DataMapper::Mapper::Relation::Base
+    class SongMapper < DataMapper::Mapper::Relation
       model         Song
       relation_name :songs
       repository    :postgres

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe DataMapper::Mapper::Relation::Base, '.relation_name' do
+describe Mapper::Relation, '.relation_name' do
   let(:name) { :users }
 
   context "with a name" do

@@ -15,7 +15,7 @@ describe 'PORO with a custom mapper' do
         @id, @name, @age = attributes.values_at(:id, :name, :age)
       end
 
-      class Mapper < DataMapper::Mapper::Relation::Base
+      class Mapper < DataMapper::Mapper::Relation
 
         model         User
         relation_name :users

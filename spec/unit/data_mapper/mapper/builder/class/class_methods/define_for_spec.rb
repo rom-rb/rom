@@ -10,7 +10,7 @@ describe DataMapper::Mapper::Builder::Class, '.define_for' do
     its(:inspect) { should eql("<#TestModelMapper @model=TestModel>") }
 
     context "without a parent" do
-      it { should < Mapper::Relation::Base }
+      it { should < Mapper::Relation }
     end
 
     context "with a parent" do

@@ -1,6 +1,6 @@
 require 'spec_helper_integration'
 
-describe 'Finalizer' do
+describe 'Finalizer', :isolation => true do
   before(:all) do
     class Song
     end
@@ -17,7 +17,7 @@ describe 'Finalizer' do
     class SongTag
     end
 
-    class TagMapper < DataMapper::Mapper::Relation::Base
+    class TagMapper < DataMapper::Mapper::Relation
       model         Tag
       relation_name :tags
       repository    :postgres
@@ -29,7 +29,7 @@ describe 'Finalizer' do
       has 0..n, :songs,     Song, :through => :song_tags
     end
 
-    class InfoMapper < DataMapper::Mapper::Relation::Base
+    class InfoMapper < DataMapper::Mapper::Relation
       model         Info
       relation_name :infos
       repository    :postgres
@@ -39,7 +39,7 @@ describe 'Finalizer' do
       map :text,   String
     end
 
-    class InfoContentMapper < DataMapper::Mapper::Relation::Base
+    class InfoContentMapper < DataMapper::Mapper::Relation
       model         InfoContent
       relation_name :info_contents
       repository    :postgres
@@ -49,7 +49,7 @@ describe 'Finalizer' do
       map :content, String
     end
 
-    class SongTagMapper < DataMapper::Mapper::Relation::Base
+    class SongTagMapper < DataMapper::Mapper::Relation
       model         SongTag
       relation_name :song_tags
       repository    :postgres
@@ -58,7 +58,7 @@ describe 'Finalizer' do
       map :tag_id,  Integer, :key => true
     end
 
-    class SongMapper < DataMapper::Mapper::Relation::Base
+    class SongMapper < DataMapper::Mapper::Relation
       model         Song
       relation_name :songs
       repository    :postgres
@@ -84,8 +84,6 @@ describe 'Finalizer' do
         restrict { |r| r.info_content_content.eq('really, really good') }
       end
     end
-
-    Finalizer.run
   end
 
   let(:relations) { SongMapper.relations }

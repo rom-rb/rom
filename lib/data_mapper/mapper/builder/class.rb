@@ -53,7 +53,7 @@ module DataMapper
         # @return [Class]
         #
         # @api public
-        def self.define_for(model, parent = Mapper::Relation::Base, name = nil)
+        def self.define_for(model, parent = Mapper::Relation, name = nil)
           name  ||= name_for(model)
 
           klass = ::Class.new(parent)

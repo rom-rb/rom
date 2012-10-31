@@ -15,7 +15,7 @@ describe DataMapper::Mapper::Builder::Class, '.create' do
   context "without a block" do
     let(:block) { nil }
 
-    specify { subject.should < DataMapper::Mapper::Relation::Base }
+    specify { subject.should < DataMapper::Mapper::Relation }
 
     its(:name)          { should eql("TestModelMapper") }
     its(:model)         { should be(model) }

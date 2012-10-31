@@ -20,11 +20,6 @@ module DataMapper
       end
 
       # @api public
-      def finalize
-        each { |relationship| relationship.finalize }
-      end
-
-      # @api public
       def <<(relationship)
         @relationships[relationship.name] = relationship
         self

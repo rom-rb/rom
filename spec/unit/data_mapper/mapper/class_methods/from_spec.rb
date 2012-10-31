@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe DataMapper::Mapper, '.from' do
+describe Mapper, '.from' do
   subject { described_class.from(other, name) }
 
   let(:model) {
@@ -9,10 +9,12 @@ describe DataMapper::Mapper, '.from' do
 
   let(:other) {
     model_class = model
+    address_model = mock_model('Address')
 
     Class.new(described_class) {
       model model_class
       map :id, Integer
+      has 1, :address, address_model
     }
   }
 
@@ -29,6 +31,10 @@ describe DataMapper::Mapper, '.from' do
 
       its(:model) { should be(model) }
       its(:name)  { should eql(name) }
+
+      it "copies relationships" do
+        subject.relationships[:address].should eql(other.relationships[:address])
+      end
     end
   end
 end

@@ -20,7 +20,7 @@ describe 'Relationship - One To One with generated mapper' do
           :id, :street, :city, :zipcode)
       end
 
-      class Mapper < DataMapper::Mapper::Relation::Base
+      class Mapper < DataMapper::Mapper::Relation
 
         model         Address
         relation_name :addresses
@@ -43,7 +43,7 @@ describe 'Relationship - One To One with generated mapper' do
         @home_address    = attributes[:home_address]
       end
 
-      class Mapper < DataMapper::Mapper::Relation::Base
+      class Mapper < DataMapper::Mapper::Relation
 
         model         User
         relation_name :users
@@ -80,7 +80,8 @@ describe 'Relationship - One To One with generated mapper' do
   end
 
   it 'loads associated object' do
-    user    = user_mapper.include(:address).to_a.last
+    mapper  = user_mapper.include(:address)
+    user    = mapper.all.last
     address = user.address
 
     address.should be_instance_of(Address)

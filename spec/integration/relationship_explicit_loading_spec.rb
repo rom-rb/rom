@@ -20,7 +20,7 @@ describe 'Relationship - One To One - Explicit Loading' do
           :id, :street, :city, :zipcode)
       end
 
-      class Mapper < DataMapper::Mapper::Relation::Base
+      class Mapper < DataMapper::Mapper::Relation
 
         model         Address
         relation_name :addresses
@@ -43,7 +43,7 @@ describe 'Relationship - One To One - Explicit Loading' do
         @address = attributes[:address]
       end
 
-      class Mapper < DataMapper::Mapper::Relation::Base
+      class Mapper < DataMapper::Mapper::Relation
 
         model         User
         relation_name :users

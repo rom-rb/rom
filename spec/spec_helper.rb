@@ -23,7 +23,7 @@ RSpec.configure do |config|
   end
 
   def mock_mapper(model_class, attributes = [])
-    klass = Class.new(DataMapper::Mapper::Relation::Base) do
+    klass = Class.new(DataMapper::Mapper::Relation) do
       model         model_class
       repository    :test
       relation_name Inflector.tableize(model_class.name)

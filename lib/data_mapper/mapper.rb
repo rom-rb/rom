@@ -1,13 +1,20 @@
 module DataMapper
 
-  # Abstract Mapper class
+  # Mapper
   #
-  # @abstract
   class Mapper
     include Enumerable
     extend DescendantsTracker
 
-    # TODO: refactor, add specs
+    attr_reader :attributes
+
+    attr_reader :relationships
+
+    # Returns a new mapper class derived from the given one
+    #
+    # @return [Class]
+    #
+    # @api public
     def self.from(other, name)
       klass = Builder::Class.define_for(other.model, self, name)
 
@@ -22,7 +29,9 @@ module DataMapper
       klass
     end
 
-    # Set or return the model for this mapper
+    # Sets or returns the model for this mapper
+    #
+    # @param [Class] model to be set
     #
     # @api public
     def self.model(model = Undefined)
@@ -33,6 +42,19 @@ module DataMapper
       end
     end
 
+    # Sets a mapping attribute
+    #
+    # @example
+    #
+    #   class UserMapper < DataMapper::Mapper
+    #     map :id, Integer, :to => :user_id
+    #   end
+    #
+    # @param [Symbol] name of the attribute
+    # @param [*args]
+    #
+    # @return [self]
+    #
     # @api public
     def self.map(name, *args)
       type    = Utils.extract_type(args)
@@ -48,99 +70,164 @@ module DataMapper
       self
     end
 
-    # TODO: add specs
+    # Establishes a relationship with the given cardinality and name
+    #
+    # @example
+    #
+    #   class UserMapper < DataMapper::Mapper
+    #     has 1,    :address, Address
+    #     has 0..n, :orders,  Order
+    #   end
+    #
+    # @param [Fixnum,Range]
+    # @param [Symbol] name for the relationship
+    # @param [*args]
+    # @param [Proc] optional operation that should be evaluated on the relation
+    #
+    # @return [self]
+    #
+    # @api public
     def self.has(cardinality, name, *args, &op)
       relationship = Relationship::Builder::Has.build(
         self, cardinality, name, *args, &op
       )
 
       relationships << relationship
+
+      self
     end
 
-    # TODO: add specs
+    # Establishes a one-to-many relationship
+    #
+    # @example
+    #
+    #   class UserMapper < DataMapper::Mapper
+    #     belongs_to :group
+    #   end
+    #
+    # @param [Symbol]
+    # @param [*args]
+    # @param [Proc] optional operation that should be evaluated on the relation
+    #
+    # @return [self]
+    #
+    # @api public
     def self.belongs_to(name, *args, &op)
       relationship = Relationship::Builder::BelongsTo.build(
         self, name, *args, &op
       )
 
       relationships << relationship
+
+      self
     end
 
-    # TODO: add specs
+    # Returns infinity constant
+    #
+    # @return [Class]
+    #
+    # @api public
     def self.n
       Infinity
     end
 
+    # Returns a mapper instance for the given model
+    #
+    # @example
+    #
+    #   DataMapper[User] #=> user mapper instance
+    #
+    # @param [Class] model class
+    #
+    # @return [DataMapper::Mapper]
+    #
     # @api public
     def self.[](model)
       mapper_registry[model]
     end
 
-    # TODO: add specs
-    def self.relation
-      raise NotImplementedError, "#{self.class}.relation must be implemented"
-    end
-
+    # Returns attribute set for this mapper class
+    #
+    # @return [DataMapper::Mapper::AttributeSet]
+    #
     # @api private
     def self.attributes
       @attributes ||= AttributeSet.new
     end
 
+    # Returns relationship set for this mapper class
+    #
+    # @return [DataMapper::Mapper::RelationshipSet]
+    #
     # @api private
     def self.relationships
       @relationships ||= RelationshipSet.new
     end
 
-    # @api public
+    # Returns mapper registry for this mapper class
+    #
+    # @return [DataMapper::MapperRegistry]
+    #
+    # @api private
     def self.mapper_registry
       @mapper_registry ||= MapperRegistry.new
     end
 
-    # @api public
-    def self.relations
-      @relations ||= engine.relations
-    end
-
-    # TODO: add specs
-    def self.gateway_relation
-      @gateway_relation ||= engine.gateway_relation(relation)
-    end
-
+    # Finalizes this mapper class
+    #
+    # @abstract
+    #
     # @api public
     def self.finalize
       # noop
       self
     end
 
+    # Finalizes attributes
+    #
+    # @return [self]
+    #
     # @api private
     def self.finalize_attributes
       attributes.finalize
+      self
     end
 
-    # @api private
-    def self.finalize_relationships
-      relationships.finalize
-    end
-
+    # Shortcut for self.class.relations
+    #
     # @api public
-    # TODO: add specs
+    #
     def relations
       self.class.relations
     end
 
-    # Load a domain object
-    #
     # @api private
-    def load(tuple)
-      raise NotImplementedError, "#{self.class} must implement #load"
+    def initialize
+      @model         = self.class.model
+      @attributes    = self.class.attributes
+      @relationships = self.class.relationships
     end
 
-    # Dump a domain object
+    # Loads a domain object
     #
-    # @api private
+    # @param [Object]
+    #
+    # @api public
+    def load(tuple)
+      @model.new(@attributes.load(tuple))
+    end
+
+    # Dumps a domain object
+    #
+    # @param [Object]
+    #
+    # @api public
     def dump(object)
-      raise NotImplementedError, "#{self.class} must implement #dump"
+      @attributes.each_with_object({}) do |attribute, attributes|
+        attributes[attribute.field] = object.send(attribute.name)
+      end
     end
 
   end # class Mapper
+
 end # module DataMapper

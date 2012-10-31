@@ -61,46 +61,46 @@ module SpecHelper
 end
 
 RSpec.configure do |config|
-  config.before(:all) do
+  config.after(:all) do
 
     # explicitly defined mappers
-    User.send(:remove_const, :Mapper)                  if User.const_get('Mapper')    rescue false
-    Address.send(:remove_const, :Mapper)               if Address.const_get('Mapper') rescue false
+    User.send(:remove_const,    :Mapper)           if User.const_get('Mapper')    rescue false
+    Address.send(:remove_const, :Mapper)           if Address.const_get('Mapper') rescue false
 
-    Object.send(:remove_const, :UserMapper)            if defined?(UserMapper)
-    Object.send(:remove_const, :OrderMapper)           if defined?(OrderMapper)
+    Object.send(:remove_const, :UserMapper)        if defined?(UserMapper)
+    Object.send(:remove_const, :OrderMapper)       if defined?(OrderMapper)
 
-    Object.send(:remove_const, :InfoMapper)            if defined?(InfoMapper)
-    Object.send(:remove_const, :InfoContentMapper)     if defined?(InfoContentMapper)
-    Object.send(:remove_const, :TagMapper)             if defined?(TagMapper)
-    Object.send(:remove_const, :SongTagMapper)         if defined?(SongTagMapper)
-    Object.send(:remove_const, :SongMapper)            if defined?(SongMapper)
+    Object.send(:remove_const, :InfoMapper)        if defined?(InfoMapper)
+    Object.send(:remove_const, :InfoContentMapper) if defined?(InfoContentMapper)
+    Object.send(:remove_const, :TagMapper)         if defined?(TagMapper)
+    Object.send(:remove_const, :SongTagMapper)     if defined?(SongTagMapper)
+    Object.send(:remove_const, :SongMapper)        if defined?(SongMapper)
 
     # models
-    Object.send(:remove_const, :User)                  if defined?(User)
-    Object.send(:remove_const, :Address)               if defined?(Address)
-    Object.send(:remove_const, :Song)                  if defined?(Song)
-    Object.send(:remove_const, :SongTag)               if defined?(SongTag)
-    Object.send(:remove_const, :Tag)                   if defined?(Tag)
-    Object.send(:remove_const, :Info)                  if defined?(Info)
-    Object.send(:remove_const, :InfoContent)           if defined?(InfoContent)
-    Object.send(:remove_const, :Order)                 if defined?(Order)
+    Object.send(:remove_const, :User)              if defined?(User)
+    Object.send(:remove_const, :Address)           if defined?(Address)
+    Object.send(:remove_const, :Song)              if defined?(Song)
+    Object.send(:remove_const, :SongTag)           if defined?(SongTag)
+    Object.send(:remove_const, :Tag)               if defined?(Tag)
+    Object.send(:remove_const, :Info)              if defined?(Info)
+    Object.send(:remove_const, :InfoContent)       if defined?(InfoContent)
+    Object.send(:remove_const, :Order)             if defined?(Order)
 
     DataMapper::Mapper.instance_variable_set('@descendants', [])
-    DataMapper::Mapper::Relation::Base.instance_variable_set('@descendants', [])
-  end
+    DataMapper::Mapper::Relation.instance_variable_set('@descendants', [])
 
-  config.before do
     DataMapper.engines.each do |name, engine|
       engine.instance_variable_set(:@relations, engine.relations.class.new(engine))
     end
 
-    DataMapper::Mapper.descendants.each do |mapper|
-      mapper.instance_variable_set(:@relations, nil)
-    end
+    DataMapper::Mapper.instance_variable_set(:@relations, nil)
 
     DataMapper.mapper_registry.instance_variable_set(:@mappers, {})
 
+    DataMapper.instance_variable_set(:@finalized, false)
+  end
+
+  config.before do
     DataMapper.finalize
   end
 end

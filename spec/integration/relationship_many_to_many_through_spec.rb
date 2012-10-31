@@ -61,7 +61,7 @@ describe 'Relationship - Many To Many with generated mappers' do
       end
     end
 
-    class TagMapper < DataMapper::Mapper::Relation::Base
+    class TagMapper < DataMapper::Mapper::Relation
 
       model         Tag
       relation_name :tags
@@ -71,7 +71,7 @@ describe 'Relationship - Many To Many with generated mappers' do
       map :name, String
     end
 
-    class InfoMapper < DataMapper::Mapper::Relation::Base
+    class InfoMapper < DataMapper::Mapper::Relation
 
       model         Info
       relation_name :infos
@@ -82,7 +82,7 @@ describe 'Relationship - Many To Many with generated mappers' do
       map :text,   String
     end
 
-    class InfoContentMapper < DataMapper::Mapper::Relation::Base
+    class InfoContentMapper < DataMapper::Mapper::Relation
 
       model         InfoContent
       relation_name :info_contents
@@ -93,7 +93,7 @@ describe 'Relationship - Many To Many with generated mappers' do
       map :content, String
     end
 
-    class SongTagMapper < DataMapper::Mapper::Relation::Base
+    class SongTagMapper < DataMapper::Mapper::Relation
 
       model         SongTag
       relation_name :song_tags
@@ -103,7 +103,7 @@ describe 'Relationship - Many To Many with generated mappers' do
       map :tag_id,  Integer, :key => true
     end
 
-    class SongMapper < DataMapper::Mapper::Relation::Base
+    class SongMapper < DataMapper::Mapper::Relation
       model         Song
       relation_name :songs
       repository    :postgres
