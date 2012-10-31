@@ -2,8 +2,6 @@ module DataMapper
 
   # Relationship
   #
-  # TODO rethink Relationship::Options
-  #
   # @api private
   class Relationship
     include Equalizer.new(:name, :source_model, :target_model)
@@ -17,6 +15,13 @@ module DataMapper
     attr_reader :source_model
     attr_reader :target_model
 
+    # Initialize a relationship object
+    #
+    # @param [DataMapper::Relationship::Options]
+    #
+    # @return [undefined]
+    #
+    # @api private
     def initialize(options)
       @options      = options
       @name         = @options.name
@@ -28,13 +33,36 @@ module DataMapper
       @target_key   = @options.target_key || default_target_key
     end
 
+    # Returns if the target is a collection or a single object
+    #
+    # @return [Boolean]
+    #
     # @api public
-    def finalize
-      self
-    end
-
     def collection_target?
       false
     end
+
+    # Return default source key
+    #
+    # @return [Symbol]
+    #
+    # @api public
+    #
+    # TODO: this should be already set by options
+    def default_source_key
+      :id
+    end
+
+    # Return default target key
+    #
+    # @return [Symbol]
+    #
+    # @api public
+    #
+    # TODO: this should be already set by options
+    def default_target_key
+      @options.foreign_key_name(@target_model)
+    end
+
   end # class Relationship
 end # module DataMapper

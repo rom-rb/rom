@@ -43,15 +43,7 @@ module DataMapper
         true
       end
 
-      # TODO: add spec
-      def default_source_key
-        :id
-      end
-
-      # TODO: add spec
-      def default_target_key
-        @options.foreign_key_name(@target_model)
-      end
     end # class OneToMany
+
   end # class Relationship
 end # module DataMapper
