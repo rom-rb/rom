@@ -6,8 +6,25 @@ module DataMapper
 
     # Engine for Veritas
     class VeritasEngine < self
+
+      # @see Engine#adapter
+      #
+      # @example
+      #   uri    = "postgres://localhost/test"
+      #   engine = DataMapper::Engine::VeritasEngine.new(uri)
+      #   engine.adapter
+      #
+      # @return [Veritas::Adapter::DataObjects]
+      #
+      # @api public
       attr_reader :adapter
 
+      # @see Engine#initialize
+      #
+      # @return [undefined]
+      #
+      # @api private
+      #
       # TODO: add specs
       def initialize(uri)
         super
@@ -15,25 +32,54 @@ module DataMapper
         @adapter = Veritas::Adapter::DataObjects.new(uri)
       end
 
-      # @api private
+      # @see Engine#relation_node_class
+      #
+      # @return [RelationRegistry::RelationNode::VeritasRelation]
+      #
+      # @api public
+      #
       # TODO: add specs
       def relation_node_class
         RelationRegistry::RelationNode::VeritasRelation
       end
 
-      # @api private
+      # @see Engine#relation_edge_class
+      #
+      # @return [RelationRegistry::RelationEdge]
+      #
+      # @api public
+      #
       # TODO: add specs
       def relation_edge_class
         RelationRegistry::RelationEdge
       end
 
-      # @api private
+      # @see Engine#base_relation
+      #
+      # @param [Symbol] name
+      #   the base relation name
+      #
+      # @param [Array<Array(Symbol, Class)>] header
+      #   the base relation header
+      #
+      # @return [Veritas::Relation::Base]
+      #
+      # @api public
+      #
       # TODO: add specs
       def base_relation(name, header)
         Veritas::Relation::Base.new(name, header)
       end
 
-      # @api private
+      # @see Engine#gateway_relation
+      #
+      # @param [Veritas::Relation] relation
+      #   the relation to be wrapped in a gateway relation
+      #
+      # @return [Veritas::Relation::Gateway]
+      #
+      # @api public
+      #
       # TODO: add specs
       def gateway_relation(relation)
         Veritas::Relation::Gateway.new(adapter, relation)
