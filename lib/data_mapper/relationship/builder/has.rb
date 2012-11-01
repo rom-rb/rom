@@ -36,7 +36,13 @@ module DataMapper
 
         private
 
+        # Extract the upper and lower bounds from the given cardinality
+        #
         # TODO: refactor
+        #
+        # @return [Array(Fixnum, Fixnum)]
+        #
+        # @api private
         def extract_min_max(cardinality, name = nil)
           case cardinality
           when Integer  then [ cardinality,       cardinality      ]
