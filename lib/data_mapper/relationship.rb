@@ -29,8 +29,8 @@ module DataMapper
       @operation    = @options.operation
       @source_model = @options.source_model
       @target_model = @options.target_model
-      @source_key   = @options.source_key || default_source_key
-      @target_key   = @options.target_key || default_target_key
+      @source_key   = @options.source_key
+      @target_key   = @options.target_key
     end
 
     # Returns if the target is a collection or a single object
@@ -41,28 +41,5 @@ module DataMapper
     def collection_target?
       false
     end
-
-    # Return default source key
-    #
-    # @return [Symbol]
-    #
-    # @api public
-    #
-    # TODO: this should be already set by options
-    def default_source_key
-      :id
-    end
-
-    # Return default target key
-    #
-    # @return [Symbol]
-    #
-    # @api public
-    #
-    # TODO: this should be already set by options
-    def default_target_key
-      Options.foreign_key_name(@target_model)
-    end
-
   end # class Relationship
 end # module DataMapper
