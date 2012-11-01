@@ -6,13 +6,38 @@ module DataMapper
     include Enumerable
     extend DescendantsTracker
 
+    # This mapper's set of attributes to map
+    #
+    # @example
+    #
+    #   mapper = DataMapper[User]
+    #   mapper.attributes
+    #
+    # @return [AttributeSet]
+    #
+    # @api public
     attr_reader :attributes
 
+    # This mapper's set of relationships to map
+    #
+    # @example
+    #
+    #   mapper = DataMapper[User]
+    #   mapper.relationships
+    #
+    # @return [RelationshipSet]
+    #
+    # @api public
     attr_reader :relationships
 
     # Returns a new mapper class derived from the given one
     #
-    # @return [Class]
+    # @example
+    #
+    #   other = DataMapper[User]
+    #   DataMapper::Mapper.from(other, 'AdminMapper')
+    #
+    # @return [Mapper]
     #
     # @api public
     def self.from(other, name)
@@ -31,7 +56,20 @@ module DataMapper
 
     # Sets or returns the model for this mapper
     #
+    # @example when setting the model
+    #
+    #   class UserMapper
+    #     model User
+    #   end
+    #
+    # @example when reading the model
+    #
+    #   mapper = DataMapper[User]
+    #   mapper.class.model
+    #
     # @param [Class] model to be set
+    #
+    # @return [Class, nil]
     #
     # @api public
     def self.model(model = Undefined)
@@ -124,6 +162,12 @@ module DataMapper
 
     # Returns infinity constant
     #
+    # @example
+    #
+    #   class UserMapper
+    #     has n, :orders, Order
+    #   end
+    #
     # @return [Float]
     #
     # @api public
@@ -175,7 +219,12 @@ module DataMapper
 
     # Finalizes this mapper class
     #
+    # @example
+    #   DataMapper::Mapper.finalize
+    #
     # @abstract
+    #
+    # @return [self]
     #
     # @api public
     def self.finalize
@@ -195,8 +244,15 @@ module DataMapper
 
     # Shortcut for self.class.relations
     #
-    # @api public
+    # @see Engine#relations
     #
+    # @example
+    #   mapper = DataMapper[User]
+    #   mapper.relations
+    #
+    # @return [RelationRegistry]
+    #
+    # @api public
     def relations
       self.class.relations
     end
@@ -210,7 +266,14 @@ module DataMapper
 
     # Loads a domain object
     #
-    # @param [Object]
+    # @example
+    #   mapper = DataMapper[User]
+    #   tuple = { :id => 1, :name => 'John' }
+    #   mapper.load(tuple)
+    #
+    # @param [(#each, #[])] tuple
+    #
+    # @return [Object] a domain model
     #
     # @api public
     def load(tuple)
@@ -219,7 +282,15 @@ module DataMapper
 
     # Dumps a domain object
     #
-    # @param [Object]
+    # @example
+    #   mapper = DataMapper[User]
+    #   model  = SomeDomainModel.new
+    #   mapper.dump(model)
+    #
+    # @param [Object] object
+    #   a domain model
+    #
+    # @return [Hash]
     #
     # @api public
     def dump(object)
