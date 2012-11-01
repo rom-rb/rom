@@ -53,8 +53,7 @@ module DataMapper
 
         # Tests wether this attribute is primitive or not
         #
-        # @return [Boolean]
-        #   true if this is a primitive attribute, false otherwise
+        # @return [Boolean] true
         #
         # @api private
         def primitive?
