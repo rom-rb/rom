@@ -135,7 +135,7 @@ module DataMapper
     #
     # @return [Boolean]
     #
-    # @api public
+    # @api private
     def collection_target?
       false
     end
