@@ -20,22 +20,18 @@ module DataMapper
 
           options.update(:min => min, :max => max, :operation => op)
 
-          options_class =
+          klass =
             if max > 1
               if via
-                Relationship::Options::ManyToMany
+                Relationship::ManyToMany
               else
-                Relationship::Options::OneToMany
+                Relationship::OneToMany
               end
             else
-              Relationship::Options::OneToOne
+              Relationship::OneToOne
             end
 
-          options = options_class.new(name, source.model, target_model, options)
-
-          options.validate
-
-          @relationship = options.type.new(options)
+          @relationship = klass.new(name, source.model, target_model, options)
         end
 
         private

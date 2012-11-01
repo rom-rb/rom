@@ -1,11 +1,11 @@
 require 'spec_helper'
 
-describe Relationship::Options::OneToOne, "#type" do
-  subject { object.type }
+describe Relationship::OneToOne, "#default_source_key" do
+  subject { object.default_source_key }
 
   let(:object)       { described_class.new(:name, source_model, target_model) }
   let(:source_model) { mock('source_model', :name => 'User') }
   let(:target_model) { mock('target_model', :name => 'Address') }
 
-  it { should be(Relationship::OneToOne) }
+  it { should be(:id) }
 end

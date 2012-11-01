@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe Relationship::Options::OneToOne, "#default_target_key" do
-  subject { object.default_target_key }
+describe Relationship::ManyToOne, "#default_source_key" do
+  subject { object.default_source_key }
 
   let(:object)       { described_class.new(:name, source_model, target_model) }
   let(:source_model) { mock('source_model', :name => 'User') }

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Relationship::Options::OneToOne, "#default_source_key" do
+describe Relationship::OneToMany, "#default_source_key" do
   subject { object.default_source_key }
 
   let(:object)       { described_class.new(:name, source_model, target_model) }

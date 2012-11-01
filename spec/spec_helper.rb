@@ -45,8 +45,7 @@ RSpec.configure do |config|
   end
 
   def mock_relationship(name, attributes = {})
-    options = Relationship::Options.new(name, attributes[:source_model], attributes[:target_model], attributes)
-    Relationship::OneToMany.new(options)
+    Relationship::OneToMany.new(name, attributes[:source_model], attributes[:target_model], attributes)
   end
 
   def mock_connector(attributes)

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe Relationship::Options, '#default_source_key' do
-  subject { object.default_source_key }
+describe Relationship, '#default_target_key' do
+  subject { object.default_target_key }
 
   let(:object)       { described_class.new(:name, source_model, target_model) }
   let(:source_model) { mock('source_model') }

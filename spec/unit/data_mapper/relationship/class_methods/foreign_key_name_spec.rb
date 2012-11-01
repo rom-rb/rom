@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Relationship::Options, '.foreign_key_name' do
+describe Relationship, '.foreign_key_name' do
   subject { described_class.foreign_key_name(class_name) }
 
   let(:class_name) { stub }
