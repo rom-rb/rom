@@ -4,7 +4,16 @@ module DataMapper
 
       class EmbeddedCollection < EmbeddedValue
 
-        # @api public
+        # Load this attribute's value from a tuple
+        #
+        # @see EmbeddedValue#load
+        #
+        # @param [(#each, #[])] tuple
+        #   the tuple to load
+        #
+        # @return [Object]
+        #
+        # @api private
         def load(tuple)
           tuple[field].map { |member| super(member) }
         end
