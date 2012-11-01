@@ -15,6 +15,7 @@ module DataMapper
       # @api public
       def finalize
         each { |attribute| attribute.finalize }
+        self
       end
 
       # @api public
