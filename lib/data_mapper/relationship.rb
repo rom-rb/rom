@@ -61,7 +61,7 @@ module DataMapper
     #
     # TODO: this should be already set by options
     def default_target_key
-      @options.foreign_key_name(@target_model)
+      Options.foreign_key_name(@target_model)
     end
 
   end # class Relationship

@@ -21,7 +21,7 @@ module DataMapper
         # @see Options#default_source_key
         #
         def default_source_key
-          foreign_key_name(source_model.name)
+          self.class.foreign_key_name(source_model.name)
         end
 
         # @see Options#default_target_key

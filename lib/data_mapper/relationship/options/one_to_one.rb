@@ -29,7 +29,7 @@ module DataMapper
         # @see Options#default_target_key
         #
         def default_target_key
-          foreign_key_name(source_model.name)
+          self.class.foreign_key_name(source_model.name)
         end
 
       end # class OneToOne

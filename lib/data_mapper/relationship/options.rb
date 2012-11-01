@@ -5,6 +5,16 @@ module DataMapper
     #
     class Options
 
+      # Returns foreign key name for the given class name
+      #
+      # @return [Symbol]
+      #
+      # @api private
+      #
+      def self.foreign_key_name(class_name)
+        Inflector.foreign_key(class_name).to_sym
+      end
+
       # Name of the relationship
       #
       # @return [Symbol]
@@ -128,17 +138,6 @@ module DataMapper
       # @api private
       def default_target_key
         nil
-      end
-
-      # Returns foreign key name for the given class name
-      #
-      # @return [Symbol]
-      #
-      # @api private
-      #
-      # TODO: this should be a class method
-      def foreign_key_name(class_name)
-        Inflector.foreign_key(class_name).to_sym
       end
 
       # Validates this options object using a specialized validator
