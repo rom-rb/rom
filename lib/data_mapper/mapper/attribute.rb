@@ -57,7 +57,22 @@ module DataMapper
       # @api public
       attr_reader :options
 
-      PRIMITIVES = [ String, Time, Integer, Float, BigDecimal, DateTime, Date, Class, TrueClass, Numeric, Object ].freeze
+      # The primitive attribute types
+      #
+      # @api private
+      PRIMITIVES = [
+        String,
+        Time,
+        Integer,
+        Float,
+        BigDecimal,
+        DateTime,
+        Date,
+        Class,
+        TrueClass,
+        Numeric,
+        Object
+      ].freeze
 
       # Instantiate a concrete attribute subclass based on the given options
       #
