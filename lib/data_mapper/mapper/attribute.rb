@@ -147,7 +147,7 @@ module DataMapper
         :"#{prefix}_#{field}"
       end
 
-      # Load the given tuple
+      # Load this attribute's value from a tuple
       #
       # @abstract
       #
