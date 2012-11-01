@@ -156,6 +156,8 @@ module DataMapper
       #
       # @raise NotImplementedError
       #
+      # @return [undefined]
+      #
       # @api private
       def load(tuple)
         raise NotImplementedError, "#{self.class} must implement #load"
