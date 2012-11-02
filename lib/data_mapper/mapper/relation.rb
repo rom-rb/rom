@@ -447,8 +447,8 @@ module DataMapper
       # @return [Mapper::Relation]
       #
       # @api public
-      def rename(aliases, &block)
-        self.class.new(@relation.rename(aliases, &block))
+      def rename(aliases)
+        self.class.new(@relation.rename(aliases))
       end
 
       # Return a mapper for iterating over the result of joining other with self
