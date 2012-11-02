@@ -6,14 +6,12 @@ module DataMapper
         include Builder
 
         # TODO: add specs
-        def self.build(source, cardinality, name, *args, &op)
-          new(source, cardinality, name, *args, &op).relationship
+        def self.build(source, cardinality, name, target_model, options = {}, &op)
+          new(source, cardinality, name, target_model, options, &op).relationship
         end
 
         # TODO: add specs
-        def initialize(source, cardinality, name, *args, &op)
-          options      = Utils.extract_options(args)
-          target_model = Utils.extract_type(args)
+        def initialize(source, cardinality, name, target_model, options = {}, &op)
 
           via      = options[:through]
           min, max = extract_min_max(cardinality, name)

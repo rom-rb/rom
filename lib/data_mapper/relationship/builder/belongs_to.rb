@@ -6,14 +6,13 @@ module DataMapper
         include Builder
 
         # TODO: add specs
-        def self.build(source, name, *args, &op)
-          new(source, name, *args, &op).relationship
+        def self.build(source, name, target_model, options = {}, &op)
+          new(source, name, target_model, options, &op).relationship
         end
 
         # TODO: add specs
-        def initialize(source, name, *args, &op)
-          target_model = Utils.extract_type(args)
-          options      = Utils.extract_options(args).merge(:operation => op)
+        def initialize(source, name, target_model, options = {}, &op)
+          options = options.merge(:operation => op)
 
           @relationship = Relationship::ManyToOne.new(
             name, source.model, target_model, options
