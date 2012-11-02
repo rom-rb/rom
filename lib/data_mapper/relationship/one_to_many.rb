@@ -5,9 +5,28 @@ module DataMapper
 
       module Iterator
 
-        # @api public
+        # Iterate over the loaded domain objects
         #
         # TODO: refactor this and add support for multi-include
+        #
+        # @see Mapper::Relation#each
+        #
+        # @example
+        #
+        #   DataMapper[Person].include(:tasks).each do |person|
+        #     person.tasks.each do |task|
+        #       puts task.name
+        #     end
+        #   end
+        #
+        # @yield [object] the loaded domain objects
+        #
+        # @yieldparam [Object] object
+        #   the loaded domain object that is yielded
+        #
+        # @return [self]
+        #
+        # @api public
         def each
           return to_enum unless block_given?
 
