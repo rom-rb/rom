@@ -27,7 +27,7 @@ module DataMapper
 
     # Initialize an alias set instance
     #
-    # @param [Symbol] prefix used for aliasing
+    # @param [Symbol,#to_sym] prefix used for aliasing
     # @param [Mapper::AttributeSet] attributes
     # @param [Array] list of excluded attribute names
     #
@@ -35,7 +35,7 @@ module DataMapper
     #
     # @api private
     def initialize(prefix, attributes = Mapper::AttributeSet.new, excluded = [])
-      @prefix     = prefix
+      @prefix     = prefix.to_sym
       @attributes = attributes
       @excluded   = excluded
       @index      = attributes.alias_index(prefix, excluded)

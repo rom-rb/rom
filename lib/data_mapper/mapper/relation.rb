@@ -135,6 +135,7 @@ module DataMapper
           @relation_name
         else
           @relation_name = name
+          self
         end
       end
 
