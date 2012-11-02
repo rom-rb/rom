@@ -153,7 +153,6 @@ require 'data_mapper/relationship/one_to_one'
 require 'data_mapper/relationship/many_to_one'
 require 'data_mapper/relationship/many_to_many'
 
-require 'data_mapper/relationship/builder'
 require 'data_mapper/relationship/builder/belongs_to'
 require 'data_mapper/relationship/builder/has'
 

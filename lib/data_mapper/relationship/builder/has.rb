@@ -3,16 +3,9 @@ module DataMapper
     module Builder
 
       class Has
-        include Builder
 
         # TODO: add specs
         def self.build(source, cardinality, name, target_model, options = {}, &op)
-          new(source, cardinality, name, target_model, options, &op).relationship
-        end
-
-        # TODO: add specs
-        def initialize(source, cardinality, name, target_model, options = {}, &op)
-
           via      = options[:through]
           min, max = extract_min_max(cardinality, name)
 
@@ -29,10 +22,8 @@ module DataMapper
               Relationship::OneToOne
             end
 
-          @relationship = klass.new(name, source.model, target_model, options)
+          klass.new(name, source.model, target_model, options)
         end
-
-        private
 
         # Extract the upper and lower bounds from the given cardinality
         #
@@ -41,7 +32,7 @@ module DataMapper
         # @return [Array(Fixnum, Fixnum)]
         #
         # @api private
-        def extract_min_max(cardinality, name = nil)
+        def self.extract_min_max(cardinality, name = nil)
           case cardinality
           when Integer  then [ cardinality,       cardinality      ]
           when Range    then [ cardinality.first, cardinality.last ]
@@ -56,6 +47,9 @@ module DataMapper
             raise ArgumentError, message
           end
         end
+
+        private_class_method :extract_min_max
+
       end # class BelongsTo
     end # module Builder
   end # class Relationship
