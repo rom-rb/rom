@@ -1,7 +1,7 @@
 module DataMapper
   class RelationRegistry
 
-    # Represenets relation edge joining 2 relation nodes
+    # Represents relation edge joining 2 relation nodes
     #
     class RelationEdge < Graph::Edge
 

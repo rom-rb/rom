@@ -11,7 +11,7 @@ module DataMapper
 
       # Instance of the engine's relation class
       #
-      # @retun [Object]
+      # @return [Object]
       #
       # @api private
       attr_reader :relation
