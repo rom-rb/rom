@@ -34,7 +34,7 @@ module DataMapper
     #
     # @example
     #
-    #   other = DataMapper[User]
+    #   other = DataMapper[User].class
     #   DataMapper::Mapper.from(other, 'AdminMapper')
     #
     # @return [Mapper]
