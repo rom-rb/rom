@@ -406,11 +406,22 @@ module DataMapper
 
       # Return a mapper for iterating over a sorted set of domain objects
       #
-      # @example
+      # @see Veritas::Relation#sort_by
+      #
+      # @example with directions
+      #
+      #   DataMapper[Person].sort_by(:name).each do |person|
+      #     puts person.name
+      #   end
+      #
+      # @example with a block
       #
       #   DataMapper[Person].sort_by { |r| [ r.name.desc ] }.each do |person|
       #     puts person.name
       #   end
+      #
+      # @param [(Symbol)] *args
+      #   the sort directions
       #
       # @param [Proc] &block
       #   the block to evaluate for the sort directions
@@ -418,8 +429,8 @@ module DataMapper
       # @return [Mapper::Relation]
       #
       # @api public
-      def sort_by(&block)
-        self.class.new(@relation.sort_by(&block))
+      def sort_by(*args, &block)
+        self.class.new(@relation.sort_by(*args, &block))
       end
 
       # Return a mapper for iterating over domain objects with renamed attributes
