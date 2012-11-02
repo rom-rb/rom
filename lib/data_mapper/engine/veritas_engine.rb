@@ -24,8 +24,6 @@ module DataMapper
       # @return [undefined]
       #
       # @api private
-      #
-      # TODO: add specs
       def initialize(uri)
         super
         # TODO: add support for other adapters based on uri
@@ -37,21 +35,8 @@ module DataMapper
       # @return [RelationRegistry::RelationNode::VeritasRelation]
       #
       # @api public
-      #
-      # TODO: add specs
       def relation_node_class
         RelationRegistry::RelationNode::VeritasRelation
-      end
-
-      # @see Engine#relation_edge_class
-      #
-      # @return [RelationRegistry::RelationEdge]
-      #
-      # @api public
-      #
-      # TODO: add specs
-      def relation_edge_class
-        RelationRegistry::RelationEdge
       end
 
       # @see Engine#base_relation
@@ -65,8 +50,6 @@ module DataMapper
       # @return [Veritas::Relation::Base]
       #
       # @api public
-      #
-      # TODO: add specs
       def base_relation(name, header)
         Veritas::Relation::Base.new(name, header)
       end
@@ -79,8 +62,6 @@ module DataMapper
       # @return [Veritas::Relation::Gateway]
       #
       # @api public
-      #
-      # TODO: add specs
       def gateway_relation(relation)
         Veritas::Relation::Gateway.new(adapter, relation)
       end
