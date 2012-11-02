@@ -100,7 +100,7 @@ module DataMapper
       # @param [Symbol] name
       #   the repository name
       #
-      # @return [Symbol, nil]
+      # @return [Symbol, nil, self]
       #
       # @api public
       def self.repository(name = Undefined)
@@ -108,6 +108,7 @@ module DataMapper
           @repository
         else
           @repository = name
+          self
         end
       end
 
