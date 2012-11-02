@@ -2,7 +2,7 @@ module DataMapper
 
   # Abstract base class for database operations
   class Command
-    include AbstractClass, Adamantium
+    include AbstractClass, Adamantium::Flat
 
     # Execute command
     #

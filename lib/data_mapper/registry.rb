@@ -1,7 +1,7 @@
 module DataMapper
   # A registry for mappers session uses to find mappers
   class Registry
-    include Adamantium
+    include Adamantium::Flat
 
     # Initialize an empty mapper registry
     #

@@ -1,7 +1,7 @@
 module DataMapper
   # Abstract base class for object state
   class State
-    include AbstractClass, Adamantium, Equalizer.new(:mapping, :dump, :key)
+    include AbstractClass, Adamantium::Flat, Equalizer.new(:mapping, :dump, :key)
 
     # Return domain object
     #
