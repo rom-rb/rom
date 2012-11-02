@@ -1,7 +1,7 @@
 module DataMapper
   # A simple non UoW database session
   class Session
-    include Adamantium
+    include Adamantium::Flat
 
     # Read objects from database
     #
