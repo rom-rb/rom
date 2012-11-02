@@ -4,7 +4,41 @@ module DataMapper
 
       class Has
 
+        # Build a {OneToOne}, {OneToMany} or {ManyToMany} relationship
+        #
+        # @see Relationship::OneToMany
+        # @see Relationship::OneToOne
+        # @see Relationship::ManyToMany
+        #
         # TODO: add specs
+        #
+        # @param [Mapper] source
+        #   the mapper establishing this relationship
+        #
+        # @param [Fixnum, Range] cardinality
+        #   the relationship's cardinality
+        #
+        # @param [Symbol] name
+        #   the relationship's name
+        #
+        # @param [::Class] target_model
+        #   the class of the object this relationship is pointing to
+        #
+        # @param [Hash] options
+        #   the relationship's options
+        #
+        # @option options [Symbol, Array<Symbol>] :source_key
+        #   the source_model's attributes to join on
+        #
+        # @option options [Symbol, Array<Symbol>] :target_key
+        #   the target_model's attributes to join on
+        #
+        # @option options [Symbol] :through
+        #   the name of the relationship to "go through" in case of M:N
+        #
+        # @return [OneToMany, OneToOne, ManyToMany]
+        #
+        # @api private
         def self.build(source, cardinality, name, target_model, options = {}, &op)
           via      = options[:through]
           min, max = extract_min_max(cardinality, name)
@@ -28,6 +62,12 @@ module DataMapper
         # Extract the upper and lower bounds from the given cardinality
         #
         # TODO: refactor
+        #
+        # @param [Fixnum, Range] cardinality
+        #   the cardinality to extract min/max from
+        #
+        # @param [Symbol, String] name
+        #   the relationship name used for better error message
         #
         # @return [Array(Fixnum, Fixnum)]
         #
