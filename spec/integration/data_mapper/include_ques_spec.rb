@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 describe DataMapper::Session, '#include?(object)' do
-  let(:mapper)        { registry.resolve_model(DomainObject) }
-  let(:registry)      { DummyRegistry.new                    }
-  let(:domain_object) { DomainObject.new                     }
+  let(:mapper)        { registry.resolve_model(Spec::DomainObject) }
+  let(:registry)      { Spec::Registry.new                    }
+  let(:domain_object) { Spec::DomainObject.new                     }
   let(:object)        { described_class.new(registry)        }
 
   subject { object.include?(domain_object) }

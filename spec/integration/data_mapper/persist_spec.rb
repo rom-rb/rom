@@ -3,24 +3,24 @@ require 'spec_helper'
 describe DataMapper::Session, '#persist' do
   subject { object.persist(domain_object) }
 
-  let(:mapper)        { registry.resolve_model(DomainObject)         }
-  let(:registry)      { DummyRegistry.new                            }
-  let(:domain_object) { DomainObject.new                             }
-  let(:object)        { described_class.new(registry)                }
+  let(:mapper)        { registry.resolve_model(Spec::DomainObject)                                  }
+  let(:registry)      { Spec::Registry.new                                                          }
+  let(:domain_object) { Spec::DomainObject.new                                                      }
+  let(:object)        { described_class.new(registry)                                               }
   let(:identity_map)  { object.instance_variable_get(:@tracker).instance_variable_get(:@identities) }
-  let(:mapping)       { DataMapper::Mapping.new(mapper, domain_object)  }
-  let(:new_key)       { mapper.dump_key(domain_object)               }
-  let!(:old_key)      { mapper.dump_key(domain_object)               }
-  let!(:old_dump)     { mapper.dump(domain_object)                   }
-  let!(:old_state)    { DataMapper::State::Loaded.new(mapping)          }
-  let!(:old_identity) { DataMapper::Identity.new(DomainObject, old_key) }
-  let!(:new_identity) { DataMapper::Identity.new(DomainObject, new_key) }
+  let(:mapping)       { DataMapper::Session::Mapping.new(mapper, domain_object)                              }
+  let(:new_key)       { mapper.dumper(domain_object).key                                            }
+  let!(:old_key)      { mapper.dumper(domain_object).key                                            }
+  let!(:old_body)     { mapper.dumper(domain_object).body                                           }
+  let!(:old_state)    { DataMapper::Session::State::Loaded.new(mapping)                                      }
+  let!(:old_identity) { DataMapper::Session::Identity.new(Spec::DomainObject, old_key)                       }
+  let(:new_identity)  { DataMapper::Session::Identity.new(Spec::DomainObject, new_key)                       }
 
   context 'with untracked domain object' do
     it 'should insert update' do
       subject
       mapper.inserts.should == [
-        DataMapper::State::New.new(mapping)
+        DataMapper::Session::State::New.new(mapping)
       ]
     end
 
@@ -30,8 +30,7 @@ describe DataMapper::Session, '#persist' do
   end
 
   context 'with tracked domain object' do
-    let(:new_dump)     { mapper.dump(domain_object) }
-    let(:new_key)      { mapper.dump_key(domain_object) }
+    let(:new_key)      { mapper.dumper(domain_object).key  }
 
     before do
       object.persist(domain_object)
@@ -41,7 +40,7 @@ describe DataMapper::Session, '#persist' do
       it 'should should update domain object' do
         subject
         mapper.updates.should eql([[
-          DataMapper::State::Dirty.new(mapping),
+          DataMapper::Session::State::Dirty.new(mapping),
           old_state
         ]])
       end
@@ -68,10 +67,9 @@ describe DataMapper::Session, '#persist' do
     # We have to make sure we cache the loaded dump and compare this to 
     # future dumps without storing a dump of an object we just loaded.
     context 'and object is dirty from dump representation change' do
-      let(:new_dump) { { :some => :change } }
-
       before do
-        mapper.stub(:dump => new_dump)
+        new_dumper = mock(:key => :changed, :body => :other_change)
+        mapper.stub(:dumper => new_dumper)
       end
 
       it_should_behave_like 'an update'

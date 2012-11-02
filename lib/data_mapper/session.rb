@@ -3,10 +3,8 @@ module DataMapper
   class Session
     include Adamantium::Flat
 
+
     # Read objects from database
-    #
-    # This method returns a mapper defined container that might be
-    # chainable.
     #
     # The container can use the passed block to load objects guarded by identity map.
     #
@@ -21,12 +19,9 @@ module DataMapper
     #
     # @api public
     #
-    def read(model, *args, &block)
+    def read(model, query)
       mapper = @registry.resolve_model(model)
-      args << block if block
-      mapper.wrap_query(*args) do |dump|
-        load(mapper, dump)
-      end
+      Reader.new(self, mapper, query) 
     end
 
     # Delete a domain object from database and forget it
@@ -160,23 +155,6 @@ module DataMapper
       self
     end
 
-  private
-
-    # Initialize session with registry
-    #
-    # @param [Registry] registry
-    #
-    # @return [self]
-    #
-    # @api private
-    #
-    def initialize(registry)
-      @registry     = registry
-      @tracker      = Tracker.new
-
-      self
-    end
-
     # Load a domain object from dump and track it
     #
     # Will return already tracked object in case of identity map collision.
@@ -196,6 +174,23 @@ module DataMapper
       state = State::Loading.new(mapper, dump)
 
       @tracker.load(state)
+    end
+
+  private
+
+    # Initialize session with registry
+    #
+    # @param [Registry] registry
+    #
+    # @return [self]
+    #
+    # @api private
+    #
+    def initialize(registry)
+      @registry     = registry
+      @tracker      = Tracker.new
+
+      self
     end
 
     # Return object state for domain object

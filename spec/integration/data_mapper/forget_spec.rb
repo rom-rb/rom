@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 describe DataMapper::Session, '#forget(object)' do
-  let(:mapper)        { registry.resolve_model(DomainObject) }
-  let(:registry)      { DummyRegistry.new                    }
-  let(:domain_object) { DomainObject.new                     }
+  let(:mapper)        { registry.resolve_model(Spec::DomainObject) }
+  let(:registry)      { Spec::Registry.new                    }
+  let(:domain_object) { Spec::DomainObject.new                     }
   let(:object)        { described_class.new(registry)        }
 
   let(:identity_map)  { object.instance_variable_get(:@tracker).instance_variable_get(:@identities) }
@@ -18,8 +18,7 @@ describe DataMapper::Session, '#forget(object)' do
   end
 
   it 'should not dump' do
-    mapper.should_not_receive(:dump)
-    mapper.should_not_receive(:dump_key)
+    mapper.should_not_receive(:dumper)
   end
 
   it 'should remove state' do
@@ -27,7 +26,7 @@ describe DataMapper::Session, '#forget(object)' do
   end
 
   it 'should remove from identity map' do
-    identity_map.should_not have_key(mapper.dump_key(domain_object))
+    identity_map.should_not have_key(mapper.dumper(domain_object).key)
   end
 
   it_should_behave_like 'a command method'

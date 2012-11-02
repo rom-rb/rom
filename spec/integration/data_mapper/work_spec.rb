@@ -2,15 +2,15 @@ require 'spec_helper'
 
 describe DataMapper::Session, 'with unit of work' do
 
-  let(:mapper)        { registry.resolve_model(DomainObject) }
+  let(:mapper)        { registry.resolve_model(Spec::DomainObject) }
   let(:object)        { described_class.new(work)            }
-  let(:work)          { DataMapper::Work.new(registry)          }
-  let(:registry)      { DummyRegistry.new                    }
-  let(:domain_object) { DomainObject.new                     }
+  let(:work)          { DataMapper::Session::Work.new(registry)          }
+  let(:registry)      { Spec::Registry.new                    }
+  let(:domain_object) { Spec::DomainObject.new                     }
 
   specify 'allows to execute a group of commands' do
-    a = DomainObject.new(:key_attribute => :a, :other_attribute => :foo)
-    b = DomainObject.new(:key_attribute => :a, :other_attribute => :bar)
+    a = Spec::DomainObject.new(:key_attribute => :a, :other_attribute => :foo)
+    b = Spec::DomainObject.new(:key_attribute => :a, :other_attribute => :bar)
 
     object.persist(a)
     object.persist(b)
