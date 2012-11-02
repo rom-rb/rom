@@ -176,9 +176,13 @@ module DataMapper
 
       # Perform finalization
       #
+      # @return [self]
+      #
       # @api private
       def self.finalize
         Mapper.mapper_registry << new(relations.node_for(gateway_relation))
+        freeze
+        self
       end
 
       # Initialize a veritas mapper instance
@@ -258,23 +262,6 @@ module DataMapper
       # @api public
       def relation_name
         self.class.relation_name
-      end
-
-      # The mapper's model
-      #
-      # @see Mapper::Relation.model
-      #
-      # @example
-      #
-      #   mapper = DataMapper[Person]
-      #   mapper.model
-      #
-      # @return [::Class]
-      #   a domain model class
-      #
-      # @api public
-      def model
-        self.class.model
       end
 
       # The mapper's human readable representation

@@ -84,7 +84,7 @@ module DataMapper
     #
     # @api public
     def register(mapper, relationships = [])
-      @mappers[Identifier.new(mapper.class.model, relationships)] = mapper
+      @mappers[Identifier.new(mapper.model, relationships)] = mapper
       self
     end
 

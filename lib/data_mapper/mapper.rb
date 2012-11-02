@@ -6,6 +6,21 @@ module DataMapper
     include Enumerable
     extend DescendantsTracker
 
+    # The mapper's model
+    #
+    # @see Mapper::Relation.model
+    #
+    # @example
+    #
+    #   mapper = DataMapper[Person]
+    #   mapper.model
+    #
+    # @return [::Class]
+    #   a domain model class
+    #
+    # @api public
+    attr_reader :model
+
     # This mapper's set of attributes to map
     #
     # @example
@@ -69,7 +84,7 @@ module DataMapper
     #
     # @param [Class] model to be set
     #
-    # @return [Class, nil]
+    # @return [Class, nil, self]
     #
     # @api public
     def self.model(model = Undefined)
@@ -77,6 +92,7 @@ module DataMapper
         @model
       else
         @model = model
+        self
       end
     end
 
