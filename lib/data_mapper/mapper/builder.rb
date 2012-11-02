@@ -12,7 +12,7 @@ module DataMapper
       #
       # @return [Class]
       #
-      # @api public
+      # @api private
       def self.call(connector, source_mapper_class)
         new(connector, source_mapper_class).mapper
       end
