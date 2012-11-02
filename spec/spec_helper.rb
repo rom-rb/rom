@@ -1,5 +1,6 @@
 require 'ostruct'
 require 'dm-mapper'
+require 'virtus'
 
 begin
   require 'rspec'  # try for RSpec 2
