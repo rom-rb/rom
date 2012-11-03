@@ -382,7 +382,7 @@ module DataMapper
       #
       # @api public
       def restrict(&block)
-        self.class.new(@relation.restrict(&block))
+        self.class.new(@relation.restrict(&block), attributes)
       end
 
       # Return a mapper for iterating over a sorted set of domain objects
