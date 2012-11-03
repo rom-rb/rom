@@ -364,7 +364,7 @@ module DataMapper
       #
       # @api public
       def include(name)
-        Mapper.mapper_registry[self.class.model, relationships[name]]
+        Mapper.mapper_registry[model, relationships[name]]
       end
 
       # Return a mapper for iterating over a restricted set of domain objects
