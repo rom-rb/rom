@@ -39,7 +39,7 @@ describe 'Finding One Object' do
 
   it 'raises an exception if more than one objects were found' do
     expect { DataMapper[User].one(:name => 'Jane') }.to raise_error(
-      "#{DataMapper[User]}.one returned more than one result")
+      "#{DataMapper[User]}#one returned more than one result")
   end
 
 end
