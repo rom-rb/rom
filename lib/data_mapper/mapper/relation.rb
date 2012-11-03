@@ -163,6 +163,7 @@ module DataMapper
         names.each do |name|
           attributes << attributes[name].clone(:key => true)
         end
+        self
       end
 
       # The aliases used for this mapper's instances
