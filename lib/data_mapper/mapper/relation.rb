@@ -449,7 +449,7 @@ module DataMapper
       #
       # @api public
       def join(other)
-        self.class.new(@relation.join(other.relation))
+        self.class.new(@relation.join(other.relation), attributes)
       end
 
     end # class Relation

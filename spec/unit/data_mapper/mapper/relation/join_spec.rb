@@ -1,5 +1,20 @@
 require 'spec_helper'
 
 describe Mapper::Relation, '#join' do
-  it 'needs spec'
+  subject { object.join(other) }
+
+  let(:object)         { mock_mapper(model).new(relation) }
+  let(:other)          { mock_mapper(model).new(other_relation) }
+  let(:relation)       { mock('relation') }
+  let(:other_relation) { mock('other_relation') }
+  let(:joined)         { mock('joined_relation') }
+  let(:model)          { mock_model(:User) }
+
+  before do
+    relation.should_receive(:join).with(other_relation).and_return(joined)
+  end
+
+  it { should be_instance_of(object.class) }
+
+  its(:relation) { should be(joined) }
 end
