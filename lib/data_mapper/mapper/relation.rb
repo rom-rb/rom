@@ -295,8 +295,7 @@ module DataMapper
       #
       # @api public
       def find(options)
-        restriction = @relation.restrict(Query.new(options, @attributes))
-        self.class.new(restriction)
+        self.class.new(relation.restrict(Query.new(options, attributes)), attributes)
       end
 
       # Return a mapper for iterating over the relation ordered by *order
