@@ -343,7 +343,7 @@ module DataMapper
           results.first
         else
           # TODO: add custom error class
-          raise "#{self}.one returned more than one result"
+          raise "#{self}#one returned more than one result"
         end
       end
 
