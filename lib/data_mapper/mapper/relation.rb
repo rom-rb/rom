@@ -276,7 +276,7 @@ module DataMapper
       #
       # @api public
       def inspect
-        "<##{self.class.name} @model=#{model} @relation_name=#{self.class.relation_name} @repository=#{self.class.repository}>"
+        "<##{self.class.name} @model=#{model} @relation_name=#{relation_name} @repository=#{self.class.repository}>"
       end
 
       # Return a mapper for iterating over the relation restricted with options
@@ -316,7 +316,7 @@ module DataMapper
       def order(*names)
         order_attributes = names.map { |attribute| attributes.field_name(attribute) }
         order_attributes.concat(attributes.fields).uniq!
-        self.class.new(relation.order(*order_attributes))
+        self.class.new(relation.order(*order_attributes), attributes)
       end
 
       # Return a mapper for iterating over the relation ordered by *order
