@@ -276,7 +276,7 @@ module DataMapper
       #
       # @api public
       def inspect
-        "<##{self.class.name}:#{object_id} @model=#{@model} @repository=#{self.class.repository} @relation=#{@relation}>"
+        "<##{self.class.name} @model=#{model} @relation_name=#{self.class.relation_name} @repository=#{self.class.repository}>"
       end
 
       # Return a mapper for iterating over the relation restricted with options
