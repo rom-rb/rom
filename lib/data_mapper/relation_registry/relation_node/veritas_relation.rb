@@ -51,6 +51,12 @@ module DataMapper
         end
 
         # TODO: add specs
+        def order(*attributes)
+          sorted = relation.sort_by { |r| attributes.map { |attribute| r.send(attribute) } }
+          self.class.new(name, sorted, aliases)
+        end
+
+        # TODO: add specs
         def sort_by(&block)
           self.class.new(name, relation.sort_by(&block), aliases)
         end

@@ -313,18 +313,10 @@ module DataMapper
       # @return [Mapper::Relation]
       #
       # @api public
-      def order(*order)
-        attributes = order.map { |attribute|
-          @attributes.field_name(attribute)
-        }
-
-        attributes = attributes.concat(@attributes.fields).uniq
-
-        sorted = relation.sort_by { |r|
-          attributes.map { |attribute| r.send(attribute) }
-        }
-
-        self.class.new(sorted)
+      def order(*names)
+        order_attributes = names.map { |attribute| attributes.field_name(attribute) }
+        order_attributes.concat(attributes.fields).uniq!
+        self.class.new(relation.order(*order_attributes))
       end
 
       # Return a mapper for iterating over the relation ordered by *order
