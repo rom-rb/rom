@@ -429,7 +429,7 @@ module DataMapper
       #
       # @api public
       def rename(aliases)
-        self.class.new(@relation.rename(aliases))
+        self.class.new(@relation.rename(aliases), attributes)
       end
 
       # Return a mapper for iterating over the result of joining other with self
