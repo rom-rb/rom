@@ -59,7 +59,7 @@ module DataMapper
       #
       # @api public
       def self.relations
-        @relations ||= engine.relations
+        relations ||= engine.relations
       end
 
       # Returns base relation for this mapper
@@ -72,7 +72,7 @@ module DataMapper
       #
       # @api public
       def self.relation
-        @relation ||= engine.base_relation(relation_name, attributes.header)
+        relation ||= engine.base_relation(relation_name, attributes.header)
       end
 
       # Returns gateway relation for this mapper class
@@ -224,7 +224,7 @@ module DataMapper
       #
       # @api private
       def remap(aliases)
-        self.class.new(@relation, @attributes.remap(aliases))
+        self.class.new(relation, @attributes.remap(aliases))
       end
 
       # Iterate over the loaded domain objects
@@ -245,7 +245,7 @@ module DataMapper
       # @api public
       def each
         return to_enum unless block_given?
-        @relation.each { |tuple| yield load(tuple) }
+        relation.each { |tuple| yield load(tuple) }
         self
       end
 
@@ -382,7 +382,7 @@ module DataMapper
       #
       # @api public
       def restrict(&block)
-        self.class.new(@relation.restrict(&block), attributes)
+        self.class.new(relation.restrict(&block), attributes)
       end
 
       # Return a mapper for iterating over a sorted set of domain objects
@@ -411,7 +411,7 @@ module DataMapper
       #
       # @api public
       def sort_by(*args, &block)
-        self.class.new(@relation.sort_by(*args, &block))
+        self.class.new(relation.sort_by(*args, &block), attributes)
       end
 
       # Return a mapper for iterating over domain objects with renamed attributes
@@ -429,7 +429,7 @@ module DataMapper
       #
       # @api public
       def rename(aliases)
-        self.class.new(@relation.rename(aliases), attributes)
+        self.class.new(relation.rename(aliases), attributes)
       end
 
       # Return a mapper for iterating over the result of joining other with self
@@ -449,7 +449,7 @@ module DataMapper
       #
       # @api public
       def join(other)
-        self.class.new(@relation.join(other.relation), attributes)
+        self.class.new(relation.join(other.relation), attributes)
       end
 
     end # class Relation
