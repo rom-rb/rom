@@ -21,5 +21,6 @@ describe Mapper::Relation, '#order' do
 
   it { should be_instance_of(object.class) }
 
-  its(:relation) { should be(sorted) }
+  its(:relation)   { should be(sorted) }
+  its(:attributes) { should be(object.attributes) }
 end

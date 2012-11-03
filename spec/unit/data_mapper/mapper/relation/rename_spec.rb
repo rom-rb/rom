@@ -15,5 +15,6 @@ describe Mapper::Relation, '#rename' do
 
   it { should be_instance_of(object.class) }
 
-  its(:relation) { should be(rename) }
+  its(:relation)   { should be(rename) }
+  its(:attributes) { should be(object.attributes) }
 end

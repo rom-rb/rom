@@ -16,5 +16,6 @@ describe Mapper::Relation, '#join' do
 
   it { should be_instance_of(object.class) }
 
-  its(:relation) { should be(joined) }
+  its(:relation)   { should be(joined) }
+  its(:attributes) { should be(object.attributes) }
 end

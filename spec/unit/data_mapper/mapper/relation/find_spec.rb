@@ -17,5 +17,6 @@ describe Mapper::Relation, '#find' do
 
   it { should be_instance_of(object.class) }
 
-  its(:relation) { should be(restriction) }
+  its(:relation)   { should be(restriction) }
+  its(:attributes) { should be(object.attributes) }
 end
