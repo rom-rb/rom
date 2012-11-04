@@ -27,7 +27,7 @@ RSpec.configure do |config|
     klass = Class.new(DataMapper::Mapper::Relation) do
       model         model_class
       repository    :test
-      relation_name Inflector.tableize(model_class.name)
+      relation_name Inflector.tableize(model_class.name).to_sym
 
       def self.name
         "#{model.name}Mapper"
