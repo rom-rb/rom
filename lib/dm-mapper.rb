@@ -149,6 +149,7 @@ require 'data_mapper/mapper/builder/class'
 
 require 'data_mapper/relationship'
 require 'data_mapper/relationship/one_to_many'
+require 'data_mapper/relationship/one_to_many/iterator'
 require 'data_mapper/relationship/one_to_one'
 require 'data_mapper/relationship/many_to_one'
 require 'data_mapper/relationship/many_to_many'

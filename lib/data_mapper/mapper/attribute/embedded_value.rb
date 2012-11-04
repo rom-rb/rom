@@ -25,6 +25,7 @@ module DataMapper
           super
           @type    = options.fetch(:type) { raise(MissingTypeOptionError) }
           @aliases = options.fetch(:aliases, {})
+          @mapper  = options[:mapper]
         end
 
         # Finalize this embedded value attribute
@@ -33,6 +34,8 @@ module DataMapper
         #
         # @api private
         def finalize
+          return self if mapper
+
           mapper = DataMapper[type]
           mapper = mapper.remap(@aliases) if @aliases.any?
 
