@@ -57,7 +57,11 @@ module DataMapper
         end
       end # module Iterator
 
-      # TODO: add spec
+      # Returns if the relationship has collection target
+      #
+      # @return [Boolean]
+      #
+      # @api private
       def collection_target?
         true
       end
