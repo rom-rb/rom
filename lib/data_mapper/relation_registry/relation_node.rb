@@ -40,7 +40,13 @@ module DataMapper
 
       # Iterate on relation
       #
-      # @return [self,#to_num]
+      # @example
+      #
+      #   DataMapper.engines[:default].relations[:people].each do |tuple|
+      #     puts tuple.inspect
+      #   end
+      #
+      # @return [self, Enumerator]
       #
       # @yield [Object]
       #
@@ -52,6 +58,11 @@ module DataMapper
       end
 
       # Adds new object to the relation
+      #
+      # @example
+      #
+      #   tuple = { :id => 1, :name => 'John' }
+      #   DataMapper.engines[:default].relations[:people] << tuple
       #
       # @param [Object]
       #
