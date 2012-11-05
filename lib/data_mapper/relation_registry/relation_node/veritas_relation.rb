@@ -11,6 +11,12 @@ module DataMapper
 
         # Iterates over relation tuples
         #
+        # @example
+        #
+        #   DataMapper.engines[:default].relations[:people].each do |tuple|
+        #     puts tuple.inspect
+        #   end
+        #
         # @return [self, Enumerator]
         #
         # @yield [Veritas::Tuple]
@@ -34,6 +40,10 @@ module DataMapper
 
         # Renames the relation with given aliases
         #
+        # @example
+        #
+        #   renamed = DataMapper.engines[:default].relations[:people].rename(:id => :person_id)
+        #
         # @param [AliasSet]
         #
         # @return [VeritasRelation]
@@ -53,6 +63,13 @@ module DataMapper
         end
 
         # Joins two nodes
+        #
+        # @example
+        #
+        #   people    = DataMapper.engines[:default].relations[:people]
+        #   addresses = DataMapper.engines[:default].relations[:addresses]
+        #
+        #   joined = people.join(addresses)
         #
         # @param [VeritasRelation]
         #
@@ -74,6 +91,12 @@ module DataMapper
 
         # Restricts the relation and returns new node
         #
+        # @example
+        #
+        #   restricted = DataMapper.engines[:default].relations[:people].restrict { |r|
+        #     r.name.eq('John)
+        #   }
+        #
         # @param [*args] anything that Veritas::Relation::Base#restrict accepts
         #
         # @param [Proc]
@@ -87,6 +110,10 @@ module DataMapper
 
         # Sorts the relation and returns new node
         #
+        # @example
+        #
+        #   ordered = DataMapper.engines[:default].relations[:people].order(:name)
+        #
         # @param [*attributes]
         #
         # @return [VeritasRelation]
@@ -98,6 +125,12 @@ module DataMapper
         end
 
         # Sorts relation and returns new node
+        #
+        # @example
+        #
+        #   sorted = DataMapper.engines[:default].relations[:people].sort_by { |r|
+        #     [ r.name.desc ]
+        #   }
         #
         # @param [Proc]
         #
