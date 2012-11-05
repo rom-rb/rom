@@ -62,6 +62,11 @@ module DataMapper
       # @api private
       PRIMITIVES = [ String, Time, Integer, Float, BigDecimal, DateTime, Date, Class, TrueClass, Numeric, Object ].freeze
 
+      # Option keys that can't be changed with {#clone}
+      #
+      # @api private
+      STABLE_OPTIONS = [ :type, :collection ].freeze
+
       # Instantiate a concrete attribute subclass based on the given options
       #
       # @example
@@ -171,18 +176,35 @@ module DataMapper
         false
       end
 
-      # Return a cloned instance with the same type but given options
+      # Return a cloned instance but with the given options merged
+      #
+      # The method will not change the +:type+ and +:collection+ options
       #
       # @see Attribute.build
+      # @see STABLE_OPTIONS
       #
       # @param [Hash] options
-      #   the options accepted by {Attribute.build}
+      #   the options accepted by {Attribute.build} minus {STABLE_OPTIONS}
       #
       # @return [Attribute]
       #
       # @api private
       def clone(options = {})
-        self.class.build(name, options.merge(:type => type))
+        self.class.build(name, @options.merge(clone_options(options)))
+      end
+
+      private
+
+      # Strip stable options from options passed to #clone
+      #
+      # @param [Hash] options
+      #   the options for a cloned attribute
+      #
+      # @return [Hash]
+      #
+      # @api private
+      def clone_options(options)
+        options.reject { |key, _| STABLE_OPTIONS.include?(key) }
       end
 
     end # class Attribute
