@@ -48,7 +48,7 @@ module DataMapper
     #
     # @return [undefined]
     #
-    # @api public
+    # @api private
     def initialize(mappers = {})
       @mappers = mappers
     end
@@ -57,7 +57,9 @@ module DataMapper
     #
     # @yield [Identifier, Mapper]
     #
-    # @api public
+    # @return [self]
+    #
+    # @api private
     def each
       return to_enum unless block_given?
       @mappers.each { |identifier, mapper| yield(identifier, mapper) }
@@ -68,7 +70,7 @@ module DataMapper
     #
     # @return [Hash]
     #
-    # @api public
+    # @api private
     def relation_map
       @mappers.values.each_with_object({}) { |mapper, h| h[mapper.model] = mapper.relation_name }
     end
@@ -80,7 +82,7 @@ module DataMapper
     #
     # @return [Boolean]
     #
-    # @api public
+    # @api private
     def include?(model, relationships = [])
       @mappers.key?(Identifier.new(model, relationships))
     end
@@ -92,7 +94,7 @@ module DataMapper
     #
     # @return [Mapper]
     #
-    # @api public
+    # @api private
     def [](model, relationships = [])
       @mappers[Identifier.new(model, relationships)]
     end
@@ -104,7 +106,7 @@ module DataMapper
     #
     # @return [self]
     #
-    # @api public
+    # @api private
     def register(mapper, relationships = [])
       @mappers[Identifier.new(mapper.model, relationships)] = mapper
       self
@@ -112,7 +114,7 @@ module DataMapper
 
     # @see #register
     #
-    # @api public
+    # @api private
     def <<(mapper, relationships = [])
       register(mapper, relationships)
     end
