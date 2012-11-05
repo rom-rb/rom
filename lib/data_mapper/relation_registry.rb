@@ -6,6 +6,10 @@ module DataMapper
 
     # Engine used in this registry
     #
+    # @example
+    #
+    #   DataMapper[Person].relations.engine
+    #
     # @return [Engine]
     #
     # @api public
@@ -14,6 +18,10 @@ module DataMapper
     # Relation node class that is used in this registry
     #
     # @see Engine#relation_node_class
+    #
+    # @example
+    #
+    #   DataMapper[Person].relations.node_class
     #
     # @return [Class]
     #
@@ -24,12 +32,20 @@ module DataMapper
     #
     # @see Engine#relation_edge_class
     #
+    # @example
+    #
+    #   DataMapper[Person].relations.edge_class
+    #
     # @return [Class]
     #
     # @api public
     attr_reader :edge_class
 
     # Connector hash
+    #
+    # @example
+    #
+    #   DataMapper[Person].relations.connectors
     #
     # @return [Hash]
     #
@@ -132,11 +148,15 @@ module DataMapper
 
     # Return relation node with the given name
     #
+    # @example
+    #
+    #   DataMapper.engines[:default].relations[:people]
+    #
     # @param [Symbol] name of the relation
     #
     # @return [RelationNode]
     #
-    # @api private
+    # @api public
     def [](name)
       name = name.to_sym
       @nodes.detect { |node| node.name == name }
