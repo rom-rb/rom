@@ -2,7 +2,6 @@ module DataMapper
 
   # Creates mappers for join relations described by relationship definitions
   #
-  # TODO: split this giant into smaller objects and add proper unit specs
   class Finalizer
 
     # The mapper registry in use
@@ -48,6 +47,11 @@ module DataMapper
       new(Mapper.descendants.select { |mapper| mapper.model }).run
     end
 
+    # @api private
+    def self.call(*args)
+      new(*args).run
+    end
+
     # Initialize a new finalizer instance
     #
     # @param [Enumerable<Mapper>] mappers
@@ -77,8 +81,8 @@ module DataMapper
     #
     # @api private
     def run
-      BaseRelationMappersFinalizer.new(mappers, edge_builder, mapper_builder).run
-      RelationshipMappersFinalizer.new(mappers, edge_builder, mapper_builder).run
+      BaseRelationMappersFinalizer.call(mappers, edge_builder, mapper_builder)
+      RelationshipMappersFinalizer.call(mappers, edge_builder, mapper_builder)
       self
     end
 

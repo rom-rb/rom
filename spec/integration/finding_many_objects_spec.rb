@@ -1,6 +1,6 @@
 require 'spec_helper_integration'
 
-describe 'Finding Many Objects' do
+describe 'Finding Many Objects', :type => :integration do
   before(:all) do
     setup_db
 

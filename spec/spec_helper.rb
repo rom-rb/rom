@@ -11,11 +11,19 @@ end
 
 RSpec.configure do |config|
   config.before(:all, :type => :unit) do
-    @_mocked_models = []
+    # FIXME: remove this when we upgrade to rspec2
+    unless self.instance_variable_get(:"@_proxy").location =~ /integration/
+      @_mocked_models  = []
+      @_mocked_mappers = []
+    end
   end
 
   config.after(:each, :type => :unit) do
-    clear_mocked_models
+    # FIXME: remove this when we upgrade to rspec2
+    unless self.instance_variable_get(:"@_proxy").location =~ /integration/
+      clear_mocked_mappers
+      clear_mocked_models
+    end
   end
 
   def mock_model(type)
@@ -38,7 +46,13 @@ RSpec.configure do |config|
       klass.attributes << attribute
     end
 
+    @_mocked_mappers << klass.name.to_sym
+
     klass
+  end
+
+  def mock_attribute(name, type, options = {})
+    Mapper::Attribute.build(name, options.merge(:type => type))
   end
 
   def mock_relation(name, header = [])
@@ -80,6 +94,14 @@ RSpec.configure do |config|
     @_mocked_models.each do |name|
       Object.send(:remove_const, name) if Object.const_defined?(name)
     end
+  end
+
+  def clear_mocked_mappers
+    @_mocked_mappers.each do |name|
+      Object.send(:remove_const, name) if Object.const_defined?(name)
+    end
+    DataMapper::Mapper.instance_variable_set('@descendants', [])
+    DataMapper::Mapper::Relation.instance_variable_set('@descendants', [])
   end
 end
 

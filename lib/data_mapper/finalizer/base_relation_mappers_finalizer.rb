@@ -7,7 +7,7 @@ module DataMapper
       def run
         finalize_mappers
         finalize_relationships
-        finalize_attribute_mappers
+        self
       end
 
       private
@@ -40,25 +40,21 @@ module DataMapper
       end
 
       # @api private
-      def finalize_attribute_mappers
-        mappers.each(&:finalize_attributes)
-      end
-
-      # @api private
       def target_keys_for(model)
         relationships_for_target(model).map(&:target_key).uniq
       end
 
       # @api private
       def relationships_for_target(model)
-        base_relation_mappers.map { |mapper|
+        target_relationships = base_relation_mappers.map { |mapper|
           mapper_relationships = mapper.relationships
           relationships        = mapper_relationships.select { |relationship| relationship.target_model.equal?(model) }
           names                = relationships.map(&:name)
           via_relationships    = mapper_relationships.select { |relationship| names.include?(relationship.via) }
 
           relationships + via_relationships
-        }.flatten
+        }
+        target_relationships.flatten!
       end
 
     end # class BaseRelationMapperFinalizer

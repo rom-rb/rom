@@ -5,6 +5,15 @@ module DataMapper
 
       # @api private
       def run
+        finalize_relationship_mappers
+        finalize_attribute_mappers
+        self
+      end
+
+      private
+
+      # @api private
+      def finalize_relationship_mappers
         mapper_relations.each do |relations|
           relations.connectors.each_value do |connector|
             relationship = connector.relationship
@@ -16,7 +25,10 @@ module DataMapper
         end
       end
 
-      private
+      # @api private
+      def finalize_attribute_mappers
+        mappers.each(&:finalize_attributes)
+      end
 
       # @api private
       def mapper_relations
