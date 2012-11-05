@@ -8,9 +8,31 @@ module DataMapper
     class Identifier
       include Equalizer.new(:model, :relationships)
 
+      # The model mapped by the identified mapper
+      #
+      # @return [::Class] a domain model class
+      #
+      # @api private
       attr_reader :model
+
+      # The relationships mapped by the identified mapper
+      #
+      # @return [Array<Relationship>]
+      #
+      # @api private
       attr_reader :relationships
 
+      # Initialize a new frozen {Identifier} instance
+      #
+      # @param [::Class] model
+      #   the identified mapper's domain model class
+      #
+      # @param [Relationship, Array<Relationship>] relationships
+      #   the identified mapper's mapped relationships
+      #
+      # @return [undefined]
+      #
+      # @api private
       def initialize(model, relationships = [])
         @model         = model
         @relationships = Array(relationships)
