@@ -99,8 +99,6 @@ module DataMapper
         relationship.collection_target?
       end
 
-      private
-
       # Returns source mapper instance
       #
       # @return [Mapper::Relation]
