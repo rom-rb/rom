@@ -5,13 +5,29 @@ module DataMapper
       # Builds relation nodes for relationships
       #
       class ViaBuilder < self
+
+        # The {NodeNameSet} built for +relationship+
+        #
+        # @return [NodeNameSet]
+        #
+        # @api private
         attr_reader :node_names
 
+        # The name of the built {RelationNode}
+        #
+        # @return [NodeName]
+        #
         # @api private
         def name
           @name ||= NodeName.new(left_name, node_names.last.to_connector_name)
         end
 
+        # The relationship's target relation node
+        #
+        # @see Builder#right_node
+        #
+        # @return [RelationNode]
+        #
         # @api private
         def right_node
           relations[node_names.last]
