@@ -5,6 +5,8 @@ module DataMapper
   # @abstract
   class Engine
 
+    include AbstractClass
+
     # Returns the database adapter used by the engine
     #
     # @example
@@ -85,9 +87,7 @@ module DataMapper
     # @return [Object]
     #
     # @api public
-    def base_relation(name)
-      raise NotImplementedError, "#{self.class}##{__method__} must be implemented"
-    end
+    abstract_method :base_relation
 
     # Returns a gateway relation instance
     #
