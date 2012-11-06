@@ -100,8 +100,8 @@ RSpec.configure do |config|
     @_mocked_mappers.each do |name|
       Object.send(:remove_const, name) if Object.const_defined?(name)
     end
-    DataMapper::Mapper.instance_variable_set('@descendants', [])
-    DataMapper::Mapper::Relation.instance_variable_set('@descendants', [])
+    DataMapper::Mapper.instance_variable_set(:@descendants, [])
+    DataMapper::Mapper::Relation.instance_variable_set(:@descendants, [])
   end
 end
 

@@ -25,6 +25,12 @@ describe Finalizer::RelationshipMappersFinalizer, '#run' do
   let(:mapper) { object.mapper_registry[User, relationship] }
 
   before do
+    DataMapper.mapper_registry.instance_variable_set(:@mappers, {})
+
+    DataMapper.engines.each do |name, engine|
+      engine.instance_variable_set(:@relations, engine.relations.class.new(engine))
+    end
+
     user_mapper.relationships << relationship
     Finalizer::BaseRelationMappersFinalizer.call(mappers)
     subject
