@@ -25,6 +25,7 @@ describe Finalizer::RelationshipMappersFinalizer, '#run' do
   let(:mapper) { object.mapper_registry[User, relationship] }
 
   before do
+    user_mapper.instance_variable_set("@relationships", Mapper::RelationshipSet.new)
     user_mapper.relationships << relationship
     Finalizer::BaseRelationMappersFinalizer.call(mappers)
     subject
