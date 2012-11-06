@@ -110,7 +110,7 @@ module DataMapper
       @operation    = options[:operation]
 
       @min = options.fetch(:min, 1)
-      @max = options.fetch(max, 1)
+      @max = options.fetch(:max, 1)
     end
 
     # Returns default name of the source key
