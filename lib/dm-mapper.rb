@@ -109,10 +109,8 @@ end # module DataMapper
 
 require 'descendants_tracker'
 require 'equalizer'
-
 require 'inflector'
-# TODO remove this once inflector includes it
-require 'data_mapper/support/inflections'
+
 require 'data_mapper/support/graph'
 require 'data_mapper/support/utils'
 
