@@ -4,7 +4,7 @@ describe DataMapper, '.finalize' do
   subject { DataMapper.finalize }
 
   context 'when not yet finalized' do
-    before { Finalizer.should_receive(:run) }
+    before { Finalizer.should_receive(:call) }
 
     it { should be(DataMapper) }
   end
@@ -12,7 +12,7 @@ describe DataMapper, '.finalize' do
   context 'when already finalized' do
     before do
       DataMapper.instance_variable_set(:@finalized, false)
-      Finalizer.should_receive(:run).once
+      Finalizer.should_receive(:call).once
       DataMapper.finalize
     end
 

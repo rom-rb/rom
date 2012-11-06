@@ -86,7 +86,7 @@ module DataMapper
   # @api public
   def self.finalize
     return self if @finalized
-    Finalizer.run
+    Finalizer.call
     @finalized = true
     self
   end

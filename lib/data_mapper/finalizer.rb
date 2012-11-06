@@ -37,16 +37,11 @@ module DataMapper
 
     # Perform finalization
     #
-    # @example
-    #   DataMapper::Finalizer.run
+    # @param *args
+    #   the same parameters that {#initialize} accepts
     #
-    # @return [self]
+    # @return [Finalizer]
     #
-    # @api public
-    def self.run
-      new(Mapper.descendants.select { |mapper| mapper.model }).run
-    end
-
     # @api private
     def self.call(*args)
       new(*args).run
@@ -66,7 +61,7 @@ module DataMapper
     # @return [undefined]
     #
     # @api private
-    def initialize(mappers, edge_builder = RelationRegistry::Builder, mapper_builder = Mapper::Builder)
+    def initialize(mappers = Mapper::Relation.descendants, edge_builder = RelationRegistry::Builder, mapper_builder = Mapper::Builder)
       @mappers         = mappers
       @mapper_registry = Mapper.mapper_registry
       @edge_builder    = edge_builder
