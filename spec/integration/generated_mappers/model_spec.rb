@@ -18,11 +18,11 @@ describe "Generated mapper from model definition" do
       attribute :orders, Array[Order]
     end
 
-    order_mapper = DataMapper.generate_mapper_for(Order, :postgres) do
+    order_mapper = DataMapper.build(Order, :postgres) do
       key :id
     end
 
-    user_mapper = DataMapper.generate_mapper_for(User, :postgres) do
+    user_mapper = DataMapper.build(User, :postgres) do
       key :id
       map :name, :to => :username
     end

@@ -53,7 +53,7 @@ module DataMapper
   #     attribute :name, String
   #   end
   #
-  #   DataMapper.generate_mapper_for(User, :default) do
+  #   DataMapper.build(User, :default) do
   #     key :id
   #   end
   #
@@ -69,7 +69,7 @@ module DataMapper
   # @return [Mapper::Relation]
   #
   # @api public
-  def self.generate_mapper_for(model, repository, &block)
+  def self.build(model, repository, &block)
     Mapper::Builder::Class.create(model, repository, &block)
   end
 

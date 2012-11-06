@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe DataMapper, '.generate_mapper_for' do
-  subject { DataMapper.generate_mapper_for(model, repository, &block) }
+describe DataMapper, '.build' do
+  subject { DataMapper.build(model, repository, &block) }
 
   let(:model)        { mock('model') }
   let(:repository)   { mock('repository') }
