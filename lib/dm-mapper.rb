@@ -108,6 +108,7 @@ module DataMapper
 end # module DataMapper
 
 require 'descendants_tracker'
+require 'abstract_class'
 require 'equalizer'
 require 'inflector'
 

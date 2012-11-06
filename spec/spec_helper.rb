@@ -28,6 +28,13 @@ RSpec.configure do |config|
     end
   end
 
+  def subclass(name = nil)
+    Class.new(described_class) do
+      define_singleton_method(:name) { "#{name}" }
+      yield if block_given?
+    end
+  end
+
   def mock_model(type)
     @_mocked_models << type
     Object.const_set(type, Class.new(OpenStruct))
