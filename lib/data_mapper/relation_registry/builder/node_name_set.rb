@@ -28,6 +28,8 @@ module DataMapper
 
         # Iterate on all generated relation node names
         #
+        # @return [self]
+        #
         # @api private
         def each(&block)
           return to_enum unless block_given?
