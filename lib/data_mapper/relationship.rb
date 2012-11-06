@@ -109,7 +109,7 @@ module DataMapper
       @via          = options[:through]
       @operation    = options[:operation]
 
-      @min = options.fetch(min, 1)
+      @min = options.fetch(:min, 1)
       @max = options.fetch(max, 1)
     end
 
