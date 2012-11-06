@@ -23,14 +23,7 @@ require 'randexp'
 require 'dm-mapper'
 require 'db_setup'
 
-module Veritas
-  class Relation
-
-    class Gateway < Relation
-      undef_method :to_set
-    end
-  end
-end
+require 'monkey_patches'
 
 ENV['TZ'] = 'UTC'
 

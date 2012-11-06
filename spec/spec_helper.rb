@@ -9,6 +9,8 @@ rescue LoadError
   RSpec = Spec::Runner
 end
 
+require 'monkey_patches'
+
 RSpec.configure do |config|
   config.before(:all, :type => :unit) do
     # FIXME: remove this when we upgrade to rspec2
