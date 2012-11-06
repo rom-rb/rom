@@ -14,7 +14,7 @@ module DataMapper
 
       # @api private
       def finalize_mappers
-        base_relation_mappers.each do |mapper|
+        mappers.each do |mapper|
           model = mapper.model
 
           next if mapper_registry[model]
@@ -32,7 +32,7 @@ module DataMapper
 
       # @api private
       def finalize_relationships
-        base_relation_mappers.each do |mapper|
+        mappers.each do |mapper|
           mapper.relationships.each do |relationship|
             edge_builder.call(mapper.relations, mapper_registry, relationship)
           end
@@ -46,7 +46,7 @@ module DataMapper
 
       # @api private
       def relationships_for_target(model)
-        target_relationships = base_relation_mappers.map { |mapper|
+        target_relationships = mappers.map { |mapper|
           mapper_relationships = mapper.relationships
           relationships        = mapper_relationships.select { |relationship| relationship.target_model.equal?(model) }
           names                = relationships.map(&:name)

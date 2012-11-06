@@ -32,9 +32,6 @@ module DataMapper
     # @api private
     attr_reader :mappers
 
-    # @api private
-    attr_reader :base_relation_mappers
-
     # Perform finalization
     #
     # @param *args
@@ -66,8 +63,6 @@ module DataMapper
       @mapper_registry = Mapper.mapper_registry
       @edge_builder    = edge_builder
       @mapper_builder  = mapper_builder
-
-      @base_relation_mappers = mappers.select { |mapper| mapper.respond_to?(:relation_name) }
     end
 
     # Perform finalization

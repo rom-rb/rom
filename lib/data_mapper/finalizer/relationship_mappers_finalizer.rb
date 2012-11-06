@@ -32,7 +32,7 @@ module DataMapper
 
       # @api private
       def mapper_relations
-        base_relation_mappers.map(&:relations).uniq
+        mappers.map(&:relations).uniq
       end
 
     end # class RelationshipMapperFinalizer
