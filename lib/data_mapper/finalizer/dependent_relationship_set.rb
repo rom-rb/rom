@@ -55,8 +55,8 @@ module DataMapper
 
           relationships + via_relationships
         }
-        @relationships.uniq!
         @relationships.flatten!
+        @relationships.uniq!
       end
     end
 
