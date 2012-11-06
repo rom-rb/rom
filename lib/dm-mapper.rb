@@ -161,5 +161,6 @@ require 'data_mapper/query'
 require 'data_mapper/model'
 
 require 'data_mapper/finalizer'
+require 'data_mapper/finalizer/dependent_relationship_set'
 require 'data_mapper/finalizer/base_relation_mappers_finalizer'
 require 'data_mapper/finalizer/relationship_mappers_finalizer'

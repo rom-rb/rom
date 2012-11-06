@@ -21,7 +21,7 @@ module DataMapper
 
           name     = mapper.relation_name
           relation = mapper.gateway_relation
-          keys     = target_keys_for(model)
+          keys     = DependentRelationshipSet.new(model, mappers).target_keys
           aliases  = mapper.aliases.exclude(*keys)
 
           mapper.relations.new_node(name, relation, aliases)
@@ -37,24 +37,6 @@ module DataMapper
             edge_builder.call(mapper.relations, mapper_registry, relationship)
           end
         end
-      end
-
-      # @api private
-      def target_keys_for(model)
-        relationships_for_target(model).map(&:target_key).uniq
-      end
-
-      # @api private
-      def relationships_for_target(model)
-        target_relationships = mappers.map { |mapper|
-          mapper_relationships = mapper.relationships
-          relationships        = mapper_relationships.select { |relationship| relationship.target_model.equal?(model) }
-          names                = relationships.map(&:name)
-          via_relationships    = mapper_relationships.select { |relationship| names.include?(relationship.via) }
-
-          relationships + via_relationships
-        }
-        target_relationships.flatten!
       end
 
     end # class BaseRelationMapperFinalizer
