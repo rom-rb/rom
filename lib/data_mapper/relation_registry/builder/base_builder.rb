@@ -6,6 +6,10 @@ module DataMapper
       #
       class BaseBuilder < self
 
+        # The name of the built {RelationNode}
+        #
+        # @return [NodeName]
+        #
         # @api private
         def name
           @name ||= NodeName.new(left_name, right_name, relationship.name).to_connector_name
