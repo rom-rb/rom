@@ -2,8 +2,12 @@ module DataMapper
 
   # Relationship
   #
+  # @abstract
+  #
   # @api private
   class Relationship
+
+    include AbstractClass
 
     # Returns foreign key name for the given class name
     #
