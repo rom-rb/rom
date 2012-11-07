@@ -5,7 +5,17 @@ module DataMapper
     #
     # @api private
     class AttributeSet
+
       include Enumerable
+
+      include Equalizer.new(:attributes)
+
+      # The set's attributes in a hash
+      #
+      # @return [Hash]
+      #
+      # @api private
+      attr_reader :attributes
 
       # Initialize an empty set of attributes
       #
