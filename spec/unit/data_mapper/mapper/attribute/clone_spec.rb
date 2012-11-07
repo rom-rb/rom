@@ -3,7 +3,7 @@ require 'spec_helper'
 describe DataMapper::Mapper::Attribute, '#clone' do
   subject { attribute.clone(options) }
 
-  let(:attribute) { described_class.new(name, :type => type) }
+  let(:attribute) { subclass.new(name, :type => type) }
   let(:name)      { :title }
   let(:type)      { String }
 
@@ -32,4 +32,3 @@ describe DataMapper::Mapper::Attribute, '#clone' do
     subject.options[:collection].should be(nil)
   end
 end
-

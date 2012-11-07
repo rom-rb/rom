@@ -7,6 +7,9 @@ module DataMapper
     #
     # @api private
     class Attribute
+
+      include AbstractClass
+
       include Equalizer.new(:name, :type, :field, :options)
 
       # The attribute's name
@@ -152,9 +155,7 @@ module DataMapper
       # @return [undefined]
       #
       # @api private
-      def load(tuple)
-        raise NotImplementedError, "#{self.class} must implement #load"
-      end
+      abstract_method :load
 
       # Tests wether the attribute is (part of) a key
       #
