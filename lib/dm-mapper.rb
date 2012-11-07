@@ -107,8 +107,30 @@ module DataMapper
 
 end # module DataMapper
 
-require 'descendants_tracker'
 require 'abstract_class'
+
+# TODO merge this into abstract_class and add specs
+module AbstractClass
+  def self.included(descendant)
+    super
+    descendant.instance_variable_set(:@descendant_superclass, descendant.superclass)
+    descendant.extend(ClassMethods)
+    self
+  end
+
+  module ClassMethods
+
+    def new(*)
+      if superclass.equal?(@descendant_superclass)
+        raise NotImplementedError, "#{self} is an abstract class"
+      else
+        super
+      end
+    end
+  end
+end
+
+require 'descendants_tracker'
 require 'equalizer'
 require 'inflector'
 

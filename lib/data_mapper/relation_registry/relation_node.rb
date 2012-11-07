@@ -10,27 +10,7 @@ module DataMapper
     #
     class RelationNode < Graph::Node
 
-      # TODO make this work
-      #
-      # include AbstractClass
-
-      # Temporary helper to make this class abstract
-      #
-      # The abstract_class gem currently only supports
-      # classes with Object as their superclass.
-      #
-      # TODO support this usecase in AbstractClass
-      #
-      # @return [undefined]
-      #
-      # @api private
-      def self.new(*)
-        if superclass.equal?(Graph::Node)
-          raise NotImplementedError, "#{self} is an abstract class"
-        else
-          super
-        end
-      end
+      include AbstractClass
 
       include Enumerable, Equalizer.new(:name, :relation)
 
