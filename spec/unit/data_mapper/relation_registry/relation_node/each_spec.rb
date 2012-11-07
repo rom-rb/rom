@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe RelationRegistry::RelationNode, '#each' do
-  let(:object)   { described_class.new(name, relation) }
+  let(:object)   { subclass.new(name, relation) }
   let(:name)     { :users }
   let(:relation) { mock('relation') }
 
