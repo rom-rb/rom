@@ -24,6 +24,8 @@ module DataMapper
       #
       # @yield [Relationship]
       #
+      # @return [self]
+      #
       # @api private
       def each(&block)
         return to_enum unless block_given?
