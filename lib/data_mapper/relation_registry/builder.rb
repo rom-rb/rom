@@ -3,7 +3,12 @@ module DataMapper
 
     # Builds relation nodes for relationships
     #
+    # @abstract
+    #
+    # @api private
     class Builder
+
+      include AbstractClass
 
       # The {RelationRegistry} used by this builder
       #
