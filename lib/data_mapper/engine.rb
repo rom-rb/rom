@@ -84,6 +84,8 @@ module DataMapper
     #
     # @abstract
     #
+    # @raise NotImplementedError
+    #
     # @return [Object]
     #
     # @api public
