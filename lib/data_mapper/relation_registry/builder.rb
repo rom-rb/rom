@@ -82,7 +82,7 @@ module DataMapper
         relation = build_relation(edge)
         node     = build_node(name, relation)
 
-        @connector = RelationRegistry::Connector.new(name, node, relationship, relations)
+        @connector = RelationRegistry::Connector.new(node, relationship, relations)
         relations.add_connector(@connector)
       end
 
