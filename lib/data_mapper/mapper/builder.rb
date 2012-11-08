@@ -9,8 +9,9 @@ module DataMapper
       # Builds a mapper based on a connector and source mapper class
       #
       # @param [RelationRegistry::Connector] connector
+      #   the connector used to build the mapper
       #
-      # @return [Class]
+      # @return [Mapper::Relation]
       #
       # @api private
       def self.call(connector)
