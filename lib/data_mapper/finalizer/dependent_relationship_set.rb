@@ -7,6 +7,13 @@ module DataMapper
     class DependentRelationshipSet
       include Enumerable
 
+      # All (frozen) target keys from dependent relationships
+      #
+      # @return [Set<Symbol>]
+      #
+      # @api private
+      attr_reader :target_keys
+
       # Initialize a new dependent relationship set instance
       #
       # @param [Class]
@@ -16,8 +23,13 @@ module DataMapper
       #
       # @api private
       def initialize(model, mappers)
-        @model, @mappers = model, mappers
+        @model         = model
+        @mappers       = mappers
+        @relationships = Set.new
+        @target_keys   = Set.new
+
         initialize_relationships
+        initialize_target_keys
       end
 
       # Iterate over dependent relationships
@@ -33,15 +45,6 @@ module DataMapper
         self
       end
 
-      # Return all unique target keys from dependent relationships
-      #
-      # @return [Array<Symbol>]
-      #
-      # @api private
-      def target_keys
-        map(&:target_key).uniq
-      end
-
       private
 
       # Initializes all dependent relationships from all mappers
@@ -50,15 +53,24 @@ module DataMapper
       #
       # @api private
       def initialize_relationships
-        @relationships = @mappers.map { |mapper|
-          mapper_relationships = mapper.relationships
-          relationships        = mapper_relationships.for_target(@model)
-          via_relationships    = mapper_relationships.find_dependent(relationships)
+        @mappers.each do |mapper|
+          @relationships.merge(mapper.relationships.find_dependent(@model))
+        end
 
-          relationships + via_relationships
-        }
-        @relationships.flatten!
-        @relationships.uniq!
+        @relationships.freeze
+      end
+
+      # Initialize all target keys from dependent relationships
+      #
+      # @return [undefined]
+      #
+      # @api private
+      def initialize_target_keys
+        @relationships.each do |relationship|
+          @target_keys << relationship.target_key
+        end
+
+        @target_keys.freeze
       end
     end
 

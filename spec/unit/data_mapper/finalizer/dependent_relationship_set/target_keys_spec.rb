@@ -26,5 +26,5 @@ describe Finalizer::DependentRelationshipSet, '#target_keys' do
     tag_mapper.relationships  << tags_song_tags  << tags_songs
   end
 
-  it { should eql([ :song_id, :tag_id ]) }
+  it { should eql(Set[ :song_id, :tag_id ]) }
 end

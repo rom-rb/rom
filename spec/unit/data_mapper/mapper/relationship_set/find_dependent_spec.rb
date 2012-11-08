@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe DataMapper::Mapper::RelationshipSet, '#find_dependent' do
-  subject { object.find_dependent(relationships) }
+  subject { object.find_dependent(song_tag_model) }
 
   let(:object)         { described_class.new }
   let(:songs)          { mock('songs',     :name => :songs,     :target_model => song_model,     :via => nil) }
@@ -11,10 +11,10 @@ describe DataMapper::Mapper::RelationshipSet, '#find_dependent' do
   let(:song_tag_model) { mock_model(:SongTag) }
   let(:tag_model)      { mock_model(:Tag) }
 
-  let(:relationships)  { [ song_tags ] }
-
   before { object << songs << song_tags << tags }
 
-  it { should have(1).items }
+  it { should be_instance_of(described_class) }
+  it { should include(song_tags) }
   it { should include(tags) }
+  it { should have(2).items }
 end

@@ -3,7 +3,7 @@ require 'spec_helper'
 describe DataMapper::Mapper::RelationshipSet, '#[]' do
   subject { relationships[name] }
 
-  let(:relationships) { described_class.new(name => relationship) }
+  let(:relationships) { described_class.new([relationship]) }
   let(:name)          { :address }
   let(:relationship)  { mock('address', :name => name) }
 
