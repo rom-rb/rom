@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Mapper::Builder, '#mapper' do
   subject { object.mapper }
 
-  let(:object) { described_class.new(connector, source_mapper_class) }
+  let(:object) { described_class.new(connector) }
 
   let(:source_model) { mock_model('User')  }
   let(:target_model) { mock_model('Order') }
@@ -29,6 +29,7 @@ describe Mapper::Builder, '#mapper' do
         :name               => :orders,
         :left               => mock_node(:users),
         :right              => mock_node(:orders),
+        :source_mapper      => source_mapper_class.new(relation),
         :source_model       => source_model,
         :target_model       => target_model,
         :source_name        => :users,
@@ -89,6 +90,7 @@ describe Mapper::Builder, '#mapper' do
         :name               => :users_X_user_order_infos_X_orders,
         :left               => mock_node(:users),
         :right              => mock_node(:user_order_infos_X_orders),
+        :source_mapper      => source_mapper_class.new(relation),
         :source_model       => source_model,
         :target_model       => target_model,
         :source_name        => :users,
@@ -107,6 +109,7 @@ describe Mapper::Builder, '#mapper' do
         :name               => :user_order_infos_X_orders,
         :left               => mock_node(:orders),
         :right              => mock_node(:user_order_infos),
+        :source_mapper      => source_mapper_class.new(other_relation),
         :source_name        => :user_order_infos,
         :target_name        => :orders,
         :source_model       => via_source_model,

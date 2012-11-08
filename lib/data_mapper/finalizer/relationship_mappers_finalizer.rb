@@ -22,11 +22,8 @@ module DataMapper
       # @api private
       def register_relationship_mappers(relation_registry)
         relation_registry.connectors.each_value do |connector|
-          relationship = connector.relationship
-          mapper_class = connector.source_mapper.class
-          mapper       = mapper_builder.call(connector, mapper_class)
-
-          mapper_registry.register(mapper, relationship)
+          mapper = mapper_builder.call(connector)
+          mapper_registry.register(mapper, connector.relationship)
         end
       end
 

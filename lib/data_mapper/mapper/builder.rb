@@ -13,15 +13,15 @@ module DataMapper
       # @return [Class]
       #
       # @api private
-      def self.call(connector, source_mapper_class)
-        new(connector, source_mapper_class).mapper
+      def self.call(connector)
+        new(connector).mapper
       end
 
-      def initialize(connector, source_mapper_class)
+      def initialize(connector)
         @connector     = connector
         @source_model  = connector.source_model
         @target_model  = connector.target_model
-        @source_mapper = source_mapper_class
+        @source_mapper = connector.source_mapper.class
         @name          = connector.relationship.name
       end
 
