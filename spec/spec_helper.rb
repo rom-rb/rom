@@ -40,7 +40,7 @@ RSpec.configure do |config|
     Object.const_set(type, Class.new(OpenStruct))
   end
 
-  def mock_mapper(model_class, attributes = [])
+  def mock_mapper(model_class, attributes = [], relationships = [])
     klass = Class.new(DataMapper::Mapper::Relation) do
       model         model_class
       repository    :test
@@ -53,6 +53,10 @@ RSpec.configure do |config|
 
     attributes.each do |attribute|
       klass.attributes << attribute
+    end
+
+    relationships.each do |relationship|
+      klass.relationships << relationship
     end
 
     @_mocked_mappers << klass.name.to_sym
