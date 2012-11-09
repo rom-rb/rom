@@ -139,8 +139,7 @@ module DataMapper
       # @api private
       def build_node(name, relation)
         unless relations[name]
-          node = relations.build_node(name, relation)
-          relations.add_node(node)
+          relations.new_node(name, relation)
         end
 
         relations[name]
