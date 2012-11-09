@@ -63,6 +63,13 @@ module DataMapper
     # @api private
     attr_reader :through
 
+    # Name of the relationship pointing from intermediary to target
+    #
+    # @return [Symbol, nil]
+    #
+    # @api private
+    attr_reader :via
+
     # Min size of the relationship children
     #
     # @return [Fixnum]
@@ -111,6 +118,7 @@ module DataMapper
       @target_key   = options[:target_key] || default_target_key
 
       @through      = options[:through]
+      @via          = options[:via]
       @operation    = options[:operation]
 
       @min = options.fetch(:min, 1)
