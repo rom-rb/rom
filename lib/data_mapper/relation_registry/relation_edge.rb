@@ -40,14 +40,7 @@ module DataMapper
       #
       # @api private
       def relation
-        left, right =
-          if source_node.base?
-            [ source_node, target_node ]
-          else
-            [ target_node, source_node ]
-          end
-
-        left.join(right).relation
+        source_node.join(target_node).relation
       end
 
       # Returns source aliases
