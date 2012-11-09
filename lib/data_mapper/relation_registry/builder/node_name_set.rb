@@ -7,23 +7,34 @@ module DataMapper
       class NodeNameSet
         include Enumerable
 
+        # A hash returned from {MapperRegistry#relation_map}
+        #
+        # @see MapperRegistry#relation_map
+        #
+        # @return [Hash{Class => Symbol}]
+        #
         # @api private
         attr_reader :relations
 
         # Initializes a node name set
         #
         # @param [Relationship] relationship
-        # @param [Mapper::RelationshipSet] registry
+        #   the relationship used to define the set
+        #
+        # @param [Mapper::RelationshipSet] relationship_set
         #   set of source model relationships
+        #
         # @param [Hash{Class => Symbol}] relations
-        #   a model => relation_name map returned by mapper registry
+        #   a hash returned from {MapperRegistry#relation_map}
         #
         # @return [undefined]
         #
         # @api private
-        def initialize(relationship, registry, relations)
-          @relationship, @registry, @relations = relationship, registry, relations
-          @names = initialize_names
+        def initialize(relationship, relationship_set, relations)
+          @relationship     = relationship
+          @relationship_set = relationship_set
+          @relations        = relations
+          @relation_names   = relation_names
         end
 
         # Iterate on all generated relation node names
@@ -33,7 +44,7 @@ module DataMapper
         # @api private
         def each(&block)
           return to_enum unless block_given?
-          @names.each(&block)
+          @relation_names.each(&block)
           self
         end
 
@@ -71,10 +82,10 @@ module DataMapper
         # @return [Array<NodeName>]
         #
         # @api private
-        def initialize_names(relationships = relationship_map, joins = [])
-          relationships.each do |right, left|
+        def relation_names(relationship_map = rel_map, joins = [])
+          relationship_map.each do |right, left|
             if left.is_a?(Hash)
-              joins << NodeName.new(initialize_names(left, joins)[joins.size-1], *right)
+              joins << NodeName.new(relation_names(left, joins)[joins.size-1], *right)
             else
               joins << NodeName.new(left, *right)
             end
@@ -85,22 +96,22 @@ module DataMapper
 
         # Generates a relationship map representing "via" hierarchy
         #
-        # Hash is indexed with relation.name-relationship.name pairs so that
-        # it's possible to generate connector names later on.
+        # Hash is indexed with relation.name => relationship.name pairs
+        # so that it's possible to generate connector names later on.
         #
         # @return [Hash]
         #
         # @api private
-        def relationship_map(relationship = @relationship, registry = @registry, map = {})
-          name             = relations[relationship.target_model]
-          key              = [ name, relationship.name ]
-          via_relationship = registry[relationship.via]
+        def rel_map(rel = @relationship, rel_set = @relationship_set, map = {})
+          name    = relations[rel.target_model]
+          key     = [ name, rel.name ]
+          via_rel = rel_set[rel.via]
 
-          if via_relationship.via
+          if via_rel.via
             map[key] = {}
-            relationship_map(via_relationship, registry, map[key])
+            rel_map(via_rel, rel_set, map[key])
           else
-            map.merge!(key => relations[via_relationship.target_model])
+            map.merge!(key => relations[via_rel.target_model])
           end
 
           map
