@@ -66,12 +66,8 @@ module DataMapper
       def remap_fields(mapper)
         source_aliases.each do |field, alias_name|
           attribute = mapper.attributes.for_field(field)
-          if attribute
-            mapper.map(attribute.name, attribute.type, :key => attribute.key?, :to => alias_name)
-          end
+          mapper.attributes << attribute.clone(:to => alias_name)
         end
-
-        mapper
       end
 
       # @api private
