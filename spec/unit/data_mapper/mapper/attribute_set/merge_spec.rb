@@ -12,8 +12,8 @@ describe DataMapper::Mapper::AttributeSet, '#merge' do
     object << id
     other  << name
 
-    id.should_receive(:clone).with(:to => 'id').and_return(id)
-    name.should_receive(:clone).with(:to => 'name').and_return(name)
+    id.should_receive(:clone).and_return(id)
+    name.should_receive(:clone).and_return(name)
   end
 
   it { should include(id) }
