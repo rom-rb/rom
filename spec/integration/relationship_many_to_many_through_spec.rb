@@ -20,11 +20,11 @@ describe 'Relationship - Many To Many with generated mappers' do
     insert_song_tag 2, 2, 2
 
     class Song
-      attr_reader :id, :title, :tags, :infos, :info_contents, :good_info_contents
+      attr_reader :id, :title, :tags, :good_tags, :infos, :good_infos, :info_contents, :good_info_contents
 
       def initialize(attributes)
-        @id, @title, @tags, @infos, @info_contents, @good_info_contents = attributes.values_at(
-          :id, :title, :tags, :infos, :info_contents, :good_info_contents
+        @id, @title, @tags, @good_tags, @infos, @good_infos, @info_contents, @good_info_contents = attributes.values_at(
+          :id, :title, :tags, :good_tags, :infos, :good_infos, :info_contents, :good_info_contents
         )
       end
     end
