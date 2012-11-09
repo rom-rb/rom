@@ -105,9 +105,9 @@ module DataMapper
         def rel_map(rel = @relationship, rel_set = @relationship_set, map = {})
           name    = relations[rel.target_model]
           key     = [ name, rel.name ]
-          via_rel = rel_set[rel.via]
+          via_rel = rel_set[rel.through]
 
-          if via_rel.via
+          if via_rel.through
             map[key] = {}
             rel_map(via_rel, rel_set, map[key])
           else

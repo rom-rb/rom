@@ -56,7 +56,7 @@ module DataMapper
 
       # @api private
       def transitive_targets(relationships)
-        select { |entry| relationships.include?(self[entry.via]) }
+        select { |entry| relationships.include?(self[entry.through]) }
       end
 
       # @api private

@@ -12,9 +12,9 @@ describe RelationRegistry::Builder::NodeNameSet, '#to_a' do
   let(:info_content_model) { mock_model('InfoContent') }
 
   let(:song_tags)     { OpenStruct.new(:name => :song_tags,     :target_model => song_tag_model) }
-  let(:tags)          { OpenStruct.new(:name => :tags,          :target_model => tag_model,          :via => :song_tags) }
-  let(:infos)         { OpenStruct.new(:name => :funky_infos,   :target_model => info_model,         :via => :tags) }
-  let(:info_contents) { OpenStruct.new(:name => :info_contents, :target_model => info_content_model, :via => :infos) }
+  let(:tags)          { OpenStruct.new(:name => :tags,          :target_model => tag_model,          :through => :song_tags) }
+  let(:infos)         { OpenStruct.new(:name => :funky_infos,   :target_model => info_model,         :through => :tags) }
+  let(:info_contents) { OpenStruct.new(:name => :info_contents, :target_model => info_content_model, :through => :infos) }
 
   it { should be_instance_of(Enumerator) }
 end

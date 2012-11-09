@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe Relationship, '#via' do
-  subject { object.via }
+describe Relationship, '#through' do
+  subject { object.through }
 
   let(:object)       { subclass.new(name, source_model, target_model, options) }
   let(:name)         { :songs }
@@ -15,9 +15,9 @@ describe Relationship, '#via' do
   end
 
   context 'when :through is present in options' do
-    let(:options) { { :through => via } }
-    let(:via)     { :song_tags }
+    let(:options) { { :through => through } }
+    let(:through) { :song_tags }
 
-    it { should be(via) }
+    it { should be(through) }
   end
 end

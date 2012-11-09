@@ -56,7 +56,7 @@ module DataMapper
       #
       # @api private
       def self.call(relations, mappers, relationship)
-        klass = relationship.via ? ViaBuilder : BaseBuilder
+        klass = relationship.through ? ViaBuilder : BaseBuilder
         klass.new(relations, mappers, relationship)
       end
 
