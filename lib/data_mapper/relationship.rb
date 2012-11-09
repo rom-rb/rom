@@ -19,7 +19,7 @@ module DataMapper
       Inflector.foreign_key(class_name).to_sym
     end
 
-    include Equalizer.new(:name, :source_model, :target_model)
+    include Equalizer.new(:name, :source_model, :target_model, :source_key, :target_key)
 
     # Name of the relationship
     #

@@ -1,35 +1,35 @@
 require 'spec_helper'
 
 describe AliasSet, '#initialize' do
-  let(:prefix)     { :songs                                         }
-  let(:attributes) { Mapper::AttributeSet.new << attribute          }
-  let(:attribute)  { Mapper::Attribute.build(:id, :type => Integer) }
-  let(:excluded)   { [ :id ]                                        }
+  let(:relation_name) { :songs                                         }
+  let(:attributes)    { Mapper::AttributeSet.new << attribute          }
+  let(:attribute)     { Mapper::Attribute.build(:id, :type => Integer) }
+  let(:excluded)      { [ :id ]                                        }
 
-  context 'with prefix passed to #initialize' do
-    subject { described_class.new(prefix) }
+  context 'with relation_name passed to #initialize' do
+    subject { described_class.new(relation_name) }
 
-    its(:prefix)     { should == prefix }
-    its(:attributes) { should == Mapper::AttributeSet.new }
-    its(:excluded)   { should == [] }
-    its(:to_hash)    { should == {} }
+    its(:relation_name) { should == relation_name }
+    its(:attributes)    { should == Mapper::AttributeSet.new }
+    its(:excluded)      { should == [] }
+    its(:to_hash)       { should == {} }
   end
 
-  context 'with prefix and attributes passed to #initialize' do
-    subject { described_class.new(prefix, attributes) }
+  context 'with relation_name and attributes passed to #initialize' do
+    subject { described_class.new(relation_name, attributes) }
 
-    its(:prefix)     { should == prefix     }
-    its(:attributes) { should == attributes }
-    its(:excluded)   { should == []         }
-    its(:to_hash)    { should == { :id => :songs_id } }
+    its(:relation_name) { should == relation_name }
+    its(:attributes)    { should == attributes }
+    its(:excluded)      { should == []         }
+    its(:to_hash)       { should == { :id => :song_id } }
   end
 
-  context 'with prefix, attributes and excluded passed to #initialize' do
-    subject { described_class.new(prefix, attributes, excluded) }
+  context 'with relation_name, attributes and excluded passed to #initialize' do
+    subject { described_class.new(relation_name, attributes, excluded) }
 
-    its(:prefix)     { should == prefix     }
-    its(:attributes) { should == attributes }
-    its(:excluded)   { should == excluded   }
-    its(:to_hash)    { should == {}         }
+    its(:relation_name) { should == relation_name     }
+    its(:attributes)    { should == attributes }
+    its(:excluded)      { should == excluded   }
+    its(:to_hash)       { should == {}         }
   end
 end

@@ -76,7 +76,7 @@ module DataMapper
         # @return [VeritasRelation]
         #
         # @api public
-        def join(other)
+        def join(other, *)
           self.class.new(name, relation.rename(aliases).join(other.aliased.relation))
         end
 

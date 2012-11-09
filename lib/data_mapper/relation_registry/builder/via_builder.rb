@@ -55,11 +55,11 @@ module DataMapper
             left_node  = relations[left]
             right_node = relations[right]
 
-            node_rel = mappers[relationship.source_model].relationships[node_name.relationship_name]
-            edge     = build_edge(relationship.name, left_node, right_node)
-            relation = build_relation(edge, node_rel)
+            node_relationship = mappers[relationship.source_model].relationships[node_name.relationship_name]
+            edge              = build_edge(relationship.name, left_node, right_node)
+            relation, aliases = build_relation(edge, node_relationship)
 
-            build_node(node_name, relation)
+            build_node(node_name, relation, aliases)
           end
         end
 

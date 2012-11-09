@@ -141,6 +141,7 @@ require 'data_mapper/engine'
 require 'data_mapper/engine/veritas_engine'
 
 require 'data_mapper/alias_set'
+require 'data_mapper/alias_set/joined'
 
 require 'data_mapper/relation_registry'
 require 'data_mapper/relation_registry/relation_node'

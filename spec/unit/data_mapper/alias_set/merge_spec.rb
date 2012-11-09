@@ -3,10 +3,10 @@ require 'spec_helper'
 describe AliasSet, '#merge' do
   subject { object.merge(other) }
 
-  let(:object) { described_class.new(prefix, object_attributes) }
-  let(:other)  { described_class.new(prefix, other_attributes, other_excludes) }
+  let(:object) { described_class.new(relation_name, object_attributes) }
+  let(:other)  { described_class.new(relation_name, other_attributes, other_excludes) }
 
-  let(:prefix)            { :user }
+  let(:relation_name)     { :users }
   let(:id)                { Mapper::Attribute.build(:id, :type => Integer) }
   let(:foo_id)            { Mapper::Attribute.build(:foo_id, :type => Integer) }
   let(:name)              { Mapper::Attribute.build(:name, :type => String, :to => :username) }

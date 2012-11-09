@@ -44,8 +44,8 @@ module DataMapper
       # @return [Object] instance of the engine's relation class
       #
       # @api private
-      def relation
-        source_node.join(target_node).relation
+      def relation(*args)
+        source_node.join(target_node, *args)
       end
 
       # Returns source aliases
