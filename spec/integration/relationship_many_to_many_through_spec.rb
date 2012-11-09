@@ -115,7 +115,13 @@ describe 'Relationship - Many To Many with generated mappers' do
 
       has 0..n, :tags, Tag, :through => :song_tags
 
+      has 0..n, :good_tags, Tag, :through => :song_tags do
+        restrict { |r| r.tag_name.eq('good') }
+      end
+
       has 0..n, :infos, Info, :through => :tags, :target_key => :tag_id
+
+      has 0..n, :good_infos, Info, :through => :good_tags, :target_key => :tag_id
 
       has 0..n, :info_contents, InfoContent, :through => :infos, :target_key => :info_id
 
@@ -143,6 +149,23 @@ describe 'Relationship - Many To Many with generated mappers' do
 
     song2.infos.should have(1).item
     song2.infos.first.text.should eql('really bad')
+  end
+
+  it 'loads associated good infos' do
+    pending 'has-many via restricted relation is broken now'
+
+    mapper = DataMapper[Song].include(:good_infos)
+
+    songs = mapper.to_a
+
+    songs.should have(1).items
+
+    song = songs.first
+
+    song.title.should eql('foo')
+
+    song.infos.should have(1).item
+    song.infos.first.text.should eql('really good')
   end
 
   it 'loads associated tag info contents' do
