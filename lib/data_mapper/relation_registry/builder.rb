@@ -148,7 +148,11 @@ module DataMapper
         edge = relations.edge_for(left, right)
 
         unless edge
-          edge = relations.build_edge(name, left, right)
+          source_key   = Array(relationship.source_key)
+          target_key   = Array(relationship.target_key)
+          join_key_map = JoinKeyMap.new(left, right, source_key, target_key)
+
+          edge = relations.build_edge(name, left, right, join_key_map)
           relations.add_edge(edge)
         end
 

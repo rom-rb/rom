@@ -19,6 +19,13 @@ module DataMapper
       # @api private
       attr_reader :target_node
 
+      # The map specifying the field names to join on
+      #
+      # @return [JoinKeyMap]
+      #
+      # @api private
+      attr_reader :join_key_map
+
       # Initializes a relation edge instance
       #
       # @param [Symbol, #to_sym] name
@@ -33,10 +40,11 @@ module DataMapper
       # @return [undefined]
       #
       # @api private
-      def initialize(name, source_node, target_node)
-        super
-        @source_node = source_node
-        @target_node = target_node
+      def initialize(name, source_node, target_node, join_key_map)
+        super(name, source_node, target_node)
+        @source_node  = source_node
+        @target_node  = target_node
+        @join_key_map = join_key_map
       end
 
       # Builds a joined relation from source and target nodes

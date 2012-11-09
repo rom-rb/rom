@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe RelationRegistry::RelationEdge, '#source_name' do
-  subject { object.source_name }
+describe RelationRegistry::RelationEdge, '#join_key_map' do
+  subject { object.join_key_map }
 
   let(:object) { described_class.new(name, left, right, join_key_map) }
 
@@ -11,5 +11,5 @@ describe RelationRegistry::RelationEdge, '#source_name' do
   let(:source_name)  { mock('source_name')}
   let(:join_key_map) { mock('join_key_map') }
 
-  it { should be(source_name) }
+  it { should be(join_key_map) }
 end

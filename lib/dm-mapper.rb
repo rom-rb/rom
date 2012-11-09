@@ -144,6 +144,7 @@ require 'data_mapper/alias_set'
 require 'data_mapper/alias_set/joined'
 
 require 'data_mapper/relation_registry'
+require 'data_mapper/relation_registry/join_key_map'
 require 'data_mapper/relation_registry/relation_node'
 require 'data_mapper/relation_registry/relation_node/veritas_relation'
 require 'data_mapper/relation_registry/relation_edge'
