@@ -130,7 +130,7 @@ module DataMapper
       end
 
       # @api private
-      def build_relation(edge, relationship = relationship)
+      def build_relation(edge, relationship = self.relationship)
         relation = edge.relation
         relation = relation.instance_eval(&relationship.operation) if relationship.operation
         relation
