@@ -19,18 +19,18 @@ module DataMapper
         #
         # @api private
         def name
-          @name ||= NodeName.new(left_name, node_names.last.to_connector_name)
+          @name ||= NodeName.new(left_name, node_names.last)
         end
 
-        # The relationship's target relation node
+        # The relationship's target relation name
         #
-        # @see Builder#right_node
+        # @see Builder#right_name
         #
-        # @return [RelationNode]
+        # @return [Symbol]
         #
         # @api private
-        def right_node
-          relations[node_names.last]
+        def right_name
+          node_names.last
         end
 
         private
@@ -49,13 +49,12 @@ module DataMapper
         # @api private
         def build_relations
           node_names.each do |node_name|
-            left  = node_name.left
-            right = node_name.right
+            left_name, right_name = node_name.to_a
 
-            left_node  = relations[left]
-            right_node = relations[right]
+            left_node  = relations[left_name]
+            right_node = relations[right_name] || relations[node_name.right]
 
-            node_relationship = mappers[relationship.source_model].relationships[node_name.relationship_name]
+            node_relationship = mappers[relationship.source_model].relationships[node_name.relationship.name]
             edge              = build_edge(relationship.name, left_node, right_node)
             relation, aliases = build_relation(edge, node_relationship)
 

@@ -15,7 +15,7 @@ module DataMapper
         attr_reader :right
 
         # @api private
-        attr_reader :relationship_name
+        attr_reader :relationship
 
         # Initialize a node name
         #
@@ -24,7 +24,7 @@ module DataMapper
         # @api private
         def initialize(*args)
           @left, @right = args[0..1]
-          @relationship_name = args.last if args.size == 3
+          @relationship = args.last if args.size == 3
 
           unless @left && @right
             raise ArgumentError, "+left+ and +right+ must be defined"
@@ -55,7 +55,7 @@ module DataMapper
         #
         # @api private
         def to_a
-          [ left.to_sym, right.to_sym ]
+          [ left.to_sym, right_name ]
         end
 
         # Coerce the name to a connector name
@@ -64,8 +64,14 @@ module DataMapper
         #
         # @api private
         def to_connector_name
-          left_name = left.respond_to?(:to_connector_name) ? left.to_connector_name : left.to_sym
-          [ left_name, relationship_name ].join(SEPARATOR).to_sym
+          [ left.to_sym, relationship.name ].join(SEPARATOR).to_sym
+        end
+
+        private
+
+        # @api private
+        def right_name
+          relationship && relationship.operation ? relationship.name : right.to_sym
         end
 
       end # class NodeName

@@ -47,9 +47,9 @@ module DataMapper
       # @return [undefined]
       #
       # @api private
-      def initialize(node, relationship, relations)
+      def initialize(name, node, relationship, relations)
+        @name         = name
         @node         = node
-        @name         = @node.name
         @relationship = relationship
         @relations    = relations
       end

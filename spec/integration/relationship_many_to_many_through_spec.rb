@@ -152,8 +152,6 @@ describe 'Relationship - Many To Many with generated mappers' do
   end
 
   it 'loads associated good infos' do
-    pending 'has-many via restricted relation is broken now'
-
     mapper = DataMapper[Song].include(:good_infos)
 
     songs = mapper.to_a
@@ -164,8 +162,8 @@ describe 'Relationship - Many To Many with generated mappers' do
 
     song.title.should eql('foo')
 
-    song.infos.should have(1).item
-    song.infos.first.text.should eql('really good')
+    song.good_infos.should have(1).item
+    song.good_infos.first.text.should eql('really good')
   end
 
   it 'loads associated tag info contents' do

@@ -12,16 +12,18 @@ describe RelationRegistry::Builder::NodeName, '#initialize' do
       subject.right.should be(:bar)
     end
 
-    it "doesn't set relationship_name" do
-      subject.relationship_name.should be_nil
+    it "doesn't set relationship" do
+      subject.relationship.should be_nil
     end
   end
 
   context "with 3 args" do
-    subject { described_class.new(:foo, :bar, :funky_bar) }
+    subject { described_class.new(:foo, :bar, relationship) }
 
-    it "sets relationship_name" do
-      subject.relationship_name.should be(:funky_bar)
+    let(:relationship) { mock('relationship', :name => :funky_bar) }
+
+    it "sets relationship" do
+      subject.relationship.should be(relationship)
     end
   end
 

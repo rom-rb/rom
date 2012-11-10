@@ -48,15 +48,6 @@ module DataMapper
           self
         end
 
-        # Return all node names as connector names
-        #
-        # @return [Array<Symbol>]
-        #
-        # @api private
-        def connector_names
-          map(&:to_connector_name)
-        end
-
         # Return the first name
         #
         # @return [NodeName, Symbol]
@@ -96,7 +87,7 @@ module DataMapper
 
         # Generates a relationship map representing "via" hierarchy
         #
-        # Hash is indexed with relation.name => relationship.name pairs
+        # Hash is indexed with relation.name => relationship pairs
         # so that it's possible to generate connector names later on.
         #
         # @return [Hash]
@@ -104,7 +95,7 @@ module DataMapper
         # @api private
         def rel_map(rel = @relationship, rel_set = @relationship_set, map = {})
           name    = relations[rel.target_model]
-          key     = [ name, rel.name ]
+          key     = [ name, rel ]
           via_rel = rel_set[rel.through]
 
           if via_rel.through

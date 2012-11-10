@@ -3,7 +3,7 @@ require 'spec_helper'
 describe RelationRegistry::Connector, '#name' do
   subject { object.name }
 
-  let(:object) { described_class.new(node, relationship, relations) }
+  let(:object) { described_class.new(name, node, relationship, relations) }
 
   let(:name)         { :users_X_addresses }
   let(:node)         { mock('relation_node', :name => name) }

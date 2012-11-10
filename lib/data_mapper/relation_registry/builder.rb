@@ -82,7 +82,7 @@ module DataMapper
         relation, aliases = build_relation(edge)
         node              = build_node(name, relation, aliases)
 
-        @connector = RelationRegistry::Connector.new(node, relationship, relations)
+        @connector = RelationRegistry::Connector.new(name, node, relationship, relations)
         relations.add_connector(@connector)
       end
 
@@ -92,7 +92,7 @@ module DataMapper
       #
       # @api private
       def left_name
-        mappers[relationship.source_model].class.relation_name
+        mappers[relationship.source_model].relation_name
       end
 
       # The relationship's target model relation name
@@ -101,7 +101,7 @@ module DataMapper
       #
       # @api private
       def right_name
-        mappers[relationship.target_model].class.relation_name
+        mappers[relationship.target_model].relation_name
       end
 
       # The relationship's source relation node
@@ -131,9 +131,10 @@ module DataMapper
 
       # @api private
       def build_relation(edge, relationship = @relationship)
-        node     = edge.relation(relationship)
-        relation = node.relation
-        relation = node.relation.instance_eval(&relationship.operation) if relationship.operation
+        node      = edge.relation(relationship)
+        operation = relationship.operation
+        relation  = node.relation
+        relation  = relation.instance_eval(&operation) if operation
         [ relation, node.aliases ]
       end
 

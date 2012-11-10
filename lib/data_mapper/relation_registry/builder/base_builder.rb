@@ -12,7 +12,7 @@ module DataMapper
         #
         # @api private
         def name
-          @name ||= NodeName.new(left_name, right_name, relationship.name).to_connector_name
+          @name ||= NodeName.new(left_name, right_name, relationship)
         end
 
       end # class BaseBuilder
