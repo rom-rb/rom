@@ -11,7 +11,7 @@ describe RelationRegistry::Builder, '#relations' do
   let(:song_tag_model)     { mock_model('SongTag') }
   let(:song_tag_mapper)    { mock_mapper(song_tag_model).new(song_tags_relation) }
 
-  let(:tags_relation) { mock_relation(:tags) }
+  let(:tags_relation) { mock_relation(:super_tags) }
   let(:tag_model)     { mock_model('Tag') }
   let(:tag_mapper)    { mock_mapper(tag_model).new(tags_relation) }
 
@@ -93,7 +93,7 @@ describe RelationRegistry::Builder, '#relations' do
     end
 
     it "adds super_tags relation edge" do
-      relations.edge_for(relations[:songs], relations[:song_tags_X_super_tags]).should be_instance_of(RelationRegistry::RelationEdge)
+      relations.edge_for(relations[:songs_X_song_tags], relations[:super_tags]).should be_instance_of(RelationRegistry::RelationEdge)
     end
   end
 
@@ -114,7 +114,7 @@ describe RelationRegistry::Builder, '#relations' do
     end
 
     it "adds infos relation edge" do
-      relations.edge_for(relations[:songs], relations[:song_tags_X_super_tags_X_infos]).should be_instance_of(RelationRegistry::RelationEdge)
+      relations.edge_for(relations[:songs_X_song_tags_X_super_tags], relations[:infos]).should be_instance_of(RelationRegistry::RelationEdge)
     end
   end
 end
