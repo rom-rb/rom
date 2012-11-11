@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe RelationRegistry::Builder, '#relations' do
+describe RelationRegistry::Builder, '.call' do
   subject { described_class.call(relations, mappers, relationship) }
 
   let(:songs_relation) { mock_relation(:songs) }

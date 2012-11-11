@@ -8,6 +8,26 @@ module DataMapper
     # @api private
     class Builder
 
+      # Build a new {RelationNode} and {Connector} for +relationship+
+      #
+      # @param [RelationRegistry] relations
+      #   a registry of relations
+      #
+      # @param [MapperRegistry] mappers
+      #   a registry of mappers
+      #
+      # @param [Relationship] relationship
+      #   the relationship the connector is built for
+      #
+      # @return [BaseBuilder, ViaBuilder]
+      #
+      # @api private
+      def self.call(relations, mappers, relationship)
+        new(relations, mappers, relationship)
+      end
+
+      private
+
       # The {RelationRegistry} used by this builder
       #
       # @return [RelationRegistry]
@@ -39,24 +59,6 @@ module DataMapper
       # @api private
       attr_reader :connector
 
-      # Build a new {RelationNode} and {Connector} for +relationship+
-      #
-      # @param [RelationRegistry] relations
-      #   a registry of relations
-      #
-      # @param [MapperRegistry] mappers
-      #   a registry of mappers
-      #
-      # @param [Relationship] relationship
-      #   the relationship the connector is built for
-      #
-      # @return [BaseBuilder, ViaBuilder]
-      #
-      # @api private
-      def self.call(relations, mappers, relationship)
-        new(relations, mappers, relationship)
-      end
-
       # Initialize a new {Builder} instance
       #
       # @param [RelationRegistry] relations
@@ -77,54 +79,6 @@ module DataMapper
         @connector = RelationRegistry::Connector.new(name, node, relationship, relations)
         relations.add_connector(@connector)
       end
-
-      # @api private
-      def node
-        @nodes.last
-      end
-
-      # @api private
-      def name
-        @node_names.last
-      end
-
-      # The relationship's source model relation name
-      #
-      # @return [Symbol]
-      #
-      # @api private
-      def left_name
-        @node_names.last.left
-      end
-
-      # The relationship's target model relation name
-      #
-      # @return [Symbol]
-      #
-      # @api private
-      def right_name
-        @node_names.last.right
-      end
-
-      # The relationship's source relation node
-      #
-      # @return [RelationNode]
-      #
-      # @api private
-      def left_node
-        relations[left_name]
-      end
-
-      # The relationship's target relation node
-      #
-      # @return [RelationNode]
-      #
-      # @api private
-      def right_node
-        relations[right_name]
-      end
-
-      private
 
       # @api private
       def build_relation(edge, relationship = @relationship)
@@ -184,7 +138,51 @@ module DataMapper
         end
       end
 
-    end # class Builder
+      # @api private
+      def node
+        @nodes.last
+      end
 
+      # @api private
+      def name
+        @node_names.last
+      end
+
+      # The relationship's source model relation name
+      #
+      # @return [Symbol]
+      #
+      # @api private
+      def left_name
+        @node_names.last.left
+      end
+
+      # The relationship's target model relation name
+      #
+      # @return [Symbol]
+      #
+      # @api private
+      def right_name
+        @node_names.last.right
+      end
+
+      # The relationship's source relation node
+      #
+      # @return [RelationNode]
+      #
+      # @api private
+      def left_node
+        relations[left_name]
+      end
+
+      # The relationship's target relation node
+      #
+      # @return [RelationNode]
+      #
+      # @api private
+      def right_node
+        relations[right_name]
+      end
+    end # class Builder
   end # class RelationRegistry
 end # module DataMapper
