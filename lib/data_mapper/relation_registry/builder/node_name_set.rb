@@ -73,39 +73,23 @@ module DataMapper
         # @return [Array<NodeName>]
         #
         # @api private
-        def relation_names(relationship_map = rel_map, joins = [])
-          relationship_map.each do |right, left|
-            if left.is_a?(Hash)
-              joins << NodeName.new(relation_names(left, joins)[joins.size-1], *right)
-            else
-              joins << NodeName.new(left, *right)
-            end
-          end
-
-          joins
+        def relation_names
+          names = []
+          rel_map.each { |pair| names << NodeName.new(names.last || source, *pair) }
+          names
         end
 
-        # Generates a relationship map representing "via" hierarchy
-        #
-        # Hash is indexed with relation.name => relationship pairs
-        # so that it's possible to generate connector names later on.
-        #
-        # @return [Hash]
-        #
         # @api private
-        def rel_map(rel = @relationship, rel_set = @relationship_set, map = {})
-          name    = relations[rel.target_model]
-          key     = [ name, rel ]
-          via_rel = rel_set[rel.through]
+        def source
+          relations[@relationship.source_model]
+        end
 
-          if via_rel.through
-            map[key] = {}
-            rel_map(via_rel, rel_set, map[key])
-          else
-            map.merge!(key => relations[via_rel.target_model])
-          end
-
-          map
+        # @api private
+        def rel_map(relationship = @relationship, relationships = [])
+          via = @relationship_set[relationship.through]
+          rel_map(via, relationships) if via
+          relationships << [ relations[relationship.target_model], relationship ]
+          relationships
         end
 
       end # class NodeNameSet
