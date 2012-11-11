@@ -142,24 +142,13 @@ describe 'Finalizer', :isolation => true do
     relation.should be_base
   end
 
-  it 'finalizes song_tags-have-many-tags relation' do
-    node = relations[:song_tags_X_tags]
-
-    node.should be_instance_of(RelationRegistry::RelationNode::VeritasRelation)
-    node.should_not be_base
-
-    edge = relations.edge_for(relations[:song_tags], relations[:tags])
-
-    edge.relation.relation.should eql(node.relation)
-  end
-
   it 'finalizes songs-have-many-tags-through-song_tags relation' do
     node = relations[:songs_X_song_tags_X_tags]
 
     node.should be_instance_of(RelationRegistry::RelationNode::VeritasRelation)
     node.should_not be_base
 
-    edge = relations.edge_for(relations[:songs], relations[:song_tags_X_tags])
+    edge = relations.edge_for(relations[:songs_X_song_tags], relations[:tags])
 
     edge.relation.relation.should eql(node.relation)
   end
@@ -170,7 +159,7 @@ describe 'Finalizer', :isolation => true do
     node.should be_instance_of(RelationRegistry::RelationNode::VeritasRelation)
     node.should_not be_base
 
-    edge = relations.edge_for(relations[:songs], relations[:song_tags_X_tags])
+    edge = relations.edge_for(relations[:songs_X_song_tags], relations[:tags])
 
     edge.relation.relation.should eql(node.relation)
   end
@@ -181,7 +170,7 @@ describe 'Finalizer', :isolation => true do
     node.should be_instance_of(RelationRegistry::RelationNode::VeritasRelation)
     node.should_not be_base
 
-    edge = relations.edge_for(relations[:songs], relations[:song_tags_X_tags_X_infos])
+    edge = relations.edge_for(relations[:songs_X_song_tags_X_tags], relations[:infos])
 
     edge.relation.relation.should eql(node.relation)
   end
@@ -192,7 +181,7 @@ describe 'Finalizer', :isolation => true do
     node.should be_instance_of(RelationRegistry::RelationNode::VeritasRelation)
     node.should_not be_base
 
-    edge = relations.edge_for(relations[:songs], relations[:song_tags_X_tags_X_infos_X_info_contents])
+    edge = relations.edge_for(relations[:songs_X_song_tags_X_tags_X_infos], relations[:info_contents])
 
     edge.relation.relation.should eql(node.relation)
   end
@@ -203,13 +192,13 @@ describe 'Finalizer', :isolation => true do
     node.should be_instance_of(RelationRegistry::RelationNode::VeritasRelation)
     node.should_not be_base
 
-    edge = relations.edge_for(relations[:songs], relations[:song_tags_X_tags_X_infos_X_info_contents])
+    edge = relations.edge_for(relations[:songs_X_song_tags_X_tags_X_infos], relations[:info_contents])
 
     edge.relation.relation.should eql(node.relation)
   end
 
   it 'finalizes tags-have-many-song_tags relation' do
-    node = relations[:song_tags_X_tags]
+    node = relations[:tags_X_song_tags]
 
     node.should be_instance_of(RelationRegistry::RelationNode::VeritasRelation)
     node.should_not be_base
@@ -225,7 +214,7 @@ describe 'Finalizer', :isolation => true do
     node.should be_instance_of(RelationRegistry::RelationNode::VeritasRelation)
     node.should_not be_base
 
-    edge = relations.edge_for(relations[:tags], relations[:song_tags_X_songs])
+    edge = relations.edge_for(relations[:tags_X_song_tags], relations[:songs])
 
     edge.relation.relation.should eql(node.relation)
   end

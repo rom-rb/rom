@@ -8,8 +8,6 @@ module DataMapper
     # @api private
     class Builder
 
-      include AbstractClass
-
       # The {RelationRegistry} used by this builder
       #
       # @return [RelationRegistry]
@@ -56,8 +54,7 @@ module DataMapper
       #
       # @api private
       def self.call(relations, mappers, relationship)
-        klass = relationship.through ? ViaBuilder : BaseBuilder
-        klass.new(relations, mappers, relationship)
+        new(relations, mappers, relationship)
       end
 
       # Initialize a new {Builder} instance
@@ -77,13 +74,18 @@ module DataMapper
       def initialize(relations, mappers, relationship)
         @relations, @mappers, @relationship = relations, mappers, relationship
         initialize_nodes
-
-        edge              = build_edge
-        relation, aliases = build_relation(edge)
-        node              = build_node(name, relation, aliases)
-
         @connector = RelationRegistry::Connector.new(name, node, relationship, relations)
         relations.add_connector(@connector)
+      end
+
+      # @api private
+      def node
+        @nodes.last
+      end
+
+      # @api private
+      def name
+        @node_names.last
       end
 
       # The relationship's source model relation name
@@ -92,7 +94,7 @@ module DataMapper
       #
       # @api private
       def left_name
-        mappers[relationship.source_model].relation_name
+        @node_names.last.left
       end
 
       # The relationship's target model relation name
@@ -101,7 +103,7 @@ module DataMapper
       #
       # @api private
       def right_name
-        mappers[relationship.target_model].relation_name
+        @node_names.last.right
       end
 
       # The relationship's source relation node
@@ -123,11 +125,6 @@ module DataMapper
       end
 
       private
-
-      # @api private
-      def initialize_nodes
-        # no-op
-      end
 
       # @api private
       def build_relation(edge, relationship = @relationship)
@@ -158,6 +155,33 @@ module DataMapper
         end
 
         edge
+      end
+
+      # @api private
+      def initialize_nodes
+        @node_names = NodeNameSet.new(
+          relationship,
+          mappers[relationship.source_model].relationships,
+          mappers.relation_map
+        )
+
+        build_relations
+      end
+
+      # @api private
+      def build_relations
+        @nodes = @node_names.map do |node_name|
+          left_name, right_name = node_name.to_a
+
+          left_node  = relations[left_name]
+          right_node = relations[right_name] || relations[node_name.right]
+
+          node_relationship = mappers[relationship.source_model].relationships[node_name.relationship.name]
+          edge              = build_edge(relationship.name, left_node, right_node)
+          relation, aliases = build_relation(edge, node_relationship)
+
+          build_node(node_name, relation, aliases)
+        end
       end
 
     end # class Builder

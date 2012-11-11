@@ -164,13 +164,4 @@ describe 'Relationship - Many To Many with generated mappers' do
     tag2.songs.should have(1).item
     tag2.songs.first.title.should eql('bar')
   end
-
-  it 'uses the same join relation for both sides' do
-    pending "reversing joins to re-use existing relation nodes is not implemented yet"
-
-    relation_a = DataMapper[Song].include(:tags).relation
-    relation_b = DataMapper[Tag].include(:songs).relation
-
-    relation_a.should eql(relation_b)
-  end
 end
