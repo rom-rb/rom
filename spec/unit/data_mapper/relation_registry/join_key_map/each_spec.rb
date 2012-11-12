@@ -1,9 +1,7 @@
 require 'spec_helper'
 
 describe RelationRegistry::JoinKeyMap, '#each' do
-  let(:object)     { described_class.new(left_node, right_node, left_keys, right_keys) }
-  let(:left_node)  { mock('left') }
-  let(:right_node) { mock('right') }
+  let(:object)     { described_class.new(left_keys, right_keys) }
   let(:left_keys)  { [:id] }
   let(:right_keys) { [:song_id] }
 
@@ -27,11 +25,9 @@ describe RelationRegistry::JoinKeyMap, '#each' do
 end
 
 describe RelationRegistry::JoinKeyMap do
-  subject { described_class.new(left_node, right_node, left_keys, right_keys) }
+  subject { described_class.new(left_keys, right_keys) }
 
   let(:object)     { described_class }
-  let(:left_node)  { mock('left') }
-  let(:right_node) { mock('right') }
   let(:left_keys)  { [:id] }
   let(:right_keys) { [:song_id] }
 

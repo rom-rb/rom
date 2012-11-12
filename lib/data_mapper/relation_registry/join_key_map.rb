@@ -9,21 +9,7 @@ module DataMapper
 
       include Enumerable
 
-      include Equalizer.new(:left_node, :right_node, :left_keys, :right_keys)
-
-      # The left node for the join
-      #
-      # @return [RelationNode]
-      #
-      # @api private
-      attr_reader :left_node
-
-      # The right node for the join
-      #
-      # @return [RelationNode]
-      #
-      # @api private
-      attr_reader :right_node
+      include Equalizer.new(:left_keys, :right_keys)
 
       # The left node's attribute names to use for the join
       #
@@ -41,12 +27,6 @@ module DataMapper
 
       # Initialize a new instance
       #
-      # @param [RelationNode] left_node
-      #   the left node to use for the join
-      #
-      # @param [RelationNode] right_node
-      #   the right node to use for the join
-      #
       # @param [Array<Symbol>] left_keys
       #   the left node's attribute names to use for the join
       #
@@ -56,9 +36,7 @@ module DataMapper
       # @return [undefined]
       #
       # @api private
-      def initialize(left_node, right_node, left_keys, right_keys)
-        @left_node  = left_node
-        @right_node = right_node
+      def initialize(left_keys, right_keys)
         @left_keys  = left_keys
         @right_keys = right_keys
 
