@@ -12,11 +12,8 @@ module DataMapper
         # @param [Relationship] relationship
         #   the relationship used to define the set
         #
-        # @param [Mapper::RelationshipSet] relationship_set
+        # @param [MapperRegistry] mapper_registry
         #   set of source model relationships
-        #
-        # @param [Hash{Class => Symbol}] relations
-        #   a hash returned from {MapperRegistry#relation_map}
         #
         # @return [undefined]
         #
@@ -83,6 +80,7 @@ module DataMapper
           relationships
         end
 
+        # @api private
         def source_relationship_set(mapper_registry)
           mapper_registry[@relationship.source_model].relationships
         end
