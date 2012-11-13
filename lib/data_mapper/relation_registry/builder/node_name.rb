@@ -5,26 +5,49 @@ module DataMapper
       # Represents a joined relation node name
       #
       class NodeName
+
         # Separator used to split left/right sides
         SEPARATOR = '_X_'.freeze
 
+        # The left node used to construct the name
+        #
+        # @return [RelationNode]
+        #
         # @api private
         attr_reader :left
 
+        # The right node used to construct the name
+        #
+        # @return [RelationNode]
+        #
         # @api private
         attr_reader :right
 
+        # The (optional) relationship used to construct the name
+        #
+        # @return [Relationship, nil]
+        #
         # @api private
         attr_reader :relationship
 
         # Initialize a node name
         #
+        # @param [RelationNode] left
+        #   the left node used to construct the name
+        #
+        # @param [RelationNode] right
+        #   the right node used to construct the name
+        #
+        # @param [Relationship, nil] relationship
+        #   the (optional) relationship used to construct the name
+        #
         # @return [undefined]
         #
         # @api private
-        def initialize(*args)
-          @left, @right = args[0..1]
-          @relationship = args.last if args.size == 3
+        def initialize(left, right, relationship = nil)
+          @left         = left
+          @right        = right
+          @relationship = relationship
 
           unless @left && @right
             raise ArgumentError, "+left+ and +right+ must be defined"
@@ -60,7 +83,17 @@ module DataMapper
 
         # Coerce the name to a connector name
         #
+        # FIXME
+        #
+        # Refactor so that a missing relationship
+        # doesn't lead to a NoMethodError. Maybe
+        # the method doesn't even belong here or
+        # isn't needed at all once connectors are
+        # local to their source_model.
+        #
         # @return [Symbol]
+        #
+        # @raise [NoMethodError] if no relationship is present
         #
         # @api private
         def to_connector_name
@@ -73,9 +106,7 @@ module DataMapper
         def right_name
           relationship && relationship.operation ? relationship.name : right.to_sym
         end
-
       end # class NodeName
-
     end # class Builder
   end # class RelationRegistry
 end # module DataMapper

@@ -1,7 +1,13 @@
 require 'spec_helper'
 
 describe RelationRegistry::Builder::NodeName, '#right' do
-  it 'needs unit specs' do
-    pending('DataMapper::RelationRegistry::Builder::NodeName#right unit specs are not implemented yet')
-  end
+  subject { object.right }
+
+  let(:object) { described_class.new(left, right, relationship) }
+
+  let(:left)         { :foo }
+  let(:right)        { :bar }
+  let(:relationship) { mock('relationship', :name => :funky_bar) }
+
+  it { should be(right) }
 end

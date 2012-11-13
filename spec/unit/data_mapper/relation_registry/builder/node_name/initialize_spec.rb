@@ -1,34 +1,21 @@
 require 'spec_helper'
 
 describe RelationRegistry::Builder::NodeName, '#initialize' do
-  context "with 2 args" do
-    subject { described_class.new(:foo, :bar) }
+  subject { object.new(left, right, relationship) }
 
-    it "sets left" do
-      subject.left.should be(:foo)
-    end
+  let(:object)       { described_class }
+  let(:left)         { :foo }
+  let(:right)        { :bar }
+  let(:relationship) { mock('relationship', :name => :funky_bar) }
 
-    it "sets right" do
-      subject.right.should be(:bar)
-    end
-
-    it "doesn't set relationship" do
-      subject.relationship.should be_nil
-    end
-  end
-
-  context "with 3 args" do
-    subject { described_class.new(:foo, :bar, relationship) }
-
-    let(:relationship) { mock('relationship', :name => :funky_bar) }
-
-    it "sets relationship" do
-      subject.relationship.should be(relationship)
-    end
+  context "with valid arguments" do
+    its(:left)         { should be(left) }
+    its(:right)        { should be(right) }
+    its(:relationship) { should be(relationship) }
   end
 
   context "when left is missing" do
-    subject { described_class.new(nil, :bar) }
+    let(:left) { nil }
 
     specify do
       expect { subject }.to raise_error(ArgumentError, "+left+ and +right+ must be defined")
@@ -36,10 +23,20 @@ describe RelationRegistry::Builder::NodeName, '#initialize' do
   end
 
   context "when right is missing" do
-    subject { described_class.new(:foo, nil) }
+    let(:right) { nil }
 
     specify do
       expect { subject }.to raise_error(ArgumentError, "+left+ and +right+ must be defined")
     end
+  end
+
+  context 'when relationship is missing' do
+    let(:relationship) { nil }
+
+    specify do
+      expect { subject }.to_not raise_error(ArgumentError)
+    end
+
+    its(:relationship) { should be(relationship) }
   end
 end
