@@ -7,15 +7,6 @@ module DataMapper
       class NodeNameSet
         include Enumerable
 
-        # A hash returned from {MapperRegistry#relation_map}
-        #
-        # @see MapperRegistry#relation_map
-        #
-        # @return [Hash{Class => Symbol}]
-        #
-        # @api private
-        attr_reader :relations
-
         # Initializes a node name set
         #
         # @param [Relationship] relationship
@@ -81,14 +72,14 @@ module DataMapper
 
         # @api private
         def source
-          relations[@relationship.source_model]
+          @relations[@relationship.source_model]
         end
 
         # @api private
         def rel_map(relationship = @relationship, relationships = [])
           via = @relationship_set[relationship.through]
           rel_map(via, relationships) if via
-          relationships << [ relations[relationship.target_model], relationship ]
+          relationships << [ @relations[relationship.target_model], relationship ]
           relationships
         end
 
