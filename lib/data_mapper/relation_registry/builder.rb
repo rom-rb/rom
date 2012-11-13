@@ -90,7 +90,7 @@ module DataMapper
       end
 
       def node_name_set
-        NodeNameSet.new(@relationship, source_relationships, relation_map)
+        NodeNameSet.new(@relationship, @mappers)
       end
 
       def join_key_map
@@ -127,10 +127,6 @@ module DataMapper
 
       def relationship(node_name)
         source_relationships[node_name.relationship.name]
-      end
-
-      def relation_map
-        @mappers.relation_map
       end
     end # class Builder
   end # class RelationRegistry

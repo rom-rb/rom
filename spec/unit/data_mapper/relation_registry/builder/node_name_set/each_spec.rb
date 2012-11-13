@@ -1,21 +1,30 @@
 require 'spec_helper'
 
 describe RelationRegistry::Builder::NodeNameSet, '#each' do
-  subject { described_class.new(info_contents, registry, relations).each }
+  subject { object.each }
 
-  let(:registry)  { { :song_tags => song_tags, :tags => tags, :infos => infos, :info_contents => info_contents } }
-  let(:relations) { { song_model => :songs, song_tag_model => :song_tags, tag_model => :tags, info_model => :infos, info_content_model => :info_contents } }
+  let(:object) { described_class.new(info_contents, mapper_registry) }
 
-  let(:song_model)         { mock_model('Song') }
-  let(:song_tag_model)     { mock_model('SongTag') }
-  let(:tag_model)          { mock_model('Tag') }
-  let(:info_model)         { mock_model('Info') }
-  let(:info_content_model) { mock_model('InfoContent') }
+  let(:mapper_registry) {
+    MapperRegistry.new << song_mapper << song_tag_mapper << tag_mapper << info_mapper << info_content_mapper
+  }
 
-  let(:song_tags)     { OpenStruct.new(:name => :song_tags,     :source_model => song_model, :target_model => song_tag_model) }
-  let(:tags)          { OpenStruct.new(:name => :tags,          :source_model => song_model, :target_model => tag_model,          :through => :song_tags) }
-  let(:infos)         { OpenStruct.new(:name => :funky_infos,   :source_model => song_model, :target_model => info_model,         :through => :tags, :operation => Proc.new {}) }
-  let(:info_contents) { OpenStruct.new(:name => :info_contents, :source_model => song_model, :target_model => info_content_model, :through => :infos) }
+  let(:song_mapper)         { mock_mapper(song_model, [], [ song_tags, tags, funky_infos, info_contents ]) }
+  let(:song_tag_mapper)     { mock_mapper(song_tag_model) }
+  let(:tag_mapper)          { mock_mapper(tag_model) }
+  let(:info_mapper)         { mock_mapper(info_model) }
+  let(:info_content_mapper) { mock_mapper(info_content_model) }
+
+  let(:song_model)          { mock_model('Song') }
+  let(:song_tag_model)      { mock_model('SongTag') }
+  let(:tag_model)           { mock_model('Tag') }
+  let(:info_model)          { mock_model('Info') }
+  let(:info_content_model)  { mock_model('InfoContent') }
+
+  let(:song_tags)     { Relationship::OneToMany .new(:song_tags,     song_model, song_tag_model) }
+  let(:tags)          { Relationship::ManyToMany.new(:tags,          song_model, tag_model,          :through => :song_tags) }
+  let(:funky_infos)   { Relationship::ManyToMany.new(:funky_infos,   song_model, info_model,         :through => :tags, :operation => Proc.new {}) }
+  let(:info_contents) { Relationship::ManyToMany.new(:info_contents, song_model, info_content_model, :through => :funky_infos) }
 
   it { should be_instance_of(Enumerator) }
 end

@@ -21,10 +21,10 @@ module DataMapper
         # @return [undefined]
         #
         # @api private
-        def initialize(relationship, relationship_set, relations)
+        def initialize(relationship, mapper_registry)
           @relationship     = relationship
-          @relationship_set = relationship_set
-          @relations        = relations
+          @relationship_set = source_relationship_set(mapper_registry)
+          @relations        = mapper_registry.relation_map
           @relation_names   = relation_names
         end
 
@@ -83,8 +83,10 @@ module DataMapper
           relationships
         end
 
+        def source_relationship_set(mapper_registry)
+          mapper_registry[@relationship.source_model].relationships
+        end
       end # class NodeNameSet
-
     end # class Builder
   end # class RelationRegistry
 end # module DataMapper
