@@ -13,7 +13,7 @@ module DataMapper
         #   the relationship used to define the set
         #
         # @param [MapperRegistry] mapper_registry
-        #   set of source model relationships
+        #   the registry containing all mappers
         #
         # @return [undefined]
         #
