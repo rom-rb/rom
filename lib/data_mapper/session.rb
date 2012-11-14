@@ -3,7 +3,6 @@ module DataMapper
   class Session
     include Adamantium::Flat
 
-
     # Read objects from database
     #
     # The container can use the passed block to load objects guarded by identity map.
