@@ -3,6 +3,7 @@ module DataMapper
 
     # A class to read objects via identity map
     class Reader
+
       # Return mapper
       #
       # @return [Mapper]

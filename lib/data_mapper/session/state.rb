@@ -95,11 +95,31 @@ module DataMapper
       # @api private
       #
       def identity
-        Identity.new(object.class, dump.key)
+        Identity.new(model, key)
       end
       memoize :identity
 
     private
+
+      # Return model of mapping
+      #
+      # @return [Model]
+      #
+      # @api private
+      #
+      def model
+        mapping.model
+      end
+
+      # Return key
+      #
+      # @return [Object]
+      #
+      # @api private
+      #
+      def key
+        dump.key
+      end
 
       # Initialize object 
       #

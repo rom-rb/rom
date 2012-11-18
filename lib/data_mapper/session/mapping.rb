@@ -43,6 +43,16 @@ module DataMapper
         self
       end
 
+      # Return model
+      #
+      # @return [Model]
+      #
+      # @api private
+      #
+      def model
+        mapper.model
+      end
+
       # Return new dump
       #
       # @return [Dump]

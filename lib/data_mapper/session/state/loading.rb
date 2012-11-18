@@ -3,14 +3,7 @@ module DataMapper
     class State
       # State for dumps that are loaded
       class Loading < self
-
-        # Return mapper
-        #
-        # @return [Mapper]
-        #
-        # @api private
-        #
-        attr_reader :mapper
+        include Equalizer.new(:mapper, :raw_dump)
 
         # Return loader
         #
@@ -19,9 +12,11 @@ module DataMapper
         # @api private
         #
         def loader
-          mapper.loader(dump)
+          mapper.loader(@raw_dump)
         end
         memoize :loader
+
+        abstract_method :mapping
 
         # Return mapping
         #
@@ -55,20 +50,67 @@ module DataMapper
           loader.body
         end
 
+        # Return dump
+        #
+        # @return [Dump]
+        #
+        # @api private
+        #
+        def dump
+          Dump.new(loader)
+        end
+
+        # Return model
+        #
+        # @return [Model]
+        #
+        # @api private
+        #
+        def model
+          mapper.model
+        end
+
+        # Return key
+        #
+        # @return [Object]
+        #
+        # @api private
+        #
+        def key
+          loader.key
+        end
+
+        # Return mapper
+        #
+        # @return [Mapper]
+        #
+        # @api private
+        #
+        attr_reader :mapper
+
+        # Return raw dump
+        #
+        # @return [Object]
+        #
+        # @api private
+        #
+        attr_reader :raw_dump
+
       private
 
         # Initialize object
         #
         # @param [Mapper] mapper
-        # @param [Object] dump
+        # @param [Object] raw_dump
         #
         # @return [undefined]
         #
         # @api private
         #
-        def initialize(mapper, dump)
-          @mapper, @dump = mapper, dump
+        def initialize(mapper, raw_dump)
+          @mapper, @raw_dump = mapper, raw_dump
         end
+
       end
     end
   end

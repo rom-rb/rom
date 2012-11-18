@@ -9,6 +9,8 @@ require 'dm-session'
 
 class Spec
   class DomainObject
+    #include Equalizer.new(:key_attribute, :other_attribute)
+
     attr_accessor :key_attribute, :other_attribute
     def initialize(key_attribute=:a, other_attribute=:b)
       @key_attribute, @other_attribute = key_attribute,other_attribute
@@ -48,21 +50,23 @@ class Spec
 
   # A test double for a loader
   class Loader
-    include Equalizer.new(:key, :object)
+    include Equalizer.new(:key, :raw)
+
+    attr_reader :raw 
 
     def initialize(dump)
-      @dump = dump
+      @raw = dump
     end
 
     def body
       DomainObject.new(
-        @dump.fetch(:key_attribute), 
-        @dump.fetch(:other_attribute)
+        @raw.fetch(:key_attribute), 
+        @raw.fetch(:other_attribute)
       )
     end
 
     def key
-      dump.fetch(:key_attribute)
+      @raw.fetch(:key_attribute)
     end
   end
 
@@ -78,6 +82,10 @@ class Spec
 
     def initialize
       @deletes, @inserts, @updates = [], [], []
+    end
+
+    def model
+      DomainObject
     end
 
     def loader(dump)
