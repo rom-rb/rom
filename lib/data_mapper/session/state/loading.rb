@@ -52,7 +52,7 @@ module DataMapper
         # @api private
         #
         def object
-          loader.object
+          loader.body
         end
 
       private

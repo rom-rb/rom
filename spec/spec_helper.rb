@@ -54,7 +54,7 @@ class Spec
       @dump = dump
     end
 
-    def object
+    def body
       DomainObject.new(
         @dump.fetch(:key_attribute), 
         @dump.fetch(:other_attribute)
