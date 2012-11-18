@@ -2,7 +2,15 @@ module DataMapper
   class Session
     # A registry for mappers session uses to find mappers
     class Registry
-      include Adamantium::Flat
+      include Adamantium::Flat, Equalizer.new(:index)
+
+      # Return index
+      # 
+      # @return [Hash]
+      #
+      # @api private
+      #
+      attr_reader :index
 
       # Initialize an empty mapper registry
       #

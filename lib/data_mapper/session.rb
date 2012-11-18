@@ -1,7 +1,15 @@
 module DataMapper
   # A simple non UoW database session
   class Session
-    include Adamantium::Flat
+    include Adamantium::Flat, Equalizer.new(:registry)
+
+    # Return registry
+    #
+    # @return [Registry]
+    #
+    # @api private
+    #
+    attr_reader :registry
 
     # Return model specific reader
     #
