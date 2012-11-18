@@ -43,7 +43,7 @@ module DataMapper
         self
       end
 
-      # Return dump
+      # Return new dump
       #
       # @return [Dump]
       #
