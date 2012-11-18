@@ -1,5 +1,6 @@
 module DataMapper
   class Session
+
     # A class to read objects via identity map
     class Reader
       # Return mapper
@@ -18,46 +19,6 @@ module DataMapper
       #
       attr_reader :session
 
-      # Return mapper
-      #
-      # @return [Query]
-      #
-      # @api private
-      #
-      attr_reader :query
-
-    private
-
-      # Initialize object
-      #
-      # @param [Session] session
-      # @param [Mapper] mapper
-      # @param [Query] query
-      #
-      # @return [undefined]
-      #
-      def initialize(session, mapper, query)
-        @session, @mapper, @query = session, mapper, query
-      end
-
-      # Enumerate objects
-      #
-      # @return [self]
-      #   if block given
-      #
-      # @return [Enumerator<Object>]
-      #   otherwise
-      #
-      # @api private
-      #
-      def each
-        return to_enum unless block_given?
-
-        bodies.each do |body|
-          yield load(body)
-        end
-      end
-
       # Load object
       #
       # @param [Object] body
@@ -70,23 +31,19 @@ module DataMapper
         @session.load(mapper, body)
       end
 
-      # Enumerate dumps
+    private
+
+      # Initialize object
       #
-      # @return [self]
-      #   if block given
+      # @param [Session] session
+      # @param [Mapper] mapper
       #
-      # @return [Enumerator<Object>]
-      #   otherwise
+      # @return [undefined]
       #
-      # @api private
-      #
-      def bodies
-        return to_enum(__method__) unless block_given?
-        @mapper.read(query) do |body|
-          yield body
-        end
-        self
+      def initialize(session, mapper)
+        @session, @mapper = session, mapper
       end
+
     end
   end
 end

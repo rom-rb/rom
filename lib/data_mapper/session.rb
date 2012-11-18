@@ -3,7 +3,7 @@ module DataMapper
   class Session
     include Adamantium::Flat
 
-    # Read objects from database
+    # Return model specific reader
     #
     # The container can use the passed block to load objects guarded by identity map.
     #
@@ -13,14 +13,14 @@ module DataMapper
     # @param [Model] model
     #   the model to be queried
     #
-    # @return [Object]
-    #   the loaded objects wrapped by mapper defined query
+    # @return [Reader]
+    #   a reader for specific model
     #
     # @api public
     #
-    def read(model, query)
+    def reader(model)
       mapper = @registry.resolve_model(model)
-      Reader.new(self, mapper, query) 
+      Reader.new(self, mapper) 
     end
 
     # Delete a domain object from database and forget it

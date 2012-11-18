@@ -43,9 +43,9 @@ module DataMapper
       # Uses objects class as model. @see #resolve_model
       #
       # @example
-      #   registry = Registry.new(Person, Person::Mapper)
+      #   registry = Registry.new(Person => Person::Mapper)
       #   person = Peron.new('John', 'Doe')
-      #   registry.resolve_object(person) # => Person::Mapper
+      #   registry.resolve_object(person)     # => Person::Mapper
       #   registry.resolve_object(Object.new) # raises ArgumentError
       #
       # @param [Object] object
