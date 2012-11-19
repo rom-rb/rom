@@ -46,9 +46,7 @@ module DataMapper
     #
     def delete(object)
       state = state(object)
-
       state.delete
-
       @tracker.delete(state)
 
       self
