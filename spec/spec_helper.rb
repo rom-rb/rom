@@ -30,7 +30,7 @@ class Spec
 
   # A test double for a dumper
   class Dumper
-    include Equalizer.new(:key, :body)
+    include Equalizer.new(:identity, :body)
 
     def initialize(object)
       @object = object
@@ -43,14 +43,15 @@ class Spec
       }
     end
 
-    def key
+    def identity
       @object.key_attribute
     end
+
   end
 
   # A test double for a loader
   class Loader
-    include Equalizer.new(:key, :raw)
+    include Equalizer.new(:identity, :raw)
 
     attr_reader :raw 
 
@@ -65,7 +66,7 @@ class Spec
       )
     end
 
-    def key
+    def identity
       @raw.fetch(:key_attribute)
     end
   end

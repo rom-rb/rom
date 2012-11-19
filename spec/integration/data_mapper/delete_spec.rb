@@ -11,7 +11,7 @@ describe DataMapper::Session, '#delete' do
 
   subject { object.delete(domain_object) }
 
-  let!(:key) { mapper.dumper(domain_object).key }
+  let!(:identity) { mapper.dumper(domain_object).identity }
 
   context 'when domain object is tracked' do
     before do
@@ -36,7 +36,7 @@ describe DataMapper::Session, '#delete' do
 
     it 'should remove domain object from identity_map' do
       subject
-      identity_map.should_not have_key(key)
+      identity_map.should_not have_key(identity)
     end
 
     it_should_behave_like 'a command method'

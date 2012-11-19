@@ -14,16 +14,16 @@ module DataMapper
         mapping.object
       end
 
-      # Return transformer
-      #
-      # @return [#key, #dump]
-      #
-      # @api private
-      #
-      def transformer
-        mapping.transformer
-      end
-      memoize :transformer
+#     # Return transformer
+#     #
+#     # @return [#key, #dump]
+#     #
+#     # @api private
+#     #
+#     def transformer
+#       mapping.transformer
+#     end
+#     memoize :transformer
 
       # Return mapper
       #
@@ -95,9 +95,8 @@ module DataMapper
       # @api private
       #
       def identity
-        Identity.new(model, key)
+        dump.identity
       end
-      memoize :identity
 
     private
 
@@ -109,16 +108,6 @@ module DataMapper
       #
       def model
         mapping.model
-      end
-
-      # Return key
-      #
-      # @return [Object]
-      #
-      # @api private
-      #
-      def key
-        dump.key
       end
 
       # Initialize object 

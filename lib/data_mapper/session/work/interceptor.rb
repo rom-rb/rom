@@ -22,14 +22,6 @@ module DataMapper
       #
       attr_reader :mapper
 
-      # Return model
-      #
-      # @return [Model]
-      #
-      def model
-        mapper.model
-      end
-
       # Intercept delete command
       #
       # @param [Sttate] state

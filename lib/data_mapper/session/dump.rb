@@ -2,15 +2,15 @@ module DataMapper
   class Session
     # Represent dumped domain object
     class Dump
-      include Adamantium, Equalizer.new(:key, :body)
+      include Adamantium, Equalizer.new(:identity, :body)
 
-      # Return key
+      # Return identity
       #
       # @return [Object]
       #
       # @api private
       #
-      attr_reader :key
+      attr_reader :identity
 
       # Return body
       #
@@ -31,7 +31,7 @@ module DataMapper
       # @api private
       #
       def initialize(input)
-        @key, @body = input.key, input.body
+        @identity, @body = input.identity, input.body
       end
     end
   end

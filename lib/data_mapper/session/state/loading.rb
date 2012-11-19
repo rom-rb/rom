@@ -60,26 +60,6 @@ module DataMapper
           Dump.new(loader)
         end
 
-        # Return model
-        #
-        # @return [Model]
-        #
-        # @api private
-        #
-        def model
-          mapper.model
-        end
-
-        # Return key
-        #
-        # @return [Object]
-        #
-        # @api private
-        #
-        def key
-          loader.key
-        end
-
         # Return mapper
         #
         # @return [Mapper]

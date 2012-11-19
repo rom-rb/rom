@@ -8,13 +8,11 @@ describe DataMapper::Session, '#persist' do
   let(:domain_object) { Spec::DomainObject.new                                                      }
   let(:object)        { described_class.new(registry)                                               }
   let(:identity_map)  { object.instance_variable_get(:@tracker).instance_variable_get(:@identities) }
-  let(:mapping)       { DataMapper::Session::Mapping.new(mapper, domain_object)                              }
-  let(:new_key)       { mapper.dumper(domain_object).key                                            }
-  let!(:old_key)      { mapper.dumper(domain_object).key                                            }
+  let(:mapping)       { DataMapper::Session::Mapping.new(mapper, domain_object)                     }
+  let(:new_identity)  { mapper.dumper(domain_object).identity                                       }
+  let!(:old_identity) { mapper.dumper(domain_object).identity                                       }
   let!(:old_body)     { mapper.dumper(domain_object).body                                           }
-  let!(:old_state)    { DataMapper::Session::State::Loaded.new(mapping)                                      }
-  let!(:old_identity) { DataMapper::Session::Identity.new(Spec::DomainObject, old_key)                       }
-  let(:new_identity)  { DataMapper::Session::Identity.new(Spec::DomainObject, new_key)                       }
+  let!(:old_state)    { DataMapper::Session::State::Loaded.new(mapping)                             }
 
   context 'with untracked domain object' do
     it 'should insert update' do
@@ -30,7 +28,7 @@ describe DataMapper::Session, '#persist' do
   end
 
   context 'with tracked domain object' do
-    let(:new_key)      { mapper.dumper(domain_object).key  }
+    let(:new_identity)      { mapper.dumper(domain_object).identity  }
 
     before do
       object.persist(domain_object)
@@ -47,15 +45,15 @@ describe DataMapper::Session, '#persist' do
 
       it_should_behave_like 'an operation that dumps once'
 
-      it 'should track the domain object under new key' do
+      it 'should track the domain object under new identity' do
         subject
         identity_map.fetch(new_identity).object.should be(domain_object)
       end
 
-      it 'should NOT track the domain object under old key' do
+      it 'should NOT track the domain object under old identity' do
         subject
 
-        if old_key != new_key
+        if old_identity != new_identity
           identity_map.should_not have_key(old_identity)
         end
       end
@@ -68,7 +66,7 @@ describe DataMapper::Session, '#persist' do
     # future dumps without storing a dump of an object we just loaded.
     context 'and object is dirty from dump representation change' do
       before do
-        new_dumper = mock(:key => :changed, :body => :other_change)
+        new_dumper = mock(:identity => :changed, :body => :other_change)
         mapper.stub(:dumper => new_dumper)
       end
 
@@ -81,12 +79,12 @@ describe DataMapper::Session, '#persist' do
         domain_object.other_attribute = :dirty
       end
 
-      context 'and key did NOT change' do
+      context 'and identity did NOT change' do
         it_should_behave_like 'an update'
       end
 
-      context 'and key did change' do
-        let(:new_key) { :dirty }
+      context 'and identity did change' do
+        let(:new_identity) { :dirty }
 
         before do
           domain_object.key_attribute = :dirty
