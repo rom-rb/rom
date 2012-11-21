@@ -9,9 +9,6 @@ module DataMapper
     # TODO: add #delete
     #
     class RelationNode < Graph::Node
-
-      include AbstractClass
-
       include Enumerable, Equalizer.new(:name, :relation)
 
       # Instance of the engine's relation class
