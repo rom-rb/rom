@@ -1,3 +1,4 @@
+require 'pp'
 require 'ostruct'
 require 'dm-mapper'
 require 'virtus'
