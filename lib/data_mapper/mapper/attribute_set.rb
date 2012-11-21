@@ -73,7 +73,7 @@ module DataMapper
 
       # Return an AttributeSet matching the given aliases
       #
-      # TODO find a better name and implementation
+      # TODO rename to #rename and find a better implementation
       #
       # @param [Hash] aliases
       #
