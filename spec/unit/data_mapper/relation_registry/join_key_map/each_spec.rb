@@ -6,9 +6,9 @@ describe RelationRegistry::JoinKeyMap, '#each' do
   let(:right_keys) { [:song_id] }
 
   context "with a block" do
-    subject { object.each { |left, right| yields << [ left, right ] } }
+    subject { object.each { |left, right| yields[left] = right } }
 
-    let(:yields) { [] }
+    let(:yields) { {} }
 
     before do
       object.should be_instance_of(described_class)
@@ -18,8 +18,8 @@ describe RelationRegistry::JoinKeyMap, '#each' do
 
     it 'yields each mapping' do
       expect { subject }.to change { yields.dup }.
-        from([]).
-        to([ [:id, :song_id] ])
+        from({}).
+        to(:id => :song_id)
     end
   end
 end
