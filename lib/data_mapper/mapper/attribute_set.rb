@@ -90,7 +90,9 @@ module DataMapper
           end
         end
 
-        each { |attribute| instance << attribute.clone unless instance[attribute.name] }
+        each do |attribute|
+          instance << attribute.clone unless instance[attribute.name]
+        end
 
         instance
       end
