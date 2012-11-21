@@ -62,8 +62,12 @@ module DataMapper
       # @api private
       def merge(other)
         instance = self.class.new
-        each       { |attribute| instance << attribute.clone }
-        other.each { |attribute| instance << attribute.clone }
+
+        operation = lambda { |attribute| instance << attribute.clone }
+
+        each(&operation)
+        other.each(&operation)
+
         instance
       end
 
