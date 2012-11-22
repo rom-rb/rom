@@ -61,7 +61,7 @@ module DataMapper
       # @api private
       #
       def dump
-        Dump.new(mapper.dumper(object))
+        mapper.dumper(object).body
       end
     end
   end

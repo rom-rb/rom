@@ -2,38 +2,7 @@ module DataMapper
   class Session
     # Abstract base class for object state
     class State
-      include AbstractClass, Adamantium::Flat, Equalizer.new(:mapping, :dump)
-
-      # Return domain object
-      #
-      # @return [Object]
-      #
-      # @api private
-      #
-      def object
-        mapping.object
-      end
-
-#     # Return transformer
-#     #
-#     # @return [#key, #dump]
-#     #
-#     # @api private
-#     #
-#     def transformer
-#       mapping.transformer
-#     end
-#     memoize :transformer
-
-      # Return mapper
-      #
-      # @return [Mapper]
-      #
-      # @api private
-      #
-      def mapper
-        mapping.mapper
-      end
+      include AbstractClass, Adamantium::Flat, Equalizer.new(:mapping, :identity, :dump)
 
       # Return mapping
       #
@@ -94,8 +63,14 @@ module DataMapper
       # 
       # @api private
       #
-      def identity
-        dump.identity
+      attr_reader :identity
+
+      # Return object
+      #
+      # @api private
+      #
+      def object
+        mapping.object
       end
 
     private
@@ -110,6 +85,16 @@ module DataMapper
         mapping.model
       end
 
+      # Return mapper
+      #
+      # @return [Mapper]
+      #
+      # @api private
+      #
+      def mapper
+        mapping.mapper
+      end
+
       # Initialize object 
       #
       # @param [State,Mapping] context
@@ -119,8 +104,9 @@ module DataMapper
       # @api private
       #
       def initialize(context)
-        @mapping = context.mapping
-        @dump    = context.dump
+        @mapping  = context.mapping
+        @identity = context.identity
+        @dump     = context.dump
       end
     end
   end
