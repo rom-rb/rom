@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe RelationRegistry::RelationNode, '#<<' do
-  subject { object << user }
+describe RelationRegistry::RelationNode, '#insert' do
+  subject { object.insert user }
 
   let(:object)   { subclass.new(name, relation) }
   let(:name)     { :users }
@@ -9,7 +9,7 @@ describe RelationRegistry::RelationNode, '#<<' do
   let(:user)     { mock('user') }
 
   it "delegates to relation" do
-    relation.should_receive(:<<).with(user)
-    subject.should be(subject)
+    relation.should_receive(:insert).with(user).and_return(user)
+    subject.should be(user)
   end
 end

@@ -452,6 +452,30 @@ module DataMapper
         self.class.new(relation.join(other.relation), attributes)
       end
 
+      # FIXME: add support for composite keys
+      #
+      # @api public
+      def insert(object)
+        key_name  = attributes.key[0].name
+        tuple     = dump(object)
+        tuple.delete(key_name)
+        key_value = relation.insert(tuple)
+
+        object.public_send("#{key_name}=", key_value)
+
+        object
+      end
+
+      # FIXME: add support for composite keys
+      #
+      # @api public
+      def delete(object)
+        key_name  = attributes.key[0].name
+        key_value = object.public_send(key_name)
+        relation.delete(key_name => key_value)
+        object
+      end
+
     end # class Relation
   end # class Mapper
 end # module DataMapper
