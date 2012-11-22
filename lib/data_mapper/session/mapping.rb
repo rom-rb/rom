@@ -33,6 +33,17 @@ module DataMapper
         @mapper, @object = mapper, object
       end
 
+      # Return identity
+      #
+      # @return [Object]
+      #
+      # @api private
+      #
+      def identity
+        mapper.identity(object)
+      end
+      memoize :identity
+
       # Return mapping
       #
       # @return [Mapping]

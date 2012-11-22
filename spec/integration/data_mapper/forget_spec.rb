@@ -25,9 +25,5 @@ describe DataMapper::Session, '#forget(object)' do
     object.include?(domain_object).should be(false)
   end
 
-  it 'should remove from identity map' do
-    identity_map.should_not have_key(mapper.dumper(domain_object).identity)
-  end
-
   it_should_behave_like 'a command method'
 end

@@ -6,7 +6,7 @@ module DataMapper
       include Adamantium::Flat
 
       # Delegate boring mapper methods
-      %w(loader dumper).each do |name|
+      %w(loader dumper identity).each do |name|
         class_eval(<<-RUBY, __FILE__, __LINE__+1)
           def #{name}(*args)
             @mapper.#{name}(*args)

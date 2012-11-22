@@ -1,5 +1,5 @@
 module DataMapper
-  # A simple non UoW database session
+  # A database session
   class Session
     include Adamantium::Flat, Equalizer.new(:registry)
 
@@ -47,7 +47,7 @@ module DataMapper
     def delete(object)
       state = state(object)
       state.delete
-      @tracker.delete(state)
+      @tracker.delete(state.identity)
 
       self
     end
@@ -76,11 +76,13 @@ module DataMapper
     # @api public
     #
     def persist(object)
-      state = @tracker.get(object) do
-        new_state(object)
+      mapping = mapping(object)
+
+      state = @tracker.fetch(mapping.identity) do
+        State::New.new(mapping)
       end
 
-      @tracker.persist(state)
+      @tracker.store(state.persist)
 
       self
     end
@@ -88,21 +90,24 @@ module DataMapper
     # Returns whether an domain object is tracked in this session
     #
     # @example
-    #   session.include?(Object.new) # => false
-    #   person = session.first(Person)
-    #   session.include?(person)     # => true
+    #   person = Person.new
+    #   session.include?(person) # => false
+    #   session.persist(person)
+    #   session.include?(person) # => true
     #
     # @param [Object] object
     #   the domain object to be tested
     #
     # @return [true|false]
-    #   returns true when object is tracked
-    #   false otherwitse
+    #   when object is tracked
+    #
+    # @return [false]
+    #   otherwitse
     #
     # @api public
     #
     def include?(object)
-      @tracker.include?(object)
+      @tracker.include?(identity(object))
     end
 
     # Returns whether a domain object has changes since last sync with the database
@@ -121,9 +126,11 @@ module DataMapper
     # @param [Object] object
     #   the domain object to be examined
     #
-    # @return [true|false]
-    #   returns true when there are changes in the object
-    #   false otherwise
+    # @return [true]
+    #   when there are changes in the object
+    #
+    # @return [false]
+    #   otherwise
     #
     # @api public
     #
@@ -155,7 +162,7 @@ module DataMapper
     def forget(object)
       state = state(object)
 
-      @tracker.delete(state)
+      @tracker.delete(state.identity)
 
       self
     end
@@ -178,7 +185,13 @@ module DataMapper
     def load(mapper, dump)
       state = State::Loading.new(mapper, dump)
 
-      @tracker.load(state)
+      identity = state.identity
+
+      @tracker.fetch(identity) do
+        loaded = state.loaded
+        @tracker.store(loaded)
+        loaded
+      end.object
     end
 
   private
@@ -201,29 +214,46 @@ module DataMapper
     # Return object state for domain object
     #
     # @param [Object] object
-    # @raise [StateError] in case object is not tracked
     #
     # @return [State]
+    #   if object is associated with a state
+    #
+    # @raise [StateError] 
+    #   in case object is not tracked
     #
     # @api private
     #
     def state(object)
-      @tracker.get(object) do
+      identity = identity(object)
+      @tracker.fetch(identity) do
         raise StateError, "#{object.inspect} is not tracked"
       end
     end
 
-    # Initialize a State::New for domain object
+    # Return identity for object
     #
     # @param [Object] object
     #
-    # @return [State::New]
+    # @return [Object]
+    #   identity of object
     #
     # @api private
     #
-    def new_state(object)
+    def identity(object)
+      mapping(object).identity
+    end
+
+    # Return mapping for object
+    #
+    # @param [Object] object
+    #
+    # @return [Mapping]
+    #
+    # @api private
+    #
+    def mapping(object)
       mapper = @registry.resolve_object(object)
-      State::New.new(Mapping.new(mapper, object))
+      Mapping.new(mapper, object)
     end
   end
 end

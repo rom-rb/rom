@@ -24,6 +24,8 @@ describe DataMapper::Session, '#delete' do
     end
 
     it 'should not dump' do
+      pending
+
       mapper.should_not_receive(:dumper)
 
       subject
@@ -32,11 +34,6 @@ describe DataMapper::Session, '#delete' do
     it 'should not track object anymore' do
       subject
       object.include?(domain_object).should be(false)
-    end
-
-    it 'should remove domain object from identity_map' do
-      subject
-      identity_map.should_not have_key(identity)
     end
 
     it_should_behave_like 'a command method'

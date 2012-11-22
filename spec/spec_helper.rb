@@ -97,6 +97,10 @@ class Spec
       Dumper.new(object)
     end
 
+    def identity(object)
+      object.key_attribute
+    end
+
     # Insert 
     #
     # @param [State]

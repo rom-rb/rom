@@ -6,7 +6,7 @@ module DataMapper
 
       # Return state for object
       #
-      # @param [Object] object
+      # @param [Object] identity
       #
       # @return [State]
       #   if object has tracked state
@@ -16,70 +16,41 @@ module DataMapper
       #
       # @api private
       #
-      def get(object)
-        @objects.fetch(object) { yield }
+      def fetch(identity)
+        @objects.fetch(identity) { yield }
       end
 
-      # Return state for identity
+      # Test if tracker includes state for identity
       #
       # @param [Object] identity
       #
-      # @api private
-      #
-      # @return [State]
-      #   if identity has tracked state
-      #
-      # @return [Object]
-      #   otherwise value returned from block
-      #
-      def identity(identity)
-        @identities.fetch(identity) { yield }
-      end
-
-      # Load state
-      #
-      # @param [State::Loading] state
-      #
-      # @return [Object]
-      #
-      # @api private
-      #
-      def load(state)
-        identity(state.identity) do
-          store(state.loaded)
-        end.object
-      end
-
-      # Persist state
-      #
-      # @param [State] state
-      #
-      # @return [self]
-      #
-      # @api private
-      #
-      def persist(state)
-        delete(state)
-        store(state.persist)
-
-        self
-      end
-
-      # Test if object is tracked
-      #
       # @return [true]
-      #   if tracked
+      #   if tracker has a state for identity
       #
-      # @return [false}
+      # @return [false]
       #   otherwise
       #
       # @api private
       #
-      def include?(object)
-        @objects.key?(object)
+      def include?(identity)
+        @objects.key?(identity)
       end
 
-      # Delete object state
+      # Forget identity
+      #
+      # @param [Object] identity
+      #
+      # @return [self]
+      #
+      # @api private
+      #
+      def delete(identity)
+        @objects.delete(identity)
+
+        self
+      end
+
+      # Store object state
       #
       # @param [State] state
       #
@@ -87,9 +58,8 @@ module DataMapper
       #
       # @api private
       #
-      def delete(state)
-        @objects.delete(state.object)
-        @identities.delete(state.identity)
+      def store(state)
+        @objects[state.identity]=state
 
         self
       end
@@ -103,22 +73,7 @@ module DataMapper
       # @api private
       #
       def initialize
-        @objects, @identities = {}, {} 
-      end
-
-      # Store object state
-      #
-      # @param [State] state
-      #
-      # @return [State]
-      #
-      # @api private
-      #
-      def store(state)
-        @objects[state.object]=state
-        @identities[state.identity]=state
-
-        state
+        @objects = {}
       end
     end
   end
