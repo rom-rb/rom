@@ -24,8 +24,6 @@ describe DataMapper::Session, '#delete' do
     end
 
     it 'should not dump' do
-      pending
-
       mapper.should_not_receive(:dumper)
 
       subject

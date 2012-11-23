@@ -73,18 +73,6 @@ module DataMapper
         mapping.object
       end
 
-    private
-
-      # Return model of mapping
-      #
-      # @return [Model]
-      #
-      # @api private
-      #
-      def model
-        mapping.model
-      end
-
       # Return mapper
       #
       # @return [Mapper]
@@ -94,6 +82,8 @@ module DataMapper
       def mapper
         mapping.mapper
       end
+
+    private
 
       # Initialize object 
       #

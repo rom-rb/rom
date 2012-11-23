@@ -42,7 +42,7 @@ module DataMapper
         # Initialize object
         #
         # @param [Mapper] mapper
-        # @param [Object] raw_dump
+        # @param [Object] dump
         #
         # @return [undefined]
         #

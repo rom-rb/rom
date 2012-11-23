@@ -77,11 +77,9 @@ module DataMapper
     #
     def persist(object)
       mapping = mapping(object)
-
       state = @tracker.fetch(mapping.identity) do
         State::New.new(mapping)
       end
-
       @tracker.store(state.persist)
 
       self
@@ -185,12 +183,10 @@ module DataMapper
     def load(mapper, dump)
       state = State::Loading.new(mapper, dump)
 
-      identity = state.identity
-
-      @tracker.fetch(identity) do
-        loaded = state.loaded
-        @tracker.store(loaded)
-        loaded
+      @tracker.fetch(state.identity) do
+        state = state.loaded
+        @tracker.store(state)
+        state
       end.object
     end
 
