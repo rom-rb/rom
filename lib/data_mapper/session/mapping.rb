@@ -2,7 +2,7 @@ module DataMapper
   class Session
     # Represent an object with its mapper
     class Mapping
-      include Adamantium::Flat, Equalizer.new(:mapper, :object)
+      include Adamantium::Flat, Equalizer.new(:mapper, :object, :identity, :tuple)
 
       # Return mapper
       #
@@ -20,6 +20,39 @@ module DataMapper
       #
       attr_reader :object
 
+      # Return identity
+      #
+      # @return [Identity]
+      #
+      # @api private
+      #
+      def identity
+        dumper.identity
+      end
+
+      # Return tuple
+      #
+      # @return [Tuple]
+      #
+      # @api private
+      #
+      def tuple
+        dumper.tuple
+      end
+
+    private
+
+      # Return dumper
+      #
+      # @return [Dumper]
+      #
+      # @api private
+      #
+      def dumper
+        mapper.dumper(object)
+      end
+      memoize :dumper, :freezer => :noop
+
       # Initialize object
       #
       # @param [Mapper] mapper
@@ -33,30 +66,6 @@ module DataMapper
         @mapper, @object = mapper, object
       end
 
-      # Return identity
-      #
-      # @return [Object]
-      #
-      # @api private
-      #
-      def identity
-        mapper.identity(object)
-      end
-      memoize :identity
-
-      # Return mapping
-      #
-      # @return [Mapping]
-      #
-      # @api private
-      #
-      def mapping
-        self
-      end
-
-      def tuple
-        @mapper.dumper(object).tuple
-      end
     end
   end
 end

@@ -2,6 +2,11 @@ require 'spec_helper'
 
 describe DataMapper::Session, 'with unit of work' do
 
+  before do
+    pending
+  end
+
+
   let(:mapper)        { registry.resolve_model(Spec::DomainObject) }
   let(:object)        { described_class.new(work)            }
   let(:work)          { DataMapper::Session::Work.new(registry)          }

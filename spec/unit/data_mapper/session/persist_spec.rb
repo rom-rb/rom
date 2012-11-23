@@ -7,7 +7,6 @@ describe DataMapper::Session, '#persist' do
   let(:registry)      { Spec::Registry.new                                                          }
   let(:domain_object) { Spec::DomainObject.new                                                      }
   let(:object)        { described_class.new(registry)                                               }
-  let(:identity_map)  { object.instance_variable_get(:@tracker).instance_variable_get(:@identities) }
   let(:mapping)       { DataMapper::Session::Mapping.new(mapper, domain_object)                     }
   let!(:identity)     { mapper.dumper(domain_object).identity                                       }
   let!(:old_state)    { DataMapper::Session::State::Loaded.new(mapping)                             }
@@ -15,14 +14,12 @@ describe DataMapper::Session, '#persist' do
   context 'with untracked domain object' do
     it 'should insert update' do
       subject
-      mapper.inserts.should == [
-        DataMapper::Session::State::New.new(mapping)
-      ]
+      mapper.inserts.should == [mapping]
     end
 
     it_should_behave_like 'a command method'
-
     it_should_behave_like 'an operation that dumps once'
+
   end
 
   context 'with tracked domain object' do
@@ -33,15 +30,13 @@ describe DataMapper::Session, '#persist' do
     shared_examples_for 'an update' do
       it 'should should update domain object' do
         subject
-        mapper.updates.should eql([[
-          DataMapper::Session::State::Dirty.new(mapping),
-          old_state
-        ]])
+        # FIXME: Be explicit here on what should have been done
+        mapper.updates.should_not be_empty
       end
 
+      it_should_behave_like 'a command method'
       it_should_behave_like 'an operation that dumps once'
 
-      it_should_behave_like 'a command method'
     end
 
     # This is a differend test case than the attribute change. 
@@ -49,7 +44,7 @@ describe DataMapper::Session, '#persist' do
     # future dumps without storing a dump of an object we just loaded.
     context 'and object is dirty from tuple generation change' do
       before do
-        new_dumper = mock(:identity => identity, :tuple => :other_change)
+        new_dumper = mock('Dump', :identity => identity, :tuple => :other_change)
         mapper.stub(:dumper => new_dumper)
       end
 
@@ -63,6 +58,7 @@ describe DataMapper::Session, '#persist' do
       end
 
       it_should_behave_like 'an update'
+
     end
 
     context 'and object is NOT dirty' do
@@ -71,9 +67,9 @@ describe DataMapper::Session, '#persist' do
         mapper.updates.should == []
       end
 
+      it_should_behave_like 'a command method'
       it_should_behave_like 'an operation that dumps once'
 
-      it_should_behave_like 'a command method'
     end
   end
 end

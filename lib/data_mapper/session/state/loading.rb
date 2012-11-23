@@ -4,16 +4,25 @@ module DataMapper
       # State for loaded objects
       class Loading < self
 
-        # Return mapping
+        # Return identity
         #
-        # @return [Mapping]
+        # @return [Identity]
         #
         # @api private
         #
-        def mapping
-          Mapping.new(@mapper, loader.object)
+        def identity
+          loader.identity
         end
-        memoize :mapping
+
+        # Return object
+        #
+        # @return [Object]
+        #
+        # @api private
+        #
+        def object
+          loader.object
+        end
 
         # Return loaded state
         #
@@ -24,7 +33,6 @@ module DataMapper
         def loaded
           Loaded.new(self)
         end
-        memoize :loaded
 
       private
 
@@ -37,7 +45,7 @@ module DataMapper
         def loader
           @mapper.loader(@tuple)
         end
-        memoize :loader
+        memoize :loader, :freezer => :noop
 
         # Initialize object
         #
@@ -49,7 +57,6 @@ module DataMapper
         # @api private
         #
         def initialize(mapper, tuple)
-          @loader = mapper.loader(tuple)
           @mapper, @tuple = mapper, tuple
         end
       end

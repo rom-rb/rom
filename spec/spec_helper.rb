@@ -56,7 +56,7 @@ class Spec
     end
 
     def identity
-      @raw.fetch(:key_attribute)
+      tuple.fetch(:key_attribute)
     end
   end
 

@@ -23,18 +23,13 @@ describe DataMapper::Session, '#delete' do
       mapper.deletes.should == [DataMapper::Session::State::Loaded.new(mapping)]
     end
 
-    it 'should not dump' do
-      mapper.should_not_receive(:dumper)
-
-      subject
-    end
-
     it 'should not track object anymore' do
       subject
       object.include?(domain_object).should be(false)
     end
 
     it_should_behave_like 'a command method'
+    it_should_behave_like 'an operation that dumps once'
   end
 
   context 'when domain object is NOT tracked' do

@@ -1,52 +1,8 @@
 module DataMapper
   class Session
-    # Abstract base class for object state
+    # Abstract base class for tracked state
     class State
-      include AbstractClass, Adamantium::Flat, Equalizer.new(:mapping, :identity, :tuple)
-
-      # Return mapping
-      #
-      # @return [Mapping]
-      #
-      # @api private
-      #
-      attr_reader :mapping
-
-      # Delete domain object
-      #
-      # Default implementation for all subclasses.
-      #
-      # @raise [StateError]
-      #
-      # @return [undefined]
-      #
-      # @api private
-      #
-      abstract_method :delete
-
-      # Forget domain object
-      #
-      # Default implementation for all subclasses.
-      #
-      # @raise [StateError]
-      #
-      # @return [undefined]
-      #
-      # @api private
-      #
-      abstract_method :forget
-
-      # Persist domain object
-      #
-      # Default implementation for all subclasses.
-      #
-      # @raise [StateError]
-      #
-      # @return [undefined]
-      #
-      # @api private
-      #
-      abstract_method :persist
+      include AbstractClass, Adamantium::Flat, Equalizer.new(:identity, :object, :tuple, :mapper)
 
       # Return identity of object
       #
@@ -56,13 +12,13 @@ module DataMapper
       #
       attr_reader :identity
 
-      # Return object
+      # Return object associated with state
+      #
+      # @return [Object]
       #
       # @api private
       #
-      def object
-        mapping.object
-      end
+      attr_reader :object
 
       # Return mapper
       #
@@ -70,9 +26,7 @@ module DataMapper
       #
       # @api private
       #
-      def mapper
-        mapping.mapper
-      end
+      attr_reader :mapper
 
       # Return tuple
       # 
@@ -86,16 +40,17 @@ module DataMapper
 
       # Initialize object 
       #
-      # @param [State,Mapping] context
+      # @param [Mapping, State] context
       #
       # @return [undefined]
       #
       # @api private
       #
       def initialize(context)
-        @mapping  = context.mapping
+        @mapper   = context.mapper
         @identity = context.identity
         @tuple    = context.tuple
+        @object   = context.object
       end
     end
   end

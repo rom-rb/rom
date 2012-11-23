@@ -6,14 +6,17 @@ module DataMapper
 
         # Insert via mapper and return loaded object state
         #
+        # @param [Mapping] mapping
+        #
         # @return [State::Loaded]
         #
         # @api private
         #
-        def persist
-          mapper.insert(self)
+        def self.persist(mapping)
+          mapper = mapping.mapper
+          mapper.insert(mapping)
 
-          Loaded.new(self)
+          Loaded.new(mapping)
         end
 
       end

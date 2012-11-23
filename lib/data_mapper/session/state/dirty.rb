@@ -4,6 +4,7 @@ module DataMapper
 
       # Persistance state that is potentially dirty
       class Dirty < self
+        include Equalizer.new(:identity, :tuple, :mapper, :object, :old)
 
         # Return old state
         #
@@ -48,15 +49,16 @@ module DataMapper
 
         # Initialize object
         #
+        # @param [Mapping] mapping
         # @param [State] old
         #
         # @return [undefined]
         #
         # @api private
         #
-        def initialize(old)
+        def initialize(mapping, old)
+          super(mapping)
           @old = old
-          super(old.mapping)
         end
 
       end

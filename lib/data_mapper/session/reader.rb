@@ -3,6 +3,7 @@ module DataMapper
 
     # A class to read objects via identity map
     class Reader
+      include Equalizer.new(:session, :reader)
 
       # Return mapper
       #

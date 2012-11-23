@@ -8,8 +8,8 @@ describe DataMapper::Session, '#reader(model)' do
 
   subject { object.reader(Spec::DomainObject) }
 
-  its(:mapper)  { should be(mapper)             }
-  its(:session) { should be(object)             }
+  its(:mapper)  { should be(mapper) }
+  its(:session) { should be(object) }
 
   it 'allows to load objects' do
     doc = { :key_attribute => :key, :other_attribute => :other }
