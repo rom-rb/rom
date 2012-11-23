@@ -78,16 +78,28 @@ class Spec
       DomainObject
     end
 
+    # Return loader for tuple
+    #
+    # @param [Tuple] tuple
+    #
+    # @return [Loader]
+    #
+    # @api private
+    #
     def loader(tuple)
       Loader.new(tuple)
     end
 
+    # Return dumper for object
+    #
+    # @param [Object] object
+    #
+    # @return [Dumper]
+    #
+    # @api private
+    #
     def dumper(object)
       Dumper.new(object)
-    end
-
-    def identity(object)
-      object.key_attribute
     end
 
     # Insert 
@@ -110,11 +122,10 @@ class Spec
 
     # Update
     #
-    # @param [State] new_state
-    # @param [State] old_state
+    # @param [DataMapper::Operand::Update] operand
     #
-    def update(new_state, old_state)
-      @updates << [new_state, old_state]
+    def update(operand)
+      @updates << operand
     end
   end
 

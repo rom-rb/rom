@@ -3,13 +3,13 @@ require 'spec_helper'
 describe DataMapper::Session, '#persist' do
   subject { object.persist(domain_object) }
 
-  let(:mapper)        { registry.resolve_model(Spec::DomainObject)                                  }
-  let(:registry)      { Spec::Registry.new                                                          }
-  let(:domain_object) { Spec::DomainObject.new                                                      }
-  let(:object)        { described_class.new(registry)                                               }
-  let(:mapping)       { DataMapper::Session::Mapping.new(mapper, domain_object)                     }
-  let!(:identity)     { mapper.dumper(domain_object).identity                                       }
-  let!(:old_state)    { DataMapper::Session::State::Loaded.new(mapping)                             }
+  let(:mapper)        { registry.resolve_model(Spec::DomainObject)              }
+  let(:registry)      { Spec::Registry.new                                      }
+  let(:domain_object) { Spec::DomainObject.new                                  }
+  let(:object)        { described_class.new(registry)                           }
+  let(:mapping)       { DataMapper::Session::Mapping.new(mapper, domain_object) }
+  let(:old_tuple)     { mapping.tuple                                           }
+  let(:identity)      { :a                                                      }
 
   context 'with untracked domain object' do
     it 'should insert update' do
@@ -28,10 +28,21 @@ describe DataMapper::Session, '#persist' do
     end
 
     shared_examples_for 'an update' do
+      let(:modified_tuple) do
+        { :key_attribute => :a, :other_attribute => :dirty }
+      end
+
+      let(:old_state) do
+        mock('State', :tuple => old_tuple)
+      end
+
+      let(:state) do
+        mock('State', :object => domain_object, :identity => :a, :tuple => modified_tuple, :old => old_state)
+      end
+
       it 'should should update domain object' do
         subject
-        # FIXME: Be explicit here on what should have been done
-        mapper.updates.should_not be_empty
+        mapper.updates.should eql([DataMapper::Session::Operand::Update.new(state)])
       end
 
       it_should_behave_like 'a command method'
@@ -43,8 +54,9 @@ describe DataMapper::Session, '#persist' do
     # We have to make sure we cache the loaded dump and compare this to 
     # future dumps without storing a dump of an object we just loaded.
     context 'and object is dirty from tuple generation change' do
+
       before do
-        new_dumper = mock('Dump', :identity => identity, :tuple => :other_change)
+        new_dumper = mock('Dump', :identity => identity, :tuple => modified_tuple)
         mapper.stub(:dumper => new_dumper)
       end
 
@@ -52,6 +64,7 @@ describe DataMapper::Session, '#persist' do
     end
 
     context 'and object is dirty from attribute change' do
+
 
       before do
         domain_object.other_attribute = :dirty

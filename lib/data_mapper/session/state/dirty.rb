@@ -40,7 +40,7 @@ module DataMapper
 
           return old if clean?
 
-          mapper.update(self, old)
+          mapper.update(Operand::Update.new(self))
 
           Loaded.new(self)
         end

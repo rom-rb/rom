@@ -20,7 +20,7 @@ describe DataMapper::Session, '#delete' do
 
     it 'should delete object' do
       subject
-      mapper.deletes.should == [DataMapper::Session::State::Loaded.new(mapping)]
+      mapper.deletes.should eql([DataMapper::Session::Operand.new(mapping)])
     end
 
     it 'should not track object anymore' do

@@ -27,7 +27,7 @@ module DataMapper
         # @api private
         #
         def delete
-          mapper.delete(self)
+          mapper.delete(Operand.new(self))
           self
         end
 
