@@ -17,26 +17,15 @@ class Spec
     end
   end
 
-  # A test double for states
-  class State
-    include Equalizer.new(:mapping, :key, :dump)
-
-    attr_reader :mapping, :key, :dump
-
-    def initialize(mapping, key, dump)
-      @mapping, @key, @dump = mapping, key, dump
-    end
-  end
-
   # A test double for a dumper
   class Dumper
-    include Equalizer.new(:identity, :body)
+    include Equalizer.new(:identity, :tuple)
 
     def initialize(object)
       @object = object
     end
 
-    def body
+    def tuple
       {
         :key_attribute => @object.key_attribute, 
         :other_attribute => @object.other_attribute
@@ -51,18 +40,18 @@ class Spec
 
   # A test double for a loader
   class Loader
-    include Equalizer.new(:identity, :raw)
+    include Equalizer.new(:identity, :tuple)
 
-    attr_reader :raw 
+    attr_reader :tuple 
 
-    def initialize(dump)
-      @raw = dump
+    def initialize(tuple)
+      @tuple = tuple
     end
 
-    def body
+    def object
       DomainObject.new(
-        @raw.fetch(:key_attribute), 
-        @raw.fetch(:other_attribute)
+        tuple.fetch(:key_attribute), 
+        tuple.fetch(:other_attribute)
       )
     end
 
@@ -73,13 +62,13 @@ class Spec
 
   # A test double for a mapper that records commands.
   class Mapper
-    include Equalizer.new(:dumps, :inserts, :updates, :deletes)
+    include Equalizer.new(:tuples, :inserts, :updates, :deletes)
 
-    def dumps=(dumps)
-      @dumps = dumps
+    def tuples=(tuples)
+      @tuples = tuples
     end
 
-    attr_reader :inserts, :deletes, :updates, :dumps
+    attr_reader :inserts, :deletes, :updates, :tuples
 
     def initialize
       @deletes, @inserts, @updates = [], [], []
@@ -89,8 +78,8 @@ class Spec
       DomainObject
     end
 
-    def loader(dump)
-      Loader.new(dump)
+    def loader(tuple)
+      Loader.new(tuple)
     end
 
     def dumper(object)

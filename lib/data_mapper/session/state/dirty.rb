@@ -24,7 +24,7 @@ module DataMapper
         # @api private
         #
         def clean?
-          dump == old.dump
+          tuple == old.tuple
         end
         memoize :clean?
 

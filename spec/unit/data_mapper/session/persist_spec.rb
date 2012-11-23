@@ -10,7 +10,6 @@ describe DataMapper::Session, '#persist' do
   let(:identity_map)  { object.instance_variable_get(:@tracker).instance_variable_get(:@identities) }
   let(:mapping)       { DataMapper::Session::Mapping.new(mapper, domain_object)                     }
   let!(:identity)     { mapper.dumper(domain_object).identity                                       }
-  let!(:old_body)     { mapper.dumper(domain_object).body                                           }
   let!(:old_state)    { DataMapper::Session::State::Loaded.new(mapping)                             }
 
   context 'with untracked domain object' do
@@ -48,9 +47,9 @@ describe DataMapper::Session, '#persist' do
     # This is a differend test case than the attribute change. 
     # We have to make sure we cache the loaded dump and compare this to 
     # future dumps without storing a dump of an object we just loaded.
-    context 'and object is dirty from dump representation change' do
+    context 'and object is dirty from tuple generation change' do
       before do
-        new_dumper = mock(:identity => identity, :body => :other_change)
+        new_dumper = mock(:identity => identity, :tuple => :other_change)
         mapper.stub(:dumper => new_dumper)
       end
 

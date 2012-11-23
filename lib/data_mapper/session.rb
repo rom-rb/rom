@@ -165,23 +165,23 @@ module DataMapper
       self
     end
 
-    # Load a domain object from dump and track it
+    # Load a domain object from tuple and track it
     #
     # Will return already tracked object in case of identity map collision.
     #
     # @param [Mapper] mapper
     #   the mapper to load domain object with
     #
-    # @param [Object] dump
-    #   the dump representing domain object
+    # @param [Object] tuple
+    #   the tuple representing domain object
     #
     # @return [Object]
     #   the loaded domain object
     #
     # @api private
     #
-    def load(mapper, dump)
-      state = State::Loading.new(mapper, dump)
+    def load(mapper, tuple)
+      state = State::Loading.new(mapper, tuple)
 
       @tracker.fetch(state.identity) do
         state = state.loaded

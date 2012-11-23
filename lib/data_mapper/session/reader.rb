@@ -22,14 +22,14 @@ module DataMapper
 
       # Load object
       #
-      # @param [Object] body
+      # @param [Object] tuple
       #
       # @return [Object]
       #
       # @api private
       #
-      def load(body)
-        @session.load(mapper, body)
+      def load(tuple)
+        @session.load(mapper, tuple)
       end
 
     private

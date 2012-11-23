@@ -2,7 +2,7 @@ module DataMapper
   class Session
     # Abstract base class for object state
     class State
-      include AbstractClass, Adamantium::Flat, Equalizer.new(:mapping, :identity, :dump)
+      include AbstractClass, Adamantium::Flat, Equalizer.new(:mapping, :identity, :tuple)
 
       # Return mapping
       #
@@ -11,15 +11,6 @@ module DataMapper
       # @api private
       #
       attr_reader :mapping
-
-      # Return dumped representation of object
-      #
-      # @return [Dump]
-      #   the dumped representation
-      #
-      # @api private
-      #
-      attr_reader :dump
 
       # Delete domain object
       #
@@ -83,6 +74,14 @@ module DataMapper
         mapping.mapper
       end
 
+      # Return tuple
+      # 
+      # @return [Tuple]
+      #
+      # @api private
+      #
+      attr_reader :tuple
+
     private
 
       # Initialize object 
@@ -96,7 +95,7 @@ module DataMapper
       def initialize(context)
         @mapping  = context.mapping
         @identity = context.identity
-        @dump     = context.dump
+        @tuple    = context.tuple
       end
     end
   end

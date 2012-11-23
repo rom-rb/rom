@@ -54,14 +54,8 @@ module DataMapper
         self
       end
 
-      # Return new dump
-      #
-      # @return [Dump]
-      #
-      # @api private
-      #
-      def dump
-        mapper.dumper(object).body
+      def tuple
+        @mapper.dumper(object).tuple
       end
     end
   end

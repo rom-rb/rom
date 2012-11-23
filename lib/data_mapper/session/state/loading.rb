@@ -1,7 +1,7 @@
 module DataMapper
   class Session
     class State
-      # State for dumps that are loaded
+      # State for loaded objects
       class Loading < self
 
         # Return mapping
@@ -11,7 +11,7 @@ module DataMapper
         # @api private
         #
         def mapping
-          Mapping.new(@mapper, loader.body)
+          Mapping.new(@mapper, loader.object)
         end
         memoize :mapping
 
@@ -35,22 +35,22 @@ module DataMapper
         # @api private
         #
         def loader
-          @mapper.loader(@dump)
+          @mapper.loader(@tuple)
         end
         memoize :loader
 
         # Initialize object
         #
         # @param [Mapper] mapper
-        # @param [Object] dump
+        # @param [Object] tuple
         #
         # @return [undefined]
         #
         # @api private
         #
-        def initialize(mapper, dump)
-          @loader = mapper.loader(dump)
-          @mapper, @dump = mapper, dump
+        def initialize(mapper, tuple)
+          @loader = mapper.loader(tuple)
+          @mapper, @tuple = mapper, tuple
         end
       end
     end
