@@ -45,23 +45,27 @@ module DataMapper
       attr_reader :tuple
 
       class Update < self
+        include Equalizer.new(:identity, :object, :tuple, :old_tuple)
 
         # Return old tuple
         #
         # @return [Tuple]
         #
-        attr_reader :tuple
+        # @api private
+        #
+        attr_reader :old_tuple
 
         # Initialize object
         #
-        # @param [State::Dirty] state
+        # @param [State] state
+        # @param [Tuple] old_tuple
         #
         # @return [undefined]
         #
         # @api private
         #
-        def initialize(state)
-          @old_tuple = state.old.tuple
+        def initialize(state, old_tuple)
+          @old_tuple = old_tuple
           super(state)
         end
       end

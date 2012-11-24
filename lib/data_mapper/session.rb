@@ -45,10 +45,10 @@ module DataMapper
     # @api public
     #
     def delete(object)
-      mapping = mapping(object)
-      state = state(mapping)
-      state.delete
-      @tracker.delete(state.identity)
+      state = state(object)
+      old = old(state)
+      old.delete
+      @tracker.delete(old.identity)
 
       self
     end
@@ -73,8 +73,8 @@ module DataMapper
     # @api public
     #
     def include?(object)
-      mapping = mapping(object)
-      @tracker.include?(mapping.identity)
+      state = state(object)
+      @tracker.include?(state.identity)
     end
 
     # Returns whether a domain object has changes since last sync with the database
@@ -102,9 +102,9 @@ module DataMapper
     # @api public
     #
     def dirty?(object)
-      mapping = mapping(object)
-      state   = state(mapping)
-      state.dirty?(mapping)
+      state = state(object)
+      old = old(state)
+      state.dirty?(old)
     end
 
     # Do not track a domain object anymore
@@ -129,8 +129,8 @@ module DataMapper
     # @api public
     #
     def forget(object)
-      mapping = mapping(object)
-      @tracker.delete(mapping.identity)
+      state = state(object)
+      @tracker.delete(state.identity)
 
       self
     end
@@ -151,13 +151,14 @@ module DataMapper
     # @api private
     #
     def load(mapper, tuple)
-      state = State::Loading.new(mapper, tuple)
+      loader = mapper.loader(tuple)
 
-      state = @tracker.fetch(state.identity) do
-        state = state.loaded
-        @tracker.store(state)
-        state
-      end.object
+      state = @tracker.fetch(loader.identity) do
+        state = State.new(mapper, loader.object)
+        store(state)
+      end
+      
+      state.object
     end
 
     # Insert or update a domain object depending on state
@@ -184,12 +185,13 @@ module DataMapper
     # @api public
     #
     def persist(object)
-      mapping = mapping(object)
+      state = state(object)
 
-      state = @tracker.fetch(mapping.identity) { State::New }
-      state = state.persist(mapping)
-      @tracker.store(state)
+      tracked = @tracker.fetch(state.identity) do 
+        state.insert
+      end
 
+      store(state.update(tracked))
       self
     end
 
@@ -210,9 +212,9 @@ module DataMapper
       self
     end
 
-    # Return state for mapping
+    # Return old state for state
     #
-    # @param [Mapping] mapping
+    # @param [State] state
     #
     # @return [State]
     #   if object is associated with a state
@@ -222,23 +224,36 @@ module DataMapper
     #
     # @api private
     #
-    def state(mapping)
-      @tracker.fetch(mapping.identity) do
-        raise StateError, "#{mapping.object.inspect} is not tracked"
+    def old(state)
+      @tracker.fetch(state.identity) do
+        raise StateError, "#{state.object.inspect} is not tracked"
       end
     end
 
-    # Return mapping for object
+    # Store and return state
     #
-    # @param [Object] object
+    # @param [State] state
     #
-    # @return [Mapping]
+    # @return [State]
     #
     # @api private
     #
-    def mapping(object)
+    def store(state)
+      @tracker.store(state)
+      state
+    end
+
+    # Return sate for object
+    #
+    # @param [Object] object
+    #
+    # @return [State]
+    #
+    # @api private
+    #
+    def state(object)
       mapper = @registry.resolve_object(object)
-      Mapping.new(mapper, object)
+      State.new(mapper, object)
     end
   end
 end

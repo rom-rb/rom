@@ -5,7 +5,7 @@ describe DataMapper::Session, '#delete' do
   let(:registry)      { Spec::Registry.new                            }
   let(:domain_object) { Spec::DomainObject.new                             }
   let(:object)        { described_class.new(registry)                }
-  let(:mapping)       { DataMapper::Session::Mapping.new(mapper, domain_object)  }
+  let(:state)       { DataMapper::Session::State.new(mapper, domain_object)  }
 
   let(:identity_map)  { object.instance_variable_get(:@tracker).instance_variable_get(:@identities) }
 
@@ -20,7 +20,7 @@ describe DataMapper::Session, '#delete' do
 
     it 'should delete object' do
       subject
-      mapper.deletes.should eql([DataMapper::Session::Operand.new(mapping)])
+      mapper.deletes.should eql([DataMapper::Session::Operand.new(state)])
     end
 
     it 'should not track object anymore' do

@@ -3,18 +3,23 @@ require 'spec_helper'
 describe DataMapper::Session, '#persist' do
   subject { object.persist(domain_object) }
 
-  let(:mapper)        { registry.resolve_model(Spec::DomainObject)              }
-  let(:registry)      { Spec::Registry.new                                      }
-  let(:domain_object) { Spec::DomainObject.new                                  }
-  let(:object)        { described_class.new(registry)                           }
-  let(:mapping)       { DataMapper::Session::Mapping.new(mapper, domain_object) }
-  let(:old_tuple)     { mapping.tuple                                           }
-  let(:identity)      { :a                                                      }
+  let(:mapper)        { registry.resolve_model(Spec::DomainObject)            }
+  let(:registry)      { Spec::Registry.new                                    }
+  let(:domain_object) { Spec::DomainObject.new                                }
+  let(:object)        { described_class.new(registry)                         }
+  let!(:old_state)    { DataMapper::Session::State.new(mapper, domain_object) }
+  let!(:old_tuple)    { old_state.tuple                                       }
+  let(:identity)      { state.identity                                        }
 
   context 'with untracked domain object' do
-    it 'should insert update' do
+    it 'should insert' do
       subject
-      mapper.inserts.should == [mapping]
+      mapper.inserts.should == [DataMapper::Session::Operand.new(old_state)]
+    end
+
+    it 'should not update' do
+      subject
+      mapper.updates.should be_empty
     end
 
     it_should_behave_like 'a command method'
@@ -25,6 +30,7 @@ describe DataMapper::Session, '#persist' do
   context 'with tracked domain object' do
     before do
       object.persist(domain_object)
+      mapper.inserts.clear
     end
 
     shared_examples_for 'an update' do
@@ -32,17 +38,18 @@ describe DataMapper::Session, '#persist' do
         { :key_attribute => :a, :other_attribute => :dirty }
       end
 
-      let(:old_state) do
-        mock('State', :tuple => old_tuple)
-      end
-
       let(:state) do
-        mock('State', :object => domain_object, :identity => :a, :tuple => modified_tuple, :old => old_state)
+        mock('State', :object => domain_object, :identity => :a, :tuple => modified_tuple)
       end
 
       it 'should should update domain object' do
         subject
-        mapper.updates.should eql([DataMapper::Session::Operand::Update.new(state)])
+        mapper.updates.should eql([DataMapper::Session::Operand::Update.new(state, old_tuple)])
+      end
+
+      it 'should not insert' do
+        subject
+        mapper.inserts.should be_empty
       end
 
       it_should_behave_like 'a command method'
@@ -77,7 +84,12 @@ describe DataMapper::Session, '#persist' do
     context 'and object is NOT dirty' do
       it 'should not update' do
         subject
-        mapper.updates.should == []
+        mapper.updates.should be_empty
+      end
+
+      it 'should not insert' do
+        subject
+        mapper.inserts.should be_empty
       end
 
       it_should_behave_like 'a command method'

@@ -47,21 +47,21 @@ module DataMapper
       #
       # @api private
       #
-      def resolve_object(*args)
-        mapper = @registry.resolve_object(*args)
+      def resolve_object(object)
+        mapper = @registry.resolve_object(object)
         Interceptor.new(self, mapper)
       end
 
       # Resolve model
       #
-      # @param [Model]
+      # @param [Model] model
       #
       # @return [Interceptor]
       #
       # @api private
       #
-      def resolve_model(*args)
-        mapper = @registry.resolve_model(*args)
+      def resolve_model(model)
+        mapper = @registry.resolve_model(model)
         Interceptor.new(self, mapper)
       end
     end

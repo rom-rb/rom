@@ -1,24 +1,8 @@
 module DataMapper
   class Session
-    # Abstract base class for tracked state
+    # Represent an object with its mapper
     class State
-      include AbstractClass, Adamantium::Flat, Equalizer.new(:identity, :object, :tuple, :mapper)
-
-      # Return identity of object
-      #
-      # @return [Object]
-      # 
-      # @api private
-      #
-      attr_reader :identity
-
-      # Return object associated with state
-      #
-      # @return [Object]
-      #
-      # @api private
-      #
-      attr_reader :object
+      include Adamantium::Flat, Equalizer.new(:mapper, :object, :identity, :tuple)
 
       # Return mapper
       #
@@ -28,30 +12,114 @@ module DataMapper
       #
       attr_reader :mapper
 
+      # Return object
+      #
+      # @return [Object]
+      #
+      # @api private
+      #
+      attr_reader :object
+
+      # Return identity
+      #
+      # @return [Identity]
+      #
+      # @api private
+      #
+      def identity
+        dumper.identity
+      end
+      memoize :identity, :freezer => :noop
+
       # Return tuple
-      # 
+      #
       # @return [Tuple]
       #
       # @api private
       #
-      attr_reader :tuple
+      def tuple
+        dumper.tuple
+      end
+      memoize :tuple, :freezer => :noop
+
+      # Perform delete
+      #
+      # @return [self]
+      #
+      # @api private
+      #
+      def delete
+        mapper.delete(Operand.new(self))
+        self
+      end
+
+      # Perform insert
+      #
+      # @return [self]
+      #
+      # @api private
+      #
+      def insert
+        mapper.insert(Operand.new(self))
+        self
+      end
+
+      # Perform update
+      #
+      # @return [self]
+      #
+      # @api private
+      #
+      def update(old)
+        if dirty?(old)
+          mapper.update(Operand::Update.new(self, old.tuple))
+        end
+
+        self
+      end
+
+      # Test if old state is dirty?
+      #
+      # @param [State] old
+      #
+      # @return [true]
+      #   if old state is dirty
+      #
+      # @return [false]
+      #   otherwise
+      #
+      # @api private
+      #
+      def dirty?(old)
+        tuple != old.tuple
+      end
 
     private
 
-      # Initialize object 
+      # Return dumper
       #
-      # @param [Mapping, State] context
+      # @return [Dumper]
+      #
+      # @api private
+      #
+      def dumper
+        mapper.dumper(object)
+      end
+      memoize :dumper, :freezer => :noop
+
+      # Initialize object
+      #
+      # @param [Mapper] mapper
+      # @param [Object] object
       #
       # @return [undefined]
       #
       # @api private
       #
-      def initialize(context)
-        @mapper   = context.mapper
-        @identity = context.identity
-        @tuple    = context.tuple
-        @object   = context.object
+      def initialize(mapper, object)
+        @mapper, @object = mapper, object
       end
+
     end
   end
 end
