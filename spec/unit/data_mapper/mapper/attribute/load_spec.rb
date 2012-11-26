@@ -3,7 +3,15 @@ require 'spec_helper'
 describe DataMapper::Mapper::Attribute, '#load' do
   subject { attribute.load({}) }
 
-  let(:attribute) { subclass(:TestAttribute).new(:title) }
+  let(:class_under_test) do
+    klass = subclass(:TestAttribute)
+    klass.class_eval do
+      def self.inspect; name; end
+    end
+    klass
+  end
+
+  let(:attribute) { class_under_test.new(:title) }
 
   specify do
     expect { subject }.to raise_error(
