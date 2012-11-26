@@ -5,7 +5,7 @@ module DataMapper
   # @abstract
   class Engine
 
-    include AbstractClass
+    include AbstractType
 
     # Returns the database adapter used by the engine
     #

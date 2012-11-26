@@ -8,7 +8,7 @@ module DataMapper
     # @api private
     class Attribute
 
-      include AbstractClass
+      include AbstractType
 
       include Equalizer.new(:name, :type, :field, :options)
 

@@ -110,7 +110,7 @@ end # module DataMapper
 require 'abstract_class'
 
 # TODO merge this into abstract_class and add specs
-module AbstractClass
+module AbstractType
   def self.included(descendant)
     super
     descendant.instance_variable_set(:@descendant_superclass, descendant.superclass)

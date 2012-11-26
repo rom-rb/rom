@@ -7,7 +7,7 @@ module DataMapper
   # @api private
   class Relationship
 
-    include AbstractClass
+    include AbstractType
 
     # Returns foreign key name for the given class name
     #
