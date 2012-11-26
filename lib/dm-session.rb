@@ -1,7 +1,7 @@
 require 'backports'
 require 'adamantium'
 require 'equalizer'
-require 'abstract_class'
+require 'abstract_type'
 
 # Namespace module 
 module DataMapper
