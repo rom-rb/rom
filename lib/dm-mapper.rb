@@ -107,7 +107,7 @@ module DataMapper
 
 end # module DataMapper
 
-require 'abstract_class'
+require 'abstract_type'
 
 # TODO merge this into abstract_class and add specs
 module AbstractType
