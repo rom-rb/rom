@@ -156,7 +156,7 @@ module DataMapper
     # @example
     #
     #   class UserMapper < DataMapper::Mapper
-    #     belongs_to :group
+    #     belongs_to :group, Group
     #   end
     #
     # @param [Symbol]

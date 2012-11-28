@@ -7,6 +7,7 @@ module DataMapper
       def run
         finalize_mappers
         finalize_relationships
+        finalize_edges
         self
       end
 
@@ -21,26 +22,27 @@ module DataMapper
       end
 
       # @api private
+      def register_base_relation(mapper)
+        name     = mapper.relation_name
+        relation = mapper.gateway_relation
+        mapper.relations.new_node(name, relation, mapper.aliases)
+      end
+
+      # @api private
       def finalize_relationships
         mappers.each do |mapper|
-          register_relationships(mapper)
+          mapper.relationships.each do |relationship|
+            relationship.finalize(mapper_registry)
+          end
         end
       end
 
       # @api private
-      def register_base_relation(mapper)
-        name     = mapper.relation_name
-        relation = mapper.gateway_relation
-        keys     = DependentRelationshipSet.new(mapper.model, mappers).target_keys
-        aliases  = mapper.aliases.exclude(*keys)
-
-        mapper.relations.new_node(name, relation, aliases)
-      end
-
-      # @api private
-      def register_relationships(mapper)
-        mapper.relationships.each do |relationship|
-          edge_builder.call(mapper.relations, mapper_registry, relationship)
+      def finalize_edges
+        mappers.each do |mapper|
+          mapper.relationships.each do |relationship|
+            edge_builder.call(mapper.relations, mapper_registry, relationship)
+          end
         end
       end
     end # class BaseRelationMapperFinalizer

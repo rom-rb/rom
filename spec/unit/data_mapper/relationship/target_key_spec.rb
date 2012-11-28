@@ -12,13 +12,13 @@ describe Relationship, '#target_key' do
     let(:options) { {} }
 
     it 'uses #default_target_key' do
-      subject.should be(object.default_target_key)
+      subject.should eql(object.send(:default_target_key))
     end
   end
 
   context 'when :target_key is present in options' do
     let(:options)    { { :target_key => target_key } }
-    let(:target_key) { :song_id }
+    let(:target_key) { [ :song_id ] }
 
     it { should be(target_key) }
   end

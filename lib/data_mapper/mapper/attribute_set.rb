@@ -34,22 +34,16 @@ module DataMapper
         self
       end
 
-      # Aliases for a given prefix and list of names to exclude
+      # Aliases for a given prefix
       #
       # @param [Symbol] prefix
-      #   the prefix used for aliasing non-excluded fields
+      #   the prefix used for aliasing fields
       #
-      # @param [Array] excluded
-      #   the list of fields to exclude from aliasing
-      #
-      # @return [Hash]
+      # @return [Aliases]
       #
       # @api private
-      def alias_index(prefix, excluded = [])
-        primitives.each_with_object({}) { |attribute, index|
-          next if excluded.include?(attribute.name)
-          index[attribute.field] = attribute.aliased_field(prefix)
-        }
+      def aliases(prefix)
+        aliases_class.new(aliased_field_map(prefix), original_aliases(prefix))
       end
 
       # Return the result of merging within a new instance
@@ -238,6 +232,10 @@ module DataMapper
         header.map(&:first)
       end
 
+      def aliased_fields(prefix)
+        fields.map { |field| Attribute.aliased_field(field, prefix) }
+      end
+
       # Load a tuple
       #
       # @see Attribute#load
@@ -261,6 +259,29 @@ module DataMapper
       # @api private
       def key
         select(&:key?)
+      end
+
+      private
+
+      def aliases_class
+        Relation::Aliases::Unary
+      end
+
+      def aliased_field_map(prefix)
+        field_map(prefix, true)
+      end
+
+      def original_aliases(prefix)
+        field_map(prefix, false)
+      end
+
+      def field_map(prefix, aliased_key)
+        primitives.each_with_object({}) { |attribute, hash|
+          aliased_field = attribute.aliased_field(prefix)
+          key = aliased_key ? aliased_field : attribute.field
+
+          hash[key] = aliased_field
+        }
       end
     end # class AttributeSet
   end # class Mapper

@@ -5,68 +5,92 @@ describe Mapper::Builder, '#mapper' do
 
   let(:object) { described_class.new(connector) }
 
-  let(:source_model) { mock_model('User')  }
-  let(:target_model) { mock_model('Order') }
+  let(:mapper_registry) do
+    # TODO think about injecting mapper_registry into Connector
+    mapper_registry = DataMapper::Mapper.mapper_registry
 
-  let(:is_via)               { false }
-  let(:via)                  { nil   }
-  let(:is_collection_target) { true  }
+    [ song_mapper, song_tag_mapper, tag_mapper ].each do |mapper|
+      mapper_registry.register(mapper)
+    end
 
-  let(:relation)     { mock('relation') }
-  let(:relationship) { mock('relationship', :name => :orders) }
+    mapper_registry
+  end
 
-  let(:source_attributes)   { Mapper::AttributeSet.new << Mapper::Attribute.build(:id, :type => Integer) << Mapper::Attribute.build(:name, :type => String, :to => :username) }
-  let(:source_mapper_class) { mock_mapper(source_model, source_attributes) }
+  let(:relations) { song_mapper.relations }
 
-  let(:target_attributes)   { Mapper::AttributeSet.new << Mapper::Attribute.build(:id, :type => Integer) << Mapper::Attribute.build(:user_id, :type => Integer) << Mapper::Attribute.build(:product, :type => String) }
-  let(:target_mapper_class) { mock_mapper(target_model, target_attributes)}
+  let(:song_mapper)            { mock_mapper(song_model, song_attributes, song_relationships).new(songs_relation) }
+  let(:song_model)             { mock_model('Song') }
+  let(:songs_relation)         { mock_relation(:songs) }
+  let(:song_attributes)        { [ songs_id, songs_title ] }
+  let(:songs_id)               { mock_attribute(:id,    Integer, :key => true) }
+  let(:songs_title)            { mock_attribute(:title, String) }
+  let(:song_relationships)     { [ songs_song_tags_relationship, songs_tags_relationship ] }
 
-  let(:relations) { source_mapper_class.relations }
+  let(:song_tag_mapper)        { mock_mapper(song_tag_model, song_tag_attributes, song_tag_relationships).new(song_tags_relation) }
+  let(:song_tag_model)         { mock_model('SongTag') }
+  let(:song_tags_relation)     { mock_relation(:song_tags) }
+  let(:song_tag_attributes)    { [ song_tags_song_id, song_tags_tag_id ] }
+  let(:song_tags_song_id)      { mock_attribute(:song_id, Integer, :key => true) }
+  let(:song_tags_tag_id)       { mock_attribute(:tag_id,  Integer, :key => true) }
+  let(:song_tag_relationships) { [ song_tags_song_relationship, song_tags_tag_relationship ] }
+
+  let(:tag_mapper)             { mock_mapper(tag_model, tag_attributes, []).new(tags_relation) }
+  let(:tag_model)              { mock_model('Tag') }
+  let(:tags_relation)          { mock_relation(:tags) }
+  let(:tag_attributes)         { [ tags_id, tags_name ] }
+  let(:tags_id)                { mock_attribute(:id,   Integer, :key => true) }
+  let(:tags_name)              { mock_attribute(:name, String) }
+
+  let(:songs_song_tags_relationship) { Relationship::OneToMany. new(:song_tags, song_model,     song_tag_model) }
+  let(:song_tags_song_relationship)  { Relationship::ManyToOne. new(:song,      song_tag_model, song_model) }
+  let(:song_tags_tag_relationship)   { Relationship::ManyToOne. new(:tag,       song_tag_model, tag_model) }
+  let(:songs_tags_relationship)      { Relationship::ManyToMany.new(:tags,      song_model,     tag_model,  :through => :song_tags, :via => :tag) }
+
+  before do
+    mapper_registry.each do |_, mapper|
+      name     = mapper.relation_name
+      relation = mapper.class.gateway_relation
+
+      mapper.relations.new_node(name, relation, mapper.class.aliases)
+    end
+
+    mapper_registry.each do |_, mapper|
+      mapper.relationships.each do |relationship|
+        relationship.finalize(mapper_registry)
+      end
+    end
+
+    mapper_registry.each do |_, mapper|
+      mapper.relationships.each do |relationship|
+        RelationRegistry::Builder.call(mapper.relations, mapper_registry, relationship)
+      end
+    end
+
+    subject
+  end
 
   context "when connector is not via other" do
-    let(:connector) {
-      mock_connector(
-        :name               => :orders,
-        :left               => mock_node(:users),
-        :right              => mock_node(:orders),
-        :source_mapper      => source_mapper_class.new(relation),
-        :source_model       => source_model,
-        :target_model       => target_model,
-        :source_name        => :users,
-        :target_name        => :orders,
-        :source_aliases     => AliasSet.new(:user, source_attributes),
-        :target_aliases     => AliasSet.new(:order, target_attributes, [ :user_id ]),
-        :collection_target? => is_collection_target,
-        :relationship       => relationship,
-        :relation           => relation,
-        :relations          => relations
-      )
-    }
 
-    before do
-      DataMapper.mapper_registry << target_mapper_class.new(relation)
-      source_mapper_class.relations.add_connector(connector)
-    end
+    let(:connector) { relations.connectors[:songs_X_song_tags] }
 
     it { should be_kind_of(Mapper::Relation) }
 
     it "remaps source model attributes" do
-      subject.attributes[:id].field.should eql(:user_id)
-      subject.attributes[:name].field.should eql(:user_username)
+      subject.attributes[:id].field.should eql(:song_tags_song_id)
+      subject.attributes[:title].field.should eql(:songs_title)
     end
 
     it "sets embedded collection attribute" do
-      user_orders = subject.attributes[:orders]
+      user_orders = subject.attributes[:song_tags]
 
       user_orders.should be_instance_of(Mapper::Attribute::EmbeddedCollection)
     end
 
     it "remaps target model attributes" do
-      target_mapper = subject.attributes[:orders].mapper
+      target_mapper = subject.attributes[:song_tags].mapper
 
-      target_mapper.attributes[:id].field.should eql(:order_id)
-      target_mapper.attributes[:user_id].field.should eql(:user_id)
-      target_mapper.attributes[:product].field.should eql(:order_product)
+      target_mapper.attributes[:song_id].field.should eql(:song_tags_song_id)
+      target_mapper.attributes[:tag_id].field.should eql(:song_tags_tag_id)
     end
 
     it "extends the mapper with OneToMany iterator" do
@@ -75,66 +99,15 @@ describe Mapper::Builder, '#mapper' do
   end
 
   context "when connector is via other" do
-    let(:via_relationship) { mock('relationship', :name => via) }
-
-    let(:is_via)         { true }
-    let(:via)            { :user_order_infos }
-    let(:other_relation) { mock('other_relation') }
-
-    let(:via_source_model)        { mock_model('UserOrderInfo')  }
-    let(:via_source_attributes)   { Mapper::AttributeSet.new << Mapper::Attribute.build(:user_id, :type => Integer) << Mapper::Attribute.build(:order_id, :type => Integer) }
-    let(:via_source_mapper_class) { mock_mapper(via_source_model, via_source_attributes) }
-
-    let(:connector) {
-      mock_connector(
-        :name               => :users_X_user_order_infos_X_orders,
-        :left               => mock_node(:users),
-        :right              => mock_node(:user_order_infos_X_orders),
-        :source_mapper      => source_mapper_class.new(relation),
-        :source_model       => source_model,
-        :target_model       => target_model,
-        :source_name        => :users,
-        :target_name        => :user_order_infos_X_orders,
-        :source_aliases     => AliasSet.new(:user, source_attributes, [ :name ]),
-        :target_aliases     => AliasSet.new(:order, target_attributes, [ :user_id, :product ]),
-        :collection_target? => is_collection_target,
-        :relationship       => relationship,
-        :relation           => relation,
-        :relations          => relations
-      )
-    }
-
-    let(:via_connector) {
-      mock_connector(
-        :name               => :user_order_infos_X_orders,
-        :left               => mock_node(:orders),
-        :right              => mock_node(:user_order_infos),
-        :source_mapper      => source_mapper_class.new(other_relation),
-        :source_name        => :user_order_infos,
-        :target_name        => :orders,
-        :source_model       => via_source_model,
-        :target_model       => target_model,
-        :source_aliases     => AliasSet.new(:user_order_info, via_source_attributes, [ :user_id, :order_id ]),
-        :target_aliases     => AliasSet.new(:order, target_attributes, [ :user_id, :product ]),
-        :relationship       => via_relationship,
-        :collection_target? => true,
-        :relation           => other_relation,
-        :relations          => relations
-      )
-    }
-
-    before do
-      DataMapper.mapper_registry << target_mapper_class.new(relation)
-      DataMapper.mapper_registry << via_source_mapper_class.new(other_relation)
-
-      source_mapper_class.relations.add_connector(connector)
-      source_mapper_class.relations.add_connector(via_connector)
-    end
+    let(:connector) { relations.connectors[:songs_X_song_tags_X_tags] }
 
     it { should be_kind_of(Mapper::Relation) }
 
     it "remaps target model attributes using connector aliases" do
-      subject.attributes[:orders].mapper.attributes[:product].field.should eql(:product)
+      target_mapper = subject.attributes[:tags].mapper
+
+      target_mapper.attributes[:id].field.should eql(:tags_id)
+      target_mapper.attributes[:name].field.should eql(:tags_name)
     end
   end
 end

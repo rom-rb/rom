@@ -6,7 +6,5 @@ describe Mapper::Relation, '.aliases' do
   let(:object) { Class.new(Mapper::Relation).relation_name(name) }
   let(:name)   { :users }
 
-  it { should be_instance_of(AliasSet) }
-
-  its(:prefix) { should be(:user) }
+  it { should be_instance_of(Mapper::Relation::Aliases::Unary) }
 end

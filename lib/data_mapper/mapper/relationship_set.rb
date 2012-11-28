@@ -40,24 +40,7 @@ module DataMapper
         @entries.size
       end
 
-      def find_dependent(model)
-        direct_targets     = direct_targets(model)
-        transitive_targets = transitive_targets(direct_targets)
-
-        self.class.new(direct_targets.concat(transitive_targets))
-      end
-
       private
-
-      # @api private
-      def direct_targets(model)
-        select { |entry| entry.target_model.equal?(model) }
-      end
-
-      # @api private
-      def transitive_targets(relationships)
-        select { |entry| relationships.include?(self[entry.through]) }
-      end
 
       # @api private
       def merge(other)

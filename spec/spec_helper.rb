@@ -95,6 +95,12 @@ RSpec.configure do |config|
     AliasSet.new(prefix, attribute_set)
   end
 
+  def mock_join_definition(left_name, right_name, left_keys, right_keys)
+    left  = Relationship::JoinDefinition::Side.new(left_name,  left_keys)
+    right = Relationship::JoinDefinition::Side.new(right_name, right_keys)
+    Relationship::JoinDefinition.new(left, right)
+  end
+
   class TestEngine < DataMapper::Engine::VeritasEngine
     def initialize(uri)
       @relations = DataMapper::RelationRegistry.new(self)

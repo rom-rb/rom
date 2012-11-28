@@ -12,6 +12,26 @@ module DataMapper
 
       include Equalizer.new(:name, :type, :field, :options)
 
+      # Return an aliasd +field_name+ by prefixing +prefix+
+      #
+      # @example
+      #
+      #   Attribute.aliased(:title, :songs) # => :songs_title
+      #
+      # @param [#to_s] field
+      #   the field to alias
+      #
+      # @param [#to_s] prefix
+      #   the prefix to use for aliasing
+      #
+      # @return [Symbol]
+      #   the aliased field name
+      #
+      # @api private
+      def self.aliased_field(field, prefix)
+        :"#{prefix}_#{field}"
+      end
+
       # The attribute's name
       #
       # @example
@@ -133,14 +153,16 @@ module DataMapper
 
       # Return an aliased field name given a prefix
       #
-      # @param [Symbol, String] prefix
+      # @see Attribute.aliased
+      #
+      # @param [#to_s] prefix
       #   the prefix to use for aliasing
       #
       # @return [Symbol]
       #
       # @api private
       def aliased_field(prefix)
-        :"#{prefix}_#{field}"
+        self.class.aliased_field(field, prefix)
       end
 
       # Load this attribute's value from a tuple

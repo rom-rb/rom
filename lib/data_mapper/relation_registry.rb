@@ -75,7 +75,7 @@ module DataMapper
     #
     # @api private
     def add_connector(connector)
-      @connectors[connector.name] = connector
+      @connectors[connector.name.to_sym] = connector
       self
     end
 
@@ -173,16 +173,16 @@ module DataMapper
       self[relation.name.to_sym]
     end
 
-    # Returns an edge for the given left/right nodes
+    # Returns the edge with the given name
     #
-    # @param [RelationNode] left relation node
-    # @param [RelationNode] right relation node
+    # @param [#to_sym] name
+    #   the edge's name
     #
     # @return [RelationEdge, nil]
     #
     # @api private
-    def edge_for(left, right)
-      edges.detect { |edge| edge.left.equal?(left) && edge.right.equal?(right) }
+    def edge_for(name)
+      edges.detect { |edge| edge.name.to_sym == name.to_sym }
     end
 
   end # class RelationRegistry

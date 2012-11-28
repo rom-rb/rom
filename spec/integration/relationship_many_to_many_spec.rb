@@ -49,7 +49,7 @@ describe 'Relationship - Many To Many with generated mappers' do
       map :name, String
 
       has 0..n, :song_tags, SongTag
-      has 0..n, :songs, Song, :through => :song_tags
+      has 0..n, :songs, Song, :through => :song_tags, :via => :song
     end
 
     class SongTagMapper < DataMapper::Mapper::Relation
@@ -60,6 +60,9 @@ describe 'Relationship - Many To Many with generated mappers' do
 
       map :song_id, Integer, :key => true
       map :tag_id,  Integer, :key => true
+
+      belongs_to :song, Song
+      belongs_to :tag,  Tag
     end
 
     class SongMapper < DataMapper::Mapper::Relation
@@ -72,10 +75,10 @@ describe 'Relationship - Many To Many with generated mappers' do
 
       has 0..n, :song_tags, SongTag
 
-      has 0..n, :tags, Tag, :through => :song_tags
+      has 0..n, :tags, Tag, :through => :song_tags, :via => :tag
 
-      has 0..n, :good_tags, Tag, :through => :song_tags do
-        restrict { |r| r.tag_name.eq('good') }
+      has 0..n, :good_tags, Tag, :through => :song_tags, :via => :tag do
+        restrict { |r| r.tags_name.eq('good') }
       end
     end
   end
@@ -100,8 +103,6 @@ describe 'Relationship - Many To Many with generated mappers' do
   end
 
   it 'loads associated tags for songs' do
-    pending "this passes when run in isolation. probably some post-run clean up issue" if RUBY_VERSION < '1.9'
-
     mapper = DataMapper[Song].include(:tags)
     songs  = mapper.to_a
 
@@ -116,9 +117,10 @@ describe 'Relationship - Many To Many with generated mappers' do
     song2.title.should eql('bar')
     song2.tags.should have(1).item
     song2.tags.first.name.should eql('bad')
+
   end
 
-  it 'loads associated tags with name = good' do
+  it 'loads associated tags with name = good for songs' do
     mapper = DataMapper[Song].include(:good_tags)
     songs  = mapper.include(:good_tags).to_a
 
@@ -148,7 +150,7 @@ describe 'Relationship - Many To Many with generated mappers' do
     tag2.song_tags.first.tag_id.should eql(tag2.id)
   end
 
-  it 'loads associated songs' do
+  it 'loads associated songs for tags' do
     mapper = DataMapper[Tag].include(:songs)
     tags   = mapper.to_a
 

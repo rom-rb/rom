@@ -12,13 +12,13 @@ describe Relationship, '#source_key' do
     let(:options) { {} }
 
     it 'uses #default_source_key' do
-      subject.should be(object.default_source_key)
+      subject.should be(object.send(:default_source_key))
     end
   end
 
   context 'when :source_key is present in options' do
     let(:options)    { { :source_key => source_key } }
-    let(:source_key) { :id }
+    let(:source_key) { [ :id ] }
 
     it { should be(source_key) }
   end

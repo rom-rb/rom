@@ -12,28 +12,6 @@ describe 'Relationship - One To One with generated mapper' do
     insert_address 2, 2, 'Street 1/2', 'Chicago', '54321'
     insert_address 3, 1, 'Street 2/4', 'Boston',  '67890'
 
-    class Address
-      attr_reader :id, :street, :city, :zipcode
-
-      def initialize(attributes)
-        @id, @street, @city, @zipcode = attributes.values_at(
-          :id, :street, :city, :zipcode)
-      end
-
-      class Mapper < DataMapper::Mapper::Relation
-
-        model         Address
-        relation_name :addresses
-        repository    :postgres
-
-        map :id,      Integer, :key => true
-        map :user_id, Integer
-        map :street,  String
-        map :city,    String
-        map :zipcode, String
-      end
-    end
-
     class User
       attr_reader :id, :name, :age, :address, :home_address
 
@@ -42,23 +20,47 @@ describe 'Relationship - One To One with generated mapper' do
         @address         = attributes[:address]
         @home_address    = attributes[:home_address]
       end
+    end
 
-      class Mapper < DataMapper::Mapper::Relation
+    class Address
+      attr_reader :id, :street, :city, :zipcode, :user
 
-        model         User
-        relation_name :users
-        repository    :postgres
-
-        map :id,   Integer, :key => true
-        map :name, String,  :to  => :username
-        map :age,  Integer
-
-        has 1, :address, Address
-
-        has 1, :home_address, Address do
-          restrict { |r| r.address_city.eq('Krakow') }
-        end
+      def initialize(attributes)
+        @id, @street, @city, @zipcode, @user = attributes.values_at(
+          :id, :street, :city, :zipcode, :user)
       end
+    end
+
+    class UserMapper < DataMapper::Mapper::Relation
+
+      model         User
+      relation_name :users
+      repository    :postgres
+
+      map :id,   Integer, :key => true
+      map :name, String,  :to  => :username
+      map :age,  Integer
+
+      has 1, :address, Address
+
+      has 1, :home_address, Address do
+        restrict { |r| r.addresses_city.eq('Krakow') }
+      end
+    end
+
+    class AddressMapper < DataMapper::Mapper::Relation
+
+      model         Address
+      relation_name :addresses
+      repository    :postgres
+
+      map :id,      Integer, :key => true
+      map :user_id, Integer
+      map :street,  String
+      map :city,    String
+      map :zipcode, String
+
+      belongs_to :user, User
     end
   end
 
@@ -100,7 +102,7 @@ describe 'Relationship - One To One with generated mapper' do
 
   it 'finds users with matching address' do
     user_address_mapper = user_mapper.include(:address)
-    users               = user_address_mapper.restrict { |r| r.address_city.eq('Krakow') }.to_a
+    users               = user_address_mapper.restrict { |r| r.addresses_city.eq('Krakow') }.to_a
 
     users.should have(1).item
 

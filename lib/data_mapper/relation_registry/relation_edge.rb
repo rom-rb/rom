@@ -19,12 +19,12 @@ module DataMapper
       # @api private
       attr_reader :target_node
 
-      # The map specifying the field names to join on
+      # The object specifying how to perform the join
       #
-      # @return [JoinKeyMap]
+      # @return [Relationship::JoinDefinition]
       #
       # @api private
-      attr_reader :join_key_map
+      attr_reader :join_definition
 
       # Initializes a relation edge instance
       #
@@ -40,11 +40,12 @@ module DataMapper
       # @return [undefined]
       #
       # @api private
-      def initialize(name, source_node, target_node, join_key_map)
-        super(name, source_node, target_node)
-        @source_node  = source_node
-        @target_node  = target_node
-        @join_key_map = join_key_map
+      def initialize(name, source_node, target_node)
+        super
+
+        @source_node     = source_node
+        @target_node     = target_node
+        @join_definition = name.relationship.join_definition
       end
 
       # Builds a joined relation from source and target nodes
@@ -52,7 +53,7 @@ module DataMapper
       # @return [Object] instance of the engine's relation class
       #
       # @api private
-      def relation(*args)
+      def node(*args)
         source_node.join(target_node, *args)
       end
 
@@ -91,8 +92,6 @@ module DataMapper
       def target_name
         target_node.name
       end
-
     end # class RelationEdge
-
   end # class RelationRegistry
 end # module DataMapper

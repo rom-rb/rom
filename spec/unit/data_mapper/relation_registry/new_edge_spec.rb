@@ -1,18 +1,24 @@
 require 'spec_helper'
 
 describe RelationRegistry, '#new_edge' do
-  subject { object.new_edge(name, left, right, join_key_map) }
+  subject { object.new_edge(name, left, right) }
 
   let(:object) { described_class.new(TEST_ENGINE) }
 
-  let(:name)         { 'users' }
-  let(:left)         { mock('left') }
-  let(:right)        { mock('right') }
-  let(:join_key_map) { mock('join_key_map') }
+  let(:name)           { mock('users', :to_sym => :users, :relationship => relationship) }
+  let(:relationship)   { mock('relationship', :join_definition => mock) }
+
+  let(:left)           { mock('left',  :aliases => left_aliases, :relation => left_relation) }
+  let(:left_aliases)   { mock('left_aliases', :join => {}) }
+  let(:left_relation)  { mock('left_relation', :rename => mock) }
+
+  let(:right)          { mock('right', :aliases => right_aliases, :relation => right_relation) }
+  let(:right_aliases)  { mock('right_aliases', :join => {}) }
+  let(:right_relation) { mock('right_relation', :rename => mock) }
 
   it { should be(object) }
 
   it "adds a new edge" do
-    subject.edge_for(left, right).should be_instance_of(TEST_ENGINE.relation_edge_class)
+    subject.edge_for(name).should be_instance_of(TEST_ENGINE.relation_edge_class)
   end
 end

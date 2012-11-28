@@ -6,7 +6,7 @@ module DataMapper
     # @api private
     class Builder
 
-      # Build new nodes, edges and a connector for +relationship+
+      # Build new node(s), edge(s) and a connector for +relationship+
       #
       # @see RelationNode
       # @see RelationEdge
@@ -31,70 +31,57 @@ module DataMapper
       private
 
       def initialize(relations, mappers, relationship)
-        @relations    = relations
-        @mappers      = mappers
-        @relationship = relationship
-        @node_names   = node_name_set
+        @relations     = relations
+        @mappers       = mappers
+        @relationship  = relationship
+        @node_name_set = NodeNameSet.new(@relationship, @mappers)
 
         build
       end
 
       def build
-        build_connector(*build_relation_nodes)
+        idx, size = 0, @node_name_set.count
+
+        nodes = @node_name_set.map { |node_name|
+          left, right  = nodes(node_name)
+          relationship = node_name.relationship
+
+          edge = build_edge(node_name, left, right)
+          node = edge.node(relationship, operation(relationship, idx, size))
+
+          @relations.add_node(node)
+
+          idx += 1
+
+          node
+        }
+
+        build_connector(nodes.last)
       end
 
-      def build_relation_nodes
-        nodes = @node_names.map do |node_name|
-          edge = build_edge(@relationship.name, *nodes(node_name))
-          build_node(node_name, *build_relation(edge, relationship(node_name)))
-        end
-
-        [ @node_names.last, nodes.last ]
+      # TODO refactor this
+      def operation(relationship, node_name_set_idx, node_name_set_size)
+        last_join = node_name_set_idx == node_name_set_size - 1
+        last_join ? @relationship.operation : relationship.operation
       end
 
-      def build_edge(name, left, right)
-        edge = @relations.edge_for(left, right)
+      def build_edge(node_name, left, right)
+        edge = @relations.edge_for(node_name)
 
         unless edge
-          edge = @relations.build_edge(name, left, right, join_key_map)
+          edge = @relations.build_edge(node_name, left, right)
           @relations.add_edge(edge)
         end
 
         edge
       end
 
-      def build_relation(edge, relationship)
-        node = edge.relation(relationship)
-
-        [ relation(node, relationship), node.aliases ]
+      def build_connector(node)
+        @relations.add_connector(connector(node))
       end
 
-      def build_node(name, relation, aliases)
-        @relations.new_node(name, relation, aliases) unless @relations[name]
-        @relations[name]
-      end
-
-      def build_connector(name, node)
-        @relations.add_connector(connector(name, node))
-      end
-
-      def relation(node, relationship)
-        operation = relationship.operation
-        relation  = node.relation
-        relation  = relation.instance_eval(&operation) if operation
-        relation
-      end
-
-      def connector(name, node)
-        Connector.new(name, node, @relationship, @relations)
-      end
-
-      def node_name_set
-        NodeNameSet.new(@relationship, @mappers)
-      end
-
-      def join_key_map
-        JoinKeyMap.new(left_key, right_key)
+      def connector(node)
+        Connector.new(node, @relationship, @relations)
       end
 
       def nodes(node_name)
@@ -106,27 +93,11 @@ module DataMapper
       end
 
       def right_node(node_name)
-        @relations[node_name.to_a.last] || @relations[node_name.right]
+        @relations[node_name.right] || target_mapper(node_name).relation
       end
 
-      def left_key
-        Array(@relationship.source_key)
-      end
-
-      def right_key
-        Array(@relationship.target_key)
-      end
-
-      def source_mapper
-        @mappers[@relationship.source_model]
-      end
-
-      def source_relationships
-        source_mapper.relationships
-      end
-
-      def relationship(node_name)
-        source_relationships[node_name.relationship.name]
+      def target_mapper(node_name)
+        @mappers[node_name.relationship.target_model]
       end
     end # class Builder
   end # class RelationRegistry

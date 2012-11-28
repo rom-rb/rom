@@ -55,9 +55,11 @@ describe 'Relationship - One To One through with generated mappers' do
       relation_name :song_tags
       repository    :postgres
 
-      map :id,      Integer, :key => true
-      map :song_id, Integer
-      map :tag_id,  Integer
+      map :song_id, Integer, :key => true
+      map :tag_id,  Integer, :key => true
+
+      belongs_to :song, Song
+      belongs_to :tag,  Tag
     end
 
     class SongMapper < DataMapper::Mapper::Relation
@@ -70,17 +72,15 @@ describe 'Relationship - One To One through with generated mappers' do
 
       has 1, :song_tag, SongTag
 
-      has 1, :tag, Tag, :through => :song_tag, :target_key => :tag_id
+      has 1, :tag, Tag, :through => :song_tag, :via => :tag
 
-      has 1, :good_tag, Tag, :through => :song_tag do
-        restrict { |r| r.tag_name.eq('good') }
+      has 1, :good_tag, Tag, :through => :song_tag, :via => :tag do
+        restrict { |r| r.tags_name.eq('good') }
       end
     end
   end
 
   it 'loads associated tag' do
-    pending "this passes when run in isolation. probably some post-run clean up issue" if RUBY_VERSION < '1.9'
-
     mapper = DataMapper[Song].include(:tag)
     songs  = mapper.to_a
 

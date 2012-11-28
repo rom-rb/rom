@@ -98,24 +98,35 @@ module DataMapper
     # @api private
     attr_reader :options
 
+    # The information needed to perform this relationship's join
+    #
+    # @return [nil]
+    #   if this relationship hasn't been finalized yet
+    #
+    # @return [JoinDefinition]
+    #   the object defining how to perform the join
+    #
+    # @api private
+    attr_reader :join_definition
+
     # Initializes relationship options instance
     #
-    # @param [String,Symbol,#to_sym] name
+    # @param [#to_sym] name
     # @param [Class] source model
     # @param [Class] target model
-    # @param [Hash] options
+    # @param [#to_hash] options
     #
     # @return [undefined]
     #
     # @api private
     def initialize(name, source_model, target_model, options = {})
       @name         = name.to_sym
-      @options      = options
+      @options      = options.to_hash
 
       @source_model = source_model
       @target_model = target_model || options.fetch(:model)
-      @source_key   = options[:source_key] || default_source_key
-      @target_key   = options[:target_key] || default_target_key
+      @source_key   = Array(options[:source_key] || default_source_key).freeze
+      @target_key   = Array(options[:target_key] || default_target_key).freeze
 
       @through      = options[:through]
       @via          = options[:via]
@@ -125,22 +136,11 @@ module DataMapper
       @max = options.fetch(:max, 1)
     end
 
-    # Returns default name of the source key
-    #
-    # @return [Symbol,nil]
-    #
-    # @api private
-    def default_source_key
-      nil
-    end
-
-    # Returns default name of the target key
-    #
-    # @return [Symbol,nil]
-    #
-    # @api private
-    def default_target_key
-      nil
+    def finalize(mapper_registry)
+      return self if @finalized
+      finalize_join_definition(mapper_registry)
+      @finalized = true
+      self
     end
 
     # Returns if the target is a collection or a single object
@@ -150,6 +150,43 @@ module DataMapper
     # @api private
     def collection_target?
       false
+    end
+
+    private
+
+    DEFAULT_SOURCE_KEY = [ :id ].freeze
+
+    # Returns default name of the source key
+    #
+    # @return [Symbol,nil]
+    #
+    # @api private
+    def default_source_key
+      DEFAULT_SOURCE_KEY
+    end
+
+    # Returns default name of the target key
+    #
+    # @return [Symbol,nil]
+    #
+    # @api private
+    def default_target_key
+      [].freeze
+    end
+
+    def finalize_join_definition(mapper_registry)
+      left  = join_side(mapper_registry, source_model, source_key)
+      right = join_side(mapper_registry, target_model, target_key)
+
+      @join_definition = JoinDefinition.new(left, right)
+    end
+
+    def join_side(mapper_registry, model, key)
+      JoinDefinition::Side.new(relation_name(mapper_registry, model), key)
+    end
+
+    def relation_name(mapper_registry, model)
+      mapper_registry[model].relation_name
     end
   end # class Relationship
 end # module DataMapper

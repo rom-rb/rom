@@ -53,7 +53,7 @@ describe 'Relationship - One To Many with generated mapper' do
       has 0..n, :orders, Order
 
       has 0..n, :apple_orders, Order do
-        restrict { |r| r.order_product.eq('Apple') }
+        restrict { |r| r.orders_product.eq('Apple') }
       end
     end
 

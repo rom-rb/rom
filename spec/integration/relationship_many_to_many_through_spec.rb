@@ -69,6 +69,8 @@ describe 'Relationship - Many To Many with generated mappers' do
 
       map :id,   Integer, :key => true
       map :name, String
+
+      has 0..n, :infos, Info
     end
 
     class InfoMapper < DataMapper::Mapper::Relation
@@ -80,6 +82,10 @@ describe 'Relationship - Many To Many with generated mappers' do
       map :id,     Integer, :key => true
       map :tag_id, Integer
       map :text,   String
+
+      belongs_to :tag, Tag
+
+      has 0..n, :info_contents, InfoContent
     end
 
     class InfoContentMapper < DataMapper::Mapper::Relation
@@ -91,6 +97,8 @@ describe 'Relationship - Many To Many with generated mappers' do
       map :id,      Integer, :key => true
       map :info_id, Integer
       map :content, String
+
+      belongs_to :info, Info
     end
 
     class SongTagMapper < DataMapper::Mapper::Relation
@@ -101,6 +109,9 @@ describe 'Relationship - Many To Many with generated mappers' do
 
       map :song_id, Integer, :key => true
       map :tag_id,  Integer, :key => true
+
+      belongs_to :song, Song
+      belongs_to :tag,  Tag
     end
 
     class SongMapper < DataMapper::Mapper::Relation
@@ -113,25 +124,27 @@ describe 'Relationship - Many To Many with generated mappers' do
 
       has 0..n, :song_tags, SongTag
 
-      has 0..n, :tags, Tag, :through => :song_tags
+      has 0..n, :tags, Tag, :through => :song_tags, :via => :tag
 
-      has 0..n, :good_tags, Tag, :through => :song_tags do
-        restrict { |r| r.tag_name.eq('good') }
+      has 0..n, :good_tags, Tag, :through => :song_tags, :via => :tag do
+        restrict { |r| r.tags_name.eq('good') }
       end
 
-      has 0..n, :infos, Info, :through => :tags, :target_key => :tag_id
+      has 0..n, :infos, Info, :through => :tags, :via => :infos
 
-      has 0..n, :good_infos, Info, :through => :good_tags, :target_key => :tag_id
+      has 0..n, :good_infos, Info, :through => :good_tags, :via => :infos
 
-      has 0..n, :info_contents, InfoContent, :through => :infos, :target_key => :info_id
+      has 0..n, :info_contents, InfoContent, :through => :infos, :via => :info_contents
 
-      has 0..n, :good_info_contents, InfoContent, :through => :infos do
-        restrict { |r| r.info_content_content.eq('really, really good') }
+      has 0..n, :good_info_contents, InfoContent, :through => :infos, :via => :info_contents do
+        restrict { |r| r.info_contents_content.eq('really, really good') }
       end
     end
   end
 
-  it 'loads associated tag infos' do
+  it 'loads associated :infos for songs' do
+    Spec.draw_relation_registry('many_to_many_through.png')
+
     mapper = DataMapper[Song].include(:infos)
 
     songs = mapper.to_a
@@ -151,7 +164,7 @@ describe 'Relationship - Many To Many with generated mappers' do
     song2.infos.first.text.should eql('really bad')
   end
 
-  it 'loads associated good infos' do
+  it 'loads associated :good_infos for songs' do
     mapper = DataMapper[Song].include(:good_infos)
 
     songs = mapper.to_a
@@ -166,9 +179,7 @@ describe 'Relationship - Many To Many with generated mappers' do
     song.good_infos.first.text.should eql('really good')
   end
 
-  it 'loads associated tag info contents' do
-    pending "this passes when run in isolation. probably some post-run clean up issue" if RUBY_VERSION < '1.9'
-
+  it 'loads associated tag :info_contents for songs' do
     mapper = DataMapper[Song].include(:info_contents)
     songs = mapper.to_a
 
@@ -187,7 +198,7 @@ describe 'Relationship - Many To Many with generated mappers' do
     song2.info_contents.first.content.should eql('really, really bad')
   end
 
-  it 'loads associated restricted tag info contents' do
+  it 'loads associated :good_info_contents for songs' do
     mapper = DataMapper[Song].include(:good_info_contents)
     songs = mapper.to_a
 

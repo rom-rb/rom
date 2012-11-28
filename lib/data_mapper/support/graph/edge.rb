@@ -59,7 +59,7 @@ class Graph
     #
     # @api private
     def initialize(name, left, right)
-      @name  = name.to_sym
+      @name  = name
       @left  = left
       @right = right
       @nodes = Set[ left, right ]

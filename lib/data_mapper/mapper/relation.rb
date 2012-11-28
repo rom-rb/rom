@@ -172,7 +172,7 @@ module DataMapper
       #
       # @api private
       def self.aliases
-        @aliases ||= AliasSet.new(relation_name, attributes)
+        @aliases ||= attributes.aliases(relation_name)
       end
 
       # Perform finalization

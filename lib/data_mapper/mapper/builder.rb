@@ -35,49 +35,36 @@ module DataMapper
       # @api private
       def initialize(connector)
         @connector     = connector
-        @source_model  = connector.source_model
-        @target_model  = connector.target_model
-        @source_mapper = connector.source_mapper.class
-        @name          = connector.relationship.name
+        @aliases       = @connector.source_aliases
+        @source_model  = @connector.source_model
+        @target_model  = @connector.target_model
+        @source_mapper = @connector.source_mapper.class
+        @target_mapper = @connector.target_mapper.class
+        @name          = @connector.relationship.name
 
-        initialize_mapper
+        @source_aliases = aliases(@source_mapper)
+        @target_aliases = aliases(@target_mapper)
+
+        @collection_target = @connector.collection_target?
+
+        @mapper = build
       end
 
       private
 
       # @api private
-      def initialize_mapper
+      def build
         klass = Mapper::Relation.from(@source_mapper, mapper_name)
-
-        remap_fields(klass)
 
         klass.map(@name, @target_model, target_model_attribute_options)
 
         if @connector.collection_target?
-          klass.send(:include, Relationship::OneToMany::Iterator)
+          klass.class_eval { include(Relationship::OneToMany::Iterator) }
         end
 
-        klass.finalize_attributes
-
-        @mapper = klass.new(@connector.node)
-      end
-
-      # @api private
-      def remap_fields(mapper)
-        source_aliases.each do |field, alias_name|
-          attribute = mapper.attributes.for_field(field)
-          mapper.attributes << attribute.clone(:to => alias_name)
-        end
-      end
-
-      # @api private
-      def source_aliases
-        @connector.source_aliases
-      end
-
-      # @api private
-      def target_aliases
-        @connector.target_aliases
+        mapper = klass.new(@connector.node).remap(@source_aliases)
+        mapper.attributes.finalize
+        mapper
       end
 
       # @api private
@@ -88,9 +75,16 @@ module DataMapper
       # @api private
       def target_model_attribute_options
         {
-          :collection => @connector.collection_target?,
-          :aliases    => target_aliases
+          :collection => @collection_target,
+          :aliases    => @target_aliases
         }
+      end
+
+      def aliases(mapper)
+        prefix  = mapper.relation_name
+        mapper.attributes.primitives.each_with_object({}) do |attribute, aliases|
+          aliases[attribute.field] = @aliases.alias(attribute.aliased_field(prefix))
+        end
       end
     end # class Builder
   end # class Mapper

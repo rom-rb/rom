@@ -1,32 +1,25 @@
 module DataMapper
   class Relationship
 
-    class ManyToMany < OneToMany
+    class ManyToMany < self
 
-      def initialize(*)
-        super
+      include CollectionBehavior
 
-        @via ||= infer_via
-      end
+      attr_reader :via_relationship
 
-      # @see Options#default_target_key
+      # Set foreign keys for joining from intermediary to target
+      #
+      # @return [self]
       #
       # @api private
-      def default_source_key
-        :id
-      end
+      def finalize(mapper_registry)
+        definition = ViaDefinition.new(self, mapper_registry)
 
-      # @see Options#default_target_key
-      #
-      # @api private
-      def default_target_key
-        self.class.foreign_key_name(target_model.name)
-      end
+        @via              = definition.via
+        @via_model        = definition.via_model
+        @via_relationship = definition.via_relationship
 
-      private
-
-      def infer_via
-        Inflector.underscore(target_model.name).to_sym
+        self
       end
     end # class ManyToMany
   end # class Relationship

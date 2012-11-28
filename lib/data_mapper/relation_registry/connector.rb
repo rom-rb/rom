@@ -43,15 +43,19 @@ module DataMapper
       # @param [Relationship]
       #
       # @param [RelationRegistry]
-      #
+      #, relationship
       # @return [undefined]
       #
       # @api private
-      def initialize(name, node, relationship, relations)
-        @name         = name
+      def initialize(node, relationship, relations)
         @node         = node
+        @name         = node.name
         @relationship = relationship
         @relations    = relations
+      end
+
+      def source_node
+        @relations[source_mapper.relation_name]
       end
 
       # Returns source model of the relationship
@@ -78,7 +82,7 @@ module DataMapper
       #
       # @api private
       def source_aliases
-        relations[source_mapper.relation_name].aliases
+        @node.aliases
       end
 
       # Returns aliases for the target model

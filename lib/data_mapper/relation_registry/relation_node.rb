@@ -29,15 +29,15 @@ module DataMapper
       #
       # @param [Symbol,#to_sym]
       # @param [Object] relation from engine
-      # @param [AliasSet]
+      # @param [Aliases]
       #
       # @return [undefined]
       #
       # @api private
-      def initialize(name, relation, aliases = nil)
+      def initialize(name, relation, aliases = {})
         super(name)
         @relation = relation
-        @aliases  = aliases || {}
+        @aliases  = aliases
       end
 
       # Iterate on relation

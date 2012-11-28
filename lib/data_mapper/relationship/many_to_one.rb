@@ -3,16 +3,20 @@ module DataMapper
 
     class ManyToOne < self
 
+      private
+
+      DEFAULT_TARGET_KEY = [ :id ].freeze
+
       # @see Options#default_source_key
       #
       def default_source_key
-        self.class.foreign_key_name(source_model.name)
+        [ self.class.foreign_key_name(target_model.name) ].freeze
       end
 
       # @see Options#default_target_key
       #
       def default_target_key
-        :id
+        DEFAULT_TARGET_KEY
       end
     end # class ManyToOne
   end # class Relationship

@@ -30,7 +30,7 @@ ENV['TZ'] = 'UTC'
 # require spec support files and shared behavior
 Dir[File.expand_path('../**/shared/**/*.rb', __FILE__)].each { |file| require file }
 
-module SpecHelper
+module Spec
 
   def self.draw_relation_registry(file_name = 'graph.png')
 
@@ -39,13 +39,26 @@ module SpecHelper
     # Create a new graph
     g = GraphViz.new( :G, :type => :digraph )
 
-    graph = DataMapper.engines[:postgres].relations
+    relation_registry = DataMapper.engines[:postgres].relations
 
-    graph.edges.each do |edge|
-      left  = g.add_nodes(edge.left.name.to_s)
-      right = g.add_nodes(edge.right.name.to_s)
+    map = {}
 
-      g.add_edges(left, right, :label => edge.name)
+    relation_registry.nodes.each do |relation_node|
+      node = g.add_nodes(relation_node.name.to_s)
+      map[relation_node] = node
+    end
+
+    relation_registry.edges.each do |edge|
+      source = map[edge.left]
+      target = map[edge.right]
+
+      g.add_edges(source, target, :label => edge.name.to_s)
+    end
+
+    relation_registry.connectors.each do |name, connector|
+      source = map[connector.source_node]
+      target = map[connector.node]
+      g.add_edges(source, target, :label => name.to_s, :style => 'bold', :color => 'blue')
     end
 
     # Generate output image
