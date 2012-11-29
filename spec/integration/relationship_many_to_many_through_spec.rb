@@ -143,8 +143,6 @@ describe 'Relationship - Many To Many with generated mappers' do
   end
 
   it 'loads associated :infos for songs' do
-    Spec.draw_relation_registry('many_to_many_through.png')
-
     mapper = DataMapper[Song].include(:infos)
 
     songs = mapper.to_a
