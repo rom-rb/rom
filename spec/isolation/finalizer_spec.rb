@@ -26,7 +26,8 @@ describe 'Finalizer', :isolation => true do
       map :name, String
 
       has 0..n, :song_tags, SongTag
-      has 0..n, :songs,     Song, :through => :song_tags
+      has 0..n, :songs,     Song, :through => :song_tags, :via => :song
+      has 0..n, :infos,     Info
     end
 
     class InfoMapper < DataMapper::Mapper::Relation
@@ -37,6 +38,10 @@ describe 'Finalizer', :isolation => true do
       map :id,     Integer, :key => true
       map :tag_id, Integer
       map :text,   String
+
+      belongs_to :tag, Tag
+
+      has 0..n, :info_contents, InfoContent
     end
 
     class InfoContentMapper < DataMapper::Mapper::Relation
@@ -47,6 +52,8 @@ describe 'Finalizer', :isolation => true do
       map :id,      Integer, :key => true
       map :info_id, Integer
       map :content, String
+
+      belongs_to :info, Info
     end
 
     class SongTagMapper < DataMapper::Mapper::Relation
@@ -56,6 +63,9 @@ describe 'Finalizer', :isolation => true do
 
       map :song_id, Integer, :key => true
       map :tag_id,  Integer, :key => true
+
+      belongs_to :song, Song
+      belongs_to :tag,  Tag
     end
 
     class SongMapper < DataMapper::Mapper::Relation
@@ -67,21 +77,21 @@ describe 'Finalizer', :isolation => true do
       map :title, String
 
       has 0..n, :song_tags, SongTag
-      has 0..n, :tags, Tag, :through => :song_tags
+      has 0..n, :tags, Tag, :through => :song_tags, :via => :tag
 
       has 1, :song_tag, SongTag
-      has 1, :tag,      Tag, :through => :song_tag
+      has 1, :tag,      Tag, :through => :song_tag, :via => :tag
 
-      has 1, :good_tag, Tag, :through => :song_tag do
-        restrict { |r| r.tag_name.eq('good') }
+      has 1, :good_tag, Tag, :through => :song_tag, :via => :tag do
+        restrict { |r| r.tags_name.eq('good') }
       end
 
-      has 0..n, :infos, Info, :through => :tags, :target_key => :tag_id
+      has 0..n, :infos, Info, :through => :tags, :via => :infos
 
-      has 0..n, :info_contents, InfoContent, :through => :infos, :target_key => :info_id
+      has 0..n, :info_contents, InfoContent, :through => :infos, :via => :info_contents
 
-      has 0..n, :good_info_contents, InfoContent, :through => :infos do
-        restrict { |r| r.info_content_content.eq('really, really good') }
+      has 0..n, :good_info_contents, InfoContent, :through => :infos, :via => :info_contents do
+        restrict { |r| r.info_contents_content.eq('really, really good') }
       end
     end
   end
@@ -90,133 +100,134 @@ describe 'Finalizer', :isolation => true do
 
   it 'finalizes songs relation' do
     relation = relations[:songs]
-
     relation.should be_instance_of(RelationRegistry::RelationNode::VeritasRelation)
-    relation.aliases.to_hash.should eql(:id => :song_id, :title => :song_title)
-
     relation.should be_base
   end
 
   it 'finalizes tags relation' do
     relation = relations[:tags]
-
     relation.should be_instance_of(RelationRegistry::RelationNode::VeritasRelation)
-    relation.aliases.to_hash.should eql(:id => :tag_id, :name => :tag_name)
-
     relation.should be_base
   end
 
   it 'finalizes song_tags relation' do
     relation = relations[:song_tags]
-
     relation.should be_instance_of(RelationRegistry::RelationNode::VeritasRelation)
-    relation.aliases.to_hash.should eql({})
-
     relation.should be_base
   end
 
   it 'finalizes infos relation' do
     relation = relations[:infos]
-
     relation.should be_instance_of(RelationRegistry::RelationNode::VeritasRelation)
-    relation.aliases.to_hash.should eql(:id => :info_id, :text => :info_text)
-
     relation.should be_base
   end
 
   it 'finalizes info_contents relation' do
     relation = relations[:info_contents]
-
     relation.should be_instance_of(RelationRegistry::RelationNode::VeritasRelation)
-    relation.aliases.to_hash.should eql(:id => :info_content_id, :content => :info_content_content)
-
-    relation.should be_base
-  end
-
-  it 'finalizes info_contents relation' do
-    relation = relations[:info_contents]
-
-    relation.should be_instance_of(RelationRegistry::RelationNode::VeritasRelation)
-    relation.aliases.to_hash.should eql(:id => :info_content_id, :content => :info_content_content)
-
     relation.should be_base
   end
 
   it 'finalizes songs-have-many-tags-through-song_tags relation' do
-    node = relations[:songs_X_song_tags_X_tags]
+    name = :songs_X_song_tags_X_tags
+
+    node = relations[name]
 
     node.should be_instance_of(RelationRegistry::RelationNode::VeritasRelation)
     node.should_not be_base
 
-    edge = relations.edge_for(relations[:songs_X_song_tags], relations[:tags])
+    edge = relations.edge_for(name)
+    edge.should be_instance_of(RelationRegistry::RelationEdge::VeritasEdge)
 
-    edge.relation.relation.should eql(node.relation)
+    connector = relations.connectors[name]
+    connector.should be_instance_of(RelationRegistry::Connector)
   end
 
   it 'finalizes songs-have-one-good_tag-through-song_tag relation' do
-    node = relations[:songs_X_song_tags_X_good_tag]
+    name = :songs_X_song_tags_X_good_tag
+
+    node = relations[name]
 
     node.should be_instance_of(RelationRegistry::RelationNode::VeritasRelation)
     node.should_not be_base
 
-    edge = relations.edge_for(relations[:songs_X_song_tags], relations[:tags])
+    edge = relations.edge_for(name)
+    edge.should be_instance_of(RelationRegistry::RelationEdge::VeritasEdge)
 
-    edge.relation.relation.should eql(node.relation)
+    connector = relations.connectors[name]
+    connector.should be_instance_of(RelationRegistry::Connector)
   end
 
   it 'finalizes songs-have-many-infos-through-tags relation' do
-    node = relations[:songs_X_song_tags_X_tags_X_infos]
+    name = :songs_X_song_tags_X_tags_X_infos
+    node = relations[name]
 
     node.should be_instance_of(RelationRegistry::RelationNode::VeritasRelation)
     node.should_not be_base
 
-    edge = relations.edge_for(relations[:songs_X_song_tags_X_tags], relations[:infos])
+    edge = relations.edge_for(name)
+    edge.should be_instance_of(RelationRegistry::RelationEdge::VeritasEdge)
 
-    edge.relation.relation.should eql(node.relation)
+    connector = relations.connectors[name]
+    connector.should be_instance_of(RelationRegistry::Connector)
   end
 
   it 'finalizes songs-have-many-info_contents-through-infos relation' do
-    node = relations[:songs_X_song_tags_X_tags_X_infos_X_info_contents]
+    name = :songs_X_song_tags_X_tags_X_infos_X_info_contents
+
+    node = relations[name]
 
     node.should be_instance_of(RelationRegistry::RelationNode::VeritasRelation)
     node.should_not be_base
 
-    edge = relations.edge_for(relations[:songs_X_song_tags_X_tags_X_infos], relations[:info_contents])
+    edge = relations.edge_for(name)
+    edge.should be_instance_of(RelationRegistry::RelationEdge::VeritasEdge)
 
-    edge.relation.relation.should eql(node.relation)
+    connector = relations.connectors[name]
+    connector.should be_instance_of(RelationRegistry::Connector)
   end
 
   it 'finalizes songs-have-many-good_info_contents-through-infos relation' do
-    node = relations[:songs_X_song_tags_X_tags_X_infos_X_good_info_contents]
+    name = :songs_X_song_tags_X_tags_X_infos_X_good_info_contents
+
+    node = relations[name]
 
     node.should be_instance_of(RelationRegistry::RelationNode::VeritasRelation)
     node.should_not be_base
 
-    edge = relations.edge_for(relations[:songs_X_song_tags_X_tags_X_infos], relations[:info_contents])
+    edge = relations.edge_for(name)
+    edge.should be_instance_of(RelationRegistry::RelationEdge::VeritasEdge)
 
-    edge.relation.relation.should eql(node.relation)
+    connector = relations.connectors[name]
+    connector.should be_instance_of(RelationRegistry::Connector)
   end
 
   it 'finalizes tags-have-many-song_tags relation' do
-    node = relations[:tags_X_song_tags]
+    name = :tags_X_song_tags
+    node = relations[name]
 
     node.should be_instance_of(RelationRegistry::RelationNode::VeritasRelation)
     node.should_not be_base
 
-    edge = relations.edge_for(relations[:tags], relations[:song_tags])
+    edge = relations.edge_for(name)
+    edge.should be_instance_of(RelationRegistry::RelationEdge::VeritasEdge)
 
-    edge.relation.relation.should eql(node.relation)
+    connector = relations.connectors[name]
+    connector.should be_instance_of(RelationRegistry::Connector)
   end
 
   it 'finalizes tags-have-many-songs-through-song_tags relation' do
-    node = relations[:tags_X_song_tags_X_songs]
+    name = :tags_X_song_tags_X_songs
+    node = relations[name]
 
     node.should be_instance_of(RelationRegistry::RelationNode::VeritasRelation)
     node.should_not be_base
 
-    edge = relations.edge_for(relations[:tags_X_song_tags], relations[:songs])
+    edge = relations.edge_for(name)
+    edge.should be_instance_of(RelationRegistry::RelationEdge::VeritasEdge)
 
-    edge.relation.relation.should eql(node.relation)
+    connector = relations.connectors[name]
+    connector.should be_instance_of(RelationRegistry::Connector)
   end
 
   it 'finalizes song mapper' do
