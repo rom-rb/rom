@@ -115,10 +115,10 @@ module DataMapper
         end
 
         def target_name?(rel)
-          rel.operation && target?(rel)
+          rel.operation && target_relationship?(rel)
         end
 
-        def target?(rel)
+        def target_relationship?(rel)
           @relationship == rel
         end
       end # class NodeNameSet
