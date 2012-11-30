@@ -90,7 +90,8 @@ module DataMapper
         end
 
         def via_relationship(rel)
-          rel.respond_to?(:via_relationship) && rel.via_relationship ? rel.via_relationship : rel
+          return rel unless rel.respond_to?(:via_relationship)
+          rel.via_relationship || rel
         end
 
         # @api private
