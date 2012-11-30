@@ -8,6 +8,25 @@ module DataMapper
       class NodeNameSet
         include Enumerable
 
+        # Initialize a new node name set
+        #
+        # @param [Relationship] relationship
+        #   the relationship used to define the set
+        #
+        # @param [MapperRegistry] mapper_registry
+        #   the registry containing all mappers
+        #
+        # @return [undefined]
+        #
+        # @api private
+        def initialize(relationship, mapper_registry)
+          @relationship     = relationship
+          source_mapper     = mapper_registry[@relationship.source_model]
+          @relationship_set = source_mapper.relationships
+          @relation_map     = mapper_registry.relation_map
+          @node_names       = node_names
+        end
+
         # Iterate on all generated relation node names
         #
         # @return [self]
@@ -38,25 +57,6 @@ module DataMapper
         end
 
         private
-
-        # Initialize a new node name set
-        #
-        # @param [Relationship] relationship
-        #   the relationship used to define the set
-        #
-        # @param [MapperRegistry] mapper_registry
-        #   the registry containing all mappers
-        #
-        # @return [undefined]
-        #
-        # @api private
-        def initialize(relationship, mapper_registry)
-          @relationship     = relationship
-          source_mapper     = mapper_registry[@relationship.source_model]
-          @relationship_set = source_mapper.relationships
-          @relation_map     = mapper_registry.relation_map
-          @node_names       = node_names
-        end
 
         # Generates an array of unique relation node names used to build a join
         #
