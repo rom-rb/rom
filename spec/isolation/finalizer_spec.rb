@@ -251,7 +251,7 @@ describe 'Finalizer', :isolation => true do
   end
 
   it 'finalizes song-song-tags mapper' do
-    DataMapper[Song].include(:song_tags).relation.should be(relations[:songs_X_song_tags])
+    DataMapper[Song].include(:song_tags).relation.should eql(relations[:songs_X_song_tags])
   end
 
   it 'finalizes song-song-tag mapper' do
