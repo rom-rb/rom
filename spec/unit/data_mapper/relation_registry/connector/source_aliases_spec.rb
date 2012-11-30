@@ -5,10 +5,9 @@ describe RelationRegistry::Connector, '#source_aliases' do
 
   let(:object) { described_class.new(node, relationship, relations) }
 
-  let(:node)            { mock('relation_node', :name => name, :aliases => aliases) }
-  let(:name)            { :users_X_addresses }
+  let(:node)            { mock('relation_node', :name => mock, :aliases => aliases) }
   let(:aliases)         { {} }
-  let(:relationship)    { mock('relationship') }
+  let(:relationship)    { mock('relationship', :name => mock) }
   let(:relations)       { mock('relations') }
 
   it { should be(aliases) }

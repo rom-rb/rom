@@ -68,8 +68,9 @@ describe RelationRegistry::Builder, '.call' do
   let(:relations) { song_mapper.relations }
 
   context "with one-to-many" do
-    let(:relationship) { songs_song_tags_relationship }
-    let(:name)         { :songs_X_song_tags }
+    let(:relationship)   { songs_song_tags_relationship }
+    let(:name)           { :songs_X_song_tags }
+    let(:connector_name) { :"#{name}__song_tags" }
 
     it "adds songs_X_song_tags relation node" do
       node = relations[name]
@@ -83,14 +84,15 @@ describe RelationRegistry::Builder, '.call' do
 
     it "adds songs_X_song_tags connector" do
       node      = relations.node_for(relations[name])
-      connector = relations.connectors[name]
+      connector = relations.connectors[connector_name]
       connector.node.should eql(node)
     end
   end
 
   context "with one-to-many via other" do
-    let(:relationship) { songs_tags_relationship }
-    let(:name)         { :songs_X_song_tags_X_tags }
+    let(:relationship)   { songs_tags_relationship }
+    let(:name)           { :songs_X_song_tags_X_tags }
+    let(:connector_name) { :"#{name}__tags" }
 
     it "adds songs_X_song_tags_X_tags relation node" do
       node = relations[:songs_X_song_tags]
@@ -106,14 +108,15 @@ describe RelationRegistry::Builder, '.call' do
 
     it "adds songs_X_song_tags_X_tags connector" do
       node      = relations.node_for(relations[name])
-      connector = relations.connectors[name]
+      connector = relations.connectors[connector_name]
       connector.node.should eql(node)
     end
   end
 
   context "with one-to-many via other via another" do
-    let(:relationship) { songs_infos_relationship }
-    let(:name)         { :songs_X_song_tags_X_tags_X_infos }
+    let(:relationship)   { songs_infos_relationship }
+    let(:name)           { :songs_X_song_tags_X_tags_X_infos }
+    let(:connector_name) { :"#{name}__infos" }
 
     it "adds songs_X_song_tags_X_tags_X_infos relation node" do
       node = relations[:songs_X_song_tags]
@@ -131,7 +134,7 @@ describe RelationRegistry::Builder, '.call' do
 
     it "adds songs_X_song_tags_X_tags_X_infos connector" do
       node      = relations.node_for(relations[name])
-      connector = relations.connectors[name]
+      connector = relations.connectors[connector_name]
       connector.node.should eql(node)
     end
   end

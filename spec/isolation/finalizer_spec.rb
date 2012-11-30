@@ -139,7 +139,7 @@ describe 'Finalizer', :isolation => true do
     edge = relations.edge_for(name)
     edge.should be_instance_of(RelationRegistry::RelationEdge::VeritasEdge)
 
-    connector = relations.connectors[name]
+    connector = relations.connectors[:"#{name}__tags"]
     connector.should be_instance_of(RelationRegistry::Connector)
   end
 
@@ -154,7 +154,7 @@ describe 'Finalizer', :isolation => true do
     edge = relations.edge_for(name)
     edge.should be_instance_of(RelationRegistry::RelationEdge::VeritasEdge)
 
-    connector = relations.connectors[name]
+    connector = relations.connectors[:"#{name}__good_tag"]
     connector.should be_instance_of(RelationRegistry::Connector)
   end
 
@@ -168,7 +168,7 @@ describe 'Finalizer', :isolation => true do
     edge = relations.edge_for(name)
     edge.should be_instance_of(RelationRegistry::RelationEdge::VeritasEdge)
 
-    connector = relations.connectors[name]
+    connector = relations.connectors[:"#{name}__infos"]
     connector.should be_instance_of(RelationRegistry::Connector)
   end
 
@@ -183,7 +183,7 @@ describe 'Finalizer', :isolation => true do
     edge = relations.edge_for(name)
     edge.should be_instance_of(RelationRegistry::RelationEdge::VeritasEdge)
 
-    connector = relations.connectors[name]
+    connector = relations.connectors[:"#{name}__info_contents"]
     connector.should be_instance_of(RelationRegistry::Connector)
   end
 
@@ -198,7 +198,7 @@ describe 'Finalizer', :isolation => true do
     edge = relations.edge_for(name)
     edge.should be_instance_of(RelationRegistry::RelationEdge::VeritasEdge)
 
-    connector = relations.connectors[name]
+    connector = relations.connectors[:"#{name}__good_info_contents"]
     connector.should be_instance_of(RelationRegistry::Connector)
   end
 
@@ -212,7 +212,7 @@ describe 'Finalizer', :isolation => true do
     edge = relations.edge_for(name)
     edge.should be_instance_of(RelationRegistry::RelationEdge::VeritasEdge)
 
-    connector = relations.connectors[name]
+    connector = relations.connectors[:"#{name}__song_tags"]
     connector.should be_instance_of(RelationRegistry::Connector)
   end
 
@@ -226,7 +226,7 @@ describe 'Finalizer', :isolation => true do
     edge = relations.edge_for(name)
     edge.should be_instance_of(RelationRegistry::RelationEdge::VeritasEdge)
 
-    connector = relations.connectors[name]
+    connector = relations.connectors[:"#{name}__songs"]
     connector.should be_instance_of(RelationRegistry::Connector)
   end
 
@@ -255,19 +255,19 @@ describe 'Finalizer', :isolation => true do
   end
 
   it 'finalizes song-song-tag mapper' do
-    DataMapper[Song].include(:song_tag).relation.should be(relations[:songs_X_song_tags])
+    DataMapper[Song].include(:song_tag).relation.should eql(relations[:songs_X_song_tags])
   end
 
   it 'finalizes song-tag-through-song_tag mapper' do
-    DataMapper[Song].include(:tag).relation.should be(relations[:songs_X_song_tags_X_tags])
+    DataMapper[Song].include(:tag).relation.should eql(relations[:songs_X_song_tags_X_tags])
   end
 
   it 'finalizes song-tags mapper' do
-    DataMapper[Song].include(:tags).relation.should be(relations[:songs_X_song_tags_X_tags])
+    DataMapper[Song].include(:tags).relation.should eql(relations[:songs_X_song_tags_X_tags])
   end
 
   it 'finalizes song-infos mapper' do
-    DataMapper[Song].include(:infos).relation.should be(relations[:songs_X_song_tags_X_tags_X_infos])
+    DataMapper[Song].include(:infos).relation.should eql(relations[:songs_X_song_tags_X_tags_X_infos])
   end
 
   it 'finalizes song-info-contents mapper' do

@@ -71,7 +71,7 @@ describe Mapper::Builder, '#mapper' do
 
   context "when connector is not via other" do
 
-    let(:connector) { relations.connectors[:songs_X_song_tags] }
+    let(:connector) { relations.connectors[:songs_X_song_tags__song_tags] }
 
     it { should be_kind_of(Mapper::Relation) }
 
@@ -99,7 +99,7 @@ describe Mapper::Builder, '#mapper' do
   end
 
   context "when connector is via other" do
-    let(:connector) { relations.connectors[:songs_X_song_tags_X_tags] }
+    let(:connector) { relations.connectors[:songs_X_song_tags_X_tags__tags] }
 
     it { should be_kind_of(Mapper::Relation) }
 

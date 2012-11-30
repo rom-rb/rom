@@ -5,20 +5,17 @@ describe RelationRegistry::Connector, '#collection_target?' do
 
   let(:object) { described_class.new(node, relationship, relations) }
 
-  let(:node)         { mock('relation_node', :name => name) }
-  let(:name)         { :users_X_addresses }
-  let(:source_model) { mock_model(:User) }
-  let(:target_model) { mock_model(:Address) }
+  let(:node)         { mock('relation_node', :name => mock) }
   let(:relations)    { mock('relations') }
 
   context "when relationship has collection target" do
-    let(:relationship) { mock('relationship', :collection_target? => true) }
+    let(:relationship) { mock('relationship', :collection_target? => true, :name => mock) }
 
     it { should be(true) }
   end
 
   context "when relationship doesn't have collection target" do
-    let(:relationship) { mock('relationship', :collection_target? => false) }
+    let(:relationship) { mock('relationship', :collection_target? => false, :name => mock) }
 
     it { should be(false) }
   end

@@ -6,7 +6,7 @@ module DataMapper
     # @api private
     class Connector
 
-      # Name of the joined relation
+      # The connector's name
       #
       # @return [Symbol]
       #
@@ -49,9 +49,9 @@ module DataMapper
       # @api private
       def initialize(node, relationship, relations)
         @node         = node
-        @name         = node.name
         @relationship = relationship
         @relations    = relations
+        @name         = connector_name(node.name)
       end
 
       def source_node
@@ -121,7 +121,11 @@ module DataMapper
         DataMapper[target_model]
       end
 
-    end # class Connector
+      private
 
+      def connector_name(node_name)
+        :"#{node_name}__#{@relationship.name}"
+      end
+    end # class Connector
   end # class RelationRegistry
 end # module DataMapper

@@ -5,9 +5,8 @@ describe RelationRegistry::Connector, '#target_aliases' do
 
   let(:object) { described_class.new(node, relationship, relations) }
 
-  let(:node)            { mock('relation_node', :name => name) }
-  let(:name)            { :users_X_addresses }
-  let(:relationship)    { mock('relationship', :source_model => source_model, :target_model => target_model) }
+  let(:node)            { mock('relation_node', :name => mock) }
+  let(:relationship)    { mock('relationship', :name => mock, :source_model => source_model, :target_model => target_model) }
   let(:source_model)    { mock_model(:User) }
   let(:target_model)    { mock_model(:Address) }
   let(:relations)       { mock('relations', :addresses => target_relation) }
