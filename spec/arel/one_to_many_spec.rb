@@ -61,7 +61,7 @@ describe '[Arel] One To Many with generated mapper' do
       has 0..n, :orders, Order
 
       has 0..n, :apple_orders, Order do
-        restrict(engine.relations[:orders][:product].eq('Apple'))
+        where(source.right.first.left[:product].eq('Apple'))
       end
     end
 

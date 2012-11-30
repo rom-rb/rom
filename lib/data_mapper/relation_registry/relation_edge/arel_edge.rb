@@ -39,7 +39,10 @@ module DataMapper
             relation = relation.instance_eval(&operation)
           end
 
-          @source_node.gateway.new(relation, @aliases)
+          # FIXME: @aliases should already include fields from both sides
+          header = @aliases.to_hash.merge(@target_aliases)
+
+          @source_node.gateway.new(relation, header)
         end
 
 
