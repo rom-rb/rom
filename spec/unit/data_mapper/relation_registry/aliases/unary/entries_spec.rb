@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe Mapper::Relation::Aliases, '#entries' do
+describe RelationRegistry::Aliases::Unary, '#entries' do
   subject { object.entries }
 
-  let(:object) { subclass.new(songs_entries, songs_aliases) }
+  let(:object) { described_class.new(songs_entries, songs_aliases) }
 
   let(:songs_entries) {{
     :songs_id    => :songs_id,
@@ -15,6 +15,5 @@ describe Mapper::Relation::Aliases, '#entries' do
     :title => :songs_title,
   }}
 
-  it { should respond_to(:each) }
-  it { should respond_to(:to_hash) }
+  it { should eql(songs_entries) }
 end

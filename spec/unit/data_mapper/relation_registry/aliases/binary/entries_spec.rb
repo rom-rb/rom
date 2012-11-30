@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe Mapper::Relation::Aliases::Binary, '#entries' do
+describe RelationRegistry::Aliases::Binary, '#entries' do
   subject { object.entries }
 
-  let(:songs) { Mapper::Relation::Aliases::Unary.new(songs_entries, songs_aliases) }
+  let(:songs) { RelationRegistry::Aliases::Unary.new(songs_entries, songs_aliases) }
 
   let(:songs_entries) {{
     :songs_id    => :songs_id,
@@ -15,7 +15,7 @@ describe Mapper::Relation::Aliases::Binary, '#entries' do
     :title => :songs_title,
   }}
 
-  let(:song_tags) { Mapper::Relation::Aliases::Unary.new(song_tags_entries, song_tags_aliases) }
+  let(:song_tags) { RelationRegistry::Aliases::Unary.new(song_tags_entries, song_tags_aliases) }
 
   let(:song_tags_entries) {{
     :song_tags_song_id => :song_tags_song_id,
@@ -27,7 +27,7 @@ describe Mapper::Relation::Aliases::Binary, '#entries' do
     :tag_id  => :song_tags_tag_id,
   }}
 
-  let(:tags) { Mapper::Relation::Aliases::Unary.new(tags_entries, tags_aliases) }
+  let(:tags) { RelationRegistry::Aliases::Unary.new(tags_entries, tags_aliases) }
 
   let(:tags_entries) {{
     :tags_id   => :tags_id,
@@ -39,7 +39,7 @@ describe Mapper::Relation::Aliases::Binary, '#entries' do
     :tags_name => :tags_name,
   }}
 
-  let(:infos) { Mapper::Relation::Aliases::Unary.new(infos_entries, infos_aliases) }
+  let(:infos) { RelationRegistry::Aliases::Unary.new(infos_entries, infos_aliases) }
 
   let(:infos_entries) {{
     :infos_id     => :infos_id,
@@ -53,7 +53,7 @@ describe Mapper::Relation::Aliases::Binary, '#entries' do
     :text   => :infos_text,
   }}
 
-  let(:song_comments) { Mapper::Relation::Aliases::Unary.new(song_comments_entries, song_comments_aliases) }
+  let(:song_comments) { RelationRegistry::Aliases::Unary.new(song_comments_entries, song_comments_aliases) }
 
   let(:song_comments_entries) {{
     :song_comments_song_id    => :song_comments_song_id,
@@ -66,7 +66,7 @@ describe Mapper::Relation::Aliases::Binary, '#entries' do
     :comment_id => :song_comments_comment_id,
   }}
 
-  let(:comments) { Mapper::Relation::Aliases::Unary.new(comments_entries, comments_aliases) }
+  let(:comments) { RelationRegistry::Aliases::Unary.new(comments_entries, comments_aliases) }
 
   let(:comments_entries) {{
     :comments_id   => :comments_id,

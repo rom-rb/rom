@@ -264,7 +264,7 @@ module DataMapper
       private
 
       def aliases_class
-        Relation::Aliases::Unary
+        RelationRegistry::Aliases::Unary
       end
 
       def aliased_field_map(prefix)

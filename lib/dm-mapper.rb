@@ -141,6 +141,7 @@ require 'data_mapper/engine'
 require 'data_mapper/engine/veritas_engine'
 
 require 'data_mapper/relation_registry'
+require 'data_mapper/relation_registry/aliases'
 require 'data_mapper/relation_registry/relation_node'
 require 'data_mapper/relation_registry/relation_node/veritas_relation'
 require 'data_mapper/relation_registry/relation_edge'
@@ -158,9 +159,7 @@ require 'data_mapper/mapper/attribute/primitive'
 require 'data_mapper/mapper/attribute/embedded_value'
 require 'data_mapper/mapper/attribute/embedded_collection'
 require 'data_mapper/mapper/attribute_set'
-
 require 'data_mapper/mapper'
-require 'data_mapper/mapper/relation/aliases'
 require 'data_mapper/mapper/relation'
 
 require 'data_mapper/mapper/builder'
