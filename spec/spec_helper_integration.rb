@@ -95,7 +95,7 @@ RSpec.configure do |config|
 
     DataMapper::Mapper::Relation.instance_variable_set(:@relations, nil)
 
-    DataMapper.mapper_registry.instance_variable_set(:@mappers, {})
+    DataMapper::Mapper.mapper_registry.instance_variable_set(:@mapper_registry, nil)
 
     DataMapper.instance_variable_set(:@finalized, false)
   end
