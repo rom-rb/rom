@@ -40,18 +40,14 @@ module DataMapper
       end
 
       def build
-        idx, size = 0, @node_name_set.count
-
         nodes = @node_name_set.map { |node_name|
           left, right  = nodes(node_name)
           relationship = node_name.relationship
 
           edge = build_edge(node_name, left, right)
-          node = edge.node(relationship, operation(relationship, idx, size))
+          node = edge.node(relationship, operation(relationship, node_name))
 
           @relations.add_node(node)
-
-          idx += 1
 
           node
         }
@@ -59,9 +55,8 @@ module DataMapper
         build_connector(nodes.last)
       end
 
-      # TODO refactor this
-      def operation(relationship, node_name_set_idx, node_name_set_size)
-        last_join = node_name_set_idx == node_name_set_size - 1
+      def operation(relationship, node_name)
+        last_join = @node_name_set.last == node_name
         last_join ? @relationship.operation : relationship.operation
       end
 
