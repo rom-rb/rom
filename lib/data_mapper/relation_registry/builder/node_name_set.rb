@@ -64,8 +64,8 @@ module DataMapper
         #
         # @api private
         def node_names
-          rel_map.each_with_object([]) do |(target_name, relationship), names|
-            names << NodeName.new(source_name(names), target_name, relationship)
+          rel_map.each_with_object([]) do |(right_name, relationship), names|
+            names << NodeName.new(left_name(names), right_name, relationship)
           end
         end
 
@@ -86,7 +86,7 @@ module DataMapper
 
           via_rel = via_relationship(via_rel) if via_rel == @relationship
 
-          rels << [ target_name(rel), via_rel ]
+          rels << [ right_name(rel), via_rel ]
         end
 
         def via_relationship(rel)
@@ -94,21 +94,32 @@ module DataMapper
           rel.via_relationship || rel
         end
 
-        # @api private
-        def source_name(names)
-          names.last || @relation_map[@relationship.source_model]
+        def left_name(names)
+          names.last || left_relation_name(@relationship)
         end
 
-        def target_name(relationship)
-          if @relationship == relationship
-            if @relationship.operation
-              @relationship.name
-            else
-              relationship.operation ? relationship.name : @relation_map[relationship.target_model]
-            end
-          else
-            relationship.operation ? relationship.name : @relation_map[relationship.target_model]
-          end
+        def right_name(rel)
+          target_name?(rel) ? rel.name : name(rel)
+        end
+
+        def name(rel)
+          rel.operation ? rel.name : right_relation_name(rel)
+        end
+
+        def left_relation_name(rel)
+          @relation_map[rel.source_model]
+        end
+
+        def right_relation_name(rel)
+          @relation_map[rel.target_model]
+        end
+
+        def target_name?(rel)
+          rel.operation && target?(rel)
+        end
+
+        def target?(rel)
+          @relationship == rel
         end
       end # class NodeNameSet
     end # class Builder
