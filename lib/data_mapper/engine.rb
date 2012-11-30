@@ -51,7 +51,7 @@ module DataMapper
     #   engine = DataMapper::Engine::VeritasEngine.new(uri)
     #   engine.relation_node_class
     #
-    # @return [Class]
+    # @return [RelationRegistry::Node]
     #
     # @api public
     def relation_node_class
@@ -65,7 +65,7 @@ module DataMapper
     #   engine = DataMapper::Engine::VeritasEngine.new(uri)
     #   engine.relation_edge_class
     #
-    # @return [Class]
+    # @return [RelationRegistry::Edge]
     #
     # @api public
     def relation_edge_class

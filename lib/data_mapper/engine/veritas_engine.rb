@@ -34,7 +34,12 @@ module DataMapper
       #
       # @see Engine#relation_node_class
       #
-      # @return [RelationRegistry::RelationNode::VeritasRelation]
+      # @example
+      #   uri    = "postgres://localhost/test"
+      #   engine = DataMapper::Engine::VeritasEngine.new(uri)
+      #   engine.relation_node_class
+      #
+      # @return [RelationRegistry::Veritas::Node]
       #
       # @api public
       def relation_node_class
@@ -50,7 +55,7 @@ module DataMapper
       #   engine = DataMapper::Engine::VeritasEngine.new(uri)
       #   engine.relation_edge_class
       #
-      # @return [RelationRegistry::RelationEdge::VeritasEdge]
+      # @return [RelationRegistry::Veritas::Edge]
       #
       # @api public
       def relation_edge_class

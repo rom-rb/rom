@@ -19,7 +19,7 @@ module DataMapper
         #
         # @return [self, Enumerator]
         #
-        # @yield [Veritas::Tuple]
+        # @yield [::Veritas::Tuple]
         #
         # @api public
         def each(&block)
@@ -46,7 +46,7 @@ module DataMapper
         #
         # @param [AliasSet]
         #
-        # @return [VeritasRelation]
+        # @return [Node]
         #
         # @api public
         def rename(new_aliases)
@@ -55,7 +55,7 @@ module DataMapper
 
         # Renames relation using this relation node aliases
         #
-        # @return [VeritasRelation]
+        # @return [Node]
         #
         # @api private
         def aliased
@@ -71,9 +71,9 @@ module DataMapper
         #
         #   joined = people.join(addresses)
         #
-        # @param [VeritasRelation]
+        # @param [Node]
         #
-        # @return [VeritasRelation]
+        # @return [Node]
         #
         # @api public
         def join(other, *)
@@ -82,7 +82,7 @@ module DataMapper
 
         # Returns header for the veritas relation
         #
-        # @return [Veritas::Header]
+        # @return [::Veritas::Header]
         #
         # @api private
         def header
@@ -101,7 +101,7 @@ module DataMapper
         #
         # @param [Proc]
         #
-        # @return [VeritasRelation]
+        # @return [Node]
         #
         # @api public
         def restrict(*args, &block)
@@ -116,7 +116,7 @@ module DataMapper
         #
         # @param [*attributes]
         #
-        # @return [VeritasRelation]
+        # @return [Node]
         #
         # @api public
         def order(*attributes)
@@ -134,7 +134,7 @@ module DataMapper
         #
         # @param [Proc]
         #
-        # @return [VeritasRelation]
+        # @return [Node]
         #
         # @api public
         def sort_by(&block)

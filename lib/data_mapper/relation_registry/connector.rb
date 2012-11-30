@@ -15,7 +15,7 @@ module DataMapper
 
       # Joined relation node
       #
-      # @return [RelationNode]
+      # @return [Node]
       #
       # @api private
       attr_reader :node
@@ -36,14 +36,15 @@ module DataMapper
 
       # Initializes new connector instance
       #
-      # @param [Symbol]
+      # @param [Node] node
+      #   the node this connector must point to
       #
-      # @param [RelationNode]
+      # @param [Relationship] relationship
+      #   the relationship backing the connector
       #
-      # @param [Relationship]
+      # @param [RelationRegistry] relations
+      #   the registry used to lookup relations
       #
-      # @param [RelationRegistry]
-      #, relationship
       # @return [undefined]
       #
       # @api private
@@ -78,7 +79,7 @@ module DataMapper
 
       # Returns aliases for the source model
       #
-      # @return [AliasSet]
+      # @return [Aliases]
       #
       # @api private
       def source_aliases
@@ -87,7 +88,7 @@ module DataMapper
 
       # Returns aliases for the target model
       #
-      # @return [AliasSet]
+      # @return [Aliases]
       #
       # @api private
       def target_aliases

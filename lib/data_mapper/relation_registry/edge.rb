@@ -7,14 +7,14 @@ module DataMapper
 
       # Left side relation node
       #
-      # @return [RelationNode]
+      # @return [Node]
       #
       # @api private
       attr_reader :source_node
 
       # Right side relation node
       #
-      # @return [RelationNode]
+      # @return [Node]
       #
       # @api private
       attr_reader :target_node
@@ -31,10 +31,10 @@ module DataMapper
       # @param [Symbol, #to_sym] name
       #   the edge's {#name}
       #
-      # @param [RelationNode] source_node
+      # @param [Node] source_node
       #   the {#left} side representing the {#source_node}
       #
-      # @param [RelationNode] target_node
+      # @param [Node] target_node
       #   the {#right} side representing the {#target_node}
       #
       # @return [undefined]
@@ -59,7 +59,7 @@ module DataMapper
 
       # Returns source aliases
       #
-      # @return [AliasSet]
+      # @return [Aliases]
       #
       # @api private
       def source_aliases
@@ -68,7 +68,7 @@ module DataMapper
 
       # Returns target aliases
       #
-      # @return [AliasSet]
+      # @return [Aliases]
       #
       # @api private
       def target_aliases

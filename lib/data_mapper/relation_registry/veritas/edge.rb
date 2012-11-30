@@ -18,7 +18,7 @@ module DataMapper
 
         # Builds a joined relation from source and target nodes
         #
-        # @return [RelationNode::VeritasRelation]
+        # @return [Node]
         #
         # @api private
         def node(relationship, operation = relationship.operation)

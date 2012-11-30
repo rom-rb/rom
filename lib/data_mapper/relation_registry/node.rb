@@ -27,9 +27,14 @@ module DataMapper
 
       # Initializes a relation node instance
       #
-      # @param [Symbol,#to_sym]
-      # @param [Object] relation from engine
-      # @param [Aliases]
+      # @param [#to_sym] name
+      #   the name for the node
+      #
+      # @param [Object] relation
+      #   an instance of the engine's relation class
+      #
+      # @param [Aliases] aliases
+      #   the aliases to use for this node
       #
       # @return [undefined]
       #

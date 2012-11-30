@@ -33,10 +33,10 @@ module DataMapper
         @data = {}
         @seq  = 0
       end
-    end
+    end # class Relation
 
     def base_relation(name, header = nil)
       Relation.new(name)
     end
-  end
-end
+  end # class InmemoryEngine
+end # module DataMapper

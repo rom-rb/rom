@@ -168,7 +168,9 @@ module DataMapper
 
       # The aliases used for this mapper's instances
       #
-      # @return [AliasSet]
+      # @see AttributeSet#aliases
+      #
+      # @return [Aliases]
       #
       # @api private
       def self.aliases
@@ -217,7 +219,7 @@ module DataMapper
       #
       # TODO find a better name
       #
-      # @param [Hash] aliases
+      # @param [Aliases, Hash] aliases
       #   the aliases to use in the returned instance
       #
       # @return [Mapper::Relation]

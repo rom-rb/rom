@@ -23,7 +23,7 @@ module DataMapper
     #
     #   DataMapper[Person].relations.node_class
     #
-    # @return [Class]
+    # @return [Node]
     #
     # @api public
     attr_reader :node_class
@@ -36,7 +36,7 @@ module DataMapper
     #
     #   DataMapper[Person].relations.edge_class
     #
-    # @return [Class]
+    # @return [Edge]
     #
     # @api public
     attr_reader :edge_class
@@ -107,9 +107,9 @@ module DataMapper
     #
     # @param [Veritas::Relation] relation
     #
-    # @param [AliasSet,nil] aliases
+    # @param [Aliases,nil] aliases
     #
-    # @return [RelationNode]
+    # @return [Node]
     #
     # @api private
     def build_node(*args)
@@ -128,7 +128,7 @@ module DataMapper
 
     # Build a new edge
     #
-    # @return [RelationEdge]
+    # @return [Edge]
     #
     # @api private
     def build_edge(*args)
@@ -137,7 +137,8 @@ module DataMapper
 
     # Add new relation node to the graph
     #
-    # @param [Veritas::Relation] relation
+    # @param [Object] relation
+    #   an instance of the engine's relation class
     #
     # @return [self]
     #
@@ -154,7 +155,7 @@ module DataMapper
     #
     # @param [Symbol] name of the relation
     #
-    # @return [RelationNode]
+    # @return [Node]
     #
     # @api public
     def [](name)
@@ -164,9 +165,10 @@ module DataMapper
 
     # Return relation node for the given relation
     #
-    # @param [Veritas::Relation] relation
+    # @param [Object] relation
+    #   an instance of the engine's relation class
     #
-    # @return [RelationNode]
+    # @return [Node]
     #
     # @api private
     def node_for(relation)
@@ -178,12 +180,11 @@ module DataMapper
     # @param [#to_sym] name
     #   the edge's name
     #
-    # @return [RelationEdge, nil]
+    # @return [Edge, nil]
     #
     # @api private
     def edge_for(name)
       edges.detect { |edge| edge.name.to_sym == name.to_sym }
     end
-
   end # class RelationRegistry
 end # module DataMapper
