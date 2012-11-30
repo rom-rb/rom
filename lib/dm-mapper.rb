@@ -138,10 +138,12 @@ require 'data_mapper/support/graph'
 require 'data_mapper/support/utils'
 
 require 'data_mapper/engine'
+require 'data_mapper/engine/arel_engine'
 require 'data_mapper/engine/veritas_engine'
 
 require 'data_mapper/relation_registry'
 require 'data_mapper/relation_registry/relation_node'
+require 'data_mapper/relation_registry/relation_node/arel_relation'
 require 'data_mapper/relation_registry/relation_node/veritas_relation'
 require 'data_mapper/relation_registry/relation_edge'
 require 'data_mapper/relation_registry/relation_edge/veritas_edge'
