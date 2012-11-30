@@ -61,6 +61,7 @@ module DataMapper
             if header.respond_to?(:columns)
               header.map(&:name)
             else
+              # FIXME: this is obviously broken and only works with 1:1 and 1:m
               header.map do |name, field|
                 "#{field.to_s.split('_').first}.#{name} AS #{field}"
               end

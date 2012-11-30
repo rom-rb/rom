@@ -28,19 +28,26 @@ module DataMapper
         private
 
         def join_relation(operation)
-          left_key  = join_definition.left.keys.first
-          right_key = join_definition.right.keys.first
+          left_key_name  = join_definition.left.keys.first
+          right_key_name = join_definition.right.keys.first
 
-          relation = @source_relation.join(@target_relation).
-            on(@source_relation[left_key].eq(@target_relation[right_key])).
-            order(@source_relation[left_key])
+          left_key =
+            if @source_relation.is_a?(Arel::SelectManager)
+              @source_relation.source.right.first.left[left_key_name]
+            else
+              @source_relation[left_key_name]
+            end
+
+          right_key = @target_relation[right_key_name]
+
+          relation = @source_relation.join(@target_relation).on(left_key.eq(right_key)).order(left_key)
 
           if operation
             relation = relation.instance_eval(&operation)
           end
 
           # FIXME: @aliases should already include fields from both sides
-          header = @aliases.to_hash.merge(@target_aliases)
+          header = @aliases.to_hash.merge(@target_aliases.to_hash)
 
           @source_node.gateway.new(relation, header)
         end

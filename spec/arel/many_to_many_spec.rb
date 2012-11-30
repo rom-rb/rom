@@ -1,6 +1,14 @@
 require 'spec_helper_integration'
 
-describe 'Relationship - Many To Many with generated mappers' do
+unless DataMapper.engines[:postgres_arel]
+  DataMapper.setup(
+    :postgres_arel,
+    'postgres://postgres@localhost/dm-mapper_test',
+    DataMapper::Engine::ArelEngine
+  )
+end
+
+describe '[Arel] Relationship - Many To Many with generated mappers' do
   before(:all) do
     setup_db
 
@@ -49,7 +57,7 @@ describe 'Relationship - Many To Many with generated mappers' do
       map :name, String
 
       has 0..n, :song_tags, SongTag
-      has 0..n, :songs, Song, :through => :song_tags, :via => [ :tag, :song_id, :id ]
+      has 0..n, :songs, Song, :through => :song_tags
     end
 
     class SongTagMapper < DataMapper::Mapper::Relation
@@ -58,8 +66,12 @@ describe 'Relationship - Many To Many with generated mappers' do
       relation_name :song_tags
       repository    :postgres_arel
 
-      map :song_id, Integer, :key => true
-      map :tag_id,  Integer, :key => true
+      belongs_to :song, Song
+      belongs_to :tag,  Tag
+
+      map :id,      Integer, :key => true
+      map :song_id, Integer
+      map :tag_id,  Integer
     end
 
     class SongMapper < DataMapper::Mapper::Relation
@@ -72,10 +84,10 @@ describe 'Relationship - Many To Many with generated mappers' do
 
       has 0..n, :song_tags, SongTag
 
-      has 0..n, :tags, Tag, :through => :song_tags, :via => [ :tag, :tag_id, :id ]
+      has 0..n, :tags, Tag, :through => :song_tags
 
-      has 0..n, :good_tags, Tag, :through => :song_tags, :via => [ :tag, :tag_id, :id ] do
-        restrict(engine.relations[:tags][:name].eq('good'))
+      has 0..n, :good_tags, Tag, :through => :song_tags do
+        where(source.right.first.left[:name].eq('good'))
       end
     end
   end
@@ -91,6 +103,8 @@ describe 'Relationship - Many To Many with generated mappers' do
   end
 
   it 'loads associated song_tags for songs' do
+    pending
+
     mapper = DataMapper[Song].include(:song_tags)
     songs  = mapper.to_a
 
@@ -110,6 +124,8 @@ describe 'Relationship - Many To Many with generated mappers' do
   end
 
   it 'loads associated tags for songs' do
+    pending
+
     mapper = DataMapper[Song].include(:tags)
     songs  = mapper.to_a
 
@@ -127,6 +143,8 @@ describe 'Relationship - Many To Many with generated mappers' do
   end
 
   it 'loads associated tags with name = good' do
+    pending
+
     mapper = DataMapper[Song].include(:good_tags)
     songs  = mapper.include(:good_tags).to_a
 
@@ -140,6 +158,8 @@ describe 'Relationship - Many To Many with generated mappers' do
   end
 
   it 'loads associated song_tags for tags' do
+    pending
+
     mapper = DataMapper[Tag].include(:song_tags)
     tags   = mapper.to_a
 
@@ -157,6 +177,8 @@ describe 'Relationship - Many To Many with generated mappers' do
   end
 
   it 'loads associated songs for tags' do
+    pending
+
     mapper = DataMapper[Tag].include(:songs)
     tags   = mapper.to_a
 
