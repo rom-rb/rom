@@ -59,7 +59,7 @@ module DataMapper
       #
       # @api public
       def self.relations
-        relations ||= engine.relations
+        @relations ||= engine.relations
       end
 
       # Returns base relation for this mapper
@@ -72,7 +72,7 @@ module DataMapper
       #
       # @api public
       def self.relation
-        relation ||= engine.base_relation(relation_name, attributes.header)
+        @relation ||= engine.base_relation(relation_name, attributes.header)
       end
 
       # Returns gateway relation for this mapper class
