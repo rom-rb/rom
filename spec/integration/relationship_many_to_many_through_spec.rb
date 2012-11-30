@@ -124,17 +124,17 @@ describe 'Relationship - Many To Many with generated mappers' do
 
       has 0..n, :song_tags, SongTag
 
-      has 0..n, :tags, Tag, :through => :song_tags, :via => :tag
+      has 0..n, :tags, Tag, :through => :song_tags
 
       has 0..n, :good_tags, Tag, :through => :song_tags, :via => :tag do
         restrict { |r| r.tags_name.eq('good') }
       end
 
-      has 0..n, :infos, Info, :through => :tags, :via => :infos
+      has 0..n, :infos, Info, :through => :tags
 
       has 0..n, :good_infos, Info, :through => :good_tags, :via => :infos
 
-      has 0..n, :info_contents, InfoContent, :through => :infos, :via => :info_contents
+      has 0..n, :info_contents, InfoContent, :through => :infos
 
       has 0..n, :good_info_contents, InfoContent, :through => :infos, :via => :info_contents do
         restrict { |r| r.info_contents_content.eq('really, really good') }

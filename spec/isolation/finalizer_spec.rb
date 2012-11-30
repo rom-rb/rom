@@ -26,7 +26,7 @@ describe 'Finalizer', :isolation => true do
       map :name, String
 
       has 0..n, :song_tags, SongTag
-      has 0..n, :songs,     Song, :through => :song_tags, :via => :song
+      has 0..n, :songs,     Song, :through => :song_tags
       has 0..n, :infos,     Info
     end
 
@@ -77,18 +77,18 @@ describe 'Finalizer', :isolation => true do
       map :title, String
 
       has 0..n, :song_tags, SongTag
-      has 0..n, :tags, Tag, :through => :song_tags, :via => :tag
+      has 0..n, :tags, Tag, :through => :song_tags
 
       has 1, :song_tag, SongTag
-      has 1, :tag,      Tag, :through => :song_tag, :via => :tag
+      has 1, :tag,      Tag, :through => :song_tag
 
       has 1, :good_tag, Tag, :through => :song_tag, :via => :tag do
         restrict { |r| r.tags_name.eq('good') }
       end
 
-      has 0..n, :infos, Info, :through => :tags, :via => :infos
+      has 0..n, :infos, Info, :through => :tags
 
-      has 0..n, :info_contents, InfoContent, :through => :infos, :via => :info_contents
+      has 0..n, :info_contents, InfoContent, :through => :infos
 
       has 0..n, :good_info_contents, InfoContent, :through => :infos, :via => :info_contents do
         restrict { |r| r.info_contents_content.eq('really, really good') }

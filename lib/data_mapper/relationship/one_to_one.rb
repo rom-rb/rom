@@ -17,7 +17,7 @@ module DataMapper
       #
       # @api private
       def finalize(mapper_registry)
-        if via
+        if through
 
           definition = ViaDefinition.new(self, mapper_registry)
 

@@ -72,7 +72,7 @@ describe 'Relationship - One To One through with generated mappers' do
 
       has 1, :song_tag, SongTag
 
-      has 1, :tag, Tag, :through => :song_tag, :via => :tag
+      has 1, :tag, Tag, :through => :song_tag
 
       has 1, :good_tag, Tag, :through => :song_tag, :via => :tag do
         restrict { |r| r.tags_name.eq('good') }

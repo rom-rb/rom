@@ -49,7 +49,7 @@ describe 'Relationship - Many To Many with generated mappers' do
       map :name, String
 
       has 0..n, :song_tags, SongTag
-      has 0..n, :songs, Song, :through => :song_tags, :via => :song
+      has 0..n, :songs, Song, :through => :song_tags
     end
 
     class SongTagMapper < DataMapper::Mapper::Relation
@@ -75,7 +75,7 @@ describe 'Relationship - Many To Many with generated mappers' do
 
       has 0..n, :song_tags, SongTag
 
-      has 0..n, :tags, Tag, :through => :song_tags, :via => :tag
+      has 0..n, :tags, Tag, :through => :song_tags
 
       has 0..n, :good_tags, Tag, :through => :song_tags, :via => :tag do
         restrict { |r| r.tags_name.eq('good') }
