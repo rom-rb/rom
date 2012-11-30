@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe RelationRegistry::RelationNode::VeritasRelation, '#join' do
+describe RelationRegistry::Veritas::Node, '#join' do
   subject { object.join(other) }
 
   let(:object)          { described_class.new(:users,   source_relation, aliases) }

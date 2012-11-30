@@ -1,14 +1,16 @@
 require 'spec_helper'
 
-describe RelationRegistry::RelationNode::VeritasRelation, '#each' do
-  let(:object)   { described_class.new(:users, relation) }
+describe RelationRegistry::Node, '#each' do
+  let(:object)   { subclass.new(name, relation) }
+  let(:name)     { :users }
   let(:relation) { mock('relation') }
-  let(:block)    { Proc.new {} }
 
   context "with a block" do
     subject { object.each(&block) }
 
-    it "passes the block to veritas relation" do
+    let(:block) { Proc.new {} }
+
+    it 'delegates to relation' do
       relation.should_receive(:each).with(&block)
       subject
     end

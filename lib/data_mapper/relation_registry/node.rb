@@ -8,7 +8,7 @@ module DataMapper
     # TODO: add #update
     # TODO: add #delete
     #
-    class RelationNode < Graph::Node
+    class Node < Graph::Node
       include Enumerable, Equalizer.new(:name)
 
       # Instance of the engine's relation class
@@ -86,8 +86,6 @@ module DataMapper
       def delete(key)
         @relation.delete(key)
       end
-
-    end # class RelationNode
-
+    end # class Node
   end # class RelationRegistry
 end # module DataMapper

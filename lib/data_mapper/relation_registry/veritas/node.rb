@@ -2,11 +2,11 @@ require 'veritas'
 
 module DataMapper
   class RelationRegistry
-    class RelationNode < Graph::Node
+    module Veritas
 
       # Relation node wrapping veritas relation
       #
-      class VeritasRelation < self
+      class Node < RelationRegistry::Node
         include Enumerable
 
         # Iterates over relation tuples
@@ -35,7 +35,7 @@ module DataMapper
         # @api private
         def base?
           veritas_relation = relation.respond_to?(:relation) ? relation.send(:relation) : relation
-          veritas_relation.instance_of?(Veritas::Relation::Base)
+          veritas_relation.instance_of?(::Veritas::Relation::Base)
         end
 
         # Renames the relation with given aliases
@@ -141,8 +141,7 @@ module DataMapper
           self.class.new(name, relation.sort_by(&block), aliases)
         end
 
-      end # class VeritasRelation
-
-    end # class RelationNode
+      end # class Node
+    end # module Veritas
   end # class RelationRegistry
 end # module DataMapper

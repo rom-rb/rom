@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe RelationRegistry::RelationNode::VeritasRelation, '#restrict' do
+describe RelationRegistry::Veritas::Node, '#restrict' do
   subject { object.restrict(query, &block) }
 
   let(:object)      { described_class.new(:users, relation) }

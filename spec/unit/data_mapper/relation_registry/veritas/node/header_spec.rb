@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe RelationRegistry::RelationNode::VeritasRelation, '#header' do
+describe RelationRegistry::Veritas::Node, '#header' do
   subject { object.header }
 
   let(:object)   { described_class.new(:users, relation) }

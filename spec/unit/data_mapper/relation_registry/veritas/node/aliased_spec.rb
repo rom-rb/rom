@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe RelationRegistry::RelationNode::VeritasRelation, '#aliased' do
+describe RelationRegistry::Veritas::Node, '#aliased' do
   subject { object.aliased }
 
   let(:object)           { described_class.new(:users, relation, aliases) }

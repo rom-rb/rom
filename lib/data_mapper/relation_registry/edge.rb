@@ -3,7 +3,7 @@ module DataMapper
 
     # Represents a directed relation edge joining 2 relation nodes
     #
-    class RelationEdge < Graph::Edge
+    class Edge < Graph::Edge
 
       # Left side relation node
       #

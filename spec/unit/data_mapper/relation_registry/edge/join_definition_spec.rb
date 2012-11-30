@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe RelationRegistry::RelationEdge, '#target_aliases' do
-  subject { object.target_aliases }
+describe RelationRegistry::Edge, '#join_definition' do
+  subject { object.join_definition }
 
   let(:object) { described_class.new(name, left, right) }
 
@@ -10,9 +10,8 @@ describe RelationRegistry::RelationEdge, '#target_aliases' do
   let(:join_definition) { mock('join_definition') }
 
   let(:left)            { mock('users', :name => source_name) }
+  let(:right)           { mock('orders') }
   let(:source_name)     { mock('source_name') }
-  let(:right)           { mock('orders', :aliases => target_aliases) }
-  let(:target_aliases)  { mock('target_aliases') }
 
-  it { should be(target_aliases) }
+  it { should be(join_definition) }
 end

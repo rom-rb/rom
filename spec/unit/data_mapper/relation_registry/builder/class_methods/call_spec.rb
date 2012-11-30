@@ -74,12 +74,12 @@ describe RelationRegistry::Builder, '.call' do
 
     it "adds songs_X_song_tags relation node" do
       node = relations[name]
-      node.should be_instance_of(RelationRegistry::RelationNode::VeritasRelation)
+      node.should be_instance_of(TEST_ENGINE.relation_node_class)
     end
 
     it "adds song_tags relation edge" do
       edge = relations.edge_for(name)
-      edge.should be_instance_of(RelationRegistry::RelationEdge::VeritasEdge)
+      edge.should be_instance_of(TEST_ENGINE.relation_edge_class)
     end
 
     it "adds songs_X_song_tags connector" do
@@ -96,14 +96,14 @@ describe RelationRegistry::Builder, '.call' do
 
     it "adds songs_X_song_tags_X_tags relation node" do
       node = relations[:songs_X_song_tags]
-      node.should be_instance_of(RelationRegistry::RelationNode::VeritasRelation)
+      node.should be_instance_of(TEST_ENGINE.relation_node_class)
       node = relations[name]
-      node.should be_instance_of(RelationRegistry::RelationNode::VeritasRelation)
+      node.should be_instance_of(TEST_ENGINE.relation_node_class)
     end
 
     it "adds tags relation edge" do
       edge = relations.edge_for(name)
-      edge.should be_instance_of(RelationRegistry::RelationEdge::VeritasEdge)
+      edge.should be_instance_of(TEST_ENGINE.relation_edge_class)
     end
 
     it "adds songs_X_song_tags_X_tags connector" do
@@ -120,16 +120,16 @@ describe RelationRegistry::Builder, '.call' do
 
     it "adds songs_X_song_tags_X_tags_X_infos relation node" do
       node = relations[:songs_X_song_tags]
-      node.should be_instance_of(RelationRegistry::RelationNode::VeritasRelation)
+      node.should be_instance_of(TEST_ENGINE.relation_node_class)
       node = relations[:songs_X_song_tags_X_tags]
-      node.should be_instance_of(RelationRegistry::RelationNode::VeritasRelation)
+      node.should be_instance_of(TEST_ENGINE.relation_node_class)
       node = relations[name]
-      node.should be_instance_of(RelationRegistry::RelationNode::VeritasRelation)
+      node.should be_instance_of(TEST_ENGINE.relation_node_class)
     end
 
     it "adds infos relation edge" do
       edge = relations.edge_for(name)
-      edge.should be_instance_of(RelationRegistry::RelationEdge::VeritasEdge)
+      edge.should be_instance_of(TEST_ENGINE.relation_edge_class)
     end
 
     it "adds songs_X_song_tags_X_tags_X_infos connector" do

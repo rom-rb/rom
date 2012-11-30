@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe RelationRegistry::RelationNode, '#insert' do
+describe RelationRegistry::Node, '#insert' do
   subject { object.insert user }
 
   let(:object)   { subclass.new(name, relation) }

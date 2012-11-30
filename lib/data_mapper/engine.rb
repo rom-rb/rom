@@ -55,7 +55,7 @@ module DataMapper
     #
     # @api public
     def relation_node_class
-      RelationRegistry::RelationNode
+      RelationRegistry::Node
     end
 
     # Returns the relation edge class used in the relation registry
@@ -69,7 +69,7 @@ module DataMapper
     #
     # @api public
     def relation_edge_class
-      RelationRegistry::RelationEdge
+      RelationRegistry::Edge
     end
 
     # Builds a relation instance that will be wrapped in a relation node

@@ -1,8 +1,8 @@
 module DataMapper
   class RelationRegistry
-    class RelationEdge < Graph::Edge
+    module Veritas
 
-      class VeritasEdge < self
+      class Edge < RelationRegistry::Edge
 
         def initialize(*)
           super
@@ -36,9 +36,9 @@ module DataMapper
         end
 
         def node_class
-          RelationNode::VeritasRelation
+          Node
         end
-      end # class VeritasEdge
-    end # class RelationEdge
+      end # class Edge
+    end # module Veritas
   end # class RelationRegistry
 end # module DataMapper

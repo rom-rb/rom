@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe RelationRegistry::RelationNode::VeritasRelation, '#rename' do
+describe RelationRegistry::Veritas::Node, '#rename' do
   subject { object.rename(new_aliases) }
 
   let(:object)   { described_class.new(:users, relation, aliases) }
