@@ -44,7 +44,7 @@ module DataMapper
         #
         # @api public
         def relation_node_class
-          RelationRegistry::Veritas::Node
+          Node
         end
 
         # Returns the relation edge class used in the relation registry
@@ -60,7 +60,7 @@ module DataMapper
         #
         # @api public
         def relation_edge_class
-          RelationRegistry::Veritas::Edge
+          Edge
         end
 
         # @see Engine#base_relation

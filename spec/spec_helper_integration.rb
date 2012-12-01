@@ -21,6 +21,8 @@ require 'do_sqlite3'
 require 'randexp'
 
 require 'dm-mapper'
+require 'data_mapper/engine/veritas'
+
 require 'db_setup'
 
 require 'monkey_patches'

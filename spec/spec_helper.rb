@@ -3,6 +3,8 @@ require 'ostruct'
 require 'dm-mapper'
 require 'virtus'
 
+require 'data_mapper/engine/veritas'
+
 begin
   require 'rspec'  # try for RSpec 2
 rescue LoadError

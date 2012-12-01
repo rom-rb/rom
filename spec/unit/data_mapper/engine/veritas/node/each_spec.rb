@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe RelationRegistry::Veritas::Node, '#each' do
+describe Engine::Veritas::Node, '#each' do
   let(:object)   { described_class.new(:users, relation) }
   let(:relation) { mock('relation') }
   let(:block)    { Proc.new {} }

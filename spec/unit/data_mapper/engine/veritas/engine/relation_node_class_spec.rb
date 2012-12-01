@@ -5,5 +5,5 @@ describe Engine::Veritas::Engine, '#relation_node_class' do
 
   let(:object) { described_class.new('postgres://localhost/test') }
 
-  it { should be(RelationRegistry::Veritas::Node) }
+  it { should be(Engine::Veritas::Node) }
 end

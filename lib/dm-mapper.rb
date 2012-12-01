@@ -22,9 +22,21 @@ module DataMapper
   # @return [self]
   #
   # @api public
-  def self.setup(name, uri, engine = Engine::Veritas::Engine)
-    engines[name.to_sym] = engine.new(uri)
+  def self.setup(name, uri, engine = nil)
+    engines[name.to_sym] = (engine || default_engine).new(uri)
     self
+  end
+
+  # The default engine to use when not passing one to {.setup}
+  #
+  # @example
+  #   DataMapper.default_engine # => DataMapper::Engine::Veritas::Engine
+  #
+  # @return [Engine::Veritas::Engine]
+  #
+  # @api public
+  def self.default_engine
+    Engine::Veritas::Engine
   end
 
   # Returns hash with all engines that were initialized
@@ -130,6 +142,8 @@ module AbstractType
   end
 end
 
+require 'bigdecimal'
+
 require 'descendants_tracker'
 require 'equalizer'
 require 'inflector'
@@ -137,15 +151,10 @@ require 'inflector'
 require 'data_mapper/support/graph'
 require 'data_mapper/support/utils'
 
-require 'data_mapper/engine'
-require 'data_mapper/engine/veritas/engine'
-
 require 'data_mapper/relation_registry'
 require 'data_mapper/relation_registry/aliases'
 require 'data_mapper/relation_registry/node'
 require 'data_mapper/relation_registry/edge'
-require 'data_mapper/relation_registry/veritas/node'
-require 'data_mapper/relation_registry/veritas/edge'
 require 'data_mapper/relation_registry/builder'
 require 'data_mapper/relation_registry/builder/node_name'
 require 'data_mapper/relation_registry/builder/node_name_set'

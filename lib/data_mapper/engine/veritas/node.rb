@@ -1,7 +1,7 @@
 require 'veritas'
 
 module DataMapper
-  class RelationRegistry
+  class Engine
     module Veritas
 
       # Relation node wrapping veritas relation
@@ -17,7 +17,8 @@ module DataMapper
         #     puts tuple.inspect
         #   end
         #
-        # @return [self, Enumerator]
+        # @return [self] if a block was passed in
+        # @return [Enumerator] otherwise
         #
         # @yield [::Veritas::Tuple]
         #
@@ -44,7 +45,7 @@ module DataMapper
         #
         #   renamed = DataMapper.engines[:default].relations[:people].rename(:id => :person_id)
         #
-        # @param [AliasSet]
+        # @param [RelationRegistry::Aliases]
         #
         # @return [Node]
         #
@@ -143,5 +144,5 @@ module DataMapper
 
       end # class Node
     end # module Veritas
-  end # class RelationRegistry
+  end # class Engine
 end # module DataMapper
