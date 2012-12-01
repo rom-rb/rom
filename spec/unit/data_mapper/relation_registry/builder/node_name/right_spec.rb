@@ -7,7 +7,7 @@ describe RelationRegistry::Builder::NodeName, '#right' do
 
   let(:left)         { :foo }
   let(:right)        { :bar }
-  let(:relationship) { mock('relationship', :name => :funky_bar) }
+  let(:relationship) { mock('relationship', :operation => mock, :target_model => mock) }
 
   it { should be(right) }
 end

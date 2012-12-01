@@ -32,6 +32,24 @@ module DataMapper
         # @api private
         attr_reader :relationship
 
+        # The operation attached to {#relationship}
+        #
+        # @see Relationship#operation
+        #
+        # @return [Proc]
+        #
+        # @api private
+        attr_reader :operation
+
+        # The {#relationship}'s target model
+        #
+        # @see Relationship#target_model
+        #
+        # @return [Class]
+        #
+        # @api private
+        attr_reader :target_model
+
         # Initialize a node name
         #
         # @param [#to_sym] left
@@ -50,6 +68,8 @@ module DataMapper
           @left         = left
           @right        = right
           @relationship = relationship
+          @operation    = @relationship.operation
+          @target_model = @relationship.target_model
         end
 
         # Coerce the name to a string

@@ -36,31 +36,27 @@ module DataMapper
         @relationship  = relationship
         @node_name_set = NodeNameSet.new(@relationship, @mappers)
 
-        build
+        connect
       end
 
-      def build
-        nodes = @node_name_set.map { |node_name|
-          left, right  = nodes(node_name)
-          relationship = node_name.relationship
+      def connect
+        nodes = connect_nodes
+        add_connector(nodes.last)
+      end
 
-          edge = build_edge(node_name, left, right)
-          node = edge.node(relationship, operation(relationship, node_name))
-
-          @relations.add_node(node)
-
-          node
+      def connect_nodes
+        @node_name_set.map { |node_name|
+          add_node(node_name, add_edge(node_name, *nodes(node_name)))
         }
-
-        build_connector(nodes.last)
       end
 
-      def operation(relationship, node_name)
-        last_join = @node_name_set.last == node_name
-        last_join ? @relationship.operation : relationship.operation
+      def add_node(node_name, edge)
+        node = edge.node(node_name.relationship, operation(node_name))
+        @relations.add_node(node)
+        node
       end
 
-      def build_edge(node_name, left, right)
+      def add_edge(node_name, left, right)
         edge = @relations.edge_for(node_name)
 
         unless edge
@@ -71,7 +67,7 @@ module DataMapper
         edge
       end
 
-      def build_connector(node)
+      def add_connector(node)
         @relations.add_connector(connector(node))
       end
 
@@ -92,7 +88,15 @@ module DataMapper
       end
 
       def target_mapper(node_name)
-        @mappers[node_name.relationship.target_model]
+        @mappers[node_name.target_model]
+      end
+
+      def operation(node_name)
+        target_node?(node_name) ? @relationship.operation : node_name.operation
+      end
+
+      def target_node?(node_name)
+        @node_name_set.last == node_name
       end
     end # class Builder
   end # class RelationRegistry
