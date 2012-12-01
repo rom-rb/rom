@@ -5,6 +5,8 @@ module DataMapper
     #
     class Edge < Graph::Edge
 
+      include Equalizer.new(:name)
+
       # Left side relation node
       #
       # @return [Node]
