@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe RelationRegistry::Aliases::Unary, '#entries' do
+describe Engine::Veritas::Aliases::Unary, '#entries' do
   subject { object.entries }
 
   let(:object) { described_class.new(songs_entries, songs_aliases) }

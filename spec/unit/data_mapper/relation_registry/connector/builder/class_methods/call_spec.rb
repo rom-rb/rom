@@ -56,7 +56,10 @@ describe RelationRegistry::Connector::Builder, '.call' do
     mapper_registry.each do |_, mapper|
       name     = mapper.relation_name
       relation = mapper.class.gateway_relation
-      mapper.relations.new_node(name, relation, mapper.class.aliases)
+      aliases  = mapper.relations.aliases(name, mapper.attributes)
+
+      mapper.relations.new_node(name, relation, aliases)
+
       mapper.relationships.each do |relationship|
         relationship.finalize(mapper_registry)
       end

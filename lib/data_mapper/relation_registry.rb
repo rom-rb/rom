@@ -192,5 +192,20 @@ module DataMapper
     def edge_for(name)
       edges.detect { |edge| edge.name.to_sym == name.to_sym }
     end
+
+    # The aliases used to join 2 of this registry's nodes
+    #
+    # @param [#to_s] relation_name
+    #   the name of the relation wrapped by a node
+    #
+    # @param [Mapper::AttributeSet] attribute_set
+    #   the attribute set to alias
+    #
+    # @return [Object] the aliases provided by a specific engine
+    #
+    # @api private
+    def aliases(relation_name, attribute_set)
+      node_class.aliases(relation_name, attribute_set)
+    end
   end # class RelationRegistry
 end # module DataMapper

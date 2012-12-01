@@ -25,7 +25,9 @@ module DataMapper
       def register_base_relation(mapper)
         name     = mapper.relation_name
         relation = mapper.gateway_relation
-        mapper.relations.new_node(name, relation, mapper.aliases)
+        aliases  = mapper.relations.aliases(name, mapper.attributes)
+
+        mapper.relations.new_node(name, relation, aliases)
       end
 
       # @api private

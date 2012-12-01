@@ -152,7 +152,6 @@ require 'data_mapper/support/graph'
 require 'data_mapper/support/utils'
 
 require 'data_mapper/relation_registry'
-require 'data_mapper/relation_registry/aliases'
 require 'data_mapper/relation_registry/node'
 require 'data_mapper/relation_registry/edge'
 require 'data_mapper/relation_registry/node_name'

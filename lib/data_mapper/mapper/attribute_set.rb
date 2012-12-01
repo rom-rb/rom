@@ -34,18 +34,6 @@ module DataMapper
         self
       end
 
-      # Aliases for a given prefix
-      #
-      # @param [Symbol] prefix
-      #   the prefix used for aliasing fields
-      #
-      # @return [Aliases]
-      #
-      # @api private
-      def aliases(prefix)
-        aliases_class.new(aliased_field_map(prefix), original_aliases(prefix))
-      end
-
       # Return the result of merging within a new instance
       #
       # @param [AttributeSet] other
@@ -261,12 +249,6 @@ module DataMapper
         select(&:key?)
       end
 
-      private
-
-      def aliases_class
-        RelationRegistry::Aliases::Unary
-      end
-
       def aliased_field_map(prefix)
         field_map(prefix, true)
       end
@@ -274,6 +256,8 @@ module DataMapper
       def original_aliases(prefix)
         field_map(prefix, false)
       end
+
+      private
 
       def field_map(prefix, aliased_key)
         primitives.each_with_object({}) { |attribute, hash|
