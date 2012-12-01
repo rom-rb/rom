@@ -57,13 +57,8 @@ module DataMapper
       end
 
       def add_edge(node_name, left, right)
-        edge = @relations.edge_for(node_name)
-
-        unless edge
-          edge = @relations.build_edge(node_name, left, right)
-          @relations.add_edge(edge)
-        end
-
+        edge = @relations.build_edge(node_name, left, right)
+        @relations.add_edge(edge)
         edge
       end
 

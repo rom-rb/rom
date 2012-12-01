@@ -113,6 +113,8 @@ module DataMapper
     #
     # @api private
     def build_node(*args)
+      node = node_for(args[1])
+      return node if node
       node_class.new(*args)
     end
 
@@ -132,6 +134,8 @@ module DataMapper
     #
     # @api private
     def build_edge(*args)
+      edge = edge_for(args.first)
+      return edge if edge
       edge_class.new(*args)
     end
 
