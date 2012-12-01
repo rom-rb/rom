@@ -58,13 +58,13 @@ module DataMapper
         def to_sql
           # FIXME: we need introduce a common interface for aliases and columns header
           fields =
-            if header.respond_to?(:columns)
-              header.map(&:name)
-            else
+            if header.is_a?(Hash)
               # FIXME: this is obviously broken and only works with 1:1 and 1:m
               header.map do |name, field|
                 "#{field.to_s.split('_').first}.#{name} AS #{field}"
               end
+            else
+              header.map(&:name)
             end.join(', ')
 
           relation.project(fields).to_sql
