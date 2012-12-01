@@ -7,7 +7,6 @@ module DataMapper
       # Relation node wrapping veritas relation
       #
       class Node < RelationRegistry::Node
-
         include Enumerable
 
         def self.aliases(relation_name, attribute_set)
@@ -35,16 +34,6 @@ module DataMapper
           return to_enum unless block_given?
           relation.each(&block)
           self
-        end
-
-        # Returns if the relation is a base relation
-        #
-        # @return [Boolean]
-        #
-        # @api private
-        def base?
-          veritas_relation = relation.respond_to?(:relation) ? relation.send(:relation) : relation
-          veritas_relation.instance_of?(::Veritas::Relation::Base)
         end
 
         # Renames the relation with given aliases
@@ -151,6 +140,7 @@ module DataMapper
         end
 
       end # class Node
+
     end # module Veritas
   end # class Engine
 end # module DataMapper

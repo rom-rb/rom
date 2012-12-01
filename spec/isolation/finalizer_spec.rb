@@ -101,31 +101,26 @@ describe 'Finalizer', :isolation => true do
   it 'finalizes songs relation' do
     relation = relations[:songs]
     relation.should be_instance_of(TEST_ENGINE.relation_node_class)
-    relation.should be_base
   end
 
   it 'finalizes tags relation' do
     relation = relations[:tags]
     relation.should be_instance_of(TEST_ENGINE.relation_node_class)
-    relation.should be_base
   end
 
   it 'finalizes song_tags relation' do
     relation = relations[:song_tags]
     relation.should be_instance_of(TEST_ENGINE.relation_node_class)
-    relation.should be_base
   end
 
   it 'finalizes infos relation' do
     relation = relations[:infos]
     relation.should be_instance_of(TEST_ENGINE.relation_node_class)
-    relation.should be_base
   end
 
   it 'finalizes info_contents relation' do
     relation = relations[:info_contents]
     relation.should be_instance_of(TEST_ENGINE.relation_node_class)
-    relation.should be_base
   end
 
   it 'finalizes songs-have-many-tags-through-song_tags relation' do
@@ -134,7 +129,6 @@ describe 'Finalizer', :isolation => true do
     node = relations[name]
 
     node.should be_instance_of(TEST_ENGINE.relation_node_class)
-    node.should_not be_base
 
     edge = relations.edge_for(name)
     edge.should be_instance_of(TEST_ENGINE.relation_edge_class)
@@ -149,7 +143,6 @@ describe 'Finalizer', :isolation => true do
     node = relations[name]
 
     node.should be_instance_of(TEST_ENGINE.relation_node_class)
-    node.should_not be_base
 
     edge = relations.edge_for(name)
     edge.should be_instance_of(TEST_ENGINE.relation_edge_class)
@@ -163,7 +156,6 @@ describe 'Finalizer', :isolation => true do
     node = relations[name]
 
     node.should be_instance_of(TEST_ENGINE.relation_node_class)
-    node.should_not be_base
 
     edge = relations.edge_for(name)
     edge.should be_instance_of(TEST_ENGINE.relation_edge_class)
@@ -178,7 +170,6 @@ describe 'Finalizer', :isolation => true do
     node = relations[name]
 
     node.should be_instance_of(TEST_ENGINE.relation_node_class)
-    node.should_not be_base
 
     edge = relations.edge_for(name)
     edge.should be_instance_of(TEST_ENGINE.relation_edge_class)
@@ -193,7 +184,6 @@ describe 'Finalizer', :isolation => true do
     node = relations[name]
 
     node.should be_instance_of(TEST_ENGINE.relation_node_class)
-    node.should_not be_base
 
     edge = relations.edge_for(name)
     edge.should be_instance_of(TEST_ENGINE.relation_edge_class)
@@ -207,7 +197,6 @@ describe 'Finalizer', :isolation => true do
     node = relations[name]
 
     node.should be_instance_of(TEST_ENGINE.relation_node_class)
-    node.should_not be_base
 
     edge = relations.edge_for(name)
     edge.should be_instance_of(TEST_ENGINE.relation_edge_class)
@@ -221,7 +210,6 @@ describe 'Finalizer', :isolation => true do
     node = relations[name]
 
     node.should be_instance_of(TEST_ENGINE.relation_node_class)
-    node.should_not be_base
 
     edge = relations.edge_for(name)
     edge.should be_instance_of(TEST_ENGINE.relation_edge_class)

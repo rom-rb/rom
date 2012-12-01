@@ -33,13 +33,13 @@ module DataMapper
         # @api private
         class Unary < self
 
-          private
-
           def initialize(entries, aliases)
             super
             @header   = aliases.keys.to_set
             @inverted = aliases.invert
           end
+
+          private
 
           def old_field(left_entries, left_key)
             @inverted.fetch(left_key)
@@ -48,8 +48,11 @@ module DataMapper
           def initial_aliases
             @aliases.dup
           end
+
         end # class Unary
+
       end # class Aliases
+
     end # module Veritas
   end # class RelationRegistry
 end # module DataMapper
