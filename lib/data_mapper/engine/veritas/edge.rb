@@ -36,6 +36,7 @@ module DataMapper
         end
 
       end # class Edge
+
     end # module Veritas
   end # class Engine
 end # module DataMapper

@@ -8,7 +8,6 @@ module DataMapper
       #
       # @api private
       class Aliases
-
         include AbstractType, Enumerable
         include Equalizer.new(:entries)
 
@@ -131,7 +130,9 @@ module DataMapper
             left[original] = right_key if left[original] == old
           end
         end
+
       end # class Aliases
+
     end # module Veritas
   end # class RelationRegistry
 end # module DataMapper

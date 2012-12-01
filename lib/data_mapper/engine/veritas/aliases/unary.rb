@@ -48,8 +48,11 @@ module DataMapper
           def initial_aliases
             @aliases.dup
           end
+
         end # class Unary
+
       end # class Aliases
+
     end # module Veritas
   end # class RelationRegistry
 end # module DataMapper

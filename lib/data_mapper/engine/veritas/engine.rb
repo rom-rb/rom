@@ -89,7 +89,9 @@ module DataMapper
         def gateway_relation(relation)
           ::Veritas::Relation::Gateway.new(adapter, relation)
         end
+
       end # class Engine
+
     end # module Veritas
   end # class Engine
 end # module DataMapper

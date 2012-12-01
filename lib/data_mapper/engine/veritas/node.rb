@@ -7,7 +7,6 @@ module DataMapper
       # Relation node wrapping veritas relation
       #
       class Node < RelationRegistry::Node
-
         include Enumerable
 
         def self.aliases(relation_name, attribute_set)
@@ -141,6 +140,7 @@ module DataMapper
         end
 
       end # class Node
+
     end # module Veritas
   end # class Engine
 end # module DataMapper

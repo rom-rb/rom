@@ -250,7 +250,9 @@ module DataMapper
           def initial_aliases
             {}
           end
+
         end # class Binary
+
       end # class Aliases
     end # module Veritas
   end # class RelationRegistry
