@@ -168,7 +168,8 @@ module DataMapper
     # @param [Object] relation
     #   an instance of the engine's relation class
     #
-    # @return [Node]
+    # @return [Node] if a node for the given relation exists
+    # @return [nil] otherwise
     #
     # @api private
     def node_for(relation)
@@ -180,7 +181,8 @@ module DataMapper
     # @param [#to_sym] name
     #   the edge's name
     #
-    # @return [Edge, nil]
+    # @return [Edge] if an edge with the given name exists
+    # @return [nil] otherwise
     #
     # @api private
     def edge_for(name)
