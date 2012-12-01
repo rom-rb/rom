@@ -4,7 +4,7 @@ unless DataMapper.engines[:postgres_arel]
   DataMapper.setup(
     :postgres_arel,
     'postgres://postgres@localhost/dm-mapper_test',
-    DataMapper::Engine::ArelEngine
+    DataMapper::Engine::Arel::Engine
   )
 end
 

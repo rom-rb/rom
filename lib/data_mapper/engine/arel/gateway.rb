@@ -1,6 +1,6 @@
 module DataMapper
   class Engine
-    class ArelEngine < self
+    module Arel
 
       class Gateway
         include Enumerable
@@ -76,6 +76,6 @@ module DataMapper
 
       end # class Gateway
 
-    end # class ArelEngine
+    end # module Arel
   end # class Engine
 end # module DataMapper

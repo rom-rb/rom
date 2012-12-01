@@ -22,6 +22,7 @@ require 'randexp'
 
 require 'dm-mapper'
 require 'data_mapper/engine/veritas'
+require 'data_mapper/engine/arel'
 
 require 'db_setup'
 

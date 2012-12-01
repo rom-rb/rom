@@ -1,10 +1,10 @@
 module DataMapper
-  class RelationRegistry
-    class RelationNode < Graph::Node
+  class Engine
+    module Arel
 
       # Relation node wrapping arel relation
       #
-      class ArelRelation < self
+      class Node < RelationRegistry::Node
         include Enumerable
 
         alias_method :gateway, :relation
@@ -53,8 +53,7 @@ module DataMapper
           raise NotImplementedError
         end
 
-      end # class ArelRelation
-
-    end # class RelationNode
-  end # class RelationRegistry
+      end # class Node
+    end # module Arel
+  end # class Engine
 end # module DataMapper

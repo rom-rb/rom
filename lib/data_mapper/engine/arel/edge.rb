@@ -1,8 +1,8 @@
 module DataMapper
-  class RelationRegistry
-    class RelationEdge < Graph::Edge
+  class Engine
+    module Arel
 
-      class ArelEdge < self
+      class Edge < RelationRegistry::Edge
 
         def initialize(*)
           super
@@ -54,9 +54,10 @@ module DataMapper
 
 
         def node_class
-          RelationNode::ArelRelation
+          Node
         end
-      end # class VeritasEdge
-    end # class RelationEdge
-  end # class RelationRegistry
+
+      end # class Edge
+    end # module Arel
+  end # class Engine
 end # module DataMapper
