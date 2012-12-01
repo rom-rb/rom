@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe RelationRegistry::Builder, '.call' do
+describe RelationRegistry::Connector::Builder, '.call' do
   subject { described_class.call(song_mapper.relations, mapper_registry, relationship) }
 
   let(:mapper_registry) do

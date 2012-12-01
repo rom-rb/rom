@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe RelationRegistry::Builder::NodeNameSet, '#each' do
+describe RelationRegistry::NodeNameSet, '#each' do
   subject { object.each { |node_name| yields << node_name } }
 
   let(:yields) { [] }
@@ -39,9 +39,9 @@ describe RelationRegistry::Builder::NodeNameSet, '#each' do
   let(:tags_infos)          { Relationship::OneToMany .new(:infos,         tag_model,      info_model) }
   let(:infos_info_contents) { Relationship::OneToMany .new(:info_contents, info_model,     info_content_model) }
 
-  let(:songs_X_song_tags)                { RelationRegistry::Builder::NodeName.new(:songs, :song_tags, songs_song_tags) }
-  let(:songs_X_song_tags_X_tags)         { RelationRegistry::Builder::NodeName.new(songs_X_song_tags, :tags, song_tags_tag) }
-  let(:songs_X_song_tags_X_tags_X_infos) { RelationRegistry::Builder::NodeName.new(songs_X_song_tags_X_tags, :infos, tags_infos) }
+  let(:songs_X_song_tags)                { RelationRegistry::NodeName.new(:songs, :song_tags, songs_song_tags) }
+  let(:songs_X_song_tags_X_tags)         { RelationRegistry::NodeName.new(songs_X_song_tags, :tags, song_tags_tag) }
+  let(:songs_X_song_tags_X_tags_X_infos) { RelationRegistry::NodeName.new(songs_X_song_tags_X_tags, :infos, tags_infos) }
 
   before do
     mapper_registry.each do |_, mapper|
@@ -64,7 +64,7 @@ describe RelationRegistry::Builder::NodeNameSet, '#each' do
         expect { subject }.to change { yields.dup }.
           from([]).
           to([
-            RelationRegistry::Builder::NodeName.new(:songs, :song_tags, songs_song_tags),
+            RelationRegistry::NodeName.new(:songs, :song_tags, songs_song_tags),
           ])
       end
     end
@@ -78,8 +78,8 @@ describe RelationRegistry::Builder::NodeNameSet, '#each' do
         expect { subject }.to change { yields.dup }.
           from([]).
           to([
-            RelationRegistry::Builder::NodeName.new(:songs,            :song_tags, songs_song_tags),
-            RelationRegistry::Builder::NodeName.new(songs_X_song_tags, :tags,      song_tags_tag),
+            RelationRegistry::NodeName.new(:songs,            :song_tags, songs_song_tags),
+            RelationRegistry::NodeName.new(songs_X_song_tags, :tags,      song_tags_tag),
           ])
       end
     end
@@ -93,9 +93,9 @@ describe RelationRegistry::Builder::NodeNameSet, '#each' do
         expect { subject }.to change { yields.dup }.
           from([]).
           to([
-            RelationRegistry::Builder::NodeName.new(:songs,                   :song_tags, songs_song_tags),
-            RelationRegistry::Builder::NodeName.new(songs_X_song_tags,        :tags,      song_tags_tag),
-            RelationRegistry::Builder::NodeName.new(songs_X_song_tags_X_tags, :infos,     tags_infos),
+            RelationRegistry::NodeName.new(:songs,                   :song_tags, songs_song_tags),
+            RelationRegistry::NodeName.new(songs_X_song_tags,        :tags,      song_tags_tag),
+            RelationRegistry::NodeName.new(songs_X_song_tags_X_tags, :infos,     tags_infos),
           ])
       end
     end
@@ -109,17 +109,17 @@ describe RelationRegistry::Builder::NodeNameSet, '#each' do
         expect { subject }.to change { yields.dup }.
           from([]).
           to([
-            RelationRegistry::Builder::NodeName.new(:songs,                           :song_tags,     songs_song_tags),
-            RelationRegistry::Builder::NodeName.new(songs_X_song_tags,                :tags,          song_tags_tag),
-            RelationRegistry::Builder::NodeName.new(songs_X_song_tags_X_tags,         :infos,         tags_infos),
-            RelationRegistry::Builder::NodeName.new(songs_X_song_tags_X_tags_X_infos, :info_contents, infos_info_contents),
+            RelationRegistry::NodeName.new(:songs,                           :song_tags,     songs_song_tags),
+            RelationRegistry::NodeName.new(songs_X_song_tags,                :tags,          song_tags_tag),
+            RelationRegistry::NodeName.new(songs_X_song_tags_X_tags,         :infos,         tags_infos),
+            RelationRegistry::NodeName.new(songs_X_song_tags_X_tags_X_infos, :info_contents, infos_info_contents),
           ])
       end
     end
   end
 end
 
-describe RelationRegistry::Builder::NodeNameSet do
+describe RelationRegistry::NodeNameSet do
   subject { object.new(songs_tags, mapper_registry) }
 
   let(:object) { described_class }

@@ -11,12 +11,12 @@ module DataMapper
     # @api private
     attr_reader :mapper_registry
 
-    # The edge builder in use
+    # The connector builder in use
     #
-    # @return [RelationRegistry::Builder]
+    # @return [RelationRegistry::Connector::Builder]
     #
     # @api private
-    attr_reader :edge_builder
+    attr_reader :connector_builder
 
     # The mapper builder in use
     #
@@ -49,8 +49,8 @@ module DataMapper
     # @param [Enumerable<Mapper>] mappers
     #   the mappers to be finalized
     #
-    # @param [RelationRegistry::Builder] edge_builder
-    #   the builder used to create edges for relationships
+    # @param [RelationRegistry::Connector::Builder] connector_builder
+    #   the builder used to create edges, nodes and connectors for relationships
     #
     # @param [Mapper::Builder] mapper_builder
     #   the builder used to create mappers for relationships
@@ -58,11 +58,11 @@ module DataMapper
     # @return [undefined]
     #
     # @api private
-    def initialize(mappers = Mapper::Relation.descendants, edge_builder = RelationRegistry::Builder, mapper_builder = Mapper::Builder)
-      @mappers         = mappers
-      @mapper_registry = Mapper.mapper_registry
-      @edge_builder    = edge_builder
-      @mapper_builder  = mapper_builder
+    def initialize(mappers = Mapper::Relation.descendants, connector_builder = RelationRegistry::Connector::Builder, mapper_builder = Mapper::Builder)
+      @mappers           = mappers
+      @mapper_registry   = Mapper.mapper_registry
+      @connector_builder = connector_builder
+      @mapper_builder    = mapper_builder
     end
 
     # Perform finalization
@@ -71,8 +71,8 @@ module DataMapper
     #
     # @api private
     def run
-      BaseRelationMappersFinalizer.call(mappers, edge_builder, mapper_builder)
-      RelationshipMappersFinalizer.call(mappers, edge_builder, mapper_builder)
+      BaseRelationMappersFinalizer.call(mappers, connector_builder, mapper_builder)
+      RelationshipMappersFinalizer.call(mappers, connector_builder, mapper_builder)
       self
     end
 

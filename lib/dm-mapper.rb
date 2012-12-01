@@ -155,10 +155,10 @@ require 'data_mapper/relation_registry'
 require 'data_mapper/relation_registry/aliases'
 require 'data_mapper/relation_registry/node'
 require 'data_mapper/relation_registry/edge'
-require 'data_mapper/relation_registry/builder'
-require 'data_mapper/relation_registry/builder/node_name'
-require 'data_mapper/relation_registry/builder/node_name_set'
+require 'data_mapper/relation_registry/node_name'
+require 'data_mapper/relation_registry/node_name_set'
 require 'data_mapper/relation_registry/connector'
+require 'data_mapper/relation_registry/connector/builder'
 
 require 'data_mapper/mapper_registry'
 

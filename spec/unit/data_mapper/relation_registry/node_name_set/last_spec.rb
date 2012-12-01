@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe RelationRegistry::Builder::NodeNameSet, '#last' do
+describe RelationRegistry::NodeNameSet, '#last' do
   subject { object.last.to_sym }
 
   let(:object) { described_class.new(songs_info_contents, mapper_registry) }

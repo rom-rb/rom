@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe RelationRegistry::Builder::NodeNameSet, '#to_a' do
+describe RelationRegistry::NodeNameSet, '#to_a' do
   subject { object.to_a }
 
   let(:object) { described_class.new(songs_info_contents, mapper_registry) }

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe RelationRegistry::Builder::NodeName, '#target_model' do
+describe RelationRegistry::NodeName, '#target_model' do
   subject { object.target_model }
 
   let(:object) { described_class.new(left, right, relationship) }

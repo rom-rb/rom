@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe RelationRegistry::Builder::NodeName, '#to_a' do
-  subject { object.to_a }
+describe RelationRegistry::NodeName, '#relationship' do
+  subject { object.relationship }
 
   let(:object) { described_class.new(left, right, relationship) }
 
@@ -9,5 +9,5 @@ describe RelationRegistry::Builder::NodeName, '#to_a' do
   let(:right)        { :bar }
   let(:relationship) { mock('relationship', :operation => mock, :target_model => mock) }
 
-  it { should eql([ left, right ]) }
+  it { should be(relationship) }
 end

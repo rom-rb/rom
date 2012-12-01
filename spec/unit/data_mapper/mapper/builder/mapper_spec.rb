@@ -62,7 +62,7 @@ describe Mapper::Builder, '#mapper' do
 
     mapper_registry.each do |_, mapper|
       mapper.relationships.each do |relationship|
-        RelationRegistry::Builder.call(mapper.relations, mapper_registry, relationship)
+        RelationRegistry::Connector::Builder.call(mapper.relations, mapper_registry, relationship)
       end
     end
 

@@ -41,7 +41,7 @@ module DataMapper
       def finalize_edges
         mappers.each do |mapper|
           mapper.relationships.each do |relationship|
-            edge_builder.call(mapper.relations, mapper_registry, relationship)
+            connector_builder.call(mapper.relations, mapper_registry, relationship)
           end
         end
       end

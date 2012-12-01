@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe RelationRegistry::Builder::NodeNameSet, '#first' do
+describe RelationRegistry::NodeNameSet, '#first' do
   subject { object.first.to_sym }
 
   let(:object) { described_class.new(info_contents, mapper_registry) }
