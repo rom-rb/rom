@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Engine::VeritasEngine, '#base_relation' do
+describe Engine::Veritas::Engine, '#base_relation' do
   subject { object.base_relation(name, header) }
 
   let(:object) { described_class.new('postgres://localhost/test') }

@@ -22,7 +22,7 @@ module DataMapper
   # @return [self]
   #
   # @api public
-  def self.setup(name, uri, engine = Engine::VeritasEngine)
+  def self.setup(name, uri, engine = Engine::Veritas::Engine)
     engines[name.to_sym] = engine.new(uri)
     self
   end
@@ -138,7 +138,7 @@ require 'data_mapper/support/graph'
 require 'data_mapper/support/utils'
 
 require 'data_mapper/engine'
-require 'data_mapper/engine/veritas_engine'
+require 'data_mapper/engine/veritas/engine'
 
 require 'data_mapper/relation_registry'
 require 'data_mapper/relation_registry/aliases'

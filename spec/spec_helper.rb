@@ -101,7 +101,7 @@ RSpec.configure do |config|
     Relationship::JoinDefinition.new(left, right)
   end
 
-  class TestEngine < DataMapper::Engine::VeritasEngine
+  class TestEngine < DataMapper::Engine::Veritas::Engine
     def initialize(uri)
       @relations = DataMapper::RelationRegistry.new(self)
     end

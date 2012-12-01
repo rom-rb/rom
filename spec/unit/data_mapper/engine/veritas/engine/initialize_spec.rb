@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Engine::VeritasEngine, '#initialize' do
+describe Engine::Veritas::Engine, '#initialize' do
   subject { described_class.new(uri) }
 
   let(:uri) { "postgres://localhost/test" }

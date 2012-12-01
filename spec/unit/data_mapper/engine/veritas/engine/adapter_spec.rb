@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Engine::VeritasEngine, '#adapter' do
+describe Engine::Veritas::Engine, '#adapter' do
   subject { object.adapter }
 
   let(:object) { described_class.new(uri)    }
