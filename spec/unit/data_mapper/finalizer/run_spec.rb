@@ -9,11 +9,11 @@ describe Finalizer, '#run' do
 
   it 'finalizes base mappers and then relationship mappers' do
     Finalizer::BaseRelationMappersFinalizer.should_receive(:call).with(
-      mappers, object.edge_builder, object.mapper_builder
+      mappers, object.connector_builder, object.mapper_builder
     )
 
     Finalizer::RelationshipMappersFinalizer.should_receive(:call).with(
-      mappers, object.edge_builder, object.mapper_builder
+      mappers, object.connector_builder, object.mapper_builder
     )
 
     subject.should be(object)

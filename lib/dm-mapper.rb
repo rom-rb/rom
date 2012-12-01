@@ -22,9 +22,21 @@ module DataMapper
   # @return [self]
   #
   # @api public
-  def self.setup(name, uri, engine = Engine::VeritasEngine)
-    engines[name.to_sym] = engine.new(uri)
+  def self.setup(name, uri, engine = nil)
+    engines[name.to_sym] = (engine || default_engine).new(uri)
     self
+  end
+
+  # The default engine to use when not passing one to {.setup}
+  #
+  # @example
+  #   DataMapper.default_engine # => DataMapper::Engine::Veritas::Engine
+  #
+  # @return [Engine::Veritas::Engine]
+  #
+  # @api public
+  def self.default_engine
+    Engine::Veritas::Engine
   end
 
   # Returns hash with all engines that were initialized
@@ -130,6 +142,8 @@ module AbstractType
   end
 end
 
+require 'bigdecimal'
+
 require 'descendants_tracker'
 require 'equalizer'
 require 'inflector'
@@ -138,20 +152,18 @@ require 'data_mapper/support/graph'
 require 'data_mapper/support/utils'
 
 require 'data_mapper/engine'
-require 'data_mapper/engine/arel_engine'
 require 'data_mapper/engine/veritas_engine'
 
 require 'data_mapper/relation_registry'
 require 'data_mapper/relation_registry/relation_node'
-require 'data_mapper/relation_registry/relation_node/arel_relation'
 require 'data_mapper/relation_registry/relation_node/veritas_relation'
 require 'data_mapper/relation_registry/relation_edge'
-require 'data_mapper/relation_registry/relation_edge/arel_edge'
 require 'data_mapper/relation_registry/relation_edge/veritas_edge'
 require 'data_mapper/relation_registry/builder'
 require 'data_mapper/relation_registry/builder/node_name'
 require 'data_mapper/relation_registry/builder/node_name_set'
 require 'data_mapper/relation_registry/connector'
+require 'data_mapper/relation_registry/connector/builder'
 
 require 'data_mapper/mapper_registry'
 
@@ -161,9 +173,7 @@ require 'data_mapper/mapper/attribute/primitive'
 require 'data_mapper/mapper/attribute/embedded_value'
 require 'data_mapper/mapper/attribute/embedded_collection'
 require 'data_mapper/mapper/attribute_set'
-
 require 'data_mapper/mapper'
-require 'data_mapper/mapper/relation/aliases'
 require 'data_mapper/mapper/relation'
 
 require 'data_mapper/mapper/builder'

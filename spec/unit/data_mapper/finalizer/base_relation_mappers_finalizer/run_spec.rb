@@ -25,10 +25,10 @@ describe Finalizer::BaseRelationMappersFinalizer, '#run' do
   it_should_behave_like 'a command method'
 
   it "adds relation node for user mapper" do
-    user_mapper.relations[:users].should be_kind_of(RelationRegistry::RelationNode)
+    user_mapper.relations[:users].should be_instance_of(TEST_ENGINE.relation_node_class)
   end
 
   it "adds relation node for address mapper" do
-    address_mapper.relations[:addresses].should be_kind_of(RelationRegistry::RelationNode)
+    address_mapper.relations[:addresses].should be_instance_of(TEST_ENGINE.relation_node_class)
   end
 end

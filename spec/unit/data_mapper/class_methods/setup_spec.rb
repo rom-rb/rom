@@ -8,7 +8,7 @@ describe DataMapper, '.setup' do
     subject { DataMapper.setup(repository, uri) }
 
     it "sets up VeritasEngine by default" do
-      subject.engines[repository].should be_instance_of(Engine::VeritasEngine)
+      subject.engines[repository].should be_instance_of(Engine::Veritas::Engine)
     end
   end
 

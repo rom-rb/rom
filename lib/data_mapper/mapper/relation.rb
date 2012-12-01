@@ -14,7 +14,7 @@ module DataMapper
       #   mapper = DataMapper[Person]
       #   mapper.relation
       #
-      # @return [RelationRegistry::RelationNode]
+      # @return [RelationRegistry::Node]
       #
       # @api public
       attr_reader :relation
@@ -166,15 +166,6 @@ module DataMapper
         self
       end
 
-      # The aliases used for this mapper's instances
-      #
-      # @return [AliasSet]
-      #
-      # @api private
-      def self.aliases
-        @aliases ||= attributes.aliases(relation_name)
-      end
-
       # Perform finalization
       #
       # @return [self]
@@ -217,7 +208,7 @@ module DataMapper
       #
       # TODO find a better name
       #
-      # @param [Hash] aliases
+      # @param [Aliases, Hash] aliases
       #   the aliases to use in the returned instance
       #
       # @return [Mapper::Relation]

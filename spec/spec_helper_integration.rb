@@ -21,6 +21,8 @@ require 'do_sqlite3'
 require 'randexp'
 
 require 'dm-mapper'
+require 'data_mapper/engine/veritas'
+
 require 'db_setup'
 
 require 'monkey_patches'
@@ -58,7 +60,12 @@ module Spec
     relation_registry.connectors.each do |name, connector|
       source = map[connector.source_node]
       target = map[connector.node]
-      g.add_edges(source, target, :label => name.to_s, :style => 'bold', :color => 'blue')
+
+      relationship = connector.relationship
+
+      label = "#{relationship.source_model}##{relationship.name} [#{name}]"
+
+      g.add_edges(source, target, :label => label, :style => 'bold', :color => 'blue')
     end
 
     # Generate output image

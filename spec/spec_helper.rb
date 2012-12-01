@@ -3,6 +3,8 @@ require 'ostruct'
 require 'dm-mapper'
 require 'virtus'
 
+require 'data_mapper/engine/veritas'
+
 begin
   require 'rspec'  # try for RSpec 2
 rescue LoadError
@@ -101,7 +103,7 @@ RSpec.configure do |config|
     Relationship::JoinDefinition.new(left, right)
   end
 
-  class TestEngine < DataMapper::Engine::VeritasEngine
+  class TestEngine < DataMapper::Engine::Veritas::Engine
     def initialize(uri)
       @relations = DataMapper::RelationRegistry.new(self)
     end

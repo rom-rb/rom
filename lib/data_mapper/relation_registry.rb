@@ -23,7 +23,7 @@ module DataMapper
     #
     #   DataMapper[Person].relations.node_class
     #
-    # @return [Class]
+    # @return [Node]
     #
     # @api public
     attr_reader :node_class
@@ -36,7 +36,7 @@ module DataMapper
     #
     #   DataMapper[Person].relations.edge_class
     #
-    # @return [Class]
+    # @return [Edge]
     #
     # @api public
     attr_reader :edge_class
@@ -107,12 +107,14 @@ module DataMapper
     #
     # @param [Veritas::Relation] relation
     #
-    # @param [AliasSet,nil] aliases
+    # @param [Aliases,nil] aliases
     #
-    # @return [RelationNode]
+    # @return [Node]
     #
     # @api private
     def build_node(*args)
+      node = node_for(args[1])
+      return node if node
       node_class.new(*args)
     end
 
@@ -128,16 +130,19 @@ module DataMapper
 
     # Build a new edge
     #
-    # @return [RelationEdge]
+    # @return [Edge]
     #
     # @api private
     def build_edge(*args)
+      edge = edge_for(args.first)
+      return edge if edge
       edge_class.new(*args)
     end
 
     # Add new relation node to the graph
     #
-    # @param [Veritas::Relation] relation
+    # @param [Object] relation
+    #   an instance of the engine's relation class
     #
     # @return [self]
     #
@@ -154,7 +159,7 @@ module DataMapper
     #
     # @param [Symbol] name of the relation
     #
-    # @return [RelationNode]
+    # @return [Node]
     #
     # @api public
     def [](name)
@@ -164,9 +169,11 @@ module DataMapper
 
     # Return relation node for the given relation
     #
-    # @param [Veritas::Relation] relation
+    # @param [Object] relation
+    #   an instance of the engine's relation class
     #
-    # @return [RelationNode]
+    # @return [Node] if a node for the given relation exists
+    # @return [nil] otherwise
     #
     # @api private
     def node_for(relation)
@@ -178,12 +185,27 @@ module DataMapper
     # @param [#to_sym] name
     #   the edge's name
     #
-    # @return [RelationEdge, nil]
+    # @return [Edge] if an edge with the given name exists
+    # @return [nil] otherwise
     #
     # @api private
     def edge_for(name)
       edges.detect { |edge| edge.name.to_sym == name.to_sym }
     end
 
+    # The aliases used to join 2 of this registry's nodes
+    #
+    # @param [#to_s] relation_name
+    #   the name of the relation wrapped by a node
+    #
+    # @param [Mapper::AttributeSet] attribute_set
+    #   the attribute set to alias
+    #
+    # @return [Object] the aliases provided by a specific engine
+    #
+    # @api private
+    def aliases(relation_name, attribute_set)
+      node_class.aliases(relation_name, attribute_set)
+    end
   end # class RelationRegistry
 end # module DataMapper
