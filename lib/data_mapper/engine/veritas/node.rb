@@ -37,16 +37,6 @@ module DataMapper
           self
         end
 
-        # Returns if the relation is a base relation
-        #
-        # @return [Boolean]
-        #
-        # @api private
-        def base?
-          veritas_relation = relation.respond_to?(:relation) ? relation.send(:relation) : relation
-          veritas_relation.instance_of?(::Veritas::Relation::Base)
-        end
-
         # Renames the relation with given aliases
         #
         # @example
