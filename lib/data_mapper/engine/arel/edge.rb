@@ -32,7 +32,7 @@ module DataMapper
           right_key_name = join_definition.right.keys.first
 
           left_key =
-            if @source_relation.is_a?(Arel::SelectManager)
+            if @source_relation.is_a?(::Arel::SelectManager)
               @source_relation.source.right.first.left[left_key_name]
             else
               @source_relation[left_key_name]
