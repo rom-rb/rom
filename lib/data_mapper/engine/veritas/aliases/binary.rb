@@ -236,12 +236,12 @@ module DataMapper
         # @api private
         class Binary < self
 
-          private
-
           def initialize(entries, aliases)
             super
             @header = entries.values.to_set
           end
+
+          private
 
           def old_field(left_entries, left_key)
             left_entries.fetch(left_key)
