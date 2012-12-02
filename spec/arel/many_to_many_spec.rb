@@ -79,7 +79,7 @@ describe '[Arel] Relationship - Many To Many with generated mappers' do
       has 0..n, :tags, Tag, :through => :song_tags
 
       has 0..n, :good_tags, Tag, :through => :song_tags do
-        where(DataMapper[Tag].class.engine.relations[:tags][:name].eq('good'))
+        where(DataMapper[Tag].relations[:tags][:name].eq('good'))
       end
     end
   end

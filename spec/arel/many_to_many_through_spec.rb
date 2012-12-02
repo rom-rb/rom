@@ -127,7 +127,7 @@ describe 'Relationship - Many-To-Many-Through with generated mappers' do
       has 0..n, :tags, Tag, :through => :song_tags
 
       has 0..n, :good_tags, Tag, :through => :song_tags do
-        where(DataMapper[Tag].class.relations[:tags][:name].eq('good'))
+        where(DataMapper[Tag].relations[:tags][:name].eq('good'))
       end
 
       has 0..n, :infos, Info, :through => :tags
@@ -137,7 +137,7 @@ describe 'Relationship - Many-To-Many-Through with generated mappers' do
       has 0..n, :info_contents, InfoContent, :through => :infos
 
       has 0..n, :good_info_contents, InfoContent, :through => :infos, :via => :info_contents do
-        where(DataMapper[InfoContent].class.relations[:info_contents][:content].eq('really, really good'))
+        where(DataMapper[InfoContent].relations[:info_contents][:content].eq('really, really good'))
       end
     end
   end
