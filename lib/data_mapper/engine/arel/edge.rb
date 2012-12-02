@@ -3,6 +3,7 @@ module DataMapper
     module Arel
 
       class Edge < RelationRegistry::Edge
+        Attribute = Struct.new(:name)
 
         def initialize(*)
           super
@@ -46,8 +47,12 @@ module DataMapper
             relation = relation.instance_eval(&operation)
           end
 
-          # FIXME: @aliases should already include fields from both sides
-          header = @aliases.to_hash.merge(@target_aliases.to_hash)
+          header = @aliases.header.map(&:to_s).map { |field|
+            parts         = field.split('_')
+            relation_name = parts.first
+            field_name    = parts[1..parts.size].join('_')
+            Attribute.new(:"#{relation_name}.#{field_name} AS #{field}")
+          }
 
           @source_node.gateway.new(relation, header)
         end

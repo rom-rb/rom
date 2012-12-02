@@ -11,6 +11,8 @@ module DataMapper
         include AbstractType, Enumerable
         include Equalizer.new(:entries)
 
+        attr_reader :header
+
         # A hash containing +original_field+ => +current_field+ pairs
         #
         # @return [Hash]
