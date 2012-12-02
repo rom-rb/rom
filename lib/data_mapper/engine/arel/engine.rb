@@ -49,7 +49,7 @@ module DataMapper
         def arel_engine_for(name, header)
           # TODO: this is temporary. we need to find out how to create a thin arel engine
           arel_engines.fetch(name) {
-            Class.new(ActiveRecord::Base) { self.table_name = name }
+            arel_engines[name] = Class.new(ActiveRecord::Base) { self.table_name = name }
           }
         end
 
