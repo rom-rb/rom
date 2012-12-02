@@ -20,7 +20,7 @@ module DataMapper
         def each(&block)
           return to_enum unless block_given?
           gateway.each do |row|
-            yield(row.symbolize_keys!)
+            yield(Hash[row.map { |key, value| [ key.to_sym, value ] }])
           end
           self
         end
