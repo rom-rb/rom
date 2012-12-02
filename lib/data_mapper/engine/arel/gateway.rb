@@ -52,7 +52,7 @@ module DataMapper
         private
 
         def read
-          engine.adapter.execute(to_sql)
+          connection.execute(to_sql)
         end
 
         def to_sql

@@ -8,19 +8,16 @@ module DataMapper
         attr_reader :adapter
         attr_reader :arel_engines
 
+        # @api private
+        def self.parse_uri(uri)
+          Addressable::URI.parse(uri)
+        end
+
+        # @api private
         def initialize(uri)
-          super
-
-          # FIXME: parse uri here
-          ActiveRecord::Base.establish_connection(
-            :database => 'dm-mapper_test',
-            :username => 'postgres',
-            :adapter  => 'postgresql'
-          )
-
-          @adapter = ActiveRecord::Base.connection
-
-          @arel_engines = {}
+          super(self.class.parse_uri(uri))
+          establish_connection
+          reset_engines!
         end
 
         # @api private
@@ -43,7 +40,21 @@ module DataMapper
           Gateway.new(self, relation)
         end
 
+        # @api private
+        def reset_engines!
+          @arel_engines = {}
+        end
+
         private
+
+        # @api private
+        def establish_connection
+          ActiveRecord::Base.establish_connection(
+            :database => uri.path.sub(/^\//, ''),
+            :username => uri.user,
+            :adapter  => uri.scheme
+          )
+        end
 
         # @api private
         def arel_engine_for(name, header)

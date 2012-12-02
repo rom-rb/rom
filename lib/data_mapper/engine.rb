@@ -19,6 +19,13 @@ module DataMapper
     # @api public
     attr_reader :adapter
 
+    # Returns database connection URI
+    #
+    # @return [Object]
+    #
+    # @api public
+    attr_reader :uri
+
     # Returns the relation registry used by the engine
     #
     # @example
