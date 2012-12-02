@@ -11,6 +11,13 @@ module DataMapper
     class Node < Graph::Node
       include Enumerable, Equalizer.new(:name)
 
+      def self.aliases(relation_name, attribute_set)
+        aliased_field_map = attribute_set.aliased_field_map(relation_name)
+        original_aliases  = attribute_set.original_aliases(relation_name)
+
+        Aliases::Unary.new(aliased_field_map, original_aliases)
+      end
+
       # Instance of the engine's relation class
       #
       # @return [Object]

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Engine::Veritas::Aliases::Unary, '#each' do
+describe RelationRegistry::Aliases::Unary, '#each' do
   subject { object.each { |field, aliased_field| yields[field] = aliased_field } }
 
   let(:yields) { {} }
@@ -37,7 +37,7 @@ describe Engine::Veritas::Aliases::Unary, '#each' do
   end
 end
 
-describe Engine::Veritas::Aliases::Unary do
+describe RelationRegistry::Aliases::Unary do
   subject { object.new(entries, aliases) }
 
   let(:entries) { mock('entries', :to_hash => {}, :values => []) }

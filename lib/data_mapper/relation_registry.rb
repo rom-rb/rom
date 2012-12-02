@@ -203,7 +203,7 @@ module DataMapper
     #
     # @api private
     def aliases(relation_name, attribute_set)
-      node_class.aliases(relation_name, attribute_set)
+      Node.aliases(relation_name, attribute_set)
     end
   end # class RelationRegistry
 end # module DataMapper
