@@ -134,9 +134,7 @@ module DataMapper
     #
     # @api private
     def build_edge(*args)
-      edge = edge_for(args.first)
-      return edge if edge
-      edge_class.new(*args)
+      edge_for(args.first) || edge_class.new(*args)
     end
 
     # Add new relation node to the graph
