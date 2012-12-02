@@ -6,5 +6,5 @@ describe Mapper::Attribute, '#aliased_field' do
   let(:attribute) { subclass.new(:title) }
   let(:prefix)    { :book }
 
-  it { should be(:book_title) }
+  its(:name) { should be(:book_title) }
 end

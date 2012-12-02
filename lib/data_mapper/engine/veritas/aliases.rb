@@ -94,11 +94,11 @@ module DataMapper
         end
 
         def alias(name)
-          @entries[name.to_sym]
+          @entries[name]
         end
 
         def to_hash
-          @aliases.dup
+          @aliases.each_with_object({}) { |(k,v ), hash| hash[k.to_sym] = v.to_sym }
         end
 
         private
