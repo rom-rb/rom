@@ -31,30 +31,50 @@ module DataMapper
 
           tuples     = relation.to_a
           parent_key = attributes.key
-          name       = attributes.detect { |attribute|
+
+          name = attributes.detect { |attribute|
             attribute.kind_of?(Mapper::Attribute::EmbeddedCollection)
           }.name
 
-          parents = tuples.each_with_object({}) do |tuple, hash|
-            key = parent_key.map { |attribute| tuple[attribute.field] }
-            hash[key] = attributes.primitives.each_with_object({}) { |attribute, parent|
-              parent[attribute.field] = tuple[attribute.field]
-            }
-          end
+          parents = map_parents(tuples, parent_key)
 
-          parents.each do |key, parent|
-            parent[name] = tuples.map { |tuple|
-              current_key = parent_key.map { |attribute| tuple[attribute.field] }
-              if key == current_key
-                tuple
-              end
-            }
-            parent[name].compact!
-          end
+          # Mutate parents
+          map_children(name, parents, tuples, parent_key)
 
           parents.each_value { |parent| yield(load(parent)) }
 
           self
+        end
+
+        private
+
+        def map_parents(tuples, parent_key)
+          tuples.each_with_object({}) do |tuple, parents|
+            parents[key_tuple(parent_key, tuple)] = parent(tuple)
+          end
+        end
+
+        # Mutates parents
+        def map_children(name, parents, tuples, parent_key)
+          parents.each do |parent_key_tuple, parent|
+            parent[name] = children(name, parent_key_tuple, parent_key, tuples)
+          end
+        end
+
+        def parent(tuple)
+          attributes.primitives.each_with_object({}) { |attribute, parent|
+            parent[attribute.field] = tuple[attribute.field]
+          }
+        end
+
+        def children(name, parent_key_tuple, parent_key, tuples)
+          tuples.select { |tuple|
+            parent_key_tuple == key_tuple(parent_key, tuple)
+          }
+        end
+
+        def key_tuple(key, tuple)
+          key.map { |attribute| tuple[attribute.field] }
         end
 
       end # module Iterator
