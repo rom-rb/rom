@@ -39,7 +39,7 @@ module DataMapper
           parents = map_parents(tuples, parent_key)
 
           # Mutate parents
-          map_children(name, parents, tuples, parent_key)
+          map_children(tuples, parent_key, parents, name)
 
           parents.each_value { |parent| yield(load(parent)) }
 
@@ -55,9 +55,9 @@ module DataMapper
         end
 
         # Mutates parents
-        def map_children(name, parents, tuples, parent_key)
+        def map_children(tuples, parent_key, parents, name)
           parents.each do |parent_key_tuple, parent|
-            parent[name] = children(name, parent_key_tuple, parent_key, tuples)
+            parent[name] = children(tuples, parent_key, parent_key_tuple)
           end
         end
 
@@ -67,7 +67,7 @@ module DataMapper
           }
         end
 
-        def children(name, parent_key_tuple, parent_key, tuples)
+        def children(tuples, parent_key, parent_key_tuple)
           tuples.select { |tuple|
             parent_key_tuple == key_tuple(parent_key, tuple)
           }
