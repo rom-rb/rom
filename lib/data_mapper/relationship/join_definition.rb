@@ -26,6 +26,8 @@ module DataMapper
         # @api private
         attr_reader :keys
 
+        attr_reader :relation
+
         private
 
         # Initialize a new instance
@@ -39,8 +41,8 @@ module DataMapper
         # @return [undefined]
         #
         # @api private
-        def initialize(relation_name, keys)
-          @relation_name, @keys = relation_name, Array(keys)
+        def initialize(relation_name, keys, relation = nil)
+          @relation_name, @keys, @relation = relation_name, Array(keys), relation
         end
       end # class Side
 

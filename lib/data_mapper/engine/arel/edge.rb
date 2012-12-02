@@ -11,7 +11,7 @@ module DataMapper
           @target_aliases = target_node.aliases
           @source_aliases = source_node.aliases.join(@target_aliases, join_definition)
 
-          @source_relation = source_node.gateway.relation.clone
+          @source_relation = source_node.gateway.relation
           @target_relation = target_node.gateway.relation
 
           @aliases = @source_aliases
@@ -31,17 +31,10 @@ module DataMapper
         def join_relation(operation)
           left_key_name  = join_definition.left.keys.first
           right_key_name = join_definition.right.keys.first
+          left_key       = join_definition.left.relation[left_key_name]
+          right_key      = join_definition.right.relation[right_key_name]
 
-          left_key =
-            if @source_relation.is_a?(::Arel::SelectManager)
-              @source_relation.source.right.first.left[left_key_name]
-            else
-              @source_relation[left_key_name]
-            end
-
-          right_key = @target_relation[right_key_name]
-
-          relation = @source_relation.join(@target_relation).on(left_key.eq(right_key)).order(left_key)
+          relation = @source_relation.clone.join(@target_relation).on(left_key.eq(right_key)).order(left_key)
 
           if operation
             relation = relation.instance_eval(&operation)

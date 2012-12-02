@@ -145,7 +145,7 @@ describe 'Relationship - Many-To-Many-Through with generated mappers' do
       has 0..n, :info_contents, InfoContent, :through => :infos
 
       has 0..n, :good_info_contents, InfoContent, :through => :infos, :via => :info_contents do
-        where(DataMapper[InfoContent].class.relations[:info_contents][:name].eq('good'))
+        where(DataMapper[InfoContent].class.relations[:info_contents][:content].eq('really, really good'))
       end
     end
   end
@@ -165,8 +165,6 @@ describe 'Relationship - Many-To-Many-Through with generated mappers' do
   end
 
   it 'loads associated tag infos' do
-    pending
-
     mapper = DataMapper[Song].include(:infos)
 
     songs = mapper.to_a
@@ -187,8 +185,6 @@ describe 'Relationship - Many-To-Many-Through with generated mappers' do
   end
 
   it 'loads associated good infos' do
-    pending
-
     mapper = DataMapper[Song].include(:good_infos)
 
     songs = mapper.to_a
@@ -204,8 +200,6 @@ describe 'Relationship - Many-To-Many-Through with generated mappers' do
   end
 
   it 'loads associated tag info contents' do
-    pending
-
     mapper = DataMapper[Song].include(:info_contents)
     songs = mapper.to_a
 
@@ -225,8 +219,6 @@ describe 'Relationship - Many-To-Many-Through with generated mappers' do
   end
 
   it 'loads associated restricted tag info contents' do
-    pending
-
     mapper = DataMapper[Song].include(:good_info_contents)
     songs = mapper.to_a
 
