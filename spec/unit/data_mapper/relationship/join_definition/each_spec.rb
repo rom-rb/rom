@@ -23,12 +23,7 @@ describe Relationship::JoinDefinition, '#each' do
     it_should_behave_like 'an #each method'
 
     it 'yields each mapping' do
-      expect { subject }.to change { yields.dup }.
-        from({}).
-        to(
-          :songs_id    => :song_tags_song_id,
-          :songs_title => :song_tags_tag_id
-        )
+      expect { subject }.to change { yields.dup }.from({}).to(object.to_hash)
     end
   end
 end

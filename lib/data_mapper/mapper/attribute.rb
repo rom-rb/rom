@@ -8,6 +8,19 @@ module DataMapper
     # @api private
     class Attribute
 
+      Alias = Struct.new(:field, :prefix) {
+        include Equalizer.new(:field, :prefix, :name)
+
+        attr_reader :name
+
+        alias_method :to_sym, :name
+
+        def initialize(field, prefix)
+          super
+          @name = :"#{prefix}_#{field}"
+        end
+      }
+
       include AbstractType
 
       include Equalizer.new(:name, :type, :field, :options)
@@ -28,8 +41,8 @@ module DataMapper
       #   the aliased field name
       #
       # @api private
-      def self.aliased_field(field, prefix)
-        :"#{prefix}_#{field}"
+      def self.aliased_field(*args)
+        Alias.new(*args)
       end
 
       # The attribute's name

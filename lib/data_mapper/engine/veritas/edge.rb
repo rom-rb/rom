@@ -10,8 +10,8 @@ module DataMapper
           @target_aliases = target_node.aliases
           @source_aliases = source_node.aliases.join(@target_aliases, join_definition)
 
-          @source_relation = source_node.relation.rename(@source_aliases)
-          @target_relation = target_node.relation.rename(@target_aliases)
+          @source_relation = source_node.relation.rename(@source_aliases.to_hash)
+          @target_relation = target_node.relation.rename(@target_aliases.to_hash)
 
           @aliases = @source_aliases
         end
