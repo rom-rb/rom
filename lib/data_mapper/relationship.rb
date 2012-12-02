@@ -175,16 +175,14 @@ module DataMapper
     end
 
     def finalize_join_definition(mapper_registry)
-      left  = join_side(mapper_registry, source_model, source_key)
-      right = join_side(mapper_registry, target_model, target_key)
+      left  = join_side(mapper_registry[source_model], source_key)
+      right = join_side(mapper_registry[target_model], target_key)
 
       @join_definition = JoinDefinition.new(left, right)
     end
 
-    def join_side(mapper_registry, model, key)
-      mapper = mapper_registry[model]
+    def join_side(mapper, key)
       JoinDefinition::Side.new(mapper.relation_name, key, mapper.relation)
     end
-
   end # class Relationship
 end # module DataMapper
