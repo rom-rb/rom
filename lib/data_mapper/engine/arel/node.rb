@@ -25,10 +25,6 @@ module DataMapper
           self
         end
 
-        # @api private
-        def join(other, join_definition)
-        end
-
         # @api public
         def [](name)
           gateway.relation[name]
