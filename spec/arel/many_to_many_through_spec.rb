@@ -1,13 +1,5 @@
 require 'spec_helper_integration'
 
-unless DataMapper.engines[:postgres_arel]
-  DataMapper.setup(
-    :postgres_arel,
-    'postgres://postgres@localhost/dm-mapper_test',
-    DataMapper::Engine::Arel::Engine
-  )
-end
-
 describe 'Relationship - Many-To-Many-Through with generated mappers' do
   before(:all) do
     setup_db
@@ -73,7 +65,7 @@ describe 'Relationship - Many-To-Many-Through with generated mappers' do
 
       model         Tag
       relation_name :tags
-      repository    :postgres_arel
+      repository    :postgres
 
       map :id,   Integer, :key => true
       map :name, String
@@ -85,7 +77,7 @@ describe 'Relationship - Many-To-Many-Through with generated mappers' do
 
       model         Info
       relation_name :infos
-      repository    :postgres_arel
+      repository    :postgres
 
       map :id,     Integer, :key => true
       map :tag_id, Integer
@@ -100,7 +92,7 @@ describe 'Relationship - Many-To-Many-Through with generated mappers' do
 
       model         InfoContent
       relation_name :info_contents
-      repository    :postgres_arel
+      repository    :postgres
 
       map :id,      Integer, :key => true
       map :info_id, Integer
@@ -113,7 +105,7 @@ describe 'Relationship - Many-To-Many-Through with generated mappers' do
 
       model         SongTag
       relation_name :song_tags
-      repository    :postgres_arel
+      repository    :postgres
 
       map :song_id, Integer, :key => true
       map :tag_id,  Integer, :key => true
@@ -125,7 +117,7 @@ describe 'Relationship - Many-To-Many-Through with generated mappers' do
     class SongMapper < DataMapper::Mapper::Relation
       model         Song
       relation_name :songs
-      repository    :postgres_arel
+      repository    :postgres
 
       map :id,    Integer, :key => true
       map :title, String

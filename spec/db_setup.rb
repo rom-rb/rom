@@ -1,7 +1,9 @@
 CONFIG = YAML.load_file("#{ROOT}/config/database.yml")
 
+ENGINE = DataMapper::Engine.const_get(ENV.fetch('ENGINE', 'Veritas'))
+
 CONFIG.each do |name, uri|
-  DataMapper.setup(name, uri)
+  DataMapper.setup(name, uri, ENGINE.const_get(:Engine))
 end
 
 MAX_RELATION_SIZE = 10

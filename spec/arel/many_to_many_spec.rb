@@ -1,13 +1,5 @@
 require 'spec_helper_integration'
 
-unless DataMapper.engines[:postgres_arel]
-  DataMapper.setup(
-    :postgres_arel,
-    'postgres://postgres@localhost/dm-mapper_test',
-    DataMapper::Engine::Arel::Engine
-  )
-end
-
 describe '[Arel] Relationship - Many To Many with generated mappers' do
   before(:all) do
     setup_db
@@ -51,7 +43,7 @@ describe '[Arel] Relationship - Many To Many with generated mappers' do
 
       model         Tag
       relation_name :tags
-      repository    :postgres_arel
+      repository    :postgres
 
       map :id,   Integer, :key => true
       map :name, String
@@ -64,7 +56,7 @@ describe '[Arel] Relationship - Many To Many with generated mappers' do
 
       model         SongTag
       relation_name :song_tags
-      repository    :postgres_arel
+      repository    :postgres
 
       belongs_to :song, Song
       belongs_to :tag,  Tag
@@ -77,7 +69,7 @@ describe '[Arel] Relationship - Many To Many with generated mappers' do
     class SongMapper < DataMapper::Mapper::Relation
       model         Song
       relation_name :songs
-      repository    :postgres_arel
+      repository    :postgres
 
       map :id,    Integer, :key => true
       map :title, String
