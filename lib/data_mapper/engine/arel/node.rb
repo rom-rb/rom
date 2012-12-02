@@ -29,12 +29,6 @@ module DataMapper
         def join(other, join_definition)
         end
 
-        # @api private
-        def base?
-          # TODO: push it down to ArelEngine::Gateway
-          gateway.relation.kind_of?(Arel::Table)
-        end
-
         # @api public
         def [](name)
           gateway.relation[name]
