@@ -155,6 +155,7 @@ module DataMapper
     private
 
     DEFAULT_SOURCE_KEY = [ :id ].freeze
+    DEFAULT_TARGET_KEY = [].freeze
 
     # Returns default name of the source key
     #
@@ -171,7 +172,7 @@ module DataMapper
     #
     # @api private
     def default_target_key
-      [].freeze
+      DEFAULT_TARGET_KEY
     end
 
     def finalize_join_definition(mapper_registry)
