@@ -87,7 +87,7 @@ describe '[Arel] Relationship - Many To Many with generated mappers' do
       has 0..n, :tags, Tag, :through => :song_tags
 
       has 0..n, :good_tags, Tag, :through => :song_tags do
-        where(source.right.first.left[:name].eq('good'))
+        where(DataMapper[Tag].class.engine.relations[:tags][:name].eq('good'))
       end
     end
   end
@@ -103,8 +103,6 @@ describe '[Arel] Relationship - Many To Many with generated mappers' do
   end
 
   it 'loads associated song_tags for songs' do
-    pending
-
     mapper = DataMapper[Song].include(:song_tags)
     songs  = mapper.to_a
 
@@ -124,8 +122,6 @@ describe '[Arel] Relationship - Many To Many with generated mappers' do
   end
 
   it 'loads associated tags for songs' do
-    pending
-
     mapper = DataMapper[Song].include(:tags)
     songs  = mapper.to_a
 
@@ -143,8 +139,6 @@ describe '[Arel] Relationship - Many To Many with generated mappers' do
   end
 
   it 'loads associated tags with name = good' do
-    pending
-
     mapper = DataMapper[Song].include(:good_tags)
     songs  = mapper.include(:good_tags).to_a
 
@@ -158,8 +152,6 @@ describe '[Arel] Relationship - Many To Many with generated mappers' do
   end
 
   it 'loads associated song_tags for tags' do
-    pending
-
     mapper = DataMapper[Tag].include(:song_tags)
     tags   = mapper.to_a
 
@@ -177,8 +169,6 @@ describe '[Arel] Relationship - Many To Many with generated mappers' do
   end
 
   it 'loads associated songs for tags' do
-    pending
-
     mapper = DataMapper[Tag].include(:songs)
     tags   = mapper.to_a
 
