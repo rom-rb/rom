@@ -47,11 +47,10 @@ module DataMapper
             relation = relation.instance_eval(&operation)
           end
 
-          header = @aliases.header.map(&:to_s).map { |field|
-            parts         = field.split('_')
-            relation_name = parts.first
-            field_name    = parts[1..parts.size].join('_')
-            Attribute.new(:"#{relation_name}.#{field_name} AS #{field}")
+          header = @aliases.header.map { |attribute_alias|
+            Attribute.new(
+              "#{attribute_alias.prefix}.#{attribute_alias.field} AS #{attribute_alias}"
+            )
           }
 
           @source_node.gateway.new(relation, header)

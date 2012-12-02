@@ -19,6 +19,10 @@ module DataMapper
           super
           @name = :"#{prefix}_#{field}"
         end
+
+        def to_s
+          name.to_s
+        end
       }
 
       include AbstractType
