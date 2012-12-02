@@ -8,7 +8,7 @@ unless DataMapper.engines[:postgres_arel]
   )
 end
 
-describe 'Relationship - Many To Many with generated mappers' do
+describe 'Relationship - Many-To-Many-Through with generated mappers' do
   before(:all) do
     setup_db
 
@@ -77,6 +77,8 @@ describe 'Relationship - Many To Many with generated mappers' do
 
       map :id,   Integer, :key => true
       map :name, String
+
+      has 0..n, :infos, Info
     end
 
     class InfoMapper < DataMapper::Mapper::Relation
@@ -85,11 +87,13 @@ describe 'Relationship - Many To Many with generated mappers' do
       relation_name :infos
       repository    :postgres_arel
 
-      belongs_to :tag, Tag
-
       map :id,     Integer, :key => true
       map :tag_id, Integer
       map :text,   String
+
+      belongs_to :tag, Tag
+
+      has 0..n, :info_contents, InfoContent
     end
 
     class InfoContentMapper < DataMapper::Mapper::Relation
@@ -98,11 +102,11 @@ describe 'Relationship - Many To Many with generated mappers' do
       relation_name :info_contents
       repository    :postgres_arel
 
-      belongs_to :info, Info
-
       map :id,      Integer, :key => true
       map :info_id, Integer
       map :content, String
+
+      belongs_to :info, Info
     end
 
     class SongTagMapper < DataMapper::Mapper::Relation
@@ -111,12 +115,11 @@ describe 'Relationship - Many To Many with generated mappers' do
       relation_name :song_tags
       repository    :postgres_arel
 
+      map :song_id, Integer, :key => true
+      map :tag_id,  Integer, :key => true
+
       belongs_to :song, Song
       belongs_to :tag,  Tag
-
-      map :id,      Integer, :key => true
-      map :song_id, Integer
-      map :tag_id,  Integer
     end
 
     class SongMapper < DataMapper::Mapper::Relation
@@ -131,19 +134,19 @@ describe 'Relationship - Many To Many with generated mappers' do
 
       has 0..n, :tags, Tag, :through => :song_tags
 
-      #has 0..n, :good_tags, Tag, :through => :song_tags, :via => [ :tag, :tag_id, :id ] do
-        #restrict(engine.relations[:tags][:name].eq('good'))
-      #end
+      has 0..n, :good_tags, Tag, :through => :song_tags do
+        where(DataMapper[Tag].class.relations[:tags][:name].eq('good'))
+      end
 
-      #has 0..n, :infos, Info, :through => :tags
+      has 0..n, :infos, Info, :through => :tags
 
-      #has 0..n, :good_infos, Info, :through => :good_tags, :via => [ :infos, :id, :tag_id ]
+      has 0..n, :good_infos, Info, :through => :good_tags, :via => :infos
 
-      #has 0..n, :info_contents, InfoContent, :through => :infos
+      has 0..n, :info_contents, InfoContent, :through => :infos
 
-      #has 0..n, :good_info_contents, InfoContent, :through => :infos, :via => [ :info_contents, :id, :info_id ] do
-        #restrict(engine.relations[:info_content][:content].eq('really, really good'))
-      #end
+      has 0..n, :good_info_contents, InfoContent, :through => :infos, :via => :info_contents do
+        where(DataMapper[InfoContent].class.relations[:info_contents][:name].eq('good'))
+      end
     end
   end
 
