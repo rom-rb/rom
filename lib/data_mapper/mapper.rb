@@ -258,21 +258,6 @@ module DataMapper
       self
     end
 
-    # Shortcut for self.class.relations
-    #
-    # @see Engine#relations
-    #
-    # @example
-    #   mapper = DataMapper[User]
-    #   mapper.relations
-    #
-    # @return [RelationRegistry]
-    #
-    # @api public
-    def relations
-      self.class.relations
-    end
-
     # @api private
     def initialize
       @model         = self.class.model

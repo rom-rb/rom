@@ -204,6 +204,21 @@ module DataMapper
         @attributes = attributes
       end
 
+      # Shortcut for self.class.relations
+      #
+      # @see Engine#relations
+      #
+      # @example
+      #   mapper = DataMapper[User]
+      #   mapper.relations
+      #
+      # @return [RelationRegistry]
+      #
+      # @api public
+      def relations
+        self.class.relations
+      end
+
       # Return a new instance with mapping that corresponds to aliases
       #
       # TODO find a better name
