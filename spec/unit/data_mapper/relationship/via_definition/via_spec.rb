@@ -23,12 +23,6 @@ describe Relationship::ViaDefinition, '#via' do
   let(:tag)       { Relationship::ManyToOne .new(:tag, song_tag_model, tag_model) }
   let(:tags)      { Relationship::ManyToMany.new(:tags, song_model, tag_model, :through => :song_tags, :via => via) }
 
-  context 'when relationship.via is a Hash' do
-    let(:via)  { { :tag_id => :id } }
-
-    it { should be(via) }
-  end
-
   context 'when relationship.via is a Symbol' do
     let(:tags) { Relationship::ManyToMany.new(:tags, song_model, tag_model, :through => :song_tags, :via => via) }
     let(:via) { :tag }

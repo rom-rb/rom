@@ -25,12 +25,6 @@ describe Relationship::ViaDefinition, '#via_target_key' do
 
   let(:via_target_key) { [ :id ] }
 
-  context 'when relationship.via is a Hash' do
-    let(:via)  { { :tag_id => :id } }
-
-    it { should eql(via_target_key) }
-  end
-
   context 'when relationship.via is a Symbol' do
     let(:tags) { Relationship::ManyToMany.new(:tags, song_model, tag_model, :through => :song_tags, :via => via) }
     let(:via) { :tag }
