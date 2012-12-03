@@ -83,7 +83,7 @@ module DataMapper
           rel_map(through_rel, rels, via_relationship(through_rel))
         end
 
-        via_rel = via_relationship(via_rel) if via_rel == @relationship
+        via_rel = via_relationship(via_rel) if target_relationship?(via_rel)
 
         rels << [ right_name(rel), via_rel ]
       end
