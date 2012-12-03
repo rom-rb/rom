@@ -29,24 +29,27 @@ module DataMapper
         private
 
         def join_relation(operation)
-          left_key_name  = join_definition.left.keys.first
-          right_key_name = join_definition.right.keys.first
-          left_key       = join_definition.left.relation[left_key_name]
-          right_key      = join_definition.right.relation[right_key_name]
-
           relation = @source_relation.clone.join(@target_relation).on(left_key.eq(right_key)).order(left_key)
+          relation = relation.instance_eval(&operation) if operation
+          @source_node.gateway.new(relation, header)
+        end
 
-          if operation
-            relation = relation.instance_eval(&operation)
-          end
+        def left_key
+          left_key_name = join_definition.left.keys.first
+          join_definition.left.relation[left_key_name]
+        end
 
-          header = @aliases.header.map { |attribute_alias|
+        def right_key
+          right_key_name = join_definition.right.keys.first
+          join_definition.right.relation[right_key_name]
+        end
+
+        def header
+          @aliases.header.map { |attribute_alias|
             Attribute.new(
               "#{attribute_alias.prefix}.#{attribute_alias.field} AS #{attribute_alias}"
             )
           }
-
-          @source_node.gateway.new(relation, header)
         end
 
       end # class Edge
