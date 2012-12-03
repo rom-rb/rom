@@ -4,11 +4,11 @@ module DataMapper
 
       class Tuples
 
-        def self.prepared(name, mapper)
-          new(name, mapper).tuples
+        def self.prepared(name, mapper, &block)
+          new(name, mapper).each do |tuple|
+            yield(tuple)
+          end
         end
-
-        attr_reader :tuples
 
         def initialize(name, mapper)
           @name       = name
@@ -19,16 +19,28 @@ module DataMapper
 
           @tuples       = {}
           @child_tuples = {}
+          @index        = {}
+
+          @raw_tuples.each_with_index { |tuple, index|
+            @index[index] = [ key_tuple(tuple), tuple ]
+          }
 
           initialize_tuples
         end
 
+        def each(&block)
+          unique_keys.each { |key| yield(@tuples[key])}
+        end
+
         private
 
+        def unique_keys
+          @index.values.map(&:first).uniq
+        end
+
         def initialize_tuples
-          @raw_tuples.each do |tuple|
-            parent_key_tuple = key_tuple(tuple)
-            @tuples[parent_key_tuple] = parent_tuple(parent_key_tuple, tuple)
+          @index.each_value do |tuples|
+            @tuples[tuples[0]] = parent_tuple(tuples[0], tuples[1])
           end
         end
 

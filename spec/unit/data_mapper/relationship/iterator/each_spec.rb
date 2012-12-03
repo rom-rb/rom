@@ -33,8 +33,6 @@ describe Relationship::Iterator, '#each' do
     it { should have(2).item }
 
     it "loads source with target collection" do
-      pending if RUBY_VERSION < '1.9'
-
       user1 = subject[0]
 
       user1.should be_instance_of(source_model)
