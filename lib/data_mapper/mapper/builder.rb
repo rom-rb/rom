@@ -62,7 +62,9 @@ module DataMapper
           klass.class_eval { include(Relationship::Iterator) }
         end
 
-        mapper = klass.new(@connector.node).remap(@source_aliases)
+        attributes = klass.attributes.remap(@source_aliases)
+
+        mapper = klass.new(@connector.node, attributes)
         mapper.attributes.finalize
         mapper
       end
