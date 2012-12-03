@@ -6,16 +6,15 @@ module DataMapper
       #
       class Engine < DataMapper::Engine
         attr_reader :adapter
+
+        attr_reader :arel_engine_class
+
         attr_reader :arel_engines
 
         # @api private
-        def self.parse_uri(uri)
-          Addressable::URI.parse(uri)
-        end
-
-        # @api private
-        def initialize(uri)
-          super(self.class.parse_uri(uri))
+        def initialize(uri, arel_engine_class = ActiveRecord::Base)
+          super(Addressable::URI.parse(uri))
+          @arel_engine_class = arel_engine_class
           establish_connection
           reset_engines!
         end
@@ -49,10 +48,11 @@ module DataMapper
 
         # @api private
         def establish_connection
-          ActiveRecord::Base.establish_connection(
+          arel_engine_class.establish_connection(
+            :adapter  => uri.scheme,
             :database => uri.path.sub(/^\//, ''),
             :username => uri.user,
-            :adapter  => uri.scheme
+            :password => uri.password
           )
         end
 
@@ -60,7 +60,7 @@ module DataMapper
         def arel_engine_for(name, header)
           # TODO: this is temporary. we need to find out how to create a thin arel engine
           arel_engines.fetch(name) {
-            arel_engines[name] = Class.new(ActiveRecord::Base) { self.table_name = name }
+            arel_engines[name] = Class.new(arel_engine_class) { self.table_name = name }
           }
         end
 
