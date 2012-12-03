@@ -104,11 +104,13 @@ describe '[Arel] Relationship - Many To Many with generated mappers' do
 
     song1, song2 = songs
 
+    song1.id.should be('1')
     song1.title.should eql('foo')
     song1.song_tags.should have(1).item
     song1.song_tags.first.song_id.should eql(song1.id)
     song1.song_tags.first.tag_id.to_i.should eql(1)
 
+    song2.id.should be('2')
     song2.title.should eql('bar')
     song2.song_tags.should have(1).item
     song2.song_tags.first.song_id.should eql(song2.id)
