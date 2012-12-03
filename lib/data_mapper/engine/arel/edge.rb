@@ -23,7 +23,7 @@ module DataMapper
         #
         # @api private
         def node(relationship, operation = relationship.operation)
-          node_class.new(name, join_relation(operation), @aliases)
+          Node.new(name, join_relation(operation), @aliases)
         end
 
         private
@@ -47,11 +47,6 @@ module DataMapper
           }
 
           @source_node.gateway.new(relation, header)
-        end
-
-
-        def node_class
-          Node
         end
 
       end # class Edge
