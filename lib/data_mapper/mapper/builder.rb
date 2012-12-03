@@ -58,7 +58,7 @@ module DataMapper
 
         klass.map(@name, @target_model, target_model_attribute_options)
 
-        if @connector.collection_target?
+        if @collection_target
           klass.class_eval { include(Relationship::Iterator) }
         end
 
