@@ -39,12 +39,12 @@ module DataMapper
           Gateway.new(self, relation)
         end
 
+        private
+
         # @api private
         def reset_engines!
           @arel_engines = {}
         end
-
-        private
 
         # @api private
         def establish_connection
