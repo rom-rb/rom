@@ -83,8 +83,12 @@ module DataMapper
       def aliases(mapper)
         prefix  = mapper.relation_name
         mapper.attributes.primitives.each_with_object({}) do |attribute, aliases|
-          aliases[attribute.field] = @aliases.alias(attribute.aliased_field(prefix)).to_sym
+          aliases[attribute.field] = aliased(attribute, prefix)
         end
+      end
+
+      def aliased(attribute, prefix)
+        @aliases.alias(attribute.aliased_field(prefix)).to_sym
       end
     end # class Builder
   end # class Mapper
