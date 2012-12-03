@@ -60,8 +60,6 @@ describe '[Arel] One To Many with generated mapper' do
   end
 
   it 'loads associated orders' do
-    pending if RUBY_VERSION < '1.9'
-
     user_order_mapper = DataMapper[User].include(:orders)
     users_with_orders = user_order_mapper.to_a
 

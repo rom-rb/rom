@@ -95,8 +95,6 @@ describe '[Arel] Relationship - Many To Many with generated mappers' do
   end
 
   it 'loads associated song_tags for songs' do
-    pending if RUBY_VERSION < '1.9'
-
     mapper = DataMapper[Song].include(:song_tags)
     songs  = mapper.to_a
 
@@ -104,13 +102,13 @@ describe '[Arel] Relationship - Many To Many with generated mappers' do
 
     song1, song2 = songs
 
-    song1.id.should be('1')
+    song1.id.should eql('1')
     song1.title.should eql('foo')
     song1.song_tags.should have(1).item
     song1.song_tags.first.song_id.should eql(song1.id)
     song1.song_tags.first.tag_id.to_i.should eql(1)
 
-    song2.id.should be('2')
+    song2.id.should eql('2')
     song2.title.should eql('bar')
     song2.song_tags.should have(1).item
     song2.song_tags.first.song_id.should eql(song2.id)
@@ -118,8 +116,6 @@ describe '[Arel] Relationship - Many To Many with generated mappers' do
   end
 
   it 'loads associated tags for songs' do
-    pending if RUBY_VERSION < '1.9'
-
     mapper = DataMapper[Song].include(:tags)
     songs  = mapper.to_a
 
@@ -150,8 +146,6 @@ describe '[Arel] Relationship - Many To Many with generated mappers' do
   end
 
   it 'loads associated song_tags for tags' do
-    pending if RUBY_VERSION < '1.9'
-
     mapper = DataMapper[Tag].include(:song_tags)
     tags   = mapper.to_a
 
@@ -169,8 +163,6 @@ describe '[Arel] Relationship - Many To Many with generated mappers' do
   end
 
   it 'loads associated songs for tags' do
-    pending if RUBY_VERSION < '1.9'
-
     mapper = DataMapper[Tag].include(:songs)
     tags   = mapper.to_a
 

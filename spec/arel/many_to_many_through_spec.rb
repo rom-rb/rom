@@ -157,8 +157,6 @@ describe 'Relationship - Many-To-Many-Through with generated mappers' do
   end
 
   it 'loads associated tag infos' do
-    pending if RUBY_VERSION < '1.9'
-
     mapper = DataMapper[Song].include(:infos)
 
     songs = mapper.to_a
@@ -179,8 +177,6 @@ describe 'Relationship - Many-To-Many-Through with generated mappers' do
   end
 
   it 'loads associated good infos' do
-    pending if RUBY_VERSION < '1.9'
-
     mapper = DataMapper[Song].include(:good_infos)
 
     songs = mapper.to_a
@@ -196,8 +192,6 @@ describe 'Relationship - Many-To-Many-Through with generated mappers' do
   end
 
   it 'loads associated tag info contents' do
-    pending if RUBY_VERSION < '1.9'
-
     mapper = DataMapper[Song].include(:info_contents)
     songs = mapper.to_a
 
