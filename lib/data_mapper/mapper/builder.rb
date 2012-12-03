@@ -59,7 +59,7 @@ module DataMapper
         klass.map(@name, @target_model, target_model_attribute_options)
 
         if @connector.collection_target?
-          klass.class_eval { include(Relationship::OneToMany::Iterator) }
+          klass.class_eval { include(Relationship::Iterator) }
         end
 
         mapper = klass.new(@connector.node).remap(@source_aliases)

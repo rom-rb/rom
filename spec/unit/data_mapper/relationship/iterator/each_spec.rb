@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Relationship::OneToMany::Iterator, '#each' do
+describe Relationship::Iterator, '#each' do
   let(:source_mapper)     { mock_mapper(source_model, source_attributes).new(relation) }
   let(:target_mapper)     { mock_mapper(target_model, target_attributes).new }
 
@@ -23,7 +23,7 @@ describe Relationship::OneToMany::Iterator, '#each' do
   let(:result)   { [ result1, result2 ] }
   let(:relation) { mock('relation', :to_a => result) }
 
-  let(:object) { source_mapper.extend(Relationship::OneToMany::Iterator) }
+  let(:object) { source_mapper.extend(Relationship::Iterator) }
 
   context "with a block" do
     subject { object.to_a }
