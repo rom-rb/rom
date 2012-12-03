@@ -72,7 +72,9 @@ module DataMapper
     #
     # @api private
     def relation_map
-      @mappers.values.each_with_object({}) { |mapper, h| h[mapper.model] = mapper.relation_name }
+      @mappers.values.each_with_object({}) { |mapper, h|
+        h[mapper.model] = mapper.relation_name
+      }
     end
 
     # Checks if the given model has a mapper
