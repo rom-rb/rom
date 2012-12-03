@@ -17,7 +17,8 @@ module DataMapper
           @parent_key = attributes.key
           @primitives = attributes.primitives
 
-          @tuples = {}
+          @tuples       = {}
+          @child_tuples = {}
 
           initialize_tuples
         end
@@ -44,7 +45,9 @@ module DataMapper
         end
 
         def child_tuples(parent_key_tuple)
-          @raw_tuples.select { |tuple| parent_key_tuple == key_tuple(tuple) }
+          @child_tuples.fetch(parent_key_tuple) {
+            @raw_tuples.select { |tuple| parent_key_tuple == key_tuple(tuple) }
+          }
         end
 
         def key_tuple(tuple)
