@@ -35,11 +35,6 @@ module DataMapper
         @entries[name]
       end
 
-      # @api private
-      def size
-        @entries.size
-      end
-
       private
 
       # @api private
