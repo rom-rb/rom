@@ -54,7 +54,7 @@ module DataMapper
           @parent_key.map { |attribute| tuple[attribute.field] }
         end
 
-      end # class Converter
+      end # class Tuples
 
     end # module Iterator
   end # class Relationship
