@@ -274,7 +274,8 @@ module DataMapper
     #
     # @param [(#each, #[])] tuple
     #
-    # @return [Object] a domain model
+    # @return [Object]
+    #   a domain model instance
     #
     # @api public
     def load(tuple)
@@ -289,9 +290,9 @@ module DataMapper
     #   mapper.dump(model)
     #
     # @param [Object] object
-    #   a domain model
+    #   a domain model instance
     #
-    # @return [Hash]
+    # @return [Hash<Symbol, Object>]
     #
     # @api public
     def dump(object)
