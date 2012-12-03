@@ -45,9 +45,7 @@ module DataMapper
         end
 
         def parent_tuple(parent_key_tuple, tuple)
-          parent = parent_base_tuple(tuple)
-          parent[@name] = child_tuples(parent_key_tuple)
-          parent
+          parent_base_tuple(tuple).merge(@name => child_tuples(parent_key_tuple))
         end
 
         def parent_base_tuple(tuple)
