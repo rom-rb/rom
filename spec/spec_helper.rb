@@ -90,9 +90,9 @@ RSpec.configure do |config|
     OpenStruct.new(:name => name)
   end
 
-  def mock_join_definition(left_name, right_name, left_keys, right_keys)
-    left  = Relationship::JoinDefinition::Side.new(left_name,  left_keys)
-    right = Relationship::JoinDefinition::Side.new(right_name, right_keys)
+  def mock_join_definition(left_relation, right_relation, left_keys, right_keys)
+    left  = Relationship::JoinDefinition::Side.new(left_relation,  left_keys)
+    right = Relationship::JoinDefinition::Side.new(right_relation, right_keys)
     Relationship::JoinDefinition.new(left, right)
   end
 

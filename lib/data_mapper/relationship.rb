@@ -183,7 +183,7 @@ module DataMapper
     end
 
     def join_side(mapper, key)
-      JoinDefinition::Side.new(mapper.relation_name, key, mapper.relation)
+      JoinDefinition::Side.new(mapper.relation, key)
     end
   end # class Relationship
 end # module DataMapper

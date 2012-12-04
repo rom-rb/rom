@@ -9,7 +9,7 @@ module DataMapper
     class Attribute
 
       Alias = Struct.new(:field, :prefix) {
-        include Equalizer.new(:field, :prefix, :name)
+        include Equalizer.new(:to_sym)
 
         attr_reader :name
 

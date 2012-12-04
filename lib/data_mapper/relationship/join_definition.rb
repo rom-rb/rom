@@ -12,6 +12,13 @@ module DataMapper
 
         include Equalizer.new(:relation_name, :keys)
 
+        # The relation to use for this side of the join
+        #
+        # @return [Relation::Graph::Node]
+        #
+        # @api private
+        attr_reader :relation
+
         # The relation name of this side of the join
         #
         # @return [Array<Symbol>]
@@ -26,14 +33,10 @@ module DataMapper
         # @api private
         attr_reader :keys
 
-        attr_reader :relation
-
-        private
-
         # Initialize a new instance
         #
-        # @param [#to_sym] relation_name
-        #   the relation name for this side of the join
+        # @param [Object] relation
+        #   an instance of the configured engine's relation class
         #
         # @param [Array<Symbol>] attribute_names
         #   the attribute names to use for this side of the join
@@ -41,8 +44,9 @@ module DataMapper
         # @return [undefined]
         #
         # @api private
-        def initialize(relation_name, keys, relation = nil)
-          @relation_name, @keys, @relation = relation_name, Array(keys), relation
+        def initialize(relation, keys)
+          @relation, @keys = relation, Array(keys)
+          @relation_name   = @relation.name
         end
       end # class Side
 
