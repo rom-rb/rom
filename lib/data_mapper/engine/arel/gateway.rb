@@ -6,15 +6,15 @@ module DataMapper
         include Enumerable
 
         attr_reader :name
+
         attr_reader :header
-        attr_reader :engine
+
         attr_reader :relation
 
-        def initialize(engine, relation, name = nil, header = nil)
-          @engine   = engine
+        def initialize(relation, name = nil, header = nil)
           @relation = relation
+          @name     = relation.respond_to?(:name)    ? relation.name    : name
           @header   = relation.respond_to?(:columns) ? relation.columns : header
-          @name     = relation.respond_to?(:name) ? relation.name : name
         end
 
         def each(&block)
@@ -24,7 +24,7 @@ module DataMapper
         end
 
         def new(relation, header = @header)
-          self.class.new(engine, relation, name, header)
+          self.class.new(relation, name, header)
         end
 
         def restrict(*args)
