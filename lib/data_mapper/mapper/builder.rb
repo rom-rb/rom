@@ -60,7 +60,7 @@ module DataMapper
       def self.define_for(model, parent = Relation::Mapper, name = nil)
         name  ||= name_for(model)
 
-        klass = ::Class.new(parent)
+        klass = Class.new(parent)
         klass.model(model)
 
         klass.class_eval <<-RUBY, __FILE__, __LINE__ + 1
