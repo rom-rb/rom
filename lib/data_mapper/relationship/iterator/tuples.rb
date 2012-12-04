@@ -56,8 +56,12 @@ module DataMapper
 
         def child_tuples(parent_key_tuple)
           @child_tuples.fetch(parent_key_tuple) {
-            @raw_tuples.select { |tuple| parent_key_tuple == key_tuple(tuple) }
+            @child_tuples[parent_key_tuple] = tuples(parent_key_tuple)
           }
+        end
+
+        def tuples(parent_key_tuple)
+          @raw_tuples.select { |tuple| parent_key_tuple == key_tuple(tuple) }
         end
 
         def key_tuple(tuple)
