@@ -58,8 +58,11 @@ module DataMapper
         # @return [Node]
         #
         # @api public
-        def join(other, *)
-          self.class.new(name, relation.rename(aliases).join(other.aliased.relation))
+        def join(other, join_definition = {})
+          joined_aliases  = aliases.join(other.aliases, join_definition)
+          joined_relation = join_relation(other, joined_aliases)
+
+          self.class.new(name, joined_relation, joined_aliases)
         end
 
         # Returns header for the veritas relation
@@ -121,6 +124,12 @@ module DataMapper
         # @api public
         def sort_by(&block)
           self.class.new(name, relation.sort_by(&block), aliases)
+        end
+
+        private
+
+        def join_relation(other, joined_aliases)
+          relation.rename(joined_aliases).join(other.relation)
         end
 
       end # class Node
