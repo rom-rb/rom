@@ -22,34 +22,6 @@ module DataMapper
         # @api public
         attr_reader :name
 
-        # The edge's left {Node}
-        #
-        # @example
-        #
-        #   left  = Node.new(:left)
-        #   right = Node.new(:right)
-        #   edge = Edge.new(:name, left, right)
-        #   edge.left
-        #
-        # @return [Node]
-        #
-        # @api public
-        attr_reader :left
-
-        # The edge's right {Node}
-        #
-        # @example
-        #
-        #   left  = Node.new(:left)
-        #   right = Node.new(:right)
-        #   edge = Edge.new(:name, left, right)
-        #   edge.right
-        #
-        # @return [Node]
-        #
-        # @api public
-        attr_reader :right
-
         # Left side relation node
         #
         # @return [Node]
