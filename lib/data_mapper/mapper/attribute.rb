@@ -15,6 +15,8 @@ module DataMapper
 
         alias_method :to_sym, :name
 
+        private :field=, :prefix=
+
         def initialize(field, prefix)
           super
           @name = :"#{prefix}_#{field}"
