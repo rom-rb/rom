@@ -165,9 +165,7 @@ module DataMapper
       #
       # @api private
       def build_node(*args)
-        node = node_for(args[1])
-        return node if node
-        node_class.new(*args)
+        node_for(args[1]) || node_class.new(*args)
       end
 
       # Add a node to the graph
