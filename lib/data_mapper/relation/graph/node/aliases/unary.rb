@@ -43,8 +43,7 @@ module DataMapper
             private
 
             def old_field(left_entries, left_key)
-              # FIXME: we can't use fetch here because it fails on RBX 1.9
-              @inverted[left_key] || raise(ArgumentError, "+left_key+ cannot be found")
+              @inverted.fetch(left_key)
             end
 
             def initial_aliases
