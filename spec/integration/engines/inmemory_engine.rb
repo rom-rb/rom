@@ -7,7 +7,7 @@ describe Engine::InmemoryEngine do
 
     User = Class.new(OpenStruct)
 
-    class UserMapper < Mapper::Relation
+    class UserMapper < DataMapper::Relation::Mapper
       repository    :memory
       relation_name :users
       model         User

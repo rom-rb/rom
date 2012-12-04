@@ -33,7 +33,7 @@ module DataMapper
     #   engine = DataMapper::Engine::VeritasEngine.new(uri)
     #   engine.relations
     #
-    # @return [RelationRegistry]
+    # @return [Graph]
     #
     # @api public
     attr_reader :relations
@@ -48,7 +48,7 @@ module DataMapper
     # @api private
     def initialize(uri = nil)
       @uri       = uri
-      @relations = RelationRegistry.new(self)
+      @relations = Relation::Graph.new(self)
     end
 
     # Returns the relation node class used in the relation registry
@@ -58,11 +58,11 @@ module DataMapper
     #   engine = DataMapper::Engine::VeritasEngine.new(uri)
     #   engine.relation_node_class
     #
-    # @return [RelationRegistry::Node]
+    # @return [Graph::Node]
     #
     # @api public
     def relation_node_class
-      RelationRegistry::Node
+      Relation::Graph::Node
     end
 
     # Returns the relation edge class used in the relation registry
@@ -72,11 +72,11 @@ module DataMapper
     #   engine = DataMapper::Engine::VeritasEngine.new(uri)
     #   engine.relation_edge_class
     #
-    # @return [RelationRegistry::Edge]
+    # @return [Graph::Edge]
     #
     # @api public
     def relation_edge_class
-      RelationRegistry::Edge
+      Relation::Graph::Edge
     end
 
     # Builds a relation instance that will be wrapped in a relation node

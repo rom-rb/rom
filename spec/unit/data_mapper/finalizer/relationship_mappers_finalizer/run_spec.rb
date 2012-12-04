@@ -25,7 +25,7 @@ describe Finalizer::RelationshipMappersFinalizer, '#run' do
   let(:mapper) { object.mapper_registry[User, relationship] }
 
   before do
-    DataMapper.mapper_registry.instance_variable_set(:@mappers, {})
+    Mapper.registry.instance_variable_set(:@mappers, {})
 
     DataMapper.engines.each do |name, engine|
       engine.instance_variable_set(:@relations, engine.relations.class.new(engine))
@@ -39,7 +39,7 @@ describe Finalizer::RelationshipMappersFinalizer, '#run' do
   it { should be(object) }
 
   it "registers relationship mapper" do
-    mapper.should be_kind_of(Mapper::Relation)
+    mapper.should be_kind_of(Relation::Mapper)
   end
 
   it "finalizes relationship mapper attributes" do

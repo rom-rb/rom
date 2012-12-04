@@ -13,7 +13,7 @@ module DataMapper
       # @param [Relationship::ManyToMany] relationship
       #   the M:N relationship used to define via info
       #
-      # @param [MapperRegistry] mapper_registry
+      # @param [Mapper::Registry] mapper_registry
       #   the registry of available mappers
       #
       # @return [Explicit] if relationship.via is a Hash

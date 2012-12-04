@@ -2,7 +2,7 @@ module DataMapper
   class Engine
     module Arel
 
-      class Edge < RelationRegistry::Edge
+      class Edge < Relation::Graph::Edge
         Attribute = Struct.new(:name)
 
         def initialize(*)

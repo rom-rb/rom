@@ -6,12 +6,12 @@ describe Finalizer, '#mappers' do
   context 'with no mappers passed into #initialize' do
     let(:object)  { described_class.new }
 
-    it { should == Mapper::Relation.descendants }
+    it { should == Relation::Mapper.descendants }
   end
 
   context 'with mappers passed into #initialize' do
     let(:object)  { described_class.new(mappers) }
-    let(:mappers) { mock('MapperRegistry')       }
+    let(:mappers) { mock('Mapper::Registry')       }
 
     it { should == mappers }
   end

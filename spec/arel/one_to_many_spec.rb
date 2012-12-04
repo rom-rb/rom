@@ -29,7 +29,7 @@ describe '[Arel] One To Many with generated mapper' do
       end
     end
 
-    class OrderMapper < DataMapper::Mapper::Relation
+    class OrderMapper < DataMapper::Relation::Mapper
 
       model         Order
       relation_name :orders
@@ -40,7 +40,7 @@ describe '[Arel] One To Many with generated mapper' do
       map :product, String
     end
 
-    class UserMapper < DataMapper::Mapper::Relation
+    class UserMapper < DataMapper::Relation::Mapper
 
       model         User
       relation_name :users

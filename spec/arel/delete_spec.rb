@@ -15,7 +15,7 @@ describe "Deleting objects with ARel" do
       attribute :name, String
       attribute :age,  Integer
 
-      class Mapper < DataMapper::Mapper::Relation
+      class Mapper < DataMapper::Relation::Mapper
 
         model         User
         relation_name :users

@@ -6,7 +6,7 @@ describe Relationship::ManyToMany, '#via' do
   let(:object) { tags }
 
   let(:mapper_registry) {
-    MapperRegistry.new << song_mapper << song_tag_mapper << tag_mapper
+    Mapper::Registry.new << song_mapper << song_tag_mapper << tag_mapper
   }
 
   let(:song_mapper)     { mock_mapper(song_model, [], [ song_tags, tags ]) }

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe DataMapper::Mapper, '.[]' do
+describe Mapper, '.[]' do
   let(:model)           { mock_model(:TestModel) }
   let(:mapper)          { mock_mapper(model) }
   let(:mapper_instance) { mapper.new(relation) }
@@ -8,8 +8,8 @@ describe DataMapper::Mapper, '.[]' do
   let(:other_relation)  { mock('other_relation') }
 
   before do
-    described_class.mapper_registry << mapper_instance
-    described_class.mapper_registry << mock_mapper(mock_model(:OtherModel)).new(other_relation)
+    described_class.registry << mapper_instance
+    described_class.registry << mock_mapper(mock_model(:OtherModel)).new(other_relation)
   end
 
   it "returns correct mapper instance" do

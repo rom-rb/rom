@@ -20,7 +20,7 @@ describe "Using Arel engine" do
       attribute :street,  String
       attribute :zipcode, String
 
-      class Mapper < DataMapper::Mapper::Relation
+      class Mapper < DataMapper::Relation::Mapper
 
         model         Address
         relation_name :addresses
@@ -42,7 +42,7 @@ describe "Using Arel engine" do
       attribute :age,     Integer
       attribute :address, Address
 
-      class Mapper < DataMapper::Mapper::Relation
+      class Mapper < DataMapper::Relation::Mapper
 
         model         User
         relation_name :users

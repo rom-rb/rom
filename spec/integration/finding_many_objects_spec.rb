@@ -21,7 +21,7 @@ describe 'Finding Many Objects', :type => :integration do
           :id, :street, :city, :zipcode)
       end
 
-      class Mapper < DataMapper::Mapper::Relation
+      class Mapper < DataMapper::Relation::Mapper
 
         model         Address
         relation_name :addresses
@@ -42,7 +42,7 @@ describe 'Finding Many Objects', :type => :integration do
         @id, @name, @age = attributes.values_at(:id, :name, :age)
       end
 
-      class Mapper < DataMapper::Mapper::Relation
+      class Mapper < DataMapper::Relation::Mapper
 
         model         User
         relation_name :users

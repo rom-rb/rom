@@ -4,7 +4,10 @@ describe DataMapper, '.finalize' do
   subject { DataMapper.finalize }
 
   context 'when not yet finalized' do
-    before { Finalizer.should_receive(:call) }
+    before {
+      DataMapper.instance_variable_set(:@finalized, false)
+      Finalizer.should_receive(:call)
+    }
 
     it { should be(DataMapper) }
   end

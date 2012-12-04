@@ -6,28 +6,28 @@ module DataMapper
 
     # The mapper registry in use
     #
-    # @return [MapperRegistry]
+    # @return [Mapper::Registry]
     #
     # @api private
     attr_reader :mapper_registry
 
     # The connector builder in use
     #
-    # @return [RelationRegistry::Connector::Builder]
+    # @return [Relation::Graph::Connector::Builder]
     #
     # @api private
     attr_reader :connector_builder
 
     # The mapper builder in use
     #
-    # @return [Mapper::Builder]
+    # @return [Relation::Mapper::Builder]
     #
     # @api private
     attr_reader :mapper_builder
 
     # The mappers to be finalized
     #
-    # @return [Enumerable<Mapper>]
+    # @return [Array<Mapper>]
     #
     # @api private
     attr_reader :mappers
@@ -46,21 +46,21 @@ module DataMapper
 
     # Initialize a new finalizer instance
     #
-    # @param [Enumerable<Mapper>] mappers
+    # @param [Array<Mapper>] mappers
     #   the mappers to be finalized
     #
-    # @param [RelationRegistry::Connector::Builder] connector_builder
+    # @param [Relation::Graph::Connector::Builder] connector_builder
     #   the builder used to create edges, nodes and connectors for relationships
     #
-    # @param [Mapper::Builder] mapper_builder
+    # @param [Relation::Mapper::Builder] mapper_builder
     #   the builder used to create mappers for relationships
     #
     # @return [undefined]
     #
     # @api private
-    def initialize(mappers = Mapper::Relation.descendants, connector_builder = RelationRegistry::Connector::Builder, mapper_builder = Mapper::Builder)
+    def initialize(mappers = default_mappers, connector_builder = default_connector_builder, mapper_builder = default_mapper_builder)
       @mappers           = mappers
-      @mapper_registry   = Mapper.mapper_registry
+      @mapper_registry   = Mapper.registry
       @connector_builder = connector_builder
       @mapper_builder    = mapper_builder
     end
@@ -74,6 +74,20 @@ module DataMapper
       BaseRelationMappersFinalizer.call(mappers, connector_builder, mapper_builder)
       RelationshipMappersFinalizer.call(mappers, connector_builder, mapper_builder)
       self
+    end
+
+    private
+
+    def default_mappers
+      Relation::Mapper.descendants
+    end
+
+    def default_connector_builder
+      Relation::Graph::Connector::Builder
+    end
+
+    def default_mapper_builder
+      Relation::Mapper::Builder
     end
 
   end # class Finalizer

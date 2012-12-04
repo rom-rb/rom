@@ -61,7 +61,7 @@ describe 'Relationship - Many-To-Many-Through with generated mappers' do
       end
     end
 
-    class TagMapper < DataMapper::Mapper::Relation
+    class TagMapper < DataMapper::Relation::Mapper
 
       model         Tag
       relation_name :tags
@@ -73,7 +73,7 @@ describe 'Relationship - Many-To-Many-Through with generated mappers' do
       has 0..n, :infos, Info
     end
 
-    class InfoMapper < DataMapper::Mapper::Relation
+    class InfoMapper < DataMapper::Relation::Mapper
 
       model         Info
       relation_name :infos
@@ -88,7 +88,7 @@ describe 'Relationship - Many-To-Many-Through with generated mappers' do
       has 0..n, :info_contents, InfoContent
     end
 
-    class InfoContentMapper < DataMapper::Mapper::Relation
+    class InfoContentMapper < DataMapper::Relation::Mapper
 
       model         InfoContent
       relation_name :info_contents
@@ -101,7 +101,7 @@ describe 'Relationship - Many-To-Many-Through with generated mappers' do
       belongs_to :info, Info
     end
 
-    class SongTagMapper < DataMapper::Mapper::Relation
+    class SongTagMapper < DataMapper::Relation::Mapper
 
       model         SongTag
       relation_name :song_tags
@@ -114,7 +114,7 @@ describe 'Relationship - Many-To-Many-Through with generated mappers' do
       belongs_to :tag,  Tag
     end
 
-    class SongMapper < DataMapper::Mapper::Relation
+    class SongMapper < DataMapper::Relation::Mapper
       model         Song
       relation_name :songs
       repository    :postgres

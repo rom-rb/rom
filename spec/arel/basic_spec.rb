@@ -15,7 +15,7 @@ describe "Using Arel engine" do
       attribute :name, String
       attribute :age,  Integer
 
-      class Mapper < DataMapper::Mapper::Relation
+      class Mapper < DataMapper::Relation::Mapper
 
         model         User
         relation_name :users

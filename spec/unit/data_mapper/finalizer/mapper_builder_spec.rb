@@ -6,14 +6,14 @@ describe Finalizer, '#mapper_builder' do
   context 'with no mapper_builder passed into #initialize' do
     let(:object)  { described_class.new }
 
-    it { should == Mapper::Builder }
+    it { should == Relation::Mapper::Builder }
   end
 
   context 'with mapper_builder passed into #initialize' do
-    let(:object)         { described_class.new(mappers, edge_builder, mapper_builder) }
-    let(:mappers)        { mock('MapperRegistry') }
-    let(:edge_builder)   { mock('EdgeBuilder')    }
-    let(:mapper_builder) { mock('MapperBuilder')  }
+    let(:object)            { described_class.new(mappers, connector_builder, mapper_builder) }
+    let(:mappers)           { mock('Mapper::Registry') }
+    let(:connector_builder) { mock('ConnectorBuilder') }
+    let(:mapper_builder)    { mock('Relation::Mapper::Builder') }
 
     it { should == mapper_builder }
   end

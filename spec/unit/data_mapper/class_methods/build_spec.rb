@@ -9,7 +9,7 @@ describe DataMapper, '.build' do
   let(:mapper_class) { mock('mapper_class') }
 
   before do
-    Mapper::Builder::Class.should_receive(:create).with(model, repository, &block).
+    Mapper::Builder.should_receive(:create).with(model, repository, &block).
       and_return(mapper_class)
   end
 

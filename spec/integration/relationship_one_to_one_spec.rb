@@ -31,7 +31,7 @@ describe 'Relationship - One To One with generated mapper' do
       end
     end
 
-    class UserMapper < DataMapper::Mapper::Relation
+    class UserMapper < DataMapper::Relation::Mapper
 
       model         User
       relation_name :users
@@ -48,7 +48,7 @@ describe 'Relationship - One To One with generated mapper' do
       end
     end
 
-    class AddressMapper < DataMapper::Mapper::Relation
+    class AddressMapper < DataMapper::Relation::Mapper
 
       model         Address
       relation_name :addresses

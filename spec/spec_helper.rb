@@ -21,6 +21,9 @@ RSpec.configure do |config|
       @_mocked_models  = []
       @_mocked_mappers = []
     end
+
+    # TODO Find out why this is necessary since renaming RelationRegistry => Relation
+    DataMapper::Mapper.instance_variable_set(:@registry, nil)
   end
 
   config.after(:each, :type => :unit) do
@@ -44,7 +47,7 @@ RSpec.configure do |config|
   end
 
   def mock_mapper(model_class, attributes = [], relationships = [])
-    klass = Class.new(DataMapper::Mapper::Relation) do
+    klass = Class.new(DataMapper::Relation::Mapper) do
       model         model_class
       repository    :test
       relation_name Inflector.tableize(model_class.name).to_sym
@@ -87,16 +90,6 @@ RSpec.configure do |config|
     OpenStruct.new(:name => name)
   end
 
-  def mock_alias_set(prefix, attributes)
-    attribute_set = Mapper::AttributeSet.new
-
-    attributes.each do |name, type|
-      attribute_set << Mapper::Attribute.build(name, :type => type)
-    end
-
-    AliasSet.new(prefix, attribute_set)
-  end
-
   def mock_join_definition(left_name, right_name, left_keys, right_keys)
     left  = Relationship::JoinDefinition::Side.new(left_name,  left_keys)
     right = Relationship::JoinDefinition::Side.new(right_name, right_keys)
@@ -105,7 +98,7 @@ RSpec.configure do |config|
 
   class TestEngine < DataMapper::Engine::Veritas::Engine
     def initialize(uri)
-      @relations = DataMapper::RelationRegistry.new(self)
+      @relations = DataMapper::Relation::Graph.new(self)
     end
   end
 
@@ -123,7 +116,7 @@ RSpec.configure do |config|
       Object.send(:remove_const, name) if Object.const_defined?(name)
     end
     DataMapper::Mapper.instance_variable_set(:@descendants, [])
-    DataMapper::Mapper::Relation.instance_variable_set(:@descendants, [])
+    DataMapper::Relation::Mapper.instance_variable_set(:@descendants, [])
   end
 end
 

@@ -77,7 +77,7 @@ end
 RSpec.configure do |config|
   config.after(:all) do
 
-    [ Mapper.descendants + Mapper::Relation.descendants ].flatten.uniq.each do |klass|
+    [ Mapper.descendants + Relation::Mapper.descendants ].flatten.uniq.each do |klass|
       name = klass.name
 
       const, parent =
@@ -95,15 +95,15 @@ RSpec.configure do |config|
     end
 
     DataMapper::Mapper.instance_variable_set('@descendants', [])
-    DataMapper::Mapper::Relation.instance_variable_set('@descendants', [])
+    DataMapper::Relation::Mapper.instance_variable_set('@descendants', [])
 
     DataMapper.engines.each do |name, engine|
       engine.instance_variable_set(:@relations, engine.relations.class.new(engine))
     end
 
-    DataMapper::Mapper::Relation.instance_variable_set(:@relations, nil)
+    DataMapper::Relation::Mapper.instance_variable_set(:@relations, nil)
 
-    DataMapper::Mapper.mapper_registry.instance_variable_set(:@mapper_registry, nil)
+    DataMapper::Mapper.instance_variable_set(:@registry, nil)
 
     DataMapper.instance_variable_set(:@finalized, false)
   end

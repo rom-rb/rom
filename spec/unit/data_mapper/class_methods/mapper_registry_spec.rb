@@ -5,7 +5,7 @@ describe DataMapper, '.mapper_registry' do
 
   let(:mapper_registry) { mock('mapper_registry') }
 
-  before { Mapper.should_receive(:mapper_registry).and_return(mapper_registry) }
+  before { Mapper.should_receive(:registry).and_return(mapper_registry) }
 
   it { should be(mapper_registry) }
 end

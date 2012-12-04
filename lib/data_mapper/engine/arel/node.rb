@@ -4,17 +4,10 @@ module DataMapper
 
       # Relation node wrapping arel relation
       #
-      class Node < RelationRegistry::Node
+      class Node < Relation::Graph::Node
         include Enumerable
 
         alias_method :gateway, :relation
-
-        def self.aliases(relation_name, attribute_set)
-          aliased_field_map = attribute_set.aliased_field_map(relation_name)
-          original_aliases  = attribute_set.original_aliases(relation_name)
-
-          Aliases::Unary.new(aliased_field_map, original_aliases)
-        end
 
         # @api public
         def each(&block)

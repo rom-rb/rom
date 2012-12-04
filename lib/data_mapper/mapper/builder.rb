@@ -1,95 +1,111 @@
 module DataMapper
   class Mapper
 
-    # Builds a {Mapper::Relation} from a {RelationRegistry::Connector}
+    # Mapper class builder
     #
-    # @api private
     class Builder
 
-      # Builds a mapper based on a connector and source mapper class
+      # Builds a mapper class for the given model and repository
       #
-      # @param [RelationRegistry::Connector] connector
-      #   the connector used to build the mapper
+      # @example
+      #   class User; end
       #
-      # @return [Mapper::Relation]
+      #   mapper = DataMapper::Mapper::Builder.create(User, :default)
       #
-      # @api private
-      def self.call(connector)
-        new(connector).mapper
+      #   mapper.model         #=> User
+      #   mapper.repository    #=> :default
+      #   mapper.relation_name #=> :users
+      #
+      # @param [Model, ::Class(.name, .attribute_set)] model
+      #   the model used by the generated mapper
+      #
+      # @param [Symbol] repository
+      #   the repository name to use for the generated mapper
+      #
+      # @param [Proc, nil] block
+      #   a block to be class_eval'ed in the context of the generated mapper
+      #
+      # @return [Relation::Mapper]
+      #
+      # @api public
+      def self.create(model, repository, &block)
+        mapper = define_for(model)
+
+        mapper.relation_name(Inflector.tableize(model.name).to_sym)
+        mapper.repository(repository)
+
+        copy_attributes(mapper, model.attribute_set)
+
+        mapper.instance_eval(&block) if block_given?
+
+        mapper
       end
 
-      # The mapper built from the instance's {RelationRegistry::Connector}
+      # Creates a "bare-bone" mapper class for the given model
       #
-      # @return [Mapper::Relation]
+      # @example
       #
-      # @api private
-      attr_reader :mapper
+      #   class User; end
+      #
+      #   mapper = DataMapper::Mapper::Builder.define_for(Model)
+      #
+      #   mapper.model #=> User
+      #   mapper.name  #=> UserMapper
+      #
+      # @param [::Class] model
+      #
+      # @return [Relation::Mapper]
+      #
+      # @api public
+      def self.define_for(model, parent = Relation::Mapper, name = nil)
+        name  ||= name_for(model)
 
-      # Initialize a new instance
-      #
-      # @param [RelationRegistry::Connector] connector
-      #   the connector used to build the mapper
-      #
-      # @return [undefined]
-      #
-      # @api private
-      def initialize(connector)
-        @connector     = connector
-        @aliases       = @connector.source_aliases
-        @source_model  = @connector.source_model
-        @target_model  = @connector.target_model
-        @source_mapper = @connector.source_mapper.class
-        @target_mapper = @connector.target_mapper.class
-        @name          = @connector.relationship.name
+        klass = ::Class.new(parent)
+        klass.model(model)
 
-        @source_aliases = aliases(@source_mapper)
-        @target_aliases = aliases(@target_mapper)
+        klass.class_eval <<-RUBY, __FILE__, __LINE__ + 1
+          def self.name
+            #{name.inspect}
+          end
 
-        @collection_target = @connector.collection_target?
+          def self.inspect
+            "<#\#{name} @model=\#{model.name}>"
+          end
+        RUBY
 
-        @mapper = build
+        klass
       end
 
-      private
-
+      # Returns a mapper class name for the given model
+      #
+      # @return [String] name of the class
+      #
       # @api private
-      def build
-        klass = Mapper::Relation.from(@source_mapper, mapper_name)
+      def self.name_for(model)
+        "#{model.name}Mapper"
+      end
 
-        klass.map(@name, @target_model, target_model_attribute_options)
-
-        if @collection_target
-          klass.class_eval { include(Relationship::Iterator) }
+      # Copies all attributes for the given mapper
+      #
+      # @param [Mapper] mapper
+      # @param [AttributeSet] attributes
+      #
+      # @return [Mapper] mapper
+      #
+      # @api private
+      def self.copy_attributes(mapper, attributes)
+        attributes.each do |attribute|
+          if attribute.options[:member_type]
+            mapper.map attribute.name, attribute.options[:member_type], :collection => true
+          else
+            mapper.map attribute.name, attribute.options[:primitive]
+          end
         end
 
-        attributes = klass.attributes.remap(@source_aliases).finalize
-
-        klass.new(@connector.node, attributes)
+        mapper
       end
 
-      # @api private
-      def mapper_name
-        "#{@source_mapper.name}_X_#{Inflector.camelize(@connector.name)}_Mapper"
-      end
-
-      # @api private
-      def target_model_attribute_options
-        {
-          :collection => @collection_target,
-          :aliases    => @target_aliases
-        }
-      end
-
-      def aliases(mapper)
-        prefix  = mapper.relation_name
-        mapper.attributes.primitives.each_with_object({}) do |attribute, aliases|
-          aliases[attribute.field] = aliased(attribute, prefix)
-        end
-      end
-
-      def aliased(attribute, prefix)
-        @aliases.alias(attribute.aliased_field(prefix)).to_sym
-      end
     end # class Builder
+
   end # class Mapper
 end # module DataMapper

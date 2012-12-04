@@ -8,8 +8,6 @@ module DataMapper
 
     # The mapper's model
     #
-    # @see Mapper::Relation.model
-    #
     # @example
     #
     #   mapper = DataMapper[Person]
@@ -56,7 +54,7 @@ module DataMapper
     #
     # @api public
     def self.from(other, name)
-      klass = Builder::Class.define_for(other.model, self, name)
+      klass = Builder.define_for(other.model, self, name)
 
       other.attributes.each do |attribute|
         klass.attributes << attribute
@@ -203,7 +201,7 @@ module DataMapper
     #
     # @api public
     def self.[](model)
-      mapper_registry[model]
+      registry[model]
     end
 
     # Returns attribute set for this mapper class
@@ -226,11 +224,11 @@ module DataMapper
 
     # Returns mapper registry for this mapper class
     #
-    # @return [MapperRegistry]
+    # @return [Registry]
     #
     # @api private
-    def self.mapper_registry
-      @mapper_registry ||= MapperRegistry.new
+    def self.registry
+      @registry ||= Registry.new
     end
 
     # Finalizes this mapper class

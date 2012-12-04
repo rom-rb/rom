@@ -17,7 +17,7 @@ describe 'Two PORO mappers' do
         @id, @street, @zipcode, @city = attributes.values_at(:id, :name, :zipcode, :city)
       end
 
-      class Mapper < DataMapper::Mapper::Relation
+      class Mapper < DataMapper::Relation::Mapper
 
         model         Address
         relation_name :addresses
@@ -38,7 +38,7 @@ describe 'Two PORO mappers' do
         @id, @name, @age = attributes.values_at(:id, :name, :age)
       end
 
-      class Mapper < DataMapper::Mapper::Relation
+      class Mapper < DataMapper::Relation::Mapper
 
         model         User
         relation_name :users

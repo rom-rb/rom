@@ -2,7 +2,7 @@ module DataMapper
   class Engine
     module Veritas
 
-      class Edge < RelationRegistry::Edge
+      class Edge < Relation::Graph::Edge
 
         def initialize(*)
           super

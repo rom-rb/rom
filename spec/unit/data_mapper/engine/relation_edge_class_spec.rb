@@ -5,5 +5,5 @@ describe Engine, '#relation_edge_class' do
 
   let(:object) { subclass.new }
 
-  it { should be(RelationRegistry::Edge) }
+  it { should be(Relation::Graph::Edge) }
 end

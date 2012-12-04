@@ -12,7 +12,7 @@ module DataMapper
       # available on mapper instances. This will allow Tuples
       # to prepare multiple included relationships.
       #
-      # @see Mapper::Relation#each
+      # @see Relation::Mapper#each
       #
       # @example
       #

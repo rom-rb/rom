@@ -6,13 +6,13 @@ describe Finalizer, '#connector_builder' do
   context 'with no connector_builder passed into #initialize' do
     let(:object)  { described_class.new }
 
-    it { should == RelationRegistry::Connector::Builder }
+    it { should == Relation::Graph::Connector::Builder }
   end
 
   context 'with connector_builder passed into #initialize' do
     let(:object)            { described_class.new(mappers, connector_builder) }
-    let(:mappers)           { mock('MapperRegistry') }
-    let(:connector_builder) { mock('ConnectorBuilder')    }
+    let(:mappers)           { mock('Mapper::Registry') }
+    let(:connector_builder) { mock('Relation::Graph::Connector::Builder')    }
 
     it { should == connector_builder }
   end

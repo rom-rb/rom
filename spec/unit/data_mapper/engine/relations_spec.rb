@@ -5,7 +5,7 @@ describe Engine, '#relations' do
 
   let(:object) { subclass.new }
 
-  it { should be_instance_of(RelationRegistry) }
+  it { should be_instance_of(Relation::Graph) }
 
   specify { object.relations.engine.should be(object) }
 end

@@ -17,7 +17,7 @@ describe 'Finalizer', :isolation => true do
     class SongTag
     end
 
-    class TagMapper < DataMapper::Mapper::Relation
+    class TagMapper < DataMapper::Relation::Mapper
       model         Tag
       relation_name :tags
       repository    :postgres
@@ -30,7 +30,7 @@ describe 'Finalizer', :isolation => true do
       has 0..n, :infos,     Info
     end
 
-    class InfoMapper < DataMapper::Mapper::Relation
+    class InfoMapper < DataMapper::Relation::Mapper
       model         Info
       relation_name :infos
       repository    :postgres
@@ -44,7 +44,7 @@ describe 'Finalizer', :isolation => true do
       has 0..n, :info_contents, InfoContent
     end
 
-    class InfoContentMapper < DataMapper::Mapper::Relation
+    class InfoContentMapper < DataMapper::Relation::Mapper
       model         InfoContent
       relation_name :info_contents
       repository    :postgres
@@ -56,7 +56,7 @@ describe 'Finalizer', :isolation => true do
       belongs_to :info, Info
     end
 
-    class SongTagMapper < DataMapper::Mapper::Relation
+    class SongTagMapper < DataMapper::Relation::Mapper
       model         SongTag
       relation_name :song_tags
       repository    :postgres
@@ -68,7 +68,7 @@ describe 'Finalizer', :isolation => true do
       belongs_to :tag,  Tag
     end
 
-    class SongMapper < DataMapper::Mapper::Relation
+    class SongMapper < DataMapper::Relation::Mapper
       model         Song
       relation_name :songs
       repository    :postgres
@@ -134,7 +134,7 @@ describe 'Finalizer', :isolation => true do
     edge.should be_instance_of(TEST_ENGINE.relation_edge_class)
 
     connector = relations.connectors[:"#{name}__tags"]
-    connector.should be_instance_of(RelationRegistry::Connector)
+    connector.should be_instance_of(Relation::Graph::Connector)
   end
 
   it 'finalizes songs-have-one-good_tag-through-song_tag relation' do
@@ -148,7 +148,7 @@ describe 'Finalizer', :isolation => true do
     edge.should be_instance_of(TEST_ENGINE.relation_edge_class)
 
     connector = relations.connectors[:"#{name}__good_tag"]
-    connector.should be_instance_of(RelationRegistry::Connector)
+    connector.should be_instance_of(Relation::Graph::Connector)
   end
 
   it 'finalizes songs-have-many-infos-through-tags relation' do
@@ -161,7 +161,7 @@ describe 'Finalizer', :isolation => true do
     edge.should be_instance_of(TEST_ENGINE.relation_edge_class)
 
     connector = relations.connectors[:"#{name}__infos"]
-    connector.should be_instance_of(RelationRegistry::Connector)
+    connector.should be_instance_of(Relation::Graph::Connector)
   end
 
   it 'finalizes songs-have-many-info_contents-through-infos relation' do
@@ -175,7 +175,7 @@ describe 'Finalizer', :isolation => true do
     edge.should be_instance_of(TEST_ENGINE.relation_edge_class)
 
     connector = relations.connectors[:"#{name}__info_contents"]
-    connector.should be_instance_of(RelationRegistry::Connector)
+    connector.should be_instance_of(Relation::Graph::Connector)
   end
 
   it 'finalizes songs-have-many-good_info_contents-through-infos relation' do
@@ -189,7 +189,7 @@ describe 'Finalizer', :isolation => true do
     edge.should be_instance_of(TEST_ENGINE.relation_edge_class)
 
     connector = relations.connectors[:"#{name}__good_info_contents"]
-    connector.should be_instance_of(RelationRegistry::Connector)
+    connector.should be_instance_of(Relation::Graph::Connector)
   end
 
   it 'finalizes tags-have-many-song_tags relation' do
@@ -202,7 +202,7 @@ describe 'Finalizer', :isolation => true do
     edge.should be_instance_of(TEST_ENGINE.relation_edge_class)
 
     connector = relations.connectors[:"#{name}__song_tags"]
-    connector.should be_instance_of(RelationRegistry::Connector)
+    connector.should be_instance_of(Relation::Graph::Connector)
   end
 
   it 'finalizes tags-have-many-songs-through-song_tags relation' do
@@ -215,7 +215,7 @@ describe 'Finalizer', :isolation => true do
     edge.should be_instance_of(TEST_ENGINE.relation_edge_class)
 
     connector = relations.connectors[:"#{name}__songs"]
-    connector.should be_instance_of(RelationRegistry::Connector)
+    connector.should be_instance_of(Relation::Graph::Connector)
   end
 
   it 'finalizes song mapper' do

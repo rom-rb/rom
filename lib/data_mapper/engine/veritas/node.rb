@@ -6,7 +6,7 @@ module DataMapper
 
       # Relation node wrapping veritas relation
       #
-      class Node < RelationRegistry::Node
+      class Node < Relation::Graph::Node
         include Enumerable
 
         # Iterates over relation tuples
@@ -35,7 +35,7 @@ module DataMapper
         #
         #   renamed = DataMapper.engines[:default].relations[:people].rename(:id => :person_id)
         #
-        # @param [RelationRegistry::Aliases]
+        # @param [Relation::Graph::Node::Aliases]
         #
         # @return [Node]
         #

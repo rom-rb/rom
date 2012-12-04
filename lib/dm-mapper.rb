@@ -78,11 +78,11 @@ module DataMapper
   # @param [Proc, nil] &block
   #   a block to be class_eval'ed in the context of the generated mapper
   #
-  # @return [Mapper::Relation]
+  # @return [Relation::Mapper]
   #
   # @api public
   def self.build(model, repository, &block)
-    Mapper::Builder::Class.create(model, repository, &block)
+    Mapper::Builder.create(model, repository, &block)
   end
 
   # Finalize the environment after all mappers were defined
@@ -110,11 +110,11 @@ module DataMapper
     Mapper[model]
   end
 
-  # @see Mapper.mapper_registry
+  # @see Mapper.registry
   #
   # @api public
   def self.mapper_registry
-    Mapper.mapper_registry
+    Mapper.registry
   end
 
 end # module DataMapper
@@ -148,21 +148,7 @@ require 'descendants_tracker'
 require 'equalizer'
 require 'inflector'
 
-require 'data_mapper/support/graph'
-require 'data_mapper/support/utils'
-
-require 'data_mapper/relation_registry'
-require 'data_mapper/relation_registry/aliases'
-require 'data_mapper/relation_registry/aliases/unary'
-require 'data_mapper/relation_registry/aliases/binary'
-require 'data_mapper/relation_registry/node'
-require 'data_mapper/relation_registry/edge'
-require 'data_mapper/relation_registry/node_name'
-require 'data_mapper/relation_registry/node_name_set'
-require 'data_mapper/relation_registry/connector'
-require 'data_mapper/relation_registry/connector/builder'
-
-require 'data_mapper/mapper_registry'
+require 'data_mapper/utils'
 
 require 'data_mapper/mapper/relationship_set'
 require 'data_mapper/mapper/attribute'
@@ -171,10 +157,8 @@ require 'data_mapper/mapper/attribute/embedded_value'
 require 'data_mapper/mapper/attribute/embedded_collection'
 require 'data_mapper/mapper/attribute_set'
 require 'data_mapper/mapper'
-require 'data_mapper/mapper/relation'
-
 require 'data_mapper/mapper/builder'
-require 'data_mapper/mapper/builder/class'
+require 'data_mapper/mapper/registry'
 
 require 'data_mapper/relationship'
 require 'data_mapper/relationship/join_definition'
@@ -186,9 +170,21 @@ require 'data_mapper/relationship/one_to_many'
 require 'data_mapper/relationship/one_to_one'
 require 'data_mapper/relationship/many_to_one'
 require 'data_mapper/relationship/many_to_many'
-
 require 'data_mapper/relationship/builder/belongs_to'
 require 'data_mapper/relationship/builder/has'
+
+require 'data_mapper/relation/graph'
+require 'data_mapper/relation/graph/node/aliases'
+require 'data_mapper/relation/graph/node/aliases/unary'
+require 'data_mapper/relation/graph/node/aliases/binary'
+require 'data_mapper/relation/graph/node'
+require 'data_mapper/relation/graph/node/name'
+require 'data_mapper/relation/graph/node/name_set'
+require 'data_mapper/relation/graph/edge'
+require 'data_mapper/relation/graph/connector'
+require 'data_mapper/relation/graph/connector/builder'
+require 'data_mapper/relation/mapper'
+require 'data_mapper/relation/mapper/builder'
 
 require 'data_mapper/query'
 require 'data_mapper/model'

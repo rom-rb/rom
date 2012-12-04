@@ -39,7 +39,7 @@ describe 'Relationship - Many To Many with generated mappers' do
       end
     end
 
-    class TagMapper < DataMapper::Mapper::Relation
+    class TagMapper < DataMapper::Relation::Mapper
 
       model         Tag
       relation_name :tags
@@ -52,7 +52,7 @@ describe 'Relationship - Many To Many with generated mappers' do
       has 0..n, :songs, Song, :through => :song_tags
     end
 
-    class SongTagMapper < DataMapper::Mapper::Relation
+    class SongTagMapper < DataMapper::Relation::Mapper
 
       model         SongTag
       relation_name :song_tags
@@ -65,7 +65,7 @@ describe 'Relationship - Many To Many with generated mappers' do
       belongs_to :tag,  Tag
     end
 
-    class SongMapper < DataMapper::Mapper::Relation
+    class SongMapper < DataMapper::Relation::Mapper
       model         Song
       relation_name :songs
       repository    :postgres
