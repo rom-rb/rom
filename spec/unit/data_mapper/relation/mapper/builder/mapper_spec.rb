@@ -44,7 +44,7 @@ describe Relation::Mapper::Builder, '#mapper' do
   let(:songs_song_tags_relationship) { Relationship::OneToMany. new(:song_tags, song_model,     song_tag_model) }
   let(:song_tags_song_relationship)  { Relationship::ManyToOne. new(:song,      song_tag_model, song_model) }
   let(:song_tags_tag_relationship)   { Relationship::ManyToOne. new(:tag,       song_tag_model, tag_model) }
-  let(:songs_tags_relationship)      { Relationship::ManyToMany.new(:tags,      song_model,     tag_model,  :through => :song_tags, :via => :tag) }
+  let(:songs_tags_relationship)      { Relationship::ManyToMany.new(:tags,      song_model,     tag_model,  :through => :song_tags) }
 
   before do
     mapper_registry.each do |_, mapper|
