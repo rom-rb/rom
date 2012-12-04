@@ -41,7 +41,10 @@ module DataMapper
         #
         # @api public
         def rename(new_aliases)
-          self.class.new(name, relation, aliases.merge(new_aliases))
+          renamed_aliases  = aliases.rename(new_aliases)
+          renamed_relation = relation.rename(renamed_aliases)
+
+          self.class.new(name, renamed_relation, renamed_aliases)
         end
 
         # Joins two nodes

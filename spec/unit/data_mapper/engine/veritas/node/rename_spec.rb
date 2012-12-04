@@ -3,13 +3,21 @@ require 'spec_helper'
 describe Engine::Veritas::Node, '#rename' do
   subject { object.rename(new_aliases) }
 
-  let(:object)   { described_class.new(:users, relation, aliases) }
-  let(:relation) { mock('relation') }
+  let(:new_aliases) { { :users_id => :users_foo_id } }
 
-  let(:aliases)     { { :id => :user_id } }
-  let(:new_aliases) { { :name => :user_name} }
+  let(:object)   { described_class.new(name, relation, aliases) }
+  let(:name)     { :users }
+  let(:relation) { mock('relation') }
+  let(:aliases)  { unary_aliases({ :users_id => :users_id }, { :id => :users_id }) }
+
+  let(:renamed_aliases) { aliases.rename(new_aliases) }
+
+  before do
+    relation.should_receive(:rename).with(renamed_aliases).and_return(relation)
+  end
 
   it { should be_instance_of(described_class) }
 
-  its(:aliases) { should eql(aliases.merge(new_aliases)) }
+  its(:relation) { should be(relation) }
+  its(:aliases)  { should eql(renamed_aliases) }
 end

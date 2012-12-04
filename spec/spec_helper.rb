@@ -96,6 +96,10 @@ RSpec.configure do |config|
     Relationship::JoinDefinition.new(left, right)
   end
 
+  def unary_aliases(field_map, original_aliases)
+    Relation::Graph::Node::Aliases::Unary.new(field_map, original_aliases)
+  end
+
   class TestEngine < DataMapper::Engine::Veritas::Engine
     def initialize(uri)
       @relations = DataMapper::Relation::Graph.new(self)
