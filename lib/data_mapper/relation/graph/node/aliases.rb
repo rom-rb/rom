@@ -107,8 +107,8 @@ module DataMapper
 
             new_aliases.keys.each do |old|
               # Hash#select on 1.8.7 returns an array
-              initials = Hash[@entries.select { |initial, current| current == old }]
-              initials.keys.each do |initial|
+              initials = @entries.select { |initial, current| current == old }
+              Hash[initials].keys.each do |initial|
                 new = new_aliases[initial]
                 entries[initial] = new if new
               end
