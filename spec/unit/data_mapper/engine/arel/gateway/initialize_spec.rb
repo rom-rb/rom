@@ -2,12 +2,13 @@ require 'spec_helper'
 require 'data_mapper/engine/arel'
 
 describe Engine::Arel::Gateway, '#initialize' do
-  subject { described_class.new(relation, header) }
+  subject { described_class.new(name, relation, header) }
 
-  let(:relation) { mock('relation', :name => 'users', :columns => header) }
+  let(:name)     { 'users' }
+  let(:relation) { mock('relation') }
   let(:header)   { mock('header') }
 
   its(:relation) { should be(relation) }
-  its(:name)     { should eql(relation.name) }
-  its(:header)   { should eql(header) }
+  its(:name)     { should be(:users) }
+  its(:header)   { should be(header) }
 end

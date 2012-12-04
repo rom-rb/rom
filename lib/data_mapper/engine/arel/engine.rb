@@ -36,7 +36,7 @@ module DataMapper
 
         # @api private
         def gateway_relation(relation)
-          Gateway.new(relation)
+          Gateway.new(relation.name, relation, relation.columns)
         end
 
         private

@@ -7,7 +7,7 @@ describe Engine::Arel::Engine, "#gateway_relation" do
   let(:object)       { described_class.new("foo://bar/baz", engine_class) }
   let(:engine_class) { mock('engine_class').as_null_object }
 
-  let(:relation) { mock('relation') }
+  let(:relation) { mock('relation', :name => 'users', :columns => []) }
 
   it { should be_instance_of(Engine::Arel::Gateway) }
 end

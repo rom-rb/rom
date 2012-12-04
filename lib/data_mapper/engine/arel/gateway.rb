@@ -11,10 +11,10 @@ module DataMapper
 
         attr_reader :relation
 
-        def initialize(relation, name = nil, header = nil)
+        def initialize(name, relation, header)
           @relation = relation
-          @name     = relation.respond_to?(:name)    ? relation.name    : name
-          @header   = relation.respond_to?(:columns) ? relation.columns : header
+          @name     = name.to_sym
+          @header   = header
         end
 
         def each(&block)
@@ -24,7 +24,7 @@ module DataMapper
         end
 
         def new(relation, header = @header)
-          self.class.new(relation, name, header)
+          self.class.new(name, relation, header)
         end
 
         def restrict(*args)
