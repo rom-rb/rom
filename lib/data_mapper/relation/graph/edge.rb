@@ -111,26 +111,6 @@ module DataMapper
           target_node.name
         end
 
-        # Tests wether this edge connects the given {Node}
-        #
-        # @example
-        #
-        #   left  = Node.new(:left)
-        #   right = Node.new(:right)
-        #   edge = Edge.new(:name, left, right)
-        #   edge.connects?(left)
-        #
-        # @param [Node] node
-        #   the node to test
-        #
-        # @return [Boolean]
-        #   true if this edge connects +node+, false otherwise
-        #
-        # @api public
-        def connects?(node)
-          @nodes.include?(node)
-        end
-
       end # class Edge
 
     end # class Graph
