@@ -102,6 +102,20 @@ module DataMapper
             self
           end
 
+          def rename(new_aliases)
+            entries = @entries.dup
+
+            new_aliases.keys.each do |old|
+              initials = @entries.select { |initial, current| current == old }
+              initials.keys.each do |initial|
+                new = new_aliases[initial]
+                entries[initial] = new if new
+              end
+            end
+
+            self.class.new(entries, new_aliases)
+          end
+
           def alias(name)
             @entries[name]
           end
