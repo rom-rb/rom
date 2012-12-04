@@ -44,15 +44,6 @@ module DataMapper
           self.class.new(name, relation, aliases.merge(new_aliases))
         end
 
-        # Renames relation using this relation node aliases
-        #
-        # @return [Node]
-        #
-        # @api private
-        def aliased
-          self.class.new(name, relation.rename(aliases))
-        end
-
         # Joins two nodes
         #
         # @example
