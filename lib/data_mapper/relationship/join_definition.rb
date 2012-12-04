@@ -8,47 +8,42 @@ module DataMapper
     # @api private
     class JoinDefinition
 
-      class Side
+      # Represent one side of a join definition
+      #
+      # @!attribute [r] relation
+      #   @return [Relation::Graph::Node] the relation for this side of the join
+      #
+      # @!attribute [r] keys
+      #   @return [Array<Symbol>] the keys for this side of the join
+      #
+      # @api private
+      class Side < Struct.new(:relation, :keys)
 
-        include Equalizer.new(:relation_name, :keys)
-
-        # The relation to use for this side of the join
-        #
-        # @return [Relation::Graph::Node]
-        #
-        # @api private
-        attr_reader :relation
+        private :relation=, :keys=
 
         # The relation name of this side of the join
         #
-        # @return [Array<Symbol>]
+        # @return [#to_sym]
         #
         # @api private
         attr_reader :relation_name
-
-        # The attribute names to use for this side of the join
-        #
-        # @return [Array<Symbol>]
-        #
-        # @api private
-        attr_reader :keys
 
         # Initialize a new instance
         #
         # @param [Object] relation
         #   an instance of the configured engine's relation class
         #
-        # @param [Array<Symbol>] attribute_names
+        # @param [Array<Symbol>] keys
         #   the attribute names to use for this side of the join
         #
         # @return [undefined]
         #
         # @api private
         def initialize(relation, keys)
-          @relation, @keys = relation, Array(keys)
-          @relation_name   = @relation.name
+          super(relation, Array(keys))
+          @relation_name = relation.name
         end
-      end # class Side
+      end # struct Side
 
       include Enumerable
 
