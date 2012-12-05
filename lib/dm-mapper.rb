@@ -110,13 +110,6 @@ module DataMapper
     Mapper[model]
   end
 
-  # @see Mapper.registry
-  #
-  # @api public
-  def self.mapper_registry
-    Mapper.registry
-  end
-
 end # module DataMapper
 
 require 'abstract_type'
