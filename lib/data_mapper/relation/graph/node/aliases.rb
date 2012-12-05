@@ -51,6 +51,28 @@ module DataMapper
           abstract_method :initial_aliases
           private :initial_aliases
 
+          # Iterate over the aliases for the left side of a join
+          #
+          # @param [Proc] &block
+          #   the block to pass
+          #
+          # @yield [old_name, new_name]
+          #
+          # @yieldparam [#to_sym] old_name
+          #   a field's old name
+          #
+          # @yieldparam [#to_sym] new_name
+          #   a field's new name
+          #
+          # @return [self]
+          #
+          # @api private
+          def each(&block)
+            return to_enum unless block_given?
+            @aliases.each(&block)
+            self
+          end
+
           # Join self with other keeping track of previous aliasing
           #
           # @param [Aliases] other
@@ -78,28 +100,6 @@ module DataMapper
             end
 
             Binary.new(left.merge(right), aliases)
-          end
-
-          # Iterate over the aliases for the left side of a join
-          #
-          # @param [Proc] &block
-          #   the block to pass
-          #
-          # @yield [old_name, new_name]
-          #
-          # @yieldparam [#to_sym] old_name
-          #   a field's old name
-          #
-          # @yieldparam [#to_sym] new_name
-          #   a field's new name
-          #
-          # @return [self]
-          #
-          # @api private
-          def each(&block)
-            return to_enum unless block_given?
-            @aliases.each(&block)
-            self
           end
 
           # Return a renamed instance
