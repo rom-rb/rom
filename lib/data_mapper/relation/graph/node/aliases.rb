@@ -102,14 +102,37 @@ module DataMapper
             self
           end
 
+          # Return a renamed instance
+          #
+          # @param [Hash] new_aliases
+          #   the new aliases to use
+          #
+          # @return [Aliases]
+          #   the renamed instance
+          #
+          # @api private
           def rename(new_aliases)
             self.class.new(renamed_entries(new_aliases), new_aliases)
           end
 
+          # Return the current name for the given original name
+          #
+          # @param [Symbol] name
+          #   the original attribute name
+          #
+          # @return [Symbol]
+          #   the current alias
+          #
+          # @api private
           def alias(name)
             @entries[name]
           end
 
+          # Return a hash representation of this instance
+          #
+          # @return [Hash]
+          #
+          # @api private
           def to_hash
             @aliases.each_with_object({}) { |(k,v ), hash|
               hash[k.to_sym] = v.to_sym
