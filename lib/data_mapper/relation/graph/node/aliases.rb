@@ -103,18 +103,7 @@ module DataMapper
           end
 
           def rename(new_aliases)
-            entries = @entries.dup
-
-            new_aliases.keys.each do |old|
-              # Hash#select on 1.8.7 returns an array
-              initials = @entries.select { |initial, current| current == old }
-              Hash[initials].keys.each do |initial|
-                new = new_aliases[initial]
-                entries[initial] = new if new
-              end
-            end
-
-            self.class.new(entries, new_aliases)
+            self.class.new(renamed_entries(new_aliases), new_aliases)
           end
 
           def alias(name)
@@ -155,6 +144,25 @@ module DataMapper
             left.each do |original, current|
               left[original] = right_key if left[original] == old
             end
+          end
+
+          def renamed_entries(new_aliases)
+            new_aliases.keys.each_with_object(@entries.dup) do |name, entries|
+              update_name(entries, name, new_aliases)
+            end
+          end
+
+          def update_name(entries, name, aliases)
+            initial_names(name).each do |initial_name|
+              if new_name = aliases[initial_name]
+                entries[initial_name] = new_name
+              end
+            end
+          end
+
+          def initial_names(name)
+            # Hash#select returns an Array on MRI 1.8.7
+            Hash[@entries.select { |_, current| current == name }].keys
           end
 
         end # class Aliases
