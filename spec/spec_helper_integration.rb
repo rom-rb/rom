@@ -26,8 +26,6 @@ require 'data_mapper/engine/arel'
 
 require 'db_setup'
 
-require 'monkey_patches'
-
 ENV['TZ'] = 'UTC'
 
 # require spec support files and shared behavior
