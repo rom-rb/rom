@@ -136,6 +136,7 @@ module AbstractType
 end
 
 require 'bigdecimal'
+require 'date'
 
 require 'descendants_tracker'
 require 'equalizer'
