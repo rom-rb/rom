@@ -4,12 +4,7 @@ require 'backports'
 require 'backports/basic_object' unless defined?(BasicObject)
 require 'rubygems'
 
-begin
-  require 'rspec'  # try for RSpec 2
-rescue LoadError
-  require 'spec'   # try for RSpec 1
-  RSpec = Spec::Runner
-end
+require 'rspec'
 
 require 'veritas-do-adapter'
 require 'virtus'
@@ -31,7 +26,7 @@ ENV['TZ'] = 'UTC'
 # require spec support files and shared behavior
 Dir[File.expand_path('../**/shared/**/*.rb', __FILE__)].each { |file| require file }
 
-module Spec
+module SpecHelper
 
   def self.draw_relation_registry(file_name = 'graph.png')
 

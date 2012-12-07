@@ -5,30 +5,48 @@ require 'virtus'
 
 require 'data_mapper/engine/veritas'
 
-begin
-  require 'rspec'  # try for RSpec 2
-rescue LoadError
-  require 'spec'   # try for RSpec 1
-  RSpec = Spec::Runner
+require 'rspec'
+
+module SpecHelper
+  def self.mocks
+    @mocks
+  end
+
+  def self.reset_mocks!
+    @mocks = { :models => [], :mappers => [] }
+  end
+
+  def self.clear_mocks!
+    @mocks[:models].each do |name|
+      #puts "REMOVING: #{name}"
+      Object.send(:remove_const, name) if Object.const_defined?(name)
+    end
+
+    @mocks[:mappers].each do |name|
+      #puts "REMOVING: #{name}"
+      Object.send(:remove_const, name) if Object.const_defined?(name)
+    end
+
+    DataMapper::Mapper.instance_variable_set(:@descendants, [])
+    DataMapper::Relation::Mapper.instance_variable_set(:@descendants, [])
+
+    reset_mocks!
+  end
 end
 
 RSpec.configure do |config|
-  config.before(:all, :type => :unit) do
-    # FIXME: remove this when we upgrade to rspec2
-    unless self.instance_variable_get(:"@_proxy").location =~ /integration/
-      @_mocked_models  = []
-      @_mocked_mappers = []
-    end
+  config.before(:each) do
+    if example.metadata[:example_group][:file_path] =~ /unit/
+      SpecHelper.reset_mocks!
 
-    # TODO Find out why this is necessary since renaming RelationRegistry => Relation
-    DataMapper::Mapper.instance_variable_set(:@registry, nil)
+      # TODO Find out why this is necessary since renaming RelationRegistry => Relation
+      DataMapper::Mapper.instance_variable_set(:@registry, nil)
+    end
   end
 
-  config.after(:each, :type => :unit) do
-    # FIXME: remove this when we upgrade to rspec2
-    unless self.instance_variable_get(:"@_proxy").location =~ /integration/
-      clear_mocked_mappers
-      clear_mocked_models
+  config.after(:each) do
+    if example.metadata[:example_group][:file_path] =~ /unit/
+      SpecHelper.clear_mocks!
     end
   end
 
@@ -40,8 +58,12 @@ RSpec.configure do |config|
   end
 
   def mock_model(type)
-    @_mocked_models << type
-    Object.const_set(type, Class.new(OpenStruct))
+    if Object.const_defined?(type)
+      Object.const_get(type)
+    else
+      SpecHelper.mocks[:models] << type
+      Object.const_set(type, Class.new(OpenStruct))
+    end
   end
 
   def mock_mapper(model_class, attributes = [], relationships = [])
@@ -63,7 +85,8 @@ RSpec.configure do |config|
       klass.relationships << relationship
     end
 
-    @_mocked_mappers << klass.name.to_sym
+
+    SpecHelper.mocks[:mappers] << klass.name.to_sym
 
     klass
   end
@@ -106,20 +129,6 @@ RSpec.configure do |config|
 
   TEST_ENGINE = TestEngine.new('db://localhost/test')
   DataMapper.engines[:test] = TEST_ENGINE
-
-  def clear_mocked_models
-    @_mocked_models.each do |name|
-      Object.send(:remove_const, name) if Object.const_defined?(name)
-    end
-  end
-
-  def clear_mocked_mappers
-    @_mocked_mappers.each do |name|
-      Object.send(:remove_const, name) if Object.const_defined?(name)
-    end
-    DataMapper::Mapper.instance_variable_set(:@descendants, [])
-    DataMapper::Relation::Mapper.instance_variable_set(:@descendants, [])
-  end
 end
 
 Dir[File.expand_path('../shared/**/*.rb', __FILE__)].each { |file| require file }
