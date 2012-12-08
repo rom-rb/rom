@@ -15,11 +15,8 @@ describe "Using Arel engine" do
       attribute :name, String
       attribute :age,  Integer
 
-      class Mapper < DataMapper::Relation::Mapper
-
-        model         User
+      DM_ENV.build(User, :postgres) do
         relation_name :users
-        repository    :postgres
 
         map :id,   Integer, :key => true
         map :name, String,  :to  => :username
@@ -33,7 +30,7 @@ describe "Using Arel engine" do
   end
 
   it "actually works ZOMG" do
-    users = DataMapper[User].to_a
+    users = DM_ENV[User].to_a
 
     users.should have(3).items
 

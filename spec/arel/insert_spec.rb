@@ -11,11 +11,8 @@ describe "Inserting new objects with ARel" do
       attribute :name, String
       attribute :age,  Integer
 
-      class Mapper < DataMapper::Relation::Mapper
-
-        model         User
+      DM_ENV.build(User, :postgres) do
         relation_name :users
-        repository    :postgres
 
         map :id,   Integer, :key => true
         map :name, String,  :to  => :username
@@ -29,7 +26,7 @@ describe "Inserting new objects with ARel" do
   end
 
   it "actually works ZOMG" do
-    mapper = DataMapper[User]
+    mapper = DM_ENV[User]
 
     user = User.new(:name => 'Piotr', :age => 29)
     mapper.insert(user)

@@ -61,11 +61,8 @@ describe 'Relationship - Many-To-Many-Through with generated mappers' do
       end
     end
 
-    class TagMapper < DataMapper::Relation::Mapper
-
-      model         Tag
+    DM_ENV.build(Tag, :postgres) do
       relation_name :tags
-      repository    :postgres
 
       map :id,   Integer, :key => true
       map :name, String
@@ -73,11 +70,8 @@ describe 'Relationship - Many-To-Many-Through with generated mappers' do
       has 0..n, :infos, Info
     end
 
-    class InfoMapper < DataMapper::Relation::Mapper
-
-      model         Info
+    DM_ENV.build(Info, :postgres) do
       relation_name :infos
-      repository    :postgres
 
       map :id,     Integer, :key => true
       map :tag_id, Integer
@@ -88,11 +82,8 @@ describe 'Relationship - Many-To-Many-Through with generated mappers' do
       has 0..n, :info_contents, InfoContent
     end
 
-    class InfoContentMapper < DataMapper::Relation::Mapper
-
-      model         InfoContent
+    DM_ENV.build(InfoContent, :postgres) do
       relation_name :info_contents
-      repository    :postgres
 
       map :id,      Integer, :key => true
       map :info_id, Integer
@@ -101,11 +92,8 @@ describe 'Relationship - Many-To-Many-Through with generated mappers' do
       belongs_to :info, Info
     end
 
-    class SongTagMapper < DataMapper::Relation::Mapper
-
-      model         SongTag
+    DM_ENV.build(SongTag, :postgres) do
       relation_name :song_tags
-      repository    :postgres
 
       map :song_id, Integer, :key => true
       map :tag_id,  Integer, :key => true
@@ -114,10 +102,8 @@ describe 'Relationship - Many-To-Many-Through with generated mappers' do
       belongs_to :tag,  Tag
     end
 
-    class SongMapper < DataMapper::Relation::Mapper
-      model         Song
+    DM_ENV.build(Song, :postgres) do
       relation_name :songs
-      repository    :postgres
 
       map :id,    Integer, :key => true
       map :title, String
@@ -127,7 +113,7 @@ describe 'Relationship - Many-To-Many-Through with generated mappers' do
       has 0..n, :tags, Tag, :through => :song_tags
 
       has 0..n, :good_tags, Tag, :through => :song_tags do
-        where(DataMapper[Tag].relations[:tags][:name].eq('good'))
+        where(DM_ENV[Tag].relations[:tags][:name].eq('good'))
       end
 
       has 0..n, :infos, Info, :through => :tags
@@ -137,7 +123,7 @@ describe 'Relationship - Many-To-Many-Through with generated mappers' do
       has 0..n, :info_contents, InfoContent, :through => :infos
 
       has 0..n, :good_info_contents, InfoContent, :through => :infos, :via => :info_contents do
-        where(DataMapper[InfoContent].relations[:info_contents][:content].eq('really, really good'))
+        where(DM_ENV[InfoContent].relations[:info_contents][:content].eq('really, really good'))
       end
     end
   end
@@ -157,7 +143,7 @@ describe 'Relationship - Many-To-Many-Through with generated mappers' do
   end
 
   it 'loads associated tag infos' do
-    mapper = DataMapper[Song].include(:infos)
+    mapper = DM_ENV[Song].include(:infos)
 
     songs = mapper.to_a
 
@@ -177,7 +163,7 @@ describe 'Relationship - Many-To-Many-Through with generated mappers' do
   end
 
   it 'loads associated good infos' do
-    mapper = DataMapper[Song].include(:good_infos)
+    mapper = DM_ENV[Song].include(:good_infos)
 
     songs = mapper.to_a
 
@@ -192,7 +178,7 @@ describe 'Relationship - Many-To-Many-Through with generated mappers' do
   end
 
   it 'loads associated tag info contents' do
-    mapper = DataMapper[Song].include(:info_contents)
+    mapper = DM_ENV[Song].include(:info_contents)
     songs = mapper.to_a
 
     songs.should have(2).items
@@ -211,7 +197,7 @@ describe 'Relationship - Many-To-Many-Through with generated mappers' do
   end
 
   it 'loads associated restricted tag info contents' do
-    mapper = DataMapper[Song].include(:good_info_contents)
+    mapper = DM_ENV[Song].include(:good_info_contents)
     songs = mapper.to_a
 
     songs.should have(1).item

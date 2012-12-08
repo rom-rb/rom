@@ -20,11 +20,8 @@ describe "Using Arel engine" do
       attribute :street,  String
       attribute :zipcode, String
 
-      class Mapper < DataMapper::Relation::Mapper
-
-        model         Address
+      DM_ENV.build(Address, :postgres) do
         relation_name :addresses
-        repository    :postgres
 
         map :id,      Integer, :key => true
         map :user_id, Integer
@@ -42,11 +39,8 @@ describe "Using Arel engine" do
       attribute :age,     Integer
       attribute :address, Address
 
-      class Mapper < DataMapper::Relation::Mapper
-
-        model         User
+      DM_ENV.build(User, :postgres) do
         relation_name :users
-        repository    :postgres
 
         map :id,   Integer, :key => true
         map :name, String,  :to  => :username
@@ -63,7 +57,7 @@ describe "Using Arel engine" do
   end
 
   it "actually works ZOMG" do
-    users = DataMapper[User].include(:address).to_a
+    users = DM_ENV[User].include(:address).to_a
 
     users.should have(3).items
 
