@@ -26,15 +26,9 @@ RSpec.configure do |config|
   end
 
   config.include(SpecHelper)
-
-  class TestEngine < DataMapper::Engine::Veritas::Engine
-    def initialize(uri)
-      @relations = DataMapper::Relation::Graph.new(self)
-    end
-  end
-
-  TEST_ENGINE = TestEngine.new('db://localhost/test')
-  DataMapper.engines[:test] = TEST_ENGINE
 end
 
 include DataMapper
+
+TEST_ENGINE = TestEngine.new('db://localhost/test')
+DataMapper.engines[:test] = TEST_ENGINE
