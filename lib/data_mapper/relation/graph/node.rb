@@ -4,8 +4,6 @@ module DataMapper
 
       # Represents a relation in the registry graph
       #
-      # @abstract
-      #
       class Node
         include Enumerable, Equalizer.new(:name)
 
