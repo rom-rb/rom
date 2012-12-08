@@ -13,8 +13,8 @@ class TestEnv
   end
 
   def clear!
-    remove_constants
-    reset_mappers
+    remove_constants!
+    clear_mappers!
     reset!
 
     # TODO Find out why this is necessary since renaming RelationRegistry => Relation
@@ -29,35 +29,35 @@ class TestEnv
         if name =~ /::/
           [ name.split('::').last, klass.model ]
         else
-          [ name.to_sym, Object ]
+          [ name, Object ]
         end
 
-      next unless parent
+      next if const.nil?
 
       if parent.const_defined?(const)
         parent.send(:remove_const, const)
       end
     end
 
-    reset_mappers
-    reset_engines
+    reset_mappers!
+    reset_engines!
   end
 
-  def remove_constants
+  def remove_constants!
     @constants.each do |name|
       remove_constant(name)
     end
     self
   end
 
-  def reset_mappers
+  def reset_mappers!
     [ Mapper, Relation::Mapper ].each do |klass|
       klass.instance_variable_set(:@descendants, [])
     end
     self
   end
 
-  def reset_engines
+  def reset_engines!
     DataMapper.engines.each_value do |engine|
       engine.instance_variable_set(:@relations, engine.relations.class.new(engine))
     end
@@ -78,7 +78,9 @@ class TestEnv
   end
 
   def mock_mapper(model_class, attributes = [], relationships = [])
-     klass = Class.new(DataMapper::Relation::Mapper) do
+    name = "#{model_class.name}Mapper"
+
+    klass = Class.new(DataMapper::Relation::Mapper) do
       model         model_class
       repository    :test
       relation_name Inflector.tableize(model_class.name).to_sym
@@ -91,8 +93,6 @@ class TestEnv
     relationships.each do |relationship|
       klass.relationships << relationship
     end
-
-    name = "#{model_class.name}Mapper"
 
     if Object.const_defined?(name)
       remove_constant(name)
@@ -120,7 +120,7 @@ class TestEnv
   end
 
   def mapper_descendants
-    [ Mapper.descendants + Relation::Mapper.descendants ].flatten.uniq
+    [ Mapper.descendants + Relation::Mapper.descendants ].flatten.uniq - [ Relation::Mapper ]
   end
 
 end
