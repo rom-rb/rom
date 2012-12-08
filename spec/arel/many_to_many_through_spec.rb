@@ -177,8 +177,6 @@ describe 'Relationship - Many-To-Many-Through with generated mappers' do
   end
 
   it 'loads associated good infos' do
-    pending "WTF travis?!" if RUBY_VERSION < '1.9'
-
     mapper = DataMapper[Song].include(:good_infos)
 
     songs = mapper.to_a

@@ -163,7 +163,6 @@ describe 'Relationship - Many To Many with generated mappers' do
   end
 
   it 'loads associated :good_infos for songs' do
-    pending "this passes when run in isolation. probably some post-run clean up issue" if RUBY_VERSION < '1.9'
     mapper = DataMapper[Song].include(:good_infos)
 
     songs = mapper.to_a
