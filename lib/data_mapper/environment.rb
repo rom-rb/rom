@@ -7,10 +7,10 @@ module DataMapper
 
     attr_reader :registry
 
-    def initialize
+    def initialize(registry = nil)
       @engines  = {}
       @mappers  = []
-      @registry = Mapper::Registry.new
+      @registry = registry || Mapper::Registry.new
     end
 
     def [](model)
