@@ -173,7 +173,7 @@ module DataMapper
       # @return [self]
       #
       # @api private
-      def finalize
+      def finalize(*)
         self # noop
       end
 

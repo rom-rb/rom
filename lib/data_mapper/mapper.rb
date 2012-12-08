@@ -228,7 +228,11 @@ module DataMapper
     #
     # @api private
     def self.registry
-      @registry ||= Registry.new
+      environment.registry
+    end
+
+    def self.environment(environment = nil)
+      @environment ||= environment
     end
 
     # Finalizes this mapper class
@@ -251,8 +255,8 @@ module DataMapper
     # @return [self]
     #
     # @api private
-    def self.finalize_attributes
-      attributes.finalize
+    def self.finalize_attributes(registry)
+      attributes.finalize(registry)
       self
     end
 
@@ -261,6 +265,11 @@ module DataMapper
       @model         = self.class.model
       @attributes    = self.class.attributes
       @relationships = self.class.relationships
+    end
+
+    # @api private
+    def environment
+      self.class.environment
     end
 
     # Loads a domain object

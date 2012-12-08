@@ -43,8 +43,8 @@ module DataMapper
       # @return [Engine]
       #
       # @api private
-      def self.engine
-        @engine ||= DataMapper.engines[repository]
+      def self.engine(engine = nil)
+        @engine ||= engine
       end
 
       # Returns relation registry for this mapper class
@@ -163,17 +163,6 @@ module DataMapper
         names.each do |name|
           attributes << attributes[name].clone(:key => true)
         end
-        self
-      end
-
-      # Perform finalization
-      #
-      # @return [self]
-      #
-      # @api private
-      def self.finalize
-        DataMapper::Mapper.registry << new(relations.node_for(gateway_relation))
-        freeze
         self
       end
 
@@ -370,7 +359,7 @@ module DataMapper
       #
       # @api public
       def include(name)
-        DataMapper::Mapper.registry[model, relationships[name]]
+        environment.registry[model, relationships[name]]
       end
 
       # Return a mapper for iterating over a restricted set of domain objects

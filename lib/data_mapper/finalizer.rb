@@ -32,6 +32,8 @@ module DataMapper
     # @api private
     attr_reader :mappers
 
+    attr_reader :environment
+
     # Perform finalization
     #
     # @param *args
@@ -58,9 +60,10 @@ module DataMapper
     # @return [undefined]
     #
     # @api private
-    def initialize(mappers = default_mappers, connector_builder = default_connector_builder, mapper_builder = default_mapper_builder)
-      @mappers           = mappers
-      @mapper_registry   = Mapper.registry
+    def initialize(environment, connector_builder = default_connector_builder, mapper_builder = default_mapper_builder)
+      @environment       = environment
+      @mappers           = environment.mappers
+      @mapper_registry   = environment.registry
       @connector_builder = connector_builder
       @mapper_builder    = mapper_builder
     end
@@ -71,16 +74,12 @@ module DataMapper
     #
     # @api private
     def run
-      BaseRelationMappersFinalizer.call(mappers, connector_builder, mapper_builder)
-      RelationshipMappersFinalizer.call(mappers, connector_builder, mapper_builder)
+      BaseRelationMappersFinalizer.call(environment, connector_builder, mapper_builder)
+      RelationshipMappersFinalizer.call(environment, connector_builder, mapper_builder)
       self
     end
 
     private
-
-    def default_mappers
-      Relation::Mapper.descendants
-    end
 
     def default_connector_builder
       Relation::Graph::Connector::Builder

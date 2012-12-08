@@ -7,7 +7,7 @@ engine_name = ENV.fetch('ENGINE', 'Veritas')
 ENGINE = DataMapper::Engine.const_get(engine_name)
 
 CONFIG[engine_name].each do |name, uri|
-  DataMapper.setup(name, uri, ENGINE.const_get(:Engine))
+  DataMapper.setup(name, uri, DM_ENV, ENGINE.const_get(:Engine))
 end
 
 MAX_RELATION_SIZE = 10

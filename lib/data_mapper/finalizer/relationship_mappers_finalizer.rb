@@ -29,13 +29,15 @@ module DataMapper
 
       # @api private
       def finalize_attribute_mappers
-        mappers.each(&:finalize_attributes)
+        mappers.each { |mapper| mapper.finalize_attributes(mapper_registry) }
       end
 
       # @api private
       def relation_registries
         mappers.map(&:relations).uniq
       end
+
     end # class RelationshipMapperFinalizer
+
   end # class Finalizer
 end # module DataMapper

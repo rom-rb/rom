@@ -34,7 +34,7 @@ module DataMapper
         mapper.relation_name(Inflector.tableize(model.name).to_sym)
         mapper.repository(repository)
 
-        copy_attributes(mapper, model.attribute_set)
+        copy_attributes(mapper, model.attribute_set) if model < DataMapper::Model
 
         mapper.instance_eval(&block) if block_given?
 

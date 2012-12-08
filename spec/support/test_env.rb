@@ -55,14 +55,14 @@ class TestEnv
   end
 
   def reset_engines!
-    DataMapper.engines.each_value do |engine|
+    DM_ENV.engines.each_value do |engine|
       engine.instance_variable_set(:@relations, engine.relations.class.new(engine))
     end
 
     DataMapper::Relation::Mapper.instance_variable_set(:@relations, nil)
     DataMapper::Mapper.instance_variable_set(:@registry, nil)
 
-    DataMapper.instance_variable_set(:@finalized, false)
+    DM_ENV.instance_variable_set(:@finalized, false)
   end
 
   def mock_model(type)

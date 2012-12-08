@@ -17,6 +17,6 @@ RSpec.configure do |config|
   end
 
   config.before do
-    DataMapper.finalize
+    #DataMapper.finalize
   end
 end
