@@ -1,3 +1,7 @@
+require 'backports'
+require 'backports/basic_object' unless defined?(BasicObject)
+require 'rubygems'
+
 require 'pp'
 require 'ostruct'
 require 'dm-mapper'
