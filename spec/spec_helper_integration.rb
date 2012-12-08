@@ -68,37 +68,12 @@ module SpecHelper
 end
 
 RSpec.configure do |config|
+  config.before(:all) do
+    @test_env = TestEnv.instance
+  end
+
   config.after(:all) do
-
-    [ Mapper.descendants + Relation::Mapper.descendants ].flatten.uniq.each do |klass|
-      name = klass.name
-
-      const, parent =
-        if name =~ /::/
-          [ name.split('::').last, klass.model ]
-        else
-          [ name.to_sym, Object ]
-        end
-
-      next unless parent
-
-      if parent.const_defined?(const)
-        parent.send(:remove_const, const)
-      end
-    end
-
-    DataMapper::Mapper.instance_variable_set('@descendants', [])
-    DataMapper::Relation::Mapper.instance_variable_set('@descendants', [])
-
-    DataMapper.engines.each do |name, engine|
-      engine.instance_variable_set(:@relations, engine.relations.class.new(engine))
-    end
-
-    DataMapper::Relation::Mapper.instance_variable_set(:@relations, nil)
-
-    DataMapper::Mapper.instance_variable_set(:@registry, nil)
-
-    DataMapper.instance_variable_set(:@finalized, false)
+    @test_env.clear_mappers!
   end
 
   config.before do

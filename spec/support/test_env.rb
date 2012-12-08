@@ -16,6 +16,31 @@ class TestEnv
     remove_constants
     reset_mappers
     reset!
+
+    # TODO Find out why this is necessary since renaming RelationRegistry => Relation
+    DataMapper::Mapper.instance_variable_set(:@registry, nil)
+  end
+
+  def clear_mappers!
+    mapper_descendants.each do |klass|
+      name = klass.name
+
+      const, parent =
+        if name =~ /::/
+          [ name.split('::').last, klass.model ]
+        else
+          [ name.to_sym, Object ]
+        end
+
+      next unless parent
+
+      if parent.const_defined?(const)
+        parent.send(:remove_const, const)
+      end
+    end
+
+    reset_mappers
+    reset_engines
   end
 
   def remove_constants
@@ -30,6 +55,17 @@ class TestEnv
       klass.instance_variable_set(:@descendants, [])
     end
     self
+  end
+
+  def reset_engines
+    DataMapper.engines.each_value do |engine|
+      engine.instance_variable_set(:@relations, engine.relations.class.new(engine))
+    end
+
+    DataMapper::Relation::Mapper.instance_variable_set(:@relations, nil)
+    DataMapper::Mapper.instance_variable_set(:@registry, nil)
+
+    DataMapper.instance_variable_set(:@finalized, false)
   end
 
   def mock_model(type)
@@ -81,6 +117,10 @@ class TestEnv
     else
       raise "[TestEnv] trying to remove non-existant constant: #{name.inspect}"
     end
+  end
+
+  def mapper_descendants
+    [ Mapper.descendants + Relation::Mapper.descendants ].flatten.uniq
   end
 
 end

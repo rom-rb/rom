@@ -15,8 +15,6 @@ RSpec.configure do |config|
 
   config.before(:each) do
     if example.metadata[:example_group][:file_path] =~ /unit|shared/
-      # TODO Find out why this is necessary since renaming RelationRegistry => Relation
-      DataMapper::Mapper.instance_variable_set(:@registry, nil)
       @test_env = TestEnv.instance
     end
   end
