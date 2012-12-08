@@ -43,6 +43,9 @@ module DataMapper
     # @api public
     attr_reader :relationships
 
+    # @api private
+    attr_reader :environment
+
     # Returns a new mapper class derived from the given one
     #
     # @example
@@ -55,6 +58,9 @@ module DataMapper
     # @api public
     def self.from(other, name)
       klass = Builder.define_for(other.model, self, name)
+
+      # FIXME: unify mapper building via environment
+      klass.environment(other.environment)
 
       other.attributes.each do |attribute|
         klass.attributes << attribute
@@ -231,8 +237,13 @@ module DataMapper
       environment.registry
     end
 
+    # @api private
     def self.environment(environment = nil)
-      @environment ||= environment
+      if @environment
+        @environment
+      else
+        @environment = environment
+      end
     end
 
     # Finalizes this mapper class
@@ -265,11 +276,7 @@ module DataMapper
       @model         = self.class.model
       @attributes    = self.class.attributes
       @relationships = self.class.relationships
-    end
-
-    # @api private
-    def environment
-      self.class.environment
+      @environment   = self.class.environment
     end
 
     # Loads a domain object

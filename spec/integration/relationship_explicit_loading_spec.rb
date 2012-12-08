@@ -20,11 +20,8 @@ describe 'Relationship - One To One - Explicit Loading' do
           :id, :street, :city, :zipcode)
       end
 
-      class Mapper < DataMapper::Relation::Mapper
-
-        model         Address
+      DM_ENV.build(Address, :postgres) do
         relation_name :addresses
-        repository    :postgres
 
         map :id,      Integer, :key => true
         map :user_id, Integer
@@ -43,11 +40,8 @@ describe 'Relationship - One To One - Explicit Loading' do
         @address = attributes[:address]
       end
 
-      class Mapper < DataMapper::Relation::Mapper
-
-        model         User
+      DM_ENV.build(User, :postgres) do
         relation_name :users
-        repository    :postgres
 
         map :id,   Integer, :key => true
         map :name, String,  :to  => :username
@@ -57,11 +51,11 @@ describe 'Relationship - One To One - Explicit Loading' do
   end
 
   let(:user_mapper) do
-    DataMapper[User]
+    DM_ENV[User]
   end
 
   let(:address_mapper) do
-    DataMapper[Address]
+    DM_ENV[Address]
   end
 
   it 'loads parent and then child' do

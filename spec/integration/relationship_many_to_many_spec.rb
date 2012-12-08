@@ -39,11 +39,8 @@ describe 'Relationship - Many To Many with generated mappers' do
       end
     end
 
-    class TagMapper < DataMapper::Relation::Mapper
-
-      model         Tag
+    DM_ENV.build(Tag, :postgres) do
       relation_name :tags
-      repository    :postgres
 
       map :id,   Integer, :key => true
       map :name, String
@@ -52,11 +49,8 @@ describe 'Relationship - Many To Many with generated mappers' do
       has 0..n, :songs, Song, :through => :song_tags
     end
 
-    class SongTagMapper < DataMapper::Relation::Mapper
-
-      model         SongTag
+    DM_ENV.build(SongTag, :postgres) do
       relation_name :song_tags
-      repository    :postgres
 
       map :song_id, Integer, :key => true
       map :tag_id,  Integer, :key => true
@@ -65,10 +59,8 @@ describe 'Relationship - Many To Many with generated mappers' do
       belongs_to :tag,  Tag
     end
 
-    class SongMapper < DataMapper::Relation::Mapper
-      model         Song
+    DM_ENV.build(Song, :postgres) do
       relation_name :songs
-      repository    :postgres
 
       map :id,    Integer, :key => true
       map :title, String
@@ -84,7 +76,7 @@ describe 'Relationship - Many To Many with generated mappers' do
   end
 
   it 'loads associated song_tags for songs' do
-    mapper = DataMapper[Song].include(:song_tags)
+    mapper = DM_ENV[Song].include(:song_tags)
     songs  = mapper.to_a
 
     songs.should have(2).items
@@ -103,7 +95,7 @@ describe 'Relationship - Many To Many with generated mappers' do
   end
 
   it 'loads associated tags for songs' do
-    mapper = DataMapper[Song].include(:tags)
+    mapper = DM_ENV[Song].include(:tags)
     songs  = mapper.to_a
 
     songs.should have(2).items
@@ -121,7 +113,7 @@ describe 'Relationship - Many To Many with generated mappers' do
   end
 
   it 'loads associated tags with name = good for songs' do
-    mapper = DataMapper[Song].include(:good_tags)
+    mapper = DM_ENV[Song].include(:good_tags)
     songs  = mapper.include(:good_tags).to_a
 
     songs.should have(1).item
@@ -134,7 +126,7 @@ describe 'Relationship - Many To Many with generated mappers' do
   end
 
   it 'loads associated song_tags for tags' do
-    mapper = DataMapper[Tag].include(:song_tags)
+    mapper = DM_ENV[Tag].include(:song_tags)
     tags   = mapper.to_a
 
     tags.should have(2).item
@@ -151,7 +143,7 @@ describe 'Relationship - Many To Many with generated mappers' do
   end
 
   it 'loads associated songs for tags' do
-    mapper = DataMapper[Tag].include(:songs)
+    mapper = DM_ENV[Tag].include(:songs)
     tags   = mapper.to_a
 
     tags.should have(2).item

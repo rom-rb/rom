@@ -59,9 +59,8 @@ class TestEnv
       engine.instance_variable_set(:@relations, engine.relations.class.new(engine))
     end
 
-    DataMapper::Relation::Mapper.instance_variable_set(:@relations, nil)
-    DataMapper::Mapper.instance_variable_set(:@registry, nil)
-
+    DM_ENV.instance_variable_set(:@registry, Mapper::Registry.new)
+    DM_ENV.instance_variable_set(:@mappers, [])
     DM_ENV.instance_variable_set(:@finalized, false)
   end
 

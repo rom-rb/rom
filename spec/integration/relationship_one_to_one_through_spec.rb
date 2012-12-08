@@ -39,21 +39,15 @@ describe 'Relationship - One To One through with generated mappers' do
       end
     end
 
-    class TagMapper < DataMapper::Relation::Mapper
-
-      model         Tag
+    DM_ENV.build(Tag, :postgres) do
       relation_name :tags
-      repository    :postgres
 
       map :id,   Integer, :key => true
       map :name, String
     end
 
-    class SongTagMapper < DataMapper::Relation::Mapper
-
-      model         SongTag
+    DM_ENV.build(SongTag, :postgres) do
       relation_name :song_tags
-      repository    :postgres
 
       map :song_id, Integer, :key => true
       map :tag_id,  Integer, :key => true
@@ -62,10 +56,8 @@ describe 'Relationship - One To One through with generated mappers' do
       belongs_to :tag,  Tag
     end
 
-    class SongMapper < DataMapper::Relation::Mapper
-      model         Song
+    DM_ENV.build(Song, :postgres) do
       relation_name :songs
-      repository    :postgres
 
       map :id,    Integer, :key => true
       map :title, String
@@ -81,7 +73,7 @@ describe 'Relationship - One To One through with generated mappers' do
   end
 
   it 'loads associated tag' do
-    mapper = DataMapper[Song].include(:tag)
+    mapper = DM_ENV[Song].include(:tag)
     songs  = mapper.to_a
 
     songs.should have(2).items
@@ -96,7 +88,7 @@ describe 'Relationship - One To One through with generated mappers' do
   end
 
   it 'loads associated restricted tag' do
-    mapper = DataMapper[Song].include(:good_tag)
+    mapper = DM_ENV[Song].include(:good_tag)
     songs = mapper.to_a
 
     songs.should have(1).item

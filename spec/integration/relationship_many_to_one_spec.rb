@@ -18,11 +18,8 @@ describe 'Relationship - Many To One with generated mapper' do
         @address = attributes[:address]
       end
 
-      class Mapper < DataMapper::Relation::Mapper
-
-        model         User
+      DM_ENV.build(User, :postgres) do
         relation_name :users
-        repository    :postgres
 
         map :id,   Integer, :key => true
         map :name, String,  :to  => :username
@@ -38,10 +35,8 @@ describe 'Relationship - Many To One with generated mapper' do
           :id, :street, :city, :zipcode, :user)
       end
 
-      class Mapper < DataMapper::Relation::Mapper
-        model         Address
+      DM_ENV.build(Address, :postgres) do
         relation_name :addresses
-        repository    :postgres
 
         map :id,      Integer, :key => true
         map :user_id, Integer
@@ -55,11 +50,11 @@ describe 'Relationship - Many To One with generated mapper' do
   end
 
   let(:user_mapper) do
-    DataMapper[User]
+    DM_ENV[User]
   end
 
   let(:address_mapper) do
-    DataMapper[Address]
+    DM_ENV[Address]
   end
 
   it 'loads associated object' do

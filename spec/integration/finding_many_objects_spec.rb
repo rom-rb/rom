@@ -21,11 +21,8 @@ describe 'Finding Many Objects', :type => :integration do
           :id, :street, :city, :zipcode)
       end
 
-      class Mapper < DataMapper::Relation::Mapper
-
-        model         Address
+      DM_ENV.build(Address, :postgres) do
         relation_name :addresses
-        repository    :postgres
 
         map :id,      Integer, :key => true
         map :user_id, Integer
@@ -42,11 +39,8 @@ describe 'Finding Many Objects', :type => :integration do
         @id, @name, @age = attributes.values_at(:id, :name, :age)
       end
 
-      class Mapper < DataMapper::Relation::Mapper
-
-        model         User
+      DM_ENV.build(User, :postgres) do
         relation_name :users
-        repository    :postgres
 
         map :id,   Integer, :key => true
         map :name, String,  :to  => :username
@@ -56,7 +50,7 @@ describe 'Finding Many Objects', :type => :integration do
   end
 
   it 'finds many object matching search criteria' do
-    users = DataMapper[User].find(:name => 'Jane').to_a
+    users = DM_ENV[User].find(:name => 'Jane').to_a
 
     users.should have(2).items
 
@@ -71,7 +65,7 @@ describe 'Finding Many Objects', :type => :integration do
   end
 
   it 'finds and sorts objects' do
-    users = DataMapper[User].find(:name => 'Jane').order(:age, :name).to_a
+    users = DM_ENV[User].find(:name => 'Jane').order(:age, :name).to_a
 
     user1, user2 = users
 
@@ -87,7 +81,7 @@ describe 'Finding Many Objects', :type => :integration do
   it 'finds objects matching criteria from joined relation' do
     pending "Nested query conditions is not yet implemented"
 
-    users = DataMapper[User].find(:age => 20, :address => { :city => 'Boston' }).to_a
+    users = DM_ENV[User].find(:age => 20, :address => { :city => 'Boston' }).to_a
 
     users.should have(1).item
 

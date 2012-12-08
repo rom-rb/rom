@@ -29,22 +29,16 @@ describe 'Relationship - One To Many with generated mapper' do
       end
     end
 
-    class OrderMapper < DataMapper::Relation::Mapper
-
-      model         Order
+    DM_ENV.build(Order, :postgres) do
       relation_name :orders
-      repository    :postgres
 
       map :id,      Integer, :key => true
       map :user_id, Integer
       map :product, String
     end
 
-    class UserMapper < DataMapper::Relation::Mapper
-
-      model         User
+    DM_ENV.build(User, :postgres) do
       relation_name :users
-      repository    :postgres
 
       map :id,     Integer, :key => true
       map :name,   String,  :to => :username
@@ -60,7 +54,7 @@ describe 'Relationship - One To Many with generated mapper' do
   end
 
   it 'loads associated orders' do
-    user_order_mapper = DataMapper[User].include(:orders)
+    user_order_mapper = DM_ENV[User].include(:orders)
     users_with_orders = user_order_mapper.to_a
 
     users_with_orders.should have(2).items
@@ -80,7 +74,7 @@ describe 'Relationship - One To Many with generated mapper' do
   end
 
   it 'loads associated restricted apple orders' do
-    user_order_mapper = DataMapper[User].include(:apple_orders)
+    user_order_mapper = DM_ENV[User].include(:apple_orders)
     users_with_orders = user_order_mapper.to_a
 
     users_with_orders.should have(1).item
