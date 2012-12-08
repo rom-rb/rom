@@ -6,11 +6,7 @@ module DataMapper
       #
       # @abstract
       #
-      # TODO: add #update
-      # TODO: add #delete
-      #
       class Node
-
         include Enumerable, Equalizer.new(:name)
 
         def self.aliases(relation_name, attribute_set)
