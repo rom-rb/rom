@@ -16,9 +16,6 @@ class TestEnv
     remove_constants!
     clear_mappers!
     reset!
-
-    # TODO Find out why this is necessary since renaming RelationRegistry => Relation
-    DataMapper::Mapper.instance_variable_set(:@registry, nil)
   end
 
   def clear_mappers!
