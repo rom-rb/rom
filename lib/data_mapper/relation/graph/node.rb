@@ -100,6 +100,20 @@ module DataMapper
         end
         alias_method :<<, :insert
 
+        # Updates an object identified with the given key from the relation
+        #
+        # @example
+        #
+        #   DataMapper.engines[:postgres].relations[:people].update(1, name: 'John')
+        #
+        # @param [Object] key attribute
+        # @param [Object] tuple
+        #
+        # @api public
+        def update(key, tuple)
+          @relation.update(key, tuple)
+        end
+
         # Deletes an object identified with the given key from the relation
         #
         # @example
