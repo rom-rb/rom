@@ -21,10 +21,6 @@ describe "Inserting new objects with ARel" do
     end
   end
 
-  after(:all) do
-    Object.send(:remove_const, :User)
-  end
-
   it "actually works ZOMG" do
     mapper = DM_ENV[User]
 

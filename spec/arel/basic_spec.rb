@@ -25,10 +25,6 @@ describe "Using Arel engine" do
     end
   end
 
-  after(:all) do
-    Object.send(:remove_const, :User)
-  end
-
   it "actually works ZOMG" do
     users = DM_ENV[User].to_a
 

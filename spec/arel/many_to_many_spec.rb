@@ -76,16 +76,6 @@ describe '[Arel] Relationship - Many To Many with generated mappers' do
     end
   end
 
-  after(:all) do
-    Object.send(:remove_const, :Tag)
-    Object.send(:remove_const, :Song)
-    Object.send(:remove_const, :SongTag)
-
-    Object.send(:remove_const, :TagMapper)
-    Object.send(:remove_const, :SongMapper)
-    Object.send(:remove_const, :SongTagMapper)
-  end
-
   it 'loads associated song_tags for songs' do
     mapper = DM_ENV[Song].include(:song_tags)
     songs  = mapper.to_a

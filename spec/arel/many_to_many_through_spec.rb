@@ -128,20 +128,6 @@ describe 'Relationship - Many-To-Many-Through with generated mappers' do
     end
   end
 
-  after(:all) do
-    Object.send(:remove_const, :Tag)
-    Object.send(:remove_const, :Song)
-    Object.send(:remove_const, :SongTag)
-    Object.send(:remove_const, :Info)
-    Object.send(:remove_const, :InfoContent)
-
-    Object.send(:remove_const, :TagMapper)
-    Object.send(:remove_const, :SongMapper)
-    Object.send(:remove_const, :SongTagMapper)
-    Object.send(:remove_const, :InfoMapper)
-    Object.send(:remove_const, :InfoContentMapper)
-  end
-
   it 'loads associated tag infos' do
     mapper = DM_ENV[Song].include(:infos)
 
