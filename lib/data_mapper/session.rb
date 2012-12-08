@@ -208,8 +208,6 @@ module DataMapper
     def initialize(registry)
       @registry     = registry
       @tracker      = Tracker.new
-
-      self
     end
 
     # Return old state for state
