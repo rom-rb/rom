@@ -9,7 +9,7 @@ class TestEnv
   end
 
   def <<(name)
-    @constants << name
+    @constants << name.to_sym
   end
 
   def clear!
@@ -29,7 +29,7 @@ class TestEnv
           [ name, Object ]
         end
 
-      next if const.nil?
+      next if const.nil? || const == ''
 
       if parent.const_defined?(const)
         parent.send(:remove_const, const)
