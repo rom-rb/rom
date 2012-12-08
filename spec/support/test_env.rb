@@ -76,9 +76,7 @@ class TestEnv
   def mock_mapper(model_class, attributes = [], relationships = [])
     name = "#{model_class.name}Mapper"
 
-    klass = Class.new(DataMapper::Relation::Mapper) do
-      model         model_class
-      repository    :test
+    klass = DM_ENV.build(model_class, :test) do
       relation_name Inflector.tableize(model_class.name).to_sym
     end
 

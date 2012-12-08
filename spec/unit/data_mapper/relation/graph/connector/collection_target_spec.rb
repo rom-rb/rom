@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Relation::Graph::Connector, '#collection_target?' do
   subject { object.collection_target? }
 
-  let(:object) { described_class.new(node, relationship, relations) }
+  let(:object) { described_class.new(node, relationship, relations, DM_ENV) }
 
   let(:node)         { mock('relation_node', :name => mock) }
   let(:relations)    { mock('relations') }

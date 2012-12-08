@@ -5,20 +5,22 @@ describe DataMapper, '.setup' do
   let(:uri)        { 'db://localhost/things'}
 
   context "when engine is not specified" do
-    subject { DataMapper.setup(repository, uri) }
+    subject { DataMapper.setup(repository, uri, DM_ENV) }
 
     it "sets up VeritasEngine by default" do
-      subject.engines[repository].should be_instance_of(Engine::Veritas::Engine)
+      subject
+      DM_ENV.engines[repository].should be_instance_of(Engine::Veritas::Engine)
     end
   end
 
   context "when engine is specified" do
-    subject { DataMapper.setup(repository, uri, engine) }
+    subject { DataMapper.setup(repository, uri, DM_ENV, engine) }
 
     let(:engine) { Class.new(Engine) }
 
     it "sets up given engine" do
-      subject.engines[repository].should be_instance_of(engine)
+      subject
+      DM_ENV.engines[repository].should be_instance_of(engine)
     end
   end
 end

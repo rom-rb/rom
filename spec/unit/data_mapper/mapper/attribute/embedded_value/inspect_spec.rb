@@ -10,8 +10,7 @@ describe DataMapper::Mapper::Attribute::EmbeddedValue, '#inspect' do
   let(:value)     { mock('loaded_object') }
 
   before do
-    DataMapper.should_receive(:[]).with(model).and_return(mapper)
-    attribute.finalize
+    attribute.finalize(model => mapper)
   end
 
   it { should eql("<#DataMapper::Mapper::Attribute::EmbeddedValue @name=title @mapper=TestModelMapper>")}

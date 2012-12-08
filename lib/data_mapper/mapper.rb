@@ -195,21 +195,6 @@ module DataMapper
       Infinity
     end
 
-    # Returns a mapper instance for the given model
-    #
-    # @example
-    #
-    #   DataMapper[User] #=> user mapper instance
-    #
-    # @param [Class] model class
-    #
-    # @return [Mapper]
-    #
-    # @api public
-    def self.[](model)
-      registry[model]
-    end
-
     # Returns attribute set for this mapper class
     #
     # @return [AttributeSet]
@@ -226,15 +211,6 @@ module DataMapper
     # @api private
     def self.relationships
       @relationships ||= RelationshipSet.new
-    end
-
-    # Returns mapper registry for this mapper class
-    #
-    # @return [Registry]
-    #
-    # @api private
-    def self.registry
-      environment.registry
     end
 
     # @api private

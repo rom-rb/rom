@@ -10,8 +10,7 @@ describe DataMapper::Mapper::Attribute::EmbeddedValue, '#load' do
   let(:value)     { mock('loaded_object') }
 
   before do
-    DataMapper.should_receive(:[]).with(model).and_return(mapper)
-    attribute.finalize
+    attribute.finalize(model => mapper)
     mapper.should_receive(:load).with(tuple).and_return(value)
   end
 

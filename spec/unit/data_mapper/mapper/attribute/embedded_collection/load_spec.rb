@@ -13,8 +13,7 @@ describe DataMapper::Mapper::Attribute::EmbeddedCollection, '#load' do
   let(:book_two)       { mock('book_two') }
 
   before do
-    DataMapper.should_receive(:[]).with(model).and_return(mapper)
-    attribute.finalize
+    attribute.finalize(model => mapper)
     mapper.should_receive(:load).with(book_tuple_one).and_return(book_one)
     mapper.should_receive(:load).with(book_tuple_two).and_return(book_two)
   end

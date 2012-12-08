@@ -6,8 +6,7 @@ describe Relation::Mapper::Builder, '#mapper' do
   let(:object) { described_class.new(connector) }
 
   let(:mapper_registry) do
-    # TODO think about injecting mapper_registry into Connector
-    mapper_registry = DataMapper::Mapper.registry
+    mapper_registry = DM_ENV.registry
 
     [ song_mapper, song_tag_mapper, tag_mapper ].each do |mapper|
       mapper_registry.register(mapper)

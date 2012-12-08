@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe DataMapper::Mapper::AttributeSet, '#finalize' do
-  subject { attributes.finalize }
+  subject { attributes.finalize({}) }
 
   let(:attributes) { described_class.new }
   let(:id)         { mock('id',   :name => :id) }
