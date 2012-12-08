@@ -1,36 +1,32 @@
-require 'spec_helper'
-require 'data_mapper/engine/inmemory_engine'
+require 'spec_helper_integration'
+require 'data_mapper/engine/in_memory'
 
-describe Engine::InmemoryEngine do
-  before(:suite) do
-    DataMapper.engines[:memory] = Engine::InmemoryEngine.new
+describe Engine::InMemory::Engine do
+  before(:all) do
+    DM_ENV.engines[:memory] = Engine::InMemory::Engine.new
 
     User = Class.new(OpenStruct)
 
-    class UserMapper < DataMapper::Relation::Mapper
-      repository    :memory
+    DM_ENV.build(User, :memory) do
       relation_name :users
-      model         User
 
-      map :id,   Integer, :key => true
+      map :key,  Integer, :key => true
       map :name, String,  :to => :UserName
       map :age,  Integer, :to => :UserAge
     end
-
-    DataMapper.finalize
   end
 
   before {
     mapper.relation.relation.reset!
   }
 
-  let(:mapper) { DataMapper[User] }
+  let(:mapper) { DM_ENV[User] }
 
   describe '#insert' do
     it "adds user to the relation" do
-      user = User.new(:name => 'Piotr', :age => 29)
+      user = User.new(:key => nil, :name => 'Piotr', :age => 29)
       mapper.insert(user)
-      user.id.should be(1)
+      user.key.should be(1)
     end
   end
 
