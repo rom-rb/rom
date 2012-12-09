@@ -49,47 +49,6 @@ class TestEnv < DataMapper::Environment
     end
   end
 
-  def mock_model(type)
-    if Object.const_defined?(type)
-      Object.const_get(type)
-    else
-      register_constant(type)
-      Object.const_set(type, Class.new(OpenStruct))
-    end
-  end
-
-  def mock_mapper(model_class, attributes = [], relationships = [])
-    name = "#{model_class.name}Mapper"
-
-    klass = build(model_class, :test) do
-      relation_name Inflector.tableize(model_class.name).to_sym
-    end
-
-    attributes.each do |attribute|
-      klass.attributes << attribute
-    end
-
-    relationships.each do |relationship|
-      klass.relationships << relationship
-    end
-
-    if Object.const_defined?(name)
-      remove_constant(name)
-    end
-
-    Object.const_set name, klass
-
-    register_constant(klass.name)
-
-    klass
-  end
-
-  private
-
-  def reset_constants
-    @constants = Set.new
-  end
-
   def register_constant(name)
     @constants << name.to_sym
   end
@@ -100,6 +59,12 @@ class TestEnv < DataMapper::Environment
     else
       raise "[TestEnv] trying to remove non-existant constant: #{name.inspect}"
     end
+  end
+
+  private
+
+  def reset_constants
+    @constants = Set.new
   end
 
   def mapper_descendants

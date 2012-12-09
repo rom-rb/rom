@@ -1,7 +1,6 @@
 module SpecHelper
 
   def self.draw_relation_registry(file_name = 'graph.png')
-
     require 'graphviz'
 
     # Create a new graph
@@ -38,19 +37,46 @@ module SpecHelper
     g.output( :png => file_name )
   end
 
-  def mock_model(*args)
-    DM_ENV.mock_model(*args)
-  end
-
-  def mock_mapper(*args)
-    DM_ENV.mock_mapper(*args)
-  end
-
   def subclass(name = nil)
     Class.new(described_class) do
       define_singleton_method(:name) { "#{name}" }
       yield if block_given?
     end
+  end
+
+  def mock_model(type)
+    if Object.const_defined?(type)
+      Object.const_get(type)
+    else
+      DM_ENV.register_constant(type)
+      Object.const_set(type, Class.new(OpenStruct))
+    end
+  end
+
+  def mock_mapper(model_class, attributes = [], relationships = [])
+    name = "#{model_class.name}Mapper"
+
+    klass = DM_ENV.build(model_class, :test) do
+      relation_name Inflector.tableize(model_class.name).to_sym
+    end
+
+    attributes.each do |attribute|
+      klass.attributes << attribute
+    end
+
+    relationships.each do |relationship|
+      klass.relationships << relationship
+    end
+
+    if Object.const_defined?(name)
+      DM_ENV.remove_constant(name)
+    end
+
+    Object.const_set name, klass
+
+    DM_ENV.register_constant(klass.name)
+
+    klass
   end
 
   def mock_attribute(name, type, options = {})
