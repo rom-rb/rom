@@ -12,6 +12,10 @@ describe "Using Arel engine" do
     insert_address 2, 2, 'Street 1/2', 'Chicago', '54321'
     insert_address 3, 1, 'Street 2/4', 'Boston',  '67890'
 
+    if Object.const_defined?(:User)
+      Object.send(:remove_const, :User)
+    end
+
     class Address
       include DataMapper::Model
 
@@ -19,16 +23,12 @@ describe "Using Arel engine" do
       attribute :city,    String
       attribute :street,  String
       attribute :zipcode, String
+    end
 
-      DM_ENV.build(Address, :postgres) do
-        relation_name :addresses
+    DM_ENV.build(Address, :postgres) do
+      relation_name :addresses
 
-        map :id,      Integer, :key => true
-        map :user_id, Integer
-        map :street,  String
-        map :city,    String
-        map :zipcode, String
-      end
+      key(:id)
     end
 
     class User
@@ -38,22 +38,15 @@ describe "Using Arel engine" do
       attribute :name,    String
       attribute :age,     Integer
       attribute :address, Address
-
-      DM_ENV.build(User, :postgres) do
-        relation_name :users
-
-        map :id,   Integer, :key => true
-        map :name, String,  :to  => :username
-        map :age,  Integer
-
-        has 1, :address, Address
-      end
     end
-  end
 
-  after(:all) do
-    Object.send(:remove_const, :User)
-    Object.send(:remove_const, :Address)
+    DM_ENV.build(User, :postgres) do
+      relation_name :users
+
+      key :id
+      map :name, String,  :to  => :username
+      has 1, :address, Address
+    end
   end
 
   it "actually works ZOMG" do

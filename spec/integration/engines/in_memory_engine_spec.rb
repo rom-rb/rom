@@ -20,6 +20,10 @@ describe Engine::InMemory::Engine do
     mapper.relation.relation.reset!
   }
 
+  after(:all) {
+    Object.send(:remove_const, :User)
+  }
+
   let(:mapper) { DM_ENV[User] }
 
   describe '#insert' do

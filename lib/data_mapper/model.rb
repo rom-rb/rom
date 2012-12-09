@@ -13,8 +13,14 @@ module DataMapper
     # @api private
     def self.included(model)
       model.send(:include, Virtus)
+      descendants << model
       super
       self
+    end
+
+    # @api public
+    def self.descendants
+      @descendants ||= []
     end
 
   end # module Model
