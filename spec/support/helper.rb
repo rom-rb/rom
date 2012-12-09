@@ -39,11 +39,11 @@ module SpecHelper
   end
 
   def mock_model(*args)
-    @test_env.mock_model(*args)
+    DM_ENV.mock_model(*args)
   end
 
   def mock_mapper(*args)
-    @test_env.mock_mapper(*args)
+    DM_ENV.mock_mapper(*args)
   end
 
   def subclass(name = nil)

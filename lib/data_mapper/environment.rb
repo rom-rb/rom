@@ -8,9 +8,8 @@ module DataMapper
     attr_reader :registry
 
     def initialize(registry = nil)
-      @engines  = {}
-      @mappers  = []
-      @registry = registry || Mapper::Registry.new
+      @engines = {}
+      reset!(registry)
     end
 
     def [](model)
@@ -70,6 +69,13 @@ module DataMapper
       Finalizer.call(self)
       @finalized = true
       self
+    end
+
+    # @api private
+    def reset!(registry = nil)
+      @mappers   = []
+      @registry  = registry || Mapper::Registry.new
+      @finalized = false
     end
 
   end # class Environment

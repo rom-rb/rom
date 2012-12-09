@@ -29,15 +29,9 @@ end
 
 RSpec.configure do |config|
 
-  config.before(:each) do
-    if example.metadata[:example_group][:file_path] =~ /unit|shared/
-      @test_env = TestEnv.instance
-    end
-  end
-
   config.after(:each) do
     if example.metadata[:example_group][:file_path] =~ /unit|shared/
-      @test_env.clear!
+      DM_ENV.reset!
     end
   end
 
@@ -46,7 +40,7 @@ end
 
 include DataMapper
 
-DM_ENV = Environment.new
+DM_ENV = TestEnv.new
 
 TEST_ENGINE = TestEngine.new('db://localhost/test')
 

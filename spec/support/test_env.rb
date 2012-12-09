@@ -1,21 +1,23 @@
-class TestEnv
+class TestEnv < DataMapper::Environment
 
-  def self.instance
-    @instance ||= new
+  def initialize(*)
+    reset_constants
+    super
   end
 
-  def initialize
-    reset!
-  end
-
-  def <<(name)
-    @constants << name.to_sym
-  end
-
-  def clear!
+  def reset!(registry = nil)
+    super
     remove_constants!
     clear_mappers!
-    reset!
+    reset_engines!
+  end
+
+  def remove_constants!
+    @constants.each do |name|
+      remove_constant(name)
+    end
+    reset_constants
+    self
   end
 
   def clear_mappers!
@@ -36,39 +38,22 @@ class TestEnv
       end
     end
 
-    reset_mappers!
-    reset_engines!
-  end
-
-  def remove_constants!
-    @constants.each do |name|
-      remove_constant(name)
-    end
-    self
-  end
-
-  def reset_mappers!
     [ Mapper, Relation::Mapper ].each do |klass|
       klass.instance_variable_set(:@descendants, [])
     end
-    self
   end
 
   def reset_engines!
-    DM_ENV.engines.each_value do |engine|
+    engines.each_value do |engine|
       engine.instance_variable_set(:@relations, engine.relations.class.new(engine))
     end
-
-    DM_ENV.instance_variable_set(:@registry, Mapper::Registry.new)
-    DM_ENV.instance_variable_set(:@mappers, [])
-    DM_ENV.instance_variable_set(:@finalized, false)
   end
 
   def mock_model(type)
     if Object.const_defined?(type)
       Object.const_get(type)
     else
-      self << type
+      register_constant(type)
       Object.const_set(type, Class.new(OpenStruct))
     end
   end
@@ -76,7 +61,7 @@ class TestEnv
   def mock_mapper(model_class, attributes = [], relationships = [])
     name = "#{model_class.name}Mapper"
 
-    klass = DM_ENV.build(model_class, :test) do
+    klass = build(model_class, :test) do
       relation_name Inflector.tableize(model_class.name).to_sym
     end
 
@@ -94,15 +79,19 @@ class TestEnv
 
     Object.const_set name, klass
 
-    self << klass.name
+    register_constant(klass.name)
 
     klass
   end
 
   private
 
-  def reset!
+  def reset_constants
     @constants = Set.new
+  end
+
+  def register_constant(name)
+    @constants << name.to_sym
   end
 
   def remove_constant(name)
