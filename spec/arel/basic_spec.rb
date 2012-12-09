@@ -8,6 +8,10 @@ describe "Using Arel engine" do
     insert_user 2, 'Jane',  21
     insert_user 3, 'Piotr', 29
 
+    if Object.const_defined?(:User)
+      Object.send(:remove_const, :User)
+    end
+
     class User
       include DataMapper::Model
 

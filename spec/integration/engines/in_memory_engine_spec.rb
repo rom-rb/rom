@@ -5,6 +5,10 @@ describe Engine::InMemory::Engine do
   before(:all) do
     DM_ENV.engines[:memory] = Engine::InMemory::Engine.new
 
+    if Object.const_defined?(:User)
+      Object.send(:remove_const, :User)
+    end
+
     User = Class.new(OpenStruct)
 
     DM_ENV.build(User, :memory) do

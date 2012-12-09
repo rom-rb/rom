@@ -4,6 +4,10 @@ describe "Inserting new objects with ARel" do
   before(:all) do
     setup_db
 
+    if Object.const_defined?(:User)
+      Object.send(:remove_const, :User)
+    end
+
     class User
       include DataMapper::Model
 
