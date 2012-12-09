@@ -149,8 +149,6 @@ describe 'Relationship - Many To Many with generated mappers' do
   end
 
   it 'loads associated :good_infos for songs' do
-    pending if RUBY_VERSION < '1.9'
-
     mapper = DM_ENV[Song].include(:good_infos)
 
     songs = mapper.to_a
