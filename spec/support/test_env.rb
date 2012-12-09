@@ -46,6 +46,7 @@ class TestEnv < DataMapper::Environment
 
   def clear_models!
     model_classes.each do |model|
+      next if model.name.nil? || model.name == ''
       remove_constant(model.name) if model.name
     end
     Model.instance_variable_set(:"@descendants", [])
