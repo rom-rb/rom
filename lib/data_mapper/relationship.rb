@@ -124,9 +124,7 @@ module DataMapper
       @options      = options.to_hash
 
       @source_model = source_model
-      @target_model = target_model || options.fetch(:model)
-      @source_key   = Array(options[:source_key] || default_source_key).freeze
-      @target_key   = Array(options[:target_key] || default_target_key).freeze
+      @target_model = target_model
 
       @through      = options[:through]
       @via          = options[:via]
@@ -134,6 +132,8 @@ module DataMapper
 
       @min = options.fetch(:min, 1)
       @max = options.fetch(:max, 1)
+
+      initialize_keys
     end
 
     def finalize(mapper_registry)
@@ -156,6 +156,11 @@ module DataMapper
 
     DEFAULT_SOURCE_KEY = [ :id ].freeze
     DEFAULT_TARGET_KEY = [].freeze
+
+    def initialize_keys
+      @source_key = Array(options[:source_key] || default_source_key).freeze
+      @target_key = Array(options[:target_key] || default_target_key).freeze
+    end
 
     # Returns default name of the source key
     #
