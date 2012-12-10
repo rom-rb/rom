@@ -34,17 +34,17 @@ describe 'Relationship - Many-To-Many-Through with generated mappers' do
     song_mapper.has 0..n, :song_tags, song_tag_model
     song_mapper.has 0..n, :tags, tag_model, :through => :song_tags
 
-    #song_mapper.has 0..n, :good_tags, tag_model, :through => :song_tags do
-      #where(DM_ENV[tag_model].relations[:tags][:name].eq('good'))
-    #end
+    song_mapper.has 0..n, :good_tags, tag_model, :through => :song_tags do |source, target|
+      source.where(target[:name].eq('good'))
+    end
 
     song_mapper.has 0..n, :infos, info_model, :through => :tags
-    #song_mapper.has 0..n, :good_infos, info_model, :through => :good_tags, :via => :infos
+    song_mapper.has 0..n, :good_infos, info_model, :through => :good_tags, :via => :infos
     song_mapper.has 0..n, :info_contents, info_content_model, :through => :infos
 
-    #song_mapper.has 0..n, :good_info_contents, info_content_model, :through => :infos, :via => :info_contents do
-      #where(DM_ENV[info_content_model].relations[:info_contents][:content].eq('really, really good'))
-    #end
+    song_mapper.has 0..n, :good_info_contents, info_content_model, :through => :infos, :via => :info_contents do |source, target|
+      source.where(target[:content].eq('really, really good'))
+    end
   end
 
   it 'loads associated tag infos' do
@@ -68,8 +68,6 @@ describe 'Relationship - Many-To-Many-Through with generated mappers' do
   end
 
   it 'loads associated good infos' do
-    pending
-
     mapper = DM_ENV[song_model].include(:good_infos)
 
     songs = mapper.to_a
@@ -104,8 +102,6 @@ describe 'Relationship - Many-To-Many-Through with generated mappers' do
   end
 
   it 'loads associated restricted tag info contents' do
-    pending
-
     mapper = DM_ENV[song_model].include(:good_info_contents)
     songs = mapper.to_a
 

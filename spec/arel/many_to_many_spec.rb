@@ -24,9 +24,9 @@ describe '[Arel] Relationship - Many To Many with generated mappers' do
     song_mapper.has 0..n, :song_tags, song_tag_model
     song_mapper.has 0..n, :tags, tag_model, :through => :song_tags
 
-    #song_mapper.has 0..n, :good_tags, tag_model, :through => :song_tags do
-      #where(tags[:name].eq('good'))
-    #end
+    song_mapper.has 0..n, :good_tags, tag_model, :through => :song_tags do |source, target|
+      source.where(target[:name].eq('good'))
+    end
   end
 
   it 'loads associated song_tags for songs' do
@@ -68,8 +68,6 @@ describe '[Arel] Relationship - Many To Many with generated mappers' do
   end
 
   it 'loads associated tags with name = good' do
-    pending
-
     mapper = DM_ENV[song_model].include(:good_tags)
     songs  = mapper.include(:good_tags).to_a
 

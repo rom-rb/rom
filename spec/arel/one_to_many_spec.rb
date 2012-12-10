@@ -17,8 +17,8 @@ describe '[Arel] One To Many with generated mapper' do
 
     user_mapper.has 0..n, :orders, order_model
 
-    user_mapper.has 0..n, :apple_orders, order_model do
-      where(source.right.first.left[:product].eq('Apple'))
+    user_mapper.has 0..n, :apple_orders, order_model do |source, target|
+      source.where(target[:product].eq('Apple'))
     end
   end
 

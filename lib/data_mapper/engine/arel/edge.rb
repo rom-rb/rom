@@ -30,7 +30,7 @@ module DataMapper
 
         def join_relation(operation)
           relation = @source_relation.clone.join(@target_relation).on(left_key.eq(right_key)).order(left_key)
-          relation = relation.instance_eval(&operation) if operation
+          relation = operation.call(relation, @target_relation) if operation
           @source_node.gateway.new(relation, header)
         end
 
