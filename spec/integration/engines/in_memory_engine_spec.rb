@@ -9,9 +9,7 @@ describe Engine::InMemory::Engine do
       Object.send(:remove_const, :User)
     end
 
-    User = Class.new(OpenStruct)
-
-    DM_ENV.build(User, :memory) do
+    DM_ENV.build(user_model, :memory) do
       relation_name :users
 
       map :key,  Integer, :key => true
@@ -20,19 +18,15 @@ describe Engine::InMemory::Engine do
     end
   end
 
-  before {
-    mapper.relation.relation.reset!
-  }
+  let!(:user_model) { mock_model('User') }
+  let!(:mapper)     { DM_ENV[user_model] }
 
-  after(:all) {
-    Object.send(:remove_const, :User)
-  }
+  before { mapper.relation.relation.reset!  }
 
-  let(:mapper) { DM_ENV[User] }
 
   describe '#insert' do
     it "adds user to the relation" do
-      user = User.new(:key => nil, :name => 'Piotr', :age => 29)
+      user = user_model.new(:key => nil, :name => 'Piotr', :age => 29)
       mapper.insert(user)
       user.key.should be(1)
     end
@@ -40,7 +34,7 @@ describe Engine::InMemory::Engine do
 
   describe '#delete' do
     it "deletes user to the relation" do
-      user = User.new(:name => 'Piotr', :age => 29)
+      user = user_model.new(:name => 'Piotr', :age => 29)
       mapper.insert(user)
       mapper.delete(user)
       mapper.all.should be_empty

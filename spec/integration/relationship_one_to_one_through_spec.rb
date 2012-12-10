@@ -1,6 +1,8 @@
 require 'spec_helper_integration'
 
 describe 'Relationship - One To One through with generated mappers' do
+  include_context 'Models and Mappers'
+
   before(:all) do
     setup_db
 
@@ -13,67 +15,20 @@ describe 'Relationship - One To One through with generated mappers' do
     insert_song_tag 1, 2, 1
     insert_song_tag 2, 1, 2
 
-    class Song
-      attr_reader :id, :title, :song_tag, :tag, :good_tag
+    tag_mapper
 
-      def initialize(attributes)
-        @id, @title, @song_tag, @tag, @good_tag = attributes.values_at(
-          :id, :title, :song_tag, :tag, :good_tag
-        )
-      end
-    end
+    song_tag_mapper.belongs_to :song, song_model
+    song_tag_mapper.belongs_to :tag,  tag_model
 
-    class Tag
-      attr_reader :id, :name
-
-      def initialize(attributes)
-        @id, @name = attributes.values_at(:id, :name)
-      end
-    end
-
-    class SongTag
-      attr_reader :song_id, :tag_id
-
-      def initialize(attributes)
-        @song_id, @tag_id = attributes.values_at(:song_id, :tag_id)
-      end
-    end
-
-    DM_ENV.build(Tag, :postgres) do
-      relation_name :tags
-
-      map :id,   Integer, :key => true
-      map :name, String
-    end
-
-    DM_ENV.build(SongTag, :postgres) do
-      relation_name :song_tags
-
-      map :song_id, Integer, :key => true
-      map :tag_id,  Integer, :key => true
-
-      belongs_to :song, Song
-      belongs_to :tag,  Tag
-    end
-
-    DM_ENV.build(Song, :postgres) do
-      relation_name :songs
-
-      map :id,    Integer, :key => true
-      map :title, String
-
-      has 1, :song_tag, SongTag
-
-      has 1, :tag, Tag, :through => :song_tag
-
-      has 1, :good_tag, Tag, :through => :song_tag, :via => :tag do
-        restrict { |r| r.tags_name.eq('good') }
-      end
+    song_mapper.has 1, :song_tag, song_tag_model
+    song_mapper.has 1, :tag, tag_model, :through => :song_tag
+    song_mapper.has 1, :good_tag, tag_model, :through => :song_tag, :via => :tag do
+      restrict { |r| r.tags_name.eq('good') }
     end
   end
 
   it 'loads associated tag' do
-    mapper = DM_ENV[Song].include(:tag)
+    mapper = DM_ENV[song_model].include(:tag)
     songs  = mapper.to_a
 
     songs.should have(2).items
@@ -88,7 +43,7 @@ describe 'Relationship - One To One through with generated mappers' do
   end
 
   it 'loads associated restricted tag' do
-    mapper = DM_ENV[Song].include(:good_tag)
+    mapper = DM_ENV[song_model].include(:good_tag)
     songs = mapper.to_a
 
     songs.should have(1).item

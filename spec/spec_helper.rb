@@ -14,6 +14,14 @@ if ENV['COVERAGE']
   end
 end
 
+if RUBY_VERSION < '1.9'
+  class OpenStruct
+    def id
+      @table.fetch(:id) { super }
+    end
+  end
+end
+
 require 'pp'
 require 'ostruct'
 require 'dm-mapper'

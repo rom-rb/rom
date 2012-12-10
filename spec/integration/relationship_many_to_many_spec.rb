@@ -1,6 +1,8 @@
 require 'spec_helper_integration'
 
 describe 'Relationship - Many To Many with generated mappers' do
+  include_context 'Models and Mappers'
+
   before(:all) do
     setup_db
 
@@ -13,70 +15,21 @@ describe 'Relationship - Many To Many with generated mappers' do
     insert_song_tag 1, 1, 1
     insert_song_tag 2, 2, 2
 
-    class Song
-      attr_reader :id, :title, :song_tags, :tags, :good_tags
+    tag_mapper.has 0..n, :song_tags, song_tag_model
+    tag_mapper.has 0..n, :songs, song_model, :through => :song_tags
 
-      def initialize(attributes)
-        @id, @title, @song_tags, @tags, @good_tags = attributes.values_at(
-          :id, :title, :song_tags, :tags, :good_tags
-        )
-      end
-    end
+    song_tag_mapper.belongs_to :song, song_model
+    song_tag_mapper.belongs_to :tag,  tag_model
 
-    class Tag
-      attr_reader :id, :name, :song_tags, :songs
-
-      def initialize(attributes)
-        @id, @name, @song_tags, @songs = attributes.values_at(:id, :name, :song_tags, :songs)
-      end
-    end
-
-    class SongTag
-      attr_reader :song_id, :tag_id
-
-      def initialize(attributes)
-        @song_id, @tag_id = attributes.values_at(:song_id, :tag_id)
-      end
-    end
-
-    DM_ENV.build(Tag, :postgres) do
-      relation_name :tags
-
-      map :id,   Integer, :key => true
-      map :name, String
-
-      has 0..n, :song_tags, SongTag
-      has 0..n, :songs, Song, :through => :song_tags
-    end
-
-    DM_ENV.build(SongTag, :postgres) do
-      relation_name :song_tags
-
-      map :song_id, Integer, :key => true
-      map :tag_id,  Integer, :key => true
-
-      belongs_to :song, Song
-      belongs_to :tag,  Tag
-    end
-
-    DM_ENV.build(Song, :postgres) do
-      relation_name :songs
-
-      map :id,    Integer, :key => true
-      map :title, String
-
-      has 0..n, :song_tags, SongTag
-
-      has 0..n, :tags, Tag, :through => :song_tags
-
-      has 0..n, :good_tags, Tag, :through => :song_tags, :via => :tag do
-        restrict { |r| r.tags_name.eq('good') }
-      end
+    song_mapper.has 0..n, :song_tags, song_tag_model
+    song_mapper.has 0..n, :tags, tag_model, :through => :song_tags
+    song_mapper.has 0..n, :good_tags, tag_model, :through => :song_tags, :via => :tag do
+      restrict { |r| r.tags_name.eq('good') }
     end
   end
 
   it 'loads associated song_tags for songs' do
-    mapper = DM_ENV[Song].include(:song_tags)
+    mapper = DM_ENV[song_model].include(:song_tags)
     songs  = mapper.to_a
 
     songs.should have(2).items
@@ -95,7 +48,7 @@ describe 'Relationship - Many To Many with generated mappers' do
   end
 
   it 'loads associated tags for songs' do
-    mapper = DM_ENV[Song].include(:tags)
+    mapper = DM_ENV[song_model].include(:tags)
     songs  = mapper.to_a
 
     songs.should have(2).items
@@ -113,7 +66,7 @@ describe 'Relationship - Many To Many with generated mappers' do
   end
 
   it 'loads associated tags with name = good for songs' do
-    mapper = DM_ENV[Song].include(:good_tags)
+    mapper = DM_ENV[song_model].include(:good_tags)
     songs  = mapper.include(:good_tags).to_a
 
     songs.should have(1).item
@@ -126,7 +79,7 @@ describe 'Relationship - Many To Many with generated mappers' do
   end
 
   it 'loads associated song_tags for tags' do
-    mapper = DM_ENV[Tag].include(:song_tags)
+    mapper = DM_ENV[tag_model].include(:song_tags)
     tags   = mapper.to_a
 
     tags.should have(2).item
@@ -143,7 +96,7 @@ describe 'Relationship - Many To Many with generated mappers' do
   end
 
   it 'loads associated songs for tags' do
-    mapper = DM_ENV[Tag].include(:songs)
+    mapper = DM_ENV[tag_model].include(:songs)
     tags   = mapper.to_a
 
     tags.should have(2).item
