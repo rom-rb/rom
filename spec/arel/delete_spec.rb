@@ -1,6 +1,8 @@
 require 'spec_helper_integration'
 
 describe "Deleting objects with ARel" do
+  include_context 'Models and Mappers'
+
   before(:all) do
     setup_db
 
@@ -8,25 +10,21 @@ describe "Deleting objects with ARel" do
     insert_user 2, 'Jane',  21
     insert_user 3, 'Piotr', 29
 
-    class User
+    user_mapper
+  end
+
+  let(:user_model) {
+    mock_model('User') {
       include DataMapper::Model
 
       attribute :id,   Integer, :key => true
       attribute :name, String
       attribute :age,  Integer
-
-      DM_ENV.build(User, :postgres) do
-        relation_name :users
-
-        map :id,   Integer, :key => true
-        map :name, String,  :to  => :username
-        map :age,  Integer
-      end
-    end
-  end
+    }
+  }
 
   it "actually works ZOMG" do
-    mapper = DM_ENV[User]
+    mapper = DM_ENV[user_model]
     user   = mapper.first
 
     mapper.delete(user)

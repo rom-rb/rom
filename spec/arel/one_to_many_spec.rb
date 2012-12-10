@@ -1,6 +1,8 @@
 require 'spec_helper_integration'
 
 describe '[Arel] One To Many with generated mapper' do
+  include_context 'Models and Mappers'
+
   before(:all) do
     setup_db
 
@@ -11,50 +13,17 @@ describe '[Arel] One To Many with generated mapper' do
     insert_order 2, 1, 'Apple'
     insert_order 3, 2, 'Peach'
 
-    class Order
-      attr_reader :id, :product
+    order_mapper
 
-      def initialize(attributes)
-        @id, @product = attributes.values_at(:id, :product)
-      end
+    user_mapper.has 0..n, :orders, order_model
+
+    user_mapper.has 0..n, :apple_orders, order_model do
+      where(source.right.first.left[:product].eq('Apple'))
     end
-
-    class User
-      attr_reader :id, :name, :age, :orders, :apple_orders
-
-      def initialize(attributes)
-        @id, @name, @age, @orders, @apple_orders = attributes.values_at(
-          :id, :name, :age, :orders, :apple_orders
-        )
-      end
-    end
-
-    DM_ENV.build(Order, :postgres) do
-      relation_name :orders
-
-      map :id,      Integer, :key => true
-      map :user_id, Integer
-      map :product, String
-    end
-
-    DM_ENV.build(User, :postgres) do
-      relation_name :users
-
-      map :id,     Integer, :key => true
-      map :name,   String,  :to => :username
-      map :age,    Integer
-
-      has 0..n, :orders, Order
-
-      has 0..n, :apple_orders, Order do
-        where(source.right.first.left[:product].eq('Apple'))
-      end
-    end
-
   end
 
   it 'loads associated orders' do
-    user_order_mapper = DM_ENV[User].include(:orders)
+    user_order_mapper = DM_ENV[user_model].include(:orders)
     users_with_orders = user_order_mapper.to_a
 
     users_with_orders.should have(2).items
@@ -74,7 +43,7 @@ describe '[Arel] One To Many with generated mapper' do
   end
 
   it 'loads associated orders where product = apple' do
-    user_order_mapper = DM_ENV[User].include(:apple_orders)
+    user_order_mapper = DM_ENV[user_model].include(:apple_orders)
     users_with_orders = user_order_mapper.to_a
 
     users_with_orders.should have(1).item

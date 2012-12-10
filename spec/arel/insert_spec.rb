@@ -1,39 +1,33 @@
 require 'spec_helper_integration'
 
 describe "Inserting new objects with ARel" do
+  include_context 'Models and Mappers'
+
   before(:all) do
     setup_db
 
-    if Object.const_defined?(:User)
-      Object.send(:remove_const, :User)
-    end
+    user_mapper
+  end
 
-    class User
+  let(:user_model) {
+    mock_model('User') {
       include DataMapper::Model
 
       attribute :id,   Integer, :key => true
       attribute :name, String
       attribute :age,  Integer
-
-      DM_ENV.build(User, :postgres) do
-        relation_name :users
-
-        map :id,   Integer, :key => true
-        map :name, String,  :to  => :username
-        map :age,  Integer
-      end
-    end
-  end
+    }
+  }
 
   it "actually works ZOMG" do
-    mapper = DM_ENV[User]
+    mapper = DM_ENV[user_model]
 
-    user = User.new(:name => 'Piotr', :age => 29)
+    user = user_model.new(:name => 'Piotr', :age => 29)
     mapper.insert(user)
 
     user = mapper.first
 
-    user.should be_instance_of(User)
+    user.should be_instance_of(user_model)
     user.id.should be(1)
     user.name.should eql('Piotr')
     user.age.should be(29)

@@ -1,6 +1,8 @@
 require 'spec_helper_integration'
 
 describe 'Relationship - Many-To-Many-Through with generated mappers' do
+  include_context 'Models and Mappers'
+
   before(:all) do
     setup_db
 
@@ -19,117 +21,34 @@ describe 'Relationship - Many-To-Many-Through with generated mappers' do
     insert_song_tag 1, 1, 1
     insert_song_tag 2, 2, 2
 
-    class Song
-      attr_reader :id, :title, :tags, :good_tags, :infos, :good_infos, :info_contents, :good_info_contents
+    tag_mapper.has 0..n, :infos, info_model
 
-      def initialize(attributes)
-        @id, @title, @tags, @good_tags, @infos, @good_infos, @info_contents, @good_info_contents = attributes.values_at(
-          :id, :title, :tags, :good_tags, :infos, :good_infos, :info_contents, :good_info_contents
-        )
-      end
-    end
+    info_mapper.belongs_to :tag, tag_model
+    info_mapper.has 0..n, :info_contents, info_content_model
 
-    class Tag
-      attr_reader :id, :name
+    info_content_mapper.belongs_to :info, info_model
 
-      def initialize(attributes)
-        @id, @name = attributes.values_at(:id, :name)
-      end
-    end
+    song_tag_mapper.belongs_to :song, song_model
+    song_tag_mapper.belongs_to :tag,  tag_model
 
-    class Info
-      attr_reader :id, :text
+    song_mapper.has 0..n, :song_tags, song_tag_model
+    song_mapper.has 0..n, :tags, tag_model, :through => :song_tags
 
-      def initialize(attributes)
-        @id, @text = attributes.values_at(:id, :text)
-      end
-    end
+    #song_mapper.has 0..n, :good_tags, tag_model, :through => :song_tags do
+      #where(DM_ENV[tag_model].relations[:tags][:name].eq('good'))
+    #end
 
-    class InfoContent
-      attr_reader :id, :content
+    song_mapper.has 0..n, :infos, info_model, :through => :tags
+    #song_mapper.has 0..n, :good_infos, info_model, :through => :good_tags, :via => :infos
+    song_mapper.has 0..n, :info_contents, info_content_model, :through => :infos
 
-      def initialize(attributes)
-        @id, @content = attributes.values_at(:id, :content)
-      end
-    end
-
-    class SongTag
-      attr_reader :song_id, :tag_id
-
-      def initialize(attributes)
-        @song_id, @tag_id = attributes.values_at(:song_id, :tag_id)
-      end
-    end
-
-    DM_ENV.build(Tag, :postgres) do
-      relation_name :tags
-
-      map :id,   Integer, :key => true
-      map :name, String
-
-      has 0..n, :infos, Info
-    end
-
-    DM_ENV.build(Info, :postgres) do
-      relation_name :infos
-
-      map :id,     Integer, :key => true
-      map :tag_id, Integer
-      map :text,   String
-
-      belongs_to :tag, Tag
-
-      has 0..n, :info_contents, InfoContent
-    end
-
-    DM_ENV.build(InfoContent, :postgres) do
-      relation_name :info_contents
-
-      map :id,      Integer, :key => true
-      map :info_id, Integer
-      map :content, String
-
-      belongs_to :info, Info
-    end
-
-    DM_ENV.build(SongTag, :postgres) do
-      relation_name :song_tags
-
-      map :song_id, Integer, :key => true
-      map :tag_id,  Integer, :key => true
-
-      belongs_to :song, Song
-      belongs_to :tag,  Tag
-    end
-
-    DM_ENV.build(Song, :postgres) do
-      relation_name :songs
-
-      map :id,    Integer, :key => true
-      map :title, String
-
-      has 0..n, :song_tags, SongTag
-
-      has 0..n, :tags, Tag, :through => :song_tags
-
-      has 0..n, :good_tags, Tag, :through => :song_tags do
-        where(DM_ENV[Tag].relations[:tags][:name].eq('good'))
-      end
-
-      has 0..n, :infos, Info, :through => :tags
-
-      has 0..n, :good_infos, Info, :through => :good_tags, :via => :infos
-
-      has 0..n, :info_contents, InfoContent, :through => :infos
-
-      has 0..n, :good_info_contents, InfoContent, :through => :infos, :via => :info_contents do
-        where(DM_ENV[InfoContent].relations[:info_contents][:content].eq('really, really good'))
-      end
-    end
+    #song_mapper.has 0..n, :good_info_contents, info_content_model, :through => :infos, :via => :info_contents do
+      #where(DM_ENV[info_content_model].relations[:info_contents][:content].eq('really, really good'))
+    #end
   end
 
   it 'loads associated tag infos' do
-    mapper = DM_ENV[Song].include(:infos)
+    mapper = DM_ENV[song_model].include(:infos)
 
     songs = mapper.to_a
 
@@ -149,7 +68,9 @@ describe 'Relationship - Many-To-Many-Through with generated mappers' do
   end
 
   it 'loads associated good infos' do
-    mapper = DM_ENV[Song].include(:good_infos)
+    pending
+
+    mapper = DM_ENV[song_model].include(:good_infos)
 
     songs = mapper.to_a
 
@@ -164,7 +85,7 @@ describe 'Relationship - Many-To-Many-Through with generated mappers' do
   end
 
   it 'loads associated tag info contents' do
-    mapper = DM_ENV[Song].include(:info_contents)
+    mapper = DM_ENV[song_model].include(:info_contents)
     songs = mapper.to_a
 
     songs.should have(2).items
@@ -183,7 +104,9 @@ describe 'Relationship - Many-To-Many-Through with generated mappers' do
   end
 
   it 'loads associated restricted tag info contents' do
-    mapper = DM_ENV[Song].include(:good_info_contents)
+    pending
+
+    mapper = DM_ENV[song_model].include(:good_info_contents)
     songs = mapper.to_a
 
     songs.should have(1).item

@@ -1,6 +1,8 @@
 require 'spec_helper_integration'
 
 describe "Using Arel engine" do
+  include_context 'Models and Mappers'
+
   before(:all) do
     setup_db
 
@@ -8,29 +10,21 @@ describe "Using Arel engine" do
     insert_user 2, 'Jane',  21
     insert_user 3, 'Piotr', 29
 
-    if Object.const_defined?(:User)
-      Object.send(:remove_const, :User)
-    end
+    user_mapper
+  end
 
-    class User
+  let(:user_model) {
+    mock_model('User') {
       include DataMapper::Model
 
       attribute :id,   Integer, :key => true
       attribute :name, String
       attribute :age,  Integer
-
-      DM_ENV.build(User, :postgres) do
-        relation_name :users
-
-        map :id,   Integer, :key => true
-        map :name, String,  :to  => :username
-        map :age,  Integer
-      end
-    end
-  end
+    }
+  }
 
   it "actually works ZOMG" do
-    users = DM_ENV[User].to_a
+    users = DM_ENV[user_model].all
 
     users.should have(3).items
 

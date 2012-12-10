@@ -44,13 +44,18 @@ module SpecHelper
     end
   end
 
-  def mock_model(type)
-    if Object.const_defined?(type)
-      Object.const_get(type)
-    else
-      DM_ENV.register_constant(type)
-      Object.const_set(type, Class.new(OpenStruct))
-    end
+  def mock_model(name, &block)
+    model = Class.new(OpenStruct)
+
+    model.class_eval <<-RUBY
+      def self.name
+        #{name.inspect}
+      end
+    RUBY
+
+    model.instance_eval(&block) if block_given?
+
+    model
   end
 
   def mock_mapper(model_class, attributes = [], relationships = [])
