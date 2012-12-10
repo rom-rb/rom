@@ -1,6 +1,8 @@
 require 'spec_helper_integration'
 
 describe "Using Arel engine" do
+  include_context 'Models and Mappers'
+
   before(:all) do
     setup_db
 
@@ -12,45 +14,36 @@ describe "Using Arel engine" do
     insert_address 2, 2, 'Street 1/2', 'Chicago', '54321'
     insert_address 3, 1, 'Street 2/4', 'Boston',  '67890'
 
-    if Object.const_defined?(:User)
-      Object.send(:remove_const, :User)
-    end
+    address_mapper
+    user_mapper.has 1, :address, address_model
+  end
 
-    class Address
+  let(:address_model) {
+    mock_model('Address') {
       include DataMapper::Model
 
       attribute :id,      Integer, :key => true
       attribute :city,    String
       attribute :street,  String
       attribute :zipcode, String
-    end
+    }
+  }
 
-    DM_ENV.build(Address, :postgres) do
-      relation_name :addresses
-
-      key(:id)
-    end
-
-    class User
+  let(:user_model) {
+    user = mock_model('User') {
       include DataMapper::Model
 
       attribute :id,      Integer, :key => true
       attribute :name,    String
       attribute :age,     Integer
-      attribute :address, Address
-    end
+    }
 
-    DM_ENV.build(User, :postgres) do
-      relation_name :users
-
-      key :id
-      map :name, String,  :to  => :username
-      has 1, :address, Address
-    end
-  end
+    user.attribute :address, address_model
+    user
+  }
 
   it "actually works ZOMG" do
-    users = DM_ENV[User].include(:address).to_a
+    users = DM_ENV[user_model].include(:address).to_a
 
     users.should have(3).items
 
