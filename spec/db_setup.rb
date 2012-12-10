@@ -3,11 +3,13 @@ require 'randexp'
 ROOT   = File.expand_path('../..', __FILE__)
 CONFIG = YAML.load_file("#{ROOT}/config/database.yml")
 
-engine_name = ENV.fetch('ENGINE', 'Veritas')
+engine_name = Inflector.camelize(ENV.fetch('ENGINE', 'veritas'))
 ENGINE = DataMapper::Engine.const_get(engine_name)
 
-CONFIG[engine_name].each do |name, uri|
-  DataMapper.setup(name, uri, DM_ENV, ENGINE.const_get(:Engine))
+if CONFIG[engine_name]
+  CONFIG[engine_name].each do |name, uri|
+    DataMapper.setup(name, uri, DM_ENV, ENGINE.const_get(:Engine))
+  end
 end
 
 MAX_RELATION_SIZE = 10
