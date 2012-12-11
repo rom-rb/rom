@@ -30,6 +30,7 @@ require 'virtus'
 require 'data_mapper/engine/veritas'
 require 'data_mapper/engine/arel'
 require 'data_mapper/engine/in_memory'
+require 'data_mapper/engine/mongo'
 
 require 'rspec'
 
