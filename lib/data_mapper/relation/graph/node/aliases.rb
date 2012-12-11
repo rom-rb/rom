@@ -3,177 +3,150 @@ module DataMapper
     class Graph
       class Node
 
-        # The aliases to use when joining nodes
-        #
-        # @abstract
-        #
-        # @api private
         class Aliases
 
           include Enumerable
-          include Equalizer.new(:entries)
+          include Equalizer.new(:index)
 
-          # The header of the relation this instance is for
-          #
-          # @return [Array<Symbol>]
-          #
-          # @api private
+          attr_reader :index
           attr_reader :header
 
-          # A hash containing +original_field+ => +current_field+ pairs
-          #
-          # @return [Hash]
-          #
-          # @api private
-          attr_reader :entries
+          protected :index
 
-          # Initialize a new instance
-          #
-          # @see Mapper::AttributeSet#aliases
-          #
-          # @param [#to_hash] entries
-          #   a hash returned from (private) {Mapper::AttributeSet#aliased_field_map}
-          #
-          # @param [#to_hash] aliases
-          #   a hash returned from (private) {Mapper::AttributeSet#original_aliases}
-          #
-          # @return [undefined]
-          #
-          # @api private
-          def initialize(entries, aliases = {})
-            @entries = entries.to_hash
-            @aliases = aliases.to_hash
-            @header  = @entries.values.to_set
+          def initialize(index, aliases = {})
+            @index   = index
+            @aliases = aliases
+            @header  = @index.header
           end
 
-          # Iterate over the aliases for the left side of a join
-          #
-          # @param [Proc] &block
-          #   the block to pass
-          #
-          # @yield [old_name, new_name]
-          #
-          # @yieldparam [#to_sym] old_name
-          #   a field's old name
-          #
-          # @yieldparam [#to_sym] new_name
-          #   a field's new name
-          #
-          # @return [self]
-          #
-          # @api private
           def each(&block)
             return to_enum unless block_given?
             @aliases.each(&block)
             self
           end
 
-          # Join self with other keeping track of previous aliasing
-          #
-          # @param [Aliases] other
-          #   the other aliases to join with self
-          #
-          # @param [#to_hash] join_definition
-          #   a hash with +left_key+ => +right_key+ mappings used for the join
-          #
-          # @return [Aliases::Binary]
-          #   the aliases to use for the left side of the join
-          #
-          # @api private
           def join(other, join_definition)
-            left    = @entries.dup
-            right   = other.entries
-            aliases = {}
+            joined_index = index.join(other.index, join_definition)
+            self.class.new(joined_index, index.aliases(joined_index))
+          end
 
-            join_key_map = join_definition.to_hash
-            left_keys    = join_key_map.keys
+          def rename(aliases)
+            self.class.new(index.rename(aliases), aliases)
+          end
 
-            left.each do |original, current|
-              if right.value?(current) && !left_keys.include?(current)
-                add_alias(current, original, aliases)
-                left[original] = original
+          class Index
+
+            include Equalizer.new(:entries)
+
+            attr_reader :entries
+            attr_reader :header
+
+            def initialize(entries, strategy)
+              @entries  = entries
+              @inverted = @entries.invert
+              @header   = @entries.values.to_set
+              @strategy = strategy.new(self)
+            end
+
+            def join(*args)
+              @strategy.join(*args)
+            end
+
+            def rename(aliases)
+              self.class.new(renamed_entries(aliases), @strategy.class)
+            end
+
+            def aliases(other)
+              entries.each_with_object({}) { |(key, name), aliases|
+                other_name    = other[key]
+                aliases[name] = other_name if name != other_name
+              }
+            end
+
+            def renamed_join_key_entries(join_definition)
+              entries.each_with_object({}) { |(key, name), renamed|
+                join_definition.each do |left_key, right_key|
+                  renamed[key] = right_key if name == left_key
+                end
+              }
+            end
+
+            def renamed_clashing_entries(other, join_definition)
+              entries.each_with_object({}) { |(key, name), renamed|
+                next if !other.include?(name) || join_definition.key?(name)
+                renamed[key] = key
+              }
+            end
+
+            def [](key)
+              entries[key]
+            end
+
+            def include?(name)
+              entries.value?(name)
+            end
+
+            private
+
+            def renamed_entries(aliases)
+              aliases.each_with_object(entries.dup) { |(from, to), renamed|
+                renamed[@inverted.fetch(from)] = to
+              }
+            end
+
+          end # class Index
+
+          class Strategy
+
+            include AbstractType
+
+            def initialize(index)
+              @index = index
+            end
+
+            def join(index, join_definition)
+              index.class.new(index_entries(index, join_definition.to_hash), self.class)
+            end
+
+            abstract_method :index_entries
+            private :index_entries
+
+            private
+
+            attr_reader :index
+
+            def join_key_entries(*args)
+              index.renamed_join_key_entries(*args)
+            end
+
+            def clashing_entries(*args)
+              index.renamed_clashing_entries(*args)
+            end
+
+            class InnerJoin < self
+
+              private
+
+              def index_entries(other_index, join_definition)
+                index.entries.dup.
+                  update(clashing_entries(other_index, join_definition)).
+                  update(other_index.entries)
               end
             end
 
-            join_key_map.each do |left_key, right_key|
-              add_alias(left_key, right_key, aliases)
-              update_dependent_keys(left, left_key, right_key)
-            end
+            class NaturalJoin < self
 
-            self.class.new(left.merge(right), aliases)
-          end
+              private
 
-          # Return a renamed instance
-          #
-          # @param [Hash] new_aliases
-          #   the new aliases to use
-          #
-          # @return [Aliases]
-          #   the renamed instance
-          #
-          # @api private
-          def rename(new_aliases)
-            self.class.new(renamed_entries(new_aliases), new_aliases)
-          end
-
-          # Return a hash representation of this instance
-          #
-          # @return [Hash]
-          #
-          # @api private
-          def to_hash
-            @aliases.each_with_object({}) { |(k, v), hash|
-              hash[k.to_sym] = v.to_sym
-            }
-          end
-
-          private
-
-          # Alias old left key to right key if the joined relation
-          # header still includes the old left key
-          #
-          # Mutates passed in aliases
-          #
-          # @api private
-          def add_alias(old, new, aliases)
-            aliases[old] = new if old != new
-          end
-
-          # Update all original left keys that are to be joined with right
-          # key. This makes sure that all previous attribute names that
-          # have been collapsed during joins, still point to the correct
-          # name. This is necessary to be able to specify source_key and
-          # target_key options that point to original attribute names that
-          # have since been renamed during previous join operations.
-          #
-          # Mutates passed in left entries
-          #
-          # @api private
-          def update_dependent_keys(left, left_key, right_key)
-            left.keys.each do |original|
-              left[original] = right_key if left[original] == left_key
-            end
-          end
-
-          def renamed_entries(new_aliases)
-            new_aliases.keys.each_with_object(@entries.dup) do |name, entries|
-              update_name(entries, name, new_aliases)
-            end
-          end
-
-          def update_name(entries, name, aliases)
-            initial_names(name).each do |initial_name|
-              entries[initial_name] = aliases[name]
-            end
-          end
-
-          def initial_names(name)
-            # Hash#select returns an Array on MRI 1.8.7
-            Hash[@entries.select { |_, current| current == name }].keys
-          end
-
+              def index_entries(other_index, join_definition)
+                index.entries.dup.
+                  update(join_key_entries(join_definition)).
+                  update(clashing_entries(other_index, join_definition)).
+                  update(other_index.entries)
+              end
+            end # class NaturalJoin
+          end # class Strategy
         end # class Aliases
-
       end # class Node
     end # class Graph
   end # module Relation

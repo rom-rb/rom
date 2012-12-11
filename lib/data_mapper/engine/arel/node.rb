@@ -7,6 +7,12 @@ module DataMapper
       class Node < Relation::Graph::Node
         include Enumerable
 
+        def self.aliasing_strategy
+          Relation::Graph::Node::Aliases::Strategy::InnerJoin
+        end
+
+        private_class_method :aliasing_strategy
+
         alias_method :gateway, :relation
 
         # @api public

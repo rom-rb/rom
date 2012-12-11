@@ -47,7 +47,7 @@ module DataMapper
         def header
           @aliases.header.map { |attribute_alias|
             Attribute.new(
-              "#{attribute_alias.prefix}.#{attribute_alias.field} AS #{attribute_alias}"
+              "#{attribute_alias.prefix}.#{attribute_alias.field} AS #{attribute_alias.name}"
             )
           }
         end
