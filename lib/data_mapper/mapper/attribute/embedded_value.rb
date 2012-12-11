@@ -33,10 +33,10 @@ module DataMapper
         # @return [self]
         #
         # @api private
-        def finalize
+        def finalize(registry)
           return self if mapper
 
-          mapper = DataMapper[type]
+          mapper = registry[type]
           mapper = mapper.remap(@aliases) if @aliases.any?
 
           @mapper = mapper

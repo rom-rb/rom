@@ -5,6 +5,8 @@ module DataMapper
       # Engine for Arel
       #
       class Engine < DataMapper::Engine
+        register_as :arel
+
         attr_reader :adapter
 
         attr_reader :arel_engine_class

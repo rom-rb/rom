@@ -35,6 +35,8 @@ module DataMapper
         # @api private
         attr_reader :relations
 
+        attr_reader :registry
+
         # Initializes new connector instance
         #
         # @param [Node] node
@@ -49,10 +51,11 @@ module DataMapper
         # @return [undefined]
         #
         # @api private
-        def initialize(node, relationship, relations)
+        def initialize(node, relationship, relations, registry)
           @node         = node
           @relationship = relationship
           @relations    = relations
+          @registry     = registry
           @name         = connector_name(node.name)
         end
 
@@ -111,7 +114,7 @@ module DataMapper
         #
         # @api private
         def source_mapper
-          DataMapper[source_model]
+          registry[source_model]
         end
 
         # Returns target mapper instance
@@ -120,7 +123,7 @@ module DataMapper
         #
         # @api private
         def target_mapper
-          DataMapper[target_model]
+          registry[target_model]
         end
 
         private

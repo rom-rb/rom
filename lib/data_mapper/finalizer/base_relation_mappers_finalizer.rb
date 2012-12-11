@@ -17,7 +17,7 @@ module DataMapper
       def finalize_mappers
         mappers.each do |mapper|
           register_base_relation(mapper)
-          mapper.finalize
+          finalize_mapper(mapper)
         end
       end
 
@@ -46,6 +46,16 @@ module DataMapper
             connector_builder.call(mapper.relations, mapper_registry, relationship)
           end
         end
+      end
+
+      private
+
+      # Perform mapper finalization
+      #
+      # @api private
+      def finalize_mapper(mapper)
+        mapper_registry << mapper.new(mapper.relations.node_for(mapper.gateway_relation))
+        mapper.freeze
       end
     end # class BaseRelationMapperFinalizer
   end # class Finalizer

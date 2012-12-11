@@ -69,7 +69,7 @@ module DataMapper
           end
 
           def connector(node)
-            Connector.new(node, @relationship, @relations)
+            Connector.new(node, @relationship, @relations, @mappers)
           end
 
           def nodes(node_name)

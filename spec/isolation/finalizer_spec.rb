@@ -1,6 +1,8 @@
 require 'spec_helper_integration'
 
 describe 'Finalizer', :isolation => true do
+  let!(:env) { DM_ENV }
+
   before(:all) do
     class Song
     end
@@ -17,10 +19,9 @@ describe 'Finalizer', :isolation => true do
     class SongTag
     end
 
-    class TagMapper < DataMapper::Relation::Mapper
+    env.build(Tag, :postgres) do
       model         Tag
       relation_name :tags
-      repository    :postgres
 
       map :id,   Integer, :key => true
       map :name, String
@@ -30,10 +31,9 @@ describe 'Finalizer', :isolation => true do
       has 0..n, :infos,     Info
     end
 
-    class InfoMapper < DataMapper::Relation::Mapper
+    env.build(Info, :postgres) do
       model         Info
       relation_name :infos
-      repository    :postgres
 
       map :id,     Integer, :key => true
       map :tag_id, Integer
@@ -44,10 +44,9 @@ describe 'Finalizer', :isolation => true do
       has 0..n, :info_contents, InfoContent
     end
 
-    class InfoContentMapper < DataMapper::Relation::Mapper
+    env.build(InfoContent, :postgres) do
       model         InfoContent
       relation_name :info_contents
-      repository    :postgres
 
       map :id,      Integer, :key => true
       map :info_id, Integer
@@ -56,10 +55,9 @@ describe 'Finalizer', :isolation => true do
       belongs_to :info, Info
     end
 
-    class SongTagMapper < DataMapper::Relation::Mapper
+    env.build(SongTag, :postgres) do
       model         SongTag
       relation_name :song_tags
-      repository    :postgres
 
       map :song_id, Integer, :key => true
       map :tag_id,  Integer, :key => true
@@ -68,10 +66,9 @@ describe 'Finalizer', :isolation => true do
       belongs_to :tag,  Tag
     end
 
-    class SongMapper < DataMapper::Relation::Mapper
+    env.build(Song, :postgres) do
       model         Song
       relation_name :songs
-      repository    :postgres
 
       map :id,    Integer, :key => true
       map :title, String
@@ -94,9 +91,11 @@ describe 'Finalizer', :isolation => true do
         restrict { |r| r.info_contents_content.eq('really, really good') }
       end
     end
+
+    env.finalize
   end
 
-  let(:relations) { SongMapper.relations }
+  let(:relations) { env.engines[:postgres].relations }
 
   it 'finalizes songs relation' do
     relation = relations[:songs]
@@ -219,50 +218,50 @@ describe 'Finalizer', :isolation => true do
   end
 
   it 'finalizes song mapper' do
-    DataMapper[Song].relation.should be(relations[:songs])
+    DM_ENV[Song].relation.should be(relations[:songs])
   end
 
   it 'finalizes tag mapper' do
-    DataMapper[Tag].relation.should be(relations[:tags])
+    DM_ENV[Tag].relation.should be(relations[:tags])
   end
 
   it 'finalizes song_tag mapper' do
-    DataMapper[SongTag].relation.should be(relations[:song_tags])
+    DM_ENV[SongTag].relation.should be(relations[:song_tags])
   end
 
   it 'finalizes info mapper' do
-    DataMapper[Info].relation.should be(relations[:infos])
+    DM_ENV[Info].relation.should be(relations[:infos])
   end
 
   it 'finalizes info content mapper' do
-    DataMapper[InfoContent].relation.should be(relations[:info_contents])
+    DM_ENV[InfoContent].relation.should be(relations[:info_contents])
   end
 
   it 'finalizes song-song-tags mapper' do
-    DataMapper[Song].include(:song_tags).relation.should eql(relations[:songs_X_song_tags])
+    DM_ENV[Song].include(:song_tags).relation.should eql(relations[:songs_X_song_tags])
   end
 
   it 'finalizes song-song-tag mapper' do
-    DataMapper[Song].include(:song_tag).relation.should eql(relations[:songs_X_song_tags])
+    DM_ENV[Song].include(:song_tag).relation.should eql(relations[:songs_X_song_tags])
   end
 
   it 'finalizes song-tag-through-song_tag mapper' do
-    DataMapper[Song].include(:tag).relation.should eql(relations[:songs_X_song_tags_X_tags])
+    DM_ENV[Song].include(:tag).relation.should eql(relations[:songs_X_song_tags_X_tags])
   end
 
   it 'finalizes song-tags mapper' do
-    DataMapper[Song].include(:tags).relation.should eql(relations[:songs_X_song_tags_X_tags])
+    DM_ENV[Song].include(:tags).relation.should eql(relations[:songs_X_song_tags_X_tags])
   end
 
   it 'finalizes song-infos mapper' do
-    DataMapper[Song].include(:infos).relation.should eql(relations[:songs_X_song_tags_X_tags_X_infos])
+    DM_ENV[Song].include(:infos).relation.should eql(relations[:songs_X_song_tags_X_tags_X_infos])
   end
 
   it 'finalizes song-info-contents mapper' do
-    DataMapper[Song].include(:info_contents).relation.should be(relations[:songs_X_song_tags_X_tags_X_infos_X_info_contents])
+    DM_ENV[Song].include(:info_contents).relation.should be(relations[:songs_X_song_tags_X_tags_X_infos_X_info_contents])
   end
 
   it 'finalizes song-good-info-contents mapper' do
-    DataMapper[Song].include(:good_info_contents).relation.should be(relations[:songs_X_song_tags_X_tags_X_infos_X_good_info_contents])
+    DM_ENV[Song].include(:good_info_contents).relation.should be(relations[:songs_X_song_tags_X_tags_X_infos_X_good_info_contents])
   end
 end

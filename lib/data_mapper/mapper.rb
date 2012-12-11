@@ -43,6 +43,9 @@ module DataMapper
     # @api public
     attr_reader :relationships
 
+    # @api private
+    attr_reader :environment
+
     # Returns a new mapper class derived from the given one
     #
     # @example
@@ -55,6 +58,9 @@ module DataMapper
     # @api public
     def self.from(other, name)
       klass = Builder.define_for(other.model, self, name)
+
+      # FIXME: unify mapper building via environment
+      klass.environment(other.environment)
 
       other.attributes.each do |attribute|
         klass.attributes << attribute
@@ -189,21 +195,6 @@ module DataMapper
       Infinity
     end
 
-    # Returns a mapper instance for the given model
-    #
-    # @example
-    #
-    #   DataMapper[User] #=> user mapper instance
-    #
-    # @param [Class] model class
-    #
-    # @return [Mapper]
-    #
-    # @api public
-    def self.[](model)
-      registry[model]
-    end
-
     # Returns attribute set for this mapper class
     #
     # @return [AttributeSet]
@@ -222,13 +213,13 @@ module DataMapper
       @relationships ||= RelationshipSet.new
     end
 
-    # Returns mapper registry for this mapper class
-    #
-    # @return [Registry]
-    #
     # @api private
-    def self.registry
-      @registry ||= Registry.new
+    def self.environment(environment = nil)
+      if @environment
+        @environment
+      else
+        @environment = environment
+      end
     end
 
     # Finalizes this mapper class
@@ -251,8 +242,8 @@ module DataMapper
     # @return [self]
     #
     # @api private
-    def self.finalize_attributes
-      attributes.finalize
+    def self.finalize_attributes(registry)
+      attributes.finalize(registry)
       self
     end
 
@@ -261,6 +252,7 @@ module DataMapper
       @model         = self.class.model
       @attributes    = self.class.attributes
       @relationships = self.class.relationships
+      @environment   = self.class.environment
     end
 
     # Loads a domain object

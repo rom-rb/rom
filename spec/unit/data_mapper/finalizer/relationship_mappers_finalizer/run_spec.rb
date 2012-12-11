@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Finalizer::RelationshipMappersFinalizer, '#run' do
   subject { object.run }
 
-  let(:object) { described_class.new(mappers) }
+  let(:object) { described_class.new(DM_ENV) }
 
   let(:id)      { mock_attribute(:id,   Integer, :key => true) }
   let(:name)    { mock_attribute(:name, String) }
@@ -20,19 +20,17 @@ describe Finalizer::RelationshipMappersFinalizer, '#run' do
   let(:address_mapper)     { mock_mapper(address_model, address_attributes) }
 
   let(:relationship) { Relationship::Builder::Has.build(user_mapper, 1, :address, address_model) }
-  let(:mappers)      { [ user_mapper, address_mapper ] }
+  let!(:mappers)     { [ user_mapper, address_mapper ] }
 
-  let(:mapper) { object.mapper_registry[User, relationship] }
+  let(:mapper) { object.mapper_registry[user_model, relationship] }
 
   before do
-    Mapper.registry.instance_variable_set(:@mappers, {})
-
-    DataMapper.engines.each do |name, engine|
+    DM_ENV.engines.each do |name, engine|
       engine.instance_variable_set(:@relations, engine.relations.class.new(engine))
     end
 
     user_mapper.relationships << relationship
-    Finalizer::BaseRelationMappersFinalizer.call(mappers)
+    Finalizer::BaseRelationMappersFinalizer.call(DM_ENV)
     subject
   end
 
@@ -43,6 +41,6 @@ describe Finalizer::RelationshipMappersFinalizer, '#run' do
   end
 
   it "finalizes relationship mapper attributes" do
-    mapper.attributes[:address].mapper.should be_instance_of(object.mapper_registry[Address].class)
+    mapper.attributes[:address].mapper.should be_instance_of(object.mapper_registry[address_model].class)
   end
 end

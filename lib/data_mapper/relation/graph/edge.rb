@@ -5,7 +5,6 @@ module DataMapper
       # Represents a directed relation edge joining 2 relation nodes
       #
       class Edge
-
         include Equalizer.new(:name)
 
         # The edge name

@@ -4,13 +4,7 @@ module DataMapper
 
       # Represents a relation in the registry graph
       #
-      # @abstract
-      #
-      # TODO: add #update
-      # TODO: add #delete
-      #
       class Node
-
         include Enumerable, Equalizer.new(:name)
 
         def self.aliases(relation_name, attribute_set)
@@ -99,6 +93,20 @@ module DataMapper
           @relation.insert(tuple)
         end
         alias_method :<<, :insert
+
+        # Updates an object identified with the given key from the relation
+        #
+        # @example
+        #
+        #   DataMapper.engines[:postgres].relations[:people].update(1, name: 'John')
+        #
+        # @param [Object] key attribute
+        # @param [Object] tuple
+        #
+        # @api public
+        def update(key, tuple)
+          @relation.update(key, tuple)
+        end
 
         # Deletes an object identified with the given key from the relation
         #

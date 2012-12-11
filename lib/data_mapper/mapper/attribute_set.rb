@@ -29,8 +29,8 @@ module DataMapper
       # @return [self]
       #
       # @api private
-      def finalize
-        each { |attribute| attribute.finalize }
+      def finalize(registry)
+        each { |attribute| attribute.finalize(registry) }
         self
       end
 

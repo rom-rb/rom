@@ -7,109 +7,6 @@ module DataMapper
   # Represent a positive, infinitely large Float number
   Infinity  = 1.0 / 0
 
-  # Setup a connection with a database
-  #
-  # @example
-  #   DataMapper.setup(:default, 'postgres://localhost/test')
-  #
-  # @param [String, Symbol, #to_sym] name
-  #   the repository name
-  # @param [String] uri
-  #   the database connection URI
-  # @param [Engine] engine
-  #   the backend engine that should be used for mappers
-  #
-  # @return [self]
-  #
-  # @api public
-  def self.setup(name, uri, engine = nil)
-    engines[name.to_sym] = (engine || default_engine).new(uri)
-    self
-  end
-
-  # The default engine to use when not passing one to {.setup}
-  #
-  # @example
-  #   DataMapper.default_engine # => DataMapper::Engine::Veritas::Engine
-  #
-  # @return [Engine::Veritas::Engine]
-  #
-  # @api public
-  def self.default_engine
-    Engine::Veritas::Engine
-  end
-
-  # Returns hash with all engines that were initialized
-  #
-  # @example
-  #   DataMapper.engines # => {:default=>#<Engine::VeritasEngine:0x108168bf0..>}
-  #
-  # @return [Hash<Symbol, Engine>]
-  #   a hash mapping a repository name to the engine used for that name
-  #
-  # @api public
-  def self.engines
-    @engines ||= {}
-  end
-
-  # Generates mappers class
-  #
-  # @see Mapper::Builder::Class.create
-  #
-  # @example
-  #
-  #   class User
-  #     include DataMapper::Model
-  #
-  #     attribute :id,   Integer
-  #     attribute :name, String
-  #   end
-  #
-  #   DataMapper.build(User, :default) do
-  #     key :id
-  #   end
-  #
-  # @param [Model, ::Class(.name, .attribute_set)] model
-  #   the model used by the generated mapper
-  #
-  # @param [Symbol] repository
-  #   the repository name to use for the generated mapper
-  #
-  # @param [Proc, nil] &block
-  #   a block to be class_eval'ed in the context of the generated mapper
-  #
-  # @return [Relation::Mapper]
-  #
-  # @api public
-  def self.build(model, repository, &block)
-    Mapper::Builder.create(model, repository, &block)
-  end
-
-  # Finalize the environment after all mappers were defined
-  #
-  # @see Finalizer#run
-  #
-  # @example
-  #
-  #   DataMapper.finalize
-  #
-  # @return [self]
-  #
-  # @api public
-  def self.finalize
-    return self if @finalized
-    Finalizer.call
-    @finalized = true
-    self
-  end
-
-  # @see Mapper.[]
-  #
-  # @api public
-  def self.[](model)
-    Mapper[model]
-  end
-
 end # module DataMapper
 
 require 'abstract_type'
@@ -143,6 +40,8 @@ require 'equalizer'
 require 'inflector'
 
 require 'data_mapper/utils'
+
+require 'data_mapper/environment'
 
 require 'data_mapper/mapper/relationship_set'
 require 'data_mapper/mapper/attribute'

@@ -15,7 +15,7 @@ describe Relation::Mapper, '#include' do
   end
 
   it "returns mapper for address relationship from mapper registry" do
-    Mapper.registry.should_receive(:[]).with(model, relationship).
+    DM_ENV.registry.should_receive(:[]).with(model, relationship).
       and_return(mapper)
 
     subject.should be(mapper)
