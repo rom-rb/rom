@@ -16,7 +16,7 @@ describe 'Relationship - One To One with generated mapper' do
 
     user_mapper.has 1, :address, address_model
     user_mapper.has 1, :home_address, address_model do
-      restrict { |r| r.addresses_city.eq('Krakow') }
+      restrict { |r| r.city.eq('Krakow') }
     end
 
     address_mapper.belongs_to :user, user_model
@@ -52,7 +52,7 @@ describe 'Relationship - One To One with generated mapper' do
 
   it 'finds users with matching address' do
     user_address_mapper = DM_ENV[user_model].include(:address)
-    users               = user_address_mapper.restrict { |r| r.addresses_city.eq('Krakow') }.to_a
+    users               = user_address_mapper.restrict { |r| r.city.eq('Krakow') }.to_a
 
     users.should have(1).item
 

@@ -8,7 +8,7 @@ describe Engine::Veritas::Node, '#rename' do
   let(:object)   { described_class.new(name, relation, aliases) }
   let(:name)     { :users }
   let(:relation) { mock('relation') }
-  let(:aliases)  { unary_aliases({ :users_id => :users_id }, { :id => :users_id }) }
+  let(:aliases)  { Relation::Graph::Node::Aliases.new({ :users_id => :id }) }
 
   let(:renamed_aliases) { aliases.rename(new_aliases) }
 

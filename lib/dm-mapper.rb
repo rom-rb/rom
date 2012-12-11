@@ -100,8 +100,6 @@ require 'data_mapper/relationship/builder/has'
 
 require 'data_mapper/relation/graph'
 require 'data_mapper/relation/graph/node/aliases'
-require 'data_mapper/relation/graph/node/aliases/unary'
-require 'data_mapper/relation/graph/node/aliases/binary'
 require 'data_mapper/relation/graph/node'
 require 'data_mapper/relation/graph/node/name'
 require 'data_mapper/relation/graph/node/name_set'

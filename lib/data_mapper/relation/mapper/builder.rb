@@ -42,11 +42,7 @@ module DataMapper
           @source_mapper = @connector.source_mapper.class
           @target_mapper = @connector.target_mapper.class
           @name          = @connector.relationship.name
-
-          @source_aliases = aliases(@source_mapper)
-          @target_aliases = aliases(@target_mapper)
-
-          @collection_target = @connector.collection_target?
+          @collection    = @connector.collection_target?
 
           @mapper = build
         end
@@ -57,13 +53,13 @@ module DataMapper
         def build
           klass = Relation::Mapper.from(@source_mapper, mapper_name)
 
-          klass.map(@name, @target_model, target_model_attribute_options)
+          klass.map(@name, @target_model, :collection => @collection)
 
-          if @collection_target
+          if @collection
             klass.class_eval { include(Relationship::Iterator) }
           end
 
-          attributes = klass.attributes.remap(@source_aliases).finalize(@connector.registry)
+          attributes = klass.attributes.remap(@aliases).finalize(@connector.registry)
 
           klass.new(@connector.node, attributes)
         end
@@ -71,25 +67,6 @@ module DataMapper
         # @api private
         def mapper_name
           "#{@source_mapper.name}_X_#{Inflector.camelize(@connector.name)}_Mapper"
-        end
-
-        # @api private
-        def target_model_attribute_options
-          {
-            :collection => @collection_target,
-            :aliases    => @target_aliases
-          }
-        end
-
-        def aliases(mapper)
-          prefix  = mapper.relation_name
-          mapper.attributes.primitives.each_with_object({}) do |attribute, aliases|
-            aliases[attribute.field] = aliased(attribute, prefix)
-          end
-        end
-
-        def aliased(attribute, prefix)
-          @aliases.alias(attribute.aliased_field(prefix)).to_sym
         end
 
       end # class Builder

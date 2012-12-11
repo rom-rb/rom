@@ -10,7 +10,7 @@ module DataMapper
         # @api private
         class Aliases
 
-          include AbstractType, Enumerable
+          include Enumerable
           include Equalizer.new(:entries)
 
           # The header of the relation this instance is for
@@ -40,16 +40,11 @@ module DataMapper
           # @return [undefined]
           #
           # @api private
-          def initialize(entries, aliases)
+          def initialize(entries, aliases = {})
             @entries = entries.to_hash
             @aliases = aliases.to_hash
+            @header  = @entries.values.to_set
           end
-
-          abstract_method :old_field
-          private :old_field
-
-          abstract_method :initial_aliases
-          private :initial_aliases
 
           # Iterate over the aliases for the left side of a join
           #
@@ -88,18 +83,24 @@ module DataMapper
           def join(other, join_definition)
             left    = @entries.dup
             right   = other.entries
-            aliases = initial_aliases
+            aliases = {}
 
-            join_definition.to_hash.each do |left_key, right_key|
-              old = old_field(left, left_key)
+            join_key_map = join_definition.to_hash
+            left_keys    = join_key_map.keys
 
-              add_alias(aliases, old, right_key)
-              update_dependent_keys(left, old, right_key)
-
-              left[left_key] = right_key
+            left.each do |original, current|
+              if right.value?(current) && !left_keys.include?(current)
+                add_alias(current, original, aliases)
+                left[original] = original
+              end
             end
 
-            Binary.new(left.merge(right), aliases)
+            join_key_map.each do |left_key, right_key|
+              add_alias(left_key, right_key, aliases)
+              update_dependent_keys(left, left_key, right_key)
+            end
+
+            self.class.new(left.merge(right), aliases)
           end
 
           # Return a renamed instance
@@ -115,26 +116,13 @@ module DataMapper
             self.class.new(renamed_entries(new_aliases), new_aliases)
           end
 
-          # Return the current name for the given original name
-          #
-          # @param [Symbol] name
-          #   the original attribute name
-          #
-          # @return [Symbol]
-          #   the current alias
-          #
-          # @api private
-          def alias(name)
-            @entries[name]
-          end
-
           # Return a hash representation of this instance
           #
           # @return [Hash]
           #
           # @api private
           def to_hash
-            @aliases.each_with_object({}) { |(k,v ), hash|
+            @aliases.each_with_object({}) { |(k, v), hash|
               hash[k.to_sym] = v.to_sym
             }
           end
@@ -147,10 +135,8 @@ module DataMapper
           # Mutates passed in aliases
           #
           # @api private
-          def add_alias(aliases, old, right_key)
-            if @header.include?(old)
-              aliases[old] = right_key
-            end
+          def add_alias(old, new, aliases)
+            aliases[old] = new if old != new
           end
 
           # Update all original left keys that are to be joined with right
@@ -163,9 +149,9 @@ module DataMapper
           # Mutates passed in left entries
           #
           # @api private
-          def update_dependent_keys(left, old, right_key)
-            left.each do |original, current|
-              left[original] = right_key if left[original] == old
+          def update_dependent_keys(left, left_key, right_key)
+            left.keys.each do |original|
+              left[original] = right_key if left[original] == left_key
             end
           end
 
@@ -177,9 +163,7 @@ module DataMapper
 
           def update_name(entries, name, aliases)
             initial_names(name).each do |initial_name|
-              if new_name = aliases[initial_name]
-                entries[initial_name] = new_name
-              end
+              entries[initial_name] = aliases[name]
             end
           end
 

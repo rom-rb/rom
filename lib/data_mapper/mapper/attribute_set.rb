@@ -220,10 +220,6 @@ module DataMapper
         header.map(&:first)
       end
 
-      def aliased_fields(prefix)
-        fields.map { |field| Attribute.aliased_field(field, prefix) }
-      end
-
       # Load a tuple
       #
       # @see Attribute#load
@@ -250,23 +246,12 @@ module DataMapper
       end
 
       def aliased_field_map(prefix)
-        field_map(prefix, true)
-      end
-
-      def original_aliases(prefix)
-        field_map(prefix, false)
-      end
-
-      private
-
-      def field_map(prefix, aliased_key)
         primitives.each_with_object({}) { |attribute, hash|
           aliased_field = attribute.aliased_field(prefix)
-          key = aliased_key ? aliased_field : attribute.field
-
-          hash[key] = aliased_field
+          hash[aliased_field] = attribute.field
         }
       end
+
     end # class AttributeSet
   end # class Mapper
 end # module DataMapper

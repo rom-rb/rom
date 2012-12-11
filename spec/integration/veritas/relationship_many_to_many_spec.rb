@@ -24,7 +24,7 @@ describe 'Relationship - Many To Many with generated mappers' do
     song_mapper.has 0..n, :song_tags, song_tag_model
     song_mapper.has 0..n, :tags, tag_model, :through => :song_tags
     song_mapper.has 0..n, :good_tags, tag_model, :through => :song_tags, :via => :tag do
-      restrict { |r| r.tags_name.eq('good') }
+      restrict { |r| r.name.eq('good') }
     end
   end
 
