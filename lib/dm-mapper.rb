@@ -7,38 +7,6 @@ module DataMapper
   # Represent a positive, infinitely large Float number
   Infinity  = 1.0 / 0
 
-  # Setup a connection with a database
-  #
-  # @example
-  #   DataMapper.setup(:default, 'postgres://localhost/test')
-  #
-  # @param [String, Symbol, #to_sym] name
-  #   the repository name
-  # @param [String] uri
-  #   the database connection URI
-  # @param [Engine] engine
-  #   the backend engine that should be used for mappers
-  #
-  # @return [self]
-  #
-  # @api public
-  def self.setup(name, uri, env, engine = nil)
-    env.engines[name.to_sym] = (engine || default_engine).new(uri)
-    self
-  end
-
-  # The default engine to use when not passing one to {.setup}
-  #
-  # @example
-  #   DataMapper.default_engine # => DataMapper::Engine::Veritas::Engine
-  #
-  # @return [Engine::Veritas::Engine]
-  #
-  # @api public
-  def self.default_engine
-    Engine::Veritas::Engine
-  end
-
 end # module DataMapper
 
 require 'abstract_type'

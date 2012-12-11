@@ -3,8 +3,6 @@ require 'spec_helper'
 require 'veritas-do-adapter'
 require 'do_postgres'
 
-require 'data_mapper/engine/arel'
-
 require 'db_setup'
 
 RSpec.configure do |config|

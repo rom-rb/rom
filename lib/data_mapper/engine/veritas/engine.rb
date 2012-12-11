@@ -7,6 +7,7 @@ module DataMapper
 
       # Engine for Veritas
       class Engine < DataMapper::Engine
+        register_as :veritas
 
         # @see Engine#adapter
         #

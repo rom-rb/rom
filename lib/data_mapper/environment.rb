@@ -7,11 +7,19 @@ module DataMapper
 
     attr_reader :registry
 
+    # @api private
     def initialize(registry = nil)
       @engines = {}
       reset!(registry)
     end
 
+    # @api public
+    def setup(name, options = {})
+      engines[name.to_sym] = Engine.build(options)
+      self
+    end
+
+    # @api public
     def [](model)
       registry[model]
     end

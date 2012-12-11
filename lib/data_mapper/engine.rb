@@ -4,8 +4,9 @@ module DataMapper
   #
   # @abstract
   class Engine
-
     include AbstractType
+
+    MissingEngineError = Class.new(StandardError)
 
     # Returns the database adapter used by the engine
     #
@@ -37,6 +38,44 @@ module DataMapper
     #
     # @api public
     attr_reader :relations
+
+    # @api public
+    def self.register_as(name)
+      Engine.engines[name] = self
+    end
+
+    class << self
+
+      # @api private
+      def build(options)
+        fetch(options[:engine]).new(options[:uri])
+      end
+
+      # @api private
+      def default
+        Engine.engines.values.first
+      end
+
+      # @api private
+      def engines
+        @engines ||= {}
+      end
+
+      # @api private
+      def fetch(name)
+        engines.fetch(name) {
+          if name.nil?
+            Engine.default
+          else
+            raise(
+              MissingEngineError,
+              "#{name.inspect} is not a correct engine identifier"
+            )
+          end
+        }
+      end
+
+    end
 
     # Initializes an engine instance
     #
