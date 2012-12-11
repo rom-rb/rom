@@ -71,4 +71,3 @@ module DataMapper
     end # class Graph
   end # module Relation
 end # module DataMapper
-
