@@ -6,6 +6,10 @@ describe Environment, '#setup' do
   let(:name)    { :somerepo }
   let(:uri)     { "something://somewhere/test" }
 
+  after(:all) {
+    Engine.engines.delete(:somerepo)
+  }
+
   context "when engine name is not provided" do
     let(:options) { { :uri => uri, :engine => nil } }
 
