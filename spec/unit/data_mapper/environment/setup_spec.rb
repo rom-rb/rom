@@ -12,10 +12,12 @@ describe Environment, '#setup' do
 
   context "when engine name is not provided" do
     let(:options) { { :uri => uri, :engine => nil } }
+    let(:default) { Class.new(Engine) }
 
     it "initializes default engine" do
+      Engine.stub(:default => default)
       subject.setup(name, options)
-      expect(subject.engines[:somerepo]).to be_instance_of(Engine.default)
+      expect(subject.engines[:somerepo]).to be_instance_of(default)
     end
   end
 
