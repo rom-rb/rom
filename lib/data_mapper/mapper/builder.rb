@@ -98,7 +98,7 @@ module DataMapper
           if attribute.options[:member_type]
             mapper.map attribute.name, attribute.options[:member_type], :collection => true
           else
-            mapper.map attribute.name, attribute.options[:primitive]
+            mapper.map attribute.name, attribute.options[:primitive], :association => attribute.options[:association]
           end
         end
 

@@ -65,8 +65,6 @@ describe "Using Arel engine" do
   }
 
   it "loads user objects with embedded addresses" do
-    pending
-
     mapper = DM_ENV[user_model]
     users  = mapper.all
 

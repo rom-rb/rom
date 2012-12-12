@@ -63,6 +63,8 @@ module DataMapper
             klass.class_eval { include(Relationship::Iterator) }
           end
 
+          address = klass.attributes[:address]
+
           attributes = klass.attributes.remap(@source_aliases).finalize(@connector.registry)
 
           klass.new(@connector.node, attributes)
@@ -76,8 +78,9 @@ module DataMapper
         # @api private
         def target_model_attribute_options
           {
-            :collection => @collection_target,
-            :aliases    => @target_aliases
+            :collection  => @collection_target,
+            :association => true,
+            :aliases     => @target_aliases
           }
         end
 

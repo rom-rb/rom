@@ -42,13 +42,14 @@ describe "Using Arel engine" do
       attribute :age,     Integer
     }
 
-    user.attribute :address,      address_model
-    user.attribute :home_address, address_model
+    user.attribute :address,      address_model, :association => true
+    user.attribute :home_address, address_model, :association => true
     user
   }
 
   it 'loads the object without association' do
-    user = DM_ENV[user_model].all.first
+    mapper = DM_ENV[user_model]
+    user   = mapper.first
 
     user.should be_instance_of(user_model)
     user.id.should eql(1)
