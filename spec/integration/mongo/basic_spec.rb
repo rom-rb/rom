@@ -20,9 +20,9 @@ describe "Using Arel engine" do
     DM_ENV.build(user_model, :mongo) do
       relation_name :users
 
-      map :id,   Integer, :key => true, :to => :_id
-      map :name, String
-      map :age,  Integer
+      map :id,   Integer, :to => '_id', :key => true
+      map :name, String,  :to => 'name'
+      map :age,  Integer, :to => 'age'
     end
   }
 

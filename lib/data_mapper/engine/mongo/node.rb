@@ -12,9 +12,7 @@ module DataMapper
         # @api public
         def each(&block)
           return to_enum unless block_given?
-          gateway.each do |document|
-            yield(Hash[document.map { |key, value| [ key.to_sym, value ] }])
-          end
+          gateway.each(&block)
           self
         end
 

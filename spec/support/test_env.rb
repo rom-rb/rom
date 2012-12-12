@@ -35,7 +35,7 @@ class TestEnv < DataMapper::Environment
       next if const.nil? || const == ''
 
       if parent.const_defined?(const)
-        parent.send(:remove_const, const)
+        parent.send(:remove_const, const) rescue nil
       end
     end
 
