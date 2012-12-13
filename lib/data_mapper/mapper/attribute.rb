@@ -11,7 +11,7 @@ module DataMapper
       Alias = Struct.new(:field, :prefix) {
         attr_reader :name
 
-        alias_method :to_sym, :name
+        alias_method :to_sym, :field
 
         private :field=, :prefix=
 
@@ -25,10 +25,6 @@ module DataMapper
         def initialize(field, prefix)
           super
           @name = :"#{prefix}_#{field}"
-        end
-
-        def to_s
-          name.to_s
         end
       }
 

@@ -44,7 +44,7 @@ module DataMapper
             def renamed_clashing_entries(other, join_definition)
               entries.each_with_object({}) { |(key, name), renamed|
                 next if !other.include?(name) || join_definition.key?(name)
-                renamed[key] = key
+                renamed[key] = key.name
               }
             end
 
