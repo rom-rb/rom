@@ -99,7 +99,7 @@ module DataMapper
       def initialize(left, right)
         @left, @right = left, right
 
-        @map = Hash[left.keys.zip(right.keys)]
+        @map = Hash[@left.keys.zip(@right.keys)]
       end
     end # class JoinDefinition
   end # class Relationship
