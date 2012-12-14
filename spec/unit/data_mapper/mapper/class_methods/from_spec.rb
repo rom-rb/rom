@@ -4,17 +4,15 @@ describe Mapper, '.from' do
   subject { described_class.from(other, name) }
 
   let(:model) {
-    mock_model(:TestModel)
+    mock_model('TestModel')
   }
 
   let(:other) {
-    model_class = model
-    address_model = mock_model('Address')
-
-    Class.new(described_class) {
-      model model_class
+    klass = Class.new(described_class) {
       map :id, Integer
     }
+    klass.model(model)
+    klass
   }
 
   context "with another mapper" do
@@ -30,6 +28,10 @@ describe Mapper, '.from' do
 
       its(:model) { should be(model) }
       its(:name)  { should eql(name) }
+
+      it "copies attributes" do
+        subject.attributes[:id].should be_instance_of(Mapper::Attribute::Primitive)
+      end
     end
   end
 end
