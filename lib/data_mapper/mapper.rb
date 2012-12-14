@@ -153,21 +153,6 @@ module DataMapper
       end
     end
 
-    # Finalizes this mapper class
-    #
-    # @example
-    #   DataMapper::Mapper.finalize
-    #
-    # @abstract
-    #
-    # @return [self]
-    #
-    # @api public
-    def self.finalize
-      # noop
-      self
-    end
-
     # Finalizes attributes
     #
     # @return [self]
