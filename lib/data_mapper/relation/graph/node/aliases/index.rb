@@ -50,7 +50,7 @@ module DataMapper
               entries.each_with_object({}) { |(key, name), renamed|
                 if other.field?(name.field)
                   if natural_join
-                    if !join_definition.key?(name.field)
+                    unless join_definition.key?(name.field)
                       renamed[key] = aliased_field(key.field, key.prefix, true)
                     end
                   else
