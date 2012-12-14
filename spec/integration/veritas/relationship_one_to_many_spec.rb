@@ -17,7 +17,7 @@ describe 'Relationship - One To Many with generated mapper' do
 
     user_mapper.has 0..n, :orders, order_model
     user_mapper.has 0..n, :apple_orders, order_model do
-      restrict { |r| r.orders_product.eq('Apple') }
+      restrict { |r| r.product.eq('Apple') }
     end
   end
 

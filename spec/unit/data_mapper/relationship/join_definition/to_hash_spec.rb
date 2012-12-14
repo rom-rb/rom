@@ -15,8 +15,8 @@ describe Relationship::JoinDefinition, '#to_hash' do
 
   it "should alias both left and right keys" do
     subject.should eql(
-      Mapper::Attribute::Alias.new(:id, :songs)    => Mapper::Attribute::Alias.new(:song_id, :song_tags),
-      Mapper::Attribute::Alias.new(:title, :songs) => Mapper::Attribute::Alias.new(:tag_id, :song_tags)
+      :id => :song_id,
+      :title => :tag_id
     )
   end
 end

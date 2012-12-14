@@ -76,8 +76,8 @@ describe Relation::Mapper::Builder, '#mapper' do
     it { should be_kind_of(Relation::Mapper) }
 
     it "remaps source model attributes" do
-      subject.attributes[:id].field.should eql(:song_tags_song_id)
-      subject.attributes[:title].field.should eql(:songs_title)
+      subject.attributes[:id].field.should eql(:song_id)
+      subject.attributes[:title].field.should eql(:title)
     end
 
     it "sets embedded collection attribute" do
@@ -89,8 +89,8 @@ describe Relation::Mapper::Builder, '#mapper' do
     it "remaps target model attributes" do
       target_mapper = subject.attributes[:song_tags].mapper
 
-      target_mapper.attributes[:song_id].field.should eql(:song_tags_song_id)
-      target_mapper.attributes[:tag_id].field.should eql(:song_tags_tag_id)
+      target_mapper.attributes[:song_id].field.should eql(:song_id)
+      target_mapper.attributes[:tag_id].field.should eql(:tag_id)
     end
 
     it "extends the mapper with OneToMany iterator" do
@@ -106,8 +106,8 @@ describe Relation::Mapper::Builder, '#mapper' do
     it "remaps target model attributes using connector aliases" do
       target_mapper = subject.attributes[:tags].mapper
 
-      target_mapper.attributes[:id].field.should eql(:tags_id)
-      target_mapper.attributes[:name].field.should eql(:tags_name)
+      target_mapper.attributes[:id].field.should eql(:id)
+      target_mapper.attributes[:name].field.should eql(:name)
     end
   end
 end

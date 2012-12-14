@@ -10,8 +10,11 @@ describe Engine::Veritas::Node, '#join' do
   let(:target_relation) { mock('target_relation') }
   let(:join_relation)   { mock('join_relation') }
 
-  let(:source_aliases)  { Relation::Graph::Node::Aliases::Unary.new({ :users_id     => :users_id     }, { :id => :users_id }) }
-  let(:target_aliases)  { Relation::Graph::Node::Aliases::Unary.new({ :addresses_id => :addresses_id }, { :id => :addresses_id }) }
+  let(:source_aliases)  { Relation::Graph::Node::Aliases.new(source_index) }
+  let(:target_aliases)  { Relation::Graph::Node::Aliases.new(target_index) }
+  let(:source_index)    { Relation::Graph::Node::Aliases::Index.new({ :users_id     => :id }, strategy) }
+  let(:target_index)    { Relation::Graph::Node::Aliases::Index.new({ :addresses_id => :id }, strategy) }
+  let(:strategy)        { Relation::Graph::Node.send(:aliasing_strategy) }
   let(:joined_aliases)  { mock('joined_aliases') }
   let(:join_definition) { {} }
 

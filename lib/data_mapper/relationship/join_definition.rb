@@ -99,14 +99,7 @@ module DataMapper
       def initialize(left, right)
         @left, @right = left, right
 
-        left_keys  = aliased_keys(left.keys, left.relation_name)
-        right_keys = aliased_keys(right.keys, right.relation_name)
-
-        @map = Hash[left_keys.zip(right_keys)]
-      end
-
-      def aliased_keys(keys, relation_name)
-        keys.map { |key| Mapper::Attribute.aliased_field(key, relation_name) }
+        @map = Hash[@left.keys.zip(@right.keys)]
       end
     end # class JoinDefinition
   end # class Relationship

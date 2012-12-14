@@ -3,12 +3,14 @@ require 'spec_helper'
 describe Engine::Veritas::Node, '#rename' do
   subject { object.rename(new_aliases) }
 
-  let(:new_aliases) { { :users_id => :users_foo_id } }
+  let(:new_aliases) { { :id => :foo_id } }
 
   let(:object)   { described_class.new(name, relation, aliases) }
   let(:name)     { :users }
   let(:relation) { mock('relation') }
-  let(:aliases)  { unary_aliases({ :users_id => :users_id }, { :id => :users_id }) }
+  let(:aliases)  { Relation::Graph::Node::Aliases.new(index) }
+  let(:index)    { Relation::Graph::Node::Aliases::Index.new({ :users_id => :id }, strategy) }
+  let(:strategy) { Relation::Graph::Node.send(:aliasing_strategy) }
 
   let(:renamed_aliases) { aliases.rename(new_aliases) }
 

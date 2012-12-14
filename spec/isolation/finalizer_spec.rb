@@ -80,7 +80,7 @@ describe 'Finalizer', :isolation => true do
       has 1, :tag,      Tag, :through => :song_tag
 
       has 1, :good_tag, Tag, :through => :song_tag, :via => :tag do
-        restrict { |r| r.tags_name.eq('good') }
+        restrict { |r| r.name.eq('good') }
       end
 
       has 0..n, :infos, Info, :through => :tags
@@ -88,7 +88,7 @@ describe 'Finalizer', :isolation => true do
       has 0..n, :info_contents, InfoContent, :through => :infos
 
       has 0..n, :good_info_contents, InfoContent, :through => :infos, :via => :info_contents do
-        restrict { |r| r.info_contents_content.eq('really, really good') }
+        restrict { |r| r.content.eq('really, really good') }
       end
     end
 
