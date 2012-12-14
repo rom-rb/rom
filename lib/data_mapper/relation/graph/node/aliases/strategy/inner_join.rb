@@ -11,7 +11,7 @@ module DataMapper
 
               def index_entries(other_index, join_definition)
                 index.entries.dup.
-                  update(clashing_entries(other_index, join_definition)).
+                  update(clashing_entries(other_index, join_definition, false)).
                   update(other_index.entries)
               end
 

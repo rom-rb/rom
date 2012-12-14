@@ -8,23 +8,21 @@ module DataMapper
     # @api private
     class Attribute
 
-      Alias = Struct.new(:field, :prefix) {
+      Alias = Struct.new(:field, :prefix, :aliased) {
         attr_reader :name
 
-        alias_method :to_sym, :field
-
-        private :field=, :prefix=
+        private :field=, :prefix=, :aliased=
 
         CACHE = {}
 
-        def self.build(field, prefix)
-          key = "#{field}-#{prefix}"
-          CACHE.fetch(key) { CACHE[key] = Alias.new(field, prefix) }
+        def self.build(field, prefix, aliased = false)
+          key = "#{field}-#{prefix}-#{aliased.inspect}"
+          CACHE.fetch(key) { CACHE[key] = Alias.new(field, prefix, aliased) }
         end
 
-        def initialize(field, prefix)
+        def initialize(field, prefix, aliased)
           super
-          @name = :"#{prefix}_#{field}"
+          @name = aliased ? :"#{prefix}_#{field}" : field.to_sym
         end
       }
 
@@ -181,8 +179,8 @@ module DataMapper
       # @return [Symbol]
       #
       # @api private
-      def aliased_field(prefix)
-        self.class.aliased_field(field, prefix)
+      def aliased_field(prefix, aliased = false)
+        self.class.aliased_field(field, prefix, aliased)
       end
 
       # Load this attribute's value from a tuple

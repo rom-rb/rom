@@ -248,7 +248,7 @@ module DataMapper
       def aliased_field_map(prefix)
         primitives.each_with_object({}) { |attribute, hash|
           aliased_field = attribute.aliased_field(prefix)
-          hash[aliased_field] = attribute.field
+          hash[aliased_field] = aliased_field
         }
       end
 

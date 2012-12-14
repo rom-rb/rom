@@ -13,8 +13,8 @@ describe Relation::Graph::Node::Aliases, '#index' do
       let(:songs_index) { described_class::Index.new(songs_entries, strategy) }
 
       let(:songs_entries) {{
-        :songs_id    => :id,
-        :songs_title => :title,
+        attribute_alias(:id,    :songs) => attribute_alias(:id,    :songs),
+        attribute_alias(:title, :songs) => attribute_alias(:title, :songs),
       }}
 
       it { should eql(described_class::Index.new(songs_entries, strategy)) }
@@ -37,21 +37,21 @@ describe Relation::Graph::Node::Aliases, '#index' do
       context "with unique attribute names across both relations" do
 
         let(:songs_entries) {{
-          :songs_id    => :id,
-          :songs_title => :title,
+          attribute_alias(:id,    :songs) => attribute_alias(:id,    :songs),
+          attribute_alias(:title, :songs) => attribute_alias(:title, :songs),
         }}
 
         let(:song_tags_entries) {{
-          :song_tags_song_id => :song_id,
-          :song_tags_tag_id  => :tag_id,
+          attribute_alias(:song_id, :song_tags) => attribute_alias(:song_id, :song_tags),
+          attribute_alias(:tag_id,  :song_tags) => attribute_alias(:tag_id,  :song_tags),
         }}
 
         it "should contain field mappings for all attributes" do
           subject.should eql(described_class::Index.new({
-            :songs_id          => :song_id,
-            :songs_title       => :title,
-            :song_tags_song_id => :song_id,
-            :song_tags_tag_id  => :tag_id,
+            attribute_alias(:id,      :songs)     => attribute_alias(:song_id, :songs),
+            attribute_alias(:title,   :songs)     => attribute_alias(:title,   :songs),
+            attribute_alias(:song_id, :song_tags) => attribute_alias(:song_id, :song_tags),
+            attribute_alias(:tag_id,  :song_tags) => attribute_alias(:tag_id,  :song_tags),
           }, strategy))
         end
       end
@@ -70,28 +70,28 @@ describe Relation::Graph::Node::Aliases, '#index' do
         let(:song_comments_index) { described_class::Index.new(song_comments_entries, strategy) }
 
         let(:songs_entries) {{
-          :songs_id    => :id,
-          :songs_title => :title,
+          attribute_alias(:id,    :songs) => attribute_alias(:id,    :songs),
+          attribute_alias(:title, :songs) => attribute_alias(:title, :songs),
         }}
 
         let(:song_tags_entries) {{
-          :song_tags_song_id => :song_id,
-          :song_tags_tag_id  => :tag_id,
+          attribute_alias(:song_id, :song_tags) => attribute_alias(:song_id, :song_tags),
+          attribute_alias(:tag_id,  :song_tags) => attribute_alias(:tag_id,  :song_tags),
         }}
 
         let(:song_comments_entries) {{
-          :song_comments_song_id    => :song_id,
-          :song_comments_comment_id => :comment_id,
+          attribute_alias(:song_id,    :song_comments) => attribute_alias(:song_id,    :song_comments),
+          attribute_alias(:comment_id, :song_comments) => attribute_alias(:comment_id, :song_comments),
         }}
 
         it "should contain field mappings for all attributes" do
           subject.should eql(described_class::Index.new({
-            :songs_id                 => :song_id,
-            :songs_title              => :title,
-            :song_tags_song_id        => :song_id,
-            :song_tags_tag_id         => :tag_id,
-            :song_comments_song_id    => :song_id,
-            :song_comments_comment_id => :comment_id,
+            attribute_alias(:id,         :songs)         => attribute_alias(:song_id,    :songs),
+            attribute_alias(:title,      :songs)         => attribute_alias(:title,      :songs),
+            attribute_alias(:song_id,    :song_tags)     => attribute_alias(:song_id,    :song_tags),
+            attribute_alias(:tag_id,     :song_tags)     => attribute_alias(:tag_id,     :song_tags),
+            attribute_alias(:song_id,    :song_comments) => attribute_alias(:song_id,    :song_comments),
+            attribute_alias(:comment_id, :song_comments) => attribute_alias(:comment_id, :song_comments),
           }, strategy))
         end
       end
@@ -101,23 +101,23 @@ describe Relation::Graph::Node::Aliases, '#index' do
         context "only before renaming join keys" do
 
           let(:songs_entries) {{
-            :songs_id    => :id,
-            :songs_title => :title,
+            attribute_alias(:id,    :songs) => attribute_alias(:id,    :songs),
+            attribute_alias(:title, :songs) => attribute_alias(:title, :songs),
           }}
 
           let(:song_tags_entries) {{
-            :song_tags_id      => :id,
-            :song_tags_song_id => :song_id,
-            :song_tags_tag_id  => :tag_id,
+            attribute_alias(:id,      :song_tags) => attribute_alias(:id,      :song_tags),
+            attribute_alias(:song_id, :song_tags) => attribute_alias(:song_id, :song_tags),
+            attribute_alias(:tag_id,  :song_tags) => attribute_alias(:tag_id,  :song_tags),
           }}
 
           it "should contain field mappings for all attributes" do
             subject.should eql(described_class::Index.new({
-              :songs_id          => :song_id,
-              :songs_title       => :title,
-              :song_tags_id      => :id,
-              :song_tags_song_id => :song_id,
-              :song_tags_tag_id  => :tag_id,
+              attribute_alias(:id,      :songs)     => attribute_alias(:song_id, :songs),
+              attribute_alias(:title,   :songs)     => attribute_alias(:title,   :songs),
+              attribute_alias(:id,      :song_tags) => attribute_alias(:id,      :song_tags),
+              attribute_alias(:song_id, :song_tags) => attribute_alias(:song_id, :song_tags),
+              attribute_alias(:tag_id,  :song_tags) => attribute_alias(:tag_id,  :song_tags),
             }, strategy))
           end
         end
@@ -126,25 +126,25 @@ describe Relation::Graph::Node::Aliases, '#index' do
 
           context "and the clashing attribute is not part of the join keys" do
             let(:songs_entries) {{
-              :songs_id         => :id,
-              :songs_title      => :title,
-              :songs_created_at => :created_at
+              attribute_alias(:id,         :songs) => attribute_alias(:id,         :songs),
+              attribute_alias(:title,      :songs) => attribute_alias(:title,      :songs),
+              attribute_alias(:created_at, :songs) => attribute_alias(:created_at, :songs),
             }}
 
             let(:song_tags_entries) {{
-              :song_tags_song_id    => :song_id,
-              :song_tags_tag_id     => :tag_id,
-              :song_tags_created_at => :created_at,
+              attribute_alias(:song_id,    :song_tags) => attribute_alias(:song_id,    :song_tags),
+              attribute_alias(:tag_id,     :song_tags) => attribute_alias(:tag_id,     :song_tags),
+              attribute_alias(:created_at, :song_tags) => attribute_alias(:created_at, :song_tags),
             }}
 
             it "should contain field mappings for all attributes" do
               subject.should eql(described_class::Index.new({
-                :songs_id             => :song_id,
-                :songs_title          => :title,
-                :songs_created_at     => :songs_created_at,
-                :song_tags_song_id    => :song_id,
-                :song_tags_tag_id     => :tag_id,
-                :song_tags_created_at => :created_at,
+                attribute_alias(:id,         :songs)     => attribute_alias(:song_id,    :songs),
+                attribute_alias(:title,      :songs)     => attribute_alias(:title,      :songs),
+                attribute_alias(:created_at, :songs)     => attribute_alias(:created_at, :songs, true),
+                attribute_alias(:song_id,    :song_tags) => attribute_alias(:song_id,    :song_tags),
+                attribute_alias(:tag_id,     :song_tags) => attribute_alias(:tag_id,     :song_tags),
+                attribute_alias(:created_at, :song_tags) => attribute_alias(:created_at, :song_tags),
               }, strategy))
             end
           end
@@ -152,25 +152,25 @@ describe Relation::Graph::Node::Aliases, '#index' do
           context "and the clashing attribute matches a join key" do
 
             let(:songs_entries) {{
-              :songs_id      => :id,
-              :songs_title   => :title,
-              :songs_song_id => :song_id,
+              attribute_alias(:id,      :songs) => attribute_alias(:id,      :songs),
+              attribute_alias(:title,   :songs) => attribute_alias(:title,   :songs),
+              attribute_alias(:song_id, :songs) => attribute_alias(:song_id, :songs),
             }}
 
             let(:song_tags_entries) {{
-              :song_tags_id      => :id,
-              :song_tags_song_id => :song_id,
-              :song_tags_tag_id  => :tag_id,
+              attribute_alias(:id,      :song_tags) => attribute_alias(:id,      :song_tags),
+              attribute_alias(:song_id, :song_tags) => attribute_alias(:song_id, :song_tags),
+              attribute_alias(:tag_id,  :song_tags) => attribute_alias(:tag_id,  :song_tags),
             }}
 
             it "should contain field mappings for all attributes" do
               subject.should eql(described_class::Index.new({
-                :songs_id          => :song_id,
-                :songs_title       => :title,
-                :songs_song_id     => :songs_song_id,
-                :song_tags_id      => :id,
-                :song_tags_song_id => :song_id,
-                :song_tags_tag_id  => :tag_id,
+                attribute_alias(:id,      :songs)     => attribute_alias(:song_id, :songs),
+                attribute_alias(:title,   :songs)     => attribute_alias(:title,   :songs),
+                attribute_alias(:song_id, :songs)     => attribute_alias(:song_id, :songs, true),
+                attribute_alias(:id,      :song_tags) => attribute_alias(:id,      :song_tags),
+                attribute_alias(:song_id, :song_tags) => attribute_alias(:song_id, :song_tags),
+                attribute_alias(:tag_id,  :song_tags) => attribute_alias(:tag_id,  :song_tags),
               }, strategy))
             end
           end
