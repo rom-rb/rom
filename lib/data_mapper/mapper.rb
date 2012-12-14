@@ -43,6 +43,10 @@ module DataMapper
     # @api public
     attr_reader :relationships
 
+    # Return mapper's environment object
+    #
+    # @return [DataMapper::Environment]
+    #
     # @api private
     attr_reader :environment
 
@@ -247,6 +251,10 @@ module DataMapper
       self
     end
 
+    # Initialize mapper instance using default settings from its class
+    #
+    # @return [undefined]
+    #
     # @api private
     def initialize
       @model         = self.class.model
