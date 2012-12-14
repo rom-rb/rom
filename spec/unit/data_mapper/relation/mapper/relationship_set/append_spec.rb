@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe DataMapper::Mapper::RelationshipSet, '#<<' do
+describe Relation::Mapper::RelationshipSet, '#<<' do
   let(:relationships) { described_class.new }
   let(:name)          { :address }
   let(:relationship)  { mock('address', :name => name) }

@@ -44,7 +44,6 @@ require 'support/options'
 
 require 'data_mapper/environment'
 
-require 'data_mapper/mapper/relationship_set'
 require 'data_mapper/mapper/attribute'
 require 'data_mapper/mapper/attribute/primitive'
 require 'data_mapper/mapper/attribute/embedded_value'
@@ -81,6 +80,7 @@ require 'data_mapper/relation/graph/edge'
 require 'data_mapper/relation/graph/connector'
 require 'data_mapper/relation/graph/connector/builder'
 require 'data_mapper/relation/mapper'
+require 'data_mapper/relation/mapper/relationship_set'
 require 'data_mapper/relation/mapper/builder'
 
 require 'data_mapper/query'

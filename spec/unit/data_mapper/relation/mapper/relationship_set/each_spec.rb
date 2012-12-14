@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe DataMapper::Mapper::RelationshipSet, '#each' do
+describe Relation::Mapper::RelationshipSet, '#each' do
   subject { relationships.each.to_a }
 
   let(:relationships) { described_class.new }

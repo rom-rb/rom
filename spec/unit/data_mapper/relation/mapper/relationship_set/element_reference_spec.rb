@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe DataMapper::Mapper::RelationshipSet, '#[]' do
+describe Relation::Mapper::RelationshipSet, '#[]' do
   subject { relationships[name] }
 
   let(:relationships) { described_class.new([relationship]) }
