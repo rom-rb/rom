@@ -31,18 +31,6 @@ module DataMapper
     # @api public
     attr_reader :attributes
 
-    # This mapper's set of relationships to map
-    #
-    # @example
-    #
-    #   mapper = DataMapper[User]
-    #   mapper.relationships
-    #
-    # @return [RelationshipSet]
-    #
-    # @api public
-    attr_reader :relationships
-
     # Return mapper's environment object
     #
     # @return [DataMapper::Environment]
@@ -68,10 +56,6 @@ module DataMapper
 
       other.attributes.each do |attribute|
         klass.attributes << attribute
-      end
-
-      other.relationships.each do |relationship|
-        klass.relationships << relationship
       end
 
       klass
@@ -132,58 +116,6 @@ module DataMapper
       self
     end
 
-    # Establishes a relationship with the given cardinality and name
-    #
-    # @example
-    #
-    #   class UserMapper < DataMapper::Mapper
-    #     has 1,    :address, Address
-    #     has 0..n, :orders,  Order
-    #   end
-    #
-    # @param [Fixnum,Range]
-    # @param [Symbol] name for the relationship
-    # @param [*args]
-    # @param [Proc] optional operation that should be evaluated on the relation
-    #
-    # @return [self]
-    #
-    # @api public
-    def self.has(cardinality, name, *args, &op)
-      relationship = Relationship::Builder::Has.build(
-        self, cardinality, name, *args, &op
-      )
-
-      relationships << relationship
-
-      self
-    end
-
-    # Establishes a one-to-many relationship
-    #
-    # @example
-    #
-    #   class UserMapper < DataMapper::Mapper
-    #     belongs_to :group, Group
-    #   end
-    #
-    # @param [Symbol]
-    # @param [*args]
-    # @param [Proc] optional operation that should be evaluated on the relation
-    #
-    # @return [self]
-    #
-    # @api public
-    def self.belongs_to(name, *args, &op)
-      relationship = Relationship::Builder::BelongsTo.build(
-        self, name, *args, &op
-      )
-
-      relationships << relationship
-
-      self
-    end
-
     # Returns infinity constant
     #
     # @example
@@ -208,15 +140,10 @@ module DataMapper
       @attributes ||= AttributeSet.new
     end
 
-    # Returns relationship set for this mapper class
+    # Return or set environment for this mapper class
     #
-    # @return [RelationshipSet]
+    # @return [DataMapper::Environment]
     #
-    # @api private
-    def self.relationships
-      @relationships ||= RelationshipSet.new
-    end
-
     # @api private
     def self.environment(environment = nil)
       if @environment
@@ -259,7 +186,6 @@ module DataMapper
     def initialize
       @model         = self.class.model
       @attributes    = self.class.attributes
-      @relationships = self.class.relationships
       @environment   = self.class.environment
     end
 

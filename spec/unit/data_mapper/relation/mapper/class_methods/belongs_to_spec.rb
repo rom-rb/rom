@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Mapper, '.belongs_to' do
+describe Relation::Mapper, '.belongs_to' do
   subject { described_class.belongs_to(name, model) }
 
   let(:name)  { :stuff }

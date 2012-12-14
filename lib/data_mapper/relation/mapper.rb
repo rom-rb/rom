@@ -19,6 +19,18 @@ module DataMapper
       # @api public
       attr_reader :relation
 
+      # This mapper's set of relationships to map
+      #
+      # @example
+      #
+      #   mapper = DataMapper[User]
+      #   mapper.relationships
+      #
+      # @return [RelationshipSet]
+      #
+      # @api public
+      attr_reader :relationships
+
       # Return a new mapper class derived from the given one
       #
       # @see Mapper.from
@@ -35,6 +47,9 @@ module DataMapper
         klass = super
         klass.repository(other.repository)
         klass.relation_name(other.relation_name)
+        other.relationships.each do |relationship|
+          klass.relationships << relationship
+        end
         klass
       end
 
@@ -166,7 +181,68 @@ module DataMapper
         self
       end
 
-      # Initialize a veritas mapper instance
+      # Establishes a relationship with the given cardinality and name
+      #
+      # @example
+      #
+      #   class UserMapper < DataMapper::Mapper
+      #     has 1,    :address, Address
+      #     has 0..n, :orders,  Order
+      #   end
+      #
+      # @param [Fixnum,Range]
+      # @param [Symbol] name for the relationship
+      # @param [*args]
+      # @param [Proc] optional operation that should be evaluated on the relation
+      #
+      # @return [self]
+      #
+      # @api public
+      def self.has(cardinality, name, *args, &op)
+        relationship = Relationship::Builder::Has.build(
+          self, cardinality, name, *args, &op
+        )
+
+        relationships << relationship
+
+        self
+      end
+
+      # Establishes a one-to-many relationship
+      #
+      # @example
+      #
+      #   class UserMapper < DataMapper::Mapper
+      #     belongs_to :group, Group
+      #   end
+      #
+      # @param [Symbol]
+      # @param [*args]
+      # @param [Proc] optional operation that should be evaluated on the relation
+      #
+      # @return [self]
+      #
+      # @api public
+      def self.belongs_to(name, *args, &op)
+        relationship = Relationship::Builder::BelongsTo.build(
+          self, name, *args, &op
+        )
+
+        relationships << relationship
+
+        self
+      end
+
+      # Returns relationship set for this mapper class
+      #
+      # @return [RelationshipSet]
+      #
+      # @api private
+      def self.relationships
+        @relationships ||= RelationshipSet.new
+      end
+
+      # Initialize a relation mapper instance
       #
       # @example
       #
@@ -189,8 +265,9 @@ module DataMapper
       # @api public
       def initialize(relation = self.class.relation, attributes = self.class.attributes)
         super()
-        @relation   = relation
-        @attributes = attributes
+        @relation      = relation
+        @attributes    = attributes
+        @relationships = self.class.relationships
       end
 
       # Shortcut for self.class.relations

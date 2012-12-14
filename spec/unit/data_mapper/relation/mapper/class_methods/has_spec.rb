@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Mapper, '.has' do
+describe Relation::Mapper, '.has' do
   subject { described_class.has(cardinality, name, model) }
 
   let(:cardinality) { 1 }

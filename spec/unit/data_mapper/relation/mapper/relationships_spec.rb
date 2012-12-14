@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe Mapper, '#relationships' do
+describe Relation::Mapper, '#relationships' do
   subject { object.relationships }
 
-  let(:object)        { described_class.new }
+  let(:object)        { described_class.new(mock('relation')) }
   let(:relationships) { mock('relationships') }
 
   it 'delegates to self.class' do

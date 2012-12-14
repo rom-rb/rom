@@ -14,7 +14,6 @@ describe Mapper, '.from' do
     Class.new(described_class) {
       model model_class
       map :id, Integer
-      has 1, :address, address_model
     }
   }
 
@@ -31,10 +30,6 @@ describe Mapper, '.from' do
 
       its(:model) { should be(model) }
       its(:name)  { should eql(name) }
-
-      it "copies relationships" do
-        subject.relationships[:address].should eql(other.relationships[:address])
-      end
     end
   end
 end
