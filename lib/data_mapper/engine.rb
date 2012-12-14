@@ -8,18 +8,6 @@ module DataMapper
 
     MissingEngineError = Class.new(StandardError)
 
-    # Returns the database adapter used by the engine
-    #
-    # @example
-    #   uri    = "postgres://localhost/test"
-    #   engine = DataMapper::Engine::VeritasEngine.new(uri)
-    #   engine.adapter
-    #
-    # @return [Object]
-    #
-    # @api public
-    attr_reader :adapter
-
     # Returns database connection URI
     #
     # @return [Object]
@@ -157,4 +145,5 @@ module DataMapper
     end
 
   end # class Engine
+
 end # module DataMapper
