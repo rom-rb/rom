@@ -9,32 +9,10 @@ module DataMapper
 
 end # module DataMapper
 
-require 'abstract_type'
-
-# TODO merge this into abstract_class and add specs
-module AbstractType
-  def self.included(descendant)
-    super
-    descendant.instance_variable_set(:@descendant_superclass, descendant.superclass)
-    descendant.extend(ClassMethods)
-    self
-  end
-
-  module ClassMethods
-
-    def new(*)
-      if superclass.equal?(@descendant_superclass)
-        raise NotImplementedError, "#{self} is an abstract class"
-      else
-        super
-      end
-    end
-  end
-end
-
 require 'bigdecimal'
 require 'date'
 
+require 'abstract_type'
 require 'descendants_tracker'
 require 'equalizer'
 require 'inflector'
