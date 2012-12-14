@@ -91,21 +91,6 @@ module DataMapper
       self
     end
 
-    # Returns infinity constant
-    #
-    # @example
-    #
-    #   class UserMapper
-    #     has n, :orders, Order
-    #   end
-    #
-    # @return [Float]
-    #
-    # @api public
-    def self.n
-      Infinity
-    end
-
     # Returns attribute set for this mapper class
     #
     # @return [AttributeSet]
