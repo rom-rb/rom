@@ -40,6 +40,7 @@ require 'equalizer'
 require 'inflector'
 
 require 'data_mapper/utils'
+require 'support/options'
 
 require 'data_mapper/environment'
 

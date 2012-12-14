@@ -4,7 +4,9 @@ module DataMapper
   #
   class Mapper
     include Enumerable
-    extend DescendantsTracker
+    extend DescendantsTracker, Options
+
+    accept_options :model, :environment
 
     # The mapper's model
     #
@@ -61,33 +63,6 @@ module DataMapper
       klass
     end
 
-    # Sets or returns the model for this mapper
-    #
-    # @example when setting the model
-    #
-    #   class UserMapper
-    #     model User
-    #   end
-    #
-    # @example when reading the model
-    #
-    #   mapper = DataMapper[User]
-    #   mapper.class.model
-    #
-    # @param [Class] model to be set
-    #
-    # @return [Class, nil, self]
-    #
-    # @api public
-    def self.model(model = Undefined)
-      if model.equal?(Undefined)
-        @model
-      else
-        @model = model
-        self
-      end
-    end
-
     # Sets a mapping attribute
     #
     # @example
@@ -138,19 +113,6 @@ module DataMapper
     # @api private
     def self.attributes
       @attributes ||= AttributeSet.new
-    end
-
-    # Return or set environment for this mapper class
-    #
-    # @return [DataMapper::Environment]
-    #
-    # @api private
-    def self.environment(environment = nil)
-      if @environment
-        @environment
-      else
-        @environment = environment
-      end
     end
 
     # Finalizes attributes

@@ -7,6 +7,8 @@ module DataMapper
     class Mapper < DataMapper::Mapper
       alias_method :all, :to_a
 
+      accept_options :relation_name, :repository
+
       # The relation backing this mapper
       #
       # @example
@@ -97,62 +99,6 @@ module DataMapper
       # @api private
       def self.gateway_relation
         @gateway_relation ||= engine.gateway_relation(relation)
-      end
-
-      # Set or return the name of this mapper's repository
-      #
-      # @example when setting the repository name
-      #
-      #   class UserMapper
-      #     repository :foo
-      #   end
-      #
-      # @example when reading the repository name
-      #
-      #   mapper = DataMapper[User]
-      #   mapper.class.repository
-      #
-      # @param [Symbol] name
-      #   the repository name
-      #
-      # @return [Symbol, nil, self]
-      #
-      # @api public
-      def self.repository(name = Undefined)
-        if name.equal?(Undefined)
-          @repository
-        else
-          @repository = name
-          self
-        end
-      end
-
-      # Set or return the name of this mapper's relation
-      #
-      # @example when setting the relation name
-      #
-      #   class UserMapper
-      #     relation_name :users
-      #   end
-      #
-      # @example when reading the relation name
-      #
-      #   mapper = DataMapper[User]
-      #   mapper.class.relation_name
-      #
-      # @param [Symbol] name
-      #   the relation name
-      #
-      # @return [Symbol, nil]
-      #
-      # @api public
-      def self.relation_name(name = Undefined)
-        if name.equal?(Undefined)
-          @relation_name
-        else
-          @relation_name = name
-          self
-        end
       end
 
       # Mark the given attribute names as (part of) the key
