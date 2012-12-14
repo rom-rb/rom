@@ -42,7 +42,7 @@ RSpec.configure do |config|
 
   config.after(:each) do
     if example.metadata[:example_group][:file_path] =~ /unit|shared/
-      DM_ENV.reset!
+      DM_ENV.reset
     end
   end
 

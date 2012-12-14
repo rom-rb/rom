@@ -10,7 +10,7 @@ module DataMapper
     # @api private
     def initialize(registry = nil)
       @engines = {}
-      reset!(registry)
+      reset(registry)
     end
 
     # @api public
@@ -80,7 +80,7 @@ module DataMapper
     end
 
     # @api private
-    def reset!(registry = nil)
+    def reset(registry = nil)
       @mappers   = []
       @registry  = registry || Mapper::Registry.new
       @finalized = false

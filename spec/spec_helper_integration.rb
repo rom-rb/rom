@@ -7,7 +7,7 @@ require 'db_setup'
 
 RSpec.configure do |config|
   config.after(:all) do
-    DM_ENV.reset!
+    DM_ENV.reset
   end
 
   config.before do

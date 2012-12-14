@@ -5,15 +5,15 @@ class TestEnv < DataMapper::Environment
     super
   end
 
-  def reset!(registry = nil)
+  def reset(registry = nil)
     super
-    remove_constants!
-    clear_mappers!
-    clear_models!
-    reset_engines!
+    remove_constants
+    clear_mappers
+    clear_models
+    reset_engines
   end
 
-  def remove_constants!
+  def remove_constants
     @constants.each do |name|
       remove_constant(name)
     end
@@ -21,7 +21,7 @@ class TestEnv < DataMapper::Environment
     self
   end
 
-  def clear_mappers!
+  def clear_mappers
     mapper_classes.each do |klass|
       name = klass.name
 
@@ -44,7 +44,7 @@ class TestEnv < DataMapper::Environment
     end
   end
 
-  def clear_models!
+  def clear_models
     model_classes.each do |model|
       next if model.name.nil? || model.name == ''
       remove_constant(model.name) if model.name && Object.const_defined?(model.name)
@@ -52,7 +52,7 @@ class TestEnv < DataMapper::Environment
     Model.instance_variable_set(:"@descendants", [])
   end
 
-  def reset_engines!
+  def reset_engines
     engines.each_value do |engine|
       engine.instance_variable_set(:@relations, engine.relations.class.new(engine))
     end
