@@ -10,7 +10,7 @@ module DataMapper
 
     # Returns database connection URI
     #
-    # @return [Object]
+    # @return [Addressable::URI]
     #
     # @api public
     attr_reader :uri
@@ -70,7 +70,7 @@ module DataMapper
     #
     # @api private
     def initialize(uri = nil)
-      @uri       = uri
+      @uri       = Addressable::URI.parse(uri)
       @relations = Relation::Graph.new(self)
     end
 

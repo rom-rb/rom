@@ -16,7 +16,7 @@ module DataMapper
         DEFAULT_PORT = 27017
 
         def initialize(uri)
-          super(Addressable::URI.parse(uri))
+          super
           establish_connection
         end
 

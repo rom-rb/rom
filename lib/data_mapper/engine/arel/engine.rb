@@ -13,7 +13,7 @@ module DataMapper
 
         # @api private
         def initialize(uri, arel_engine_class = ActiveRecord::Base)
-          super(Addressable::URI.parse(uri))
+          super(uri)
           @arel_engine_class = arel_engine_class
           establish_connection
           reset_engines!
