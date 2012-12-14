@@ -1,6 +1,3 @@
-require 'veritas'
-require 'veritas-do-adapter'
-
 module DataMapper
   class Engine
     module Veritas
@@ -9,17 +6,17 @@ module DataMapper
       class Engine < DataMapper::Engine
         register_as :veritas
 
-        # @see Engine#adapter
+        # Returns db connection object
         #
         # @example
         #   uri    = "postgres://localhost/test"
-        #   engine = DataMapper::Engine::VeritasEngine.new(uri)
-        #   engine.adapter
+        #   engine = DataMapper::Engine::Veritas::Engine.new(uri)
+        #   engine.connection
         #
         # @return [::Veritas::Adapter::DataObjects]
         #
         # @api public
-        attr_reader :adapter
+        attr_reader :connection
 
         # @see Engine#initialize
         #
@@ -28,8 +25,7 @@ module DataMapper
         # @api private
         def initialize(uri)
           super
-          # TODO: add support for other adapters based on uri
-          @adapter = ::Veritas::Adapter::DataObjects.new(uri)
+          establish_connection
         end
 
         # Returns the relation node class used in the relation registry
@@ -88,7 +84,16 @@ module DataMapper
         #
         # @api public
         def gateway_relation(relation)
-          ::Veritas::Relation::Gateway.new(adapter, relation)
+          ::Veritas::Relation::Gateway.new(connection, relation)
+        end
+
+        private
+
+        # TODO: add support for other connections based on uri
+        #
+        # @api private
+        def establish_connection
+          @connection = ::Veritas::Adapter::DataObjects.new(uri)
         end
 
       end # class Engine
