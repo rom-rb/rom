@@ -1,16 +1,16 @@
 shared_context 'Models and Mappers' do
   let(:n) { DataMapper::Infinity }
 
-  let(:user_model)         { mock_model('User') }
-  let(:order_model)        { mock_model('Order') }
-  let(:address_model)      { mock_model('Address') }
-  let(:song_model)         { mock_model('Song') }
-  let(:tag_model)          { mock_model('Tag') }
-  let(:song_tag_model)     { mock_model('SongTag') }
-  let(:info_model)         { mock_model('Info') }
-  let(:info_content_model) { mock_model('InfoContent') }
+  let!(:user_model)         { mock_model('User') }
+  let!(:order_model)        { mock_model('Order') }
+  let!(:address_model)      { mock_model('Address') }
+  let!(:song_model)         { mock_model('Song') }
+  let!(:tag_model)          { mock_model('Tag') }
+  let!(:song_tag_model)     { mock_model('SongTag') }
+  let!(:info_model)         { mock_model('Info') }
+  let!(:info_content_model) { mock_model('InfoContent') }
 
-  let(:user_mapper) {
+  let!(:user_mapper) {
     DM_ENV.build(user_model, :postgres) do
       relation_name :users
 
@@ -20,7 +20,7 @@ shared_context 'Models and Mappers' do
     end
   }
 
-  let(:order_mapper) {
+  let!(:order_mapper) {
     DM_ENV.build(order_model, :postgres) do
       relation_name :orders
 
@@ -30,7 +30,7 @@ shared_context 'Models and Mappers' do
     end
   }
 
-  let(:address_mapper) {
+  let!(:address_mapper) {
     DM_ENV.build(address_model, :postgres) do
       relation_name :addresses
 
@@ -42,7 +42,7 @@ shared_context 'Models and Mappers' do
     end
   }
 
-  let(:tag_mapper) {
+  let!(:tag_mapper) {
     DM_ENV.build(tag_model, :postgres) do
       relation_name :tags
 
@@ -51,7 +51,7 @@ shared_context 'Models and Mappers' do
     end
   }
 
-  let(:info_mapper) {
+  let!(:info_mapper) {
     DM_ENV.build(info_model, :postgres) do
       relation_name :infos
 
@@ -61,7 +61,7 @@ shared_context 'Models and Mappers' do
     end
   }
 
-  let(:info_content_mapper) {
+  let!(:info_content_mapper) {
     DM_ENV.build(info_content_model, :postgres) do
       relation_name :info_contents
 
@@ -71,7 +71,7 @@ shared_context 'Models and Mappers' do
     end
   }
 
-  let(:song_tag_mapper) {
+  let!(:song_tag_mapper) {
     DM_ENV.build(song_tag_model, :postgres) do
       relation_name :song_tags
 
@@ -80,7 +80,7 @@ shared_context 'Models and Mappers' do
     end
   }
 
-  let(:song_mapper) {
+  let!(:song_mapper) {
     DM_ENV.build(song_model, :postgres) do
       relation_name :songs
 
