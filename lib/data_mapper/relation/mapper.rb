@@ -352,6 +352,36 @@ module DataMapper
         self.class.new(relation.order(*order_attributes), attributes)
       end
 
+      # Set limit for the relation
+      #
+      # @example
+      #
+      #   env[Person].limit(3).all
+      #
+      # @param [Integer]
+      #
+      # @return [Relation::Mapper]
+      #
+      # @api public
+      def limit(count)
+        self.class.new(relation.take(count), attributes)
+      end
+
+      # Set offset for the relation
+      #
+      # @example
+      #
+      #   env[Person].limit(20).offset(2).all
+      #
+      # @param [Integer]
+      #
+      # @return [Relation::Mapper]
+      #
+      # @api public
+      def offset(num)
+        self.class.new(relation.skip(num), attributes)
+      end
+
       # Return a mapper for iterating over the relation ordered by *order
       #
       # @example

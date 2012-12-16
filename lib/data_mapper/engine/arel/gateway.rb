@@ -85,6 +85,24 @@ module DataMapper
           }
         end
 
+        # Apply limit to the relation
+        #
+        # @param [Integer]
+        #
+        # @api public
+        def take(limit)
+          new(relation.take(limit))
+        end
+
+        # Apply offset to the relation
+        #
+        # @param [Integer]
+        #
+        # @api public
+        def skip(offset)
+          new(relation.skip(offset))
+        end
+
         # Inserts a new row
         #
         # @param [Hash] tuple

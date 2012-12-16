@@ -23,7 +23,7 @@ describe "Using Arel engine" do
     }
   }
 
-  it "actually works ZOMG" do
+  it "returns all users" do
     users = DM_ENV[user_model].all
 
     users.should have(3).items
@@ -38,5 +38,16 @@ describe "Using Arel engine" do
 
     user3.name.should eql('Piotr')
     user3.age.should be(29)
+  end
+
+  it "returns all users with given limit and offset" do
+    users = DM_ENV[user_model].limit(1).offset(2).all
+
+    users.should have(1).items
+
+    user = users.first
+
+    user.name.should eql('Piotr')
+    user.age.should be(29)
   end
 end

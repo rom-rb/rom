@@ -29,27 +29,38 @@ module DataMapper
           gateway.relation[name]
         end
 
-        # @api private
+        # @api public
         def restrict(query, &block)
           self.class.new(name, gateway.restrict(query.to_h, &block), aliases)
         end
 
-        # @api private
+        # @api public
+        def take(amount)
+          self.class.new(name, gateway.take(amount), aliases)
+        end
+
+        # @api public
+        def skip(offset)
+          self.class.new(name, gateway.skip(offset), aliases)
+        end
+
+        # @api public
         def sort_by(&block)
           raise NotImplementedError
         end
 
-        # @api private
+        # @api public
         def rename(new_aliases)
           raise NotImplementedError
         end
 
-        # @api private
+        # @api public
         def header
           raise NotImplementedError
         end
 
       end # class Node
+
     end # module Arel
   end # class Engine
 end # module DataMapper
