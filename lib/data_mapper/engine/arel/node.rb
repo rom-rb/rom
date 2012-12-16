@@ -30,22 +30,22 @@ module DataMapper
         end
 
         # @api private
+        def restrict(query, &block)
+          self.class.new(name, gateway.restrict(query.to_h, &block), aliases)
+        end
+
+        # @api private
+        def sort_by(&block)
+          raise NotImplementedError
+        end
+
+        # @api private
         def rename(new_aliases)
           raise NotImplementedError
         end
 
         # @api private
         def header
-          raise NotImplementedError
-        end
-
-        # @api private
-        def restrict(*args, &block)
-          raise NotImplementedError
-        end
-
-        # @api private
-        def sort_by(&block)
           raise NotImplementedError
         end
 

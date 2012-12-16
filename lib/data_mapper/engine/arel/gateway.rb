@@ -78,8 +78,11 @@ module DataMapper
         # Returns restricted relation
         #
         # @api public
-        def restrict(*args)
-          new(relation.where(*args))
+        def restrict(conditions, &block)
+          with_restriction(conditions) { |restriction|
+            restriction = yield(restriction) if block_given?
+            new(restriction)
+          }
         end
 
         # Inserts a new row
@@ -101,11 +104,7 @@ module DataMapper
         #
         # @api public
         def delete(conditions)
-          relation_to_delete = nil
-          conditions.each do |key, value|
-            relation_to_delete = relation.where(relation[key].eq(value))
-          end
-          relation_to_delete.delete
+          with_restriction(conditions) { |restriction| restriction.delete }
         end
 
         private
@@ -129,6 +128,15 @@ module DataMapper
         # @api private
         def connection
           relation.engine.connection
+        end
+
+        # @api private
+        def with_restriction(conditions, &block)
+          restriction = relation.clone
+          conditions.each do |key, value|
+            restriction = restriction.where(relation[key].eq(value))
+          end
+          yield(restriction)
         end
 
       end # class Gateway
