@@ -11,6 +11,7 @@ end # module DataMapper
 
 require 'bigdecimal'
 require 'date'
+require 'addressable/uri'
 
 require 'abstract_type'
 require 'descendants_tracker'
