@@ -40,14 +40,14 @@ module DataMapper
         #
         # @api private
         def self.build(source, cardinality, name, target_model, options = {}, &op)
-          via      = options[:through]
+          through  = options[:through]
           min, max = extract_min_max(cardinality, name)
 
           options.update(:min => min, :max => max, :operation => op)
 
           klass =
             if max > 1
-              if via
+              if through
                 Relationship::ManyToMany
               else
                 Relationship::OneToMany
