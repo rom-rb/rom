@@ -9,26 +9,6 @@ module DataMapper
       class Node < Relation::Graph::Node
         include Enumerable
 
-        # Iterates over relation tuples
-        #
-        # @example
-        #
-        #   DataMapper.engines[:default].relations[:people].each do |tuple|
-        #     puts tuple.inspect
-        #   end
-        #
-        # @return [self] if a block was passed in
-        # @return [Enumerator] otherwise
-        #
-        # @yield [::Veritas::Tuple]
-        #
-        # @api public
-        def each(&block)
-          return to_enum unless block_given?
-          relation.each(&block)
-          self
-        end
-
         # Renames the relation with given aliases
         #
         # @example
