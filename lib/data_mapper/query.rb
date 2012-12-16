@@ -5,6 +5,14 @@ module DataMapper
   class Query
     include Enumerable
 
+    attr_reader :options
+
+    attr_reader :attributes
+
+    # @api private
+    attr_reader :index
+    alias_method :to_h, :index
+
     # Initializes a new query instance
     #
     # @param [Hash]
@@ -15,8 +23,8 @@ module DataMapper
     #
     # @api private
     def initialize(options, attributes)
-      @options    = options
-      @attributes = attributes
+      @options, @attributes = options, attributes
+      initialize_index
     end
 
     # Iterate over attribute fields
@@ -24,14 +32,19 @@ module DataMapper
     # @return [self]
     #
     # @api private
-    def each
+    def each(&block)
       return to_enum unless block_given?
-
-      @options.each do |name, value|
-        yield(@attributes.field_name(name), value)
-      end
-
+      index.each(&block)
       self
+    end
+
+    private
+
+    # @api private
+    def initialize_index
+      @index = options.each_with_object({}) do |(name, value), index|
+        index[attributes.field_name(name)] = value
+      end
     end
 
   end # class Query
