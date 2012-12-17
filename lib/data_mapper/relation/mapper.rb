@@ -246,18 +246,20 @@ module DataMapper
         self.class.relations
       end
 
-      # Return a new instance with mapping that corresponds to aliases
+      # The mapped relation's name
       #
-      # TODO find a better name
+      # @see Relation::Mapper.relation_name
       #
-      # @param [Graph::Node::Aliases, Hash] aliases
-      #   the aliases to use in the returned instance
+      # @example
       #
-      # @return [Relation::Mapper]
+      #   mapper = DataMapper[Person]
+      #   mapper.relation_name
       #
-      # @api private
-      def remap(aliases)
-        self.class.new(relation, @attributes.remap(aliases))
+      # @return [Symbol]
+      #
+      # @api public
+      def relation_name
+        self.class.relation_name
       end
 
       # Iterate over the loaded domain objects
@@ -282,53 +284,69 @@ module DataMapper
         self
       end
 
-      # The mapped relation's name
-      #
-      # @see Relation::Mapper.relation_name
-      #
-      # @example
-      #
-      #   mapper = DataMapper[Person]
-      #   mapper.relation_name
-      #
-      # @return [Symbol]
-      #
-      # @api public
-      def relation_name
-        self.class.relation_name
-      end
-
-      # The mapper's human readable representation
-      #
-      # @example
-      #
-      #   mapper = DataMapper[Person]
-      #   puts mapper.inspect
-      #
-      # @return [String]
-      #
-      # @api public
-      def inspect
-        "<##{self.class.name} @model=#{model.name} @relation_name=#{relation_name} @repository=#{self.class.repository}>"
-      end
-
       # Return a mapper for iterating over the relation restricted with options
       #
       # @see Veritas::Relation#restrict
       #
       # @example
       #
-      #   mapper = DataMapper[Person]
-      #   mapper.find(:name => 'John').to_a
+      #   mapper = mappers[Person]
+      #   mapper.find(:name => 'John').all
       #
-      # @param [Hash] options
+      # @param [Hash] conditions
       #   the options to restrict the relation
       #
       # @return [Relation::Mapper]
       #
       # @api public
-      def find(options)
-        self.class.new(relation.restrict(Query.new(options, attributes)), attributes)
+      def find(conditions = {})
+        new(relation.restrict(Query.new(conditions, attributes)))
+      end
+
+      # Return a mapper for iterating over the relation ordered by *order
+      #
+      # @example
+      #
+      #   mapper = DataMapper[Person]
+      #   mapper.one(:name => 'John')
+      #
+      # @param [Hash] conditions
+      #   the options to restrict the relation
+      #
+      # @raise RuntimeError
+      #   if more than one domain object was found
+      #
+      # @return [Object]
+      #   a domain object
+      #
+      # @api public
+      def one(conditions = {})
+        results = find(conditions).to_a
+
+        if results.size == 1
+          results.first
+        else
+          # TODO: add custom error class
+          raise "#{self}#one returned more than one result"
+        end
+      end
+
+      # Return a mapper for iterating over a restricted set of domain objects
+      #
+      # @example
+      #
+      #   DataMapper[Person].restrict { |r| r.name.eq('John') }.each do |person|
+      #     puts person.name
+      #   end
+      #
+      # @param [Proc] &block
+      #   the block to restrict the relation with
+      #
+      # @return [Relation::Mapper]
+      #
+      # @api public
+      def restrict(&block)
+        new(relation.restrict(&block))
       end
 
       # Return a mapper for iterating over the relation ordered by *order
@@ -349,7 +367,36 @@ module DataMapper
       def order(*names)
         order_attributes = names.map { |attribute| attributes.field_name(attribute) }
         order_attributes.concat(attributes.fields).uniq!
-        self.class.new(relation.order(*order_attributes), attributes)
+        new(relation.order(*order_attributes))
+      end
+
+      # Return a mapper for iterating over a sorted set of domain objects
+      #
+      # @see Veritas::Relation#sort_by
+      #
+      # @example with directions
+      #
+      #   DataMapper[Person].sort_by(:name).each do |person|
+      #     puts person.name
+      #   end
+      #
+      # @example with a block
+      #
+      #   mappers[Person].sort_by { |r| [ r.name.desc ] }.each do |person|
+      #     puts person.name
+      #   end
+      #
+      # @param [(Symbol)] *args
+      #   the sort directions
+      #
+      # @param [Proc] &block
+      #   the block to evaluate for the sort directions
+      #
+      # @return [Relation::Mapper]
+      #
+      # @api public
+      def sort_by(*args, &block)
+        new(relation.sort_by(*args, &block))
       end
 
       # Set limit for the relation
@@ -364,7 +411,7 @@ module DataMapper
       #
       # @api public
       def limit(count)
-        self.class.new(relation.take(count), attributes)
+        new(relation.take(count))
       end
 
       # Set offset for the relation
@@ -379,35 +426,59 @@ module DataMapper
       #
       # @api public
       def offset(num)
-        self.class.new(relation.skip(num), attributes)
+        new(relation.skip(num))
       end
 
-      # Return a mapper for iterating over the relation ordered by *order
+      # Return a mapper for iterating over domain objects with renamed attributes
       #
       # @example
       #
-      #   mapper = DataMapper[Person]
-      #   mapper.one(:name => 'John')
+      #   DataMapper[Person].rename(:name => :nickname).each do |person|
+      #     puts person.nickname
+      #   end
       #
-      # @param [Hash] options
-      #   the options to restrict the relation
+      # @param [Hash] aliases
+      #   the old and new attribute names as alias pairs
       #
-      # @raise RuntimeError
-      #   if more than one domain object was found
-      #
-      # @return [Object]
-      #   a domain object
+      # @return [Relation::Mapper]
       #
       # @api public
-      def one(options = {})
-        results = find(options).to_a
+      def rename(aliases)
+        new(relation.rename(aliases))
+      end
 
-        if results.size == 1
-          results.first
-        else
-          # TODO: add custom error class
-          raise "#{self}#one returned more than one result"
-        end
+      # Return a mapper for iterating over the result of joining other with self
+      #
+      # TODO investigate if the following example works
+      #
+      # @example
+      #
+      #   DataMapper[Person].join(DataMapper[Task]).each do |person|
+      #     puts person.tasks.size
+      #   end
+      #
+      # @param [Relation::Mapper] other
+      #   the other mapper to join with self
+      #
+      # @return [Relation::Mapper]
+      #
+      # @api public
+      def join(other)
+        new(relation.join(other.relation))
+      end
+
+      # Return a new instance with mapping that corresponds to aliases
+      #
+      # TODO find a better name
+      #
+      # @param [Graph::Node::Aliases, Hash] aliases
+      #   the aliases to use in the returned instance
+      #
+      # @return [Relation::Mapper]
+      #
+      # @api private
+      def remap(aliases)
+        self.class.new(relation, attributes.remap(aliases))
       end
 
       # Return a mapper for iterating over domain objects with loaded relationships
@@ -428,91 +499,6 @@ module DataMapper
       # @api public
       def include(name)
         environment.registry[model, relationships[name]]
-      end
-
-      # Return a mapper for iterating over a restricted set of domain objects
-      #
-      # @example
-      #
-      #   DataMapper[Person].restrict { |r| r.name.eq('John') }.each do |person|
-      #     puts person.name
-      #   end
-      #
-      # @param [Proc] &block
-      #   the block to restrict the relation with
-      #
-      # @return [Relation::Mapper]
-      #
-      # @api public
-      def restrict(&block)
-        self.class.new(relation.restrict(&block), attributes)
-      end
-
-      # Return a mapper for iterating over a sorted set of domain objects
-      #
-      # @see Veritas::Relation#sort_by
-      #
-      # @example with directions
-      #
-      #   DataMapper[Person].sort_by(:name).each do |person|
-      #     puts person.name
-      #   end
-      #
-      # @example with a block
-      #
-      #   DataMapper[Person].sort_by { |r| [ r.name.desc ] }.each do |person|
-      #     puts person.name
-      #   end
-      #
-      # @param [(Symbol)] *args
-      #   the sort directions
-      #
-      # @param [Proc] &block
-      #   the block to evaluate for the sort directions
-      #
-      # @return [Relation::Mapper]
-      #
-      # @api public
-      def sort_by(*args, &block)
-        self.class.new(relation.sort_by(*args, &block), attributes)
-      end
-
-      # Return a mapper for iterating over domain objects with renamed attributes
-      #
-      # @example
-      #
-      #   DataMapper[Person].rename(:name => :nickname).each do |person|
-      #     puts person.nickname
-      #   end
-      #
-      # @param [Hash] aliases
-      #   the old and new attribute names as alias pairs
-      #
-      # @return [Relation::Mapper]
-      #
-      # @api public
-      def rename(aliases)
-        self.class.new(relation.rename(aliases), attributes)
-      end
-
-      # Return a mapper for iterating over the result of joining other with self
-      #
-      # TODO investigate if the following example works
-      #
-      # @example
-      #
-      #   DataMapper[Person].join(DataMapper[Task]).each do |person|
-      #     puts person.tasks.size
-      #   end
-      #
-      # @param [Relation::Mapper] other
-      #   the other mapper to join with self
-      #
-      # @return [Relation::Mapper]
-      #
-      # @api public
-      def join(other)
-        self.class.new(relation.join(other.relation), attributes)
       end
 
       # FIXME: add support for composite keys
@@ -537,6 +523,31 @@ module DataMapper
         key_value = object.public_send(key_name)
         relation.delete(key_name => key_value)
         object
+      end
+
+      # The mapper's human readable representation
+      #
+      # @example
+      #
+      #   mapper = DataMapper[Person]
+      #   puts mapper.inspect
+      #
+      # @return [String]
+      #
+      # @api public
+      def inspect
+        "#<#{self.class.name} @model=#{model.name} @relation_name=#{relation_name} @repository=#{self.class.repository}>"
+      end
+
+      private
+
+      # Return a new mapper instance
+      #
+      # @param [Graph::Node]
+      #
+      # @api private
+      def new(relation)
+        self.class.new(relation, attributes)
       end
 
     end # class Mapper
