@@ -573,8 +573,8 @@ module DataMapper
       # @param [Graph::Node]
       #
       # @api private
-      def new(relation, attributes = nil)
-        self.class.new(relation, attributes || self.attributes)
+      def new(relation, attributes = self.attributes)
+        self.class.new(relation, attributes)
       end
 
     end # class Mapper
