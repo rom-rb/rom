@@ -28,5 +28,6 @@ describe "Inserting new objects with ARel" do
     user.age = 21
 
     expect(mapper.update(user, :age)).to be(1)
+    expect(mapper.first.age).to be(21)
   end
 end
