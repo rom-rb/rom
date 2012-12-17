@@ -110,12 +110,22 @@ module DataMapper
         # @api public
         def insert(tuple)
           binds = tuple.to_a.map { |a| [ relation[a.first], a.last ] }
-          im    = relation.create_insert
+          stmt  = relation.create_insert
 
-          im.into(relation)
-          im.insert(binds)
+          stmt.into(relation)
+          stmt.insert(binds)
 
-          connection.insert(im, 'SQL')
+          connection.insert(stmt, 'SQL')
+        end
+
+        def update(conditions, tuple)
+          binds = tuple.to_a.map { |a| [ relation[a.first], a.last ] }
+
+          stmt = with_restriction(conditions) { |restriction|
+            restriction.compile_update(binds)
+          }
+
+          connection.update(stmt, 'SQL')
         end
 
         # Deletes a row matching given criteria

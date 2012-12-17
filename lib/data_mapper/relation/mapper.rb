@@ -517,6 +517,33 @@ module DataMapper
 
       # FIXME: add support for composite keys
       #
+      # Persist changes made to a given domain object
+      #
+      # @example
+      #
+      #   mapper = mappers[User]
+      #
+      #   user = mapper.find(:id => 1)
+      #   user.age = 21
+      #
+      #   mapper.update(user, :age)
+      #
+      # @param [Object] domain object to be updated
+      # @param [Array<Symbol>] names of attributes for the update
+      #
+      # @return [Integer] number of affected "rows"
+      #
+      # @api public
+      def update(object, *names)
+        key_name  = attributes.key[0].name
+        key_value = object.public_send(key_name)
+        tuple     = dump(object)
+        fields    = names.map { |name| attributes[name].field }
+        relation.update({ key_name => key_value }, tuple.reject { |k, _| !fields.include?(k) })
+      end
+
+      # FIXME: add support for composite keys
+      #
       # @api public
       def delete(object)
         key_name  = attributes.key[0].name
