@@ -1,5 +1,3 @@
-require 'veritas'
-
 module DataMapper
   class Engine
     module Veritas
