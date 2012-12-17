@@ -478,7 +478,7 @@ module DataMapper
       #
       # @api private
       def remap(aliases)
-        self.class.new(relation, attributes.remap(aliases))
+        new(relation, attributes.remap(aliases))
       end
 
       # Return a mapper for iterating over domain objects with loaded relationships

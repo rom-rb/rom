@@ -127,6 +127,12 @@ module DataMapper
           @relation.delete(key)
         end
 
+        private
+
+        def new(*args)
+          self.class.new(*args)
+        end
+
       end # class Node
 
     end # class Graph

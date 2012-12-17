@@ -31,17 +31,17 @@ module DataMapper
 
         # @api public
         def restrict(query, &block)
-          self.class.new(name, gateway.restrict(query.to_h, &block), aliases)
+          new(name, gateway.restrict(query.to_h, &block), aliases)
         end
 
         # @api public
         def take(amount)
-          self.class.new(name, gateway.take(amount), aliases)
+          new(name, gateway.take(amount), aliases)
         end
 
         # @api public
         def skip(offset)
-          self.class.new(name, gateway.skip(offset), aliases)
+          new(name, gateway.skip(offset), aliases)
         end
 
         # @api public
