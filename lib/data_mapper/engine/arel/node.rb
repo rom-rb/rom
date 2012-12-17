@@ -8,7 +8,7 @@ module DataMapper
         include Enumerable
 
         def self.aliasing_strategy
-          Relation::Graph::Node::Aliases::Strategy::InnerJoin
+          Relation::Aliases::Strategy::InnerJoin
         end
 
         private_class_method :aliasing_strategy

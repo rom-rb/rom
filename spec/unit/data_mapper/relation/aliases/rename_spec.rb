@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Relation::Graph::Node::Aliases, '#rename' do
+describe Relation::Aliases, '#rename' do
   subject { object.rename(aliases) }
 
   let(:object) { described_class.new(songs_index) }

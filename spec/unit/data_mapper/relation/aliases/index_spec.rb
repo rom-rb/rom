@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Relation::Graph::Node::Aliases, '#index' do
+describe Relation::Aliases, '#index' do
   subject { object.send(:index) }
 
   context "when using Aliases::Strategy::NaturalJoin" do

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Relation::Graph::Node::Aliases, '#each' do
+describe Relation::Aliases, '#each' do
   subject { object.each { |field, aliased_field| yields[field] = aliased_field } }
 
   let(:yields) { {} }
@@ -188,7 +188,7 @@ describe Relation::Graph::Node::Aliases, '#each' do
   end
 end
 
-describe DataMapper::Relation::Graph::Node::Aliases do
+describe DataMapper::Relation::Aliases do
   subject { object.new(index) }
 
   let(:object) { described_class }
