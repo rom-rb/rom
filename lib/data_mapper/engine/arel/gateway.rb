@@ -68,13 +68,6 @@ module DataMapper
           self
         end
 
-        # Returns new gateway instance
-        #
-        # @api private
-        def new(relation, header = @header)
-          self.class.new(name, relation, header)
-        end
-
         # Returns restricted relation
         #
         # @api public
@@ -195,6 +188,13 @@ module DataMapper
             restriction = restriction.where(relation[key].eq(value))
           end
           yield(restriction)
+        end
+
+        # Returns new gateway instance
+        #
+        # @api private
+        def new(relation, header = @header)
+          self.class.new(name, relation, header)
         end
 
       end # class Gateway
