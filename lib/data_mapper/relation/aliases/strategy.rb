@@ -24,10 +24,10 @@ module DataMapper
         private :joined_entries
 
         def join_key_entries(join_definition)
-          renamed_entries { |key, name, renamed|
+          with_entries { |key, name, new_entries|
             join_definition.each do |left_key, right_key|
               if name.field == left_key
-                renamed[key] = aliased_field(right_key, name.prefix)
+                new_entries[key] = aliased_field(right_key, name.prefix)
               end
             end
           }
@@ -45,9 +45,9 @@ module DataMapper
           index.field?(name.field)
         end
 
-        def renamed_entries
-          entries.each_with_object({}) { |(key, name), renamed|
-            yield(key, name, renamed)
+        def with_entries
+          entries.each_with_object({}) { |(key, name), new_entries|
+            yield(key, name, new_entries)
           }
         end
 
