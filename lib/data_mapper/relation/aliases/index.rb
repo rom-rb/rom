@@ -26,9 +26,9 @@ module DataMapper
 
         def aliases(other)
           entries.each_with_object({}) { |(key, name), aliases|
-            other_name = other[key]
-            if name.field != other_name.name
-              aliases[name.field] = other_name.name
+            other_name = other[key].name
+            if name.field != other_name
+              aliases[name.field] = other_name
             end
           }
         end
