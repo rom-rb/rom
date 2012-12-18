@@ -85,6 +85,11 @@ module DataMapper
           }
         end
 
+        # @api public
+        def order(*fields)
+          new(relation.order(*fields))
+        end
+
         # Apply limit to the relation
         #
         # @param [Integer]

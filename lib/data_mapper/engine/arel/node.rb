@@ -33,6 +33,11 @@ module DataMapper
         end
 
         # @api public
+        def order(*fields)
+          new(name, relation.order(*fields.map { |field| relation[field] }))
+        end
+
+        # @api public
         def take(amount)
           new(name, relation.take(amount), aliases)
         end

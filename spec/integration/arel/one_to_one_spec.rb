@@ -58,8 +58,6 @@ describe "Using Arel engine" do
   end
 
   it 'loads associated object' do
-    pending
-
     mapper  = DM_ENV[user_model].include(:address)
     user    = mapper.all.last
     address = user.address

@@ -23,18 +23,18 @@ describe "Using Arel engine" do
     }
   }
 
-  it "returns all users" do
-    users = DM_ENV[user_model].all
+  it "returns all users ordered by name" do
+    users = DM_ENV[user_model].order(:name).all
 
     users.should have(3).items
 
     user1, user2, user3 = users
 
-    user1.name.should eql('John')
-    user1.age.should be(18)
+    user1.name.should eql('Jane')
+    user1.age.should be(21)
 
-    user2.name.should eql('Jane')
-    user2.age.should be(21)
+    user2.name.should eql('John')
+    user2.age.should be(18)
 
     user3.name.should eql('Piotr')
     user3.age.should be(29)
