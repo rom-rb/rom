@@ -2,33 +2,33 @@ module DataMapper
   module Relation
     class Mapper < DataMapper::Mapper
 
-      # Builds a {Relation::Mapper} from a {Relation::Graph::Connector}
+      # Builds a {Mapper} from a {Graph::Connector}
       #
       # @api private
       class Builder
 
         # Builds a mapper based on a connector and source mapper class
         #
-        # @param [Relation::Graph::Connector] connector
+        # @param [Graph::Connector] connector
         #   the connector used to build the mapper
         #
-        # @return [Relation::Mapper]
+        # @return [Mapper]
         #
         # @api private
         def self.call(connector)
           new(connector).mapper
         end
 
-        # The mapper built from the instance's {Relation::Graph::Connector}
+        # The mapper built from the instance's {Graph::Connector}
         #
-        # @return [Relation::Mapper]
+        # @return [Mapper]
         #
         # @api private
         attr_reader :mapper
 
         # Initialize a new instance
         #
-        # @param [Relation::Graph::Connector] connector
+        # @param [Graph::Connector] connector
         #   the connector used to build the mapper
         #
         # @return [undefined]
@@ -47,7 +47,6 @@ module DataMapper
 
         private
 
-        # @api private
         def build
           klass = Relation::Mapper.from(@source_mapper, mapper_name)
 
@@ -62,7 +61,6 @@ module DataMapper
           klass.new(@connector.node)
         end
 
-        # @api private
         def mapper_name
           "#{@source_mapper.name}_X_#{connector_name}_Mapper"
         end
