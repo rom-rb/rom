@@ -23,7 +23,7 @@ module DataMapper
 
         private :joined_entries
 
-        def renamed_join_key_entries(join_definition)
+        def join_key_entries(join_definition)
           entries.each_with_object({}) { |(key, name), renamed|
             join_definition.each do |left_key, right_key|
               if name.field == left_key

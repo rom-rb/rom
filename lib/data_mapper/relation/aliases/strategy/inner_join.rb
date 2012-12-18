@@ -9,11 +9,11 @@ module DataMapper
 
           def joined_entries(index, join_definition)
             entries.dup.
-              update(renamed_clashing_entries(index, join_definition)).
+              update(clashing_entries(index, join_definition)).
               update(index.entries)
           end
 
-          def renamed_clashing_entries(index, join_definition)
+          def clashing_entries(index, join_definition)
             entries.each_with_object({}) { |(key, name), renamed|
               if clash?(index, name)
                 renamed[key] = aliased_field(key.field, key.prefix, true)
