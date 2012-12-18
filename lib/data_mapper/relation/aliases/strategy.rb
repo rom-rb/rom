@@ -41,7 +41,15 @@ module DataMapper
           @index.class.new(*args)
         end
 
-        def clash?(index, name)
+        def clashing_entries(index, join_definition)
+          with_entries { |key, name, new_entries|
+            if clashing?(name, index, join_definition)
+              new_entries[key] = aliased_field(key.field, key.prefix, true)
+            end
+          }
+        end
+
+        def clashing?(name, index, _join_definition)
           index.field?(name.field)
         end
 

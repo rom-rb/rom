@@ -14,12 +14,8 @@ module DataMapper
               update(index.entries)
           end
 
-          def clashing_entries(index, join_definition)
-            with_entries { |key, name, new_entries|
-              if clash?(index, name) && !join_definition.key?(name.field)
-                new_entries[key] = aliased_field(key.field, key.prefix, true)
-              end
-            }
+          def clashing?(name, index, join_definition)
+            super && !join_definition.key?(name.field)
           end
 
         end # class NaturalJoin

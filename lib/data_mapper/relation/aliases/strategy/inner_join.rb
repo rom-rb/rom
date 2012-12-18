@@ -13,14 +13,6 @@ module DataMapper
               update(index.entries)
           end
 
-          def clashing_entries(index, join_definition)
-            with_entries { |key, name, new_entries|
-              if clash?(index, name)
-                new_entries[key] = aliased_field(key.field, key.prefix, true)
-              end
-            }
-          end
-
         end # class InnerJoin
 
       end # class Strategy
