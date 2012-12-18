@@ -13,12 +13,10 @@ module DataMapper
 
         private_class_method :aliasing_strategy
 
-        alias_method :gateway, :relation
-
         # @api public
         def each(&block)
           return to_enum unless block_given?
-          gateway.each do |row|
+          relation.each do |row|
             yield(Hash[row.map { |key, value| [ key.to_sym, value ] }])
           end
           self
@@ -26,22 +24,22 @@ module DataMapper
 
         # @api public
         def [](name)
-          gateway.relation[name]
+          relation[name]
         end
 
         # @api public
         def restrict(query, &block)
-          new(name, gateway.restrict(query.to_h, &block), aliases)
+          new(name, relation.restrict(query.to_h, &block), aliases)
         end
 
         # @api public
         def take(amount)
-          new(name, gateway.take(amount), aliases)
+          new(name, relation.take(amount), aliases)
         end
 
         # @api public
         def skip(offset)
-          new(name, gateway.skip(offset), aliases)
+          new(name, relation.skip(offset), aliases)
         end
 
         # @api public

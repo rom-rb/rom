@@ -11,8 +11,8 @@ module DataMapper
           @target_aliases = target_node.aliases
           @source_aliases = source_node.aliases.join(@target_aliases, join_definition)
 
-          @source_relation = source_node.gateway.relation
-          @target_relation = target_node.gateway.relation
+          @source_relation = source_node.relation
+          @target_relation = target_node.relation
 
           @aliases = @source_aliases
         end
@@ -29,9 +29,9 @@ module DataMapper
         private
 
         def join_relation(operation)
-          relation = @source_relation.clone.join(@target_relation).on(left_key.eq(right_key)).order(left_key)
+          relation = @source_relation.join(@target_relation, left_key.eq(right_key))
           relation = operation.call(relation, @target_relation) if operation
-          @source_node.gateway.new(relation, header)
+          relation.project(header)
         end
 
         def left_key
