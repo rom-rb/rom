@@ -19,9 +19,9 @@ module DataMapper
 
         attr_reader :entries
 
-        abstract_method :joined_entries
-
-        private :joined_entries
+        def joined_entries(*)
+          entries.dup
+        end
 
         def join_key_entries(join_definition)
           with_entries { |key, name, new_entries|
