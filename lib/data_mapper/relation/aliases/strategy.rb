@@ -24,7 +24,7 @@ module DataMapper
         private :joined_entries
 
         def join_key_entries(join_definition)
-          entries.each_with_object({}) { |(key, name), renamed|
+          renamed_entries { |key, name, renamed|
             join_definition.each do |left_key, right_key|
               if name.field == left_key
                 renamed[key] = aliased_field(right_key, name.prefix)
@@ -43,6 +43,12 @@ module DataMapper
 
         def clash?(index, name)
           index.field?(name.field)
+        end
+
+        def renamed_entries
+          entries.each_with_object({}) { |(key, name), renamed|
+            yield(key, name, renamed)
+          }
         end
 
       end # class Strategy

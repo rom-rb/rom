@@ -15,7 +15,7 @@ module DataMapper
           end
 
           def clashing_entries(index, join_definition)
-            entries.each_with_object({}) { |(key, name), renamed|
+            renamed_entries { |key, name, renamed|
               if clash?(index, name) && !join_definition.key?(name.field)
                 renamed[key] = aliased_field(key.field, key.prefix, true)
               end
