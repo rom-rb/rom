@@ -35,12 +35,12 @@ module DataMapper
         #
         # @api private
         def initialize(connector)
-          @connector     = connector
-          @aliases       = @connector.target_aliases
-          @target_model  = @connector.target_model
-          @source_mapper = @connector.source_mapper.class
-          @name          = @connector.relationship.name
-          @collection    = @connector.collection_target?
+          @connector         = connector
+          @source_mapper     = @connector.source_mapper.class
+          @target_aliases    = @connector.target_aliases
+          @target_model      = @connector.target_model
+          @relationship_name = @connector.relationship.name
+          @collection        = @connector.collection_target?
 
           @mapper = build
         end
@@ -51,7 +51,7 @@ module DataMapper
         def build
           klass = Relation::Mapper.from(@source_mapper, mapper_name)
 
-          klass.map(@name, @target_model, target_mapper_options)
+          klass.map(@relationship_name, @target_model, target_mapper_options)
 
           if @collection
             klass.class_eval { include(Relationship::Iterator) }
@@ -64,14 +64,18 @@ module DataMapper
 
         # @api private
         def mapper_name
-          "#{@source_mapper.name}_X_#{Inflector.camelize(@connector.name)}_Mapper"
+          "#{@source_mapper.name}_X_#{connector_name}_Mapper"
+        end
+
+        def connector_name
+          Inflector.camelize(@connector.name)
         end
 
         def target_mapper_options
           {
             :association => true,
             :collection  => @collection,
-            :aliases     => @aliases
+            :aliases     => @target_aliases
           }
         end
 
