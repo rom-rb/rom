@@ -7,10 +7,18 @@ module DataMapper
 
           private
 
-          def index_entries(other_index, join_definition)
-            index.entries.dup.
-              update(clashing_entries(other_index, join_definition, false)).
+          def joined_entries(other_index, join_definition)
+            entries.dup.
+              update(renamed_clashing_entries(other_index, join_definition)).
               update(other_index.entries)
+          end
+
+          def renamed_clashing_entries(other_index, join_definition)
+            entries.each_with_object({}) { |(key, name), renamed|
+              if other_index.field?(name.field)
+                renamed[key] = aliased_field(key.field, key.prefix, true)
+              end
+            }
           end
 
         end # class InnerJoin
