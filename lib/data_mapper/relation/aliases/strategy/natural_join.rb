@@ -7,19 +7,17 @@ module DataMapper
 
           private
 
-          def joined_entries(other_index, join_definition)
+          def joined_entries(index, join_definition)
             entries.dup.
               update(renamed_join_key_entries(join_definition)).
-              update(renamed_clashing_entries(other_index, join_definition)).
-              update(other_index.entries)
+              update(renamed_clashing_entries(index, join_definition)).
+              update(index.entries)
           end
 
-          def renamed_clashing_entries(other_index, join_definition)
+          def renamed_clashing_entries(index, join_definition)
             entries.each_with_object({}) { |(key, name), renamed|
-              if other_index.field?(name.field)
-                unless join_definition.key?(name.field)
-                  renamed[key] = aliased_field(key.field, key.prefix, true)
-                end
+              if clash?(index, name) && !join_definition.key?(name.field)
+                renamed[key] = aliased_field(key.field, key.prefix, true)
               end
             }
           end

@@ -15,14 +15,13 @@ module DataMapper
           new_index(joined_entries(index, join_definition.to_hash), self.class)
         end
 
+        private
+
+        attr_reader :entries
+
         abstract_method :joined_entries
 
         private :joined_entries
-
-        private
-
-        attr_reader :index
-        attr_reader :entries
 
         def renamed_join_key_entries(join_definition)
           entries.each_with_object({}) { |(key, name), renamed|
@@ -39,7 +38,11 @@ module DataMapper
         end
 
         def new_index(*args)
-          index.class.new(*args)
+          @index.class.new(*args)
+        end
+
+        def clash?(index, name)
+          index.field?(name.field)
         end
 
       end # class Strategy
