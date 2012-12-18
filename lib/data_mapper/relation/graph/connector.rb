@@ -68,15 +68,6 @@ module DataMapper
           @relations[source_mapper.relation_name]
         end
 
-        # Returns source model of the relationship
-        #
-        # @return [Class]
-        #
-        # @api private
-        def source_model
-          relationship.source_model
-        end
-
         # Returns target model of the relationship
         #
         # @return [Class]
@@ -113,6 +104,21 @@ module DataMapper
           registry[source_model]
         end
 
+        private
+
+        def connector_name(node_name)
+          :"#{node_name}__#{@relationship.name}"
+        end
+
+        # Returns source model of the relationship
+        #
+        # @return [Class]
+        #
+        # @api private
+        def source_model
+          relationship.source_model
+        end
+
         # Returns target mapper instance
         #
         # @return [Relation::Mapper]
@@ -120,12 +126,6 @@ module DataMapper
         # @api private
         def target_mapper
           registry[target_model]
-        end
-
-        private
-
-        def connector_name(node_name)
-          :"#{node_name}__#{@relationship.name}"
         end
 
       end # class Connector

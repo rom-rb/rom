@@ -37,10 +37,8 @@ module DataMapper
         def initialize(connector)
           @connector     = connector
           @aliases       = @connector.target_aliases
-          @source_model  = @connector.source_model
           @target_model  = @connector.target_model
           @source_mapper = @connector.source_mapper.class
-          @target_mapper = @connector.target_mapper.class
           @name          = @connector.relationship.name
           @collection    = @connector.collection_target?
 
