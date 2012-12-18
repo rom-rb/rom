@@ -10,7 +10,7 @@ module DataMapper
           def joined_entries(index, join_definition)
             super.
               update(clashing_entries(index, join_definition)).
-              update(index.entries)
+              update(entries)
           end
 
         end # class InnerJoin

@@ -75,8 +75,8 @@ describe Relation::Mapper::Builder, '#mapper' do
 
     it { should be_kind_of(Relation::Mapper) }
 
-    it "remaps source model attributes" do
-      subject.attributes[:id].field.should eql(:song_id)
+    it "does not remap source model attributes" do
+      subject.attributes[:id].field.should eql(:id)
       subject.attributes[:title].field.should eql(:title)
     end
 
@@ -89,7 +89,7 @@ describe Relation::Mapper::Builder, '#mapper' do
     it "remaps target model attributes" do
       target_mapper = subject.attributes[:song_tags].mapper
 
-      target_mapper.attributes[:song_id].field.should eql(:song_id)
+      target_mapper.attributes[:song_id].field.should eql(:id)
       target_mapper.attributes[:tag_id].field.should eql(:tag_id)
     end
 
@@ -106,7 +106,7 @@ describe Relation::Mapper::Builder, '#mapper' do
     it "remaps target model attributes using connector aliases" do
       target_mapper = subject.attributes[:tags].mapper
 
-      target_mapper.attributes[:id].field.should eql(:id)
+      target_mapper.attributes[:id].field.should eql(:tag_id)
       target_mapper.attributes[:name].field.should eql(:name)
     end
   end

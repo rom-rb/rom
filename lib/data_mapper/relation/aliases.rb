@@ -25,7 +25,7 @@ module DataMapper
 
       def join(other, join_definition)
         joined_index = index.join(other.index, join_definition)
-        new(joined_index, index.aliases(joined_index))
+        new(joined_index, other.index.aliases(joined_index))
       end
 
       def rename(aliases)

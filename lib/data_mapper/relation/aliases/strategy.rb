@@ -19,34 +19,34 @@ module DataMapper
 
         attr_reader :entries
 
-        def joined_entries(*)
-          entries.dup
+        def joined_entries(index, _join_definition)
+          index.entries.dup
         end
 
-        def join_key_entries(join_definition)
-          with_entries { |key, name, new_entries|
+        def join_key_entries(index, join_definition)
+          with_index_entries(index) { |key, name, new_entries|
             join_definition.each do |left_key, right_key|
-              if name.field == left_key
-                new_entries[key] = aliased_field(right_key, name.prefix)
+              if name.field == right_key
+                new_entries[key] = aliased_field(left_key, name.prefix)
               end
             end
           }
         end
 
         def clashing_entries(index, join_definition)
-          with_entries { |key, name, new_entries|
-            if clashing?(name, index, join_definition)
+          with_index_entries(index) { |key, name, new_entries|
+            if clashing?(name, join_definition)
               new_entries[key] = aliased_field(key.field, key.prefix, true)
             end
           }
         end
 
-        def clashing?(name, index, _join_definition)
-          index.field?(name.field)
+        def clashing?(name, _join_definition)
+          @index.field?(name.field)
         end
 
-        def with_entries
-          entries.each_with_object({}) { |(key, name), new_entries|
+        def with_index_entries(index)
+          index.entries.each_with_object({}) { |(key, name), new_entries|
             yield(key, name, new_entries)
           }
         end

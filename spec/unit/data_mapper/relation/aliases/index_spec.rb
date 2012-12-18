@@ -48,10 +48,10 @@ describe Relation::Aliases, '#index' do
 
         it "should contain field mappings for all attributes" do
           subject.should eql(described_class::Index.new({
-            attribute_alias(:id,      :songs)     => attribute_alias(:song_id, :songs),
-            attribute_alias(:title,   :songs)     => attribute_alias(:title,   :songs),
-            attribute_alias(:song_id, :song_tags) => attribute_alias(:song_id, :song_tags),
-            attribute_alias(:tag_id,  :song_tags) => attribute_alias(:tag_id,  :song_tags),
+            attribute_alias(:id,      :songs)     => attribute_alias(:id,     :songs),
+            attribute_alias(:title,   :songs)     => attribute_alias(:title,  :songs),
+            attribute_alias(:song_id, :song_tags) => attribute_alias(:id,     :song_tags),
+            attribute_alias(:tag_id,  :song_tags) => attribute_alias(:tag_id, :song_tags),
           }, strategy))
         end
       end
@@ -61,7 +61,7 @@ describe Relation::Aliases, '#index' do
         let(:object) { songs_X_song_tags.join(song_comments, other_join_definition) }
 
         let(:other_join_definition) {{
-          :song_id => :song_id
+          :id => :song_id
         }}
 
         let(:songs_X_song_tags) { songs.join(song_tags, join_definition) }
@@ -86,11 +86,11 @@ describe Relation::Aliases, '#index' do
 
         it "should contain field mappings for all attributes" do
           subject.should eql(described_class::Index.new({
-            attribute_alias(:id,         :songs)         => attribute_alias(:song_id,    :songs),
+            attribute_alias(:id,         :songs)         => attribute_alias(:id,         :songs),
             attribute_alias(:title,      :songs)         => attribute_alias(:title,      :songs),
-            attribute_alias(:song_id,    :song_tags)     => attribute_alias(:song_id,    :song_tags),
+            attribute_alias(:song_id,    :song_tags)     => attribute_alias(:id,         :song_tags),
             attribute_alias(:tag_id,     :song_tags)     => attribute_alias(:tag_id,     :song_tags),
-            attribute_alias(:song_id,    :song_comments) => attribute_alias(:song_id,    :song_comments),
+            attribute_alias(:song_id,    :song_comments) => attribute_alias(:id,         :song_comments),
             attribute_alias(:comment_id, :song_comments) => attribute_alias(:comment_id, :song_comments),
           }, strategy))
         end
@@ -113,11 +113,11 @@ describe Relation::Aliases, '#index' do
 
           it "should contain field mappings for all attributes" do
             subject.should eql(described_class::Index.new({
-              attribute_alias(:id,      :songs)     => attribute_alias(:song_id, :songs),
-              attribute_alias(:title,   :songs)     => attribute_alias(:title,   :songs),
-              attribute_alias(:id,      :song_tags) => attribute_alias(:id,      :song_tags),
-              attribute_alias(:song_id, :song_tags) => attribute_alias(:song_id, :song_tags),
-              attribute_alias(:tag_id,  :song_tags) => attribute_alias(:tag_id,  :song_tags),
+              attribute_alias(:id,      :songs)     => attribute_alias(:id,     :songs),
+              attribute_alias(:title,   :songs)     => attribute_alias(:title,  :songs),
+              attribute_alias(:id,      :song_tags) => attribute_alias(:id,     :song_tags, true),
+              attribute_alias(:song_id, :song_tags) => attribute_alias(:id,     :song_tags),
+              attribute_alias(:tag_id,  :song_tags) => attribute_alias(:tag_id, :song_tags),
             }, strategy))
           end
         end
@@ -139,12 +139,12 @@ describe Relation::Aliases, '#index' do
 
             it "should contain field mappings for all attributes" do
               subject.should eql(described_class::Index.new({
-                attribute_alias(:id,         :songs)     => attribute_alias(:song_id,    :songs),
-                attribute_alias(:title,      :songs)     => attribute_alias(:title,      :songs),
-                attribute_alias(:created_at, :songs)     => attribute_alias(:created_at, :songs, true),
-                attribute_alias(:song_id,    :song_tags) => attribute_alias(:song_id,    :song_tags),
-                attribute_alias(:tag_id,     :song_tags) => attribute_alias(:tag_id,     :song_tags),
-                attribute_alias(:created_at, :song_tags) => attribute_alias(:created_at, :song_tags),
+                attribute_alias(:id,         :songs)     => attribute_alias(:id,          :songs),
+                attribute_alias(:title,      :songs)     => attribute_alias(:title,       :songs),
+                attribute_alias(:created_at, :songs)     => attribute_alias(:created_at,  :songs),
+                attribute_alias(:song_id,    :song_tags) => attribute_alias(:id,          :song_tags),
+                attribute_alias(:tag_id,     :song_tags) => attribute_alias(:tag_id,      :song_tags),
+                attribute_alias(:created_at, :song_tags) => attribute_alias(:created_at,  :song_tags, true),
               }, strategy))
             end
           end
@@ -165,11 +165,11 @@ describe Relation::Aliases, '#index' do
 
             it "should contain field mappings for all attributes" do
               subject.should eql(described_class::Index.new({
-                attribute_alias(:id,      :songs)     => attribute_alias(:song_id, :songs),
+                attribute_alias(:id,      :songs)     => attribute_alias(:id,      :songs),
                 attribute_alias(:title,   :songs)     => attribute_alias(:title,   :songs),
-                attribute_alias(:song_id, :songs)     => attribute_alias(:song_id, :songs, true),
-                attribute_alias(:id,      :song_tags) => attribute_alias(:id,      :song_tags),
-                attribute_alias(:song_id, :song_tags) => attribute_alias(:song_id, :song_tags),
+                attribute_alias(:song_id, :songs)     => attribute_alias(:song_id, :songs),
+                attribute_alias(:id,      :song_tags) => attribute_alias(:id,      :song_tags, true),
+                attribute_alias(:song_id, :song_tags) => attribute_alias(:id,      :song_tags),
                 attribute_alias(:tag_id,  :song_tags) => attribute_alias(:tag_id,  :song_tags),
               }, strategy))
             end

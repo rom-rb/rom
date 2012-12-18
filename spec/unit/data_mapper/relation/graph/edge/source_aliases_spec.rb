@@ -10,8 +10,8 @@ describe Relation::Graph::Edge, '#source_aliases' do
   let(:join_definition) { mock('join_definition') }
 
   let(:left)            { mock('users', :name => source_name, :aliases => source_aliases) }
-  let(:source_aliases)  { mock('source_aliases') }
-  let(:right)           { mock('orders') }
+  let(:source_aliases)  { mock('source_aliases', :join => mock) }
+  let(:right)           { mock('orders', :aliases => mock) }
   let(:source_name)     { mock('source_name') }
 
   it { should be(source_aliases) }

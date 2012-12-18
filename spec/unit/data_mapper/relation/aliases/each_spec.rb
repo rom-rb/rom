@@ -63,7 +63,7 @@ describe Relation::Aliases, '#each' do
           it 'yields correct aliases' do
             expect { subject }.to change { yields.dup }.
               from({}).
-              to(:id => :song_id)
+              to(:song_id => :id)
           end
         end
 
@@ -72,7 +72,7 @@ describe Relation::Aliases, '#each' do
           let(:object) { songs_X_song_tags.join(song_comments, other_join_definition) }
 
           let(:other_join_definition) {{
-            :song_id => :song_id
+            :id => :song_id
           }}
 
           let(:songs_X_song_tags) { songs.join(song_tags, join_definition) }
@@ -98,7 +98,9 @@ describe Relation::Aliases, '#each' do
           it_should_behave_like 'an #each method'
 
           it 'yields correct aliases' do
-            expect { subject }.to_not change { yields.dup }
+            expect { subject }.to change { yields.dup }.
+              from({}).
+              to(:song_id => :id)
           end
         end
 
@@ -122,7 +124,10 @@ describe Relation::Aliases, '#each' do
             it 'yields correct aliases' do
               expect { subject }.to change { yields.dup }.
                 from({}).
-                to(:id => :song_id)
+                to(
+                  :song_id => :id,
+                  :id      => :song_tags_id
+                )
             end
           end
 
@@ -147,8 +152,8 @@ describe Relation::Aliases, '#each' do
                 expect { subject }.to change { yields.dup }.
                   from({}).
                   to(
-                    :id         => :song_id,
-                    :created_at => :songs_created_at
+                    :song_id    => :id,
+                    :created_at => :song_tags_created_at
                   )
               end
             end
@@ -173,8 +178,8 @@ describe Relation::Aliases, '#each' do
                 expect { subject }.to change { yields.dup }.
                   from({}).
                   to(
-                    :id      => :song_id,
-                    :song_id => :songs_song_id
+                    :song_id => :id,
+                    :id      => :song_tags_id
                   )
               end
             end

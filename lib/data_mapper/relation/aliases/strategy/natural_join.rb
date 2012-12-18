@@ -9,13 +9,13 @@ module DataMapper
 
           def joined_entries(index, join_definition)
             super.
-              update(join_key_entries(join_definition)).
+              update(join_key_entries(index, join_definition)).
               update(clashing_entries(index, join_definition)).
-              update(index.entries)
+              update(entries)
           end
 
-          def clashing?(name, index, join_definition)
-            super && !join_definition.key?(name.field)
+          def clashing?(name, join_definition)
+            super && !join_definition.value?(name.field)
           end
 
         end # class NaturalJoin

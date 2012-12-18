@@ -35,6 +35,11 @@ module DataMapper
         # @api private
         attr_reader :relations
 
+        # Mapper registry
+        #
+        # @return [DataMapper::Mapper::Registry]
+        #
+        # @api private
         attr_reader :registry
 
         # Initializes new connector instance
@@ -81,22 +86,13 @@ module DataMapper
           relationship.target_model
         end
 
-        # Returns aliases for the source model
-        #
-        # @return [Node::Aliases]
-        #
-        # @api private
-        def source_aliases
-          @node.aliases
-        end
-
         # Returns aliases for the target model
         #
         # @return [Node::Aliases]
         #
         # @api private
         def target_aliases
-          relations[target_mapper.relation_name].aliases
+          @node.aliases
         end
 
         # Returns if the relationship has collection target
