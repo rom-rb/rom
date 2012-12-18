@@ -33,14 +33,6 @@ module DataMapper
           }
         end
 
-        def aliased_field(*args)
-          DataMapper::Mapper::Attribute.aliased_field(*args)
-        end
-
-        def new_index(*args)
-          @index.class.new(*args)
-        end
-
         def clashing_entries(index, join_definition)
           with_entries { |key, name, new_entries|
             if clashing?(name, index, join_definition)
@@ -57,6 +49,14 @@ module DataMapper
           entries.each_with_object({}) { |(key, name), new_entries|
             yield(key, name, new_entries)
           }
+        end
+
+        def aliased_field(*args)
+          DataMapper::Mapper::Attribute.aliased_field(*args)
+        end
+
+        def new_index(*args)
+          @index.class.new(*args)
         end
 
       end # class Strategy
