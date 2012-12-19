@@ -17,7 +17,10 @@ module DataMapper
         private
 
         def join_relation(operation)
-          relation = source_relation.join(target_relation, left_key.eq(right_key)).order(left_key)
+          relation = source_relation.
+            join(target_relation, left_key.eq(right_key)).
+            order(left_key)
+
           relation = operation.call(relation, target_relation) if operation
           relation.project(header)
         end
