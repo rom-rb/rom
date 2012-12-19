@@ -33,11 +33,13 @@ module DataMapper
         end
 
         def header
-          aliases.header.map { |attribute_alias|
-            Attribute.new(
-              "#{attribute_alias.prefix}.#{attribute_alias.field} AS #{attribute_alias.name}"
-            )
+          aliases.header.map { |attribute|
+            Attribute.new(projected_attribute(attribute))
           }
+        end
+
+        def projected_attribute(attribute)
+          "#{attribute.prefix}.#{attribute.field} AS #{attribute.name}"
         end
 
       end # class Edge
