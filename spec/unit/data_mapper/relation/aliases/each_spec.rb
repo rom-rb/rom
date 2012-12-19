@@ -125,7 +125,7 @@ describe Relation::Aliases, '#each' do
               end
             end
 
-            context "and one clashing attribute being part of the join attributes and the other not" do
+            context "and one clashing attribute is part of the join attributes and the other not" do
               let(:songs_entries) {{
                 attribute_alias(:id,         :songs) => attribute_alias(:id,         :songs),
                 attribute_alias(:title,      :songs) => attribute_alias(:title,      :songs),
