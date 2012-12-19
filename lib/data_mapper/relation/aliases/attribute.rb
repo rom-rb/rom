@@ -6,6 +6,20 @@ module DataMapper
 
         CACHE = {}
 
+        # Build and cache a new {Attribute} instance
+        #
+        # @param [#to_sym] field
+        #   the attribute's field name
+        #
+        # @param [#to_sym] prefix
+        #   the prefix to use for aliasing
+        #
+        # @param [Boolean] aliased
+        #   true if this attribute is aliased, false otherwise
+        #
+        # @return [Attribute]
+        #
+        # @api private
         def self.build(field, prefix, aliased = false)
           key = "#{field}-#{prefix}-#{aliased.inspect}"
           CACHE.fetch(key) {
@@ -13,10 +27,29 @@ module DataMapper
           }
         end
 
+        # Return this attribute's name
+        #
+        # @return [Symbol]
+        #
+        # @api private
         attr_reader :name
 
         private :field=, :prefix=, :aliased=
 
+        # Initialize a new instance
+        #
+        # @param [#to_sym] field
+        #   the attribute's field name
+        #
+        # @param [#to_sym] prefix
+        #   the prefix to use for aliasing
+        #
+        # @param [Boolean] aliased
+        #   true if this attribute is aliased, false otherwise
+        #
+        # @return [undefined
+        #
+        # @api private
         def initialize(field, prefix, aliased)
           super
           @name = aliased ? :"#{prefix}_#{field}" : field.to_sym
