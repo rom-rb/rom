@@ -1,24 +1,84 @@
 module DataMapper
 
   class Environment
+
+    # The engines registered with this instance
+    #
+    # @return [Hash]
+    #
+    # @api private
     attr_reader :engines
 
+    # The mappers built with this instance
+    #
+    # @return [Array<Mapper>]
+    #
+    # @api private
     attr_reader :mappers
 
+    # The mapper registry used by this instance
+    #
+    # @return [Mapper::Registry]
+    #
+    # @api private
     attr_reader :registry
 
+    # Initialize a new instance
+    #
+    # @param [Mapper::Registry, nil] registry
+    #   the mapper registry to use with this instance,
+    #   or a new instance in case nil was passed in.
+    #
+    # @return [undefined]
+    #
     # @api private
     def initialize(registry = nil)
       @engines = {}
       reset(registry)
     end
 
+    # Register a new engine to use with this instance
+    #
+    # @example
+    #
+    #   env = DataMapper::Environment.new
+    #   env.setup(:default, :uri => 'postgres://localhost/test')
+    #
+    # @param [#to_sym] name
+    #   the name to use for the engine
+    #
+    # @param [Hash] options
+    #   the options to use for instantiating the engine
+    #
+    # @return [self]
+    #
     # @api public
     def setup(name, options = {})
       engines[name.to_sym] = Engine.build(options)
       self
     end
 
+    # Return the mapper instance for the given model class
+    #
+    # @example
+    #
+    #   class User
+    #     include DataMapper::Model
+    #
+    #     attribute :id,   Integer
+    #     attribute :name, String
+    #   end
+    #
+    #   env = DataMapper::Environment.new
+    #   env.setup(:default, :uri => 'postgres://localhost/test')
+    #   env.build(User, :default)
+    #   env[User] # => the user mapper
+    #
+    # @param [Class] model
+    #   a domain model class
+    #
+    # @return [Mapper]
+    #
     # @api public
     def [](model)
       registry[model]
@@ -37,11 +97,13 @@ module DataMapper
     #     attribute :name, String
     #   end
     #
-    #   DataMapper.build(User, :default) do
+    #   env = DataMapper::Environment.new
+    #   env.setup(:default, :uri => 'postgres://localhost/test')
+    #   env.build(User, :default) do
     #     key :id
     #   end
     #
-    # @param [Model, ::Class(.name, .attribute_set)] model
+    # @param [Model, Class(.name, .attribute_set)] model
     #   the model used by the generated mapper
     #
     # @param [Symbol] repository
@@ -63,11 +125,23 @@ module DataMapper
 
     # Finalize the environment after all mappers were defined
     #
-    # @see Finalizer#run
+    # @see Finalizer.call
     #
     # @example
     #
-    #   DataMapper.finalize
+    #   class User
+    #     include DataMapper::Model
+    #
+    #     attribute :id,   Integer
+    #     attribute :name, String
+    #   end
+    #
+    #   env = DataMapper::Environment.new
+    #   env.setup(:default, :uri => 'postgres://localhost/test')
+    #   env.build(User, :default) do
+    #     key :id
+    #   end
+    #   env.finalize
     #
     # @return [self]
     #
@@ -79,6 +153,10 @@ module DataMapper
       self
     end
 
+    # Reset this instance
+    #
+    # @return [undefined]
+    #
     # @api private
     def reset(registry = nil)
       @mappers   = []
