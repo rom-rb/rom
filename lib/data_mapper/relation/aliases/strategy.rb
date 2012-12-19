@@ -6,11 +6,30 @@ module DataMapper
 
         include AbstractType
 
+        # Initialize a new instance
+        #
+        # @param [Index] index
+        #   the index used by this instance
+        #
+        # @return [undefined]
+        #
+        # @api private
         def initialize(index)
           @index   = index
           @entries = @index.entries
         end
 
+        # Join two {Index} instances
+        #
+        # @param [Index] index
+        #   the index to join with the instance's own index
+        #
+        # @param [Relationship::JoinDefinition] join_definition
+        #   the attributes to use for joining
+        #
+        # @return [Index]
+        #
+        # @api private
         def join(index, join_definition)
           new_index(joined_entries(index, join_definition.to_hash), self.class)
         end
