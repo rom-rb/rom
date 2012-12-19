@@ -17,9 +17,7 @@ module DataMapper
 
         def join_relation(operation)
           relation = source_relation.join(target_relation)
-          if operation
-            relation = relation.instance_eval(&operation)
-          end
+          relation = relation.instance_eval(&operation) if operation
           relation
         end
 
