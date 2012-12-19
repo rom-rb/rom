@@ -46,7 +46,7 @@ describe Relation::Aliases, '#each' do
           :id => :song_id
         }}
 
-        context "with unique attribute names across both relations" do
+        context "with no clashing attribute names" do
 
           let(:songs_entries) {{
             attribute_alias(:id,    :songs) => attribute_alias(:id,    :songs),
@@ -64,6 +64,94 @@ describe Relation::Aliases, '#each' do
             expect { subject }.to change { yields.dup }.
               from({}).
               to(:song_id => :id)
+          end
+        end
+
+        context "with clashing attribute names" do
+
+          context "on the right side only" do
+
+            context "after renaming the right side join attributes" do
+
+              let(:songs_entries) {{
+                attribute_alias(:id,    :songs) => attribute_alias(:id,    :songs),
+                attribute_alias(:title, :songs) => attribute_alias(:title, :songs),
+              }}
+
+              let(:song_tags_entries) {{
+                attribute_alias(:id,      :song_tags) => attribute_alias(:id,      :song_tags),
+                attribute_alias(:song_id, :song_tags) => attribute_alias(:song_id, :song_tags),
+                attribute_alias(:tag_id,  :song_tags) => attribute_alias(:tag_id,  :song_tags),
+              }}
+
+              it_should_behave_like 'an #each method'
+
+              it 'yields correct aliases' do
+                expect { subject }.to change { yields.dup }.
+                  from({}).
+                  to(
+                    :song_id => :id,
+                    :id      => :song_tags_id
+                  )
+              end
+            end
+
+          end
+
+          context "on both sides" do
+
+            context "and the only clashing attribute is not part of the join attributes" do
+              let(:songs_entries) {{
+                attribute_alias(:id,         :songs) => attribute_alias(:id,         :songs),
+                attribute_alias(:title,      :songs) => attribute_alias(:title,      :songs),
+                attribute_alias(:created_at, :songs) => attribute_alias(:created_at, :songs),
+              }}
+
+              let(:song_tags_entries) {{
+                attribute_alias(:song_id,    :song_tags) => attribute_alias(:song_id,    :song_tags),
+                attribute_alias(:tag_id,     :song_tags) => attribute_alias(:tag_id,     :song_tags),
+                attribute_alias(:created_at, :song_tags) => attribute_alias(:created_at, :song_tags),
+              }}
+
+              it_should_behave_like 'an #each method'
+
+              it 'yields correct aliases' do
+                expect { subject }.to change { yields.dup }.
+                  from({}).
+                  to(
+                    :song_id    => :id,
+                    :created_at => :song_tags_created_at
+                  )
+              end
+            end
+
+            context "and one clashing attribute being part of the join attributes and the other not" do
+              let(:songs_entries) {{
+                attribute_alias(:id,         :songs) => attribute_alias(:id,         :songs),
+                attribute_alias(:title,      :songs) => attribute_alias(:title,      :songs),
+                attribute_alias(:created_at, :songs) => attribute_alias(:created_at, :songs),
+              }}
+
+              let(:song_tags_entries) {{
+                attribute_alias(:id,         :song_tags) => attribute_alias(:id,         :song_tags),
+                attribute_alias(:song_id,    :song_tags) => attribute_alias(:song_id,    :song_tags),
+                attribute_alias(:tag_id,     :song_tags) => attribute_alias(:tag_id,     :song_tags),
+                attribute_alias(:created_at, :song_tags) => attribute_alias(:created_at, :song_tags),
+              }}
+
+              it_should_behave_like 'an #each method'
+
+              it 'yields correct aliases' do
+                expect { subject }.to change { yields.dup }.
+                  from({}).
+                  to(
+                    :id         => :song_tags_id,
+                    :song_id    => :id,
+                    :created_at => :song_tags_created_at
+                  )
+              end
+            end
+
           end
         end
 
@@ -104,91 +192,7 @@ describe Relation::Aliases, '#each' do
           end
         end
 
-        context "with clashing attribute names" do
-
-          context "only before renaming join keys" do
-
-            let(:songs_entries) {{
-              attribute_alias(:id,    :songs) => attribute_alias(:id,    :songs),
-              attribute_alias(:title, :songs) => attribute_alias(:title, :songs),
-            }}
-
-            let(:song_tags_entries) {{
-              attribute_alias(:id,      :song_tags) => attribute_alias(:id,      :song_tags),
-              attribute_alias(:song_id, :song_tags) => attribute_alias(:song_id, :song_tags),
-              attribute_alias(:tag_id,  :song_tags) => attribute_alias(:tag_id,  :song_tags),
-            }}
-
-            it_should_behave_like 'an #each method'
-
-            it 'yields correct aliases' do
-              expect { subject }.to change { yields.dup }.
-                from({}).
-                to(
-                  :song_id => :id,
-                  :id      => :song_tags_id
-                )
-            end
-          end
-
-          context "before and after renaming join keys" do
-
-            context "and the clashing attribute is not part of the join keys" do
-              let(:songs_entries) {{
-                attribute_alias(:id,         :songs) => attribute_alias(:id,         :songs),
-                attribute_alias(:title,      :songs) => attribute_alias(:title,      :songs),
-                attribute_alias(:created_at, :songs) => attribute_alias(:created_at, :songs),
-              }}
-
-              let(:song_tags_entries) {{
-                attribute_alias(:song_id,    :song_tags) => attribute_alias(:song_id,    :song_tags),
-                attribute_alias(:tag_id,     :song_tags) => attribute_alias(:tag_id,     :song_tags),
-                attribute_alias(:created_at, :song_tags) => attribute_alias(:created_at, :song_tags),
-              }}
-
-              it_should_behave_like 'an #each method'
-
-              it 'yields correct aliases' do
-                expect { subject }.to change { yields.dup }.
-                  from({}).
-                  to(
-                    :song_id    => :id,
-                    :created_at => :song_tags_created_at
-                  )
-              end
-            end
-
-            context "and the clashing attribute matches a join key" do
-
-              let(:songs_entries) {{
-                attribute_alias(:id,      :songs) => attribute_alias(:id,      :songs),
-                attribute_alias(:title,   :songs) => attribute_alias(:title,   :songs),
-                attribute_alias(:song_id, :songs) => attribute_alias(:song_id, :songs),
-              }}
-
-              let(:song_tags_entries) {{
-                attribute_alias(:id,      :song_tags) => attribute_alias(:id,      :song_tags),
-                attribute_alias(:song_id, :song_tags) => attribute_alias(:song_id, :song_tags),
-                attribute_alias(:tag_id,  :song_tags) => attribute_alias(:tag_id,  :song_tags),
-              }}
-
-              it_should_behave_like 'an #each method'
-
-              it 'yields correct aliases' do
-                expect { subject }.to change { yields.dup }.
-                  from({}).
-                  to(
-                    :song_id => :id,
-                    :id      => :song_tags_id
-                  )
-              end
-            end
-
-          end
-        end
       end
-
-
     end
   end
 end
