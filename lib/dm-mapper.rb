@@ -48,6 +48,7 @@ require 'data_mapper/relationship/builder/has'
 
 require 'data_mapper/relation/aliases'
 require 'data_mapper/relation/aliases/index'
+require 'data_mapper/relation/aliases/attribute'
 require 'data_mapper/relation/aliases/strategy'
 require 'data_mapper/relation/aliases/strategy/natural_join'
 require 'data_mapper/relation/aliases/strategy/inner_join'

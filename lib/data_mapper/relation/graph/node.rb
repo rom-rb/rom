@@ -8,7 +8,7 @@ module DataMapper
         include Enumerable, Equalizer.new(:name)
 
         def self.aliases(relation_name, attribute_set)
-          entries = attribute_set.aliased_field_map(relation_name)
+          entries = Aliases.index_entries(relation_name, attribute_set)
           index   = Aliases::Index.new(entries, aliasing_strategy)
 
           Aliases.new(index)

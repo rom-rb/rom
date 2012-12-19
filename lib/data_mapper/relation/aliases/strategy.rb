@@ -27,7 +27,7 @@ module DataMapper
           with_index_entries(index) { |key, name, new_entries|
             join_definition.each do |left_key, right_key|
               if name.field == right_key
-                new_entries[key] = aliased_field(left_key, name.prefix)
+                new_entries[key] = Attribute.build(left_key, name.prefix)
               end
             end
           }
@@ -36,7 +36,7 @@ module DataMapper
         def clashing_entries(index, join_definition)
           with_index_entries(index) { |key, name, new_entries|
             if clashing?(name, join_definition)
-              new_entries[key] = aliased_field(key.field, key.prefix, true)
+              new_entries[key] = Attribute.build(key.field, key.prefix, true)
             end
           }
         end
@@ -49,10 +49,6 @@ module DataMapper
           index.entries.each_with_object({}) { |(key, name), new_entries|
             yield(key, name, new_entries)
           }
-        end
-
-        def aliased_field(*args)
-          DataMapper::Mapper::Attribute.aliased_field(*args)
         end
 
         def new_index(*args)

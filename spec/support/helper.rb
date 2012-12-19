@@ -111,7 +111,7 @@ module SpecHelper
   end
 
   def attribute_alias(*args)
-    DataMapper::Mapper::Attribute.aliased_field(*args)
+    DataMapper::Relation::Aliases::Attribute.build(*args)
   end
 
 end

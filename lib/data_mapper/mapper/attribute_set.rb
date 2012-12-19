@@ -245,13 +245,6 @@ module DataMapper
         select(&:key?)
       end
 
-      def aliased_field_map(prefix)
-        primitives.each_with_object({}) { |attribute, hash|
-          aliased_field = attribute.aliased_field(prefix)
-          hash[aliased_field] = aliased_field
-        }
-      end
-
     end # class AttributeSet
   end # class Mapper
 end # module DataMapper

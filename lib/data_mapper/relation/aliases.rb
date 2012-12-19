@@ -3,6 +3,13 @@ module DataMapper
 
     class Aliases
 
+      def self.index_entries(relation_name, attribute_set)
+        attribute_set.primitives.each_with_object({}) { |attribute, hash|
+          attribute = Attribute.build(attribute.field, relation_name)
+          hash[attribute] = attribute
+        }
+      end
+
       include Enumerable
       include Equalizer.new(:index)
 

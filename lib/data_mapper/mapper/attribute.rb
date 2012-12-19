@@ -8,47 +8,9 @@ module DataMapper
     # @api private
     class Attribute
 
-      Alias = Struct.new(:field, :prefix, :aliased) {
-        attr_reader :name
-
-        private :field=, :prefix=, :aliased=
-
-        CACHE = {}
-
-        def self.build(field, prefix, aliased = false)
-          key = "#{field}-#{prefix}-#{aliased.inspect}"
-          CACHE.fetch(key) { CACHE[key] = Alias.new(field, prefix, aliased) }
-        end
-
-        def initialize(field, prefix, aliased)
-          super
-          @name = aliased ? :"#{prefix}_#{field}" : field.to_sym
-        end
-      }
-
       include AbstractType
 
       include Equalizer.new(:name, :type, :field, :options)
-
-      # Return an aliasd +field_name+ by prefixing +prefix+
-      #
-      # @example
-      #
-      #   Attribute.aliased(:title, :songs) # => :songs_title
-      #
-      # @param [#to_s] field
-      #   the field to alias
-      #
-      # @param [#to_s] prefix
-      #   the prefix to use for aliasing
-      #
-      # @return [Symbol]
-      #   the aliased field name
-      #
-      # @api private
-      def self.aliased_field(*args)
-        Alias.build(*args)
-      end
 
       # The attribute's name
       #
@@ -169,20 +131,6 @@ module DataMapper
       # @api private
       def finalize(*)
         self # noop
-      end
-
-      # Return an aliased field name given a prefix
-      #
-      # @see Attribute.aliased
-      #
-      # @param [#to_s] prefix
-      #   the prefix to use for aliasing
-      #
-      # @return [Symbol]
-      #
-      # @api private
-      def aliased_field(prefix, aliased = false)
-        self.class.aliased_field(field, prefix, aliased)
       end
 
       # Load this attribute's value from a tuple
