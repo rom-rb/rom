@@ -15,9 +15,9 @@ module DataMapper
       #
       # @api private
       def self.index_entries(relation_name, attribute_set)
-        attribute_set.primitives.each_with_object({}) { |attribute, hash|
+        attribute_set.primitives.each_with_object({}) { |attribute, entries|
           attribute = Attribute.build(attribute.field, relation_name)
-          hash[attribute] = attribute
+          entries[attribute] = attribute
         }
       end
 
