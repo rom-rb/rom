@@ -22,6 +22,24 @@ describe '[Arel] One To Many with generated mapper' do
     end
   end
 
+  it 'loads users without orders' do
+    mapper = DM_ENV[user_model]
+
+    users = mapper.all
+
+    expect(users).to have(2).items
+
+    user1, user2 = users
+
+    expect(user1.id).to eql('1')
+    expect(user1.name).to eql('John')
+    expect(user1.age).to eql('18')
+
+    expect(user2.id).to eql('2')
+    expect(user2.name).to eql('Jane')
+    expect(user2.age).to eql('21')
+  end
+
   it 'loads associated orders' do
     user_order_mapper = DM_ENV[user_model].include(:orders)
     users_with_orders = user_order_mapper.to_a
