@@ -30,19 +30,19 @@ module DataMapper
         # @return [Index]
         #
         # @api private
-        def join(index, join_definition)
-          new_index(joined_entries(index, join_definition.to_hash), self.class)
+        def join(index, join_definition, relation_aliases)
+          new_index(joined_entries(index, join_definition.to_hash, relation_aliases))
         end
 
         private
 
         attr_reader :entries
 
-        def joined_entries(index, _join_definition)
+        def joined_entries(index, _join_definition, relation_aliases)
           index.entries.dup
         end
 
-        def join_key_entries(index, join_definition)
+        def join_key_entries(index, join_definition, relation_aliases)
           with_index_entries(index) { |key, name, new_entries|
             join_definition.each do |left_key, right_key|
               if name.field == right_key
@@ -52,7 +52,7 @@ module DataMapper
           }
         end
 
-        def clashing_entries(index, join_definition)
+        def clashing_entries(index, join_definition, relation_aliases)
           with_index_entries(index) { |key, name, new_entries|
             if clashing?(name, join_definition)
               new_entries[key] = Attribute.build(key.field, key.prefix, true)
@@ -70,8 +70,8 @@ module DataMapper
           }
         end
 
-        def new_index(*args)
-          @index.class.new(*args)
+        def new_index(new_entries)
+          @index.class.new(new_entries, self.class)
         end
 
       end # class Strategy

@@ -35,6 +35,8 @@ module DataMapper
           @entries  = entries
           @header   = @entries.values.to_set
           @strategy = strategy.new(self)
+
+          @relation_names = relation_names(self)
         end
 
         # Join this instance with another one
@@ -47,8 +49,9 @@ module DataMapper
         # @return [Index]
         #
         # @api private
-        def join(*args)
-          @strategy.join(*args)
+        def join(index, join_definition, relation_aliases)
+          assert_valid_relation_aliases(index, relation_aliases)
+          @strategy.join(index, join_definition, relation_aliases)
         end
 
         # Rename this instance
@@ -123,6 +126,19 @@ module DataMapper
           Hash[entries.select { |original, current| current.field == field }]
         end
 
+        def assert_valid_relation_aliases(index, aliases)
+          unless aliases.keys.to_set == common_relation_names(index)
+            raise InvalidRelationAliasError
+          end
+        end
+
+        def common_relation_names(index)
+          @relation_names & relation_names(index)
+        end
+
+        def relation_names(index)
+          index.entries.keys.map(&:prefix).to_set
+        end
       end # class Index
 
     end # class Aliases

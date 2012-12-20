@@ -3,6 +3,8 @@ module DataMapper
 
     class Aliases
 
+      InvalidRelationAliasError = Class.new(StandardError)
+
       # Return index entries as required by {Aliases#initialize}
       #
       # @param [#to_sym] relation_name
@@ -91,9 +93,9 @@ module DataMapper
       # @return [Aliases]
       #
       # @api private
-      def join(other, join_definition)
-        joined_index = index.join(other.index, join_definition)
-        new(joined_index, other.index.aliases(joined_index))
+      def join(other, join_definition, relation_aliases = {})
+        joined = index.join(other.index, join_definition, relation_aliases)
+        new(joined, other.index.aliases(joined))
       end
 
       # Rename this instance
