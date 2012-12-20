@@ -9,8 +9,8 @@ describe Relation::Aliases, '#rename' do
   let(:strategy)    { described_class::Strategy::NaturalJoin }
 
   let(:songs_entries) {{
-    :songs_id    => :id,
-    :songs_title => :title,
+    attribute_alias(:id,    :songs) => attribute_alias(:id,    :songs),
+    attribute_alias(:title, :songs) => attribute_alias(:title, :songs),
   }}
 
   let(:aliases) {{
@@ -21,8 +21,8 @@ describe Relation::Aliases, '#rename' do
   let(:expected_index) { described_class::Index.new(expected_entries, strategy) }
 
   let(:expected_entries) {{
-    :songs_id    => :foo_id,
-    :songs_title => :foo_title,
+    attribute_alias(:id,    :songs) => attribute_alias(:foo_id,    :songs),
+    attribute_alias(:title, :songs) => attribute_alias(:foo_title, :songs),
   }}
 
   it { should be_instance_of(object.class) }

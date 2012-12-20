@@ -33,7 +33,6 @@ module DataMapper
         # @api private
         def initialize(entries, strategy)
           @entries  = entries
-          @inverted = @entries.invert
           @header   = @entries.values.to_set
           @strategy = strategy.new(self)
         end
@@ -114,8 +113,14 @@ module DataMapper
 
         def renamed_entries(aliases)
           aliases.each_with_object(entries.dup) { |(from, to), renamed|
-            renamed[@inverted.fetch(from)] = to
+            original_attributes(from).each do |original, current|
+              renamed[original] = Attribute.build(to, current.prefix)
+            end
           }
+        end
+
+        def original_attributes(field)
+          Hash[entries.select { |original, current| current.field == field }]
         end
 
       end # class Index

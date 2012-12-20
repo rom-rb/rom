@@ -9,7 +9,7 @@ describe Engine::Veritas::Node, '#rename' do
   let(:name)     { :users }
   let(:relation) { mock('relation') }
   let(:aliases)  { Relation::Aliases.new(index) }
-  let(:index)    { Relation::Aliases::Index.new({ :users_id => :id }, strategy) }
+  let(:index)    { Relation::Aliases::Index.new({ attribute_alias(:id, :users) => attribute_alias(:id, :users) }, strategy) }
   let(:strategy) { Relation::Graph::Node.send(:aliasing_strategy) }
 
   let(:renamed_aliases) { aliases.rename(new_aliases) }
