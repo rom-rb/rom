@@ -116,14 +116,14 @@ module DataMapper
 
         def renamed_entries(aliases)
           aliases.each_with_object(entries.dup) { |(from, to), renamed|
-            original_attributes(from).each do |original, current|
-              renamed[original] = Attribute.build(to, current.prefix)
+            original_attributes(from).each do |original|
+              renamed[original] = Attribute.build(to, original.prefix)
             end
           }
         end
 
         def original_attributes(field)
-          Hash[entries.select { |original, current| current.field == field }]
+          Hash[entries.select { |original, current| current.field == field }].keys
         end
 
         def assert_valid_relation_aliases(index, aliases)
