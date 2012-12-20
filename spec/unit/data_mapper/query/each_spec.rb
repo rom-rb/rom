@@ -4,10 +4,10 @@ describe Query, '#each' do
   let(:object) { described_class.new(options, attributes) }
 
   let(:options)    { { :name => 'Piotr', :age => 29 } }
-  let(:attributes) { Mapper::AttributeSet.new         }
+  let(:attributes) { AttributeSet.new         }
 
-  let(:name) { Mapper::Attribute.build(:name, :type => String,  :to => :user_name) }
-  let(:age)  { Mapper::Attribute.build(:age,  :type => Integer, :to => :user_age)  }
+  let(:name) { Attribute.build(:name, :type => String,  :to => :user_name) }
+  let(:age)  { Attribute.build(:age,  :type => Integer, :to => :user_age)  }
 
   before { attributes << name << age }
 

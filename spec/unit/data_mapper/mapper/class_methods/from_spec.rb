@@ -30,7 +30,7 @@ describe Mapper, '.from' do
       its(:name)  { should eql(name) }
 
       it "copies attributes" do
-        subject.attributes[:id].should be_instance_of(Mapper::Attribute::Primitive)
+        subject.attributes[:id].should be_instance_of(Attribute::Primitive)
       end
     end
   end

@@ -7,9 +7,9 @@ describe Relation::Mapper, '#order' do
 
   let(:model)      { mock_model(:User) }
   let(:attributes) { [ id, name, age ] }
-  let(:id)         { Mapper::Attribute.build(:id, :type => Integer) }
-  let(:age)        { Mapper::Attribute.build(:age, :type => Integer) }
-  let(:name)       { Mapper::Attribute.build(:name, :type => String) }
+  let(:id)         { Attribute.build(:id, :type => Integer) }
+  let(:age)        { Attribute.build(:age, :type => Integer) }
+  let(:name)       { Attribute.build(:name, :type => String) }
 
   let(:relation)   { mock('relation') }
   let(:sorted)     { mock('sorted') }

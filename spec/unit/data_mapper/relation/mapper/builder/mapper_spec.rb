@@ -83,7 +83,7 @@ describe Relation::Mapper::Builder, '#mapper' do
     it "sets embedded collection attribute" do
       user_orders = subject.attributes[:song_tags]
 
-      user_orders.should be_instance_of(Mapper::Attribute::EmbeddedCollection)
+      user_orders.should be_instance_of(Attribute::EmbeddedCollection)
     end
 
     it "remaps target model attributes" do

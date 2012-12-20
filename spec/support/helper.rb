@@ -85,7 +85,7 @@ module SpecHelper
   end
 
   def mock_attribute(name, type, options = {})
-    Mapper::Attribute.build(name, options.merge(:type => type))
+    Attribute.build(name, options.merge(:type => type))
   end
 
   def mock_relation(name, header = [])

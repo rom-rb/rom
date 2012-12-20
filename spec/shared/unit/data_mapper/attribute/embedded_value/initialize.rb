@@ -1,4 +1,4 @@
-shared_examples_for 'DataMapper::Mapper::Attribute::EmbeddedValue#initialize' do
+shared_examples_for 'Attribute::EmbeddedValue#initialize' do
   subject { described_class.new(name, options) }
 
   let(:name)    { :address }

@@ -5,7 +5,7 @@ describe Relation::Mapper, '.key' do
 
   let(:object) { Class.new(described_class) }
 
-  let(:id) { Mapper::Attribute.build(:id, :type => Integer) }
+  let(:id) { Attribute.build(:id, :type => Integer) }
 
   before { object.attributes << id }
 
