@@ -94,8 +94,8 @@ describe Relation::Aliases, '#index' do
             subject.should eql(described_class::Index.new({
               attribute_alias(:id,    :songs)   => attribute_alias(:id,    :songs),
               attribute_alias(:title, :songs)   => attribute_alias(:title, :songs),
-              attribute_alias(:id,    :songs_1) => attribute_alias(:id,    :songs_1, true),
-              attribute_alias(:title, :songs_1) => attribute_alias(:title, :songs_1),
+              attribute_alias(:id,    :songs_2) => attribute_alias(:id,    :songs_2, true),
+              attribute_alias(:title, :songs_2) => attribute_alias(:title, :songs_2),
             }, strategy))
           end
 
@@ -131,8 +131,8 @@ describe Relation::Aliases, '#index' do
               attribute_alias(:title,   :songs)     => attribute_alias(:title,  :songs),
               attribute_alias(:song_id, :song_tags) => attribute_alias(:id,     :song_tags),
               attribute_alias(:tag_id,  :song_tags) => attribute_alias(:tag_id, :song_tags),
-              attribute_alias(:id,      :songs_1)   => attribute_alias(:id,     :songs_1, true),
-              attribute_alias(:title,   :songs_1)   => attribute_alias(:title,  :songs_1),
+              attribute_alias(:id,      :songs_2)   => attribute_alias(:id,     :songs_2, true),
+              attribute_alias(:title,   :songs_2)   => attribute_alias(:title,  :songs_2),
             }, strategy))
           end
 
