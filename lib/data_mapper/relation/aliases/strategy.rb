@@ -38,7 +38,7 @@ module DataMapper
 
         attr_reader :entries
 
-        def joined_entries(index, _join_definition, relation_aliases)
+        def joined_entries(index, _join_definition, _relation_aliases)
           index.entries.dup
         end
 
