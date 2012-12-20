@@ -12,8 +12,8 @@ describe Engine::Veritas::Node, '#join' do
 
   let(:source_aliases)  { Relation::Aliases.new(source_index) }
   let(:target_aliases)  { Relation::Aliases.new(target_index) }
-  let(:source_index)    { Relation::Aliases::Index.new({ :users_id     => :id }, strategy) }
-  let(:target_index)    { Relation::Aliases::Index.new({ :addresses_id => :id }, strategy) }
+  let(:source_index)    { Relation::Aliases::Index.new({ attribute_alias(:id, :users)     => attribute_alias(:id, :users) }, strategy) }
+  let(:target_index)    { Relation::Aliases::Index.new({ attribute_alias(:id, :addresses) => attribute_alias(:id, :addresses) }, strategy) }
   let(:strategy)        { Relation::Graph::Node.send(:aliasing_strategy) }
   let(:joined_aliases)  { mock('joined_aliases') }
   let(:join_definition) { {} }
