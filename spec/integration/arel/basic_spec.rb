@@ -13,14 +13,14 @@ describe "Using Arel engine" do
     user_mapper
   end
 
-  let(:user_model) {
-    mock_model('User') {
-      include DataMapper::Model
+  let(:user_mapper) {
+    DM_ENV.build(user_model, :postgres) do
+      relation_name :users
 
-      attribute :id,   Integer, :key => true
-      attribute :name, String
-      attribute :age,  Integer
-    }
+      map :id,   Integer, :key => true, :coercion_method => :to_integer
+      map :name, String,  :to  => :username
+      map :age,  Integer, :coercion_method => :to_integer
+    end
   }
 
   it "returns all users ordered by name" do
@@ -30,12 +30,15 @@ describe "Using Arel engine" do
 
     user1, user2, user3 = users
 
+    user1.id.should be(2)
     user1.name.should eql('Jane')
     user1.age.should be(21)
 
+    user2.id.should be(1)
     user2.name.should eql('John')
     user2.age.should be(18)
 
+    user3.id.should be(3)
     user3.name.should eql('Piotr')
     user3.age.should be(29)
   end

@@ -28,6 +28,7 @@ require 'data_mapper/attribute/primitive'
 require 'data_mapper/attribute/embedded_value'
 require 'data_mapper/attribute/association'
 require 'data_mapper/attribute/embedded_collection'
+require 'data_mapper/attribute/coercible'
 require 'data_mapper/attribute_set'
 
 require 'data_mapper/mapper'

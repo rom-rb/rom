@@ -104,7 +104,9 @@ module DataMapper
                 Attribute::EmbeddedValue
               end
 
-      klass.new(name, options)
+      attribute = klass.new(name, options)
+      attribute.extend(Coercible) if options[:coercion_method]
+      attribute
     end
 
     # Initialize a new attribute instance
