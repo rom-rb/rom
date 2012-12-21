@@ -21,7 +21,7 @@ module DataMapper
         #
         # @api private
         def self.build(field, prefix, aliased = false)
-          key = "#{field}-#{prefix}-#{aliased.inspect}"
+          key = "#{field}-#{prefix}-#{aliased}"
           CACHE.fetch(key) {
             CACHE[key] = Attribute.new(field, prefix, aliased)
           }
