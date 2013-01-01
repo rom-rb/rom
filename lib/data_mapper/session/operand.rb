@@ -15,9 +15,7 @@ module DataMapper
       # @api private
       #
       def initialize(state)
-        @identity = state.identity
-        @object   = state.object
-        @tuple    = state.tuple
+        @identity, @object, @tuple = state.identity, state.object, state.tuple
       end
 
       # Return object

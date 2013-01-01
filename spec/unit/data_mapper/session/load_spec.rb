@@ -22,9 +22,13 @@ describe DataMapper::Session, '#load' do
       expect { subject }.to change { object.include?(domain_object) }.from(false).to(true)
     end
 
-    it 'should track object dirtyness' do
+    it 'should track object in tracker' do
+      expect { subject }.to change { object.tracker.length }.from(0).to(1)
+    end
+
+    it 'should allow to modify object state' do
       subject
-      object.dirty?(domain_object).should be(false)
+      object.delete(domain_object)
     end
   end
 

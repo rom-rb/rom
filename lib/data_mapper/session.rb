@@ -3,6 +3,14 @@ module DataMapper
   class Session
     include Adamantium::Flat, Equalizer.new(:registry)
 
+    # Return tracker
+    #
+    # @return [Hash]
+    #
+    # @api private
+    #
+    attr_reader :tracker
+
     # Return registry
     #
     # @return [Registry]
@@ -27,7 +35,7 @@ module DataMapper
     # @api public
     #
     def reader(model)
-      mapper = @registry.resolve_model(model)
+      mapper = registry.resolve_model(model)
       Reader.new(self, mapper) 
     end
 
@@ -48,7 +56,7 @@ module DataMapper
       state = state(object)
       old = old(state)
       old.delete
-      @tracker.delete(old.identity)
+      tracker.delete(old.identity)
 
       self
     end
@@ -74,7 +82,7 @@ module DataMapper
     #
     def include?(object)
       state = state(object)
-      @tracker.key?(state.identity)
+      tracker.key?(state.identity)
     end
 
     # Returns whether a domain object has changes since last sync with the database
@@ -130,7 +138,7 @@ module DataMapper
     #
     def forget(object)
       state = state(object)
-      @tracker.delete(state.identity)
+      tracker.delete(state.identity)
 
       self
     end
@@ -152,7 +160,7 @@ module DataMapper
     # @api private
     #
     def load(loader)
-      @tracker.fetch(loader.identity) do
+      tracker.fetch(loader.identity) do
         store(State::Loaded.new(loader))
       end.object
     end
@@ -181,10 +189,11 @@ module DataMapper
     # @api public
     #
     def persist(object)
+      util = tracker
       state = state(object)
       identity = state.identity
-      if @tracker.key?(identity)
-        state.update(@tracker.fetch(identity))
+      if util.key?(identity)
+        state.update(util.fetch(identity))
       else
         state.insert
       end
@@ -219,7 +228,7 @@ module DataMapper
     # @api private
     #
     def old(state)
-      @tracker.fetch(state.identity) do
+      tracker.fetch(state.identity) do
         raise StateError, "#{state.object.inspect} is not tracked"
       end
     end
@@ -233,8 +242,7 @@ module DataMapper
     # @api private
     #
     def store(state)
-      @tracker.store(state.identity, state)
-      state
+      tracker.store(state.identity, state)
     end
 
     # Return sate for object
@@ -246,7 +254,7 @@ module DataMapper
     # @api private
     #
     def state(object)
-      mapper = @registry.resolve_object(object)
+      mapper = registry.resolve_object(object)
       State.new(mapper, object)
     end
   end
