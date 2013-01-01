@@ -120,6 +120,51 @@ module DataMapper
         @mapper, @object = mapper, object
       end
 
+      # State for loaded objects
+      class Loaded < self
+
+        # Return identity
+        #
+        # @return [Identity]
+        #
+        # @api private
+        #
+        def identity
+          @loader.identity
+        end
+
+        # Return mapper
+        #
+        # @return [Mapper]
+        #
+        # @api private
+        #
+        def mapper
+          @loader.mapper
+        end
+
+        # Return object
+        #
+        # @return [Object]
+        #
+        # @api private
+        #
+        def object
+          @loader.object
+        end
+
+        # Initialize object
+        #
+        # @param [Loader] loader
+        #
+        # @api private
+        #
+        def initialize(loader)
+          @loader = loader
+        end
+
+      end
+
     end
   end
 end

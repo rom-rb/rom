@@ -50,7 +50,7 @@ class Spec
     end
 
     def object
-      DomainObject.new(
+      @object ||= DomainObject.new(
         tuple.fetch(:key_attribute), 
         tuple.fetch(:other_attribute)
       )

@@ -137,9 +137,13 @@ module DataMapper
 
     # Load a domain object from tuple and track it
     #
+    # FIXME: This method as an unclear CQS role!
+    #
+    #   * Stragegy object missing?
+    #
     # Will return already tracked object in case of identity map collision.
     #
-    # @param [Loader] loade
+    # @param [Loader] loader
     #   the loader for domain object
     #
     # @return [Object]
@@ -148,12 +152,9 @@ module DataMapper
     # @api private
     #
     def load(loader)
-      state = @tracker.fetch(loader.identity) do
-        state = State.new(loader.mapper, loader.object)
-        store(state)
-      end
-      
-      state.object
+      @tracker.fetch(loader.identity) do
+        store(State::Loaded.new(loader))
+      end.object
     end
 
     # Insert or update a domain object depending on state
@@ -181,12 +182,13 @@ module DataMapper
     #
     def persist(object)
       state = state(object)
-
-      tracked = @tracker.fetch(state.identity) do 
+      identity = state.identity
+      if @tracker.key?(identity)
+        state.update(@tracker.fetch(identity))
+      else
         state.insert
       end
-
-      store(state.update(tracked))
+      store(state)
       self
     end
 
