@@ -143,6 +143,16 @@ module DataMapper
           @loader.mapper
         end
 
+        # Return tuple
+        #
+        # @return [Tuple]
+        #
+        # @api private
+        #
+        def tuple
+          @loader.tuple
+        end
+
         # Return object
         #
         # @return [Object]
