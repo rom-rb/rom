@@ -14,7 +14,6 @@ end
 require 'data_mapper/session'
 require 'data_mapper/session/reader'
 require 'data_mapper/session/state'
-require 'data_mapper/session/tracker'
 require 'data_mapper/session/operand'
 require 'data_mapper/session/work'
 require 'data_mapper/session/work/interceptor'

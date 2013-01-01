@@ -74,7 +74,7 @@ module DataMapper
     #
     def include?(object)
       state = state(object)
-      @tracker.include?(state.identity)
+      @tracker.key?(state.identity)
     end
 
     # Returns whether a domain object has changes since last sync with the database
@@ -205,9 +205,8 @@ module DataMapper
     #
     # @api private
     #
-    def initialize(registry)
-      @registry     = registry
-      @tracker      = Tracker.new
+    def initialize(registry, tracker = {})
+      @registry, @tracker = registry, tracker
     end
 
     # Return old state for state
@@ -237,7 +236,7 @@ module DataMapper
     # @api private
     #
     def store(state)
-      @tracker.store(state)
+      @tracker.store(state.identity, state)
       state
     end
 
