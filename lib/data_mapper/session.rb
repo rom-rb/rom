@@ -139,22 +139,17 @@ module DataMapper
     #
     # Will return already tracked object in case of identity map collision.
     #
-    # @param [Mapper] mapper
-    #   the mapper to load domain object with
-    #
-    # @param [Object] tuple
-    #   the tuple representing domain object
+    # @param [Loader] loade
+    #   the loader for domain object
     #
     # @return [Object]
     #   the loaded domain object
     #
     # @api private
     #
-    def load(mapper, tuple)
-      loader = mapper.loader(tuple)
-
+    def load(loader)
       state = @tracker.fetch(loader.identity) do
-        state = State.new(mapper, loader.object)
+        state = State.new(loader.mapper, loader.object)
         store(state)
       end
       

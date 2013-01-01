@@ -42,10 +42,11 @@ class Spec
   class Loader
     include Equalizer.new(:identity, :tuple)
 
+    attr_reader :mapper 
     attr_reader :tuple 
 
-    def initialize(tuple)
-      @tuple = tuple
+    def initialize(mapper, tuple)
+      @mapper, @tuple = mapper, tuple
     end
 
     def object
@@ -87,7 +88,7 @@ class Spec
     # @api private
     #
     def loader(tuple)
-      Loader.new(tuple)
+      Loader.new(self, tuple)
     end
 
     # Return dumper for object

@@ -30,7 +30,7 @@ module DataMapper
       # @api private
       #
       def load(tuple)
-        @session.load(mapper, tuple)
+        @session.load(mapper.loader(tuple))
       end
 
     private
