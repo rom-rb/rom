@@ -10,7 +10,7 @@ module DataMapper
       # @see Options#default_source_key
       #
       def default_source_key
-        [ self.class.foreign_key_name(target_model.name) ].freeze
+        [ self.class.foreign_key_name(name.to_s) ].freeze
       end
 
       # @see Options#default_target_key
