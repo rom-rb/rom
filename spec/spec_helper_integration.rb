@@ -6,6 +6,9 @@ require 'do_postgres'
 require 'db_setup'
 
 RSpec.configure do |config|
+
+  config.filter_run :focus => true
+
   config.after(:all) do
     DM_ENV.reset
   end

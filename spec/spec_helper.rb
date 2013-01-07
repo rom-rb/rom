@@ -40,6 +40,8 @@ end
 
 RSpec.configure do |config|
 
+  config.filter_run :focus => true
+
   config.after(:each) do
     if example.metadata[:example_group][:file_path] =~ /unit|shared/
       DM_ENV.reset
