@@ -3,35 +3,29 @@ module DataMapper
 
     class Aliases
 
-      InvalidRelationAliasError = Class.new(StandardError)
-
-      # Return index entries as required by {Aliases#initialize}
+      # Build a new {Aliases} instance
       #
-      # @param [#to_sym] relation_name
-      #   the name of the relation +attribute_set+ belongs to
+      # @param [Symbol] relation_name
+      #   the name of the relation
       #
-      # @param [DataMapper::Mapper::AttributeSet] attribute_set
-      #   the attribute set to be aliased
+      # @param [AttributeSet] attribute_set
+      #   the set of attributes to build the index for
       #
-      # @return [Hash<Attribute, Attribute>]
+      # @param [Class] strategy_class
+      #   the strategy class to use for joining
+      #
+      # @return [Aliases]
       #
       # @api private
-      def self.index_entries(relation_name, attribute_set)
-        attribute_set.primitives.each_with_object({}) { |attribute, entries|
-          attribute = Attribute.build(attribute.field, relation_name)
-          entries[attribute] = attribute
-        }
+      def self.build(relation_name, attribute_set, strategy_class)
+        a_idx = AttributeIndex.build(relation_name, attribute_set, strategy_class)
+        r_idx = RelationIndex.build(a_idx)
+
+        new(a_idx, r_idx)
       end
 
       include Enumerable
-      include Equalizer.new(:index)
-
-      # The index used by this instance
-      #
-      # @return [Index]
-      #
-      # @api private
-      attr_reader :index
+      include Equalizer.new(:attribute_index)
 
       # The header represented by this instance
       #
@@ -40,12 +34,10 @@ module DataMapper
       # @api private
       attr_reader :header
 
-      protected :index
-
       # Initialize a new instance
       #
-      # @param [Index] index
-      #   the index used by this instance
+      # @param [AttributeIndex] attribute_index
+      #   the attribute index used by this instance
       #
       # @param [Hash] aliases
       #   the aliases used by this instance
@@ -53,10 +45,12 @@ module DataMapper
       # @return [undefined]
       #
       # @api private
-      def initialize(index, aliases = {})
-        @index   = index
+      def initialize(attribute_index, relation_index, aliases = {})
+        @attribute_index = attribute_index
+        @relation_index  = relation_index
+
         @aliases = aliases
-        @header  = @index.header
+        @header  = @attribute_index.header
       end
 
       # Iterate over the aliases
@@ -87,15 +81,21 @@ module DataMapper
       # @param [Aliases] other
       #   the instance to join with self
       #
-      # @param [Relationship::JoinDefinition] join_definition
+      # @param [#to_hash] join_definition
       #   the attributes to use for the join
       #
       # @return [Aliases]
       #
       # @api private
-      def join(other, join_definition, relation_aliases = {})
-        joined = index.join(other.index, join_definition, relation_aliases)
-        new(joined, other.index.aliases(joined))
+      def join(other, join_definition)
+        joined_r_idx   = relation_index.join(other.relation_index)
+        other_aliases  = other.relation_index.aliases(joined_r_idx)
+        renamed_a_idx  = other.rename_relations(other_aliases)
+        join_keys      = join_definition.to_hash
+        joined_a_idx   = attribute_index.join(renamed_a_idx, join_keys)
+        joined_aliases = renamed_a_idx.aliases(joined_a_idx)
+
+        new(joined_a_idx, joined_r_idx, joined_aliases)
       end
 
       # Rename this instance
@@ -107,7 +107,36 @@ module DataMapper
       #
       # @api private
       def rename(aliases)
-        new(index.rename(aliases), aliases)
+        new(attribute_index.rename(aliases), relation_index, aliases)
+      end
+
+      protected
+
+      # The index used by this instance
+      #
+      # @return [AttributeIndex]
+      #
+      # @api private
+      attr_reader :attribute_index
+
+      # Return the relation alias index
+      #
+      # @return [RelationIndex]
+      #
+      # @api private
+      attr_reader :relation_index
+
+      # Rename the indexed relations
+      #
+      # @param [Hash<Symbol, Symbol>] relation_aliases
+      #   the aliases used to rename this index's instance
+      #
+      # @return [AttributeIndex]
+      #   the renamed attribute index
+      #
+      # @api private
+      def rename_relations(relation_aliases)
+        attribute_index.rename_relations(relation_aliases)
       end
 
       private

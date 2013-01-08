@@ -26,6 +26,8 @@ def setup_db
   connection.create_command('DROP TABLE IF EXISTS "tags"').execute_non_query
   connection.create_command('DROP TABLE IF EXISTS "infos"').execute_non_query
   connection.create_command('DROP TABLE IF EXISTS "info_contents"').execute_non_query
+  connection.create_command('DROP TABLE IF EXISTS "people"').execute_non_query
+  connection.create_command('DROP TABLE IF EXISTS "people_links"').execute_non_query
 
   connection.create_command(<<-SQL.gsub(/\s+/, ' ').strip).execute_non_query
     CREATE TABLE "users"
@@ -91,6 +93,20 @@ def setup_db
       )
   SQL
 
+  connection.create_command(<<-SQL.gsub(/\s+/, ' ').strip).execute_non_query
+    CREATE TABLE "people"
+      ( "id"   SERIAL NOT NULL PRIMARY KEY,
+        "name" VARCHAR(50) NOT NULL
+      )
+  SQL
+
+  connection.create_command(<<-SQL.gsub(/\s+/, ' ').strip).execute_non_query
+    CREATE TABLE "people_links"
+      ( "id"          SERIAL NOT NULL PRIMARY KEY,
+        "follower_id" INTEGER NOT NULL,
+        "followed_id" INTEGER NOT NULL
+      )
+  SQL
   connection.close
 end
 
@@ -184,6 +200,28 @@ def insert_song_tag(id, song_id, tag_id, connection = nil)
     'INSERT INTO "song_tags" ("id", "song_id", "tag_id") VALUES (?, ?, ?)')
 
   insert_users.execute_non_query(id, song_id, tag_id)
+
+  connection.close
+end
+
+def insert_person(id, name, connection = nil)
+  connection ||= DataObjects::Connection.new(CONFIG['veritas']['postgres'])
+
+  insert_users = connection.create_command(
+    'INSERT INTO "people" ("id", "name") VALUES (?, ?)')
+
+  insert_users.execute_non_query(id, name)
+
+  connection.close
+end
+
+def insert_people_link(id, follower_id, followed_id, connection = nil)
+  connection ||= DataObjects::Connection.new(CONFIG['veritas']['postgres'])
+
+  insert_users = connection.create_command(
+    'INSERT INTO "people_links" ("id", "follower_id", "followed_id") VALUES (?, ?, ?)')
+
+  insert_users.execute_non_query(id, follower_id, followed_id)
 
   connection.close
 end

@@ -9,6 +9,8 @@ shared_context 'Models and Mappers' do
   let!(:song_tag_model)     { mock_model('SongTag') }
   let!(:info_model)         { mock_model('Info') }
   let!(:info_content_model) { mock_model('InfoContent') }
+  let!(:person_model)       { mock_model('Person') }
+  let!(:link_model)         { mock_model('Link') }
 
   let!(:user_mapper) {
     DM_ENV.build(user_model, :postgres) do
@@ -86,6 +88,25 @@ shared_context 'Models and Mappers' do
 
       map :id,    Integer, :key => true
       map :title, String
+    end
+  }
+
+  let!(:person_mapper) {
+    DM_ENV.build(person_model, :postgres) do
+      relation_name :people
+
+      map :id,   Integer, :key => true
+      map :name, String
+    end
+  }
+
+  let!(:link_mapper) {
+    DM_ENV.build(link_model, :postgres) do
+      relation_name :people_links
+
+      map :id,          Integer, :key => true
+      map :follower_id, Integer
+      map :followed_id, Integer
     end
   }
 end

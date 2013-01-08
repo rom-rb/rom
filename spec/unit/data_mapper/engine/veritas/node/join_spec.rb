@@ -10,10 +10,12 @@ describe Engine::Veritas::Node, '#join' do
   let(:target_relation) { mock('target_relation') }
   let(:join_relation)   { mock('join_relation') }
 
-  let(:source_aliases)  { Relation::Aliases.new(source_index) }
-  let(:target_aliases)  { Relation::Aliases.new(target_index) }
-  let(:source_index)    { Relation::Aliases::Index.new({ attribute_alias(:id, :users)     => attribute_alias(:id, :users) }, strategy) }
-  let(:target_index)    { Relation::Aliases::Index.new({ attribute_alias(:id, :addresses) => attribute_alias(:id, :addresses) }, strategy) }
+  let(:source_aliases)  { Relation::Aliases.new(source_index, source_r_index) }
+  let(:target_aliases)  { Relation::Aliases.new(target_index, target_r_index) }
+  let(:source_index)    { Relation::Aliases::AttributeIndex.new({ attribute_alias(:id, :users)     => attribute_alias(:id, :users) }, strategy) }
+  let(:target_index)    { Relation::Aliases::AttributeIndex.new({ attribute_alias(:id, :addresses) => attribute_alias(:id, :addresses) }, strategy) }
+  let(:source_r_index)  { Relation::Aliases::RelationIndex.new(:users     => 1) }
+  let(:target_r_index)  { Relation::Aliases::RelationIndex.new(:addresses => 1) }
   let(:strategy)        { Relation::Graph::Node.send(:aliasing_strategy) }
   let(:joined_aliases)  { mock('joined_aliases') }
   let(:join_definition) { {} }

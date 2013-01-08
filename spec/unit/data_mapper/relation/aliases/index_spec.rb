@@ -1,32 +1,38 @@
 require 'spec_helper'
 
-describe Relation::Aliases, '#index' do
-  subject { object.send(:index) }
+describe Relation::Aliases, '#attribute_index' do
+  subject { object.send(:attribute_index) }
 
   context "when using Aliases::Strategy::NaturalJoin" do
 
     let(:strategy) { described_class::Strategy::NaturalJoin }
 
     context "when no join has been performed" do
-      let(:object) { described_class.new(songs_index) }
+      let(:object) { described_class.new(songs_index, relation_index) }
 
-      let(:songs_index) { described_class::Index.new(songs_entries, strategy) }
+      let(:songs_index) { described_class::AttributeIndex.new(songs_entries, strategy) }
 
       let(:songs_entries) {{
         attribute_alias(:id,    :songs) => attribute_alias(:id,    :songs),
         attribute_alias(:title, :songs) => attribute_alias(:title, :songs),
       }}
 
-      it { should eql(described_class::Index.new(songs_entries, strategy)) }
+      let(:relation_index) {
+        described_class::RelationIndex.new({
+          :songs => 1
+        })
+      }
+
+      it { should eql(described_class::AttributeIndex.new(songs_entries, strategy)) }
     end
 
     context "when a self join is performed" do
 
-      let(:songs)     { described_class.new(songs_index) }
-      let(:song_tags) { described_class.new(song_tags_index) }
+      let(:songs)     { described_class.new(songs_index, songs_relation_index) }
+      let(:song_tags) { described_class.new(song_tags_index, song_tags_relation_index) }
 
-      let(:songs_index)       { described_class::Index.new(songs_entries, strategy) }
-      let(:song_tags_index)   { described_class::Index.new(song_tags_entries, strategy) }
+      let(:songs_index)     { described_class::AttributeIndex.new(songs_entries, strategy) }
+      let(:song_tags_index) { described_class::AttributeIndex.new(song_tags_entries, strategy) }
 
       let(:songs_entries) {{
         attribute_alias(:id,    :songs) => attribute_alias(:id,    :songs),
@@ -38,7 +44,19 @@ describe Relation::Aliases, '#index' do
         attribute_alias(:tag_id,  :song_tags) => attribute_alias(:tag_id,  :song_tags),
       }}
 
-      context "and no relation aliases have been specified" do
+      let(:songs_relation_index) {
+        described_class::RelationIndex.new({
+          :songs => 1
+        })
+      }
+
+      let(:song_tags_relation_index) {
+        described_class::RelationIndex.new({
+          :song_tags => 1
+        })
+      }
+
+      context "directly" do
 
         let(:object) { songs.join(songs, join_definition) }
 
@@ -46,97 +64,42 @@ describe Relation::Aliases, '#index' do
           :title => :title
         }}
 
-        it "should raise InvalidRelationAliasError" do
-          expect { subject }.to raise_error(Relation::Aliases::InvalidRelationAliasError)
+        it "should contain field mappings for all attributes" do
+          subject.should eql(described_class::AttributeIndex.new({
+            attribute_alias(:id,    :songs)   => attribute_alias(:id,    :songs),
+            attribute_alias(:title, :songs)   => attribute_alias(:title, :songs),
+            attribute_alias(:id,    :songs_2) => attribute_alias(:id,    :songs_2, true),
+            attribute_alias(:title, :songs_2) => attribute_alias(:title, :songs_2),
+          }, strategy))
         end
 
       end
 
-      context "and invalid relation aliases have been specified" do
+      context "indirectly" do #, :focus => true do
 
-        let(:object) { songs.join(songs, join_definition, relation_aliases) }
+        let(:object) { songs_X_song_tags.join(songs, other_join_definition) }
+
+        let(:songs_X_song_tags) { songs.join(song_tags, join_definition) }
 
         let(:join_definition) {{
-          :title => :title
+          :id => :song_id
         }}
 
-        let(:relation_aliases) {{
-          :foo => :bar
+        let(:other_join_definition) {{
+          :song_id => :id
         }}
 
-        it "should raise InvalidRelationAliasError" do
-          expect { subject }.to raise_error(Relation::Aliases::InvalidRelationAliasError)
+        it "should contain field mappings for all attributes" do
+          subject.should eql(described_class::AttributeIndex.new({
+            attribute_alias(:id,      :songs)     => attribute_alias(:id,     :songs),
+            attribute_alias(:title,   :songs)     => attribute_alias(:title,  :songs),
+            attribute_alias(:song_id, :song_tags) => attribute_alias(:id,     :song_tags),
+            attribute_alias(:tag_id,  :song_tags) => attribute_alias(:tag_id, :song_tags),
+            attribute_alias(:id,      :songs_2)   => attribute_alias(:id,     :songs_2),
+            attribute_alias(:title,   :songs_2)   => attribute_alias(:title,  :songs_2, true),
+          }, strategy))
         end
 
-      end
-
-      context "and valid relation aliases have been specified" do
-
-        context "directly" do
-
-          let(:object) { songs.join(songs, join_definition, relation_aliases) }
-
-          let(:join_definition) {{
-            :title => :title
-          }}
-
-          let(:relation_aliases) {{
-            :songs => :songs_2
-          }}
-
-          it "should not raise InvalidRelationAliasError" do
-            expect { subject }.to_not raise_error(Relation::Aliases::InvalidRelationAliasError)
-          end
-
-          it "should contain field mappings for all attributes" do
-            pending "direct self joins are not yet implemented"
-
-            subject.should eql(described_class::Index.new({
-              attribute_alias(:id,    :songs)   => attribute_alias(:id,    :songs),
-              attribute_alias(:title, :songs)   => attribute_alias(:title, :songs),
-              attribute_alias(:id,    :songs_2) => attribute_alias(:id,    :songs_2, true),
-              attribute_alias(:title, :songs_2) => attribute_alias(:title, :songs_2),
-            }, strategy))
-          end
-
-        end
-
-        context "indirectly" do
-
-          let(:object) { songs_X_song_tags.join(songs, other_join_definition, relation_aliases) }
-
-          let(:songs_X_song_tags) { songs.join(song_tags, join_definition) }
-
-          let(:join_definition) {{
-            :id => :song_id
-          }}
-
-          let(:other_join_definition) {{
-            :title => :title
-          }}
-
-          let(:relation_aliases) {{
-            :songs => :songs_2
-          }}
-
-          it "should not raise InvalidRelationAliasError" do
-            expect { subject }.to_not raise_error(Relation::Aliases::InvalidRelationAliasError)
-          end
-
-          it "should contain field mappings for all attributes" do
-            pending "indirect self joins are not yet implemented"
-
-            subject.should eql(described_class::Index.new({
-              attribute_alias(:id,      :songs)     => attribute_alias(:id,     :songs),
-              attribute_alias(:title,   :songs)     => attribute_alias(:title,  :songs),
-              attribute_alias(:song_id, :song_tags) => attribute_alias(:id,     :song_tags),
-              attribute_alias(:tag_id,  :song_tags) => attribute_alias(:tag_id, :song_tags),
-              attribute_alias(:id,      :songs_2)   => attribute_alias(:id,     :songs_2, true),
-              attribute_alias(:title,   :songs_2)   => attribute_alias(:title,  :songs_2),
-            }, strategy))
-          end
-
-        end
       end
 
     end
@@ -145,11 +108,23 @@ describe Relation::Aliases, '#index' do
 
       let(:object) { songs.join(song_tags, join_definition) }
 
-      let(:songs)     { described_class.new(songs_index) }
-      let(:song_tags) { described_class.new(song_tags_index) }
+      let(:songs)     { described_class.new(songs_index, songs_relation_index) }
+      let(:song_tags) { described_class.new(song_tags_index, song_tags_relation_index) }
 
-      let(:songs_index)     { described_class::Index.new(songs_entries, strategy) }
-      let(:song_tags_index) { described_class::Index.new(song_tags_entries, strategy) }
+      let(:songs_index)     { described_class::AttributeIndex.new(songs_entries, strategy) }
+      let(:song_tags_index) { described_class::AttributeIndex.new(song_tags_entries, strategy) }
+
+      let(:songs_relation_index) {
+        described_class::RelationIndex.new({
+          :songs => 1
+        })
+      }
+
+      let(:song_tags_relation_index) {
+        described_class::RelationIndex.new({
+          :song_tags => 1
+        })
+      }
 
       let(:join_definition) {{
         :id => :song_id
@@ -168,7 +143,7 @@ describe Relation::Aliases, '#index' do
         }}
 
         it "should contain field mappings for all attributes" do
-          subject.should eql(described_class::Index.new({
+          subject.should eql(described_class::AttributeIndex.new({
             attribute_alias(:id,      :songs)     => attribute_alias(:id,     :songs),
             attribute_alias(:title,   :songs)     => attribute_alias(:title,  :songs),
             attribute_alias(:song_id, :song_tags) => attribute_alias(:id,     :song_tags),
@@ -195,7 +170,7 @@ describe Relation::Aliases, '#index' do
             }}
 
             it "should contain field mappings for all attributes" do
-              subject.should eql(described_class::Index.new({
+              subject.should eql(described_class::AttributeIndex.new({
                 attribute_alias(:id,      :songs)     => attribute_alias(:id,     :songs),
                 attribute_alias(:title,   :songs)     => attribute_alias(:title,  :songs),
                 attribute_alias(:id,      :song_tags) => attribute_alias(:id,     :song_tags, true),
@@ -223,7 +198,7 @@ describe Relation::Aliases, '#index' do
             }}
 
             it "should contain field mappings for all attributes" do
-              subject.should eql(described_class::Index.new({
+              subject.should eql(described_class::AttributeIndex.new({
                 attribute_alias(:id,         :songs)     => attribute_alias(:id,          :songs),
                 attribute_alias(:title,      :songs)     => attribute_alias(:title,       :songs),
                 attribute_alias(:created_at, :songs)     => attribute_alias(:created_at,  :songs),
@@ -250,7 +225,7 @@ describe Relation::Aliases, '#index' do
             }}
 
             it "should contain field mappings for all attributes" do
-              subject.should eql(described_class::Index.new({
+              subject.should eql(described_class::AttributeIndex.new({
                 attribute_alias(:id,         :songs)     => attribute_alias(:id,         :songs),
                 attribute_alias(:title,      :songs)     => attribute_alias(:title,      :songs),
                 attribute_alias(:created_at, :songs)     => attribute_alias(:created_at, :songs),
@@ -274,9 +249,15 @@ describe Relation::Aliases, '#index' do
         }}
 
         let(:songs_X_song_tags) { songs.join(song_tags, join_definition) }
-        let(:song_comments)     { described_class.new(song_comments_index) }
+        let(:song_comments)     { described_class.new(song_comments_index, song_comments_relation_index) }
 
-        let(:song_comments_index) { described_class::Index.new(song_comments_entries, strategy) }
+        let(:song_comments_index) { described_class::AttributeIndex.new(song_comments_entries, strategy) }
+
+        let(:song_comments_relation_index) {
+          described_class::RelationIndex.new({
+            :song_tags => 1
+          })
+        }
 
         let(:songs_entries) {{
           attribute_alias(:id,    :songs) => attribute_alias(:id,    :songs),
@@ -294,7 +275,7 @@ describe Relation::Aliases, '#index' do
         }}
 
         it "should contain field mappings for all attributes" do
-          subject.should eql(described_class::Index.new({
+          subject.should eql(described_class::AttributeIndex.new({
             attribute_alias(:id,         :songs)         => attribute_alias(:id,         :songs),
             attribute_alias(:title,      :songs)         => attribute_alias(:title,      :songs),
             attribute_alias(:song_id,    :song_tags)     => attribute_alias(:id,         :song_tags),
