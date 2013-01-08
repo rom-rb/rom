@@ -98,7 +98,7 @@ module DataMapper
 
       # Rename this instance
       #
-      # @param [Hash] aliases
+      # @param [Hash<Symbol, Symbol>] aliases
       #   the aliases to use for renaming
       #
       # @return [Aliases]
@@ -110,24 +110,24 @@ module DataMapper
 
       protected
 
-      # The index used by this instance
+      # The attribute index used by this instance
       #
       # @return [AttributeIndex]
       #
       # @api private
       attr_reader :attribute_index
 
-      # Return the relation alias index
+      # The relation index used by this instance
       #
       # @return [RelationIndex]
       #
       # @api private
       attr_reader :relation_index
 
-      # Rename the indexed relations
+      # Rename the instance's attribute index relations
       #
       # @param [Hash<Symbol, Symbol>] aliases
-      #   the aliases used to rename this index's instance
+      #   the aliases used to rename this instance's attribute index
       #
       # @return [AttributeIndex]
       #   the renamed attribute index
