@@ -88,14 +88,12 @@ module DataMapper
       #
       # @api private
       def join(other, join_definition)
-        joined_r_idx   = relation_index.join(other.relation_index)
-        other_aliases  = other.relation_index.aliases(joined_r_idx)
-        renamed_a_idx  = other.rename_relations(other_aliases)
-        join_keys      = join_definition.to_hash
-        joined_a_idx   = attribute_index.join(renamed_a_idx, join_keys)
-        joined_aliases = renamed_a_idx.aliases(joined_a_idx)
+        joined_r_idx  = joined_relation_index(other)
+        renamed_a_idx = renamed_attribute_index(other, joined_r_idx)
+        joined_a_idx  = attribute_index.join(renamed_a_idx, join_definition)
+        other_aliases = renamed_a_idx.aliases(joined_a_idx)
 
-        new(joined_a_idx, joined_r_idx, joined_aliases)
+        new(joined_a_idx, joined_r_idx, other_aliases)
       end
 
       # Rename this instance
@@ -140,6 +138,18 @@ module DataMapper
       end
 
       private
+
+      def joined_relation_index(other)
+        relation_index.join(other.relation_index)
+      end
+
+      def renamed_attribute_index(other, other_relation_index)
+        other.rename_relations(relation_aliases(other, other_relation_index))
+      end
+
+      def relation_aliases(other, other_relation_index)
+        other.relation_index.aliases(other_relation_index)
+      end
 
       def new(*args)
         self.class.new(*args)

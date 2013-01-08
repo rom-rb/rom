@@ -24,14 +24,14 @@ module DataMapper
         # @param [AttributeIndex] attribute_index
         #   the attribute index to join with the instance's own attribute index
         #
-        # @param [Enumerable<Symbol, Symbol>] join_definition
+        # @param [#to_hash] join_definition
         #   the attributes to use for joining
         #
         # @return [AttributeIndex]
         #
         # @api private
         def join(attribute_index, join_definition)
-          new_index(joined_entries(attribute_index, join_definition))
+          new_index(joined_entries(attribute_index, join_definition.to_hash))
         end
 
         private
