@@ -126,15 +126,15 @@ module DataMapper
 
       # Rename the indexed relations
       #
-      # @param [Hash<Symbol, Symbol>] relation_aliases
+      # @param [Hash<Symbol, Symbol>] aliases
       #   the aliases used to rename this index's instance
       #
       # @return [AttributeIndex]
       #   the renamed attribute index
       #
       # @api private
-      def rename_relations(relation_aliases)
-        attribute_index.rename_relations(relation_aliases)
+      def rename_relations(aliases)
+        attribute_index.rename_relations(aliases)
       end
 
       private
