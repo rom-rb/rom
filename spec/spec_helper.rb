@@ -7,6 +7,10 @@ Dir[File.expand_path('../{support,shared}/**/*.rb', __FILE__)].each { |f| requir
 
 require 'dm-session'
 
+if RUBY_VERSION < '1.9'
+  require 'rspec/autorun'
+end
+
 class Spec
   class DomainObject
     #include Equalizer.new(:key_attribute, :other_attribute)
