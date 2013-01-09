@@ -35,8 +35,8 @@ module DataMapper
         # @api private
         def self.initial_entries(relation_name, attribute_set)
           attribute_set.primitives.each_with_object({}) { |attribute, entries|
-            attribute = Attribute.build(attribute.field, relation_name)
-            entries[attribute] = attribute
+            entry = Attribute.build(attribute.field, relation_name)
+            entries[entry] = entry
           }
         end
 
