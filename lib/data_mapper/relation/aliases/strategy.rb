@@ -5,6 +5,7 @@ module DataMapper
       class Strategy
 
         include AbstractType
+        include Adamantium
 
         # Initialize a new instance
         #

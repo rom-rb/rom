@@ -24,8 +24,7 @@ module DataMapper
         new(a_idx, r_idx)
       end
 
-      include Enumerable
-      include Equalizer.new(:attribute_index)
+      include Enumerable, Adamantium, Equalizer.new(:attribute_index)
 
       # The header represented by this instance
       #

@@ -42,7 +42,7 @@ module DataMapper
 
         private_class_method :initial_entries
 
-        include Equalizer.new(:entries)
+        include Adamantium, Equalizer.new(:entries)
 
         # The entries managed by this instance
         #

@@ -32,6 +32,8 @@ module DataMapper
 
         private_class_method :initial_entries
 
+        include Adamantium, Equalizer.new(:entries)
+
         # Initialize a new instance
         #
         # @param [Hash<Symbol, Integer>] entries
