@@ -9,7 +9,7 @@ describe Relation::Aliases::RelationIndex, '.build' do
 
   let(:relation_name)  { :users }
   let(:attribute_set)  { AttributeSet.new << mock_attribute(:id, Integer) }
-  let(:strategy_class) { Relation::Aliases::Strategy::NaturalJoin }
+  let(:strategy_class) { mock }
 
   it { should eql(described_class.new({ :users => 1 })) }
 end
