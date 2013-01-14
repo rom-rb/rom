@@ -1,6 +1,5 @@
 require 'spec_helper'
 
-# TODO make these specs more strict!
 describe Engine::Veritas::Node, '#join' do
   subject { object.join(other, join_definition) }
 
