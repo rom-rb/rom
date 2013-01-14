@@ -192,6 +192,7 @@ module DataMapper
               renamed_initial = new_attribute(initial.field, to)
               renamed_current = new_attribute(current.field, to)
               renamed[renamed_initial] = renamed_current
+              renamed.delete(initial)
             end
           }
         end
