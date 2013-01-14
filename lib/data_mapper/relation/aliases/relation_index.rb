@@ -56,7 +56,7 @@ module DataMapper
         #
         # @api private
         def join(other)
-          new(entries.merge(other.entries) { |key, old, new| old + new })
+          new(entries.merge(other.entries) { |_name, old, new| old + new })
         end
 
         # Rename relations indexed by this instance
