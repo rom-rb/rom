@@ -110,7 +110,7 @@ module DataMapper
         private
 
         def join_relation(other, joined_aliases)
-          relation.join(other.rename(joined_aliases).relation)
+          relation.join(other.relation.rename(joined_aliases))
         end
 
       end # class Node
