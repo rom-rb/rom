@@ -180,7 +180,7 @@ module DataMapper
 
         def renamed_entries(aliases)
           aliases.each_with_object(entries.dup) { |(from, to), renamed|
-            with_initial_attributes(from) do |initial, _current|
+            with_initial_attributes(from) do |initial|
               renamed[initial] = new_attribute(to, initial.prefix)
             end
           }
