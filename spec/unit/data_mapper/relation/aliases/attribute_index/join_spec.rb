@@ -17,5 +17,9 @@ describe Relation::Aliases::AttributeIndex, '#join' do
   let(:joined_index)    { mock }
   let(:join_definition) { mock }
 
+  before do
+    strategy_class.should_receive(:new).with(object).and_return(strategy)
+  end
+
   it { should be(joined_index) }
 end
