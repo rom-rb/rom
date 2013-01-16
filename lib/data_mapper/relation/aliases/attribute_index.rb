@@ -79,14 +79,17 @@ module DataMapper
         #
         # @see Strategy#join
         #
-        # @param [*args] args
-        #   the arguments accepted by {Strategy#join}
+        # @param [AttributeIndex] other
+        #   the attribute index to join with self
+        #
+        # @param [#to_hash] join_definition
+        #   the attributes used to perform the join
         #
         # @return [AttributeIndex]
         #
         # @api private
-        def join(*args)
-          strategy.join(*args)
+        def join(other, join_definition)
+          strategy(join_definition).join(other)
         end
 
         # Rename attributes indexed by this instance
@@ -218,8 +221,8 @@ module DataMapper
           proc { |attribute| attribute.field == name }
         end
 
-        def strategy
-          @strategy_class.new(self)
+        def strategy(join_definition)
+          @strategy_class.new(self, join_definition)
         end
 
         def new_attribute(field, relation_name)

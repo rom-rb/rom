@@ -12,11 +12,15 @@ module DataMapper
         # @param [AttributeIndex] attribute_index
         #   the attribute index used by this instance
         #
+        # @param [#to_hash] join_definition
+        #   the attributes used for joining two attribute indexes
+        #
         # @return [undefined]
         #
         # @api private
-        def initialize(attribute_index)
+        def initialize(attribute_index, join_definition)
           @attribute_index = attribute_index
+          @join_definition = join_definition.to_hash
           @entries         = @attribute_index.entries
         end
 
@@ -25,25 +29,23 @@ module DataMapper
         # @param [AttributeIndex] attribute_index
         #   the attribute index to join with the instance's own attribute index
         #
-        # @param [#to_hash] join_definition
-        #   the attributes to use for joining
-        #
         # @return [AttributeIndex]
         #
         # @api private
-        def join(attribute_index, join_definition)
-          new_index(joined_entries(attribute_index, join_definition.to_hash))
+        def join(attribute_index)
+          new_index(joined_entries(attribute_index))
         end
 
         private
 
+        attr_reader :join_definition
         attr_reader :entries
 
-        def joined_entries(attribute_index, _join_definition)
+        def joined_entries(attribute_index)
           attribute_index.entries.dup
         end
 
-        def join_key_entries(attribute_index, join_definition)
+        def join_key_entries(attribute_index)
           with_new_index_entries(attribute_index) { |key, name, new_entries|
             join_definition.each do |left_key, right_key|
               if name.field == right_key
@@ -54,15 +56,15 @@ module DataMapper
           }
         end
 
-        def clashing_entries(attribute_index, join_definition)
+        def clashing_entries(attribute_index)
           with_new_index_entries(attribute_index) { |key, name, new_entries|
-            if clashing?(name, join_definition)
+            if clashing?(name)
               new_entries[key] = Attribute.build(key.field, key.prefix, true)
             end
           }
         end
 
-        def clashing?(name, _join_definition)
+        def clashing?(name)
           @attribute_index.field?(name.field)
         end
 

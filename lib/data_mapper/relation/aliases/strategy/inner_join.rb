@@ -7,9 +7,9 @@ module DataMapper
 
           private
 
-          def joined_entries(index, join_definition)
+          def joined_entries(attribute_index)
             super.
-              update(clashing_entries(index, join_definition)).
+              update(clashing_entries(attribute_index)).
               update(entries)
           end
 
