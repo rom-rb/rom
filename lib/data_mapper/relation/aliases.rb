@@ -104,7 +104,7 @@ module DataMapper
       #
       # @api private
       def rename(aliases)
-        new(attribute_index.rename(aliases), relation_index, aliases)
+        new(attribute_index.rename_attributes(aliases), relation_index, aliases)
       end
 
       protected

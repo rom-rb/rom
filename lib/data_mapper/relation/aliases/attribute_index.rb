@@ -100,8 +100,8 @@ module DataMapper
         # @return [AttributeIndex]
         #
         # @api private
-        def rename(aliases)
-          new(renamed_entries(aliases))
+        def rename_attributes(aliases)
+          new(renamed_attributes(aliases))
         end
 
         # Rename relations indexed by this instance
@@ -181,7 +181,7 @@ module DataMapper
 
         private
 
-        def renamed_entries(aliases)
+        def renamed_attributes(aliases)
           with_new_entries(aliases) { |from, to, renamed|
             with_initial_attributes(from) do |initial|
               renamed[initial] = new_attribute(to, initial.prefix)

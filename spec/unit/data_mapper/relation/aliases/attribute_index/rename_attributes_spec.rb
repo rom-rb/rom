@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe Relation::Aliases::AttributeIndex, '#rename' do
-  subject { object.rename(aliases) }
+describe Relation::Aliases::AttributeIndex, '#rename_attributes' do
+  subject { object.rename_attributes(aliases) }
 
   let(:object) { described_class.new(entries, strategy_class) }
 
