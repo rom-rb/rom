@@ -6,5 +6,5 @@ describe Relationship, '#initialize' do
   let(:user_model)  { mock_model('User') }
   let(:group_model) { mock_model('Group') }
 
-  it_should_behave_like 'an abstract class'
+  it_should_behave_like 'an abstract type'
 end

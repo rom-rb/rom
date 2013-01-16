@@ -1,4 +1,4 @@
-shared_examples_for 'an abstract class' do
+shared_examples_for 'an abstract type' do
   context 'called on a subclass' do
     let(:object) { Class.new(described_class) }
 

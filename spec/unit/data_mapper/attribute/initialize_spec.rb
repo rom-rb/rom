@@ -6,5 +6,5 @@ describe Attribute, '#initialize' do
   let(:name)    { :id }
   let(:options) { {}  }
 
-  it_should_behave_like 'an abstract class'
+  it_should_behave_like 'an abstract type'
 end
