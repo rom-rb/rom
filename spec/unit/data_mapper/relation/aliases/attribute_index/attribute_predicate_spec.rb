@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe Relation::Aliases::AttributeIndex, '#field?' do
-  subject { object.field?(name) }
+describe Relation::Aliases::AttributeIndex, '#attribute?' do
+  subject { object.attribute?(name) }
 
   let(:object) { described_class.new(entries, strategy_class) }
 

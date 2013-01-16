@@ -65,7 +65,7 @@ module DataMapper
         end
 
         def clashing?(name)
-          @attribute_index.field?(name.field)
+          @attribute_index.attribute?(name.field)
         end
 
         def with_new_index_entries(attribute_index)

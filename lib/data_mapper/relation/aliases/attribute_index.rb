@@ -133,17 +133,17 @@ module DataMapper
           }
         end
 
-        # Tests wether this instance contains the given +field+
+        # Tests wether the given +current_name+ is present
         #
-        # @param [Symbol] name
-        #   the field name to test for
+        # @param [Symbol] current_name
+        #   the current name to look for
         #
-        # @return [true] if the instance contains the given +field+
+        # @return [true] if +current_name+ is present
         # @return [false] otherwise
         #
         # @api private
-        def field?(name)
-          entries.values.any?(&filter_field(name))
+        def attribute?(current_name)
+          entries.values.any?(&filter_field(current_name))
         end
 
         # The attribute initially named by +name+
