@@ -146,9 +146,9 @@ module DataMapper
           entries.values.any?(&filter_field(current_name))
         end
 
-        # The attribute initially named by +name+
+        # The attribute initially named by +initial_name+
         #
-        # @param [Symbol] name
+        # @param [Symbol] initial_name
         #   the attribute's initial name
         #
         # @return [Attribute]
@@ -157,8 +157,8 @@ module DataMapper
         #   if no matching attribute exists
         #
         # @api private
-        def field(name)
-          fetch(entries.keys.detect(&filter_field(name)))
+        def attribute(initial_name)
+          fetch(entries.keys.detect(&filter_field(initial_name)))
         end
 
         protected

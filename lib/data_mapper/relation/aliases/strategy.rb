@@ -49,7 +49,7 @@ module DataMapper
           with_new_index_entries(attribute_index) { |key, name, new_entries|
             join_definition.each do |left_key, right_key|
               if name.field == right_key
-                attribute        = @attribute_index.field(left_key)
+                attribute        = @attribute_index.attribute(left_key)
                 new_entries[key] = Attribute.build(attribute.field, name.prefix)
               end
             end
