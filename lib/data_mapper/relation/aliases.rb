@@ -136,6 +136,10 @@ module DataMapper
         attribute_index.rename_relations(aliases)
       end
 
+      def relation_aliases(relation_index)
+        self.relation_index.aliases(relation_index)
+      end
+
       private
 
       def joined_relation_index(other)
@@ -143,11 +147,7 @@ module DataMapper
       end
 
       def renamed_attribute_index(other, other_relation_index)
-        other.rename_relations(relation_aliases(other, other_relation_index))
-      end
-
-      def relation_aliases(other, other_relation_index)
-        other.relation_index.aliases(other_relation_index)
+        other.rename_relations(other.relation_aliases(other_relation_index))
       end
 
       def new(*args)
