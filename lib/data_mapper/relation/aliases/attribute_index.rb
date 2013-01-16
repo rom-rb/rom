@@ -182,7 +182,7 @@ module DataMapper
         private
 
         def renamed_entries(aliases)
-          aliases.each_with_object(entries.dup) { |(from, to), renamed|
+          with_new_entries(aliases) { |from, to, renamed|
             with_initial_attributes(from) do |initial|
               renamed[initial] = new_attribute(to, initial.prefix)
             end
@@ -190,7 +190,7 @@ module DataMapper
         end
 
         def renamed_relations(aliases)
-          aliases.each_with_object(entries.dup) { |(from, to), renamed|
+          with_new_entries(aliases) { |from, to, renamed|
             with_relation_siblings(from) do |initial, current|
               renamed_initial = new_attribute(initial.field, to)
               renamed_current = new_attribute(current.field, to)
@@ -211,6 +211,12 @@ module DataMapper
         def with_entries(name, filter)
           entries.each do |initial, current|
             yield(initial, current) if filter.call(name, current)
+          end
+        end
+
+        def with_new_entries(aliases)
+          aliases.each_with_object(entries.dup) do |(from, to), renamed|
+            yield(from, to, renamed)
           end
         end
 
