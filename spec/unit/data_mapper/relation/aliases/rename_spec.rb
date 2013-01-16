@@ -35,4 +35,5 @@ describe Relation::Aliases, '#rename' do
 
   its(:attribute_index) { should eql(expected_index) }
   its(:relation_index)  { should eql(songs_relation_index) }
+  its(:aliases)         { should eql(aliases) }
 end

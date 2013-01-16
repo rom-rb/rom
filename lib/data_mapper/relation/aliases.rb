@@ -123,6 +123,13 @@ module DataMapper
       # @api private
       attr_reader :relation_index
 
+      # The aliases used to rename the right side of a relational join
+      #
+      # @return [Hash<Symbol, Symbol>]
+      #
+      # @api private
+      attr_reader :aliases
+
       # Rename the instance's attribute index relations
       #
       # @param [Hash<Symbol, Symbol>] aliases
