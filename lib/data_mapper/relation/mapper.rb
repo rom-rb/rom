@@ -314,7 +314,7 @@ module DataMapper
       #   the options to restrict the relation
       #
       # @raise RuntimeError
-      #   if more than one domain object was found
+      #   if zero or more than one domain object was found
       #
       # @return [Object]
       #   a domain object
@@ -322,9 +322,13 @@ module DataMapper
       # @api public
       def one(conditions = {})
         results = find(conditions).to_a
+        size = results.size
 
-        if results.size == 1
+        if size == 1
           results.first
+        elsif size == 0
+          # TODO: add custom error class
+          raise "#{self}#one returned zero results"
         else
           # TODO: add custom error class
           raise "#{self}#one returned more than one result"

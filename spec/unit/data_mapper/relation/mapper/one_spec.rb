@@ -25,4 +25,12 @@ describe Relation::Mapper, '#one' do
       expect { subject }.to raise_error("#{object}#one returned more than one result")
     end
   end
+
+  context "when zero results are returned" do
+    let(:result) { [] }
+
+    specify do
+      expect { subject }.to raise_error("#{object}#one returned zero results")
+    end
+  end
 end
