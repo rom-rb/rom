@@ -49,7 +49,7 @@ describe Relation::Mapper::Builder, '#mapper' do
     mapper_registry.each do |_, mapper|
       name     = mapper.relation_name
       relation = mapper.class.gateway_relation
-      aliases  = mapper.relations.aliases(name, mapper.attributes)
+      aliases  = mapper.relations.header(name, mapper.attributes)
 
       mapper.relations.new_node(name, relation, aliases)
     end

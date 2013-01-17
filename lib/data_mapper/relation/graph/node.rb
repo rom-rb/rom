@@ -7,15 +7,15 @@ module DataMapper
       class Node
         include Enumerable, Equalizer.new(:name)
 
-        def self.aliases(relation_name, attribute_set)
-          Aliases.build(relation_name, attribute_set, aliasing_strategy)
+        def self.header(relation_name, attribute_set)
+          Header.build(relation_name, attribute_set, join_strategy)
         end
 
-        def self.aliasing_strategy
-          Aliases::Strategy::NaturalJoin
+        def self.join_strategy
+          Header::JoinStrategy::NaturalJoin
         end
 
-        private_class_method :aliasing_strategy
+        private_class_method :join_strategy
 
         # The node name
         #
@@ -36,9 +36,9 @@ module DataMapper
         # @api private
         attr_reader :relation
 
-        # Aliases for this relation
+        # Header for this relation
         #
-        # @return [AliasSet]
+        # @return [Header]
         #
         # @api private
         attr_reader :aliases
@@ -51,7 +51,7 @@ module DataMapper
         # @param [Object] relation
         #   an instance of the engine's relation class
         #
-        # @param [Aliases] aliases
+        # @param [Header] aliases
         #   the aliases to use for this node
         #
         # @return [undefined]

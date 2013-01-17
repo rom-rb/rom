@@ -293,8 +293,8 @@ module DataMapper
       # @return [Object] the aliases provided by a specific engine
       #
       # @api private
-      def aliases(relation_name, attribute_set)
-        node_class.aliases(relation_name, attribute_set)
+      def header(relation_name, attribute_set)
+        node_class.header(relation_name, attribute_set)
       end
 
     end # class Graph
