@@ -313,8 +313,10 @@ module DataMapper
       # @param [Hash] conditions
       #   the options to restrict the relation
       #
-      # @raise RuntimeError
-      #   if zero or more than one domain object was found
+      # @raise [NoTuplesError]
+      #   raised if no tuples are returned
+      # @raise [ManyTuplesError]
+      #   raised if more than one tuple is returned
       #
       # @return [Object]
       #   a domain object
@@ -322,17 +324,8 @@ module DataMapper
       # @api public
       def one(conditions = {})
         results = find(conditions).to_a
-        size = results.size
-
-        if size == 1
-          results.first
-        elsif size == 0
-          # TODO: add custom error class
-          raise "#{self}#one returned zero results"
-        else
-          # TODO: add custom error class
-          raise "#{self}#one returned more than one result"
-        end
+        assert_exactly_one_tuple(results.size)
+        results.first
       end
 
       # Return a mapper for iterating over a restricted set of domain objects
@@ -571,6 +564,24 @@ module DataMapper
       end
 
       private
+
+      # Assert exactly one tuple is returned
+      #
+      # @return [undefined]
+      #
+      # @raise [NoTuplesError]
+      #   raised if no tuples are returned
+      # @raise [ManyTuplesError]
+      #   raised if more than one tuple is returned
+      #
+      # @api private
+      def assert_exactly_one_tuple(size)
+        if size.zero?
+          raise NoTuplesError, 'one tuple expected, but none was returned'
+        elsif size > 1
+          raise ManyTuplesError, "one tuple expected, but #{size} were returned"
+        end
+      end
 
       # Return a new mapper instance
       #

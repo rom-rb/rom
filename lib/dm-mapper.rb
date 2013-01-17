@@ -1,6 +1,12 @@
 # Main DataMapper module with methods to setup and manage the environment
 module DataMapper
 
+  # Raised when the returned tuples are unexpectedly empty
+  NoTuplesError = Class.new(RuntimeError)
+
+  # Raised when the returned tuples are unexpectedly too many
+  ManyTuplesError = Class.new(RuntimeError)
+
   # Represent an undefined argument
   Undefined = Object.new.freeze
 
