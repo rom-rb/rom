@@ -119,7 +119,7 @@ module DataMapper
     # @return [undefined]
     #
     # @api private
-    def initialize(name, source_model, target_model, options = {})
+    def initialize(name, source_model, target_model, options = EMPTY_HASH)
       @name         = name.to_sym
       @options      = options.to_hash
 

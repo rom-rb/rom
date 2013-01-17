@@ -29,11 +29,9 @@ module DataMapper
         # @return [ManyToOne]
         #
         # @api private
-        def self.build(source, name, target_model, options = {}, &op)
-          options = options.merge(:operation => op)
-
+        def self.build(source, name, target_model, options = EMPTY_HASH, &op)
           Relationship::ManyToOne.new(
-            name, source.model, target_model, options
+            name, source.model, target_model, options.merge(:operation => op)
           )
         end
       end # class BelongsTo

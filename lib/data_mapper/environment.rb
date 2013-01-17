@@ -53,7 +53,7 @@ module DataMapper
     # @return [self]
     #
     # @api public
-    def setup(name, options = {})
+    def setup(name, options = EMPTY_HASH)
       engines[name.to_sym] = Engine.build(options)
       self
     end

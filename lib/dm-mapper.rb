@@ -10,6 +10,9 @@ module DataMapper
   # Represent an undefined argument
   Undefined = Object.new.freeze
 
+  # An empty frozen Hash useful for parameter default values
+  EMPTY_HASH = Hash.new.freeze
+
   # Represent a positive, infinitely large Float number
   Infinity  = 1.0 / 0
 

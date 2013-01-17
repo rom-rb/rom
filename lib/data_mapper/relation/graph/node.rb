@@ -57,7 +57,7 @@ module DataMapper
         # @return [undefined]
         #
         # @api private
-        def initialize(name, relation, header = {})
+        def initialize(name, relation, header = EMPTY_HASH)
           @name     = name.to_sym
           @relation = relation
           @header   = header

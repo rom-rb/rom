@@ -93,7 +93,7 @@ module DataMapper
     #   a concrete subclass based on the given options
     #
     # @api public
-    def self.build(name, options = {})
+    def self.build(name, options = EMPTY_HASH)
       klass = if PRIMITIVES.include?(options[:type])
                 Attribute::Primitive
               elsif options[:collection]
@@ -116,7 +116,7 @@ module DataMapper
     # @return [undefined]
     #
     # @api private
-    def initialize(name, options = {})
+    def initialize(name, options)
       @name    = name
       @field   = options.fetch(:to, @name)
       @key     = options.fetch(:key, false)
@@ -181,7 +181,7 @@ module DataMapper
     # @return [Attribute]
     #
     # @api private
-    def clone(options = {})
+    def clone(options = EMPTY_HASH)
       self.class.build(name, @options.merge(clone_options(options)))
     end
 

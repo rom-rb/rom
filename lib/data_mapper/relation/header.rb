@@ -44,7 +44,7 @@ module DataMapper
       # @return [undefined]
       #
       # @api private
-      def initialize(attribute_index, relation_index, aliases = {})
+      def initialize(attribute_index, relation_index, aliases = EMPTY_HASH)
         @attribute_index = attribute_index
         @relation_index  = relation_index
 

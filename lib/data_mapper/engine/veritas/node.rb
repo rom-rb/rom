@@ -39,7 +39,7 @@ module DataMapper
         # @return [Node]
         #
         # @api public
-        def join(other, join_definition = {})
+        def join(other, join_definition = EMPTY_HASH)
           joined_header   = header.join(other.header, join_definition)
           joined_relation = join_relation(other, joined_header)
 

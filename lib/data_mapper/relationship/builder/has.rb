@@ -39,11 +39,11 @@ module DataMapper
         # @return [OneToMany, OneToOne, ManyToMany]
         #
         # @api private
-        def self.build(source, cardinality, name, target_model, options = {}, &op)
+        def self.build(source, cardinality, name, target_model, options = EMPTY_HASH, &op)
           through  = options[:through]
           min, max = extract_min_max(cardinality, name)
 
-          options.update(:min => min, :max => max, :operation => op)
+          inferred_options = options.merge(:min => min, :max => max, :operation => op)
 
           klass =
             if max > 1
@@ -56,7 +56,7 @@ module DataMapper
               Relationship::OneToOne
             end
 
-          klass.new(name, source.model, target_model, options)
+          klass.new(name, source.model, target_model, inferred_options)
         end
 
         # Extract the upper and lower bounds from the given cardinality

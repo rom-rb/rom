@@ -302,7 +302,7 @@ module DataMapper
       # @return [Relation::Mapper]
       #
       # @api public
-      def find(conditions = {})
+      def find(conditions = EMPTY_HASH)
         new(restricted_relation(conditions))
       end
 
@@ -325,7 +325,7 @@ module DataMapper
       #   a domain object
       #
       # @api public
-      def one(conditions = {})
+      def one(conditions = EMPTY_HASH)
         results = new(limited_relation(conditions, DEFAULT_LIMIT_FOR_ONE)).to_a
         assert_exactly_one_tuple(results.size)
         results.first

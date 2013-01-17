@@ -11,7 +11,7 @@ describe Attribute, '#load' do
     klass
   end
 
-  let(:attribute) { class_under_test.new(:title) }
+  let(:attribute) { class_under_test.new(:title, EMPTY_HASH) }
 
   specify do
     expect { subject }.to raise_error(
