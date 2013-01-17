@@ -88,8 +88,8 @@ module SpecHelper
     Attribute.build(name, options.merge(:type => type))
   end
 
-  def mock_relation(name, header = [])
-    Veritas::Relation::Base.new(name, header)
+  def mock_relation(name, header = [], tuples = Veritas::Relation::Empty::ZERO_TUPLE)
+    Veritas::Relation::Base.new(name, header, tuples)
   end
 
   def mock_relationship(name, attributes = {})
