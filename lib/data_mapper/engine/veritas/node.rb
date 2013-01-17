@@ -89,13 +89,17 @@ module DataMapper
         #     [ r.name.desc ]
         #   }
         #
-        # @param [Proc]
+        # @param [*args] args
+        #   the directions used for sorting the relation
+        #
+        # @param [Proc] &block
+        #   the optional block to evaluate for directions
         #
         # @return [Node]
         #
         # @api public
-        def sort_by(&block)
-          new(name, relation.sort_by(&block), header)
+        def sort_by(*args, &block)
+          new(name, relation.sort_by(*args, &block), header)
         end
 
         # Sorts relation ascending using the complete header
