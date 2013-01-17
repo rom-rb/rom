@@ -300,7 +300,7 @@ module DataMapper
       #
       # @api public
       def find(conditions = {})
-        new(relation.restrict(Query.new(conditions, attributes)))
+        new(restricted_relation(conditions))
       end
 
       # Return a mapper for iterating over the relation ordered by *order
@@ -564,6 +564,10 @@ module DataMapper
       end
 
       private
+
+      def restricted_relation(conditions)
+        relation.restrict(Query.new(conditions, attributes))
+      end
 
       # Assert exactly one tuple is returned
       #
