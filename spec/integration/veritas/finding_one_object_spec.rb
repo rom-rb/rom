@@ -24,7 +24,7 @@ describe 'Finding One Object' do
 
   it 'raises an exception if more than one objects were found' do
     expect { DM_ENV[user_model].one(:name => 'Jane') }.to raise_error(
-      "#{DM_ENV[user_model]}#one returned more than one result")
+      ManyTuplesError, "one tuple expected, but 2 were returned")
   end
 
 end
