@@ -41,7 +41,7 @@ module DataMapper
         # @return [Header]
         #
         # @api private
-        attr_reader :aliases
+        attr_reader :header
 
         # Initializes a relation node instance
         #
@@ -51,16 +51,16 @@ module DataMapper
         # @param [Object] relation
         #   an instance of the engine's relation class
         #
-        # @param [Header] aliases
-        #   the aliases to use for this node
+        # @param [Header] header
+        #   the header to use for this node
         #
         # @return [undefined]
         #
         # @api private
-        def initialize(name, relation, aliases = {})
+        def initialize(name, relation, header = {})
           @name     = name.to_sym
           @relation = relation
-          @aliases  = aliases
+          @header   = header
         end
 
         # Iterate on relation

@@ -16,5 +16,5 @@ describe Engine::Veritas::Node, '#restrict' do
   it { should be_instance_of(described_class) }
 
   its(:relation) { should be(restriction) }
-  its(:aliases)  { should be(object.aliases) }
+  its(:header)   { should be(object.header) }
 end

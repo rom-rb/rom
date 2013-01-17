@@ -26,12 +26,12 @@ module DataMapper
 
       include Enumerable, Adamantium, Equalizer.new(:attribute_index)
 
-      # The header represented by this instance
+      # The aliases for renaming the right side relation after a {#join}
       #
-      # @return [Set<Attribute>]
+      # @return [Hash<Symbol, Symbol>]
       #
       # @api private
-      attr_reader :header
+      attr_reader :aliases
 
       # Initialize a new instance
       #
@@ -52,26 +52,19 @@ module DataMapper
         @header  = @attribute_index.header
       end
 
-      # Iterate over the aliases
+      # Iterate over the header's attributes
       #
-      # If this instance has previously been joined with another one,
-      # the yielded aliases are to be used for renaming the right side
-      # relation of the relational join.
+      # @yield [attribute]
       #
-      # @yield [old, new]
-      #
-      # @yieldparam [Symbol] old
-      #   the old attribute name
-      #
-      # @yieldparam [Symbol] new
-      #   the new attribute name
+      # @yieldparam [Attribute] attribute
+      #   a header attribute
       #
       # @return [self, Enumerator]
       #
       # @api private
       def each(&block)
         return to_enum unless block_given?
-        @aliases.each(&block)
+        @header.each(&block)
         self
       end
 
@@ -122,13 +115,6 @@ module DataMapper
       #
       # @api private
       attr_reader :relation_index
-
-      # The aliases used to rename the right side of a relational join
-      #
-      # @return [Hash<Symbol, Symbol>]
-      #
-      # @api private
-      attr_reader :aliases
 
       # Rename the instance's attribute index relations
       #

@@ -11,7 +11,7 @@ module DataMapper
         #
         # @api private
         def node(relationship, operation = relationship.operation)
-          Node.new(name, join_relation(operation), aliases)
+          Node.new(name, join_relation(operation), header)
         end
 
         private
@@ -22,7 +22,7 @@ module DataMapper
             order(left_key)
 
           relation = operation.call(relation, target_relation) if operation
-          relation.project(header)
+          relation.project(header_attributes)
         end
 
         def left_key
@@ -35,8 +35,16 @@ module DataMapper
           join_definition.right.relation[right_key_name]
         end
 
-        def header
-          aliases.header.map { |attribute|
+        # TODO
+        #
+        # think about injecting a representation strategy
+        # into Relation::Header::Attribute objects that
+        # would be invoked for Relation::Header::Attribute#name
+        #
+        # this would also make Arel::Edge::Attribute redundant
+        #
+        def header_attributes
+          header.map { |attribute|
             Attribute.new(projected_attribute(attribute))
           }
         end

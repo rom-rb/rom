@@ -10,12 +10,12 @@ describe Relation::Graph, '#edge_for' do
   let(:name)           { mock('left_right', :to_sym => :left_right, :relationship => relationship) }
   let(:relationship)   { mock('relationship', :join_definition => mock) }
 
-  let(:left)           { mock('left',  :aliases => left_aliases, :relation => left_relation) }
-  let(:left_aliases)   { mock('left_aliases', :join => {}, :to_hash => {}) }
+  let(:left)           { mock('left',  :header => left_header, :relation => left_relation) }
+  let(:left_header)    { mock('left_header', :join => {}, :aliases => {}) }
   let(:left_relation)  { mock('left_relation', :rename => mock) }
 
-  let(:right)          { mock('right', :aliases => right_aliases, :relation => right_relation) }
-  let(:right_aliases)  { mock('right_aliases', :join => {}, :to_hash => {}) }
+  let(:right)          { mock('right', :header => right_header, :relation => right_relation) }
+  let(:right_header)   { mock('right_header', :join => {}, :aliases => {}) }
   let(:right_relation) { mock('right_relation', :rename => mock) }
 
   before { object.add_edge(edge) }

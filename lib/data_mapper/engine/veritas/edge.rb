@@ -10,7 +10,7 @@ module DataMapper
         #
         # @api private
         def node(relationship, operation = relationship.operation)
-          Node.new(name, join_relation(operation), aliases)
+          Node.new(name, join_relation(operation), header)
         end
 
         private
@@ -22,7 +22,7 @@ module DataMapper
         end
 
         def target_relation
-          super.rename(aliases)
+          super.rename(header.aliases)
         end
 
       end # class Edge

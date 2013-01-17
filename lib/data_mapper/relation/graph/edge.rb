@@ -64,7 +64,7 @@ module DataMapper
           @target_node     = target_node
           @join_definition = name.relationship.join_definition
 
-          @aliases = joined_aliases
+          @header = joined_header
         end
 
         # Builds a joined relation from source and target nodes
@@ -76,22 +76,22 @@ module DataMapper
           source_node.join(target_node, *args)
         end
 
-        # Returns source aliases
+        # Returns source header
         #
-        # @return [Aliases]
+        # @return [Header]
         #
         # @api private
-        def source_aliases
-          source_node.aliases
+        def source_header
+          source_node.header
         end
 
-        # Returns target aliases
+        # Returns target header
         #
-        # @return [Aliases]
+        # @return [Header]
         #
         # @api private
-        def target_aliases
-          target_node.aliases
+        def target_header
+          target_node.header
         end
 
         # Returns source node name
@@ -114,7 +114,7 @@ module DataMapper
 
         private
 
-        attr_reader :aliases
+        attr_reader :header
 
         def source_relation
           source_node.relation
@@ -124,8 +124,8 @@ module DataMapper
           target_node.relation
         end
 
-        def joined_aliases
-          source_aliases.join(target_aliases, join_definition)
+        def joined_header
+          source_header.join(target_header, join_definition)
         end
 
       end # class Edge

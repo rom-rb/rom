@@ -83,7 +83,7 @@ module DataMapper
         #
         # @api private
         def target_aliases
-          @node.aliases
+          @node.header.aliases
         end
 
         # Returns if the relationship has collection target

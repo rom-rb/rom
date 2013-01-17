@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe Relation::Graph::Edge, '#source_aliases' do
-  subject { object.source_aliases }
+describe Relation::Graph::Edge, '#source_header' do
+  subject { object.source_header }
 
   let(:object) { described_class.new(name, left, right) }
 
@@ -9,10 +9,10 @@ describe Relation::Graph::Edge, '#source_aliases' do
   let(:relationship)    { mock('relationship', :join_definition => join_definition) }
   let(:join_definition) { mock('join_definition') }
 
-  let(:left)            { mock('users', :name => source_name, :aliases => source_aliases) }
-  let(:source_aliases)  { mock('source_aliases', :join => mock) }
-  let(:right)           { mock('orders', :aliases => mock) }
+  let(:left)            { mock('users', :name => source_name, :header => source_header) }
+  let(:source_header)   { mock('source_header', :join => mock) }
+  let(:right)           { mock('orders', :header => mock) }
   let(:source_name)     { mock('source_name') }
 
-  it { should be(source_aliases) }
+  it { should be(source_header) }
 end

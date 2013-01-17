@@ -1,9 +1,7 @@
 require 'spec_helper'
 
 describe Relation::Header, '#each' do
-  subject { object.each { |field, aliased_field| yields[field] = aliased_field } }
-
-  let(:yields) { {} }
+  subject { object.aliases } #each { |field, aliased_field| yields[field] = aliased_field } }
 
   before do
     object.should be_instance_of(described_class)
@@ -37,11 +35,7 @@ describe Relation::Header, '#each' do
           attribute_alias(:title, :songs) => attribute_alias(:title, :songs),
         }}
 
-        it_should_behave_like 'an #each method'
-
-        it 'yields correct aliases' do
-          expect { subject }.to_not change { yields.dup }
-        end
+        it { should eql({}) }
       end
 
       context "when a self join is performed" do
@@ -70,13 +64,7 @@ describe Relation::Header, '#each' do
             :title => :title
           }}
 
-          it 'yields correct aliases' do
-            expect { subject }.to change { yields.dup }.
-              from({}).
-              to(
-                :id => :songs_2_id
-              )
-          end
+          it { should eql(:id => :songs_2_id) }
         end
 
         context "indirectly" do
@@ -93,13 +81,7 @@ describe Relation::Header, '#each' do
             :song_id => :id
           }}
 
-          it 'yields correct aliases' do
-            expect { subject }.to change { yields.dup }.
-              from({}).
-              to(
-                :title => :songs_2_title
-              )
-          end
+          it { should eql(:title => :songs_2_title) }
         end
 
       end
@@ -130,13 +112,7 @@ describe Relation::Header, '#each' do
             attribute_alias(:tag_id,  :song_tags) => attribute_alias(:tag_id,  :song_tags),
           }}
 
-          it_should_behave_like 'an #each method'
-
-          it 'yields correct aliases' do
-            expect { subject }.to change { yields.dup }.
-              from({}).
-              to(:song_id => :id)
-          end
+          it { should eql(:song_id => :id) }
         end
 
         context "with clashing attribute names" do
@@ -156,16 +132,12 @@ describe Relation::Header, '#each' do
                 attribute_alias(:tag_id,  :song_tags) => attribute_alias(:tag_id,  :song_tags),
               }}
 
-              it_should_behave_like 'an #each method'
-
-              it 'yields correct aliases' do
-                expect { subject }.to change { yields.dup }.
-                  from({}).
-                  to(
-                    :song_id => :id,
-                    :id      => :song_tags_id
-                  )
-              end
+              it {
+                should eql(
+                  :song_id => :id,
+                  :id      => :song_tags_id
+                )
+              }
             end
 
           end
@@ -185,16 +157,12 @@ describe Relation::Header, '#each' do
                 attribute_alias(:created_at, :song_tags) => attribute_alias(:created_at, :song_tags),
               }}
 
-              it_should_behave_like 'an #each method'
-
-              it 'yields correct aliases' do
-                expect { subject }.to change { yields.dup }.
-                  from({}).
-                  to(
-                    :song_id    => :id,
-                    :created_at => :song_tags_created_at
-                  )
-              end
+              it {
+                should eql(
+                  :song_id    => :id,
+                  :created_at => :song_tags_created_at
+                )
+              }
             end
 
             context "and one clashing attribute is part of the join attributes and the other not" do
@@ -211,17 +179,13 @@ describe Relation::Header, '#each' do
                 attribute_alias(:created_at, :song_tags) => attribute_alias(:created_at, :song_tags),
               }}
 
-              it_should_behave_like 'an #each method'
-
-              it 'yields correct aliases' do
-                expect { subject }.to change { yields.dup }.
-                  from({}).
-                  to(
-                    :id         => :song_tags_id,
-                    :song_id    => :id,
-                    :created_at => :song_tags_created_at
-                  )
-              end
+              it {
+                should eql(
+                  :id         => :song_tags_id,
+                  :song_id    => :id,
+                  :created_at => :song_tags_created_at
+                )
+              }
             end
 
           end
@@ -261,13 +225,7 @@ describe Relation::Header, '#each' do
             })
           }
 
-          it_should_behave_like 'an #each method'
-
-          it 'yields correct aliases' do
-            expect { subject }.to change { yields.dup }.
-              from({}).
-              to(:song_id => :id)
-          end
+          it { should eql(:song_id => :id) }
         end
 
       end

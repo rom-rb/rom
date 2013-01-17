@@ -29,7 +29,7 @@ module DataMapper
 
         # @api public
         def restrict(query, &block)
-          new(name, relation.restrict(query.to_h, &block), aliases)
+          new(name, relation.restrict(query.to_h, &block), header)
         end
 
         # @api public
@@ -39,12 +39,12 @@ module DataMapper
 
         # @api public
         def take(amount)
-          new(name, relation.take(amount), aliases)
+          new(name, relation.take(amount), header)
         end
 
         # @api public
         def skip(offset)
-          new(name, relation.skip(offset), aliases)
+          new(name, relation.skip(offset), header)
         end
 
         # @api public
@@ -54,11 +54,6 @@ module DataMapper
 
         # @api public
         def rename(new_aliases)
-          raise NotImplementedError
-        end
-
-        # @api public
-        def header
           raise NotImplementedError
         end
 

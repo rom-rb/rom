@@ -17,5 +17,5 @@ describe Engine::Veritas::Node, '#order' do
   it { should be_instance_of(described_class) }
 
   its(:relation) { should be(sorted) }
-  its(:aliases)  { should be(object.aliases) }
+  its(:header)   { should be(object.header) }
 end

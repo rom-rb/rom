@@ -18,11 +18,11 @@ module DataMapper
         # @return [Node]
         #
         # @api public
-        def rename(new_aliases)
-          renamed_aliases  = aliases.rename(new_aliases)
-          renamed_relation = relation.rename(renamed_aliases)
+        def rename(aliases)
+          renamed_header   = header.rename(aliases)
+          renamed_relation = relation.rename(renamed_header.aliases)
 
-          new(name, renamed_relation, renamed_aliases)
+          new(name, renamed_relation, renamed_header)
         end
 
         # Joins two nodes
@@ -40,19 +40,10 @@ module DataMapper
         #
         # @api public
         def join(other, join_definition = {})
-          joined_aliases  = aliases.join(other.aliases, join_definition)
-          joined_relation = join_relation(other, joined_aliases)
+          joined_header   = header.join(other.header, join_definition)
+          joined_relation = join_relation(other, joined_header)
 
-          new(name, joined_relation, joined_aliases)
-        end
-
-        # Returns header for the veritas relation
-        #
-        # @return [::Veritas::Header]
-        #
-        # @api private
-        def header
-          relation.header
+          new(name, joined_relation, joined_header)
         end
 
         # Restricts the relation and returns new node
@@ -71,7 +62,7 @@ module DataMapper
         #
         # @api public
         def restrict(*args, &block)
-          new(name, relation.restrict(*args, &block), aliases)
+          new(name, relation.restrict(*args, &block), header)
         end
 
         # Sorts the relation and returns new node
@@ -87,7 +78,7 @@ module DataMapper
         # @api public
         def order(*attributes)
           sorted = relation.sort_by { |r| attributes.map { |attribute| r.send(attribute) } }
-          new(name, sorted, aliases)
+          new(name, sorted, header)
         end
 
         # Sorts relation and returns new node
@@ -104,13 +95,13 @@ module DataMapper
         #
         # @api public
         def sort_by(&block)
-          new(name, relation.sort_by(&block), aliases)
+          new(name, relation.sort_by(&block), header)
         end
 
         private
 
-        def join_relation(other, joined_aliases)
-          relation.join(other.relation.rename(joined_aliases))
+        def join_relation(other, joined_header)
+          relation.join(other.relation.rename(joined_header.aliases))
         end
 
       end # class Node
