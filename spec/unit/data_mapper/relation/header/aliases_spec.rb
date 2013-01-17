@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe Relation::Header, '#each' do
-  subject { object.aliases } #each { |field, aliased_field| yields[field] = aliased_field } }
+describe Relation::Header, '#aliases' do
+  subject { object.aliases }
 
   before do
     object.should be_instance_of(described_class)
