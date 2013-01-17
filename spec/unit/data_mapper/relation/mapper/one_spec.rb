@@ -1,36 +1,66 @@
 require 'spec_helper'
 
 describe Relation::Mapper, '#one' do
-  subject { object.one(conditions) }
+  let(:object)   { mock_mapper(model, [ id, name ]).new(relation) }
+  let(:id)       { mock_attribute(:id, Integer) }
+  let(:name)     { mock_attribute(:name, String) }
+  let(:relation) { mock_relation('users', header, tuples) }
+  let(:header)   { [ [ :id, Integer ], [ :name, String ] ] }
+  let(:model)    { mock_model(:User) }
 
-  let(:object)     { mock_mapper(model).new(relation) }
-  let(:relation)   { mock('relation') }
-  let(:model)      { mock_model(:User) }
-  let(:conditions) { {} }
+  context "when conditions are given" do
+    subject { object.one(conditions) }
 
-  before do
-    object.should_receive(:find).with(options).and_return(result)
-  end
+    let(:tuples) { [ [ 1, 'John' ], [ 2, 'John' ] ] }
 
-  context "when 1 result is returned" do
-    let(:result) { [ :foo ] }
+    context "when zero results are returned" do
+      let(:conditions) { { :name => 'Jane' } }
 
-    it { should be(:foo) }
-  end
+      specify do
+        expect { subject }.to raise_error(NoTuplesError, 'one tuple expected, but none was returned')
+      end
+    end
 
-  context "when more than 1 result is returned" do
-    let(:result) { [ :foo, :bar ] }
+    context "when 1 result is returned" do
+      let(:conditions) { { :id => 1 } }
 
-    specify do
-      expect { subject }.to raise_error(ManyTuplesError, 'one tuple expected, but 2 were returned')
+      its(:id)   { should == 1 }
+      its(:name) { should == 'John' }
+    end
+
+    context "when more than 1 result is returned" do
+      let(:conditions) { { :name => 'John' } }
+
+      specify do
+        expect { subject }.to raise_error(ManyTuplesError, 'one tuple expected, but 2 were returned')
+      end
     end
   end
 
-  context "when zero results are returned" do
-    let(:result) { [] }
+  context "when no conditions are given" do
+    subject { object.one }
 
-    specify do
-      expect { subject }.to raise_error(NoTuplesError, 'one tuple expected, but none was returned')
+    context "when zero results are returned" do
+      let(:tuples) { [] }
+
+      specify do
+        expect { subject }.to raise_error(NoTuplesError, 'one tuple expected, but none was returned')
+      end
+    end
+
+    context "when 1 result is returned" do
+      let(:tuples) { [ [ 1, 'John' ] ] }
+
+      its(:id)   { should == 1 }
+      its(:name) { should == 'John' }
+    end
+
+    context "when more than 1 result is returned" do
+      let(:tuples) { [ [ 1, 'John' ], [ 2, 'Jane' ] ] }
+
+      specify do
+        expect { subject }.to raise_error(ManyTuplesError, 'one tuple expected, but 2 were returned')
+      end
     end
   end
 end
