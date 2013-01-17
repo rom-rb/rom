@@ -5,6 +5,9 @@ module DataMapper
     #
     # @api public
     class Mapper < DataMapper::Mapper
+
+      DEFAULT_LIMIT_FOR_ONE = 2
+
       alias_method :all, :to_a
 
       accept_options :relation_name, :repository
@@ -323,7 +326,7 @@ module DataMapper
       #
       # @api public
       def one(conditions = {})
-        results = find(conditions).to_a
+        results = new(limited_relation(conditions, DEFAULT_LIMIT_FOR_ONE)).to_a
         assert_exactly_one_tuple(results.size)
         results.first
       end
@@ -567,6 +570,10 @@ module DataMapper
 
       def restricted_relation(conditions)
         relation.restrict(Query.new(conditions, attributes))
+      end
+
+      def limited_relation(conditions, limit)
+        restricted_relation(conditions).ordered.take(limit)
       end
 
       # Assert exactly one tuple is returned

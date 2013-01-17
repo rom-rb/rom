@@ -98,6 +98,21 @@ module DataMapper
           new(name, relation.sort_by(&block), header)
         end
 
+        # Sorts relation ascending using the complete header
+        #
+        # TODO think more about this and/or refactor + implement for arel
+        #
+        # @example
+        #
+        #   sorted = DataMapper.engines[:default].relations[:people].ordered
+        #
+        # @return [Node]
+        #
+        # @api public
+        def ordered
+          new(name, relation.sort_by(relation.header), header)
+        end
+
         private
 
         def join_relation(other, joined_header)
