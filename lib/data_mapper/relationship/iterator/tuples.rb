@@ -39,8 +39,8 @@ module DataMapper
         end
 
         def initialize_tuples
-          @index.each_value do |tuples|
-            @tuples[tuples[0]] = parent_tuple(tuples[0], tuples[1])
+          @index.each_value do |(key_tuple, tuple)|
+            @tuples[key_tuple] = parent_tuple(key_tuple, tuple)
           end
         end
 
