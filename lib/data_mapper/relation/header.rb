@@ -8,8 +8,8 @@ module DataMapper
       # @param [Symbol] relation_name
       #   the name of the relation
       #
-      # @param [AttributeSet] attribute_set
-      #   the set of attributes to build the index for
+      # @param [Enumerable<Symbol>] attribute_names
+      #   the set of attribute names to build the index for
       #
       # @param [Class] strategy_class
       #   the strategy class to use for joining
@@ -17,8 +17,8 @@ module DataMapper
       # @return [Header]
       #
       # @api private
-      def self.build(relation_name, attribute_set, strategy_class)
-        a_idx = AttributeIndex.build(relation_name, attribute_set, strategy_class)
+      def self.build(relation_name, attribute_names, strategy_class)
+        a_idx = AttributeIndex.build(relation_name, attribute_names, strategy_class)
         r_idx = RelationIndex.build(a_idx)
 
         new(a_idx, r_idx)

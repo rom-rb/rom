@@ -9,8 +9,8 @@ module DataMapper
         # @param [Symbol] relation_name
         #   the name of the relation
         #
-        # @param [AttributeSet] attribute_set
-        #   the set of attributes to build the index for
+        # @param [Enumerable<Symbol>] attribute_names
+        #   the set of attribute names to build the index for
         #
         # @param [Class] strategy_class
         #   the strategy class to use for joining
@@ -18,24 +18,24 @@ module DataMapper
         # @return [AttributeIndex]
         #
         # @api private
-        def self.build(relation_name, attribute_set, strategy_class)
-          new(initial_entries(relation_name, attribute_set), strategy_class)
+        def self.build(relation_name, attribute_names, strategy_class)
+          new(initial_entries(relation_name, attribute_names), strategy_class)
         end
 
         # Return index entries as required by {#initialize}
         #
         # @param [#to_sym] relation_name
-        #   the name of the relation +attribute_set+ belongs to
+        #   the name of the relation
         #
-        # @param [DataMapper::Mapper::AttributeSet] attribute_set
-        #   the attribute set to be aliased
+        # @param [Enumerable<Symbol>] attribute_names
+        #   the set of attribute names to build the index for
         #
         # @return [Hash<Attribute, Attribute>]
         #
         # @api private
-        def self.initial_entries(relation_name, attribute_set)
-          attribute_set.primitives.each_with_object({}) { |attribute, entries|
-            entry = Attribute.build(attribute.field, relation_name)
+        def self.initial_entries(relation_name, attribute_names)
+          attribute_names.each_with_object({}) { |attribute_name, entries|
+            entry = Attribute.build(attribute_name, relation_name)
             entries[entry] = entry
           }
         end

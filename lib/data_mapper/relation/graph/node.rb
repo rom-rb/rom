@@ -7,10 +7,26 @@ module DataMapper
       class Node
         include Enumerable, Equalizer.new(:name)
 
-        def self.header(relation_name, attribute_set)
-          Header.build(relation_name, attribute_set, join_strategy)
+        # Build a new {Header} instance
+        #
+        # @param [Symbol] relation_name
+        #   the name of the relation
+        #
+        # @param [Enumerable<Symbol>] attribute_names
+        #   the set of attribute names to build the index for
+        #
+        # @return [Header]
+        #
+        # @api private
+        def self.header(relation_name, attribute_names)
+          Header.build(relation_name, attribute_names, join_strategy)
         end
 
+        # The strategy to use for header aliasing when joining headers
+        #
+        # @return [Header::JoinStrategy::NaturalJoin]
+        #
+        # @api private
         def self.join_strategy
           Header::JoinStrategy::NaturalJoin
         end

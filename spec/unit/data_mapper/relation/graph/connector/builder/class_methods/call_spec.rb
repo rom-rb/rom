@@ -56,7 +56,7 @@ describe Relation::Graph::Connector::Builder, '.call' do
     mapper_registry.each do |_, mapper|
       name     = mapper.relation_name
       relation = mapper.class.gateway_relation
-      header   = mapper.relations.header(name, mapper.attributes)
+      header   = mapper.relations.header(name, mapper.attributes.fields)
 
       mapper.relations.new_node(name, relation, header)
 
