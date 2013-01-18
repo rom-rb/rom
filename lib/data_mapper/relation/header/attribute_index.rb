@@ -183,7 +183,7 @@ module DataMapper
 
         def renamed_attributes(aliases)
           with_new_entries(aliases) { |from, to, renamed|
-            with_initial_attributes(from) do |initial|
+            with_initial_attributes(from) do |initial, *|
               renamed[initial] = new_attribute(to, initial.prefix)
             end
           }
