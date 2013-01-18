@@ -10,10 +10,11 @@ describe 'Relationship - Self referential One To Many' do
     insert_person 2, 'Jane',  1
     insert_person 3, 'Alice', 1
 
-    # TODO investigate why #one returns zero results when this is present
-    # person_mapper.belongs_to :parent, person_model
-
     person_mapper.has 0..n, :children, person_model, :target_key => [:parent_id]
+
+    # FIXME investigate why #one returns zero results when
+    # this is defined *before* the :children relationship
+    person_mapper.belongs_to :parent, person_model
   end
 
   let(:jane)  { person_model.new(:id => 2, :name => 'Jane',  :parent_id => 1) }
