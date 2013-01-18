@@ -95,8 +95,9 @@ shared_context 'Models and Mappers' do
     DM_ENV.build(person_model, :postgres) do
       relation_name :people
 
-      map :id,   Integer, :key => true
-      map :name, String
+      map :id,        Integer, :key => true
+      map :parent_id, Integer
+      map :name,      String
     end
   }
 

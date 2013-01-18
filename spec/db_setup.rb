@@ -95,8 +95,9 @@ def setup_db
 
   connection.create_command(<<-SQL.gsub(/\s+/, ' ').strip).execute_non_query
     CREATE TABLE "people"
-      ( "id"   SERIAL NOT NULL PRIMARY KEY,
-        "name" VARCHAR(50) NOT NULL
+      ( "id"        SERIAL NOT NULL PRIMARY KEY,
+        "name"      VARCHAR(50) NOT NULL,
+        "parent_id" INTEGER
       )
   SQL
 
@@ -204,13 +205,13 @@ def insert_song_tag(id, song_id, tag_id, connection = nil)
   connection.close
 end
 
-def insert_person(id, name, connection = nil)
+def insert_person(id, name, parent_id = nil, connection = nil)
   connection ||= DataObjects::Connection.new(CONFIG['veritas']['postgres'])
 
   insert_users = connection.create_command(
-    'INSERT INTO "people" ("id", "name") VALUES (?, ?)')
+    'INSERT INTO "people" ("id", "name", "parent_id") VALUES (?, ?, ?)')
 
-  insert_users.execute_non_query(id, name)
+  insert_users.execute_non_query(id, name, parent_id)
 
   connection.close
 end
