@@ -1,6 +1,6 @@
 require 'spec_helper_integration'
 
-describe 'Relationship - Self referential Many To One' do
+describe 'Relationship - Self referential One To Many' do
   include_context 'Models and Mappers'
 
   before(:all) do
