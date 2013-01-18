@@ -30,6 +30,8 @@ describe 'Relationship - Self referential Many To Many' do
   end
 
   it 'loads all followed people' do
+    pending if RUBY_VERSION < '1.9'
+
     people = DM_ENV[person_model].include(:followed_people).to_a
 
     john = people[0]
@@ -41,6 +43,8 @@ describe 'Relationship - Self referential Many To Many' do
   end
 
   it 'loads all followers' do
+    pending if RUBY_VERSION < '1.9'
+
     people = DM_ENV[person_model].include(:followers).to_a
 
     john = people[0]
