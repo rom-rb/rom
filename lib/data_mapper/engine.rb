@@ -34,31 +34,22 @@ module DataMapper
 
     # @api private
     def self.build(options)
-      fetch(options[:engine]).new(options[:uri])
-    end
+      name = options[:engine]
 
-    # @api private
-    def self.default
-      Engine.engines.values.first
+      if name
+        require "data_mapper/engine/#{name}"
+        engines.fetch(name).new(options[:uri])
+      else
+        raise(
+          MissingEngineError,
+          "#{name.inspect} is not a correct engine identifier"
+        )
+      end
     end
 
     # @api private
     def self.engines
       @engines ||= {}
-    end
-
-    # @api private
-    def self.fetch(name)
-      engines.fetch(name) {
-        if name.nil?
-          Engine.default
-        else
-          raise(
-            MissingEngineError,
-            "#{name.inspect} is not a correct engine identifier"
-          )
-        end
-      }
     end
 
     # Initializes an engine instance
