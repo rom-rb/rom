@@ -38,8 +38,11 @@ module DataMapper
       # @param [AttributeIndex] attribute_index
       #   the attribute index used by this instance
       #
-      # @param [Hash] aliases
-      #   the aliases used by this instance
+      # @param [RelationIndex] relation_index
+      #   the relation index used by this instance
+      #
+      # @param [Hash<Symbol, Symbol>] aliases
+      #   the aliases for the right side relation after a {#join}
       #
       # @return [undefined]
       #
