@@ -16,9 +16,6 @@ describe 'Relationship - Self referential One To One' do
     person_mapper.belongs_to :parent, person_model
   end
 
-  let(:jane)  { person_model.new(:id => 2, :name => 'Jane',  :parent_id => 1) }
-  let(:alice) { person_model.new(:id => 3, :name => 'Alice', :parent_id => 1) }
-
   it 'loads the associated children' do
     jane = DM_ENV[person_model].include(:child).one(:id => 1).child
 
