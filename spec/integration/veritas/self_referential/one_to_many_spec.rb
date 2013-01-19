@@ -21,6 +21,8 @@ describe 'Relationship - Self referential One To Many' do
   let(:alice) { person_model.new(:id => 3, :name => 'Alice', :parent_id => 1) }
 
   it 'loads the associated children' do
+    pending if RUBY_VERSION < '1.9'
+
     children = DM_ENV[person_model].include(:children).one(:id => 1).children
 
     children.size.should == 2

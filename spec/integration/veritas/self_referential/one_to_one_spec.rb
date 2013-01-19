@@ -17,6 +17,8 @@ describe 'Relationship - Self referential One To One' do
   end
 
   it 'loads the associated children' do
+    pending if RUBY_VERSION < '1.9'
+
     jane = DM_ENV[person_model].include(:child).one(:id => 1).child
 
     jane.id.should == 2
