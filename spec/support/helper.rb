@@ -62,7 +62,7 @@ module SpecHelper
     name = "#{model_class.name}Mapper"
 
     klass = DM_ENV.build(model_class, :test) do
-      relation_name Inflector.tableize(model_class.name).to_sym
+      relation_name Inflecto.tableize(model_class.name).to_sym
     end
 
     attributes.each do |attribute|

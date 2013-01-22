@@ -6,8 +6,8 @@ describe Relationship, '.foreign_key_name' do
   let(:class_name) { stub }
   let(:fk_string)  { stub }
 
-  it "delegates to Inflector and calls #to_sym on the result" do
-    Inflector.should_receive(:foreign_key).with(class_name).and_return(fk_string)
+  it "delegates to Inflecto and calls #to_sym on the result" do
+    Inflecto.should_receive(:foreign_key).with(class_name).and_return(fk_string)
     fk_string.should_receive(:to_sym)
     subject
   end

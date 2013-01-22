@@ -75,7 +75,7 @@ module DataMapper
       end
 
       def inferred_via_name
-        Inflector.underscore(target_model.name).to_sym
+        Inflecto.underscore(target_model.name).to_sym
       end
     end # class ViaDefinition
   end # class Relationship

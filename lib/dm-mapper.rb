@@ -25,7 +25,7 @@ require 'addressable/uri'
 require 'abstract_type'
 require 'descendants_tracker'
 require 'equalizer'
-require 'inflector'
+require 'inflecto'
 
 require 'data_mapper/utils'
 require 'support/options'

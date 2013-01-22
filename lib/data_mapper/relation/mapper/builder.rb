@@ -66,7 +66,7 @@ module DataMapper
         end
 
         def connector_name
-          Inflector.camelize(@connector.name)
+          Inflecto.camelize(@connector.name)
         end
 
         def target_mapper_options

@@ -16,7 +16,7 @@ module DataMapper
     # @api private
     #
     def self.foreign_key_name(class_name)
-      Inflector.foreign_key(class_name).to_sym
+      Inflecto.foreign_key(class_name).to_sym
     end
 
     include Equalizer.new(:name, :source_model, :target_model, :source_key, :target_key)

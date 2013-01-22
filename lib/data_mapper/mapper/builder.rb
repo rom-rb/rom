@@ -31,7 +31,7 @@ module DataMapper
       def self.create(model, repository, &block)
         mapper = define_for(model)
 
-        mapper.relation_name(Inflector.tableize(model.name).to_sym) unless model.name.nil? || model.name == ''
+        mapper.relation_name(Inflecto.tableize(model.name).to_sym) unless model.name.nil? || model.name == ''
         mapper.repository(repository)
 
         copy_attributes(mapper, model.attribute_set) if model.respond_to?(:attribute_set)
