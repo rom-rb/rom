@@ -1,4 +1,5 @@
 require 'randexp'
+require 'yaml'
 
 ROOT   = File.expand_path('../..', __FILE__)
 CONFIG = YAML.load_file("#{ROOT}/config/database.yml")
