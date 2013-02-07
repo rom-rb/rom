@@ -65,9 +65,9 @@ module DataMapper
           #
           # @api private
           def node_names
-            rel_map.each_with_object([]) do |(right_name, relationship), names|
+            rel_map.each_with_object([]) { |(right_name, relationship), names|
               names << Name.new(left_name(names), right_name, relationship)
-            end
+            }
           end
 
           # Generate pairs of [target relation name, relationship]
