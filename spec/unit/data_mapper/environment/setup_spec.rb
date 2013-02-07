@@ -1,41 +1,39 @@
 require 'spec_helper'
 
 describe Environment, '#setup' do
-  let!(:engine)  { Class.new(Engine).register_as(:in_memory) }
 
-  let(:name)    { :somerepo }
-  let(:uri)     { "something://somewhere/test" }
+  let(:object)  { described_class.new }
+  let(:name)    { :test }
+  let(:engine)  { mock }
+  let(:options) { mock }
 
-  after(:all) {
-    Engine.engines.delete(:somerepo)
-  }
+  all_specs_for_this_method = "#{described_class}#setup"
 
-  context "when engine name is not provided" do
-    let(:options) { { :uri => uri, :engine => nil } }
-    let(:default) { Class.new(Engine) }
+  shared_examples_for all_specs_for_this_method do
+    it_should_behave_like 'a command method'
 
-    it "initializes default engine" do
-      expect { subject.setup(name, options) }.to raise_error(
-        Engine::MissingEngineError,
-        'nil is not a correct engine identifier'
-      )
+    it "should instantiate and register the engine with the given name" do
+      subject.engines[name].should eql(engine)
     end
   end
 
-  context "when engine name is provided" do
-    let(:options) { { :uri => uri, :engine => :in_memory } }
+  context "when options are given" do
+    subject { object.setup(name, options) }
 
-    it "initializes engine identified by :engine option" do
-      subject.setup(name, options)
-      expect(subject.engines[:somerepo]).to be_instance_of(engine)
+    before do
+      Engine.should_receive(:build).with(options).and_return(engine)
     end
+
+    it_should_behave_like all_specs_for_this_method
   end
 
-  context "when engine cannot be found" do
-    let(:options) { { :uri => uri, :engine => '#nothereforsure#' } }
+  context "when no options are given" do
+    subject { object.setup(name) }
 
-    it "raises exception" do
-      expect { subject.setup(name, options) }.to raise_error(LoadError)
+    before do
+      Engine.should_receive(:build).with(EMPTY_HASH).and_return(engine)
     end
+
+    it_should_behave_like all_specs_for_this_method
   end
 end

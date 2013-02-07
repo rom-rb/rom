@@ -34,17 +34,13 @@ module DataMapper
 
     # @api private
     def self.build(options)
-      name = options[:engine]
-
-      if name
-        require "data_mapper/engine/#{name}"
-        engines.fetch(name).new(options[:uri])
-      else
-        raise(
-          MissingEngineError,
-          "#{name.inspect} is not a correct engine identifier"
-        )
+      name  = options[:engine]
+      klass = engines.fetch(name) do
+        raise MissingEngineError, "#{name.inspect} has not been registered"
       end
+
+      require "data_mapper/engine/#{name}"
+      klass.new(options[:uri])
     end
 
     # @api private
