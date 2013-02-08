@@ -152,9 +152,9 @@ module DataMapper
     #
     # @api public
     def dump(object)
-      @attributes.each_with_object({}) do |attribute, attributes|
+      @attributes.each_with_object({}) { |attribute, attributes|
         attributes[attribute.field] = object.send(attribute.name)
-      end
+      }
     end
 
   end # class Mapper

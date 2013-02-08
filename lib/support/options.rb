@@ -14,10 +14,10 @@ module DataMapper
     #
     # @api public
     def options
-      accepted_options.each_with_object({}) do |option_name, options|
+      accepted_options.each_with_object({}) { |option_name, options|
         option_value         = send(option_name)
         options[option_name] = option_value unless option_value.nil?
-      end
+      }
     end
 
     # Returns an array of valid options
