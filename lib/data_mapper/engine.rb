@@ -3,9 +3,6 @@ require 'veritas-do-adapter'
 
 module DataMapper
 
-  # Abstract class for DataMapper engines
-  #
-  # @abstract
   class Engine
 
     # Returns database connection URI
