@@ -47,7 +47,7 @@ module DataMapper
     def initialize(uri)
       @uri       = Addressable::URI.parse(uri)
       @relations = Relation::Graph.new(self)
-      @adapter   = Veritas::Adapter::DataObjects.new(uri)
+      @adapter   = Veritas::Adapter::DataObjects.new(@uri)
     end
 
     # Returns the relation node class used in the relation registry
