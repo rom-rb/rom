@@ -19,7 +19,7 @@ describe Engine, '.build' do
   end
 
   context "when the desired engine is registered" do
-    let(:registered_name) { :in_memory }
+    let(:registered_name) { :veritas }
     let(:engine_name)     { registered_name }
 
     before do

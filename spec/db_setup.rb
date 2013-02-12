@@ -4,20 +4,18 @@ require 'yaml'
 ROOT   = File.expand_path('../..', __FILE__)
 CONFIG = YAML.load_file("#{ROOT}/config/database.yml")
 
-engine_name = ENV.fetch('ENGINE')
+ENGINE     = 'veritas'
+REPOSITORY = 'postgres'
+URI        = CONFIG.fetch(ENGINE).fetch(REPOSITORY)
 
-if CONFIG[engine_name]
-  CONFIG[engine_name].each do |name, uri|
-    DM_ENV.setup(name, :uri => uri, :engine => engine_name.to_sym)
-  end
-end
+DM_ENV.setup(REPOSITORY, :uri => URI, :engine => ENGINE.to_sym)
 
 MAX_RELATION_SIZE = 10
 
 def setup_db
   DataObjects.logger.set_log('log/do.log', :debug)
 
-  connection = DataObjects::Connection.new(CONFIG['veritas']['postgres'])
+  connection = DataObjects::Connection.new(URI)
 
   connection.create_command('DROP TABLE IF EXISTS "users"').execute_non_query
   connection.create_command('DROP TABLE IF EXISTS "addresses"').execute_non_query
