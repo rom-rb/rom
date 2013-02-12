@@ -18,49 +18,31 @@ describe Relationship::Iterator, '#each' do
   let(:user_id) { Attribute.build(:user_id, :type => Integer) }
   let(:product) { Attribute.build(:product, :type => String) }
 
-  let(:result1)  { { :user_id => '1', :name => 'Piotr',  :order_id =>'1', :product => 'apple' } }
-  let(:result2)  { { :user_id => '1', :name => 'Piotr',  :order_id =>'2', :product => 'orange' } }
-  let(:result3)  { { :user_id => '2', :name => 'Martin', :order_id =>'3', :product => 'orange' } }
-  let(:result4)  { { :user_id => '2', :name => 'Martin', :order_id =>'4', :product => 'apple' } }
+  let(:result1)  { { :user_id => 1, :name => 'Piotr',  :order_id => 1, :product => 'apple' } }
+  let(:result2)  { { :user_id => 1, :name => 'Piotr',  :order_id => 2, :product => 'orange' } }
+  let(:result3)  { { :user_id => 2, :name => 'Martin', :order_id => 3, :product => 'orange' } }
+  let(:result4)  { { :user_id => 2, :name => 'Martin', :order_id => 4, :product => 'apple' } }
   let(:result)   { [ result1, result2, result3, result4 ] }
+
   let(:relation) { mock('relation', :to_a => result) }
 
-  let(:object) { source_mapper.extend(Relationship::Iterator) }
+  let(:object) { source_mapper.extend(described_class) }
+
+  let(:user_1) { source_model.new(:id => 1, :name => 'Piotr',  :orders => [ order_1, order_2 ]) }
+  let(:user_2) { source_model.new(:id => 2, :name => 'Martin', :orders => [ order_3, order_4 ]) }
+
+  let(:order_1) { target_model.new(:id => 1, :user_id => 1, :product => 'apple') }
+  let(:order_2) { target_model.new(:id => 2, :user_id => 1, :product => 'orange') }
+  let(:order_3) { target_model.new(:id => 3, :user_id => 2, :product => 'orange') }
+  let(:order_4) { target_model.new(:id => 4, :user_id => 2, :product => 'apple') }
 
   context "with a block" do
     subject { object.to_a }
 
-    it { should have(2).item }
+    it { should have(2).items }
 
-    it "loads source with target collection" do
-      user1 = subject[0]
-
-      user1.should be_instance_of(source_model)
-      user1.name.should eql('Piotr')
-      user1.orders.should have(2).items
-
-      order1, order2 = user1.orders
-
-      order1.should be_instance_of(target_model)
-      order1.product.should eql('apple')
-
-      order2.should be_instance_of(target_model)
-      order2.product.should eql('orange')
-
-      user2 = subject[1]
-
-      user2.should be_instance_of(source_model)
-      user2.name.should eql('Martin')
-      user2.orders.should have(2).items
-
-      order3, order4 = user2.orders
-
-      order3.should be_instance_of(target_model)
-      order3.product.should eql('orange')
-
-      order4.should be_instance_of(target_model)
-      order4.product.should eql('apple')
-    end
+    it { should include(user_1) }
+    it { should include(user_2) }
   end
 
   context "without a block" do
