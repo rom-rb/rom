@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Engine::Veritas::Node, '#order' do
+describe Relation::Graph::Node, '#order' do
   subject { object.order(*names) }
 
   let(:object)    { described_class.new(:users, relation) }

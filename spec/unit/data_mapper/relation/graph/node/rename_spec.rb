@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Engine::Veritas::Node, '#rename' do
+describe Relation::Graph::Node, '#rename' do
   subject { object.rename(aliases) }
 
   let(:aliases)          { { :id => :foo_id } }

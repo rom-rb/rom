@@ -1,12 +1,14 @@
+require 'veritas'
+require 'veritas-do-adapter'
+
 module DataMapper
 
   # Abstract class for DataMapper engines
   #
   # @abstract
   class Engine
-    include AbstractType
 
-    MissingEngineError = Class.new(StandardError)
+    #MissingEngineError = Class.new(StandardError)
 
     # Returns database connection URI
     #
@@ -27,26 +29,17 @@ module DataMapper
     # @api public
     attr_reader :relations
 
+    # Returns the veritas database adapter
+    #
+    # @example
+    #   uri    = "postgres://localhost/test"
+    #   engine = DataMapper::Engine::Veritas::Engine.new(uri)
+    #   engine.connection
+    #
+    # @return [::Veritas::Adapter::DataObjects]
+    #
     # @api public
-    def self.register_as(name)
-      Engine.engines[name] = self
-    end
-
-    # @api private
-    def self.build(options)
-      name  = options[:engine]
-      klass = engines.fetch(name) do
-        raise MissingEngineError, "#{name.inspect} has not been registered"
-      end
-
-      require "data_mapper/engine/#{name}"
-      klass.new(options[:uri])
-    end
-
-    # @api private
-    def self.engines
-      @engines ||= {}
-    end
+    attr_reader :adapter
 
     # Initializes an engine instance
     #
@@ -59,6 +52,7 @@ module DataMapper
     def initialize(uri = nil)
       @uri       = Addressable::URI.parse(uri)
       @relations = Relation::Graph.new(self)
+      @adapter   = Veritas::Adapter::DataObjects.new(uri)
     end
 
     # Returns the relation node class used in the relation registry
@@ -89,48 +83,32 @@ module DataMapper
       Relation::Graph::Edge
     end
 
-    # Builds a relation instance that will be wrapped in a relation node
-    #
-    # @example
-    #   uri    = "postgres://localhost/test"
-    #   engine = DataMapper::Engine::VeritasEngine.new(uri)
-    #   engine.base_relation(:foo)
+    # @see Engine#base_relation
     #
     # @param [Symbol] name
     #   the base relation name
     #
-    # @abstract
+    # @param [Array<Array(Symbol, Class)>] header
+    #   the base relation header
     #
-    # @raise NotImplementedError
-    #
-    # @return [Object]
+    # @return [::Veritas::Relation::Base]
     #
     # @api public
-    abstract_method :base_relation
+    def base_relation(name, header)
+      Veritas::Relation::Base.new(name, header)
+    end
 
-    # Returns a gateway relation instance
+    # @see Engine#gateway_relation
     #
-    # This is optional and by default it just returns the given relation back.
-    # Currently it's only here for {VeritasEngine}. Most of the engines won't need
-    # to override it.
-    #
-    # @example
-    #   uri      = "postgres://localhost/test"
-    #   engine   = DataMapper::Engine::VeritasEngine.new(uri)
-    #   relation = Veritas::Relation::Base.new(:foo, [ [ :id, Integer ] ])
-    #   engine.gateway_relation(relation)
-    #
-    # @param [Object] relation
+    # @param [Veritas::Relation] relation
     #   the relation to be wrapped in a gateway relation
     #
-    # @return [Object]
-    #   the relation that was passed in
+    # @return [::Veritas::Relation::Gateway]
     #
     # @api public
     def gateway_relation(relation)
-      relation
+      Veritas::Relation::Gateway.new(adapter, relation)
     end
 
   end # class Engine
-
 end # module DataMapper

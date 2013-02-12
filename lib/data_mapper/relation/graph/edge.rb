@@ -112,16 +112,29 @@ module DataMapper
           target_node.name
         end
 
+        # Builds a joined relation from source and target nodes
+        #
+        # @return [Node]
+        #
+        # @api private
+        def node(relationship, operation = relationship.operation)
+          Node.new(name, join_relation(operation), @header)
+        end
+
         private
 
-        attr_reader :header
+        def join_relation(operation)
+          relation = source_relation.join(target_relation)
+          relation = relation.instance_eval(&operation) if operation
+          relation
+        end
 
         def source_relation
           source_node.relation
         end
 
         def target_relation
-          target_node.relation
+          target_node.relation.rename(@header.aliases)
         end
 
         def joined_header

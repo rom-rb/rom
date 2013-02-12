@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Engine::Veritas::Node, '#sort_by' do
+describe Relation::Graph::Node, '#sort_by' do
   subject { object.sort_by(&block) }
 
   let(:object)   { described_class.new(:users, relation) }

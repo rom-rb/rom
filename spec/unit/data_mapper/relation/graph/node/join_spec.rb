@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Engine::Veritas::Node, '#join' do
+describe Relation::Graph::Node, '#join' do
   subject { object.join(other, join_definition) }
 
   let(:object)           { described_class.new(:users,     source_relation, source_header) }

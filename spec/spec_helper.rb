@@ -26,9 +26,6 @@ require 'pp'
 require 'ostruct'
 require 'dm-mapper'
 require 'virtus'
-
-require 'data_mapper/engine/veritas'
-
 require 'rspec'
 
 %w(shared support).each do |name|
@@ -53,6 +50,6 @@ include DataMapper
 
 DM_ENV = TestEnv.new
 
-TEST_ENGINE = TestEngine.new('db://localhost/test')
+TEST_ENGINE = Engine.new('db://localhost/test')
 
 DM_ENV.engines[:test] = TEST_ENGINE

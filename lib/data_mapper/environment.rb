@@ -47,14 +47,14 @@ module DataMapper
     # @param [#to_sym] name
     #   the name to use for the engine
     #
-    # @param [Hash] options
-    #   the options to use for instantiating the engine
+    # @param [Addressable::Uri, String] uri
+    #   the uri the adapter uses for creating a connection
     #
     # @return [self]
     #
     # @api public
-    def setup(name, options = EMPTY_HASH)
-      engines[name.to_sym] = Engine.build(options)
+    def setup(name, uri)
+      engines[name.to_sym] = Engine.new(uri)
       self
     end
 

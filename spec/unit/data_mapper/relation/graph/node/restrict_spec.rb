@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Engine::Veritas::Node, '#restrict' do
+describe Relation::Graph::Node, '#restrict' do
   subject { object.restrict(query, &block) }
 
   let(:object)      { described_class.new(:users, relation) }

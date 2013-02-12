@@ -8,7 +8,7 @@ ENGINE     = 'veritas'
 REPOSITORY = 'postgres'
 URI        = CONFIG.fetch(ENGINE).fetch(REPOSITORY)
 
-DM_ENV.setup(REPOSITORY, :uri => URI, :engine => ENGINE.to_sym)
+DM_ENV.setup(REPOSITORY, URI)
 
 MAX_RELATION_SIZE = 10
 

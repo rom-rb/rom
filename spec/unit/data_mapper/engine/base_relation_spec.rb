@@ -1,20 +1,14 @@
 require 'spec_helper'
 
 describe Engine, '#base_relation' do
-  subject { object.base_relation(relation) }
+  subject { object.base_relation(name, header) }
 
-  let(:class_under_test) do
-    klass = subclass(:TestEngine)
-    klass.class_eval do
-      def self.inspect; name; end
-    end
-    klass
-  end
+  let(:object) { described_class.new('postgres://localhost/test') }
 
-  let(:object)   { class_under_test.new }
-  let(:relation) { mock('relation') }
+  let(:name)   { :users }
+  let(:header) { [[:id, Integer], [:name, String]] }
 
-  specify do
-    expect { subject }.to raise_error(NotImplementedError, 'TestEngine#base_relation is not implemented')
-  end
+  it { should be_instance_of(Veritas::Relation::Base) }
+
+  its(:name) { should eql(name.to_s) }
 end
