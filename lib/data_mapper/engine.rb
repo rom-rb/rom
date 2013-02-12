@@ -8,8 +8,6 @@ module DataMapper
   # @abstract
   class Engine
 
-    #MissingEngineError = Class.new(StandardError)
-
     # Returns database connection URI
     #
     # @return [Addressable::URI]
