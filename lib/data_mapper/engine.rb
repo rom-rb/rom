@@ -47,7 +47,7 @@ module DataMapper
     # @return [undefined]
     #
     # @api private
-    def initialize(uri = nil)
+    def initialize(uri)
       @uri       = Addressable::URI.parse(uri)
       @relations = Relation::Graph.new(self)
       @adapter   = Veritas::Adapter::DataObjects.new(uri)
