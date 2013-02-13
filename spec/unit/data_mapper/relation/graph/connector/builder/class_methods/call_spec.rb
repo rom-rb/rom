@@ -56,7 +56,7 @@ describe Relation::Graph::Connector::Builder, '.call' do
     mapper_registry.each do |_, mapper|
       name     = mapper.relation_name
       relation = mapper.class.gateway_relation
-      header   = mapper.relations.header(name, mapper.attributes.fields)
+      header   = Relation::Graph::Node.header(name, mapper.attributes.fields)
 
       mapper.relations.new_node(name, relation, header)
 
@@ -77,12 +77,12 @@ describe Relation::Graph::Connector::Builder, '.call' do
 
     it "adds songs_X_song_tags relation node" do
       node = relations[name]
-      node.should be_instance_of(TEST_ENGINE.relation_node_class)
+      node.should be_instance_of(Relation::Graph::Node)
     end
 
     it "adds song_tags relation edge" do
       edge = relations.edge_for(name)
-      edge.should be_instance_of(TEST_ENGINE.relation_edge_class)
+      edge.should be_instance_of(Relation::Graph::Edge)
     end
 
     it "adds songs_X_song_tags connector" do
@@ -99,14 +99,14 @@ describe Relation::Graph::Connector::Builder, '.call' do
 
     it "adds songs_X_song_tags_X_tags relation node" do
       node = relations[:songs_X_song_tags]
-      node.should be_instance_of(TEST_ENGINE.relation_node_class)
+      node.should be_instance_of(Relation::Graph::Node)
       node = relations[name]
-      node.should be_instance_of(TEST_ENGINE.relation_node_class)
+      node.should be_instance_of(Relation::Graph::Node)
     end
 
     it "adds tags relation edge" do
       edge = relations.edge_for(name)
-      edge.should be_instance_of(TEST_ENGINE.relation_edge_class)
+      edge.should be_instance_of(Relation::Graph::Edge)
     end
 
     it "adds songs_X_song_tags_X_tags connector" do
@@ -123,16 +123,16 @@ describe Relation::Graph::Connector::Builder, '.call' do
 
     it "adds songs_X_song_tags_X_tags_X_infos relation node" do
       node = relations[:songs_X_song_tags]
-      node.should be_instance_of(TEST_ENGINE.relation_node_class)
+      node.should be_instance_of(Relation::Graph::Node)
       node = relations[:songs_X_song_tags_X_tags]
-      node.should be_instance_of(TEST_ENGINE.relation_node_class)
+      node.should be_instance_of(Relation::Graph::Node)
       node = relations[name]
-      node.should be_instance_of(TEST_ENGINE.relation_node_class)
+      node.should be_instance_of(Relation::Graph::Node)
     end
 
     it "adds infos relation edge" do
       edge = relations.edge_for(name)
-      edge.should be_instance_of(TEST_ENGINE.relation_edge_class)
+      edge.should be_instance_of(Relation::Graph::Edge)
     end
 
     it "adds songs_X_song_tags_X_tags_X_infos connector" do

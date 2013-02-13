@@ -99,27 +99,27 @@ describe 'Finalizer', :isolation => true do
 
   it 'finalizes songs relation' do
     relation = relations[:songs]
-    relation.should be_instance_of(TEST_ENGINE.relation_node_class)
+    relation.should be_instance_of(Relation::Graph::Node)
   end
 
   it 'finalizes tags relation' do
     relation = relations[:tags]
-    relation.should be_instance_of(TEST_ENGINE.relation_node_class)
+    relation.should be_instance_of(Relation::Graph::Node)
   end
 
   it 'finalizes song_tags relation' do
     relation = relations[:song_tags]
-    relation.should be_instance_of(TEST_ENGINE.relation_node_class)
+    relation.should be_instance_of(Relation::Graph::Node)
   end
 
   it 'finalizes infos relation' do
     relation = relations[:infos]
-    relation.should be_instance_of(TEST_ENGINE.relation_node_class)
+    relation.should be_instance_of(Relation::Graph::Node)
   end
 
   it 'finalizes info_contents relation' do
     relation = relations[:info_contents]
-    relation.should be_instance_of(TEST_ENGINE.relation_node_class)
+    relation.should be_instance_of(Relation::Graph::Node)
   end
 
   it 'finalizes songs-have-many-tags-through-song_tags relation' do
@@ -127,10 +127,10 @@ describe 'Finalizer', :isolation => true do
 
     node = relations[name]
 
-    node.should be_instance_of(TEST_ENGINE.relation_node_class)
+    node.should be_instance_of(Relation::Graph::Node)
 
     edge = relations.edge_for(name)
-    edge.should be_instance_of(TEST_ENGINE.relation_edge_class)
+    edge.should be_instance_of(Relation::Graph::Edge)
 
     connector = relations.connectors[:"#{name}__tags"]
     connector.should be_instance_of(Relation::Graph::Connector)
@@ -141,10 +141,10 @@ describe 'Finalizer', :isolation => true do
 
     node = relations[name]
 
-    node.should be_instance_of(TEST_ENGINE.relation_node_class)
+    node.should be_instance_of(Relation::Graph::Node)
 
     edge = relations.edge_for(name)
-    edge.should be_instance_of(TEST_ENGINE.relation_edge_class)
+    edge.should be_instance_of(Relation::Graph::Edge)
 
     connector = relations.connectors[:"#{name}__good_tag"]
     connector.should be_instance_of(Relation::Graph::Connector)
@@ -154,10 +154,10 @@ describe 'Finalizer', :isolation => true do
     name = :songs_X_song_tags_X_tags_X_infos
     node = relations[name]
 
-    node.should be_instance_of(TEST_ENGINE.relation_node_class)
+    node.should be_instance_of(Relation::Graph::Node)
 
     edge = relations.edge_for(name)
-    edge.should be_instance_of(TEST_ENGINE.relation_edge_class)
+    edge.should be_instance_of(Relation::Graph::Edge)
 
     connector = relations.connectors[:"#{name}__infos"]
     connector.should be_instance_of(Relation::Graph::Connector)
@@ -168,10 +168,10 @@ describe 'Finalizer', :isolation => true do
 
     node = relations[name]
 
-    node.should be_instance_of(TEST_ENGINE.relation_node_class)
+    node.should be_instance_of(Relation::Graph::Node)
 
     edge = relations.edge_for(name)
-    edge.should be_instance_of(TEST_ENGINE.relation_edge_class)
+    edge.should be_instance_of(Relation::Graph::Edge)
 
     connector = relations.connectors[:"#{name}__info_contents"]
     connector.should be_instance_of(Relation::Graph::Connector)
@@ -182,10 +182,10 @@ describe 'Finalizer', :isolation => true do
 
     node = relations[name]
 
-    node.should be_instance_of(TEST_ENGINE.relation_node_class)
+    node.should be_instance_of(Relation::Graph::Node)
 
     edge = relations.edge_for(name)
-    edge.should be_instance_of(TEST_ENGINE.relation_edge_class)
+    edge.should be_instance_of(Relation::Graph::Edge)
 
     connector = relations.connectors[:"#{name}__good_info_contents"]
     connector.should be_instance_of(Relation::Graph::Connector)
@@ -195,10 +195,10 @@ describe 'Finalizer', :isolation => true do
     name = :tags_X_song_tags
     node = relations[name]
 
-    node.should be_instance_of(TEST_ENGINE.relation_node_class)
+    node.should be_instance_of(Relation::Graph::Node)
 
     edge = relations.edge_for(name)
-    edge.should be_instance_of(TEST_ENGINE.relation_edge_class)
+    edge.should be_instance_of(Relation::Graph::Edge)
 
     connector = relations.connectors[:"#{name}__song_tags"]
     connector.should be_instance_of(Relation::Graph::Connector)
@@ -208,10 +208,10 @@ describe 'Finalizer', :isolation => true do
     name = :tags_X_song_tags_X_songs
     node = relations[name]
 
-    node.should be_instance_of(TEST_ENGINE.relation_node_class)
+    node.should be_instance_of(Relation::Graph::Node)
 
     edge = relations.edge_for(name)
-    edge.should be_instance_of(TEST_ENGINE.relation_edge_class)
+    edge.should be_instance_of(Relation::Graph::Edge)
 
     connector = relations.connectors[:"#{name}__songs"]
     connector.should be_instance_of(Relation::Graph::Connector)

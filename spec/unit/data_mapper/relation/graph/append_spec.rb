@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Relation::Graph, '#<<' do
   let(:name)     { 'users' }
   let(:relation) { mock_relation(name) }
-  let(:registry) { described_class.new(TEST_ENGINE) }
+  let(:registry) { described_class.new }
 
   it "adds relation to the registry" do
     registry << relation

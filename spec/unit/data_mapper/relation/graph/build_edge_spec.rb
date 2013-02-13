@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Relation::Graph, '#build_edge' do
   subject { object.build_edge(name, left, right) }
 
-  let(:object) { described_class.new(TEST_ENGINE) }
+  let(:object) { described_class.new }
 
   let(:name)           { mock('users', :to_sym => :users, :relationship => relationship) }
   let(:relationship)   { mock('relationship', :join_definition => mock) }
@@ -17,8 +17,8 @@ describe Relation::Graph, '#build_edge' do
   let(:right_relation) { mock('right_relation', :rename => mock) }
 
   context "when no edge with the same name is included" do
-    it "delegates to TEST_ENGINE.relation_edge_class.new" do
-      TEST_ENGINE.relation_edge_class.should_receive(:new).with(name, left, right)
+    it "delegates to Relation::Graph::Edge.new" do
+      Relation::Graph::Edge.should_receive(:new).with(name, left, right)
       subject
     end
   end
@@ -35,8 +35,8 @@ describe Relation::Graph, '#build_edge' do
       subject.should be(other_edge)
     end
 
-    it "does not delegate to TEST_ENGINE.relation_edge_class.new" do
-      TEST_ENGINE.relation_edge_class.should_not_receive(:new).with(name, left, right)
+    it "does not delegate to Relation::Graph::Edge.new" do
+      Relation::Graph::Edge.should_not_receive(:new).with(name, left, right)
       subject
     end
   end

@@ -3,15 +3,15 @@ require 'spec_helper'
 describe Relation::Graph, '#build_node' do
   subject { object.build_node(name, relation, aliases) }
 
-  let(:object) { described_class.new(TEST_ENGINE) }
+  let(:object) { described_class.new }
 
   let(:name)     { 'users' }
   let(:relation) { mock_relation(name) }
   let(:aliases)  { mock('aliases') }
 
   context "when no node with the same name is included" do
-    it "delegates to TEST_ENGINE.relation_edge_class.new" do
-      TEST_ENGINE.relation_node_class.should_receive(:new).with(name, relation, aliases)
+    it "delegates to Relation::Graph::Edge.new" do
+      Relation::Graph::Node.should_receive(:new).with(name, relation, aliases)
       subject
     end
   end
@@ -28,8 +28,8 @@ describe Relation::Graph, '#build_node' do
       subject.should be(other_node)
     end
 
-    it "does not delegate to TEST_ENGINE.relation_node_class.new" do
-      TEST_ENGINE.relation_node_class.should_not_receive(:new).with(name, relation, aliases)
+    it "does not delegate to Relation::Graph::Node.new" do
+      Relation::Graph::Node.should_not_receive(:new).with(name, relation, aliases)
       subject
     end
   end

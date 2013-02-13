@@ -54,7 +54,7 @@ class TestEnv < DataMapper::Environment
 
   def reset_engines
     engines.each_value do |engine|
-      engine.instance_variable_set(:@relations, engine.relations.class.new(engine))
+      engine.instance_variable_set(:@relations, engine.relations.class.new)
     end
   end
 

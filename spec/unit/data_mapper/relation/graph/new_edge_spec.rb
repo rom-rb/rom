@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Relation::Graph, '#new_edge' do
   subject { object.new_edge(name, left, right) }
 
-  let(:object) { described_class.new(TEST_ENGINE) }
+  let(:object) { described_class.new }
 
   let(:name)           { mock('users', :to_sym => :users, :relationship => relationship) }
   let(:relationship)   { mock('relationship', :join_definition => mock) }
@@ -19,6 +19,6 @@ describe Relation::Graph, '#new_edge' do
   it { should be(object) }
 
   it "adds a new edge" do
-    subject.edge_for(name).should be_instance_of(TEST_ENGINE.relation_edge_class)
+    subject.edge_for(name).should be_instance_of(Relation::Graph::Edge)
   end
 end

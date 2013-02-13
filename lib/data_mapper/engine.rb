@@ -46,36 +46,8 @@ module DataMapper
     # @api private
     def initialize(uri)
       @uri       = Addressable::URI.parse(uri)
-      @relations = Relation::Graph.new(self)
+      @relations = Relation::Graph.new
       @adapter   = Veritas::Adapter::DataObjects.new(@uri)
-    end
-
-    # Returns the relation node class used in the relation registry
-    #
-    # @example
-    #   uri    = "postgres://localhost/test"
-    #   engine = DataMapper::Engine::VeritasEngine.new(uri)
-    #   engine.relation_node_class
-    #
-    # @return [Graph::Node]
-    #
-    # @api public
-    def relation_node_class
-      Relation::Graph::Node
-    end
-
-    # Returns the relation edge class used in the relation registry
-    #
-    # @example
-    #   uri    = "postgres://localhost/test"
-    #   engine = DataMapper::Engine::VeritasEngine.new(uri)
-    #   engine.relation_edge_class
-    #
-    # @return [Graph::Edge]
-    #
-    # @api public
-    def relation_edge_class
-      Relation::Graph::Edge
     end
 
     # @see Engine#base_relation

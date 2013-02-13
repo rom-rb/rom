@@ -7,6 +7,4 @@ describe Engine, '#relations' do
   let(:uri)    { 'something://somewhere/test' }
 
   it { should be_instance_of(Relation::Graph) }
-
-  specify { object.relations.engine.should be(object) }
 end

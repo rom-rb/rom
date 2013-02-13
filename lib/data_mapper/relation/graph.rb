@@ -55,17 +55,6 @@ module DataMapper
       # @api public
       attr_reader :edges
 
-      # Engine used in this registry
-      #
-      # @example
-      #
-      #   DataMapper[Person].relations.engine
-      #
-      # @return [Engine]
-      #
-      # @api public
-      attr_reader :engine
-
       # Relation node class that is used in this registry
       #
       # @see Engine#relation_node_class
@@ -110,12 +99,11 @@ module DataMapper
       # @return [undefined]
       #
       # @api private
-      def initialize(engine)
+      def initialize(node_class = self.class.node_class, edge_class = self.class.edge_class)
         @nodes      = Set.new
         @edges      = Set.new
-        @engine     = engine
-        @node_class = engine.relation_node_class
-        @edge_class = engine.relation_edge_class
+        @node_class = node_class
+        @edge_class = edge_class
         @connectors = {}
       end
 

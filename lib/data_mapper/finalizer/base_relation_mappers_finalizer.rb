@@ -25,7 +25,7 @@ module DataMapper
       def register_base_relation(mapper)
         name     = mapper.relation_name
         relation = mapper.gateway_relation
-        header   = mapper.relations.header(name, mapper.attributes.fields)
+        header   = Relation::Graph::Node.header(name, mapper.attributes.fields)
 
         mapper.relations.new_node(name, relation, header)
       end

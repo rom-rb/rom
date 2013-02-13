@@ -26,7 +26,7 @@ describe Finalizer::RelationshipMappersFinalizer, '#run' do
 
   before do
     DM_ENV.engines.each do |name, engine|
-      engine.instance_variable_set(:@relations, engine.relations.class.new(engine))
+      engine.instance_variable_set(:@relations, engine.relations.class.new)
     end
 
     user_mapper.relationships << relationship
