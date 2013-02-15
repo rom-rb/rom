@@ -15,7 +15,7 @@ describe Relation::Mapper::Builder, '#mapper' do
     mapper_registry
   end
 
-  let(:relations) { song_mapper.relations }
+  let(:relations) { DM_ENV.relations }
 
   let(:song_mapper)            { mock_mapper(song_model, song_attributes, song_relationships).new(songs_relation) }
   let(:song_model)             { mock_model('Song') }
@@ -49,9 +49,9 @@ describe Relation::Mapper::Builder, '#mapper' do
     mapper_registry.each do |_, mapper|
       name     = mapper.relation_name
       relation = mapper.class.gateway_relation
-      aliases  = mapper.relations.header(name, mapper.attributes.fields)
+      aliases  = DM_ENV.relations.header(name, mapper.attributes.fields)
 
-      mapper.relations.new_node(name, relation, aliases)
+      DM_ENV.relations.new_node(name, relation, aliases)
     end
 
     mapper_registry.each do |_, mapper|
@@ -62,7 +62,7 @@ describe Relation::Mapper::Builder, '#mapper' do
 
     mapper_registry.each do |_, mapper|
       mapper.relationships.each do |relationship|
-        Relation::Graph::Connector::Builder.call(mapper.relations, mapper_registry, relationship)
+        Relation::Graph::Connector::Builder.call(DM_ENV.relations, mapper_registry, relationship)
       end
     end
 

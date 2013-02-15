@@ -39,6 +39,13 @@ module DataMapper
     # @api private
     attr_reader :environment
 
+    # The relations registered with {#environment}
+    #
+    # @return [Relation::Graph]
+    #
+    # @api private
+    attr_reader :relations
+
     # Perform finalization
     #
     # @param *args
@@ -67,6 +74,7 @@ module DataMapper
     # @api private
     def initialize(environment, connector_builder = default_connector_builder, mapper_builder = default_mapper_builder)
       @environment       = environment
+      @relations         = environment.relations
       @mappers           = environment.mappers
       @mapper_registry   = environment.registry
       @connector_builder = connector_builder

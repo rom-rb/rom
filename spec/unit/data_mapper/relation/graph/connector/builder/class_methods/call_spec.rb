@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Relation::Graph::Connector::Builder, '.call' do
-  subject { described_class.call(song_mapper.relations, mapper_registry, relationship) }
+  subject { described_class.call(DM_ENV.relations, mapper_registry, relationship) }
 
   let(:mapper_registry) do
     mapper_registry = Mapper::Registry.new
@@ -58,7 +58,7 @@ describe Relation::Graph::Connector::Builder, '.call' do
       relation = mapper.class.gateway_relation
       header   = Relation::Graph::Node.header(name, mapper.attributes.fields)
 
-      mapper.relations.new_node(name, relation, header)
+      DM_ENV.relations.new_node(name, relation, header)
 
       mapper.relationships.each do |relationship|
         relationship.finalize(mapper_registry)
@@ -68,7 +68,7 @@ describe Relation::Graph::Connector::Builder, '.call' do
     subject
   end
 
-  let(:relations) { song_mapper.relations }
+  let(:relations) { DM_ENV.relations }
 
   context "with one-to-many" do
     let(:relationship)   { songs_song_tags_relationship }

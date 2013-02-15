@@ -7,8 +7,5 @@ describe Relation::Mapper, '#relations' do
   let(:relation)  { mock_relation('relation') }
   let(:relations) { mock('relations') }
 
-  it 'delegates to self.class' do
-    described_class.should_receive(:relations).and_return(relations)
-    subject.should be(relations)
-  end
+  it { should be(DM_ENV.relations) }
 end

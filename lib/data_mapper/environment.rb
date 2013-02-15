@@ -23,6 +23,13 @@ module DataMapper
     # @api private
     attr_reader :registry
 
+    # The relations registered with this environment
+    #
+    # @return [Relation::Graph]
+    #
+    # @api private
+    attr_reader :relations
+
     # Initialize a new instance
     #
     # @param [Mapper::Registry, nil] registry
@@ -160,6 +167,7 @@ module DataMapper
     def reset(registry = nil)
       @mappers   = []
       @registry  = registry || Mapper::Registry.new
+      @relations = Relation::Graph.new
       @finalized = false
     end
 

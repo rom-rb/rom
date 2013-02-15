@@ -27,10 +27,10 @@ describe Finalizer::BaseRelationMappersFinalizer, '#run' do
   before { subject }
 
   it "adds relation node for user mapper" do
-    user_mapper.relations[:users].should be_instance_of(Relation::Graph::Node)
+    DM_ENV.relations[:users].should be_instance_of(Relation::Graph::Node)
   end
 
   it "adds relation node for address mapper" do
-    address_mapper.relations[:addresses].should be_instance_of(Relation::Graph::Node)
+    DM_ENV.relations[:addresses].should be_instance_of(Relation::Graph::Node)
   end
 end

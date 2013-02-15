@@ -249,7 +249,7 @@ module DataMapper
       #
       # @api public
       def relations
-        self.class.relations
+        environment.relations
       end
 
       # The mapped relation's name

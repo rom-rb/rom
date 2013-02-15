@@ -27,7 +27,7 @@ module DataMapper
         relation = mapper.gateway_relation
         header   = Relation::Graph::Node.header(name, mapper.attributes.fields)
 
-        mapper.relations.new_node(name, relation, header)
+        relations.new_node(name, relation, header)
       end
 
       # @api private
@@ -43,7 +43,7 @@ module DataMapper
       def finalize_edges
         mappers.each do |mapper|
           mapper.relationships.each do |relationship|
-            connector_builder.call(mapper.relations, mapper_registry, relationship)
+            connector_builder.call(relations, mapper_registry, relationship)
           end
         end
       end
@@ -54,7 +54,7 @@ module DataMapper
       #
       # @api private
       def finalize_mapper(mapper)
-        mapper_registry << mapper.new(environment, mapper.relations.node_for(mapper.gateway_relation))
+        mapper_registry << mapper.new(environment, relations.node_for(mapper.gateway_relation))
         mapper.freeze
       end
     end # class BaseRelationMapperFinalizer

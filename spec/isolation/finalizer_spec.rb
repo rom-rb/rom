@@ -95,7 +95,7 @@ describe 'Finalizer', :isolation => true do
     env.finalize
   end
 
-  let(:relations) { env.engines[:postgres].relations }
+  let(:relations) { env.relations }
 
   it 'finalizes songs relation' do
     relation = relations[:songs]
