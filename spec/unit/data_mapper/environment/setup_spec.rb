@@ -1,11 +1,12 @@
 require 'spec_helper'
 
 describe Environment, '#setup' do
-  subject { object.setup(name, uri) }
+  subject { object.setup(name, options) }
 
   let(:object)  { described_class.new }
   let(:name)    { :test }
   let(:engine)  { mock }
+  let(:options) { { :uri => uri } }
   let(:uri)     { 'something://somewhere/test' }
 
   before do

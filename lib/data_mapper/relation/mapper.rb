@@ -95,15 +95,6 @@ module DataMapper
         @relation ||= engine.base_relation(relation_name, attributes.header)
       end
 
-      # Returns gateway relation for this mapper class
-      #
-      # @return [Object]
-      #
-      # @api private
-      def self.gateway_relation
-        @gateway_relation ||= engine.gateway_relation(relation)
-      end
-
       # Mark the given attribute names as (part of) the key
       #
       # @example

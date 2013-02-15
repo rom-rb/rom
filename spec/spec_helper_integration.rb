@@ -1,6 +1,10 @@
 require 'spec_helper'
 
 require 'veritas-do-adapter'
+
+# Monkey patch that adds Veritas::Adapter::DataObjects#gateway(relation)
+require 'support/veritas/adapter/data_objects'
+
 require 'do_postgres'
 
 require 'db_setup'

@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Relation::Graph, '#edge_for' do
   subject { object.edge_for(name) }
 
-  let(:object) { described_class.new(TEST_ENGINE) }
+  let(:object) { described_class.new }
 
   let(:edge)           { object.build_edge(name, left, right) }
 

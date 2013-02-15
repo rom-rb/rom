@@ -40,7 +40,9 @@ module DataMapper
     #
     # @api private
     def initialize(registry = nil)
-      @engines = {}
+      @engines      = {}
+      @repositories = {}
+
       reset(registry)
     end
 
@@ -60,9 +62,19 @@ module DataMapper
     # @return [self]
     #
     # @api public
-    def setup(name, uri)
-      engines[name.to_sym] = Engine.new(uri)
+    def setup(name, options = EMPTY_HASH)
+      engines[name.to_sym]      = Engine.new(options[:uri])
+      repositories[name.to_sym] = Repository.coerce(name, options)
       self
+    end
+
+    # The repository with the given +name+
+    #
+    # @return [Repository]
+    #
+    # @api private
+    def repository(name)
+      repositories[name]
     end
 
     # Return the mapper instance for the given model class
@@ -165,11 +177,15 @@ module DataMapper
     #
     # @api private
     def reset(registry = nil)
-      @mappers   = []
-      @registry  = registry || Mapper::Registry.new
-      @relations = Relation::Graph.new
-      @finalized = false
+      @mappers      = []
+      @registry     = registry || Mapper::Registry.new
+      @relations    = Relation::Graph.new
+      @finalized    = false
     end
+
+    protected
+
+    attr_reader :repositories
 
   end # class Environment
 

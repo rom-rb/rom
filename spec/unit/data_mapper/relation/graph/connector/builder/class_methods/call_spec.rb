@@ -54,8 +54,11 @@ describe Relation::Graph::Connector::Builder, '.call' do
 
   before do
     mapper_registry.each do |_, mapper|
-      name     = mapper.relation_name
-      relation = mapper.class.gateway_relation
+      name       = mapper.relation_name
+      repository = DM_ENV.repository(mapper.class.repository)
+      repository.register(name, mapper.attributes.header)
+
+      relation = repository.get(name)
       header   = Relation::Graph::Node.header(name, mapper.attributes.fields)
 
       DM_ENV.relations.new_node(name, relation, header)

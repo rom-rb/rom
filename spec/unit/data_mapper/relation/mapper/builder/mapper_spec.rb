@@ -48,10 +48,13 @@ describe Relation::Mapper::Builder, '#mapper' do
   before do
     mapper_registry.each do |_, mapper|
       name     = mapper.relation_name
-      relation = mapper.class.gateway_relation
-      aliases  = DM_ENV.relations.header(name, mapper.attributes.fields)
+      repository = DM_ENV.repository(mapper.class.repository)
+      repository.register(name, mapper.attributes.header)
 
-      DM_ENV.relations.new_node(name, relation, aliases)
+      relation = repository.get(name)
+      header  = DM_ENV.relations.header(name, mapper.attributes.fields)
+
+      DM_ENV.relations.new_node(name, relation, header)
     end
 
     mapper_registry.each do |_, mapper|

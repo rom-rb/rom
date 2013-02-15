@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Relation::Graph, '#freeze' do
   subject { object.freeze }
 
-  let(:object) { described_class.new(TEST_ENGINE) }
+  let(:object) { described_class.new }
 
   it { should be_frozen }
 

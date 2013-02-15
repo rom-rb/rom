@@ -254,7 +254,12 @@ module DataMapper
       #
       # @api private
       def node_for(relation)
-        self[relation.name.to_sym]
+        # TODO streamline this
+        if relation.respond_to?(:name)
+          self[relation.name.to_sym]
+        else
+          nodes.detect { |node| node.relation == relation }
+        end
       end
 
       # Returns the edge with the given name

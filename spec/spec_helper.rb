@@ -48,8 +48,4 @@ end
 
 include DataMapper
 
-DM_ENV = TestEnv.new
-
-TEST_ENGINE = Engine.new('db://localhost/test')
-
-DM_ENV.engines[:test] = TEST_ENGINE
+DM_ENV = TestEnv.new.setup(:test)
