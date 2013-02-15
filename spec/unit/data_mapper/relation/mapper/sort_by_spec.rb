@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Relation::Mapper, '#sort_by' do
   subject { object.sort_by(*names, &block) }
 
-  let(:object)   { mock_mapper(model).new(relation) }
+  let(:object)   { mock_mapper(model).new(DM_ENV, relation) }
   let(:model)    { mock_model(:User) }
   let(:relation) { mock('relation') }
   let(:sorted)   { mock('sorted') }

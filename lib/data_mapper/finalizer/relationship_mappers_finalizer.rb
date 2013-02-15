@@ -22,7 +22,7 @@ module DataMapper
       # @api private
       def register_relationship_mappers(relation_registry)
         relation_registry.connectors.each_value do |connector|
-          mapper = mapper_builder.call(connector)
+          mapper = mapper_builder.call(connector, environment)
           mapper_registry.register(mapper, connector.relationship)
         end
       end

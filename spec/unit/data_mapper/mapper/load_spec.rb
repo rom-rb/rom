@@ -3,7 +3,7 @@ require 'spec_helper'
 describe DataMapper::Mapper, '#load' do
   subject { object.load(tuple) }
 
-  let(:object) { mapper.new }
+  let(:object) { mapper.new(DM_ENV) }
 
   let(:mapper) { Class.new(described_class) { map :name, String, :to => :username } }
   let(:tuple)  { { :username => name } }

@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Relation::Mapper::Builder, '#mapper' do
   subject { object.mapper }
 
-  let(:object) { described_class.new(connector) }
+  let(:object) { described_class.new(connector, DM_ENV) }
 
   let(:mapper_registry) do
     mapper_registry = DM_ENV.registry

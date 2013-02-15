@@ -32,6 +32,11 @@ module DataMapper
     # @api private
     attr_reader :mappers
 
+    # The environment to finalize
+    #
+    # @return [DataMapper::Environment]
+    #
+    # @api private
     attr_reader :environment
 
     # Perform finalization

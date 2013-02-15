@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe Relationship::Iterator, '#each' do
-  let(:source_mapper)     { mock_mapper(source_model, source_attributes).new(relation) }
-  let(:target_mapper)     { mock_mapper(target_model, target_attributes).new }
+  let(:source_mapper)     { mock_mapper(source_model, source_attributes).new(DM_ENV, relation) }
+  let(:target_mapper)     { mock_mapper(target_model, target_attributes).new(DM_ENV) }
 
   let(:source_model)      { mock_model(:User) }
   let(:target_model)      { mock_model(:Order) }

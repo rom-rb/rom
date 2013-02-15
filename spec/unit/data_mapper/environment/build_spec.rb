@@ -16,6 +16,5 @@ describe Environment, '#build' do
   it 'builds mapper class' do
     subject.should be < Relation::Mapper
     subject.engine.should be(engine)
-    subject.environment.should be(object)
   end
 end

@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Relation::Mapper, '#relationships' do
   subject { object.relationships }
 
-  let(:object)        { described_class.new(mock('relation')) }
+  let(:object)        { described_class.new(DM_ENV, mock('relation')) }
   let(:relationships) { mock('relationships') }
 
   it 'delegates to self.class' do

@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Relation::Mapper, '#restrict' do
   subject { object.restrict(&block) }
 
-  let(:object)      { mock_mapper(model).new(relation) }
+  let(:object)      { mock_mapper(model).new(DM_ENV, relation) }
   let(:relation)    { mock('relation') }
   let(:restriction) { mock('restriction') }
   let(:model)       { mock_model(:User) }

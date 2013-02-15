@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Relation::Mapper, '#one' do
-  let(:object)   { mock_mapper(model, [ id, name ]).new(node) }
+  let(:object)   { mock_mapper(model, [ id, name ]).new(DM_ENV, node) }
   let(:id)       { mock_attribute(:id, Integer) }
   let(:name)     { mock_attribute(:name, String) }
   let(:node)     { Relation::Graph::Node.new(:users, relation) }

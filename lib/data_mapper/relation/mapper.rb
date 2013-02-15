@@ -218,6 +218,9 @@ module DataMapper
       #
       #   mapper = PersonMapper.new
       #
+      # @param [Environment] environment
+      #   the new mapper's environment
+      #
       # @param [Veritas::Relation] relation
       #   the relation to map from
       #
@@ -227,8 +230,8 @@ module DataMapper
       # @return [undefined]
       #
       # @api public
-      def initialize(relation = self.class.relation, attributes = self.class.attributes)
-        super()
+      def initialize(environment, relation = self.class.relation, attributes = self.class.attributes)
+        super(environment)
         @relation      = relation
         @attributes    = attributes
         @relationships = self.class.relationships
@@ -600,7 +603,7 @@ module DataMapper
       #
       # @api private
       def new(relation, attributes = self.attributes)
-        self.class.new(relation, attributes)
+        self.class.new(environment, relation, attributes)
       end
 
     end # class Mapper

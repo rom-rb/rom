@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Relation::Mapper, '#each' do
-  let(:object)   { Class.new(described_class).model(model).new(relation) }
+  let(:object)   { Class.new(described_class).model(model).new(DM_ENV, relation) }
   let(:model)    { mock_model(:User) }
   let(:relation) { mock('relation') }
 

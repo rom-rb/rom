@@ -118,7 +118,6 @@ module DataMapper
     def build(model, repository, &block)
       mapper = Mapper::Builder.create(model, repository, &block)
       mapper.engine(engines[repository])
-      mapper.environment(self)
       mappers << mapper
       mapper
     end

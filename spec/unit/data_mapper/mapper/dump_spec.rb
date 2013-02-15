@@ -3,7 +3,7 @@ require 'spec_helper'
 describe DataMapper::Mapper, '#dump' do
   subject { object.dump(user) }
 
-  let(:object) { mapper.new }
+  let(:object) { mapper.new(DM_ENV) }
 
   let(:mapper) { Class.new(described_class) { map :name, String, :to => :username } }
   let(:user)   { model.new(:name => name) }

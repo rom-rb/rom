@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Relation::Mapper, '#include' do
   subject { object.include(name) }
 
-  let(:object) { mock_mapper(model).new }
+  let(:object) { mock_mapper(model).new(DM_ENV) }
 
   let(:model)        { mock_model(:User) }
   let(:name)         { :address }

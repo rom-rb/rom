@@ -9,14 +9,16 @@ module DataMapper
 
         # Builds a mapper based on a connector and source mapper class
         #
-        # @param [Graph::Connector] connector
-        #   the connector used to build the mapper
+        # @see #initialize
+        #
+        # @param [*args] args
+        #   the parameters accepted by {#initialize}
         #
         # @return [Mapper]
         #
         # @api private
-        def self.call(connector)
-          new(connector).mapper
+        def self.call(*args)
+          new(*args).mapper
         end
 
         # The mapper built from the instance's {Graph::Connector}
@@ -31,11 +33,15 @@ module DataMapper
         # @param [Graph::Connector] connector
         #   the connector used to build the mapper
         #
+        # @param [Environment] environment
+        #   the new mapper's environment
+        #
         # @return [undefined]
         #
         # @api private
-        def initialize(connector)
+        def initialize(connector, environment)
           @connector         = connector
+          @environment       = environment
           @source_mapper     = @connector.source_mapper.class
           @target_aliases    = @connector.target_aliases
           @target_model      = @connector.target_model
@@ -58,7 +64,7 @@ module DataMapper
 
           klass.finalize_attributes(@connector.registry)
 
-          klass.new(@connector.node)
+          klass.new(@environment, @connector.node)
         end
 
         def mapper_name

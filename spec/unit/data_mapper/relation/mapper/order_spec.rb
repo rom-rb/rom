@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Relation::Mapper, '#order' do
   subject { object.order(*names) }
 
-  let(:object)     { mock_mapper(model, attributes).new(relation) }
+  let(:object)     { mock_mapper(model, attributes).new(DM_ENV, relation) }
 
   let(:model)      { mock_model(:User) }
   let(:attributes) { [ id, name, age ] }
