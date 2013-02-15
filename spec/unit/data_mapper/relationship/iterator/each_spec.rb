@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Relationship::Iterator, '#each' do
   let(:source_mapper)     { mock_mapper(source_model, source_attributes).new(DM_ENV, relation) }
-  let(:target_mapper)     { mock_mapper(target_model, target_attributes).new(DM_ENV) }
+  let(:target_mapper)     { mock_mapper(target_model, target_attributes).new(DM_ENV, orders_relation) }
 
   let(:source_model)      { mock_model(:User) }
   let(:target_model)      { mock_model(:Order) }
@@ -25,6 +25,7 @@ describe Relationship::Iterator, '#each' do
   let(:result)   { [ result1, result2, result3, result4 ] }
 
   let(:relation) { mock('relation', :to_a => result) }
+  let(:orders_relation) { mock_relation(:orders) }
 
   let(:object) { source_mapper.extend(described_class) }
 

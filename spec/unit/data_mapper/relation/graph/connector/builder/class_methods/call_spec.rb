@@ -13,7 +13,7 @@ describe Relation::Graph::Connector::Builder, '.call' do
     mapper_registry
   end
 
-  let(:song_mapper)            { mock_mapper(song_model, song_attributes, song_relationships).new(songs_relation) }
+  let(:song_mapper)            { mock_mapper(song_model, song_attributes, song_relationships).new(DM_ENV, songs_relation) }
   let(:song_model)             { mock_model('Song') }
   let(:songs_relation)         { mock_relation(:songs) }
   let(:song_attributes)        { [ songs_id, songs_title ] }
@@ -21,7 +21,7 @@ describe Relation::Graph::Connector::Builder, '.call' do
   let(:songs_title)            { mock_attribute(:title, String) }
   let(:song_relationships)     { [ songs_song_tags_relationship, songs_tags_relationship, songs_infos_relationship ] }
 
-  let(:song_tag_mapper)        { mock_mapper(song_tag_model, song_tag_attributes, song_tag_relationships).new(song_tags_relation) }
+  let(:song_tag_mapper)        { mock_mapper(song_tag_model, song_tag_attributes, song_tag_relationships).new(DM_ENV, song_tags_relation) }
   let(:song_tag_model)         { mock_model('SongTag') }
   let(:song_tags_relation)     { mock_relation(:song_tags) }
   let(:song_tag_attributes)    { [ song_tags_song_id, song_tags_tag_id ] }
@@ -29,7 +29,7 @@ describe Relation::Graph::Connector::Builder, '.call' do
   let(:song_tags_tag_id)       { mock_attribute(:tag_id,  Integer, :key => true) }
   let(:song_tag_relationships) { [ song_tags_song_relationship, song_tags_tag_relationship ] }
 
-  let(:tag_mapper)             { mock_mapper(tag_model, tag_attributes, tag_relationships).new(tags_relation) }
+  let(:tag_mapper)             { mock_mapper(tag_model, tag_attributes, tag_relationships).new(DM_ENV, tags_relation) }
   let(:tag_model)              { mock_model('Tag') }
   let(:tags_relation)          { mock_relation(:tags) }
   let(:tag_attributes)         { [ tags_id, tags_name ] }
@@ -37,7 +37,7 @@ describe Relation::Graph::Connector::Builder, '.call' do
   let(:tags_name)              { mock_attribute(:name, String) }
   let(:tag_relationships)      { [ tags_infos_relationship ] }
 
-  let(:info_mapper)            { mock_mapper(info_model, info_attributes, info_relationships).new(infos_relation) }
+  let(:info_mapper)            { mock_mapper(info_model, info_attributes, info_relationships).new(DM_ENV, infos_relation) }
   let(:info_model)             { mock_model('Info') }
   let(:infos_relation)         { mock_relation(:infos) }
   let(:info_attributes)        { [ infos_id, infos_text ] }

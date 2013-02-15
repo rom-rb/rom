@@ -7,14 +7,12 @@ describe Environment, '#build' do
   let(:model)      { mock_model('User') }
   let(:repository) { :test }
   let(:mapper)     { mock('mapper') }
-  let(:engine)     { mock('engine') }
-
-  before do
-    object.engines[:test] = engine
-  end
 
   it 'builds mapper class' do
     subject.should be < Relation::Mapper
-    subject.engine.should be(engine)
+  end
+
+  it "uses the correct repository" do
+    subject.repository.should eql(repository)
   end
 end

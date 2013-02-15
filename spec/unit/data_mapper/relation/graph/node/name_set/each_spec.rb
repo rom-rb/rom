@@ -6,22 +6,33 @@ describe Relation::Graph::Node::NameSet, '#each' do
   let(:yields) { [] }
 
   let(:mapper_registry) {
-    Mapper::Registry.new << song_mapper << song_tag_mapper << tag_mapper << info_mapper << info_content_mapper
+    mapper_registry = Mapper::Registry.new
+
+    [ song_mapper, song_tag_mapper, tag_mapper, info_mapper, info_content_mapper ].each do |mapper|
+      mapper_registry.register(mapper)
+    end
+
+    mapper_registry
   }
 
-  let(:song_mapper)                { mock_mapper(song_model, [], song_relationships) }
+  let(:song_mapper)                { mock_mapper(song_model, [], song_relationships).new(DM_ENV, songs_relation) }
+  let(:songs_relation)             { mock_relation(:songs) }
   let(:song_relationships)         { [ songs_song_tags, songs_tags, songs_infos, songs_info_contents ] }
 
-  let(:song_tag_mapper)            { mock_mapper(song_tag_model, [], song_tag_relationships) }
+  let(:song_tag_mapper)            { mock_mapper(song_tag_model, [], song_tag_relationships).new(DM_ENV, song_tags_relation) }
+  let(:song_tags_relation)         { mock_relation(:song_tags) }
   let(:song_tag_relationships)     { [ song_tags_song, song_tags_tag ] }
 
-  let(:tag_mapper)                 { mock_mapper(tag_model, [], tag_relationships) }
+  let(:tag_mapper)                 { mock_mapper(tag_model, [], tag_relationships).new(DM_ENV, tags_relation) }
+  let(:tags_relation)              { mock_relation(:tags) }
   let(:tag_relationships)          { [ tags_infos ] }
 
-  let(:info_mapper)                { mock_mapper(info_model, [], info_relationships) }
+  let(:info_mapper)                { mock_mapper(info_model, [], info_relationships).new(DM_ENV, infos_relation) }
+  let(:infos_relation)             { mock_relation(:infos) }
   let(:info_relationships)         { [ infos_info_contents ] }
 
-  let(:info_content_mapper)        { mock_mapper(info_content_model, [], info_content_relationships) }
+  let(:info_content_mapper)        { mock_mapper(info_content_model, [], info_content_relationships).new(DM_ENV, info_contents_relation) }
+  let(:info_contents_relation)     { mock_relation(:info_contents) }
   let(:info_content_relationships) { [] }
 
   let(:song_model)          { mock_model('Song') }
@@ -45,7 +56,18 @@ describe Relation::Graph::Node::NameSet, '#each' do
 
   before do
     mapper_registry.each do |_, mapper|
-      mapper.relationships.each { |relationship| relationship.finalize(mapper_registry) }
+      name       = mapper.relation_name
+      repository = DM_ENV.repository(mapper.class.repository)
+      repository.register(name, mapper.attributes.header)
+
+      relation = repository.get(name)
+      header   = Relation::Graph::Node.header(name, mapper.attributes.fields)
+
+      DM_ENV.relations.new_node(name, relation, header)
+
+      mapper.relationships.each do |relationship|
+        relationship.finalize(mapper_registry)
+      end
     end
   end
 
@@ -125,24 +147,42 @@ describe Relation::Graph::Node::NameSet do
   let(:object) { described_class }
 
   let(:mapper_registry) {
-    Mapper::Registry.new << song_mapper << song_tag_mapper << tag_mapper
+    mapper_registry = Mapper::Registry.new
+
+    [ song_mapper, song_tag_mapper, tag_mapper ].each do |mapper|
+      mapper_registry.register(mapper)
+    end
+
+    mapper_registry
   }
 
-  let(:song_mapper)     { mock_mapper(song_model, [], [ songs_song_tags, songs_tags ]) }
-  let(:song_model)      { mock_model('Song') }
-  let(:songs_song_tags) { Relationship::OneToMany .new(:song_tags, song_model, song_tag_model) }
-  let(:songs_tags)      { Relationship::ManyToMany.new(:tags, song_model, tag_model, :through => :song_tags, :via => :tag) }
+  let(:song_mapper)         { mock_mapper(song_model, [], [songs_song_tags, songs_tags]).new(DM_ENV, songs_relation) }
+  let(:songs_relation)      { mock_relation(:songs) }
+  let(:song_model)          { mock_model('Song') }
+  let(:songs_song_tags)     { Relationship::OneToMany .new(:song_tags, song_model, song_tag_model) }
+  let(:songs_tags)          { Relationship::ManyToMany.new(:tags, song_model, tag_model, :through => :song_tags, :via => :tag) }
 
-  let(:song_tag_mapper) { mock_mapper(song_tag_model, [], [ song_tags_song, song_tags_tag ]) }
-  let(:song_tag_model)  { mock_model('SongTag') }
-  let(:song_tags_song)  { Relationship::ManyToOne .new(:song, song_tag_model, song_model) }
-  let(:song_tags_tag)   { Relationship::ManyToOne .new(:tag,  song_tag_model, tag_model) }
+  let(:song_tag_mapper)    { mock_mapper(song_tag_model, [], [song_tags_song, song_tags_tag]).new(DM_ENV, song_tags_relation) }
+  let(:song_tags_relation) { mock_relation(:song_tags) }
+  let(:song_tag_model)     { mock_model('SongTag') }
+  let(:song_tags_song)     { Relationship::ManyToOne .new(:song, song_tag_model, song_model) }
+  let(:song_tags_tag)      { Relationship::ManyToOne .new(:tag,  song_tag_model, tag_model) }
 
-  let(:tag_mapper)      { mock_mapper(tag_model) }
-  let(:tag_model)       { mock_model('Tag') }
+  let(:tag_mapper)         { mock_mapper(tag_model, []).new(DM_ENV, tags_relation) }
+  let(:tags_relation)      { mock_relation(:tags) }
+  let(:tag_model)          { mock_model('Tag') }
 
   before do
     mapper_registry.each do |_, mapper|
+      name       = mapper.relation_name
+      repository = DM_ENV.repository(mapper.class.repository)
+      repository.register(name, mapper.attributes.header)
+
+      relation = repository.get(name)
+      header   = Relation::Graph::Node.header(name, mapper.attributes.fields)
+
+      DM_ENV.relations.new_node(name, relation, header)
+
       mapper.relationships.each { |relationship| relationship.finalize(mapper_registry) }
     end
   end

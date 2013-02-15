@@ -5,7 +5,7 @@ describe Mapper::Registry, '#each' do
 
   let(:model)    { mock_model('TestModel') }
   let(:relation) { mock('relation') }
-  let(:mapper)   { mock_mapper(model).new(relation) }
+  let(:mapper)   { mock_mapper(model).new(DM_ENV, relation) }
 
   before { object.register(mapper) }
 

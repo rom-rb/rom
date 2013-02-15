@@ -8,7 +8,7 @@ describe Mapper::Registry, '#[]', :type => :unit do
 
     let(:model)    { mock_model('TestModel') }
     let(:relation) { mock('relation') }
-    let(:mapper)   { mock_mapper(model).new(relation)  }
+    let(:mapper)   { mock_mapper(model).new(DM_ENV, relation)  }
 
     before { object << mapper }
 
@@ -22,7 +22,7 @@ describe Mapper::Registry, '#[]', :type => :unit do
     let(:target_model) { mock_model('Thing') }
     let(:relation)     { mock('relation') }
     let(:relationship) { mock_relationship(:things, :source_model => source_model, :target_model => target_model) }
-    let(:mapper)       { mock_mapper(source_model).new(relation)  }
+    let(:mapper)       { mock_mapper(source_model).new(DM_ENV, relation)  }
 
     before { object.register mapper, relationship }
 

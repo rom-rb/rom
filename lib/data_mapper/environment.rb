@@ -2,13 +2,6 @@ module DataMapper
 
   class Environment
 
-    # The engines registered with this instance
-    #
-    # @return [Hash]
-    #
-    # @api private
-    attr_reader :engines
-
     # The mappers built with this instance
     #
     # @return [Array<Mapper>]
@@ -40,9 +33,7 @@ module DataMapper
     #
     # @api private
     def initialize(registry = nil)
-      @engines      = {}
       @repositories = {}
-
       reset(registry)
     end
 
@@ -63,7 +54,6 @@ module DataMapper
     #
     # @api public
     def setup(name, options = EMPTY_HASH)
-      engines[name.to_sym]      = Engine.new(options[:uri])
       repositories[name.to_sym] = Repository.coerce(name, options)
       self
     end
@@ -136,7 +126,6 @@ module DataMapper
     # @api public
     def build(model, repository, &block)
       mapper = Mapper::Builder.create(model, repository, &block)
-      mapper.engine(engines[repository])
       mappers << mapper
       mapper
     end

@@ -58,31 +58,7 @@ module DataMapper
         klass
       end
 
-      # Returns engine for this mapper
-      #
-      # @return [Engine]
-      #
-      # @api private
-      def self.engine(engine = nil)
-        @engine ||= engine
-      end
-
-      # Returns relation registry for this mapper class
-      #
-      # @see Engine#relations
-      #
-      # @example
-      #
-      #   DataMapper::Relation::Mapper.relations
-      #
-      # @return [Graph]
-      #
-      # @api public
-      def self.relations
-        @relations ||= engine.relations
-      end
-
-      # Returns base relation for this mapper
+      # Returns relation for this mapper class
       #
       # @example
       #
@@ -92,7 +68,6 @@ module DataMapper
       #
       # @api public
       def self.relation
-        @relation ||= engine.base_relation(relation_name, attributes.header)
       end
 
       # Mark the given attribute names as (part of) the key
@@ -221,11 +196,15 @@ module DataMapper
       # @return [undefined]
       #
       # @api public
-      def initialize(environment, relation = self.class.relation, attributes = self.class.attributes)
+      def initialize(environment, relation = default_relation(environment), attributes = self.class.attributes)
         super(environment)
         @relation      = relation
         @attributes    = attributes
         @relationships = self.class.relationships
+      end
+
+      def default_relation(environment)
+        self.class.relation || environment.repository(self.class.repository).get(self.class.relation_name)
       end
 
       # Shortcut for self.class.relations
