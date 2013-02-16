@@ -3,7 +3,6 @@ module DataMapper
   # Mapper
   #
   class Mapper
-    include Enumerable
     extend DescendantsTracker, Options
 
     accept_options :model

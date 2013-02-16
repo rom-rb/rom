@@ -6,6 +6,8 @@ module DataMapper
     # @api public
     class Mapper < DataMapper::Mapper
 
+      include Enumerable
+
       DEFAULT_LIMIT_FOR_ONE = 2
 
       alias_method :all, :to_a
