@@ -1,34 +1,40 @@
 module SpecHelper
 
-  def self.draw_relation_registry(file_name = 'graph.png')
+  # Print a graph representation of the relations registered with +env+
+  #
+  # @param [DataMapper::Environment] env
+  #   the environment to use for accessing the relation graph
+  #
+  # @return [undefined]
+  def self.draw_relation_graph(env, file_name = 'graph.png')
     require 'graphviz'
 
     # Create a new graph
     g = GraphViz.new( :G, :type => :digraph )
 
-    relation_registry = DataMapper.engines[:postgres].relations
+    relation_graph = env.relations
 
     map = {}
 
-    relation_registry.nodes.each do |relation_node|
+    relation_graph.nodes.each do |relation_node|
       node = g.add_nodes(relation_node.name.to_s)
       map[relation_node] = node
     end
 
-    relation_registry.edges.each do |edge|
-      source = map[edge.left]
-      target = map[edge.right]
+    relation_graph.edges.each do |edge|
+      source = map[edge.source_node]
+      target = map[edge.target_node]
 
       g.add_edges(source, target, :label => edge.name.to_s)
     end
 
-    relation_registry.connectors.each do |name, connector|
+    relation_graph.connectors.each do |name, connector|
       source = map[connector.source_node]
       target = map[connector.node]
 
       relationship = connector.relationship
 
-      label = "#{relationship.source_model}##{relationship.name} [#{name}]"
+      label = "#{relationship.source_model.name}##{relationship.name} [#{name}]"
 
       g.add_edges(source, target, :label => label, :style => 'bold', :color => 'blue')
     end
