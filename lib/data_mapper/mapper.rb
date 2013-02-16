@@ -33,13 +33,6 @@ module DataMapper
     # @api public
     attr_reader :attributes
 
-    # Return mapper's environment object
-    #
-    # @return [Environment]
-    #
-    # @api private
-    attr_reader :environment
-
     # Returns a new mapper class derived from the given one
     #
     # @example
@@ -115,10 +108,9 @@ module DataMapper
     # @return [undefined]
     #
     # @api private
-    def initialize(environment)
-      @environment = environment
-      @model       = self.class.model
-      @attributes  = self.class.attributes
+    def initialize
+      @model      = self.class.model
+      @attributes = self.class.attributes
     end
 
     # Loads a domain object

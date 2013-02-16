@@ -12,6 +12,13 @@ module DataMapper
 
       accept_options :relation_name, :repository
 
+      # Return the mapper's environment object
+      #
+      # @return [Environment]
+      #
+      # @api private
+      attr_reader :environment
+
       # The relation backing this mapper
       #
       # @example
@@ -197,7 +204,8 @@ module DataMapper
       #
       # @api public
       def initialize(environment, relation = default_relation(environment), attributes = self.class.attributes)
-        super(environment)
+        super()
+        @environment   = environment
         @relation      = relation
         @attributes    = attributes
         @relationships = self.class.relationships

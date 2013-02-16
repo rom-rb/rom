@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Mapper, '#attributes' do
   subject { object.attributes }
 
-  let(:object)     { described_class.new(DM_ENV) }
+  let(:object)     { described_class.new }
   let(:attributes) { mock('attributes') }
 
   it 'delegates to self.class' do
