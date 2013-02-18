@@ -32,6 +32,8 @@ require 'data_mapper/utils'
 require 'support/options'
 
 require 'data_mapper/repository'
+require 'data_mapper/repository/in_memory'
+require 'data_mapper/repository/persistent'
 require 'data_mapper/environment'
 
 require 'data_mapper/attribute'
