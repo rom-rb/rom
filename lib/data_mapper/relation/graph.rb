@@ -256,7 +256,7 @@ module DataMapper
       def node_for(relation)
         # TODO streamline this
         if relation.respond_to?(:name)
-          self[relation.name.to_sym]
+          self[relation.name]
         else
           nodes.detect { |node| node.relation == relation }
         end
