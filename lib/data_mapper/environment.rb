@@ -60,8 +60,10 @@ module DataMapper
     # @param [#to_sym] name
     #   the name to use for the engine
     #
-    # @param [Addressable::Uri, String] uri
-    #   the uri the adapter uses for creating a connection
+    # @param [Hash] options
+    #   the options to pass to the adapter
+    #
+    # @option options [Symbol] :uri the uri to use to connect
     #
     # @return [self]
     #
