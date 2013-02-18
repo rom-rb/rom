@@ -67,7 +67,7 @@ class TestEnv < DataMapper::Environment
     end
   end
 
-  def draw_relation_graph(file_name = 'graph.png')
+  def draw(file_name = 'graph.png')
     require 'graphviz'
 
     # Create a new graph
