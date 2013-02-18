@@ -32,9 +32,12 @@ module DataMapper
     # @return [undefined]
     #
     # @api private
-    def initialize(registry = nil)
+    def initialize
       @repositories = {}
-      reset(registry)
+      @mappers      = []
+      @registry     = Mapper::Registry.new
+      @relations    = Relation::Graph.new
+      @finalized    = false
     end
 
     # Register a new engine to use with this instance
@@ -158,18 +161,6 @@ module DataMapper
       Finalizer.call(self)
       @finalized = true
       self
-    end
-
-    # Reset this instance
-    #
-    # @return [undefined]
-    #
-    # @api private
-    def reset(registry = nil)
-      @mappers      = []
-      @registry     = registry || Mapper::Registry.new
-      @relations    = Relation::Graph.new
-      @finalized    = false
     end
 
     protected

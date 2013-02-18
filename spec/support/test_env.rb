@@ -1,12 +1,16 @@
 class TestEnv < DataMapper::Environment
 
-  def initialize(*)
+  def initialize
     reset_constants
     super
   end
 
-  def reset(registry = nil)
-    super
+  def reset
+    @mappers   = []
+    @registry  = Mapper::Registry.new
+    @relations = Relation::Graph.new
+    @finalized = false
+
     remove_constants
     clear_mappers
     clear_models
