@@ -5,6 +5,8 @@ module DataMapper
   # @api private
   class Repository
 
+    include AbstractType
+
     def self.coerce(name, options = EMPTY_HASH)
       if options.any?
         Persistent.new(name, adapter(options))
@@ -20,8 +22,6 @@ module DataMapper
     end
 
     private_class_method :adapter
-
-    include AbstractType
 
     # The repository's name
     #
