@@ -16,22 +16,16 @@ module DataMapper
       # @api private
       def finalize_mappers
         mappers.each do |mapper|
-          relation = register_base_relation(mapper)
-          finalize_mapper(mapper, relation)
+          finalize_mapper(mapper, register_base_relation(mapper))
         end
       end
 
       # @api private
       def register_base_relation(mapper)
-        name       = mapper.relation_name
-        repository = environment.repository(mapper.repository)
-        repository.register(name, mapper.attributes.header)
-        relation = repository.get(name)
-        header   = Relation::Graph::Node.header(name, mapper.attributes.fields)
+        name   = mapper.relation_name
+        header = Relation::Graph::Node.header(name, mapper.attributes.fields)
 
-        relation_node = relations.build_node(name, relation, header)
-        relations.add_node(relation_node)
-        relation_node
+        registered_node(mapper, name, header)
       end
 
       # @api private
@@ -53,6 +47,19 @@ module DataMapper
       end
 
       private
+
+      def registered_node(mapper, name, header)
+        relation = registered_relation(name, mapper)
+        node = relations.build_node(name, relation, header)
+        relations.add_node(node)
+        node
+      end
+
+      def registered_relation(name, mapper)
+        repository = environment.repository(mapper.repository)
+        repository.register(name, mapper.attributes.header)
+        repository.get(name)
+      end
 
       # Perform mapper finalization
       #
