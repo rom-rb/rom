@@ -129,7 +129,7 @@ module DataMapper
         @adapter = adapter
       end
 
-    private
+      private
 
       # Build veritas gateway relation
       #
