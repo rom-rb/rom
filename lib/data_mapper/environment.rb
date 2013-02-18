@@ -63,7 +63,7 @@ module DataMapper
     # @param [Hash] options
     #   the options to pass to the adapter
     #
-    # @option options [Symbol] :uri the uri to use to connect
+    # @option options [Addressable::URI, #to_s] :uri the uri to use to connect
     #
     # @return [self]
     #
