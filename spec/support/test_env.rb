@@ -67,41 +67,6 @@ class TestEnv < DataMapper::Environment
     end
   end
 
-  def draw(file_name = 'graph.png')
-    require 'graphviz'
-
-    # Create a new graph
-    g = GraphViz.new( :G, :type => :digraph )
-
-    map = {}
-
-    relations.nodes.each do |relation_node|
-      node = g.add_nodes(relation_node.name.to_s)
-      map[relation_node] = node
-    end
-
-    relations.edges.each do |edge|
-      source = map[edge.source_node]
-      target = map[edge.target_node]
-
-      g.add_edges(source, target, :label => edge.name.to_s)
-    end
-
-    relations.connectors.each do |name, connector|
-      source = map[connector.source_node]
-      target = map[connector.node]
-
-      relationship = connector.relationship
-
-      label = "#{relationship.source_model.name}##{relationship.name} [#{name}]"
-
-      g.add_edges(source, target, :label => label, :style => 'bold', :color => 'blue')
-    end
-
-    # Generate output image
-    g.output( :png => file_name )
-  end
-
   private
 
   def reset_constants
