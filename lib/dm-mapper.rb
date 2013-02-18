@@ -29,7 +29,7 @@ require 'equalizer'
 require 'inflecto'
 
 require 'data_mapper/utils'
-require 'support/options'
+require 'data_mapper/support/options'
 
 require 'data_mapper/repository'
 require 'data_mapper/repository/in_memory'

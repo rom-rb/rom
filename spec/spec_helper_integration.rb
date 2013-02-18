@@ -3,10 +3,10 @@ require 'spec_helper'
 require 'veritas-do-adapter'
 
 # Monkey patch that adds Veritas::Adapter::DataObjects#gateway(relation)
-require 'support/veritas/adapter/data_objects'
+require 'data_mapper/support/veritas/adapter/data_objects'
 
 # Have it available in specs (doesn't require graphviz itself)
-require 'support/graphviz'
+require 'data_mapper/support/graphviz'
 
 require 'do_postgres'
 
