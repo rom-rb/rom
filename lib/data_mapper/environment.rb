@@ -23,6 +23,16 @@ module DataMapper
     # @api private
     attr_reader :relations
 
+    # The repositories setup with this environment
+    #
+    # @return [Hash<Symbol, Repository>]
+    #
+    # @api private
+    attr_reader :repositories
+
+    protected :repositories
+
+
     # Initialize a new instance
     #
     # @param [Mapper::Registry, nil] registry
@@ -163,10 +173,5 @@ module DataMapper
       self
     end
 
-    protected
-
-    attr_reader :repositories
-
   end # class Environment
-
 end # module DataMapper
