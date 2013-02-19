@@ -9,6 +9,11 @@ module Veritas
 
       include Equalizer.new(:uri)
 
+      # The URI this adapter uses for establishing a connection
+      #
+      # @return [Addressable::URI]
+      #
+      # @api private
       attr_reader :uri
 
       # Wrap the given +relation+ with a gateway
