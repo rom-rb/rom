@@ -13,6 +13,9 @@ module DataMapper
   # An empty frozen Hash useful for parameter default values
   EMPTY_HASH = Hash.new.freeze
 
+  # An empty frozen Array useful for parameter default values
+  EMPTY_ARRAY = [].freeze
+
   # Represent a positive, infinitely large Float number
   Infinity  = 1.0 / 0
 
@@ -32,8 +35,6 @@ require 'data_mapper/utils'
 require 'data_mapper/support/options'
 
 require 'data_mapper/repository'
-require 'data_mapper/repository/in_memory'
-require 'data_mapper/repository/persistent'
 require 'data_mapper/environment'
 
 require 'data_mapper/attribute'

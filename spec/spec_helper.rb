@@ -24,13 +24,15 @@ end
 
 require 'pp'
 require 'ostruct'
-require 'dm-mapper'
 require 'virtus'
 require 'rspec'
 
-%w(shared support).each do |name|
-  Dir[File.expand_path("../#{name}/**/*.rb", __FILE__)].each { |file| require file }
-end
+require 'dm-mapper'
+require 'data_mapper/support/veritas/adapter/in_memory'
+
+require 'shared_helper'
+
+include DataMapper
 
 RSpec.configure do |config|
 
@@ -46,6 +48,4 @@ RSpec.configure do |config|
   config.include(SpecHelper)
 end
 
-include DataMapper
-
-DM_ENV = TestEnv.new.setup(:test)
+DM_ENV = TestEnv.coerce(:test => 'in_memory://test')

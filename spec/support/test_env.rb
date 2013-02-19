@@ -1,6 +1,6 @@
 class TestEnv < DataMapper::Environment
 
-  def initialize
+  def initialize(config)
     reset_constants
     super
   end

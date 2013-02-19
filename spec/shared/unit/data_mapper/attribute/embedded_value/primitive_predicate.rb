@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 share_examples_for "Attribute::EmbeddedValue#primitive?" do
   subject { attribute.primitive? }
 

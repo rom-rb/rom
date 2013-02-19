@@ -1,27 +1,26 @@
 module DataMapper
 
-  # Abstract base class for repositories
+  # A repository with a given +name+ and +adapter+
   #
   # @api private
   class Repository
 
-    include AbstractType
+    include Equalizer.new(:name, :adapter)
 
-    def self.coerce(name, options = EMPTY_HASH)
-      if options.any?
-        Persistent.new(name, adapter(options))
-      else
-        InMemory.new(name)
-      end
+    # Coerce a given +name+ and +uri+ into a repository
+    #
+    # @param [Symbol] name
+    #   the repository's name
+    #
+    # @param [Addressable::URI] uri
+    #   the uri for initializing the adapter
+    #
+    # @return [Repository]
+    #
+    # @api private
+    def self.coerce(name, uri)
+      new(name, Veritas::Adapter.new(uri))
     end
-
-    # TODO make that smarter
-    def self.adapter(options)
-      parsed_uri = Addressable::URI.parse(options.fetch(:uri))
-      Veritas::Adapter::DataObjects.new(parsed_uri)
-    end
-
-    private_class_method :adapter
 
     # The repository's name
     #
@@ -30,25 +29,40 @@ module DataMapper
     # @api private
     attr_reader :name
 
+    # The repository's adapter
+    #
+    # @return [Object]
+    #   a veritas adapter
+    #
+    # @api private
+    attr_reader :adapter
+
     # Initialize a new instance
     #
     # @param [#to_sym] name
     #   the repository's name
     #
+    # @param [Object] adapter
+    #   the veritas adapter to access relations
+    #
     # @return [undefined]
     #
     # @api private
-    def initialize(name)
-      @name = name
-      @map  = {}
+    def initialize(name, adapter)
+      @name    = name
+      @adapter = adapter
+      @map     = {}
     end
 
     # Return the relation identified by +name+
     #
     # @example
-    #   repo = Repository::InMemory.new
+    #
+    #   repo = Repository.coerce(:test, 'in_memory://test')
     #   repo.register(:foo, [[:id, String], [:foo, String]])
-    #   repo.get(:foo) # => <Veritas::Relation header=Veritas::Header ...>
+    #   repo.get(:foo)
+    #
+    #   # => <Veritas::Relation header=Veritas::Header ...>
     #
     # @param [Symbol] name
     #   the name of the relation
@@ -72,11 +86,11 @@ module DataMapper
     #
     # @example with coercible header
     #   repo = Repository::InMemory.new
-    #   repo.register(:foo, [[:id, String], [:foo, String]])
+    #   repo.register(:foo, [[:id, String]])
     #
     # @example with instace of veritas header
     #   repo = Repository::InMemory.new
-    #   repo.register(:foo, Veritas::Header.coerce([[:id, String], [:foo, String]]))
+    #   repo.register(:foo, Veritas::Header.coerce([[:id, String]]))
     #
     # @return [self]
     #
@@ -84,6 +98,38 @@ module DataMapper
     def register(name, header)
       @map[name] = build(name, Veritas::Relation::Header.coerce(header))
       self
+    end
+
+    private
+
+    # Build a veritas gateway relation
+    #
+    # @param [Symbol] name
+    #   the relatio name
+    #
+    # @param [Veritas::Relation::Header] header
+    #
+    # @return [Veritas::Adapter::Gateway]
+    #
+    # @api private
+    #
+    def build(name, header)
+      adapter.gateway(relation(name, header))
+    end
+
+    # Build a veritas base relation
+    #
+    # @param [Symbol] name
+    #   the relatio name
+    #
+    # @param [Veritas::Relation::Header] header
+    #
+    # @return [Veritas::Adapter::Gateway]
+    #
+    # @api private
+    #
+    def relation(name, header)
+      Veritas::Relation::Base.new(name, header)
     end
   end # class Repository
 end # module DataMapper

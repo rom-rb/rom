@@ -2,6 +2,14 @@ module DataMapper
 
   class Environment
 
+    def self.coerce(config)
+      return config if config.kind_of?(self)
+
+      new(config.each_with_object({}) { |(name, uri), hash|
+        hash[name.to_sym] = Repository.coerce(name, Addressable::URI.parse(uri))
+      })
+    end
+
     # The mappers built with this instance
     #
     # @return [Array<Mapper>]
@@ -35,42 +43,18 @@ module DataMapper
 
     # Initialize a new instance
     #
-    # @param [Mapper::Registry, nil] registry
-    #   the mapper registry to use with this instance,
-    #   or a new instance in case nil was passed in.
+    # @param [Hash<Symbol, Addressable::URI>] repositories
+    #   the repository configuration for this environment
     #
     # @return [undefined]
     #
     # @api private
-    def initialize
-      @repositories = {}
+    def initialize(repositories)
+      @repositories = repositories
       @mappers      = []
       @registry     = Mapper::Registry.new
       @relations    = Relation::Graph.new
       @finalized    = false
-    end
-
-    # Register a new engine to use with this instance
-    #
-    # @example
-    #
-    #   env = DataMapper::Environment.new
-    #   env.setup(:default, :uri => 'postgres://localhost/test')
-    #
-    # @param [#to_sym] name
-    #   the name to use for the engine
-    #
-    # @param [Hash] options
-    #   the options to pass to the adapter
-    #
-    # @option options [Addressable::URI, #to_s] :uri the uri to use to connect
-    #
-    # @return [self]
-    #
-    # @api public
-    def setup(name, options = EMPTY_HASH)
-      repositories[name.to_sym] = Repository.coerce(name, options)
-      self
     end
 
     # The repository with the given +name+

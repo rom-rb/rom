@@ -4,11 +4,8 @@ require 'yaml'
 ROOT   = File.expand_path('../..', __FILE__)
 CONFIG = YAML.load_file("#{ROOT}/config/database.yml")
 
-ENGINE     = 'veritas'
 REPOSITORY = 'postgres'
-URI        = CONFIG.fetch(ENGINE).fetch(REPOSITORY)
-
-DM_ENV.setup(REPOSITORY, :uri => URI)
+URI        = CONFIG.fetch(REPOSITORY)
 
 MAX_RELATION_SIZE = 10
 
@@ -111,13 +108,13 @@ def setup_db
 end
 
 def seed
-  connection = DataObjects::Connection.new(CONFIG['veritas']['postgres'])
+  connection = DataObjects::Connection.new(URI)
   MAX_RELATION_SIZE.times { |n| insert_user(n + 1, Randgen.name, n*3, connection) }
   connection.close
 end
 
 def insert_user(id, name, age, connection = nil)
-  connection ||= DataObjects::Connection.new(CONFIG['veritas']['postgres'])
+  connection ||= DataObjects::Connection.new(URI)
 
   insert_users = connection.create_command(
     'INSERT INTO "users" ("id", "username", "age") VALUES (?, ?, ?)')
@@ -128,7 +125,7 @@ def insert_user(id, name, age, connection = nil)
 end
 
 def insert_address(id, user_id, street, city, zipcode, connection = nil)
-  connection ||= DataObjects::Connection.new(CONFIG['veritas']['postgres'])
+  connection ||= DataObjects::Connection.new(URI)
 
   insert_users = connection.create_command(
     'INSERT INTO "addresses" ("id", "user_id", "street", "city", "zipcode") VALUES (?, ?, ?, ?, ?)')
@@ -139,7 +136,7 @@ def insert_address(id, user_id, street, city, zipcode, connection = nil)
 end
 
 def insert_order(id, user_id, product, connection = nil)
-  connection ||= DataObjects::Connection.new(CONFIG['veritas']['postgres'])
+  connection ||= DataObjects::Connection.new(URI)
 
   insert_users = connection.create_command(
     'INSERT INTO "orders" ("id", "user_id", "product") VALUES (?, ?, ?)')
@@ -150,7 +147,7 @@ def insert_order(id, user_id, product, connection = nil)
 end
 
 def insert_song(id, title, connection = nil)
-  connection ||= DataObjects::Connection.new(CONFIG['veritas']['postgres'])
+  connection ||= DataObjects::Connection.new(URI)
 
   insert_users = connection.create_command(
     'INSERT INTO "songs" ("id", "title") VALUES (?, ?)')
@@ -161,7 +158,7 @@ def insert_song(id, title, connection = nil)
 end
 
 def insert_tag(id, name, connection = nil)
-  connection ||= DataObjects::Connection.new(CONFIG['veritas']['postgres'])
+  connection ||= DataObjects::Connection.new(URI)
 
   insert_users = connection.create_command(
     'INSERT INTO "tags" ("id", "name") VALUES (?, ?)')
@@ -172,7 +169,7 @@ def insert_tag(id, name, connection = nil)
 end
 
 def insert_info(id, tag_id, text, connection = nil)
-  connection ||= DataObjects::Connection.new(CONFIG['veritas']['postgres'])
+  connection ||= DataObjects::Connection.new(URI)
 
   insert_users = connection.create_command(
     'INSERT INTO "infos" ("id", "tag_id", "text") VALUES (?, ?, ?)')
@@ -183,7 +180,7 @@ def insert_info(id, tag_id, text, connection = nil)
 end
 
 def insert_info_content(id, info_id, content, connection = nil)
-  connection ||= DataObjects::Connection.new(CONFIG['veritas']['postgres'])
+  connection ||= DataObjects::Connection.new(URI)
 
   insert_info_contents = connection.create_command(
     'INSERT INTO "info_contents" ("id", "info_id", "content") VALUES (?, ?, ?)')
@@ -194,7 +191,7 @@ def insert_info_content(id, info_id, content, connection = nil)
 end
 
 def insert_song_tag(id, song_id, tag_id, connection = nil)
-  connection ||= DataObjects::Connection.new(CONFIG['veritas']['postgres'])
+  connection ||= DataObjects::Connection.new(URI)
 
   insert_users = connection.create_command(
     'INSERT INTO "song_tags" ("id", "song_id", "tag_id") VALUES (?, ?, ?)')
@@ -205,7 +202,7 @@ def insert_song_tag(id, song_id, tag_id, connection = nil)
 end
 
 def insert_person(id, name, parent_id = nil, connection = nil)
-  connection ||= DataObjects::Connection.new(CONFIG['veritas']['postgres'])
+  connection ||= DataObjects::Connection.new(URI)
 
   insert_users = connection.create_command(
     'INSERT INTO "people" ("id", "name", "parent_id") VALUES (?, ?, ?)')
@@ -216,7 +213,7 @@ def insert_person(id, name, parent_id = nil, connection = nil)
 end
 
 def insert_people_link(id, follower_id, followed_id, connection = nil)
-  connection ||= DataObjects::Connection.new(CONFIG['veritas']['postgres'])
+  connection ||= DataObjects::Connection.new(URI)
 
   insert_users = connection.create_command(
     'INSERT INTO "people_links" ("id", "follower_id", "followed_id") VALUES (?, ?, ?)')

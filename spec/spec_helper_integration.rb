@@ -1,16 +1,19 @@
-require 'spec_helper'
+require 'pp'
+require 'backports'
+require 'backports/basic_object' unless defined?(BasicObject)
 
-require 'veritas-do-adapter'
+require 'virtus'
+require 'rspec'
 
-# Monkey patch that adds Veritas::Adapter::DataObjects#gateway(relation)
-require 'data_mapper/support/veritas/adapter/data_objects'
-
-# Have it available in specs (doesn't require graphviz itself)
+require 'dm-mapper'
+require 'data_mapper/support/veritas/adapter/postgres'
 require 'data_mapper/support/graphviz'
 
-require 'do_postgres'
+require 'shared_helper'
 
 require 'db_setup'
+
+include(DataMapper)
 
 RSpec.configure do |config|
 
@@ -24,4 +27,8 @@ RSpec.configure do |config|
   config.before do
     DM_ENV.finalize
   end
+
+  config.include(SpecHelper)
 end
+
+DM_ENV = TestEnv.coerce(REPOSITORY => URI)
