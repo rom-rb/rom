@@ -18,12 +18,33 @@ module Veritas
 
       uri_scheme :in_memory
 
+      # The URI this adapter uses for establishing a connection
+      #
+      # @return [Addressable::URI]
+      #
+      # @api private
       attr_reader :uri
 
+      # Initialize a new instance
+      #
+      # @param [Addressable::URI] uri
+      #   the URI to use for establishing a connection
+      #
+      # @return [undefined]
+      #
+      # @api private
       def initialize(uri)
         @uri = uri
       end
 
+      # Return the passed in relation
+      #
+      # @param [Veritas::Relation] relation
+      #   the relation to be returned as is
+      #
+      # @return [Veritas::Relation]
+      #
+      # @api private
       def gateway(relation)
         relation
       end
