@@ -1,6 +1,4 @@
-require 'backports'
-require 'backports/basic_object' unless defined?(BasicObject)
-require 'rubygems'
+require 'shared_helper'
 
 if ENV['COVERAGE']
   require 'simplecov'
@@ -13,28 +11,3 @@ if ENV['COVERAGE']
     add_group "Engine",       "lib/data_mapper/engine"
   end
 end
-
-require 'pp'
-require 'ostruct'
-require 'virtus'
-require 'rspec'
-
-require 'dm-mapper'
-require 'data_mapper/support/veritas/adapter/in_memory'
-
-require 'shared_helper'
-
-include DataMapper
-
-RSpec.configure do |config|
-
-  config.after(:each) do
-    if example.metadata[:example_group][:file_path] =~ /unit|shared/
-      DM_ENV.reset
-    end
-  end
-
-  config.include(SpecHelper)
-end
-
-DM_ENV = TestEnv.coerce(:test => 'in_memory://test')
