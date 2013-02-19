@@ -23,4 +23,3 @@ describe Environment, '.coerce' do
     it { should eq(object.new(coerced_config)) }
   end
 end
-

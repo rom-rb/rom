@@ -3,8 +3,8 @@ require 'spec_helper'
 describe Repository, '.coerce' do
   subject { object.coerce(name, uri) }
 
-  let(:object)  { described_class }
-  let(:name)    { :test }
+  let(:object) { described_class }
+  let(:name)   { :test }
 
   context "with a registered uri scheme" do
     let(:uri) { Addressable::URI.parse('in_memory://test') }
