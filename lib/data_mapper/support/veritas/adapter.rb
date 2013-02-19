@@ -3,6 +3,17 @@ module Veritas
   # Raised when passing an +uri+ with an unregistered scheme to {Adapter.new}
   UnknownAdapterError = Class.new(StandardError)
 
+  # Provides base functionality for every veritas adapter
+  #
+  # @todo think about making this a (base) class
+  #
+  # @example
+  #
+  #   class MyAdapter
+  #     extend Veritas::Adapter
+  #     uri_scheme :foo
+  #   end
+  #
   module Adapter
 
     # The registry of adapters
