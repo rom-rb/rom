@@ -1,5 +1,7 @@
 module DataMapper
 
+  # The environment used to build and finalize mappers and their relations
+  #
   class Environment
 
     include Equalizer.new(:repositories, :registry, :relations)
