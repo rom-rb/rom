@@ -5,6 +5,8 @@ module DataMapper
     #
     class Graph
 
+      include Equalizer.new(:nodes, :edges, :connectors)
+
       # The class used to represent nodes in the graph
       #
       # @example

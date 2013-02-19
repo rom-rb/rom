@@ -43,6 +43,11 @@ module DataMapper
       end # class Identifier
 
       include Enumerable
+      include Equalizer.new(:mappers)
+
+      attr_reader :mappers
+
+      protected :mappers
 
       # Initializes an empty mapper registry
       #

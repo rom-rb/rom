@@ -2,6 +2,8 @@ module DataMapper
 
   class Environment
 
+    include Equalizer.new(:repositories, :registry, :relations)
+
     # Coerce a repository config hash into an environment instance
     #
     # @example
