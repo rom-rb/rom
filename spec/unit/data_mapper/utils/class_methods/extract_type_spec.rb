@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe DataMapper::Utils, '.extract_type' do
-  subject { DataMapper::Utils.extract_type(value) }
+  subject { described_class.extract_type(value) }
 
   context "when args are a hash" do
     let(:value) { {} }

@@ -1,15 +1,14 @@
 require 'spec_helper'
 
 describe Repository, '.coerce' do
-  subject { object.coerce(name, uri) }
+  subject { described_class.coerce(name, uri) }
 
-  let(:object) { described_class }
-  let(:name)   { :test }
+  let(:name) { :test }
 
   context "with a registered uri scheme" do
     let(:uri) { Addressable::URI.parse('in_memory://test') }
 
-    it { should be_instance_of(object) }
+    it { should be_instance_of(described_class) }
 
     its(:name)    { should be(name) }
     its(:adapter) { should eq(Veritas::Adapter.new(uri)) }

@@ -1,13 +1,11 @@
 require 'spec_helper'
 
 describe Environment, '.coerce' do
-  subject { object.coerce(config) }
-
-  let(:object)  { described_class }
+  subject { described_class.coerce(config) }
 
   context "when an environment is passed" do
     let(:config)      { environment }
-    let(:environment) { object.new('test' => 'in_memory://test') }
+    let(:environment) { described_class.new('test' => 'in_memory://test') }
 
     it { should be(environment) }
   end
@@ -20,6 +18,6 @@ describe Environment, '.coerce' do
     let(:coerced_config) { { :test => Repository.coerce(name, coerced_uri) } }
     let(:coerced_uri)    { Addressable::URI.parse(uri) }
 
-    it { should eq(object.new(coerced_config)) }
+    it { should eq(described_class.new(coerced_config)) }
   end
 end

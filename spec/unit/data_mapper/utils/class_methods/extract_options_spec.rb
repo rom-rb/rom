@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe DataMapper::Utils, '.extract_options' do
-  subject { DataMapper::Utils.extract_options(value) }
+  subject { described_class.extract_options(value) }
 
 
   context "when options responds to :to_hash" do
