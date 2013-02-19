@@ -88,20 +88,26 @@ module DataMapper
 
       def add_edges
         edges.each do |edge|
-          g_nodes = *g_nodes(edge.source_node, edge.target_node)
-          g.add_edges(*g_nodes, :label => edge.name.to_s)
+          options = edge_options(edge)
+          g_nodes = g_nodes(edge.source_node, edge.target_node, options)
+          g.add_edges(*g_nodes)
         end
       end
 
       def add_connectors
         connectors.each do |name, connector|
-          g_nodes = *g_nodes(connector.source_node, connector.node)
-          g.add_edges(*g_nodes, connector_options(name, connector.relationship))
+          options = connector_options(name, connector.relationship)
+          g_nodes = g_nodes(connector.source_node, connector.node, options)
+          g.add_edges(*g_nodes)
         end
       end
 
-      def g_nodes(source, target)
-        [ map[source], map[target] ]
+      def g_nodes(source, target, options)
+        [ map[source], map[target], options ]
+      end
+
+      def edge_options(edge)
+        { :label => edge.name.to_s }
       end
 
       def connector_options(name, relationship)
