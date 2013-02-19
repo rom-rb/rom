@@ -2,6 +2,19 @@ module DataMapper
 
   class Environment
 
+    # Coerce a repository config hash into an environment instance
+    #
+    # @example
+    #
+    #   config = { 'test' => 'in_memory://test' }
+    #   env    = DataMapper::Environment.coerce(config)
+    #
+    # @param [Environment, Hash<#to_sym, String>] config
+    #   an environment or a hash of adapter uri strings, keyed by repository name
+    #
+    # @return [Environment]
+    #
+    # @api public
     def self.coerce(config)
       return config if config.kind_of?(self)
 
