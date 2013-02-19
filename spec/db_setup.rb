@@ -1,11 +1,6 @@
 require 'randexp'
-require 'yaml'
 
-ROOT   = File.expand_path('../..', __FILE__)
-CONFIG = YAML.load_file("#{ROOT}/config/database.yml")
-
-REPOSITORY = 'postgres'
-URI        = CONFIG.fetch(REPOSITORY)
+URI = DM_ENV.repository(:postgres).adapter.uri
 
 MAX_RELATION_SIZE = 10
 
