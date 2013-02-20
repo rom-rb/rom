@@ -428,7 +428,25 @@ module DataMapper
         new(relation.take(limit))
       end
 
-      # Set offset for the relation
+      # Limit the underlying ordered relation to the last +limit+ tuples
+      #
+      # @example with no limit
+      #   limited_relation = relation.last
+      #
+      # @example with a limit
+      #   limited_relation = relation.last(7)
+      #
+      # @param [Integer] limit
+      #   optional number of tuples from the end of the relation
+      #
+      # @return [Mapper]
+      #   a new mapper backed by a relation with the last +limit+ tuples
+      #
+      # @api public
+      def last(limit = 1)
+        new(relation.last(limit))
+      end
+
       #
       # @example
       #

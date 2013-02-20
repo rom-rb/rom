@@ -269,6 +269,25 @@ module DataMapper
           take(limit)
         end
 
+        # Limit the underlying ordered relation to the last +limit+ tuples
+        #
+        # @example with no limit
+        #   limited_relation = relation.last
+        #
+        # @example with a limit
+        #   limited_relation = relation.last(7)
+        #
+        # @param [Integer] limit
+        #   optional number of tuples from the end of the relation
+        #
+        # @return [Node]
+        #   a new node backed by a relation with the last +limit+ tuples
+        #
+        # @api public
+        def last(limit = 1)
+          new(name, relation.reverse.take(limit).reverse, header)
+        end
+
         # Sort the underlying relation by the given +attributes+
         #
         # @example
