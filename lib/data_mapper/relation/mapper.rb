@@ -425,7 +425,7 @@ module DataMapper
       #
       # @api public
       def first(limit = 1)
-        new(relation.take(limit))
+        new(relation.first(limit))
       end
 
       # Limit the underlying ordered relation to the last +limit+ tuples
