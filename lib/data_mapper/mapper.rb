@@ -3,6 +3,8 @@ module DataMapper
   # Mapper
   #
   class Mapper
+
+    include Enumerable
     extend DescendantsTracker, Options
 
     accept_options :model
@@ -99,17 +101,47 @@ module DataMapper
       self
     end
 
-    # Initialize mapper instance using default settings from its class
+    # The collection of tuples backing the mapper
     #
-    # @param [Environment] environment
-    #   the new mapper's environment
+    # @return [Enumerable]
+    #
+    # @api private
+    attr_reader :collection
+
+    # Initialize a new instance
+    #
+    # @param [Enumerable] collection
+    #   the collection of tuples backing the mapper
     #
     # @return [undefined]
     #
     # @api private
-    def initialize
+    def initialize(collection = EMPTY_ARRAY)
       @model      = self.class.model
       @attributes = self.class.attributes
+      @collection = collection
+    end
+
+    # Iterate over the loaded domain objects
+    #
+    # @example
+    #
+    #   DataMapper[Person].each do |person|
+    #     puts person.name
+    #   end
+    #
+    # @yield [object] the loaded domain objects
+    #
+    # @yieldparam [Object] object
+    #   the loaded domain object that is yielded
+    #
+    # @return [self]
+    #
+    # @api public
+    def each(&block)
+      return to_enum unless block_given?
+      collection.each { |tuple| yield load(tuple) }
+      self
     end
 
     # Loads a domain object

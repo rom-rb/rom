@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe Relation::Mapper, '#each' do
-  let(:object)   { Class.new(described_class).model(model).new(DM_ENV, relation) }
-  let(:model)    { mock_model(:User) }
-  let(:relation) { mock('relation') }
+describe Mapper, '#each' do
+  let(:object)     { described_class.model(model).new(collection) }
+  let(:model)      { mock_model(:User) }
+  let(:collection) { mock('collection') }
 
   context "without a block" do
     subject { object.each }
@@ -18,7 +18,7 @@ describe Relation::Mapper, '#each' do
     let(:tuple) { {} }
 
     it "iterates over relation tuples and loads them" do
-      relation.should_receive(:each).with(&block).and_yield(tuple)
+      collection.should_receive(:each).with(&block).and_yield(tuple)
       model.should_receive(:new).with(tuple)
       subject
     end

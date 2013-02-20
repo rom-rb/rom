@@ -6,8 +6,6 @@ module DataMapper
     # @api public
     class Mapper < DataMapper::Mapper
 
-      include Enumerable
-
       include Equalizer.new(:environment, :model, :attributes, :relationships, :relation)
 
       DEFAULT_LIMIT_FOR_ONE = 2
@@ -208,7 +206,7 @@ module DataMapper
       #
       # @api public
       def initialize(environment, relation = default_relation(environment), attributes = self.class.attributes)
-        super()
+        super(relation)
         @environment   = environment
         @relation      = relation
         @attributes    = attributes
@@ -248,28 +246,6 @@ module DataMapper
       # @api public
       def relation_name
         self.class.relation_name
-      end
-
-      # Iterate over the loaded domain objects
-      #
-      # @example
-      #
-      #   DataMapper[Person].each do |person|
-      #     puts person.name
-      #   end
-      #
-      # @yield [object] the loaded domain objects
-      #
-      # @yieldparam [Object] object
-      #   the loaded domain object that is yielded
-      #
-      # @return [self]
-      #
-      # @api public
-      def each
-        return to_enum unless block_given?
-        relation.each { |tuple| yield load(tuple) }
-        self
       end
 
       # Return a mapper for iterating over the relation restricted with options
