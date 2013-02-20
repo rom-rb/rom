@@ -45,27 +45,27 @@ module DataMapper
         # @api public
         attr_reader :name
 
-        # Instance of the engine's relation class
+        # The underlying relation
         #
-        # @return [Object]
+        # @return [Veritas::Relation]
         #
         # @api private
         attr_reader :relation
 
-        # Header for this relation
+        # The header
         #
         # @return [Header]
         #
         # @api private
         attr_reader :header
 
-        # Initializes a relation node instance
+        # Initialize a new instance
         #
         # @param [#to_sym] name
         #   the name for the node
         #
-        # @param [Object] relation
-        #   an instance of the engine's relation class
+        # @param [Veritas::Relation] relation
+        #   a veritas relation instance backing this node
         #
         # @param [Header] header
         #   the header to use for this node
@@ -79,17 +79,20 @@ module DataMapper
           @header   = header
         end
 
-        # Iterate on relation
+        # Iterate over all tuples in the underlying relation
         #
         # @example
         #
-        #   DataMapper.engines[:default].relations[:people].each do |tuple|
+        #   env.relations[:people].each do |tuple|
         #     puts tuple.inspect
         #   end
         #
-        # @return [self, Enumerator]
+        # @yield [tuple]
         #
-        # @yield [Object]
+        # @yieldparam [Veritas::Tuple] tuple
+        #   each tuple in the relation
+        #
+        # @return [self, Enumerator]
         #
         # @api public
         def each(&block)
@@ -98,57 +101,69 @@ module DataMapper
           self
         end
 
-        # Adds new object to the relation
+        # Insert +tuples+ into the underlying relation
         #
         # @example
         #
-        #   tuple = { :name => 'John' }
-        #   DataMapper.engines[:postgres].relations[:people].insert(tuple)
+        #   env.relations[:people].insert([ [ 1, 'John' ] ])
         #
-        # @param [Object]
+        # @param [Enumerable] tuples
+        #   an enumerable coercible by {Veritas::Relation.coerce}
+        #
+        # @return [Node]
+        #   a new node backed by a relation containing +tuples+
         #
         # @api public
-        def insert(tuple)
-          @relation.insert(tuple)
+        def insert(tuples)
+          @relation.insert(tuples)
         end
         alias_method :<<, :insert
 
-        # Updates an object identified with the given key from the relation
+        # Update +tuples+ in the underlying relation
         #
         # @example
         #
-        #   DataMapper.engines[:postgres].relations[:people].update(1, name: 'John')
+        #   env.relations[:people].update([ [ 1, 'Jane' ] ])
         #
-        # @param [Object] key attribute
-        # @param [Object] tuple
+        # @param [Enumerable] tuples
+        #   an enumerable coercible by {Veritas::Relation.coerce}
+        #
+        # @return [Node]
+        #   a new node backed by a relation including +tuples+
         #
         # @api public
         def update(key, tuple)
           @relation.update(key, tuple)
         end
 
-        # Deletes an object identified with the given key from the relation
+        # Delete +tuples+ from the underlying relation
         #
         # @example
         #
-        #   DataMapper.engines[:postgres].relations[:people].delete(1)
+        #   env.relations[:people].delete([ [ 1, 'Jane' ] ])
         #
-        # @param [Object] key attribute
-        #
-        # @api public
-        def delete(key)
-          @relation.delete(key)
-        end
-
-        # Renames the relation with given aliases
-        #
-        # @example
-        #
-        #   renamed = DataMapper.engines[:default].relations[:people].rename(:id => :person_id)
-        #
-        # @param [Relation::Graph::Node::Aliases]
+        # @param [Enumerable] tuples
+        #   an enumerable coercible by {Veritas::Relation.coerce}
         #
         # @return [Node]
+        #   a new node backed by a relation excluding +tuples+
+        #
+        # @api public
+        def delete(tuples)
+          @relation.delete(tuples)
+        end
+
+        # Renames the relation with the given +aliases+
+        #
+        # @example
+        #
+        #   env.relations[:people].rename(:id => :person_id)
+        #
+        # @param [Hash, Veritas::Relation::Algebra::Rename::Aliases] aliases
+        #   the old and new attribute names
+        #
+        # @return [Node]
+        #   a new node with a renamed header
         #
         # @api public
         def rename(aliases)
@@ -158,18 +173,23 @@ module DataMapper
           new(name, renamed_relation, renamed_header)
         end
 
-        # Joins two nodes
+        # Join the underlying relation with +other+
         #
         # @example
         #
-        #   people    = DataMapper.engines[:default].relations[:people]
-        #   addresses = DataMapper.engines[:default].relations[:addresses]
+        #   people    = env.relations[:people]
+        #   addresses = env.relations[:addresses]
         #
         #   joined = people.join(addresses)
         #
-        # @param [Node]
+        # @param [Node] other
+        #   the other node to join
+        #
+        # @param [Hash<Symbol, Symbol>] join_definition
+        #   the left and right attributes to join on
         #
         # @return [Node]
+        #   a new node backed by the joined relation
         #
         # @api public
         def join(other, join_definition = EMPTY_HASH)
@@ -179,34 +199,45 @@ module DataMapper
           new(name, joined_relation, joined_header)
         end
 
-        # Restricts the relation and returns new node
+        # Restrict the underlying relation
+        #
+        # @see Veritas::Relation#restrict
         #
         # @example
         #
-        #   restricted = DataMapper.engines[:default].relations[:people].restrict { |r|
-        #     r.name.eq('John)
-        #   }
+        #   env.relations[:people].restrict { |r| r.name.eq('John) }
         #
-        # @param [*args] anything that Veritas::Relation::Base#restrict accepts
+        # @param [Array] args
+        #   optional args accepted by {Veritas::Relation#restrict}
         #
-        # @param [Proc]
+        # @yield [context]
+        #   optional block to restrict the tuples with
+        #
+        # @yieldparam [Veritas::Evaluator::Context] context
+        #   the context to evaluate the restriction with
+        #
+        # @yieldreturn [Veritas::Function, #call]
+        #   predicate to restrict the tuples with
         #
         # @return [Node]
+        #   a new node backed by the restricted relation
         #
         # @api public
         def restrict(*args, &block)
           new(name, relation.restrict(*args, &block), header)
         end
 
-        # Sorts the relation and returns new node
+        # Sort the underlying relation by the given +attributes+
         #
         # @example
         #
-        #   ordered = DataMapper.engines[:default].relations[:people].order(:name)
+        #   env.relations[:people].order(:id, :name)
         #
-        # @param [*attributes]
+        # @param [*Array] attributes
+        #   the attributes to sort by
         #
         # @return [Node]
+        #   a new node backed by the sorted relation
         #
         # @api public
         def order(*attributes)
@@ -214,36 +245,42 @@ module DataMapper
           new(name, sorted, header)
         end
 
-        # Sorts relation and returns new node
+        # Sort the underlying relation
         #
         # @example
         #
-        #   sorted = DataMapper.engines[:default].relations[:people].sort_by { |r|
-        #     [ r.name.desc ]
-        #   }
+        #   env.relations[:people].sort_by { |r| [ r.name.desc ] }
         #
-        # @param [*args] args
-        #   the directions used for sorting the relation
+        # @param [*Array] args
+        #   optional arguments
         #
-        # @param [Proc] &block
-        #   the optional block to evaluate for directions
+        # @yield [relation]
+        #   optional block to evaluate for directions
+        #
+        # @yieldparam [Relation] relation
+        #   the relation to sort
+        #
+        # @yieldreturn [Enumerable]
+        #   an array of relation attributes
         #
         # @return [Node]
+        #   a new node backed by the ordered relation
         #
         # @api public
         def sort_by(*args, &block)
           new(name, relation.sort_by(*args, &block), header)
         end
 
-        # Sorts relation ascending using the complete header
+        # Sort the underlying relation in ascending order
         #
         # TODO think more about this and/or refactor
         #
         # @example
         #
-        #   sorted = DataMapper.engines[:default].relations[:people].ordered
+        #   env.relations[:people].ordered
         #
         # @return [Node]
+        #   a new node backed by the sorted relation
         #
         # @api public
         def ordered
