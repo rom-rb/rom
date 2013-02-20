@@ -579,14 +579,24 @@ module DataMapper
         new(relation.update(dump(object)))
       end
 
-      # FIXME: add support for composite keys
+      # Delete +object+ from the underlying relation
+      #
+      # @example
+      #
+      #   person = Person.new(:id => 1, :name => 'John')
+      #   mapper = env[Person]
+      #   mapper.insert([ person ])
+      #   mapper.delete([ person ])
+      #
+      # @param [Enumerable] object
+      #   an enumerable coercible by {Veritas::Relation.coerce}
+      #
+      # @return [Mapper]
+      #   a new mapper backed by a relation excluding +object+
       #
       # @api public
       def delete(object)
-        key_name  = attributes.key[0].name
-        key_value = object.public_send(key_name)
-        relation.delete(key_name => key_value)
-        object
+        new(relation.delete(dump(object)))
       end
 
       # The mapper's human readable representation

@@ -153,7 +153,7 @@ module DataMapper
         #
         # @api public
         def delete(tuples)
-          @relation.delete(tuples)
+          new(name, relation.delete(tuples), header)
         end
 
         # Renames the relation with the given +aliases+
