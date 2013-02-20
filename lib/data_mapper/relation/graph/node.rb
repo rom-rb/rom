@@ -136,7 +136,7 @@ module DataMapper
         #
         # @api public
         def update(tuples)
-          raise NotImplementedError, "#{self.class}##{__method__} is not yet implemented"
+          new(name, relation.delete(tuples).insert(tuples), header)
         end
 
         # Delete +tuples+ from the underlying relation

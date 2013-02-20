@@ -558,31 +558,25 @@ module DataMapper
         new(relation.insert(dump(object)))
       end
 
-      # FIXME: add support for composite keys
-      #
-      # Persist changes made to a given domain object
+      # Update +tuples+ in the underlying relation
       #
       # @example
       #
-      #   mapper = mappers[User]
+      #   person = Person.new(:id => 1, :name => 'John')
+      #   env[Person].update([ person ])
       #
-      #   user = mapper.find(:id => 1)
-      #   user.age = 21
+      # @param [Enumerable] tuples
+      #   an enumerable coercible by {Veritas::Relation.coerce}
       #
-      #   mapper.update(user, :age)
+      # @return [Node]
+      #   a new node backed by a relation including +tuples+
       #
-      # @param [Object] domain object to be updated
-      # @param [Array<Symbol>] names of attributes for the update
-      #
-      # @return [Integer] number of affected "rows"
+      # @raise [NotImplementedError]
+      #   this method is not yet implemented
       #
       # @api public
-      def update(object, *names)
-        key_name  = attributes.key[0].name
-        key_value = object.public_send(key_name)
-        tuple     = dump(object)
-        fields    = names.map { |name| attributes[name].field }
-        relation.update({ key_name => key_value }, tuple.reject { |k, _| !fields.include?(k) })
+      def update(object)
+        new(relation.update(dump(object)))
       end
 
       # FIXME: add support for composite keys
