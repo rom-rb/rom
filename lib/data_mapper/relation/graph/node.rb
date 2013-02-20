@@ -250,6 +250,25 @@ module DataMapper
           new(name, relation.take(limit), header)
         end
 
+        # Limit the underlying ordered relation to the first +limit+ tuples
+        #
+        # @example with no limit
+        #   limited_relation = relation.first
+        #
+        # @example with a limit
+        #   limited_relation = relation.first(7)
+        #
+        # @param [Integer] limit
+        #   optional number of tuples from the beginning of the relation
+        #
+        # @return [Node]
+        #   a new node backed by a relation with the first +limit+ tuples
+        #
+        # @api public
+        def first(limit = 1)
+          take(limit)
+        end
+
         # Sort the underlying relation by the given +attributes+
         #
         # @example

@@ -405,10 +405,27 @@ module DataMapper
         new(relation.take(limit))
       end
 
+      # Limit the underlying ordered relation to the first +limit+ tuples
+      #
+      # @example with no limit
+      #
+      #   people = env[Person].sort_by { |r| [ r.id.asc ] }
+      #   people.first
+      #
+      # @example with a limit
+      #
+      #   people = env[Person].sort_by { |r| [ r.id.asc ] }
+      #   people.first(7)
+      #
+      # @param [Integer] limit
+      #   optional number of tuples from the beginning of the relation
+      #
+      # @return [Mapper]
+      #   a new mapper backed by a relation with the first +limit+ tuples
       #
       # @api public
-      def limit(count)
-        new(relation.take(count))
+      def first(limit = 1)
+        new(relation.take(limit))
       end
 
       # Set offset for the relation

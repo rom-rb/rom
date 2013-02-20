@@ -3,6 +3,8 @@ require 'spec_helper_integration'
 describe 'Relationship - Many To One with generated mapper' do
   include_context 'Models and Mappers'
 
+  subject { DM_ENV[address_model].include(:user).all }
+
   before(:all) do
     setup_db
 
@@ -16,12 +18,34 @@ describe 'Relationship - Many To One with generated mapper' do
     address_mapper.belongs_to :user, user_model
   end
 
-  it 'loads associated object' do
-    mapper  = DM_ENV[address_model].include(:user)
-    address = mapper.first
-    user    = DM_ENV[user_model].first
+  let(:address_1) {
+    address_model.new(
+      {
+        :id      => 1,
+        :user_id => 1,
+        :user    => user_model.new({ :id => 1, :name => 'John', :age => 18 }),
+        :street  => 'Street 1/2',
+        :city    => 'Chicago',
+        :zipcode => '12345'
+      }
+    )
+  }
 
-    address.user.should be_instance_of(user_model)
-    address.user.id.should eql(user.id)
-  end
+  let(:address_2) {
+    address_model.new(
+      {
+        :id      => 2,
+        :user_id => 2,
+        :user    => user_model.new({ :id => 2, :name => 'Jane', :age => 21 }),
+        :street  => 'Street 2/4',
+        :city    => 'Boston',
+        :zipcode => '67890'
+      }
+    )
+  }
+
+  it { should include(address_1) }
+  it { should include(address_2) }
+
+  its(:size) { should == 2 }
 end
