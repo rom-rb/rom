@@ -230,6 +230,26 @@ module DataMapper
           new(name, relation.restrict(*args, &block), header)
         end
 
+        # Limit the underlying ordered relation to the first +limit+ tuples
+        #
+        # @example
+        #
+        #   env.relations[:people].drop(7)
+        #
+        # @param [Integer] limit
+        #   the maximum number of tuples in the limited relation
+        #
+        # @return [Node]
+        #   a new node backed with a relation starting from +offset+
+        #
+        # @raise [Veritas::OrderedRelationRequiredError]
+        #   raised if the operand is unordered
+        #
+        # @api public
+        def take(limit)
+          new(name, relation.take(limit), header)
+        end
+
         # Sort the underlying relation by the given +attributes+
         #
         # @example

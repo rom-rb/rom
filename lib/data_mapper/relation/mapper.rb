@@ -8,6 +8,8 @@ module DataMapper
 
       include Enumerable
 
+      include Equalizer.new(:environment, :model, :attributes, :relationships, :relation)
+
       DEFAULT_LIMIT_FOR_ONE = 2
 
       alias_method :all, :to_a
@@ -382,15 +384,27 @@ module DataMapper
         new(relation.sort_by(*args, &block))
       end
 
-      # Set limit for the relation
+      # Limit the underlying ordered relation to the first +limit+ tuples
       #
       # @example
       #
-      #   env[Person].limit(3).all
+      #   people = env[Person].sort_by { |r| [ r.id.asc ] }
+      #   people.take(7)
       #
-      # @param [Integer]
+      # @param [Integer] limit
+      #   the maximum number of tuples in the limited relation
       #
-      # @return [Relation::Mapper]
+      # @return [Mapper]
+      #   a new mapper backed by a relation with the first +limit+ tuples
+      #
+      # @raise [Veritas::OrderedRelationRequiredError]
+      #   raised if the operand is unordered
+      #
+      # @api public
+      def take(limit)
+        new(relation.take(limit))
+      end
+
       #
       # @api public
       def limit(count)

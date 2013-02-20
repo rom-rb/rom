@@ -10,7 +10,9 @@ module DataMapper
       #
       # @api private
       class RelationshipSet
+
         include Enumerable
+        include Equalizer.new(:entries)
 
         # @api private
         def initialize(entries = nil)
@@ -35,6 +37,10 @@ module DataMapper
         def [](name)
           @entries[name]
         end
+
+        protected
+
+        attr_reader :entries
 
         private
 
