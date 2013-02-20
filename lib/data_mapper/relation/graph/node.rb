@@ -156,6 +156,23 @@ module DataMapper
           new(name, relation.delete(tuples), header)
         end
 
+        # Replace the underlying relation with +tuples+
+        #
+        # @example
+        #
+        #   env.relations[:people].replace([ [ 1, 'Jane' ] ])
+        #
+        # @param [Enumerable] tuples
+        #   an enumerable coercible by {Veritas::Relation.coerce}
+        #
+        # @return [Node]
+        #   a new node backed by a relation only including +tuples+
+        #
+        # @api public
+        def replace(tuples)
+          new(name, relation.replace(tuples), header)
+        end
+
         # Renames the relation with the given +aliases+
         #
         # @example

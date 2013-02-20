@@ -599,6 +599,29 @@ module DataMapper
         new(relation.delete(dump(object)))
       end
 
+      # Replace the underlying relation with +object+
+      #
+      # @example
+      #
+      #   john  = Person.new(:id => 1, :name => 'John')
+      #   jane  = Person.new(:id => 2, :name => 'Jane')
+      #   alice = Person.new(:id => 1, :name => 'Jane')
+      #
+      #   mapper = env[Person]
+      #   mapper.insert([ john, jane ])
+      #   mapper.replace([ alice ])
+      #
+      # @param [Enumerable] object
+      #   an enumerable coercible by {Veritas::Relation.coerce}
+      #
+      # @return [Mapper]
+      #   a new mapper backed by a relation only including +object+
+      #
+      # @api public
+      def replace(object)
+        new(relation.replace(dump(object)))
+      end
+
       # The mapper's human readable representation
       #
       # @example
