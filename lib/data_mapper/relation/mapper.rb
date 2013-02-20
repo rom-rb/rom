@@ -447,18 +447,25 @@ module DataMapper
         new(relation.last(limit))
       end
 
+      # Drop tuples before +offset+ in an ordered relation
       #
       # @example
       #
-      #   env[Person].limit(20).offset(2).all
+      #   people = env[Person].sort_by { |r| [ r.id.asc ] }
+      #   people.drop(7)
       #
-      # @param [Integer]
+      # @param [Integer] offset
+      #   the offset of the relation to drop
       #
       # @return [Relation::Mapper]
+      #   a new mapper backed by the offset relation
+      #
+      # @raise [Veritas::OrderedRelationRequiredError]
+      #   raised if the operand is unordered
       #
       # @api public
-      def offset(num)
-        new(relation.skip(num))
+      def drop(offset)
+        new(relation.drop(offset))
       end
 
       # Return a mapper for iterating over domain objects with renamed attributes

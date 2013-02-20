@@ -288,6 +288,26 @@ module DataMapper
           new(name, relation.reverse.take(limit).reverse, header)
         end
 
+        # Drop tuples before +offset+ in the underlying ordered relation
+        #
+        # @example
+        #
+        #   env.relations[:people].drop(7)
+        #
+        # @param [Integer] offset
+        #   the offset of the relation to drop
+        #
+        # @return [Node]
+        #   a new node backed with a relation starting from +offset+
+        #
+        # @raise [Veritas::OrderedRelationRequiredError]
+        #   raised if the operand is unordered
+        #
+        # @api public
+        def drop(offset)
+          new(name, relation.drop(offset), header)
+        end
+
         # Sort the underlying relation by the given +attributes+
         #
         # @example
