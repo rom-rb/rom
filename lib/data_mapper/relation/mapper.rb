@@ -540,18 +540,22 @@ module DataMapper
         environment.registry[model, relationships[name]]
       end
 
-      # FIXME: add support for composite keys
+      # Insert +tuples+ into the underlying relation
+      #
+      # @example
+      #
+      #   person = Person.new(:id => 1, :name => 'John')
+      #   env[Person].insert([ person ])
+      #
+      # @param [Enumerable] object
+      #   an enumerable coercible by {Veritas::Relation.coerce}
+      #
+      # @return [Mapper]
+      #   a new mapper backed by a relation containing +object+
       #
       # @api public
       def insert(object)
-        key_name  = attributes.key[0].name
-        tuple     = dump(object)
-        tuple.delete(key_name)
-        key_value = relation.insert(tuple)
-
-        object.public_send("#{key_name}=", key_value)
-
-        object
+        new(relation.insert(dump(object)))
       end
 
       # FIXME: add support for composite keys

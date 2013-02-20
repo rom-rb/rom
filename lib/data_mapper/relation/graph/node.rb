@@ -115,7 +115,7 @@ module DataMapper
         #
         # @api public
         def insert(tuples)
-          @relation.insert(tuples)
+          new(name, relation.insert(tuples), header)
         end
         alias_method :<<, :insert
 
