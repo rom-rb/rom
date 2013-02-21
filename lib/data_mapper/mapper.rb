@@ -101,13 +101,6 @@ module DataMapper
       self
     end
 
-    # The collection of tuples backing the mapper
-    #
-    # @return [Enumerable]
-    #
-    # @api private
-    attr_reader :collection
-
     # Initialize a new instance
     #
     # @param [Enumerable] collection
@@ -179,6 +172,15 @@ module DataMapper
         attributes[attribute.field] = object.send(attribute.name)
       }
     end
+
+    protected
+
+    # The collection of tuples backing the mapper
+    #
+    # @return [Enumerable]
+    #
+    # @api private
+    attr_reader :collection
 
   end # class Mapper
 
