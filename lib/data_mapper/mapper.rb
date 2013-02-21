@@ -126,7 +126,7 @@ module DataMapper
     #
     # @example
     #
-    #   DataMapper[Person].each do |person|
+    #   env[Person].each do |person|
     #     puts person.name
     #   end
     #
