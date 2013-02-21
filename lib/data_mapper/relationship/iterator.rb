@@ -25,7 +25,7 @@ module DataMapper
       # @yield [object] the loaded domain objects
       #
       # @yieldparam [Object] object
-      #   the loaded domain object that is yielded
+      #   each loaded domain object
       #
       # @return [self]
       #
