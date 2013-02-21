@@ -168,9 +168,7 @@ module DataMapper
     #
     # @api public
     def dump(object)
-      @attributes.each_with_object({}) { |attribute, attributes|
-        attributes[attribute.field] = object.send(attribute.name)
-      }
+      @attributes.dump(object)
     end
 
     protected

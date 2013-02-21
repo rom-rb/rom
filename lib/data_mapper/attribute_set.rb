@@ -235,6 +235,20 @@ module DataMapper
       end
     end
 
+    # Dump a domain object
+    #
+    # @param [Object] object
+    #   a domain model instance
+    #
+    # @return [Hash<Symbol, Object>]
+    #
+    # @api private
+    def dump(object)
+      each_with_object({}) { |attribute, attributes|
+        attributes[attribute.field] = object.send(attribute.name)
+      }
+    end
+
     # Return all key attributes
     #
     # @return [Array<Attribute>]
