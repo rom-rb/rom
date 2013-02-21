@@ -16,7 +16,7 @@ module DataMapper
       #
       # @example
       #
-      #   DataMapper[Person].include(:tasks).each do |person|
+      #   env[Person].include(:tasks).each do |person|
       #     person.tasks.each do |task|
       #       puts task.name
       #     end
