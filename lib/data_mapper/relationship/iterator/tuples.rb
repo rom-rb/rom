@@ -4,16 +4,15 @@ module DataMapper
 
       class Tuples
 
-        def self.prepared(name, mapper, &block)
-          new(name, mapper).each do |tuple|
+        def self.prepared(name, attributes, relation, &block)
+          new(name, attributes, relation).each do |tuple|
             yield(tuple)
           end
         end
 
-        def initialize(name, mapper)
+        def initialize(name, attributes, relation)
           @name       = name
-          @raw_tuples = mapper.relation.to_a
-          attributes  = mapper.attributes
+          @raw_tuples = relation.to_a
           @parent_key = attributes.key
           @primitives = attributes.primitives
 

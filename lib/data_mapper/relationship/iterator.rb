@@ -39,7 +39,7 @@ module DataMapper
         }.name
 
         # TODO replace with Tuples.prepared(self)...
-        Tuples.prepared(name, self) do |tuple|
+        Tuples.prepared(name, attributes, relation) do |tuple|
           yield(load(tuple))
         end
 
