@@ -33,12 +33,10 @@ module DataMapper
       def each
         return to_enum unless block_given?
 
-        # TODO remove this
         name = attributes.detect { |attribute|
           attribute.kind_of?(Mapper::Attribute::EmbeddedCollection)
         }.name
 
-        # TODO replace with Tuples.prepared(self)...
         Tuples.prepared(name, attributes, relation) do |tuple|
           yield(load(tuple))
         end
