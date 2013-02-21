@@ -139,34 +139,24 @@ module DataMapper
 
     # Loads a domain object
     #
-    # @example
-    #   mapper = DataMapper[User]
-    #   tuple = { :id => 1, :name => 'John' }
-    #   mapper.load(tuple)
-    #
     # @param [(#each, #[])] tuple
     #
     # @return [Object]
     #   a domain model instance
     #
-    # @api public
+    # @api private
     def load(tuple)
       @model.new(@attributes.load(tuple))
     end
 
     # Dumps a domain object
     #
-    # @example
-    #   mapper = DataMapper[User]
-    #   model  = SomeDomainModel.new
-    #   mapper.dump(model)
-    #
     # @param [Object] object
     #   a domain model instance
     #
     # @return [Hash<Symbol, Object>]
     #
-    # @api public
+    # @api private
     def dump(object)
       @attributes.dump(object)
     end
