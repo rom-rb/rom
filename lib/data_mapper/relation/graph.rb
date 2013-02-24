@@ -234,7 +234,7 @@ module DataMapper
       #
       # @example
       #
-      #   DataMapper.engines[:default].relations[:people]
+      #   env.relations[:people]
       #
       # @param [Symbol] name of the relation
       #
