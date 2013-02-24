@@ -1,4 +1,5 @@
 require 'devtools'
+require 'equalizer'
 Devtools.init_spec_helper
 
 class Spec
