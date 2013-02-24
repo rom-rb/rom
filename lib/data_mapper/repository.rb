@@ -88,7 +88,7 @@ module DataMapper
     #   repo = Repository::InMemory.new
     #   repo.register(:foo, [[:id, String]])
     #
-    # @example with instace of veritas header
+    # @example with instance of veritas header
     #   repo = Repository::InMemory.new
     #   repo.register(:foo, Veritas::Header.coerce([[:id, String]]))
     #
@@ -105,7 +105,7 @@ module DataMapper
     # Build a veritas gateway relation
     #
     # @param [Symbol] name
-    #   the relatio name
+    #   the relation name
     #
     # @param [Veritas::Relation::Header] header
     #
@@ -120,7 +120,7 @@ module DataMapper
     # Build a veritas base relation
     #
     # @param [Symbol] name
-    #   the relatio name
+    #   the relation name
     #
     # @param [Veritas::Relation::Header] header
     #
