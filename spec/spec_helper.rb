@@ -1,5 +1,7 @@
 require 'devtools'
 require 'equalizer'
+require 'dm-session'
+
 Devtools.init_spec_helper
 
 class Spec
