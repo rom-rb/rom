@@ -25,7 +25,7 @@ module DataMapper
       #
       # @example
       #
-      #   mapper = DataMapper[Person]
+      #   mapper = env[Person]
       #   mapper.relation
       #
       # @return [Graph::Node]
@@ -37,7 +37,7 @@ module DataMapper
       #
       # @example
       #
-      #   mapper = DataMapper[User]
+      #   mapper = env[User]
       #   mapper.relationships
       #
       # @return [RelationshipSet]
@@ -51,7 +51,7 @@ module DataMapper
       #
       # @example
       #
-      #   other = DataMapper[Person].class
+      #   other = env[Person].class
       #   DataMapper::Relation::Mapper.from(other, 'AdminMapper')
       #
       # @return [Mapper]
@@ -88,7 +88,7 @@ module DataMapper
       #     attribute :id, Integer
       #   end
       #
-      #   DataMapper.generate_mapper_for(Person, :postgres) do
+      #   env.build(Person, :postgres) do
       #     key :id
       #   end
       #
@@ -109,7 +109,7 @@ module DataMapper
       #
       # @example
       #
-      #   class UserMapper < DataMapper::Mapper
+      #   class UserMapper < DataMapper::Relation::Mapper
       #     has 1,    :address, Address
       #     has 0..n, :orders,  Order
       #   end
@@ -136,7 +136,7 @@ module DataMapper
       #
       # @example
       #
-      #   class UserMapper < DataMapper::Mapper
+      #   class UserMapper < DataMapper::Relation::Mapper
       #     belongs_to :group, Group
       #   end
       #
@@ -161,7 +161,7 @@ module DataMapper
       #
       # @example
       #
-      #   class UserMapper
+      #   class UserMapper < DataMapper::Relation::Mapper
       #     has n, :orders, Order
       #   end
       #
@@ -183,16 +183,6 @@ module DataMapper
 
       # Initialize a relation mapper instance
       #
-      # @example
-      #
-      #   class PersonMapper < DataMapper::Relation::Mapper
-      #     relation_name :people
-      #     model Person
-      #     repository :postgres
-      #   end
-      #
-      #   mapper = PersonMapper.new
-      #
       # @param [Environment] environment
       #   the new mapper's environment
       #
@@ -204,7 +194,7 @@ module DataMapper
       #
       # @return [undefined]
       #
-      # @api public
+      # @api private
       def initialize(environment, relation = default_relation(environment), attributes = self.class.attributes)
         super(relation)
         @environment   = environment
@@ -222,7 +212,7 @@ module DataMapper
       # @see Engine#relations
       #
       # @example
-      #   mapper = DataMapper[User]
+      #   mapper = env[User]
       #   mapper.relations
       #
       # @return [Graph]
@@ -238,7 +228,7 @@ module DataMapper
       #
       # @example
       #
-      #   mapper = DataMapper[Person]
+      #   mapper = env[Person]
       #   mapper.relation_name
       #
       # @return [Symbol]
@@ -254,7 +244,7 @@ module DataMapper
       #
       # @example
       #
-      #   mapper = mappers[Person]
+      #   mapper = env[Person]
       #   mapper.find(:name => 'John').all
       #
       # @param [Hash] conditions
@@ -271,7 +261,7 @@ module DataMapper
       #
       # @example
       #
-      #   mapper = DataMapper[Person]
+      #   mapper = env[Person]
       #   mapper.one(:name => 'John')
       #
       # @param [Hash] conditions
@@ -296,7 +286,7 @@ module DataMapper
       #
       # @example
       #
-      #   DataMapper[Person].restrict { |r| r.name.eq('John') }.each do |person|
+      #   env[Person].restrict { |r| r.name.eq('John') }.each do |person|
       #     puts person.name
       #   end
       #
@@ -316,7 +306,7 @@ module DataMapper
       #
       # @example
       #
-      #   mapper = DataMapper[Person]
+      #   mapper = env[Person]
       #   mapper.order(:name).to_a
       #
       # @param [(Symbol)] *order
@@ -337,7 +327,7 @@ module DataMapper
       #
       # @example with directions
       #
-      #   DataMapper[Person].sort_by(:name).each do |person|
+      #   env[Person].sort_by(:name).each do |person|
       #     puts person.name
       #   end
       #
@@ -448,7 +438,7 @@ module DataMapper
       #
       # @example
       #
-      #   DataMapper[Person].rename(:name => :nickname).each do |person|
+      #   env[Person].rename(:name => :nickname).each do |person|
       #     puts person.nickname
       #   end
       #
@@ -468,7 +458,7 @@ module DataMapper
       #
       # @example
       #
-      #   DataMapper[Person].join(DataMapper[Task]).each do |person|
+      #   env[Person].join(env[Task]).each do |person|
       #     puts person.tasks.size
       #   end
       #
@@ -500,7 +490,7 @@ module DataMapper
       #
       # @example
       #
-      #   DataMapper[Person].include(:tasks).each do |person|
+      #   env[Person].include(:tasks).each do |person|
       #     person.tasks.each do |task|
       #       puts task.name
       #     end
@@ -602,7 +592,7 @@ module DataMapper
       #
       # @example
       #
-      #   mapper = DataMapper[Person]
+      #   mapper = env[Person]
       #   puts mapper.inspect
       #
       # @return [String]
