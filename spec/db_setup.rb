@@ -1,6 +1,6 @@
 require 'randexp'
 
-URI = DM_ENV.repository(:postgres).adapter.uri
+URI = DM_ENV.repository(DM_REPO_NAME).adapter.uri
 
 MAX_RELATION_SIZE = 10
 

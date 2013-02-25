@@ -19,7 +19,7 @@ describe 'Finalizer', :isolation => true do
     class SongTag
     end
 
-    env.build(Tag, :postgres) do
+    env.build(Tag, DM_REPO_NAME) do
       model         Tag
       relation_name :tags
 
@@ -31,7 +31,7 @@ describe 'Finalizer', :isolation => true do
       has 0..n, :infos,     Info
     end
 
-    env.build(Info, :postgres) do
+    env.build(Info, DM_REPO_NAME) do
       model         Info
       relation_name :infos
 
@@ -44,7 +44,7 @@ describe 'Finalizer', :isolation => true do
       has 0..n, :info_contents, InfoContent
     end
 
-    env.build(InfoContent, :postgres) do
+    env.build(InfoContent, DM_REPO_NAME) do
       model         InfoContent
       relation_name :info_contents
 
@@ -55,7 +55,7 @@ describe 'Finalizer', :isolation => true do
       belongs_to :info, Info
     end
 
-    env.build(SongTag, :postgres) do
+    env.build(SongTag, DM_REPO_NAME) do
       model         SongTag
       relation_name :song_tags
 
@@ -66,7 +66,7 @@ describe 'Finalizer', :isolation => true do
       belongs_to :tag,  Tag
     end
 
-    env.build(Song, :postgres) do
+    env.build(Song, DM_REPO_NAME) do
       model         Song
       relation_name :songs
 

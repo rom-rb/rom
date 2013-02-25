@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Relation::Mapper, '.repository' do
-  let(:name) { :postgres }
+  let(:name) { DM_REPO_NAME }
 
   context "with a name" do
     it "sets the repository name" do

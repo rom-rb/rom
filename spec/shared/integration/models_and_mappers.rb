@@ -13,7 +13,7 @@ shared_context 'Models and Mappers' do
   let!(:link_model)         { mock_model('Link') }
 
   let!(:user_mapper) {
-    DM_ENV.build(user_model, :postgres) do
+    DM_ENV.build(user_model, DM_REPO_NAME) do
       relation_name :users
 
       map :id,   Integer, :key => true
@@ -23,7 +23,7 @@ shared_context 'Models and Mappers' do
   }
 
   let!(:order_mapper) {
-    DM_ENV.build(order_model, :postgres) do
+    DM_ENV.build(order_model, DM_REPO_NAME) do
       relation_name :orders
 
       map :id,      Integer, :key => true
@@ -33,7 +33,7 @@ shared_context 'Models and Mappers' do
   }
 
   let!(:address_mapper) {
-    DM_ENV.build(address_model, :postgres) do
+    DM_ENV.build(address_model, DM_REPO_NAME) do
       relation_name :addresses
 
       map :id,      Integer, :key => true
@@ -45,7 +45,7 @@ shared_context 'Models and Mappers' do
   }
 
   let!(:tag_mapper) {
-    DM_ENV.build(tag_model, :postgres) do
+    DM_ENV.build(tag_model, DM_REPO_NAME) do
       relation_name :tags
 
       map :id,   Integer, :key => true
@@ -54,7 +54,7 @@ shared_context 'Models and Mappers' do
   }
 
   let!(:info_mapper) {
-    DM_ENV.build(info_model, :postgres) do
+    DM_ENV.build(info_model, DM_REPO_NAME) do
       relation_name :infos
 
       map :id,     Integer, :key => true
@@ -64,7 +64,7 @@ shared_context 'Models and Mappers' do
   }
 
   let!(:info_content_mapper) {
-    DM_ENV.build(info_content_model, :postgres) do
+    DM_ENV.build(info_content_model, DM_REPO_NAME) do
       relation_name :info_contents
 
       map :id,      Integer, :key => true
@@ -74,7 +74,7 @@ shared_context 'Models and Mappers' do
   }
 
   let!(:song_tag_mapper) {
-    DM_ENV.build(song_tag_model, :postgres) do
+    DM_ENV.build(song_tag_model, DM_REPO_NAME) do
       relation_name :song_tags
 
       map :song_id, Integer, :key => true
@@ -83,7 +83,7 @@ shared_context 'Models and Mappers' do
   }
 
   let!(:song_mapper) {
-    DM_ENV.build(song_model, :postgres) do
+    DM_ENV.build(song_model, DM_REPO_NAME) do
       relation_name :songs
 
       map :id,    Integer, :key => true
@@ -92,7 +92,7 @@ shared_context 'Models and Mappers' do
   }
 
   let!(:person_mapper) {
-    DM_ENV.build(person_model, :postgres) do
+    DM_ENV.build(person_model, DM_REPO_NAME) do
       relation_name :people
 
       map :id,        Integer, :key => true
@@ -102,7 +102,7 @@ shared_context 'Models and Mappers' do
   }
 
   let!(:link_mapper) {
-    DM_ENV.build(link_model, :postgres) do
+    DM_ENV.build(link_model, DM_REPO_NAME) do
       relation_name :people_links
 
       map :id,          Integer, :key => true
