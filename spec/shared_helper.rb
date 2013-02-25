@@ -28,7 +28,7 @@ root  = File.expand_path('../..', __FILE__)
 repos = YAML.load_file("#{root}/config/database.yml")
 
 DM_ENV = TestEnv.coerce(repos)
-DM_REPO_NAME = (ENV['DM_REPO_NAME'] || :postgres).to_sym
+DM_REPO_NAME = ENV.fetch('DM_REPO_NAME', :postgres).to_sym
 
 %w[shared].each do |name|
   Dir[File.expand_path("../#{name}/**/*.rb", __FILE__)].each do |file|
