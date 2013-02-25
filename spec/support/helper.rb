@@ -24,7 +24,7 @@ module SpecHelper
   def mock_mapper(model_class, attributes = [], relationships = [])
     name = "#{model_class.name}Mapper"
 
-    klass = DM_ENV.build(model_class, :test) do
+    klass = DM_ENV.build(model_class, :in_memory) do
       relation_name Inflecto.tableize(model_class.name).to_sym
     end
 
