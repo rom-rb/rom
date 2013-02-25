@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Relation::Mapper, '.repository' do
-  let(:name) { DM_REPO_NAME }
+  let(:name) { DM_ADAPTER }
 
   context "with a name" do
     it "sets the repository name" do
