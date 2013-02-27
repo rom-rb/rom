@@ -1,16 +1,14 @@
 require 'pp'
 require 'ostruct'
 require 'yaml'
-require 'backports'
-require 'backports/basic_object' unless defined?(BasicObject)
 
-require 'virtus'
 require 'dm-mapper'
 require 'data_mapper/support/veritas/adapter/in_memory'
 require 'data_mapper/support/veritas/adapter/postgres'
 require 'data_mapper/support/veritas/adapter/sqlite3'
 require 'data_mapper/support/graphviz'
 
+require 'virtus'
 require 'rspec'
 require 'support/ice_nine_config'
 require 'support/test_env'

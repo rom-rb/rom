@@ -1,3 +1,6 @@
+require 'backports'
+require 'backports/basic_object' unless defined?(::BasicObject)
+
 # Main DataMapper module with methods to setup and manage the environment
 module DataMapper
 
