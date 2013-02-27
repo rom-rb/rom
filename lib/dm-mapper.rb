@@ -1,5 +1,14 @@
+require 'bigdecimal'
+require 'date'
+
 require 'backports'
 require 'backports/basic_object' unless defined?(::BasicObject)
+require 'addressable/uri'
+require 'veritas'
+require 'abstract_type'
+require 'descendants_tracker'
+require 'equalizer'
+require 'inflecto'
 
 # Main DataMapper module with methods to setup and manage the environment
 module DataMapper
@@ -23,16 +32,6 @@ module DataMapper
   Infinity  = 1.0 / 0
 
 end # module DataMapper
-
-require 'bigdecimal'
-require 'date'
-require 'addressable/uri'
-
-require 'veritas'
-require 'abstract_type'
-require 'descendants_tracker'
-require 'equalizer'
-require 'inflecto'
 
 require 'data_mapper/utils'
 require 'data_mapper/support/options'
