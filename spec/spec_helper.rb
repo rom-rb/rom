@@ -1,8 +1,5 @@
 require 'dm-mapper'
 
-require 'devtools'
-Devtools.init_spec_helper
-
 require 'shared_helper'
 
 if ENV['COVERAGE']

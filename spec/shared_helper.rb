@@ -9,10 +9,9 @@ require 'data_mapper/support/veritas/adapter/sqlite3'
 require 'data_mapper/support/graphviz'
 
 require 'virtus'
-require 'rspec'
-require 'support/ice_nine_config'
-require 'support/test_env'
-require 'support/helper'
+
+require 'devtools'
+Devtools.init_spec_helper
 
 if RUBY_VERSION < '1.9'
   class OpenStruct
@@ -27,12 +26,6 @@ repos = YAML.load_file("#{root}/config/database.yml")
 
 DM_ENV = TestEnv.coerce(repos)
 DM_ADAPTER = ENV.fetch('DM_ADAPTER', :postgres).to_sym
-
-%w[shared].each do |name|
-  Dir[File.expand_path("../#{name}/**/*.rb", __FILE__)].each do |file|
-    require file
-  end
-end
 
 include(DataMapper)
 
