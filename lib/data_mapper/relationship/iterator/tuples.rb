@@ -2,6 +2,8 @@ module DataMapper
   class Relationship
     module Iterator
 
+      # Extracts child tuples from a flat (joined) relation into
+      # tuples that can then be mapped using the child mapper.
       class Tuples
 
         def self.prepared(name, attributes, relation, &block)
