@@ -1,6 +1,9 @@
 module DataMapper
   module Relation
 
+    # Implements renaming attributes and relations during relational
+    # joins. Supports using either {Header::JoinStrategy::NaturalJoin}
+    # or {Header::JoinStrategy::InnerJoin} strategies.
     class Header
 
       # Build a new {Header} instance
