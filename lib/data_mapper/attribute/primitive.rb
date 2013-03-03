@@ -1,6 +1,7 @@
 module DataMapper
   class Attribute
 
+    # An {Attribute} subclass backed by a primitive type
     class Primitive < Attribute
 
       # Initialize a new primitive attribute instance

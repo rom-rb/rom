@@ -1,6 +1,7 @@
 module DataMapper
   class Attribute
 
+    # An {Attribute} subclass that represents an embedded value
     class EmbeddedValue < Attribute
 
       # Error raised when type option is missing

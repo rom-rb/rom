@@ -1,6 +1,7 @@
 module DataMapper
   class Attribute
 
+    # Provides coercion behavior for {Attribute} subclasses
     module Coercible
 
       # @api public
