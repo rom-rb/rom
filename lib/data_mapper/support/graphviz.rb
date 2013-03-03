@@ -88,7 +88,7 @@ module DataMapper
 
       def add_edges
         edges.each do |edge|
-          options = edge_options(edge)
+          options = self.class.edge_options(edge)
           g_nodes = g_nodes(edge.source_node, edge.target_node, options)
           graph.add_edges(*g_nodes)
         end
@@ -96,7 +96,7 @@ module DataMapper
 
       def add_connectors
         connectors.each do |name, connector|
-          options = connector_options(name, connector.relationship)
+          options = self.class.connector_options(name, connector.relationship)
           g_nodes = g_nodes(connector.source_node, connector.node, options)
           graph.add_edges(*g_nodes)
         end
@@ -106,11 +106,11 @@ module DataMapper
         [ map[source], map[target], options ]
       end
 
-      def edge_options(edge)
+      def self.edge_options(edge)
         { :label => edge.name.to_s }
       end
 
-      def connector_options(name, relationship)
+      def self.connector_options(name, relationship)
         {
           :label => label(name, relationship),
           :style => 'bold',
@@ -118,7 +118,7 @@ module DataMapper
         }
       end
 
-      def label(name, relationship)
+      def self.label(name, relationship)
         "#{relationship.source_model.name}##{relationship.name} [#{name}]"
       end
     end # module Graphviz
