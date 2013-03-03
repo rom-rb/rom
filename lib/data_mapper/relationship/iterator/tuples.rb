@@ -49,7 +49,8 @@ module DataMapper
 
         def parent_base_tuple(tuple)
           @primitives.each_with_object({}) { |attribute, parent|
-            parent[attribute.field] = tuple[attribute.field]
+            field         = attribute.field
+            parent[field] = tuple[field]
           }
         end
 
