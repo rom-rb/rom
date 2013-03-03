@@ -37,9 +37,10 @@ module DataMapper
       def initialize_join_keys
         @via ||= inferred_via_name
 
+        relationship    = via_relationship
         @via_model      = intermediary_model
-        @via_source_key = via_relationship.source_key
-        @via_target_key = via_relationship.target_key
+        @via_source_key = relationship.source_key
+        @via_target_key = relationship.target_key
       end
 
       def name
