@@ -114,22 +114,7 @@ module DataMapper
     # @api private
     #
     def build(name, header)
-      adapter.gateway(relation(name, header))
-    end
-
-    # Build a veritas base relation
-    #
-    # @param [Symbol] name
-    #   the relation name
-    #
-    # @param [Veritas::Relation::Header] header
-    #
-    # @return [Veritas::Adapter::Gateway]
-    #
-    # @api private
-    #
-    def relation(name, header)
-      Veritas::Relation::Base.new(name, header)
+      adapter.gateway(Veritas::Relation::Base.new(name, header))
     end
   end # class Repository
 end # module DataMapper
