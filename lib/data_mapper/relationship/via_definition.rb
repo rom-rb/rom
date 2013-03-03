@@ -26,12 +26,13 @@ module DataMapper
         @relationship    = relationship
         @via             = @relationship.via
         @mapper_registry = mapper_registry
+        @via_relationships = via_relationships
 
         initialize_join_keys
       end
 
       def via_relationship
-        via_relationships[via] || via_relationships[name]
+        @via_relationships[via] || @via_relationships[name]
       end
 
       private
