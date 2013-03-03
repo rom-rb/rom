@@ -1,6 +1,7 @@
 module DataMapper
   class Relationship
 
+    # Represent a 1:1 relationship
     class OneToOne < self
 
       # @see Options#default_target_key

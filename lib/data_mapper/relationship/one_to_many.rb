@@ -1,6 +1,7 @@
 module DataMapper
   class Relationship
 
+    # Represent a 1:N relationship
     class OneToMany < self
 
       include CollectionBehavior

@@ -1,6 +1,7 @@
 module DataMapper
   class Relationship
 
+    # Represent a M:1 relationship
     class ManyToOne < self
 
       private
