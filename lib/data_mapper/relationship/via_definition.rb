@@ -1,6 +1,8 @@
 module DataMapper
   class Relationship
 
+    # Calculate join keys for the `via` relationship in M:N
+    # relationships
     class ViaDefinition
 
       attr_reader :via
