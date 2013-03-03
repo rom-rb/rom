@@ -5,7 +5,7 @@ module DataMapper
     module Coercible
 
       # @api public
-      def load(tuple)
+      def load(*)
         value = super
         Virtus::Coercion[value.class].send(coercion_method, value)
       end
