@@ -67,7 +67,7 @@ module DataMapper
     # Option keys that can't be changed with {#clone}
     #
     # @api private
-    STABLE_OPTIONS = [ :type, :collection, :association ].freeze
+    STABLE_OPTIONS = [ :type, :collection ].freeze
 
     # Instantiate a concrete attribute subclass based on the given options
     #
@@ -98,8 +98,6 @@ module DataMapper
                 Attribute::Primitive
               elsif options[:collection]
                 Attribute::EmbeddedCollection
-              elsif options[:association]
-                Attribute::Association
               else
                 Attribute::EmbeddedValue
               end

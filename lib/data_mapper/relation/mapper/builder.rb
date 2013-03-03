@@ -77,7 +77,6 @@ module DataMapper
 
         def target_mapper_options
           {
-            :association => true,
             :collection  => @collection,
             :aliases     => @target_aliases
           }

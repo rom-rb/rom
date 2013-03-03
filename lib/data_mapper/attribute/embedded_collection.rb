@@ -2,7 +2,7 @@ module DataMapper
   class Attribute
 
     # An {Attribute} subclass that represents an embedded collection
-    class EmbeddedCollection < Association
+    class EmbeddedCollection < EmbeddedValue
 
       # Load this attribute's value from a tuple
       #

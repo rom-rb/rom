@@ -67,7 +67,7 @@ module DataMapper
       #
       # @api private
       def load(tuple)
-        mapper.load(tuple[field])
+        mapper.load(tuple)
       end
 
       # Tests wether this attribute is primitive or not

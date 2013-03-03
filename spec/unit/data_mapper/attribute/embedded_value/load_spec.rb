@@ -11,7 +11,7 @@ describe Attribute::EmbeddedValue, '#load' do
 
   before do
     attribute.finalize(model => mapper)
-    mapper.should_receive(:load).with({}).and_return(value)
+    mapper.should_receive(:load).with(tuple).and_return(value)
   end
 
   it { should be(value) }
