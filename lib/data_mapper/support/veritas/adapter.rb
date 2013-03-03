@@ -53,8 +53,9 @@ module Veritas
     #
     # @api private
     def self.get(uri)
-      REGISTRY.fetch(uri.scheme) {
-        raise UnknownAdapterError, "'#{uri.scheme}' is no registered uri scheme"
+      uri_scheme = uri.scheme
+      REGISTRY.fetch(uri_scheme) {
+        raise UnknownAdapterError, "'#{uri_scheme}' is no registered uri scheme"
       }
     end
 
