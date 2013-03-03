@@ -52,8 +52,8 @@ module DataMapper
         @connectors = relations.connectors
         @file_name  = file_name
 
-        @map = {}
-        @g   = GraphViz.new( :G, :type => :digraph )
+        @map   = {}
+        @graph = GraphViz.new( :G, :type => :digraph )
       end
 
       # Draw the graph into a png file
@@ -61,7 +61,7 @@ module DataMapper
       # @api private
       def draw
         build
-        g.output( :png => file_name )
+        graph.output( :png => file_name )
       end
 
       private
@@ -70,7 +70,7 @@ module DataMapper
       attr_reader :edges
       attr_reader :connectors
       attr_reader :file_name
-      attr_reader :g
+      attr_reader :graph
       attr_reader :map
 
       def build
@@ -81,7 +81,7 @@ module DataMapper
 
       def add_nodes
         nodes.each do |relation_node|
-          node = g.add_nodes(relation_node.name.to_s)
+          node = graph.add_nodes(relation_node.name.to_s)
           map[relation_node] = node
         end
       end
@@ -90,7 +90,7 @@ module DataMapper
         edges.each do |edge|
           options = edge_options(edge)
           g_nodes = g_nodes(edge.source_node, edge.target_node, options)
-          g.add_edges(*g_nodes)
+          graph.add_edges(*g_nodes)
         end
       end
 
@@ -98,7 +98,7 @@ module DataMapper
         connectors.each do |name, connector|
           options = connector_options(name, connector.relationship)
           g_nodes = g_nodes(connector.source_node, connector.node, options)
-          g.add_edges(*g_nodes)
+          graph.add_edges(*g_nodes)
         end
       end
 
