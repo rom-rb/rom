@@ -3,6 +3,10 @@ require 'veritas-do-adapter'
 module Veritas
   module Adapter
 
+    # Reopenend to add functionality that should eventually
+    # be puhsed down to Adapter::DataObjects proper, or whatever
+    # will be the base class.
+    #
     class DataObjects
 
       extend Adapter
