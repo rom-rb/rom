@@ -109,6 +109,42 @@ module DataMapper
       attribute
     end
 
+    # Return a clone of +attribute+ but with the given +clone_options+ merged
+    #
+    # The method will not change the +:type+ and +:collection+ options
+    #
+    # @see Attribute.build
+    # @see STABLE_OPTIONS
+    #
+    # @param [Attribute] attribute
+    #   the attribute instance to clone
+    #
+    # @param [Hash] clone_options
+    #   the options accepted by {.build}
+    #
+    # @return [Attribute]
+    #
+    # @api private
+    def self.clone(attribute, clone_options = EMPTY_HASH)
+      name, options = attribute.name, attribute.options
+      build(name, options.merge(cloneable_options(clone_options)))
+    end
+
+    # Strip stable options from options passed to #clone
+    #
+    # @param [Hash] options
+    #   the options for a cloned attribute
+    #
+    # @return [Hash]
+    #   the passed in options minus keys in {STABLE_OPTIONS}
+    #
+    # @api private
+    def self.cloneable_options(options)
+      options.reject { |key, _| STABLE_OPTIONS.include?(key) }
+    end
+
+    private_class_method :cloneable_options
+
     # Initialize a new attribute instance
     #
     # @see Attribute.build
@@ -182,21 +218,7 @@ module DataMapper
     #
     # @api private
     def clone(options = EMPTY_HASH)
-      self.class.build(name, @options.merge(clone_options(options)))
-    end
-
-    private
-
-    # Strip stable options from options passed to #clone
-    #
-    # @param [Hash] options
-    #   the options for a cloned attribute
-    #
-    # @return [Hash]
-    #
-    # @api private
-    def clone_options(options)
-      options.reject { |key, _| STABLE_OPTIONS.include?(key) }
+      self.class.clone(self, options)
     end
 
   end # class Attribute
