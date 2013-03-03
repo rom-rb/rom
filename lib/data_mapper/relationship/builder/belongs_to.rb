@@ -2,6 +2,7 @@ module DataMapper
   class Relationship
     module Builder
 
+      # Builds M:1 relationship instances
       class BelongsTo
 
         # Build a {ManyToOne} relationship

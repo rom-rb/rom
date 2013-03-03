@@ -2,6 +2,8 @@ module DataMapper
   class Relationship
     module Builder
 
+      # Builds 1:1, 1:N or M:N relationship instances based on the given
+      # arguments
       class Has
 
         # Build a {OneToOne}, {OneToMany} or {ManyToMany} relationship
