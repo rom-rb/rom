@@ -1,30 +1,31 @@
 module DataMapper
 
-  # A module that adds class and instance level options
+  # A module that adds class and instance level options module Options
   module Options
 
     # Returns default options hash for a given attribute class
     #
     # @example
-    #   Virtus::Attribute::String.options
-    #   # => {:primitive => String}
+    #   DataMapper::Relation::Mapper.options
+    #   # => { :relation_name => :people }
     #
     # @return [Hash]
     #   a hash of default option values
     #
     # @api public
     def options
-      accepted_options.each_with_object({}) { |option_name, options|
-        option_value         = send(option_name)
-        options[option_name] = option_value unless option_value.nil?
-      }
+      accepted_options.each_with_object({}) do |name, options|
+        ivar = "@#{name}"
+        next unless instance_variable_defined?(ivar)
+        options[name] = instance_variable_get(ivar)
+      end
     end
 
     # Returns an array of valid options
     #
     # @example
-    #   Virtus::Attribute::String.accepted_options
-    #   # => [:primitive, :accessor, :reader, :writer]
+    #   DataMapper::Relation::Mapper.accepted_options
+    #   # => [:model, :relation_name, :repository]
     #
     # @return [Array]
     #   the array of valid option names
@@ -37,8 +38,8 @@ module DataMapper
     # Defines which options are valid for a given attribute class
     #
     # @example
-    #   class MyAttribute < Virtus::Attribute::Object
-    #     accept_options :foo, :bar
+    #   class DataMapper::Relation::Mapper
+    #     accept_options :relation_name, :repository
     #   end
     #
     # @return [self]
@@ -53,21 +54,6 @@ module DataMapper
 
   protected
 
-    # Adds a reader/writer method for the give option name
-    #
-    # @return [undefined]
-    #
-    # @api private
-    def define_option_method(option)
-      class_eval <<-RUBY, __FILE__, __LINE__ + 1
-        def self.#{option}(value = Undefined)           # def self.primitive(value = Undefined)
-          return @#{option} if value.equal?(Undefined)  #   return @primitive if value.equal?(Undefined)
-          @#{option} = value                            #   @primitive = value
-          self                                          #   self
-        end                                             # end
-      RUBY
-    end
-
     # Sets default options
     #
     # @param [#each] new_options
@@ -77,7 +63,7 @@ module DataMapper
     #
     # @api private
     def set_options(new_options)
-      new_options.each { |pair| send(*pair) }
+      new_options.each { |pair| public_send(*pair) }
       self
     end
 
@@ -106,6 +92,22 @@ module DataMapper
     def inherited(descendant)
       super
       descendant.add_accepted_options(accepted_options).set_options(options)
+    end
+
+    # Adds a reader/writer method for the give option name
+    #
+    # @param [#to_s] option
+    #
+    # @return [undefined]
+    #
+    # @api private
+    def define_option_method(option)
+      ivar = "@#{option}"
+      define_singleton_method(option) do |*args|
+        return instance_variable_get(ivar) if args.empty?
+        instance_variable_set(ivar, *args)
+        self
+      end
     end
 
   end # module Options
