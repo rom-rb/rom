@@ -87,8 +87,8 @@ module DataMapper
     #
     # @api private
     def run
-      BaseRelationMappersFinalizer.call(environment, connector_builder, mapper_builder)
-      RelationshipMappersFinalizer.call(environment, connector_builder, mapper_builder)
+      BaseRelationMappersFinalizer.call(@environment, @connector_builder, @mapper_builder)
+      RelationshipMappersFinalizer.call(@environment, @connector_builder, @mapper_builder)
       self
     end
 
