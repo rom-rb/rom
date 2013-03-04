@@ -158,8 +158,8 @@ module DataMapper
     DEFAULT_TARGET_KEY = [].freeze
 
     def initialize_keys
-      @source_key = Array(options[:source_key] || default_source_key).freeze
-      @target_key = Array(options[:target_key] || default_target_key).freeze
+      @source_key = Array(@options[:source_key] || default_source_key).freeze
+      @target_key = Array(@options[:target_key] || default_target_key).freeze
     end
 
     # Returns default name of the source key
