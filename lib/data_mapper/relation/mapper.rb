@@ -57,7 +57,7 @@ module DataMapper
       # @return [Mapper]
       #
       # @api public
-      def self.from(other, name = nil)
+      def self.from(other, _name = nil)
         klass = super
         klass.repository(other.repository)
         klass.relation_name(other.relation_name)
