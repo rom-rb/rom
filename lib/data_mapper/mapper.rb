@@ -73,8 +73,10 @@ module DataMapper
       options = Utils.extract_options(args)
       options = options.merge(:type => type) if type
 
-      if attributes[name]
-        attributes << attributes[name].clone(options)
+      attribute = attributes[name]
+
+      if attribute
+        attributes << attribute.clone(options)
       else
         attributes.add(name, options)
       end
@@ -110,8 +112,9 @@ module DataMapper
     #
     # @api private
     def initialize(collection = EMPTY_ARRAY)
-      @model      = self.class.model
-      @attributes = self.class.attributes
+      klass       = self.class
+      @model      = klass.model
+      @attributes = klass.attributes
       @collection = collection
     end
 
