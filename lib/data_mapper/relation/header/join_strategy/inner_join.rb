@@ -3,6 +3,8 @@ module DataMapper
     class Header
       class JoinStrategy
 
+        # Renaming strategy for inner join operations. Only renames
+        # attributes with clashing names.
         class InnerJoin < self
 
           private

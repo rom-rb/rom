@@ -2,6 +2,8 @@ module DataMapper
   module Relation
     class Header
 
+      # Base class for different strategies of renaming attributes when
+      # a relational join is performed
       class JoinStrategy
 
         include AbstractType

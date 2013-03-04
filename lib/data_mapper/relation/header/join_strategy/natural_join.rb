@@ -3,6 +3,9 @@ module DataMapper
     class Header
       class JoinStrategy
 
+        # Renaming strategy for natural join operations. Renames
+        # attributes join key attributes to match, and renames
+        # attributes with clashing names to make sure they don't match.
         class NaturalJoin < self
 
           private

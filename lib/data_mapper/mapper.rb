@@ -1,6 +1,6 @@
 module DataMapper
 
-  # Mapper
+  # Supports mapping of arbitrary collections of hash like objects
   #
   class Mapper
 

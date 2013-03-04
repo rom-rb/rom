@@ -1,6 +1,7 @@
 module DataMapper
   class Finalizer
 
+    # Finalizes mappers for all base relations
     class BaseRelationMappersFinalizer < self
 
       # @api private

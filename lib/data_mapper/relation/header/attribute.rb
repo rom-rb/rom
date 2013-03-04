@@ -2,6 +2,7 @@ module DataMapper
   module Relation
     class Header
 
+      # An attribute in the {Relation::Header}
       class Attribute < Struct.new(:field, :prefix, :aliased)
 
         CACHE = {}

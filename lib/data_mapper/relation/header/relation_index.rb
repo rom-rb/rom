@@ -2,6 +2,7 @@ module DataMapper
   module Relation
     class Header
 
+      # Keeps track of relations in {Relation::Header}
       class RelationIndex
 
         # Build a new {RelationIndex} instance
