@@ -127,9 +127,10 @@ module DataMapper
         # @api private
         def aliases(other)
           entries.each_with_object({}) { |(key, name), aliases|
+            field      = name.field
             other_name = other.fetch(key).name
-            if name.field != other_name
-              aliases[name.field] = other_name
+            if field != other_name
+              aliases[field] = other_name
             end
           }
         end

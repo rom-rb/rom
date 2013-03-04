@@ -382,6 +382,7 @@ module DataMapper
         #
         # @api public
         def ordered
+          relation = self.relation
           new(name, relation.sort_by(relation.header), header)
         end
 
