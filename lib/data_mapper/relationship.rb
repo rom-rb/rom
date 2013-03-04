@@ -9,6 +9,8 @@ module DataMapper
 
     include AbstractType
 
+    include Equalizer.new(:name, :source_model, :target_model, :source_key, :target_key)
+
     # Returns foreign key name for the given class name
     #
     # @return [Symbol]
@@ -19,7 +21,20 @@ module DataMapper
       Inflecto.foreign_key(class_name).to_sym
     end
 
-    include Equalizer.new(:name, :source_model, :target_model, :source_key, :target_key)
+    # Returns the relation backing +model+
+    #
+    # @param [Hash<Mapper, Relation::Graph::Node>] mapper_registry
+    #   a hash mapping mappers to their backing relation nodes
+    #
+    # @param [Class] model
+    #   a domain model class
+    #
+    # @return [Relation::Graph::Node]
+    #
+    # @api private
+    def self.relation(mapper_registry, model)
+      mapper_registry[model].relation
+    end
 
     # Name of the relationship
     #
@@ -181,14 +196,17 @@ module DataMapper
     end
 
     def finalize_join_definition(mapper_registry)
-      left  = join_side(mapper_registry[source_model], source_key)
-      right = join_side(mapper_registry[target_model], target_key)
+      source_relation = relation(mapper_registry, source_model)
+      target_relation = relation(mapper_registry, target_model)
+
+      left  = JoinDefinition::Side.new(source_relation, source_key)
+      right = JoinDefinition::Side.new(target_relation, target_key)
 
       @join_definition = JoinDefinition.new(left, right)
     end
 
-    def join_side(mapper, key)
-      JoinDefinition::Side.new(mapper.relation, key)
+    def relation(*args)
+      self.class.relation(*args)
     end
   end # class Relationship
 end # module DataMapper
