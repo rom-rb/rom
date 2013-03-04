@@ -99,8 +99,9 @@ module DataMapper
       #
       # @api public
       def self.key(*names)
+        attribute_set = attributes
         names.each do |name|
-          attributes << attributes[name].clone(:key => true)
+          attribute_set << attribute_set[name].clone(:key => true)
         end
         self
       end
@@ -316,8 +317,11 @@ module DataMapper
       #
       # @api public
       def order(*names)
-        order_attributes = names.map { |attribute| attributes.field_name(attribute) }
-        order_attributes.concat(attributes.fields).uniq!
+        attribute_set = attributes
+        order_attributes = names.map { |attribute|
+          attribute_set.field_name(attribute)
+        }
+        order_attributes.concat(attribute_set.fields).uniq!
         new(relation.order(*order_attributes))
       end
 
@@ -599,7 +603,8 @@ module DataMapper
       #
       # @api public
       def inspect
-        "#<#{self.class.name} @model=#{model.name} @relation_name=#{relation_name} @repository=#{self.class.repository}>"
+        klass = self.class
+        "#<#{klass.name} @model=#{model.name} @relation_name=#{relation_name} @repository=#{klass.repository}>"
       end
 
       private
