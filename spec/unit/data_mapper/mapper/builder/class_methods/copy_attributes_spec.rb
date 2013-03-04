@@ -15,7 +15,7 @@ describe Mapper::Builder, '.copy_attributes' do
     let(:options) { { :primitive => String } }
 
     it "maps the primitive attribute" do
-      mapper.should_receive(:map).with(name, String, :association => nil)
+      mapper.should_receive(:map).with(name, String)
       described_class.copy_attributes(mapper, attributes)
     end
   end

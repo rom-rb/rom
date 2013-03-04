@@ -110,7 +110,7 @@ module DataMapper
         if member_type
           mapper.map name, member_type, :collection => true
         else
-          mapper.map name, options[:primitive], :association => options[:association]
+          mapper.map name, options[:primitive]
         end
       end
 
