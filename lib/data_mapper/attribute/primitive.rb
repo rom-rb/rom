@@ -11,7 +11,7 @@ module DataMapper
       # @return [undefined]
       #
       # @api private
-      def initialize(name, options = EMPTY_HASH)
+      def initialize(_name, options = EMPTY_HASH)
         super
         @type = options.fetch(:type, Object)
       end
