@@ -36,7 +36,7 @@ module DataMapper
             @relations     = relations
             @mappers       = mappers
             @relationship  = relationship
-            @node_name_set = node_name_set(@relationship, @mappers)
+            @node_name_set = Graph::Node::NameSet.new(@relationship, @mappers)
 
             connect
           end
@@ -94,10 +94,6 @@ module DataMapper
 
           def target_node?(node_name)
             @node_name_set.last == node_name
-          end
-
-          def node_name_set(relationship, mappers)
-            Graph::Node::NameSet.new(@relationship, @mappers)
           end
 
         end # class Builder
