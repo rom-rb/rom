@@ -181,6 +181,10 @@ module DataMapper
         @relationships ||= RelationshipSet.new
       end
 
+      def self.default_relation(environment)
+        relation || environment.repository(repository).get(relation_name)
+      end
+
       # Initialize a relation mapper instance
       #
       # @param [Environment] environment
@@ -201,10 +205,6 @@ module DataMapper
         @relation      = relation
         @attributes    = attributes
         @relationships = self.class.relationships
-      end
-
-      def default_relation(environment)
-        self.class.relation || environment.repository(self.class.repository).get(self.class.relation_name)
       end
 
       # Shortcut for self.class.relations
@@ -603,6 +603,10 @@ module DataMapper
       end
 
       private
+
+      def default_relation(environment)
+        self.class.default_relation(environment)
+      end
 
       def restricted_relation(conditions)
         relation.restrict(Query.new(conditions, attributes))
