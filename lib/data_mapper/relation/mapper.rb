@@ -200,7 +200,7 @@ module DataMapper
       # @return [undefined]
       #
       # @api private
-      def initialize(environment, relation = default_relation(environment), attributes = self.class.attributes)
+      def initialize(environment, relation = default_relation(environment), attributes = default_attributes)
         super(relation)
         @environment   = environment
         @relation      = relation
@@ -611,6 +611,10 @@ module DataMapper
 
       def default_relation(environment)
         self.class.default_relation(environment)
+      end
+
+      def default_attributes
+        self.class.attributes
       end
 
       def restricted_relation(conditions)
