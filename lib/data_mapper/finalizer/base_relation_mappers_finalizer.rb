@@ -50,9 +50,11 @@ module DataMapper
       private
 
       def registered_node(mapper, name, header)
+        graph    = relations
         relation = registered_relation(name, mapper)
-        node = relations.build_node(name, relation, header)
-        relations.add_node(node)
+
+        node = graph.build_node(name, relation, header)
+        graph.add_node(node)
         node
       end
 
