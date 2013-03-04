@@ -30,8 +30,9 @@ module DataMapper
       # @api public
       def self.create(model, repository, &block)
         mapper = define_for(model)
+        name   = model.name
 
-        mapper.relation_name(Inflecto.tableize(model.name).to_sym) unless model.name.nil? || model.name == ''
+        mapper.relation_name(Inflecto.tableize(name).to_sym) unless name.nil? || name == ''
         mapper.repository(repository)
 
         copy_attributes(mapper, model.attribute_set) if model.respond_to?(:attribute_set)
@@ -95,14 +96,22 @@ module DataMapper
       # @api private
       def self.copy_attributes(mapper, attributes)
         attributes.each do |attribute|
-          if attribute.options[:member_type]
-            mapper.map attribute.name, attribute.options[:member_type], :collection => true
-          else
-            mapper.map attribute.name, attribute.options[:primitive], :association => attribute.options[:association]
-          end
+          map_attribute(mapper, attribute)
         end
 
         mapper
+      end
+
+      def self.map_attribute(mapper, attribute)
+        name        = attribute.name
+        options     = attribute.options
+        member_type = options[:member_type]
+
+        if member_type
+          mapper.map name, member_type, :collection => true
+        else
+          mapper.map name, options[:primitive], :association => options[:association]
+        end
       end
 
     end # class Builder
