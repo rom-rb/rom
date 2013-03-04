@@ -101,7 +101,7 @@ module DataMapper
       # @return [undefined]
       #
       # @api private
-      def initialize(node_class = self.class.node_class, edge_class = self.class.edge_class)
+      def initialize(node_class = default_node_class, edge_class = default_edge_class)
         @nodes      = Set.new
         @edges      = Set.new
         @node_class = node_class
@@ -290,6 +290,16 @@ module DataMapper
       # @api private
       def header(relation_name, attribute_set)
         node_class.header(relation_name, attribute_set)
+      end
+
+      private
+
+      def default_node_class
+        self.class.node_class
+      end
+
+      def default_edge_class
+        self.class.edge_class
       end
 
     end # class Graph
