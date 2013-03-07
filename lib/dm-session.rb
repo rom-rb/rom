@@ -3,7 +3,7 @@ require 'adamantium'
 require 'equalizer'
 require 'abstract_type'
 
-# Namespace module 
+# Namespace module
 module DataMapper
   class Session
     # Exception thrown on illegal state
