@@ -1,5 +1,6 @@
 module DataMapper
   class Session
+
     # Represent an object with its mapper
     class State
       include Adamantium::Flat, Equalizer.new(:mapper, :object, :identity, :tuple)
@@ -9,7 +10,6 @@ module DataMapper
       # @return [Mapper]
       #
       # @api private
-      #
       attr_reader :mapper
 
       # Return object
@@ -17,15 +17,13 @@ module DataMapper
       # @return [Object]
       #
       # @api private
-      #
       attr_reader :object
 
       # Return identity
       #
-      # @return [Identity]
+      # @return [Object]
       #
       # @api private
-      #
       def identity
         dumper.identity
       end
@@ -33,10 +31,9 @@ module DataMapper
 
       # Return tuple
       #
-      # @return [Tuple]
+      # @return [#[]]
       #
       # @api private
-      #
       def tuple
         dumper.tuple
       end
@@ -47,7 +44,6 @@ module DataMapper
       # @return [self]
       #
       # @api private
-      #
       def delete
         mapper.delete(Operand.new(self))
         self
@@ -58,7 +54,6 @@ module DataMapper
       # @return [self]
       #
       # @api private
-      #
       def insert
         mapper.insert(Operand.new(self))
         self
@@ -66,10 +61,12 @@ module DataMapper
 
       # Perform update
       #
+      # @param [State] old
+      #   the old state to be updated
+      #
       # @return [self]
       #
       # @api private
-      #
       def update(old)
         if dirty?(old)
           mapper.update(Operand::Update.new(self, old.tuple))
@@ -81,6 +78,7 @@ module DataMapper
       # Test if old state is dirty?
       #
       # @param [State] old
+      #   the old state to be examined
       #
       # @return [true]
       #   if old state is dirty
@@ -89,7 +87,6 @@ module DataMapper
       #   otherwise
       #
       # @api private
-      #
       def dirty?(old)
         tuple != old.tuple
       end
@@ -101,7 +98,6 @@ module DataMapper
       # @return [Dumper]
       #
       # @api private
-      #
       def dumper
         mapper.dumper(object)
       end
@@ -110,12 +106,14 @@ module DataMapper
       # Initialize object
       #
       # @param [Mapper] mapper
+      #   the mapper used with this state
+      #
       # @param [Object] object
+      #   the object used with this state
       #
       # @return [undefined]
       #
       # @api private
-      #
       def initialize(mapper, object)
         @mapper, @object = mapper, object
       end
@@ -125,10 +123,9 @@ module DataMapper
 
         # Return identity
         #
-        # @return [Identity]
+        # @return [Object]
         #
         # @api private
-        #
         def identity
           @loader.identity
         end
@@ -138,17 +135,15 @@ module DataMapper
         # @return [Mapper]
         #
         # @api private
-        #
         def mapper
           @loader.mapper
         end
 
         # Return tuple
         #
-        # @return [Tuple]
+        # @return [#[]]
         #
         # @api private
-        #
         def tuple
           @loader.tuple
         end
@@ -158,7 +153,6 @@ module DataMapper
         # @return [Object]
         #
         # @api private
-        #
         def object
           @loader.object
         end
@@ -166,9 +160,9 @@ module DataMapper
         # Initialize object
         #
         # @param [Loader] loader
+        #   the loader used by this instance
         #
         # @api private
-        #
         def initialize(loader)
           @loader = loader
         end

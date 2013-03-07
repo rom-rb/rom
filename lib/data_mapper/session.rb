@@ -1,14 +1,15 @@
 module DataMapper
+
   # A database session
   class Session
     include Adamantium::Flat, Equalizer.new(:registry)
 
     # Return tracker
     #
-    # @return [Hash]
+    # @return [Hash<Object, State>]
+    #   a mapping of identity objects to their current state
     #
     # @api private
-    #
     attr_reader :tracker
 
     # Return registry
@@ -16,7 +17,6 @@ module DataMapper
     # @return [Registry]
     #
     # @api private
-    #
     attr_reader :registry
 
     # Return model specific reader
@@ -26,20 +26,19 @@ module DataMapper
     # @example
     #   people = session.read(Person, :lastname => 'Doe')
     #
-    # @param [Model] model
-    #   the model to be queried
+    # @param [Class] model
+    #   the domain model class to be queried
     #
     # @return [Reader]
-    #   a reader for specific model
+    #   a reader for instances of +model+
     #
     # @api public
-    #
     def reader(model)
       mapper = registry.resolve_model(model)
-      Reader.new(self, mapper) 
+      Reader.new(self, mapper)
     end
 
-    # Delete a domain object from database and forget it
+    # Delete a domain object from the database and forget it
     #
     # @example
     #   person = session.first(Person)
@@ -51,7 +50,6 @@ module DataMapper
     # @return [self]
     #
     # @api public
-    #
     def delete(object)
       state = state(object)
       old = old(state)
@@ -61,7 +59,7 @@ module DataMapper
       self
     end
 
-    # Returns whether an domain object is tracked in this session
+    # Returns whether a domain object is tracked in this session
     #
     # @example
     #   person = Person.new
@@ -70,16 +68,15 @@ module DataMapper
     #   session.include?(person) # => true
     #
     # @param [Object] object
-    #   the domain object to be tested
+    #   the domain object to be examined
     #
-    # @return [true|false]
-    #   when object is tracked
+    # @return [true]
+    #   if +object+ is tracked
     #
     # @return [false]
-    #   otherwitse
+    #   otherwise
     #
     # @api public
-    #
     def include?(object)
       state = state(object)
       tracker.key?(state.identity)
@@ -102,13 +99,12 @@ module DataMapper
     #   the domain object to be examined
     #
     # @return [true]
-    #   when there are changes in the object
+    #   if there are changes in the object
     #
     # @return [false]
     #   otherwise
     #
     # @api public
-    #
     def dirty?(object)
       state = state(object)
       old = old(state)
@@ -119,7 +115,7 @@ module DataMapper
     #
     # Should be used in batch operations to unregister objects that are not needed anymore.
     #
-    # In case you iterate about to many objects using the same session all iterated objects
+    # In case you iterate about too many objects using the same session all iterated objects
     # stay referenced in the identity map and state tracking.
     #
     # @example
@@ -135,7 +131,6 @@ module DataMapper
     # @return [self]
     #
     # @api public
-    #
     def forget(object)
       state = state(object)
       tracker.delete(state.identity)
@@ -158,7 +153,6 @@ module DataMapper
     #   the loaded domain object
     #
     # @api private
-    #
     def load(loader)
       tracker.fetch(loader.identity) do
         store(State::Loaded.new(loader))
@@ -170,14 +164,12 @@ module DataMapper
     # Will insert object if NOT tracked.
     # Will update object if tracked.
     #
-    # @example
-    #   # acts as update
+    # @example acting as update
     #   person = session.first(Person)
     #   person.firstname = 'John'
     #   session.persist(person)
     #
-    # @example
-    #   # acts as insert
+    # @example acting as insert
     #   person = Person.new('John', 'Doe')
     #   session.persist(person)
     #
@@ -187,7 +179,6 @@ module DataMapper
     # @return [self]
     #
     # @api public
-    #
     def persist(object)
       util = tracker
       state = state(object)
@@ -206,11 +197,11 @@ module DataMapper
     # Initialize session with registry
     #
     # @param [Registry] registry
+    #   a registry mapping model classes to mappers
     #
     # @return [self]
     #
     # @api private
-    #
     def initialize(registry, tracker = {})
       @registry, @tracker = registry, tracker
     end
@@ -218,15 +209,15 @@ module DataMapper
     # Return old state for state
     #
     # @param [State] state
+    #   the state for which to retrieve the old state
     #
     # @return [State]
     #   if object is associated with a state
     #
-    # @raise [StateError] 
+    # @raise [StateError]
     #   in case object is not tracked
     #
     # @api private
-    #
     def old(state)
       tracker.fetch(state.identity) do
         raise StateError, "#{state.object.inspect} is not tracked"
@@ -236,23 +227,25 @@ module DataMapper
     # Store and return state
     #
     # @param [State] state
+    #   the state to store
     #
     # @return [State]
+    #   the stored state
     #
     # @api private
-    #
     def store(state)
       tracker.store(state.identity, state)
     end
 
-    # Return sate for object
+    # Return state for object
     #
     # @param [Object] object
+    #   a domain model instance
     #
     # @return [State]
+    #   a state instance wrapping +object+
     #
     # @api private
-    #
     def state(object)
       mapper = registry.resolve_object(object)
       State.new(mapper, object)

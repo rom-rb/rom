@@ -1,15 +1,15 @@
 module DataMapper
   class Session
+
     # A registry for mappers session uses to find mappers
     class Registry
       include Adamantium::Flat, Equalizer.new(:index)
 
       # Return index
-      # 
-      # @return [Hash]
+      #
+      # @return [Hash<Class, Mapper>]
       #
       # @api private
-      #
       attr_reader :index
 
       # Initialize an empty mapper registry
@@ -19,24 +19,25 @@ module DataMapper
       #   session = Session.new(registry)
       #
       # @api public
-      #
       def initialize(index)
         @index = index
       end
 
-      # Resolve a mapper for a given model
+      # Resolve the mapper for the given +model+
       #
       # @example
       #   registry = Registry.new(Person => Person::Mapper)
       #   registry.resolve_model(Person) # => Person::Mapper
       #   registry.resolve_model(UnmappedModel) # raises ArgumentError
       #
-      # @param [Object] model
+      # @param [Class] model
+      #   a domain model class
       #
-      # @return [Object]
-      #   the mapper for given model
+      # @return [Mapper]
+      #   the mapper for the given +model+
       #
-      # @raise [ArgumentError] in case mapper for model is not found.
+      # @raise [MissingMapperError]
+      #   in case no mapper for +model+ can be found
       #
       # @api public
       #
@@ -46,7 +47,7 @@ module DataMapper
         end
       end
 
-      # Resolve a mapper for a given domain object
+      # Resolve a mapper for a given domain +object+
       #
       # Uses objects class as model. @see #resolve_model
       #
@@ -57,12 +58,12 @@ module DataMapper
       #   registry.resolve_object(Object.new) # raises ArgumentError
       #
       # @param [Object] object
+      #   a domain model instance
       #
-      # @return [Object]
-      #   the mapper for given object
+      # @return [Mapper]
+      #   the mapper for the given +object+
       #
       # @api public
-      #
       def resolve_object(object)
         resolve_model(object.class)
       end

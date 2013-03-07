@@ -1,7 +1,7 @@
 module DataMapper
   class Session
 
-    # A class to read objects via identity map
+    # A class to read objects via the identity map
     class Reader
       include Equalizer.new(:session, :reader)
 
@@ -10,25 +10,24 @@ module DataMapper
       # @return [Mapper]
       #
       # @api private
-      #
       attr_reader :mapper
 
-      # Return mapper
+      # Return session
       #
       # @return [Session]
       #
       # @api private
-      #
       attr_reader :session
 
-      # Load object
+      # Load object from +tuple+
       #
-      # @param [Object] tuple
+      # @param [#[]] tuple
+      #   the tuple used to load an object
       #
       # @return [Object]
+      #   a domain model instance
       #
       # @api private
-      #
       def load(tuple)
         @session.load(mapper.loader(tuple))
       end
@@ -38,10 +37,14 @@ module DataMapper
       # Initialize object
       #
       # @param [Session] session
+      #   the session instance to use
+      #
       # @param [Mapper] mapper
+      #   the mapper instance to use
       #
       # @return [undefined]
       #
+      # @api private
       def initialize(session, mapper)
         @session, @mapper = session, mapper
       end
