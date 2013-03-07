@@ -43,7 +43,7 @@ module DataMapper
       #
       def resolve_model(model)
         @index.fetch(model) do
-          raise MissingMapperError, "Mapper for: #{model.inspect} is not registred"
+          raise MissingMapperError, "Mapper for: #{model.inspect} is not registered"
         end
       end
 

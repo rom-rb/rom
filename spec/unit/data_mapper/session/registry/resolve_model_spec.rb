@@ -8,7 +8,7 @@ describe DataMapper::Session::Registry, '#resolve_model' do
   subject { object.resolve_model(model) }
 
 
-  context 'when mapper for model was registred' do
+  context 'when mapper for model was registered' do
     it 'should return mapper' do
       should be(mapper)
     end
@@ -20,7 +20,7 @@ describe DataMapper::Session::Registry, '#resolve_model' do
     let(:object) { described_class.new({}) }
 
     it 'should raise error' do
-      expect { subject }.to raise_error(DataMapper::Session::MissingMapperError, "Mapper for: #{model.inspect} is not registred")
+      expect { subject }.to raise_error(DataMapper::Session::MissingMapperError, "Mapper for: #{model.inspect} is not registered")
     end
   end
 end
