@@ -140,10 +140,6 @@ module DataMapper
 
     # Load a domain object from tuple and track it
     #
-    # FIXME: This method as an unclear CQS role!
-    #
-    #   * Stragegy object missing?
-    #
     # Will return already tracked object in case of identity map collision.
     #
     # @param [Loader] loader
