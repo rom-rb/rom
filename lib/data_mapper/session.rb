@@ -59,7 +59,7 @@ module DataMapper
       self
     end
 
-    # Returns whether a domain object is tracked in this session
+    # Test whether a domain object is tracked in this session
     #
     # @example
     #   person = Person.new
