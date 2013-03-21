@@ -10,8 +10,7 @@ require 'data_mapper/support/graphviz'
 
 require 'virtus'
 
-require 'devtools'
-Devtools.init_spec_helper
+require 'devtools/spec_helper'
 
 if RUBY_VERSION < '1.9'
   class OpenStruct
