@@ -11,4 +11,3 @@ describe Finalizer, '#mapper_registry' do
     subject.should be(mapper_registry)
   end
 end
-
