@@ -6,10 +6,10 @@ module DataMapper
     # Raised when the method is already used
     class ReservedMethodError < ArgumentError; end
 
-    # Defines which options are valid for a given attribute class
+    # Defines which options are valid for a given class
     #
     # @example
-    #   class MyTypes < Axiom::Types::Object
+    #   class Foo
     #     accept_options :foo, :bar
     #   end
     #
@@ -27,7 +27,7 @@ module DataMapper
 
   protected
 
-    # Adds new option that an attribute class can accept
+    # Adds new option that a class can accept
     #
     # @param [Symbol] new_option
     #   new option to be added
@@ -62,8 +62,13 @@ module DataMapper
     # Returns default options hash for a given attribute class
     #
     # @example
-    #   Axiom::Types::String.options
-    #   # => {:primitive => String}
+    #   class Foo
+    #     accept_options :foo
+    #   end
+    #
+    #   Foo.foo = :bar
+    #   Foo.options
+    #   # => {:foo => :bar}
     #
     # @return [Hash]
     #   a hash of default option values
@@ -78,8 +83,12 @@ module DataMapper
     # Returns an array of valid options
     #
     # @example
-    #   Axiom::Types::String.accepted_options
-    #   # => [:primitive, :accessor, :reader, :writer]
+    #   class Foo
+    #     accept_options :foo, :bar
+    #   end
+    #
+    #   Foo.accepted_options
+    #   # => [:foo, :bar]
     #
     # @return [Array]
     #   the array of valid option names
