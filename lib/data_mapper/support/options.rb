@@ -1,82 +1,45 @@
 module DataMapper
 
-  # A module that adds class and instance level options module Options
+  # A module that adds class and instance level options
   module Options
 
-    # Returns default options hash for a given attribute class
-    #
-    # @example
-    #   DataMapper::Relation::Mapper.options
-    #   # => { :relation_name => :people }
-    #
-    # @return [Hash]
-    #   a hash of default option values
-    #
-    # @api public
-    def options
-      accepted_options.each_with_object({}) do |name, options|
-        ivar = "@#{name}"
-        next unless instance_variable_defined?(ivar)
-        options[name] = instance_variable_get(ivar)
-      end
-    end
-
-    # Returns an array of valid options
-    #
-    # @example
-    #   DataMapper::Relation::Mapper.accepted_options
-    #   # => [:model, :relation_name, :repository]
-    #
-    # @return [Array]
-    #   the array of valid option names
-    #
-    # @api public
-    def accepted_options
-      @accepted_options ||= []
-    end
+    # Raised when the method is already used
+    class ReservedMethodError < ArgumentError; end
 
     # Defines which options are valid for a given attribute class
     #
     # @example
-    #   class DataMapper::Relation::Mapper
-    #     accept_options :relation_name, :repository
+    #   class MyTypes < Axiom::Types::Object
+    #     accept_options :foo, :bar
     #   end
     #
     # @return [self]
     #
     # @api public
     def accept_options(*new_options)
-      add_accepted_options(new_options)
-      new_options.each { |option| define_option_method(option) }
-      descendants.each { |descendant| descendant.add_accepted_options(new_options) }
+      (new_options - accepted_options).each do |new_option|
+        assert_method_available(new_option)
+        add_accepted_option(new_option)
+        define_option_method(new_option)
+      end
       self
     end
 
   protected
 
-    # Sets default options
+    # Adds new option that an attribute class can accept
     #
-    # @param [#each] new_options
-    #   options to be set
-    #
-    # @return [self]
-    #
-    # @api private
-    def set_options(new_options)
-      new_options.each { |pair| public_send(*pair) }
-      self
-    end
-
-    # Adds new options that an attribute class can accept
-    #
-    # @param [#to_ary] new_options
-    #   new options to be added
+    # @param [Symbol] new_option
+    #   new option to be added
     #
     # @return [self]
     #
     # @api private
-    def add_accepted_options(new_options)
-      accepted_options.concat(new_options)
+    def add_accepted_option(new_option)
+      accepted_options << new_option
+      descendants.each do |descendant|
+        descendant.send(__method__, new_option)
+      end
       self
     end
 
@@ -91,19 +54,67 @@ module DataMapper
     # @api private
     def inherited(descendant)
       super
-      descendant.add_accepted_options(accepted_options).set_options(options)
+      options.each do |option, value|
+        descendant.add_accepted_option(option).public_send(option, value)
+      end
+    end
+
+    # Returns default options hash for a given attribute class
+    #
+    # @example
+    #   Axiom::Types::String.options
+    #   # => {:primitive => String}
+    #
+    # @return [Hash]
+    #   a hash of default option values
+    #
+    # @api private
+    def options
+      accepted_options.each_with_object({}) do |name, options|
+        options[name] = public_send(name)
+      end
+    end
+
+    # Returns an array of valid options
+    #
+    # @example
+    #   Axiom::Types::String.accepted_options
+    #   # => [:primitive, :accessor, :reader, :writer]
+    #
+    # @return [Array]
+    #   the array of valid option names
+    #
+    # @api private
+    def accepted_options
+      @accepted_options ||= []
+    end
+
+    # Assert that the option is not already defined
+    #
+    # @param [Symbol] name
+    #
+    # @return [undefined]
+    #
+    # @raise [ReservedMethodError]
+    #   raised when the method is already defined
+    #
+    # @api private
+    def assert_method_available(name)
+      return unless respond_to?(name)
+      raise ReservedMethodError,
+        "method named `#{name.inspect}` is already defined"
     end
 
     # Adds a reader/writer method for the give option name
     #
-    # @param [#to_s] option
+    # @param [#to_s] name
     #
     # @return [undefined]
     #
     # @api private
-    def define_option_method(option)
-      ivar = "@#{option}"
-      define_singleton_method(option) do |*args|
+    def define_option_method(name)
+      ivar = "@#{name}"
+      define_singleton_method(name) do |*args|
         return instance_variable_get(ivar) if args.empty?
         instance_variable_set(ivar, *args)
         self
