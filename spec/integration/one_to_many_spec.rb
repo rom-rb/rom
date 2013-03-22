@@ -27,7 +27,7 @@ describe 'Relationship - One To Many with generated mapper' do
 
     users_with_orders.should have(2).items
 
-    user1, user2 = users_with_orders
+    user1, user2 = users_with_orders.sort_by(&:id)
 
     orders1 = user1.orders
     orders2 = user2.orders

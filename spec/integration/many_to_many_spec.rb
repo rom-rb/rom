@@ -15,11 +15,11 @@ describe 'Relationship - Many To Many with generated mappers' do
     insert_song_tag 1, 1, 1
     insert_song_tag 2, 2, 2
 
-    insert_info 1, 1, "really good"
-    insert_info 2, 2, "really bad"
+    insert_info 1, 1, 'really good'
+    insert_info 2, 2, 'really bad'
 
-    insert_info_content 1, 1, "really, really good"
-    insert_info_content 2, 2, "really, really bad"
+    insert_info_content 1, 1, 'really, really good'
+    insert_info_content 2, 2, 'really, really bad'
 
     tag_mapper.has 0..n, :song_tags, song_tag_model
     tag_mapper.has 0..n, :songs, song_model, :through => :song_tags
@@ -57,7 +57,7 @@ describe 'Relationship - Many To Many with generated mappers' do
 
     songs.should have(2).items
 
-    song1, song2 = songs
+    song1, song2 = songs.sort_by(&:id)
 
     song1.title.should eql('foo')
     song1.song_tags.should have(1).item
@@ -76,7 +76,7 @@ describe 'Relationship - Many To Many with generated mappers' do
 
     songs.should have(2).items
 
-    song1, song2 = songs
+    song1, song2 = songs.sort_by(&:id)
 
     song1.title.should eql('foo')
     song1.tags.should have(1).item
@@ -85,7 +85,6 @@ describe 'Relationship - Many To Many with generated mappers' do
     song2.title.should eql('bar')
     song2.tags.should have(1).item
     song2.tags.first.name.should eql('bad')
-
   end
 
   it 'loads associated tags with name = good for songs' do
@@ -107,7 +106,7 @@ describe 'Relationship - Many To Many with generated mappers' do
 
     tags.should have(2).item
 
-    tag1, tag2 = tags
+    tag1, tag2 = tags.sort_by(&:id)
 
     tag1.name.should eql('good')
     tag1.song_tags.should have(1).item
@@ -124,7 +123,7 @@ describe 'Relationship - Many To Many with generated mappers' do
 
     tags.should have(2).item
 
-    tag1, tag2 = tags
+    tag1, tag2 = tags.sort_by(&:id)
 
     tag1.name.should eql('good')
     tag1.songs.should have(1).item
@@ -141,15 +140,13 @@ describe 'Relationship - Many To Many with generated mappers' do
 
     songs.should have(2).items
 
-    song1, song2 = songs
+    song1, song2 = songs.sort_by(&:id)
 
     song1.title.should eql('foo')
-
     song1.infos.should have(1).item
     song1.infos.first.text.should eql('really good')
 
     song2.title.should eql('bar')
-
     song2.infos.should have(1).item
     song2.infos.first.text.should eql('really bad')
   end
@@ -166,7 +163,6 @@ describe 'Relationship - Many To Many with generated mappers' do
     song = songs.first
 
     song.title.should eql('foo')
-
     song.good_infos.should have(1).item
     song.good_infos.first.text.should eql('really good')
   end
@@ -177,15 +173,13 @@ describe 'Relationship - Many To Many with generated mappers' do
 
     songs.should have(2).items
 
-    song1, song2 = songs
+    song1, song2 = songs.sort_by(&:id)
 
     song1.title.should eql('foo')
-
     song1.info_contents.should have(1).item
     song1.info_contents.first.content.should eql('really, really good')
 
     song2.title.should eql('bar')
-
     song2.info_contents.should have(1).item
     song2.info_contents.first.content.should eql('really, really bad')
   end
@@ -199,7 +193,6 @@ describe 'Relationship - Many To Many with generated mappers' do
     song = songs.first
 
     song.title.should eql('foo')
-
     song.good_info_contents.should have(1).item
     song.good_info_contents.first.content.should eql('really, really good')
   end
