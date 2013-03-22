@@ -1,23 +1,8 @@
 module DataMapper
   class Session
-
-    # Represent an object with its mapper
+    # Object persistance state
     class State
-      include Adamantium::Flat, Equalizer.new(:mapper, :object, :identity, :tuple)
-
-      # Return mapper
-      #
-      # @return [Mapper]
-      #
-      # @api private
-      attr_reader :mapper
-
-      # Return object
-      #
-      # @return [Object]
-      #
-      # @api private
-      attr_reader :object
+      include Adamantium::Flat, Concord.new(:mapper, :object)
 
       # Return identity
       #
@@ -75,7 +60,7 @@ module DataMapper
         self
       end
 
-      # Test if old state is dirty?
+      # Test if old state is dirty
       #
       # @param [State] old
       #   the old state to be examined
@@ -103,23 +88,9 @@ module DataMapper
       end
       memoize :dumper, :freezer => :noop
 
-      # Initialize object
-      #
-      # @param [Mapper] mapper
-      #   the mapper used with this state
-      #
-      # @param [Object] object
-      #   the object used with this state
-      #
-      # @return [undefined]
-      #
-      # @api private
-      def initialize(mapper, object)
-        @mapper, @object = mapper, object
-      end
-
       # State for loaded objects
       class Loaded < self
+        include Concord.new(:loader)
 
         # Return identity
         #
@@ -127,7 +98,7 @@ module DataMapper
         #
         # @api private
         def identity
-          @loader.identity
+          loader.identity
         end
 
         # Return mapper
@@ -136,7 +107,7 @@ module DataMapper
         #
         # @api private
         def mapper
-          @loader.mapper
+          loader.mapper
         end
 
         # Return tuple
@@ -145,7 +116,7 @@ module DataMapper
         #
         # @api private
         def tuple
-          @loader.tuple
+          loader.tuple
         end
 
         # Return object
@@ -154,17 +125,7 @@ module DataMapper
         #
         # @api private
         def object
-          @loader.object
-        end
-
-        # Initialize object
-        #
-        # @param [Loader] loader
-        #   the loader used by this instance
-        #
-        # @api private
-        def initialize(loader)
-          @loader = loader
+          loader.object
         end
 
       end

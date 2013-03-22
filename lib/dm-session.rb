@@ -2,6 +2,7 @@ require 'backports'
 require 'adamantium'
 require 'equalizer'
 require 'abstract_type'
+require 'concord'
 
 # Namespace module
 module DataMapper
