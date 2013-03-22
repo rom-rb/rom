@@ -1,7 +1,7 @@
 require 'spec_helper_integration'
 
 describe 'Finalizer', :isolation => true do
-  let!(:env) { DM_ENV }
+  def env() DM_ENV end
 
   before(:all) do
     class Song
