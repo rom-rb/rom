@@ -151,14 +151,14 @@ describe 'Relationship - Many To Many with generated mappers' do
     song2.infos.first.text.should eql('really bad')
   end
 
+  let(:song_info) { info_model.new(:id => 1, :tag_id => 1, :text => 'really good') }
+  let(:song) { song_model.new(:id => 1, :title => 'foo', :good_infos => [ song_info ]) }
   it 'loads associated :good_infos for songs' do
     pending if RUBY_VERSION < '1.9'
 
     mapper = DM_ENV[song_model].include(:good_infos)
 
-    songs = mapper.to_a
-
-    songs.should include(song)
+    songs = mapper.to_a.should =~ [song]
   end
 
   it 'loads associated tag :info_contents for songs' do
