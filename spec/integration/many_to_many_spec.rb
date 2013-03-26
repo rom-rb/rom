@@ -158,13 +158,7 @@ describe 'Relationship - Many To Many with generated mappers' do
 
     songs = mapper.to_a
 
-    songs.should have(1).items
-
-    song = songs.first
-
-    song.title.should eql('foo')
-    song.good_infos.should have(1).item
-    song.good_infos.first.text.should eql('really good')
+    songs.should include(song)
   end
 
   it 'loads associated tag :info_contents for songs' do
