@@ -1,16 +1,16 @@
-module Veritas
+module Axiom
 
   # Raised when passing an +uri+ with an unregistered scheme to {Adapter.new}
   UnknownAdapterError = Class.new(StandardError)
 
-  # Provides base functionality for every veritas adapter
+  # Provides base functionality for every axiom adapter
   #
   # @todo think about making this a (base) class
   #
   # @example
   #
   #   class MyAdapter
-  #     extend Veritas::Adapter
+  #     extend Axiom::Adapter
   #     uri_scheme :foo
   #   end
   #
@@ -30,7 +30,7 @@ module Veritas
     #   the uri to initialize the adapter with
     #
     # @return [Object]
-    #   a veritas adapter
+    #   a axiom adapter
     #
     # @raise [UnknownAdapterError]
     #   when the given +uri+'s scheme is not registered
@@ -46,7 +46,7 @@ module Veritas
     #   the uri that identifies the adapter class
     #
     # @return [Class]
-    #   a veritas adapter class
+    #   a axiom adapter class
     #
     # @raise [UnknownAdapterError]
     #   when the given +uri+'s scheme is not registered
@@ -63,14 +63,14 @@ module Veritas
     #
     # @example for a DataObjects adapter
     #
-    #   class Postgres < Veritas::Adapter::DataObjects
+    #   class Postgres < Axiom::Adapter::DataObjects
     #     uri_scheme :postgres
     #   end
     #
     # @example for an arbitrary adapter
     #
     #   class InMemory
-    #     extend Veritas::Adapter
+    #     extend Axiom::Adapter
     #     uri_scheme :in_memory
     #   end
     #
@@ -85,4 +85,4 @@ module Veritas
     end
 
   end # module Adapter
-end # module Veritas
+end # module Axiom

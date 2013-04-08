@@ -19,7 +19,7 @@ module DataMapper
     #
     # @api private
     def self.coerce(name, uri)
-      new(name, Veritas::Adapter.new(uri))
+      new(name, Axiom::Adapter.new(uri))
     end
 
     # The repository's name
@@ -32,7 +32,7 @@ module DataMapper
     # The repository's adapter
     #
     # @return [Object]
-    #   a veritas adapter
+    #   a axiom adapter
     #
     # @api private
     attr_reader :adapter
@@ -43,7 +43,7 @@ module DataMapper
     #   the repository's name
     #
     # @param [Object] adapter
-    #   the veritas adapter to access relations
+    #   the axiom adapter to access relations
     #
     # @return [undefined]
     #
@@ -62,12 +62,12 @@ module DataMapper
     #   repo.register(:foo, [[:id, String], [:foo, String]])
     #   repo.get(:foo)
     #
-    #   # => <Veritas::Relation header=Veritas::Header ...>
+    #   # => <Axiom::Relation header=Axiom::Header ...>
     #
     # @param [Symbol] name
     #   the name of the relation
     #
-    # @return [Veritas::Relation]
+    # @return [Axiom::Relation]
     #
     # @raise [KeyError]
     #
@@ -81,40 +81,40 @@ module DataMapper
     # @param [Symbol] name
     #   the name used to track the relation
     #
-    # @param [Veritas::Header] header
-    #   the veritas header, or coercible to veritas header
+    # @param [Axiom::Header] header
+    #   the axiom header, or coercible to axiom header
     #
     # @example with coercible header
     #   repo = Repository::InMemory.new
     #   repo.register(:foo, [[:id, String]])
     #
-    # @example with instance of veritas header
+    # @example with instance of axiom header
     #   repo = Repository::InMemory.new
-    #   repo.register(:foo, Veritas::Header.coerce([[:id, String]]))
+    #   repo.register(:foo, Axiom::Header.coerce([[:id, String]]))
     #
     # @return [self]
     #
     # @api private
     def register(name, header)
-      @map[name] = build(name, Veritas::Relation::Header.coerce(header))
+      @map[name] = build(name, Axiom::Relation::Header.coerce(header))
       self
     end
 
     private
 
-    # Build a veritas gateway relation
+    # Build a axiom gateway relation
     #
     # @param [Symbol] name
     #   the relation name
     #
-    # @param [Veritas::Relation::Header] header
+    # @param [Axiom::Relation::Header] header
     #
-    # @return [Veritas::Adapter::Gateway]
+    # @return [Axiom::Adapter::Gateway]
     #
     # @api private
     #
     def build(name, header)
-      adapter.gateway(Veritas::Relation::Base.new(name, header))
+      adapter.gateway(Axiom::Relation::Base.new(name, header))
     end
   end # class Repository
 end # module DataMapper

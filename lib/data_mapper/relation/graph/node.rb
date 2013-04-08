@@ -47,7 +47,7 @@ module DataMapper
 
         # The underlying relation
         #
-        # @return [Veritas::Relation]
+        # @return [Axiom::Relation]
         #
         # @api private
         attr_reader :relation
@@ -64,8 +64,8 @@ module DataMapper
         # @param [#to_sym] name
         #   the name for the node
         #
-        # @param [Veritas::Relation] relation
-        #   a veritas relation instance backing this node
+        # @param [Axiom::Relation] relation
+        #   a axiom relation instance backing this node
         #
         # @param [Header] header
         #   the header to use for this node
@@ -89,7 +89,7 @@ module DataMapper
         #
         # @yield [tuple]
         #
-        # @yieldparam [Veritas::Tuple] tuple
+        # @yieldparam [Axiom::Tuple] tuple
         #   each tuple in the relation
         #
         # @return [self, Enumerator]
@@ -108,7 +108,7 @@ module DataMapper
         #   env.relations[:people].insert([ [ 1, 'John' ] ])
         #
         # @param [Enumerable] tuples
-        #   an enumerable coercible by {Veritas::Relation.coerce}
+        #   an enumerable coercible by {Axiom::Relation.coerce}
         #
         # @return [Node]
         #   a new node backed by a relation containing +tuples+
@@ -126,7 +126,7 @@ module DataMapper
         #   env.relations[:people].update([ [ 1, 'Jane' ] ])
         #
         # @param [Enumerable] tuples
-        #   an enumerable coercible by {Veritas::Relation.coerce}
+        #   an enumerable coercible by {Axiom::Relation.coerce}
         #
         # @return [Node]
         #   a new node backed by a relation including +tuples+
@@ -146,7 +146,7 @@ module DataMapper
         #   env.relations[:people].delete([ [ 1, 'Jane' ] ])
         #
         # @param [Enumerable] tuples
-        #   an enumerable coercible by {Veritas::Relation.coerce}
+        #   an enumerable coercible by {Axiom::Relation.coerce}
         #
         # @return [Node]
         #   a new node backed by a relation excluding +tuples+
@@ -163,7 +163,7 @@ module DataMapper
         #   env.relations[:people].replace([ [ 1, 'Jane' ] ])
         #
         # @param [Enumerable] tuples
-        #   an enumerable coercible by {Veritas::Relation.coerce}
+        #   an enumerable coercible by {Axiom::Relation.coerce}
         #
         # @return [Node]
         #   a new node backed by a relation only including +tuples+
@@ -179,7 +179,7 @@ module DataMapper
         #
         #   env.relations[:people].rename(:id => :person_id)
         #
-        # @param [Hash, Veritas::Relation::Algebra::Rename::Aliases] aliases
+        # @param [Hash, Axiom::Relation::Algebra::Rename::Aliases] aliases
         #   the old and new attribute names
         #
         # @return [Node]
@@ -221,22 +221,22 @@ module DataMapper
 
         # Restrict the underlying relation
         #
-        # @see Veritas::Relation#restrict
+        # @see Axiom::Relation#restrict
         #
         # @example
         #
         #   env.relations[:people].restrict { |r| r.name.eq('John) }
         #
         # @param [Array] args
-        #   optional args accepted by {Veritas::Relation#restrict}
+        #   optional args accepted by {Axiom::Relation#restrict}
         #
         # @yield [context]
         #   optional block to restrict the tuples with
         #
-        # @yieldparam [Veritas::Evaluator::Context] context
+        # @yieldparam [Axiom::Evaluator::Context] context
         #   the context to evaluate the restriction with
         #
-        # @yieldreturn [Veritas::Function, #call]
+        # @yieldreturn [Axiom::Function, #call]
         #   predicate to restrict the tuples with
         #
         # @return [Node]
@@ -259,7 +259,7 @@ module DataMapper
         # @return [Node]
         #   a new node backed with a relation starting from +offset+
         #
-        # @raise [Veritas::OrderedRelationRequiredError]
+        # @raise [Axiom::OrderedRelationRequiredError]
         #   raised if the operand is unordered
         #
         # @api public
@@ -317,7 +317,7 @@ module DataMapper
         # @return [Node]
         #   a new node backed with a relation starting from +offset+
         #
-        # @raise [Veritas::OrderedRelationRequiredError]
+        # @raise [Axiom::OrderedRelationRequiredError]
         #   raised if the operand is unordered
         #
         # @api public

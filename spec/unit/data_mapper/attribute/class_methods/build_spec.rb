@@ -7,7 +7,7 @@ describe Attribute, '.build' do
   let(:collection) { false }
   let(:options)    { { :type => type, :collection => collection } }
 
-  context "when type is a veritas primitive attribute" do
+  context "when type is a axiom primitive attribute" do
     let(:type) { String }
 
     it { should be_instance_of(described_class::Primitive) }

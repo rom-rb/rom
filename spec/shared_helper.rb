@@ -3,9 +3,9 @@ require 'ostruct'
 require 'yaml'
 
 require 'dm-mapper'
-require 'data_mapper/support/veritas/adapter/in_memory'
-require 'data_mapper/support/veritas/adapter/postgres'
-require 'data_mapper/support/veritas/adapter/sqlite3'
+require 'data_mapper/support/axiom/adapter/in_memory'
+require 'data_mapper/support/axiom/adapter/postgres'
+require 'data_mapper/support/axiom/adapter/sqlite3'
 require 'data_mapper/support/graphviz'
 
 require 'virtus'

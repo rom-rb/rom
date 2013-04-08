@@ -6,7 +6,7 @@ describe Repository, '#register' do
   let(:object)   { described_class.new(name, adapter) }
   let(:name)     { mock }
   let(:adapter)  { mock(:gateway => relation) }
-  let(:relation) { Veritas::Relation.new(header, EMPTY_ARRAY.each) }
+  let(:relation) { Axiom::Relation.new(header, EMPTY_ARRAY.each) }
 
   let(:relation_name) { :test }
   let(:header)        { [] }

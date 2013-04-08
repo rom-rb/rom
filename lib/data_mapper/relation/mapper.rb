@@ -191,7 +191,7 @@ module DataMapper
       # @param [Environment] environment
       #   the new mapper's environment
       #
-      # @param [Veritas::Relation] relation
+      # @param [Axiom::Relation] relation
       #   the relation to map from
       #
       # @param [DataMapper::Mapper::AttributeSet] attributes
@@ -241,7 +241,7 @@ module DataMapper
 
       # Return a mapper for iterating over the relation restricted with options
       #
-      # @see Veritas::Relation#restrict
+      # @see Axiom::Relation#restrict
       #
       # @example
       #
@@ -303,7 +303,7 @@ module DataMapper
 
       # Return a mapper for iterating over the relation ordered by *order
       #
-      # @see Veritas::Relation#sort_by
+      # @see Axiom::Relation#sort_by
       #
       # @example
       #
@@ -327,7 +327,7 @@ module DataMapper
 
       # Return a mapper for iterating over a sorted set of domain objects
       #
-      # @see Veritas::Relation#sort_by
+      # @see Axiom::Relation#sort_by
       #
       # @example with directions
       #
@@ -367,7 +367,7 @@ module DataMapper
       # @return [Mapper]
       #   a new mapper backed by a relation with the first +limit+ tuples
       #
-      # @raise [Veritas::OrderedRelationRequiredError]
+      # @raise [Axiom::OrderedRelationRequiredError]
       #   raised if the operand is unordered
       #
       # @api public
@@ -430,7 +430,7 @@ module DataMapper
       # @return [Relation::Mapper]
       #   a new mapper backed by the offset relation
       #
-      # @raise [Veritas::OrderedRelationRequiredError]
+      # @raise [Axiom::OrderedRelationRequiredError]
       #   raised if the operand is unordered
       #
       # @api public
@@ -518,7 +518,7 @@ module DataMapper
       #   env[Person].insert([ person ])
       #
       # @param [Enumerable] object
-      #   an enumerable coercible by {Veritas::Relation.coerce}
+      #   an enumerable coercible by {Axiom::Relation.coerce}
       #
       # @return [Mapper]
       #   a new mapper backed by a relation containing +object+
@@ -536,7 +536,7 @@ module DataMapper
       #   env[Person].update([ person ])
       #
       # @param [Enumerable] tuples
-      #   an enumerable coercible by {Veritas::Relation.coerce}
+      #   an enumerable coercible by {Axiom::Relation.coerce}
       #
       # @return [Node]
       #   a new node backed by a relation including +tuples+
@@ -559,7 +559,7 @@ module DataMapper
       #   mapper.delete([ person ])
       #
       # @param [Enumerable] object
-      #   an enumerable coercible by {Veritas::Relation.coerce}
+      #   an enumerable coercible by {Axiom::Relation.coerce}
       #
       # @return [Mapper]
       #   a new mapper backed by a relation excluding +object+
@@ -582,7 +582,7 @@ module DataMapper
       #   mapper.replace([ alice ])
       #
       # @param [Enumerable] object
-      #   an enumerable coercible by {Veritas::Relation.coerce}
+      #   an enumerable coercible by {Axiom::Relation.coerce}
       #
       # @return [Mapper]
       #   a new mapper backed by a relation only including +object+

@@ -4,7 +4,7 @@ require 'date'
 require 'backports'
 require 'backports/basic_object' unless defined?(::BasicObject)
 require 'addressable/uri'
-require 'veritas'
+require 'axiom'
 require 'abstract_type'
 require 'descendants_tracker'
 require 'equalizer'
