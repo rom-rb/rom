@@ -19,7 +19,7 @@ describe 'Relationship - One To One - Explicit Loading' do
   end
 
   it 'loads parent and then child' do
-    pending "VeritasRelation#rename is not finished yet"
+    pending "AxiomRelation#rename is not finished yet"
 
     user    = user_mapper.to_a.last
     address = DM_ENV[address_mapper].join(user_mapper.rename(:id => :user_id)).first

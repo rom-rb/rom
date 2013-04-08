@@ -147,7 +147,7 @@ module DataMapper
       #
       # @param [String,Symbol,#to_sym] name
       #
-      # @param [Veritas::Relation] relation
+      # @param [Axiom::Relation] relation
       #
       # @param [Aliases,nil] aliases
       #

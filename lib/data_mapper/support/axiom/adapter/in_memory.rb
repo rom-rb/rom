@@ -1,9 +1,9 @@
-require 'data_mapper/support/veritas/adapter'
+require 'data_mapper/support/axiom/adapter'
 
-module Veritas
+module Axiom
   module Adapter
 
-    # A veritas in memory adapter
+    # A axiom in memory adapter
     #
     # This is basically a "null adapter"
     # as it doesn't make use of it's uri
@@ -39,10 +39,10 @@ module Veritas
 
       # Return the passed in relation
       #
-      # @param [Veritas::Relation] relation
+      # @param [Axiom::Relation] relation
       #   the relation to be returned as is
       #
-      # @return [Veritas::Relation]
+      # @return [Axiom::Relation]
       #
       # @api private
       def gateway(relation)
@@ -51,4 +51,5 @@ module Veritas
 
     end # class InMemory
   end # module Adapter
-end # module Veritas
+end # module Axiom
+

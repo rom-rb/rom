@@ -11,7 +11,7 @@ describe Repository, '.coerce' do
     it { should be_instance_of(described_class) }
 
     its(:name)    { should be(name) }
-    its(:adapter) { should eq(Veritas::Adapter.new(uri)) }
+    its(:adapter) { should eq(Axiom::Adapter.new(uri)) }
   end
 
   context "with an unregistered uri scheme" do
@@ -19,7 +19,7 @@ describe Repository, '.coerce' do
     let(:msg) { "'#{uri.scheme}' is no registered uri scheme" }
 
     specify do
-      expect { subject }.to raise_error(Veritas::UnknownAdapterError, msg)
+      expect { subject }.to raise_error(Axiom::UnknownAdapterError, msg)
     end
   end
 end
