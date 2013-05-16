@@ -1,11 +1,15 @@
 require 'spec_helper'
 
 describe DataMapper::Mapper, '.map' do
+  subject { object.map(name, options) }
+
+  let(:object)  { described_class }
   let(:name)    { :title }
   let(:options) { { :to => :book_title } }
 
-  it "adds a new attribute to attribute set" do
-    described_class.attributes.should_receive(:add).with(name, options)
-    described_class.map(name, options)
+  before do
+    object.attributes.should_receive(:add).with(name, options)
   end
+
+  it_should_behave_like 'a command method'
 end
