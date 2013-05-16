@@ -40,7 +40,7 @@ module SpecHelper
       DM_ENV.remove_constant(name)
     end
 
-    Object.const_set name, klass
+    Object.const_set(name, klass)
 
     DM_ENV.register_constant(klass.name)
 
