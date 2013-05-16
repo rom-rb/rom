@@ -24,7 +24,7 @@ if ENV['COVERAGE'] == 'true'
     add_group 'Relationship', 'lib/data_mapper/relationship'
     add_group 'Attribute',    'lib/data_mapper/attribute'
 
-    minimum_coverage 98.11  # 0.10 lower under JRuby
+    minimum_coverage 98.10  # 0.10 lower under JRuby
   end
 
 end
