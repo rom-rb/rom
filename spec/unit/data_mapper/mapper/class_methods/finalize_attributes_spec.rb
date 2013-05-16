@@ -1,8 +1,14 @@
 require 'spec_helper'
 
 describe DataMapper::Mapper, '.finalize_attributes' do
-  it "finalizes its attribute set" do
-    described_class.attributes.should_receive(:finalize).with({})
-    described_class.finalize_attributes({})
+  subject { object.finalize_attributes(registry) }
+
+  let(:object)   { described_class }
+  let(:registry) { mock }
+
+  before do
+    object.attributes.should_receive(:finalize).with(registry)
   end
+
+  it_should_behave_like 'a command method'
 end
