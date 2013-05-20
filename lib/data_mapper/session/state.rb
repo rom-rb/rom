@@ -4,6 +4,22 @@ module DataMapper
     class State
       include Adamantium::Flat, Concord.new(:mapper, :object)
 
+      # Return object
+      #
+      # @return [Object]
+      #
+      # @api private
+      #
+      attr_reader :object
+
+      # Return mapper
+      #
+      # @return [Mapper]
+      #
+      # @api private
+      #
+      attr_reader :mapper
+
       # Return identity
       #
       # @return [Object]
