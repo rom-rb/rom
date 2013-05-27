@@ -60,7 +60,7 @@ module DataMapper
 
     # Initialize a new instance
     #
-    # @param [Hash<Symbol, Addressable::URI>] repositories
+    # @param [Hash<Symbol, Repository>] repositories
     #   the repository configuration for this environment
     #
     # @return [undefined]
