@@ -35,4 +35,3 @@ module Axiom
     end # class DataObjects
   end # module Adapter
 end # module Axiom
-

@@ -15,4 +15,3 @@ module Axiom
     end # class Postgres
   end # module Adapter
 end # module Axiom
-

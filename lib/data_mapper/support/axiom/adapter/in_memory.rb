@@ -52,4 +52,3 @@ module Axiom
     end # class InMemory
   end # module Adapter
 end # module Axiom
-
