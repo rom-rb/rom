@@ -20,6 +20,9 @@ describe 'Relationship - One To Many with generated mapper' do
       restrict { |r| r.product.eq('Apple') }
     end
   end
+  let(:order1) { order_model.new(:id => 1, :product => 'Apple', :user_id => 1) }
+  let(:order2) { order_model.new(:id => 2, :product => 'Apple', :user_id => 1) }
+  let(:order3) { order_model.new(:id => 3, :product => 'Peach', :user_id => 2) }
 
   it 'loads associated orders' do
     user_order_mapper = DM_ENV[user_model].include(:orders)
@@ -35,10 +38,9 @@ describe 'Relationship - One To Many with generated mapper' do
     orders1.should have(2).items
     orders2.should have(1).items
 
-    orders1[0].product.should eql('Apple')
-    orders1[1].product.should eql('Apple')
+    orders1.should =~ [order1, order2]
 
-    orders2[0].product.should eql('Peach')
+    orders2.should =~ [order3]
   end
 
   it 'loads associated restricted apple orders' do
