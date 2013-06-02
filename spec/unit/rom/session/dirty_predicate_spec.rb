@@ -4,9 +4,9 @@ describe Rom::Session, '#dirty?' do
   subject { object.dirty?(domain_object) }
 
   let(:mapper)        { registry.resolve_model(Spec::DomainObject) }
-  let(:registry)      { Spec::Registry.new                    }
+  let(:registry)      { Spec::Registry.new                         }
   let(:domain_object) { Spec::DomainObject.new                     }
-  let(:object)        { described_class.new(registry)        }
+  let(:object)        { described_class.new(registry)              }
 
   context 'when domain object is tracked' do
     before do

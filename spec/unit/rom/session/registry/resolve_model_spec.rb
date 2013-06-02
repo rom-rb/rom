@@ -1,12 +1,12 @@
 require 'spec_helper'
 
 describe Rom::Session::Registry, '#resolve_model' do
+
   let(:model)  { Spec::DomainObject                   }
   let(:mapper) { Spec::Mapper                         }
   let(:object) { described_class.new(model => mapper) }
 
   subject { object.resolve_model(model) }
-
 
   context 'when mapper for model was registered' do
     it 'should return mapper' do

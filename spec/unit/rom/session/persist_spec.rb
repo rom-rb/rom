@@ -3,13 +3,13 @@ require 'spec_helper'
 describe Rom::Session, '#persist' do
   subject { object.persist(domain_object) }
 
-  let(:mapper)        { registry.resolve_model(Spec::DomainObject)            }
-  let(:registry)      { Spec::Registry.new                                    }
-  let(:domain_object) { Spec::DomainObject.new                                }
-  let(:object)        { described_class.new(registry)                         }
+  let(:mapper)        { registry.resolve_model(Spec::DomainObject)     }
+  let(:registry)      { Spec::Registry.new                             }
+  let(:domain_object) { Spec::DomainObject.new                         }
+  let(:object)        { described_class.new(registry)                  }
   let!(:old_state)    { Rom::Session::State.new(mapper, domain_object) }
-  let!(:old_tuple)    { old_state.tuple                                       }
-  let(:identity)      { state.identity                                        }
+  let!(:old_tuple)    { old_state.tuple                                }
+  let(:identity)      { state.identity                                 }
 
   context 'with untracked domain object' do
     it 'should insert' do

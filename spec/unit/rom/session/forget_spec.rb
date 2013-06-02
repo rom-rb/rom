@@ -2,9 +2,9 @@ require 'spec_helper'
 
 describe Rom::Session, '#forget(object)' do
   let(:mapper)        { registry.resolve_model(Spec::DomainObject) }
-  let(:registry)      { Spec::Registry.new                    }
+  let(:registry)      { Spec::Registry.new                         }
   let(:domain_object) { Spec::DomainObject.new                     }
-  let(:object)        { described_class.new(registry)        }
+  let(:object)        { described_class.new(registry)              }
 
   let(:identity_map)  { object.instance_variable_get(:@tracker).instance_variable_get(:@identities) }
 

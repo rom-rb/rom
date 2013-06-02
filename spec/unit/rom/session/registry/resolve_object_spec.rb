@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe Rom::Session::Registry, '#resolve_object' do
+
   let(:model)         { Spec::DomainObject                   }
   let(:mapper)        { Spec::Mapper                         }
   let(:object)        { described_class.new(model => mapper) }
