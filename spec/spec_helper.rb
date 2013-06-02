@@ -1,5 +1,5 @@
 require 'devtools'
-require 'dm-session'
+require 'rom-session'
 
 Devtools.init_spec_helper
 
@@ -119,14 +119,14 @@ class Spec
 
     # Update
     #
-    # @param [DataMapper::Operand::Update] operand
+    # @param [Rom::Operand::Update] operand
     #
     def update(operand)
       @updates << operand
     end
   end
 
-  class Registry < DataMapper::Session::Registry
+  class Registry < Rom::Session::Registry
     def initialize
       super(DomainObject => Mapper.new)
     end

@@ -1,4 +1,4 @@
-module DataMapper
+module Rom
   class Session
 
     # A database operation operand

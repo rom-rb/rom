@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe DataMapper::Session::State::Loaded, '#identity' do
+describe Rom::Session::State::Loaded, '#identity' do
   subject { object.identity }
 
   let(:object) { described_class.new(loader) }

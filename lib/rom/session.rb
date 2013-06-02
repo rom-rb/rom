@@ -1,4 +1,4 @@
-module DataMapper
+module Rom
 
   # A database session
   class Session

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe DataMapper::Session::State, '#mapper' do
+describe Rom::Session::State, '#mapper' do
   subject { object.mapper }
   
   let(:object)        { described_class.new(mapper, domain_object)             }

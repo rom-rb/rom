@@ -1,4 +1,4 @@
-module DataMapper
+module Rom
   class Session
 
     # A class to read objects via the identity map

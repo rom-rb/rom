@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe DataMapper::Session, '#dirty?' do
+describe Rom::Session, '#dirty?' do
   subject { object.dirty?(domain_object) }
 
   let(:mapper)        { registry.resolve_model(Spec::DomainObject) }
@@ -35,7 +35,7 @@ describe DataMapper::Session, '#dirty?' do
 
   context 'when domain object is NOT tracked' do
     it 'should raise error' do
-      expect { subject }.to raise_error(DataMapper::Session::StateError, "#{domain_object.inspect} is not tracked")
+      expect { subject }.to raise_error(Rom::Session::StateError, "#{domain_object.inspect} is not tracked")
     end
   end
 end

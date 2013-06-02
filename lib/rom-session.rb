@@ -5,7 +5,7 @@ require 'abstract_type'
 require 'concord'
 
 # Namespace module
-module DataMapper
+module Rom
   class Session
 
     # Error raised on illegal state
@@ -16,8 +16,8 @@ module DataMapper
   end
 end
 
-require 'data_mapper/session'
-require 'data_mapper/session/reader'
-require 'data_mapper/session/state'
-require 'data_mapper/session/operand'
-require 'data_mapper/session/registry'
+require 'rom/session'
+require 'rom/session/reader'
+require 'rom/session/state'
+require 'rom/session/operand'
+require 'rom/session/registry'

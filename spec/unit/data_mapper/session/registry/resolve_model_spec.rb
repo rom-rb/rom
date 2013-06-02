@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe DataMapper::Session::Registry, '#resolve_model' do
+describe Rom::Session::Registry, '#resolve_model' do
   let(:model)  { Spec::DomainObject                   }
   let(:mapper) { Spec::Mapper                         }
   let(:object) { described_class.new(model => mapper) }
@@ -20,7 +20,7 @@ describe DataMapper::Session::Registry, '#resolve_model' do
     let(:object) { described_class.new({}) }
 
     it 'should raise error' do
-      expect { subject }.to raise_error(DataMapper::Session::MissingMapperError, "Mapper for: #{model.inspect} is not registered")
+      expect { subject }.to raise_error(Rom::Session::MissingMapperError, "Mapper for: #{model.inspect} is not registered")
     end
   end
 end

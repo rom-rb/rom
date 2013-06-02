@@ -1,4 +1,4 @@
-module DataMapper
+module Rom
   class Session
 
     # A registry for mappers session uses to find mappers

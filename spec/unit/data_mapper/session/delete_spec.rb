@@ -1,11 +1,11 @@
 require 'spec_helper'
 
-describe DataMapper::Session, '#delete' do
+describe Rom::Session, '#delete' do
   let(:mapper)        { registry.resolve_model(Spec::DomainObject)         }
   let(:registry)      { Spec::Registry.new                            }
   let(:domain_object) { Spec::DomainObject.new                             }
   let(:object)        { described_class.new(registry)                }
-  let(:state)       { DataMapper::Session::State.new(mapper, domain_object)  }
+  let(:state)       { Rom::Session::State.new(mapper, domain_object)  }
 
   let(:identity_map)  { object.instance_variable_get(:@tracker).instance_variable_get(:@identities) }
 
@@ -20,7 +20,7 @@ describe DataMapper::Session, '#delete' do
 
     it 'should delete object' do
       subject
-      mapper.deletes.should eql([DataMapper::Session::Operand.new(state)])
+      mapper.deletes.should eql([Rom::Session::Operand.new(state)])
     end
 
     it 'should not track object anymore' do
@@ -34,7 +34,7 @@ describe DataMapper::Session, '#delete' do
 
   context 'when domain object is NOT tracked' do
     it 'should raise error' do
-      expect { subject }.to raise_error(DataMapper::Session::StateError, "#{domain_object.inspect} is not tracked")
+      expect { subject }.to raise_error(Rom::Session::StateError, "#{domain_object.inspect} is not tracked")
     end
   end
 end

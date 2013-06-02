@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe DataMapper::Session::Operand, '#tuple' do
+describe Rom::Session::Operand, '#tuple' do
   subject { object.tuple }
 
   let(:object) { described_class.new(state) }
