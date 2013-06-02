@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe DataMapper::Mapper, '.model' do
+describe Rom::Mapper, '.model' do
   let(:model_class) { mock_model(:TestModel) }
 
   context "with a model class" do

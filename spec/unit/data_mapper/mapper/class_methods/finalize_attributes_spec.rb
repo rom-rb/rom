@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe DataMapper::Mapper, '.finalize_attributes' do
+describe Rom::Mapper, '.finalize_attributes' do
   subject { object.finalize_attributes(registry) }
 
   let(:object)   { described_class }

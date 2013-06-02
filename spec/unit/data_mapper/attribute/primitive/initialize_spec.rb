@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe DataMapper::Attribute::Primitive, '#initialize' do
+describe Rom::Attribute::Primitive, '#initialize' do
   subject { described_class.new(name, options) }
 
   let(:name)    { :title }

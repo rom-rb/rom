@@ -7,7 +7,7 @@ describe AttributeSet, '#add' do
   let(:attribute)  { mock('attribute', :name => :title) }
 
   it "adds a new attribute" do
-    DataMapper::Attribute.should_receive(:build).with(name, options).
+    Rom::Attribute.should_receive(:build).with(name, options).
       and_return(attribute)
 
     attributes.add(name, options).should be(attributes)

@@ -1,4 +1,4 @@
-class TestEnv < DataMapper::Environment
+class TestEnv < Rom::Environment
 
   def initialize(config)
     reset_constants

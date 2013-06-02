@@ -2,11 +2,11 @@ require 'pp'
 require 'ostruct'
 require 'yaml'
 
-require 'dm-mapper'
-require 'data_mapper/support/axiom/adapter/in_memory'
-require 'data_mapper/support/axiom/adapter/postgres'
-require 'data_mapper/support/axiom/adapter/sqlite3'
-require 'data_mapper/support/graphviz'
+require 'rom'
+require 'rom/support/axiom/adapter/in_memory'
+require 'rom/support/axiom/adapter/postgres'
+require 'rom/support/axiom/adapter/sqlite3'
+require 'rom/support/graphviz'
 
 require 'virtus'
 
@@ -26,7 +26,7 @@ repos = YAML.load_file("#{root}/config/database.yml")
 DM_ENV = TestEnv.coerce(repos)
 DM_ADAPTER = ENV.fetch('DM_ADAPTER', :postgres).to_sym
 
-include(DataMapper)
+include(Rom)
 
 RSpec.configure do |config|
 

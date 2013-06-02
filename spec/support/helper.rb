@@ -74,7 +74,7 @@ module SpecHelper
   end
 
   def attribute_alias(*args)
-    DataMapper::Relation::Header::Attribute.build(*args)
+    Rom::Relation::Header::Attribute.build(*args)
   end
 
 end

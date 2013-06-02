@@ -11,5 +11,5 @@ describe Attribute::EmbeddedCollection, '#inspect' do
     attribute.finalize(model => mapper)
   end
 
-  it { should eql("#<DataMapper::Attribute::EmbeddedCollection @name=books @mapper=TestModelMapper>") }
+  it { should eql("#<Rom::Attribute::EmbeddedCollection @name=books @mapper=TestModelMapper>") }
 end

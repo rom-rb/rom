@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe DataMapper::Attribute::Primitive, '#load' do
+describe Rom::Attribute::Primitive, '#load' do
   subject { attribute.load(tuple) }
 
   let(:attribute) { described_class.new(:title, options) }

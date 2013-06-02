@@ -15,14 +15,14 @@ if ENV['COVERAGE'] == 'true'
     command_name 'spec:unit'
 
     add_filter 'config'
-    add_filter 'lib/data_mapper/support'
+    add_filter 'lib/rom/support'
     add_filter 'spec'
 
-    add_group 'Finalizer',    'lib/data_mapper/finalizer'
-    add_group 'Mapper',       'lib/data_mapper/mapper'
-    add_group 'Relation',     'lib/data_mapper/relation'
-    add_group 'Relationship', 'lib/data_mapper/relationship'
-    add_group 'Attribute',    'lib/data_mapper/attribute'
+    add_group 'Finalizer',    'lib/rom/finalizer'
+    add_group 'Mapper',       'lib/rom/mapper'
+    add_group 'Relation',     'lib/rom/relation'
+    add_group 'Relationship', 'lib/rom/relationship'
+    add_group 'Attribute',    'lib/rom/attribute'
 
     minimum_coverage 98.10  # 0.10 lower under JRuby
   end

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe DataMapper::Utils, '.extract_options' do
+describe Rom::Utils, '.extract_options' do
   subject { described_class.extract_options(value) }
 
 

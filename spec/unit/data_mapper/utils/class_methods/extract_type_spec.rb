@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe DataMapper::Utils, '.extract_type' do
+describe Rom::Utils, '.extract_type' do
   subject { described_class.extract_type(value) }
 
   context "when args are a hash" do
