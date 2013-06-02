@@ -6,6 +6,8 @@ require 'concord'
 
 # Namespace module
 module Rom
+
+  # Session namespace
   class Session
 
     # Error raised on illegal state
@@ -13,8 +15,9 @@ module Rom
 
     # Error raised when session misses a mapper
     class MissingMapperError < RuntimeError; end
-  end
-end
+
+  end # Session
+end # Rom
 
 require 'rom/session'
 require 'rom/session/reader'

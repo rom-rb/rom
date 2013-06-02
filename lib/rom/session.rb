@@ -246,5 +246,6 @@ module Rom
       mapper = registry.resolve_object(object)
       State.new(mapper, object)
     end
-  end
-end
+
+  end # Session
+end # ROM
