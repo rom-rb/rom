@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Rom::Mapper, '.map' do
+describe ROM::Mapper, '.map' do
   subject { object.map(name, options) }
 
   let(:object)  { described_class }

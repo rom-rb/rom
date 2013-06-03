@@ -1,4 +1,4 @@
-module Rom
+module ROM
 
   module Utils
 
@@ -15,4 +15,4 @@ module Rom
       options.respond_to?(:to_hash) ? options.to_hash.dup : {}
     end
   end # module Utils
-end # module Rom
+end # module ROM

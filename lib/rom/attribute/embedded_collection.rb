@@ -1,4 +1,4 @@
-module Rom
+module ROM
   class Attribute
 
     # An {Attribute} subclass that represents an embedded collection
@@ -22,4 +22,4 @@ module Rom
 
   end # class Attribute
 
-end # module Rom
+end # module ROM

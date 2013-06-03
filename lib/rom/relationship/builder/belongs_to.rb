@@ -1,4 +1,4 @@
-module Rom
+module ROM
   class Relationship
     module Builder
 
@@ -38,4 +38,4 @@ module Rom
       end # class BelongsTo
     end # module Builder
   end # class Relationship
-end # module Rom
+end # module ROM

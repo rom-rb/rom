@@ -1,6 +1,6 @@
-module Rom
+module ROM
   module Relation
-    class Mapper < Rom::Mapper
+    class Mapper < ROM::Mapper
 
       # Builds a {Mapper} from a {Graph::Connector}
       #
@@ -86,4 +86,4 @@ module Rom
 
     end # class Mapper
   end # module Relation
-end # module Rom
+end # module ROM

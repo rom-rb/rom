@@ -26,7 +26,7 @@ repos = YAML.load_file("#{root}/config/database.yml")
 DM_ENV = TestEnv.coerce(repos)
 DM_ADAPTER = ENV.fetch('DM_ADAPTER', :postgres).to_sym
 
-include(Rom)
+include(ROM)
 
 RSpec.configure do |config|
 

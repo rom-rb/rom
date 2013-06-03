@@ -1,5 +1,5 @@
 shared_context 'Models and Mappers' do
-  def n() Rom::Infinity end
+  def n() ROM::Infinity end
 
   def user_model()         @user_model         ||= mock_model('User') end
   def order_model()        @order_model        ||= mock_model('Order') end

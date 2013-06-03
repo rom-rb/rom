@@ -1,4 +1,4 @@
-module Rom
+module ROM
   class Relationship
 
     # Calculate join keys for the `via` relationship in M:N
@@ -83,4 +83,4 @@ module Rom
       end
     end # class ViaDefinition
   end # class Relationship
-end # module Rom
+end # module ROM

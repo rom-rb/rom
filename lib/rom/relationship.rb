@@ -1,4 +1,4 @@
-module Rom
+module ROM
 
   # Relationship
   #
@@ -209,4 +209,4 @@ module Rom
       self.class.relation(*args)
     end
   end # class Relationship
-end # module Rom
+end # module ROM

@@ -1,4 +1,4 @@
-module Rom
+module ROM
   class Attribute
 
     # An {Attribute} subclass that represents an embedded value
@@ -48,7 +48,7 @@ module Rom
       #
       # @example
       #
-      #   attribute = Rom[Person].attributes[:name]
+      #   attribute = ROM[Person].attributes[:name]
       #   puts attribute.inspect
       #
       # @return [String]
@@ -82,4 +82,4 @@ module Rom
     end # class EmbeddedValue
 
   end # class Attribute
-end # module Rom
+end # module ROM

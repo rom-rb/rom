@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Rom::Utils, '.extract_options' do
+describe ROM::Utils, '.extract_options' do
   subject { described_class.extract_options(value) }
 
 

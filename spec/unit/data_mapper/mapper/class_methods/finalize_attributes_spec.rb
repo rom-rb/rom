@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Rom::Mapper, '.finalize_attributes' do
+describe ROM::Mapper, '.finalize_attributes' do
   subject { object.finalize_attributes(registry) }
 
   let(:object)   { described_class }

@@ -1,4 +1,4 @@
-module Rom
+module ROM
 
   # A module that adds class and instance level options
   module Options
@@ -131,4 +131,4 @@ module Rom
     end
 
   end # module Options
-end # module Rom
+end # module ROM

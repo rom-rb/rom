@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Rom::Utils, '.extract_type' do
+describe ROM::Utils, '.extract_type' do
   subject { described_class.extract_type(value) }
 
   context "when args are a hash" do

@@ -1,4 +1,4 @@
-module Rom
+module ROM
   class Attribute
 
     # Provides coercion behavior for {Attribute} subclasses
@@ -18,4 +18,4 @@ module Rom
     end
 
   end # class Attribute
-end # module Rom
+end # module ROM

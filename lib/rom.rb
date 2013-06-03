@@ -10,8 +10,8 @@ require 'descendants_tracker'
 require 'equalizer'
 require 'inflecto'
 
-# Main Rom module with methods to setup and manage the environment
-module Rom
+# Main ROM module with methods to setup and manage the environment
+module ROM
 
   # Raised when the returned tuples are unexpectedly empty
   NoTuplesError = Class.new(RuntimeError)
@@ -31,7 +31,7 @@ module Rom
   # Represent a positive, infinitely large Float number
   Infinity  = 1.0 / 0
 
-end # module Rom
+end # module ROM
 
 require 'rom/utils'
 require 'rom/support/options'

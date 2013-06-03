@@ -1,4 +1,4 @@
-module Rom
+module ROM
   module Relation
     class Header
       class JoinStrategy
@@ -26,4 +26,4 @@ module Rom
       end # class JoinStrategy
     end # class Header
   end # module Relation
-end # module Rom
+end # module ROM

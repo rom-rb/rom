@@ -52,7 +52,7 @@ describe Relationship::Builder::Has, '.build' do
     specify do
       expect { subject }.to raise_error(
         ArgumentError,
-        'Rom::Relationship::Builder::Has.has(foo, :address, ...): must be Integer or Range but was Symbol'
+        'ROM::Relationship::Builder::Has.has(foo, :address, ...): must be Integer or Range but was Symbol'
       )
     end
   end

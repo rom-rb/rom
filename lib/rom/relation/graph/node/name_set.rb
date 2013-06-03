@@ -1,4 +1,4 @@
-module Rom
+module ROM
   module Relation
     class Graph
       class Node
@@ -11,10 +11,10 @@ module Rom
 
           # Initialize a new node name set
           #
-          # @param [Rom::Relationship] relationship
+          # @param [ROM::Relationship] relationship
           #   the relationship used to define the set
           #
-          # @param [Rom::Mapper::Registry] mapper_registry
+          # @param [ROM::Mapper::Registry] mapper_registry
           #   the registry containing all mappers
           #
           # @return [undefined]
@@ -128,4 +128,4 @@ module Rom
       end # class Node
     end # class Graph
   end # module Relation
-end # module Rom
+end # module ROM

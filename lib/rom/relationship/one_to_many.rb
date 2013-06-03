@@ -1,4 +1,4 @@
-module Rom
+module ROM
   class Relationship
 
     # Represent a 1:N relationship
@@ -13,4 +13,4 @@ module Rom
       end
     end # class OneToMany
   end # class Relationship
-end # module Rom
+end # module ROM

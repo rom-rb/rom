@@ -1,4 +1,4 @@
-module Rom
+module ROM
   module Relation
     class Header
 
@@ -88,4 +88,4 @@ module Rom
 
     end # class Header
   end # module Relation
-end # module Rom
+end # module ROM

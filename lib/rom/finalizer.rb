@@ -1,4 +1,4 @@
-module Rom
+module ROM
 
   # Creates mappers for join relations described by relationship definitions
   #
@@ -34,7 +34,7 @@ module Rom
 
     # The environment to finalize
     #
-    # @return [Rom::Environment]
+    # @return [ROM::Environment]
     #
     # @api private
     attr_reader :environment
@@ -103,4 +103,4 @@ module Rom
     end
 
   end # class Finalizer
-end # module Rom
+end # module ROM

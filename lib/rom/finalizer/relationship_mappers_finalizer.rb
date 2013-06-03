@@ -1,4 +1,4 @@
-module Rom
+module ROM
   class Finalizer
 
     # Finalizes mappers for all relationships
@@ -28,4 +28,4 @@ module Rom
 
     end # class RelationshipMappersFinalizer
   end # class Finalizer
-end # module Rom
+end # module ROM

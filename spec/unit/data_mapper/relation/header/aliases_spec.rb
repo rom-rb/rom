@@ -233,7 +233,7 @@ describe Relation::Header, '#aliases' do
   end
 end
 
-describe Rom::Relation::Header do
+describe ROM::Relation::Header do
   subject { object.new(attribute_index, relation_index) }
 
   let(:object)          { described_class }

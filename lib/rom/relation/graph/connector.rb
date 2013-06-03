@@ -1,4 +1,4 @@
-module Rom
+module ROM
   module Relation
     class Graph
 
@@ -37,7 +37,7 @@ module Rom
 
         # Mapper registry
         #
-        # @return [Rom::Mapper::Registry]
+        # @return [ROM::Mapper::Registry]
         #
         # @api private
         attr_reader :registry
@@ -132,4 +132,4 @@ module Rom
 
     end # class Graph
   end # module Relation
-end # module Rom
+end # module ROM

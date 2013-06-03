@@ -1,4 +1,4 @@
-module Rom
+module ROM
   class Relationship
 
     # Encapsulate information for both sides a join
@@ -103,4 +103,4 @@ module Rom
       end
     end # class JoinDefinition
   end # class Relationship
-end # module Rom
+end # module ROM

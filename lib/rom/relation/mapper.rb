@@ -1,10 +1,10 @@
-module Rom
+module ROM
   module Relation
 
     # Relation
     #
     # @api public
-    class Mapper < Rom::Mapper
+    class Mapper < ROM::Mapper
 
       include Equalizer.new(:environment, :model, :attributes, :relationships, :relation)
 
@@ -52,7 +52,7 @@ module Rom
       # @example
       #
       #   other = env[Person].class
-      #   Rom::Relation::Mapper.from(other, 'AdminMapper')
+      #   ROM::Relation::Mapper.from(other, 'AdminMapper')
       #
       # @return [Mapper]
       #
@@ -71,7 +71,7 @@ module Rom
       #
       # @example
       #
-      #   Rom::Relation::Mapper.relation
+      #   ROM::Relation::Mapper.relation
       #
       # @return [Object]
       #
@@ -84,7 +84,7 @@ module Rom
       # @example
       #
       #   class Person
-      #     include Rom::Model
+      #     include ROM::Model
       #     attribute :id, Integer
       #   end
       #
@@ -110,7 +110,7 @@ module Rom
       #
       # @example
       #
-      #   class UserMapper < Rom::Relation::Mapper
+      #   class UserMapper < ROM::Relation::Mapper
       #     has 1,    :address, Address
       #     has 0..n, :orders,  Order
       #   end
@@ -137,7 +137,7 @@ module Rom
       #
       # @example
       #
-      #   class UserMapper < Rom::Relation::Mapper
+      #   class UserMapper < ROM::Relation::Mapper
       #     belongs_to :group, Group
       #   end
       #
@@ -162,7 +162,7 @@ module Rom
       #
       # @example
       #
-      #   class UserMapper < Rom::Relation::Mapper
+      #   class UserMapper < ROM::Relation::Mapper
       #     has n, :orders, Order
       #   end
       #
@@ -194,7 +194,7 @@ module Rom
       # @param [Axiom::Relation] relation
       #   the relation to map from
       #
-      # @param [Rom::Mapper::AttributeSet] attributes
+      # @param [ROM::Mapper::AttributeSet] attributes
       #   the set of attributes to map
       #
       # @return [undefined]
@@ -655,4 +655,4 @@ module Rom
     end # class Mapper
 
   end # module Relation
-end # module Rom
+end # module ROM

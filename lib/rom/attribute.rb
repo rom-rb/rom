@@ -1,4 +1,4 @@
-module Rom
+module ROM
 
   # Class representing a relation's attribute within a mapper
   #
@@ -15,7 +15,7 @@ module Rom
     #
     # @example
     #
-    #   attribute = Rom[Person].attributes[:name]
+    #   attribute = ROM[Person].attributes[:name]
     #   attribute.name
     #
     # @return [Symbol]
@@ -27,7 +27,7 @@ module Rom
     #
     # @example
     #
-    #   attribute = Rom[Person].attributes[:name]
+    #   attribute = ROM[Person].attributes[:name]
     #   attribute.type
     #
     # @return [Class]
@@ -39,7 +39,7 @@ module Rom
     #
     # @example
     #
-    #   attribute = Rom[Person].attributes[:name]
+    #   attribute = ROM[Person].attributes[:name]
     #   attribute.field
     #
     # @return [Symbol]
@@ -51,7 +51,7 @@ module Rom
     #
     # @example
     #
-    #   attribute = Rom[Person].attributes[:name]
+    #   attribute = ROM[Person].attributes[:name]
     #   attribute.options
     #
     # @return [Hash]
@@ -73,7 +73,7 @@ module Rom
     #
     # @example
     #
-    #   Rom::Mapper::Attribute.build(:name, :type => String)
+    #   ROM::Mapper::Attribute.build(:name, :type => String)
     #
     # @param [Symbol] name
     #   the attribute's name
@@ -221,4 +221,4 @@ module Rom
 
   end # class Attribute
 
-end # module Rom
+end # module ROM

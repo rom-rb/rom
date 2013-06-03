@@ -1,4 +1,4 @@
-module Rom
+module ROM
   module Relation
 
     # Implements renaming attributes and relations during relational
@@ -156,4 +156,4 @@ module Rom
     end # class Header
 
   end # module Relation
-end # module Rom
+end # module ROM

@@ -1,4 +1,4 @@
-module Rom
+module ROM
 
   # A repository with a given +name+ and +adapter+
   #
@@ -117,4 +117,4 @@ module Rom
       adapter.gateway(Axiom::Relation::Base.new(name, header))
     end
   end # class Repository
-end # module Rom
+end # module ROM

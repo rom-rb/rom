@@ -1,4 +1,4 @@
-module Rom
+module ROM
   class Finalizer
 
     # Finalizes mappers for all base relations
@@ -73,4 +73,4 @@ module Rom
       end
     end # class BaseRelationMapperFinalizer
   end # class Finalizer
-end # module Rom
+end # module ROM

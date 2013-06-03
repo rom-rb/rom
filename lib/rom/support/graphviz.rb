@@ -1,4 +1,4 @@
-module Rom
+module ROM
   module Support
 
     # Support drawing the environment as a graph of relations
@@ -14,10 +14,10 @@ module Rom
       # @example
       #
       #   config = { :default => 'postgres://localhost/test' }
-      #   dm_env = Rom::Environment.coerce(config)
+      #   dm_env = ROM::Environment.coerce(config)
       #   dm_env.finalize
       #
-      #   Rom::Support::Graphviz.draw(dm_env)
+      #   ROM::Support::Graphviz.draw(dm_env)
       #
       #   # => puts file "graph.png" into the current working directory
       #
@@ -122,4 +122,4 @@ module Rom
       end
     end # module Graphviz
   end # module Support
-end # module Rom
+end # module ROM

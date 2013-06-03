@@ -1,4 +1,4 @@
-module Rom
+module ROM
   module Relation
     class Mapper
 
@@ -52,4 +52,4 @@ module Rom
       end # class RelationshipSet
     end # class Mapper
   end # module Relation
-end # module Rom
+end # module ROM

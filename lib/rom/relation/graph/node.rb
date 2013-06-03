@@ -1,4 +1,4 @@
-module Rom
+module ROM
   module Relation
     class Graph
 
@@ -400,4 +400,4 @@ module Rom
 
     end # class Graph
   end # module Relation
-end # module Rom
+end # module ROM

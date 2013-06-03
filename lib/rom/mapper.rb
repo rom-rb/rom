@@ -1,4 +1,4 @@
-module Rom
+module ROM
 
   # Supports mapping of arbitrary collections of hash like objects
   #
@@ -13,7 +13,7 @@ module Rom
     #
     # @example
     #
-    #   mapper = Rom[Person]
+    #   mapper = ROM[Person]
     #   mapper.model
     #
     # @return [::Class]
@@ -26,7 +26,7 @@ module Rom
     #
     # @example
     #
-    #   mapper = Rom[User]
+    #   mapper = ROM[User]
     #   mapper.attributes
     #
     # @return [AttributeSet]
@@ -38,8 +38,8 @@ module Rom
     #
     # @example
     #
-    #   other = Rom[User].class
-    #   Rom::Mapper.from(other, 'AdminMapper')
+    #   other = ROM[User].class
+    #   ROM::Mapper.from(other, 'AdminMapper')
     #
     # @return [Mapper]
     #
@@ -58,7 +58,7 @@ module Rom
     #
     # @example
     #
-    #   class UserMapper < Rom::Mapper
+    #   class UserMapper < ROM::Mapper
     #     map :id, Integer, :to => :user_id
     #   end
     #
@@ -176,4 +176,4 @@ module Rom
 
   end # class Mapper
 
-end # module Rom
+end # module ROM

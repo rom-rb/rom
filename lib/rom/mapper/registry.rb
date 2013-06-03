@@ -1,4 +1,4 @@
-module Rom
+module ROM
   class Mapper
 
     # Mapper registry
@@ -130,4 +130,4 @@ module Rom
 
     end # class Registry
   end # class Mapper
-end # module Rom
+end # module ROM

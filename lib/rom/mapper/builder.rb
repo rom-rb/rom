@@ -1,4 +1,4 @@
-module Rom
+module ROM
   class Mapper
 
     # Mapper class builder
@@ -10,7 +10,7 @@ module Rom
       # @example
       #   class User; end
       #
-      #   mapper = Rom::Mapper::Builder.create(User, :default)
+      #   mapper = ROM::Mapper::Builder.create(User, :default)
       #
       #   mapper.model         #=> User
       #   mapper.repository    #=> :default
@@ -48,7 +48,7 @@ module Rom
       #
       #   class User; end
       #
-      #   mapper = Rom::Mapper::Builder.define_for(Model)
+      #   mapper = ROM::Mapper::Builder.define_for(Model)
       #
       #   mapper.model #=> User
       #   mapper.name  #=> UserMapper
@@ -117,4 +117,4 @@ module Rom
     end # class Builder
 
   end # class Mapper
-end # module Rom
+end # module ROM

@@ -13,5 +13,5 @@ describe Attribute::EmbeddedValue, '#inspect' do
     attribute.finalize(model => mapper)
   end
 
-  it { should eql("#<Rom::Attribute::EmbeddedValue @name=title @mapper=TestModelMapper>")}
+  it { should eql("#<ROM::Attribute::EmbeddedValue @name=title @mapper=TestModelMapper>")}
 end

@@ -1,4 +1,4 @@
-module Rom
+module ROM
   class Relationship
 
     module Iterator
@@ -49,4 +49,4 @@ module Rom
     end # module Iterator
 
   end # class Relationship
-end # module Rom
+end # module ROM

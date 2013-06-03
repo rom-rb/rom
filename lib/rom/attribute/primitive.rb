@@ -1,4 +1,4 @@
-module Rom
+module ROM
   class Attribute
 
     # An {Attribute} subclass backed by a primitive type
@@ -20,7 +20,7 @@ module Rom
       #
       # @example
       #
-      #   attribute = Rom[Person].attributes[:name]
+      #   attribute = ROM[Person].attributes[:name]
       #   puts attribute.inspect
       #
       # @return [String]
@@ -63,4 +63,4 @@ module Rom
     end # class Primitive
 
   end # class Attribute
-end # module Rom
+end # module ROM

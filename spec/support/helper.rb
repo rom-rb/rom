@@ -74,7 +74,7 @@ module SpecHelper
   end
 
   def attribute_alias(*args)
-    Rom::Relation::Header::Attribute.build(*args)
+    ROM::Relation::Header::Attribute.build(*args)
   end
 
 end

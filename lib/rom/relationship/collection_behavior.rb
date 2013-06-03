@@ -1,4 +1,4 @@
-module Rom
+module ROM
   class Relationship
 
     module CollectionBehavior
@@ -13,4 +13,4 @@ module Rom
       end
     end # module CollectionBehavior
   end # class Relationship
-end # module Rom
+end # module ROM

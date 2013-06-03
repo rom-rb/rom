@@ -1,4 +1,4 @@
-module Rom
+module ROM
   module Relation
     class Graph
       class Node
@@ -28,14 +28,14 @@ module Rom
 
           # The relationship used to construct the name
           #
-          # @return [Rom::Relationship]
+          # @return [ROM::Relationship]
           #
           # @api private
           attr_reader :relationship
 
           # The operation attached to {#relationship}
           #
-          # @see Rom::Relationship#operation
+          # @see ROM::Relationship#operation
           #
           # @return [Proc]
           #
@@ -44,7 +44,7 @@ module Rom
 
           # The {#relationship}'s target model
           #
-          # @see Rom::Relationship#target_model
+          # @see ROM::Relationship#target_model
           #
           # @return [Class]
           #
@@ -59,7 +59,7 @@ module Rom
           # @param [#to_sym] right
           #   the right relation name used to construct the name
           #
-          # @param [Rom::Relationship] relationship
+          # @param [ROM::Relationship] relationship
           #   the relationship used to construct the name
           #
           # @return [undefined]
@@ -103,4 +103,4 @@ module Rom
       end # class Node
     end # class Graph
   end # module Relation
-end # module Rom
+end # module ROM

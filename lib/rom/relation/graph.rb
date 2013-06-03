@@ -1,4 +1,4 @@
-module Rom
+module ROM
   module Relation
 
     # Graph representation of finalized relations
@@ -63,7 +63,7 @@ module Rom
       #
       # @example
       #
-      #   Rom[Person].relations.node_class
+      #   ROM[Person].relations.node_class
       #
       # @return [Node]
       #
@@ -76,7 +76,7 @@ module Rom
       #
       # @example
       #
-      #   Rom[Person].relations.edge_class
+      #   ROM[Person].relations.edge_class
       #
       # @return [Edge]
       #
@@ -87,7 +87,7 @@ module Rom
       #
       # @example
       #
-      #   Rom[Person].relations.connectors
+      #   ROM[Person].relations.connectors
       #
       # @return [Hash]
       #
@@ -305,4 +305,4 @@ module Rom
     end # class Graph
 
   end # module Relation
-end # module Rom
+end # module ROM

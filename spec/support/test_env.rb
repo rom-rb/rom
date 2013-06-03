@@ -1,4 +1,4 @@
-class TestEnv < Rom::Environment
+class TestEnv < ROM::Environment
 
   def initialize(config)
     reset_constants

@@ -1,4 +1,4 @@
-module Rom
+module ROM
 
   # The environment used to build and finalize mappers and their relations
   #
@@ -11,7 +11,7 @@ module Rom
     # @example
     #
     #   config = { 'test' => 'in_memory://test' }
-    #   env    = Rom::Environment.coerce(config)
+    #   env    = ROM::Environment.coerce(config)
     #
     # @param [Environment, Hash<#to_sym, String>] config
     #   an environment or a hash of adapter uri strings, keyed by repository name
@@ -88,13 +88,13 @@ module Rom
     # @example
     #
     #   class User
-    #     include Rom::Model
+    #     include ROM::Model
     #
     #     attribute :id,   Integer
     #     attribute :name, String
     #   end
     #
-    #   env = Rom::Environment.new
+    #   env = ROM::Environment.new
     #   env.setup(:default, :uri => 'postgres://localhost/test')
     #   env.build(User, :default)
     #   env[User] # => the user mapper
@@ -116,13 +116,13 @@ module Rom
     # @example
     #
     #   class User
-    #     include Rom::Model
+    #     include ROM::Model
     #
     #     attribute :id,   Integer
     #     attribute :name, String
     #   end
     #
-    #   env = Rom::Environment.new
+    #   env = ROM::Environment.new
     #   env.setup(:default, :uri => 'postgres://localhost/test')
     #   env.build(User, :default) do
     #     key :id
@@ -153,13 +153,13 @@ module Rom
     # @example
     #
     #   class User
-    #     include Rom::Model
+    #     include ROM::Model
     #
     #     attribute :id,   Integer
     #     attribute :name, String
     #   end
     #
-    #   env = Rom::Environment.new
+    #   env = ROM::Environment.new
     #   env.setup(:default, :uri => 'postgres://localhost/test')
     #   env.build(User, :default) do
     #     key :id
@@ -177,4 +177,4 @@ module Rom
     end
 
   end # class Environment
-end # module Rom
+end # module ROM

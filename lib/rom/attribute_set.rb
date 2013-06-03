@@ -1,4 +1,4 @@
-module Rom
+module ROM
 
   # AttributeSet
   #
@@ -146,7 +146,7 @@ module Rom
     #
     # @example
     #
-    #   attributes = Rom[User].attributes
+    #   attributes = ROM[User].attributes
     #   attributes.each do |attribute|
     #     puts attribute.name
     #   end
@@ -164,7 +164,7 @@ module Rom
     #
     # @example
     #
-    #   attributes = Rom[User].attributes
+    #   attributes = ROM[User].attributes
     #   attributes.field_name(:name)
     #
     # @param [Symbol] attribute_name
@@ -182,7 +182,7 @@ module Rom
     #
     # @example
     #
-    #   attributes = Rom[User].attributes
+    #   attributes = ROM[User].attributes
     #   attributes.key_names
     #
     # @return [Array]
@@ -260,4 +260,4 @@ module Rom
 
   end # class AttributeSet
 
-end # module Rom
+end # module ROM

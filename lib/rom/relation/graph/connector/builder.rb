@@ -1,4 +1,4 @@
-module Rom
+module ROM
   module Relation
     class Graph
       class Connector
@@ -17,10 +17,10 @@ module Rom
           # @param [Graph] relations
           #   a registry of relations
           #
-          # @param [Rom::Mapper::Registry] mappers
+          # @param [ROM::Mapper::Registry] mappers
           #   a registry of mappers
           #
-          # @param [Rom::Relationship] relationship
+          # @param [ROM::Relationship] relationship
           #   the relationship the connector is built for
           #
           # @return [Builder]
@@ -101,4 +101,4 @@ module Rom
       end # class Connector
     end # class Graph
   end # module Relation
-end # module Rom
+end # module ROM

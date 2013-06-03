@@ -1,4 +1,4 @@
-module Rom
+module ROM
 
   # Extend class with attribute definition DSL
   #
@@ -25,4 +25,4 @@ module Rom
 
   end # module Model
 
-end # module Rom
+end # module ROM

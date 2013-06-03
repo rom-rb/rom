@@ -1,4 +1,4 @@
-module Rom
+module ROM
 
   # Represents a query for a restriction
   #
@@ -49,4 +49,4 @@ module Rom
 
   end # class Query
 
-end # module Rom
+end # module ROM
