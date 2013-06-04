@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Relation::Mapper, '#remap' do
   subject { object.remap(aliases) }
 
-  let(:object)     { mock_mapper(model, attributes).new(DM_ENV, relation) }
+  let(:object)     { mock_mapper(model, attributes).new(ROM_ENV, relation) }
   let(:model)      { mock_model(:User) }
   let(:attributes) { [ mock_attribute(:id, Integer) ] }
   let(:relation)   { mock('relation') }

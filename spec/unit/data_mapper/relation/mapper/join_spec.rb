@@ -3,8 +3,8 @@ require 'spec_helper'
 describe Relation::Mapper, '#join' do
   subject { object.join(other) }
 
-  let(:object)         { mock_mapper(model).new(DM_ENV, relation) }
-  let(:other)          { mock_mapper(model).new(DM_ENV, other_relation) }
+  let(:object)         { mock_mapper(model).new(ROM_ENV, relation) }
+  let(:other)          { mock_mapper(model).new(ROM_ENV, other_relation) }
   let(:relation)       { mock('relation') }
   let(:other_relation) { mock('other_relation') }
   let(:joined)         { mock('joined_relation') }

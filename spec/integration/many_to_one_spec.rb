@@ -3,7 +3,7 @@ require 'spec_helper_integration'
 describe 'Relationship - Many To One with generated mapper' do
   include_context 'Models and Mappers'
 
-  subject { DM_ENV[address_model].include(:user).all }
+  subject { ROM_ENV[address_model].include(:user).all }
 
   before(:all) do
     setup_db

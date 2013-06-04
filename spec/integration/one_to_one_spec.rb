@@ -43,7 +43,7 @@ describe 'Relationship - One To One with generated mapper' do
   end
 
   it 'loads the object without association' do
-    user = DM_ENV[user_model].all.first
+    user = ROM_ENV[user_model].all.first
 
     user.should be_instance_of(user_model)
     user.id.should eql(1)
@@ -52,7 +52,7 @@ describe 'Relationship - One To One with generated mapper' do
   end
 
   it 'loads associated object' do
-    mapper  = DM_ENV[user_model].include(:address)
+    mapper  = ROM_ENV[user_model].include(:address)
     user    = mapper.all.last
     address = user.address
 
@@ -62,7 +62,7 @@ describe 'Relationship - One To One with generated mapper' do
   end
 
   it 'loads restricted association' do
-    mapper  = DM_ENV[user_model].include(:home_address)
+    mapper  = ROM_ENV[user_model].include(:home_address)
     address = mapper.to_a.first.home_address
 
     address.should be_instance_of(address_model)
@@ -71,7 +71,7 @@ describe 'Relationship - One To One with generated mapper' do
   end
 
   it 'finds users with matching address' do
-    user_address_mapper = DM_ENV[user_model].include(:address)
+    user_address_mapper = ROM_ENV[user_model].include(:address)
     users               = user_address_mapper.restrict { |r| r.city.eq('Krakow') }.to_a
 
     users.should have(1).item
@@ -98,7 +98,7 @@ describe 'Relationship - One To One with generated mapper' do
   end
 
   it 'loads associated tag' do
-    mapper = DM_ENV[song_model].include(:tag)
+    mapper = ROM_ENV[song_model].include(:tag)
     songs  = mapper.to_a
 
     songs.should have(2).items
@@ -113,7 +113,7 @@ describe 'Relationship - One To One with generated mapper' do
   end
 
   it 'loads associated restricted tag' do
-    mapper = DM_ENV[song_model].include(:good_tag)
+    mapper = ROM_ENV[song_model].include(:good_tag)
     songs = mapper.to_a
 
     songs.should have(1).item

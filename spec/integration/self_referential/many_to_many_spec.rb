@@ -44,7 +44,7 @@ describe 'Relationship - Self referential Many To Many' do
   it 'loads all followed people' do
     pending if RUBY_VERSION < '1.9'
 
-    DM_ENV[person_model].include(:followed_people).to_a.should =~ [
+    ROM_ENV[person_model].include(:followed_people).to_a.should =~ [
       john_with_followed_people,
       jane_with_followed_people,
       alice_with_followed_people
@@ -54,7 +54,7 @@ describe 'Relationship - Self referential Many To Many' do
   it 'loads all followers' do
     pending "Loading a person's followers doesn't work yet"
 
-    DM_ENV[person_model].include(:followers).to_a.should =~ [
+    ROM_ENV[person_model].include(:followers).to_a.should =~ [
       john_with_followers,
       jane_with_followers,
       alice_with_followers

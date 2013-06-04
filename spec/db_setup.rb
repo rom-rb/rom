@@ -1,6 +1,6 @@
 require 'randexp'
 
-URI = DM_ENV.repository(DM_ADAPTER).adapter.uri
+URI = ROM_ENV.repository(ROM_ADAPTER).adapter.uri
 
 MAX_RELATION_SIZE = 10
 

@@ -13,7 +13,7 @@ describe 'Relationship - Self referential Many To One' do
   end
 
   it 'loads the associated parent' do
-    jane = DM_ENV[person_model].include(:parent).one(:id => 2)
+    jane = ROM_ENV[person_model].include(:parent).one(:id => 2)
 
     john = jane.parent
 

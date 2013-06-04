@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Finalizer, '#mappers' do
   subject { object.mappers }
 
-  let(:object)  { described_class.new(DM_ENV) }
+  let(:object)  { described_class.new(ROM_ENV) }
 
-  it { should be(DM_ENV.mappers) }
+  it { should be(ROM_ENV.mappers) }
 end

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Relation::Mapper, '#first' do
-  let(:object)    { mapper.new(DM_ENV, node) }
+  let(:object)    { mapper.new(ROM_ENV, node) }
   let(:mapper)    { mock_mapper(model, [ id ]) }
   let(:model)     { mock_model(:User) }
   let(:id)        { mock_attribute(:id, Integer) }
@@ -11,7 +11,7 @@ describe Relation::Mapper, '#first' do
   let(:header)    { [ [ :id, Integer ] ] }
   let(:tuples)    { [ [ 1 ], [ 2 ], [ 3 ] ] }
 
-  let(:expected_object)   { mapper.new(DM_ENV, expected_node) }
+  let(:expected_object)   { mapper.new(ROM_ENV, expected_node) }
   let(:expected_node)     { Relation::Graph::Node.new(node_name, expected_relation) }
 
   context "with no limit" do

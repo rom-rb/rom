@@ -24,7 +24,7 @@ module SpecHelper
   def mock_mapper(model_class, attributes = [], relationships = [])
     name = "#{model_class.name}Mapper"
 
-    klass = DM_ENV.build(model_class, :in_memory) do
+    klass = ROM_ENV.build(model_class, :in_memory) do
       relation_name Inflecto.tableize(model_class.name).to_sym
     end
 
@@ -37,12 +37,12 @@ module SpecHelper
     end
 
     if Object.const_defined?(name)
-      DM_ENV.remove_constant(name)
+      ROM_ENV.remove_constant(name)
     end
 
     Object.const_set(name, klass)
 
-    DM_ENV.register_constant(klass.name)
+    ROM_ENV.register_constant(klass.name)
 
     klass
   end

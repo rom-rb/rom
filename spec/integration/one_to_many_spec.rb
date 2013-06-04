@@ -25,7 +25,7 @@ describe 'Relationship - One To Many with generated mapper' do
   let(:order3) { order_model.new(:id => 3, :product => 'Peach', :user_id => 2) }
 
   it 'loads associated orders' do
-    user_order_mapper = DM_ENV[user_model].include(:orders)
+    user_order_mapper = ROM_ENV[user_model].include(:orders)
     users_with_orders = user_order_mapper.to_a
 
     users_with_orders.should have(2).items
@@ -44,7 +44,7 @@ describe 'Relationship - One To Many with generated mapper' do
   end
 
   it 'loads associated restricted apple orders' do
-    user_order_mapper = DM_ENV[user_model].include(:apple_orders)
+    user_order_mapper = ROM_ENV[user_model].include(:apple_orders)
     users_with_orders = user_order_mapper.to_a
 
     users_with_orders.should have(1).item
