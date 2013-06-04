@@ -43,12 +43,7 @@ require 'rom/relation/header/attribute'
 require 'rom/relation/header/join_strategy'
 require 'rom/relation/header/join_strategy/natural_join'
 require 'rom/relation/header/join_strategy/inner_join'
+
 require 'rom/relation/graph'
 require 'rom/relation/graph/node'
-require 'rom/relation/graph/node/name'
-require 'rom/relation/graph/node/name_set'
 require 'rom/relation/graph/edge'
-require 'rom/relation/graph/connector'
-require 'rom/relation/graph/connector/builder'
-
-require 'rom/query'

@@ -7,56 +7,8 @@ module SpecHelper
     end
   end
 
-  def mock_model(name, &block)
-    model = Class.new(OpenStruct)
-
-    model.class_eval <<-RUBY
-      def self.name
-        #{name.inspect}
-      end
-    RUBY
-
-    model.instance_eval(&block) if block_given?
-
-    model
-  end
-
-  def mock_mapper(model_class, attributes = [], relationships = [])
-    name = "#{model_class.name}Mapper"
-
-    klass = ROM_ENV.build(model_class, :in_memory) do
-      relation_name Inflecto.tableize(model_class.name).to_sym
-    end
-
-    attributes.each do |attribute|
-      klass.attributes << attribute
-    end
-
-    relationships.each do |relationship|
-      klass.relationships << relationship
-    end
-
-    if Object.const_defined?(name)
-      ROM_ENV.remove_constant(name)
-    end
-
-    Object.const_set(name, klass)
-
-    ROM_ENV.register_constant(klass.name)
-
-    klass
-  end
-
-  def mock_attribute(name, type, options = {})
-    Attribute.build(name, options.merge(:type => type))
-  end
-
   def mock_relation(name, header = [], tuples = Axiom::Relation::Empty::ZERO_TUPLE)
     Axiom::Relation::Base.new(name, header, tuples)
-  end
-
-  def mock_relationship(name, attributes = {})
-    Relationship::OneToMany.new(name, attributes[:source_model], attributes[:target_model], attributes)
   end
 
   def mock_connector(attributes)

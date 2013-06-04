@@ -2,7 +2,7 @@ require 'pp'
 require 'ostruct'
 require 'yaml'
 
-require 'rom'
+require 'rom-relation'
 require 'rom/support/axiom/adapter/in_memory'
 require 'rom/support/axiom/adapter/postgres'
 require 'rom/support/axiom/adapter/sqlite3'
