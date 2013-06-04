@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Relation::Graph::Connector::Builder, '.call' do
-  subject { described_class.call(DM_ENV.relations, mapper_registry, relationship) }
+  subject { described_class.call(ROM_ENV.relations, mapper_registry, relationship) }
 
   let(:mapper_registry) do
     mapper_registry = Mapper::Registry.new
@@ -13,7 +13,7 @@ describe Relation::Graph::Connector::Builder, '.call' do
     mapper_registry
   end
 
-  let(:song_mapper)            { mock_mapper(song_model, song_attributes, song_relationships).new(DM_ENV, songs_relation) }
+  let(:song_mapper)            { mock_mapper(song_model, song_attributes, song_relationships).new(ROM_ENV, songs_relation) }
   let(:song_model)             { mock_model('Song') }
   let(:songs_relation)         { mock_relation(:songs) }
   let(:song_attributes)        { [ songs_id, songs_title ] }
@@ -21,7 +21,7 @@ describe Relation::Graph::Connector::Builder, '.call' do
   let(:songs_title)            { mock_attribute(:title, String) }
   let(:song_relationships)     { [ songs_song_tags_relationship, songs_tags_relationship, songs_infos_relationship ] }
 
-  let(:song_tag_mapper)        { mock_mapper(song_tag_model, song_tag_attributes, song_tag_relationships).new(DM_ENV, song_tags_relation) }
+  let(:song_tag_mapper)        { mock_mapper(song_tag_model, song_tag_attributes, song_tag_relationships).new(ROM_ENV, song_tags_relation) }
   let(:song_tag_model)         { mock_model('SongTag') }
   let(:song_tags_relation)     { mock_relation(:song_tags) }
   let(:song_tag_attributes)    { [ song_tags_song_id, song_tags_tag_id ] }
@@ -29,7 +29,7 @@ describe Relation::Graph::Connector::Builder, '.call' do
   let(:song_tags_tag_id)       { mock_attribute(:tag_id,  Integer, :key => true) }
   let(:song_tag_relationships) { [ song_tags_song_relationship, song_tags_tag_relationship ] }
 
-  let(:tag_mapper)             { mock_mapper(tag_model, tag_attributes, tag_relationships).new(DM_ENV, tags_relation) }
+  let(:tag_mapper)             { mock_mapper(tag_model, tag_attributes, tag_relationships).new(ROM_ENV, tags_relation) }
   let(:tag_model)              { mock_model('Tag') }
   let(:tags_relation)          { mock_relation(:tags) }
   let(:tag_attributes)         { [ tags_id, tags_name ] }
@@ -37,7 +37,7 @@ describe Relation::Graph::Connector::Builder, '.call' do
   let(:tags_name)              { mock_attribute(:name, String) }
   let(:tag_relationships)      { [ tags_infos_relationship ] }
 
-  let(:info_mapper)            { mock_mapper(info_model, info_attributes, info_relationships).new(DM_ENV, infos_relation) }
+  let(:info_mapper)            { mock_mapper(info_model, info_attributes, info_relationships).new(ROM_ENV, infos_relation) }
   let(:info_model)             { mock_model('Info') }
   let(:infos_relation)         { mock_relation(:infos) }
   let(:info_attributes)        { [ infos_id, infos_text ] }
@@ -55,13 +55,13 @@ describe Relation::Graph::Connector::Builder, '.call' do
   before do
     mapper_registry.each do |_, mapper|
       name       = mapper.relation_name
-      repository = DM_ENV.repository(mapper.class.repository)
+      repository = ROM_ENV.repository(mapper.class.repository)
       repository.register(name, mapper.attributes.header)
 
       relation = repository.get(name)
       header   = Relation::Graph::Node.header(name, mapper.attributes.fields)
 
-      DM_ENV.relations.new_node(name, relation, header)
+      ROM_ENV.relations.new_node(name, relation, header)
 
       mapper.relationships.each do |relationship|
         relationship.finalize(mapper_registry)
@@ -71,7 +71,7 @@ describe Relation::Graph::Connector::Builder, '.call' do
     subject
   end
 
-  let(:relations) { DM_ENV.relations }
+  let(:relations) { ROM_ENV.relations }
 
   context "with one-to-many" do
     let(:relationship)   { songs_song_tags_relationship }

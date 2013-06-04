@@ -1,7 +1,7 @@
 require 'spec_helper_integration'
 
 describe 'Finalizer', :isolation => true do
-  def env() DM_ENV end
+  def env() ROM_ENV end
 
   before(:all) do
     class Song
@@ -19,7 +19,7 @@ describe 'Finalizer', :isolation => true do
     class SongTag
     end
 
-    env.build(Tag, DM_ADAPTER) do
+    env.build(Tag, ROM_ADAPTER) do
       model         Tag
       relation_name :tags
 
@@ -31,7 +31,7 @@ describe 'Finalizer', :isolation => true do
       has 0..n, :infos,     Info
     end
 
-    env.build(Info, DM_ADAPTER) do
+    env.build(Info, ROM_ADAPTER) do
       model         Info
       relation_name :infos
 
@@ -44,7 +44,7 @@ describe 'Finalizer', :isolation => true do
       has 0..n, :info_contents, InfoContent
     end
 
-    env.build(InfoContent, DM_ADAPTER) do
+    env.build(InfoContent, ROM_ADAPTER) do
       model         InfoContent
       relation_name :info_contents
 
@@ -55,7 +55,7 @@ describe 'Finalizer', :isolation => true do
       belongs_to :info, Info
     end
 
-    env.build(SongTag, DM_ADAPTER) do
+    env.build(SongTag, ROM_ADAPTER) do
       model         SongTag
       relation_name :song_tags
 
@@ -66,7 +66,7 @@ describe 'Finalizer', :isolation => true do
       belongs_to :tag,  Tag
     end
 
-    env.build(Song, DM_ADAPTER) do
+    env.build(Song, ROM_ADAPTER) do
       model         Song
       relation_name :songs
 
@@ -218,50 +218,50 @@ describe 'Finalizer', :isolation => true do
   end
 
   it 'finalizes song mapper' do
-    DM_ENV[Song].relation.should be(relations[:songs])
+    ROM_ENV[Song].relation.should be(relations[:songs])
   end
 
   it 'finalizes tag mapper' do
-    DM_ENV[Tag].relation.should be(relations[:tags])
+    ROM_ENV[Tag].relation.should be(relations[:tags])
   end
 
   it 'finalizes song_tag mapper' do
-    DM_ENV[SongTag].relation.should be(relations[:song_tags])
+    ROM_ENV[SongTag].relation.should be(relations[:song_tags])
   end
 
   it 'finalizes info mapper' do
-    DM_ENV[Info].relation.should be(relations[:infos])
+    ROM_ENV[Info].relation.should be(relations[:infos])
   end
 
   it 'finalizes info content mapper' do
-    DM_ENV[InfoContent].relation.should be(relations[:info_contents])
+    ROM_ENV[InfoContent].relation.should be(relations[:info_contents])
   end
 
   it 'finalizes song-song-tags mapper' do
-    DM_ENV[Song].include(:song_tags).relation.should eql(relations[:songs_X_song_tags])
+    ROM_ENV[Song].include(:song_tags).relation.should eql(relations[:songs_X_song_tags])
   end
 
   it 'finalizes song-song-tag mapper' do
-    DM_ENV[Song].include(:song_tag).relation.should eql(relations[:songs_X_song_tags])
+    ROM_ENV[Song].include(:song_tag).relation.should eql(relations[:songs_X_song_tags])
   end
 
   it 'finalizes song-tag-through-song_tag mapper' do
-    DM_ENV[Song].include(:tag).relation.should eql(relations[:songs_X_song_tags_X_tags])
+    ROM_ENV[Song].include(:tag).relation.should eql(relations[:songs_X_song_tags_X_tags])
   end
 
   it 'finalizes song-tags mapper' do
-    DM_ENV[Song].include(:tags).relation.should eql(relations[:songs_X_song_tags_X_tags])
+    ROM_ENV[Song].include(:tags).relation.should eql(relations[:songs_X_song_tags_X_tags])
   end
 
   it 'finalizes song-infos mapper' do
-    DM_ENV[Song].include(:infos).relation.should eql(relations[:songs_X_song_tags_X_tags_X_infos])
+    ROM_ENV[Song].include(:infos).relation.should eql(relations[:songs_X_song_tags_X_tags_X_infos])
   end
 
   it 'finalizes song-info-contents mapper' do
-    DM_ENV[Song].include(:info_contents).relation.should be(relations[:songs_X_song_tags_X_tags_X_infos_X_info_contents])
+    ROM_ENV[Song].include(:info_contents).relation.should be(relations[:songs_X_song_tags_X_tags_X_infos_X_info_contents])
   end
 
   it 'finalizes song-good-info-contents mapper' do
-    DM_ENV[Song].include(:good_info_contents).relation.should be(relations[:songs_X_song_tags_X_tags_X_infos_X_good_info_contents])
+    ROM_ENV[Song].include(:good_info_contents).relation.should be(relations[:songs_X_song_tags_X_tags_X_infos_X_good_info_contents])
   end
 end

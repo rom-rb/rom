@@ -22,7 +22,7 @@ describe 'Relationship - One To One - Explicit Loading' do
     pending "AxiomRelation#rename is not finished yet"
 
     user    = user_mapper.to_a.last
-    address = DM_ENV[address_mapper].join(user_mapper.rename(:id => :user_id)).first
+    address = ROM_ENV[address_mapper].join(user_mapper.rename(:id => :user_id)).first
 
     address.should be_instance_of(address_model)
     address.id.should eql(1)

@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Finalizer::RelationshipMappersFinalizer, '#run' do
   subject { object.run }
 
-  let(:object) { described_class.new(DM_ENV) }
+  let(:object) { described_class.new(ROM_ENV) }
 
   let(:id)      { mock_attribute(:id,   Integer, :key => true) }
   let(:name)    { mock_attribute(:name, String) }
@@ -26,7 +26,7 @@ describe Finalizer::RelationshipMappersFinalizer, '#run' do
 
   before do
     user_mapper.relationships << relationship
-    Finalizer::BaseRelationMappersFinalizer.call(DM_ENV)
+    Finalizer::BaseRelationMappersFinalizer.call(ROM_ENV)
     subject
   end
 

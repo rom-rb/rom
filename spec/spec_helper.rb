@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-# SimpleCov MUST be started before require 'dm-mapper'
+# SimpleCov MUST be started before require 'ROM'
 #
 if ENV['COVERAGE'] == 'true'
   require 'simplecov'
@@ -29,4 +29,4 @@ if ENV['COVERAGE'] == 'true'
 
 end
 
-require 'shared_helper' # requires dm-mapper
+require 'shared_helper' # requires ROM

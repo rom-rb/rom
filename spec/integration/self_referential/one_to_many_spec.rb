@@ -23,7 +23,7 @@ describe 'Relationship - Self referential One To Many' do
   it 'loads the associated children' do
     pending if RUBY_VERSION < '1.9'
 
-    children = DM_ENV[person_model].include(:children).one(:id => 1).children
+    children = ROM_ENV[person_model].include(:children).one(:id => 1).children
 
     children.size.should == 2
 

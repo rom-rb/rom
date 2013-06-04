@@ -14,10 +14,10 @@ module ROM
       # @example
       #
       #   config = { :default => 'postgres://localhost/test' }
-      #   dm_env = ROM::Environment.coerce(config)
-      #   dm_env.finalize
+      #   rom_env = ROM::Environment.coerce(config)
+      #   rom_env.finalize
       #
-      #   ROM::Support::Graphviz.draw(dm_env)
+      #   ROM::Support::Graphviz.draw(rom_env)
       #
       #   # => puts file "graph.png" into the current working directory
       #

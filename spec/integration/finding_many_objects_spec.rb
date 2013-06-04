@@ -20,7 +20,7 @@ describe 'Finding Many Objects', :type => :integration do
   end
 
   it 'finds many object matching search criteria' do
-    users = DM_ENV[user_model].find(:name => 'Jane').to_a
+    users = ROM_ENV[user_model].find(:name => 'Jane').to_a
 
     users.should have(2).items
 
@@ -35,7 +35,7 @@ describe 'Finding Many Objects', :type => :integration do
   end
 
   it 'finds and sorts objects' do
-    users = DM_ENV[user_model].find(:name => 'Jane').order(:age, :name).to_a
+    users = ROM_ENV[user_model].find(:name => 'Jane').order(:age, :name).to_a
 
     user1, user2 = users
 
@@ -51,7 +51,7 @@ describe 'Finding Many Objects', :type => :integration do
   it 'finds objects matching criteria from joined relation' do
     pending "Nested query conditions is not yet implemented"
 
-    users = DM_ENV[user_model].find(:age => 20, :address => { :city => 'Boston' }).to_a
+    users = ROM_ENV[user_model].find(:age => 20, :address => { :city => 'Boston' }).to_a
 
     users.should have(1).item
 

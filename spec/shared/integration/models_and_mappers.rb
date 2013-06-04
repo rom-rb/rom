@@ -13,7 +13,7 @@ shared_context 'Models and Mappers' do
   def link_model()         @link_model         ||= mock_model('Link') end
 
   def user_mapper
-    @user_mapper ||= DM_ENV.build(user_model, DM_ADAPTER) do
+    @user_mapper ||= ROM_ENV.build(user_model, ROM_ADAPTER) do
       relation_name :users
 
       map :id,   Integer, :key => true
@@ -23,7 +23,7 @@ shared_context 'Models and Mappers' do
   end
 
   def order_mapper
-    @order_mapper ||= DM_ENV.build(order_model, DM_ADAPTER) do
+    @order_mapper ||= ROM_ENV.build(order_model, ROM_ADAPTER) do
       relation_name :orders
 
       map :id,      Integer, :key => true
@@ -33,7 +33,7 @@ shared_context 'Models and Mappers' do
   end
 
   def address_mapper
-    @address_mapper ||= DM_ENV.build(address_model, DM_ADAPTER) do
+    @address_mapper ||= ROM_ENV.build(address_model, ROM_ADAPTER) do
       relation_name :addresses
 
       map :id,      Integer, :key => true
@@ -45,7 +45,7 @@ shared_context 'Models and Mappers' do
   end
 
   def tag_mapper
-    @tag_mapper ||= DM_ENV.build(tag_model, DM_ADAPTER) do
+    @tag_mapper ||= ROM_ENV.build(tag_model, ROM_ADAPTER) do
       relation_name :tags
 
       map :id,   Integer, :key => true
@@ -54,7 +54,7 @@ shared_context 'Models and Mappers' do
   end
 
   def info_mapper
-    @info_mapper ||= DM_ENV.build(info_model, DM_ADAPTER) do
+    @info_mapper ||= ROM_ENV.build(info_model, ROM_ADAPTER) do
       relation_name :infos
 
       map :id,     Integer, :key => true
@@ -64,7 +64,7 @@ shared_context 'Models and Mappers' do
   end
 
   def info_content_mapper
-    @info_content_mapper ||= DM_ENV.build(info_content_model, DM_ADAPTER) do
+    @info_content_mapper ||= ROM_ENV.build(info_content_model, ROM_ADAPTER) do
       relation_name :info_contents
 
       map :id,      Integer, :key => true
@@ -74,7 +74,7 @@ shared_context 'Models and Mappers' do
   end
 
   def song_tag_mapper
-    @song_tag_mapper ||= DM_ENV.build(song_tag_model, DM_ADAPTER) do
+    @song_tag_mapper ||= ROM_ENV.build(song_tag_model, ROM_ADAPTER) do
       relation_name :song_tags
 
       map :song_id, Integer, :key => true
@@ -83,7 +83,7 @@ shared_context 'Models and Mappers' do
   end
 
   def song_mapper
-    @song_mapper ||= DM_ENV.build(song_model, DM_ADAPTER) do
+    @song_mapper ||= ROM_ENV.build(song_model, ROM_ADAPTER) do
       relation_name :songs
 
       map :id,    Integer, :key => true
@@ -92,7 +92,7 @@ shared_context 'Models and Mappers' do
   end
 
   def person_mapper
-    @person_mapper ||= DM_ENV.build(person_model, DM_ADAPTER) do
+    @person_mapper ||= ROM_ENV.build(person_model, ROM_ADAPTER) do
       relation_name :people
 
       map :id,        Integer, :key => true
@@ -102,7 +102,7 @@ shared_context 'Models and Mappers' do
   end
 
   def link_mapper
-    @link_mapper ||= DM_ENV.build(link_model, DM_ADAPTER) do
+    @link_mapper ||= ROM_ENV.build(link_model, ROM_ADAPTER) do
       relation_name :people_links
 
       map :id,          Integer, :key => true

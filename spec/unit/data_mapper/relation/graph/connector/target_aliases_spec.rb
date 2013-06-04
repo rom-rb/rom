@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Relation::Graph::Connector, '#target_aliases' do
   subject { object.target_aliases }
 
-  let(:object) { described_class.new(node, relationship, relations, DM_ENV) }
+  let(:object) { described_class.new(node, relationship, relations, ROM_ENV) }
 
   let(:node)         { mock('relation_node', :name => mock, :header => header) }
   let(:header)       { mock(:aliases => aliases) }

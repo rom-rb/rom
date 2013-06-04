@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Finalizer::BaseRelationMappersFinalizer, '#run' do
   subject { object.run }
 
-  let(:object)  { described_class.new(DM_ENV) }
+  let(:object)  { described_class.new(ROM_ENV) }
 
   let!(:mappers) { [ user_mapper, address_mapper ] }
 
@@ -27,10 +27,10 @@ describe Finalizer::BaseRelationMappersFinalizer, '#run' do
   before { subject }
 
   it "adds relation node for user mapper" do
-    DM_ENV.relations[:users].should be_instance_of(Relation::Graph::Node)
+    ROM_ENV.relations[:users].should be_instance_of(Relation::Graph::Node)
   end
 
   it "adds relation node for address mapper" do
-    DM_ENV.relations[:addresses].should be_instance_of(Relation::Graph::Node)
+    ROM_ENV.relations[:addresses].should be_instance_of(Relation::Graph::Node)
   end
 end

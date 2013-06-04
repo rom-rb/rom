@@ -52,7 +52,7 @@ describe 'Relationship - Many To Many with generated mappers' do
   end
 
   it 'loads associated song_tags for songs' do
-    mapper = DM_ENV[song_model].include(:song_tags)
+    mapper = ROM_ENV[song_model].include(:song_tags)
     songs  = mapper.to_a
 
     songs.should have(2).items
@@ -71,7 +71,7 @@ describe 'Relationship - Many To Many with generated mappers' do
   end
 
   it 'loads associated tags for songs' do
-    mapper = DM_ENV[song_model].include(:tags)
+    mapper = ROM_ENV[song_model].include(:tags)
     songs  = mapper.to_a
 
     songs.should have(2).items
@@ -88,7 +88,7 @@ describe 'Relationship - Many To Many with generated mappers' do
   end
 
   it 'loads associated tags with name = good for songs' do
-    mapper = DM_ENV[song_model].include(:good_tags)
+    mapper = ROM_ENV[song_model].include(:good_tags)
     songs  = mapper.include(:good_tags).to_a
 
     songs.should have(1).item
@@ -101,7 +101,7 @@ describe 'Relationship - Many To Many with generated mappers' do
   end
 
   it 'loads associated song_tags for tags' do
-    mapper = DM_ENV[tag_model].include(:song_tags)
+    mapper = ROM_ENV[tag_model].include(:song_tags)
     tags   = mapper.to_a
 
     tags.should have(2).item
@@ -118,7 +118,7 @@ describe 'Relationship - Many To Many with generated mappers' do
   end
 
   it 'loads associated songs for tags' do
-    mapper = DM_ENV[tag_model].include(:songs)
+    mapper = ROM_ENV[tag_model].include(:songs)
     tags   = mapper.to_a
 
     tags.should have(2).item
@@ -134,7 +134,7 @@ describe 'Relationship - Many To Many with generated mappers' do
     tag2.songs.first.title.should eql('bar')
   end
   it 'loads associated :infos for songs' do
-    mapper = DM_ENV[song_model].include(:infos)
+    mapper = ROM_ENV[song_model].include(:infos)
 
     songs = mapper.to_a
 
@@ -156,13 +156,13 @@ describe 'Relationship - Many To Many with generated mappers' do
   it 'loads associated :good_infos for songs' do
     pending if RUBY_VERSION < '1.9'
 
-    songs = DM_ENV[song_model].include(:good_infos).to_a
+    songs = ROM_ENV[song_model].include(:good_infos).to_a
 
     songs.should =~ [song]
   end
 
   it 'loads associated tag :info_contents for songs' do
-    mapper = DM_ENV[song_model].include(:info_contents)
+    mapper = ROM_ENV[song_model].include(:info_contents)
     songs = mapper.to_a
 
     songs.should have(2).items
@@ -179,7 +179,7 @@ describe 'Relationship - Many To Many with generated mappers' do
   end
 
   it 'loads associated :good_info_contents for songs' do
-    mapper = DM_ENV[song_model].include(:good_info_contents)
+    mapper = ROM_ENV[song_model].include(:good_info_contents)
     songs = mapper.to_a
 
     songs.should have(1).item
