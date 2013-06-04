@@ -8,8 +8,6 @@ require 'rom/support/axiom/adapter/postgres'
 require 'rom/support/axiom/adapter/sqlite3'
 require 'rom/support/graphviz'
 
-require 'virtus'
-
 require 'devtools/spec_helper'
 
 if RUBY_VERSION < '1.9'

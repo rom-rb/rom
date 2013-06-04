@@ -1,5 +1,5 @@
 module ROM
-  module Relation
+  class Relation
     class Header
 
       # Base class for different strategies of renaming attributes when
@@ -87,5 +87,5 @@ module ROM
       end # class JoinStrategy
 
     end # class Header
-  end # module Relation
+  end # class Relation
 end # module ROM

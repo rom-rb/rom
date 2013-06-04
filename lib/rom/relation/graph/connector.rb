@@ -1,5 +1,5 @@
 module ROM
-  module Relation
+  class Relation
     class Graph
 
       # Holds joined relation node and relationship used to create the join
@@ -131,5 +131,5 @@ module ROM
       end # class Connector
 
     end # class Graph
-  end # module Relation
+  end # class Relation
 end # module ROM

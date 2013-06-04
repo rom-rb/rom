@@ -1,5 +1,5 @@
 module ROM
-  module Relation
+  class Relation
     class Graph
       class Node
 
@@ -102,5 +102,5 @@ module ROM
         end # class Name
       end # class Node
     end # class Graph
-  end # module Relation
+  end # class Relation
 end # module ROM

@@ -1,5 +1,5 @@
 module ROM
-  module Relation
+  class Relation
     class Graph
 
       # Represents a directed relation edge joining 2 relation nodes
@@ -144,5 +144,5 @@ module ROM
       end # class Edge
 
     end # class Graph
-  end # module Relation
+  end # class Relation
 end # module ROM

@@ -1,5 +1,5 @@
 module ROM
-  class Mapper
+  class Relation
     VERSION = '0.0.1'
   end
 end

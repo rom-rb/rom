@@ -1,5 +1,5 @@
 module ROM
-  module Relation
+  class Relation
     class Graph
 
       # Represents a relation in the registry graph
@@ -399,5 +399,5 @@ module ROM
       end # class Node
 
     end # class Graph
-  end # module Relation
+  end # class Relation
 end # module ROM

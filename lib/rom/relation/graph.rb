@@ -1,5 +1,5 @@
 module ROM
-  module Relation
+  class Relation
 
     # Graph representation of finalized relations
     #
@@ -304,5 +304,5 @@ module ROM
 
     end # class Graph
 
-  end # module Relation
+  end # class Relation
 end # module ROM

@@ -1,5 +1,5 @@
 module ROM
-  module Relation
+  class Relation
     class Header
 
       # Keeps track of attributes in {Relation::Header}
@@ -244,5 +244,5 @@ module ROM
       end # class AttributeIndex
 
     end # class Header
-  end # module Relation
+  end # class Relation
 end # module ROM

@@ -1,5 +1,5 @@
 module ROM
-  module Relation
+  class Relation
     class Header
 
       # Keeps track of relations in {Relation::Header}
@@ -133,5 +133,5 @@ module ROM
       end
 
     end # class Header
-  end # module Relation
+  end # class Relation
 end # module ROM

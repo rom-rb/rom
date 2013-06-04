@@ -1,5 +1,5 @@
 module ROM
-  module Relation
+  class Relation
 
     # Implements renaming attributes and relations during relational
     # joins. Supports using either {Header::JoinStrategy::NaturalJoin}
@@ -155,5 +155,5 @@ module ROM
 
     end # class Header
 
-  end # module Relation
+  end # class Relation
 end # module ROM

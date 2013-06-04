@@ -1,5 +1,5 @@
 module ROM
-  module Relation
+  class Relation
     class Header
 
       # An attribute in the {Relation::Header}
@@ -59,5 +59,5 @@ module ROM
       end # struct Attribute
 
     end # class Header
-  end # module Relation
+  end # class Relation
 end # module ROM

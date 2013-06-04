@@ -1,5 +1,5 @@
 module ROM
-  module Relation
+  class Relation
     class Graph
       class Connector
 
@@ -100,5 +100,5 @@ module ROM
 
       end # class Connector
     end # class Graph
-  end # module Relation
+  end # class Relation
 end # module ROM
