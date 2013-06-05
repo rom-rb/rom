@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Rom::Session, '#reader(model)' do
+describe ROM::Session, '#reader(model)' do
 
   let(:mapper)   { registry.resolve_model(Spec::DomainObject) }
   let(:registry) { Spec::Registry.new                         }

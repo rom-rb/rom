@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Rom::Session::State, '#delete' do
+describe ROM::Session::State, '#delete' do
   subject { object.delete }
 
   let(:object)        { described_class.new(mapper, domain_object)              }
@@ -11,7 +11,7 @@ describe Rom::Session::State, '#delete' do
   let(:domain_object) { mock('Domain Object')                                   }
 
   let(:operand) do
-    Rom::Session::Operand.new(Rom::Session::State.new(mapper, domain_object))
+    ROM::Session::Operand.new(ROM::Session::State.new(mapper, domain_object))
   end
 
   before do

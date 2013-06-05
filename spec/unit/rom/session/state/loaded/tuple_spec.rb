@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Rom::Session::State::Loaded, '#tuple' do
+describe ROM::Session::State::Loaded, '#tuple' do
   subject { object.tuple }
 
   let(:object) { described_class.new(loader) }

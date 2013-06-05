@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Rom::Session::Operand, '#object' do
+describe ROM::Session::Operand, '#object' do
   subject { object.object }
 
   let(:object) { described_class.new(state) }

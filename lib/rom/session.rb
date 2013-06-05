@@ -1,4 +1,4 @@
-module Rom
+module ROM
 
   # A database session
   class Session

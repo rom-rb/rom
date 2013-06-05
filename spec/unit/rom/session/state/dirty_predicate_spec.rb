@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Rom::Session::State, '#dirty?' do
+describe ROM::Session::State, '#dirty?' do
   subject { object.dirty?(old_state) }
 
   let(:object)        { described_class.new(mapper, domain_object)              }

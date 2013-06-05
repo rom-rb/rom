@@ -119,14 +119,14 @@ class Spec
 
     # Update
     #
-    # @param [Rom::Operand::Update] operand
+    # @param [ROM::Operand::Update] operand
     #
     def update(operand)
       @updates << operand
     end
   end
 
-  class Registry < Rom::Session::Registry
+  class Registry < ROM::Session::Registry
     def initialize
       super(DomainObject => Mapper.new)
     end

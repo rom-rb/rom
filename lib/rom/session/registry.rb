@@ -1,4 +1,4 @@
-module Rom
+module ROM
   class Session
 
     # A registry for mappers session uses to find mappers

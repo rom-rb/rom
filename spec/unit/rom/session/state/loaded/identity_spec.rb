@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Rom::Session::State::Loaded, '#identity' do
+describe ROM::Session::State::Loaded, '#identity' do
   subject { object.identity }
 
   let(:object) { described_class.new(loader) }

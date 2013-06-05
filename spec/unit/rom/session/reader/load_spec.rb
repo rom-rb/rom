@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Rom::Session::Reader, '#load' do
+describe ROM::Session::Reader, '#load' do
   subject { object.load(tuple) }
 
   let(:object) { described_class.new(session, mapper) }

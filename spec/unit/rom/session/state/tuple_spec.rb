@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Rom::Session::State, '#tuple' do
+describe ROM::Session::State, '#tuple' do
   subject { object.tuple }
   
   let(:object)        { described_class.new(mapper, domain_object)             }

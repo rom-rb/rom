@@ -5,7 +5,7 @@ require 'abstract_type'
 require 'concord'
 
 # Namespace module
-module Rom
+module ROM
 
   # Session namespace
   class Session
@@ -17,7 +17,7 @@ module Rom
     class MissingMapperError < RuntimeError; end
 
   end # Session
-end # Rom
+end # ROM
 
 require 'rom/session'
 require 'rom/session/reader'

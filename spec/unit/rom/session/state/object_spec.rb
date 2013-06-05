@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Rom::Session::State, '#object' do
+describe ROM::Session::State, '#object' do
   subject { object.object }
   
   let(:object)        { described_class.new(mapper, domain_object)             }

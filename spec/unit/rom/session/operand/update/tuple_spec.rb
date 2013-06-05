@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Rom::Session::Operand::Update, '#tuple' do
+describe ROM::Session::Operand::Update, '#tuple' do
   subject { object.tuple }
 
   let(:object) { described_class.new(state, old_tuple) }

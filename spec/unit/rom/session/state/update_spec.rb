@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Rom::Session::State, '#update' do
+describe ROM::Session::State, '#update' do
   subject { object.update(old_state) }
 
   let(:object)        { described_class.new(mapper, domain_object)              }
@@ -20,7 +20,7 @@ describe Rom::Session::State, '#update' do
     let(:old_tuple) { mock('Old Tuple') }
 
     let(:operand) do
-      Rom::Session::Operand::Update.new(Rom::Session::State.new(mapper, domain_object), old_tuple)
+      ROM::Session::Operand::Update.new(ROM::Session::State.new(mapper, domain_object), old_tuple)
     end
 
     before do

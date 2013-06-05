@@ -1,4 +1,4 @@
-module Rom
+module ROM
   class Session
 
     # A database operation operand

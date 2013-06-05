@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Rom::Session, '#forget(object)' do
+describe ROM::Session, '#forget(object)' do
   let(:mapper)        { registry.resolve_model(Spec::DomainObject) }
   let(:registry)      { Spec::Registry.new                         }
   let(:domain_object) { Spec::DomainObject.new                     }

@@ -1,4 +1,4 @@
-module Rom
+module ROM
   class Session
     # Object persistance state
     class State

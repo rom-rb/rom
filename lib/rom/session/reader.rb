@@ -1,4 +1,4 @@
-module Rom
+module ROM
   class Session
 
     # A class to read objects via the identity map

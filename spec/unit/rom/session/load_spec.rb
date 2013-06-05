@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Rom::Session, '#load' do
+describe ROM::Session, '#load' do
   subject { object.load(loader) }
 
   let(:object)        { described_class.new(registry)                    }
