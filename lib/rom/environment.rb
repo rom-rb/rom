@@ -52,7 +52,7 @@ module ROM
     # @api private
     def initialize(repositories)
       @repositories = repositories
-      @relations    = Relation::Graph.new
+      @relations    = Graph.new
     end
 
     # The repository with the given +name+
