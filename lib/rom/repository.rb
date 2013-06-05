@@ -95,8 +95,8 @@ module ROM
     # @return [self]
     #
     # @api private
-    def register(name, header)
-      @map[name] = build(name, Axiom::Relation::Header.coerce(header))
+    def register(name, header, keys = {})
+      @map[name] = build(name, Axiom::Relation::Header.coerce(header, keys))
       self
     end
 
