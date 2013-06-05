@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-# SimpleCov MUST be started before require 'ROM'
+# SimpleCov MUST be started before require 'rom-mapper'
 #
 if ENV['COVERAGE'] == 'true'
   require 'simplecov'
