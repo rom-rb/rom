@@ -35,6 +35,7 @@ require 'rom/support/options'
 
 require 'rom/repository'
 require 'rom/environment'
+require 'rom/relation'
 
 require 'rom/header'
 require 'rom/header/attribute_index'
