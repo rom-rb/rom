@@ -9,7 +9,7 @@ describe Header::AttributeIndex, '#rename_attributes' do
   let(:initial) { attribute_alias(:initial_id, :users) }
   let(:current) { attribute_alias(:current_id, :users) }
 
-  let(:strategy_class) { mock }
+  let(:strategy_class) { Class.new }
 
   context "when the field to rename is indexed" do
     let(:aliases) { { :current_id => renamed_current_id } }
@@ -22,7 +22,7 @@ describe Header::AttributeIndex, '#rename_attributes' do
   end
 
   context "when the field to rename is not indexed" do
-    let(:aliases) { { mock => :current_id } }
+    let(:aliases) { { :not_here => :current_id } }
 
     it { should eql(described_class.new(entries, strategy_class)) }
   end

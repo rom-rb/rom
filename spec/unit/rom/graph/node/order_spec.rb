@@ -4,13 +4,14 @@ describe Graph::Node, '#order' do
   subject { object.order(*names) }
 
   let(:object)    { described_class.new(:users, relation) }
-  let(:relation)  { mock('relation') }
   let(:sorted)    { mock('sorted') }
   let(:names)     { [ :id, :age, :name ] }
   let(:evaluator) { mock('evaluator') }
 
+  fake(:relation)
+
   before do
-    relation.should_receive(:sort_by).and_yield(evaluator).and_return(sorted)
+    pending 'Relation#order is not implemented yet'
     names.each { |name| evaluator.should_receive(name).and_return(name) }
   end
 

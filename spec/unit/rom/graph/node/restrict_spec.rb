@@ -4,13 +4,14 @@ describe Graph::Node, '#restrict' do
   subject { object.restrict(query, &block) }
 
   let(:object)      { described_class.new(:users, relation) }
-  let(:relation)    { mock('relation') }
   let(:restriction) { mock('restriction') }
   let(:query)       { {} }
   let(:block)       { Proc.new {} }
 
+  fake(:relation)
+
   before do
-    relation.should_receive(:restrict).with(query, &block).and_return(restriction)
+    stub(relation).restrict(query) { restriction }
   end
 
   it { should be_instance_of(described_class) }

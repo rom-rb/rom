@@ -9,6 +9,7 @@ describe Graph::Node, '#sort_by' do
   let(:block)    { Proc.new {} }
 
   before do
+    pending 'Relation#sort_by is not implemented yet'
     relation.should_receive(:sort_by).and_return(sorted)
   end
 

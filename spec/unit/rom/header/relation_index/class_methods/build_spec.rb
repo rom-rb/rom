@@ -9,7 +9,7 @@ describe Header::RelationIndex, '.build' do
 
   let(:relation_name)   { :users }
   let(:attribute_names) { [ :id ] }
-  let(:strategy_class)  { mock }
+  let(:strategy_class)  { Class.new }
 
   it { should eql(described_class.new({ :users => 1 })) }
 end

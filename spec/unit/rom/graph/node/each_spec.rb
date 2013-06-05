@@ -3,7 +3,8 @@ require 'spec_helper'
 describe Graph::Node, '#each' do
   let(:object)   { described_class.new(name, relation) }
   let(:name)     { :users }
-  let(:relation) { mock('relation') }
+
+  fake(:relation)
 
   context "with a block" do
     subject { object.each(&block) }
@@ -11,8 +12,8 @@ describe Graph::Node, '#each' do
     let(:block) { Proc.new {} }
 
     it 'delegates to relation' do
-      relation.should_receive(:each).with(&block)
       subject
+      relation.should have_received.each(&block)
     end
   end
 

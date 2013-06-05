@@ -18,6 +18,10 @@ describe Graph, '#edge_for' do
   let(:right_header)   { mock('right_header', :join => {}, :aliases => {}) }
   let(:right_relation) { mock('right_relation', :rename => mock) }
 
+  before do
+    pending 'no relationships yet'
+  end
+
   before { object.add_edge(edge) }
 
   it { should be(edge) }

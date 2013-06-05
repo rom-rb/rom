@@ -3,10 +3,9 @@ require 'spec_helper'
 describe ROM::Utils, '.extract_options' do
   subject { described_class.extract_options(value) }
 
-
   context "when options responds to :to_hash" do
     let(:value)        { [ 'foo', options ] }
-    let(:options)      { mock('options', :to_hash => options_hash) }
+    let(:options)      { Hash[options_hash] }
     let(:options_hash) { { :a => 1, :b => 2 } }
 
     it { should     eql(options_hash) }

@@ -29,4 +29,14 @@ if ENV['COVERAGE'] == 'true'
 
 end
 
+class Mapper
+  def load(tuple)
+    tuple
+  end
+
+  def dump(object)
+    object.to_h
+  end
+end
+
 require 'shared_helper' # requires ROM

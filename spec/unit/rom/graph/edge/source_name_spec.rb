@@ -15,5 +15,9 @@ describe Graph::Edge, '#source_name' do
   let(:right)           { mock('orders', :name => target_name, :header => mock) }
   let(:target_name)     { mock('target_name') }
 
+  before do
+    pending 'no relationships yet'
+  end
+
   it { should be(source_name) }
 end

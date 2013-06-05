@@ -8,7 +8,7 @@ describe Header::AttributeIndex, '#attribute?' do
   let(:entries)        { { initial => current } }
   let(:initial)        { attribute_alias(:id, :users) }
   let(:current)        { attribute_alias(:id, :users) }
-  let(:strategy_class) { mock }
+  let(:strategy_class) { Class.new }
 
   context "when the requested name is present" do
     let(:name) { :id }
@@ -17,7 +17,7 @@ describe Header::AttributeIndex, '#attribute?' do
   end
 
   context "when the requested name is not present" do
-    let(:name) { mock }
+    let(:name) { :not_here }
 
     it { should be(false) }
   end

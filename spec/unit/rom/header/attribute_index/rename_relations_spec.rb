@@ -9,7 +9,7 @@ describe Header::AttributeIndex, '#rename_relations' do
   let(:initial) { attribute_alias(:initial_id, :users) }
   let(:current) { attribute_alias(:current_id, :users) }
 
-  let(:strategy_class) { mock }
+  let(:strategy_class) { Class.new }
 
   context "when the relation to rename is indexed" do
     let(:aliases) { { :users => :people } }
@@ -22,7 +22,7 @@ describe Header::AttributeIndex, '#rename_relations' do
   end
 
   context "when the relation to rename is not indexed" do
-    let(:aliases) { { mock => :people } }
+    let(:aliases) { { :not_here => :people } }
 
     it { should eql(described_class.new(entries, strategy_class)) }
   end

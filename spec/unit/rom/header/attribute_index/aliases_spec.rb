@@ -8,7 +8,7 @@ describe Header::AttributeIndex, '#aliases' do
   let(:entries)         { { initial       => current } }
   let(:initial)         { attribute_alias(:initial_id, :users) }
   let(:current)         { attribute_alias(:current_id, :users) }
-  let(:strategy_class)  { mock }
+  let(:strategy_class) { Class.new }
 
   context "when self.eql(other)" do
     let(:other) { object }

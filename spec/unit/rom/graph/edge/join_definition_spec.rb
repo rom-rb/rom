@@ -14,5 +14,9 @@ describe Graph::Edge, '#join_definition' do
   let(:source_header)   { mock('source_header', :join => mock) }
   let(:right)           { mock('orders', :header => mock) }
 
+  before do
+    pending 'no relationships yet'
+  end
+
   it { should be(join_definition) }
 end
