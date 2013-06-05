@@ -31,11 +31,11 @@ end
 
 class Mapper
   def load(tuple)
-    tuple
+    Hash[tuple.header.map { |attribute| [attribute.name, tuple[attribute]] }]
   end
 
   def dump(object)
-    object.to_h
+    object
   end
 end
 
