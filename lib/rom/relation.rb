@@ -1,26 +1,24 @@
 module ROM
 
-  # Enhanced ROM relation wrapping axiom relation and using injected mapper to
+  # Enhanced ROM relation wrapping graph nodes and using injected mapper to
   # load/dump tuples/objects
   #
   class Relation
     include Enumerable
 
-    attr_reader :axiom_relation, :mapper
+    attr_reader :relation_node, :mapper
 
-    def initialize(axiom_relation, mapper)
-      @axiom_relation = axiom_relation
-      @mapper         = mapper
+    alias_method :all, :to_a
+
+    def initialize(relation_node, mapper)
+      @relation_node = relation_node
+      @mapper        = mapper
     end
 
     def each(&block)
       return to_enum unless block_given?
-      axiom_relation.each(&block)
+      relation_node.each { |tuple| yield(mapper.load(tuple)) }
       self
-    end
-
-    def all
-      axiom_relation.to_a.map { |tuple| mapper.load(tuple) }
     end
 
     def restrict(query, &block)

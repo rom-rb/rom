@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 describe Relation, '#all' do
-  subject(:relation) { described_class.new(axiom_relation, mapper) }
+  subject(:relation) { described_class.new(relation_node, mapper) }
 
-  let(:axiom_relation) { [ 1, 2 ] }
+  let(:relation_node) { [ 1, 2 ] }
   fake(:mapper)
 
   before do
