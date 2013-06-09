@@ -7,6 +7,10 @@ module SpecHelper
     end
   end
 
+  def mock_model(attributes)
+    OpenStruct.new(attributes)
+  end
+
   def mock_relation(name, header = [], tuples = Axiom::Relation::Empty::ZERO_TUPLE)
     Axiom::Relation::Base.new(name, header, tuples)
   end

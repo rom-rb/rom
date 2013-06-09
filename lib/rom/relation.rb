@@ -21,21 +21,22 @@ module ROM
       self
     end
 
-    def insert(tuples)
-      new(axiom_relation.insert(tuples))
+    def insert(object)
+      new(axiom_relation.insert(mapper.dump(object)))
     end
     alias_method :<<, :insert
 
-    def update(old_tuples, new_tuples)
-      new(axiom_relation.delete(old_tuples).insert(new_tuples))
+    def update(object)
+      tuple = mapper.dump(object)
+      new(axiom_relation.delete(tuple).insert(tuple))
     end
 
-    def delete(tuples)
-      new(axiom_relation.delete(tuples))
+    def delete(object)
+      new(axiom_relation.delete(mapper.dump(object)))
     end
 
-    def replace(tuples)
-      new(axiom_relation.replace(tuples))
+    def replace(objects)
+      new(axiom_relation.replace(objects.map { |object| mapper.dump(object).flatten }))
     end
 
     def restrict(*args, &block)

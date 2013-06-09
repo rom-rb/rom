@@ -1,12 +1,13 @@
 require 'spec_helper'
 
 describe Relation, '#update' do
-  subject(:relation) { described_class.new(axiom_relation, mapper) }
+  subject(:relation) { described_class.new(users, mapper) }
 
-  let(:axiom_relation) { Axiom::Relation.new([[ :name, String ]], [[ 'John' ]]) }
-  let(:mapper)         { Mapper.new }
+  let(:users)  { Axiom::Relation.new([[ :name, String ]], [[ 'John' ]]) }
+  let(:user)   { mock_model(name: 'John') }
+  let(:mapper) { Mapper.new(users.header) }
 
   it 'updates old tuples with new ones' do
-    expect(relation.update([['John']], [['Jane']]).all).to eql([{ :name => 'Jane' }])
+    expect(relation.update(user).all).to eq([ user ])
   end
 end
