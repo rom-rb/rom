@@ -3,7 +3,7 @@ module ROM
   # The environment used to build and finalize mappers and their relations
   #
   class Environment
-    include Equalizer.new(:repositories, :relations)
+    include Concord.new(:repositories)
 
     # Coerce a repository config hash into an environment instance
     #
@@ -24,35 +24,6 @@ module ROM
       new(config.each_with_object({}) { |(name, uri), hash|
         hash[name.to_sym] = Repository.coerce(name, Addressable::URI.parse(uri))
       })
-    end
-
-    # The relations registered with this environment
-    #
-    # @return [Relation::Graph]
-    #
-    # @api private
-    attr_reader :relations
-
-    # The repositories setup with this environment
-    #
-    # @return [Hash<Symbol, Repository>]
-    #
-    # @api private
-    attr_reader :repositories
-
-    protected :repositories
-
-    # Initialize a new instance
-    #
-    # @param [Hash<Symbol, Repository>] repositories
-    #   the repository configuration for this environment
-    #
-    # @return [undefined]
-    #
-    # @api private
-    def initialize(repositories)
-      @repositories = repositories
-      @relations    = Graph.new
     end
 
     # The repository with the given +name+

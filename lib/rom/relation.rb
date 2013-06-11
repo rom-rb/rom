@@ -4,16 +4,9 @@ module ROM
   # load/dump tuples/objects
   #
   class Relation
-    include Enumerable
-
-    attr_reader :relation, :mapper
+    include Enumerable, Concord.new(:relation, :mapper)
 
     alias_method :all, :to_a
-
-    def initialize(relation, mapper)
-      @relation = relation
-      @mapper   = mapper
-    end
 
     def each(&block)
       return to_enum unless block_given?
