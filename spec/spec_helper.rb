@@ -29,24 +29,7 @@ if ENV['COVERAGE'] == 'true'
 
 end
 
-class Mapper
-
-  def initialize(header)
-    @header = header
-  end
-
-  def load(tuple)
-    OpenStruct.new(
-      Hash[tuple.header.map { |attribute| [attribute.name, tuple[attribute]] }]
-    )
-  end
-
-  def dump(object)
-    @header.each_with_object([]) { |attribute, tuple|
-      tuple << [ object.send(attribute.name) ]
-    }
-  end
-
-end
-
 require 'shared_helper' # requires ROM
+require 'rom-mapper'
+
+include ROM
