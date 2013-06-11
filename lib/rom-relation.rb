@@ -31,7 +31,6 @@ module ROM
 
 end # module ROM
 
-require 'rom/utils'
 require 'rom/support/options'
 
 require 'rom/repository'
