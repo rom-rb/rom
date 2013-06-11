@@ -3,8 +3,7 @@ module ROM
   # The environment used to build and finalize mappers and their relations
   #
   class Environment
-
-    include Equalizer.new(:repositories, :registry, :relations)
+    include Equalizer.new(:repositories, :relations)
 
     # Coerce a repository config hash into an environment instance
     #
@@ -27,20 +26,6 @@ module ROM
       })
     end
 
-    # The mappers built with this instance
-    #
-    # @return [Array<Mapper>]
-    #
-    # @api private
-    attr_reader :mappers
-
-    # The mapper registry used by this instance
-    #
-    # @return [Mapper::Registry]
-    #
-    # @api private
-    attr_reader :registry
-
     # The relations registered with this environment
     #
     # @return [Relation::Graph]
@@ -57,7 +42,6 @@ module ROM
 
     protected :repositories
 
-
     # Initialize a new instance
     #
     # @param [Hash<Symbol, Repository>] repositories
@@ -68,10 +52,7 @@ module ROM
     # @api private
     def initialize(repositories)
       @repositories = repositories
-      @mappers      = []
-      @registry     = Mapper::Registry.new
-      @relations    = Relation::Graph.new
-      @finalized    = false
+      @relations    = Graph.new
     end
 
     # The repository with the given +name+
@@ -83,95 +64,13 @@ module ROM
       repositories[name]
     end
 
-    # Return the mapper instance for the given model class
-    #
-    # @example
-    #
-    #   class User
-    #     include ROM::Model
-    #
-    #     attribute :id,   Integer
-    #     attribute :name, String
-    #   end
-    #
-    #   env = ROM::Environment.new
-    #   env.setup(:default, :uri => 'postgres://localhost/test')
-    #   env.build(User, :default)
-    #   env[User] # => the user mapper
-    #
-    # @param [Class] model
-    #   a domain model class
-    #
-    # @return [Mapper]
-    #
-    # @api public
-    def [](model)
-      registry[model]
-    end
-
-    # Generates mappers class
-    #
-    # @see Mapper::Builder::Class.create
-    #
-    # @example
-    #
-    #   class User
-    #     include ROM::Model
-    #
-    #     attribute :id,   Integer
-    #     attribute :name, String
-    #   end
-    #
-    #   env = ROM::Environment.new
-    #   env.setup(:default, :uri => 'postgres://localhost/test')
-    #   env.build(User, :default) do
-    #     key :id
-    #   end
-    #
-    # @param [Model, Class(.name, .attribute_set)] model
-    #   the model used by the generated mapper
-    #
-    # @param [Symbol] repository
-    #   the repository name to use for the generated mapper
-    #
-    # @param [Proc, nil] &block
-    #   a block to be class_eval'ed in the context of the generated mapper
-    #
-    # @return [Relation::Mapper]
-    #
-    # @api public
-    def build(model, repository, &block)
-      mapper = Mapper::Builder.create(model, repository, &block)
-      mappers << mapper
-      mapper
-    end
-
     # Finalize the environment after all mappers were defined
-    #
-    # @see Finalizer.call
-    #
-    # @example
-    #
-    #   class User
-    #     include ROM::Model
-    #
-    #     attribute :id,   Integer
-    #     attribute :name, String
-    #   end
-    #
-    #   env = ROM::Environment.new
-    #   env.setup(:default, :uri => 'postgres://localhost/test')
-    #   env.build(User, :default) do
-    #     key :id
-    #   end
-    #   env.finalize
     #
     # @return [self]
     #
     # @api public
     def finalize
       return self if @finalized
-      Finalizer.call(self)
       @finalized = true
       self
     end

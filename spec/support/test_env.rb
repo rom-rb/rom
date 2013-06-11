@@ -6,14 +6,10 @@ class TestEnv < ROM::Environment
   end
 
   def reset
-    @mappers   = []
-    @registry  = Mapper::Registry.new
     @relations = Relation::Graph.new
     @finalized = false
 
     remove_constants
-    clear_mappers
-    clear_models
   end
 
   def remove_constants
@@ -22,37 +18,6 @@ class TestEnv < ROM::Environment
     end
     reset_constants
     self
-  end
-
-  def clear_mappers
-    mapper_classes.each do |klass|
-      name = klass.name
-
-      const, parent =
-        if name =~ /::/
-          [ name.split('::').last, klass.model ]
-        else
-          [ name, Object ]
-        end
-
-      next if const.nil? || const == ''
-
-      if parent.const_defined?(const)
-        parent.send(:remove_const, const) rescue nil
-      end
-    end
-
-    [ Mapper, Relation::Mapper ].each do |klass|
-      klass.instance_variable_set(:@descendants, [])
-    end
-  end
-
-  def clear_models
-    model_classes.each do |model|
-      next if model.name.nil? || model.name == ''
-      remove_constant(model.name) if model.name && Object.const_defined?(model.name)
-    end
-    Model.instance_variable_set(:"@descendants", [])
   end
 
   def register_constant(name)
@@ -71,14 +36,6 @@ class TestEnv < ROM::Environment
 
   def reset_constants
     @constants = Set.new
-  end
-
-  def model_classes
-    mappers.map(&:model) + Model.descendants
-  end
-
-  def mapper_classes
-    [ Mapper.descendants + Relation::Mapper.descendants ].flatten.uniq - [ Relation::Mapper ]
   end
 
 end
