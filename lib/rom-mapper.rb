@@ -8,6 +8,10 @@ module ROM
   class Mapper
     include Concord.new(:header, :model)
 
+    def self.new(header, model = OpenStruct)
+      super
+    end
+
     def load(tuple)
       model.new(
         Hash[header.map { |attribute| [ attribute.name, tuple[attribute.name] ] }]
