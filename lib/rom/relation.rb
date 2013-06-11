@@ -36,7 +36,7 @@ module ROM
     end
 
     def replace(objects)
-      new(relation.replace(objects.map { |object| mapper.dump(object).flatten }))
+      new(relation.replace(objects.flat_map(&mapper.method(:dump))))
     end
 
     def restrict(*args, &block)
