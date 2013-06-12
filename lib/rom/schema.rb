@@ -6,7 +6,7 @@ module ROM
     include Adamantium
 
     def self.build(&block)
-      new(Definition.new(&block).relations)
+      new(Definition.relations(&block))
     end
 
     def [](name)
@@ -42,6 +42,10 @@ module ROM
       end # class Relation
 
       include Equalizer.new(:relations)
+
+      def self.relations(&block)
+        new(&block).relations
+      end
 
       attr_reader :relations
 
