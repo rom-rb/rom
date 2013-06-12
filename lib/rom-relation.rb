@@ -34,6 +34,7 @@ end # module ROM
 require 'rom/repository'
 require 'rom/environment'
 require 'rom/relation'
+require 'rom/schema'
 
 require 'rom/header'
 require 'rom/header/attribute_index'
