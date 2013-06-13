@@ -34,6 +34,8 @@ describe 'Defining a ROM::Schema' do
         ROM::Schema.build do
 
           base_relation :people do
+            repository :postgres
+
             attribute :id,   Integer
             attribute :name, String
 
@@ -41,6 +43,8 @@ describe 'Defining a ROM::Schema' do
           end
 
           base_relation :profiles do
+            repository :postgres
+
             attribute :id,        Integer
             attribute :person_id, Integer
             attribute :text,      String

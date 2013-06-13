@@ -17,6 +17,15 @@ module ROM
 
       class Relation
 
+        class Base < self
+
+          attr_reader :repository
+
+          def repository(name)
+            @repository = name
+          end
+        end
+
         include Equalizer.new(:header, :keys)
 
         def initialize(&block)
@@ -55,8 +64,8 @@ module ROM
       end
 
       def base_relation(name, &block)
-        relation = Relation.new(&block)
-        relations[name] = Axiom::Relation::Base.new(name, relation.header)
+        header = Relation::Base.new(&block).header
+        relations[name] = Axiom::Relation::Base.new(name, header)
         self
       end
 
