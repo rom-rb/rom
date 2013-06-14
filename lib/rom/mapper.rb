@@ -5,7 +5,7 @@ module ROM
 
     def load(tuple)
       header.each_with_object(model.allocate) { |attribute, object|
-        object.send("#{attribute.name}=", tuple[attribute.field])
+        object.send("#{attribute.name}=", tuple[attribute.tuple_key])
       }
     end
 

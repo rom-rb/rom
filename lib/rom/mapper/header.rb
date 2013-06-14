@@ -1,19 +1,25 @@
 module ROM
   class Mapper
-    Attribute = Struct.new(:field, :name)
+    class Attribute < Struct.new(:name, :field)
+
+      def self.coerce(field, mapping = nil)
+        new(mapping || field.name, field)
+      end
+
+      def tuple_key
+        field.name
+      end
+
+    end
 
     class AttributeSet
       include Enumerable, Concord.new(:attributes)
 
       def self.coerce(header, mapping = {})
-        merged_mapping = Hash[
-          header.map { |attribute| [ attribute.name, attribute.name ] }
-        ].merge(mapping)
-
-        attributes = merged_mapping.each_with_object({}) { |(field, name), object|
-          object[name] = Attribute.new(field, name)
+        attributes = header.each_with_object({}) { |field, object|
+          attribute = Attribute.coerce(field, mapping[field.name])
+          object[attribute.name] = attribute
         }
-
         new(attributes)
       end
 
@@ -21,10 +27,6 @@ module ROM
         return to_enum unless block_given?
         attributes.each_value(&block)
         self
-      end
-
-      def [](name)
-        attributes[name]
       end
 
     end # AttributeSet
