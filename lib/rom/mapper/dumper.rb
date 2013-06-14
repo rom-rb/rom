@@ -10,6 +10,10 @@ module ROM
         }
       end
 
+      def identity
+        header.keys.map { |key| object.send("#{key.name}") }
+      end
+
     end # Dumper
 
   end # Mapper
