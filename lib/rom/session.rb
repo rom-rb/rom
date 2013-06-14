@@ -2,22 +2,14 @@ module ROM
 
   # A database session
   class Session
-    include Adamantium::Flat, Equalizer.new(:registry)
+    include Adamantium::Flat, Concord.new(:registry, :tracker)
 
-    # Return tracker
-    #
-    # @return [Hash<Object, State>]
-    #   a mapping of identity objects to their current state
-    #
-    # @api private
-    attr_reader :tracker
+    public :tracker
 
-    # Return registry
-    #
-    # @return [Registry]
-    #
     # @api private
-    attr_reader :registry
+    def self.new(registry, tracker = {})
+      super(registry, tracker)
+    end
 
     # Return model specific reader
     #
@@ -186,20 +178,6 @@ module ROM
       end
       store(state)
       self
-    end
-
-  private
-
-    # Initialize session with registry
-    #
-    # @param [Registry] registry
-    #   a registry mapping model classes to mappers
-    #
-    # @return [self]
-    #
-    # @api private
-    def initialize(registry, tracker = {})
-      @registry, @tracker = registry, tracker
     end
 
     # Return old state for state

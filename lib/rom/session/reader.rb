@@ -3,21 +3,9 @@ module ROM
 
     # A class to read objects via the identity map
     class Reader
-      include Equalizer.new(:session, :reader)
+      include Concord.new(:session, :mapper)
 
-      # Return mapper
-      #
-      # @return [Mapper]
-      #
-      # @api private
-      attr_reader :mapper
-
-      # Return session
-      #
-      # @return [Session]
-      #
-      # @api private
-      attr_reader :session
+      public :session, :mapper
 
       # Load object from +tuple+
       #
@@ -29,24 +17,7 @@ module ROM
       #
       # @api private
       def load(tuple)
-        @session.load(mapper.loader(tuple))
-      end
-
-    private
-
-      # Initialize object
-      #
-      # @param [Session] session
-      #   the session instance to use
-      #
-      # @param [Mapper] mapper
-      #   the mapper instance to use
-      #
-      # @return [undefined]
-      #
-      # @api private
-      def initialize(session, mapper)
-        @session, @mapper = session, mapper
+        session.load(mapper.loader(tuple))
       end
 
     end
