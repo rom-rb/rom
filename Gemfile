@@ -5,7 +5,7 @@ gemspec
 gem 'rom-mapper', :path => '.'
 
 group :test do
-  gem 'bogus', '~> 0.0.4'
+  gem 'bogus', '~> 0.1'
   gem 'axiom', '~> 0.1'
 end
 

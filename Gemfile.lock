@@ -39,7 +39,7 @@ GEM
       descendants_tracker (~> 0.0.1)
       equalizer (~> 0.0.5)
     backports (3.3.1)
-    bogus (0.0.4)
+    bogus (0.1.0)
       dependor (>= 0.0.4)
     coderay (1.0.9)
     colorize (0.5.8)
@@ -52,7 +52,7 @@ GEM
       rest-client
       simplecov (>= 0.7)
       thor
-    dependor (0.0.5)
+    dependor (0.0.6)
     descendants_tracker (0.0.1)
     diff-lcs (1.2.4)
     equalizer (0.0.5)
@@ -162,7 +162,7 @@ PLATFORMS
 DEPENDENCIES
   axiom (~> 0.1)
   backports (~> 3.3, >= 3.3.1)
-  bogus (~> 0.0.4)
+  bogus (~> 0.1)
   coveralls (~> 0.6.7)
   devtools!
   flay (~> 2.3.0)
