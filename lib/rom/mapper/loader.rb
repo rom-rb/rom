@@ -10,6 +10,10 @@ module ROM
         }
       end
 
+      def identity
+        header.keys.map { |key| tuple[key.tuple_key] }
+      end
+
     end # AttributeSet
 
   end # Mapper
