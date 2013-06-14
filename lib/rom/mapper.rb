@@ -4,11 +4,11 @@ module ROM
     include Concord.new(:header, :model)
 
     def load(tuple)
-      loader(tuple).call
+      loader(tuple).call.object
     end
 
     def dump(object)
-      dumper(object).call
+      dumper(object).call.tuple
     end
 
     def loader(tuple)

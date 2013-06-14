@@ -4,7 +4,15 @@ module ROM
     class Dumper
       include Concord.new(:header, :model, :object), Adamantium
 
+      Result = Struct.new(:tuple, :identity) { include Adamantium }
+
       def call
+        Result.new(tuple, identity)
+      end
+
+      private
+
+      def tuple
         header.each_with_object([]) { |attribute, tuple|
           tuple << object.send(attribute.name)
         }
