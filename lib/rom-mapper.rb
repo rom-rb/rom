@@ -3,5 +3,5 @@ require 'adamantium'
 require 'equalizer'
 require 'abstract_type'
 
-require 'rom/header'
+require 'rom/mapper/header'
 require 'rom/mapper'
