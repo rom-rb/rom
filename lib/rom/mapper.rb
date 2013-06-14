@@ -4,15 +4,19 @@ module ROM
     include Concord.new(:header, :model)
 
     def load(tuple)
-      header.each_with_object(model.allocate) { |attribute, object|
-        object.send("#{attribute.name}=", tuple[attribute.tuple_key])
-      }
+      loader(tuple).call
     end
 
     def dump(object)
       header.each_with_object([]) { |attribute, tuple|
         tuple << object.send(attribute.name)
       }
+    end
+
+    private
+
+    def loader(tuple)
+      Loader.new(header, model, tuple)
     end
 
   end # Mapper
