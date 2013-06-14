@@ -5,9 +5,13 @@ module ROM
       include Enumerable, Concord.new(:header, :attributes), Adamantium
 
       def self.coerce(attributes, options = {})
-        header     = Axiom::Relation::Header.coerce(attributes)
+        header     = Axiom::Relation::Header.coerce(attributes, :keys => options.fetch(:keys, []))
         attributes = AttributeSet.coerce(header, options.fetch(:map, {}))
         new(header, attributes)
+      end
+
+      def keys
+        attributes.keys
       end
 
       def each(&block)
