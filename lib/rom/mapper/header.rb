@@ -1,6 +1,7 @@
 module ROM
   class Mapper
     class Attribute < Struct.new(:name, :field)
+      include Adamantium, Equalizer.new(:name, :field)
 
       def self.coerce(field, mapping = nil)
         new(mapping || field.name, field)
@@ -13,7 +14,7 @@ module ROM
     end
 
     class AttributeSet
-      include Enumerable, Concord.new(:attributes)
+      include Enumerable, Concord.new(:attributes), Adamantium
 
       def self.coerce(header, mapping = {})
         attributes = header.each_with_object({}) { |field, object|
@@ -32,7 +33,7 @@ module ROM
     end # AttributeSet
 
     class Header
-      include Enumerable, Concord.new(:header, :attributes)
+      include Enumerable, Concord.new(:header, :attributes), Adamantium
 
       def self.coerce(attributes, options = {})
         header     = Axiom::Relation::Header.coerce(attributes)
