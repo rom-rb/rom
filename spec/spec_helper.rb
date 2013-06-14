@@ -35,3 +35,15 @@ RSpec.configure do |config|
 end
 
 include ROM
+
+def mock_model(*attributes)
+  Class.new {
+    include Equalizer.new(*attributes)
+
+    attributes.each { |attribute| attr_accessor attribute }
+
+    def initialize(attrs)
+      attrs.each { |name, value| send("#{name}=", value) }
+    end
+  }
+end
