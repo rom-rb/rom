@@ -4,6 +4,9 @@ require 'equalizer'
 require 'abstract_type'
 require 'concord'
 
+require 'rom-relation'
+require 'rom-mapper'
+
 # Namespace module
 module ROM
 
