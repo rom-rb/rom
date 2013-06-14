@@ -4,7 +4,15 @@ module ROM
     class Loader
       include Concord.new(:header, :model, :tuple), Adamantium
 
+      Result = Struct.new(:object, :identity) { include Adamantium }
+
       def call
+        Result.new(object, identity)
+      end
+
+      private
+
+      def object
         header.each_with_object(model.allocate) { |attribute, object|
           object.send("#{attribute.name}=", tuple[attribute.tuple_key])
         }
