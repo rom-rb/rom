@@ -11,8 +11,6 @@ module ROM
       dumper(object).call
     end
 
-    private
-
     def loader(tuple)
       Loader.new(header, model, tuple)
     end
