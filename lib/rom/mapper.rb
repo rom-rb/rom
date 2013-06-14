@@ -8,15 +8,17 @@ module ROM
     end
 
     def dump(object)
-      header.each_with_object([]) { |attribute, tuple|
-        tuple << object.send(attribute.name)
-      }
+      dumper(object).call
     end
 
     private
 
     def loader(tuple)
       Loader.new(header, model, tuple)
+    end
+
+    def dumper(object)
+      Dumper.new(header, model, object)
     end
 
   end # Mapper
