@@ -4,8 +4,9 @@ describe Relation, '#insert' do
   subject(:relation) { described_class.new(users, mapper) }
 
   let(:users)  { Axiom::Relation.new([[ :name, String ]], [[ 'John' ]]) }
-  let(:user)   { mock_model(name: 'Jane') }
-  let(:mapper) { Mapper.new(users.header) }
+  let(:model)  { mock_model(:name) }
+  let(:user)   { model.new(name: 'John') }
+  let(:mapper) { TestMapper.new(users.header, model) }
 
   it 'inserts dumped object into relation' do
     expect(relation.insert(user).all).to include(user)

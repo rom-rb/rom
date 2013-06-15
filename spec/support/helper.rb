@@ -7,8 +7,16 @@ module SpecHelper
     end
   end
 
-  def mock_model(attributes)
-    OpenStruct.new(attributes)
+  def mock_model(*attributes)
+    Class.new {
+      include Equalizer.new(*attributes)
+
+      attributes.each { |attribute| attr_accessor attribute }
+
+      def initialize(attrs)
+        attrs.each { |name, value| send("#{name}=", value) }
+      end
+    }
   end
 
   def mock_relation(name, header = [], tuples = Axiom::Relation::Empty::ZERO_TUPLE)
