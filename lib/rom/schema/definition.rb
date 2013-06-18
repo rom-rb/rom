@@ -4,20 +4,19 @@ module ROM
     class Definition
       include Equalizer.new(:relations)
 
-      def self.relations(&block)
-        new(&block).relations
-      end
-
       attr_reader :relations
+      attr_reader :repositories
 
       def initialize(&block)
-        @relations = {}
+        @relations    = {}
+        @repositories = {}
         instance_eval(&block) if block
       end
 
       def base_relation(name, &block)
-        header = Relation::Base.new(&block).header
-        relations[name] = Axiom::Relation::Base.new(name, header)
+        base = Relation::Base.new(&block)
+        relations[name] = Axiom::Relation::Base.new(name, base.header)
+        (repositories[base.repository] ||= []) << base
         self
       end
 

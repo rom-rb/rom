@@ -5,10 +5,12 @@ module ROM
 
         class Base < self
 
-          attr_reader :repository
-
-          def repository(name)
-            @repository = name
+          def repository(name = Undefined)
+            if name == Undefined
+              @repository
+            else
+              @repository = name
+            end
           end
 
         end # Base
