@@ -25,8 +25,8 @@ module ROM
           self
         end
 
-      end # class Relation
+      end # Relation
 
-    end # class Definition
-  end # class Schema
-end # module ROM
+    end # Definition
+  end # Schema
+end # ROM

@@ -16,6 +16,6 @@ module ROM
       definition.repositories.each(&block)
     end
 
-  end # class Schema
+  end # Schema
 
-end # module ROM
+end # ROM
