@@ -35,6 +35,11 @@ require 'rom/repository'
 require 'rom/environment'
 require 'rom/relation'
 
+require 'rom/schema'
+require 'rom/schema/definition'
+require 'rom/schema/definition/relation'
+require 'rom/schema/definition/relation/base'
+
 require 'rom/header'
 require 'rom/header/attribute_index'
 require 'rom/header/relation_index'
