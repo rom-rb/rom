@@ -21,7 +21,7 @@ module ROM
         end
 
         def key(*attribute_names)
-          @keys << attribute_names
+          @keys.concat(attribute_names)
           self
         end
 
