@@ -1,21 +1,6 @@
 require 'spec_helper'
 
-shared_examples_for 'a rom schema definition' do
-  specify 'registers the people relation' do
-    expect(schema[:people]).to eql(people)
-  end
-
-  specify 'registers the profiles relation' do
-    expect(schema[:profiles]).to eql(profiles)
-  end
-
-  specify 'registers the people_with_profile relation' do
-    expect(schema[:people_with_profile]).to eql(people_with_profile)
-  end
-end
-
-describe 'Defining a ROM::Schema' do
-
+describe 'Defining a ROM schema' do
   let(:people)              { Axiom::Relation::Base.new(:people, people_header) }
   let(:people_header)       { Axiom::Relation::Header.coerce(people_attributes, :keys => people_keys) }
   let(:people_attributes)   { [ [ :id, Integer ], [ :name, String ] ] }
@@ -28,66 +13,43 @@ describe 'Defining a ROM::Schema' do
 
   let(:people_with_profile) { people.join(profiles.rename(:id => :profile_id, :person_id => :id)) }
 
-  context 'using ROM::Schema.build' do
-    it_behaves_like 'a rom schema definition' do
-      let(:schema) do
-        ROM::Schema.build do
+  let(:schema) do
+    ROM::Schema.build do
+      base_relation :people do
+        repository :postgres
 
-          base_relation :people do
-            repository :postgres
+        attribute :id,   Integer
+        attribute :name, String
 
-            attribute :id,   Integer
-            attribute :name, String
+        key :id
+      end
 
-            key :id
-          end
+      base_relation :profiles do
+        repository :postgres
 
-          base_relation :profiles do
-            repository :postgres
+        attribute :id,        Integer
+        attribute :person_id, Integer
+        attribute :text,      String
 
-            attribute :id,        Integer
-            attribute :person_id, Integer
-            attribute :text,      String
+        key :id
+        key :person_id
+      end
 
-            key :id
-            key :person_id
-          end
-
-          relation :people_with_profile do
-            people.join(profiles.rename(:id => :profile_id, :person_id => :id))
-          end
-        end
+      relation :people_with_profile do
+        people.join(profiles.rename(:id => :profile_id, :person_id => :id))
       end
     end
   end
 
-  context 'using ROM::Schema::Definition' do
-    it_behaves_like 'a rom schema definition' do
-      let(:schema) do
-        definition = ROM::Schema::Definition.new
+  it 'registers the people relation' do
+    expect(schema[:people]).to eql(people)
+  end
 
-        definition.base_relation :people do
-          attribute :id,   Integer
-          attribute :name, String
+  it 'registers the profiles relation' do
+    expect(schema[:profiles]).to eql(profiles)
+  end
 
-          key :id
-        end
-
-        definition.base_relation :profiles do
-          attribute :id,        Integer
-          attribute :person_id, Integer
-          attribute :text,      String
-
-          key :id
-          key :person_id
-        end
-
-        definition.relation :people_with_profile do
-          people.join(profiles.rename(:id => :profile_id, :person_id => :id))
-        end
-
-        ROM::Schema.new(definition.relations)
-      end
-    end
+  it 'registers the people_with_profile relation' do
+    expect(schema[:people_with_profile]).to eql(people_with_profile)
   end
 end
