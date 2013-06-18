@@ -26,6 +26,16 @@ module ROM
       })
     end
 
+    # @api public
+    def load_schema(schema)
+      schema.each do |repository_name, relations|
+        relations.each do |relation|
+          repository(repository_name).register(relation)
+        end
+      end
+      self
+    end
+
     # The repository with the given +name+
     #
     # @return [Repository]
@@ -46,5 +56,5 @@ module ROM
       self
     end
 
-  end # class Environment
-end # module ROM
+  end # Environment
+end # ROM

@@ -14,9 +14,12 @@ module ROM
       end
 
       def base_relation(name, &block)
-        base = Relation::Base.new(&block)
-        relations[name] = Axiom::Relation::Base.new(name, base.header)
-        (repositories[base.repository] ||= []) << base
+        base            = Relation::Base.new(&block)
+        relation        = Axiom::Relation::Base.new(name, base.header)
+        relations[name] = relation
+
+        (repositories[base.repository] ||= []) << relation
+
         self
       end
 

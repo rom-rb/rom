@@ -12,6 +12,10 @@ module ROM
       definition[name]
     end
 
+    def each(&block)
+      definition.repositories.each(&block)
+    end
+
   end # class Schema
 
 end # module ROM

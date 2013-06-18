@@ -78,43 +78,16 @@ module ROM
 
     # Register a relation with this repository
     #
-    # @param [Symbol] name
-    #   the name used to track the relation
-    #
-    # @param [Axiom::Header] header
-    #   the axiom header, or coercible to axiom header
-    #
-    # @example with coercible header
-    #   repo = Repository::InMemory.new
-    #   repo.register(:foo, [[:id, String]])
-    #
-    # @example with instance of axiom header
-    #   repo = Repository::InMemory.new
-    #   repo.register(:foo, Axiom::Header.coerce([[:id, String]]))
+    # @param [Axiom::Relation::Base] relation
     #
     # @return [self]
     #
     # @api private
-    def register(name, header, keys = {})
-      @map[name] = build(name, Axiom::Relation::Header.coerce(header, keys))
+    def register(relation)
+      @map[relation.name.to_sym] = adapter.gateway(relation)
       self
     end
 
-    private
+  end # Repository
 
-    # Build a axiom gateway relation
-    #
-    # @param [Symbol] name
-    #   the relation name
-    #
-    # @param [Axiom::Relation::Header] header
-    #
-    # @return [Axiom::Adapter::Gateway]
-    #
-    # @api private
-    #
-    def build(name, header)
-      adapter.gateway(Axiom::Relation::Base.new(name, header))
-    end
-  end # class Repository
-end # module ROM
+end # ROM
