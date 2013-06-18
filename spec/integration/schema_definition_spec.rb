@@ -46,11 +46,11 @@ describe 'Defining a ROM schema' do
   end
 
   it 'establishes key attributes for people relation' do
-    expect(schema[:people].header.keys.flat_map { |h| h.map(&:name) }).to eq(people_keys)
+    expect(schema[:people].header.keys).to include(*people_keys)
   end
 
   it 'establishes key attributes for profiles relation' do
-    expect(schema[:profiles].header.keys.flat_map { |h| h.map(&:name) }).to eq(profiles_keys)
+    expect(schema[:profiles].header.keys).to include(*profiles_keys)
   end
 
   it 'registers the profiles relation' do
