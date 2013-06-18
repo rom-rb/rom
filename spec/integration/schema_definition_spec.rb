@@ -9,7 +9,7 @@ describe 'Defining a ROM schema' do
   let(:profiles)            { Axiom::Relation::Base.new(:profiles, profiles_header) }
   let(:profiles_header)     { Axiom::Relation::Header.coerce(profiles_attributes, :keys => profiles_keys) }
   let(:profiles_attributes) { [ [ :id, Integer ], [ :person_id, Integer ], [ :text, String ] ] }
-  let(:profiles_keys)       { [ [ :id ], [ :person_id ] ] }
+  let(:profiles_keys)       { [ :id, :person_id ] }
 
   let(:people_with_profile) { people.join(profiles.rename(:id => :profile_id, :person_id => :id)) }
 
@@ -43,6 +43,14 @@ describe 'Defining a ROM schema' do
 
   it 'registers the people relation' do
     expect(schema[:people]).to eql(people)
+  end
+
+  it 'establishes key attributes for people relation' do
+    expect(schema[:people].header.keys.flat_map { |h| h.map(&:name) }).to eq(people_keys)
+  end
+
+  it 'establishes key attributes for profiles relation' do
+    expect(schema[:profiles].header.keys.flat_map { |h| h.map(&:name) }).to eq(profiles_keys)
   end
 
   it 'registers the profiles relation' do
