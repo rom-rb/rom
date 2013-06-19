@@ -2,9 +2,9 @@
 
 This is a meta-project grouping pieces of ROM's default stack:
 
-* [rom-relation](/rom-rb/rom-relation)
-* [rom-mapper](/rom-rb/rom-mapper)
-* [rom-session](/rom-rb/rom-session)
+* [rom-relation](https://github.com/rom-rb/rom-relation)
+* [rom-mapper](https://github.com/rom-rb/rom-mapper)
+* [rom-session](https://github.com/rom-rb/rom-session)
 
 # Installation
 
