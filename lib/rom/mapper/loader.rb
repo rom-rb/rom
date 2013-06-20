@@ -2,19 +2,17 @@ module ROM
   class Mapper
 
     class Loader
-      include Concord.new(:header, :model, :tuple), Adamantium::Flat
+      include Concord.new(:header, :model), Adamantium
 
-      def object
+      def call(tuple)
         header.each_with_object(model.allocate) { |attribute, object|
           object.send("#{attribute.name}=", tuple[attribute.tuple_key])
         }
       end
-      memoize :object, :freezer => :noop
 
-      def identity
+      def identity(tuple)
         header.keys.map { |key| tuple[key.tuple_key] }
       end
-      memoize :identity, :freezer => :noop
 
     end # AttributeSet
 

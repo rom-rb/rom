@@ -1,15 +1,19 @@
 require 'spec_helper'
 
 describe Mapper, '#dump' do
-  subject(:mapper) { described_class.new(header, model) }
+  subject(:mapper) { described_class.new(loader, dumper) }
 
-  let(:header) { Mapper::Header.coerce([[:uid, Integer ], [:name, String]], :map => { :uid => :id }) }
-  let(:tuple)  { Hash[uid: 1, name: 'Jane'] }
+  let(:loader) { fake(:loader) { Mapper::Loader } }
+  let(:dumper) { fake(:dumper) { Mapper::Dumper } }
   let(:data)   { [1, 'Jane'] }
   let(:object) { model.new(id: 1, name: 'Jane') }
   let(:model)  { mock_model(:id, :name) }
 
-  it 'dumps the object into tuple data' do
-    expect(mapper.dump(object)).to eq(data)
+  it 'dumps the object into data tuple' do
+    stub(dumper).call(object) { data }
+
+    expect(mapper.dump(object)).to be(data)
+
+    dumper.should have_received.call(object)
   end
 end
