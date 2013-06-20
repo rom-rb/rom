@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Session::Registry do
-  subject(:registry) { described_class.new(relations, im) }
+  subject(:registry) { described_class.new(relations, tracker) }
 
   let(:relations) {
     { :users => users }
@@ -13,8 +13,8 @@ describe Session::Registry do
     Relation.new(relation, mapper)
   }
 
-  let(:im) {
-    Hash.new
+  let(:tracker) {
+    Session::Tracker.new
   }
 
   describe '#[]' do

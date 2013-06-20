@@ -5,14 +5,14 @@ module ROM
       attr_reader :relations
       private :relations
 
-      attr_reader :im
-      private :im
+      attr_reader :tracker
+      private :tracker
 
       attr_reader :memory
       private :memory
 
-      def initialize(relations, im)
-        @relations, @im = relations, im
+      def initialize(relations, tracker)
+        @relations, @tracker = relations, tracker
         @memory = {}
       end
 
@@ -24,7 +24,7 @@ module ROM
         relation = relations[name]
         loader   = relation.mapper.loader
         dumper   = relation.mapper.dumper
-        mapper   = Session::Mapper.new(loader, dumper, im)
+        mapper   = Session::Mapper.new(loader, dumper, tracker.fetch(name))
 
         memory[name] = relation.inject_mapper(mapper)
       end
