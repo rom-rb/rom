@@ -2,13 +2,18 @@ module ROM
   class Session
 
     class Registry
-      include Concord.new(:relations, :im)
+      attr_reader :relations
+      private :relations
+
+      attr_reader :im
+      private :im
 
       attr_reader :memory
       private :memory
 
-      def memory
-        @memory ||= {}
+      def initialize(relations, im)
+        @relations, @im = relations, im
+        @memory = {}
       end
 
       def [](name)
