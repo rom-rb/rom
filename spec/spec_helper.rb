@@ -49,6 +49,11 @@ end
 
 class Mapper
   public :loader, :dumper
+
+  def self.build(attributes, model)
+    header = Mapper::Header.coerce(attributes)
+    new(Mapper::Loader.new(header, model), Mapper::Dumper.new(header, model))
+  end
 end
 
 class Relation
