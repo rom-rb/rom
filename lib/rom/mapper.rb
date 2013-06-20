@@ -1,22 +1,14 @@
 module ROM
 
   class Mapper
-    include Concord.new(:header, :model)
+    include Concord.new(:loader, :dumper)
 
     def load(tuple)
-      loader(tuple).object
+      loader.call(tuple)
     end
 
     def dump(object)
-      dumper(object).tuple
-    end
-
-    def loader(tuple)
-      Loader.new(header, model, tuple)
-    end
-
-    def dumper(object)
-      Dumper.new(header, model, object)
+      dumper.call(object)
     end
 
   end # Mapper

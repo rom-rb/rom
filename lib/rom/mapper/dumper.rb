@@ -2,19 +2,17 @@ module ROM
   class Mapper
 
     class Dumper
-      include Concord.new(:header, :model, :object), Adamantium::Flat
+      include Concord.new(:header, :model), Adamantium
 
-      def tuple
+      def call(object)
         header.each_with_object([]) { |attribute, tuple|
           tuple << object.send(attribute.name)
         }
       end
-      memoize :tuple, :freezer => :noop
 
-      def identity
+      def identity(object)
         header.keys.map { |key| object.send("#{key.name}") }
       end
-      memoize :identity, :freezer => :noop
 
     end # Dumper
 
