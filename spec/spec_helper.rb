@@ -19,7 +19,7 @@ def mock_model(*attributes)
 
     attributes.each { |attribute| attr_accessor attribute }
 
-    def initialize(attrs)
+    def initialize(attrs = {})
       attrs.each { |name, value| send("#{name}=", value) }
     end
   }
@@ -50,8 +50,7 @@ end
 class Mapper
   public :loader, :dumper
 
-  def self.build(attributes, model)
-    header = Mapper::Header.coerce(attributes)
+  def self.build(header, model)
     new(Mapper::Loader.new(header, model), Mapper::Dumper.new(header, model))
   end
 end

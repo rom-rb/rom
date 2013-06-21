@@ -4,7 +4,6 @@ module ROM
     # TODO: consider using a decorator instead
     class Mapper < ROM::Mapper
       attr_reader :im
-      private :im
 
       def initialize(loader, dumper, im)
         super(loader, dumper)
@@ -13,7 +12,7 @@ module ROM
 
       def load(tuple)
         identity = loader.identity(tuple)
-        im.fetch(identity) { im[identity] = super }
+        im.fetch(identity) { im.store(identity, super, tuple)[identity] }
       end
 
     end # Mapper

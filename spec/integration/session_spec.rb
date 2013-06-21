@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'Session' do
-  let(:mapper) { Mapper.build([[:id, Integer], [:name, String]], model) }
+  let(:mapper) { Mapper.build(Mapper::Header.coerce([[:id, Integer], [:name, String]], :keys => [:id]), model) }
   let(:model)  { mock_model(:id, :name) }
 
   specify 'fetching an object from a relation' do
@@ -11,7 +11,7 @@ describe 'Session' do
 
     relation = Relation.new(users, mapper)
 
-    session_registry = Session::Registry.new({ :users => relation }, Session::Tracker.new)
+    session_registry = Session::Registry.new(Session::Tracker.new(:users => relation))
 
     # fetch user for the first time
     jane1 = session_registry[:users].restrict { |r| r.name.eq('Jane') }.all.first

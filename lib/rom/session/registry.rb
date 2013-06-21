@@ -2,18 +2,19 @@ module ROM
   class Session
 
     class Registry
-      attr_reader :relations
-      private :relations
-
       attr_reader :tracker
       private :tracker
 
       attr_reader :memory
       private :memory
 
-      def initialize(relations, tracker)
-        @relations, @tracker = relations, tracker
-        @memory = {}
+      def initialize(tracker)
+        @tracker = tracker
+        @memory  = {}
+      end
+
+      def relations
+        tracker.relations
       end
 
       def [](name)
@@ -21,12 +22,7 @@ module ROM
       end
 
       def build_relation(name)
-        relation = relations[name]
-        loader   = relation.mapper.loader
-        dumper   = relation.mapper.dumper
-        mapper   = Session::Mapper.new(loader, dumper, tracker.fetch(name))
-
-        memory[name] = relation.inject_mapper(mapper)
+        memory[name] = Session::Relation.build(relations[name], tracker, tracker.identity_map(name))
       end
 
     end # Registry

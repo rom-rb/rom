@@ -10,7 +10,11 @@ describe Session::Mapper, '#load' do
   let(:model)  { mock_model(:id, :name) }
 
   context 'when IM includes the loaded object' do
-    let(:im) { Hash[1 => object] }
+    let(:im) { Session::IdentityMap.new }
+
+    before do
+      im.store(1, object, tuple)
+    end
 
     it 'returns the already loaded object' do
       stub(loader).identity(tuple) { 1 }
@@ -22,7 +26,7 @@ describe Session::Mapper, '#load' do
   end
 
   context 'when IM does not include the loaded object' do
-    let(:im) { Hash.new }
+    let(:im) { Session::IdentityMap.new }
 
     it 'returns a newly loaded object' do
       stub(loader).identity(tuple) { 1 }
