@@ -31,4 +31,14 @@ describe 'Session' do
       expect(users).not_to include(jane)
     end
   end
+
+  specify 'saving an object to a relation' do
+    Session.start(:users => relation) do |env|
+      piotr = model.new(:id => 3, :name => 'Piotr')
+
+      users = env[:users].track(piotr).save(piotr).state(piotr).commit.all
+
+      expect(users).to include(piotr)
+    end
+  end
 end

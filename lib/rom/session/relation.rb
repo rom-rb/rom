@@ -38,7 +38,7 @@ module ROM
       end
 
       def save(object)
-        tracker.queue(state(object).save)
+        tracker.queue(state(object).save(relation))
         self
       end
 

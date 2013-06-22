@@ -17,6 +17,14 @@ module ROM
         end
       end
 
+      class Created < self
+        include Concord::Public.new(:object, :relation)
+
+        def commit
+          relation.insert(object)
+        end
+      end
+
       def delete(relation)
         if persisted?
           Deleted.new(object, relation)
@@ -25,11 +33,11 @@ module ROM
         end
       end
 
-      def save
+      def save(relation)
         if persisted?
           Updated.new(object, tuple)
         elsif transient?
-          Created.new(object)
+          Created.new(object, relation)
         else
           raise "[State#save] unsupported state change from #{self.class}"
         end
