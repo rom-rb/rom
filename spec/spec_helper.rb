@@ -47,7 +47,7 @@ class ROM::Environment
   end
 end
 
-class Mapper
+class ROM::Mapper
   public :loader, :dumper
 
   def self.build(header, model)
@@ -55,7 +55,7 @@ class Mapper
   end
 end
 
-class Relation
+class ROM::Relation
   public :mapper
 
   def inject_mapper(new_mapper)
