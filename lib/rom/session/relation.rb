@@ -2,10 +2,14 @@ module ROM
   class Session
 
     class Relation < ROM::Relation
-      include Concord.new(:relation, :tracker)
+      include Proxy
 
-      DECORATED_CLASS = superclass
-      undef_method *DECORATED_CLASS.public_instance_methods(false).map(&:to_s)
+      attr_reader :relation, :tracker
+      protected :relation, :tracker
+
+      def initialize(relation, tracker)
+        @relation, @tracker = relation, tracker
+      end
 
       def self.build(relation, tracker, identity_map)
         loader = relation.mapper.loader
@@ -56,28 +60,6 @@ module ROM
 
       def dumper
         mapper.dumper
-      end
-
-      private
-
-      def method_missing(method, *args, &block)
-        forwardable?(method) ? forward(method, *args, &block) : super
-      end
-
-      def forwardable?(method)
-        relation.respond_to?(method)
-      end
-
-      def forward(*args, &block)
-        response = relation.public_send(*args, &block)
-
-        if response.equal?(relation)
-          self
-        elsif response.kind_of?(DECORATED_CLASS)
-          self.class.new(response, tracker)
-        else
-          response
-        end
       end
 
     end # Relation
