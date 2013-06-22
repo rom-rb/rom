@@ -2,11 +2,13 @@ module ROM
   class Session
 
     class State
+      include Concord::Public.new(:object)
+
       Persisted = Class.new(self) { include Concord::Public.new(:object, :tuple) }
-      Updated   = Class.new(self) { include Concord::Public.new(:object, :tuple) }
-      Created   = Class.new(self) { include Concord::Public.new(:object) }
-      Deleted   = Class.new(self) { include Concord::Public.new(:object) }
-      Transient = Class.new(self) { include Concord::Public.new(:object) }
+      Updated   = Class.new(Persisted)
+      Deleted   = Class.new(self)
+      Created   = Class.new(self)
+      Transient = Class.new(self)
 
       def delete
         if persisted?
