@@ -11,17 +11,17 @@ module ROM
       end
 
       def [](object)
-        @objects[object]
+        @objects[object.object_id]
       end
 
       def fetch(object)
-        @objects.fetch(object) {
+        @objects.fetch(object.object_id) {
           raise "tracker doesn't include #{object.inspect}"
         }
       end
 
       def include?(object)
-        @objects.key?(object)
+        @objects.key?(object.object_id)
       end
 
       def queue(state)
@@ -34,7 +34,7 @@ module ROM
       end
 
       def store(object, state)
-        @objects[object] = state
+        @objects[object.object_id] = state
       end
 
       def identity_map(relation_name)

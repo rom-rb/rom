@@ -5,8 +5,6 @@ module ROM
       include Concord::Public.new(:object)
 
       Persisted = Class.new(self) { include Concord::Public.new(:object, :tuple) }
-      Updated   = Class.new(Persisted)
-      Created   = Class.new(self)
       Transient = Class.new(self)
 
       class Deleted < self
@@ -25,6 +23,14 @@ module ROM
         end
       end
 
+      class Updated < self
+        include Concord::Public.new(:object, :relation)
+
+        def commit
+          relation.update(object)
+        end
+      end
+
       def delete(relation)
         if persisted?
           Deleted.new(object, relation)
@@ -35,7 +41,7 @@ module ROM
 
       def save(relation)
         if persisted?
-          Updated.new(object, tuple)
+          Updated.new(object, relation)
         elsif transient?
           Created.new(object, relation)
         else

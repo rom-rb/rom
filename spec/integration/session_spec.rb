@@ -41,4 +41,18 @@ describe 'Session' do
       expect(users).to include(piotr)
     end
   end
+
+  specify 'updating an object in a relation' do
+    Session.start(:users => relation) do |env|
+      jane = env[:users].restrict { |r| r.name.eq('Jane') }.all.first
+      jane.name = 'Jane Doe'
+
+      users = env[:users].save(jane).state(jane).commit.all
+
+      # FIXME: ROM::Relation#update doesn't work like expected
+      #expect(users.size).to be(2)
+
+      expect(users.last).to eql(jane)
+    end
+  end
 end

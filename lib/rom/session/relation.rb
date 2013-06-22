@@ -5,7 +5,7 @@ module ROM
       include Proxy
 
       attr_reader :relation, :tracker
-      protected :relation, :tracker
+      public :relation, :tracker
 
       def initialize(relation, tracker)
         @relation, @tracker = relation, tracker
