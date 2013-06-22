@@ -6,11 +6,12 @@ module ROM
 
       Persisted = Class.new(self) { include Concord::Public.new(:object, :tuple) }
       Updated   = Class.new(Persisted)
-      Deleted   = Class.new(self) { include Concord::Public.new(:object, :relation) }
       Created   = Class.new(self)
       Transient = Class.new(self)
 
       class Deleted < self
+        include Concord::Public.new(:object, :relation)
+
         def commit
           relation.delete(object)
         end
