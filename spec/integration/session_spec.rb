@@ -4,23 +4,21 @@ describe 'Session' do
   let(:mapper) { Mapper.build(Mapper::Header.coerce([[:id, Integer], [:name, String]], :keys => [:id]), model) }
   let(:model)  { mock_model(:id, :name) }
 
+  # we're using an in-memory relation
+  let(:users)    { Axiom::Relation.new(SCHEMA[:users].header, [ [ 1, 'John' ], [ 2, 'Jane' ] ]) }
+  let(:relation) { Relation.new(users, mapper) }
+
   specify 'fetching an object from a relation' do
-    users = Axiom::Relation.new(
-      SCHEMA[:users].header, [ [ 1, 'John' ], [ 2, 'Jane' ] ]
-    )
+    Session.start(:users => relation) do |env|
+      # fetch user for the first time
+      jane1 = env[:users].restrict { |r| r.name.eq('Jane') }.all.first
 
-    relation = Relation.new(users, mapper)
+      expect(jane1).to eq(model.new(:id => 2, :name => 'Jane'))
 
-    session = Session::Environment.new({ :users => relation }, Session::Tracker.new)
+      # here IM-powered loader kicks in
+      jane2 = env[:users].restrict { |r| r.name.eq('Jane') }.all.first
 
-    # fetch user for the first time
-    jane1 = session[:users].restrict { |r| r.name.eq('Jane') }.all.first
-
-    expect(jane1).to eq(model.new(:id => 2, :name => 'Jane'))
-
-    # here IM-powered loader kicks in
-    jane2 = session[:users].restrict { |r| r.name.eq('Jane') }.all.first
-
-    expect(jane1).to be(jane2)
+      expect(jane1).to be(jane2)
+    end
   end
 end
