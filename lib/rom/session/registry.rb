@@ -14,15 +14,21 @@ module ROM
       def initialize(environment, tracker)
         @environment = environment
         @tracker     = tracker
-        @memory      = {}
+        initialize_memory
       end
 
       def [](name)
-        memory.fetch(name) { build_relation(name) }
+        memory[name]
+      end
+
+      private
+
+      def initialize_memory
+        @memory = Hash.new { |memory, name| memory[name] = build_relation(name) }
       end
 
       def build_relation(name)
-        memory[name] = Session::Relation.build(environment[name], tracker, tracker.identity_map(name))
+        Session::Relation.build(environment[name], tracker, tracker.identity_map(name))
       end
 
     end # Registry
