@@ -21,4 +21,14 @@ describe 'Session' do
       expect(jane1).to be(jane2)
     end
   end
+
+  specify 'deleting an object from a relation' do
+    Session.start(:users => relation) do |env|
+      jane = env[:users].restrict { |r| r.name.eq('Jane') }.all.first
+
+      users = env[:users].delete(jane).state(jane).commit.all
+
+      expect(users).not_to include(jane)
+    end
+  end
 end

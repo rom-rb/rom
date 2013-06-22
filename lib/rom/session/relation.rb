@@ -33,7 +33,7 @@ module ROM
       end
 
       def delete(object)
-        tracker.queue(state(object).delete)
+        tracker.queue(state(object).delete(relation))
         self
       end
 

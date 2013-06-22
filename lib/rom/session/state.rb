@@ -6,13 +6,19 @@ module ROM
 
       Persisted = Class.new(self) { include Concord::Public.new(:object, :tuple) }
       Updated   = Class.new(Persisted)
-      Deleted   = Class.new(self)
+      Deleted   = Class.new(self) { include Concord::Public.new(:object, :relation) }
       Created   = Class.new(self)
       Transient = Class.new(self)
 
-      def delete
+      class Deleted < self
+        def commit
+          relation.delete(object)
+        end
+      end
+
+      def delete(relation)
         if persisted?
-          Deleted.new(object)
+          Deleted.new(object, relation)
         else
           raise "cannot delete a transient object"
         end
