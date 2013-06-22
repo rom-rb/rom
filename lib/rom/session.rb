@@ -1,12 +1,11 @@
 module ROM
 
   class Session
-    include Concord.new(:registry)
+    include Concord.new(:environment)
 
     def [](relation_name)
-      registry[relation_name]
+      environment[relation_name]
     end
-
 
   end # Session
 

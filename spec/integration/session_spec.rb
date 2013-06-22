@@ -11,15 +11,15 @@ describe 'Session' do
 
     relation = Relation.new(users, mapper)
 
-    session_registry = Session::Registry.new({ :users => relation }, Session::Tracker.new)
+    session = Session::Environment.new({ :users => relation }, Session::Tracker.new)
 
     # fetch user for the first time
-    jane1 = session_registry[:users].restrict { |r| r.name.eq('Jane') }.all.first
+    jane1 = session[:users].restrict { |r| r.name.eq('Jane') }.all.first
 
     expect(jane1).to eq(model.new(:id => 2, :name => 'Jane'))
 
     # here IM-powered loader kicks in
-    jane2 = session_registry[:users].restrict { |r| r.name.eq('Jane') }.all.first
+    jane2 = session[:users].restrict { |r| r.name.eq('Jane') }.all.first
 
     expect(jane1).to be(jane2)
   end

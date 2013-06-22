@@ -1,7 +1,9 @@
 module ROM
   class Session
 
-    class Registry
+    class Environment < ROM::Environment
+      include Proxy
+
       attr_reader :environment
       private :environment
 

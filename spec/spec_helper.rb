@@ -26,7 +26,7 @@ def mock_model(*attributes)
 end
 
 # FIXME: this monkey patching will be eventually moved to rom-relation
-class Environment
+class ROM::Environment
   attr_reader :registry
 
   def [](name)

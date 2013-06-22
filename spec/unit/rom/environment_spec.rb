@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe Session::Registry do
-  subject(:registry) { described_class.new({ :users => users }, tracker) }
+describe Session::Environment do
+  subject(:env) { described_class.new({ :users => users }, tracker) }
 
   let(:users) {
     relation = TEST_ENV.repository(:test).get(:users)
@@ -15,7 +15,7 @@ describe Session::Registry do
 
   describe '#[]' do
     it 'returns relation identified by a symbol' do
-      relation = registry[:users]
+      relation = env[:users]
       expect(relation).to be_kind_of(Session::Relation)
     end
   end

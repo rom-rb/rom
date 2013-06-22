@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 describe Session do
-  subject(:session) { described_class.new(registry) }
+  subject(:session) { described_class.new(env) }
 
-  let(:registry) { Session::Registry.new({ :users => relation }, tracker) }
+  let(:env)      { Session::Environment.new({ :users => relation }, tracker) }
   let(:tracker)  { Session::Tracker.new }
 
   let(:mapper)   { Mapper.build(Mapper::Header.coerce([[:id, Integer], [:name, String]], :keys => [:id]), model) }
@@ -11,7 +11,7 @@ describe Session do
   let(:users)    { Axiom::Relation.new(SCHEMA[:users].header, [ [ 1, 'John' ], [ 2, 'Jane' ] ]) }
   let(:relation) { Relation.new(users, mapper) }
 
-  let(:object) { registry[:users].all.first }
+  let(:object) { env[:users].all.first }
 
   describe '#dirty?' do
     context 'when persisted object was changed' do

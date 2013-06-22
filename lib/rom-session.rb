@@ -19,9 +19,9 @@ require 'rom/support/proxy'
 
 require 'rom/session'
 
+require 'rom/session/environment'
 require 'rom/session/tracker'
 require 'rom/session/state'
 require 'rom/session/identity_map'
 require 'rom/session/relation'
 require 'rom/session/mapper'
-require 'rom/session/registry'
