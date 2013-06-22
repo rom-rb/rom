@@ -2,10 +2,9 @@ module ROM
   class Session
 
     class Tracker
-      attr_reader :relations, :objects, :changelog
+      attr_reader :objects, :changelog
 
-      def initialize(relations)
-        @relations    = relations
+      def initialize
         @identity_map = Hash.new { |hash, key| hash[key] = IdentityMap.new(self) }
         @objects      = Hash.new
         @changelog    = []

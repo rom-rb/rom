@@ -3,8 +3,8 @@ require 'spec_helper'
 describe Session do
   subject(:session) { described_class.new(registry) }
 
-  let(:registry) { Session::Registry.new(tracker) }
-  let(:tracker)  { Session::Tracker.new(:users => relation) }
+  let(:registry) { Session::Registry.new({ :users => relation }, tracker) }
+  let(:tracker)  { Session::Tracker.new }
 
   let(:mapper)   { Mapper.build(Mapper::Header.coerce([[:id, Integer], [:name, String]], :keys => [:id]), model) }
   let(:model)    { mock_model(:id, :name) }

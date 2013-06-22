@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Session::Registry do
-  subject(:registry) { described_class.new(tracker) }
+  subject(:registry) { described_class.new({ :users => users }, tracker) }
 
   let(:users) {
     relation = TEST_ENV.repository(:test).get(:users)
@@ -10,7 +10,7 @@ describe Session::Registry do
   }
 
   let(:tracker) {
-    Session::Tracker.new(:users => users)
+    Session::Tracker.new
   }
 
   describe '#[]' do

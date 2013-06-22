@@ -11,7 +11,7 @@ describe 'Session' do
 
     relation = Relation.new(users, mapper)
 
-    session_registry = Session::Registry.new(Session::Tracker.new(:users => relation))
+    session_registry = Session::Registry.new({ :users => relation }, Session::Tracker.new)
 
     # fetch user for the first time
     jane1 = session_registry[:users].restrict { |r| r.name.eq('Jane') }.all.first
