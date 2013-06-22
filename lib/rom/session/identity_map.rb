@@ -19,7 +19,7 @@ module ROM
 
       def store(identity, object, tuple)
         @objects[identity] = LoadedObject.new(object, tuple)
-        @tracker.store(object, State::Persisted.new(object, tuple))
+        @tracker.store(object, State::Persisted.new(object))
         self
       end
 

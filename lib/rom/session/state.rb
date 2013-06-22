@@ -4,7 +4,7 @@ module ROM
     class State
       include Concord::Public.new(:object)
 
-      Persisted = Class.new(self) { include Concord::Public.new(:object, :tuple) }
+      Persisted = Class.new(self)
       Transient = Class.new(self)
 
       class Deleted < self
