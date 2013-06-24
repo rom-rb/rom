@@ -8,6 +8,8 @@ shared_context 'Session::Relation' do
   let(:model)    { mock_model(:id, :name) }
   let(:axiom)    { Axiom::Relation.new(SCHEMA[:users].header, [ [ 1, 'John' ], [ 2, 'Jane' ] ]) }
   let(:relation) { Relation.new(axiom, mapper) }
+  let(:users)    { session[:users] }
+
 
   let(:user) { session[:users].all.first }
 end

@@ -5,8 +5,6 @@ describe Session::Relation, '#dirty?' do
 
   include_context 'Session::Relation'
 
-  let(:users) { session[:users] }
-
   context 'when persisted object was changed' do
     before do
       user.name = 'John Doe'

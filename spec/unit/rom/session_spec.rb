@@ -13,16 +13,6 @@ describe Session do
 
   let(:object) { env[:users].all.first }
 
-  describe '#track' do
-    it 'starts tracking an object' do
-      user = model.new(:id => 3, :name => 'John')
-
-      session[:users].track(user)
-
-      expect(session[:users].tracking?(user)).to be_true
-    end
-  end
-
   describe '#save' do
     context 'when an object is persisted' do
       context 'when not dirty' do
