@@ -1,7 +1,7 @@
 module ROM
 
   class Mapper
-    include Concord.new(:loader, :dumper)
+    include Concord::Public.new(:loader, :dumper)
 
     def load(tuple)
       loader.call(tuple)
