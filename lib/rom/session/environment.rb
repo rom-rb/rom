@@ -23,6 +23,10 @@ module ROM
         memory[name]
       end
 
+      def commit
+        tracker.commit
+      end
+
       private
 
       def initialize_memory

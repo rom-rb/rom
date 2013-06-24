@@ -11,6 +11,10 @@ module ROM
       environment[relation_name]
     end
 
+    def flush
+      environment.commit
+    end
+
   end # Session
 
 end # ROM

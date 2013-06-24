@@ -10,6 +10,12 @@ module ROM
         @changelog    = []
       end
 
+      def commit
+        @changelog.each { |state| update(state.commit) }
+        @changelog = []
+        self
+      end
+
       def [](object)
         @objects[object.object_id]
       end

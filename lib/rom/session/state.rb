@@ -10,24 +10,30 @@ module ROM
       class Deleted < self
         include Concord::Public.new(:object, :relation)
 
+        Commited = Class.new(self)
+
         def commit
-          relation.delete(object)
+          Commited.new(object, relation.delete(object))
         end
       end
 
       class Created < self
         include Concord::Public.new(:object, :relation)
 
+        Commited = Class.new(self)
+
         def commit
-          relation.insert(object)
+          Commited.new(object, relation.insert(object))
         end
       end
 
       class Updated < self
         include Concord::Public.new(:object, :relation)
 
+        Commited = Class.new(self)
+
         def commit
-          relation.update(object)
+          Commited.new(object, relation.update(object))
         end
       end
 
