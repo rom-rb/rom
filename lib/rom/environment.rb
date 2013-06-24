@@ -3,7 +3,7 @@ module ROM
   # The environment used to build and finalize mappers and their relations
   #
   class Environment
-    include Concord.new(:repositories)
+    include Concord.new(:repositories, :registry)
 
     # Coerce a repository config hash into an environment instance
     #
@@ -21,18 +21,52 @@ module ROM
     def self.coerce(config)
       return config if config.kind_of?(self)
 
-      new(config.each_with_object({}) { |(name, uri), hash|
+      repositories = config.each_with_object({}) { |(name, uri), hash|
         hash[name.to_sym] = Repository.coerce(name, Addressable::URI.parse(uri))
-      })
+      }
+
+      new(repositories, {})
     end
 
+    # Create a new environment
+    #
+    # @param [Hash] repositories
+    #
+    # @param [Hash] registry for relations
+    #
+    # @return [Environment]
+    #
+    # @api public
+    def self.new(config, registry = {})
+      super(config, registry)
+    end
+
+    # Return registered rom's relation
+    #
+    # @param [Symbol] relation name
+    #
+    # @return [Relation]
+    #
+    # @api public
+    def [](name)
+      registry[name]
+    end
+
+    # Load defined rom schema and register relations
+    #
+    # @param [Schema] schema
+    #
+    # @return [Environment]
+    #
     # @api public
     def load_schema(schema)
       schema.each do |repository_name, relations|
         relations.each do |relation|
-          repository(repository_name).register(relation)
+          name           = relation.name.to_sym
+          registry[name] = repository(repository_name).register(relation).get(name)
         end
       end
+
       self
     end
 

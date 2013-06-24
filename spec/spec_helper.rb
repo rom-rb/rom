@@ -30,7 +30,6 @@ if ENV['COVERAGE'] == 'true'
 end
 
 require 'shared_helper' # requires ROM
-require 'rom-mapper'
 
 include ROM
 
