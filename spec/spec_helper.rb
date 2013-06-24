@@ -43,41 +43,9 @@ def mock_model(*attributes)
   }
 end
 
-# FIXME: this monkey patching will be eventually moved to rom-relation
-class ROM::Environment
-  attr_reader :registry
-
-  def [](name)
-    registry[name]
-  end
-
-  def load_schema(schema)
-    @registry = {}
-
-    schema.each do |repository_name, relations|
-      relations.each do |relation|
-        name            = relation.name.to_sym
-        @registry[name] = repository(repository_name).register(relation).get(name)
-      end
-    end
-
-    self
-  end
-end
-
 class ROM::Mapper
-  public :loader, :dumper
-
   def self.build(header, model)
     new(Mapper::Loader.new(header, model), Mapper::Dumper.new(header, model))
-  end
-end
-
-class ROM::Relation
-  public :mapper
-
-  def inject_mapper(new_mapper)
-    self.class.new(relation, new_mapper)
   end
 end
 
