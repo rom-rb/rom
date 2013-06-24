@@ -40,10 +40,22 @@ describe Session do
 
   describe '#save' do
     context 'when an object is persisted' do
-      it 'queues an object to be updated' do
-        session[:users].save(object)
+      context 'when not dirty' do
+        it 'does not queue an object to be updated' do
+          session[:users].save(object)
 
-        expect(session[:users].state(object)).to be_updated
+          expect(session[:users].state(object)).to be_persisted
+        end
+      end
+
+      context 'when dirty' do
+        it 'queues an object to be updated' do
+          object.name = 'John Doe'
+
+          session[:users].save(object)
+
+          expect(session[:users].state(object)).to be_updated
+        end
       end
     end
 

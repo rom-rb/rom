@@ -38,7 +38,10 @@ module ROM
       end
 
       def save(object)
-        tracker.queue(state(object).save(relation))
+        # TODO: should we raise if object isn't transient or dirty?
+        if state(object).transient? || dirty?(object)
+          tracker.queue(state(object).save(relation))
+        end
         self
       end
 
