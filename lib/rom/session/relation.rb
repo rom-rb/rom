@@ -19,6 +19,13 @@ module ROM
         new(relation.inject_mapper(mapper), tracker)
       end
 
+      def new(*args, &block)
+        # FIXME: expose some nice API on the mapper to build new models
+        object = mapper.loader.send(:model).new(*args, &block)
+        track(object)
+        object
+      end
+
       def identity(object)
         dumper.identity(object)
       end

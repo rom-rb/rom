@@ -10,6 +10,5 @@ shared_context 'Session::Relation' do
   let(:relation) { Relation.new(axiom, mapper) }
   let(:users)    { session[:users] }
 
-
   let(:user) { session[:users].all.first }
 end
