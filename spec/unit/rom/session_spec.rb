@@ -13,21 +13,6 @@ describe Session do
 
   let(:object) { env[:users].all.first }
 
-  describe '#dirty?' do
-    context 'when persisted object was changed' do
-      it 'returns true' do
-        object.name = 'John Doe'
-        expect(session[:users].dirty?(object)).to be_true
-      end
-    end
-
-    context 'when persisted object was not changed' do
-      it 'returns false' do
-        expect(session[:users].dirty?(object)).to be_false
-      end
-    end
-  end
-
   describe '#track' do
     it 'starts tracking an object' do
       user = model.new(:id => 3, :name => 'John')
