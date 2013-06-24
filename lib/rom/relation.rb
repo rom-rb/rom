@@ -4,7 +4,7 @@ module ROM
   # load/dump tuples/objects
   #
   class Relation
-    include Enumerable, Concord.new(:relation, :mapper)
+    include Enumerable, Concord::Public.new(:relation, :mapper)
 
     alias_method :all, :to_a
 
@@ -65,10 +65,14 @@ module ROM
       new(relation.sort_by(relation.header))
     end
 
+    def inject_mapper(mapper)
+      new(relation, mapper)
+    end
+
     private
 
-    def new(new_relation)
-      self.class.new(new_relation, mapper)
+    def new(new_relation, new_mapper = mapper)
+      self.class.new(new_relation, new_mapper)
     end
 
   end # class Relation
