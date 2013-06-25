@@ -7,13 +7,13 @@ module ROM
       attr_reader :relation, :tracker
       public :relation, :tracker
 
-      def initialize(relation, tracker)
-        @relation, @tracker = relation, tracker
-      end
-
       def self.build(relation, tracker, identity_map)
         mapper = Session::Mapper.new(relation.mapper, identity_map)
         new(relation.inject_mapper(mapper), tracker)
+      end
+
+      def initialize(relation, tracker)
+        @relation, @tracker = relation, tracker
       end
 
       def new(*args, &block)
@@ -49,7 +49,7 @@ module ROM
       end
 
       def dirty?(object)
-        mapper.identity_map[identity(object)].tuple != dumper.call(object)
+        mapper.dirty?(object)
       end
 
       def tracking?(object)

@@ -16,4 +16,15 @@ describe Session::Relation, '#dirty?' do
   context 'when persisted object was not changed' do
     it { should be(false) }
   end
+
+  context 'when object is not in the IM' do
+    let(:user) { model.new(:id => 3, :name => 'Unknown') }
+
+    specify do
+      expect { subject }.to raise_error(
+        Session::IdentityMap::ObjectMissingError,
+        'An object with identity=[3] was not found in the identity map'
+      )
+    end
+  end
 end

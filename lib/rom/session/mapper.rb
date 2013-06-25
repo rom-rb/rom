@@ -6,6 +6,11 @@ module ROM
       include Proxy, Concord::Public.new(:mapper, :identity_map)
 
       # @api private
+      def dirty?(object)
+        identity_map.fetch_tuple(identity(object)) != dump(object)
+      end
+
+      # @api private
       def load(tuple)
         identity = mapper.loader.identity(tuple)
 
