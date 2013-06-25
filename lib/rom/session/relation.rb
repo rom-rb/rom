@@ -12,10 +12,7 @@ module ROM
       end
 
       def self.build(relation, tracker, identity_map)
-        loader = relation.mapper.loader
-        dumper = relation.mapper.dumper
-        mapper = Session::Mapper.new(loader, dumper, identity_map)
-
+        mapper = Session::Mapper.new(relation.mapper, identity_map)
         new(relation.inject_mapper(mapper), tracker)
       end
 
@@ -53,7 +50,7 @@ module ROM
       end
 
       def dirty?(object)
-        mapper.im[identity(object)].tuple != dumper.call(object)
+        mapper.identity_map[identity(object)].tuple != dumper.call(object)
       end
 
       def tracking?(object)

@@ -1,18 +1,17 @@
 module ROM
   class Session
 
-    # TODO: consider using a decorator instead
+    # @api private
     class Mapper < ROM::Mapper
-      attr_reader :im
+      include Proxy, Concord::Public.new(:mapper, :identity_map)
 
-      def initialize(loader, dumper, im)
-        super(loader, dumper)
-        @im = im
-      end
-
+      # @api private
       def load(tuple)
-        identity = loader.identity(tuple)
-        im.fetch(identity) { im.store(identity, super, tuple)[identity] }
+        identity = mapper.loader.identity(tuple)
+
+        identity_map.fetch(identity) {
+          identity_map.store(identity, mapper.load(tuple), tuple)[identity]
+        }
       end
 
     end # Mapper
