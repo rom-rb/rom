@@ -106,7 +106,6 @@ module ROM
 
       # Check if an object is being tracked
       #
-      #
       # @param [Object]
       #
       # @return [Boolean]
@@ -114,18 +113,6 @@ module ROM
       # @api public
       def tracking?(object)
         tracker.include?(object)
-      end
-
-      private
-
-      # @api private
-      def mapper
-        relation.mapper
-      end
-
-      # @api private
-      def dumper
-        mapper.dumper
       end
 
     end # Relation
