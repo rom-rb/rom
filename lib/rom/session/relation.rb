@@ -1,6 +1,12 @@
 module ROM
   class Session
 
+    # Adds session-specific functionality on top of ROM's relation.
+    #
+    # A session relation builds a queue of state changes that will be committed
+    # when a session is flushed.
+    #
+    # @api public
     class Relation < ROM::Relation
       include Proxy
 
