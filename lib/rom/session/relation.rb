@@ -17,14 +17,13 @@ module ROM
       end
 
       def new(*args, &block)
-        # FIXME: expose some nice API on the mapper to build new models
-        object = mapper.loader.send(:model).new(*args, &block)
+        object = mapper.new_object(*args, &block)
         track(object)
         object
       end
 
       def identity(object)
-        dumper.identity(object)
+        mapper.identity(object)
       end
 
       def state(object)
@@ -57,12 +56,10 @@ module ROM
         tracker.include?(object)
       end
 
+      private
+
       def mapper
         relation.mapper
-      end
-
-      def loader
-        mapper.loader
       end
 
       def dumper
