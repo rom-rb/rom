@@ -16,7 +16,7 @@ module ROM
       end
 
       def [](identity)
-        @objects.fetch(identity) { raise ObjectMissingError.new(identity) }
+        @objects.fetch(identity) { raise ObjectMissingError, identity }
       end
 
       def fetch(identity, &block)
