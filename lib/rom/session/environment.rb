@@ -1,25 +1,31 @@
 module ROM
   class Session
 
+    # Session-specific environment wrapping ROM's environment
+    #
+    # It works exactly the same as ROM::Environment except it returns
+    # session relations
+    #
     # @api public
     class Environment < ROM::Environment
       include Proxy
 
-      attr_reader :environment
-      private :environment
+      attr_reader :environment, :tracker, :memory
+      private :environment, :tracker, :memory
 
-      attr_reader :tracker
-      private :tracker
-
-      attr_reader :memory
-      private :memory
-
+      # @api private
       def initialize(environment, tracker)
         @environment = environment
         @tracker     = tracker
         initialize_memory
       end
 
+      # Return a relation identified by name
+      #
+      # @param [Symbol] name of a relation
+      #
+      # @return [Session::Relation] rom's relation wrapped by session
+      #
       # @api public
       def [](name)
         memory[name]
@@ -42,7 +48,7 @@ module ROM
         Session::Relation.build(environment[name], tracker, tracker.identity_map(name))
       end
 
-    end # Registry
+    end # Environment
 
   end # Session
 end # ROM
