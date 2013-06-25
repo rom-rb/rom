@@ -36,9 +36,9 @@ describe 'Session' do
 
   specify 'saving an object to a relation' do
     Session.start(:users => relation) do |session|
-      piotr = model.new(:id => 3, :name => 'Piotr')
+      piotr = session[:users].new(:id => 3, :name => 'Piotr')
 
-      session[:users].track(piotr).save(piotr)
+      session[:users].save(piotr)
 
       session.flush
 
