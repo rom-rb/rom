@@ -10,7 +10,7 @@ module ROM
 
     # @api public
     def new_object(*args, &block)
-      loader.model.new(*args, &block)
+      dumper.new_object(*args, &block)
     end
 
     # @api public

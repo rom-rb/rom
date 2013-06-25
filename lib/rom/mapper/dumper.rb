@@ -14,6 +14,10 @@ module ROM
         header.keys.map { |key| object.send("#{key.name}") }
       end
 
+      def new_object(*args, &block)
+        model.new(*args, &block)
+      end
+
     end # Dumper
 
   end # Mapper
