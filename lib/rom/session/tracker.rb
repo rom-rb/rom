@@ -6,6 +6,12 @@ module ROM
       attr_reader :objects, :changelog
       private :objects, :changelog
 
+      class ObjectNotTrackedError < StandardError
+        def initialize(object)
+          super("Tracker doesn't include #{object.inspect}")
+        end
+      end
+
       # @api private
       def initialize
         @identity_map = Hash.new { |hash, key| hash[key] = IdentityMap.new(self) }
@@ -22,9 +28,7 @@ module ROM
 
       # @api private
       def fetch(object)
-        @objects.fetch(object.object_id) {
-          raise "tracker doesn't include #{object.inspect}"
-        }
+        @objects.fetch(object.object_id) { raise ObjectNotTrackedError, object }
       end
 
       # @api private
