@@ -5,7 +5,7 @@ module ROM
       include Proxy
 
       attr_reader :relation, :tracker
-      public :relation, :tracker
+      private :relation, :tracker
 
       def self.build(relation, tracker, identity_map)
         mapper = Session::Mapper.new(relation.mapper, identity_map)
@@ -16,22 +16,11 @@ module ROM
         @relation, @tracker = relation, tracker
       end
 
-      def new(*args, &block)
-        object = mapper.new_object(*args, &block)
-        track(object)
-        object
-      end
-
-      def identity(object)
-        mapper.identity(object)
-      end
-
-      def state(object)
-        tracker.fetch(object)
-      end
-
-      def track(object)
-        tracker.store(object, State::Transient.new(object))
+      def save(object)
+        # TODO: should we raise if object isn't transient or dirty?
+        if state(object).transient? || dirty?(object)
+          tracker.queue(state(object).save(relation))
+        end
         self
       end
 
@@ -40,12 +29,23 @@ module ROM
         self
       end
 
-      def save(object)
-        # TODO: should we raise if object isn't transient or dirty?
-        if state(object).transient? || dirty?(object)
-          tracker.queue(state(object).save(relation))
-        end
+      def state(object)
+        tracker.fetch(object)
+      end
+
+      def identity(object)
+        mapper.identity(object)
+      end
+
+      def track(object)
+        tracker.store(object, State::Transient.new(object))
         self
+      end
+
+      def new(*args, &block)
+        object = mapper.new_object(*args, &block)
+        track(object)
+        object
       end
 
       def dirty?(object)
