@@ -8,7 +8,7 @@ describe Mapper, '#new_object' do
   let(:attributes) { Hash[:id => 1, :name => 'Jane'] }
 
   before do
-    stub(loader).model { model }
+    stub(dumper).new_object(attributes) { model.new(attributes) }
   end
 
   it { should eql(model.new(attributes)) }
