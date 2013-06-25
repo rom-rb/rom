@@ -9,6 +9,11 @@ module ROM
     end
 
     # @api public
+    def new_object(*args, &block)
+      loader.model.new(*args, &block)
+    end
+
+    # @api public
     def load(tuple)
       loader.call(tuple)
     end
