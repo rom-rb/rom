@@ -20,7 +20,9 @@ if ENV['COVERAGE'] == 'true'
 
 end
 
-require 'ostruct'
+require 'devtools'
+Devtools.init_spec_helper
+
 require 'axiom'
 require 'rom-mapper'
 
