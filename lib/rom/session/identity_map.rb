@@ -10,8 +10,7 @@ module ROM
         end
       end
 
-      def initialize(tracker = {})
-        @tracker = tracker
+      def initialize
         @objects = {}
       end
 
@@ -27,9 +26,12 @@ module ROM
         self[identity].tuple
       end
 
+      def fetch_object(identity)
+        self[identity].object
+      end
+
       def store(identity, object, tuple)
         @objects[identity] = LoadedObject.new(object, tuple)
-        @tracker.store(object, State::Persisted.new(object))
         self
       end
 

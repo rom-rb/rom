@@ -3,7 +3,7 @@ module ROM
 
     # @api private
     class Mapper < ROM::Mapper
-      include Proxy, Concord::Public.new(:mapper, :identity_map)
+      include Proxy, Concord::Public.new(:mapper, :tracker, :identity_map)
 
       # @api private
       def dirty?(object)
@@ -15,7 +15,10 @@ module ROM
         identity = mapper.loader.identity(tuple)
 
         identity_map.fetch(identity) {
-          identity_map.store(identity, mapper.load(tuple), tuple)[identity]
+          identity_map.store(identity, mapper.load(tuple), tuple)
+          loaded = identity_map[identity]
+          tracker.store(loaded.object, State::Persisted.new(loaded.object, self))
+          loaded
         }
       end
 

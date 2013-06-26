@@ -3,16 +3,17 @@ require 'spec_helper'
 describe Session::Mapper, '#load' do
   subject { object.load(tuple) }
 
-  let(:object) { described_class.new(mapper, im) }
+  let(:object) { described_class.new(mapper, tracker, im) }
 
   let(:mapper) { fake(:mapper) { ROM::Mapper } }
   let(:loader) { fake(:loader) { ROM::Mapper::Loader } }
   let(:dumper) { fake(:dumper) { ROM::Mapper::Dumper } }
 
-  let(:tuple)  { Hash[:id => 1, :name => 'Jane'] }
-  let(:user)   { model.new(tuple) }
-  let(:model)  { mock_model(:id, :name) }
-  let(:im)     { Session::IdentityMap.new }
+  let(:tuple)   { Hash[:id => 1, :name => 'Jane'] }
+  let(:user)    { model.new(tuple) }
+  let(:model)   { mock_model(:id, :name) }
+  let(:im)      { Session::IdentityMap.new }
+  let(:tracker) { Session::Tracker.new }
 
   before do
     stub(mapper).loader { loader }
@@ -41,5 +42,10 @@ describe Session::Mapper, '#load' do
     end
 
     it { should be(user) }
+
+    it 'stores persisted state in the tracker' do
+      subject
+      expect(tracker.fetch(user)).to be_persisted
+    end
   end
 end

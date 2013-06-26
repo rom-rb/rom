@@ -4,16 +4,21 @@ module ROM
     class State
       include Concord::Public.new(:object)
 
-      Persisted = Class.new(self)
-      Transient = Class.new(self)
+      class Transient < self
+        include Concord::Public.new(:object)
+      end
 
-      class Deleted < self
+      class Persisted < self
+        include Concord::Public.new(:object, :mapper)
+      end
+
+      class Updated < self
         include Concord::Public.new(:object, :relation)
 
         Commited = Class.new(self)
 
         def commit
-          Commited.new(object, relation.delete(object))
+          Commited.new(object, relation.update(object))
         end
       end
 
@@ -27,13 +32,13 @@ module ROM
         end
       end
 
-      class Updated < self
+      class Deleted < self
         include Concord::Public.new(:object, :relation)
 
         Commited = Class.new(self)
 
         def commit
-          Commited.new(object, relation.update(object))
+          Commited.new(object, relation.delete(object))
         end
       end
 
