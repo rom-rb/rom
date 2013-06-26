@@ -1,37 +1,35 @@
 module ROM
   class Session
 
+    # @api private
     class IdentityMap
-      LoadedObject = Struct.new(:object, :tuple)
+      include Concord.new(:objects)
 
-      class ObjectMissingError < StandardError
-        def initialize(identity)
-          super("An object with identity=#{identity.inspect} was not found in the identity map")
-        end
+      LoadedObject = Class.new { include Concord::Public.new(:object, :tuple) }
+
+      # @api private
+      def self.new(objects = {})
+        super(objects)
       end
 
-      def initialize
-        @objects = {}
-      end
-
+      # @api private
       def [](identity)
-        @objects.fetch(identity) { raise ObjectMissingError, identity }
+        objects[identity]
       end
 
+      # @api private
       def fetch(identity, &block)
-        @objects.fetch(identity, &block).object
+        objects.fetch(identity, &block).object
       end
 
+      # @api private
       def fetch_tuple(identity)
         self[identity].tuple
       end
 
-      def fetch_object(identity)
-        self[identity].object
-      end
-
+      # @api private
       def store(identity, object, tuple)
-        @objects[identity] = LoadedObject.new(object, tuple)
+        objects[identity] = LoadedObject.new(object, tuple)
         self
       end
 
