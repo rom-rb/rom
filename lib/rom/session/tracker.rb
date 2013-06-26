@@ -23,7 +23,6 @@ module ROM
       def commit
         @changelog.each { |state| update(state.commit) }
         @changelog = []
-        self
       end
 
       # @api private
@@ -55,13 +54,11 @@ module ROM
       # @api private
       def store_transient(object)
         store(object, State::Transient.new(object))
-        self
       end
 
       # @api private
       def store_persisted(object, mapper)
         store(object, State::Persisted.new(object, mapper))
-        self
       end
 
       # @api private
