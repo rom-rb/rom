@@ -90,8 +90,8 @@ module ROM
       # @return [Object]
       #
       # @api public
-      def new(*args, &block)
-        object = mapper.new_object(*args, &block)
+      def new(*args)
+        object = mapper.new_object(*args)
         track(object)
         object
       end
