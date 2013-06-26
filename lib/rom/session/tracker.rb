@@ -50,6 +50,11 @@ module ROM
       # @api private
       def store(object, state)
         @objects[object.object_id] = state
+        self
+      end
+
+      def store_persisted(object, mapper)
+        store(object, State::Persisted.new(object, mapper))
       end
 
       # @api private

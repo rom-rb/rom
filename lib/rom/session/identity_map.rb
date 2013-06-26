@@ -18,7 +18,7 @@ module ROM
       end
 
       # @api private
-      def fetch(identity, &block)
+      def fetch_object(identity, &block)
         objects.fetch(identity, &block).object
       end
 

@@ -13,13 +13,18 @@ module ROM
       # @api private
       def load(tuple)
         identity = mapper.loader.identity(tuple)
+        identity_map.fetch_object(identity) { load_and_track(identity, tuple) }
+      end
 
-        identity_map.fetch(identity) {
-          identity_map.store(identity, mapper.load(tuple), tuple)
-          loaded = identity_map[identity]
-          tracker.store(loaded.object, State::Persisted.new(loaded.object, self))
-          loaded
-        }
+      private
+
+      def load_and_track(identity, tuple)
+        object = mapper.load(tuple)
+
+        identity_map.store(identity, object, tuple)
+        tracker.store_persisted(object, self)
+
+        identity_map[identity]
       end
 
     end # Mapper
