@@ -5,6 +5,8 @@ describe Session, '#flush' do
 
   include_context 'Session::Relation'
 
+  let(:object) { session }
+
   let(:john)  { session[:users].all.first }
   let(:jane)  { session[:users].all.last }
   let(:piotr) { session[:users].new(:id => 3, :name => 'Piotr') }
@@ -18,6 +20,10 @@ describe Session, '#flush' do
     session[:users].save(piotr)
   end
 
+  it_behaves_like 'a command method'
+
+  it { should be_clean }
+
   it 'commits all deletes' do
     expect(subject[:users].state(john).relation.all).to_not include(john)
   end
@@ -29,4 +35,5 @@ describe Session, '#flush' do
   it 'commits all inserts' do
     expect(subject[:users].state(piotr).relation.all).to include(piotr)
   end
+
 end

@@ -41,11 +41,16 @@ module ROM
         tracker.commit
       end
 
+      # @api private
+      def clean?
+        tracker.clean?
+      end
+
       private
 
       # @api private
       def initialize_memory
-        @memory = Hash.new { |memory, name| memory[name] = build_relation(name) }
+        @memory = Hash.new { |_, name| memory[name] = build_relation(name) }
       end
 
       # @api private

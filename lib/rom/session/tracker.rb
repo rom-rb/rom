@@ -37,6 +37,11 @@ module ROM
       end
 
       # @api private
+      def clean?
+        changelog.empty?
+      end
+
+      # @api private
       def queue(state)
         @changelog << state
         update(state)

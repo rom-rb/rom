@@ -20,11 +20,8 @@ module ROM
 
       def load_and_track(identity, tuple)
         object = mapper.load(tuple)
-
-        identity_map.store(identity, object, tuple)
         tracker.store_persisted(object, self)
-
-        identity_map[identity]
+        identity_map.store(identity, object, tuple)[identity]
       end
 
     end # Mapper

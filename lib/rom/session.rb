@@ -46,6 +46,15 @@ module ROM
       self
     end
 
+    # Return if there are any pending state changes
+    #
+    # @return [Boolean]
+    #
+    # @api public
+    def clean?
+      environment.clean?
+    end
+
   end # Session
 
 end # ROM
