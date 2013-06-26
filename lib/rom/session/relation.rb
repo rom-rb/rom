@@ -81,7 +81,7 @@ module ROM
       #
       # @api public
       def track(object)
-        tracker.store(object, State::Transient.new(object))
+        tracker.store_transient(object)
         self
       end
 
