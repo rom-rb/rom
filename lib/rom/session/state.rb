@@ -4,13 +4,31 @@ module ROM
     class State
       include Concord::Public.new(:object)
 
+      TransitionError = Class.new(StandardError)
+
       class Transient < self
         include Concord::Public.new(:object)
-      end
+
+        def save(relation)
+          Created.new(object, relation)
+        end
+      end # Transient
 
       class Persisted < self
         include Concord::Public.new(:object, :mapper)
-      end
+
+        def save(relation)
+          if mapper.dirty?(object)
+            Updated.new(object, relation)
+          else
+            self
+          end
+        end
+
+        def delete(relation)
+          Deleted.new(object, relation)
+        end
+      end # Persisted
 
       class Updated < self
         include Concord::Public.new(:object, :relation)
@@ -20,7 +38,7 @@ module ROM
         def commit
           Commited.new(object, relation.update(object))
         end
-      end
+      end # Updated
 
       class Created < self
         include Concord::Public.new(:object, :relation)
@@ -30,7 +48,7 @@ module ROM
         def commit
           Commited.new(object, relation.insert(object))
         end
-      end
+      end # Created
 
       class Deleted < self
         include Concord::Public.new(:object, :relation)
@@ -40,24 +58,14 @@ module ROM
         def commit
           Commited.new(object, relation.delete(object))
         end
+      end # Deleted
+
+      def save(*)
+        raise TransitionError, "cannot save object with #{self.class} state"
       end
 
-      def delete(relation)
-        if persisted?
-          Deleted.new(object, relation)
-        else
-          raise "cannot delete a transient object"
-        end
-      end
-
-      def save(relation)
-        if persisted?
-          Updated.new(object, relation)
-        elsif transient?
-          Created.new(object, relation)
-        else
-          raise "[State#save] unsupported state change from #{self.class}"
-        end
+      def delete(*)
+        raise TransitionError, "cannot delete object with #{self.class} state"
       end
 
       def updated?

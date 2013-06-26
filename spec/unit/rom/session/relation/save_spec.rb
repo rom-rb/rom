@@ -32,4 +32,17 @@ describe Session::Relation, '#save' do
       specify { state.should be_updated }
     end
   end
+
+  context 'when an object is deleted' do
+    before do
+      object.delete(user)
+    end
+
+    specify do
+      expect { subject }.to raise_error(
+        Session::State::TransitionError,
+        'cannot save object with ROM::Session::State::Deleted state'
+      )
+    end
+  end
 end

@@ -35,10 +35,7 @@ module ROM
       #
       # @api public
       def save(object)
-        # TODO: should we raise if object isn't transient or dirty?
-        if state(object).transient? || dirty?(object)
-          tracker.queue(state(object).save(relation))
-        end
+        tracker.queue(state(object).save(relation))
         self
       end
 
@@ -107,7 +104,7 @@ module ROM
       #
       # @api public
       def dirty?(object)
-        mapper.dirty?(object)
+        state(object).transient? || mapper.dirty?(object)
       end
 
       # Check if an object is being tracked
