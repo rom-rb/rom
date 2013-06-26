@@ -11,6 +11,8 @@ describe Session::Relation, '#track' do
     users.track(user)
   end
 
+  it_behaves_like 'a command method'
+
   it { should be(subject) }
 
   it 'starts tracking the object' do
