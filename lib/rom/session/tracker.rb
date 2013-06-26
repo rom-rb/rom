@@ -48,24 +48,27 @@ module ROM
       end
 
       # @api private
-      def store(object, state)
-        @objects[object.object_id] = state
-        self
-      end
-
-      # @api private
       def store_transient(object)
         store(object, State::Transient.new(object))
+        self
       end
 
       # @api private
       def store_persisted(object, mapper)
         store(object, State::Persisted.new(object, mapper))
+        self
       end
 
       # @api private
       def identity_map(relation_name)
         @identity_map[relation_name]
+      end
+
+      private
+
+      # @api private
+      def store(object, state)
+        @objects[object.object_id] = state
       end
 
     end # Tracker
