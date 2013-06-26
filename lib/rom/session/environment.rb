@@ -14,6 +14,11 @@ module ROM
       private :environment, :tracker, :memory
 
       # @api private
+      def self.build(environment, tracker = Tracker.new)
+        new(environment, tracker)
+      end
+
+      # @api private
       def initialize(environment, tracker)
         @environment = environment
         @tracker     = tracker

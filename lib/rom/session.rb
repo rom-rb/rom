@@ -22,7 +22,7 @@ module ROM
     #
     # @api public
     def self.start(environment)
-      yield(new(Environment.new(environment, Tracker.new)))
+      yield(new(Environment.build(environment)))
     end
 
     # Return a session relation identified by name
