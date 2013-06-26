@@ -21,7 +21,7 @@ module ROM
     # @yieldparam [Session::Environment]
     #
     # @api public
-    def self.start(environment, &block)
+    def self.start(environment)
       yield(new(Environment.new(environment, Tracker.new)))
     end
 
