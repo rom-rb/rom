@@ -14,7 +14,7 @@ module ROM
 
       # @api private
       def initialize
-        @identity_map = Hash.new { |hash, key| hash[key] = IdentityMap.new }
+        @identity_map = Hash.new { |hash, key| hash[key] = IdentityMap.build }
         @objects      = Hash.new
         @changelog    = []
       end

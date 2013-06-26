@@ -8,8 +8,8 @@ module ROM
       LoadedObject = Class.new { include Concord::Public.new(:object, :tuple) }
 
       # @api private
-      def self.new(objects = {})
-        super(objects)
+      def self.build(objects = {})
+        new(objects)
       end
 
       # @api private

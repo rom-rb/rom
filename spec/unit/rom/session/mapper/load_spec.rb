@@ -12,7 +12,7 @@ describe Session::Mapper, '#load' do
   let(:tuple)   { Hash[:id => 1, :name => 'Jane'] }
   let(:user)    { model.new(tuple) }
   let(:model)   { mock_model(:id, :name) }
-  let(:im)      { Session::IdentityMap.new }
+  let(:im)      { Session::IdentityMap.build }
   let(:tracker) { Session::Tracker.new }
 
   before do
