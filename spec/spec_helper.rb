@@ -27,8 +27,6 @@ require 'rom/support/axiom/adapter/in_memory'
 require 'devtools/spec_helper'
 require 'bogus/rspec'
 
-Devtools.init_spec_helper
-
 include ROM
 
 ROM_ENV     = ROM::Environment.coerce(:test => "in_memory://test")
