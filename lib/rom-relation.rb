@@ -1,12 +1,10 @@
-require 'backports'
-require 'backports/basic_object' unless defined?(::BasicObject)
 require 'addressable/uri'
-require 'axiom'
+
 require 'concord'
 require 'abstract_type'
 require 'descendants_tracker'
 require 'equalizer'
-require 'inflecto'
+require 'axiom'
 
 # Main ROM module with methods to setup and manage the environment
 module ROM
