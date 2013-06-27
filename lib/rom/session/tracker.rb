@@ -27,12 +27,12 @@ module ROM
 
       # @api private
       def fetch(object)
-        @objects.fetch(object.object_id) { raise ObjectNotTrackedError, object }
+        @objects.fetch(object.__id__) { raise ObjectNotTrackedError, object }
       end
 
       # @api private
       def include?(object)
-        @objects.key?(object.object_id)
+        @objects.key?(object.__id__)
       end
 
       # @api private
@@ -70,7 +70,7 @@ module ROM
 
       # @api private
       def store(object, state)
-        @objects[object.object_id] = state
+        @objects[object.__id__] = state
       end
 
     end # Tracker
