@@ -1,89 +1,43 @@
 module ROM
   class Session
 
+    # @api private
     class State
       include Concord::Public.new(:object)
 
       TransitionError = Class.new(StandardError)
 
-      class Transient < self
-        include Concord::Public.new(:object)
-
-        def save(relation)
-          Created.new(object, relation)
-        end
-      end # Transient
-
-      class Persisted < self
-        include Concord::Public.new(:object, :mapper)
-
-        def save(relation)
-          if mapper.dirty?(object)
-            Updated.new(object, relation)
-          else
-            self
-          end
-        end
-
-        def delete(relation)
-          Deleted.new(object, relation)
-        end
-      end # Persisted
-
-      class Updated < self
-        include Concord::Public.new(:object, :relation)
-
-        Commited = Class.new(self)
-
-        def commit
-          Commited.new(object, relation.update(object))
-        end
-      end # Updated
-
-      class Created < self
-        include Concord::Public.new(:object, :relation)
-
-        Commited = Class.new(self)
-
-        def commit
-          Commited.new(object, relation.insert(object))
-        end
-      end # Created
-
-      class Deleted < self
-        include Concord::Public.new(:object, :relation)
-
-        Commited = Class.new(self)
-
-        def commit
-          Commited.new(object, relation.delete(object))
-        end
-      end # Deleted
-
+      # @api private
       def save(*)
         raise TransitionError, "cannot save object with #{self.class} state"
       end
 
+      # @api private
       def delete(*)
         raise TransitionError, "cannot delete object with #{self.class} state"
       end
 
-      def updated?
-        instance_of?(Updated)
-      end
-
-      def created?
-        instance_of?(Created)
-      end
-
-      def persisted?
-        instance_of?(Persisted)
-      end
-
+      # @api private
       def transient?
         instance_of?(Transient)
       end
 
+      # @api private
+      def created?
+        instance_of?(Created)
+      end
+
+      # @api private
+      def persisted?
+        instance_of?(Persisted)
+      end
+
+      # @api private
+      def updated?
+        instance_of?(Updated)
+      end
+
+      # @api private
       def deleted?
         instance_of?(Deleted)
       end
