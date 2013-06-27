@@ -4,7 +4,7 @@ module ROM
 
       # @api private
       class Deleted < self
-        include Concord::Public.new(:object, :relation)
+        include Concord::Public.new(:object, :relation), Adamantium::Flat
 
         Commited = Class.new(self)
 
