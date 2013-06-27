@@ -1,5 +1,4 @@
 language: ruby
-before_install: gem install bundler
 bundler_args: --without yard guard benchmarks
 script: "bundle exec rake spec"
 rvm:
@@ -8,11 +7,6 @@ rvm:
   - ruby-head
   - rbx-19mode
 matrix:
-  include:
-    - rvm: jruby-19mode
-      env: JRUBY_OPTS="$JRUBY_OPTS --debug"
-    - rvm: jruby-head
-      env: JRUBY_OPTS="$JRUBY_OPTS --debug"
   allow_failures:
     - rvm: jruby-19mode
     - rvm: ruby-head
@@ -23,7 +17,5 @@ notifications:
     on_success: never
     on_failure: change
   email:
-    recipients:
-      - piotr.solnica@gmail.com
     on_success: never
     on_failure: change
