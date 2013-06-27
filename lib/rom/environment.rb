@@ -25,10 +25,10 @@ module ROM
         hash[name.to_sym] = Repository.build(name, Addressable::URI.parse(uri))
       }
 
-      new(repositories, {})
+      build(repositories)
     end
 
-    # Create a new environment
+    # Build a new environment
     #
     # @param [Hash] repositories
     #
@@ -37,8 +37,8 @@ module ROM
     # @return [Environment]
     #
     # @api public
-    def self.new(config, registry = {})
-      super(config, registry)
+    def self.build(repositories, registry = {})
+      new(repositories, registry)
     end
 
     # Return registered rom's relation

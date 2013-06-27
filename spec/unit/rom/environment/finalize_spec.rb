@@ -1,10 +1,9 @@
 require 'spec_helper'
 
 describe Environment, '#finalize' do
-  subject { object.finalize }
+  include_context 'Environment'
 
-  let(:object) { described_class.coerce(:test => 'in_memory://test') }
-  let(:uri)    { 'in_memory://test' }
+  subject { object.finalize }
 
   it { should be(object) }
 end
