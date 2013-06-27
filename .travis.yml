@@ -7,6 +7,15 @@ rvm:
   - 2.0.0
   - ruby-head
   - rbx-19mode
+matrix:
+  include:
+    - rvm: jruby-19mode
+      env: JRUBY_OPTS="$JRUBY_OPTS --debug"
+    - rvm: jruby-head
+      env: JRUBY_OPTS="$JRUBY_OPTS --debug"
+allow_failures:
+  - rvm: jruby-19mode
+  - rvm: ruby-head
 notifications:
   irc:
     channels:
@@ -18,9 +27,3 @@ notifications:
       - piotr.solnica@gmail.com
     on_success: never
     on_failure: change
-matrix:
-  include:
-    - rvm: jruby-19mode
-      env: JRUBY_OPTS="$JRUBY_OPTS --debug"
-    - rvm: jruby-head
-      env: JRUBY_OPTS="$JRUBY_OPTS --debug"
