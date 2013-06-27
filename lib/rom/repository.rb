@@ -4,10 +4,9 @@ module ROM
   #
   # @api private
   class Repository
+    include Concord.new(:name, :adapter, :relations)
 
-    include Equalizer.new(:name, :adapter)
-
-    # Coerce a given +name+ and +uri+ into a repository
+    # Build a repository with a given +name+ and +uri+
     #
     # @param [Symbol] name
     #   the repository's name
@@ -18,40 +17,8 @@ module ROM
     # @return [Repository]
     #
     # @api private
-    def self.coerce(name, uri)
-      new(name, Axiom::Adapter.new(uri))
-    end
-
-    # The repository's name
-    #
-    # @return [Symbol]
-    #
-    # @api private
-    attr_reader :name
-
-    # The repository's adapter
-    #
-    # @return [Object]
-    #   a axiom adapter
-    #
-    # @api private
-    attr_reader :adapter
-
-    # Initialize a new instance
-    #
-    # @param [#to_sym] name
-    #   the repository's name
-    #
-    # @param [Object] adapter
-    #   the axiom adapter to access relations
-    #
-    # @return [undefined]
-    #
-    # @api private
-    def initialize(name, adapter)
-      @name    = name
-      @adapter = adapter
-      @map     = {}
+    def self.build(name, uri, relations = {})
+      new(name, Axiom::Adapter.new(uri), relations)
     end
 
     # Return the relation identified by +name+
@@ -71,9 +38,9 @@ module ROM
     #
     # @raise [KeyError]
     #
-    # @api private
+    # @api public
     def get(name)
-      @map.fetch(name)
+      relations.fetch(name)
     end
 
     # Register a relation with this repository
@@ -84,7 +51,7 @@ module ROM
     #
     # @api private
     def register(relation)
-      @map[relation.name.to_sym] = adapter.gateway(relation)
+      relations[relation.name.to_sym] = adapter.gateway(relation)
       self
     end
 

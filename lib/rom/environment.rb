@@ -22,7 +22,7 @@ module ROM
       return config if config.kind_of?(self)
 
       repositories = config.each_with_object({}) { |(name, uri), hash|
-        hash[name.to_sym] = Repository.coerce(name, Addressable::URI.parse(uri))
+        hash[name.to_sym] = Repository.build(name, Addressable::URI.parse(uri))
       }
 
       new(repositories, {})

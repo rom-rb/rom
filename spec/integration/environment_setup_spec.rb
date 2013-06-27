@@ -19,6 +19,5 @@ describe 'Setting up environment' do
     repository = env.repository(:memory)
 
     expect(repository.get(:users)).to eq(schema[:users])
-    expect(repository.adapter).to be_instance_of(Axiom::Adapter::InMemory)
   end
 end

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe Repository, '.coerce' do
-  subject { described_class.coerce(name, uri) }
+describe Repository, '.build' do
+  subject { described_class.build(name, uri) }
 
   let(:name) { :test }
 
