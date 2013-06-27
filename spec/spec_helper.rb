@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-# SimpleCov MUST be started before require 'rom-mapper'
+# SimpleCov MUST be started before require 'rom-relation'
 #
 if ENV['COVERAGE'] == 'true'
   require 'simplecov'
@@ -17,34 +17,29 @@ if ENV['COVERAGE'] == 'true'
     add_filter 'config'
     add_filter 'lib/rom/support'
     add_filter 'spec'
-
-    add_group 'Finalizer',    'lib/rom/finalizer'
-    add_group 'Mapper',       'lib/rom/mapper'
-    add_group 'Relation',     'lib/rom/relation'
-    add_group 'Relationship', 'lib/rom/relationship'
-    add_group 'Attribute',    'lib/rom/attribute'
-
-    #minimum_coverage 98.10  # 0.10 lower under JRuby
   end
-
 end
 
-require 'shared_helper' # requires ROM
+require 'rom-relation'
+require 'rom-mapper'
+require 'rom/support/axiom/adapter/in_memory'
+
+require 'devtools/spec_helper'
+require 'bogus/rspec'
+
+Devtools.init_spec_helper
 
 include ROM
 
-class TestMapper < Struct.new(:header, :model)
-  def load(tuple)
-    model.new(
-      Hash[
-        header.map { |attribute| [ attribute.name, tuple[attribute.name]] }
-      ]
-    )
-  end
+ROM_ENV     = ROM::Environment.coerce(:test => "in_memory://test")
+ROM_ADAPTER = ENV.fetch('ROM_ADAPTER', :in_memory).to_sym
 
-  def dump(object)
-    header.each_with_object([]) { |attribute, tuple|
-      tuple << object.send(attribute.name)
-    }
-  end
+include ROM
+
+Bogus.configure do |config|
+  config.search_modules << ROM
+end
+
+RSpec.configure do |config|
+  config.include(SpecHelper)
 end
