@@ -1,5 +1,3 @@
-# SimpleCov MUST be started before require 'rom-mapper'
-#
 if ENV['COVERAGE'] == 'true'
   require 'simplecov'
   require 'coveralls'
@@ -13,18 +11,15 @@ if ENV['COVERAGE'] == 'true'
     command_name 'spec:unit'
 
     add_filter 'config'
+    add_filter 'lib/rom/support'
     add_filter 'spec'
-
-    #minimum_coverage 98.10  # 0.10 lower under JRuby
   end
-
 end
 
 require 'devtools'
-Devtools.init_spec_helper
 
-require 'axiom'
 require 'rom-mapper'
+require 'axiom'
 
 require 'bogus/rspec'
 
