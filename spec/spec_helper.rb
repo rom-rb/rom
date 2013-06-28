@@ -16,9 +16,7 @@ if ENV['COVERAGE'] == 'true'
   end
 end
 
-require 'devtools'
-
-Devtools.init_spec_helper
+require 'devtools/spec_helper'
 
 require 'rom-session'
 
