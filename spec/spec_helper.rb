@@ -16,11 +16,10 @@ if ENV['COVERAGE'] == 'true'
   end
 end
 
-require 'devtools'
-
 require 'rom-mapper'
 require 'axiom'
 
+require 'devtools/spec_helper'
 require 'bogus/rspec'
 
 Bogus.configure do |config|
