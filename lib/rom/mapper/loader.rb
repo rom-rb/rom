@@ -6,7 +6,7 @@ module ROM
 
       def call(tuple)
         header.each_with_object(model.allocate) { |attribute, object|
-          object.send("#{attribute.name}=", tuple[attribute.tuple_key])
+          object.instance_variable_set("@#{attribute.name}", tuple[attribute.tuple_key])
         }
       end
 
