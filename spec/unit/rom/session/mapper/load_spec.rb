@@ -6,8 +6,6 @@ describe Session::Mapper, '#load' do
   let(:object) { described_class.new(mapper, tracker, im) }
 
   let(:mapper) { fake(:mapper) { ROM::Mapper } }
-  let(:loader) { fake(:loader) { ROM::Mapper::Loader } }
-  let(:dumper) { fake(:dumper) { ROM::Mapper::Dumper } }
 
   let(:tuple)   { Hash[:id => 1, :name => 'Jane'] }
   let(:user)    { model.new(tuple) }
@@ -16,8 +14,7 @@ describe Session::Mapper, '#load' do
   let(:tracker) { Session::Tracker.new }
 
   before do
-    stub(mapper).loader { loader }
-    stub(loader).identity(tuple) { 1 }
+    stub(mapper).identity_from_tuple(tuple) { 1 }
   end
 
   context 'when IM does not include the loaded object' do

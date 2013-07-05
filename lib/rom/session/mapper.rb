@@ -12,7 +12,7 @@ module ROM
 
       # @api private
       def load(tuple)
-        identity = mapper.loader.identity(tuple)
+        identity = mapper.identity_from_tuple(tuple)
         identity_map.fetch_object(identity) { load_and_track(identity, tuple) }
       end
 
