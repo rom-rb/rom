@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Mapper::Loader, '#call' do
+describe Mapper::Loader::Allocator, '#call' do
   subject(:loader) { described_class.new(header, model) }
 
   let(:header) { Mapper::Header.coerce([[:uid, Integer ], [:name, String]], :map => { :uid => :id }, :keys => [ :uid ]) }
