@@ -9,6 +9,11 @@ module ROM
     end
 
     # @api public
+    def identity_from_tuple(tuple)
+      loader.identity(tuple)
+    end
+
+    # @api public
     def new_object(*args, &block)
       dumper.new_object(*args, &block)
     end
