@@ -1,6 +1,4 @@
-require 'spec_helper'
-
-describe Mapper::Loader, '#identity' do
+shared_examples_for 'Mapper::Loader#identity' do
   subject(:loader) { described_class.new(header, model) }
 
   let(:header) { Mapper::Header.coerce([[:uid, Integer ], [:name, String]], :map => { :uid => :id }, :keys => [ :uid ]) }

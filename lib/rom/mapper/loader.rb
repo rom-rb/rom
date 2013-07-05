@@ -1,20 +1,18 @@
 module ROM
   class Mapper
 
+    # @public
     class Loader
-      include Concord.new(:header, :model), Adamantium
+      include Concord.new(:header, :model), Adamantium, AbstractType
 
-      def call(tuple)
-        header.each_with_object(model.allocate) { |attribute, object|
-          object.instance_variable_set("@#{attribute.name}", tuple[attribute.tuple_key])
-        }
-      end
+      abstract_method :call
 
+      # @api public
       def identity(tuple)
         header.keys.map { |key| tuple[key.tuple_key] }
       end
 
-    end # AttributeSet
+    end # Loader
 
   end # Mapper
 end # ROM
