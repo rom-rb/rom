@@ -1,3 +1,4 @@
 ---
 name: rom-mapper
-namespace: ROM::Mapper
+namespace: "ROM::Mapper*"
+strategy: --rspec-unit
