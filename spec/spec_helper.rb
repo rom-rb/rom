@@ -22,14 +22,14 @@ end
 
 require 'rom-relation'
 require 'rom-mapper'
-require 'rom/support/axiom/adapter/in_memory'
+require 'rom/support/axiom/adapter/memory'
 
 require 'devtools/spec_helper'
 require 'bogus/rspec'
 
 include ROM
 
-ROM_ENV     = Environment.coerce(:test => "in_memory://test")
+ROM_ENV     = Environment.coerce(:test => "memory://test")
 ROM_ADAPTER = ENV.fetch('ROM_ADAPTER', :in_memory).to_sym
 
 Bogus.configure do |config|

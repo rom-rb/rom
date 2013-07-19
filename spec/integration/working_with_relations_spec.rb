@@ -7,7 +7,7 @@ describe 'Working with relations' do
   specify 'relation setup' do
     pending 'in memory adapter is not finished yet'
 
-    env  = ROM::Environment.coerce(:test => 'in_memory://test')
+    env  = ROM::Environment.coerce(:test => 'memory://test')
     repo = env.repository(:test)
 
     repo.register(:users, [[:id, Integer], [:name, String]], :keys => [:id])

@@ -13,7 +13,7 @@ describe 'Setting up environment' do
       end
     end
 
-    env = ROM::Environment.coerce(:memory => 'in_memory://test')
+    env = ROM::Environment.coerce(:memory => 'memory://test')
     env.load_schema(schema)
 
     repository = env.repository(:memory)

@@ -18,7 +18,7 @@ module ROM
     #
     # @api private
     def self.build(name, uri, relations = {})
-      new(name, Axiom::Adapter.new(uri), relations)
+      new(name, Axiom::Adapter.build(uri), relations)
     end
 
     # Return the relation identified by +name+
@@ -51,7 +51,11 @@ module ROM
     #
     # @api private
     def register(relation)
-      relations[relation.name.to_sym] = adapter.gateway(relation)
+      name = relation.name
+
+      adapter[relation.name] = relation
+      relations[name.to_sym] = adapter[name]
+
       self
     end
 

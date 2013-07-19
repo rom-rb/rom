@@ -36,8 +36,14 @@ module Axiom
     #   when the given +uri+'s scheme is not registered
     #
     # @api private
-    def self.new(uri)
-      get(uri).new(uri)
+    def self.build(uri)
+      klass = get(uri)
+
+      if klass == Axiom::Adapter::Memory
+        klass.new
+      else
+        klass.new(uri)
+      end
     end
 
     # Return the adapter class registered for +uri+

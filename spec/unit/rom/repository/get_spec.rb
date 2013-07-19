@@ -5,7 +5,7 @@ describe Repository, '#get' do
 
   let(:object)   { described_class.build(name, uri) }
   let(:name)     { :bigdata }
-  let(:uri)      { Addressable::URI.parse('in_memory://test') }
+  let(:uri)      { Addressable::URI.parse('memory://test') }
 
   let(:relation)      { Axiom::Relation::Base.new(relation_name, header) }
   let(:relation_name) { :test }

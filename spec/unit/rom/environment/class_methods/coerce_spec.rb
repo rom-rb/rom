@@ -5,7 +5,7 @@ describe Environment, '.coerce' do
 
   context 'when an environment is passed' do
     let(:config)      { environment }
-    let(:environment) { described_class.build('test' => 'in_memory://test') }
+    let(:environment) { described_class.build('test' => 'memory://test') }
 
     it { should be(environment) }
   end
@@ -13,7 +13,7 @@ describe Environment, '.coerce' do
   context 'when a repository config hash is passed' do
     let(:config) { { name => uri } }
     let(:name)   { 'test' }
-    let(:uri)    { 'in_memory://test' }
+    let(:uri)    { 'memory://test' }
 
     let(:coerced_config) { Hash[:test => Repository.build(name, coerced_uri)] }
     let(:coerced_uri)    { Addressable::URI.parse(uri) }

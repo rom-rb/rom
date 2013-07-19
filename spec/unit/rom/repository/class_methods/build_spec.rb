@@ -6,12 +6,12 @@ describe Repository, '.build' do
   let(:name) { :test }
 
   context "with a registered uri scheme" do
-    let(:uri) { Addressable::URI.parse('in_memory://test') }
+    let(:uri) { Addressable::URI.parse('memory://test') }
 
     it { should be_instance_of(described_class) }
 
     its(:name)    { should be(name) }
-    its(:adapter) { should eq(Axiom::Adapter.new(uri)) }
+    its(:adapter) { should eq(Axiom::Adapter.build(uri)) }
   end
 
   context "with an unregistered uri scheme" do
