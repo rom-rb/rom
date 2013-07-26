@@ -15,6 +15,7 @@ describe 'Working with relations' do
 
     user = model.new(id: 1, name: 'Jane')
 
+    # TODO: change this to check original relation once Relation::Variable
     expect(users.insert(user).all).to include(user)
   end
 end
