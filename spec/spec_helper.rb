@@ -23,7 +23,7 @@ require 'rom-session'
 require 'axiom'
 require 'rom-relation'
 require 'rom-mapper'
-require 'rom/support/axiom/adapter/in_memory'
+require 'rom/support/axiom/adapter/memory'
 
 require 'bogus/rspec'
 
@@ -43,7 +43,7 @@ end
 
 class ROM::Mapper
   def self.build(header, model)
-    new(Mapper::Loader.new(header, model), Mapper::Dumper.new(header, model))
+    new(Mapper::Loader::ObjectBuilder.new(header, model), Mapper::Dumper.new(header, model))
   end
 end
 
@@ -58,5 +58,5 @@ SCHEMA = Schema.build do
   end
 end
 
-TEST_ENV = Environment.coerce(:test => 'in_memory://test')
+TEST_ENV = Environment.coerce(:test => 'memory://test')
 TEST_ENV.load_schema(SCHEMA)
