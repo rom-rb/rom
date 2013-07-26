@@ -61,10 +61,7 @@ module ROM
     # @api public
     def load_schema(schema)
       schema.each do |repository_name, relations|
-        relations.each do |relation|
-          name           = relation.name.to_sym
-          registry[name] = repository(repository_name).register(relation).get(name)
-        end
+        register_relations(repository_name, relations)
       end
 
       self
@@ -88,6 +85,16 @@ module ROM
       return self if @finalized
       @finalized = true
       self
+    end
+
+    private
+
+    # @api private
+    def register_relations(repository_name, relations)
+      relations.each do |relation|
+        name           = relation.name.to_sym
+        registry[name] = repository(repository_name).register(relation).get(name)
+      end
     end
 
   end # Environment
