@@ -1,5 +1,7 @@
 module ROM
 
+  # Represents ROM's relation schema
+  #
   class Schema
     include Concord.new(:definition)
     include Adamantium

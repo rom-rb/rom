@@ -1,6 +1,8 @@
 module ROM
   class Schema
 
+    # Builder object used by schema DSL to establish Axiom relations
+    #
     class Definition
       include Equalizer.new(:relations)
 
@@ -32,7 +34,7 @@ module ROM
         relations[name]
       end
 
-      def method_missing(name, *args, &block)
+      def method_missing(name, *)
         return super unless relations.key?(name)
         relations[name]
       end

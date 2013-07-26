@@ -3,6 +3,8 @@ module ROM
     class Definition
       class Relation
 
+        # Base relation builder object
+        #
         class Base < self
 
           def repository(name = Undefined)

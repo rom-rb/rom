@@ -2,6 +2,8 @@ module ROM
   class Schema
     class Definition
 
+      # Builder object for Axiom relation
+      #
       class Relation
         include Equalizer.new(:header, :keys)
 
