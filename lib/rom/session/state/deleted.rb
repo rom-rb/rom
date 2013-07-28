@@ -6,11 +6,12 @@ module ROM
       class Deleted < self
         include Concord::Public.new(:object, :relation), Adamantium::Flat
 
-        Commited = Class.new(self)
+        Committed = Class.new(State) { include Adamantium }
 
         # @api private
         def commit
-          Commited.new(object, relation.delete(object))
+          relation.delete(object)
+          Committed.new(object)
         end
 
       end # Deleted

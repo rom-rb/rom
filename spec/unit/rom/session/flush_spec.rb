@@ -40,4 +40,8 @@ describe Session, '#flush' do
     expect(subject[:users].state(jane)).to be_persisted
   end
 
+  it 'sets correct state for deleted objects' do
+    expect(subject[:users].state(john)).to be_frozen
+  end
+
 end
