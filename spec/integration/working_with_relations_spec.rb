@@ -14,8 +14,8 @@ describe 'Working with relations' do
     users = ROM::Relation.new(repo.get(:users), mapper)
 
     user = model.new(id: 1, name: 'Jane')
+    users.insert(user)
 
-    # TODO: change this to check original relation once Relation::Variable
-    expect(users.insert(user).all).to include(user)
+    expect(users.all).to include(user)
   end
 end
