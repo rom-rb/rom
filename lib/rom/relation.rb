@@ -37,15 +37,15 @@ module ROM
     end
 
     def take(limit)
-      new(relation.take(limit))
+      new(sorted.take(limit))
     end
 
     def first(limit = 1)
-      take(limit)
+      new(sorted.first(limit))
     end
 
     def last(limit = 1)
-      new(relation.reverse.take(limit).reverse)
+      new(sorted.last(limit))
     end
 
     def drop(offset)
@@ -69,6 +69,10 @@ module ROM
     end
 
     private
+
+    def sorted
+      relation.sort_by { relation.header }
+    end
 
     def new(new_relation, new_mapper = mapper)
       self.class.new(new_relation, new_mapper)

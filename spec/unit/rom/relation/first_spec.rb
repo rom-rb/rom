@@ -1,13 +1,12 @@
 require 'spec_helper'
 
-describe Relation, '#take' do
-  subject(:relation) { described_class.new(axiom_relation, mapper) }
+describe Relation, '#first' do
+  subject(:relation) { described_class.new(users, mapper) }
 
-  let(:axiom_relation) { Axiom::Relation.new([[ :name, String ]], [['John'], ['Jane']]) }
-  let(:mapper)         { Mapper.new }
+  include_context 'Relation'
 
-  it 'limits the relation' do
-    pending
-    expect(relation.take(1).all).to eql([{ :name => 'John' }])
+  it 'returns first n-tuples' do
+    expect(relation.first.all).to include(model.new(:name => 'Jane'))
+    expect(relation.first.count).to be(1)
   end
 end
