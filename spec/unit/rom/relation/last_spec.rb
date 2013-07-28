@@ -8,6 +8,6 @@ describe Relation, '#first' do
   let(:mapper) { TestMapper.new(users.header, model) }
 
   it 'returns first object from the relation' do
-    expect(relation.first).to eq(model.new(:name => 'Jane'))
+    expect(relation.last).to eq(model.new(:name => 'John'))
   end
 end

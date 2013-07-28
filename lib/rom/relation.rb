@@ -32,36 +32,12 @@ module ROM
       new(relation.replace(objects.map(&mapper.method(:dump))))
     end
 
-    def restrict(*args, &block)
-      new(relation.restrict(*args, &block))
+    def first(*args)
+      new(sorted.first(*args)).all.first
     end
 
-    def take(limit)
-      new(relation.take(limit))
-    end
-
-    def first(limit = 1)
-      take(limit)
-    end
-
-    def last(limit = 1)
-      new(relation.reverse.take(limit).reverse)
-    end
-
-    def drop(offset)
-      new(relation.drop(offset))
-    end
-
-    def order(*attributes)
-      new(relation.sort_by(project(attributes).header))
-    end
-
-    def sort_by(*args, &block)
-      new(relation.sort_by(*args, &block))
-    end
-
-    def ordered
-      new(relation.sort_by(header))
+    def last(*args)
+      new(sorted.last(*args)).all.first
     end
 
     def inject_mapper(mapper)
@@ -72,6 +48,10 @@ module ROM
 
     def new(new_relation, new_mapper = mapper)
       self.class.new(new_relation, new_mapper)
+    end
+
+    def sorted
+      relation.sort_by(header)
     end
 
   end # class Relation
