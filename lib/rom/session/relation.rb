@@ -14,8 +14,8 @@ module ROM
       private :relation, :tracker
 
       # @api private
-      def self.build(relation, tracker, identity_map)
-        mapper = Session::Mapper.new(relation.mapper, tracker, identity_map)
+      def self.build(relation, tracker)
+        mapper = Mapper.build(relation.mapper, tracker)
         new(relation.inject_mapper(mapper), tracker)
       end
 

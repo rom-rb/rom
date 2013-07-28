@@ -14,9 +14,8 @@ module ROM
 
       # @api private
       def initialize
-        @identity_map = Hash.new { |hash, key| hash[key] = IdentityMap.build }
-        @objects      = Hash.new
-        @changelog    = []
+        @objects   = Hash.new
+        @changelog = []
       end
 
       # @api private
@@ -59,11 +58,6 @@ module ROM
       # @api private
       def store_persisted(object, mapper)
         store(object, State::Persisted.new(object, mapper))
-      end
-
-      # @api private
-      def identity_map(relation_name)
-        @identity_map[relation_name]
       end
 
       private

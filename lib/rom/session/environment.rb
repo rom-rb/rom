@@ -55,7 +55,7 @@ module ROM
 
       # @api private
       def build_relation(name)
-        Session::Relation.build(environment[name], tracker, tracker.identity_map(name))
+        Relation.build(environment[name], tracker)
       end
 
     end # Environment

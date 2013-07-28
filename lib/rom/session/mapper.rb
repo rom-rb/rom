@@ -6,6 +6,11 @@ module ROM
       include Proxy, Concord::Public.new(:mapper, :tracker, :identity_map)
 
       # @api private
+      def self.build(mapper, tracker)
+        new(mapper, tracker, IdentityMap.build)
+      end
+
+      # @api private
       def dirty?(object)
         identity_map.fetch_tuple(identity(object)) != dump(object)
       end
