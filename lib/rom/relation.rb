@@ -4,7 +4,7 @@ module ROM
   # load/dump tuples/objects
   #
   class Relation
-    include Enumerable, Proxy, Concord::Public.new(:relation, :mapper)
+    include Enumerable, Concord::Public.new(:relation, :mapper)
 
     alias_method :all, :to_a
 
@@ -32,12 +32,36 @@ module ROM
       new(relation.replace(objects.map(&mapper.method(:dump))))
     end
 
-    def first(*args)
-      new(sorted.first(*args)).all.first
+    def restrict(*args, &block)
+      new(relation.restrict(*args, &block))
     end
 
-    def last(*args)
-      new(sorted.last(*args)).all.first
+    def take(limit)
+      new(relation.take(limit))
+    end
+
+    def first(limit = 1)
+      take(limit)
+    end
+
+    def last(limit = 1)
+      new(relation.reverse.take(limit).reverse)
+    end
+
+    def drop(offset)
+      new(relation.drop(offset))
+    end
+
+    def order(*attributes)
+      new(relation.sort_by { relation.header.project(attributes) })
+    end
+
+    def sort_by(*args, &block)
+      new(relation.sort_by(*args, &block))
+    end
+
+    def ordered
+      new(relation.sort_by(relation.header))
     end
 
     def inject_mapper(mapper)
@@ -48,10 +72,6 @@ module ROM
 
     def new(new_relation, new_mapper = mapper)
       self.class.new(new_relation, new_mapper)
-    end
-
-    def sorted
-      relation.sort_by(header)
     end
 
   end # class Relation

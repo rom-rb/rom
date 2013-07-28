@@ -1,13 +1,12 @@
 require 'spec_helper'
 
-describe Relation, '#take' do
+describe Relation, '#drop' do
   subject(:relation) { described_class.new(axiom_relation, mapper) }
 
   let(:axiom_relation) { Axiom::Relation.new([[ :name, String ]], [['John'], ['Jane']]) }
-  let(:mapper)         { Mapper.new }
+  let(:mapper) { Mapper.new(users.header) }
 
-  it 'limits the relation' do
+  it 'drops the relation by the given offset' do
     pending
-    expect(relation.take(1).all).to eql([{ :name => 'John' }])
   end
 end
