@@ -4,9 +4,12 @@ describe 'Session' do
   let(:mapper) { Mapper.build(Mapper::Header.coerce([[:id, Integer], [:name, String]], :keys => [:id]), model) }
   let(:model)  { mock_model(:id, :name) }
 
-  # we're using an in-memory relation
-  let(:users)    { Axiom::Relation.new(SCHEMA[:users].header, [ [ 1, 'John' ], [ 2, 'Jane' ] ]) }
-  let(:relation) { Relation.new(users, mapper) }
+  let(:users)    { TEST_ENV[:users] }
+  let(:relation) { Relation.new(TEST_ENV[:users], mapper) }
+
+  before do
+    users.insert([[1, 'John'], [2, 'Jane']])
+  end
 
   specify 'fetching an object from a relation' do
     Session.start(:users => relation) do |session|
@@ -30,7 +33,7 @@ describe 'Session' do
 
       session.flush
 
-      expect(session[:users].state(jane).relation.all).not_to include(jane)
+      expect(relation.all).not_to include(jane)
     end
   end
 
@@ -42,21 +45,23 @@ describe 'Session' do
 
       session.flush
 
-      expect(session[:users].state(piotr).relation.all).to include(piotr)
+      expect(relation.all).to include(piotr)
     end
   end
 
   specify 'updating an object in a relation' do
     Session.start(:users => relation) do |session|
-      jane = session[:users].restrict { |r| r.name.eq('Jane') }.all.first
+      jane = session[:users].restrict { |r| r.id.eq(2) }.all.first
       jane.name = 'Jane Doe'
 
       session[:users].save(jane)
 
-      # FIXME: ROM::Relation#update doesn't work like expected
-      #expect(users.size).to be(2)
+      session.flush
 
-      expect(session[:users].state(jane).relation.all.last).to be(jane)
+      # TODO: ROM::Relation#update doesn't work like expected
+      #expect(relation.count).to be(2)
+
+      expect(relation.all.last).to eql(jane)
     end
   end
 end
