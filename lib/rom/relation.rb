@@ -53,8 +53,7 @@ module ROM
     end
 
     def order(*attributes)
-      sorted = relation.project(attributes).header | relation.header
-      new(relation.sort_by { sorted })
+      new(relation.sort_by { relation.project(attributes).header })
     end
 
     def sort_by(*args, &block)
