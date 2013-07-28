@@ -36,6 +36,10 @@ describe Session, '#flush' do
     expect(subject[:users].all).to include(piotr)
   end
 
+  it 'sets correct state for created objects' do
+    expect(subject[:users].state(piotr)).to be_persisted
+  end
+
   it 'sets correct state for updated objects' do
     expect(subject[:users].state(jane)).to be_persisted
   end

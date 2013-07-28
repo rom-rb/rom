@@ -81,7 +81,7 @@ module ROM
       #
       # @api public
       def track(object)
-        tracker.store_transient(object)
+        tracker.store_transient(object, mapper)
         self
       end
 

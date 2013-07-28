@@ -7,7 +7,7 @@ describe Session::State do
 
   describe '#transient?' do
     context 'with transient state' do
-      subject { Session::State::Transient.new(object) }
+      subject { Session::State::Transient.new(object, mapper) }
 
       it { should be_transient }
     end
@@ -27,7 +27,7 @@ describe Session::State do
     end
 
     context 'with a non-persisted state' do
-      subject { Session::State::Transient.new(object) }
+      subject { Session::State::Transient.new(object, mapper) }
 
       it { should_not be_persisted }
     end
@@ -35,13 +35,13 @@ describe Session::State do
 
   describe '#created?' do
     context 'with a created state' do
-      subject { Session::State::Created.new(object, relation) }
+      subject { Session::State::Created.new(object, mapper, relation) }
 
       it { should be_created }
     end
 
     context 'with a non-created state' do
-      subject { Session::State::Transient.new(object) }
+      subject { Session::State::Transient.new(object, mapper) }
 
       it { should_not be_created }
     end
@@ -55,7 +55,7 @@ describe Session::State do
     end
 
     context 'with a non-updated state' do
-      subject { Session::State::Transient.new(object) }
+      subject { Session::State::Transient.new(object, mapper) }
 
       it { should_not be_updated }
     end
@@ -69,7 +69,7 @@ describe Session::State do
     end
 
     context 'with a non-updated state' do
-      subject { Session::State::Transient.new(object) }
+      subject { Session::State::Transient.new(object, mapper) }
 
       it { should_not be_deleted }
     end

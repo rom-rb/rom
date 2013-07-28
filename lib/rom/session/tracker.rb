@@ -52,8 +52,8 @@ module ROM
       end
 
       # @api private
-      def store_transient(object)
-        store(object, State::Transient.new(object))
+      def store_transient(object, mapper)
+        store(object, State::Transient.new(object, mapper))
       end
 
       # @api private

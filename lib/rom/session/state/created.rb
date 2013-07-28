@@ -4,13 +4,12 @@ module ROM
 
       # @api private
       class Created < self
-        include Concord::Public.new(:object, :relation), Adamantium::Flat
-
-        Commited = Class.new(self)
+        include Concord::Public.new(:object, :mapper, :relation), Adamantium::Flat
 
         # @api private
         def commit
-          Commited.new(object, relation.insert(object))
+          relation.insert(object)
+          Persisted.new(object, mapper)
         end
 
       end # Created
