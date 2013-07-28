@@ -76,17 +76,6 @@ module ROM
       repositories[name]
     end
 
-    # Finalize the environment after all mappers were defined
-    #
-    # @return [self]
-    #
-    # @api public
-    def finalize
-      return self if @finalized
-      @finalized = true
-      self
-    end
-
     private
 
     # @api private
