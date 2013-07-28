@@ -49,7 +49,7 @@ module ROM
     end
 
     def drop(offset)
-      new(relation.drop(offset))
+      new(sorted.drop(offset))
     end
 
     def sort_by(*args, &block)
