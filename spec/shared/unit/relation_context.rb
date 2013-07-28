@@ -8,7 +8,8 @@ shared_context 'Session::Relation' do
 
   let(:mapper)   { Mapper.build(Mapper::Header.coerce([[:id, Integer], [:name, String]], :keys => [:id]), model) }
   let(:model)    { mock_model(:id, :name) }
-  let(:axiom)    { Axiom::Relation.new(SCHEMA[:users].header, [ [ 1, 'John' ], [ 2, 'Jane' ] ]) }
+  let(:header)   { SCHEMA[:users].header }
+  let(:axiom)    { Axiom::Relation::Variable.new(Axiom::Relation.new(header, [[1, 'John'], [2, 'Jane']])) }
   let(:relation) { Relation.new(axiom, mapper) }
 
   let(:user) { session[:users].all.first }

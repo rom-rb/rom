@@ -25,15 +25,15 @@ describe Session, '#flush' do
   it { should be_clean }
 
   it 'commits all deletes' do
-    expect(subject[:users].state(john).relation.all).to_not include(john)
+    expect(subject[:users].all).to_not include(john)
   end
 
   it 'commits all updates' do
-    expect(subject[:users].state(jane).relation.all.last).to eq(jane)
+    expect(subject[:users].all.first).to eq(jane)
   end
 
   it 'commits all inserts' do
-    expect(subject[:users].state(piotr).relation.all).to include(piotr)
+    expect(subject[:users].all).to include(piotr)
   end
 
 end
