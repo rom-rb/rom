@@ -1,8 +1,6 @@
 require 'spec_helper'
 
 describe Relation, '#sort_by' do
-  subject(:relation) { described_class.new(users, mapper) }
-
   include_context 'Relation'
 
   it 'sorts relation by its attributes' do
