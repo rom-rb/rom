@@ -6,6 +6,6 @@ describe Relation, '#delete' do
   include_context 'Relation'
 
   it 'deletes tuples from the relation' do
-    expect(relation.delete(user).all).not_to include(user)
+    expect(relation.delete(user1).all).not_to include(user1)
   end
 end

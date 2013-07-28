@@ -52,16 +52,8 @@ module ROM
       new(relation.drop(offset))
     end
 
-    def order(*attributes)
-      new(relation.sort_by { relation.header.project(attributes) })
-    end
-
     def sort_by(*args, &block)
       new(relation.sort_by(*args, &block))
-    end
-
-    def ordered
-      new(relation.sort_by(relation.header))
     end
 
     def inject_mapper(mapper)
