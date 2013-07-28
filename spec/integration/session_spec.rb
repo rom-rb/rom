@@ -11,6 +11,10 @@ describe 'Session' do
     users.insert([[1, 'John'], [2, 'Jane']])
   end
 
+  after do
+    users.delete([[1, 'John'], [2, 'Jane'], [3, 'Piotr']])
+  end
+
   specify 'fetching an object from a relation' do
     Session.start(:users => relation) do |session|
       # fetch user for the first time
@@ -58,8 +62,7 @@ describe 'Session' do
 
       session.flush
 
-      # TODO: ROM::Relation#update doesn't work like expected
-      #expect(relation.count).to be(2)
+      expect(relation.count).to be(2)
 
       expect(relation.all.last).to eql(jane)
     end

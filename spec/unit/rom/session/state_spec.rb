@@ -49,7 +49,7 @@ describe Session::State do
 
   describe '#updated?' do
     context 'with an updated state' do
-      subject { Session::State::Updated.new(object, relation) }
+      subject { Session::State::Updated.new(object, [], relation) }
 
       it { should be_updated }
     end

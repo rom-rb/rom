@@ -9,7 +9,7 @@ module ROM
         # @api private
         def save(relation)
           if mapper.dirty?(object)
-            Updated.new(object, relation)
+            Updated.new(object, original_tuple, relation)
           else
             self
           end
@@ -18,6 +18,13 @@ module ROM
         # @api private
         def delete(relation)
           Deleted.new(object, relation)
+        end
+
+        private
+
+        # @api private
+        def original_tuple
+          mapper.identity_map.fetch_tuple(mapper.identity(object))
         end
 
       end # Persisted
