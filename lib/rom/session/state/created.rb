@@ -9,6 +9,7 @@ module ROM
         # @api private
         def commit
           relation.insert(object)
+          mapper.store_in_identity_map(object)
           Persisted.new(object, mapper)
         end
 

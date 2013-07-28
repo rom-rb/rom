@@ -40,6 +40,10 @@ describe Session, '#flush' do
     expect(subject[:users].state(piotr)).to be_persisted
   end
 
+  it 'registers newly created object in the IM' do
+    expect(subject[:users].restrict { |r| r.name.eq('Piotr') }.all.first).to be(piotr)
+  end
+
   it 'sets correct state for updated objects' do
     expect(subject[:users].state(jane)).to be_persisted
   end

@@ -16,8 +16,14 @@ module ROM
         identity_map.fetch_object(identity) { load_and_track(identity, tuple) }
       end
 
+      # @api private
+      def store_in_identity_map(object)
+        identity_map.store(identity(object), object, dump(object))
+      end
+
       private
 
+      # @api private
       def load_and_track(identity, tuple)
         object = mapper.load(tuple)
         tracker.store_persisted(object, self)
