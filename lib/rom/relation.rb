@@ -52,7 +52,7 @@ module ROM
     end
 
     def order(*attributes)
-      new(relation.sort_by { project(attributes).header })
+      new(relation.sort_by(project(attributes).header))
     end
 
     def sort_by(*args, &block)
