@@ -4,7 +4,7 @@ module ROM
   # load/dump tuples/objects
   #
   class Relation
-    include Enumerable, Concord::Public.new(:relation, :mapper)
+    include Enumerable, Proxy, Concord::Public.new(:relation, :mapper)
 
     alias_method :all, :to_a
 
@@ -52,7 +52,7 @@ module ROM
     end
 
     def order(*attributes)
-      new(relation.sort_by { relation.project(attributes).header })
+      new(relation.sort_by { project(attributes).header })
     end
 
     def sort_by(*args, &block)
@@ -60,7 +60,7 @@ module ROM
     end
 
     def ordered
-      new(relation.sort_by(relation.header))
+      new(relation.sort_by(header))
     end
 
     def inject_mapper(mapper)

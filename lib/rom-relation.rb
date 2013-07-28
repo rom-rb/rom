@@ -29,6 +29,8 @@ module ROM
 
 end # module ROM
 
+require 'rom/support/proxy'
+
 require 'rom/repository'
 require 'rom/environment'
 require 'rom/relation'
