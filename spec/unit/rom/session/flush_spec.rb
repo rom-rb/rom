@@ -29,11 +29,15 @@ describe Session, '#flush' do
   end
 
   it 'commits all updates' do
-    expect(subject[:users].all.first).to eq(jane)
+    expect(subject[:users].all.first).to eq(relation.all.first)
   end
 
   it 'commits all inserts' do
     expect(subject[:users].all).to include(piotr)
+  end
+
+  it 'sets correct state for updated objects' do
+    expect(subject[:users].state(jane)).to be_persisted
   end
 
 end
