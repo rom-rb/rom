@@ -1,4 +1,3 @@
-require 'backports'
 require 'adamantium'
 require 'equalizer'
 require 'abstract_type'
@@ -7,23 +6,26 @@ require 'concord'
 require 'rom-relation'
 require 'rom-mapper'
 
-# Namespace module
 module ROM
 
   # Session namespace
   class Session
 
-    # Error raised on illegal state
-    class StateError < RuntimeError; end
-
-    # Error raised when session misses a mapper
-    class MissingMapperError < RuntimeError; end
-
   end # Session
+
 end # ROM
 
 require 'rom/session'
-require 'rom/session/reader'
+
+require 'rom/session/environment'
+require 'rom/session/tracker'
+require 'rom/session/identity_map'
+require 'rom/session/relation'
+require 'rom/session/mapper'
+
 require 'rom/session/state'
-require 'rom/session/operand'
-require 'rom/session/registry'
+require 'rom/session/state/transient'
+require 'rom/session/state/persisted'
+require 'rom/session/state/created'
+require 'rom/session/state/updated'
+require 'rom/session/state/deleted'

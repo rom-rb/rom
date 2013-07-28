@@ -1,134 +1,69 @@
-require 'devtools'
-require 'rom-session'
+if ENV['COVERAGE'] == 'true'
+  require 'simplecov'
+  require 'coveralls'
 
-Devtools.init_spec_helper
+  SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
+    SimpleCov::Formatter::HTMLFormatter,
+    Coveralls::SimpleCov::Formatter
+  ]
 
-class Spec
-  class DomainObject
-    #include Equalizer.new(:key_attribute, :other_attribute)
+  SimpleCov.start do
+    command_name 'spec:unit'
 
-    attr_accessor :key_attribute, :other_attribute
-    def initialize(key_attribute=:a, other_attribute=:b)
-      @key_attribute, @other_attribute = key_attribute,other_attribute
-    end
-  end
-
-  # A test double for a dumper
-  class Dumper
-    include Equalizer.new(:identity, :tuple)
-
-    def initialize(object)
-      @object = object
-    end
-
-    def tuple
-      {
-        :key_attribute => @object.key_attribute, 
-        :other_attribute => @object.other_attribute
-      }
-    end
-
-    def identity
-      @object.key_attribute
-    end
-
-  end
-
-  # A test double for a loader
-  class Loader
-    include Equalizer.new(:identity, :tuple)
-
-    attr_reader :mapper 
-    attr_reader :tuple 
-
-    def initialize(mapper, tuple)
-      @mapper, @tuple = mapper, tuple
-    end
-
-    def object
-      @object ||= DomainObject.new(
-        tuple.fetch(:key_attribute), 
-        tuple.fetch(:other_attribute)
-      )
-    end
-
-    def identity
-      tuple.fetch(:key_attribute)
-    end
-  end
-
-  # A test double for a mapper that records commands.
-  class Mapper
-    include Equalizer.new(:tuples, :inserts, :updates, :deletes)
-
-    def tuples=(tuples)
-      @tuples = tuples
-    end
-
-    attr_reader :inserts, :deletes, :updates, :tuples
-
-    def initialize
-      @deletes, @inserts, @updates = [], [], []
-    end
-
-    def model
-      DomainObject
-    end
-
-    # Return loader for tuple
-    #
-    # @param [Tuple] tuple
-    #
-    # @return [Loader]
-    #
-    # @api private
-    #
-    def loader(tuple)
-      Loader.new(self, tuple)
-    end
-
-    # Return dumper for object
-    #
-    # @param [Object] object
-    #
-    # @return [Dumper]
-    #
-    # @api private
-    #
-    def dumper(object)
-      Dumper.new(object)
-    end
-
-    # Insert 
-    #
-    # @param [State]
-    #
-    # @api private
-    #
-    def insert(state)
-      @inserts << state
-    end
-
-    # Delete
-    #
-    # @param [STate] 
-    #
-    def delete(state)
-      @deletes << state
-    end
-
-    # Update
-    #
-    # @param [ROM::Operand::Update] operand
-    #
-    def update(operand)
-      @updates << operand
-    end
-  end
-
-  class Registry < ROM::Session::Registry
-    def initialize
-      super(DomainObject => Mapper.new)
-    end
+    add_filter 'config'
+    add_filter 'lib/rom/support'
+    add_filter 'spec'
   end
 end
+
+require 'devtools/spec_helper'
+
+require 'rom-session'
+
+require 'axiom'
+require 'rom-relation'
+require 'rom-mapper'
+require 'rom/support/axiom/adapter/memory'
+
+require 'bogus/rspec'
+
+include ROM
+
+# TODO: remove this once axiom provides #update interface
+class ROM::Relation
+  def update(object, original_tuple)
+    new(relation.delete([original_tuple]).insert([mapper.dump(object)]))
+  end
+end
+
+def mock_model(*attributes)
+  Class.new {
+    include Equalizer.new(*attributes)
+
+    attributes.each { |attribute| attr_accessor attribute }
+
+    def initialize(attrs = {})
+      attrs.each { |name, value| send("#{name}=", value) }
+    end
+  }
+end
+
+class ROM::Mapper
+  def self.build(header, model)
+    new(Mapper::Loader::ObjectBuilder.new(header, model), Mapper::Dumper.new(header, model))
+  end
+end
+
+SCHEMA = Schema.build do
+  base_relation :users do
+    repository :test
+
+    attribute :id,   Integer
+    attribute :name, String
+
+    key :id
+  end
+end
+
+TEST_ENV = Environment.coerce(:test => 'memory://test')
+TEST_ENV.load_schema(SCHEMA)
