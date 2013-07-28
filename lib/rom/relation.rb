@@ -20,7 +20,8 @@ module ROM
     alias_method :<<, :insert
 
     def update(object)
-      new(relation.update { mapper.dump(object) })
+      tuple = mapper.dump(object)
+      new(relation.delete([tuple]).insert([ tuple ]))
     end
 
     def delete(object)
