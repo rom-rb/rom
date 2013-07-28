@@ -12,7 +12,7 @@ describe Repository, '#get' do
   let(:header)        { [] }
 
   before do
-    object.register(relation)
+    object.register(relation_name, relation)
   end
 
   it { should eq(relation) }

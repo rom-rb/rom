@@ -92,8 +92,8 @@ module ROM
     # @api private
     def register_relations(repository_name, relations)
       relations.each do |relation|
-        name           = relation.name.to_sym
-        registry[name] = repository(repository_name).register(relation).get(name)
+        name           = relation.name
+        registry[name] = repository(repository_name).register(name, relation).get(name)
       end
     end
 

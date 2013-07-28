@@ -50,12 +50,9 @@ module ROM
     # @return [self]
     #
     # @api private
-    def register(relation)
-      name = relation.name
-
-      adapter[relation.name] = relation
-      relations[name.to_sym] = adapter[name]
-
+    def register(name, relation)
+      adapter[name]   = relation
+      relations[name] = adapter[name]
       self
     end
 
