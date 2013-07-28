@@ -38,6 +38,7 @@ describe Session, '#flush' do
 
   it 'sets correct state for created objects' do
     expect(subject[:users].state(piotr)).to be_persisted
+    expect(subject[:users].dirty?(piotr)).to be(false)
   end
 
   it 'registers newly created object in the IM' do
