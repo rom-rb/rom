@@ -56,6 +56,16 @@ module ROM
       new(relation.sort_by(*args, &block))
     end
 
+    def one(*args, &block)
+      restriction = relation.restrict(*args, &block)
+
+      if restriction.count > 1
+        raise ManyTuplesError
+      else
+        new(restriction).all.first
+      end
+    end
+
     def inject_mapper(mapper)
       new(relation, mapper)
     end
