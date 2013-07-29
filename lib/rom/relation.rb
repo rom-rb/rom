@@ -41,7 +41,7 @@ module ROM
   #   # => [{:id=>1, :name=>"John"}, {:id=>2, :name=>"Jane"}, {:id=>3, :name=>"Piotr"}]
   #
   #   relation.delete(id: 1, name: 'John').to_a
-  #   [{:id=>2, :name=>"Jane"}]
+  #   # => [{:id=>2, :name=>"Jane"}]
   #
   #
   class Relation
