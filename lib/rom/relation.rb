@@ -43,7 +43,6 @@ module ROM
   #   relation.delete(id: 1, name: 'John').to_a
   #   # => [{:id=>2, :name=>"Jane"}]
   #
-  #
   class Relation
     include Enumerable, Concord::Public.new(:relation, :mapper)
 
@@ -69,6 +68,8 @@ module ROM
     #   end
     #
     # @yieldparam [Object]
+    #
+    # @return [Relation]
     #
     # @api public
     def each(&block)
@@ -302,12 +303,16 @@ module ROM
 
     # Sort wrapped relation using all attributes in the header
     #
+    # @return [Axiom::Relation]
+    #
     # @api private
     def sorted
       relation.sort_by { relation.header }
     end
 
     # Return new relation instance
+    #
+    # @return [Relation]
     #
     # @api private
     def new(new_relation, new_mapper = mapper)
