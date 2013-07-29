@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module ROM
 
   # Enhanced ROM relation wrapping axiom relation and using injected mapper to
@@ -21,7 +23,7 @@ module ROM
 
     def update(object)
       tuple = mapper.dump(object)
-      new(relation.delete([tuple]).insert([ tuple ]))
+      new(relation.delete([tuple]).insert([tuple]))
     end
 
     def delete(object)

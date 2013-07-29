@@ -1,3 +1,7 @@
+# # encoding: utf-8
+
+# encoding: utf-8
+
 shared_context 'Relation' do
   subject(:relation) { described_class.new(users, mapper) }
 

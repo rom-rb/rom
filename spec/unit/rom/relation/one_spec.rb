@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require 'spec_helper'
 
 describe Relation, '#one' do
@@ -5,7 +7,7 @@ describe Relation, '#one' do
 
   context 'when one tuple is returned' do
     it 'returns one object' do
-      expect(relation.one(:name => 'Jane')).to eql(user2)
+      expect(relation.one(name: 'Jane')).to eql(user2)
     end
   end
 
@@ -14,7 +16,7 @@ describe Relation, '#one' do
     let(:users)  { Axiom::Relation.new(header, [[1, 'Jane'], [2, 'Jane']]) }
 
     it 'raises error' do
-      expect { relation.one(:name => 'Jane') }.to raise_error(ManyTuplesError)
+      expect { relation.one(name: 'Jane') }.to raise_error(ManyTuplesError)
     end
   end
 end

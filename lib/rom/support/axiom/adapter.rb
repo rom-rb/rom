@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module Axiom
 
   # Raised when passing an +uri+ with an unregistered scheme to {Adapter.new}
@@ -60,8 +62,12 @@ module Axiom
     # @api private
     def self.get(uri)
       uri_scheme = uri.scheme
+
       REGISTRY.fetch(uri_scheme) {
-        raise UnknownAdapterError, "'#{uri_scheme}' is no registered uri scheme"
+        raise(
+          UnknownAdapterError,
+          "#{uri_scheme.inspect} is no registered uri scheme"
+        )
       }
     end
 

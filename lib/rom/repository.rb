@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module ROM
 
   # A repository with a given +name+ and +adapter+

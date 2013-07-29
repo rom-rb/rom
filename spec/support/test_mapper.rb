@@ -1,8 +1,10 @@
+# encoding: utf-8
+
 class TestMapper < Struct.new(:header, :model)
   def load(tuple)
     model.new(
       Hash[
-        header.map { |attribute| [ attribute.name, tuple[attribute.name]] }
+        header.map { |attribute| [attribute.name, tuple[attribute.name]] }
       ]
     )
   end

@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require 'addressable/uri'
 
 require 'concord'
@@ -19,7 +21,7 @@ module ROM
   Undefined = Object.new.freeze
 
   # An empty frozen Hash useful for parameter default values
-  EMPTY_HASH = Hash.new.freeze
+  EMPTY_HASH = {}.freeze
 
   # An empty frozen Array useful for parameter default values
   EMPTY_ARRAY = [].freeze

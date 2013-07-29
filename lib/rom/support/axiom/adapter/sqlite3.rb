@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require 'do_sqlite3'
 
 require 'rom/support/axiom/adapter'

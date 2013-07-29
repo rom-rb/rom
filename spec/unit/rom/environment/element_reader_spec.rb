@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require 'spec_helper'
 
 describe Environment, '#[]' do
@@ -6,10 +8,10 @@ describe Environment, '#[]' do
   subject { object[:users] }
 
   context 'when relation exists' do
-    fake(:relation, :name => :users) { Axiom::Relation::Base }
+    fake(:relation, name: :users) { Axiom::Relation::Base }
 
     before do
-      object.load_schema(:test => [ relation ])
+      object.load_schema(test: [relation])
     end
 
     it { should be_instance_of(Axiom::Relation::Variable::Materialized) }

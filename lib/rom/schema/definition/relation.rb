@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module ROM
   class Schema
     class Definition
@@ -14,7 +16,7 @@ module ROM
         end
 
         def header
-          Axiom::Relation::Header.coerce(@header, :keys => @keys)
+          Axiom::Relation::Header.coerce(@header, keys: @keys)
         end
 
         def attribute(name, type)

@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require 'axiom-memory-adapter'
 require 'rom/support/axiom/adapter'
 

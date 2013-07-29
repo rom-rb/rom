@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module ROM
 
   # Represents ROM's relation schema

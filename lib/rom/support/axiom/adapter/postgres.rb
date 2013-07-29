@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require 'do_postgres'
 
 require 'rom/support/axiom/adapter'

@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require 'spec_helper'
 
 describe Repository, '.build' do
@@ -5,7 +7,7 @@ describe Repository, '.build' do
 
   let(:name) { :test }
 
-  context "with a registered uri scheme" do
+  context 'with a registered uri scheme' do
     let(:uri) { Addressable::URI.parse('memory://test') }
 
     it { should be_instance_of(described_class) }
@@ -14,9 +16,9 @@ describe Repository, '.build' do
     its(:adapter) { should eq(Axiom::Adapter.build(uri)) }
   end
 
-  context "with an unregistered uri scheme" do
+  context 'with an unregistered uri scheme' do
     let(:uri) { Addressable::URI.parse('unregistered://test') }
-    let(:msg) { "'#{uri.scheme}' is no registered uri scheme" }
+    let(:msg) { "#{uri.scheme.inspect} is no registered uri scheme" }
 
     specify do
       expect { subject }.to raise_error(Axiom::UnknownAdapterError, msg)

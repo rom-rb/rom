@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module ROM
 
   # The environment used to build and finalize mappers and their relations
@@ -13,7 +15,8 @@ module ROM
     #   env    = ROM::Environment.coerce(config)
     #
     # @param [Environment, Hash<#to_sym, String>] config
-    #   an environment or a hash of adapter uri strings, keyed by repository name
+    #   an environment or a hash of adapter uri strings,
+    #   keyed by repository name
     #
     # @return [Environment]
     #
@@ -82,7 +85,8 @@ module ROM
     def register_relations(repository_name, relations)
       relations.each do |relation|
         name           = relation.name
-        registry[name] = repository(repository_name).register(name, relation).get(name)
+        repository     = repository(repository_name).register(name, relation)
+        registry[name] = repository.get(name)
       end
     end
 
