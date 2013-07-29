@@ -90,7 +90,7 @@ module ROM
     #
     # @return [Relation]
     #
-    # @api private
+    # @api public
     def insert(object)
       new(relation.insert([mapper.dump(object)]))
     end
