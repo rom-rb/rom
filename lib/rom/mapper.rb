@@ -17,7 +17,10 @@ module ROM
     end
 
     def call(relation)
-      relation.rename(header.mapping)
+      mapping    = header.mapping
+      attributes = mapping.keys
+
+      relation.project(attributes).rename(mapping)
     end
 
     # @api public
