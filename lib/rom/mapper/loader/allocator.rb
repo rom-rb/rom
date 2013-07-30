@@ -9,7 +9,7 @@ module ROM
         def call(tuple)
           allocate { |attribute, object|
             object.instance_variable_set(
-              "@#{attribute.name}", tuple[attribute.tuple_key]
+              "@#{attribute.name}", tuple[attribute.name]
             )
           }
         end

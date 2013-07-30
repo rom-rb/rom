@@ -9,7 +9,7 @@ module ROM
 
       # @api public
       def identity(tuple)
-        header.keys.map { |key| tuple[key.tuple_key] }
+        header.keys.map { |key| tuple[key.name] }
       end
 
     end # Loader
