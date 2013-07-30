@@ -1,7 +1,11 @@
 module ROM
 
   class Mapper
-    include Concord::Public.new(:loader, :dumper)
+    include Concord::Public.new(:header, :loader, :dumper)
+
+    def call(relation)
+      relation.rename(header.mapping)
+    end
 
     # @api public
     def identity(object)
