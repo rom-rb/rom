@@ -18,6 +18,7 @@ module ROM
           hash[attribute.tuple_key] = attribute.name
         }
       end
+      memoize :mapping
 
       def keys
         # FIXME: find a way to simplify this
