@@ -14,7 +14,7 @@ module ROM
 
         # @api private
         def attributes(tuple)
-          Hash[header.map { |attribute| [ attribute.name, tuple[attribute.tuple_key] ] }]
+          Hash[header.map { |attribute| [attribute.name, tuple[attribute.name]] }]
         end
 
       end # AttributeWriter
