@@ -8,7 +8,10 @@ describe Mapper, '#call' do
   }
 
   let(:header) {
-    Mapper::Header.build(relation.header, map: { user_id: :id, user_name: :name })
+    Mapper::Header.build(
+      [[:user_id, Integer], [:user_name, String]],
+      map: { user_id: :id, user_name: :name }
+    )
   }
 
   let(:model) {
@@ -16,7 +19,9 @@ describe Mapper, '#call' do
   }
 
   let(:relation) {
-    Axiom::Relation::Base.new(:users, [[:user_id, Integer], [:user_name, String]])
+    Axiom::Relation::Base.new(:users, [
+      [:user_id, Integer], [:user_name, String], [:email, String]
+    ])
   }
 
   it 'renames relation' do
