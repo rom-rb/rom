@@ -1,6 +1,7 @@
 shared_context 'Mapper' do
-  let(:mapper) { described_class.new(loader, dumper) }
+  let(:mapper) { described_class.new(header, loader, dumper) }
 
+  let(:header) { fake(:header) { Mapper::Header } }
   let(:loader) { fake(:loader) { Mapper::Loader } }
   let(:dumper) { fake(:dumper) { Mapper::Dumper } }
   let(:data)   { [1, 'Jane'] }

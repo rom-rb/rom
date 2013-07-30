@@ -10,6 +10,10 @@ module ROM
         new(header, attributes)
       end
 
+      def mapping
+        attributes.mapping
+      end
+
       def keys
         attributes.keys
       end
