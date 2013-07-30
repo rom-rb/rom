@@ -21,7 +21,7 @@ describe 'Mapping relations' do
     env.load_schema(schema)
 
     # TODO: replace that with mapper DSL once ready
-    header = Mapper::Header.coerce(schema[:users].header, map: { user_name: :name })
+    header = Mapper::Header.build(schema[:users].header, map: { user_name: :name })
     mapper = Mapper.build(header, model)
 
     users  = Relation.build(env.repository(:test).get(:users), mapper)
