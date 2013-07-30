@@ -8,7 +8,7 @@ describe Mapper, '#call' do
   }
 
   let(:header) {
-    Mapper::Header.coerce(relation.header, map: { user_id: :id, user_name: :name })
+    Mapper::Header.build(relation.header, map: { user_id: :id, user_name: :name })
   }
 
   let(:model) {
