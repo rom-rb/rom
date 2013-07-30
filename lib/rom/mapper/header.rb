@@ -4,7 +4,7 @@ module ROM
     class Header
       include Enumerable, Concord.new(:header, :attributes), Adamantium
 
-      def self.coerce(attributes, options = {})
+      def self.build(attributes, options = {})
         header     = Axiom::Relation::Header.coerce(attributes, :keys => options.fetch(:keys, []))
         attributes = AttributeSet.coerce(header, options.fetch(:map, {}))
         new(header, attributes)
