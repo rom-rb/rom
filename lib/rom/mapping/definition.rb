@@ -3,6 +3,8 @@
 module ROM
   class Mapping
 
+    # Mapping definition DSL
+    #
     # @private
     class Definition
       include Adamantium::Flat
@@ -10,11 +12,17 @@ module ROM
       attr_reader :mapping, :attributes
       private :mapping, :attributes
 
+      # Build new mapping definition
+      #
       # @api private
       def self.build(header, &block)
         new(header, &block)
       end
 
+      # Initialize a new Definition instance
+      #
+      # @return [undefined]
+      #
       # @api private
       def initialize(header, &block)
         @header     = header
@@ -22,7 +30,10 @@ module ROM
         @attributes = Set.new
         @mapper     = nil
         @model      = nil
+
         instance_eval(&block)
+
+        build_mapper unless mapper
       end
 
       # @api private
@@ -31,7 +42,21 @@ module ROM
       end
       memoize :header
 
-      # @api private
+      # Get or set mapper
+      #
+      # @example
+      #
+      #   Mapping.build do
+      #     users do
+      #       mapper my_custom_mapper
+      #     end
+      #   end
+      #
+      # @param [Object]
+      #
+      # @return [Object]
+      #
+      # @api public
       def mapper(mapper = Undefined)
         if mapper == Undefined
           @mapper
@@ -40,7 +65,21 @@ module ROM
         end
       end
 
-      # @api private
+      # Set model for the mapper
+      #
+      # @example
+      #
+      #   Mapping.build do
+      #     users do
+      #       model User
+      #     end
+      #   end
+      #
+      # @param [Class]
+      #
+      # @return [Class]
+      #
+      # @api public
       def model(model = Undefined)
         if model == Undefined
           @model
@@ -49,7 +88,22 @@ module ROM
         end
       end
 
-      # @api private
+      # Configure attribute mappings
+      #
+      # @example
+      #
+      #   Mapping.build do
+      #     users do
+      #       map :id, :email
+      #       map :user_name, to: :name
+      #     end
+      #   end
+      #
+      # @params [Array<Symbol>,Symbol,Hash]
+      #
+      # @return [Definition]
+      #
+      # @api public
       def map(*args)
         options = args.last
 
@@ -64,9 +118,18 @@ module ROM
 
       private
 
+      # Project header using configured attributes
+      #
       # @api private
       def project_header
         @header.project(attributes + Set[*mapping.keys])
+      end
+
+      # Build default rom mapper
+      #
+      # @api private
+      def build_mapper
+        @mapper = Mapper.build(header, model)
       end
 
     end # Definition

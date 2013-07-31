@@ -59,10 +59,8 @@ module ROM
 
     # @api private
     def build_relation(relation, &block)
-      definition = Definition.build(relation.header, &block)
-      mapper     = definition.mapper || Mapper.build(definition.header, definition.model)
-
-      registry[relation.name] = Relation.build(relation, mapper)
+      definition              = Definition.build(relation.header, &block)
+      registry[relation.name] = Relation.build(relation, definition.mapper)
     end
 
   end # Mapping
