@@ -12,5 +12,5 @@ shared_context 'Session::Relation' do
   let(:axiom)    { Axiom::Relation::Variable.new(Axiom::Relation.new(header, [[1, 'John'], [2, 'Jane']])) }
   let(:relation) { Relation.new(axiom, mapper) }
 
-  let(:user) { session[:users].all.first }
+  let(:user) { session[:users].to_a.first }
 end

@@ -18,12 +18,12 @@ describe 'Session' do
   specify 'fetching an object from a relation' do
     Session.start(:users => relation) do |session|
       # fetch user for the first time
-      jane1 = session[:users].restrict { |r| r.name.eq('Jane') }.all.first
+      jane1 = session[:users].restrict { |r| r.name.eq('Jane') }.to_a.first
 
       expect(jane1).to eq(model.new(:id => 2, :name => 'Jane'))
 
       # here IM-powered loader kicks in
-      jane2 = session[:users].restrict { |r| r.name.eq('Jane') }.all.first
+      jane2 = session[:users].restrict { |r| r.name.eq('Jane') }.to_a.first
 
       expect(jane1).to be(jane2)
     end
@@ -31,13 +31,13 @@ describe 'Session' do
 
   specify 'deleting an object from a relation' do
     Session.start(:users => relation) do |session|
-      jane = session[:users].restrict { |r| r.name.eq('Jane') }.all.first
+      jane = session[:users].restrict { |r| r.name.eq('Jane') }.to_a.first
 
       session[:users].delete(jane)
 
       session.flush
 
-      expect(relation.all).not_to include(jane)
+      expect(relation.to_a).not_to include(jane)
     end
   end
 
@@ -49,13 +49,13 @@ describe 'Session' do
 
       session.flush
 
-      expect(relation.all).to include(piotr)
+      expect(relation.to_a).to include(piotr)
     end
   end
 
   specify 'updating an object in a relation' do
     Session.start(:users => relation) do |session|
-      jane = session[:users].restrict { |r| r.id.eq(2) }.all.first
+      jane = session[:users].restrict { |r| r.id.eq(2) }.to_a.first
       jane.name = 'Jane Doe'
 
       session[:users].save(jane)
@@ -64,7 +64,7 @@ describe 'Session' do
 
       expect(relation.count).to be(2)
 
-      expect(relation.all.last).to eql(jane)
+      expect(relation.to_a.last).to eql(jane)
     end
   end
 end

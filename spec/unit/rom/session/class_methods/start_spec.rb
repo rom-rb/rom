@@ -16,6 +16,6 @@ describe Session, '.start' do
       session.flush
     end
 
-    expect(relation.all).to include(user)
+    expect(relation.to_a).to include(user)
   end
 end

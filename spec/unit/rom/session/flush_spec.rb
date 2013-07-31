@@ -7,8 +7,8 @@ describe Session, '#flush' do
 
   let(:object) { session }
 
-  let(:john)  { session[:users].all.first }
-  let(:jane)  { session[:users].all.last }
+  let(:john)  { session[:users].to_a.first }
+  let(:jane)  { session[:users].to_a.last }
   let(:piotr) { session[:users].new(:id => 3, :name => 'Piotr') }
 
   before do
@@ -25,15 +25,15 @@ describe Session, '#flush' do
   it { should be_clean }
 
   it 'commits all deletes' do
-    expect(subject[:users].all).to_not include(john)
+    expect(subject[:users].to_a).to_not include(john)
   end
 
   it 'commits all updates' do
-    expect(subject[:users].all.first).to eq(relation.all.first)
+    expect(subject[:users].to_a.first).to eq(relation.to_a.first)
   end
 
   it 'commits all inserts' do
-    expect(subject[:users].all).to include(piotr)
+    expect(subject[:users].to_a).to include(piotr)
   end
 
   it 'sets correct state for created objects' do
@@ -42,7 +42,7 @@ describe Session, '#flush' do
   end
 
   it 'registers newly created object in the IM' do
-    expect(subject[:users].restrict { |r| r.name.eq('Piotr') }.all.first).to be(piotr)
+    expect(subject[:users].restrict { |r| r.name.eq('Piotr') }.to_a.first).to be(piotr)
   end
 
   it 'sets correct state for updated objects' do
