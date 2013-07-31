@@ -37,6 +37,10 @@ module ROM
       new(env, registry, &block).registry
     end
 
+    # Initialize a new mapping instance
+    #
+    # @return [undefined]
+    #
     # @api private
     def initialize(env, registry, &block)
       @env      = env
@@ -46,6 +50,10 @@ module ROM
 
     private
 
+    # Method missing hook
+    #
+    # @return [Relation]
+    #
     # @api private
     def method_missing(name, *args, &block)
       relation = env[name]
@@ -57,6 +65,10 @@ module ROM
       end
     end
 
+    # Build relation
+    #
+    # @return [Relation]
+    #
     # @api private
     def build_relation(relation, &block)
       definition              = Definition.build(relation.header, &block)
