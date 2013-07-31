@@ -2,6 +2,7 @@
 
 require 'addressable/uri'
 
+require 'set'
 require 'concord'
 require 'abstract_type'
 require 'descendants_tracker'
@@ -41,3 +42,4 @@ require 'rom/schema/definition/relation'
 require 'rom/schema/definition/relation/base'
 
 require 'rom/mapping'
+require 'rom/mapping/definition'
