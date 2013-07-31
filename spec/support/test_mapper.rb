@@ -1,6 +1,11 @@
 # encoding: utf-8
 
 class TestMapper < Struct.new(:header, :model)
+
+  def call(relation)
+    relation
+  end
+
   def load(tuple)
     model.new(
       Hash[
@@ -14,4 +19,5 @@ class TestMapper < Struct.new(:header, :model)
       tuple << object.send(attribute.name)
     }
   end
+
 end
