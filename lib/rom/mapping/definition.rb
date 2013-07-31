@@ -21,6 +21,7 @@ module ROM
         @mapping    = {}
         @attributes = Set.new
         @mapper     = nil
+        @model      = nil
         instance_eval(&block)
       end
 
@@ -65,7 +66,7 @@ module ROM
 
       # @api private
       def project_header
-        @header.project(attributes + Set[mapping.keys])
+        @header.project(attributes + Set[*mapping.keys])
       end
 
     end # Definition
