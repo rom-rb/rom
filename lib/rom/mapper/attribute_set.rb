@@ -12,6 +12,14 @@ module ROM
         new(header, attributes)
       end
 
+      # @api private
+      def mapping
+        each_with_object({}) { |attribute, hash|
+          hash[attribute.tuple_key] = attribute.name
+        }
+      end
+      memoize :mapping
+
       def keys
         # FIXME: find a way to simplify this
         header.keys.flat_map { |key_header|
