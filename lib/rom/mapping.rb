@@ -55,7 +55,7 @@ module ROM
     # @return [Relation]
     #
     # @api private
-    def method_missing(name, *args, &block)
+    def method_missing(name, *, &block)
       relation = env[name]
 
       if relation
