@@ -5,8 +5,15 @@ require 'spec_helper'
 describe Relation, '#first' do
   include_context 'Relation'
 
-  it 'returns first n-tuples' do
-    expect(relation.first.to_a).to include(model.new(name: 'Jane'))
-    expect(relation.first.count).to be(1)
+  context 'when limit is not provided' do
+    it 'returns first object' do
+      expect(relation.first.to_a).to eql([user3])
+    end
+  end
+
+  context 'when limit is provided' do
+    it 'returns first n-objects' do
+      expect(relation.first(2).to_a).to eql([user3, user4])
+    end
   end
 end

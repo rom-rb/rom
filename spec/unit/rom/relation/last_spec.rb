@@ -2,11 +2,18 @@
 
 require 'spec_helper'
 
-describe Relation, '#last' do
+describe Relation, '#first' do
   include_context 'Relation'
 
-  it 'returns last n-tuples' do
-    expect(relation.last.to_a).to include(model.new(name: 'John'))
-    expect(relation.last.count).to be(1)
+  context 'when limit is not provided' do
+    it 'returns last object' do
+      expect(relation.last.to_a).to eql([user1])
+    end
+  end
+
+  context 'when limit is provided' do
+    it 'returns last n-objects' do
+      expect(relation.last(2).to_a).to eql([user2, user1])
+    end
   end
 end
