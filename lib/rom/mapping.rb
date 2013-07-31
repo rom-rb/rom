@@ -7,17 +7,27 @@ module ROM
     class Definition
 
       def self.build(header, &block)
-        new(header).instance_eval(&block).freeze
+        new(header, &block).freeze
       end
 
-      def initialize(header)
+      def initialize(header, &block)
         @header     = header
         @map        = {}
         @attributes = []
+        @mapper     = nil
+        instance_eval(&block)
       end
 
       def header
         Mapper::Header.build(project_header, map: mapping)
+      end
+
+      def mapper(mapper = Undefined)
+        if mapper == Undefined
+          @mapper
+        else
+          @mapper = mapper
+        end
       end
 
       def mapping
@@ -81,7 +91,7 @@ module ROM
     # @api private
     def build_relation(relation, &block)
       definition = Definition.build(relation.header, &block)
-      mapper     = Mapper.build(definition.header, definition.model)
+      mapper     = definition.mapper || Mapper.build(definition.header, definition.model)
 
       registry[relation.name] = Relation.build(relation, mapper)
     end
