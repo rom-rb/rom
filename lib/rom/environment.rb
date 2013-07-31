@@ -2,7 +2,7 @@
 
 module ROM
 
-  # The environment used to build and finalize mappers and their relations
+  # The environment configures repositories and loads schema with relations
   #
   class Environment
     include Concord.new(:repositories, :registry)
@@ -39,12 +39,16 @@ module ROM
     #
     # @return [Environment]
     #
-    # @api public
+    # @api private
     def self.build(repositories, registry = {})
       new(repositories, registry)
     end
 
-    # Return registered rom's relation
+    # Return registered relation
+    #
+    # @example
+    #
+    #   env[:users]
     #
     # @param [Symbol] relation name
     #
@@ -55,7 +59,19 @@ module ROM
       registry[name]
     end
 
-    # Load defined rom schema and register relations
+    # Load defined schema and register relations
+    #
+    # @example
+    #
+    #   schema = Schema.build do
+    #     base_relation :users do
+    #       repository :test
+    #
+    #       attributes :id, :name, :email
+    #     end
+    #   end
+    #
+    #   env = Environment.coerce(test: 'memory://test').load_schema(schema)
     #
     # @param [Schema] schema
     #
@@ -81,6 +97,10 @@ module ROM
 
     private
 
+    # Register relations in a repository
+    #
+    # @return [Environment]
+    #
     # @api private
     def register_relations(repository_name, relations)
       relations.each do |relation|
@@ -88,6 +108,7 @@ module ROM
         repository     = repository(repository_name).register(name, relation)
         registry[name] = repository.get(name)
       end
+      self
     end
 
   end # Environment
