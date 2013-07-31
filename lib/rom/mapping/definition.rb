@@ -52,7 +52,7 @@ module ROM
       def map(*args)
         options = args.last
 
-        if options.is_a?(Hash)
+        if options.kind_of?(Hash)
           mapping.update(args.first => options[:to])
         else
           @attributes += Set[*args]
