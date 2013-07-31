@@ -7,14 +7,14 @@ module ROM
     attr_reader :env, :registry, :model
 
     # @api public
-    def self.build(env, &block)
-      new(env, &block).registry
+    def self.build(env, registry = {}, &block)
+      new(env, registry, &block).registry
     end
 
     # @api private
-    def initialize(env, &block)
+    def initialize(env, registry, &block)
       @env      = env
-      @registry = {}
+      @registry = registry
       instance_eval(&block)
     end
 
