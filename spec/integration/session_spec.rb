@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'Session' do
-  let(:mapper) { Mapper.build(Mapper::Header.coerce([[:id, Integer], [:name, String]], :keys => [:id]), model) }
+  let(:mapper) { Mapper.build(Mapper::Header.build([[:id, Integer], [:name, String]], :keys => [:id]), model) }
   let(:model)  { mock_model(:id, :name) }
 
   let(:users)    { TEST_ENV[:users] }

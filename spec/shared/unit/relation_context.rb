@@ -6,7 +6,7 @@ shared_context 'Session::Relation' do
   let(:env)      { Session::Environment.new({ :users => relation }, tracker) }
   let(:tracker)  { Session::Tracker.new }
 
-  let(:mapper)   { Mapper.build(Mapper::Header.coerce([[:id, Integer], [:name, String]], :keys => [:id]), model) }
+  let(:mapper)   { Mapper.build(Mapper::Header.build([[:id, Integer], [:name, String]], :keys => [:id]), model) }
   let(:model)    { mock_model(:id, :name) }
   let(:header)   { SCHEMA[:users].header }
   let(:axiom)    { Axiom::Relation::Variable.new(Axiom::Relation.new(header, [[1, 'John'], [2, 'Jane']])) }

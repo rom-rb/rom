@@ -48,12 +48,6 @@ def mock_model(*attributes)
   }
 end
 
-class ROM::Mapper
-  def self.build(header, model)
-    new(Mapper::Loader::ObjectBuilder.new(header, model), Mapper::Dumper.new(header, model))
-  end
-end
-
 SCHEMA = Schema.build do
   base_relation :users do
     repository :test
