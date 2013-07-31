@@ -17,7 +17,7 @@ module ROM
       end
 
       def header
-        @header.project(@attributes.concat(@map.keys))
+        Mapper::Header.build(project_header, map: mapping)
       end
 
       def mapping
@@ -42,6 +42,12 @@ module ROM
         end
 
         self
+      end
+
+      private
+
+      def project_header
+        @header.project(@attributes.concat(@map.keys))
       end
     end
 
@@ -75,8 +81,7 @@ module ROM
     # @api private
     def build_relation(relation, &block)
       definition = Definition.build(relation.header, &block)
-      header     = Mapper::Header.build(definition.header, map: definition.mapping)
-      mapper     = Mapper.build(header, definition.model)
+      mapper     = Mapper.build(definition.header, definition.model)
 
       registry[relation.name] = Relation.build(relation, mapper)
     end
