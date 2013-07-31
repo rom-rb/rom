@@ -2,12 +2,9 @@
 
 require 'spec_helper'
 
-describe 'Mapping relations' do
-  let!(:env)   { Environment.coerce(:test => 'memory://test') }
-  let!(:model) { mock_model(:id, :name) }
-
-  specify 'I can define a relation and its mapping' do
-    schema = Schema.build do
+describe 'Defining relation mappings' do
+  let!(:schema) {
+    Schema.build {
       base_relation :users do
         repository :test
 
@@ -16,17 +13,34 @@ describe 'Mapping relations' do
 
         key :id
       end
-    end
+    }
+  }
 
-    env.load_schema(schema)
+  let!(:env) {
+    Environment.coerce(test: 'memory://test').load_schema(schema)
+  }
 
-    # TODO: replace that with mapper DSL once ready
-    header = Mapper::Header.build(schema[:users].header, map: { user_name: :name })
-    mapper = Mapper.build(header, model)
+  before do
+    User = mock_model(:id, :name)
+  end
 
-    users  = Relation.build(env.repository(:test).get(:users), mapper)
+  after do
+    Object.send(:remove_const, :User)
+  end
 
-    jane = model.new(id: 1, name: 'Jane')
+  specify 'building registry of mapped relations' do
+    registry = Mapping.build(env) {
+      users do
+        model User
+
+        map :id
+        map :user_name, to: :name
+      end
+    }
+
+    users = registry[:users]
+
+    jane = User.new(id: 1, name: 'Jane')
 
     users.insert(jane)
 
