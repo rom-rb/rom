@@ -3,14 +3,11 @@
 require 'spec_helper'
 
 describe Relation, '#insert' do
-  subject(:relation) { described_class.new(users, mapper) }
+  include_context 'Relation'
 
-  let(:users)  { Axiom::Relation.new([[:name, String]], [['John']]) }
-  let(:model)  { mock_model(:name) }
-  let(:user)   { model.new(name: 'John') }
-  let(:mapper) { TestMapper.new(users.header, model) }
+  let(:user) { model.new(name: 'Piotr') }
 
-  it 'inserts dumped object into relation' do
+  it 'inserts object into relation' do
     expect(relation.insert(user).to_a).to include(user)
   end
 end
