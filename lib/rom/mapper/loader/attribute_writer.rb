@@ -8,7 +8,7 @@ module ROM
         # @api private
         def call(tuple)
           allocate { |attribute, object|
-            object.public_send("#{attribute.name}=", tuple[attribute.tuple_key])
+            object.public_send("#{attribute.name}=", tuple[attribute.name])
           }
         end
 
