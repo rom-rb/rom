@@ -15,6 +15,8 @@ module ROM
 
 end # ROM
 
+require 'rom/support/proxy'
+
 require 'rom/session'
 
 require 'rom/session/environment'
