@@ -9,7 +9,7 @@ describe Mapper, '#call' do
 
   let(:header) {
     Mapper::Header.build(
-      [[:user_id, Integer], [:user_name, String]],
+      [[:user_id, Integer], [:user_name, String], [:age, Integer]],
       map: { user_id: :id, user_name: :name }
     )
   }
@@ -20,11 +20,11 @@ describe Mapper, '#call' do
 
   let(:relation) {
     Axiom::Relation::Base.new(:users, [
-      [:user_id, Integer], [:user_name, String], [:email, String]
+      [:user_id, Integer], [:user_name, String], [:email, String], [:age, Integer]
     ])
   }
 
   it 'renames relation' do
-    expect(subject.header.map(&:name)).to eq([:id, :name])
+    expect(subject.header.map(&:name)).to eq([:id, :name, :age])
   end
 end
