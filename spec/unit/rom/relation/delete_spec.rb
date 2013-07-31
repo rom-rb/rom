@@ -5,7 +5,11 @@ require 'spec_helper'
 describe Relation, '#delete' do
   include_context 'Relation'
 
+  subject { relation.delete(user1) }
+
+  it { should be_instance_of(Relation) }
+
   it 'deletes tuples from the relation' do
-    expect(relation.delete(user1).to_a).not_to include(user1)
+    should_not include(user1)
   end
 end
