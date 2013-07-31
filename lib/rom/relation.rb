@@ -289,7 +289,7 @@ module ROM
       if restriction.count > 1
         raise ManyTuplesError
       else
-        new(restriction).all.first
+        new(restriction).to_a.first
       end
     end
 
