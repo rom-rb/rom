@@ -2,10 +2,36 @@
 
 module ROM
 
+  # Builder DSL for ROM relations
+  #
   class Mapping
 
     attr_reader :env, :registry, :model
+    private :env, :model
 
+    # Build ROM relations
+    #
+    # @example
+    #   relation = Axiom::Relation::Base.new(:users, [[:id, Integer], [:user_name, String]])
+    #   env      = { users: relation }
+    #
+    #   User = Class.new(OpenStruct.new)
+    #
+    #   registry = Mapping.build(env) do
+    #     users do
+    #       map :id
+    #       map :user_name, to: :name
+    #     end
+    #   end
+    #
+    #   registry[:users]
+    #   # #<ROM::Relation:0x000000025d3160>
+    #
+    # @param [Environment, Hash] container with configured axiom relations
+    # @param [Hash] registry for rom relations
+    #
+    # @return [Hash]
+    #
     # @api public
     def self.build(env, registry = {}, &block)
       new(env, registry, &block).registry
