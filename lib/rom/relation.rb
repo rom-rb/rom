@@ -82,7 +82,7 @@ module ROM
     # @return [Relation]
     #
     # @api public
-    def each(&block)
+    def each
       return to_enum unless block_given?
       relation.each { |tuple| yield(mapper.load(tuple)) }
       self
