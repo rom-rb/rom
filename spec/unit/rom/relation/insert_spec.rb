@@ -11,6 +11,6 @@ describe Relation, '#insert' do
   let(:mapper) { TestMapper.new(users.header, model) }
 
   it 'inserts dumped object into relation' do
-    expect(relation.insert(user).all).to include(user)
+    expect(relation.insert(user).to_a).to include(user)
   end
 end

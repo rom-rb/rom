@@ -26,6 +26,6 @@ describe 'Working with relations' do
     user = model.new(id: 1, name: 'Jane')
     users.insert(user)
 
-    expect(users.all).to include(user)
+    expect(users.to_a).to include(user)
   end
 end

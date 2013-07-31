@@ -58,8 +58,6 @@ module ROM
       new(mapper.call(relation), mapper)
     end
 
-    alias_method :all, :to_a
-
     # Iterate over tuples yielded by the wrapped relation
     #
     # @example

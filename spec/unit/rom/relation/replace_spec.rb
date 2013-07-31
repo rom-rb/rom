@@ -8,6 +8,6 @@ describe Relation, '#replace' do
   include_context 'Relation'
 
   it 'replaces the relation with a new one' do
-    expect(relation.replace([user2]).all).to eq([user2])
+    expect(relation.replace([user2]).to_a).to eq([user2])
   end
 end

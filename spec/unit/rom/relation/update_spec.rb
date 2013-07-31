@@ -7,6 +7,6 @@ describe Relation, '#update' do
 
   it 'updates old tuples with new ones' do
     user1.name = 'John Doe'
-    expect(relation.update(user1).all.last).to eq(user1)
+    expect(relation.update(user1).to_a.last).to eq(user1)
   end
 end

@@ -6,6 +6,6 @@ describe Relation, '#take' do
   include_context 'Relation'
 
   it 'returns first n-tuples' do
-    expect(relation.take(2).all).to eql([user2, user1])
+    expect(relation.take(2).to_a).to eql([user2, user1])
   end
 end
