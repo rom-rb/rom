@@ -73,6 +73,30 @@ module ROM
       @schema
     end
 
+    # Define mapping for relations
+    #
+    # @example
+    #
+    #   env.schema do
+    #     base_relation :users do
+    #       repository :test
+    #
+    #       attribute :id,        Integer
+    #       attribtue :user_name, String
+    #     end
+    #   end
+    #
+    #   env.mapping do
+    #     users do
+    #       model User
+    #
+    #       map :id
+    #       map :user_name, :to => :name
+    #     end
+    #   end
+    #
+    # @return [Mapping]
+    #
     # @api public
     def mapping(&block)
       Mapping.build(self, &block)
