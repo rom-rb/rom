@@ -5,7 +5,7 @@ module ROM
   # Schema builder DSL
   #
   class Schema
-    include Concord.new(:definition)
+    include Concord.new(:definition), Adamantium::Flat
 
     # Build a relation schema
     #

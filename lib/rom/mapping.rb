@@ -5,6 +5,7 @@ module ROM
   # Builder DSL for ROM relations
   #
   class Mapping
+    include Adamantium::Flat
 
     attr_reader :environment, :schema, :model
     private :environment, :schema, :model
