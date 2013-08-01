@@ -109,8 +109,6 @@ module ROM
 
     # Update an object
     #
-    # TODO: this isn't working yet, fix it once Axiom provides update interface
-    #
     # @example
     #   data     = [[1, 'John'], [2, 'Jane']]
     #   axiom    = Axiom::Relation.new([[:id, Integer], [:name, String]], data)
@@ -120,13 +118,13 @@ module ROM
     #   relation.to_a # => [[1, 'John'], [2, 'Jane Doe']]
     #
     # @param [Object]
+    # @param [Hash] original attributes
     #
     # @return [Relation]
     #
     # @api public
-    def update(object)
-      tuple = mapper.dump(object)
-      new(relation.delete([tuple]).insert([tuple]))
+    def update(object, original_tuple)
+      new(relation.delete([original_tuple]).insert([mapper.dump(object)]))
     end
 
     # Delete an object from the relation

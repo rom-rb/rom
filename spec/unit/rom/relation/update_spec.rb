@@ -5,8 +5,21 @@ require 'spec_helper'
 describe Relation, '#update' do
   include_context 'Relation'
 
-  it 'updates old tuples with new ones' do
+  subject { relation.update(john, old_tuple) }
+
+  let!(:old_tuple) { relation.mapper.dump(john) }
+
+  it { should be_instance_of(Relation) }
+
+  before do
     john.name = 'John Doe'
-    expect(relation.update(john).to_a.last).to eq(john)
+  end
+
+  it 'replaces old object with the new one' do
+    expect(subject.restrict(name: 'John Doe').one).to eq(john)
+  end
+
+  it 'removes old object' do
+    expect(subject.restrict(name: 'John').count).to be(0)
   end
 end
