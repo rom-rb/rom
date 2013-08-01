@@ -38,14 +38,9 @@ module ROM
       definition[name]
     end
 
-    # Iterate over repositories and relations
-    #
-    # @return [Schema]
-    #
     # @api private
-    def each(&block)
-      definition.repositories.each(&block)
-      self
+    def call(&block)
+      definition.instance_eval(&block)
     end
 
   end # Schema

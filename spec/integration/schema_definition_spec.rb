@@ -63,7 +63,9 @@ describe 'Defining a ROM schema' do
         key :id
         key :person_id
       end
+    end
 
+    env.schema do
       relation :people_with_profile do
         people.join(profiles.rename(id: :profile_id, person_id: :id))
       end
