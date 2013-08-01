@@ -29,13 +29,6 @@ require 'bogus/rspec'
 
 include ROM
 
-# TODO: remove this once axiom provides #update interface
-class ROM::Relation
-  def update(object, original_tuple)
-    new(relation.delete([original_tuple]).insert([mapper.dump(object)]))
-  end
-end
-
 def mock_model(*attributes)
   Class.new {
     include Equalizer.new(*attributes)
