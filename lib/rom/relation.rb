@@ -272,24 +272,30 @@ module ROM
     # Return exactly one object matching criteria or raise an error
     #
     # @example
-    #   axiom    = Axiom::Relation.new([[:id, Integer]], [[2], [1]])
+    #   axiom    = Axiom::Relation.new([[:id, Integer]], [1]])
     #   relation = ROM::Relation.new(axiom, mapper)
     #
-    #   relation.one(id: 2).to_a # => {id: 2}
+    #   relation.one.to_a # => {id: 1}
     #
-    # @param [Hash] conditions
+    # @param [Proc] block
+    #   optional block to call in case no tuple is returned
     #
     # @return [Object]
-    # @raises ManyTuplesError
+    #
+    # @raise NoTuplesError
+    #   if no tuples were returned
+    #
+    # @raise ManyTuplesError
+    #   if more than one tuple was returned
     #
     # @api public
-    def one(*args, &block)
-      restriction = relation.restrict(*args, &block)
-
-      if restriction.count > 1
+    def one(&block)
+      block  ||= ->() { raise NoTuplesError }
+      tuples   = take(2).to_a
+      if tuples.count > 1
         raise ManyTuplesError
       else
-        new(restriction).to_a.first
+        tuples.first or  block.()
       end
     end
 
