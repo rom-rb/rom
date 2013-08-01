@@ -114,7 +114,7 @@ module ROM
     #   axiom    = Axiom::Relation.new([[:id, Integer], [:name, String]], data)
     #   relation = ROM::Relation.new(axiom, mapper)
     #
-    #   relation.update(id: 2, name: 'Jane Doe')
+    #   relation.update({id: 2, name: 'Jane Doe'}, {id:2, name: 'Jane'})
     #   relation.to_a # => [[1, 'John'], [2, 'Jane Doe']]
     #
     # @param [Object]
