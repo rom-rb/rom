@@ -73,7 +73,7 @@ module ROM
     # @api private
     def build_relation(relation, &block)
       definition = Definition.build(relation.header, &block)
-      environment.register(relation.name, Relation.build(relation, definition.mapper))
+      environment[relation.name] = Relation.build(relation, definition.mapper)
     end
 
   end # Mapping

@@ -122,7 +122,7 @@ module ROM
     # @return [Environment]
     #
     # @api private
-    def register(name, relation)
+    def []=(name, relation)
       registry[name] = relation
       self
     end

@@ -11,7 +11,7 @@ describe Environment, '#[]' do
     fake(:relation, name: :users) { Axiom::Relation::Base }
 
     before do
-      object.register(:users, relation)
+      object[:users] = relation
     end
 
     it { should be(relation) }
