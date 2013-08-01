@@ -6,7 +6,7 @@ describe 'Setting up environment' do
   it 'registers relations within repositories' do
     env = ROM::Environment.coerce(memory: 'memory://test')
 
-    schema = Schema.build(env.repositories) do
+    schema = env.schema do
       base_relation :users do
         repository :memory
 

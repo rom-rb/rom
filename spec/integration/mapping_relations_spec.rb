@@ -4,7 +4,7 @@ require 'spec_helper'
 
 describe 'Defining relation mappings' do
   let!(:schema) {
-    Schema.build(env.repositories) {
+    env.schema {
       base_relation :users do
         repository :test
 

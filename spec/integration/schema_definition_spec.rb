@@ -43,7 +43,7 @@ describe 'Defining a ROM schema' do
   let(:repository) { env.repository(:test) }
 
   let(:schema) do
-    ROM::Schema.build(env.repositories) do
+    env.schema do
       base_relation :people do
         repository :test
 

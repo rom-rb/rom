@@ -5,7 +5,7 @@ module ROM
   # The environment configures repositories and loads schema with relations
   #
   class Environment
-    include Concord::Public.new(:repositories, :registry)
+    include Concord.new(:repositories, :registry)
 
     # Coerce a repository config hash into an environment instance
     #
@@ -42,6 +42,27 @@ module ROM
     # @api private
     def self.build(repositories, registry = {})
       new(repositories, registry)
+    end
+
+    # Build a relation schema for this environment
+    #
+    # @example
+    #   env = Environment.coerce(test: 'memory://test')
+    #
+    #   env.schema do
+    #     base_relation :users do
+    #       repository :test
+    #
+    #       attribute :id, Integer
+    #       attribute :name, String
+    #     end
+    #   end
+    #
+    # @return [Schema]
+    #
+    # @api public
+    def schema(&block)
+      Schema.build(repositories, &block)
     end
 
     # Return registered relation
