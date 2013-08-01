@@ -3,7 +3,7 @@ module ROM
 
     # @public
     class Loader
-      include Concord.new(:header, :model), Adamantium, AbstractType
+      include Concord::Public.new(:header, :model), Adamantium, AbstractType
 
       abstract_method :call
 
