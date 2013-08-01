@@ -11,10 +11,10 @@ describe Environment, '#[]' do
     fake(:relation, name: :users) { Axiom::Relation::Base }
 
     before do
-      object.load_schema(test: [relation])
+      object.register(:users, relation)
     end
 
-    it { should be_instance_of(Axiom::Relation::Variable::Materialized) }
+    it { should be(relation) }
   end
 
   context 'when relation does not exist' do

@@ -6,7 +6,6 @@ module ROM
   #
   class Schema
     include Concord.new(:definition)
-    include Adamantium
 
     # Build a relation schema
     #
@@ -22,8 +21,8 @@ module ROM
     # @return [Schema]
     #
     # @api public
-    def self.build(&block)
-      new(Definition.new(&block))
+    def self.build(repositories, &block)
+      new(Definition.new(repositories, &block))
     end
 
     # Return defined relation identified by name

@@ -4,7 +4,7 @@ require 'spec_helper'
 
 describe 'Defining a ROM schema' do
   let(:people) {
-    Axiom::Relation::Base.new(:people, people_header)
+    Axiom::Relation::Variable.new(Axiom::Relation::Base.new(:people, people_header))
   }
 
   let(:people_header) {
@@ -20,7 +20,7 @@ describe 'Defining a ROM schema' do
   }
 
   let(:profiles) {
-    Axiom::Relation::Base.new(:profiles, profiles_header)
+    Axiom::Relation::Variable.new(Axiom::Relation::Base.new(:profiles, profiles_header))
   }
 
   let(:profiles_header) {
@@ -39,10 +39,13 @@ describe 'Defining a ROM schema' do
     people.join(profiles.rename(id: :profile_id, person_id: :id))
   }
 
+  let(:env)        { Environment.coerce(test: 'memory://test') }
+  let(:repository) { env.repository(:test) }
+
   let(:schema) do
-    ROM::Schema.build do
+    ROM::Schema.build(env.repositories) do
       base_relation :people do
-        repository :postgres
+        repository :test
 
         attribute :id,   Integer
         attribute :name, String
@@ -51,7 +54,7 @@ describe 'Defining a ROM schema' do
       end
 
       base_relation :profiles do
-        repository :postgres
+        repository :test
 
         attribute :id,        Integer
         attribute :person_id, Integer
