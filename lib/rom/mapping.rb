@@ -27,8 +27,8 @@ module ROM
     #   registry[:users]
     #   # #<ROM::Relation:0x000000025d3160>
     #
-    # @param [Environment, Hash] container with configured axiom relations
-    # @param [Hash] registry for rom relations
+    # @param [Environment] rom environment
+    # @param [Schema] rom schema
     #
     # @return [Hash]
     #
