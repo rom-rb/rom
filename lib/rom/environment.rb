@@ -62,7 +62,10 @@ module ROM
     #
     # @api public
     def schema(&block)
-      Schema.build(repositories, &block)
+      if block_given?
+        @schema = Schema.build(repositories, &block)
+      end
+      @schema
     end
 
     # Return registered relation
