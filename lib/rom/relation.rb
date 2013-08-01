@@ -317,7 +317,7 @@ module ROM
     #
     # @api private
     def sorted
-      relation.sort_by { }
+      relation.sort_by
     end
 
     # Return new relation instance
