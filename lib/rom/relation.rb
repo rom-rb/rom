@@ -295,7 +295,7 @@ module ROM
       if tuples.count > 1
         raise ManyTuplesError
       else
-        tuples.first or  block.()
+        tuples.first or block.()
       end
     end
 
