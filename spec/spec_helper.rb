@@ -41,7 +41,9 @@ def mock_model(*attributes)
   }
 end
 
-SCHEMA = Schema.build do
+TEST_ENV = Environment.coerce(:test => 'memory://test')
+
+TEST_ENV.schema do
   base_relation :users do
     repository :test
 
@@ -51,6 +53,3 @@ SCHEMA = Schema.build do
     key :id
   end
 end
-
-TEST_ENV = Environment.coerce(:test => 'memory://test')
-TEST_ENV.load_schema(SCHEMA)
