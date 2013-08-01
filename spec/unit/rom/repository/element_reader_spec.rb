@@ -14,7 +14,7 @@ describe Repository, '#[]' do
   let(:header)        { [] }
 
   before do
-    object.register(relation_name, relation)
+    object[relation_name] = relation
   end
 
   it { should eq(relation) }

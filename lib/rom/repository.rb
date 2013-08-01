@@ -52,7 +52,7 @@ module ROM
     # @return [self]
     #
     # @api private
-    def register(name, relation)
+    def []=(name, relation)
       adapter[name]   = relation
       relations[name] = adapter[name]
       self
