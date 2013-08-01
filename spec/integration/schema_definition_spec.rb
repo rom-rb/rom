@@ -4,7 +4,7 @@ require 'spec_helper'
 
 describe 'Defining a ROM schema' do
   let(:people) {
-    Axiom::Relation::Variable.new(Axiom::Relation::Base.new(:people, people_header))
+    Axiom::Relation::Base.new(:people, people_header)
   }
 
   let(:people_header) {
@@ -20,7 +20,7 @@ describe 'Defining a ROM schema' do
   }
 
   let(:profiles) {
-    Axiom::Relation::Variable.new(Axiom::Relation::Base.new(:profiles, profiles_header))
+    Axiom::Relation::Base.new(:profiles, profiles_header)
   }
 
   let(:profiles_header) {
@@ -73,7 +73,7 @@ describe 'Defining a ROM schema' do
   end
 
   it 'registers the people relation' do
-    expect(schema[:people]).to eql(people)
+    expect(schema[:people]).to eq(people)
   end
 
   it 'establishes key attributes for people relation' do
@@ -85,10 +85,10 @@ describe 'Defining a ROM schema' do
   end
 
   it 'registers the profiles relation' do
-    expect(schema[:profiles]).to eql(profiles)
+    expect(schema[:profiles]).to eq(profiles)
   end
 
   it 'registers the people_with_profile relation' do
-    expect(schema[:people_with_profile]).to eql(people_with_profile)
+    expect(schema[:people_with_profile]).to eq(people_with_profile)
   end
 end
