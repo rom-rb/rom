@@ -29,14 +29,14 @@ describe 'Defining relation mappings' do
   end
 
   specify 'building registry of automatically mapped relations' do
-    Mapping.build(env, schema) {
+    env.mapping do
       users do
         model User
 
         map :id
         map :user_name, to: :name
       end
-    }
+    end
 
     users = env[:users]
 
@@ -51,7 +51,7 @@ describe 'Defining relation mappings' do
     custom_model  = mock_model(:id, :user_name)
     custom_mapper = TestMapper.new(schema[:users].header, custom_model)
 
-    Mapping.build(env, schema) { users { mapper(custom_mapper) } }
+    env.mapping { users { mapper(custom_mapper) } }
 
     users = env[:users]
 

@@ -68,6 +68,11 @@ module ROM
       @schema
     end
 
+    # @api public
+    def mapping(&block)
+      Mapping.build(self, &block)
+    end
+
     # Return registered relation
     #
     # @example

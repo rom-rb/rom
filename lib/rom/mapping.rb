@@ -33,7 +33,7 @@ module ROM
     # @return [Hash]
     #
     # @api public
-    def self.build(environment, schema, &block)
+    def self.build(environment, schema = environment.schema, &block)
       new(environment, schema, &block)
     end
 
