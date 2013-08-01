@@ -53,3 +53,10 @@ TEST_ENV.schema do
     key :id
   end
 end
+
+TEST_ENV.mapping do
+  users do
+    model mock_model(:id, :name)
+    map :id, :name
+  end
+end
