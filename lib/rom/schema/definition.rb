@@ -36,7 +36,7 @@ module ROM
         relation   = Axiom::Relation::Base.new(name, base.header)
         repository = repositories.fetch(base.repository)
 
-        relations[name] = repository.register(name, relation).get(name)
+        relations[name] = repository.register(name, relation)[name]
 
         self
       end

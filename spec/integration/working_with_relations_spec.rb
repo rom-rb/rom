@@ -21,7 +21,7 @@ describe 'Working with relations' do
 
     repo.register(:users, Axiom::Relation::Base.new(:users, header))
 
-    users = ROM::Relation.new(repo.get(:users), mapper)
+    users = ROM::Relation.new(repo[:users], mapper)
 
     user = model.new(id: 1, name: 'Jane')
     users.insert(user)

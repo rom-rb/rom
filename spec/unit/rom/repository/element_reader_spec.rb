@@ -2,8 +2,8 @@
 
 require 'spec_helper'
 
-describe Repository, '#get' do
-  subject { object.get(relation_name) }
+describe Repository, '#[]' do
+  subject { object[relation_name] }
 
   let(:object) { described_class.build(name, uri) }
   let(:name)   { :bigdata }
