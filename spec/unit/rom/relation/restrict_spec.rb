@@ -7,7 +7,7 @@ describe Relation, '#restrict' do
 
   share_examples_for 'restricted relation' do
     specify do
-      should eq([user2])
+      should eq([jane])
     end
   end
 

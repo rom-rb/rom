@@ -6,7 +6,7 @@ describe Relation, '#update' do
   include_context 'Relation'
 
   it 'updates old tuples with new ones' do
-    user1.name = 'John Doe'
-    expect(relation.update(user1).to_a.last).to eq(user1)
+    john.name = 'John Doe'
+    expect(relation.update(john).to_a.last).to eq(john)
   end
 end

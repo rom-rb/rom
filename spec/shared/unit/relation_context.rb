@@ -5,14 +5,21 @@
 shared_context 'Relation' do
   subject(:relation) { described_class.new(users, mapper) }
 
-  let(:header) { [[:name, String]] }
-  let(:users)  { Axiom::Relation.new(header, [['John'], ['Jane'], ['Jack'], ['Jade']]) }
+  let(:header) {
+    Axiom::Relation::Header.coerce([[:id, Integer], [:name, String]], keys: [:id])
+  }
 
-  let(:model)  { mock_model(:name) }
+  let(:users) {
+    Axiom::Relation.new(header, [
+      [1, 'John'], [2, 'Jane'], [3, 'Jack'], [4, 'Jade']
+    ])
+  }
+
+  let(:model)  { mock_model(:id, :name) }
   let(:mapper) { TestMapper.new(users.header, model) }
 
-  let(:user1)  { model.new(name: 'John') }
-  let(:user2)  { model.new(name: 'Jane') }
-  let(:user3)  { model.new(name: 'Jack') }
-  let(:user4)  { model.new(name: 'Jade') }
+  let(:john) { model.new(id: 1, name: 'John') }
+  let(:jane) { model.new(id: 2, name: 'Jane') }
+  let(:jack) { model.new(id: 3, name: 'Jack') }
+  let(:jade) { model.new(id: 4, name: 'Jade') }
 end

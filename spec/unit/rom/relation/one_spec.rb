@@ -6,15 +6,15 @@ describe Relation, '#one' do
   include_context 'Relation'
 
   it 'limits the underlying relation' do
-    stub(relation).take(2) { [user1] }
-    expect(relation.one).to eql(user1)
+    stub(relation).take(2) { [john] }
+    expect(relation.one).to eql(john)
     relation.should have_received.take(2)
   end
 
   context 'when no block is given' do
     context 'when one tuple is returned' do
       it 'returns one object' do
-        expect(relation.restrict(name: 'John').one).to eql(user1)
+        expect(relation.restrict(name: 'John').one).to eql(john)
       end
     end
 
