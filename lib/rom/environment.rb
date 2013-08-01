@@ -62,14 +62,8 @@ module ROM
     #
     # @api public
     def schema(&block)
-      if block_given?
-        if @schema
-          @schema.call(&block)
-        else
-          @schema = Schema.build(repositories, &block)
-        end
-      end
-
+      @schema ||= Schema.build(repositories)
+      @schema.call(&block) if block
       @schema
     end
 
