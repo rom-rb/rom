@@ -44,6 +44,58 @@ module ROM
       new(repositories, registry)
     end
 
+    # Build a relation schema for this environment
+    #
+    # @example
+    #   env = Environment.coerce(test: 'memory://test')
+    #
+    #   env.schema do
+    #     base_relation :users do
+    #       repository :test
+    #
+    #       attribute :id, Integer
+    #       attribute :name, String
+    #     end
+    #   end
+    #
+    # @return [Schema]
+    #
+    # @api public
+    def schema(&block)
+      @schema ||= Schema.build(repositories)
+      @schema.call(&block) if block
+      @schema
+    end
+
+    # Define mapping for relations
+    #
+    # @example
+    #
+    #   env.schema do
+    #     base_relation :users do
+    #       repository :test
+    #
+    #       attribute :id,        Integer
+    #       attribtue :user_name, String
+    #     end
+    #   end
+    #
+    #   env.mapping do
+    #     users do
+    #       model User
+    #
+    #       map :id
+    #       map :user_name, :to => :name
+    #     end
+    #   end
+    #
+    # @return [Mapping]
+    #
+    # @api public
+    def mapping(&block)
+      Mapping.build(self, &block)
+    end
+
     # Return registered relation
     #
     # @example
@@ -59,30 +111,13 @@ module ROM
       registry[name]
     end
 
-    # Load defined schema and register relations
-    #
-    # @example
-    #
-    #   schema = Schema.build do
-    #     base_relation :users do
-    #       repository :test
-    #
-    #       attributes :id, :name, :email
-    #     end
-    #   end
-    #
-    #   env = Environment.coerce(test: 'memory://test').load_schema(schema)
-    #
-    # @param [Schema] schema
+    # Register a rom relation
     #
     # @return [Environment]
     #
-    # @api public
-    def load_schema(schema)
-      schema.each do |repository_name, relations|
-        register_relations(repository_name, relations)
-      end
-
+    # @api private
+    def []=(name, relation)
+      registry[name] = relation
       self
     end
 
@@ -93,22 +128,6 @@ module ROM
     # @api private
     def repository(name)
       repositories[name]
-    end
-
-    private
-
-    # Register relations in a repository
-    #
-    # @return [Environment]
-    #
-    # @api private
-    def register_relations(repository_name, relations)
-      relations.each do |relation|
-        name           = relation.name
-        repository     = repository(repository_name).register(name, relation)
-        registry[name] = repository.get(name)
-      end
-      self
     end
 
   end # Environment

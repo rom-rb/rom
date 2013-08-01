@@ -5,9 +5,10 @@ module ROM
   # Builder DSL for ROM relations
   #
   class Mapping
+    include Adamantium::Flat
 
-    attr_reader :env, :registry, :model
-    private :env, :model
+    attr_reader :environment, :schema, :model
+    private :environment, :schema, :model
 
     # Build ROM relations
     #
@@ -27,14 +28,14 @@ module ROM
     #   registry[:users]
     #   # #<ROM::Relation:0x000000025d3160>
     #
-    # @param [Environment, Hash] container with configured axiom relations
-    # @param [Hash] registry for rom relations
+    # @param [Environment] rom environment
+    # @param [Schema] rom schema
     #
     # @return [Hash]
     #
     # @api public
-    def self.build(env, registry = {}, &block)
-      new(env, registry, &block).registry
+    def self.build(environment, schema = environment.schema, &block)
+      new(environment, schema, &block)
     end
 
     # Initialize a new mapping instance
@@ -42,9 +43,9 @@ module ROM
     # @return [undefined]
     #
     # @api private
-    def initialize(env, registry, &block)
-      @env      = env
-      @registry = registry
+    def initialize(environment, schema, &block)
+      @environment = environment
+      @schema      = schema
       instance_eval(&block)
     end
 
@@ -56,7 +57,7 @@ module ROM
     #
     # @api private
     def method_missing(name, *, &block)
-      relation = env[name]
+      relation = schema[name]
 
       if relation
         build_relation(relation, &block)
@@ -71,8 +72,8 @@ module ROM
     #
     # @api private
     def build_relation(relation, &block)
-      definition              = Definition.build(relation.header, &block)
-      registry[relation.name] = Relation.build(relation, definition.mapper)
+      definition = Definition.build(relation.header, &block)
+      environment[relation.name] = Relation.build(relation, definition.mapper)
     end
 
   end # Mapping

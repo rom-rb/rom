@@ -5,8 +5,7 @@ module ROM
   # Schema builder DSL
   #
   class Schema
-    include Concord.new(:definition)
-    include Adamantium
+    include Concord.new(:definition), Adamantium::Flat
 
     # Build a relation schema
     #
@@ -22,8 +21,8 @@ module ROM
     # @return [Schema]
     #
     # @api public
-    def self.build(&block)
-      new(Definition.new(&block))
+    def self.build(repositories, &block)
+      new(Definition.new(repositories, &block))
     end
 
     # Return defined relation identified by name
@@ -39,14 +38,9 @@ module ROM
       definition[name]
     end
 
-    # Iterate over repositories and relations
-    #
-    # @return [Schema]
-    #
     # @api private
-    def each(&block)
-      definition.repositories.each(&block)
-      self
+    def call(&block)
+      definition.instance_eval(&block)
     end
 
   end # Schema

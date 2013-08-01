@@ -19,9 +19,9 @@ describe 'Working with relations' do
     env  = ROM::Environment.coerce(test: 'memory://test')
     repo = env.repository(:test)
 
-    repo.register(:users, Axiom::Relation::Base.new(:users, header))
+    repo[:users] = Axiom::Relation::Base.new(:users, header)
 
-    users = ROM::Relation.new(repo.get(:users), mapper)
+    users = ROM::Relation.new(repo[:users], mapper)
 
     user = model.new(id: 1, name: 'Jane')
     users.insert(user)

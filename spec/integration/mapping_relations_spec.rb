@@ -4,7 +4,7 @@ require 'spec_helper'
 
 describe 'Defining relation mappings' do
   let!(:schema) {
-    Schema.build {
+    env.schema {
       base_relation :users do
         repository :test
 
@@ -17,7 +17,7 @@ describe 'Defining relation mappings' do
   }
 
   let!(:env) {
-    Environment.coerce(test: 'memory://test').load_schema(schema)
+    Environment.coerce(test: 'memory://test')
   }
 
   before do
@@ -29,16 +29,16 @@ describe 'Defining relation mappings' do
   end
 
   specify 'building registry of automatically mapped relations' do
-    registry = Mapping.build(env) {
+    env.mapping do
       users do
         model User
 
         map :id
         map :user_name, to: :name
       end
-    }
+    end
 
-    users = registry[:users]
+    users = env[:users]
 
     jane = User.new(id: 1, name: 'Jane')
 
@@ -51,9 +51,9 @@ describe 'Defining relation mappings' do
     custom_model  = mock_model(:id, :user_name)
     custom_mapper = TestMapper.new(schema[:users].header, custom_model)
 
-    registry = Mapping.build(env) { users { mapper(custom_mapper) } }
+    env.mapping { users { mapper(custom_mapper) } }
 
-    users = registry[:users]
+    users = env[:users]
 
     jane = custom_model.new(id: 1, user_name: 'Jane')
 

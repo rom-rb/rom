@@ -29,7 +29,7 @@ module ROM
     #
     #   repo = Repository.coerce(:test, 'in_memory://test')
     #   repo.register(:foo, [[:id, String], [:foo, String]])
-    #   repo.get(:foo)
+    #   repo[:foo]
     #
     #   # => <Axiom::Relation header=Axiom::Header ...>
     #
@@ -41,7 +41,7 @@ module ROM
     # @raise [KeyError]
     #
     # @api public
-    def get(name)
+    def [](name)
       relations.fetch(name)
     end
 
@@ -52,7 +52,7 @@ module ROM
     # @return [self]
     #
     # @api private
-    def register(name, relation)
+    def []=(name, relation)
       adapter[name]   = relation
       relations[name] = adapter[name]
       self

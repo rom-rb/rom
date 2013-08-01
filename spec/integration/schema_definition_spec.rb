@@ -39,10 +39,13 @@ describe 'Defining a ROM schema' do
     people.join(profiles.rename(id: :profile_id, person_id: :id))
   }
 
+  let(:env)        { Environment.coerce(test: 'memory://test') }
+  let(:repository) { env.repository(:test) }
+
   let(:schema) do
-    ROM::Schema.build do
+    env.schema do
       base_relation :people do
-        repository :postgres
+        repository :test
 
         attribute :id,   Integer
         attribute :name, String
@@ -51,7 +54,7 @@ describe 'Defining a ROM schema' do
       end
 
       base_relation :profiles do
-        repository :postgres
+        repository :test
 
         attribute :id,        Integer
         attribute :person_id, Integer
@@ -60,7 +63,9 @@ describe 'Defining a ROM schema' do
         key :id
         key :person_id
       end
+    end
 
+    env.schema do
       relation :people_with_profile do
         people.join(profiles.rename(id: :profile_id, person_id: :id))
       end
@@ -68,7 +73,7 @@ describe 'Defining a ROM schema' do
   end
 
   it 'registers the people relation' do
-    expect(schema[:people]).to eql(people)
+    expect(schema[:people]).to eq(people)
   end
 
   it 'establishes key attributes for people relation' do
@@ -80,10 +85,10 @@ describe 'Defining a ROM schema' do
   end
 
   it 'registers the profiles relation' do
-    expect(schema[:profiles]).to eql(profiles)
+    expect(schema[:profiles]).to eq(profiles)
   end
 
   it 'registers the people_with_profile relation' do
-    expect(schema[:people_with_profile]).to eql(people_with_profile)
+    expect(schema[:people_with_profile]).to eq(people_with_profile)
   end
 end

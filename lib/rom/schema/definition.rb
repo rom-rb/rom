@@ -7,14 +7,14 @@ module ROM
     #
     # @private
     class Definition
-      include Equalizer.new(:relations)
+      include Equalizer.new(:repositories, :relations)
 
-      attr_reader :relations, :repositories
+      attr_reader :repositories, :relations
 
       # @api private
-      def initialize(&block)
+      def initialize(repositories, &block)
+        @repositories = repositories
         @relations    = {}
-        @repositories = {}
         instance_eval(&block) if block
       end
 
@@ -32,11 +32,12 @@ module ROM
       #
       # @api public
       def base_relation(name, &block)
-        base            = Relation::Base.new(&block)
-        relation        = Axiom::Relation::Base.new(name, base.header)
-        relations[name] = relation
+        base       = Relation::Base.new(&block)
+        relation   = Axiom::Relation::Base.new(name, base.header)
+        repository = repositories.fetch(base.repository)
 
-        (repositories[base.repository] ||= []) << relation
+        repository[name] = relation
+        relations[name]  = repository[name]
 
         self
       end

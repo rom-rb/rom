@@ -4,7 +4,9 @@ require 'spec_helper'
 
 describe 'Setting up environment' do
   it 'registers relations within repositories' do
-    schema = ROM::Schema.build do
+    env = ROM::Environment.coerce(memory: 'memory://test')
+
+    schema = env.schema do
       base_relation :users do
         repository :memory
 
@@ -15,11 +17,6 @@ describe 'Setting up environment' do
       end
     end
 
-    env = ROM::Environment.coerce(memory: 'memory://test')
-    env.load_schema(schema)
-
-    repository = env.repository(:memory)
-
-    expect(repository.get(:users)).to eq(schema[:users])
+    expect(schema[:users]).to be_instance_of(Axiom::Relation::Variable)
   end
 end
