@@ -11,6 +11,14 @@ module ROM
   # Session namespace
   class Session
 
+    # Raised when an object is expected to be tracked and it's not
+    #
+    class ObjectNotTrackedError < StandardError
+      def initialize(object)
+        super("Tracker doesn't include #{object.inspect}")
+      end
+    end
+
   end # Session
 
 end # ROM

@@ -28,7 +28,7 @@ describe Session::Relation, '#dirty?' do
 
     specify do
       expect { subject }.to raise_error(
-        Session::Tracker::ObjectNotTrackedError,
+        Session::ObjectNotTrackedError,
         "Tracker doesn't include #{user.inspect}"
       )
     end

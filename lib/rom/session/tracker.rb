@@ -6,12 +6,6 @@ module ROM
       attr_reader :objects, :changelog
       private :objects, :changelog
 
-      class ObjectNotTrackedError < StandardError
-        def initialize(object)
-          super("Tracker doesn't include #{object.inspect}")
-        end
-      end
-
       # @api private
       def initialize
         @objects   = Hash.new
