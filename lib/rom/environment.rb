@@ -118,7 +118,6 @@ module ROM
     # @api private
     def []=(name, relation)
       registry[name] = relation
-      self
     end
 
     # The repository with the given +name+
