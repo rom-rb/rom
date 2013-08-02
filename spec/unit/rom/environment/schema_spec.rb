@@ -5,6 +5,7 @@ require 'spec_helper'
 describe Environment, '#schema' do
   let(:repositories) { Hash.new }
   let(:object)       { Environment.build(repositories) }
+  let(:block)        { Proc.new {} }
 
   before do
     stub(Schema).build(repositories) { schema }
@@ -12,8 +13,6 @@ describe Environment, '#schema' do
 
   describe 'with a block' do
     subject { object.schema(&block) }
-
-    let(:block) { Proc.new {} }
 
     fake(:schema)
 
@@ -30,7 +29,7 @@ describe Environment, '#schema' do
 
     it 'calls the schema' do
       expect(subject).to be(schema)
-      expect(schema).not_to have_received.call
+      expect(schema).not_to have_received.call(&block)
     end
   end
 end
