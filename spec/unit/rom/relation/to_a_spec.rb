@@ -6,6 +6,7 @@ describe Relation, '#to_a' do
   subject(:relation) { described_class.new(axiom_relation, mapper) }
 
   let(:axiom_relation) { [1, 2] }
+  let(:loaded_objects) { %w(1 2) }
   fake(:mapper)
 
   before do
@@ -14,6 +15,6 @@ describe Relation, '#to_a' do
   end
 
   it 'gets all tuples and loads them via mapper' do
-    expect(relation.to_a).to eql(%w(1 2))
+    expect(relation.to_a).to eql(loaded_objects)
   end
 end

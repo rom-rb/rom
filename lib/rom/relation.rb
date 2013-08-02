@@ -290,10 +290,11 @@ module ROM
     def one(&block)
       block  ||= ->() { raise NoTuplesError }
       tuples   = take(2).to_a
+
       if tuples.count > 1
         raise ManyTuplesError
       else
-        tuples.first or block.()
+        tuples.first || block.call
       end
     end
 

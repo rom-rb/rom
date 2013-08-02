@@ -31,7 +31,6 @@ describe Mapping, '.build' do
       expect(subject[:users]).to be_instance_of(Relation)
     end
 
-
     it 'builds rom mapper' do
       expect(mapper.header.map(&:name)).to eql([:id, :email, :name])
 

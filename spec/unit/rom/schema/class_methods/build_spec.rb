@@ -35,7 +35,6 @@ describe Schema, '.build' do
   fake(:repository)
   fake(:gateway) { Axiom::Relation }
 
-
   before do
     stub(repository).[]=(:users, relation) { gateway }
     stub(repository).[](:users) { gateway }

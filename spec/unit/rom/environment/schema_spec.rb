@@ -5,7 +5,7 @@ require 'spec_helper'
 describe Environment, '#schema' do
   let(:repositories) { Hash.new }
   let(:object)       { Environment.build(repositories) }
-  let(:block)        { Proc.new {} }
+  let(:block)        { -> { } }
 
   fake(:schema)
 
