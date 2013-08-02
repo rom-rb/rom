@@ -57,7 +57,7 @@ module ROM
       # @api public
       def mapper(mapper = Undefined)
         if mapper == Undefined
-          instance_variable_get('@mapper')
+          @mapper
         else
           @mapper = mapper
         end
@@ -80,7 +80,7 @@ module ROM
       # @api public
       def model(model = Undefined)
         if model == Undefined
-          instance_variable_get('@model')
+          @model
         else
           @model = model
         end
