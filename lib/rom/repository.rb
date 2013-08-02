@@ -49,13 +49,12 @@ module ROM
     #
     # @param [Axiom::Relation::Base] relation
     #
-    # @return [self]
+    # @return [Object] relation gateway
     #
-    # @api private
+    # @api public
     def []=(name, relation)
       adapter[name]   = relation
       relations[name] = adapter[name]
-      self
     end
 
   end # Repository
