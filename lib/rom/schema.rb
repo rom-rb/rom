@@ -41,6 +41,7 @@ module ROM
     # @api private
     def call(&block)
       definition.instance_eval(&block)
+      self
     end
 
   end # Schema

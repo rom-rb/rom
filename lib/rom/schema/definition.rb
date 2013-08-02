@@ -30,16 +30,13 @@ module ROM
       #
       # @return [Definition]
       #
-      # @api public
+      # @api private
       def base_relation(name, &block)
-        base       = Relation::Base.new(&block)
-        relation   = Axiom::Relation::Base.new(name, base.header)
-        repository = repositories.fetch(base.repository)
+        builder    = Relation::Base.new(&block)
+        repository = repositories.fetch(builder.repository)
 
-        repository[name] = relation
+        repository[name] = builder.call(name)
         relations[name]  = repository[name]
-
-        self
       end
 
       # Build a relation
@@ -54,10 +51,9 @@ module ROM
       #
       # @return [Definition]
       #
-      # @api public
+      # @api private
       def relation(name, &block)
         relations[name] = instance_eval(&block)
-        self
       end
 
       # Return relation identified by name
@@ -69,15 +65,6 @@ module ROM
         relations[name]
       end
 
-      # Return if the definition object respond to the given method name
-      #
-      # @return [Boolean]
-      #
-      # @api private
-      def respond_to?(name)
-        super || relations.key?(name)
-      end
-
       private
 
       # Method missing hook
@@ -85,9 +72,8 @@ module ROM
       # @return [Axiom::Relation, Axiom::Relation::Base]
       #
       # @api private
-      def method_missing(name, *)
-        return super unless relations.key?(name)
-        relations[name]
+      def method_missing(name)
+        self[name] || super
       end
 
     end # Definition
