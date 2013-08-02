@@ -56,11 +56,7 @@ module ROM
       #
       # @api public
       def mapper(mapper = Undefined)
-        if mapper == Undefined
-          instance_variable_get('@mapper')
-        else
-          @mapper = mapper
-        end
+        get_or_set(:mapper, mapper)
       end
 
       # Get or set model for the mapper
@@ -79,11 +75,7 @@ module ROM
       #
       # @api public
       def model(model = Undefined)
-        if model == Undefined
-          instance_variable_get('@model')
-        else
-          @model = model
-        end
+        get_or_set(:model, model)
       end
 
       # Configure attribute mappings
@@ -126,6 +118,15 @@ module ROM
       # @api private
       def build_mapper
         @mapper = Mapper.build(header, model)
+      end
+
+      def get_or_set(name, value)
+        ivar = "@#{name}"
+        if value == Undefined
+          instance_variable_get(ivar)
+        else
+          instance_variable_set(ivar, value)
+        end
       end
 
     end # Definition
