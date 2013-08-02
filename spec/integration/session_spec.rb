@@ -17,12 +17,12 @@ describe 'Session' do
   specify 'fetching an object from a relation' do
     Session.start(:users => relation) do |session|
       # fetch user for the first time
-      jane1 = session[:users].restrict { |r| r.name.eq('Jane') }.to_a.first
+      jane1 = session[:users].restrict(name: 'Jane').one
 
       expect(jane1).to eq(model.new(:id => 2, :name => 'Jane'))
 
       # here IM-powered loader kicks in
-      jane2 = session[:users].restrict { |r| r.name.eq('Jane') }.to_a.first
+      jane2 = session[:users].restrict(name: 'Jane').one
 
       expect(jane1).to be(jane2)
     end
@@ -30,7 +30,7 @@ describe 'Session' do
 
   specify 'deleting an object from a relation' do
     Session.start(:users => relation) do |session|
-      jane = session[:users].restrict { |r| r.name.eq('Jane') }.to_a.first
+      jane = session[:users].restrict(name: 'Jane').one
 
       session[:users].delete(jane)
 
@@ -54,7 +54,7 @@ describe 'Session' do
 
   specify 'updating an object in a relation' do
     Session.start(:users => relation) do |session|
-      jane = session[:users].restrict { |r| r.id.eq(2) }.to_a.first
+      jane = session[:users].restrict(id: 2).one
       jane.name = 'Jane Doe'
 
       session[:users].save(jane)
