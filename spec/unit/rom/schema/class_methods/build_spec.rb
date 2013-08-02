@@ -90,7 +90,7 @@ describe Schema, '.build' do
 
       it 'raises error' do
         expect { subject }.to raise_error(
-          NameError, /undefined local variable or method `not_here' for/
+          NameError, /undefined local variable or method `not_here'/
         )
       end
     end
