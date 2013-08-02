@@ -125,7 +125,7 @@ module ROM
     #
     # @return [Repository]
     #
-    # @api private
+    # @api public
     def repository(name)
       repositories[name]
     end
