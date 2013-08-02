@@ -28,8 +28,6 @@ module ROM
         @header     = header
         @mapping    = {}
         @attributes = Set.new
-        @mapper     = nil
-        @model      = nil
 
         instance_eval(&block)
 
@@ -59,13 +57,13 @@ module ROM
       # @api public
       def mapper(mapper = Undefined)
         if mapper == Undefined
-          @mapper
+          instance_variable_get('@mapper')
         else
           @mapper = mapper
         end
       end
 
-      # Set model for the mapper
+      # Get or set model for the mapper
       #
       # @example
       #
@@ -82,7 +80,7 @@ module ROM
       # @api public
       def model(model = Undefined)
         if model == Undefined
-          @model
+          instance_variable_get('@model')
         else
           @model = model
         end
@@ -112,8 +110,6 @@ module ROM
         else
           @attributes += Set[*args]
         end
-
-        self
       end
 
       private

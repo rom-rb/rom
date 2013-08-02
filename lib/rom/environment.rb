@@ -93,7 +93,7 @@ module ROM
     #
     # @api public
     def mapping(&block)
-      Mapping.build(self, &block)
+      Mapping.build(self, schema, &block)
     end
 
     # Return registered relation

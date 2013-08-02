@@ -34,7 +34,7 @@ module ROM
     # @return [Hash]
     #
     # @api public
-    def self.build(environment, schema = environment.schema, &block)
+    def self.build(environment, schema, &block)
       new(environment, schema, &block)
     end
 
@@ -56,7 +56,7 @@ module ROM
     # @return [Relation]
     #
     # @api private
-    def method_missing(name, *, &block)
+    def method_missing(name, *args, &block)
       relation = schema[name]
 
       if relation
