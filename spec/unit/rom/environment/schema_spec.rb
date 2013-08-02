@@ -7,29 +7,27 @@ describe Environment, '#schema' do
   let(:object)       { Environment.build(repositories) }
   let(:block)        { Proc.new {} }
 
+  fake(:schema)
+
   before do
-    stub(Schema).build(repositories) { schema }
+    fake_class(Schema, build: -> { schema })
   end
 
   describe 'with a block' do
     subject { object.schema(&block) }
 
-    fake(:schema)
-
     it 'calls the schema' do
       expect(subject).to be(schema)
-      expect(schema).to have_received.call(&block)
+      expect(schema).to have_received.call
     end
   end
 
   describe 'without a block' do
     subject { object.schema }
 
-    fake(:schema)
-
     it 'calls the schema' do
       expect(subject).to be(schema)
-      expect(schema).not_to have_received.call(&block)
+      expect(schema).not_to have_received.call
     end
   end
 end
