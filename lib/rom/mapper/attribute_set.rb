@@ -1,6 +1,9 @@
 module ROM
   class Mapper
 
+    # Represents a set of mapping attributes
+    #
+    # @private
     class AttributeSet
       include Enumerable, Concord.new(:header, :attributes), Adamantium
 
@@ -20,6 +23,7 @@ module ROM
       end
       memoize :mapping
 
+      # @api private
       def keys
         # FIXME: find a way to simplify this
         header.keys.flat_map { |key_header|
@@ -31,6 +35,7 @@ module ROM
         }
       end
 
+      # @api private
       def each(&block)
         return to_enum unless block_given?
         attributes.each_value(&block)

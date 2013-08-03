@@ -1,19 +1,25 @@
 module ROM
   class Mapper
 
+    # Dumps an object back into a tuple
+    #
+    # @private
     class Dumper
       include Concord::Public.new(:header, :model), Adamantium
 
+      # @api private
       def call(object)
         header.each_with_object([]) { |attribute, tuple|
           tuple << object.send(attribute.name)
         }
       end
 
+      # @api private
       def identity(object)
         header.keys.map { |key| object.send("#{key.name}") }
       end
 
+      # @api private
       def new_object(*args, &block)
         model.new(*args, &block)
       end

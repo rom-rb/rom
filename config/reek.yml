@@ -17,32 +17,32 @@ DataClump:
   max_copies: 2
   min_clump_size: 2
 DuplicateMethodCall:
-  enabled: true
-  exclude: []
-  max_calls: 1
-  allow_calls: []
+  enabled: false
 FeatureEnvy:
   enabled: true
-  exclude: []
+  exclude:
+    - ROM::Mapper::Loader::Allocator#call
+    - ROM::Mapper::Loader::AttributeWriter#call
+    - ROM::Mapper::Loader::ObjectBuilder#attributes
+    - ROM::Mapper::AttributeSet#mapping
 IrresponsibleModule:
   enabled: true
   exclude: []
 LongParameterList:
   enabled: true
-  exclude: []
+  exclude:
+    - ROM::Mapper#self.build
   max_params: 2
-  overrides:
-    initialize:
-      max_params: 3
 LongYieldList:
   enabled: true
   exclude: []
   max_params: 2
 NestedIterators:
   enabled: true
-  exclude: []
   max_allowed_nesting: 1
   ignore_iterators: []
+  exclude:
+    - ROM::Mapper::AttributeSet#keys
 NilCheck:
   enabled: true
   exclude: []
@@ -62,7 +62,8 @@ TooManyStatements:
   enabled: true
   exclude:
   - each
-  max_statements: 2
+  - ROM::Mapper#self.build
+  max_statements: 4
 UncommunicativeMethodName:
   enabled: true
   exclude: []

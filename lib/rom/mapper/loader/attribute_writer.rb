@@ -2,6 +2,8 @@ module ROM
   class Mapper
     class Loader
 
+      # Special type of Allocator loader which uses attribute writers
+      #
       # @private
       class AttributeWriter < Allocator
 
