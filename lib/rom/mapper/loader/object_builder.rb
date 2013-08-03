@@ -2,6 +2,8 @@ module ROM
   class Mapper
     class Loader
 
+      # Loader class that calls initialize
+      #
       # @private
       class ObjectBuilder < self
 

@@ -2,6 +2,8 @@ module ROM
   class Mapper
     class Loader
 
+      # Loader class which doesn't call initialize
+      #
       # @private
       class Allocator < self
 

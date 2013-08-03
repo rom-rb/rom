@@ -1,7 +1,9 @@
 module ROM
   class Mapper
 
-    # @public
+    # Abstract loader class
+    #
+    # @private
     class Loader
       include Concord::Public.new(:header, :model), Adamantium, AbstractType
 
