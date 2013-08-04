@@ -15,4 +15,5 @@ describe Relation, '.build' do
   end
 
   its(:relation) { should be(mapped_relation) }
+  its(:mapper)   { should be(mapper) }
 end
