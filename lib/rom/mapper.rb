@@ -29,7 +29,7 @@ module ROM
       dumper_class = options.fetch(:dumper_class) { DEFAULT_DUMPER }
 
       loader = loader_class.new(header, model)
-      dumper = dumper_class.new(header, model)
+      dumper = dumper_class.new(header)
 
       new(header, loader, dumper)
     end
@@ -91,7 +91,16 @@ module ROM
     #
     # @api public
     def new_object(*args, &block)
-      dumper.new_object(*args, &block)
+      model.new(*args, &block)
+    end
+
+    # Return model used by this mapper
+    #
+    # @return [Class]
+    #
+    # @api public
+    def model
+      loader.model
     end
 
     # Load an object instance from the tuple

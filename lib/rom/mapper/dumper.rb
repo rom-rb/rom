@@ -5,7 +5,7 @@ module ROM
     #
     # @private
     class Dumper
-      include Concord::Public.new(:header, :model), Adamantium
+      include Concord::Public.new(:header), Adamantium
 
       # @api private
       def call(object)
@@ -17,11 +17,6 @@ module ROM
       # @api private
       def identity(object)
         header.keys.map { |key| object.send("#{key.name}") }
-      end
-
-      # @api private
-      def new_object(*args, &block)
-        model.new(*args, &block)
       end
 
     end # Dumper
