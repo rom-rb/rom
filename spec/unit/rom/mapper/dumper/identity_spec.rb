@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Mapper::Dumper, '#identity' do
-  subject(:dumper) { described_class.new(header, model) }
+  subject(:dumper) { described_class.new(header) }
 
   let(:header) { Mapper::Header.build([[:uid, Integer ], [:name, String]], :map => { :uid => :id }, :keys => [ :uid ]) }
   let(:data)   { Hash[id: 1, name: 'Jane'] }
