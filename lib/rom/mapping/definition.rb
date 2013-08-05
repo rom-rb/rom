@@ -36,7 +36,7 @@ module ROM
 
       # @api private
       def header
-        Mapper::Header.build(project_header, map: mapping)
+        @header.project(attributes + Set[*mapping.keys])
       end
       memoize :header
 
@@ -114,18 +114,11 @@ module ROM
 
       private
 
-      # Project header using configured attributes
-      #
-      # @api private
-      def project_header
-        @header.project(attributes + Set[*mapping.keys])
-      end
-
       # Build default rom mapper
       #
       # @api private
       def build_mapper
-        @mapper = Mapper.build(header, model)
+        @mapper = Mapper.build(header, model, map: mapping)
       end
 
     end # Definition
