@@ -10,9 +10,12 @@ module ROM
       # Build a header
       #
       # @api private
-      def self.build(attributes, options = {})
-        header     = Axiom::Relation::Header.coerce(attributes, :keys => options.fetch(:keys, []))
+      def self.build(input, options = {})
+        return input if input.is_a?(self)
+
+        header     = Axiom::Relation::Header.coerce(input, :keys => options.fetch(:keys, []))
         attributes = AttributeSet.coerce(header, options.fetch(:map, {}))
+
         new(header, attributes)
       end
 

@@ -8,6 +8,16 @@ module ROM
     DEFAULT_LOADER = Loader::Allocator
     DEFAULT_DUMPER = Dumper
 
+    LOADERS = {
+      allocator:        Loader::Allocator,
+      object_builder:   Loader::ObjectBuilder,
+      attribute_writer: Loader::AttributeWriter
+    }
+
+    DUMPERS = {
+      default: DEFAULT_DUMPER
+    }
+
     # Build a mapper
     #
     # @example
@@ -25,9 +35,10 @@ module ROM
     #
     # @api public
     def self.build(header, model, options = {})
-      loader_class = options.fetch(:loader_class) { DEFAULT_LOADER }
-      dumper_class = options.fetch(:dumper_class) { DEFAULT_DUMPER }
+      loader_class = LOADERS.fetch(options[:loader], DEFAULT_LOADER)
+      dumper_class = DUMPERS.fetch(options[:dumper], DEFAULT_DUMPER)
 
+      header = Mapper::Header.build(header, map: options.fetch(:map, {}))
       loader = loader_class.new(header, model)
       dumper = dumper_class.new(header)
 
