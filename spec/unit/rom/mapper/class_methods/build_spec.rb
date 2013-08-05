@@ -11,11 +11,22 @@ describe Mapper, '.build' do
     let(:header) { attributes }
 
     its(:model)  { should be(model) }
-    its(:loader) { should be_instance_of(Mapper::DEFAULT_LOADER) }
-    its(:dumper) { should be_instance_of(Mapper::DEFAULT_DUMPER) }
+    its(:loader) { should be_instance_of(Mapper::LOADERS[:allocator]) }
+    its(:dumper) { should be_instance_of(Mapper::Dumper) }
 
     it 'builds correct header' do
       expect(subject.header.mapping).to eql(options[:map])
+    end
+
+    let(:object) { model.new(name: 'Jane') }
+    let(:params) { Hash[name: 'Jane'] }
+
+    specify do
+      expect(subject.load(params)).to eq(object)
+    end
+
+    specify do
+      expect(subject.dump(object)).to eq(params.values)
     end
   end
 
@@ -24,8 +35,8 @@ describe Mapper, '.build' do
     let(:options) { Hash.new }
 
     its(:model)  { should be(model) }
-    its(:loader) { should be_instance_of(Mapper::DEFAULT_LOADER) }
-    its(:dumper) { should be_instance_of(Mapper::DEFAULT_DUMPER) }
+    its(:loader) { should be_instance_of(Mapper::LOADERS[:allocator]) }
+    its(:dumper) { should be_instance_of(Mapper::Dumper) }
     its(:header) { should be(header) }
   end
 
@@ -35,7 +46,7 @@ describe Mapper, '.build' do
 
     its(:model)  { should be(model) }
     its(:loader) { should be_instance_of(Mapper::LOADERS[:object_builder]) }
-    its(:dumper) { should be_instance_of(Mapper::DEFAULT_DUMPER) }
+    its(:dumper) { should be_instance_of(Mapper::Dumper) }
     its(:header) { should be(header) }
   end
 
@@ -45,7 +56,7 @@ describe Mapper, '.build' do
 
     its(:model)  { should be(model) }
     its(:loader) { should be_instance_of(Mapper::LOADERS[:attribute_writer]) }
-    its(:dumper) { should be_instance_of(Mapper::DEFAULT_DUMPER) }
+    its(:dumper) { should be_instance_of(Mapper::Dumper) }
     its(:header) { should be(header) }
   end
 end

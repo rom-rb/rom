@@ -13,8 +13,11 @@ module ROM
       def self.build(input, options = {})
         return input if input.is_a?(self)
 
-        header     = Axiom::Relation::Header.coerce(input, :keys => options.fetch(:keys, []))
-        attributes = AttributeSet.coerce(header, options.fetch(:map, {}))
+        keys       = options.fetch(:keys, [])
+        header     = Axiom::Relation::Header.coerce(input, keys: keys)
+
+        mapping    = options.fetch(:map, {})
+        attributes = AttributeSet.coerce(header, mapping)
 
         new(header, attributes)
       end

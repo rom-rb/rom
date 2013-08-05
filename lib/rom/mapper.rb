@@ -5,9 +5,6 @@ module ROM
   class Mapper
     include Concord::Public.new(:header, :loader, :dumper)
 
-    DEFAULT_LOADER = Loader::Allocator
-    DEFAULT_DUMPER = Dumper
-
     LOADERS = {
       allocator:        Loader::Allocator,
       object_builder:   Loader::ObjectBuilder,
@@ -15,8 +12,11 @@ module ROM
     }
 
     DUMPERS = {
-      default: DEFAULT_DUMPER
+      default: Dumper
     }
+
+    DEFAULT_LOADER = :allocator
+    DEFAULT_DUMPER = :default
 
     # Build a mapper
     #
@@ -35,10 +35,10 @@ module ROM
     #
     # @api public
     def self.build(header, model, options = {})
-      loader_class = LOADERS.fetch(options[:loader], DEFAULT_LOADER)
-      dumper_class = DUMPERS.fetch(options[:dumper], DEFAULT_DUMPER)
+      loader_class = LOADERS[options.fetch(:loader, DEFAULT_LOADER)]
+      dumper_class = DUMPERS[options.fetch(:dumper, DEFAULT_DUMPER)]
 
-      header = Mapper::Header.build(header, map: options.fetch(:map, {}))
+      header = Header.build(header, options)
       loader = loader_class.new(header, model)
       dumper = dumper_class.new(header)
 
