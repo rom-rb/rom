@@ -43,6 +43,11 @@ module ROM
         self
       end
 
+      # @api private
+      def [](name)
+        attributes.fetch(name)
+      end
+
     end # AttributeSet
 
   end # Mapper

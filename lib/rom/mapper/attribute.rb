@@ -8,7 +8,8 @@ module ROM
       include Adamantium, Equalizer.new(:name, :field)
 
       # @api private
-      def self.coerce(field, mapping = nil)
+      def self.coerce(input, mapping = nil)
+        field = Axiom::Attribute.coerce(input)
         new(mapping || field.name, field)
       end
 
