@@ -24,7 +24,7 @@ FeatureEnvy:
     - ROM::Mapper::Loader::Allocator#call
     - ROM::Mapper::Loader::AttributeWriter#call
     - ROM::Mapper::Loader::ObjectBuilder#attributes
-    - ROM::Mapper::AttributeSet#mapping
+    - ROM::Mapper::Header#mapping
 IrresponsibleModule:
   enabled: true
   exclude: []
@@ -42,7 +42,7 @@ NestedIterators:
   max_allowed_nesting: 1
   ignore_iterators: []
   exclude:
-    - ROM::Mapper::AttributeSet#keys
+    - ROM::Mapper::Header#keys
 NilCheck:
   enabled: true
   exclude: []
