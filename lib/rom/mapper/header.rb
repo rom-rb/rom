@@ -31,9 +31,20 @@ module ROM
 
       # Return all key attributes
       #
-      # @api private
+      # @return [Array<Attribute>]
+      #
+      # @api public
       def keys
         attributes.keys
+      end
+
+      # Return attribute with the given name
+      #
+      # @return [Attribute]
+      #
+      # @api public
+      def [](name)
+        attributes[name]
       end
 
       # Iterate over attributes
