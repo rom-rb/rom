@@ -8,7 +8,19 @@ describe Mapper::Dumper, '#identity' do
   let(:model)  { mock_model(:id, :name) }
   let(:object) { model.new(data) }
 
-  it "returns object's identity" do
-    expect(dumper.identity(object)).to eq([1])
+  context 'with public attribute readers' do
+    it "returns object's identity" do
+      expect(dumper.identity(object)).to eq([1])
+    end
+  end
+
+  context 'with private attribute readers' do
+    before do
+      model.send(:private, :id)
+    end
+
+    it "returns object's identity" do
+      expect(dumper.identity(object)).to eq([1])
+    end
   end
 end
