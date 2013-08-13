@@ -36,7 +36,7 @@ describe Mapping, '.build' do
 
       # TODO: introduce new interface in rom-mapper to make this simpler
       expect(mapper.header.map { |a| a.field.type }).to eql([
-        Axiom::Attribute::Integer, Axiom::Attribute::String, Axiom::Attribute::String
+        Axiom::Types::Integer, Axiom::Types::String, Axiom::Types::String
       ])
     end
 
