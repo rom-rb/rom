@@ -63,6 +63,7 @@ TooManyStatements:
   exclude:
   - each
   - ROM::Mapper#self.build
+  - ROM::Mapper::Header#self.build
   max_statements: 4
 UncommunicativeMethodName:
   enabled: true
