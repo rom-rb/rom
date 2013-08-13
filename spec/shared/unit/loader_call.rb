@@ -1,7 +1,9 @@
+# encoding: utf-8
+
 shared_examples_for 'Mapper::Loader#call' do
   subject(:loader) { described_class.new(header, model) }
 
-  let(:header) { Mapper::Header.build([[:id, Integer ], [:name, String]]) }
+  let(:header) { Mapper::Header.build([[:id, Integer], [:name, String]]) }
   let(:tuple)  { Hash[id: 1, name: 'Jane', something: 'foo'] }
   let(:model)  { mock_model(:id, :name) }
 
