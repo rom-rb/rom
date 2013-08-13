@@ -5,7 +5,7 @@ describe Mapper, '#new_object' do
 
   include_context 'Mapper'
 
-  let(:attributes) { Hash[:id => 1, :name => 'Jane'] }
+  let(:attributes) { Hash[:id => 1, name: 'Jane'] }
   let(:block)      { Proc.new { self.id = 1 } }
 
   it { should eql(model.new(attributes)) }
