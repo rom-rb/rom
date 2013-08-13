@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module ROM
 
   # Mappers load tuples into objects and dump objects back into tuples

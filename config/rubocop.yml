@@ -33,7 +33,7 @@ AccessControl:
   Enabled: false
 
 LineLength:
-  Max: 90
+  Max: 108
 
 Blocks:
   Enabled: false

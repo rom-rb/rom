@@ -1,8 +1,10 @@
+# encoding: utf-8
+
 source 'https://rubygems.org'
 
 gemspec
 
-gem 'rom-mapper', :path => '.'
+gem 'rom-mapper', path: '.'
 
 group :test do
   gem 'bogus', '~> 0.1'
@@ -10,7 +12,7 @@ group :test do
 end
 
 group :development do
-  gem 'devtools', :git => 'https://github.com/rom-rb/devtools.git'
+  gem 'devtools', git: 'https://github.com/rom-rb/devtools.git'
 end
 
 # Added by devtools

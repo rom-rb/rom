@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 shared_context 'Mapper' do
   let(:mapper) { described_class.new(header, loader, dumper) }
 

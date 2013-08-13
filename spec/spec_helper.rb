@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 if ENV['COVERAGE'] == 'true'
   require 'simplecov'
   require 'coveralls'
