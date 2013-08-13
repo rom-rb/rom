@@ -19,7 +19,7 @@ module ROM
           Hash[header.map { |attribute| [attribute.name, tuple[attribute.name]] }]
         end
 
-      end # AttributeWriter
+      end # ObjectBuilder
 
     end # Loader
   end # Mapper
