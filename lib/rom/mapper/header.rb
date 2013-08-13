@@ -17,7 +17,10 @@ module ROM
         header     = Axiom::Relation::Header.coerce(input, keys: keys)
 
         mapping    = options.fetch(:map, {})
-        attributes = AttributeSet.coerce(header, mapping)
+        attributes = header.each_with_object({}) { |field, object|
+          attribute = Attribute.coerce(field, mapping[field.name])
+          object[attribute.name] = attribute
+        }
 
         new(header, attributes)
       end
@@ -26,8 +29,11 @@ module ROM
       #
       # @api private
       def mapping
-        attributes.mapping
+        each_with_object({}) { |attribute, hash|
+          hash[attribute.tuple_key] = attribute.name
+        }
       end
+      memoize :mapping
 
       # Return all key attributes
       #
@@ -35,8 +41,16 @@ module ROM
       #
       # @api public
       def keys
-        attributes.keys
+        # FIXME: find a way to simplify this
+        header.keys.flat_map { |key_header|
+          key_header.flat_map { |key|
+            attributes.values.select { |attribute|
+              attribute.tuple_key == key.name
+            }
+          }
+        }
       end
+      memoize :keys
 
       # Return attribute with the given name
       #
@@ -44,7 +58,7 @@ module ROM
       #
       # @api public
       def [](name)
-        attributes[name]
+        attributes.fetch(name)
       end
 
       # Iterate over attributes
@@ -52,7 +66,7 @@ module ROM
       # @api private
       def each(&block)
         return to_enum unless block_given?
-        attributes.each(&block)
+        attributes.each_value(&block)
         self
       end
 
