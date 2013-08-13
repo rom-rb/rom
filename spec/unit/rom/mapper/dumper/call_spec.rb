@@ -8,7 +8,20 @@ describe Mapper::Dumper, '#call' do
   let(:model)  { mock_model(:id, :name) }
   let(:object) { model.new(data) }
 
-  it "returns dumped tuple" do
-    expect(dumper.call(object)).to eq([1, 'Jane'])
+  context 'with public attribute readers' do
+    it 'returns dumped tuple' do
+      expect(dumper.call(object)).to eq([1, 'Jane'])
+    end
+  end
+
+  context 'with private attribute readers' do
+    before do
+      model.send(:private, :id)
+      model.send(:private, :name)
+    end
+
+    it 'returns dumped tuple' do
+      expect(dumper.call(object)).to eq([1, 'Jane'])
+    end
   end
 end
