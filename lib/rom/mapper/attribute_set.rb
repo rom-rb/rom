@@ -34,6 +34,7 @@ module ROM
           }
         }
       end
+      memoize :keys
 
       # @api private
       def each(&block)
