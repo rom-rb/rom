@@ -1,4 +1,4 @@
-# Ruby Object Mapper
+# rom-mapper
 
 [![Gem Version](https://badge.fury.io/rb/rom-mapper.png)][gem]
 [![Build Status](https://travis-ci.org/rom-rb/rom-mapper.png?branch=master)][travis]
@@ -12,7 +12,10 @@
 [codeclimate]: https://codeclimate.com/github/rom-rb/rom-mapper
 [coveralls]: https://coveralls.io/r/rom-rb/rom-mapper
 
-## Community
+Mappers for [Ruby Object Mapper](http://rom-rb.org).
 
-* [Google mailing list](https://groups.google.com/forum/?fromgroups#!forum/rom-rb)
-* [#rom-rb](http://irclog.whitequark.org/rom-rb) channel on freenode
+See ROM's [README](https://github.com/rom-rb/rom) for more information.
+
+## License
+
+See LICENSE file.
