@@ -6,7 +6,7 @@ This is a meta-project grouping pieces of ROM's default stack:
 * [rom-mapper](https://github.com/rom-rb/rom-mapper)
 * [rom-session](https://github.com/rom-rb/rom-session)
 
-# Getting started
+## Getting started
 
 ### 1. Set up environment and define schema
 
@@ -56,3 +56,14 @@ This is a meta-project grouping pieces of ROM's default stack:
 
   jane = env[:users].restrict(name: 'Jane').one
 ```
+
+## Authors
+
+* [Dan Kubb](https://github.com/dkubb)
+* [Markus Schirp](https://github.com/mbj)
+* [Martin Gamsjaeger](https://github.com/snusnu)
+* [Piotr Solnica](https://github.com/solnic)
+
+## Licence
+
+See `LICENSE` file.
