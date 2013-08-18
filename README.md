@@ -17,6 +17,8 @@ This is a meta-project grouping pieces of ROM's default stack:
 
   env.schema do
     base_relation :users do
+      repository :memory
+
       attribute :id,   Serial
       attribute :name, String
 
