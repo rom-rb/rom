@@ -32,7 +32,7 @@ module ROM
       # @api private
       def mapping
         each_with_object({}) { |attribute, hash|
-          hash[attribute.tuple_key] = attribute.name
+          hash.update attribute.to_mapping
         }
       end
       memoize :mapping
