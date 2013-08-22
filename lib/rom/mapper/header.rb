@@ -63,6 +63,13 @@ module ROM
         attributes.fetch(name)
       end
 
+      # Return attribute names
+      #
+      # @api private
+      def attribute_names
+        map(&:name)
+      end
+
       # Iterate over attributes
       #
       # @api private
