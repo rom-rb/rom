@@ -10,7 +10,7 @@ module ROM
 
       # @api private
       def initialize
-        @objects   = Hash.new
+        @objects   = {}
         @changelog = []
       end
 

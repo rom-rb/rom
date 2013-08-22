@@ -7,7 +7,9 @@ module ROM
     class IdentityMap
       include Concord.new(:objects)
 
-      LoadedObject = Class.new { include Concord::Public.new(:object, :tuple) }
+      class LoadedObject
+        include Concord::Public.new(:object, :tuple)
+      end
 
       # @api private
       def self.build(objects = {})

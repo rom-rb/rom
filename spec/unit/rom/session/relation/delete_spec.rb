@@ -21,7 +21,7 @@ describe Session::Relation, '#delete' do
     specify do
       expect { subject }.to raise_error(
         Session::State::TransitionError,
-        "cannot delete object with ROM::Session::State::Transient state"
+        'cannot delete object with ROM::Session::State::Transient state'
       )
     end
   end

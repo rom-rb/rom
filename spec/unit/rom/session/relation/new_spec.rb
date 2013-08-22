@@ -41,7 +41,7 @@ describe Session::Relation, '#new' do
       }
     }
 
-    let(:block) { Proc.new { |attributes| attributes[:test] = true } }
+    let(:block) { proc { |attributes| attributes[:test] = true } }
 
     its(:attributes) { should eq(attributes.merge(:test => true)) }
 

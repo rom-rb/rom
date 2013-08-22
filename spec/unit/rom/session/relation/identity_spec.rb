@@ -7,5 +7,5 @@ describe Session::Relation, '#save' do
 
   include_context 'Session::Relation'
 
-  it { should eq([ user.id ]) }
+  it { should eq([user.id]) }
 end
