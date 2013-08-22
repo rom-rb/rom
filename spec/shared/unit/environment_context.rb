@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 shared_context 'Session::Environment' do
   let(:object) { described_class.new({ :users => users }, Session::Tracker.new) }
 

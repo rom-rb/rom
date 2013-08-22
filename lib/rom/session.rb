@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module ROM
 
   # Extends ROM's environment with IdentityMap and state-tracking functionality

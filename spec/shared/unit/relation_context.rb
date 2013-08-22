@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 shared_context 'Session::Relation' do
   let(:users)    { session[:users] }
   let(:object)   { users }

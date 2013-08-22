@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require 'adamantium'
 require 'equalizer'
 require 'abstract_type'
