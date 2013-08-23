@@ -41,7 +41,7 @@ module Axiom
     def self.build(uri)
       klass = get(uri)
 
-      if klass == Axiom::Adapter::Memory
+      if klass.name == 'Axiom::Adapter::Memory'
         klass.new
       else
         klass.new(uri)
