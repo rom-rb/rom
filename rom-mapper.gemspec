@@ -12,6 +12,7 @@ Gem::Specification.new do |gem|
   gem.version       = ROM::Mapper::VERSION.dup
   gem.files         = `git ls-files`.split("\n")
   gem.test_files    = `git ls-files -- {spec}/*`.split("\n")
+  gem.license       = 'MIT'
 
   gem.add_dependency 'concord',             '~> 0.1'
   gem.add_dependency 'equalizer',           '~> 0.0.7'
