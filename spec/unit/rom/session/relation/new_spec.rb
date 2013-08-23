@@ -17,7 +17,7 @@ describe Session::Relation, '#new' do
 
   include_context 'Session::Relation'
 
-  let(:attributes) { Hash[:id => 1, :name => 'Jane'] }
+  let(:attributes) { Hash[id: 1, name: 'Jane'] }
 
   context 'with attributes' do
     subject { users.new(attributes) }
@@ -43,7 +43,7 @@ describe Session::Relation, '#new' do
 
     let(:block) { proc { |attributes| attributes[:test] = true } }
 
-    its(:attributes) { should eq(attributes.merge(:test => true)) }
+    its(:attributes) { should eq(attributes.merge(test: true)) }
 
     it_behaves_like 'a new tracked object'
   end

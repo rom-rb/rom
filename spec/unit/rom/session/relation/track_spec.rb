@@ -7,7 +7,7 @@ describe Session::Relation, '#track' do
 
   include_context 'Session::Relation'
 
-  let(:user) { model.new(:id => 3, :name => 'John') }
+  let(:user) { model.new(id: 3, name: 'John') }
 
   before do
     users.track(user)

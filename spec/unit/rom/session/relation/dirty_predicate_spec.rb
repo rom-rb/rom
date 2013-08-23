@@ -26,7 +26,7 @@ describe Session::Relation, '#dirty?' do
   end
 
   context 'when object is not tracked' do
-    let(:user) { model.new(:id => 3, :name => 'Unknown') }
+    let(:user) { model.new(id: 3, name: 'Unknown') }
 
     specify do
       expect { subject }.to raise_error(

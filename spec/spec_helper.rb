@@ -49,7 +49,7 @@ def mock_model(*attributes)
   }
 end
 
-TEST_ENV = Environment.coerce(:test => 'memory://test')
+TEST_ENV = Environment.coerce(test: 'memory://test')
 
 TEST_ENV.schema do
   base_relation :users do

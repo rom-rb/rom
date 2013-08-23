@@ -10,7 +10,7 @@ describe Session::Relation, '#save' do
   let(:state) { subject.state(user) }
 
   context 'when an object is transient' do
-    let(:user) { users.new(:id => 3, :name => 'John') }
+    let(:user) { users.new(id: 3, name: 'John') }
 
     it_behaves_like 'a command method'
 

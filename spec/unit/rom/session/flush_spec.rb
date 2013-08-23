@@ -11,7 +11,7 @@ describe Session, '#flush' do
 
   let(:john)  { session[:users].to_a.first }
   let(:jane)  { session[:users].to_a.last }
-  let(:piotr) { session[:users].new(:id => 3, :name => 'Piotr') }
+  let(:piotr) { session[:users].new(id: 3, name: 'Piotr') }
 
   before do
     session[:users].delete(john)

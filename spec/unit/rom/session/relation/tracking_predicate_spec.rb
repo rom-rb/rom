@@ -7,7 +7,7 @@ describe Session::Relation, '#tracking?' do
 
   include_context 'Session::Relation'
 
-  let(:user) { model.new(:id => 3, :name => 'John') }
+  let(:user) { model.new(id: 3, name: 'John') }
 
   context 'when the object is being tracked' do
     before do

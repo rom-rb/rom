@@ -9,7 +9,7 @@ describe Session::Mapper, '#load' do
 
   let(:mapper) { fake(:mapper) { ROM::Mapper } }
 
-  let(:tuple)   { Hash[:id => 1, :name => 'Jane'] }
+  let(:tuple)   { Hash[id: 1, name: 'Jane'] }
   let(:user)    { model.new(tuple) }
   let(:model)   { mock_model(:id, :name) }
   let(:im)      { Session::IdentityMap.build }
