@@ -13,7 +13,7 @@ This is a meta-project grouping pieces of ROM's default stack:
 ```ruby
   require 'rom'
 
-  env = ROM::Environment.coerce(memory: 'memory://test')
+  env = ROM::Environment.setup(memory: 'memory://test')
 
   env.schema do
     base_relation :users do
