@@ -7,12 +7,12 @@ module ROM
   class Environment
     include Concord.new(:repositories, :registry)
 
-    # Coerce a repository config hash into an environment instance
+    # Build an environment instance from a repository config hash
     #
     # @example
     #
-    #   config = { 'test' => 'in_memory://test' }
-    #   env    = ROM::Environment.coerce(config)
+    #   config = { 'test' => 'memory://test' }
+    #   env    = ROM::Environment.setup(config)
     #
     # @param [Environment, Hash<#to_sym, String>] config
     #   an environment or a hash of adapter uri strings,
@@ -21,7 +21,7 @@ module ROM
     # @return [Environment]
     #
     # @api public
-    def self.coerce(config)
+    def self.setup(config)
       return config if config.kind_of?(self)
 
       repositories = config.each_with_object({}) { |(name, uri), hash|

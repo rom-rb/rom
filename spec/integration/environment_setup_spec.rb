@@ -4,7 +4,7 @@ require 'spec_helper'
 
 describe 'Setting up environment' do
   it 'registers relations within repositories' do
-    env = ROM::Environment.coerce(memory: 'memory://test')
+    env = ROM::Environment.setup(memory: 'memory://test')
 
     schema = env.schema do
       base_relation :users do

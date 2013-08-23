@@ -17,7 +17,7 @@ describe 'Defining relation mappings' do
   }
 
   let!(:env) {
-    Environment.coerce(test: 'memory://test')
+    Environment.setup(test: 'memory://test')
   }
 
   before do

@@ -6,7 +6,7 @@ describe Mapping, '.build' do
   let(:header)   { [[:id, Integer], [:user_name, String], [:age, Integer], [:email, String]] }
   let(:relation) { Axiom::Relation::Base.new(:users, header) }
   let(:model)    { mock_model(:id, :name, :email) }
-  let(:env)      { Environment.coerce(test: 'memory://test') }
+  let(:env)      { Environment.setup(test: 'memory://test') }
   let(:schema)   { Hash[users: relation] }
 
   context 'when attribute mapping is used' do

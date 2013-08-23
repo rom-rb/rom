@@ -39,7 +39,7 @@ describe 'Defining a ROM schema' do
     people.join(profiles.rename(id: :profile_id, person_id: :id))
   }
 
-  let(:env)        { Environment.coerce(test: 'memory://test') }
+  let(:env)        { Environment.setup(test: 'memory://test') }
   let(:repository) { env.repository(:test) }
 
   let(:schema) do
