@@ -1,9 +1,0 @@
-[submodule "rom-relation"]
-	path = rom-relation
-	url = git@github.com:rom-rb/rom-relation.git
-[submodule "rom-mapper"]
-	path = rom-mapper
-	url = git@github.com:rom-rb/rom-mapper.git
-[submodule "rom-session"]
-	path = rom-session
-	url = git@github.com:rom-rb/rom-session.git

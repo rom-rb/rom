@@ -16,3 +16,7 @@ tmp
 .yardoc
 _yardoc
 doc/
+
+rom-relation
+rom-mapper
+rom-session
