@@ -16,7 +16,7 @@ module ROM
       end
 
       # @api private
-      def to_mapping
+      def mapping
         { tuple_key => name }
       end
 
