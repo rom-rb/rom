@@ -10,7 +10,7 @@ Gem::Specification.new do |gem|
   gem.email         = ['piotr.solnica@gmail.com', 'dan.kubb@gmail.com', 'mbj@schirp-dso.com', 'gamsnjaga@gmail.com'].sort
   gem.homepage      = 'http://rom-rb.org'
   gem.require_paths = ['lib']
-  gem.version       = ROM::VERSION
+  gem.version       = ROM::VERSION.dup
   gem.files         = `git ls-files`.split("\n")
   gem.test_files    = `git ls-files -- {spec}/*`.split("\n")
   gem.license       = 'MIT'
