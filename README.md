@@ -19,7 +19,7 @@ This is a meta-project grouping pieces of ROM's default stack:
     base_relation :users do
       repository :memory
 
-      attribute :id,   Serial
+      attribute :id,   Integer
       attribute :name, String
 
       key :id
@@ -49,7 +49,7 @@ This is a meta-project grouping pieces of ROM's default stack:
 ### 3. Work with Plain Old Ruby Objects
 
 ```ruby
-  env.session do |session|
+  ROM::Session.start(env) do |session|
     session[:users].save(User.new(id: 1, name: 'Jane'))
     session.commit
   end
