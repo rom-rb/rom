@@ -17,7 +17,7 @@ describe 'Session' do
   end
 
   specify 'fetching an object from a relation' do
-    Session.start(users: relation) do |session|
+    TEST_ENV.session do |session|
       # fetch user for the first time
       jane1 = session[:users].restrict(name: 'Jane').one
 
@@ -31,7 +31,7 @@ describe 'Session' do
   end
 
   specify 'deleting an object from a relation' do
-    Session.start(users: relation) do |session|
+    TEST_ENV.session do |session|
       jane = session[:users].restrict(name: 'Jane').one
 
       session[:users].delete(jane)
@@ -43,7 +43,7 @@ describe 'Session' do
   end
 
   specify 'saving an object to a relation' do
-    Session.start(users: relation) do |session|
+    TEST_ENV.session do |session|
       piotr = session[:users].new(id: 3, name: 'Piotr')
 
       session[:users].save(piotr)
@@ -55,7 +55,7 @@ describe 'Session' do
   end
 
   specify 'updating an object in a relation' do
-    Session.start(users: relation) do |session|
+    TEST_ENV.session do |session|
       jane = session[:users].restrict(id: 2).one
       jane.name = 'Jane Doe'
 

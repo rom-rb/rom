@@ -2,6 +2,24 @@
 
 module ROM
 
+  # Extended ROM::Environment with session support
+  class Environment
+
+    # Start a new session for this environment
+    #
+    # @example
+    #  env.session do |session|
+    #    # ...
+    #  end
+    #
+    # @see Session.start
+    #
+    # @api public
+    def session(&block)
+      Session.start(self, &block)
+    end
+  end
+
   # Extends ROM's environment with IdentityMap and state-tracking functionality
   #
   # @api public
