@@ -49,7 +49,7 @@ This is a meta-project grouping pieces of ROM's default stack:
 ### 3. Work with Plain Old Ruby Objects
 
 ```ruby
-  ROM::Session.start(env) do |session|
+  env.session do |session|
     session[:users].save(User.new(id: 1, name: 'Jane'))
     session.commit
   end
