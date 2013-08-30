@@ -8,6 +8,7 @@ require 'abstract_type'
 require 'descendants_tracker'
 require 'equalizer'
 require 'axiom'
+require 'axiom-optimizer'
 
 # Main ROM module with methods to setup and manage the environment
 module ROM

@@ -46,10 +46,10 @@ describe Mapping, '.build' do
     end
   end
 
-  context 'when custom mapper is inject' do
+  context 'when custom mapper is injected' do
     subject { env }
 
-    fake(:test_mapper) { TestMapper }
+    let(:test_mapper) { TestMapper.new(header, model) }
 
     before do
       custom_mapper = test_mapper
@@ -57,11 +57,7 @@ describe Mapping, '.build' do
     end
 
     it 'sets the custom mapper' do
-      stub(test_mapper).call(relation) { relation }
-
       expect(subject[:users].mapper).to be(test_mapper)
-
-      expect(test_mapper).to have_received.call(relation)
     end
   end
 

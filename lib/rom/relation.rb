@@ -55,7 +55,7 @@ module ROM
     #
     # @api public
     def self.build(relation, mapper)
-      new(mapper.call(relation), mapper)
+      new(mapper.call(relation).optimize, mapper)
     end
 
     # Iterate over tuples yielded by the wrapped relation
