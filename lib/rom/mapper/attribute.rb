@@ -16,6 +16,11 @@ module ROM
       end
 
       # @api private
+      def mapping
+        { tuple_key => name }
+      end
+
+      # @api private
       def tuple_key
         field.name
       end
