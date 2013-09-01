@@ -23,8 +23,6 @@ FeatureEnvy:
   exclude:
     - ROM::Mapper::Loader::Allocator#call
     - ROM::Mapper::Loader::AttributeWriter#call
-    - ROM::Mapper::Loader::ObjectBuilder#attributes
-    - ROM::Mapper::Header#mapping
 IrresponsibleModule:
   enabled: true
   exclude: []

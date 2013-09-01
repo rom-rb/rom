@@ -32,7 +32,7 @@ module ROM
       # @api private
       def mapping
         each_with_object({}) { |attribute, hash|
-          hash[attribute.tuple_key] = attribute.name
+          hash.update attribute.mapping
         }
       end
       memoize :mapping
@@ -61,6 +61,13 @@ module ROM
       # @api public
       def [](name)
         attributes.fetch(name)
+      end
+
+      # Return attribute names
+      #
+      # @api private
+      def attribute_names
+        map(&:name)
       end
 
       # Iterate over attributes
