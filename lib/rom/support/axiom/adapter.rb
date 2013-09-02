@@ -39,6 +39,8 @@ module Axiom
     #
     # @api private
     def self.build(uri)
+      require_adapter(uri)
+
       klass = get(uri)
 
       if klass.name == 'Axiom::Adapter::Memory'
@@ -70,6 +72,15 @@ module Axiom
         )
       }
     end
+
+    # Try to load an adapter using a standard path
+    #
+    # @api private
+    def self.require_adapter(uri)
+      require "rom/support/axiom/adapter/#{uri.scheme}"
+    rescue LoadError
+    end
+    private_class_method :require_adapter
 
     # Set the uri scheme for an adapter class
     #

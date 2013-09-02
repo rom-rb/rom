@@ -33,6 +33,8 @@ module ROM
 
 end # module ROM
 
+require 'rom/support/axiom/adapter'
+
 require 'rom/repository'
 require 'rom/environment'
 require 'rom/relation'
