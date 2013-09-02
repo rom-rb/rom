@@ -28,8 +28,7 @@ require 'bogus/rspec'
 
 include ROM
 
-ROM_ENV     = Environment.setup(test: 'memory://test')
-ROM_ADAPTER = ENV.fetch('ROM_ADAPTER', :in_memory).to_sym
+ROM_ENV = Environment.setup(test: 'memory://test')
 
 Bogus.configure do |config|
   config.search_modules << ROM
