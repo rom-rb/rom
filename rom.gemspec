@@ -15,7 +15,7 @@ Gem::Specification.new do |gem|
   gem.test_files    = `git ls-files -- {spec}/*`.split("\n")
   gem.license       = 'MIT'
 
-  gem.add_dependency 'rom-relation', '~> 0.1.1'
+  gem.add_dependency 'rom-relation', '~> 0.1.2'
   gem.add_dependency 'rom-mapper',   '~> 0.1.0'
-  gem.add_dependency 'rom-session',  '~> 0.1.0'
+  gem.add_dependency 'rom-session',  '~> 0.1.1'
 end
