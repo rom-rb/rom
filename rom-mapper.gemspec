@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-require File.expand_path('../lib/rom/version', __FILE__)
+require File.expand_path('../lib/rom/mapper/version', __FILE__)
 
 Gem::Specification.new do |gem|
   gem.name          = "rom-mapper"
