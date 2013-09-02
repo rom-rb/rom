@@ -11,7 +11,7 @@ Gem::Specification.new do |gem|
   gem.homepage      = 'http://rom-rb.org'
   gem.require_paths = ['lib']
   gem.version       = ROM::VERSION.dup
-  gem.files         = `git ls-files`.split("\n")
+  gem.files         = `git ls-files`.split("\n").reject { |name| name.include?('benchmarks') }
   gem.test_files    = `git ls-files -- {spec}/*`.split("\n")
   gem.license       = 'MIT'
 
