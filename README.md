@@ -8,10 +8,15 @@ This is a meta-project grouping pieces of ROM's default stack:
 
 ## Getting started
 
+```
+gem install rom axiom-memory-adapter
+```
+
 ### 1. Set up environment and define schema
 
 ```ruby
   require 'rom'
+  require 'axiom-memory-adapter'
 
   env = ROM::Environment.setup(memory: 'memory://test')
 
