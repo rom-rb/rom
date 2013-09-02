@@ -14,5 +14,5 @@ describe Repository, '#[]=' do
 
   it { should eq(relation) }
 
-  it { should be_instance_of(Axiom::Relation::Variable) }
+  it { should be_instance_of(Axiom::Relation::Variable::Materialized) }
 end

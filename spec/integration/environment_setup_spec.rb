@@ -17,6 +17,6 @@ describe 'Setting up environment' do
       end
     end
 
-    expect(schema[:users]).to be_instance_of(Axiom::Relation::Variable)
+    expect(schema[:users]).to be_instance_of(Axiom::Relation::Variable::Materialized)
   end
 end
