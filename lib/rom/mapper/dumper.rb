@@ -18,7 +18,7 @@ module ROM
 
       # @api private
       def identity(object)
-        header.keys.map { |key| object.send("#{key.name}") }
+        header.keys.map { |key| object.send(key.name) }
       end
 
     end # Dumper
