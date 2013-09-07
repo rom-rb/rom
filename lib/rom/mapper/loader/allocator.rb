@@ -11,10 +11,8 @@ module ROM
 
         # @api private
         def call(tuple)
-          allocate { |attribute, object|
-            object.instance_variable_set(
-              "@#{attribute.name}", tuple[attribute.name]
-            )
+          allocate { |name, object|
+            object.instance_variable_set("@#{name}", tuple[name])
           }
         end
 
@@ -22,7 +20,7 @@ module ROM
 
         # @api private
         def allocate(&block)
-          header.each_with_object(model.allocate, &block)
+          header.attribute_names.each_with_object(model.allocate, &block)
         end
 
       end # Allocator
