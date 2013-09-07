@@ -11,9 +11,7 @@ module ROM
 
       # @api private
       def call(object)
-        header.each_with_object([]) { |attribute, tuple|
-          tuple << object.send(attribute.name)
-        }
+        header.map { |attribute| object.send(attribute.name) }
       end
 
       # @api private
