@@ -11,9 +11,7 @@ module ROM
 
         # @api private
         def call(tuple)
-          allocate { |attribute, object|
-            object.public_send("#{attribute.name}=", tuple[attribute.name])
-          }
+          allocate { |name, object| object.public_send("#{name}=", tuple[name]) }
         end
 
       end # AttributeWriter
