@@ -56,7 +56,7 @@ gem install rom axiom-memory-adapter
 ```ruby
   env.session do |session|
     session[:users].save(User.new(id: 1, name: 'Jane'))
-    session.commit
+    session.flush
   end
 
   jane = env[:users].restrict(name: 'Jane').one
