@@ -1,7 +1,7 @@
 # Ruby Object Mapper
 
 Ruby Object Mapper is an implementation of [the Data Mapper](http://martinfowler.com/eaaCatalog/dataMapper.html)
-pattern in Ruby language. It consists of multiple lously coupled pieces and uses
+pattern in Ruby language. It consists of multiple loosely coupled pieces and uses
 a powerful relational algebra library called [axiom](https://github.com/dkubb/axiom).
 
 This is a meta-project grouping pieces of ROM's default stack:
