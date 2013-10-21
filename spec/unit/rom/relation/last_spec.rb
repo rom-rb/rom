@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-describe Relation, '#first' do
+describe Relation, '#last' do
   include_context 'Relation'
 
   context 'when limit is not provided' do
