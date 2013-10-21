@@ -298,6 +298,22 @@ module ROM
       end
     end
 
+    # Return a grouped relation
+    #
+    # @example
+    #   axiom    = Axiom::Relation.new([[:id, Integer], [:product_name, String])
+    #   relation = ROM::Relation.new(axiom, mapper)
+    #   grouped  = relation.group(products: [:product_name])
+    #
+    # @param [Hash{#to_sym => Enumerable<Axiom::Attribute>] grouping
+    #
+    # @return [Relation]
+    #
+    # @api public
+    def group(grouping)
+      new(relation.group(grouping))
+    end
+
     # Inject a new mapper into this relation
     #
     # @example
