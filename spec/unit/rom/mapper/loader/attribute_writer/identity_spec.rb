@@ -1,7 +1,0 @@
-# encoding: utf-8
-
-require 'spec_helper'
-
-describe Mapper::Loader::AttributeWriter, '#identity' do
-  it_behaves_like 'Mapper::Loader#identity'
-end

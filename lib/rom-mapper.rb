@@ -1,17 +1,23 @@
 # encoding: utf-8
 
 require 'concord'
-require 'adamantium'
-require 'equalizer'
-require 'abstract_type'
+require 'anima'
+require 'ducktrap'
 
-require 'rom/mapper/attribute'
-require 'rom/mapper/header'
+module ROM
 
-require 'rom/mapper/loader'
-require 'rom/mapper/loader/allocator'
-require 'rom/mapper/loader/attribute_writer'
-require 'rom/mapper/loader/object_builder'
+  Undefined = Class.new.freeze
 
-require 'rom/mapper/dumper'
+  EMPTY_ARRAY = [].freeze
+
+end
+
+require 'rom/mapper/mapping/attribute'
+require 'rom/mapper/mapping/registry'
+require 'rom/mapper/mapping'
+require 'rom/mapper/builder/attribute'
+require 'rom/mapper/builder/attribute/simple'
+require 'rom/mapper/builder/attribute/embedded'
+require 'rom/mapper/builder'
+require 'rom/mapper/registry'
 require 'rom/mapper'
