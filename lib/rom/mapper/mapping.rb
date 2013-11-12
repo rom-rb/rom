@@ -8,9 +8,9 @@ module ROM
       attr_reader :model
       attr_reader :header
 
-      def initialize(model, header = [], &block)
+      def initialize(model, header = EMPTY_ARRAY, &block)
         @model   = model
-        @header  = header
+        @header  = header.dup
         instance_eval(&block) if block
       end
 
