@@ -45,6 +45,7 @@ module ROM
         def fetch_operand
           block(operands)
         end
+        memoize :fetch_operand
 
         def operands
           [dump]
