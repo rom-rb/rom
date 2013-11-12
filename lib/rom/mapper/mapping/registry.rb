@@ -11,8 +11,8 @@ module ROM
         attr_reader :entries
         private     :entries
 
-        def initialize(entries = {})
-          @entries = entries
+        def initialize(entries = EMPTY_HASH)
+          @entries = entries.dup
         end
 
         def register(model, &block)

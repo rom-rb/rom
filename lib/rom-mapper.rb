@@ -10,6 +10,8 @@ module ROM
 
   EMPTY_ARRAY = [].freeze
 
+  EMPTY_HASH  = {}.freeze
+
 end
 
 require 'rom/mapper/mapping/attribute'
