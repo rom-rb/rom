@@ -21,9 +21,6 @@ module ROM
           new(attribute, mappers).call
         end
 
-        include AbstractType
-        include Adamantium::Flat
-
         attr_reader :name
         private     :name
 
