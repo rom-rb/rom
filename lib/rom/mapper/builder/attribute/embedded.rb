@@ -7,8 +7,6 @@ module ROM
 
         class Embedded < self
 
-          include Typed
-
           class Value < self
             private
 

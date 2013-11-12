@@ -9,14 +9,6 @@ module ROM
         include AbstractType
         include Adamantium::Flat
 
-        module Typed
-          private
-
-          def operands
-            super.unshift(type_transformer)
-          end
-        end
-
         def self.call(attribute, mappers)
           new(attribute, mappers).call
         end
@@ -43,13 +35,9 @@ module ROM
         private
 
         def fetch_operand
-          block(operands)
+          block([type_transformer, dump])
         end
         memoize :fetch_operand
-
-        def operands
-          [dump]
-        end
 
         def dump
           Ducktrap::Node::Key::Dump.new(block, name)
