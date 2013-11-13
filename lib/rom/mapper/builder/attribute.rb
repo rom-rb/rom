@@ -31,13 +31,13 @@ module ROM
         def call
           Ducktrap::Node::Key::Fetch.new(fetch_operand, name)
         end
+        memoize :call
 
         private
 
         def fetch_operand
           block([type_transformer, dump])
         end
-        memoize :fetch_operand
 
         def dump
           Ducktrap::Node::Key::Dump.new(block, name)
