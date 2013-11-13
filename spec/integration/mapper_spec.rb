@@ -37,6 +37,10 @@ describe ROM::Mapper do
       expect(person_mapper.load(person_hash)).to eql(person)
       expect(person_mapper.dump(person)).to eql(person_hash)
     end
+
+    it 'raises an error when trying to access an unknown mapper' do
+      expect { mappers[:unknown] }.to raise_error(ROM::Mapper::UnknownMapper)
+    end
   end
 
   context 'with untyped mappings' do

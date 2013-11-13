@@ -4,6 +4,8 @@ module ROM
 
   class Mapper
 
+    UnknownMapper = Class.new(StandardError)
+
     def self.build(registry, mapping)
       new(Builder.call(registry, mapping))
     end
