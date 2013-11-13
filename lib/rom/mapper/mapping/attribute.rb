@@ -24,7 +24,7 @@ module ROM
           private
 
           def builder
-            Mapper::Builder::Attribute::Simple
+            Builder::Attribute::Simple
           end
         end
 
@@ -32,7 +32,7 @@ module ROM
           private
 
           def builder
-            Mapper::Builder::Attribute::Embedded::Value
+            Builder::Attribute::Embedded::Value
           end
         end
 
@@ -40,7 +40,7 @@ module ROM
           private
 
           def builder
-            Mapper::Builder::Attribute::Embedded::Collection
+            Builder::Attribute::Embedded::Collection
           end
         end
       end # class Attribute
