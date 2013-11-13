@@ -19,10 +19,6 @@ module ROM
           entries[model] = Mapping.new(model, &block)
         end
 
-        def [](model)
-          entries.fetch(model)
-        end
-
         def each(&block)
           return to_enum unless block
           entries.each(&block)
