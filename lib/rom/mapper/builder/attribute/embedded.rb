@@ -10,7 +10,7 @@ module ROM
           class Value < self
             private
 
-            def type_transformer
+            def transformer
               mappers[type].transformer
             end
           end # class Value
@@ -18,7 +18,7 @@ module ROM
           class Collection < Value
             private
 
-            def type_transformer
+            def transformer
               Ducktrap::Node::Map.new(super)
             end
           end

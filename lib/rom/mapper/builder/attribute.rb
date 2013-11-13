@@ -36,7 +36,7 @@ module ROM
         private
 
         def fetch_operand
-          block([type_transformer, dump])
+          block([transformer, dump])
         end
 
         def dump

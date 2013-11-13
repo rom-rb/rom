@@ -16,7 +16,7 @@ module ROM
           class Untyped < self
             private
 
-            def type_transformer
+            def transformer
               Ducktrap::Node::Identity.instance
             end
           end # class Untyped
@@ -24,7 +24,7 @@ module ROM
           class Typed < self
             private
 
-            def type_transformer
+            def transformer
               Ducktrap::Node::Primitive.new(type)
             end
           end # class Typed
