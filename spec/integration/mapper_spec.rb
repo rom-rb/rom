@@ -30,12 +30,12 @@ describe ROM::Mapper do
   let(:person_mapper)  { mappers[Person]  }
 
   shared_examples_for 'mapping' do
-    it "supports objects with primitive attributes" do
+    it 'supports objects with primitive attributes' do
       expect(address_mapper.load(address_hash)).to eql(address)
       expect(address_mapper.dump(address)).to eql(address_hash)
     end
 
-    it "supports objects with primitive attributes, embedded values and collections" do
+    it 'supports objects with primitive attributes, embedded values and collections' do
       expect(person_mapper.load(person_hash)).to eql(person)
       expect(person_mapper.dump(person)).to eql(person_hash)
     end
