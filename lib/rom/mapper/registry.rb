@@ -16,7 +16,7 @@ module ROM
 
       def [](model)
         entries.fetch(model) do
-          raise UnknownMapper, UNKNOWN_MAPPER_MSG % model.inspect
+          fail UnknownMapper, UNKNOWN_MAPPER_MSG % model.inspect
         end
       end
     end # class Registry
