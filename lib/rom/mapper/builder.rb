@@ -19,6 +19,7 @@ module ROM
       def call
         Ducktrap::Node::Block.new([transform, anima_load])
       end
+      memoize :call
 
       private
 
