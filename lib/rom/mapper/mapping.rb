@@ -31,6 +31,6 @@ module ROM
       def add(attribute, name, type)
         header << attribute.new(name, type)
       end
-    end # class Mapping
-  end # class Mapper
-end # module ROM
+    end # Mapping
+  end # Mapper
+end # ROM

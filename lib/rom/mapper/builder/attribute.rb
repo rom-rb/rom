@@ -46,7 +46,7 @@ module ROM
         def block(traps = EMPTY_ARRAY)
           Ducktrap::Node::Block.new(traps)
         end
-      end # class Attribute
-    end # class Builder
-  end # class Mapper
-end # module ROM
+      end # Attribute
+    end # Builder
+  end # Mapper
+end # ROM

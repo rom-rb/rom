@@ -34,6 +34,6 @@ module ROM
       def anima_load
         Ducktrap::Node::Anima::Load.new(@model)
       end
-    end # class Builder
-  end # class Mapper
-end # module ROM
+    end # Builder
+  end # Mapper
+end # ROM

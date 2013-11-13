@@ -27,5 +27,5 @@ module ROM
     def dump(object)
       dumper.run(object)
     end
-  end # class Mapper
-end # module ROM
+  end # Mapper
+end # ROM

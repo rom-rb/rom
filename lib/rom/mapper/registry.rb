@@ -19,6 +19,6 @@ module ROM
           fail UnknownMapper, UNKNOWN_MAPPER_MSG % model.inspect
         end
       end
-    end # class Registry
-  end # class Mapper
-end # module ROM
+    end # Registry
+  end # Mapper
+end # ROM

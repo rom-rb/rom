@@ -24,7 +24,7 @@ module ROM
           entries.each(&block)
           self
         end
-      end # class Registry
-    end # class Mapping
-  end # class Mapper
-end # module ROM
+      end # Registry
+    end # Mapping
+  end # Mapper
+end # ROM

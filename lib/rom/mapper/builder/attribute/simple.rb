@@ -19,7 +19,7 @@ module ROM
             def transformer
               Ducktrap::Node::Identity.instance
             end
-          end # class Untyped
+          end # Untyped
 
           class Typed < self
             private
@@ -27,10 +27,10 @@ module ROM
             def transformer
               Ducktrap::Node::Primitive.new(type)
             end
-          end # class Typed
+          end # Typed
 
-        end # class Simple
-      end # class Attribute
-    end # class Builder
-  end # class Mapper
-end # module ROM
+        end # Simple
+      end # Attribute
+    end # Builder
+  end # Mapper
+end # ROM

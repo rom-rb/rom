@@ -6,5 +6,5 @@ module ROM
     # Gem version
     VERSION = '0.1.1'.freeze
 
-  end # class Mapper
-end # module ROM
+  end # Mapper
+end # ROM

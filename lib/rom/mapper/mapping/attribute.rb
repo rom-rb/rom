@@ -26,7 +26,7 @@ module ROM
           def builder
             Builder::Attribute::Simple
           end
-        end
+        end # Simple
 
         class EmbeddedValue < self
           private
@@ -34,7 +34,7 @@ module ROM
           def builder
             Builder::Attribute::Embedded::Value
           end
-        end
+        end # EmbeddedValue
 
         class EmbeddedCollection < self
           private
@@ -42,8 +42,9 @@ module ROM
           def builder
             Builder::Attribute::Embedded::Collection
           end
-        end
-      end # class Attribute
-    end # class Mapping
-  end # class Mapper
-end # module ROM
+        end # EmbeddedCollection
+
+      end # Attribute
+    end # Mapping
+  end # Mapper
+end # ROM
