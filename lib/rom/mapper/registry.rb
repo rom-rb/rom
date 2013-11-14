@@ -6,7 +6,7 @@ module ROM
     class Registry
       include Concord.new(:entries)
 
-      UNKNOWN_MAPPER_MSG = 'No registered mapper for: %s'
+      UNKNOWN_MAPPER_MSG = 'No registered mapper for: %s'.freeze
 
       def self.build(mappings)
         new(mappings.each_with_object({}) { |(model, mapping), registry|
