@@ -79,6 +79,6 @@ gem install rom axiom-memory-adapter
 * [Martin Gamsjaeger](https://github.com/snusnu)
 * [Piotr Solnica](https://github.com/solnic)
 
-## Licence
+## License
 
 See `LICENSE` file.
