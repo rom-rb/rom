@@ -20,7 +20,7 @@ module ROM
   ManyTuplesError = Class.new(RuntimeError)
 
   # Represent an undefined argument
-  Undefined = Object.new.freeze
+  Undefined = Class.new.freeze
 
   # An empty frozen Hash useful for parameter default values
   EMPTY_HASH = {}.freeze
