@@ -44,7 +44,15 @@ module ROM
   #   # => [{:id=>2, :name=>"Jane"}]
   #
   class Relation
-    include Enumerable, Concord::Public.new(:relation, :mapper)
+    include Enumerable
+    include Charlatan.new(:relation, :kind => Axiom::Relation)
+
+    attr_reader :mapper
+
+    def initialize(relation, mapper)
+      super(relation, mapper)
+      @mapper = mapper
+    end
 
     # Build a new relation
     #
@@ -161,23 +169,6 @@ module ROM
     # @api public
     def replace(objects)
       new(relation.replace(objects.map(&mapper.method(:dump))))
-    end
-
-    # Restrict the relation
-    #
-    # @example
-    #   axiom    = Axiom::Relation.new([[:id, Integer]], [[1], [2]])
-    #   relation = ROM::Relation.new(axiom, mapper)
-    #
-    #   relation.restrict(id: 2).to_a # => [[2]]
-    #
-    # @param [Hash] conditions
-    #
-    # @return [Relation]
-    #
-    # @api public
-    def restrict(*args, &block)
-      new(relation.restrict(*args, &block))
     end
 
     # Take objects form the relation with provided limit
