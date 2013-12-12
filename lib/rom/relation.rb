@@ -47,6 +47,8 @@ module ROM
     include Enumerable
     include Charlatan.new(:relation, :kind => Axiom::Relation)
 
+    undef_method :sort_by
+
     attr_reader :mapper
 
     def initialize(relation, mapper)
@@ -241,23 +243,6 @@ module ROM
       new(sorted.drop(offset))
     end
 
-    # Sort the relation by provided attributes
-    #
-    # @example
-    #   axiom    = Axiom::Relation.new([[:id, Integer]], [[2], [1]])
-    #   relation = ROM::Relation.new(axiom, mapper)
-    #
-    #   relation.sort_by(:id).to_a # => [[1], [2]]
-    #
-    # @param [Array<Symbol>]
-    #
-    # @return [Relation]
-    #
-    # @api public
-    def sort_by(*args, &block)
-      new(relation.sort_by(*args, &block))
-    end
-
     # Return exactly one object matching criteria or raise an error
     #
     # @example
@@ -287,22 +272,6 @@ module ROM
       else
         tuples.first || block.call
       end
-    end
-
-    # Return a grouped relation
-    #
-    # @example
-    #   axiom    = Axiom::Relation.new([[:id, Integer], [:product_name, String])
-    #   relation = ROM::Relation.new(axiom, mapper)
-    #   grouped  = relation.group(products: [:product_name])
-    #
-    # @param [Hash{#to_sym => Enumerable<Axiom::Attribute>] grouping
-    #
-    # @return [Relation]
-    #
-    # @api public
-    def group(grouping)
-      new(relation.group(grouping))
     end
 
     # Inject a new mapper into this relation
