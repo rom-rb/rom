@@ -9,8 +9,8 @@ module ROM
     # session relations
     #
     # @api public
-    class Environment < ROM::Environment
-      include Proxy
+    class Environment
+      include Charlatan.new(:environment)
 
       attr_reader :environment, :tracker, :memory
       private :environment, :tracker, :memory
@@ -22,6 +22,7 @@ module ROM
 
       # @api private
       def initialize(environment, tracker)
+        super
         @environment = environment
         @tracker     = tracker
         initialize_memory

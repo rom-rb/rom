@@ -4,8 +4,16 @@ module ROM
   class Session
 
     # @api private
-    class Mapper < ROM::Mapper
-      include Proxy, Concord::Public.new(:mapper, :tracker, :identity_map)
+    class Mapper
+      include Charlatan.new(:mapper)
+
+      attr_reader :tracker, :identity_map
+
+      def initialize(mapper, tracker, identity_map)
+        super
+        @tracker = tracker
+        @identity_map = identity_map
+      end
 
       # @api private
       def self.build(mapper, tracker)

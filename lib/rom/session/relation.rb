@@ -9,11 +9,11 @@ module ROM
     # when a session is flushed.
     #
     # @api public
-    class Relation < ROM::Relation
-      include Proxy
+    class Relation
+      include Charlatan.new(:relation, :kind => ROM::Relation)
 
-      attr_reader :relation, :tracker
-      private :relation, :tracker
+      attr_reader :tracker
+      private :tracker
 
       # @api private
       def self.build(relation, tracker)
@@ -23,6 +23,7 @@ module ROM
 
       # @api private
       def initialize(relation, tracker)
+        super
         @relation, @tracker = relation, tracker
       end
 

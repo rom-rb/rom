@@ -43,7 +43,7 @@ module ROM
 
 end # ROM
 
-require 'rom/support/proxy'
+require 'charlatan'
 
 require 'rom/session'
 
