@@ -10,7 +10,7 @@ module ROM
     #
     # @api public
     class Relation
-      include Charlatan.new(:relation, :kind => ROM::Relation)
+      include Charlatan.new(:relation, kind: ROM::Relation)
 
       attr_reader :tracker
       private :tracker
