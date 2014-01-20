@@ -9,10 +9,11 @@ gem 'axiom',      '~> 0.1', git: 'https://github.com/dkubb/axiom.git',      bran
 
 group :test do
   gem 'bogus', '~> 0.1'
+  gem 'rubysl-bigdecimal', :platforms => :rbx
 end
 
 group :development do
-  gem 'devtools', git: 'https://github.com/rom-rb/devtools.git'
+  gem 'devtools', git: 'https://github.com/rom-rb/devtools.git', branch: 'master'
 end
 
 # Added by devtools
