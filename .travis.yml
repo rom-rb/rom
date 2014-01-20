@@ -1,6 +1,6 @@
 language: ruby
 bundler_args: --without yard guard benchmarks
-script: "bundle exec rake ci"
+script: "bundle exec rake metrics:coverage"
 rvm:
   - 1.9.3
   - 2.0.0
