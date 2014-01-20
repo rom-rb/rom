@@ -53,8 +53,15 @@ module ROM
     #
     # @api public
     def []=(name, relation)
-      adapter[name]   = relation
-      relations[name] = adapter[name]
+      relation =
+        if adapter.respond_to?(:gateway)
+          adapter.gateway(relation)
+        else
+          adapter[name] = relation
+          adapter[name]
+        end
+
+      relations[name] = relation
     end
 
   end # Repository

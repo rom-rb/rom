@@ -10,7 +10,6 @@ module Axiom
     # will be the base class.
     #
     class DataObjects
-
       extend Adapter
 
       include Equalizer.new(:uri)
@@ -34,6 +33,6 @@ module Axiom
         Axiom::Relation::Gateway.new(self, relation)
       end
 
-    end # class DataObjects
-  end # module Adapter
-end # module Axiom
+    end # DataObjects
+  end # Adapter
+end # Axiom

@@ -14,6 +14,7 @@ module Axiom
 
       uri_scheme :sqlite3
 
-    end # class Sqlite3
-  end # module Adapter
-end # module Axiom
+    end # Sqlite3
+
+  end # Adapter
+end # Axiom
