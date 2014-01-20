@@ -4,9 +4,8 @@ source 'https://rubygems.org'
 
 gemspec
 
-gem 'rom-mapper', path: '.'
-gem 'adamantium', '~> 0.1', github: 'dkubb/adamantium', branch: 'master'
-gem 'axiom', '~> 0.1', github: 'dkubb/axiom', branch: 'master'
+gem 'adamantium', '~> 0.1', git: 'https://github.com/dkubb/adamantium.git', branch: 'master'
+gem 'axiom',      '~> 0.1', git: 'https://github.com/dkubb/axiom.git',      branch: 'master'
 
 group :test do
   gem 'bogus', '~> 0.1'
