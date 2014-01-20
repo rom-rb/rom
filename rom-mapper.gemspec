@@ -15,9 +15,10 @@ Gem::Specification.new do |gem|
   gem.test_files    = `git ls-files -- {spec}/*`.split("\n")
   gem.license       = 'MIT'
 
-  gem.add_dependency 'concord',             '~> 0.1.4'
-  gem.add_dependency 'equalizer',           '~> 0.0.7'
+  gem.add_dependency 'concord',             '~> 0.1'
+  gem.add_dependency 'equalizer',           '~> 0.0.9'
   gem.add_dependency 'descendants_tracker', '~> 0.0.1'
-  gem.add_dependency 'abstract_type',       '~> 0.0.6'
+  gem.add_dependency 'abstract_type',       '~> 0.0.7'
   gem.add_dependency 'adamantium',          '~> 0.1'
+  gem.add_dependency 'axiom',               '~> 0.1'
 end
