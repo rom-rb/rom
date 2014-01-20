@@ -9,8 +9,7 @@ rvm:
   - ruby-head
 matrix:
   allow_failures:
-    - rvm: jruby-19mode
-    - rvm: ruby-head
+    - rvm: 2.1.0
 notifications:
   irc:
     channels:
