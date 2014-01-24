@@ -8,8 +8,9 @@ module SpecHelper
 
       attributes.each { |attribute| attr_accessor attribute }
 
-      def initialize(attrs)
+      def initialize(attrs = {}, &block)
         attrs.each { |name, value| send("#{name}=", value) }
+        instance_eval(&block) if block
       end
     }
   end

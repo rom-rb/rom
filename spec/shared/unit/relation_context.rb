@@ -1,5 +1,3 @@
-# # encoding: utf-8
-
 # encoding: utf-8
 
 shared_context 'Relation' do

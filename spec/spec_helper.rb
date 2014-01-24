@@ -26,28 +26,15 @@ end
 
 require 'devtools/spec_helper'
 
-require 'rom-session'
-
-require 'axiom'
 require 'rom-relation'
 require 'rom-mapper'
+require 'rom-session'
 require 'rom/support/axiom/adapter/memory'
 
 require 'bogus/rspec'
 
 include ROM
-
-def mock_model(*attributes)
-  Class.new {
-    include Equalizer.new(*attributes)
-
-    attributes.each { |attribute| attr_accessor attribute }
-
-    def initialize(attrs = {})
-      attrs.each { |name, value| send("#{name}=", value) }
-    end
-  }
-end
+include SpecHelper
 
 TEST_ENV = Environment.setup(test: 'memory://test')
 
