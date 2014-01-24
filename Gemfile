@@ -1,12 +1,15 @@
 source 'https://rubygems.org'
 
-gem 'rom', :path => '.'
-
-gem 'rom-relation', :git => 'https://github.com/rom-rb/rom-relation.git', :branch => 'master'
-gem 'rom-mapper',   :git => 'https://github.com/rom-rb/rom-mapper.git',   :branch => 'master'
-gem 'rom-session',  :git => 'https://github.com/rom-rb/rom-session.git',  :branch => 'master'
+group :test do
+  gem 'axiom-memory-adapter', '~> 0.2'
+  gem 'bogus', '~> 0.1'
+end
 
 group :benchmarks do
   gem 'faker'
-  gem 'axiom-memory-adapter'
 end
+
+gem 'devtools', git: 'https://github.com/rom-rb/devtools.git', branch: 'master'
+
+# Added by devtools
+eval_gemfile 'Gemfile.devtools'
