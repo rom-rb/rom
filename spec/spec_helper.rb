@@ -1,7 +1,5 @@
 # encoding: utf-8
 
-# SimpleCov MUST be started before require 'rom-relation'
-#
 if ENV['COVERAGE'] == 'true'
   require 'simplecov'
   require 'coveralls'
@@ -20,20 +18,31 @@ if ENV['COVERAGE'] == 'true'
   end
 end
 
-require 'rom-relation'
 require 'rom-mapper'
+require 'axiom'
 
 require 'devtools/spec_helper'
 require 'bogus/rspec'
-
-include ROM
-
-ROM_ENV = Environment.setup(test: 'memory://test')
 
 Bogus.configure do |config|
   config.search_modules << ROM
 end
 
 RSpec.configure do |config|
-  config.include(SpecHelper)
+  config.mock_with Bogus::RSpecAdapter
+end
+
+include ROM
+
+def mock_model(*attributes)
+  Class.new {
+    include Equalizer.new(*attributes)
+
+    attributes.each { |attribute| attr_accessor attribute }
+
+    def initialize(attrs, &block)
+      attrs.each { |name, value| send("#{name}=", value) }
+      instance_eval(&block) if block
+    end
+  }
 end
