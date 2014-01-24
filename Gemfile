@@ -4,9 +4,6 @@ source 'https://rubygems.org'
 
 gemspec
 
-gem 'adamantium', '~> 0.1', git: 'https://github.com/dkubb/adamantium.git', branch: 'master'
-gem 'axiom',      '~> 0.1', git: 'https://github.com/dkubb/axiom.git',      branch: 'master'
-
 group :test do
   gem 'bogus', '~> 0.1'
   gem 'rubysl-bigdecimal', :platforms => :rbx
