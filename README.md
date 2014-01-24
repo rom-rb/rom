@@ -4,13 +4,10 @@ Ruby Object Mapper is an implementation of [the Data Mapper](http://martinfowler
 pattern in Ruby language. It consists of multiple loosely coupled pieces and uses
 a powerful relational algebra library called [axiom](https://github.com/dkubb/axiom).
 
-This is a meta-project grouping pieces of ROM's default stack:
-
-* [rom-relation](https://github.com/rom-rb/rom-relation)
-* [rom-mapper](https://github.com/rom-rb/rom-mapper)
-* [rom-session](https://github.com/rom-rb/rom-session)
-
 ## Getting started
+
+Currently the setup is a bit verbose. Automatization will come in the future once
+the API becomes stable.
 
 ```
 gem install rom axiom-memory-adapter
