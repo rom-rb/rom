@@ -18,19 +18,22 @@ if ENV['COVERAGE'] == 'true'
   end
 end
 
-require 'rom-mapper'
-require 'axiom'
+class BasicObject
+  def self.freeze
+    # FIXME: remove this when axiom no longer freezes classes
+  end
+end
 
 require 'devtools/spec_helper'
+
+require 'rom-session'
+
+require 'axiom'
+require 'rom-relation'
+require 'rom-mapper'
+require 'rom/support/axiom/adapter/memory'
+
 require 'bogus/rspec'
-
-Bogus.configure do |config|
-  config.search_modules << ROM
-end
-
-RSpec.configure do |config|
-  config.mock_with Bogus::RSpecAdapter
-end
 
 include ROM
 
@@ -40,9 +43,28 @@ def mock_model(*attributes)
 
     attributes.each { |attribute| attr_accessor attribute }
 
-    def initialize(attrs, &block)
+    def initialize(attrs = {})
       attrs.each { |name, value| send("#{name}=", value) }
-      instance_eval(&block) if block
     end
   }
+end
+
+TEST_ENV = Environment.setup(test: 'memory://test')
+
+TEST_ENV.schema do
+  base_relation :users do
+    repository :test
+
+    attribute :id,   Integer
+    attribute :name, String
+
+    key :id
+  end
+end
+
+TEST_ENV.mapping do
+  users do
+    model mock_model(:id, :name)
+    map :id, :name
+  end
 end
