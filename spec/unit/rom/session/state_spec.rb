@@ -65,7 +65,7 @@ describe Session::State do
 
   describe '#deleted?' do
     context 'with a deleted state' do
-      subject { Session::State::Deleted.new(object, relation) }
+      subject { Session::State::Deleted.new(object, mapper, relation) }
 
       it { should be_deleted }
     end

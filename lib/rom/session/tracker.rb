@@ -21,13 +21,13 @@ module ROM
       end
 
       # @api private
-      def fetch(object)
-        @objects.fetch(object.__id__) { raise ObjectNotTrackedError, object }
+      def fetch(identity)
+        @objects.fetch(identity) { raise ObjectNotTrackedError, identity }
       end
 
       # @api private
-      def include?(object)
-        @objects.key?(object.__id__)
+      def include?(identity)
+        @objects.key?(identity)
       end
 
       # @api private
@@ -43,24 +43,17 @@ module ROM
 
       # @api private
       def update(state)
-        store(state.object, state)
+        @objects[state.identity] = state
       end
 
       # @api private
       def store_transient(object, mapper)
-        store(object, State::Transient.new(object, mapper))
+        update(State::Transient.new(object, mapper))
       end
 
       # @api private
       def store_persisted(object, mapper)
-        store(object, State::Persisted.new(object, mapper))
-      end
-
-      private
-
-      # @api private
-      def store(object, state)
-        @objects[object.__id__] = state
+        update(State::Persisted.new(object, mapper))
       end
 
     end # Tracker
