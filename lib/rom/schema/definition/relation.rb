@@ -18,6 +18,7 @@ module ROM
           @header = []
           @keys   = []
           @wrappings = []
+          @groupings = []
           instance_eval(&block)
         end
 
@@ -27,6 +28,10 @@ module ROM
 
           if @wrappings.any?
             @wrappings.each { |wrapping| relation = relation.wrap(wrapping) }
+          end
+
+          if @groupings.any?
+            @groupings.each { |grouping| relation = relation.group(grouping) }
           end
 
           relation
@@ -45,6 +50,11 @@ module ROM
         # @api private
         def wrap(wrapping)
           @wrappings << wrapping
+        end
+
+        # @api private
+        def group(grouping)
+          @groupings << grouping
         end
 
         # @api private

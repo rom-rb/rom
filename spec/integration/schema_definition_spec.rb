@@ -13,6 +13,12 @@ describe 'Defining a ROM schema' do
     )
   }
 
+  let(:people_with_profiles) {
+    Axiom::Relation::Base.new(:people, people_header).group(
+      profiles: profiles.header
+    )
+  }
+
   let(:addresses) {
     Axiom::Relation::Base.new(
       :addresses,
@@ -48,7 +54,7 @@ describe 'Defining a ROM schema' do
     [:id, :person_id]
   }
 
-  let(:people_with_profile) {
+  let(:people_with_joined_profiles) {
     people.join(profiles.rename(id: :profile_id, person_id: :id))
   }
 
@@ -75,6 +81,17 @@ describe 'Defining a ROM schema' do
         key :id
       end
 
+      base_relation :profiles do
+        repository :test
+
+        attribute :id,        Integer
+        attribute :person_id, Integer
+        attribute :text,      String
+
+        key :id
+        key :person_id
+      end
+
       base_relation :people_with_address do
         repository :test
 
@@ -86,20 +103,20 @@ describe 'Defining a ROM schema' do
         key :id
       end
 
-      base_relation :profiles do
+      base_relation :people_with_profiles do
         repository :test
 
-        attribute :id,        Integer
-        attribute :person_id, Integer
-        attribute :text,      String
+        attribute :id,   Integer
+        attribute :name, String
+
+        group profiles: profiles.header
 
         key :id
-        key :person_id
       end
     end
 
     env.schema do
-      relation :people_with_profile do
+      relation :people_with_joined_profiles do
         people.join(profiles.rename(id: :profile_id, person_id: :id))
       end
     end
@@ -111,6 +128,10 @@ describe 'Defining a ROM schema' do
 
   it 'registers the people with wrapped addresses relation' do
     expect(schema[:people_with_address]).to eq(people_with_address)
+  end
+
+  it 'registers the people with grouped profiles relation' do
+    expect(schema[:people_with_profiles]).to eq(people_with_profiles)
   end
 
   it 'establishes key attributes for people relation' do
@@ -125,7 +146,7 @@ describe 'Defining a ROM schema' do
     expect(schema[:profiles]).to eq(profiles)
   end
 
-  it 'registers the people_with_profile relation' do
-    expect(schema[:people_with_profile]).to eq(people_with_profile)
+  it 'registers the people_with_joined_profile relation' do
+    expect(schema[:people_with_joined_profiles]).to eq(people_with_joined_profiles)
   end
 end
