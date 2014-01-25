@@ -69,21 +69,19 @@ describe 'Session' do
     end
   end
 
-  context 'with an immutable object' do
-    specify 'updating an immutable object in a relation' do
-      TEST_ENV.session do |session|
-        jane = session[:users].restrict(id: 2).one
+  specify 'updating an immutable object in a relation' do
+    TEST_ENV.session do |session|
+      jane = session[:users].restrict(id: 2).one
 
-        jane.freeze
+      jane.freeze
 
-        session[:users].update_attributes(jane, name: 'Jane Doe')
+      session[:users].update_attributes(jane, name: 'Jane Doe')
 
-        session.flush
+      session.flush
 
-        expect(relation.count).to be(2)
+      expect(relation.count).to be(2)
 
-        expect(relation.to_a.last).to eql(jane.update(name: 'Jane Doe'))
-      end
+      expect(relation.to_a.last).to eql(jane.update(name: 'Jane Doe'))
     end
   end
 end
