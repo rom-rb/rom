@@ -58,3 +58,25 @@ shared_context 'Project with tasks' do
     task_model.new(task_id: 2, task_name: 'Add ROM::Relation#ungroup')
   ]}
 end
+
+shared_context 'City with location' do
+  subject(:relation) { described_class.new(city_relation, mapper) }
+
+  let(:header) {
+    Axiom::Relation::Header.coerce([
+      [:id, Integer], [:name, String], [:location_id, Integer], [:lat, Float], [:lng, Float]
+    ])
+  }
+
+  let(:city_relation) {
+    Axiom::Relation.new(header, [[1, 'Krakow', 1, 2.0, 3.0]])
+  }
+
+  let(:city_model) { mock_model(:id, :name, :location) }
+  let(:location_model) { mock_model(:lat, :lng) }
+
+  let(:mapper) { CityWithLocationMapper.new(header, city_model, location_model) }
+
+  let(:city) { city_model.new(id: 1, name: 'Krakow', location: location) }
+  let(:location) { location_model.new(lat: 2.0, lng: 3.0) }
+end
