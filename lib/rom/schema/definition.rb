@@ -32,7 +32,7 @@ module ROM
       #
       # @api private
       def base_relation(name, &block)
-        builder    = Relation::Base.new(&block)
+        builder    = Relation::Base.new(relations, &block)
         repository = repositories.fetch(builder.repository)
 
         repository[name] = builder.call(name)
@@ -72,8 +72,8 @@ module ROM
       # @return [Axiom::Relation, Axiom::Relation::Base]
       #
       # @api private
-      def method_missing(name)
-        self[name] || super
+      def method_missing(*args)
+        self[args.first] || super
       end
 
     end # Definition

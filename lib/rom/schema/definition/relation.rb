@@ -10,16 +10,26 @@ module ROM
       class Relation
         include Equalizer.new(:header, :keys)
 
+        attr_reader :registry
+
         # @api private
-        def initialize(&block)
+        def initialize(registry, &block)
+          @registry = registry
           @header = []
           @keys   = []
+          @wrappings = []
           instance_eval(&block)
         end
 
         # @api private
         def call(name)
-          Axiom::Relation::Base.new(name, header)
+          relation = Axiom::Relation::Base.new(name, header)
+
+          if @wrappings.any?
+            @wrappings.each { |wrapping| relation = relation.wrap(wrapping) }
+          end
+
+          relation
         end
 
         # @api private
@@ -33,8 +43,18 @@ module ROM
         end
 
         # @api private
+        def wrap(wrapping)
+          @wrappings << wrapping
+        end
+
+        # @api private
         def key(*attribute_names)
           @keys.concat(attribute_names)
+        end
+
+        # @api private
+        def method_missing(*args)
+          registry[args.first] || super
         end
 
       end # Relation

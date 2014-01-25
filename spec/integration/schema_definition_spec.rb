@@ -7,6 +7,19 @@ describe 'Defining a ROM schema' do
     Axiom::Relation::Base.new(:people, people_header)
   }
 
+  let(:people_with_address) {
+    Axiom::Relation::Base.new(:people, people_header).wrap(
+      address: addresses.header
+    )
+  }
+
+  let(:addresses) {
+    Axiom::Relation::Base.new(
+      :addresses,
+      [[:id, Integer], [:street, String], [:city, String], [:zipcode, String]]
+    )
+  }
+
   let(:people_header) {
     Axiom::Relation::Header.coerce(people_attributes, keys: people_keys)
   }
@@ -44,11 +57,31 @@ describe 'Defining a ROM schema' do
 
   let(:schema) do
     env.schema do
+      base_relation :addresses do
+        repository :test
+
+        attribute :id, Integer
+        attribute :street, String
+        attribute :city, String
+        attribute :zipcode, String
+      end
+
       base_relation :people do
         repository :test
 
         attribute :id,   Integer
         attribute :name, String
+
+        key :id
+      end
+
+      base_relation :people_with_address do
+        repository :test
+
+        attribute :id,   Integer
+        attribute :name, String
+
+        wrap address: addresses.header
 
         key :id
       end
@@ -74,6 +107,10 @@ describe 'Defining a ROM schema' do
 
   it 'registers the people relation' do
     expect(schema[:people]).to eq(people)
+  end
+
+  it 'registers the people with wrapped addresses relation' do
+    expect(schema[:people_with_address]).to eq(people_with_address)
   end
 
   it 'establishes key attributes for people relation' do
