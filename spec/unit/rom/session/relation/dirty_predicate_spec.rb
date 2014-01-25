@@ -29,10 +29,7 @@ describe Session::Relation, '#dirty?' do
     let(:user) { model.new(id: 3, name: 'Unknown') }
 
     specify do
-      expect { subject }.to raise_error(
-        Session::ObjectNotTrackedError,
-        "Tracker doesn't include #{user.inspect}"
-      )
+      expect { subject }.to raise_error(Session::ObjectNotTrackedError)
     end
   end
 end

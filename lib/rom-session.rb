@@ -34,8 +34,8 @@ module ROM
     # Raised when an object is expected to be tracked and it's not
     #
     class ObjectNotTrackedError < StandardError
-      def initialize(object)
-        super("Tracker doesn't include #{object.inspect}")
+      def initialize(identity)
+        super("Tracker doesn't include object with identity #{identity.inspect}")
       end
     end
 

@@ -5,7 +5,7 @@ module ROM
 
     # @api private
     class State
-      include Concord::Public.new(:object)
+      include Concord::Public.new(:object, :mapper)
 
       TransitionError = Class.new(StandardError)
 
@@ -17,6 +17,11 @@ module ROM
       # @api private
       def delete(*)
         raise TransitionError, "cannot delete object with #{self.class} state"
+      end
+
+      # @api private
+      def update(*)
+        raise TransitionError, "cannot update object with #{self.class} state"
       end
 
       # @api private
@@ -44,6 +49,10 @@ module ROM
         instance_of?(Deleted)
       end
 
+      # @api private
+      def identity
+        mapper.identity(object)
+      end
     end # State
 
   end # Session

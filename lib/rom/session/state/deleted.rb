@@ -6,16 +6,16 @@ module ROM
 
       # @api private
       class Deleted < self
-        include Concord::Public.new(:object, :relation), Adamantium::Flat
+        include Concord::Public.new(:object, :mapper, :relation), Adamantium::Flat
 
         class Committed < State
-          include Adamantium
+          include Adamantium::Flat
         end
 
         # @api private
         def commit
           relation.delete(object)
-          Committed.new(object)
+          Committed.new(object, mapper)
         end
 
       end # Deleted

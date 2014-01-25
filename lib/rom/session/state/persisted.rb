@@ -18,8 +18,13 @@ module ROM
         end
 
         # @api private
+        def update(relation, tuple)
+          Updated.new(object.update(tuple), mapper, relation)
+        end
+
+        # @api private
         def delete(relation)
-          Deleted.new(object, relation)
+          Deleted.new(object, mapper, relation)
         end
 
       end # Persisted

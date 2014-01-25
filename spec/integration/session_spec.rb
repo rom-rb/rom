@@ -6,14 +6,14 @@ describe 'Session' do
   let(:users)    { TEST_ENV.schema[:users] }
   let(:relation) { TEST_ENV[:users] }
   let(:mapper)   { relation.mapper }
-  let(:model)    { mapper.loader.model }
+  let(:model)    { mapper.model }
 
   before do
     users.insert([[1, 'John'], [2, 'Jane']])
   end
 
   after do
-    users.delete([[1, 'John'], [2, 'Jane'], [3, 'Piotr']])
+    users.delete([[1, 'John'], [2, 'Jane'], [2, 'Jane Doe'], [3, 'Piotr']])
   end
 
   specify 'fetching an object from a relation' do
@@ -66,6 +66,22 @@ describe 'Session' do
       expect(relation.count).to be(2)
 
       expect(relation.to_a.last).to eql(jane)
+    end
+  end
+
+  specify 'updating an immutable object in a relation' do
+    TEST_ENV.session do |session|
+      jane = session[:users].restrict(id: 2).one
+
+      jane.freeze
+
+      session[:users].update_attributes(jane, name: 'Jane Doe')
+
+      session.flush
+
+      expect(relation.count).to be(2)
+
+      expect(relation.to_a.last).to eql(jane.update(name: 'Jane Doe'))
     end
   end
 end

@@ -31,7 +31,7 @@ describe Session::Relation, '#new' do
     subject { users.new(attributes, &block) }
 
     let(:model) {
-      Class.new {
+      mock_model(:id, :name) {
         attr_reader :attributes
 
         def initialize(attributes, &block)

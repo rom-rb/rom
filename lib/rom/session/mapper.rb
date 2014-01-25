@@ -20,6 +20,17 @@ module ROM
         new(mapper, tracker, IdentityMap.build)
       end
 
+      # @api public
+      def identity(object)
+        keys = mapper.identity(object)
+
+        if keys.empty?
+          object.__id__
+        else
+          keys
+        end
+      end
+
       # @api private
       def dirty?(object)
         identity_map.fetch_tuple(identity(object)) != dump(object)

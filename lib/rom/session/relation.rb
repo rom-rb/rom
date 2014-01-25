@@ -42,6 +42,19 @@ module ROM
         self
       end
 
+      # Queue an object to be updated
+      #
+      # @param [Object] object to be updated
+      # @param [Hash] new attributes for the update
+      #
+      # @return [self]
+      #
+      # @api public
+      def update_attributes(object, tuple)
+        tracker.queue(state(object).update(relation, tuple))
+        self
+      end
+
       # Transient an object into a deleted state
       #
       # @param [Object] an object to be deleted
@@ -62,7 +75,7 @@ module ROM
       #
       # @api public
       def state(object)
-        tracker.fetch(object)
+        tracker.fetch(identity(object))
       end
 
       # Return object's identity
@@ -118,7 +131,7 @@ module ROM
       #
       # @api public
       def tracking?(object)
-        tracker.include?(object)
+        tracker.include?(identity(object))
       end
 
     end # Relation
