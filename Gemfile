@@ -2,6 +2,8 @@ source 'https://rubygems.org'
 
 gemspec
 
+gem 'ducktrap', git: 'https://github.com/mbj/ducktrap.git', branch: 'master'
+
 group :test do
   gem 'axiom-memory-adapter', '~> 0.2'
   gem 'bogus', '~> 0.1'
