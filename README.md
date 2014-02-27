@@ -5,7 +5,7 @@
 [![Dependency Status](https://gemnasium.com/rom-rb/rom.png)][gemnasium]
 [![Code Climate](https://codeclimate.com/github/rom-rb/rom.png)][codeclimate]
 [![Coverage Status](https://coveralls.io/repos/rom-rb/rom/badge.png?branch=master)][coveralls]
-[![Inline docs](http://inch-pages.github.io/github/rom-rb/rom.png)][coveralls]
+[![Inline docs](http://inch-pages.github.io/github/rom-rb/rom.png)][inchpages]
 
 [gem]: https://rubygems.org/gems/rom
 [travis]: https://travis-ci.org/rom-rb/rom
