@@ -55,12 +55,18 @@ module ROM
       memoize :keys
 
       def transformer
-        Morpher.evaluator(
-          s(:hash_transform,
-            s(:block, s(:key_fetch, :id), s(:key_dump, :id)),
-            s(:block, s(:key_fetch, :name), s(:key_dump, :name))
-           )
-        )
+        sexp = s(:hash_transform)
+
+        attribute_names.each do |name|
+          sexp = sexp.append(
+            s(:block,
+              s(:key_fetch, name),
+              s(:key_dump, name)
+             )
+          )
+        end
+
+        Morpher.evaluator(sexp)
       end
       memoize :transformer
 
