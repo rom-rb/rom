@@ -11,6 +11,10 @@ module ROM
 
       abstract_method :call
 
+      def self.build(header, model)
+        new(header, model, header.transformer)
+      end
+
       # @api public
       def identity(tuple)
         header.keys.map { |key| tuple[key.name] }
