@@ -11,8 +11,8 @@ module ROM
 
         # @api private
         def call(tuple)
-          allocate { |name, object|
-            object.instance_variable_set("@#{name}", tuple[name])
+          transformer.call(tuple).each_with_object(model.allocate) { |(key, value), object|
+            object.instance_variable_set("@#{key}", value)
           }
         end
 

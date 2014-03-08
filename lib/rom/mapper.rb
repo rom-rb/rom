@@ -41,8 +41,8 @@ module ROM
       dumper_class = DUMPERS[options.fetch(:dumper, DEFAULT_DUMPER)]
 
       header = Header.build(header, options)
-      loader = loader_class.new(header, model)
-      dumper = dumper_class.new(header)
+      loader = loader_class.build(header, model)
+      dumper = dumper_class.build(header)
 
       new(header, loader, dumper)
     end

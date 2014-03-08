@@ -7,7 +7,7 @@ module ROM
     #
     # @private
     class Header
-      include Enumerable, Concord.new(:header, :attributes), Adamantium
+      include Enumerable, Concord.new(:header, :attributes), Adamantium, Morpher::NodeHelpers
 
       # Build a header
       #
@@ -53,6 +53,22 @@ module ROM
         }
       end
       memoize :keys
+
+      def transformer
+        sexp = s(:hash_transform)
+
+        attribute_names.each do |name|
+          sexp = sexp.append(
+            s(:block,
+              s(:key_fetch, name),
+              s(:key_dump, name)
+             )
+          )
+        end
+
+        Morpher.compile(sexp)
+      end
+      memoize :transformer
 
       # Return attribute with the given name
       #

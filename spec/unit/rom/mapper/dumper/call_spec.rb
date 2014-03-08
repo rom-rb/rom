@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 describe Mapper::Dumper, '#call' do
-  subject(:dumper) { described_class.new(header) }
+  subject(:dumper) { described_class.build(header) }
 
   let(:header) { Mapper::Header.build([[:uid, Integer], [:name, String]], map: { uid: :id }, keys: [:uid]) }
   let(:data)   { Hash[id: 1, name: 'Jane'] }

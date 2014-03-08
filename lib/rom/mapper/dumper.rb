@@ -7,7 +7,11 @@ module ROM
     #
     # @private
     class Dumper
-      include Concord::Public.new(:header), Adamantium
+      include Concord::Public.new(:header, :transformer), Adamantium
+
+      def self.build(header)
+        new(header, header.transformer.inverse)
+      end
 
       # @api private
       def call(object)

@@ -4,6 +4,7 @@ require 'concord'
 require 'adamantium'
 require 'equalizer'
 require 'abstract_type'
+require 'morpher'
 
 require 'rom/mapper/attribute'
 require 'rom/mapper/header'

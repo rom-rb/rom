@@ -13,6 +13,7 @@ group :benchmarks do
 end
 
 gem 'devtools', git: 'https://github.com/rom-rb/devtools.git', branch: 'master'
+gem 'morpher', git: 'https://github.com/mbj/morpher.git', branch: 'master'
 
 # Added by devtools
 eval_gemfile 'Gemfile.devtools'

@@ -7,9 +7,13 @@ module ROM
     #
     # @private
     class Loader
-      include Concord::Public.new(:header, :model), Adamantium, AbstractType
+      include Concord::Public.new(:header, :model, :transformer), Adamantium, AbstractType
 
       abstract_method :call
+
+      def self.build(header, model)
+        new(header, model, header.transformer)
+      end
 
       # @api public
       def identity(tuple)
