@@ -66,7 +66,7 @@ module ROM
           )
         end
 
-        Morpher.evaluator(sexp)
+        Morpher.compile(sexp)
       end
       memoize :transformer
 
