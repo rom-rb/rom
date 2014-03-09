@@ -10,8 +10,8 @@ module ROM
       class AttributeWriter < Allocator
 
         # @api private
-        def call(tuple)
-          allocate { |name, object| object.public_send("#{name}=", tuple[name]) }
+        def self.transformer_node_name
+          :load_attribute_accessors
         end
 
       end # AttributeWriter

@@ -10,17 +10,16 @@ module ROM
       class Allocator < self
 
         # @api private
-        def call(tuple)
-          transformer.call(tuple).each_with_object(model.allocate) { |(key, value), object|
-            object.instance_variable_set("@#{key}", value)
-          }
+        def self.transformer_node(model, attributes)
+          s(
+            transformer_node_name,
+            Morpher::Evaluator::Transformer::Domain::Param.new(model, attributes)
+          )
         end
 
-        private
-
         # @api private
-        def allocate(&block)
-          header.attribute_names.each_with_object(model.allocate, &block)
+        def self.transformer_node_name
+          :load_instance_variables
         end
 
       end # Allocator

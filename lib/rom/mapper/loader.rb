@@ -13,13 +13,13 @@ module ROM
       abstract_method :call
 
       def self.build(header, model)
-        transformer_ast = header.transformer_ast.append(
-          s(:load_instance_variables,
-            Morpher::Evaluator::Transformer::Domain::Param.new(model, header.attribute_names)
-           )
-        )
-
+        transformer_ast = s(:block, header.transformer_ast, transformer_node(model, header.attribute_names))
         new(header, model, Morpher.compile(transformer_ast))
+      end
+
+      # @api public
+      def call(tuple)
+        transformer.call(tuple)
       end
 
       # @api public

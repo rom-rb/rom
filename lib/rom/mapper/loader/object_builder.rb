@@ -10,15 +10,8 @@ module ROM
       class ObjectBuilder < self
 
         # @api private
-        def call(tuple)
-          model.new(attributes(tuple))
-        end
-
-        private
-
-        # @api private
-        def attributes(tuple)
-          Hash[header.attribute_names.map { |name| [name, tuple[name]] }]
+        def self.transformer_node(model, _)
+          s(:load_attributes_hash, model)
         end
 
       end # ObjectBuilder
