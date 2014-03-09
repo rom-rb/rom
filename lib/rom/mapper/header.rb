@@ -54,11 +54,11 @@ module ROM
       end
       memoize :keys
 
-      def transformer
-        sexp = s(:hash_transform)
+      def transformer_ast
+        ast = s(:hash_transform)
 
         attribute_names.each do |name|
-          sexp = sexp.append(
+          ast = ast.append(
             s(:block,
               s(:key_fetch, name),
               s(:key_dump, name)
@@ -66,9 +66,9 @@ module ROM
           )
         end
 
-        Morpher.compile(sexp)
+        ast
       end
-      memoize :transformer
+      memoize :transformer_ast
 
       # Return attribute with the given name
       #

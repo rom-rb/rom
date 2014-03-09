@@ -42,7 +42,7 @@ module ROM
 
       header = Header.build(header, options)
       loader = loader_class.build(header, model)
-      dumper = dumper_class.build(header)
+      dumper = dumper_class.build(header, loader.transformer.inverse)
 
       new(header, loader, dumper)
     end

@@ -9,8 +9,8 @@ module ROM
     class Dumper
       include Concord::Public.new(:header, :transformer), Adamantium
 
-      def self.build(header)
-        new(header, header.transformer.inverse)
+      def self.build(header, transformer)
+        new(header, transformer)
       end
 
       # @api private
