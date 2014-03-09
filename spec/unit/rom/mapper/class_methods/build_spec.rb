@@ -13,7 +13,7 @@ describe Mapper, '.build' do
     let(:header) { attributes }
 
     its(:model)  { should be(model) }
-    its(:loader) { should be_instance_of(Mapper::LOADERS[:allocator]) }
+    its(:loader) { should be_instance_of(Mapper::Loader) }
     its(:dumper) { should be_instance_of(Mapper::Dumper) }
 
     it 'builds correct header' do
@@ -37,27 +37,27 @@ describe Mapper, '.build' do
     let(:options) { Hash.new }
 
     its(:model)  { should be(model) }
-    its(:loader) { should be_instance_of(Mapper::LOADERS[:allocator]) }
+    its(:loader) { should be_instance_of(Mapper::Loader) }
     its(:dumper) { should be_instance_of(Mapper::Dumper) }
     its(:header) { should be(header) }
   end
 
   describe 'when options has custom loader' do
     let(:header)  { Mapper::Header.build(attributes) }
-    let(:options) { Hash[loader: :object_builder] }
+    let(:options) { Hash[loader: :load_attributes_hash] }
 
     its(:model)  { should be(model) }
-    its(:loader) { should be_instance_of(Mapper::LOADERS[:object_builder]) }
+    its(:loader) { should be_instance_of(Mapper::Loader) }
     its(:dumper) { should be_instance_of(Mapper::Dumper) }
     its(:header) { should be(header) }
   end
 
-  describe 'loader is set to :attribute_writer' do
+  describe 'loader is set to :load_attribute_accessors' do
     let(:header)  { Mapper::Header.build(attributes) }
-    let(:options) { Hash[loader: :attribute_writer] }
+    let(:options) { Hash[loader: :load_attribute_accessors] }
 
     its(:model)  { should be(model) }
-    its(:loader) { should be_instance_of(Mapper::LOADERS[:attribute_writer]) }
+    its(:loader) { should be_instance_of(Mapper::Loader) }
     its(:dumper) { should be_instance_of(Mapper::Dumper) }
     its(:header) { should be(header) }
   end
