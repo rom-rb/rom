@@ -21,7 +21,7 @@ module ROM
           end
 
         transformer_node = s(node_name, param)
-        transformer_ast  = s(:block, header.transformer_ast, transformer_node)
+        transformer_ast  = s(:block, header.to_ast, transformer_node)
 
         new(header, model, Morpher.compile(transformer_ast))
       end

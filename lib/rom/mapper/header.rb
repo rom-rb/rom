@@ -54,21 +54,10 @@ module ROM
       end
       memoize :keys
 
-      def transformer_ast
-        ast = s(:hash_transform)
-
-        attribute_names.each do |name|
-          ast = ast.append(
-            s(:block,
-              s(:key_fetch, name),
-              s(:key_dump, name)
-             )
-          )
-        end
-
-        ast
+      def to_ast
+        s(:hash_transform, *map(&:to_ast))
       end
-      memoize :transformer_ast
+      memoize :to_ast
 
       # Return attribute with the given name
       #
