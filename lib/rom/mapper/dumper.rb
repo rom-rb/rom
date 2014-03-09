@@ -9,13 +9,14 @@ module ROM
     class Dumper
       include Concord::Public.new(:header, :transformer), Adamantium
 
+      # @api public
       def self.build(header, transformer)
         new(header, transformer)
       end
 
       # @api private
       def call(object)
-        header.map { |attribute| object.send(attribute.name) }
+        transformer.call(object).values_at(*header.attribute_names)
       end
 
       # @api private
