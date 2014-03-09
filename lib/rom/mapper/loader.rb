@@ -7,7 +7,7 @@ module ROM
     #
     # @private
     class Loader
-      include Concord::Public.new(:header, :model, :transformer), Adamantium
+      include Concord::Public.new(:header, :model, :transformer)
       extend Morpher::NodeHelpers
 
       def self.build(header, model, node_name)
