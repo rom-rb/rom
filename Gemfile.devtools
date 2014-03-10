@@ -1,9 +1,10 @@
 # encoding: utf-8
 
 group :development do
-  gem 'rake',  '~> 10.1.0'
-  gem 'rspec', '~> 2.14.1'
-  gem 'yard',  '~> 0.8.7'
+  gem 'rake',       '~> 10.1.0'
+  gem 'rspec',      '~> 2.14.1'
+  gem 'rspec-core', '~> 2.14.8'
+  gem 'yard',       '~> 0.8.7'
 
   platform :rbx do
     gem 'rubysl-singleton', '~> 2.0.0'
@@ -11,17 +12,17 @@ group :development do
 end
 
 group :yard do
-  gem 'kramdown', '~> 1.3.0'
+  gem 'kramdown', '~> 1.3.2'
 end
 
 group :guard do
-  gem 'guard',         '~> 2.3.0'
+  gem 'guard',         '~> 2.4.0'
   gem 'guard-bundler', '~> 2.0.0'
-  gem 'guard-rspec',   '~> 4.2.0'
-  gem 'guard-rubocop', '~> 1.0.0'
+  gem 'guard-rspec',   '~> 4.2.6'
+  gem 'guard-rubocop', '~> 1.0.2'
 
   # file system change event handling
-  gem 'listen',     '~> 2.4.0'
+  gem 'listen',     '~> 2.5.0'
   gem 'rb-fchange', '~> 0.0.6', require: false
   gem 'rb-fsevent', '~> 0.9.3', require: false
   gem 'rb-inotify', '~> 0.9.0', require: false
@@ -37,12 +38,13 @@ group :metrics do
   gem 'flay',      '~> 2.4.0'
   gem 'flog',      '~> 4.2.0'
   gem 'reek',      '~> 1.3.2'
-  gem 'rubocop',   '~> 0.16.0'
+  gem 'rubocop',   '~> 0.18.1'
   gem 'simplecov', '~> 0.8.2'
   gem 'yardstick', '~> 0.9.9'
 
   platforms :mri do
-    gem 'mutant', '~> 0.3.4'
+    gem 'mutant',       '~> 0.5.3'
+    gem 'mutant-rspec', '~> 0.5.3'
   end
 
   platforms :ruby_19, :ruby_20 do
