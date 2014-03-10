@@ -15,9 +15,7 @@ module ROM
           if node_name == :load_attribute_hash
             model
           else
-            Morpher::Evaluator::Transformer::Domain::Param.new(
-              model, header.attribute_names
-            )
+            s(:param, model, *header.attribute_names)
           end
 
         transformer_node = s(node_name, param)
