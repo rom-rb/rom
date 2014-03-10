@@ -7,13 +7,19 @@ module ROM
     #
     # @private
     class Attribute < Struct.new(:name, :field)
-      include Adamantium, Equalizer.new(:name, :field)
+      include Adamantium, Equalizer.new(:name, :field), Morpher::NodeHelpers
 
       # @api private
       def self.coerce(input, mapping = nil)
         field = Axiom::Attribute.coerce(input)
         new(mapping || field.name, field)
       end
+
+      # @api private
+      def to_ast
+        s(:block, s(:key_fetch, name), s(:key_dump, name))
+      end
+      memoize :to_ast
 
       # @api private
       def mapping

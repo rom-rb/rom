@@ -7,7 +7,7 @@ module ROM
     #
     # @private
     class Header
-      include Enumerable, Concord.new(:header, :attributes), Adamantium
+      include Enumerable, Concord.new(:header, :attributes), Adamantium, Morpher::NodeHelpers
 
       # Build a header
       #
@@ -53,6 +53,11 @@ module ROM
         }
       end
       memoize :keys
+
+      def to_ast
+        s(:hash_transform, *map(&:to_ast))
+      end
+      memoize :to_ast
 
       # Return attribute with the given name
       #

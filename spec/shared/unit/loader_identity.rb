@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 shared_examples_for 'Mapper::Loader#identity' do
-  subject(:loader) { described_class.new(header, model) }
+  subject(:loader) { described_class.build(header, model) }
 
   let(:header) { Mapper::Header.build([[:id, Integer], [:name, String]], keys: [:id]) }
   let(:tuple)  { Hash[id: 1, name: 'Jane'] }

@@ -7,9 +7,29 @@ module ROM
     #
     # @private
     class Loader
-      include Concord::Public.new(:header, :model), Adamantium, AbstractType
+      include Concord::Public.new(:header, :model, :transformer)
+      extend Morpher::NodeHelpers
 
-      abstract_method :call
+      def self.build(header, model, node_name)
+        param =
+          if node_name == :load_attributes_hash
+            model
+          else
+            Morpher::Evaluator::Transformer::Domain::Param.new(
+              model, header.attribute_names
+            )
+          end
+
+        transformer_node = s(node_name, param)
+        transformer_ast  = s(:block, header.to_ast, transformer_node)
+
+        new(header, model, Morpher.compile(transformer_ast))
+      end
+
+      # @api public
+      def call(tuple)
+        transformer.call(tuple)
+      end
 
       # @api public
       def identity(tuple)
