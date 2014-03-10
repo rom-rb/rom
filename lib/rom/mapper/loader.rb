@@ -12,7 +12,7 @@ module ROM
 
       def self.build(header, model, node_name)
         param =
-          if node_name == :load_attributes_hash
+          if node_name == :load_attribute_hash
             model
           else
             Morpher::Evaluator::Transformer::Domain::Param.new(
