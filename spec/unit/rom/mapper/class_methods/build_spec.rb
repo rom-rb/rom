@@ -44,7 +44,7 @@ describe Mapper, '.build' do
 
   describe 'when options has custom loader' do
     let(:header)  { Mapper::Header.build(attributes) }
-    let(:options) { Hash[loader: :load_attributes_hash] }
+    let(:options) { Hash[loader: :load_attribute_hash] }
 
     its(:model)  { should be(model) }
     its(:loader) { should be_instance_of(Mapper::Loader) }
