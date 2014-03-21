@@ -10,8 +10,8 @@ module ROM
       class Definition
         include Adamantium::Flat
 
-        attr_reader :mapping, :attributes
-        private :mapping, :attributes
+        attr_reader :attributes
+        private :attributes
 
         # Build new mapping definition
         #
@@ -26,9 +26,9 @@ module ROM
         #
         # @api private
         def initialize(header, &block)
-          @header     = header
-          @mapping    = {}
-          @attributes = Set.new
+          @header = header
+          @keys = header.keys.flat_map { |key_header| key_header.flat_map(&:name) }
+          @attributes = []
 
           instance_eval(&block)
 
@@ -37,7 +37,7 @@ module ROM
 
         # @api private
         def header
-          @header.project(attributes + Set[*mapping.keys])
+          @header.project(attributes.map(&:name))
         end
         memoize :header
 
@@ -104,12 +104,10 @@ module ROM
         #
         # @api public
         def map(*args)
-          options = args.last
-
-          if options.kind_of?(Hash)
-            mapping.update(args.first => options[:to])
+          if args.last.kind_of?(Hash)
+            attributes.concat([build_attribute(*args)])
           else
-            @attributes += Set[*args]
+            attributes.concat(args.map { |name| build_attribute(name) })
           end
         end
 
@@ -119,7 +117,18 @@ module ROM
         #
         # @api private
         def build_mapper
-          @mapper = Mapper.build(header, model, map: mapping)
+          @mapper = Mapper.build(attributes, model)
+        end
+
+        def build_attribute(name, options = {})
+          header_name = options.fetch(:from, name)
+
+          defaults = {
+            key: @keys.include?(header_name),
+            type: @header[header_name].type.primitive
+          }
+
+          Attribute.build(name, defaults.merge(options))
         end
 
       end # Definition

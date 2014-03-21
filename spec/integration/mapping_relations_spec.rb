@@ -34,7 +34,7 @@ describe 'Defining relation mappings' do
         model User
 
         map :id
-        map :user_name, to: :name
+        map :name, from: :user_name
       end
     end
 

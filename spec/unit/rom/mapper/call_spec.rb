@@ -10,10 +10,11 @@ describe Mapper, '#call' do
   }
 
   let(:header) {
-    Mapper::Header.build(
-      [[:user_id, Integer], [:user_name, String], [:age, Integer]],
-      map: { user_id: :id, user_name: :name }
-    )
+    Mapper::Header.build([
+      [:id,   type: Integer, from: :id],
+      [:name, type: String,  from: :user_name],
+      [:age,  type: Integer]
+    ])
   }
 
   let(:model) {

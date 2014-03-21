@@ -3,23 +3,19 @@
 require 'spec_helper'
 
 describe Mapper::Header, '#[]' do
-  subject { object[name] }
-
-  let(:object)     { Mapper::Header.build(attributes) }
-  let(:attributes) { [[:id, Integer]] }
+  subject(:header) { Mapper::Header.build([[:id]]) }
 
   context 'when attribute exists' do
-    let(:name) { :id }
-    let(:id)   { Mapper::Attribute.coerce(attributes.first) }
+    subject { header[:id] }
+
+    let(:id) { Mapper::Attribute.build(:id) }
 
     it { should eql(id) }
   end
 
   context 'when attribute does not exist' do
-    let(:name) { :not_here }
-
     specify do
-      expect { subject }.to raise_error(KeyError)
+      expect { header[:not_here] }.to raise_error(KeyError)
     end
   end
 end

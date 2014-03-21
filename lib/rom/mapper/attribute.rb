@@ -6,13 +6,19 @@ module ROM
     # Represents a mapping attribute
     #
     # @private
-    class Attribute < Struct.new(:name, :field)
-      include Adamantium, Equalizer.new(:name, :field), Morpher::NodeHelpers
+    class Attribute
+      include Adamantium, Concord::Public.new(:name, :options), Morpher::NodeHelpers
 
       # @api private
-      def self.coerce(input, mapping = nil)
-        field = Axiom::Attribute.coerce(input)
-        new(mapping || field.name, field)
+      def self.build(*args)
+        input = args.first
+
+        if input.kind_of?(self)
+          input
+        else
+          name, options = args
+          new(name, options || {})
+        end
       end
 
       # @api private
@@ -21,15 +27,27 @@ module ROM
       end
       memoize :to_ast
 
+      def key?
+        options.fetch(:key, false)
+      end
+      memoize :key?
+
       # @api private
       def mapping
         { tuple_key => name }
       end
+      memoize :mapping
 
       # @api private
       def tuple_key
-        field.name
+        options[:from] || name
       end
+      memoize :tuple_key
+
+      def type
+        options[:type] || Object
+      end
+      memoize :type
 
     end # Attribute
 

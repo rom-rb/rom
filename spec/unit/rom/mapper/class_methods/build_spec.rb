@@ -3,11 +3,10 @@
 require 'spec_helper'
 
 describe Mapper, '.build' do
-  subject { described_class.build(header, model, options) }
+  subject { described_class.build(header, model) }
 
   let(:model)      { mock_model(:name) }
-  let(:attributes) { [[:user_name, String]] }
-  let(:options)    { Hash[map: { user_name: :name }] }
+  let(:attributes) { [[:name, type: String, from: :user_name]] }
 
   describe 'when header is a primitive' do
     let(:header) { attributes }
@@ -17,7 +16,7 @@ describe Mapper, '.build' do
     its(:dumper) { should be_instance_of(Mapper::Dumper) }
 
     it 'builds correct header' do
-      expect(subject.header.mapping).to eql(options[:map])
+      expect(subject.header.mapping).to eql(user_name: :name)
     end
 
     let(:object) { model.new(name: 'Jane') }
@@ -39,7 +38,7 @@ describe Mapper, '.build' do
     its(:model)  { should be(model) }
     its(:loader) { should be_instance_of(Mapper::Loader) }
     its(:dumper) { should be_instance_of(Mapper::Dumper) }
-    its(:header) { should be(header) }
+    its(:header) { should eql(header) }
   end
 
   describe 'when options has custom loader' do
@@ -49,7 +48,7 @@ describe Mapper, '.build' do
     its(:model)  { should be(model) }
     its(:loader) { should be_instance_of(Mapper::Loader) }
     its(:dumper) { should be_instance_of(Mapper::Dumper) }
-    its(:header) { should be(header) }
+    its(:header) { should eql(header) }
   end
 
   describe 'loader is set to :load_attribute_accessors' do
@@ -59,6 +58,6 @@ describe Mapper, '.build' do
     its(:model)  { should be(model) }
     its(:loader) { should be_instance_of(Mapper::Loader) }
     its(:dumper) { should be_instance_of(Mapper::Dumper) }
-    its(:header) { should be(header) }
+    its(:header) { should eql(header) }
   end
 end

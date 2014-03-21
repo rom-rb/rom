@@ -11,24 +11,13 @@ module ROM
 
     # Build a mapper
     #
-    # @example
-    #
-    #   header = Mapper::Header.build([[:user_name, String]], map: { user_name: :name })
-    #
-    #   mapper = Mapper.build(header, User)
-    #   mapper = Mapper.build(header, User, loader_class: Loader::ObjectBuilder)
-    #
-    # @param [Header]
-    # @param [Class]
-    # @param [Hash]
-    #
     # @return [Mapper]
     #
     # @api public
-    def self.build(header, model, options = {})
+    def self.build(attributes, model, options = {})
       loader_node_name = options.fetch(:loader, DEFAULT_LOADER)
 
-      header = Header.build(header, options)
+      header = Header.build(attributes)
       loader = Loader.build(header, model, loader_node_name)
       dumper = Dumper.build(header, loader.transformer.inverse)
 

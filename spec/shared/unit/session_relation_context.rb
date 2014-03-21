@@ -8,7 +8,7 @@ shared_context 'Session::Relation' do
   let(:env)      { Session::Environment.new({ users: relation }, tracker) }
   let(:tracker)  { Session::Tracker.new }
 
-  let(:mapper)   { Mapper.build([[:id, Integer], [:name, String]], model, keys: [:id]) }
+  let(:mapper)   { Mapper.build([[:id, type: Integer, key: true], [:name, type: String]], model) }
   let(:model)    { mock_model(:id, :name) }
   let(:header)   { TEST_ENV.schema[:users].header }
   let(:axiom)    { Axiom::Relation::Variable.new(Axiom::Relation.new(header, [[1, 'John'], [2, 'Jane']])) }

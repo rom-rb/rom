@@ -3,25 +3,23 @@
 require 'spec_helper'
 
 describe Mapper::Header, '#each' do
-  let(:object)     { Mapper::Header.build(attributes) }
-  let(:attributes) { [[:id, Integer], [:name, String]] }
-  let(:id)         { object[:id] }
-  let(:name)       { object[:name] }
+  subject(:header) { Mapper::Header.build([[:id], [:name]]) }
+
+  let(:id) { header[:id] }
+  let(:name) { header[:name] }
 
   context 'with a block' do
-    subject { object.each { |attribute| result << attribute } }
+    it 'yields attributes' do
+      result = []
 
-    let(:result) { [] }
+      header.each { |attribute| result << attribute }
 
-    it { should be(object) }
-
-    specify do
-      expect { subject }.to change { result }.from([]).to([id, name])
+      expect(result).to eql([id, name])
     end
   end
 
   context 'without a block' do
-    subject { object.each }
+    subject { header.each }
 
     it { should be_instance_of(Enumerator) }
   end

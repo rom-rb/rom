@@ -7,33 +7,20 @@ module ROM
     #
     # @private
     class Header
-      include Enumerable, Concord.new(:header, :attributes), Adamantium, Morpher::NodeHelpers
+      include Enumerable, Concord.new(:attributes), Adamantium, Morpher::NodeHelpers
 
       # Build a header
       #
       # @api private
-      def self.build(input, options = {})
-        return input if input.is_a?(self)
-
-        keys       = options.fetch(:keys, [])
-        header     = Axiom::Relation::Header.coerce(input, keys: keys)
-
-        mapping    = options.fetch(:map, {})
-        attributes = header.each_with_object({}) { |field, object|
-          attribute = Attribute.coerce(field, mapping[field.name])
-          object[attribute.name] = attribute
-        }
-
-        new(header, attributes)
+      def self.build(attributes)
+        new(attributes.map { |input| Attribute.build(*input) })
       end
 
       # Return attribute mapping
       #
       # @api private
       def mapping
-        each_with_object({}) { |attribute, hash|
-          hash.update attribute.mapping
-        }
+        each_with_object({}) { |attribute, hash| hash.update(attribute.mapping) }
       end
       memoize :mapping
 
@@ -43,14 +30,7 @@ module ROM
       #
       # @api public
       def keys
-        # FIXME: find a way to simplify this
-        header.keys.flat_map { |key_header|
-          key_header.flat_map { |key|
-            attributes.values.select { |attribute|
-              attribute.tuple_key == key.name
-            }
-          }
-        }
+        select(&:key?)
       end
       memoize :keys
 
@@ -65,7 +45,7 @@ module ROM
       #
       # @api public
       def [](name)
-        attributes.fetch(name)
+        detect { |attribute| attribute.name == name } || raise(KeyError)
       end
 
       # Return attribute names
@@ -80,7 +60,7 @@ module ROM
       # @api private
       def each(&block)
         return to_enum unless block_given?
-        attributes.each_value(&block)
+        attributes.each(&block)
         self
       end
 

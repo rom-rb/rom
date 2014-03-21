@@ -22,7 +22,7 @@ describe Mapping, '.build' do
           model user_model
 
           map :id, :email
-          map :user_name, to: :name
+          map :name, from: :user_name
         end
       end
     end
@@ -33,11 +33,7 @@ describe Mapping, '.build' do
 
     it 'builds rom mapper' do
       expect(mapper.header.map(&:name)).to eql([:id, :email, :name])
-
-      # TODO: introduce new interface in rom-mapper to make this simpler
-      expect(mapper.header.map { |a| a.field.type }).to eql([
-        Axiom::Types::Integer, Axiom::Types::String, Axiom::Types::String
-      ])
+      expect(mapper.header.map(&:type)).to eql([Integer, String, String])
     end
 
     it 'sets up the model' do
