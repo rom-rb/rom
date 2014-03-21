@@ -26,9 +26,7 @@ end
 
 require 'devtools/spec_helper'
 
-require 'rom-relation'
-require 'rom-mapper'
-require 'rom-session'
+require 'rom'
 require 'rom/support/axiom/adapter/memory'
 
 require 'bogus/rspec'

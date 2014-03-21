@@ -2,6 +2,24 @@
 
 module ROM
 
+  # Extended ROM::Environment with session support
+  class Environment
+
+    # Start a new session for this environment
+    #
+    # @example
+    #  env.session do |session|
+    #    # ...
+    #  end
+    #
+    # @see Session.start
+    #
+    # @api public
+    def session(&block)
+      Session.start(self, &block)
+    end
+  end
+
   # Session with IdentityMap and state-tracking functionality
   #
   # @example
@@ -17,6 +35,14 @@ module ROM
   # @api public
   class Session
     include Concord.new(:environment)
+
+    # Raised when an object is expected to be tracked and it's not
+    #
+    class ObjectNotTrackedError < StandardError
+      def initialize(identity)
+        super("Tracker doesn't include object with identity #{identity.inspect}")
+      end
+    end
 
     # Start a new session
     #
