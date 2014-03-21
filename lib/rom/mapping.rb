@@ -72,7 +72,7 @@ module ROM
     #
     # @api private
     def build_relation(relation, &block)
-      definition = Definition.build(relation.header, &block)
+      definition = Mapper::DSL::Definition.build(relation.header, &block)
       environment[relation.name] = Relation.build(relation, definition.mapper)
     end
 

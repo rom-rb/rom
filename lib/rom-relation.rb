@@ -44,6 +44,3 @@ require 'rom/schema'
 require 'rom/schema/definition'
 require 'rom/schema/definition/relation'
 require 'rom/schema/definition/relation/base'
-
-require 'rom/mapping'
-require 'rom/mapping/definition'
