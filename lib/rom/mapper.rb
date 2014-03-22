@@ -107,6 +107,14 @@ module ROM
       dumper.call(object)
     end
 
+    def wrap(other)
+      header = self.header.wrap(other)
+      loader = self.loader.class.build(header, model, :load_instance_variables)
+      dumper = self.dumper.class.build(header, loader.transformer.inverse)
+
+      self.class.new(header, loader, dumper)
+    end
+
   end # Mapper
 
 end # ROM

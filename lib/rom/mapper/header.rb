@@ -64,6 +64,17 @@ module ROM
         self
       end
 
+      def wrap(other)
+        new_attributes = other.map do |name, mapper|
+          Attribute.build(name,
+            type: mapper.model,
+            node: s(:key_transform, name, name, mapper.loader.transformer.node)
+          )
+        end
+
+        self.class.new(attributes + new_attributes)
+      end
+
     end # Header
 
   end # Mapper
