@@ -66,8 +66,6 @@ describe 'Wrapped mappers' do
   end
 
   specify 'dumping wrapped tuples' do
-    pending
-
     mapper = env[:tasks].mapper.wrap(:user => env[:users].mapper)
 
     tuple = { :id => 1, :title => 'Task 1', :user => { :id => 2, :name => 'Jane' } }
@@ -75,6 +73,6 @@ describe 'Wrapped mappers' do
     user = User.new(tuple[:user])
     task = Task.new(:id => tuple[:id], :title => tuple[:title], :user => user)
 
-    expect(mapper.dump(task)).to eql(tuple)
+    expect(mapper.dump(task)).to eql([1, 'Task 1', [2, 'Jane']])
   end
 end

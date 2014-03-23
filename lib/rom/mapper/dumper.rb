@@ -16,7 +16,17 @@ module ROM
 
       # @api private
       def call(object)
-        transformer.call(object).values_at(*header.attribute_names)
+        ary = transformer.call(object)
+
+        ary.each_with_object([]) do |(name, value), tuple|
+          attribute = header[name]
+
+          if attribute.header
+            tuple << value.values_at(*attribute.header.attribute_names)
+          else
+            tuple << value
+          end
+        end
       end
 
       # @api private

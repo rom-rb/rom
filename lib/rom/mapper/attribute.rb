@@ -27,6 +27,11 @@ module ROM
       end
       memoize :to_ast
 
+      # TODO: this will be moved to an attribute subclass that's used to load EVs
+      def header
+        options[:header]
+      end
+
       def key?
         options.fetch(:key, false)
       end
