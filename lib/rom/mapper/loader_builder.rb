@@ -17,10 +17,7 @@ module ROM
             s(:param, model, *header.attribute_names)
           end
 
-        transformer_node = s(type, param)
-        transformer_ast  = s(:block, header.to_ast, transformer_node)
-
-        Morpher.compile(transformer_ast)
+        Morpher.compile(s(:block, header.to_ast, s(type, param)))
       end
 
     end # Loader
