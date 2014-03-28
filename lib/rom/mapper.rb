@@ -1,5 +1,7 @@
 # encoding: utf-8
 
+require 'rom/mapper/loader_builder'
+
 module ROM
 
   # Mappers load tuples into objects and dump objects back into tuples
@@ -20,7 +22,7 @@ module ROM
       defaults = { type: DEFAULT_LOADER, model: OpenStruct }.update(options)
 
       header = Header.build(attributes)
-      loader = Loader.build(header, defaults[:model], defaults[:type])
+      loader = LoaderBuilder.call(header, defaults[:model], defaults[:type])
 
       new(header, loader, defaults)
     end
@@ -131,7 +133,7 @@ module ROM
     end
 
     def new(header)
-      self.class.new(header, Loader.build(header, model, type), options)
+      self.class.build(header, options)
     end
 
   end # Mapper

@@ -6,10 +6,10 @@ module ROM
     # Abstract loader class
     #
     # @private
-    class Loader
+    class LoaderBuilder
       extend Morpher::NodeHelpers
 
-      def self.build(header, model, type)
+      def self.call(header, model, type)
         param =
           if type == :load_attribute_hash
             model
