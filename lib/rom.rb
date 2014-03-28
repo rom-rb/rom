@@ -53,7 +53,6 @@ require 'rom/mapper/attribute'
 require 'rom/mapper/header'
 
 require 'rom/mapper/loader'
-require 'rom/mapper/dumper'
 require 'rom/mapper'
 
 require 'rom/mapper/dsl/definition'

@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 describe Mapper, '.build' do
-  subject { described_class.build(header, model) }
+  subject { described_class.build(header, model: model) }
 
   let(:model)      { mock_model(:name) }
   let(:attributes) { [[:name, type: String, from: :user_name]] }
@@ -12,8 +12,6 @@ describe Mapper, '.build' do
     let(:header) { attributes }
 
     its(:model)  { should be(model) }
-    its(:loader) { should be_instance_of(Mapper::Loader) }
-    its(:dumper) { should be_instance_of(Mapper::Dumper) }
 
     it 'builds correct header' do
       expect(subject.header.mapping).to eql(user_name: :name)
@@ -36,8 +34,6 @@ describe Mapper, '.build' do
     let(:options) { Hash.new }
 
     its(:model)  { should be(model) }
-    its(:loader) { should be_instance_of(Mapper::Loader) }
-    its(:dumper) { should be_instance_of(Mapper::Dumper) }
     its(:header) { should eql(header) }
   end
 
@@ -46,8 +42,6 @@ describe Mapper, '.build' do
     let(:options) { Hash[loader: :load_attribute_hash] }
 
     its(:model)  { should be(model) }
-    its(:loader) { should be_instance_of(Mapper::Loader) }
-    its(:dumper) { should be_instance_of(Mapper::Dumper) }
     its(:header) { should eql(header) }
   end
 
@@ -56,8 +50,6 @@ describe Mapper, '.build' do
     let(:options) { Hash[loader: :load_attribute_accessors] }
 
     its(:model)  { should be(model) }
-    its(:loader) { should be_instance_of(Mapper::Loader) }
-    its(:dumper) { should be_instance_of(Mapper::Dumper) }
     its(:header) { should eql(header) }
   end
 end

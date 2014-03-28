@@ -7,9 +7,5 @@ describe Mapper, '#identity' do
 
   include_context 'Mapper'
 
-  before do
-    stub(dumper).identity(object) { [1] }
-  end
-
   it { should eq([1]) }
 end

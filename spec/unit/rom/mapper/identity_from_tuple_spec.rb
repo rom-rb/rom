@@ -7,9 +7,5 @@ describe Mapper, '#identity_from_tuple' do
 
   include_context 'Mapper'
 
-  before do
-    stub(loader).identity(tuple) { [1] }
-  end
-
   it { should eq([1]) }
 end

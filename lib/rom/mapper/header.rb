@@ -70,7 +70,7 @@ module ROM
           Attribute.build(name,
             type: mapper.model,
             header: mapper.header,
-            node: s(:key_transform, name, name, mapper.loader.transformer.node)
+            node: s(:key_transform, name, name, mapper.loader.node)
           )
         end
 

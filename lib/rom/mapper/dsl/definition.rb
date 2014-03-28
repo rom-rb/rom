@@ -117,7 +117,7 @@ module ROM
         #
         # @api private
         def build_mapper
-          @mapper = Mapper.build(attributes, model)
+          @mapper = Mapper.build(attributes, model: model)
         end
 
         def build_attribute(name, options = {})

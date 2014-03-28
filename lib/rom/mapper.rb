@@ -5,23 +5,33 @@ module ROM
   # Mappers load tuples into objects and dump objects back into tuples
   #
   class Mapper
-    include Concord::Public.new(:header, :loader, :dumper)
+    include Equalizer.new(:header, :options)
 
     DEFAULT_LOADER = :load_instance_variables
+
+    attr_reader :header, :loader, :dumper, :model, :type, :options
 
     # Build a mapper
     #
     # @return [Mapper]
     #
     # @api public
-    def self.build(attributes, model, options = {})
-      loader_node_name = options.fetch(:loader, DEFAULT_LOADER)
+    def self.build(attributes, options = {})
+      defaults = { type: DEFAULT_LOADER, model: OpenStruct }.update(options)
 
       header = Header.build(attributes)
-      loader = Loader.build(header, model, loader_node_name)
-      dumper = Dumper.build(header, loader.transformer.inverse)
+      loader = Loader.build(header, defaults[:model], defaults[:type])
 
-      new(header, loader, dumper)
+      new(header, loader, defaults)
+    end
+
+    def initialize(header, loader, options = {})
+      @header = header
+      @loader = loader
+      @dumper = loader.inverse
+      @model = options.fetch(:model)
+      @type = options.fetch(:type)
+      @options = options
     end
 
     # Project and rename given relation
@@ -54,7 +64,7 @@ module ROM
     #
     # @api public
     def identity(object)
-      dumper.identity(object)
+      header.keys.map { |key| object.send(key.name) }
     end
 
     # Return identity from the given tuple
@@ -69,7 +79,7 @@ module ROM
     #
     # @api public
     def identity_from_tuple(tuple)
-      loader.identity(tuple)
+      header.keys.map { |key| tuple[key.name] }
     end
 
     # Build a new model instance
@@ -84,15 +94,6 @@ module ROM
       model.new(*args, &block)
     end
 
-    # Return model used by this mapper
-    #
-    # @return [Class]
-    #
-    # @api public
-    def model
-      loader.model
-    end
-
     # Load an object instance from the tuple
     #
     # @api private
@@ -104,31 +105,33 @@ module ROM
     #
     # @api private
     def dump(object)
-      dumper.call(object)
+      ary = dumper.call(object)
+
+      ary.each_with_object([]) do |(name, value), tuple|
+        attribute = header[name]
+
+        if attribute.header
+          tuple << value.values_at(*attribute.header.attribute_names)
+        else
+          tuple << value
+        end
+      end
     end
 
     def wrap(other)
-      header = self.header.wrap(other)
-      loader = self.loader.class.build(header, model, :load_instance_variables)
-      dumper = self.dumper.class.build(header, loader.transformer.inverse)
-
-      self.class.new(header, loader, dumper)
+      new(header.wrap(other))
     end
 
     def join(other)
-      header = self.header.join(other.header)
-      loader = self.loader.class.build(header, model, :load_instance_variables)
-      dumper = self.dumper.class.build(header, loader.transformer.inverse)
-
-      self.class.new(header, loader, dumper)
+      new(header.join(other.header))
     end
 
     def project(names)
-      header = self.header.project(names)
-      loader = self.loader.class.build(header, model, :load_instance_variables)
-      dumper = self.dumper.class.build(header, loader.transformer.inverse)
+      new(header.project(names))
+    end
 
-      self.class.new(header, loader, dumper)
+    def new(header)
+      self.class.new(header, Loader.build(header, model, type), options)
     end
 
   end # Mapper

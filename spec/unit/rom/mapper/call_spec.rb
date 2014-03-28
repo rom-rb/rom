@@ -6,7 +6,7 @@ describe Mapper, '#call' do
   subject { object.call(relation) }
 
   let(:object) {
-    Mapper.build(header, model)
+    Mapper.build(header, model: model)
   }
 
   let(:header) {
