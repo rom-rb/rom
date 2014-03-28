@@ -77,6 +77,14 @@ module ROM
         self.class.new(attributes + new_attributes)
       end
 
+      def join(other)
+        self.class.new((attributes + other.attributes).uniq)
+      end
+
+      def project(names)
+        self.class.new(select { |attribute| names.include?(attribute.name) })
+      end
+
     end # Header
 
   end # Mapper

@@ -115,6 +115,22 @@ module ROM
       self.class.new(header, loader, dumper)
     end
 
+    def join(other)
+      header = self.header.join(other.header)
+      loader = self.loader.class.build(header, model, :load_instance_variables)
+      dumper = self.dumper.class.build(header, loader.transformer.inverse)
+
+      self.class.new(header, loader, dumper)
+    end
+
+    def project(names)
+      header = self.header.project(names)
+      loader = self.loader.class.build(header, model, :load_instance_variables)
+      dumper = self.dumper.class.build(header, loader.transformer.inverse)
+
+      self.class.new(header, loader, dumper)
+    end
+
   end # Mapper
 
 end # ROM

@@ -290,7 +290,20 @@ module ROM
       new(relation, mapper)
     end
 
-    private
+    def join(other)
+      new(relation.join(other.relation), mapper.join(other.mapper))
+    end
+
+    def wrap(other)
+      relation_wrap = other.each_with_object({}) { |(name, relation), o| o[name] = relation.header }
+      mapper_wrap = other.each_with_object({}) { |(name, relation), o| o[name] = relation.mapper }
+
+      new(relation.wrap(relation_wrap), mapper.wrap(mapper_wrap))
+    end
+
+    def project(names)
+      new(relation.project(names), mapper.project(names))
+    end
 
     # Sort wrapped relation using all attributes in the header
     #
