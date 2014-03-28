@@ -9,6 +9,29 @@ module ROM
     class Attribute
       include Adamantium, Concord::Public.new(:name, :options), Morpher::NodeHelpers
 
+      class EmbeddedValue < Attribute
+
+        # @api private
+        def to_ast
+          s(:key_transform, name, name, node)
+        end
+        memoize :to_ast
+
+        # @api private
+        def header
+          options.fetch(:header)
+        end
+        memoize :header
+
+        private
+
+        # @api private
+        def node
+          options.fetch(:node)
+        end
+        memoize :node
+      end
+
       # @api private
       def self.build(*args)
         input = args.first
@@ -26,11 +49,6 @@ module ROM
         options.fetch(:node) { s(:block, s(:key_fetch, name), s(:key_dump, name)) }
       end
       memoize :to_ast
-
-      # TODO: this will be moved to an attribute subclass that's used to load EVs
-      def header
-        options[:header]
-      end
 
       def key?
         options.fetch(:key, false)

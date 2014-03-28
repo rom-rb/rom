@@ -112,7 +112,7 @@ module ROM
       ary.each_with_object([]) do |(name, value), tuple|
         attribute = header[name]
 
-        if attribute.header
+        if attribute.respond_to?(:header)
           tuple << value.values_at(*attribute.header.attribute_names)
         else
           tuple << value
@@ -130,6 +130,10 @@ module ROM
 
     def project(names)
       new(header.project(names))
+    end
+
+    def attribute(name)
+      Attribute::EmbeddedValue.build(name, type: model, header: header, node: loader.node)
     end
 
     def new(header)

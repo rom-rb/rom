@@ -12,7 +12,7 @@ module ROM
       def self.call(header, model, type)
         param =
           if type == :load_attribute_hash
-            model
+            s(:param, model)
           else
             s(:param, model, *header.attribute_names)
           end
