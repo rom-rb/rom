@@ -56,7 +56,6 @@ describe 'Wrapped mappers' do
   subject(:mapper) { env[:tasks].mapper.wrap(:user => env[:users].mapper) }
 
   specify 'loading wrapped tuples' do
-
     tuple = { :id => 1, :title => 'Task 1', :user => { :id => 2, :name => 'Jane' } }
 
     user = User.new(tuple[:user])

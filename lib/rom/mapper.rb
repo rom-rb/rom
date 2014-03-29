@@ -113,7 +113,15 @@ module ROM
         attribute = header[name]
 
         if attribute.respond_to?(:header)
-          tuple << value.values_at(*attribute.header.attribute_names)
+          names = attribute.header.attribute_names
+
+          if value.is_a?(Hash)
+            tuple << value.values_at(*names)
+          elsif value.is_a?(Array)
+            tuple << value.map { |v| v.values_at(*names) }
+          else
+            raise NotImplementedError
+          end
         else
           tuple << value
         end
@@ -124,6 +132,10 @@ module ROM
       new(header.wrap(other))
     end
 
+    def group(other)
+      new(header.group(other))
+    end
+
     def join(other)
       new(header.join(other.header))
     end
@@ -132,8 +144,8 @@ module ROM
       new(header.project(names))
     end
 
-    def attribute(name)
-      Attribute::EmbeddedValue.build(name, type: model, header: header, node: loader.node)
+    def attribute(type, name)
+      type.build(name, type: model, header: header, node: loader.node)
     end
 
     def new(header)
