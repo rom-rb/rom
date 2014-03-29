@@ -64,11 +64,13 @@ module ROM
         self
       end
 
+      # TODO: this should receive a hash with header objects already
       def wrap(other)
         new_attributes = other.map { |name, mapper| mapper.attribute(Attribute::EmbeddedValue, name) }
         self.class.new((attributes + new_attributes).uniq)
       end
 
+      # TODO: this should receive a hash with header objects already
       def group(other)
         new_attributes = other.map { |name, mapper| mapper.attribute(Attribute::EmbeddedCollection, name) }
         self.class.new((attributes + new_attributes).uniq)

@@ -47,6 +47,9 @@ module ROM
     # @return [Axiom::Relation]
     #
     # @api public
+    #
+    # TODO: this will go away once we have schema supporting renaming.
+    #       note: ROM::{Relation,Mapper}#rename will be introduced too
     def call(relation)
       mapping    = header.mapping
       attributes = mapping.keys
@@ -98,14 +101,17 @@ module ROM
 
     # Load an object instance from the tuple
     #
-    # @api private
+    # @api public
     def load(tuple)
       loader.call(tuple)
     end
 
     # Dump an object into a tuple
     #
-    # @api private
+    # @api public
+    #
+    # TODO: it's not clear how a tuple should look like for grouped/wrapped
+    #       relation. the current implementation is temporary
     def dump(object)
       ary = dumper.call(object)
 
@@ -128,26 +134,38 @@ module ROM
       end
     end
 
+    # TODO: this should map the wrapping hash into {Symbol => Mapper::Header}
+    #       otherwise header is coupled to mapper
+    #
+    # @api public
     def wrap(other)
       new(header.wrap(other))
     end
 
+    # TODO: this should map the grouping hash into {Symbol => Mapper::Header}
+    #       otherwise header is coupled to mapper
+    #
+    # @api public
     def group(other)
       new(header.group(other))
     end
 
+    # @api public
     def join(other)
       new(header.join(other.header))
     end
 
+    # @api public
     def project(names)
       new(header.project(names))
     end
 
+    # @api private
     def attribute(type, name)
       type.build(name, type: model, header: header, node: loader.node)
     end
 
+    # @api private
     def new(header)
       self.class.build(header, options)
     end
