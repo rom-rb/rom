@@ -7,5 +7,7 @@ describe Relation, '#group' do
 
   subject { relation.group(tasks: [:task_id, :task_name]).to_a }
 
+  before { pending }
+
   it { should eql([project_with_tasks]) }
 end

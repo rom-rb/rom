@@ -66,12 +66,12 @@ module ROM
 
       def wrap(other)
         new_attributes = other.map { |name, mapper| mapper.attribute(Attribute::EmbeddedValue, name) }
-        self.class.new(attributes + new_attributes)
+        self.class.new((attributes + new_attributes).uniq)
       end
 
       def group(other)
         new_attributes = other.map { |name, mapper| mapper.attribute(Attribute::EmbeddedCollection, name) }
-        self.class.new(attributes + new_attributes)
+        self.class.new((attributes + new_attributes).uniq)
       end
 
       def join(other)

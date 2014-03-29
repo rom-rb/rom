@@ -301,6 +301,13 @@ module ROM
       new(relation.wrap(relation_wrap), mapper.wrap(mapper_wrap))
     end
 
+    def group(other)
+      relation_group = other.each_with_object({}) { |(name, relation), o| o[name] = relation.header }
+      mapper_group = other.each_with_object({}) { |(name, relation), o| o[name] = relation.mapper }
+
+      new(relation.group(relation_group), mapper.group(mapper_group))
+    end
+
     def project(names)
       new(relation.project(names), mapper.project(names))
     end
