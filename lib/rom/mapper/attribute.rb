@@ -32,6 +32,27 @@ module ROM
         memoize :node
       end
 
+      class EmbeddedCollection < Attribute
+
+        def to_ast
+          s(:key_transform, name, name, s(:map, node))
+        end
+        memoize :to_ast
+
+        # @api private
+        def header
+          options.fetch(:header)
+        end
+        memoize :header
+
+        private
+
+        def node
+          options.fetch(:node)
+        end
+        memoize :node
+      end
+
       # @api private
       def self.build(*args)
         input = args.first
