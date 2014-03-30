@@ -8,7 +8,7 @@ describe 'Joining and wrapping relations' do
       base_relation :users do
         repository :test
 
-        attribute :user_id,   Integer
+        attribute :user_id, Integer
         attribute :name, String
 
         key :id

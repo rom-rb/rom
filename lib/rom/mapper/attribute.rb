@@ -34,6 +34,7 @@ module ROM
 
       class EmbeddedCollection < Attribute
 
+        # @api private
         def to_ast
           s(:key_transform, name, name, s(:map, node))
         end
@@ -47,6 +48,7 @@ module ROM
 
         private
 
+        # @api private
         def node
           options.fetch(:node)
         end
@@ -67,10 +69,11 @@ module ROM
 
       # @api private
       def to_ast
-        options.fetch(:node) { s(:block, s(:key_fetch, name), s(:key_dump, name)) }
+        options.fetch(:node) { s(:block, s(:key_fetch, tuple_key), s(:key_dump, name)) }
       end
       memoize :to_ast
 
+      # @api private
       def key?
         options.fetch(:key, false)
       end
@@ -88,10 +91,16 @@ module ROM
       end
       memoize :tuple_key
 
+      # @api private
       def type
         options[:type] || Object
       end
       memoize :type
+
+      # @api private
+      def rename(new_name)
+        self.class.new(new_name, options)
+      end
 
     end # Attribute
 

@@ -60,7 +60,7 @@ module ROM
       relation = schema[name]
 
       if relation
-        build_relation(relation, &block)
+        build_relation(name, relation, &block)
       else
         super
       end
@@ -71,9 +71,9 @@ module ROM
     # @return [Relation]
     #
     # @api private
-    def build_relation(relation, &block)
+    def build_relation(name, relation, &block)
       definition = Mapper::DSL::Definition.build(relation.header, &block)
-      environment[relation.name] = Relation.build(relation, definition.mapper)
+      environment[name] = Relation.new(relation, definition.mapper)
     end
 
   end # Mapping

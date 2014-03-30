@@ -11,7 +11,6 @@ module ROM
         include Adamantium::Flat
 
         attr_reader :attributes
-        private :attributes
 
         # Build new mapping definition
         #
@@ -33,6 +32,11 @@ module ROM
           instance_eval(&block)
 
           build_mapper unless mapper
+        end
+
+        # @api private
+        def attribute_names
+          attributes.map(&:name)
         end
 
         # @api private

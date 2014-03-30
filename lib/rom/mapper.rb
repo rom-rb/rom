@@ -36,27 +36,6 @@ module ROM
       @options = options
     end
 
-    # Project and rename given relation
-    #
-    # @example
-    #
-    #   mapper.call(relation)
-    #
-    # @param [Axiom::Relation]
-    #
-    # @return [Axiom::Relation]
-    #
-    # @api public
-    #
-    # TODO: this will go away once we have schema supporting renaming.
-    #       note: ROM::{Relation,Mapper}#rename will be introduced too
-    def call(relation)
-      mapping    = header.mapping
-      attributes = mapping.keys
-
-      relation.project(attributes).rename(mapping)
-    end
-
     # Retrieve identity from the given object
     #
     # @example
@@ -116,7 +95,7 @@ module ROM
       ary = dumper.call(object)
 
       ary.each_with_object([]) do |(name, value), tuple|
-        attribute = header[name]
+        attribute = header.detect { |attr| attr.tuple_key == name }
 
         if attribute.respond_to?(:header)
           names = attribute.header.attribute_names
@@ -160,14 +139,19 @@ module ROM
       new(header.project(names))
     end
 
+    # @api public
+    def rename(names)
+      new(header.rename(names))
+    end
+
     # @api private
     def attribute(type, name)
       type.build(name, type: model, header: header, node: loader.node)
     end
 
     # @api private
-    def new(header)
-      self.class.build(header, options)
+    def new(new_header)
+      self.class.build(new_header, options)
     end
 
   end # Mapper

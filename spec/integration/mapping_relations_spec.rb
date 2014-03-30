@@ -8,8 +8,9 @@ describe 'Defining relation mappings' do
       base_relation :users do
         repository :test
 
-        attribute :id,        Integer
-        attribute :user_name, String
+        attribute :id, Integer
+        attribute :user_name, String, rename: :name
+        attribute :user_age, Integer
 
         key :id
       end
@@ -21,7 +22,7 @@ describe 'Defining relation mappings' do
   }
 
   before do
-    User = mock_model(:id, :name)
+    User = mock_model(:id, :name, :age)
   end
 
   after do
@@ -32,15 +33,14 @@ describe 'Defining relation mappings' do
     env.mapping do
       users do
         model User
-
-        map :id
-        map :name, from: :user_name
+        map :id, :name
+        map :age, from: :user_age
       end
     end
 
     users = env[:users]
 
-    jane = User.new(id: 1, name: 'Jane')
+    jane = User.new(id: 1, name: 'Jane', age: 30)
 
     users.insert(jane)
 
@@ -48,14 +48,14 @@ describe 'Defining relation mappings' do
   end
 
   specify 'providing custom mapper' do
-    custom_model  = mock_model(:id, :user_name)
+    custom_model  = mock_model(:id, :name, :user_age)
     custom_mapper = TestMapper.new(schema[:users].header, custom_model)
 
     env.mapping { users { mapper(custom_mapper) } }
 
     users = env[:users]
 
-    jane = custom_model.new(id: 1, user_name: 'Jane')
+    jane = custom_model.new(id: 1, name: 'Jane', user_age: 30)
 
     users.insert(jane)
 

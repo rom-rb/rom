@@ -18,7 +18,7 @@ describe Mapper, '.build' do
     end
 
     let(:object) { model.new(name: 'Jane') }
-    let(:params) { Hash[name: 'Jane'] }
+    let(:params) { Hash[user_name: 'Jane'] }
 
     specify do
       expect(subject.load(params)).to eq(object)
