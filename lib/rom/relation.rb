@@ -45,6 +45,7 @@ module ROM
   #
   class Relation
     include Enumerable
+    include Equalizer.new(:relation, :mapper)
     include Charlatan.new(:relation, :kind => Axiom::Relation)
 
     undef_method :sort_by
