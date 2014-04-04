@@ -23,4 +23,5 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'axiom',               '~> 0.2'
   gem.add_dependency 'axiom-optimizer',     '~> 0.2'
   gem.add_dependency 'charlatan',           '~> 0.1'
+  gem.add_dependency 'morpher',             '~> 0.2'
 end
