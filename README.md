@@ -53,8 +53,8 @@ gem install rom axiom-memory-adapter
       end
     end
 
-    env.mapping do
-      users do
+    mapping do
+      relation(:users) do
         map :id, :name
         model User
       end
