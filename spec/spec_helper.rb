@@ -33,6 +33,7 @@ require 'bogus/rspec'
 
 include ROM
 include SpecHelper
+include Morpher::NodeHelpers
 
 TEST_ENV = Environment.setup(test: 'memory://test')
 

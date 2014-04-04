@@ -11,7 +11,8 @@ module ROM
         include Adamantium::Flat
 
         attr_reader :attributes
-        private :attributes
+
+        LOADERS = [:instance_variables, :attribute_hash, :attribute_writers].freeze
 
         # Build new mapping definition
         #
@@ -29,10 +30,30 @@ module ROM
           @header = header
           @keys = header.keys.flat_map { |key_header| key_header.flat_map(&:name) }
           @attributes = []
+          @loader = :load_instance_variables
 
           instance_eval(&block)
 
           build_mapper unless mapper
+        end
+
+        # @api private
+        def attribute_names
+          attributes.map(&:name)
+        end
+
+        # @api private
+        def loader(name = Undefined)
+          if name == Undefined
+            @loader
+          else
+            unless LOADERS.include?(name)
+              raise ArgumentError,
+                "loader +#{name.inspect}+ is not known. Valid loaders are #{LOADERS.inspect}"
+            end
+
+            @loader = :"load_#{name}"
+          end
         end
 
         # @api private
@@ -117,7 +138,7 @@ module ROM
         #
         # @api private
         def build_mapper
-          @mapper = Mapper.build(attributes, model)
+          @mapper = Mapper.build(attributes, model: model, loader: loader)
         end
 
         def build_attribute(name, options = {})

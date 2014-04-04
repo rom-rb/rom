@@ -5,7 +5,7 @@ shared_context 'Session::Environment' do
 
   let(:users) {
     relation = TEST_ENV.repository(:test)[:users]
-    mapper   = Mapper.build([[:id], [:name]], mock_model(:id, :name))
+    mapper   = Mapper.build([[:id], [:name]], model: mock_model(:id, :name))
     Relation.new(relation, mapper)
   }
 end

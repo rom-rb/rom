@@ -12,8 +12,12 @@ module ROM
       # Build a header
       #
       # @api private
-      def self.build(attributes)
-        new(attributes.map { |input| Attribute.build(*input) })
+      def self.build(input)
+        if input.is_a?(self)
+          input
+        else
+          new(input.map { |args| Attribute.build(*args) })
+        end
       end
 
       # Return attribute mapping
@@ -62,6 +66,33 @@ module ROM
         return to_enum unless block_given?
         attributes.each(&block)
         self
+      end
+
+      # TODO: this should receive a hash with header objects already
+      def wrap(other)
+        new_attributes = other.map { |name, mapper| mapper.attribute(Attribute::EmbeddedValue, name) }
+        self.class.new((attributes + new_attributes).uniq)
+      end
+
+      # TODO: this should receive a hash with header objects already
+      def group(other)
+        new_attributes = other.map { |name, mapper| mapper.attribute(Attribute::EmbeddedCollection, name) }
+        self.class.new((attributes + new_attributes).uniq)
+      end
+
+      # @api private
+      def join(other)
+        self.class.new((attributes + other.attributes).uniq)
+      end
+
+      # @api private
+      def project(names)
+        self.class.new(select { |attribute| names.include?(attribute.name) })
+      end
+
+      # @api private
+      def rename(names)
+        self.class.new(map { |attribute| names[attribute.name] ? attribute.rename(names[attribute.name]) : attribute })
       end
 
     end # Header

@@ -45,6 +45,7 @@ module ROM
   #
   class Relation
     include Enumerable
+    include Equalizer.new(:relation, :mapper)
     include Charlatan.new(:relation, :kind => Axiom::Relation)
 
     undef_method :sort_by
@@ -54,18 +55,6 @@ module ROM
     def initialize(relation, mapper)
       super(relation, mapper)
       @mapper = mapper
-    end
-
-    # Build a new relation
-    #
-    # @param [Axiom::Relation]
-    # @param [Object] mapper
-    #
-    # @return [Relation]
-    #
-    # @api public
-    def self.build(relation, mapper)
-      new(mapper.call(relation).optimize, mapper)
     end
 
     # Iterate over tuples yielded by the wrapped relation
@@ -290,7 +279,36 @@ module ROM
       new(relation, mapper)
     end
 
-    private
+    # @api public
+    def join(other)
+      new(relation.join(other.relation), mapper.join(other.mapper))
+    end
+
+    # @api public
+    def wrap(other)
+      relation_wrap = other.each_with_object({}) { |(name, relation), o| o[name] = relation.header }
+      mapper_wrap = other.each_with_object({}) { |(name, relation), o| o[name] = relation.mapper }
+
+      new(relation.wrap(relation_wrap), mapper.wrap(mapper_wrap))
+    end
+
+    # @api public
+    def group(other)
+      relation_group = other.each_with_object({}) { |(name, relation), o| o[name] = relation.header }
+      mapper_group = other.each_with_object({}) { |(name, relation), o| o[name] = relation.mapper }
+
+      new(relation.group(relation_group), mapper.group(mapper_group))
+    end
+
+    # @api public
+    def project(names)
+      new(relation.project(names), mapper.project(names))
+    end
+
+    # @api public
+    def rename(names)
+      new(relation.rename(names), mapper.rename(names))
+    end
 
     # Sort wrapped relation using all attributes in the header
     #

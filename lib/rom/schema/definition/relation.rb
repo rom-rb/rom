@@ -34,7 +34,11 @@ module ROM
             @groupings.each { |grouping| relation = relation.group(grouping) }
           end
 
-          relation
+          renames = @header.each_with_object({}) { |ary, mapping|
+            mapping[ary.first] = ary.last[:rename] if ary.last[:rename]
+          }
+
+          relation.rename(renames).optimize
         end
 
         # @api private
@@ -43,8 +47,8 @@ module ROM
         end
 
         # @api private
-        def attribute(name, type)
-          @header << [name, type]
+        def attribute(name, type, options = {})
+          @header << [name, type, options]
         end
 
         # @api private
