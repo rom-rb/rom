@@ -1,5 +1,18 @@
 # encoding: utf-8
 
+require 'rom/session/environment'
+require 'rom/session/tracker'
+require 'rom/session/identity_map'
+require 'rom/session/relation'
+require 'rom/session/mapper'
+
+require 'rom/session/state'
+require 'rom/session/state/transient'
+require 'rom/session/state/persisted'
+require 'rom/session/state/created'
+require 'rom/session/state/updated'
+require 'rom/session/state/deleted'
+
 module ROM
 
   # Extended ROM::Environment with session support

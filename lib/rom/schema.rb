@@ -1,5 +1,10 @@
 # encoding: utf-8
 
+require 'rom/schema/builder'
+require 'rom/schema/definition'
+require 'rom/schema/definition/relation'
+require 'rom/schema/definition/relation/base'
+
 module ROM
 
   # ROM's relation schema

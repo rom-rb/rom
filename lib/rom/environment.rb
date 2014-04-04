@@ -1,5 +1,11 @@
 # encoding: utf-8
 
+require 'rom/support/axiom/adapter'
+
+require 'rom/schema'
+require 'rom/repository'
+require 'rom/environment/builder'
+
 module ROM
 
   # The environment configures repositories and loads schema with relations

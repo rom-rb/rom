@@ -34,43 +34,7 @@ module ROM
 
 end # module ROM
 
-# axiom additions
-require 'rom/support/axiom/adapter'
-
-# relation and schema
-require 'rom/repository'
 require 'rom/environment'
-require 'rom/environment/builder'
 require 'rom/relation'
-
-require 'rom/schema'
-require 'rom/schema/builder'
-require 'rom/schema/definition'
-require 'rom/schema/definition/relation'
-require 'rom/schema/definition/relation/base'
-
-# mapper
-require 'morpher'
-
-require 'rom/mapper/builder'
-require 'rom/mapper/builder/definition'
-require 'rom/mapper/attribute'
-require 'rom/mapper/header'
-
 require 'rom/mapper'
-
-# session
 require 'rom/session'
-
-require 'rom/session/environment'
-require 'rom/session/tracker'
-require 'rom/session/identity_map'
-require 'rom/session/relation'
-require 'rom/session/mapper'
-
-require 'rom/session/state'
-require 'rom/session/state/transient'
-require 'rom/session/state/persisted'
-require 'rom/session/state/created'
-require 'rom/session/state/updated'
-require 'rom/session/state/deleted'
