@@ -21,6 +21,8 @@ describe 'Defining relation mappings' do
     Environment.setup(test: 'memory://test')
   }
 
+  let(:users) { env[:users] }
+
   before do
     User = mock_model(:id, :name, :age)
   end
@@ -47,13 +49,55 @@ describe 'Defining relation mappings' do
     expect(users.to_a).to eql([jane])
   end
 
+  specify 'setting :attribute_hash loader strategy' do
+    AnimaUser = Class.new { include Anima.new(:id, :name, :age) }
+
+    env.mapping do
+      users do
+        model AnimaUser
+        loader :attribute_hash
+        map :id, :name
+        map :age, from: :user_age
+      end
+    end
+
+    jane = AnimaUser.new(id: 1, name: 'Jane', age: 30)
+
+    users.insert(jane)
+
+    expect(users.to_a).to eql([jane])
+  end
+
+  specify 'setting :attribute_writers loader strategy' do
+    UserWithAccessors = Class.new {
+      include Equalizer.new(:id, :name, :age)
+      attr_accessor :id, :name, :age
+    }
+
+    env.mapping do
+      users do
+        model UserWithAccessors
+        loader :attribute_writers
+        map :id, :name
+        map :age, from: :user_age
+      end
+    end
+
+    jane = UserWithAccessors.new
+    jane.id = 1
+    jane.name = 'Jane'
+    jane.age = 30
+
+    users.insert(jane)
+
+    expect(users.to_a).to eql([jane])
+  end
+
   specify 'providing custom mapper' do
     custom_model  = mock_model(:id, :name, :user_age)
     custom_mapper = TestMapper.new(schema[:users].header, custom_model)
 
     env.mapping { users { mapper(custom_mapper) } }
-
-    users = env[:users]
 
     jane = custom_model.new(id: 1, name: 'Jane', user_age: 30)
 
