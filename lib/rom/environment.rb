@@ -5,7 +5,16 @@ module ROM
   # The environment configures repositories and loads schema with relations
   #
   class Environment
-    include Concord.new(:repositories, :registry)
+    include Equalizer.new(:relations)
+
+    attr_reader :repositories, :schema, :relations, :mappers
+
+    def initialize(repositories, schema, relations, mappers)
+      @repositories = repositories
+      @schema = schema
+      @relations = relations
+      @mappers = mappers
+    end
 
     # Build an environment instance from a repository config hash
     #
@@ -22,80 +31,14 @@ module ROM
     #
     # @api public
     def self.setup(config)
-      return config if config.kind_of?(self)
+      builder = Builder.call(config)
 
-      repositories = config.each_with_object({}) { |(name, uri), hash|
-        hash[name.to_sym] = Repository.build(name, Addressable::URI.parse(uri))
-      }
-
-      build(repositories)
-    end
-
-    # Build a new environment
-    #
-    # @param [Hash] repositories
-    #
-    # @param [Hash] registry for relations
-    #
-    # @return [Environment]
-    #
-    # @api private
-    def self.build(repositories, registry = {})
-      new(repositories, registry)
-    end
-
-    # Build a relation schema for this environment
-    #
-    # @example
-    #   env = Environment.coerce(test: 'memory://test')
-    #
-    #   env.schema do
-    #     base_relation :users do
-    #       repository :test
-    #
-    #       attribute :id, Integer
-    #       attribute :name, String
-    #     end
-    #   end
-    #
-    # @return [Schema]
-    #
-    # @api public
-    def schema(&block)
-      @schema ||= Schema::Builder.build(repositories)
-      @schema.call(&block) if block
-      @schema
-    end
-
-    # Define mapping for relations
-    #
-    # @example
-    #
-    #   env.schema do
-    #     base_relation :users do
-    #       repository :test
-    #
-    #       attribute :id,        Integer
-    #       attribtue :user_name, String
-    #     end
-    #   end
-    #
-    #   env.mapping do
-    #     users do
-    #       model User
-    #
-    #       map :id
-    #       map :user_name, :to => :name
-    #     end
-    #   end
-    #
-    # @return [Mapping]
-    #
-    # @api public
-    def mapping(&block)
-      @mappers ||= Mapper::Builder.new(self, schema)
-      @mappers.call(&block) if block
-      @mappers
+      if block_given?
+        yield(builder)
+        builder.finalize
+      else
+        builder
+      end
     end
 
     # Return registered relation
@@ -110,16 +53,7 @@ module ROM
     #
     # @api public
     def [](name)
-      registry[name]
-    end
-
-    # Register a rom relation
-    #
-    # @return [Environment]
-    #
-    # @api private
-    def []=(name, relation)
-      registry[name] = relation
+      relations[name]
     end
 
     # The repository with the given +name+
@@ -132,4 +66,5 @@ module ROM
     end
 
   end # Environment
+
 end # ROM

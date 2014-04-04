@@ -3,51 +3,49 @@
 require 'spec_helper'
 
 describe 'Joining and grouping relations' do
-  let!(:schema) {
-    env.schema {
-      base_relation :users do
-        repository :test
+  let(:env) do
+    Environment.setup(test: 'memory://test') do |env|
+      env.schema do
+        base_relation :users do
+          repository :test
 
-        attribute :user_id, Integer
-        attribute :name, String
+          attribute :user_id, Integer
+          attribute :name, String
 
-        key :user_id
+          key :user_id
+        end
+
+        base_relation :tasks do
+          repository :test
+
+          attribute :id, Integer
+          attribute :user_id, Integer
+          attribute :title, String
+
+          key :id
+        end
       end
 
-      base_relation :tasks do
-        repository :test
+      env.mapping do
+        relation(:users) do
+          model User
+          map :user_id, :name
+        end
 
-        attribute :id, Integer
-        attribute :user_id, Integer
-        attribute :title, String
-
-        key :id
+        relation(:tasks) do
+          model Task
+          map :id, :user_id, :title
+        end
       end
-    }
-  }
-
-  let!(:env) {
-    Environment.setup(test: 'memory://test')
-  }
+    end
+  end
 
   before do
     User = mock_model(:user_id, :name, :tasks)
     Task = mock_model(:id, :user_id, :title)
 
-    env.mapping do
-      users do
-        model User
-        map :user_id, :name
-      end
-
-      tasks do
-        model Task
-        map :id, :user_id, :title
-      end
-    end
-
-    schema[:users].insert([[1, 'Jane']])
-    schema[:tasks].insert([[2, 1, 'Task 1'], [3, 1, 'Task 2']])
+    env.schema[:users].insert([[1, 'Jane']])
+    env.schema[:tasks].insert([[2, 1, 'Task 1'], [3, 1, 'Task 2']])
   end
 
   after do
@@ -56,10 +54,10 @@ describe 'Joining and grouping relations' do
   end
 
   specify 'loading a user with grouped tasks' do
-    loaded_user = env[:users].
-      join(env[:tasks]).
-      group(:tasks => env[:tasks]).
-      project([:user_id, :name, :tasks]).one
+    users = env[:users]
+    tasks = env[:tasks]
+
+    loaded_user = users.join(tasks).group(:tasks => tasks).project([:user_id, :name, :tasks]).one
 
     tuple = {
       :name => 'Jane',

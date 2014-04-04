@@ -3,51 +3,49 @@
 require 'spec_helper'
 
 describe 'Joining and wrapping relations' do
-  let!(:schema) {
-    env.schema {
-      base_relation :users do
-        repository :test
+  let(:env) {
+    Environment.setup(test: 'memory://test') do |env|
+      env.schema do
+        base_relation :users do
+          repository :test
 
-        attribute :user_id, Integer
-        attribute :name, String
+          attribute :user_id, Integer
+          attribute :name, String
 
-        key :id
+          key :id
+        end
+
+        base_relation :tasks do
+          repository :test
+
+          attribute :id, Integer
+          attribute :user_id, Integer
+          attribute :title, String
+
+          key :id
+        end
       end
 
-      base_relation :tasks do
-        repository :test
+      env.mapping do
+        relation(:users) do
+          model User
+          map :user_id, :name
+        end
 
-        attribute :id, Integer
-        attribute :user_id, Integer
-        attribute :title, String
-
-        key :id
+        relation(:tasks) do
+          model Task
+          map :id, :user_id, :title
+        end
       end
-    }
-  }
-
-  let!(:env) {
-    Environment.setup(test: 'memory://test')
+    end
   }
 
   before do
     User = mock_model(:user_id, :name)
     Task = mock_model(:id, :user_id, :title, :user)
 
-    env.mapping do
-      users do
-        model User
-        map :user_id, :name
-      end
-
-      tasks do
-        model Task
-        map :id, :user_id, :title
-      end
-    end
-
-    schema[:users].insert([[2, 'Jane']])
-    schema[:tasks].insert([[1, 2, 'Task 1']])
+    env.schema[:users].insert([[2, 'Jane']])
+    env.schema[:tasks].insert([[1, 2, 'Task 1']])
   end
 
   after do

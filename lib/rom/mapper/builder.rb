@@ -6,10 +6,7 @@ module ROM
     # Builder DSL for ROM mappers
     #
     class Builder
-      include Adamantium::Flat
-
-      attr_reader :environment, :schema, :model
-      private :environment, :schema, :model
+      attr_reader :schema, :mappers
 
       # @api public
       def self.call(*args, &block)
@@ -21,9 +18,16 @@ module ROM
       # @return [undefined]
       #
       # @api private
-      def initialize(environment, schema)
-        @environment = environment
-        @schema      = schema
+      def initialize(schema)
+        @schema = schema
+        @mappers = {}
+      end
+
+      # @api public
+      def relation(name, &block)
+        definition = Definition.build(schema[name].header, &block)
+        mappers[name] = definition.mapper
+        self
       end
 
       # @api private
@@ -31,31 +35,19 @@ module ROM
         instance_eval(&block)
       end
 
-      private
-
-      # Method missing hook
-      #
-      # @return [Relation]
-      #
       # @api private
-      def method_missing(name, *, &block)
-        relation = schema[name]
-
-        if relation
-          build_relation(name, relation, &block)
-        else
-          super
-        end
+      def finalize
+        mappers.freeze
       end
 
-      # Build relation
-      #
-      # @return [Relation]
-      #
       # @api private
-      def build_relation(name, relation, &block)
-        definition = Mapper::DSL::Definition.build(relation.header, &block)
-        environment[name] = Relation.new(relation, definition.mapper)
+      def each(&block)
+        mappers.each(&block)
+      end
+
+      # @api private
+      def [](name)
+        mappers.fetch(name)
       end
 
     end # Builder

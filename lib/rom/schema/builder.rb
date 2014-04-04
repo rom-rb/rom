@@ -45,6 +45,11 @@ module ROM
         self
       end
 
+      # @api private
+      def finalize
+        Schema.new(definition.relations)
+      end
+
     end # Builder
 
   end # Schema

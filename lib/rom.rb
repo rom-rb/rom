@@ -40,6 +40,7 @@ require 'rom/support/axiom/adapter'
 # relation and schema
 require 'rom/repository'
 require 'rom/environment'
+require 'rom/environment/builder'
 require 'rom/relation'
 
 require 'rom/schema'
@@ -52,10 +53,10 @@ require 'rom/schema/definition/relation/base'
 require 'morpher'
 
 require 'rom/mapper/builder'
+require 'rom/mapper/builder/definition'
 require 'rom/mapper/attribute'
 require 'rom/mapper/header'
 
-require 'rom/mapper/dsl/definition'
 require 'rom/mapper'
 
 # session

@@ -10,25 +10,19 @@ describe Mapper::Builder, '.call' do
   let(:schema)   { Hash[users: relation] }
 
   context 'when attribute mapping is used' do
-    subject { env }
+    let(:mapper) { subject.mappers[:users] }
 
-    let(:mapper) { subject[:users].mapper }
-
-    before do
+    subject do
       user_model = model
 
-      Mapper::Builder.call(env, schema) do
-        users do
+      Mapper::Builder.call(schema) do
+        relation(:users) do
           model user_model
 
           map :id, :email
           map :name, from: :user_name
         end
       end
-    end
-
-    it 'registers rom relation' do
-      expect(subject[:users]).to be_instance_of(Relation)
     end
 
     it 'builds rom mapper' do
@@ -43,22 +37,20 @@ describe Mapper::Builder, '.call' do
   end
 
   context 'when custom mapper is injected' do
-    subject { env }
+    subject do
+      custom_mapper = test_mapper
+      Mapper::Builder.call(schema) { relation(:users) { mapper(custom_mapper) } }
+    end
 
     let(:test_mapper) { TestMapper.new(header, model) }
 
-    before do
-      custom_mapper = test_mapper
-      Mapper::Builder.call(env, schema) { users { mapper(custom_mapper) } }
-    end
-
     it 'sets the custom mapper' do
-      expect(subject[:users].mapper).to be(test_mapper)
+      expect(subject.mappers[:users]).to be(test_mapper)
     end
   end
 
   context 'when unknown relation name is used' do
-    subject { described_class.call(env, schema) { not_here(1, 'a') {} } }
+    subject { described_class.call(schema) { not_here(1, 'a') {} } }
 
     it 'raises error' do
       expect { subject }.to raise_error(

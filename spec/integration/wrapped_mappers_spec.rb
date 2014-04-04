@@ -3,49 +3,45 @@
 require 'spec_helper'
 
 describe 'Wrapped mappers' do
-  let!(:schema) {
-    env.schema {
-      base_relation :users do
-        repository :test
+  let(:env) do
+    Environment.setup(test: 'memory://test') do |env|
+      env.schema do
+        base_relation :users do
+          repository :test
 
-        attribute :id,   Integer
-        attribute :name, String
+          attribute :id,   Integer
+          attribute :name, String
 
-        key :id
+          key :id
+        end
+
+        base_relation :tasks do
+          repository :test
+
+          attribute :id, Integer
+          attribute :title, String
+
+          key :id
+        end
       end
 
-      base_relation :tasks do
-        repository :test
+      env.mapping do
+        relation(:users) do
+          model User
+          map :id, :name
+        end
 
-        attribute :id, Integer
-        attribute :title, String
-
-        key :id
+        relation(:tasks) do
+          model Task
+          map :id, :title
+        end
       end
-    }
-  }
-
-  let!(:env) {
-    Environment.setup(test: 'memory://test')
-  }
+    end
+  end
 
   before do
     User = mock_model(:id, :name)
     Task = mock_model(:id, :title, :user)
-
-    env.mapping do
-      users do
-        model User
-        map :id
-        map :name
-      end
-
-      tasks do
-        model Task
-        map :id
-        map :title
-      end
-    end
   end
 
   after do

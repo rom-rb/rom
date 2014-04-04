@@ -21,8 +21,6 @@ describe 'Defining relation mappings' do
     Environment.setup(test: 'memory://test')
   }
 
-  let(:users) { env[:users] }
-
   before do
     User = mock_model(:id, :name, :age)
   end
@@ -33,14 +31,14 @@ describe 'Defining relation mappings' do
 
   specify 'building registry of automatically mapped relations' do
     env.mapping do
-      users do
+      relation(:users) do
         model User
         map :id, :name
         map :age, from: :user_age
       end
     end
 
-    users = env[:users]
+    users = env.finalize[:users]
 
     jane = User.new(id: 1, name: 'Jane', age: 30)
 
@@ -53,13 +51,15 @@ describe 'Defining relation mappings' do
     AnimaUser = Class.new { include Anima.new(:id, :name, :age) }
 
     env.mapping do
-      users do
+      relation(:users) do
         model AnimaUser
         loader :attribute_hash
         map :id, :name
         map :age, from: :user_age
       end
     end
+
+    users = env.finalize[:users]
 
     jane = AnimaUser.new(id: 1, name: 'Jane', age: 30)
 
@@ -75,13 +75,15 @@ describe 'Defining relation mappings' do
     }
 
     env.mapping do
-      users do
+      relation(:users) do
         model UserWithAccessors
         loader :attribute_writers
         map :id, :name
         map :age, from: :user_age
       end
     end
+
+    users = env.finalize[:users]
 
     jane = UserWithAccessors.new
     jane.id = 1
@@ -97,7 +99,13 @@ describe 'Defining relation mappings' do
     custom_model  = mock_model(:id, :name, :user_age)
     custom_mapper = TestMapper.new(schema[:users].header, custom_model)
 
-    env.mapping { users { mapper(custom_mapper) } }
+    env.mapping do
+      relation(:users) do
+        mapper(custom_mapper)
+      end
+    end
+
+    users = env.finalize[:users]
 
     jane = custom_model.new(id: 1, name: 'Jane', user_age: 30)
 

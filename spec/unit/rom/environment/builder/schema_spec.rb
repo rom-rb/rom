@@ -2,9 +2,9 @@
 
 require 'spec_helper'
 
-describe Environment, '#schema' do
+describe Environment::Builder, '#schema' do
   let(:repositories) { Hash.new }
-  let(:object)       { Environment.build(repositories) }
+  let(:object)       { Environment::Builder.call(test: "memory://test") }
   let(:block)        { -> { } }
 
   fake(:builder) { Schema::Builder }

@@ -2,7 +2,7 @@
 
 module ROM
   class Mapper
-    module DSL
+    class Builder
 
       # Mapping definition DSL
       #
