@@ -25,7 +25,7 @@ module ROM
     # @return [Mapper]
     #
     # @api public
-    def self.build(attributes, options = {})
+    def self.build(attributes, options = EMPTY_HASH)
       defaults = { type: DEFAULT_LOADER, model: OpenStruct }.update(options)
 
       header = Header.build(attributes)
@@ -34,7 +34,8 @@ module ROM
       new(header, loader, defaults)
     end
 
-    def initialize(header, loader, options = {})
+    # @api private
+    def initialize(header, loader, options)
       @header = header
       @loader = loader
       @dumper = loader.inverse
