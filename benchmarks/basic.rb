@@ -10,10 +10,6 @@ require 'rom'
 require 'axiom-memory-adapter'
 require 'rom/support/axiom/adapter/memory'
 
-def env
- @env ||= ROM::Environment.setup(:memory => 'memory://test')
-end
-
 class User
   attr_reader :id, :name, :email, :age
 
@@ -22,23 +18,29 @@ class User
   end
 end
 
-env.schema do
-  base_relation :users do
-    repository :memory
-
-    attribute :id,    Integer
-    attribute :name,  String
-    attribute :email, String
-    attribute :age,   Integer
-
-    key :id
-  end
+def env
+  ROM_ENV
 end
 
-env.mapping do
-  users do
-    map :id, :name, :email, :age
-    model User
+ROM_ENV = ROM::Environment.setup(:memory => 'memory://test') do
+  schema do
+    base_relation :users do
+      repository :memory
+
+      attribute :id,    Integer
+      attribute :name,  String
+      attribute :email, String
+      attribute :age,   Integer
+
+      key :id
+    end
+  end
+
+  mapping do
+    relation(:users) do
+      map :id, :name, :email, :age
+      model User
+    end
   end
 end
 
