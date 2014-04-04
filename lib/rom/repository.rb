@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 require 'rom/support/axiom/adapter'
-require 'concord'
 
 module ROM
 

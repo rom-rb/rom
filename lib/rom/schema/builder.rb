@@ -1,7 +1,5 @@
 # encoding: utf-8
 
-require 'concord'
-require 'adamantium'
 require 'rom/schema'
 require 'rom/schema/definition'
 

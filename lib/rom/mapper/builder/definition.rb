@@ -1,6 +1,5 @@
 # encoding: utf-8
 
-require 'adamantium'
 require 'rom/mapper'
 require 'rom/mapper/attribute'
 

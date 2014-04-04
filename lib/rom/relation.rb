@@ -1,8 +1,6 @@
 # encoding: utf-8
 
-require 'equalizer'
-require 'charlatan'
-require 'axiom'
+require 'rom/constants'
 
 module ROM
 

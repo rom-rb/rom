@@ -1,9 +1,5 @@
 # encoding: utf-8
 
-require 'equalizer'
-require 'axiom'
-require 'axiom-optimizer'
-
 module ROM
   class Schema
     class Definition

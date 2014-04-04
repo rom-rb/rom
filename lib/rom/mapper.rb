@@ -1,9 +1,6 @@
 # encoding: utf-8
 
-require 'ostruct'
-require 'morpher'
-require 'equalizer'
-
+require 'rom/constants'
 require 'rom/mapper/header'
 require 'rom/mapper/loader_builder'
 

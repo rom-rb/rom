@@ -1,8 +1,5 @@
 # encoding: utf-8
 
-require 'adamantium'
-require 'concord'
-
 module ROM
 
   # ROM's relation schema
