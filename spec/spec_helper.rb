@@ -35,8 +35,8 @@ include ROM
 include SpecHelper
 include Morpher::NodeHelpers
 
-TEST_ENV = Environment.setup(test: 'memory://test') do |env|
-  env.schema do
+TEST_ENV = Environment.setup(test: 'memory://test') do
+  schema do
     base_relation :users do
       repository :test
 
@@ -47,7 +47,7 @@ TEST_ENV = Environment.setup(test: 'memory://test') do |env|
     end
   end
 
-  env.mapping do
+  mapping do
     relation(:users) do
       model mock_model(:id, :name)
       map :id, :name

@@ -30,11 +30,11 @@ module ROM
     # @return [Environment]
     #
     # @api public
-    def self.setup(config)
+    def self.setup(config, &block)
       builder = Builder.call(config)
 
-      if block_given?
-        yield(builder)
+      if block
+        builder.instance_eval(&block)
         builder.finalize
       else
         builder

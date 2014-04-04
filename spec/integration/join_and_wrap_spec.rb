@@ -4,8 +4,8 @@ require 'spec_helper'
 
 describe 'Joining and wrapping relations' do
   let(:env) {
-    Environment.setup(test: 'memory://test') do |env|
-      env.schema do
+    Environment.setup(test: 'memory://test') do
+      schema do
         base_relation :users do
           repository :test
 
@@ -26,7 +26,7 @@ describe 'Joining and wrapping relations' do
         end
       end
 
-      env.mapping do
+      mapping do
         relation(:users) do
           model User
           map :user_id, :name

@@ -4,8 +4,8 @@ require 'spec_helper'
 
 describe 'Wrapped mappers' do
   let(:env) do
-    Environment.setup(test: 'memory://test') do |env|
-      env.schema do
+    Environment.setup(test: 'memory://test') do
+      schema do
         base_relation :users do
           repository :test
 
@@ -25,7 +25,7 @@ describe 'Wrapped mappers' do
         end
       end
 
-      env.mapping do
+      mapping do
         relation(:users) do
           model User
           map :id, :name

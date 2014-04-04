@@ -4,8 +4,8 @@ require 'spec_helper'
 
 describe 'Setting up environment' do
   let(:env) do
-    ROM::Environment.setup(memory: 'memory://test') do |env|
-      env.schema do
+    ROM::Environment.setup(memory: 'memory://test') do
+      schema do
         base_relation :users do
           repository :memory
 
