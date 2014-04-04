@@ -27,29 +27,12 @@ the API becomes stable.
 gem install rom axiom-memory-adapter
 ```
 
-### 1. Set up environment and define schema
+### 1. Set up environment and define schema with mappings
 
 ```ruby
   require 'rom'
   require 'axiom-memory-adapter'
 
-  env = ROM::Environment.setup(memory: 'memory://test')
-
-  env.schema do
-    base_relation :users do
-      repository :memory
-
-      attribute :id,   Integer
-      attribute :name, String
-
-      key :id
-    end
-  end
-```
-
-### 2. Set up mapping
-
-```ruby
   class User
     attr_reader :id, :name
 
@@ -58,15 +41,28 @@ gem install rom axiom-memory-adapter
     end
   end
 
-  env.mapping do
-    users do
-      map :id, :name
-      model User
+  env = ROM::Environment.setup(memory: 'memory://test') do
+    schema do
+      base_relation :users do
+        repository :memory
+
+        attribute :id,   Integer
+        attribute :name, String
+
+        key :id
+      end
+    end
+
+    env.mapping do
+      users do
+        map :id, :name
+        model User
+      end
     end
   end
 ```
 
-### 3. Work with Plain Old Ruby Objects
+### 2. Work with Plain Old Ruby Objects
 
 ```ruby
   env.session do |session|
