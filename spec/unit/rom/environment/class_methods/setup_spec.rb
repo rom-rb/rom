@@ -13,6 +13,6 @@ describe Environment, '.setup' do
     let(:coerced_config) { Hash[test: Repository.build(name, coerced_uri)] }
     let(:coerced_uri)    { Addressable::URI.parse(uri) }
 
-    it { should eq(described_class.new(coerced_config, {}, {}, {})) }
+    its(:repositories) { should eql(described_class.new(coerced_config, {}, {}, {}).repositories) }
   end
 end

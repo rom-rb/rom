@@ -5,8 +5,6 @@ module ROM
   # The environment configures repositories and loads schema with relations
   #
   class Environment
-    include Equalizer.new(:relations)
-
     attr_reader :repositories, :schema, :relations, :mappers
 
     def initialize(repositories, schema, relations, mappers)
