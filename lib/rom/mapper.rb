@@ -1,5 +1,6 @@
 # encoding: utf-8
 
+require 'ostruct'
 require 'rom/mapper/loader_builder'
 
 module ROM

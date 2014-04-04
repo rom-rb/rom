@@ -87,7 +87,7 @@ module ROM
 
       # @api private
       def project(names)
-        self.class.new(select { |attribute| names.include?(attribute.name) })
+        self.class.new(select { |attribute| names.include?(attribute.tuple_key) })
       end
 
       # @api private
