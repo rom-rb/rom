@@ -13,7 +13,7 @@ module ROM
     #
     # @return [Relation]
     def [](name)
-      relations[name]
+      relations.fetch(name)
     end
 
   end # Schema
