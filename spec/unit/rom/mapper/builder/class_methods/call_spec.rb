@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-describe Mapper::Builder, '.new' do
+describe Mapper::Builder, '.call' do
   let(:header)   { [[:id, Integer], [:user_name, String], [:age, Integer], [:email, String]] }
   let(:relation) { Axiom::Relation::Base.new(:users, header) }
   let(:model)    { mock_model(:id, :name, :email) }
@@ -17,7 +17,7 @@ describe Mapper::Builder, '.new' do
     before do
       user_model = model
 
-      Mapper::Builder.new(env, schema) do
+      Mapper::Builder.call(env, schema) do
         users do
           model user_model
 
@@ -49,7 +49,7 @@ describe Mapper::Builder, '.new' do
 
     before do
       custom_mapper = test_mapper
-      Mapper::Builder.new(env, schema) { users { mapper(custom_mapper) } }
+      Mapper::Builder.call(env, schema) { users { mapper(custom_mapper) } }
     end
 
     it 'sets the custom mapper' do
@@ -58,7 +58,7 @@ describe Mapper::Builder, '.new' do
   end
 
   context 'when unknown relation name is used' do
-    subject { described_class.new(env, schema) { not_here(1, 'a') {} } }
+    subject { described_class.call(env, schema) { not_here(1, 'a') {} } }
 
     it 'raises error' do
       expect { subject }.to raise_error(

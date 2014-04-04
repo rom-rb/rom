@@ -11,14 +11,23 @@ module ROM
       attr_reader :environment, :schema, :model
       private :environment, :schema, :model
 
+      # @api public
+      def self.call(*args, &block)
+        new(*args).call(&block)
+      end
+
       # Initialize a new mapping instance
       #
       # @return [undefined]
       #
       # @api private
-      def initialize(environment, schema, &block)
+      def initialize(environment, schema)
         @environment = environment
         @schema      = schema
+      end
+
+      # @api private
+      def call(&block)
         instance_eval(&block)
       end
 

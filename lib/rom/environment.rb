@@ -93,7 +93,9 @@ module ROM
     #
     # @api public
     def mapping(&block)
-      Mapper::Builder.new(self, schema, &block)
+      @mappers ||= Mapper::Builder.new(self, schema)
+      @mappers.call(&block) if block
+      @mappers
     end
 
     # Return registered relation
