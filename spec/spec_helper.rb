@@ -18,12 +18,6 @@ if ENV['COVERAGE'] == 'true'
   end
 end
 
-class BasicObject
-  def self.freeze
-    # FIXME: remove this when axiom no longer freezes classes
-  end
-end
-
 require 'devtools/spec_helper'
 
 require 'rom'
