@@ -69,7 +69,7 @@ module ROM
 
       # @api private
       def to_ast
-        options.fetch(:node) { s(:block, s(:key_fetch, tuple_key), s(:key_dump, name)) }
+        s(:block, s(:key_fetch, tuple_key), s(:key_dump, name))
       end
       memoize :to_ast
 
