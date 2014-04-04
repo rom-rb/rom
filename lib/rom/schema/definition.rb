@@ -1,5 +1,8 @@
 # encoding: utf-8
 
+require 'equalizer'
+require 'rom/schema/definition/relation/base'
+
 module ROM
   class Schema
 

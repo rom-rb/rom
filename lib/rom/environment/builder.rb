@@ -1,5 +1,12 @@
 # encoding: utf-8
 
+require 'addressable/uri'
+
+require 'rom/environment'
+require 'rom/repository'
+require 'rom/schema/builder'
+require 'rom/mapper/builder'
+
 module ROM
 
   # The environment configures repositories and loads schema with relations

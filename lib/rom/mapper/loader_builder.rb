@@ -1,5 +1,7 @@
 # encoding: utf-8
 
+require 'morpher'
+
 module ROM
   class Mapper
 

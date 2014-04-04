@@ -1,5 +1,10 @@
 # encoding: utf-8
 
+require 'morpher'
+require 'adamantium'
+require 'concord'
+require 'rom/mapper/attribute'
+
 module ROM
   class Mapper
 

@@ -2,10 +2,8 @@
 
 require 'ostruct'
 require 'morpher'
+require 'equalizer'
 
-require 'rom/mapper/builder'
-require 'rom/mapper/builder/definition'
-require 'rom/mapper/attribute'
 require 'rom/mapper/header'
 require 'rom/mapper/loader_builder'
 

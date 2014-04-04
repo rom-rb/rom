@@ -1,5 +1,9 @@
 # encoding: utf-8
 
+require 'equalizer'
+require 'charlatan'
+require 'axiom'
+
 module ROM
 
   # Enhanced ROM relation wrapping axiom relation and using injected mapper to

@@ -1,5 +1,7 @@
 # encoding: utf-8
 
+require 'rom/mapper/builder/definition'
+
 module ROM
   class Mapper
 

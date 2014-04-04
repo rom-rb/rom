@@ -1,17 +1,6 @@
 # encoding: utf-8
 
-require 'set'
-require 'concord'
-require 'abstract_type'
-require 'descendants_tracker'
-require 'equalizer'
-require 'charlatan'
-require 'addressable/uri'
-
-require 'axiom'
-require 'axiom-optimizer'
-
-# Main ROM module with methods to setup and manage the environment
+# Main ROM namespace
 module ROM
 
   # Raised when the returned tuples are unexpectedly empty
