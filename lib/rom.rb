@@ -49,13 +49,13 @@ require 'rom/schema/definition/relation/base'
 
 # mapper
 require 'morpher'
+
+require 'rom/mapper/builder'
 require 'rom/mapper/attribute'
 require 'rom/mapper/header'
 
-require 'rom/mapper'
-
 require 'rom/mapper/dsl/definition'
-require 'rom/mapping'
+require 'rom/mapper'
 
 # session
 require 'rom/session'
