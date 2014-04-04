@@ -43,6 +43,7 @@ require 'rom/environment'
 require 'rom/relation'
 
 require 'rom/schema'
+require 'rom/schema/builder'
 require 'rom/schema/definition'
 require 'rom/schema/definition/relation'
 require 'rom/schema/definition/relation/base'

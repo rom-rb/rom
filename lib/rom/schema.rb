@@ -2,46 +2,18 @@
 
 module ROM
 
-  # Schema builder DSL
+  # ROM's relation schema
   #
   class Schema
-    include Concord.new(:definition), Adamantium::Flat
+    include Concord.new(:relations), Adamantium::Flat
 
-    # Build a relation schema
+    # Return a relation identified by name
     #
-    # @example
+    # @param [Symbol] name of the relation
     #
-    #   Schema.build do
-    #     base_relation :users do
-    #       repository :test
-    #       attribute :id, :name
-    #     end
-    #   end
-    #
-    # @return [Schema]
-    #
-    # @api public
-    def self.build(repositories, &block)
-      new(Definition.new(repositories, &block))
-    end
-
-    # Return defined relation identified by name
-    #
-    # @example
-    #
-    #   schema[:users] # => #<Axiom::Relation::Base ..>
-    #
-    # @return [Axiom::Relation, Axiom::Relation::Base]
-    #
-    # @api public
+    # @return [Relation]
     def [](name)
-      definition[name]
-    end
-
-    # @api private
-    def call(&block)
-      definition.instance_eval(&block)
-      self
+      relations[name]
     end
 
   end # Schema

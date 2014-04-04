@@ -7,18 +7,18 @@ describe Environment, '#schema' do
   let(:object)       { Environment.build(repositories) }
   let(:block)        { -> { } }
 
-  fake(:schema)
+  fake(:builder) { Schema::Builder }
 
   before do
-    fake_class(Schema, build: -> { schema })
+    fake_class(Schema::Builder, build: -> { builder })
   end
 
   describe 'with a block' do
     subject { object.schema(&block) }
 
     it 'calls the schema' do
-      expect(subject).to be(schema)
-      expect(schema).to have_received.call
+      expect(subject).to be(builder)
+      expect(builder).to have_received.call
     end
   end
 
@@ -26,8 +26,8 @@ describe Environment, '#schema' do
     subject { object.schema }
 
     it 'calls the schema' do
-      expect(subject).to be(schema)
-      expect(schema).not_to have_received.call
+      expect(subject).to be(builder)
+      expect(builder).not_to have_received.call
     end
   end
 end

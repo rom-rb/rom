@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-describe Schema, '.build' do
+describe Schema::Builder, '.build' do
   include_context 'Environment'
 
   let(:registry) { Hash[test: repository] }
@@ -96,8 +96,8 @@ describe Schema, '.build' do
   end
 
   context 'without block' do
-    subject { Schema.build({}) }
+    subject { Schema::Builder.build({}) }
 
-    it { should be_instance_of(Schema) }
+    it { should be_instance_of(Schema::Builder) }
   end
 end

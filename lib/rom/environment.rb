@@ -62,7 +62,7 @@ module ROM
     #
     # @api public
     def schema(&block)
-      @schema ||= Schema.build(repositories)
+      @schema ||= Schema::Builder.build(repositories)
       @schema.call(&block) if block
       @schema
     end
