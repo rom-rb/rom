@@ -49,7 +49,7 @@ ROM_ENV = ROM::Environment.setup(:memory => 'memory://test') do
   end
 end
 
-COUNT = ENV.fetch('COUNT', 10).to_i
+COUNT = ENV.fetch('COUNT', 100).to_i
 
 SEED = COUNT.times.map do |i|
   { :id    => i + 1,
@@ -74,17 +74,10 @@ end
 def delete
   env[:users].each { |user| env[:users].delete(user) }
 end
-
 if profile
   seed and delete
   PerfTools::CpuProfiler.stop
 else
-  Benchmark.bm do |x|
-    x.report("seed")            { seed }
-    x.report("delete")          { delete }
-    x.report("seed and delete") { seed and delete }
-  end
-
   Benchmark.bm do |x|
     x.report("seed")            { seed }
     x.report("delete")          { delete }
