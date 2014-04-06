@@ -21,18 +21,12 @@ describe 'Defining relation mappings' do
     Environment.setup(test: 'memory://test')
   }
 
-  before do
-    User = mock_model(:id, :name, :age)
-  end
-
-  after do
-    Object.send(:remove_const, :User)
-  end
-
   specify 'building registry of automatically mapped relations' do
+    UserWithReaders = Class.new { attr_reader :id, :name, :age; include Equalizer.new(:id, :name, :age) }
+
     env.mapping do
       relation(:users) do
-        model User
+        model UserWithReaders
         map :id, :name
         map :age, from: :user_age
       end
@@ -40,7 +34,10 @@ describe 'Defining relation mappings' do
 
     users = env.finalize[:users]
 
-    jane = User.new(id: 1, name: 'Jane', age: 30)
+    jane = UserWithReaders.new
+    jane.instance_variable_set("@id", 1)
+    jane.instance_variable_set("@name", "Jane")
+    jane.instance_variable_set("@age", 30)
 
     users.insert(jane)
 
@@ -71,13 +68,19 @@ describe 'Defining relation mappings' do
   specify 'setting :attribute_writers loader strategy' do
     UserWithAccessors = Class.new {
       include Equalizer.new(:id, :name, :age)
-      attr_accessor :id, :name, :age
+      attr_accessor :name, :age
+      attr_reader :id_set, :id
+
+      def id=(id)
+        @id_set = true
+        @id = id
+      end
     }
 
     env.mapping do
       relation(:users) do
         model UserWithAccessors
-        loader :attribute_writers
+        loader :attribute_accessors
         map :id, :name
         map :age, from: :user_age
       end
@@ -93,6 +96,7 @@ describe 'Defining relation mappings' do
     users.insert(jane)
 
     expect(users.to_a).to eql([jane])
+    expect(jane.id_set).to be(true)
   end
 
   specify 'providing custom mapper' do

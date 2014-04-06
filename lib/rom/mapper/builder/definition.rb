@@ -15,7 +15,7 @@ module ROM
 
         attr_reader :attributes
 
-        LOADERS = [:instance_variables, :attribute_hash, :attribute_writers].freeze
+        LOADERS = [:instance_variables, :attribute_hash, :attribute_accessors].freeze
 
         # Build new mapping definition
         #
@@ -141,7 +141,7 @@ module ROM
         #
         # @api private
         def build_mapper
-          @mapper = Mapper.build(attributes, model: model, loader: loader)
+          @mapper = Mapper.build(attributes, model: model, type: loader)
         end
 
         def build_attribute(name, options = {})
