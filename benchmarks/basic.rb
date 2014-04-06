@@ -4,11 +4,15 @@
 Bundler.setup
 Bundler.require
 
+profile = ENV['PROFILE'] || false
+
+require 'perftools' if profile
 require 'benchmark'
 require 'faker'
 require 'rom'
 require 'axiom-memory-adapter'
-require 'rom/support/axiom/adapter/memory'
+
+PerfTools::CpuProfiler.start("./tmp/rom_profile") if profile
 
 class User
   attr_reader :id, :name, :email, :age
@@ -70,8 +74,19 @@ def delete
   env[:users].each { |user| env[:users].delete(user) }
 end
 
-Benchmark.bm do |x|
-  x.report("seed")            { seed }
-  x.report("delete")          { delete }
-  x.report("seed and delete") { seed and delete }
+if profile
+  seed and delete
+  PerfTools::CpuProfiler.stop
+else
+  Benchmark.bm do |x|
+    x.report("seed")            { seed }
+    x.report("delete")          { delete }
+    x.report("seed and delete") { seed and delete }
+  end
+
+  Benchmark.bm do |x|
+    x.report("seed")            { seed }
+    x.report("delete")          { delete }
+    x.report("seed and delete") { seed and delete }
+  end
 end
