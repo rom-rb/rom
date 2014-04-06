@@ -1,3 +1,5 @@
 ---
 name: rom
-namespace: ROM
+namespace:
+  - ROM::Relation
+  - ROM::Mapper

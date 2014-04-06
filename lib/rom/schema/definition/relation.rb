@@ -24,7 +24,7 @@ module ROM
 
         # @api private
         def call(name)
-          relation = Axiom::Relation::Base.new(name, header)
+          relation = Axiom::Relation::Base.new(name, build_header)
 
           if @wrappings.any?
             @wrappings.each { |wrapping| relation = relation.wrap(wrapping) }
@@ -39,11 +39,6 @@ module ROM
           }
 
           relation.rename(renames).optimize
-        end
-
-        # @api private
-        def header
-          Axiom::Relation::Header.coerce(@header, keys: @keys)
         end
 
         # @api private
@@ -66,9 +61,16 @@ module ROM
           @keys.concat(attribute_names)
         end
 
+        private
+
         # @api private
         def method_missing(*args)
           registry[args.first] || super
+        end
+
+        # @api private
+        def build_header
+          Axiom::Relation::Header.coerce(@header, keys: @keys)
         end
 
       end # Relation
