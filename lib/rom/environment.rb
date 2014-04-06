@@ -7,8 +7,24 @@ module ROM
   # The environment configures repositories and loads schema with relations
   #
   class Environment
-    attr_reader :repositories, :schema, :relations, :mappers
+    # @api private
+    attr_reader :repositories, :relations
 
+    # Return schema registry
+    #
+    # @return [Schema]
+    #
+    # @api public
+    attr_reader :schema
+
+    # Return mapper registry
+    #
+    # @return [Hash]
+    #
+    # @api public
+    attr_reader :mappers
+
+    # @api private
     def initialize(repositories, schema, relations, mappers)
       @repositories = repositories
       @schema = schema
@@ -16,18 +32,37 @@ module ROM
       @mappers = mappers
     end
 
-    # Build an environment instance from a repository config hash
+    # Setup ROM environment
     #
     # @example
     #
-    #   config = { 'test' => 'memory://test' }
-    #   env    = ROM::Environment.setup(config)
+    #   env = ROM::Environment.setup(test: 'memory://test') do
+    #     schema do
+    #       base_relation(:users) do
+    #         repository :test
+    #
+    #         attribute :id, Integer
+    #         attribute :name, String
+    #
+    #         key :id
+    #       end
+    #     end
+    #
+    #     mapping do
+    #       relation(:users) do
+    #         model User
+    #
+    #         map :id, :name
+    #       end
+    #     end
+    #
+    #   end
     #
     # @param [Environment, Hash<#to_sym, String>] config
     #   an environment or a hash of adapter uri strings,
     #   keyed by repository name
     #
-    # @return [Environment]
+    # @return [Environment::Builder]
     #
     # @api public
     def self.setup(config, &block)

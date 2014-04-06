@@ -281,11 +281,27 @@ module ROM
       new(relation, mapper)
     end
 
+    # Join two relations
+    #
+    # @example
+    #
+    #   users.join(tasks)
+    #
+    # @return [Relation]
+    #
     # @api public
     def join(other)
       new(relation.join(other.relation), mapper.join(other.mapper))
     end
 
+    # Wrap one or more relation
+    #
+    # @example
+    #
+    #   tasks.join(users).wrap(user: tasks)
+    #
+    # @return [Relation]
+    #
     # @api public
     def wrap(other)
       relation_wrap = other.each_with_object({}) { |(name, relation), o| o[name] = relation.header }
@@ -294,6 +310,14 @@ module ROM
       new(relation.wrap(relation_wrap), mapper.wrap(mapper_wrap))
     end
 
+    # Group one or more relation
+    #
+    # @example
+    #
+    #   users.join(tasks).group(tasks: tasks)
+    #
+    # @return [Relation]
+    #
     # @api public
     def group(other)
       relation_group = other.each_with_object({}) { |(name, relation), o| o[name] = relation.header }
@@ -302,11 +326,27 @@ module ROM
       new(relation.group(relation_group), mapper.group(mapper_group))
     end
 
+    # Project a relation
+    #
+    # @example
+    #
+    #   users.project([:id, :name])
+    #
+    # @return [Relation]
+    #
     # @api public
     def project(names)
       new(relation.project(names), mapper.project(names))
     end
 
+    # Rename attributes in a relation
+    #
+    # @example
+    #
+    #   users.rename(:user_id => :id)
+    #
+    # @return [Relation]
+    #
     # @api public
     def rename(names)
       new(relation.rename(names), mapper.rename(names))

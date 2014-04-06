@@ -18,20 +18,7 @@ module ROM
     class Builder
       attr_reader :repositories, :relations, :mappers
 
-      # Build an environment instance from a repository config hash
-      #
-      # @example
-      #
-      #   config = { 'test' => 'memory://test' }
-      #   env    = ROM::Environment.setup(config)
-      #
-      # @param [Environment, Hash<#to_sym, String>] config
-      #   an environment or a hash of adapter uri strings,
-      #   keyed by repository name
-      #
-      # @return [Environment]
-      #
-      # @api public
+      # @api private
       def self.call(config)
         repositories = config.each_with_object({}) { |(name, uri), hash|
           hash[name.to_sym] = Repository.build(name, Addressable::URI.parse(uri))
@@ -40,14 +27,6 @@ module ROM
         new(repositories)
       end
 
-      # Build a new environment
-      #
-      # @param [Hash] repositories
-      #
-      # @param [Hash] relations for relations
-      #
-      # @return [Environment]
-      #
       # @api private
       def initialize(repositories)
         @repositories = repositories
@@ -56,82 +35,28 @@ module ROM
         @mappers = Mapper::Builder.new(schema)
       end
 
-      # Build a relation schema for this environment
-      #
-      # @example
-      #   env = Environment.coerce(test: 'memory://test')
-      #
-      #   env.schema do
-      #     base_relation :users do
-      #       repository :test
-      #
-      #       attribute :id, Integer
-      #       attribute :name, String
-      #     end
-      #   end
-      #
-      # @return [Schema]
-      #
-      # @api public
+      # @api private
       def schema(&block)
         @schema.call(&block) if block
         @schema
       end
 
-      # Define mapping for relations
-      #
-      # @example
-      #
-      #   env.schema do
-      #     base_relation :users do
-      #       repository :test
-      #
-      #       attribute :id,        Integer
-      #       attribtue :user_name, String
-      #     end
-      #   end
-      #
-      #   env.mapping do
-      #     users do
-      #       model User
-      #
-      #       map :id
-      #       map :user_name, :to => :name
-      #     end
-      #   end
-      #
-      # @return [Mapping]
-      #
-      # @api public
+      # @api private
       def mapping(&block)
         mappers.call(&block)
       end
 
-      # Return registered relation
-      #
-      # @example
-      #
-      #   env[:users]
-      #
-      # @param [Symbol] relation name
-      #
-      # @return [Relation]
-      #
-      # @api public
+      # @api private
       def [](name)
         relations[name]
       end
 
-      # Register a rom relation
-      #
-      # @return [Environment]
-      #
       # @api private
       def []=(name, relation)
         relations[name] = relation
       end
 
-      # @api public
+      # @api private
       def finalize
         mappers.each do |name, mapper|
           relations[name] = Relation.new(schema[name], mapper)

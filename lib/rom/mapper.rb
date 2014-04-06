@@ -19,6 +19,18 @@ module ROM
 
     # Build a mapper
     #
+    # @example
+    #
+    #   User = Class.new { attr_reader :id, :name }
+    #
+    #   mapper = ROM::Mapper.build([[:id, from: :user_id], [:name, from: :user_name]], model: User)
+    #
+    #   user = mapper.load(user_id: 1, user_name: 'Jane')
+    #   # => #<User:0x007fee3b8bf2c8 @id=1, @name="Jane">
+    #
+    #   tuple = mapper.dump(user)
+    #   # => [1, "Jane"]
+    #
     # @return [Mapper]
     #
     # @api public
