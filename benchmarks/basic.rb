@@ -1,7 +1,8 @@
 #!/usr/bin/env ruby
 # encoding: utf-8
 
-Bundler.setup
+require 'bundler'
+
 Bundler.require
 
 profile = ENV['PROFILE'] || false
