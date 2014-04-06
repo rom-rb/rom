@@ -9,7 +9,6 @@ profile = ENV['PROFILE'] || false
 
 require 'perftools' if profile
 require 'benchmark'
-require 'faker'
 require 'rom'
 require 'axiom-memory-adapter'
 
@@ -53,8 +52,8 @@ COUNT = ENV.fetch('COUNT', 100).to_i
 
 SEED = COUNT.times.map do |i|
   { :id    => i + 1,
-    :name  => Faker::Name.name,
-    :email => Faker::Internet.email,
+    :name  => "name #{i}",
+    :email => "email_{i}@domain.com",
     :age   => i*10 }
 end
 

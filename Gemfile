@@ -9,7 +9,6 @@ group :test do
 end
 
 group :benchmarks do
-  gem 'faker'
   gem 'perftools.rb'
 end
 
