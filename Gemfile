@@ -10,6 +10,7 @@ end
 
 group :benchmarks do
   gem 'faker'
+  gem 'perftools.rb'
 end
 
 gem 'devtools', git: 'https://github.com/rom-rb/devtools.git', branch: 'master'
