@@ -1,5 +1,7 @@
 # encoding: utf-8
 
+require 'ostruct'
+
 require 'rom/constants'
 require 'rom/mapper/header'
 require 'rom/mapper/loader_builder'
