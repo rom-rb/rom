@@ -12,7 +12,7 @@
 * [feature] environment exposes mapper registry via Environment#mappers (solnic)
 * [internal] mappers are now backed by [morpher](https://github.com/mbj/morpher) (solnic)
 * [internal] renaming and optimizing relations happens on the schema level now (solnic)
-* [internal] environment will raise if unknown relation is referenced via Environment#[] (solnic)
+* [internal] environment will raise if unknown relation is referenced via `Environment#[]` (solnic)
 
 # v0.1.2 2013-09-02
 
