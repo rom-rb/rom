@@ -8,21 +8,16 @@ module ROM
     # Builder DSL for ROM mappers
     #
     class Builder
-      attr_reader :schema, :mappers
+      include Concord::Public.new(:schema, :mappers)
 
       # @api public
       def self.call(*args, &block)
         new(*args).call(&block)
       end
 
-      # Initialize a new mapping instance
-      #
-      # @return [undefined]
-      #
       # @api private
-      def initialize(schema)
-        @schema = schema
-        @mappers = {}
+      def initialize(schema, mappers = {})
+        super
       end
 
       # @api public
