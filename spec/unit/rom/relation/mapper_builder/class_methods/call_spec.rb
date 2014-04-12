@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-describe Mapper::Builder, '.call' do
+describe Relation::MapperBuilder, '.call' do
   let(:header)   { [[:id, Integer], [:user_name, String], [:age, Integer], [:email, String]] }
   let(:relation) { Axiom::Relation::Base.new(:users, header) }
   let(:model)    { mock_model(:id, :name, :email) }
@@ -19,7 +19,7 @@ describe Mapper::Builder, '.call' do
     subject do
       user_model = model
 
-      Mapper::Builder.call(schema) do
+      Relation::MapperBuilder.call(schema) do
         relation(:users) do
           model user_model
 
@@ -43,7 +43,7 @@ describe Mapper::Builder, '.call' do
   context 'when custom mapper is injected' do
     subject do
       custom_mapper = test_mapper
-      Mapper::Builder.call(schema) { relation(:users, custom_mapper) }
+      Relation::MapperBuilder.call(schema) { relation(:users, custom_mapper) }
     end
 
     let(:test_mapper) { TestMapper.new(header, model) }

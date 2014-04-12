@@ -5,7 +5,7 @@ require 'addressable/uri'
 require 'rom/environment'
 require 'rom/repository'
 require 'rom/schema/builder'
-require 'rom/mapper/builder'
+require 'rom/relation/mapper_builder'
 
 module ROM
 
@@ -32,7 +32,7 @@ module ROM
         @repositories = repositories
         @relations = {}
         @schema = Schema::Builder.build(repositories)
-        @mappers = Mapper::Builder.new(schema)
+        @mappers = Relation::MapperBuilder.new(schema)
       end
 
       # @api private

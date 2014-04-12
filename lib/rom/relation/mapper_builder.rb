@@ -4,11 +4,11 @@ require 'rom/mapper/builder/definition'
 require 'rom/mapper'
 
 module ROM
-  class Mapper
+  class Relation
 
     # Builder DSL for ROM mappers
     #
-    class Builder
+    class MapperBuilder
       include Concord.new(:schema)
 
       attr_reader :definitions, :mappers
@@ -21,7 +21,7 @@ module ROM
       # @api private
       def initialize(*args)
         super
-        @definitions = []
+        @definitions = {}
         @mappers = {}
       end
 
@@ -33,7 +33,7 @@ module ROM
       # @api public
       def relation(name, mapper = nil, &block)
         if block_given?
-          @definitions << Definition.build(name, &block)
+          @definitions[name] = Mapper::Builder::Definition.new(&block)
         else
           mappers[name] = mapper
         end
@@ -43,14 +43,14 @@ module ROM
 
       # @api private
       def finalize
-        definitions.each do |definition|
-          header = schema[definition.name].header
+        definitions.each do |name, definition|
+          header = schema[name].header
 
           attributes = definition.attributes.map do |args|
             build_attribute_options(header, *args)
           end
 
-          mappers[definition.name] = definition.mapper || Mapper.build(attributes, definition.options)
+          mappers[name] = definition.mapper || Mapper.build(attributes, definition.options)
         end
 
         mappers.freeze
@@ -81,7 +81,6 @@ module ROM
         [name, defaults.merge(options)]
       end
 
-    end # Builder
-
-  end # Mapper
+    end # MapperBuilder
+  end # Relation
 end # ROM

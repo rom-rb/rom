@@ -10,24 +10,16 @@ module ROM
       class Definition
         include Adamantium::Flat
 
-        attr_reader :name, :attributes, :mapper
+        attr_reader :attributes, :mapper
 
         LOADERS = [:instance_variables, :attribute_hash, :attribute_accessors].freeze
-
-        # Build new mapping definition
-        #
-        # @api private
-        def self.build(header, &block)
-          new(header, &block)
-        end
 
         # Initialize a new Definition instance
         #
         # @return [undefined]
         #
         # @api private
-        def initialize(name, &block)
-          @name = name
+        def initialize(&block)
           @attributes = []
           @loader = :load_instance_variables
 
