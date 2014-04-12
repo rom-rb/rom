@@ -34,13 +34,21 @@ module ROM
     # @return [Mapper]
     #
     # @api public
-    def self.build(attributes, options = EMPTY_HASH)
-      defaults = { type: DEFAULT_LOADER, model: OpenStruct }.update(options)
+    def self.build(*args, &block)
+      if block
+        definition = Builder::Definition.new(&block)
+        build(definition.attributes, definition.options)
+      else
+        attributes = args.first
+        options = args[1] || EMPTY_HASH
 
-      header = Header.build(attributes)
-      loader = LoaderBuilder.call(header, defaults[:model], defaults[:type])
+        defaults = { type: DEFAULT_LOADER, model: OpenStruct }.update(options)
 
-      new(header, loader, defaults)
+        header = Header.build(attributes)
+        loader = LoaderBuilder.call(header, defaults[:model], defaults[:type])
+
+        new(header, loader, defaults)
+      end
     end
 
     # @api private

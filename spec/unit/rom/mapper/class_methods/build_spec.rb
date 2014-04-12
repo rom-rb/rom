@@ -52,4 +52,19 @@ describe Mapper, '.build' do
     its(:model)  { should be(model) }
     its(:header) { should eql(header) }
   end
+
+  describe 'using DSL' do
+    let(:header) { attributes }
+
+    it 'builds a mapper' do
+      mapper_model = model
+
+      mapper = Mapper.build do
+        model(mapper_model)
+        map :name, type: String, from: :user_name
+      end
+
+      expect(mapper).to eql(subject)
+    end
+  end
 end
