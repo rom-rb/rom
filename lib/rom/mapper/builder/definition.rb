@@ -41,11 +41,6 @@ module ROM
         end
 
         # @api private
-        def attribute_names
-          attributes.map(&:name)
-        end
-
-        # @api private
         def loader(name = Undefined)
           if name == Undefined
             @loader
@@ -58,12 +53,6 @@ module ROM
             @loader = :"load_#{name}"
           end
         end
-
-        # @api private
-        def header
-          @header.project(attributes.map(&:name))
-        end
-        memoize :header
 
         # Get or set mapper
         #
