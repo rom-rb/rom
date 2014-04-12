@@ -9,6 +9,10 @@ describe Mapper::Builder, '.call' do
   let(:env)      { Environment.setup(test: 'memory://test') }
   let(:schema)   { Hash[users: relation] }
 
+  before do
+    subject.finalize
+  end
+
   context 'when attribute mapping is used' do
     let(:mapper) { subject.mappers[:users] }
 
@@ -39,23 +43,13 @@ describe Mapper::Builder, '.call' do
   context 'when custom mapper is injected' do
     subject do
       custom_mapper = test_mapper
-      Mapper::Builder.call(schema) { relation(:users) { mapper(custom_mapper) } }
+      Mapper::Builder.call(schema) { relation(:users, custom_mapper) }
     end
 
     let(:test_mapper) { TestMapper.new(header, model) }
 
     it 'sets the custom mapper' do
       expect(subject.mappers[:users]).to be(test_mapper)
-    end
-  end
-
-  context 'when unknown relation name is used' do
-    subject { described_class.call(schema) { not_here(1, 'a') {} } }
-
-    it 'raises error' do
-      expect { subject }.to raise_error(
-        NoMethodError, /undefined method `not_here'/
-      )
     end
   end
 end

@@ -104,9 +104,7 @@ describe 'Defining relation mappings' do
     custom_mapper = TestMapper.new(schema[:users].header, custom_model)
 
     env.mapping do
-      relation(:users) do
-        mapper(custom_mapper)
-      end
+      relation(:users, custom_mapper)
     end
 
     users = env.finalize[:users]

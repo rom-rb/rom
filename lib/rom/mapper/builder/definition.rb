@@ -1,8 +1,5 @@
 # encoding: utf-8
 
-require 'rom/mapper'
-require 'rom/mapper/attribute'
-
 module ROM
   class Mapper
     class Builder
@@ -13,7 +10,7 @@ module ROM
       class Definition
         include Adamantium::Flat
 
-        attr_reader :attributes
+        attr_reader :name, :attributes, :mapper
 
         LOADERS = [:instance_variables, :attribute_hash, :attribute_accessors].freeze
 
@@ -29,15 +26,17 @@ module ROM
         # @return [undefined]
         #
         # @api private
-        def initialize(header, &block)
-          @header = header
-          @keys = header.keys.flat_map { |key_header| key_header.flat_map(&:name) }
+        def initialize(name, &block)
+          @name = name
           @attributes = []
           @loader = :load_instance_variables
 
           instance_eval(&block)
+        end
 
-          build_mapper unless mapper
+        # @api private
+        def options
+          { model: model, type: loader }
         end
 
         # @api private
@@ -51,29 +50,6 @@ module ROM
             end
 
             @loader = :"load_#{name}"
-          end
-        end
-
-        # Get or set mapper
-        #
-        # @example
-        #
-        #   Mapping.build do
-        #     users do
-        #       mapper my_custom_mapper
-        #     end
-        #   end
-        #
-        # @param [Object]
-        #
-        # @return [Object]
-        #
-        # @api public
-        def mapper(mapper = Undefined)
-          if mapper == Undefined
-            @mapper
-          else
-            @mapper = mapper
           end
         end
 
@@ -100,6 +76,30 @@ module ROM
           end
         end
 
+        # Get or set model for the mapper
+        #
+        # @example
+        #
+        #   Mapping.build do
+        #     users do
+        #       model User
+        #     end
+        #   end
+        #
+        # @param [Class]
+        #
+        # @return [Class]
+        #
+        # @api public
+        def mapper(mapper = Undefined)
+          if mapper == Undefined
+            @mapper
+          else
+            warn "setting mapper inside mapping block is deprecated - use relation(#{name.inspect}, your_mapper) instead (#{caller[0]})"
+            @mapper = mapper
+          end
+        end
+
         # Configure attribute mappings
         #
         # @example
@@ -117,31 +117,11 @@ module ROM
         #
         # @api public
         def map(*args)
-          if args.last.kind_of?(Hash)
-            attributes.concat([build_attribute(*args)])
+          if args.last.is_a?(Hash)
+            @attributes << args
           else
-            attributes.concat(args.map { |name| build_attribute(name) })
+            @attributes.concat(args.zip)
           end
-        end
-
-        private
-
-        # Build default rom mapper
-        #
-        # @api private
-        def build_mapper
-          @mapper = Mapper.build(attributes, model: model, type: loader)
-        end
-
-        def build_attribute(name, options = {})
-          header_name = options.fetch(:from, name)
-
-          defaults = {
-            key: @keys.include?(header_name),
-            type: @header[header_name].type.primitive
-          }
-
-          Attribute.build(name, defaults.merge(options))
         end
 
       end # Definition

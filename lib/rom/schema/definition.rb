@@ -64,7 +64,7 @@ module ROM
       #
       # @api private
       def [](name)
-        relations[name]
+        relations.fetch(name)
       end
 
       private
@@ -74,8 +74,8 @@ module ROM
       # @return [Axiom::Relation, Axiom::Relation::Base]
       #
       # @api private
-      def method_missing(*args)
-        self[args.first] || super
+      def method_missing(name, *)
+        relations[name] || super
       end
 
     end # Definition

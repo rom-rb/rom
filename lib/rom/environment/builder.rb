@@ -58,11 +58,14 @@ module ROM
 
       # @api private
       def finalize
+        schema  = self.schema.finalize
+        mappers = self.mappers.finalize
+
         mappers.each do |name, mapper|
           relations[name] = Relation.new(schema[name], mapper)
         end
 
-        Environment.new(repositories, schema.finalize, relations, mappers.finalize)
+        Environment.new(repositories, schema, relations, mappers)
       end
 
     end # Builder

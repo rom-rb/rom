@@ -19,6 +19,8 @@ describe Environment::Builder, '#mapping' do
       relation(:users) { map :name }
     end
 
+    builder.finalize
+
     expect(builder.mappers[:users]).to be_instance_of(Mapper)
   end
 end

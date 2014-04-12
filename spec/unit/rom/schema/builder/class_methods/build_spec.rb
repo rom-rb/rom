@@ -88,9 +88,7 @@ describe Schema::Builder, '.build' do
       end
 
       it 'raises error' do
-        expect { subject }.to raise_error(
-          NameError, /method `not_here'/
-        )
+        expect { subject }.to raise_error(NameError, /method `not_here'/)
       end
     end
   end
