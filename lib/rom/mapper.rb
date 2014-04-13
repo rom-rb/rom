@@ -3,6 +3,7 @@
 require 'ostruct'
 
 require 'rom/constants'
+require 'rom/mapper/builder/definition'
 require 'rom/mapper/header'
 require 'rom/mapper/loader_builder'
 
