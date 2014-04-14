@@ -2,15 +2,28 @@
 
 module ROM
   class Schema
-    class Definition
+    module Definition
 
       # Builder object for Axiom relation
       #
       # @private
       class Relation
-        include Equalizer.new(:header, :keys)
+        attr_reader :registry, :header, :keys, :wrappings, :groupings
 
-        attr_reader :registry
+        # Base relation builder object
+        #
+        class Base < self
+
+          # @api private
+          def repository(name = Undefined)
+            if name == Undefined
+              @repository
+            else
+              @repository = name
+            end
+          end
+
+        end # Base
 
         # @api private
         def initialize(registry, &block)
@@ -20,25 +33,6 @@ module ROM
           @wrappings = []
           @groupings = []
           instance_eval(&block)
-        end
-
-        # @api private
-        def call(name)
-          relation = Axiom::Relation::Base.new(name, build_header)
-
-          if @wrappings.any?
-            @wrappings.each { |wrapping| relation = relation.wrap(wrapping) }
-          end
-
-          if @groupings.any?
-            @groupings.each { |grouping| relation = relation.group(grouping) }
-          end
-
-          renames = @header.each_with_object({}) { |ary, mapping|
-            mapping[ary.first] = ary.last[:rename] if ary.last[:rename]
-          }
-
-          relation.rename(renames).optimize
         end
 
         # @api private
@@ -61,16 +55,18 @@ module ROM
           @keys.concat(attribute_names)
         end
 
+        # @api private
+        def renames
+          header.each_with_object({}) { |ary, mapping|
+            mapping[ary.first] = ary.last[:rename] if ary.last[:rename]
+          }
+        end
+
         private
 
         # @api private
         def method_missing(*args)
           registry[args.first] || super
-        end
-
-        # @api private
-        def build_header
-          Axiom::Relation::Header.coerce(@header, keys: @keys)
         end
 
       end # Relation

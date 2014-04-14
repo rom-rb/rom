@@ -3,31 +3,24 @@
 require 'spec_helper'
 
 describe Environment::Builder, '#schema' do
-  let(:repositories) { Hash.new }
-  let(:object)       { Environment::Builder.call(test: "memory://test") }
-  let(:block)        { -> { } }
+  subject(:builder) { Environment::Builder.new({}, schema, {}) }
 
-  fake(:builder) { Schema::Builder }
+  fake(:schema) { Schema::Builder }
 
-  before do
-    fake_class(Schema::Builder, build: -> { builder })
-  end
-
-  describe 'with a block' do
-    subject { object.schema(&block) }
+  context 'with a block' do
+    let(:block) { Proc.new {} }
 
     it 'calls the schema' do
-      expect(subject).to be(builder)
-      expect(builder).to have_received.call
+      stub(schema).call { schema }
+      expect(builder.schema(&block)).to be(schema)
+      expect(schema).to have_received.call(&block)
     end
   end
 
-  describe 'without a block' do
-    subject { object.schema }
-
-    it 'calls the schema' do
-      expect(subject).to be(builder)
-      expect(builder).not_to have_received.call
+  context 'without a block' do
+    it 'returns the schema' do
+      expect(builder.schema).to be(schema)
+      expect(schema).not_to have_received.call
     end
   end
 end

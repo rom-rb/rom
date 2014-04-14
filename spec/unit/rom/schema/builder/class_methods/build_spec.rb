@@ -2,9 +2,7 @@
 
 require 'spec_helper'
 
-describe Schema::Builder, '.build' do
-  include_context 'Environment'
-
+describe Schema::Builder, '.new' do
   let(:registry) { Hash[test: repository] }
 
   let(:keys) { [:id] }
@@ -12,7 +10,7 @@ describe Schema::Builder, '.build' do
   let(:schema) {
     key_args = keys
 
-    described_class.build(registry) do
+    described_class.new(registry).call do
       base_relation :users do
         repository :test
 
@@ -94,7 +92,7 @@ describe Schema::Builder, '.build' do
   end
 
   context 'without block' do
-    subject { Schema::Builder.build({}) }
+    subject { Schema::Builder.new({}) }
 
     it { should be_instance_of(Schema::Builder) }
   end

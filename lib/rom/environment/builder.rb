@@ -16,7 +16,9 @@ module ROM
     # Environment builder DSL
     #
     class Builder
-      attr_reader :repositories, :relations, :mappers
+      include Concord::Public.new(:repositories, :schema, :mappers)
+
+      attr_reader :relations
 
       # @api private
       def self.call(config)
@@ -24,15 +26,16 @@ module ROM
           hash[name.to_sym] = Repository.build(name, Addressable::URI.parse(uri))
         }
 
-        new(repositories)
+        schema = Schema::Builder.new(repositories)
+        mappers = Relation::MapperBuilder.new(schema)
+
+        new(repositories, schema, mappers)
       end
 
       # @api private
-      def initialize(repositories)
-        @repositories = repositories
+      def initialize(*args)
+        super
         @relations = {}
-        @schema = Schema::Builder.build(repositories)
-        @mappers = Relation::MapperBuilder.new(schema)
       end
 
       # @api private
