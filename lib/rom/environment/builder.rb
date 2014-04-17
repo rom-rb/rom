@@ -39,8 +39,8 @@ module ROM
       end
 
       # @api private
-      def schema(&block)
-        @schema.call(&block) if block
+      def schema(options = {}, &block)
+        @schema.call(options, &block) if block
         @schema
       end
 
@@ -61,6 +61,10 @@ module ROM
 
       # @api private
       def finalize
+        schema.automapped.each do |name, relation|
+          mappers.automap(name, relation)
+        end
+
         schema  = self.schema.finalize
         mappers = self.mappers.finalize
 

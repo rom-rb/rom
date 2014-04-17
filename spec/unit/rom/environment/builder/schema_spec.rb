@@ -13,7 +13,7 @@ describe Environment::Builder, '#schema' do
     it 'calls the schema' do
       stub(schema).call { schema }
       expect(builder.schema(&block)).to be(schema)
-      expect(schema).to have_received.call(&block)
+      expect(schema).to have_received.call({}, &block)
     end
   end
 

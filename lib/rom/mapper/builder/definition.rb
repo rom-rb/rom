@@ -8,7 +8,7 @@ module ROM
       #
       # @private
       class Definition
-        include Adamantium::Flat
+        include Equalizer.new(:attributes, :model, :loader)
 
         attr_reader :attributes, :mapper
 
@@ -23,7 +23,7 @@ module ROM
           @attributes = []
           @loader = :load_instance_variables
 
-          instance_eval(&block)
+          instance_eval(&block) if block
         end
 
         # @api private

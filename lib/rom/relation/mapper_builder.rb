@@ -1,5 +1,7 @@
 # encoding: utf-8
 
+require 'ostruct'
+
 require 'rom/mapper/builder/definition'
 require 'rom/mapper'
 
@@ -28,6 +30,17 @@ module ROM
       # @api public
       def call(&block)
         instance_eval(&block)
+      end
+
+      # @api public
+      def automap(name, relation)
+        definition = Mapper::Builder::Definition.new
+        definition.map(*relation.header.map(&:name))
+        definition.model(OpenStruct) # TODO: add model generator
+
+        @definitions[name] = definition
+
+        self
       end
 
       # @api public

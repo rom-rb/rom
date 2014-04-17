@@ -11,12 +11,14 @@ module ROM
     class Builder
       include Concord.new(:repositories)
 
-      attr_reader :relations
+      attr_reader :relations, :automapped, :options
 
       # @api private
       def initialize(repositories)
         super
         @relations = {}
+        @options = {}
+        @automapped = {}
       end
 
       # Return defined relation identified by name
@@ -33,9 +35,8 @@ module ROM
       end
 
       # @api private
-      def call(&block)
-        instance_eval(&block)
-        self
+      def call(options = {}, &block)
+        with_options(options) { instance_eval(&block) }
       end
 
       # Build a base relation
@@ -51,12 +52,17 @@ module ROM
       # @return [Definition]
       #
       # @api private
-      def base_relation(name, &block)
+      def base_relation(name, options = {}, &block)
         definition = Definition::Relation::Base.new(relations, &block)
         repository = repositories.fetch(definition.repository)
 
         repository[name] = build_relation(name, definition)
         relations[name]  = repository[name]
+        relation         = relations[name]
+
+        automapped[name] = relation if automap? || options[:automap]
+
+        relation
       end
 
       # Build a relation
@@ -92,6 +98,20 @@ module ROM
         definition.groupings.each { |grouping| relation = relation.group(grouping) }
 
         relation.rename(definition.renames).optimize
+      end
+
+      # @api private
+      def with_options(options)
+        @options = options
+        yield
+        self
+      ensure
+        @options = {}
+      end
+
+      # @api private
+      def automap?
+        options[:automap]
       end
 
       # @api private
