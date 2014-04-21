@@ -29,9 +29,7 @@ module ROM
         end
 
         # @api private
-        def call(tuples, relation)
-          mapper = relation.mapper
-
+        def call(tuples, mapper)
           tuples.each do |tuple|
             identity = mapper.identity_from_tuple(tuple)
 

@@ -58,8 +58,8 @@ module ROM
     class Reader
 
       # @api private
-      def call(tuples, relation)
-        tuples.each { |tuple| yield(relation.mapper.load(tuple)) }
+      def call(tuples, mapper)
+        tuples.each { |tuple| yield(mapper.load(tuple)) }
       end
 
     end
@@ -103,7 +103,7 @@ module ROM
     # @api public
     def each(&block)
       return to_enum unless block_given?
-      reader.call(relation.to_enum, self, &block)
+      reader.call(relation.to_enum, mapper, &block)
       self
     end
 
