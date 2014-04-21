@@ -12,19 +12,73 @@ module ROM
     class Relation
       include Charlatan.new(:relation, kind: ROM::Relation)
 
-      attr_reader :tracker
-      private :tracker
+      attr_reader :tracker, :identity_map
 
+      # Session reader uses identity map to fetch already loaded objects
+      #
       # @api private
-      def self.build(relation, tracker)
-        mapper = Mapper.build(relation.mapper, tracker)
-        new(relation.inject_mapper(mapper), tracker)
+      class SessionReader
+        include Concord.new(:identity_map)
+
+        attr_reader :on_loaded
+
+        # @api private
+        def initialize(*args, &block)
+          super
+          @on_loaded = block
+        end
+
+        # @api private
+        def call(tuples, relation)
+          mapper = relation.mapper
+
+          tuples.each do |tuple|
+            identity = mapper.identity_from_tuple(tuple)
+
+            yield identity_map.fetch_object(identity) {
+              on_loaded.call(identity, mapper.load(tuple), tuple)
+            }
+          end
+        end
+
       end
 
       # @api private
-      def initialize(relation, tracker)
-        super
-        @relation, @tracker = relation, tracker
+      def self.build(relation, tracker)
+        new(relation, tracker, IdentityMap.build)
+      end
+
+      # @api private
+      def initialize(relation, tracker, identity_map)
+        reader = SessionReader.new(identity_map, &method(:on_loaded))
+
+        @relation = relation.inject_reader(reader)
+        @tracker = tracker
+        @identity_map = identity_map
+
+        super(@relation, tracker, identity_map)
+      end
+
+      # @see ROM::Relation#insert
+      #
+      # @api public
+      def insert!(object)
+        identity_map.store(identity(object), object, mapper.dump(object))
+        __new__(relation.insert(object))
+      end
+
+      # @see ROM::Relation#update
+      #
+      # @api public
+      def update!(object, original_tuple)
+        __new__(relation.update(object, original_tuple))
+      end
+
+      # @see ROM::Relation#delete
+      #
+      # @api public
+      def delete!(object)
+        __new__(relation.delete(object))
       end
 
       # Transition an object into a saved state
@@ -38,7 +92,7 @@ module ROM
       #
       # @api public
       def save(object)
-        tracker.queue(state(object).save(relation))
+        tracker.queue(state(object).save)
         self
       end
 
@@ -51,7 +105,7 @@ module ROM
       #
       # @api public
       def update_attributes(object, tuple)
-        tracker.queue(state(object).update(relation, tuple))
+        tracker.queue(state(object).update(tuple))
         self
       end
 
@@ -63,7 +117,7 @@ module ROM
       #
       # @api public
       def delete(object)
-        tracker.queue(state(object).delete(relation))
+        tracker.queue(state(object).delete)
         self
       end
 
@@ -86,7 +140,13 @@ module ROM
       #
       # @api public
       def identity(object)
-        mapper.identity(object)
+        keys = mapper.identity(object)
+
+        if keys.empty?
+          object.__id__
+        else
+          keys
+        end
       end
 
       # Start tracking an object within this session
@@ -97,7 +157,7 @@ module ROM
       #
       # @api public
       def track(object)
-        tracker.store_transient(object, mapper)
+        tracker.store_transient(object, self)
         self
       end
 
@@ -120,7 +180,7 @@ module ROM
       #
       # @api public
       def dirty?(object)
-        state(object).transient? || mapper.dirty?(object)
+        state(object).transient? || identity_map.fetch_tuple(identity(object)) != mapper.dump(object)
       end
 
       # Check if an object is being tracked
@@ -132,6 +192,19 @@ module ROM
       # @api public
       def tracking?(object)
         tracker.include?(identity(object))
+      end
+
+      private
+
+      # @api private
+      def __new__(new_relation)
+        self.class.new(new_relation, tracker, identity_map)
+      end
+
+      # @api private
+      def on_loaded(identity, object, tuple)
+        tracker.store_persisted(object, self)
+        identity_map.store(identity, object, tuple)[identity]
       end
 
     end # Relation

@@ -5,7 +5,8 @@ module ROM
 
     # @api private
     class State
-      include Concord::Public.new(:object, :mapper)
+      include Adamantium::Flat
+      include Concord::Public.new(:object, :relation)
 
       TransitionError = Class.new(StandardError)
 
@@ -51,7 +52,7 @@ module ROM
 
       # @api private
       def identity
-        mapper.identity(object)
+        relation.identity(object)
       end
     end # State
 

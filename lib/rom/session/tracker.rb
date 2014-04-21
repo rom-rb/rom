@@ -47,13 +47,13 @@ module ROM
       end
 
       # @api private
-      def store_transient(object, mapper)
-        update(State::Transient.new(object, mapper))
+      def store_transient(object, relation)
+        update(State::Transient.new(object, relation))
       end
 
       # @api private
-      def store_persisted(object, mapper)
-        update(State::Persisted.new(object, mapper))
+      def store_persisted(object, relation)
+        update(State::Persisted.new(object, relation))
       end
 
     end # Tracker

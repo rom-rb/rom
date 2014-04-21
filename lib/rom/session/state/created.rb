@@ -6,13 +6,11 @@ module ROM
 
       # @api private
       class Created < self
-        include Concord::Public.new(:object, :mapper, :relation), Adamantium::Flat
+        include Adamantium::Flat
 
         # @api private
         def commit
-          relation.insert(object)
-          mapper.store_in_identity_map(object)
-          Persisted.new(object, mapper)
+          Persisted.new(object, relation.insert!(object))
         end
 
       end # Created

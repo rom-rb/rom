@@ -6,25 +6,24 @@ module ROM
 
       # @api private
       class Persisted < self
-        include Concord::Public.new(:object, :mapper)
 
         # @api private
-        def save(relation)
-          if mapper.dirty?(object)
-            Updated.new(object, mapper, relation)
+        def save
+          if relation.dirty?(object)
+            Updated.new(object, relation)
           else
             self
           end
         end
 
         # @api private
-        def update(relation, tuple)
-          Updated.new(object.update(tuple), mapper, relation)
+        def update(tuple)
+          Updated.new(object.update(tuple), relation)
         end
 
         # @api private
-        def delete(relation)
-          Deleted.new(object, mapper, relation)
+        def delete
+          Deleted.new(object, relation)
         end
 
       end # Persisted

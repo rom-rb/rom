@@ -50,13 +50,31 @@ module ROM
     include Equalizer.new(:mapper)
     include Charlatan.new(:relation, :kind => Axiom::Relation)
 
-    undef_method :sort_by
+    attr_reader :mapper, :reader
 
-    attr_reader :mapper
+    # Default relation reader object
+    #
+    # @api private
+    class Reader
 
-    def initialize(relation, mapper)
-      super(relation, mapper)
+      # @api private
+      def call(tuples, relation)
+        tuples.each { |tuple| yield(relation.mapper.load(tuple)) }
+      end
+
+    end
+
+    # @api public
+    def self.new(relation, mapper, reader = Reader.new)
+      super(relation, mapper, reader)
+    end
+
+    # @api private
+    def initialize(relation, mapper, reader)
+      super
+
       @mapper = mapper
+      @reader = reader
     end
 
     # Iterate over tuples yielded by the wrapped relation
@@ -83,9 +101,9 @@ module ROM
     # @return [Relation]
     #
     # @api public
-    def each
+    def each(&block)
       return to_enum unless block_given?
-      relation.each { |tuple| yield(mapper.load(tuple)) }
+      reader.call(relation.to_enum, self, &block)
       self
     end
 
@@ -162,6 +180,16 @@ module ROM
     # @api public
     def replace(objects)
       new(relation.replace(objects.map(&mapper.method(:dump))))
+    end
+
+    # @api public
+    def restrict(*args, &block)
+      new(relation.restrict(*args, &block))
+    end
+
+    # @api public
+    def sort_by(*args, &block)
+      new(relation.sort_by(*args, &block))
     end
 
     # Take objects form the relation with provided limit
@@ -265,20 +293,9 @@ module ROM
       end
     end
 
-    # Inject a new mapper into this relation
-    #
-    # @example
-    #
-    #   relation = ROM::Relation.new([], mapper)
-    #   relation.inject_mapper(new_mapper)
-    #
-    # @param [Object] a mapper object
-    #
-    # @return [Relation]
-    #
-    # @api public
-    def inject_mapper(mapper)
-      new(relation, mapper)
+    # @api private
+    def inject_reader(new_reader)
+      new(relation, mapper, new_reader)
     end
 
     # Join two relations
@@ -366,8 +383,8 @@ module ROM
     # @return [Relation]
     #
     # @api private
-    def new(new_relation, new_mapper = mapper)
-      self.class.new(new_relation, new_mapper)
+    def new(new_relation, new_mapper = mapper, new_reader = reader)
+      self.class.new(new_relation, new_mapper, new_reader)
     end
 
   end # class Relation

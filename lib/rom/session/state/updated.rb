@@ -6,20 +6,17 @@ module ROM
 
       # @api private
       class Updated < self
-        include Adamantium::Flat
-        include Concord::Public.new(:object, :mapper, :relation)
 
         # @api private
         def commit
-          relation.update(object, original_tuple)
-          Persisted.new(object, mapper)
+          Persisted.new(object, relation.update!(object, original_tuple))
         end
 
         private
 
         # @api private
         def original_tuple
-          mapper.identity_map.fetch_tuple(mapper.identity(object))
+          relation.identity_map.fetch_tuple(relation.identity(object))
         end
 
       end # Updated
