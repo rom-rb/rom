@@ -3,9 +3,8 @@ bundler_args: --without yard guard benchmarks
 script: "bundle exec rake metrics:coverage"
 rvm:
   - 1.9.3
-  - 2.0.0
-  - 2.1.1
-  - rbx
+  - 2.1.2
+  - rbx-2.1.2
   - jruby
   - ruby-head
 matrix:
