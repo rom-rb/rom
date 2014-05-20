@@ -1,5 +1,6 @@
 # Ruby Object Mapper
 
+[![Gitter chat](https://badges.gitter.im/rom-rb/chat.png)](https://gitter.im/rom-rb/chat)
 [![Gem Version](https://badge.fury.io/rb/rom.png)][gem]
 [![Build Status](https://travis-ci.org/rom-rb/rom.png?branch=master)][travis]
 [![Dependency Status](https://gemnasium.com/rom-rb/rom.png)][gemnasium]
