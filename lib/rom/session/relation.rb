@@ -84,7 +84,7 @@ module ROM
       # Transient object's state turns into Created
       # Persisted object's state turns into Updated
       #
-      # @param [Object] an object to be saved
+      # @param [Object] object an object to be saved
       #
       # @return [Session::Relation]
       #
@@ -96,8 +96,8 @@ module ROM
 
       # Queue an object to be updated
       #
-      # @param [Object] object to be updated
-      # @param [Hash] new attributes for the update
+      # @param [Object] object object to be updated
+      # @param [Hash] tuple new attributes for the update
       #
       # @return [self]
       #
@@ -109,7 +109,7 @@ module ROM
 
       # Transient an object into a deleted state
       #
-      # @param [Object] an object to be deleted
+      # @param [Object] object an object to be deleted
       #
       # @return [Session::Relation]
       #
@@ -121,7 +121,7 @@ module ROM
 
       # Return current state of the tracked object
       #
-      # @param [Object] an object
+      # @param [Object] object an object
       #
       # @return [Session::State]
       #
@@ -132,7 +132,7 @@ module ROM
 
       # Return object's identity
       #
-      # @param [Object] an object
+      # @param [Object] object an object
       #
       # @return [Array]
       #
@@ -149,7 +149,7 @@ module ROM
 
       # Start tracking an object within this session
       #
-      # @param [Object] an object to be track
+      # @param [Object] object an object to be tracked
       #
       # @return [Session::Relation]
       #
@@ -172,7 +172,7 @@ module ROM
 
       # Check if a tracked object is dirty
       #
-      # @param [Object] an object
+      # @param [Object] object an object
       #
       # @return [Boolean]
       #
@@ -183,7 +183,7 @@ module ROM
 
       # Check if an object is being tracked
       #
-      # @param [Object]
+      # @param [Object] object an object
       #
       # @return [Boolean]
       #
