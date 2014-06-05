@@ -5,14 +5,14 @@
 [![Dependency Status](https://gemnasium.com/rom-rb/rom.png)][gemnasium]
 [![Code Climate](https://codeclimate.com/github/rom-rb/rom.png)][codeclimate]
 [![Coverage Status](https://coveralls.io/repos/rom-rb/rom/badge.png?branch=master)][coveralls]
-[![Inline docs](http://inch-pages.github.io/github/rom-rb/rom.png)][inchpages]
+[![Inline docs](http://inch-ci.org/github/rom-rb/rom.png)][inchpages]
 
 [gem]: https://rubygems.org/gems/rom
 [travis]: https://travis-ci.org/rom-rb/rom
 [gemnasium]: https://gemnasium.com/rom-rb/rom
 [codeclimate]: https://codeclimate.com/github/rom-rb/rom
 [coveralls]: https://coveralls.io/r/rom-rb/rom
-[inchpages]: http://inch-pages.github.io/github/rom-rb/rom/
+[inchpages]: http://inch-ci.org/github/rom-rb/rom/
 
 Ruby Object Mapper is an implementation of [the Data Mapper](http://martinfowler.com/eaaCatalog/dataMapper.html)
 pattern in Ruby language. It consists of multiple loosely coupled pieces and uses
