@@ -54,6 +54,11 @@ module ROM
       # @api private
       def base_relation(name, options = {}, &block)
         definition = Definition::Relation::Base.new(relations, &block)
+
+        if definition.repository.nil?
+          raise ArgumentError.new("schema repository was not set")
+        end
+
         repository = repositories.fetch(definition.repository)
 
         repository[name] = build_relation(name, definition)
