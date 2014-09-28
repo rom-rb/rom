@@ -68,7 +68,7 @@ module Axiom
       REGISTRY.fetch(uri_scheme) {
         raise(
           UnknownAdapterError,
-          "#{uri_scheme.inspect} is no registered uri scheme"
+          "#{uri_scheme.inspect} is not registered uri scheme"
         )
       }
     end

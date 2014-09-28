@@ -18,7 +18,7 @@ describe Repository, '.build' do
 
   context 'with an unregistered uri scheme' do
     let(:uri) { Addressable::URI.parse('unregistered://test') }
-    let(:msg) { "#{uri.scheme.inspect} is no registered uri scheme" }
+    let(:msg) { "#{uri.scheme.inspect} is not registered uri scheme" }
 
     specify do
       expect { subject }.to raise_error(Axiom::UnknownAdapterError, msg)
