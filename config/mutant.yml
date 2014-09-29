@@ -1,5 +1,3 @@
 ---
-name: rom
-namespace:
-  - ROM::Relation
-  - ROM::Mapper
+name: your_lib
+namespace: YourLib

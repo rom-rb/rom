@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 describe Session::Relation, '#new' do
-  share_examples_for 'a new tracked object' do
+  shared_examples_for 'a new tracked object' do
     it { should be_instance_of(model) }
 
     it 'sets state to transient' do
@@ -11,7 +11,7 @@ describe Session::Relation, '#new' do
     end
 
     it 'auto-tracks the new object' do
-      expect(object.tracking?(subject)).to be_true
+      expect(object.tracking?(subject)).to be(true)
     end
   end
 

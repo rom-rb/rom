@@ -2,8 +2,6 @@ source 'https://rubygems.org'
 
 gemspec
 
-gem 'concord', '~> 0.1', git: 'https://github.com/mbj/concord.git', branch: 'master'
-
 group :test do
   gem 'axiom-memory-adapter', '~> 0.2'
   gem 'bogus', '~> 0.1'

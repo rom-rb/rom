@@ -5,7 +5,7 @@ require 'spec_helper'
 describe Relation, '#sort_by' do
   include_context 'Relation'
 
-  share_examples_for 'sorted relation' do
+  shared_examples_for 'sorted relation' do
     specify do
       should eql([jack, jade, jane, john])
     end

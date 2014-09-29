@@ -18,6 +18,6 @@ describe Session::Relation, '#track' do
   it { should be(subject) }
 
   it 'starts tracking the object' do
-    expect(users.tracking?(user)).to be_true
+    expect(users.tracking?(user)).to be(true)
   end
 end

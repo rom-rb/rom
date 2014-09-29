@@ -5,7 +5,7 @@ require 'spec_helper'
 describe Relation, '#restrict' do
   include_context 'Relation'
 
-  share_examples_for 'restricted relation' do
+  shared_examples_for 'restricted relation' do
     specify do
       should eq([jane])
     end
