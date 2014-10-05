@@ -8,7 +8,7 @@ describe Relation, '#one' do
   it 'limits the underlying relation' do
     stub(relation).take(2) { [john] }
     expect(relation.one).to eql(john)
-    relation.should have_received.take(2)
+    expect(relation).to have_received.take(2)
   end
 
   context 'when no block is given' do

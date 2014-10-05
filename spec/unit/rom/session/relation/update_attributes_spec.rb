@@ -18,7 +18,7 @@ describe Session::Relation, '#update_attributes' do
     context 'when dirty' do
       it_behaves_like 'a command method'
 
-      specify { state.should be_updated }
+      specify { expect(state).to be_updated }
     end
   end
 

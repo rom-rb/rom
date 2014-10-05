@@ -14,14 +14,14 @@ describe Session::Relation, '#save' do
 
     it_behaves_like 'a command method'
 
-    specify { state.should be_created }
+    specify { expect(state).to be_created }
   end
 
   context 'when an object is persisted' do
     context 'when not dirty' do
       it_behaves_like 'a command method'
 
-      specify { state.should be_persisted }
+      specify { expect(state).to be_persisted }
     end
 
     context 'when dirty' do
@@ -31,7 +31,7 @@ describe Session::Relation, '#save' do
 
       it_behaves_like 'a command method'
 
-      specify { state.should be_updated }
+      specify { expect(state).to be_updated }
     end
   end
 
