@@ -15,10 +15,6 @@ Gem::Specification.new do |gem|
   gem.test_files    = `git ls-files -- {spec}/*`.split("\n")
   gem.license       = 'MIT'
 
-  gem.add_dependency 'addressable',     '~> 2.3', '>= 2.3.3'
   gem.add_dependency 'concord',         '~> 0.1.4'
-  gem.add_dependency 'adamantium',      '~> 0.2.0'
-  gem.add_dependency 'charlatan',       '~> 0.1'
-  gem.add_dependency 'morpher',         '~> 0.2.1'
   gem.add_dependency 'sequel',          '~> 4.15'
 end

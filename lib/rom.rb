@@ -1,4 +1,7 @@
 module ROM
 end
 
-require "rom/version"
+require 'concord'
+
+require 'rom/version'
+require 'rom/relation'
