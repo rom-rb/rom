@@ -6,3 +6,4 @@ require 'sequel'
 
 require 'rom/version'
 require 'rom/relation'
+require 'rom/mapper'
