@@ -7,12 +7,3 @@ group :test do
   gem 'bogus', '~> 0.1'
   gem 'rubysl-bigdecimal', :platforms => :rbx
 end
-
-group :benchmarks do
-  gem 'perftools.rb'
-end
-
-gem 'devtools', git: 'https://github.com/rom-rb/devtools.git', branch: 'master'
-
-# Added by devtools
-eval_gemfile 'Gemfile.devtools'
