@@ -1,8 +1,5 @@
 require 'spec_helper'
 
-require 'concord'
-require 'sequel'
-
 DB = Sequel.connect("sqlite::memory")
 
 DB.run("CREATE TABLE users (id SERIAL, name STRING)")
