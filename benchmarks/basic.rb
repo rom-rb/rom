@@ -5,14 +5,26 @@ require 'bundler'
 
 Bundler.require
 
-profile = ENV['PROFILE'] || false
-
-require 'perftools' if profile
-require 'benchmark'
+require 'benchmark/ips'
 require 'rom'
-require 'axiom-memory-adapter'
+require 'active_record'
 
-PerfTools::CpuProfiler.start("./tmp/rom_profile") if profile
+ActiveRecord::Base.establish_connection(
+  :adapter => "sqlite3",
+  :database => ":memory:"
+)
+
+ActiveRecord::Schema.define do
+  create_table :users do |t|
+    t.string :name
+    t.string :email
+    t.integer :age
+  end
+end
+
+class ARUser < ActiveRecord::Base
+  self.table_name = :users
+end
 
 class User
   attr_reader :id, :name, :email, :age
@@ -26,21 +38,19 @@ def env
   ROM_ENV
 end
 
-ROM_ENV = ROM::Environment.setup(:memory => 'memory://test') do
+ROM_ENV = ROM.setup(sqlite: 'sqlite::memory') do
   schema do
     base_relation :users do
-      repository :memory
+      repository :sqlite
 
       attribute :id,    Integer
       attribute :name,  String
       attribute :email, String
       attribute :age,   Integer
-
-      key :id
     end
   end
 
-  mapping do
+  mappers do
     relation(:users) do
       map :id, :name, :email, :age
       model User
@@ -48,38 +58,31 @@ ROM_ENV = ROM::Environment.setup(:memory => 'memory://test') do
   end
 end
 
-COUNT = ENV.fetch('COUNT', 100).to_i
+ROM_ENV.sqlite.connection.run("create table users (id SERIAL, name STRING, email STRING, age INT)")
+
+COUNT = ENV.fetch('COUNT', 1000).to_i
 
 SEED = COUNT.times.map do |i|
   { :id    => i + 1,
     :name  => "name #{i}",
-    :email => "email_{i}@domain.com",
+    :email => "email_#{i}@domain.com",
     :age   => i*10 }
 end
 
 def seed
-  env.session do |session|
-    SEED.each do |attributes|
-      if env[:users].restrict(attributes).count == 0
-        user = session[:users].new(attributes)
-        session[:users].save(user)
-      end
-    end
-
-    session.flush
+  SEED.each do |attributes|
+    env.schema.users.insert(attributes)
+    ARUser.create(attributes)
   end
 end
 
-def delete
-  env[:users].each { |user| env[:users].delete(user) }
-end
-if profile
-  seed and delete
-  PerfTools::CpuProfiler.stop
-else
-  Benchmark.bm do |x|
-    x.report("seed")            { seed }
-    x.report("delete")          { delete }
-    x.report("seed and delete") { seed and delete }
-  end
+seed
+
+puts "LOADED #{env.schema.users.count} users via ROM/Sequel"
+puts "LOADED #{ARUser.count} users via ActiveRecord"
+
+Benchmark.ips do |x|
+  x.report("schema.users.to_a") { ROM_ENV.schema.users.to_a }
+  x.report("mappers.users.to_a") { ROM_ENV.mappers.users.to_a }
+  x.report("ARUser.all.to_a") { ARUser.all.to_a }
 end

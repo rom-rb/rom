@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-require File.expand_path('../lib/version', __FILE__)
+require File.expand_path('../lib/rom/version', __FILE__)
 
 Gem::Specification.new do |gem|
   gem.name          = 'rom'
@@ -15,11 +15,12 @@ Gem::Specification.new do |gem|
   gem.test_files    = `git ls-files -- {spec}/*`.split("\n")
   gem.license       = 'MIT'
 
-  gem.add_dependency 'addressable',     '~> 2.3', '>= 2.3.3'
-  gem.add_dependency 'concord',         '~> 0.1.4'
-  gem.add_dependency 'adamantium',      '~> 0.2.0'
-  gem.add_dependency 'axiom',           '~> 0.2.0'
-  gem.add_dependency 'axiom-optimizer', '~> 0.2.0'
-  gem.add_dependency 'charlatan',       '~> 0.1'
-  gem.add_dependency 'morpher',         '~> 0.2.1'
+  gem.add_dependency 'concord',     '~> 0.1.4'
+  gem.add_dependency 'addressable', '~> 2.3'
+  gem.add_dependency 'sequel',      '~> 4.15'
+  gem.add_dependency 'charlatan',   '~> 0.1'
+
+  gem.add_development_dependency 'rake'
+  gem.add_development_dependency 'rspec-core', '~> 3.1'
+  gem.add_development_dependency 'rspec-expectations', '~> 3.1'
 end

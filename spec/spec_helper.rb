@@ -1,49 +1,16 @@
 # encoding: utf-8
 
-if ENV['COVERAGE'] == 'true'
-  require 'simplecov'
-  require 'coveralls'
-
-  SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
-    SimpleCov::Formatter::HTMLFormatter,
-    Coveralls::SimpleCov::Formatter
-  ]
-
-  SimpleCov.start do
-    command_name 'spec:unit'
-
-    add_filter 'config'
-    add_filter 'lib/rom/support'
-    add_filter 'spec'
-  end
-end
-
-require 'devtools/spec_helper'
-
 require 'rom'
 
-require 'bogus/rspec'
-
 include ROM
-include SpecHelper
-include Morpher::NodeHelpers
 
-TEST_ENV = Environment.setup(test: 'memory://test') do
-  schema do
-    base_relation :users do
-      repository :test
+DB = Sequel.connect("sqlite::memory")
 
-      attribute :id,   Integer
-      attribute :name, String
+def seed(db = DB)
+  db.run("CREATE TABLE users (id SERIAL, name STRING)")
 
-      key :id
-    end
-  end
-
-  mapping do
-    relation(:users) do
-      model mock_model(:id, :name)
-      map :id, :name
-    end
-  end
+  db[:users].insert(id: 1, name: 'Jane')
+  db[:users].insert(id:2, name: 'Joe')
 end
+
+seed

@@ -14,78 +14,31 @@
 [coveralls]: https://coveralls.io/r/rom-rb/rom
 [inchpages]: http://inch-ci.org/github/rom-rb/rom/
 
-Ruby Object Mapper is an implementation of [the Data Mapper](http://martinfowler.com/eaaCatalog/dataMapper.html)
-pattern in Ruby language. It consists of multiple loosely coupled pieces and uses
-a powerful relational algebra library called [axiom](https://github.com/dkubb/axiom).
+ROM is an experimental ruby ORM.
 
-## Getting started
+## Status
 
-Currently the setup is a bit verbose. Automatization will come in the future once
-the API becomes stable.
+Project is being rebuilt from scratch. Watch this space.
 
-```
-gem install rom axiom-memory-adapter
-```
+## ROADMAP
 
-### 1. Set up environment and define schema with mappings
+The interface will be very similar to previous versions. The biggest
+change is using Sequel for RDBMS and adding a new RA in-memory layer for
+combining data in-memory.
 
-```ruby
-  require 'rom'
-  require 'axiom-memory-adapter'
+Here's a top-level TODO:
 
-  class User
-    attr_reader :id, :name
-
-    def initialize(attributes)
-      @id, @name = attributes.values_at(:id, :name)
-    end
-  end
-
-  env = ROM::Environment.setup(memory: 'memory://test') do
-    schema do
-      base_relation :users do
-        repository :memory
-
-        attribute :id,   Integer
-        attribute :name, String
-
-        key :id
-      end
-    end
-
-    mapping do
-      relation(:users) do
-        map :id, :name
-        model User
-      end
-    end
-  end
-```
-
-### 2. Work with Plain Old Ruby Objects
-
-```ruby
-  env.session do |session|
-    user = session[:users].new(id: 1, name: 'Jane')
-    session[:users].save(user)
-    session.flush
-  end
-
-  jane = env[:users].restrict(name: 'Jane').one
-```
+* Add adapter interface
+* Add sequel adapter
+* Add redis adapter (just to prove that stuff works with different adapters)
+* Add a couple of RA operations
+* Rebuild relation and mapper definition DSL
+* Release 0.3.0 \o/
 
 ## Community
 
-* [![Gitter chat](https://badges.gitter.im/rom-rb/chat.png)](https://gitter.im/rom-rb/chat) (we are trying it out as a potential IRC channel replacement)
-* #rom-rb channel on freenode
+* [![Gitter chat](https://badges.gitter.im/rom-rb/chat.png)](https://gitter.im/rom-rb/chat)
 * [Ruby Object Mapper](https://groups.google.com/forum/#!forum/rom-rb) mailing list
-
-## Authors
-
-* [Dan Kubb](https://github.com/dkubb)
-* [Markus Schirp](https://github.com/mbj)
-* [Martin Gamsjaeger](https://github.com/snusnu)
-* [Piotr Solnica](https://github.com/solnic)
 
 ## License
 

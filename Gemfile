@@ -3,16 +3,12 @@ source 'https://rubygems.org'
 gemspec
 
 group :test do
-  gem 'axiom-memory-adapter', '~> 0.2'
-  gem 'bogus', '~> 0.1'
-  gem 'rubysl-bigdecimal', :platforms => :rbx
+  gem 'sqlite3', platforms: [:mri, :rbx]
+  gem 'jdbc-sqlite3', platforms: :jruby
+  gem 'rubysl-bigdecimal', platforms: :rbx
 end
 
 group :benchmarks do
-  gem 'perftools.rb'
+  gem 'activerecord'
+  gem 'benchmark-ips'
 end
-
-gem 'devtools', git: 'https://github.com/rom-rb/devtools.git', branch: 'master'
-
-# Added by devtools
-eval_gemfile 'Gemfile.devtools'
