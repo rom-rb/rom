@@ -78,6 +78,9 @@ end
 
 seed
 
+puts "LOADED #{env.schema.users.count} users via ROM/Sequel"
+puts "LOADED #{ARUser.count} users via ActiveRecord"
+
 Benchmark.ips do |x|
   x.report("schema.users.to_a") { ROM_ENV.schema.users.to_a }
   x.report("mappers.users.to_a") { ROM_ENV.mappers.users.to_a }
