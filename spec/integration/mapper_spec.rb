@@ -3,7 +3,7 @@ require 'spec_helper'
 require 'ostruct'
 
 describe Mapper do
-  subject(:mapper) { Mapper.new(relation, user_model) }
+  subject(:mapper) { Mapper.new(relation, relation.header, user_model) }
 
   let(:relation) { Relation.new(DB[:users]) }
   let(:user_model) { Class.new(OpenStruct) { include Equalizer.new(:id, :name) } }

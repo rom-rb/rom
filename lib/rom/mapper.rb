@@ -1,7 +1,7 @@
 module ROM
 
   class Mapper
-    include Concord::Public.new(:relation, :model)
+    include Concord::Public.new(:relation, :header, :model)
     include Enumerable
 
     def each(&block)

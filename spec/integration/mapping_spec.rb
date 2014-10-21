@@ -24,6 +24,7 @@ describe Mapping do
       end
 
       expect(mappers.users.to_a).to eql([User.new(id: 231)])
+      expect(mappers.users.header).to eql(relations[:users].header)
     end
   end
 end

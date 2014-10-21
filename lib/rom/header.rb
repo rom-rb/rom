@@ -8,6 +8,10 @@ module ROM
     def initialize(attributes = {})
       @attributes = attributes
     end
+
+    def [](name)
+      attributes.fetch(name)
+    end
   end
 
 end
