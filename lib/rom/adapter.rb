@@ -1,4 +1,6 @@
 require 'addressable/uri'
+
+require 'rom/adapter/memory'
 require 'rom/adapter/sequel'
 
 module ROM
@@ -12,6 +14,7 @@ module ROM
       adapter =
         case uri.scheme
         when 'sqlite' then Adapter::Sequel
+        when 'memory' then Adapter::Memory
         else
           raise ArgumentError, "#{uri_string.inspect} uri is not supported"
         end

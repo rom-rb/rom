@@ -1,9 +1,35 @@
+require 'rom/ra/operation/join'
+
 module ROM
 
   class Schema
 
     class DSL
       attr_reader :env, :relations
+
+      class Relation
+        attr_reader :relations, :name
+
+        def initialize(relations, name)
+          @relations = relations
+          @name = name
+        end
+
+        def call(&block)
+          instance_exec(&block)
+          relations[name]
+        end
+
+        def join(left, right)
+          relations[name] = RA::Operation::Join.new(left, right)
+        end
+
+        private
+
+        def method_missing(name, *args)
+          relations[name] || super
+        end
+      end
 
       class BaseRelation
         attr_reader :env, :name, :repositories, :attributes, :datasets
@@ -24,7 +50,7 @@ module ROM
 
         def call(&block)
           instance_exec(&block)
-          Relation.new(datasets[name], Header.new(attributes))
+          ROM::Relation.new(datasets[name], Header.new(attributes))
         end
       end
 
@@ -35,6 +61,10 @@ module ROM
 
       def base_relation(name, &block)
         relations[name] = BaseRelation.new(env, name).call(&block)
+      end
+
+      def relation(name, &block)
+        relations[name] = Relation.new(relations, name).call(&block)
       end
 
       def call
