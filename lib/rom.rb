@@ -32,12 +32,12 @@ module ROM
   end
 
   def self.setup(options)
-    connections = options.each_with_object({}) do |(name, uri), hash|
-      hash[name] = Sequel.connect(uri)
+    adapters = options.each_with_object({}) do |(name, uri), hash|
+      hash[name] = Adapter.setup(uri)
     end
 
-    repositories = connections.each_with_object({}) do |(name, conn), hash|
-      hash[name] = Repository.new(conn)
+    repositories = adapters.each_with_object({}) do |(name, adapter), hash|
+      hash[name] = Repository.new(adapter)
     end
 
     Env.new(repositories)
@@ -46,5 +46,6 @@ module ROM
 end
 
 require 'rom/version'
+require 'rom/adapter'
 require 'rom/relation'
 require 'rom/mapper'

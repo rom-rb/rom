@@ -15,8 +15,9 @@ Gem::Specification.new do |gem|
   gem.test_files    = `git ls-files -- {spec}/*`.split("\n")
   gem.license       = 'MIT'
 
-  gem.add_dependency 'concord',         '~> 0.1.4'
-  gem.add_dependency 'sequel',          '~> 4.15'
+  gem.add_dependency 'concord',     '~> 0.1.4'
+  gem.add_dependency 'addressable', '~> 2.3'
+  gem.add_dependency 'sequel',      '~> 4.15'
 
   gem.add_development_dependency 'rake'
   gem.add_development_dependency 'rspec-core', '~> 3.1'
