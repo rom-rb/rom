@@ -3,7 +3,7 @@ require 'sequel'
 
 module ROM
 
-  def self.setup(options)
+  def self.setup(options, &block)
     adapters = options.each_with_object({}) do |(name, uri), hash|
       hash[name] = Adapter.setup(uri)
     end
@@ -12,7 +12,9 @@ module ROM
       hash[name] = Repository.new(adapter)
     end
 
-    Env.new(repositories)
+    env = Env.new(repositories)
+    env.instance_exec(&block) if block
+    env
   end
 
 end
