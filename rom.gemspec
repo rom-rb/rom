@@ -17,4 +17,8 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency 'concord',         '~> 0.1.4'
   gem.add_dependency 'sequel',          '~> 4.15'
+
+  gem.add_development_dependency 'rake'
+  gem.add_development_dependency 'rspec-core', '~> 3.1'
+  gem.add_development_dependency 'rspec-expectations', '~> 3.1'
 end
