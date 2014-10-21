@@ -6,7 +6,11 @@ include ROM
 
 DB = Sequel.connect("sqlite::memory")
 
-DB.run("CREATE TABLE users (id SERIAL, name STRING)")
+def seed(db = DB)
+  db.run("CREATE TABLE users (id SERIAL, name STRING)")
 
-DB[:users].insert(id: 1, name: 'Jane')
-DB[:users].insert(id:2, name: 'Joe')
+  db[:users].insert(id: 1, name: 'Jane')
+  db[:users].insert(id:2, name: 'Joe')
+end
+
+seed
