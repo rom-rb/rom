@@ -6,7 +6,7 @@ describe Mapper do
   subject(:mapper) { Mapper.new(relation, user_model) }
 
   let(:relation) { Relation.new(DB[:users]) }
-  let(:user_model) { OpenStruct }
+  let(:user_model) { Class.new(OpenStruct) { include Equalizer.new(:id, :name) } }
 
   let(:jane) { user_model.new(id: 1, name: 'Jane') }
   let(:joe) { user_model.new(id: 2, name: 'Joe') }
