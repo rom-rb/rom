@@ -16,7 +16,7 @@ describe Mapping do
   before do
     rom.sqlite.connection.run('CREATE TABLE users (id SERIAL)')
     rom.sqlite.connection[:users].insert(id: 231)
-    User = Class.new(OpenStruct)
+    User = Class.new(OpenStruct) { include Equalizer.new(:id) }
   end
 
   after do
