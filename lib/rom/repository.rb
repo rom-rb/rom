@@ -12,7 +12,7 @@ module ROM
     end
 
     def method_missing(name, *args)
-      Relation.new(connection[name])
+      connection[name]
     end
   end
 

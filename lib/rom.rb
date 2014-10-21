@@ -19,9 +19,12 @@ end
 
 require 'rom/version'
 
+require 'rom/header'
 require 'rom/relation'
 require 'rom/mapper'
 
 require 'rom/adapter'
 require 'rom/repository'
 require 'rom/env'
+
+require 'rom/schema'
