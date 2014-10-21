@@ -4,12 +4,12 @@ ROM is an experimental ruby ORM.
 
 ## Status
 
-[![Gem Version](https://badge.fury.io/rb/rom.png)][gem]
+[![Gem Version](https://badge.fury.io/rb/rom.svg)][gem]
 [![Build Status](https://travis-ci.org/rom-rb/rom.svg?branch=master)][travis]
 [![Dependency Status](https://gemnasium.com/rom-rb/rom.png)][gemnasium]
-[![Code Climate](https://codeclimate.com/github/rom-rb/rom.png)][codeclimate]
-[![Coverage Status](https://coveralls.io/repos/rom-rb/rom/badge.png?branch=master)][coveralls]
-[![Inline docs](http://inch-ci.org/github/rom-rb/rom.png)][inchpages]
+[![Code Climate](https://codeclimate.com/github/rom-rb/rom/badges/gpa.svg)][codeclimate]
+[![Test Coverage](https://codeclimate.com/github/rom-rb/rom/badges/coverage.svg)][codeclimate]
+[![Inline docs](http://inch-ci.org/github/rom-rb/rom.svg?branch=master)][inchpages]
 
 [gem]: https://rubygems.org/gems/rom
 [travis]: https://travis-ci.org/rom-rb/rom
