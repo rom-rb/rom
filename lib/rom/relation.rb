@@ -4,7 +4,6 @@ module ROM
 
   class Relation
     include Charlatan.new(:dataset)
-    include Enumerable
 
     attr_reader :header
 
@@ -14,6 +13,7 @@ module ROM
     end
 
     def each(&block)
+      return dataset.to_enum unless block
       dataset.each(&block)
     end
 

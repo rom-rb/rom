@@ -24,4 +24,10 @@ describe Relation do
     end
   end
 
+  describe '#select' do
+    it 'forwards to the dataset' do
+      expect(relation.select(:id).to_a).to eql([{id: 1}, {id: 2}])
+    end
+  end
+
 end
