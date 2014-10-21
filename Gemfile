@@ -7,3 +7,7 @@ group :test do
   gem 'jdbc-sqlite3', platforms: :jruby
   gem 'rubysl-bigdecimal', platforms: :rbx
 end
+
+group :benchmarks do
+  gem 'activerecord'
+end
