@@ -18,4 +18,10 @@ describe Relation do
     end
   end
 
+  describe '#where' do
+    it 'forwards to the dataset' do
+      expect(relation.where(name: 'Joe').first).to eql(joe)
+    end
+  end
+
 end

@@ -1,7 +1,9 @@
+require 'charlatan'
+
 module ROM
 
   class Relation
-    include Concord::Public.new(:dataset)
+    include Charlatan.new(:dataset)
     include Enumerable
 
     def each(&block)
