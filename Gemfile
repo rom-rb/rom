@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 gemspec
 
 group :test do
-  gem 'sqlite3'
-  gem 'rubysl-bigdecimal', :platforms => :rbx
+  gem 'sqlite3', platforms: [:mri, :rbx]
+  gem 'jdbc-sqlite3', platforms: :jruby
+  gem 'rubysl-bigdecimal', platforms: :rbx
 end
