@@ -5,7 +5,7 @@ require 'bundler'
 
 Bundler.require
 
-require 'benchmark'
+require 'benchmark/ips'
 require 'rom'
 require 'active_record'
 
@@ -78,8 +78,8 @@ end
 
 seed
 
-Benchmark.bm do |x|
-  x.report("schema.users.to_a") { COUNT.times { ROM_ENV.schema.users.to_a } }
-  x.report("mappers.users.to_a") { COUNT.times { ROM_ENV.mappers.users.to_a } }
-  x.report("ARUser.all.to_a") { COUNT.times { ARUser.all.to_a } }
+Benchmark.ips do |x|
+  x.report("schema.users.to_a") { ROM_ENV.schema.users.to_a }
+  x.report("mappers.users.to_a") { ROM_ENV.mappers.users.to_a }
+  x.report("ARUser.all.to_a") { ARUser.all.to_a }
 end

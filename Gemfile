@@ -10,4 +10,5 @@ end
 
 group :benchmarks do
   gem 'activerecord'
+  gem 'benchmark-ips'
 end
