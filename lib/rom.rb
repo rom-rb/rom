@@ -28,3 +28,4 @@ require 'rom/repository'
 require 'rom/env'
 
 require 'rom/schema'
+require 'rom/mapping'
