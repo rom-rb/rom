@@ -85,18 +85,13 @@ puts rom.relations.users(mapper: true).by_name("Jane").adults.to_a.inspect
 
 ## ROADMAP
 
-The interface will be very similar to previous versions. The biggest
-change is using Sequel for RDBMS and adding a new RA in-memory layer for
-combining data in-memory.
-
 Here's a top-level TODO:
 
-* Add adapter interface
-* Add sequel adapter
 * Add redis adapter (just to prove that stuff works with different adapters)
-* Add a couple of RA operations
-* Rebuild relation and mapper definition DSL
-* Release 0.3.0 \o/
+* Add a couple of RA operations (there's just Join now)
+* Release 0.3.0.alpha \o/
+
+Please refer to (issues)[https://github.com/rom-rb/rom/issues] for details
 
 ## Community
 
