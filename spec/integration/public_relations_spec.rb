@@ -6,12 +6,22 @@ describe 'Defining public relations' do
   before do
     conn = rom.sqlite.connection
 
-    conn.run('create table tasks (title STRING, priority INT)')
+    conn.run('create table users (name STRING, email STRING)')
+    conn.run('create table tasks (name STRING, title STRING, priority INT)')
 
-    conn[:tasks].insert(title: "be nice", priority: 1)
-    conn[:tasks].insert(title: "be cool", priority: 2)
+    conn[:users].insert(name: "Joe", email: "joe@doe.org")
+    conn[:users].insert(name: "Jane", email: "jane@doe.org")
+    conn[:tasks].insert(name: "Joe", title: "be nice", priority: 1)
+    conn[:tasks].insert(name: "Jane", title: "be cool", priority: 2)
 
     rom.schema do
+      base_relation(:users) do
+        repository :sqlite
+
+        attribute :name, String
+        attribute :email, String
+      end
+
       base_relation(:tasks) do
         repository :sqlite
 
@@ -32,11 +42,24 @@ describe 'Defining public relations' do
           where(title: title)
         end
       end
+
+      users do
+        def with_tasks
+          natural_join(tasks)
+        end
+      end
     end
 
     tasks = rom.relations.tasks
 
-    expect(tasks.high_priority.by_title("be nice").to_a).to eql([title: "be nice", priority: 1])
-    expect(tasks.by_title("be cool").to_a).to eql([title: "be cool", priority: 2])
+    expect(tasks.high_priority.by_title("be nice").to_a).to eql([name: "Joe", title: "be nice", priority: 1])
+    expect(tasks.by_title("be cool").to_a).to eql([name: "Jane", title: "be cool", priority: 2])
+
+    users = rom.relations.users
+
+    expect(users.with_tasks.to_a).to eql(
+      [{ name: "Joe", email: "joe@doe.org", title: "be nice", priority: 1 },
+       { name: "Jane", email: "jane@doe.org", title: "be cool", priority: 2 }]
+    )
   end
 end

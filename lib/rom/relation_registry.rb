@@ -5,15 +5,24 @@ module ROM
     class DSL
 
       class RelationBuilder
-        attr_reader :relation
+        attr_reader :relation, :schema
 
-        def initialize(relation)
+        def initialize(relation, schema)
           @relation = relation
+          @schema = schema
         end
 
         def call(&block)
+          relations = schema.relations
+
           mod = Module.new
           mod.module_exec(&block)
+
+          mod.module_exec do
+            relations.each do |name, relation|
+              define_method(name) { relation.dataset }
+            end
+          end
 
           Class.new(Relation).send(:include, mod).new(relation)
         end
@@ -32,7 +41,7 @@ module ROM
       end
 
       def method_missing(name, *args, &block)
-        builder = RelationBuilder.new(schema[name])
+        builder = RelationBuilder.new(schema[name], schema)
         relation = builder.call(&block)
 
         relations[name] = relation
