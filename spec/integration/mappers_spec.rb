@@ -32,10 +32,21 @@ describe Mapping do
         end
       end
 
+      rom.relations do
+        users do
+          def by_id(id)
+            where(id: id)
+          end
+        end
+      end
+
       users = rom.mappers.users
 
       expect(users.to_a).to eql([User.new(id: 231)])
       expect(users.header).to eql(rom.schema[:users].header)
+
+      expect(rom.relations.users(mapper: true).by_id(231).to_a).to eql([User.new(id: 231)])
+      expect(rom.relations.users(mapper: true).by_id(231).header).to eql(rom.schema[:users].header)
     end
   end
 end

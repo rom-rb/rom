@@ -19,15 +19,16 @@ module ROM
         end
       end
 
-      attr_reader :schema, :relations
+      attr_reader :schema, :mappers, :relations
 
-      def initialize(schema)
+      def initialize(schema, mappers)
         @schema = schema
+        @mappers = mappers
         @relations = {}
       end
 
       def call
-        RelationRegistry.new(relations)
+        RelationRegistry.new(relations, mappers)
       end
 
       def method_missing(name, *args, &block)
@@ -38,10 +39,10 @@ module ROM
       end
     end
 
-    include Concord.new(:relations)
+    include Concord.new(:relations, :mappers)
 
-    def self.define(relations, &block)
-      dsl = DSL.new(relations)
+    def self.define(schema, mappers, &block)
+      dsl = DSL.new(schema, mappers)
       dsl.instance_exec(&block)
       dsl.call
     end
@@ -56,8 +57,15 @@ module ROM
 
     private
 
-    def method_missing(name)
-      relations[name]
+    def method_missing(name, *args)
+      options = args.first || {}
+      relation = relations[name]
+
+      if options[:mapper]
+        mappers[name].new(relation)
+      else
+        relation
+      end
     end
 
   end

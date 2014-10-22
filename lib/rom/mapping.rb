@@ -50,9 +50,15 @@ module ROM
       dsl.call
     end
 
+    def [](name)
+      mappers.fetch(name)
+    end
+
     def respond_to_missing?(name, include_private = false)
       mappers.key?(name)
     end
+
+    private
 
     def method_missing(name)
       mappers.fetch(name)
