@@ -17,7 +17,6 @@ describe 'Defining public relations' do
 
         attribute :title, String
         attribute :priority, Integer
-        attribute :created_at, DateTime
       end
     end
   end
