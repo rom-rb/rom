@@ -91,7 +91,7 @@ Here's a top-level TODO:
 * Add a couple of RA operations (there's just Join now)
 * Release 0.3.0.alpha \o/
 
-Please refer to (issues)[https://github.com/rom-rb/rom/issues] for details
+Please refer to [issues](https://github.com/rom-rb/rom/issues) for details
 
 ## Community
 
