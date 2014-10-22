@@ -35,8 +35,9 @@ describe 'Defining public relations' do
       end
     end
 
-    tasks = rom.relations[:tasks].high_priority.by_title("be nice").to_a
+    tasks = rom.relations[:tasks]
 
-    expect(tasks).to eql([title: "be nice", priority: 1])
+    expect(tasks.high_priority.by_title("be nice").to_a).to eql([title: "be nice", priority: 1])
+    expect(tasks.by_title("be cool").to_a).to eql([title: "be cool", priority: 2])
   end
 end
