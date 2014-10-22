@@ -24,6 +24,7 @@ require 'rom/version'
 require 'rom/header'
 require 'rom/relation'
 require 'rom/mapper'
+require 'rom/reader'
 
 require 'rom/adapter'
 require 'rom/repository'

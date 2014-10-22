@@ -9,6 +9,11 @@ module ROM
       @mappers = nil
     end
 
+    def relations(&block)
+      @relations = Reader.define(schema, &block) if block
+      @relations
+    end
+
     def schema(&block)
       @schema = Schema.define(self, &block) if block
       @schema
@@ -26,6 +31,8 @@ module ROM
     def respond_to_missing?(name, include_private = false)
       repositories.key?(name)
     end
+
+    private
 
     def method_missing(name, *args)
       repositories.fetch(name)
