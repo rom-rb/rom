@@ -29,13 +29,13 @@ module ROM
         klass = Class.new(Relation) { include(mod) }
 
         klass.class_eval <<-RUBY, __FILE__, __LINE__ + 1
-            def self.name
-        #{klass_name.inspect}
-            end
+          def self.name
+            #{klass_name.inspect}
+          end
 
-            def inspect
-              "#<#{klass_name} header=#\{header.inspect\} dataset=#\{dataset.inspect\}>"
-            end
+          def inspect
+            "#<#{klass_name} header=#\{header.inspect\} dataset=#\{dataset.inspect\}>"
+          end
         RUBY
 
         klass.new(relation.dataset, relation.header)

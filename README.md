@@ -24,8 +24,15 @@ Project is being rebuilt from scratch. Watch this space.
 
 ``` ruby
 rom = ROM.setup(sqlite: "sqlite::memory")
+
 rom.sqlite.connection.run(
-  "CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT, name STRING, age INTEGER)"
+  <<-SQL
+  CREATE TABLE users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name STRING,
+    age INTEGER
+  )
+  SQL
 )
 
 rom.schema do
