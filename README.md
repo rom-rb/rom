@@ -20,6 +20,62 @@ ROM is an experimental ruby ORM.
 
 Project is being rebuilt from scratch. Watch this space.
 
+## Synopsis
+
+```
+rom = ROM.setup(sqlite: "sqlite::memory")
+rom.sqlite.connection.run(
+  "CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT, name STRING, age INTEGER)"
+)
+
+rom.schema do
+  base_relation(:users) do
+    repository :sqlite
+
+    attribute :id, Integer
+    attribute :name, String
+    attribute :age, Integer
+  end
+end
+
+# mapping to PORO
+class User
+  attr_reader :id, :name, :age
+
+  def initialize(attributes)
+    @id, @name, @age = attributes.values_at(:id, :name, :age)
+  end
+end
+
+rom.mappers do
+  relation(:users) do
+    model User
+    map :id, :name, :age
+  end
+end
+
+rom.relations do
+  users do
+    def by_name(name)
+      where(name: name)
+    end
+
+    def adults
+      where { age >= 18 }
+    end
+  end
+end
+
+rom.schema[:users].insert(name: "Joe", age: 17)
+rom.schema[:users].insert(name: "Jane", age: 18)
+
+puts rom.relations.users.by_name("Jane").adults.to_a.inspect
+# => [{:id=>2, :name=>"Jane", :age=>18}]
+
+puts rom.relations.users(mapper: true).by_name("Jane").adults.to_a.inspect
+# => [#<User:0x007fdba161cc48 @id=2, @name="Jane", @age=18>]
+```
+
 ## ROADMAP
 
 The interface will be very similar to previous versions. The biggest
