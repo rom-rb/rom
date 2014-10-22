@@ -10,7 +10,7 @@ module ROM
     end
 
     def relations(&block)
-      @relations = Reader.define(schema, &block) if block
+      @relations = RelationRegistry.define(schema, &block) if block
       @relations
     end
 
