@@ -1,7 +1,7 @@
-require 'rom/mapping/mapper_builder'
+require 'rom/mapper_registry/mapper_builder'
 
 module ROM
-  class Mapping
+  class MapperRegistry
 
     class DSL
       attr_reader :relations, :mappers
@@ -18,7 +18,7 @@ module ROM
       end
 
       def call
-        Mapping.new(@mappers)
+        MapperRegistry.new(@mappers)
       end
 
     end

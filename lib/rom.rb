@@ -24,11 +24,11 @@ require 'rom/version'
 require 'rom/header'
 require 'rom/relation'
 require 'rom/mapper'
-require 'rom/relation_registry'
 
 require 'rom/adapter'
 require 'rom/repository'
 require 'rom/env'
 
 require 'rom/schema'
-require 'rom/mapping'
+require 'rom/relation_registry'
+require 'rom/mapper_registry'

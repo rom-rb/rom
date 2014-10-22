@@ -1,5 +1,5 @@
 module ROM
-  class Mapping
+  class MapperRegistry
 
     class MapperBuilder
       attr_reader :relation, :model_class, :attributes

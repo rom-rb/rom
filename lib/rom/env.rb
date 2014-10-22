@@ -20,7 +20,7 @@ module ROM
     end
 
     def mappers(&block)
-      @mappers = Mapping.define(schema, &block) if block
+      @mappers = MapperRegistry.define(schema, &block) if block
       @mappers
     end
 

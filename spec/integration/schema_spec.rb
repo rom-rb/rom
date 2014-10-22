@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Schema do
+describe 'Defining schema' do
   let(:rom) { ROM.setup(sqlite: 'sqlite::memory', memory: 'memory://test') }
 
   before do

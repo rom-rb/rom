@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'ostruct'
 
-describe Mapping do
+describe 'Defining mappers' do
   let(:rom) do
     ROM.setup(sqlite: 'sqlite::memory') do
       schema do

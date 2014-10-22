@@ -1,8 +1,8 @@
-require 'rom/mapping/dsl'
+require 'rom/mapper_registry/dsl'
 
 module ROM
 
-  class Mapping
+  class MapperRegistry
     include Concord.new(:mappers)
 
     def self.define(relations, &block)
