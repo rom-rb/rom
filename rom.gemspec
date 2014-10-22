@@ -19,6 +19,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'addressable', '~> 2.3'
   gem.add_dependency 'sequel',      '~> 4.15'
   gem.add_dependency 'charlatan',   '~> 0.1'
+  gem.add_dependency 'inflecto',    '~> 0.0.2'
 
   gem.add_development_dependency 'rake'
   gem.add_development_dependency 'rspec-core', '~> 3.1'
