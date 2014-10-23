@@ -7,6 +7,14 @@ describe RA::Operation::Join do
   let(:left) { Relation.new(DB[:users]) }
   let(:right) { [{ name: 'Jane', age: 21 }] }
 
+  before do
+    seed
+  end
+
+  after do
+    deseed
+  end
+
   describe '#each' do
     it 'yields joined relation' do
       result = []

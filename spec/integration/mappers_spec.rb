@@ -3,7 +3,7 @@ require 'ostruct'
 
 describe 'Defining mappers' do
   let(:rom) do
-    ROM.setup(sqlite: 'sqlite::memory') do
+    ROM.setup(sqlite: SEQUEL_TEST_DB_URI) do
       schema do
         base_relation(:users) do
           repository :sqlite
@@ -20,6 +20,7 @@ describe 'Defining mappers' do
   end
 
   after do
+    rom.sqlite.connection.drop_table? :users
     Object.send(:remove_const, :User)
   end
 

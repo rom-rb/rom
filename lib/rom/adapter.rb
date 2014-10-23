@@ -13,7 +13,7 @@ module ROM
 
       adapter =
         case uri.scheme
-        when 'sqlite' then Adapter::Sequel
+        when 'sqlite', 'jdbc' then Adapter::Sequel
         when 'memory' then Adapter::Memory
         else
           raise ArgumentError, "#{uri_string.inspect} uri is not supported"

@@ -1,14 +1,20 @@
 require 'spec_helper'
 
 describe ROM, '.setup' do
+  let(:rom) { ROM.setup(sqlite: SEQUEL_TEST_DB_URI) }
   let(:jane) { { id: 1, name: 'Jane' } }
   let(:joe) { { id: 2, name: 'Joe' } }
 
-  it 'configures relations' do
-    rom = ROM.setup(sqlite: "sqlite::memory")
 
+  before do
     seed(rom.sqlite.connection)
+  end
 
+  after do
+    deseed(rom.sqlite.connection)
+  end
+
+  it 'configures relations' do
     expect(rom.sqlite.users.to_a).to eql([jane, joe])
   end
 end
