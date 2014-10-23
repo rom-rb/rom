@@ -1,29 +1,49 @@
 require "spec_helper"
 require "rom/ra/operation/join"
 
-describe RA::Operation::Join do
-  subject(:join) { RA::Operation::Join.new(left, right) }
-
-  let(:left) { Relation.new(DB[:users]) }
-  let(:right) { [{ name: 'Jane', age: 21 }] }
+describe 'Join operation between two repositories' do
+  let(:rom) { ROM.setup(sqlite: SEQUEL_TEST_DB_URI, memory: "memory://test") }
 
   before do
-    seed
+    seed(rom.sqlite.connection)
   end
 
   after do
-    deseed
+    deseed(rom.sqlite.connection)
   end
 
-  describe '#each' do
-    it 'yields joined relation' do
-      result = []
+  specify 'defining a joined relation' do
+    rom.schema do
+      base_relation(:users) do
+        repository :sqlite
 
-      join.each do |user|
-        result << user
+        attribute :id, Integer
+        attribute :name, String
       end
 
-      expect(result).to eql([{ id: 1, name: 'Jane', age: 21 }])
+      base_relation(:tasks) do
+        repository :memory
+
+        attribute :name, String
+        attribute :title, String
+      end
     end
+
+    rom.relations do
+      users do
+        def with_tasks
+          RA.join(users, tasks)
+        end
+      end
+    end
+
+    rom.schema.tasks << { name: 'Joe', title: 'Be happy' }
+
+    users = rom.relations.users
+
+    expect(users.with_tasks.to_a).to eql(
+      [{ id: 2, name: 'Joe', title: 'Be happy' }]
+    )
   end
+
 end

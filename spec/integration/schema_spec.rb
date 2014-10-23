@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'Defining schema' do
-  let(:rom) { ROM.setup(sqlite: SEQUEL_TEST_DB_URI, memory: 'memory://test') }
+  let(:rom) { ROM.setup(sqlite: SEQUEL_TEST_DB_URI) }
 
   before do
     seed(rom.sqlite.connection)
@@ -20,29 +20,14 @@ describe 'Defining schema' do
           attribute :user_id, Integer
           attribute :name, String
         end
-
-        base_relation(:tasks) do
-          repository :memory
-
-          attribute :name, String
-          attribute :title, String
-        end
-
-        relation(:users_with_tasks) do
-          join(users, tasks)
-        end
       end
 
       header = Header.new(user_id: { type: Integer }, name: { type: String })
 
       schema = rom.schema
 
-      schema.tasks << { name: 'Joe', title: 'Be happy' }
-
       expect(schema.users.to_a).to eql(rom.sqlite.users.to_a)
       expect(schema.users.header).to eql(header)
-
-      expect(schema.users_with_tasks.to_a).to eql([{ id: 2, name: 'Joe', title: 'Be happy' }])
     end
   end
 end

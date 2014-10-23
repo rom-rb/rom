@@ -5,8 +5,12 @@ module ROM
 
   module RA
 
-    def self.group(relation, options)
-      Operation::Group.new(relation, options)
+    def self.join(*args)
+      Operation::Join.new(*args)
+    end
+
+    def self.group(*args)
+      Operation::Group.new(*args)
     end
 
   end
