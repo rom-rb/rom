@@ -28,3 +28,5 @@ end
 def deseed(db = DB)
   db.drop_table? :users
 end
+
+Dir[Pathname(__FILE__).dirname.join('shared/*.rb').to_s].each { |f| puts f; require f }

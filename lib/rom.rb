@@ -32,3 +32,5 @@ require 'rom/env'
 require 'rom/schema'
 require 'rom/relation_registry'
 require 'rom/mapper_registry'
+
+require 'rom/ra'
