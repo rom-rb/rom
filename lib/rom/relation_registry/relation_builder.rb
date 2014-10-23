@@ -15,7 +15,7 @@ module ROM
       def call(&block)
         relations = schema.relations
 
-        mod = Module.new { include RA }
+        mod = Module.new
         mod.module_exec(&block)
 
         mod.module_exec do
