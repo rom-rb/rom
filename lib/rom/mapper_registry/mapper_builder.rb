@@ -8,12 +8,19 @@ module ROM
         @relation = relation
       end
 
-      def model(model_class)
-        @model_class = model_class
-      end
+      def map_to_model(model_class, *attrs)
+        domain_model = Class.new(Object) do
+          attr_accessor *attrs
 
-      def map(*names)
-        @attributes = names.each_with_object({}) { |name, h| h[name] = { type: relation.header[name][:type] } }
+          def initialize(params)
+            params.each do |name, value|
+              send("#{name}=", value)
+            end
+          end
+        end
+
+        @model_class = Object.const_set(model_class, domain_model)
+        @attributes = attrs.each_with_object({}) { |name, h| h[name] = { type: relation.header[name][:type] } }
       end
 
       def call
