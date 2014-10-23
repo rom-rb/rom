@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'Defining public relations' do
-  let(:rom) { ROM.setup(sqlite: "sqlite::memory") }
+  let(:rom) { ROM.setup(sqlite: SEQUEL_TEST_DB_URI) }
 
   before do
     conn = rom.sqlite.connection
@@ -29,6 +29,12 @@ describe 'Defining public relations' do
         attribute :priority, Integer
       end
     end
+  end
+
+  after do
+    conn = rom.sqlite.connection
+    conn.drop_table? :users
+    conn.drop_table? :tasks
   end
 
   it 'allows to expose chainable relations' do

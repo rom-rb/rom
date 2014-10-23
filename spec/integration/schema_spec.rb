@@ -1,10 +1,14 @@
 require 'spec_helper'
 
 describe 'Defining schema' do
-  let(:rom) { ROM.setup(sqlite: 'sqlite::memory', memory: 'memory://test') }
+  let(:rom) { ROM.setup(sqlite: SEQUEL_TEST_DB_URI, memory: 'memory://test') }
 
   before do
     seed(rom.sqlite.connection)
+  end
+
+  after do
+    deseed(rom.sqlite.connection)
   end
 
   describe '.define' do

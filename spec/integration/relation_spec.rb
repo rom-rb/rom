@@ -6,6 +6,14 @@ describe Relation do
   let(:jane) { { id: 1, name: 'Jane' } }
   let(:joe) { { id: 2, name: 'Joe' } }
 
+  before do
+    seed
+  end
+
+  after do
+    deseed
+  end
+
   describe "#each" do
     it "yields all objects" do
       result = []
