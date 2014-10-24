@@ -27,6 +27,11 @@ module ROM
       self
     end
 
+    def delete
+      dataset.delete
+      self
+    end
+
   end
 
 end

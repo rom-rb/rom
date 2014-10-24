@@ -56,4 +56,12 @@ describe Relation do
     end
   end
 
+  describe '#delete' do
+    it 'returns relation without the deleted tuple' do
+      users = relation.where(id: 2).delete
+
+      expect(users.where(id: 2)).to be_empty
+    end
+  end
+
 end
