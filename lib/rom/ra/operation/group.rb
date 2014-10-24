@@ -3,8 +3,18 @@ module ROM
     class Operation
 
       class Group
-        include Concord::Public.new(:relation, :options)
+        # FIXME: only reading from a relation should be allowed here so this is
+        #       obviously too much
+        include Charlatan.new(:relation)
+
         include Enumerable
+
+        attr_reader :options
+
+        def initialize(relation, options)
+          super
+          @options = options
+        end
 
         def each(&block)
           return to_enum unless block
