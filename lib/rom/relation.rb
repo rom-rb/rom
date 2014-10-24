@@ -22,6 +22,11 @@ module ROM
       self
     end
 
+    def update(tuple)
+      dataset.update(tuple)
+      self
+    end
+
   end
 
 end

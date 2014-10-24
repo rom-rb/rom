@@ -47,4 +47,13 @@ describe Relation do
     end
   end
 
+  describe '#update' do
+    it 'returns relation with updated tuple' do
+      tuple = { name: 'Jane Doe' }
+      users = relation.where(id: 1).update(tuple)
+
+      expect(users.where(name: 'Jane Doe').first).to include(tuple)
+    end
+  end
+
 end
