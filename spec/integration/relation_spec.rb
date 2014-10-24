@@ -38,4 +38,13 @@ describe Relation do
     end
   end
 
+  describe '#insert' do
+    it 'returns relation with inserted tuple' do
+      tuple = { name: 'Jade' }
+      users = relation.insert(tuple)
+
+      expect(users.where(name: 'Jade').first).to include(tuple)
+    end
+  end
+
 end

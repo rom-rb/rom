@@ -17,6 +17,11 @@ module ROM
       dataset.each(&block)
     end
 
+    def insert(tuple)
+      dataset.insert(tuple)
+      self
+    end
+
   end
 
 end
