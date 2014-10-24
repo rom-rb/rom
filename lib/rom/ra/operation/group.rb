@@ -26,7 +26,7 @@ module ROM
             right = tuple.reject { |k,_| !attribute_names.include?(k) }
 
             grouped[left] ||= {}
-            grouped[left][key] ||= [] << right
+            (grouped[left][key] ||= []) << right
           end
 
           result.map { |k,v| k.merge(v) }.each(&block)

@@ -20,7 +20,12 @@ describe 'Group operation' do
 
     expect(users.with_tasks.to_a).to eql(
       [
-        { name: "Joe", email: "joe@doe.org", tasks: [{ title: "be nice", priority: 1 }] },
+        {
+          name: "Joe", email: "joe@doe.org", tasks: [
+            { title: "be nice", priority: 1 },
+            { title: "sleep well", priority: 2 }
+          ]
+        },
         { name: "Jane", email: "jane@doe.org", tasks: [{ title: "be cool", priority: 2 }] }
       ]
     )

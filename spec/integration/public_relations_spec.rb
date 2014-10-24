@@ -34,6 +34,7 @@ describe 'Defining public relations' do
 
     expect(users.with_tasks.to_a).to eql(
       [{ name: "Joe", email: "joe@doe.org", title: "be nice", priority: 1 },
+       { name: "Joe", email: "joe@doe.org", title: "sleep well", priority: 2 },
        { name: "Jane", email: "jane@doe.org", title: "be cool", priority: 2 }]
     )
   end

@@ -9,7 +9,10 @@ shared_context 'users and tasks' do
 
     conn[:users].insert(name: "Joe", email: "joe@doe.org")
     conn[:users].insert(name: "Jane", email: "jane@doe.org")
+
     conn[:tasks].insert(name: "Joe", title: "be nice", priority: 1)
+    conn[:tasks].insert(name: "Joe", title: "sleep well", priority: 2)
+
     conn[:tasks].insert(name: "Jane", title: "be cool", priority: 2)
 
     rom.schema do
