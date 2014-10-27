@@ -45,19 +45,9 @@ rom.schema do
   end
 end
 
-# mapping to PORO
-class User
-  attr_reader :id, :name, :age
-
-  def initialize(attributes)
-    @id, @name, @age = attributes.values_at(:id, :name, :age)
-  end
-end
-
 rom.mappers do
   relation(:users) do
-    model User
-    map :id, :name, :age
+    model('User', :id, :name, :age)
   end
 end
 

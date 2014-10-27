@@ -16,7 +16,6 @@ describe 'Defining mappers' do
   before do
     rom.sqlite.connection.run('CREATE TABLE users (id SERIAL)')
     rom.sqlite.connection[:users].insert(id: 231)
-    User = Class.new(OpenStruct) { include Equalizer.new(:id) }
   end
 
   after do
@@ -28,8 +27,7 @@ describe 'Defining mappers' do
     it 'returns mapper registry' do
       rom.mappers do
         relation(:users) do
-          model User
-          map :id
+          model('User', :id)
         end
       end
 
@@ -42,11 +40,16 @@ describe 'Defining mappers' do
       end
 
       users = rom.mappers.users
+      first_mapped_user = users.to_a.first
 
-      expect(users.to_a).to eql([User.new(id: 231)])
       expect(users.header).to eql(rom.schema[:users].header)
+      expect(first_mapped_user).to be_an_instance_of User
+      expect(first_mapped_user.id).to eql 231
 
-      expect(rom.relations.users(mapper: true).by_id(231).to_a).to eql([User.new(id: 231)])
+      #TODO Find better way to test relations
+      expect(rom.relations.users(mapper: true).by_id(231).to_a.first).to be_an_instance_of User
+      expect(rom.relations.users(mapper: true).by_id(231).to_a.first.id).to eql 231
+
       expect(rom.relations.users(mapper: true).by_id(231).header).to eql(rom.schema[:users].header)
     end
   end
