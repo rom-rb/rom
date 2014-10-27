@@ -47,7 +47,7 @@ end
 
 rom.mappers do
   relation(:users) do
-    map_to_model('User', :id, :name, :age)
+    model('User', :id, :name, :age)
   end
 end
 

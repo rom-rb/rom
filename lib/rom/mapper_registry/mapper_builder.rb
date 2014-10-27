@@ -8,7 +8,7 @@ module ROM
         @relation = relation
       end
 
-      def map_to_model(model_class, *attrs)
+      def model(model_class, *attrs)
         domain_model = Class.new(Object) do
           attr_accessor *attrs
 

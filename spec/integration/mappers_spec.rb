@@ -26,7 +26,7 @@ describe 'Defining mappers' do
     it 'returns mapper registry' do
       rom.mappers do
         relation(:users) do
-          map_to_model('User', :id)
+          model('User', :id)
         end
       end
 
