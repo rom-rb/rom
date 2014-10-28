@@ -1,3 +1,5 @@
+require 'rom/mapper_registry/model_builder'
+
 module ROM
   class MapperRegistry
 
@@ -9,22 +11,26 @@ module ROM
         @relation = relation
       end
 
-      # TODO tweak this to support different model builders and make it use
-      #      relation header by default with ability to override using options
-      def model(model_class, *attrs)
-        @attributes = *attrs
+      def model(options)
+        name = options[:name]
+        type = options.fetch(:type) { :poro }
 
-        domain_model = Class.new(Object) do
-          attr_accessor *attrs
+        @attributes = options.fetch(:map) { relation.header.attributes.keys }
 
-          def initialize(params)
-            params.each do |name, value|
-              send("#{name}=", value)
-            end
+        builder_class =
+          case type
+          when :poro then ModelBuilder::PORO
+          else
+            raise ArgumentError, "#{type.inspect} is not a supported model type"
           end
-        end
 
-        @model_class = Object.const_set(model_class, domain_model)
+        builder = builder_class.new(attributes, options)
+
+        @model_class = builder.call
+
+        Object.const_set(name, @model_class) if name
+
+        @model_class
       end
 
       def call
