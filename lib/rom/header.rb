@@ -9,6 +9,10 @@ module ROM
       @attributes = attributes
     end
 
+    def key?(name)
+      attributes.key?(name)
+    end
+
     def [](name)
       attributes.fetch(name)
     end

@@ -9,6 +9,8 @@ module ROM
         @relation = relation
       end
 
+      # TODO tweak this to support different model builders and make it use
+      #      relation header by default with ability to override using options
       def model(model_class, *attrs)
         @attributes = *attrs
 
@@ -27,7 +29,14 @@ module ROM
 
       def call
         header_attrs = attributes.each_with_object({}) do |name, h|
-          h[name] = { type: relation.header[name][:type] }
+          h[name] =
+            # TODO add different attribute types to header so that we can set
+            #      correct type if it's a grouped or wrapped relation
+            if relation.header.key?(name)
+              { type: relation.header[name][:type] }
+            else
+              {}
+            end
         end
 
         header = Header.new(header_attrs)

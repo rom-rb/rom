@@ -1,52 +1,68 @@
 require 'spec_helper'
 
 describe Env, '#read' do
-  let(:rom) do
-    ROM.setup(sqlite: SEQUEL_TEST_DB_URI) do
-      schema do
-        base_relation(:users) do
-          repository :sqlite
-          attribute :id, Integer
-        end
-      end
-    end
-  end
-
-  before do
-    rom.sqlite.connection.run('CREATE TABLE users (id SERIAL)')
-    rom.sqlite.connection[:users].insert(id: 231)
-  end
+  include_context 'users and tasks'
 
   after do
-    rom.sqlite.connection.drop_table? :users
     Object.send(:remove_const, :User)
   end
 
   it 'exposes a relation reader' do
     rom.relations do
       users do
-        def by_id(id)
-          where(id: id)
+        def by_name(name)
+          where(name: name)
         end
 
         def sorted
-          order(:id)
+          order(:name, :email)
         end
       end
     end
 
     rom.mappers do
       users do
-        by_id do
-          model('User', :id)
+        by_name do
+          model('User', :name, :email)
         end
       end
     end
 
-    users = rom.read(:users).sorted.by_id(231)
+    users = rom.read(:users).sorted.by_name('Jane')
     user = users.first
 
     expect(user).to be_an_instance_of(User)
-    expect(user.id).to eql 231
+    expect(user.name).to eql 'Jane'
+    expect(user.email).to eql 'jane@doe.org'
+  end
+
+  it 'allows mapping joined relations' do
+    rom.relations do
+      users do
+        def with_tasks
+          RA.group(natural_join(tasks), tasks: [:title, :priority])
+        end
+
+        def sorted
+          order(:name)
+        end
+      end
+    end
+
+    rom.mappers do
+      users do
+        with_tasks do
+          model('User', :name, :email, :tasks)
+        end
+      end
+    end
+
+    User.send(:include, Equalizer.new(:name, :email, :tasks))
+
+    user = rom.read(:users).sorted.with_tasks.first
+
+    expect(user).to eql(
+      User.new(name: "Jane", email: "jane@doe.org", tasks: [{ title: "be cool", priority: 2 }])
+    )
   end
 end
