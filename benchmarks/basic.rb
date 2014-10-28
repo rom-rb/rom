@@ -53,7 +53,7 @@ ROM_ENV = ROM.setup(sqlite: 'sqlite::memory') do
   mappers do
     users do
       all do
-        model 'User', :id, :name, :email, :age
+        model name: 'User'
       end
     end
   end

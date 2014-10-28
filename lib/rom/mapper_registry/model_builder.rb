@@ -18,13 +18,11 @@ module ROM
           klass = Class.new
           klass.send(:attr_accessor, *attributes)
 
-          klass.class_eval do
+          klass.class_eval <<-RUBY, __FILE__, __LINE__ + 1
             def initialize(params)
-              params.each do |name, value|
-                send("#{name}=", value)
-              end
+              #{attributes.map { |name| "@#{name}" }.join(", ")} = params.values_at(#{attributes.map { |name| ":#{name}" }.join(", ")})
             end
-          end
+          RUBY
 
           klass
         end
