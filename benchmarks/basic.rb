@@ -26,14 +26,6 @@ class ARUser < ActiveRecord::Base
   self.table_name = :users
 end
 
-class User
-  attr_reader :id, :name, :email, :age
-
-  def initialize(attributes)
-    @id, @name, @email, @age = attributes.values_at(:id, :name, :email, :age)
-  end
-end
-
 def env
   ROM_ENV
 end
@@ -50,10 +42,19 @@ ROM_ENV = ROM.setup(sqlite: 'sqlite::memory') do
     end
   end
 
+  relations do
+    users do
+      def all
+        order(:id)
+      end
+    end
+  end
+
   mappers do
-    relation(:users) do
-      map :id, :name, :email, :age
-      model User
+    users do
+      all do
+        model 'User', :id, :name, :email, :age
+      end
     end
   end
 end
@@ -81,8 +82,10 @@ seed
 puts "LOADED #{env.schema.users.count} users via ROM/Sequel"
 puts "LOADED #{ARUser.count} users via ActiveRecord"
 
+USERS = ROM_ENV.read(:users).all
+
 Benchmark.ips do |x|
-  x.report("schema.users.to_a") { ROM_ENV.schema.users.to_a }
-  x.report("mappers.users.to_a") { ROM_ENV.mappers.users.to_a }
+  x.report("rom.relations.users.to_a") { ROM_ENV.relations.users.to_a }
+  x.report("rom.reader(:users).all.to_a") { USERS.to_a }
   x.report("ARUser.all.to_a") { ARUser.all.to_a }
 end
