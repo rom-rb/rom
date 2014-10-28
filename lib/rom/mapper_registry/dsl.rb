@@ -11,14 +11,20 @@ module ROM
         @mappers = {}
       end
 
-      def relation(name, &block)
-        builder = MapperBuilder.new(relations[name])
-        builder.instance_exec(&block)
-        @mappers[name] = builder.call
+      def call
+        MapperRegistry.new(mappers)
       end
 
-      def call
-        MapperRegistry.new(@mappers)
+      private
+
+      def method_missing(name, &block)
+        if relations.key?(name)
+          @builder = MapperBuilder.new(name, relations[name])
+          instance_exec(&block)
+        else
+          @builder.instance_exec(&block)
+          (@mappers[@builder.name] ||= MapperRegistry.new)[name] = @builder.call
+        end
       end
 
     end

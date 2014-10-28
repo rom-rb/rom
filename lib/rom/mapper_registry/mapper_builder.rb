@@ -2,13 +2,16 @@ module ROM
   class MapperRegistry
 
     class MapperBuilder
-      attr_reader :relation, :model_class, :attributes
+      attr_reader :name, :relation, :model_class, :attributes
 
-      def initialize(relation)
+      def initialize(name, relation)
+        @name = name
         @relation = relation
       end
 
       def model(model_class, *attrs)
+        @attributes = *attrs
+
         domain_model = Class.new(Object) do
           attr_accessor *attrs
 
@@ -20,12 +23,16 @@ module ROM
         end
 
         @model_class = Object.const_set(model_class, domain_model)
-        @attributes = attrs.each_with_object({}) { |name, h| h[name] = { type: relation.header[name][:type] } }
       end
 
       def call
-        header = Header.new(attributes)
-        Mapper.new(relation, header, model_class)
+        header_attrs = attributes.each_with_object({}) do |name, h|
+          h[name] = { type: relation.header[name][:type] }
+        end
+
+        header = Header.new(header_attrs)
+
+        Mapper.new(header, model_class)
       end
 
     end

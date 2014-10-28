@@ -36,6 +36,10 @@ module ROM
           def inspect
             "#<#{klass_name} header=#\{header.inspect\} dataset=#\{dataset.inspect\}>"
           end
+
+          def name
+            #{name.inspect}
+          end
         RUBY
 
         klass.new(relation.dataset, relation.header)

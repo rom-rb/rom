@@ -53,6 +53,10 @@ module ROM
       dsl.call
     end
 
+    def key?(name)
+      relations.key?(name)
+    end
+
     def [](name)
       relations.fetch(name)
     end
