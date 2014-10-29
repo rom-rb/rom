@@ -69,7 +69,7 @@ rom.schema[:users].insert(name: "Jane", age: 18)
 puts rom.relations.users.by_name("Jane").adults.to_a.inspect
 # => [{:id=>2, :name=>"Jane", :age=>18}]
 
-puts rom.relations.users(mapper: true).by_name("Jane").adults.to_a.inspect
+puts rom.read(:users).by_name("Jane").adults.to_a.inspect
 # => [#<User:0x007fdba161cc48 @id=2, @name="Jane", @age=18>]
 ```
 
