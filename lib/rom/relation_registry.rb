@@ -16,6 +16,10 @@ module ROM
       relations.fetch(name)
     end
 
+    def key?(name)
+      relations.key?(name)
+    end
+
     def respond_to_missing?(name, include_private = false)
       relations.key?(name)
     end

@@ -22,9 +22,7 @@ describe Env, '#read' do
 
     rom.mappers do
       users do
-        by_name do
-          model(name: 'User')
-        end
+        model name: 'User'
       end
     end
 
@@ -51,8 +49,10 @@ describe Env, '#read' do
 
     rom.mappers do
       users do
+        model name: 'User', map: [:name, :email, :tasks]
+
         with_tasks do
-          model(name: 'User', map: [:name, :email, :tasks])
+          group tasks: [:title, :priority]
         end
       end
     end

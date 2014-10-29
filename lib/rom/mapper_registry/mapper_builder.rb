@@ -4,18 +4,20 @@ module ROM
   class MapperRegistry
 
     class MapperBuilder
-      attr_reader :name, :relation, :model_class, :attributes
+      attr_reader :name, :header, :root, :model_class, :attributes, :group
 
-      def initialize(name, relation)
+      def initialize(name, header, root = nil)
         @name = name
-        @relation = relation
+        @header = header
+        @root = root
+        @attributes = header.attributes.keys
       end
 
       def model(options)
         name = options[:name]
         type = options.fetch(:type) { :poro }
 
-        @attributes = options.fetch(:map) { relation.header.attributes.keys }
+        @attributes = options[:map] if options[:map]
 
         builder_class =
           case type
@@ -33,16 +35,25 @@ module ROM
         @model_class
       end
 
+      def group(options)
+        @group = options
+        attributes.concat([options])
+      end
+
       def call
+        @model_class = @root.model unless @model_class
+
         header_attrs = attributes.each_with_object({}) do |name, h|
-          h[name] =
-            # TODO add different attribute types to header so that we can set
-            #      correct type if it's a grouped or wrapped relation
-            if relation.header.key?(name)
-              { type: relation.header[name][:type] }
-            else
-              {}
-            end
+          if name.is_a?(Hash)
+            h.update(name)
+          else
+            h[name] =
+              if header.key?(name)
+                { type: header[name][:type] }
+              else
+                {}
+              end
+          end
         end
 
         header = Header.new(header_attrs)
