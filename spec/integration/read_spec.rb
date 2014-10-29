@@ -49,20 +49,29 @@ describe Env, '#read' do
 
     rom.mappers do
       users do
-        model name: 'User', map: [:name, :email, :tasks]
+        model name: 'User'
 
         with_tasks do
+          model name: 'UserWithTasks', map: [:name, :email, :tasks]
+
           group tasks: [:title, :priority]
         end
       end
     end
 
-    User.send(:include, Equalizer.new(:name, :email, :tasks))
+    User.send(:include, Equalizer.new(:name, :email))
+    UserWithTasks.send(:include, Equalizer.new(:name, :email, :tasks))
+
+    user = rom.read(:users).sorted.first
+
+    expect(user).to eql(
+      User.new(name: "Jane", email: "jane@doe.org")
+    )
 
     user = rom.read(:users).sorted.with_tasks.first
 
     expect(user).to eql(
-      User.new(name: "Jane", email: "jane@doe.org", tasks: [{ title: "be cool", priority: 2 }])
+      UserWithTasks.new(name: "Jane", email: "jane@doe.org", tasks: [{ title: "be cool", priority: 2 }])
     )
   end
 end
