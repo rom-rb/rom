@@ -5,6 +5,7 @@ describe Env, '#read' do
 
   after do
     Object.send(:remove_const, :User)
+    Object.send(:remove_const, :UserWithTasks) if Object.const_defined?(:UserWithTasks)
   end
 
   it 'exposes a relation reader' do
