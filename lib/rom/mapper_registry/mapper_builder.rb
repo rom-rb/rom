@@ -4,7 +4,7 @@ module ROM
   class MapperRegistry
 
     class MapperBuilder
-      attr_reader :name, :header, :root, :model_class, :attributes, :group
+      attr_reader :name, :header, :root, :model_class, :attributes
 
       def initialize(name, header, root = nil)
         @name = name
@@ -30,7 +30,6 @@ module ROM
       end
 
       def group(options)
-        @group = options
         attributes.concat(options.keys)
       end
 
