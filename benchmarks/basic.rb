@@ -33,12 +33,6 @@ end
 ROM_ENV = ROM.setup(sqlite: 'sqlite::memory') do
   sqlite.connection.run("CREATE TABLE users (id SERIAL, name STRING, email STRING, age INT)")
 
-  schema do
-    base_relation :users do
-      repository :sqlite
-    end
-  end
-
   relations do
     users do
       def all
