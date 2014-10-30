@@ -2,6 +2,7 @@ require 'addressable/uri'
 
 require 'rom/adapter/memory'
 require 'rom/adapter/sequel'
+require 'rom/adapter/mongo'
 
 module ROM
 
@@ -15,6 +16,7 @@ module ROM
         case uri.scheme
         when 'sqlite', 'jdbc' then Adapter::Sequel
         when 'memory' then Adapter::Memory
+        when 'mongo' then Adapter::Mongo
         else
           raise ArgumentError, "#{uri_string.inspect} uri is not supported"
         end

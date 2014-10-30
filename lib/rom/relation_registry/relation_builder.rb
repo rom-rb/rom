@@ -42,7 +42,7 @@ module ROM
           end
         RUBY
 
-        klass.new(relation.dataset)
+        klass.new(relation.dataset, relation.header)
       end
     end
 

@@ -29,12 +29,22 @@ GEM
       memoizable (~> 0.4.0)
     addressable (2.3.6)
     arel (5.0.1.20140414130214)
+    axiom-types (0.1.1)
+      descendants_tracker (~> 0.0.4)
+      ice_nine (~> 0.11.0)
+      thread_safe (~> 0.3, >= 0.3.1)
     benchmark-ips (2.0.0)
+    bson (2.3.0)
     builder (3.2.2)
     charlatan (0.1.0)
+    coercible (1.0.0)
+      descendants_tracker (~> 0.0.1)
     concord (0.1.5)
       adamantium (~> 0.2.0)
       equalizer (~> 0.0.9)
+    connection_pool (2.0.0)
+    descendants_tracker (0.0.4)
+      thread_safe (~> 0.3, >= 0.3.1)
     diff-lcs (1.2.5)
     equalizer (0.0.9)
     i18n (0.6.11)
@@ -44,6 +54,11 @@ GEM
     memoizable (0.4.2)
       thread_safe (~> 0.3, >= 0.3.1)
     minitest (5.4.2)
+    moped (2.0.1)
+      bson (~> 2.2)
+      connection_pool (~> 2.0)
+      optionable (~> 0.2.0)
+    optionable (0.2.0)
     rake (10.3.2)
     rspec-core (3.1.7)
       rspec-support (~> 3.1.0)
@@ -57,6 +72,11 @@ GEM
     thread_safe (0.3.4)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
+    virtus (1.0.3)
+      axiom-types (~> 0.1)
+      coercible (~> 1.0)
+      descendants_tracker (~> 0.0, >= 0.0.3)
+      equalizer (~> 0.0, >= 0.0.9)
 
 PLATFORMS
   ruby
@@ -65,9 +85,11 @@ DEPENDENCIES
   activerecord
   benchmark-ips
   jdbc-sqlite3
+  moped
   rake
   rom!
   rspec-core (~> 3.1)
   rspec-expectations (~> 3.1)
   rubysl-bigdecimal
   sqlite3
+  virtus
