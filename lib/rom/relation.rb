@@ -7,9 +7,9 @@ module ROM
 
     attr_reader :header
 
-    def initialize(dataset, header = dataset.header)
+    def initialize(dataset, header = dataset.header.dup)
       super
-      @header = header
+      @header = header.freeze
     end
 
     def each(&block)

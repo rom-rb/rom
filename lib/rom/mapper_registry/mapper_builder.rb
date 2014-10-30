@@ -10,38 +10,39 @@ module ROM
         @name = name
         @header = header
         @root = root
-        @attributes = header
+        @attributes = header.dup
       end
 
       def model(options)
-        name = options[:name]
-        type = options.fetch(:type) { :poro }
-
+        @model_opts = options
+        @const_name = options[:name]
         @attributes = options[:map] if options[:map]
 
-        builder_class =
+        type = options.fetch(:type) { :poro }
+
+        @builder_class =
           case type
           when :poro then ModelBuilder::PORO
           else
             raise ArgumentError, "#{type.inspect} is not a supported model type"
           end
-
-        builder = builder_class.new(attributes, options)
-
-        @model_class = builder.call
-
-        Object.const_set(name, @model_class) if name
-
-        @model_class
+        self
       end
 
       def group(options)
         @group = options
-        attributes.concat([options])
+        attributes.concat(options.keys)
       end
 
       def call
-        @model_class = @root.model unless @model_class
+        model_class =
+          if @model_opts
+            builder = @builder_class.new(attributes, @modeL_opts)
+            model_class = builder.call
+            Object.const_set(@const_name, model_class) if @const_name
+          else
+            model_class = @root.model unless @model_class
+          end
 
         header_attrs = attributes.map { |name| [name, Object] }
         header = Header.coerce(header_attrs)

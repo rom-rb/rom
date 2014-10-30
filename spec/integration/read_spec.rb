@@ -52,7 +52,7 @@ describe Env, '#read' do
         model name: 'User'
 
         with_tasks do
-          model name: 'UserWithTasks', map: [:name, :email, :tasks]
+          model name: 'UserWithTasks'
 
           group tasks: [:title, :priority]
         end
@@ -61,6 +61,8 @@ describe Env, '#read' do
 
     User.send(:include, Equalizer.new(:name, :email))
     UserWithTasks.send(:include, Equalizer.new(:name, :email, :tasks))
+
+    expect(rom.read(:users).with_tasks.header).to eql([:name, :email, :tasks])
 
     user = rom.read(:users).sorted.first
 

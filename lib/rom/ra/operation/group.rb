@@ -9,11 +9,12 @@ module ROM
 
         include Enumerable
 
-        attr_reader :options
+        attr_reader :options, :header
 
         def initialize(relation, options)
           super
           @options = options
+          @header = relation.header + options.keys
         end
 
         def each(&block)

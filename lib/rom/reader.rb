@@ -4,11 +4,12 @@ module ROM
     include Enumerable
     include Equalizer.new(:name, :relation, :mapper)
 
-    attr_reader :name, :relation, :mappers, :mapper
+    attr_reader :name, :relation, :header, :mappers, :mapper
 
     def initialize(name, relation, mappers)
       @name = name
       @relation = relation
+      @header = relation.header
       @mappers = mappers
       @mapper = mappers.fetch(name) { mappers.fetch(relation.name) }
     end
