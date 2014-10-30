@@ -19,7 +19,7 @@ end
 DB = Sequel.connect(SEQUEL_TEST_DB_URI)
 
 def seed(db = DB)
-  db.run("CREATE TABLE users (id SERIAL, name STRING)")
+  db.run("CREATE TABLE users (id INTEGER PRIMARY KEY, name STRING)")
 
   db[:users].insert(id: 1, name: 'Jane')
   db[:users].insert(id:2, name: 'Joe')

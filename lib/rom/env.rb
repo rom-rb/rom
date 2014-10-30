@@ -19,7 +19,7 @@ module ROM
     end
 
     def schema(&block)
-      @schema = Schema.define(self, &block) if block
+      @schema = Schema.define(self, &block) if block || @schema.nil?
       @schema
     end
 
@@ -34,6 +34,10 @@ module ROM
 
     def respond_to_missing?(name, include_private = false)
       repositories.key?(name)
+    end
+
+    def load_schema
+      repositories.map { |_, repo| repo.schema }.reduce(:+)
     end
 
     private
