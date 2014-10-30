@@ -1,18 +1,24 @@
 module ROM
 
   class Repository
-    include Concord::Public.new(:connection)
+    include Concord::Public.new(:adapter)
 
     def [](name)
-      connection[name]
+      adapter[name]
+    end
+
+    def connection
+      adapter.connection
     end
 
     def respond_to_missing?(name, include_private = false)
-      connection[name]
+      adapter[name]
     end
 
-    def method_missing(name, *args)
-      connection[name]
+    private
+
+    def method_missing(name)
+      adapter[name]
     end
   end
 

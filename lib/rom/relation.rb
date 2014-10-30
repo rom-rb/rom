@@ -7,7 +7,7 @@ module ROM
 
     attr_reader :header
 
-    def initialize(dataset, header = Header.new)
+    def initialize(dataset, header = dataset.header)
       super
       @header = header
     end

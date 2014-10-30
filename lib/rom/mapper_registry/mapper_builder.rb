@@ -10,7 +10,7 @@ module ROM
         @name = name
         @header = header
         @root = root
-        @attributes = header.attributes.keys
+        @attributes = header
       end
 
       def model(options)
@@ -43,20 +43,8 @@ module ROM
       def call
         @model_class = @root.model unless @model_class
 
-        header_attrs = attributes.each_with_object({}) do |name, h|
-          if name.is_a?(Hash)
-            h.update(name)
-          else
-            h[name] =
-              if header.key?(name)
-                { type: header[name][:type] }
-              else
-                {}
-              end
-          end
-        end
-
-        header = Header.new(header_attrs)
+        header_attrs = attributes.map { |name| [name, Object] }
+        header = Header.coerce(header_attrs)
 
         Mapper.new(header, model_class)
       end

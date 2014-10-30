@@ -31,14 +31,11 @@ def env
 end
 
 ROM_ENV = ROM.setup(sqlite: 'sqlite::memory') do
+  sqlite.connection.run("CREATE TABLE users (id SERIAL, name STRING, email STRING, age INT)")
+
   schema do
     base_relation :users do
       repository :sqlite
-
-      attribute :id,    Integer
-      attribute :name,  String
-      attribute :email, String
-      attribute :age,   Integer
     end
   end
 
@@ -56,8 +53,6 @@ ROM_ENV = ROM.setup(sqlite: 'sqlite::memory') do
     end
   end
 end
-
-ROM_ENV.sqlite.connection.run("create table users (id SERIAL, name STRING, email STRING, age INT)")
 
 COUNT = ENV.fetch('COUNT', 1000).to_i
 

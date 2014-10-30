@@ -22,6 +22,10 @@ module ROM
         @connection = Storage.new
       end
 
+      def [](name)
+        connection[name]
+      end
+
     end
 
   end

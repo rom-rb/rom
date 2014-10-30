@@ -18,16 +18,10 @@ shared_context 'users and tasks' do
     rom.schema do
       base_relation(:users) do
         repository :sqlite
-
-        attribute :name, String
-        attribute :email, String
       end
 
       base_relation(:tasks) do
         repository :sqlite
-
-        attribute :title, String
-        attribute :priority, Integer
       end
     end
   end

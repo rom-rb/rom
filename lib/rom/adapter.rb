@@ -19,7 +19,7 @@ module ROM
           raise ArgumentError, "#{uri_string.inspect} uri is not supported"
         end
 
-      adapter.new(uri).connection
+      adapter.new(uri)
     end
 
 

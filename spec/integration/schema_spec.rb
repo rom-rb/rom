@@ -16,18 +16,14 @@ describe 'Defining schema' do
       rom.schema do
         base_relation(:users) do
           repository :sqlite
-
-          attribute :user_id, Integer
-          attribute :name, String
         end
       end
 
-      header = Header.new(user_id: { type: Integer }, name: { type: String })
-
       schema = rom.schema
+      users = schema.users
 
-      expect(schema.users.to_a).to eql(rom.sqlite.users.to_a)
-      expect(schema.users.header).to eql(header)
+      expect(users.to_a).to eql(rom.sqlite.users.to_a)
+      expect(users.header).to eql([:id, :name])
     end
   end
 end

@@ -13,20 +13,34 @@ module ROM
         def initialize(env, name)
           @env = env
           @name = name
-          @attributes = {}
+          @attributes = []
         end
 
-        def repository(name)
-          @datasets = env[name]
+        def repository(name = nil)
+          if @repository
+            @repository
+          else
+            @repository = env[name]
+          end
         end
 
-        def attribute(name, type, options = {})
-          attributes[name] = { type: type }.merge(options)
+        def attribute(name)
+          attributes << name
         end
 
         def call(&block)
           instance_exec(&block)
-          ROM::Relation.new(datasets[name], Header.new(attributes))
+
+          dataset = repository[name]
+
+          header =
+            if attributes.any?
+              attributes
+            else
+              dataset.header
+            end
+
+          ROM::Relation.new(repository[name], header)
         end
       end
 

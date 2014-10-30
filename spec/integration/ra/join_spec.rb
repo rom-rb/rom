@@ -16,16 +16,13 @@ describe 'Join operation between two repositories' do
     rom.schema do
       base_relation(:users) do
         repository :sqlite
-
-        attribute :id, Integer
-        attribute :name, String
       end
 
       base_relation(:tasks) do
         repository :memory
 
-        attribute :name, String
-        attribute :title, String
+        attribute :name
+        attribute :title
       end
     end
 
