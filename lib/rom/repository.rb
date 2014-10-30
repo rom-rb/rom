@@ -15,6 +15,10 @@ module ROM
       adapter[name]
     end
 
+    def schema
+      adapter.schema
+    end
+
     private
 
     def method_missing(name)

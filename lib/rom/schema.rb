@@ -62,9 +62,21 @@ module ROM
     include Concord::Public.new(:relations)
 
     def self.define(env, &block)
-      dsl = DSL.new(env)
-      dsl.instance_exec(&block)
-      dsl.call
+      if block
+        dsl = DSL.new(env)
+        dsl.instance_exec(&block)
+        dsl.call
+      else
+        load_schema(env)
+      end
+    end
+
+    def self.load_schema(env)
+      relations = env.load_schema.each_with_object({}) do |(table, dataset, attributes), hash|
+        hash[table] = ROM::Relation.new(dataset, attributes)
+      end
+
+      Schema.new(relations)
     end
 
     def key?(name)

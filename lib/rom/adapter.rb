@@ -31,6 +31,10 @@ module ROM
       raise NotImplemented, "#{self.class}#connection must be implemented"
     end
 
+    def schema
+      []
+    end
+
   end
 
 end

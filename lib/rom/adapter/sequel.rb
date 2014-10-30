@@ -17,6 +17,35 @@ module ROM
         connection[name]
       end
 
+      def schema
+        tables.map do |table|
+          [table, dataset(table), dataset(table).columns]
+        end
+      end
+
+      private
+
+      def tables
+        connection.tables
+      end
+
+      def dataset(table)
+        connection[table]
+      end
+
+      def attributes(table)
+        map_attribute_types connection.schema(table)
+      end
+
+      def map_attribute_types(attrs)
+        attrs.map do |column, opts|
+          [column, { type: map_schema_type(opts[:type]) }]
+        end.to_h
+      end
+
+      def map_schema_type(type)
+        connection.class::SCHEMA_TYPE_CLASSES.fetch(type)
+      end
     end
 
   end
