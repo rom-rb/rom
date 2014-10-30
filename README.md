@@ -35,22 +35,6 @@ rom.sqlite.connection.run(
   SQL
 )
 
-rom.schema do
-  base_relation(:users) do
-    repository :sqlite
-
-    attribute :id, Integer
-    attribute :name, String
-    attribute :age, Integer
-  end
-end
-
-rom.mappers do
-  relation(:users) do
-    model('User', :id, :name, :age)
-  end
-end
-
 rom.relations do
   users do
     def by_name(name)
@@ -60,6 +44,12 @@ rom.relations do
     def adults
       where { age >= 18 }
     end
+  end
+end
+
+rom.mappers do
+  users do
+    model(name: 'User')
   end
 end
 
