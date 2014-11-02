@@ -1,29 +1,29 @@
 require 'addressable/uri'
 
-require 'rom/adapter/memory'
-require 'rom/adapter/sequel'
-require 'rom/adapter/mongo'
-
 module ROM
 
   class Adapter
+    @adapters = []
+
     attr_reader :uri
 
     def self.setup(uri_string)
       uri = Addressable::URI.parse(uri_string)
 
-      adapter =
-        case uri.scheme
-        when 'sqlite', 'jdbc' then Adapter::Sequel
-        when 'memory' then Adapter::Memory
-        when 'mongo' then Adapter::Mongo
-        else
-          raise ArgumentError, "#{uri_string.inspect} uri is not supported"
-        end
+      unless adapter = self[uri.scheme]
+        raise ArgumentError, "#{uri_string.inspect} uri is not supported"
+      end
 
       adapter.new(uri)
     end
 
+    def self.register(adapter)
+      @adapters << adapter
+    end
+
+    def self.[](scheme)
+      @adapters.detect { |adapter| adapter.schemes.include?(scheme.to_sym) }
+    end
 
     def initialize(uri)
       @uri = uri
