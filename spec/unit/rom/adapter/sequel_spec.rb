@@ -12,4 +12,13 @@ describe Adapter::Sequel do
       end
     end
   end
+
+  describe ".schemes" do
+    it "returns a list of schemes supported by Sequel" do
+      schemes = %i(ado amalgalite cubrid db2 dbi do fdbsql firebird ibmdb informix jdbc
+                   mysql mysql2 odbc openbase oracle postgres sqlanywhere sqlite swift tinytds)
+
+      expect(described_class.schemes).to eq schemes
+    end
+  end
 end

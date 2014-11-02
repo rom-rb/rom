@@ -9,7 +9,8 @@ module ROM
       attr_reader :connection
 
       def self.schemes
-        [:sqlite, :jdbc]
+        %i(ado amalgalite cubrid db2 dbi do fdbsql firebird ibmdb informix jdbc
+           mysql mysql2 odbc openbase oracle postgres sqlanywhere sqlite swift tinytds)
       end
 
       def initialize(*args)
