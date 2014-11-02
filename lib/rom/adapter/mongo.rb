@@ -6,6 +6,10 @@ module ROM
     class Mongo < Adapter
       attr_reader :connection
 
+      def self.schemes
+        [:mongo]
+      end
+
       class Dataset
         include Charlatan.new(:collection, kind: Moped::Query)
       end
@@ -24,6 +28,7 @@ module ROM
         []
       end
 
+      Adapter.register(self)
     end
 
   end

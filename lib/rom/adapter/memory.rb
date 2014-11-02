@@ -4,6 +4,10 @@ module ROM
     class Memory < Adapter
       attr_reader :connection
 
+      def self.schemes
+        [:memory]
+      end
+
       class Storage
         attr_reader :data
 
@@ -26,6 +30,7 @@ module ROM
         connection[name]
       end
 
+      Adapter.register(self)
     end
 
   end

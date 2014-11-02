@@ -27,6 +27,10 @@ require 'rom/mapper'
 require 'rom/reader'
 
 require 'rom/adapter'
+require 'rom/adapter/memory'
+require 'rom/adapter/sequel'
+require 'rom/adapter/mongo'
+
 require 'rom/repository'
 require 'rom/env'
 

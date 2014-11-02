@@ -8,6 +8,10 @@ module ROM
     class Sequel < Adapter
       attr_reader :connection
 
+      def self.schemes
+        [:sqlite, :jdbc]
+      end
+
       def initialize(*args)
         super
         @connection = ::Sequel.connect(uri.to_s)
@@ -46,6 +50,8 @@ module ROM
       def map_schema_type(type)
         connection.class::SCHEMA_TYPE_CLASSES.fetch(type)
       end
+
+      Adapter.register(self)
     end
 
   end
