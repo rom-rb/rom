@@ -1,6 +1,9 @@
 # encoding: utf-8
 
 require 'rom'
+require 'rom/adapter/memory'
+require 'rom/adapter/sequel'
+require 'rom/adapter/mongo'
 
 include ROM
 
