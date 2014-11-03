@@ -13,31 +13,29 @@ module ROM
       end
 
       def call
-        @readers
+        readers
       end
 
-      def model(*args)
-        @builder.model(*args)
+      def define(name, options = {}, &block)
+        parent = options.fetch(:parent) { relations[name] }
 
-        name = @builder.name
+        builder = MapperBuilder.new(name, parent, mappers)
+        builder.instance_exec(&block)
+        builder.call
 
-        mappers[name] = @builder.call
+        readers[name] = Reader.new(name, parent, mappers) unless options[:parent]
 
-        @readers[name] = Reader.new(name, @root, mappers)
+        self
+      end
+
+      def respond_to_missing?(name, include_private = false)
+        relations.key?(name)
       end
 
       private
 
-      def method_missing(name, &block)
-        if relations.key?(name)
-          @root = relations[name]
-          @builder = MapperBuilder.new(name, @root.header)
-          instance_exec(&block)
-        else
-          @builder = MapperBuilder.new(name, @root.header, @mappers[@root.name])
-          @builder.instance_exec(&block)
-          mappers[name] = @builder.call
-        end
+      def method_missing(name)
+        relations[name]
       end
 
     end

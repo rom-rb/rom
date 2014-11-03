@@ -37,7 +37,7 @@ describe 'Mongo adapter' do
     end
 
     rom.mappers do
-      users do
+      define(:users) do
         model(user_model)
       end
     end

@@ -22,7 +22,7 @@ describe Env, '#read' do
     end
 
     rom.mappers do
-      users do
+      define(:users) do
         model name: 'User'
       end
     end
@@ -49,14 +49,14 @@ describe Env, '#read' do
     end
 
     rom.mappers do
-      users do
+      define(:users) do
         model name: 'User'
+      end
 
-        with_tasks do
-          model name: 'UserWithTasks'
+      define(:with_tasks, parent: users) do
+        model name: 'UserWithTasks'
 
-          group tasks: [:title, :priority]
-        end
+        group tasks: [:title, :priority]
       end
     end
 

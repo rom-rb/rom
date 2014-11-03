@@ -6,7 +6,10 @@ require 'bundler'
 Bundler.require
 
 require 'benchmark/ips'
+
 require 'rom'
+require 'rom/adapter/sequel'
+
 require 'active_record'
 
 ActiveRecord::Base.establish_connection(
@@ -42,7 +45,7 @@ ROM_ENV = ROM.setup(sqlite: 'sqlite::memory') do
   end
 
   mappers do
-    users do
+    define(:users) do
       model name: 'User'
     end
   end

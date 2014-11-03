@@ -4,13 +4,14 @@ module ROM
   class MapperRegistry
 
     class MapperBuilder
-      attr_reader :name, :header, :root, :model_class, :attributes
+      attr_reader :name, :root, :mappers,
+        :builder_class, :model_class, :attributes
 
-      def initialize(name, header, root = nil)
+      def initialize(name, root, mappers)
         @name = name
-        @header = header
         @root = root
-        @attributes = header.dup
+        @mappers = mappers
+        @attributes = root.header.dup
       end
 
       def model(options)
@@ -33,23 +34,31 @@ module ROM
         end
       end
 
+      def attribute(name)
+        attributes << name
+      end
+
+      def exclude(name)
+        attributes.delete(name)
+      end
+
       def group(options)
         attributes.concat(options.keys)
       end
 
       def call
-        if @model_opts
-          builder = @builder_class.new(attributes, @model_opts)
+        if builder_class
+          builder = builder_class.new(attributes, @model_opts)
           @model_class = builder.call
           Object.const_set(@const_name, model_class) if @const_name
-        else
-          @model_class = @root.model unless @model_class
+        elsif !model_class
+          @model_class = mappers[root.name].model
         end
 
         header_attrs = attributes.map { |name| [name, Object] }
         header = Header.coerce(header_attrs)
 
-        Mapper.new(header, model_class)
+        mappers[name] = Mapper.new(header, model_class)
       end
 
     end

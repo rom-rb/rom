@@ -5,6 +5,8 @@ module ROM
   class Relation
     include Charlatan.new(:dataset)
 
+    undef_method :select
+
     attr_reader :header
 
     def initialize(dataset, header = dataset.header.dup)
