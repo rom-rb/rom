@@ -48,7 +48,7 @@ rom.relations do
 end
 
 rom.mappers do
-  users do
+  define(:users) do
     model(name: 'User')
   end
 end
