@@ -8,6 +8,8 @@ group :test do
   gem 'virtus'
   gem 'jdbc-sqlite3', platforms: :jruby
   gem 'rubysl-bigdecimal', platforms: :rbx
+  gem 'guard'
+  gem 'guard-rspec'
 end
 
 group :benchmarks do
