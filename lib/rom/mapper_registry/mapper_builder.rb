@@ -39,7 +39,7 @@ module ROM
 
       def call
         if @model_opts
-          builder = @builder_class.new(attributes, @modeL_opts)
+          builder = @builder_class.new(attributes, @model_opts)
           @model_class = builder.call
           Object.const_set(@const_name, model_class) if @const_name
         else
