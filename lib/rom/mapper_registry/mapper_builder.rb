@@ -5,33 +5,24 @@ module ROM
 
     class MapperBuilder
       attr_reader :name, :root, :mappers,
-        :builder_class, :model_class, :attributes
+        :model_builder, :model_class, :attributes
 
       def initialize(name, root, mappers)
         @name = name
         @root = root
         @mappers = mappers
         @attributes = root.header.dup
+        @model_class = mappers[root.name].model if mappers[root.name]
       end
 
       def model(options)
         if options.is_a?(Class)
           @model_class = options
         else
-          @model_opts = options
-          @const_name = options[:name]
-          @attributes = options[:map] if options[:map]
-
-          type = options.fetch(:type) { :poro }
-
-          @builder_class =
-            case type
-            when :poro then ModelBuilder::PORO
-            else
-              raise ArgumentError, "#{type.inspect} is not a supported model type"
-            end
-          self
+          @model_builder = ModelBuilder[options.fetch(:type) { :poro }].new(options)
         end
+
+        self
       end
 
       def attribute(name)
@@ -47,13 +38,7 @@ module ROM
       end
 
       def call
-        if builder_class
-          builder = builder_class.new(attributes, @model_opts)
-          @model_class = builder.call
-          Object.const_set(@const_name, model_class) if @const_name
-        elsif !model_class
-          @model_class = mappers[root.name].model
-        end
+        @model_class = model_builder.call(attributes) if model_builder
 
         header_attrs = attributes.map { |name| [name, Object] }
         header = Header.coerce(header_attrs)
