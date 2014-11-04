@@ -1,7 +1,7 @@
 module ROM
 
   class Env
-    include Concord::Public.new(:repositories)
+    include Concord.new(:repositories)
 
     def initialize(repositories)
       super
@@ -24,7 +24,7 @@ module ROM
     end
 
     def mappers(&block)
-      @readers = MapperRegistry.define(relations, &block) if block
+      @readers = ReaderRegistry.define(relations, &block) if block
       @readers
     end
 

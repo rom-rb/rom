@@ -1,5 +1,5 @@
 module ROM
-  class MapperRegistry
+  class ReaderRegistry
 
     class ModelBuilder
       attr_reader :options, :const_name, :klass

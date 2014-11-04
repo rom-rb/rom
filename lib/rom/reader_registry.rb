@@ -1,12 +1,12 @@
-require 'rom/mapper_registry/dsl'
+require 'rom/reader_registry/dsl'
 
 module ROM
 
-  class MapperRegistry
-    attr_reader :mappers
+  class ReaderRegistry
+    attr_reader :readers
 
-    def initialize(mappers = {})
-      @mappers = mappers
+    def initialize(readers = {})
+      @readers = readers
     end
 
     def self.define(relations, &block)
@@ -16,21 +16,17 @@ module ROM
     end
 
     def [](name)
-      mappers.fetch(name)
-    end
-
-    def []=(name, mapper)
-      mappers[name] = mapper
+      readers.fetch(name)
     end
 
     def respond_to_missing?(name, include_private = false)
-      mappers.key?(name)
+      readers.key?(name)
     end
 
     private
 
     def method_missing(name)
-      mappers.fetch(name)
+      readers[name]
     end
 
   end

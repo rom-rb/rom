@@ -1,7 +1,7 @@
-require 'rom/mapper_registry/model_builder'
+require 'rom/reader_registry/model_builder'
 
 module ROM
-  class MapperRegistry
+  class ReaderRegistry
 
     class MapperBuilder
       attr_reader :name, :root, :mappers,
