@@ -11,6 +11,14 @@ module ROM
 
       attr_reader :name, :meta
 
+      def self.coerce(input)
+        if input.kind_of?(self)
+          input
+        else
+          new(input[0], input[1])
+        end
+      end
+
       def initialize(name, meta = {})
         @name = name
         @meta = meta
@@ -21,25 +29,47 @@ module ROM
       end
     end
 
-    def self.coerce(attributes)
-      new(attributes.map { |pair| pair.is_a?(Attribute) ? pair : Attribute.new(pair[0], type: pair[1]) })
+    def self.coerce(input)
+      if input.kind_of?(self)
+        input
+      else
+        attributes = input.each_with_object({}) { |pair, h|
+          h[pair.first] = Attribute.coerce(pair)
+        }
+
+        new(attributes)
+      end
     end
 
-    def initialize(attributes = [])
+    def initialize(attributes)
       @attributes = attributes
     end
 
     def each(&block)
       return to_enum unless block
-      attributes.each(&block)
+      attributes.values.each(&block)
     end
 
-    def include?(name)
-      attributes.map(&:name).include?(name)
+    def keys
+      attributes.keys
+    end
+
+    def values
+      attributes.values
     end
 
     def [](name)
-      attributes.detect { |attribute| attribute.name == name }
+      attributes.fetch(name)
+    end
+
+    def respond_to_missing?(name, include_private = false)
+      attributes.key?(name)
+    end
+
+    private
+
+    def method_missing(name)
+      attributes[name]
     end
   end
 

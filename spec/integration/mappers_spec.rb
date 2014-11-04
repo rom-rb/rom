@@ -35,7 +35,7 @@ describe Env, '#mappers' do
     end
 
     it 'uses all attributes from the relation header by default' do
-      expect(header.map(&:name)).to eql(rom.relations.users.header)
+      expect(header.keys).to eql(rom.relations.users.header)
     end
   end
 
@@ -77,7 +77,7 @@ describe Env, '#mappers' do
     end
 
     it 'only maps provided attributes' do
-      expect(header.map(&:name)).to eql([:email])
+      expect(header.keys).to eql([:email])
     end
   end
 
