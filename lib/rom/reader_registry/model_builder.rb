@@ -25,15 +25,17 @@ module ROM
         Object.const_set(const_name, klass)
       end
 
-      def call(attributes)
-        define_class(attributes)
+      def call(header)
+        define_class(header)
         define_const if const_name
       end
 
       class PORO < ModelBuilder
 
-        def define_class(attributes)
+        def define_class(header)
           @klass = Class.new
+
+          attributes = header.keys
 
           @klass.send(:attr_accessor, *attributes)
 

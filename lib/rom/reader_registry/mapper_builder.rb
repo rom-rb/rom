@@ -11,7 +11,7 @@ module ROM
         @name = name
         @root = root
         @mappers = mappers
-        @attributes = root.header.dup
+        @attributes = root.header.zip
         @model_class = mappers[root.name].model if mappers[root.name]
       end
 
@@ -26,22 +26,23 @@ module ROM
       end
 
       def attribute(name)
-        attributes << name
+        attributes << [name]
       end
 
       def exclude(name)
-        attributes.delete(name)
+        attributes.delete([name])
       end
 
       def group(options)
-        attributes.concat(options.keys)
+        options.each do |name, header|
+          attributes << [name, header: header.zip, type: Array]
+        end
       end
 
       def call
-        @model_class = model_builder.call(attributes) if model_builder
+        header = Header.coerce(attributes)
 
-        header_attrs = attributes.map { |name| [name, Object] }
-        header = Header.coerce(header_attrs)
+        @model_class = model_builder.call(header) if model_builder
 
         mappers[name] = Mapper.new(header, model_class)
       end

@@ -53,7 +53,7 @@ describe Env, '#mappers' do
     end
 
     it 'only maps provided attributes' do
-      expect(header.map(&:name)).to eql([:email])
+      expect(header.keys).to eql([:email])
     end
   end
 
