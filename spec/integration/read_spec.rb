@@ -5,6 +5,7 @@ describe Env, '#read' do
 
   after do
     Object.send(:remove_const, :User)
+    Object.send(:remove_const, :UserWithTask) if Object.const_defined?(:UserWithTask)
     Object.send(:remove_const, :UserWithTasks) if Object.const_defined?(:UserWithTasks)
   end
 
@@ -35,7 +36,7 @@ describe Env, '#read' do
     expect(user.email).to eql 'jane@doe.org'
   end
 
-  it 'allows mapping joined relations' do
+  it 'maps grouped relations' do
     rom.relations do
       users do
         def with_tasks
@@ -75,6 +76,44 @@ describe Env, '#read' do
 
     expect(user).to eql(
       UserWithTasks.new(name: "Jane", email: "jane@doe.org", tasks: [{ title: "be cool", priority: 2 }])
+    )
+  end
+
+  it 'maps wrapped relations' do
+    rom.relations do
+      users do
+        def with_task
+          RA.wrap(natural_join(tasks), task: [:title, :priority])
+        end
+
+        def sorted
+          order(:name)
+        end
+      end
+    end
+
+    rom.mappers do
+      define(:users) do
+        model name: 'User'
+      end
+
+      define(:with_task, parent: users) do
+        model name: 'UserWithTask'
+
+        wrap task: [:title, :priority]
+      end
+    end
+
+    User.send(:include, Equalizer.new(:name, :email))
+    UserWithTask.send(:include, Equalizer.new(:name, :email, :task))
+
+    expect(rom.read(:users).with_task.header).to eql([:name, :email, :task])
+
+    user = rom.read(:users).sorted.with_task.first
+
+    expect(user).to eql(
+      UserWithTask.new(name: "Jane", email: "jane@doe.org",
+                       task: { title: "be cool", priority: 2 })
     )
   end
 end

@@ -39,6 +39,12 @@ module ROM
         end
       end
 
+      def wrap(options)
+        options.each do |name, header|
+          attributes << [name, header: header.zip, type: Hash]
+        end
+      end
+
       def call
         header = Header.coerce(attributes)
 
