@@ -11,7 +11,7 @@ module ROM
 
       attr_reader :name, :meta
 
-      class Collection < Attribute
+      class Embedded < Attribute
         include Equalizer.new(:name, :type, :model, :header)
 
         def model
@@ -25,8 +25,8 @@ module ROM
       end
 
       def self.[](type)
-        if type == Array
-          Collection
+        if type == Array || type == Hash
+          Embedded
         else
           self
         end

@@ -35,5 +35,24 @@ describe Header do
         expect(input.first[1]).to eql(header: [[:title]], type: Array, model: model)
       end
     end
+
+    context 'with a hash type' do
+      let(:input) { [[:task, header: [[:title]], type: Hash, model: model]] }
+      let(:model) { Class.new }
+
+      let(:expected) { Header.new(task: Header::Attribute.coerce(input.first)) }
+
+      it 'returns a header with coerced attributes' do
+        expect(header).to eql(expected)
+
+        tasks = header[:task]
+
+        expect(tasks.type).to be(Hash)
+        expect(tasks.model).to be(model)
+        expect(tasks.header).to eql(Header.coerce([[:title]]))
+
+        expect(input.first[1]).to eql(header: [[:title]], type: Hash, model: model)
+      end
+    end
   end
 end
