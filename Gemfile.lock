@@ -10,6 +10,7 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
+    abstract_type (0.0.7)
     activemodel (4.1.7)
       activesupport (= 4.1.7)
       builder (~> 3.1)
@@ -27,7 +28,12 @@ GEM
       ice_nine (~> 0.11.0)
       memoizable (~> 0.4.0)
     addressable (2.3.6)
+    anima (0.2.0)
+      abstract_type (~> 0.0.7)
+      adamantium (~> 0.1)
+      equalizer (~> 0.0.8)
     arel (5.0.1.20140414130214)
+    ast (2.0.0)
     axiom-types (0.1.1)
       descendants_tracker (~> 0.0.4)
       ice_nine (~> 0.11.0)
@@ -78,7 +84,39 @@ GEM
       bson (~> 2.2)
       connection_pool (~> 2.0)
       optionable (~> 0.2.0)
+    morpher (0.2.3)
+      abstract_type (~> 0.0.7)
+      adamantium (~> 0.2.0)
+      anima (~> 0.2.0)
+      ast (~> 2.0.0)
+      concord (~> 0.1.4)
+      equalizer (~> 0.0.9)
+      ice_nine (~> 0.11.0)
+      procto (~> 0.0.2)
+    mutant (0.6.5)
+      abstract_type (~> 0.0.7)
+      adamantium (~> 0.2.0)
+      anima (~> 0.2.0)
+      ast (~> 2.0)
+      concord (~> 0.1.5)
+      diff-lcs (~> 1.2)
+      equalizer (~> 0.0.9)
+      ice_nine (~> 0.11.0)
+      memoizable (~> 0.4.2)
+      morpher (~> 0.2.3)
+      parallel (~> 1.3)
+      parser (~> 2.1)
+      procto (~> 0.0.2)
+      unparser (~> 0.1.15)
+    mutant-rspec (0.6.5)
+      mutant (~> 0.6.5)
+      rspec-core (>= 2.14.1, < 3.2.0)
     optionable (0.2.0)
+    parallel (1.3.3)
+    parser (2.2.0.pre.7)
+      ast (>= 1.1, < 3.0)
+      slop (~> 3.4, >= 3.4.5)
+    procto (0.0.2)
     pry (0.10.1)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
@@ -109,6 +147,13 @@ GEM
       hitimes
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
+    unparser (0.1.15)
+      abstract_type (~> 0.0.7)
+      adamantium (~> 0.2.0)
+      concord (~> 0.1.5)
+      equalizer (~> 0.0.9)
+      parser (~> 2.2.0.pre.4)
+      procto (~> 0.0.2)
     virtus (1.0.3)
       axiom-types (~> 0.1)
       coercible (~> 1.0)
@@ -125,6 +170,8 @@ DEPENDENCIES
   guard-rspec
   jdbc-sqlite3
   moped
+  mutant
+  mutant-rspec
   rake
   rom!
   rspec-core (~> 3.1)

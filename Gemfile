@@ -3,6 +3,8 @@ source 'https://rubygems.org'
 gemspec
 
 group :test do
+  gem 'mutant'
+  gem 'mutant-rspec'
   gem 'sequel'
   gem 'sqlite3', platforms: [:mri, :rbx]
   gem 'moped'
