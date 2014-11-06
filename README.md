@@ -81,18 +81,21 @@ puts rom.read(:users).by_name("Jane").adults.to_a.inspect
 
 ## ROADMAP
 
-Here's a top-level TODO:
-
-* Add redis adapter (just to prove that stuff works with different adapters)
-* Add a couple of RA operations (there's just Join now)
-* Release 0.3.0.alpha \o/
-
-Please refer to [issues](https://github.com/rom-rb/rom/issues) for details
+ROM is on its way towards 1.0.0. Please refer to [issues](https://github.com/rom-rb/rom/issues)
+for details.
 
 ## Community
 
 * [![Gitter chat](https://badges.gitter.im/rom-rb/chat.png)](https://gitter.im/rom-rb/chat)
 * [Ruby Object Mapper](https://groups.google.com/forum/#!forum/rom-rb) mailing list
+
+## Credits
+
+This project has a long history and wouldn't exist without following people:
+
+ * [Dan Kubb](https://github.com/dkubb)
+ * [Markus Schirp](https://github.com/mbj)
+ * [Martin Gamsjaeger](https://github.com/snusnu)
 
 ## License
 
