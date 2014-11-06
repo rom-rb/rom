@@ -25,8 +25,8 @@ module ROM
         self
       end
 
-      def attribute(name)
-        attributes << [name]
+      def attribute(name, options)
+        attributes << [name, options]
       end
 
       def exclude(name)

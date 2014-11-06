@@ -7,9 +7,9 @@ module ROM
     attr_reader :attributes
 
     class Attribute
-      include Equalizer.new(:name, :type)
+      include Equalizer.new(:name, :key, :type)
 
-      attr_reader :name, :meta
+      attr_reader :name, :key, :meta
 
       class Embedded < Attribute
         include Equalizer.new(:name, :type, :model, :header)
@@ -37,20 +37,22 @@ module ROM
           input
         else
           name = input[0]
-          meta = (input[1] || { type: Object }).dup
-          type = meta.fetch(:type) { meta[:type] }
+          meta = (input[1] || {}).dup
+
+          meta[:type] ||= Object
 
           if meta.key?(:header)
             meta[:header] = Header.coerce(meta[:header])
           end
 
-          self[type].new(name, meta)
+          self[meta[:type]].new(name, meta)
         end
       end
 
       def initialize(name, meta = {})
         @name = name
         @meta = meta
+        @key = meta.fetch(:from) { name }
       end
 
       def type
@@ -81,6 +83,10 @@ module ROM
 
     def keys
       attributes.keys
+    end
+
+    def tuple_keys
+      map(&:key)
     end
 
     def values

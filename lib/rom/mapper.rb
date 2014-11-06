@@ -9,7 +9,11 @@ module ROM
     end
 
     def load(tuple)
-      model.new(tuple)
+      loaded_tuple = header.each_with_object({}) { |attribute, h|
+        h[attribute.name] = tuple[attribute.key]
+      }
+
+      model.new(loaded_tuple)
     end
 
   end
