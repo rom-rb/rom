@@ -1,4 +1,4 @@
-shared_context 'users and tasks' do
+RSpec.shared_context 'users and tasks' do
   let(:rom) { ROM.setup(sqlite: SEQUEL_TEST_DB_URI) }
 
   before do

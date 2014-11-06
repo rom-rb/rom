@@ -1,7 +1,9 @@
 require 'spec_helper'
 
 describe Relation do
-  subject(:relation) { Relation.new(DB[:users]) }
+  subject(:relation) { Relation.new(dataset) }
+
+  let(:dataset) { DB[:users] }
 
   let(:jane) { { id: 1, name: 'Jane' } }
   let(:joe) { { id: 2, name: 'Joe' } }
@@ -14,6 +16,14 @@ describe Relation do
     deseed
   end
 
+  describe "#header" do
+    it "return's duplicated and frozen dataset header" do
+      expect(relation.header).to be_frozen
+      expect(relation.header).to eql(dataset.header)
+      expect(relation.header).not_to be(dataset.header)
+    end
+  end
+
   describe "#each" do
     it "yields all objects" do
       result = []
@@ -23,6 +33,10 @@ describe Relation do
       end
 
       expect(result).to eql([jane, joe])
+    end
+
+    it "returns an enumerator if block is not provided" do
+      expect(relation.each).to be_instance_of(Enumerator)
     end
   end
 

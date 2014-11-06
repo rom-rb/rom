@@ -9,13 +9,13 @@ module ROM
 
     attr_reader :header
 
-    def initialize(dataset, header = dataset.header.dup)
+    def initialize(dataset, header = dataset.header)
       super
-      @header = header.freeze
+      @header = header.dup.freeze
     end
 
     def each(&block)
-      return dataset.to_enum unless block
+      return to_enum unless block
       dataset.each(&block)
     end
 
