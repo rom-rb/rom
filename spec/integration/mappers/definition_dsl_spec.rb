@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Env, '#mappers' do
+describe 'Mapper definition DSL' do
   include_context 'users and tasks'
 
   let(:header) { mapper.header }
@@ -21,7 +21,7 @@ describe Env, '#mappers' do
     Object.send(:remove_const, :User) if Object.const_defined?(:User)
   end
 
-  describe 'defining a default PORO mapper' do
+  describe 'default PORO mapper' do
     subject(:mapper) { rom.read(:users).mapper }
 
     before do
@@ -41,7 +41,7 @@ describe Env, '#mappers' do
     end
   end
 
-  describe 'defining a mapper with custom attributes' do
+  describe 'excluding attributes' do
     subject(:mapper) { rom.read(:users).mapper }
 
     before do
@@ -59,7 +59,7 @@ describe Env, '#mappers' do
     end
   end
 
-  describe 'defining a mapper for a virtual relation' do
+  describe 'virtual relation mapper' do
     subject(:mapper) { rom.read(:users).email_index.mapper }
 
     before do

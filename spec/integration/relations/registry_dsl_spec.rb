@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'Defining public relations' do
+describe 'Relation registration DSL' do
   include_context 'users and tasks'
 
   it 'allows to expose chainable relations' do

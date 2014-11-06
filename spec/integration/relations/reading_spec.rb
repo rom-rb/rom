@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Env, '#read' do
+describe 'Reading relations' do
   include_context 'users and tasks'
 
   after do
@@ -13,6 +13,7 @@ describe Env, '#read' do
     rom.relations do
 
       register(:users) do
+
         def by_name(name)
           where(name: name)
         end
