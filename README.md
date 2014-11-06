@@ -1,9 +1,3 @@
-# Ruby Object Mapper
-
-ROM is an experimental ruby ORM.
-
-## Status
-
 [![Gem Version](https://badge.fury.io/rb/rom.svg)][gem]
 [![Build Status](https://travis-ci.org/rom-rb/rom.svg?branch=master)][travis]
 [![Dependency Status](https://gemnasium.com/rom-rb/rom.png)][gemnasium]
@@ -18,7 +12,20 @@ ROM is an experimental ruby ORM.
 [coveralls]: https://coveralls.io/r/rom-rb/rom
 [inchpages]: http://inch-ci.org/github/rom-rb/rom/
 
-Project is being rebuilt from scratch. Watch this space.
+# Ruby Object Mapper
+
+ROM is an experimental Ruby ORM that aims to bring powerful object mapping
+capabilities and give you back the full power of your database. It is based on
+a couple of core concepts which makes it different from a typical ORM:
+
+  * Quering a database is considered as a private implementation detail
+  * Abstract query interfaces are evil and a source of unneccessery complexity
+  * Reading and mutating data are 2 distinct concerns and should be treated separately
+  * It must be **simple** to use the full power of your database
+
+With that in mind ROM ships with adapters that allow you to connect to any
+database and exposes a DSL to define **relations** and **mappers** to simplify
+accessing the data.
 
 ## Synopsis
 
