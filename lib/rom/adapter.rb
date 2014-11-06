@@ -18,7 +18,7 @@ module ROM
     end
 
     def self.register(adapter)
-      @adapters << adapter
+      @adapters.unshift adapter
     end
 
     def self.[](scheme)
