@@ -1,3 +1,5 @@
+require 'sequel'
+
 class Sequel::Dataset
   alias_method :header, :columns
 end

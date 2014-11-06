@@ -1,5 +1,4 @@
 require 'concord'
-require 'sequel'
 
 module ROM
 
