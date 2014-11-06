@@ -15,18 +15,20 @@ module ROM
       def call(&block)
         relations = schema.relations
 
-        mod = Module.new
-        mod.module_exec(&block)
+        if block
+          mod = Module.new
+          mod.module_exec(&block)
 
-        mod.module_exec do
-          relations.each do |name, relation|
-            define_method(name) { relation.dataset }
+          mod.module_exec do
+            relations.each do |name, relation|
+              define_method(name) { relation.dataset }
+            end
           end
         end
 
         klass_name = "#{Relation.name}[#{Inflecto.camelize(name)}]"
 
-        klass = Class.new(Relation) { include(mod) }
+        klass = Class.new(Relation) { include(mod) if mod }
 
         klass.class_eval <<-RUBY, __FILE__, __LINE__ + 1
           def self.name

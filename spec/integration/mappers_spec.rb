@@ -7,10 +7,12 @@ describe Env, '#mappers' do
 
   before do
     rom.relations do
-      users do
+      register(:users) do
+
         def email_index
           select(:email)
         end
+
       end
     end
   end

@@ -18,7 +18,7 @@ describe 'Renaming attributes' do
     end
 
     rom.relations do
-      users {}
+      register(:users)
     end
 
     rom.mappers do

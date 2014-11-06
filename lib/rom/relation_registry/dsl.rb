@@ -14,18 +14,17 @@ module ROM
         @relations = {}
       end
 
-      def call
-        RelationRegistry.new(relations, mappers)
-      end
-
-      private
-
-      def method_missing(name, *args, &block)
+      def register(name, &block)
         builder = RelationBuilder.new(name, schema)
         relation = builder.call(&block)
 
         relations[name] = relation
       end
+
+      def call
+        RelationRegistry.new(relations, mappers)
+      end
+
     end
 
   end

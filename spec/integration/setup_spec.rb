@@ -5,7 +5,6 @@ describe ROM, '.setup' do
   let(:jane) { { id: 1, name: 'Jane' } }
   let(:joe) { { id: 2, name: 'Joe' } }
 
-
   before do
     seed(rom.sqlite.connection)
   end

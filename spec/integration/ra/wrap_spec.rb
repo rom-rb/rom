@@ -5,10 +5,12 @@ describe 'Wrap operation' do
 
   specify 'defining a grouped relation' do
     rom.relations do
-      users do
+      register(:users) do
+
         def with_task
           RA.wrap(natural_join(tasks), task: [:title, :priority])
         end
+
       end
     end
 

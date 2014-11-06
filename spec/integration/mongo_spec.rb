@@ -21,10 +21,12 @@ describe 'Mongo adapter' do
     end
 
     rom.relations do
-      users do
+      register(:users) do
+
         def by_name(name)
           find(name: name)
         end
+
       end
     end
 

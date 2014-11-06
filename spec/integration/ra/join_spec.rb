@@ -27,10 +27,12 @@ describe 'Join operation between two repositories' do
     end
 
     rom.relations do
-      users do
+      register(:users) do
+
         def with_tasks
           RA.join(users, tasks)
         end
+
       end
     end
 

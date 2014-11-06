@@ -5,7 +5,8 @@ describe 'Defining public relations' do
 
   it 'allows to expose chainable relations' do
     rom.relations do
-      tasks do
+      register(:tasks) do
+
         def high_priority
           where { priority < 2 }
         end
@@ -13,12 +14,15 @@ describe 'Defining public relations' do
         def by_title(title)
           where(title: title)
         end
+
       end
 
-      users do
+      register(:users) do
+
         def with_tasks
           natural_join(tasks)
         end
+
       end
     end
 

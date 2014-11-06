@@ -11,7 +11,8 @@ describe Env, '#read' do
 
   it 'exposes a relation reader' do
     rom.relations do
-      users do
+
+      register(:users) do
         def by_name(name)
           where(name: name)
         end
@@ -19,6 +20,7 @@ describe Env, '#read' do
         def sorted
           order(:name, :email)
         end
+
       end
     end
 
@@ -38,7 +40,8 @@ describe Env, '#read' do
 
   it 'maps grouped relations' do
     rom.relations do
-      users do
+      register(:users) do
+
         def with_tasks
           RA.group(natural_join(tasks), tasks: [:title, :priority])
         end
@@ -46,6 +49,7 @@ describe Env, '#read' do
         def sorted
           order(:name)
         end
+
       end
     end
 
@@ -81,7 +85,8 @@ describe Env, '#read' do
 
   it 'maps wrapped relations' do
     rom.relations do
-      users do
+      register(:users) do
+
         def with_task
           RA.wrap(natural_join(tasks), task: [:title, :priority])
         end
@@ -89,6 +94,7 @@ describe Env, '#read' do
         def sorted
           order(:name)
         end
+
       end
     end
 

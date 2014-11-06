@@ -5,7 +5,8 @@ describe 'Group operation' do
 
   specify 'defining a grouped relation' do
     rom.relations do
-      users do
+      register(:users) do
+
         def with_tasks
           RA.group(natural_join(tasks), tasks: [:title, :priority])
         end
@@ -13,6 +14,7 @@ describe 'Group operation' do
         def by_name(name)
           where(name: name)
         end
+
       end
     end
 

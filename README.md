@@ -39,7 +39,8 @@ rom.sqlite.connection.run(
 )
 
 rom.relations do
-  users do
+  register(:users) do
+
     def by_name(name)
       where(name: name)
     end
@@ -47,6 +48,7 @@ rom.relations do
     def adults
       where { age >= 18 }
     end
+
   end
 end
 
