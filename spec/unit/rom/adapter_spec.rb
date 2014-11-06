@@ -1,17 +1,18 @@
 require 'spec_helper'
 
-class TestAdapter < Adapter
-  def self.schemes
-    [:test_scheme]
+describe Adapter do
+  before do
+    class TestAdapter < Adapter
+      def self.schemes
+        [:test_scheme]
+      end
+
+      def initialize(uri); end
+
+      Adapter.register(self)
+    end
   end
 
-  def initialize(uri); end
-
-  Adapter.register(self)
-end
-
-
-describe Adapter do
   describe '.setup' do
     it 'sets up connection based on a uri' do
       adapter = Adapter.setup("test_scheme::memory")
@@ -32,28 +33,26 @@ describe Adapter do
     end
   end
 
-
   describe 'Registration order' do
     it "prefers the last-defined adapter" do
       class OrderTestFirst < TestAdapter
         def self.schemes
           [:order_test]
         end
+
         Adapter.register(self)
       end
+
       adapter = Adapter.setup("order_test::memory")
       expect(adapter).to be_instance_of(OrderTestFirst)
 
       class OrderTestSecond < OrderTestFirst
         Adapter.register(self)
       end
+
       adapter = Adapter.setup("order_test::memory")
+
       expect(adapter).to be_instance_of(OrderTestSecond)
-
-
-      Object.instance_eval { remove_const :OrderTestFirst }
-      Object.instance_eval { remove_const :OrderTestSecond }
-
     end
   end
 

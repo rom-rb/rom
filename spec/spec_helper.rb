@@ -33,3 +33,13 @@ def deseed(db = DB)
 end
 
 Dir[Pathname(__FILE__).dirname.join('shared/*.rb').to_s].each { |f| puts f; require f }
+
+RSpec.configure do |config|
+  config.before do
+    @constants = Object.constants
+  end
+
+  config.after do
+    (Object.constants - @constants).each { |name| Object.send(:remove_const, name) }
+  end
+end

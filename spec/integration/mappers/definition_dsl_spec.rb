@@ -17,10 +17,6 @@ describe 'Mapper definition DSL' do
     end
   end
 
-  after do
-    Object.send(:remove_const, :User) if Object.const_defined?(:User)
-  end
-
   describe 'default PORO mapper' do
     subject(:mapper) { rom.read(:users).mapper }
 

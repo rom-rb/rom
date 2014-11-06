@@ -3,12 +3,6 @@ require 'spec_helper'
 describe 'Reading relations' do
   include_context 'users and tasks'
 
-  after do
-    Object.send(:remove_const, :User)
-    Object.send(:remove_const, :UserWithTask) if Object.const_defined?(:UserWithTask)
-    Object.send(:remove_const, :UserWithTasks) if Object.const_defined?(:UserWithTasks)
-  end
-
   it 'exposes a relation reader' do
     rom.relations do
 

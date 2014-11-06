@@ -1,10 +1,6 @@
 require 'spec_helper'
 
 describe 'Renaming attributes' do
-  after do
-    Object.send(:remove_const, :User)
-  end
-
   it 'maps renamed attributes' do
     rom = ROM.setup(memory: 'memory://test')
 
