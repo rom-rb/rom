@@ -23,6 +23,9 @@ Project is being rebuilt from scratch. Watch this space.
 ## Synopsis
 
 ``` ruby
+require 'rom'
+require 'rom/adapter/sequel'
+
 rom = ROM.setup(sqlite: "sqlite::memory")
 
 rom.sqlite.connection.run(
@@ -53,12 +56,16 @@ rom.mappers do
   end
 end
 
-rom.schema[:users].insert(name: "Joe", age: 17)
-rom.schema[:users].insert(name: "Jane", age: 18)
+# accessing registered relations
+users = rom.relations.users
 
-puts rom.relations.users.by_name("Jane").adults.to_a.inspect
+users.insert(name: "Joe", age: 17)
+users.insert(name: "Jane", age: 18)
+
+puts users.by_name("Jane").adults.to_a.inspect
 # => [{:id=>2, :name=>"Jane", :age=>18}]
 
+# reading relations using defined mappers
 puts rom.read(:users).by_name("Jane").adults.to_a.inspect
 # => [#<User:0x007fdba161cc48 @id=2, @name="Jane", @age=18>]
 ```
