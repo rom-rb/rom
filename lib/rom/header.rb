@@ -85,8 +85,8 @@ module ROM
       attributes.keys
     end
 
-    def tuple_keys
-      map(&:key)
+    def mapping
+      Hash[map { |attribute| [attribute.key, attribute.name] }]
     end
 
     def values

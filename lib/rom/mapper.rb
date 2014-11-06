@@ -1,19 +1,16 @@
 module ROM
 
   class Mapper
-    attr_reader :header, :model
+    attr_reader :header, :model, :mapping
 
     def initialize(header, model)
       @header = header
       @model = model
+      @mapping = header.mapping
     end
 
     def load(tuple)
-      loaded_tuple = header.each_with_object({}) { |attribute, h|
-        h[attribute.name] = tuple[attribute.key]
-      }
-
-      model.new(loaded_tuple)
+      model.new(Hash[tuple.map { |k, v| [mapping[k], v] }])
     end
 
   end

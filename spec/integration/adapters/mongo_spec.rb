@@ -14,9 +14,9 @@ describe 'Mongo adapter' do
       base_relation(:users) do
         repository :mongo
 
-        attribute :_id
-        attribute :name
-        attribute :email
+        attribute "_id"
+        attribute "name"
+        attribute "email"
       end
     end
 
