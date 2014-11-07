@@ -74,7 +74,10 @@ describe 'Reading relations' do
     user = rom.read(:users).sorted.with_tasks.first
 
     expect(user).to eql(
-      UserWithTasks.new(name: "Jane", email: "jane@doe.org", tasks: [{ title: "be cool", priority: 2 }])
+      UserWithTasks.new(
+        name: "Jane",
+        email: "jane@doe.org",
+        tasks: [{ title: "be cool", priority: 2 }])
     )
   end
 

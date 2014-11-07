@@ -15,11 +15,15 @@ module ROM
         include Equalizer.new(:name, :type, :model, :header)
 
         def model
-          meta.fetch(:model)
+          meta[:model]
         end
 
         def header
           meta.fetch(:header)
+        end
+
+        def mapping
+          [name, header.mapping]
         end
 
       end
@@ -58,6 +62,10 @@ module ROM
       def type
         meta.fetch(:type)
       end
+
+      def mapping
+        [key, name]
+      end
     end
 
     def self.coerce(input)
@@ -86,7 +94,7 @@ module ROM
     end
 
     def mapping
-      Hash[map { |attribute| [attribute.key, attribute.name] }]
+      Hash[map(&:mapping)]
     end
 
     def values

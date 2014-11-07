@@ -9,8 +9,19 @@ module ROM
       @mapping = header.mapping
     end
 
-    def load(tuple)
-      model.new(Hash[tuple.map { |k, v| [mapping[k], v] }])
+    def load(tuple, mapping = mapping)
+      model.new(Hash[call(tuple, mapping)])
+    end
+
+    def call(tuple, mapping = mapping)
+      tuple.map do |key, value|
+        case value
+        when Hash  then [key, Hash[call(value, mapping[key])]]
+        when Array then [key, value.map { |v| Hash[call(v, mapping[key])] }]
+        else
+          [mapping[key], value]
+        end
+      end
     end
 
   end

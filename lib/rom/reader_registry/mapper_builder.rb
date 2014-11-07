@@ -4,6 +4,23 @@ module ROM
   class ReaderRegistry
 
     class MapperBuilder
+
+      class AttributeDSL
+        attr_reader :attributes
+
+        def initialize
+          @attributes = []
+        end
+
+        def header
+          Header.coerce(attributes)
+        end
+
+        def attribute(name, options)
+          attributes << [name, options]
+        end
+      end
+
       attr_reader :name, :root, :mappers,
         :model_builder, :model_class, :attributes
 
@@ -33,15 +50,29 @@ module ROM
         attributes.delete([name])
       end
 
-      def group(options)
-        options.each do |name, header|
-          attributes << [name, header: header.zip, type: Array]
+      def group(options, &block)
+        if block
+          dsl = AttributeDSL.new
+          dsl.instance_exec(&block)
+
+          attributes << [options, header: dsl.header, type: Array]
+        else
+          options.each do |name, header|
+            attributes << [name, header: header.zip, type: Array]
+          end
         end
       end
 
-      def wrap(options)
-        options.each do |name, header|
-          attributes << [name, header: header.zip, type: Hash]
+      def wrap(options, &block)
+        if block
+          dsl = AttributeDSL.new
+          dsl.instance_exec(&block)
+
+          attributes << [options, header: dsl.header, type: Hash]
+        else
+          options.each do |name, header|
+            attributes << [name, header: header.zip, type: Hash]
+          end
         end
       end
 

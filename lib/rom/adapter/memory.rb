@@ -8,6 +8,14 @@ module ROM
         [:memory]
       end
 
+      class Dataset
+        include Charlatan.new(:data)
+
+        def header
+          []
+        end
+      end
+
       class Storage
         attr_reader :data
 
@@ -17,7 +25,7 @@ module ROM
         end
 
         def [](name)
-          data[name] ||= []
+          data[name] ||= Dataset.new([])
         end
       end
 
