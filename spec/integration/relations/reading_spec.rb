@@ -71,7 +71,7 @@ describe 'Reading relations' do
       User.new(name: "Jane", email: "jane@doe.org")
     )
 
-    user = rom.read(:users).sorted.with_tasks.first
+    user = rom.read(:users).with_tasks.sorted.first
 
     expect(user).to eql(
       UserWithTasks.new(
