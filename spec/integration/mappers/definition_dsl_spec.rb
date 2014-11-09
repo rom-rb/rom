@@ -65,17 +65,18 @@ describe 'Mapper definition DSL' do
         end
 
         define(:email_index, parent: users) do
+          model name: 'UserWithoutName'
           exclude :name
         end
       end
     end
 
-    it 'inherits the model from the parent by default' do
-      expect(mapper.model).to be(User)
+    it 'inherits the attributes from the parent by default' do
+      expect(header.keys).to eql(rom.mappers[:users].header - [:name])
     end
 
-    it 'only maps provided attributes' do
-      expect(header.keys).to eql([:email])
+    it 'builds a new model' do
+      expect(mapper.model).to be(UserWithoutName)
     end
   end
 

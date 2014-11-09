@@ -29,7 +29,6 @@ module ROM
         @root = root
         @mappers = mappers
         @attributes = root.header.zip
-        @model_class = mappers[root.name].model if mappers[root.name]
       end
 
       def model(options)
