@@ -19,9 +19,10 @@ module ROM
       def define(name, options = {}, &block)
         parent = options.fetch(:parent) { relations[name] }
 
-        builder = MapperBuilder.new(name, parent, mappers)
+        builder = MapperBuilder.new(name, parent, mappers, options)
         builder.instance_exec(&block)
         builder.call
+
 
         readers[name] = Reader.new(name, parent, mappers) unless options[:parent]
 

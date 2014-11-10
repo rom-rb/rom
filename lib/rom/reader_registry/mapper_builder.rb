@@ -21,14 +21,15 @@ module ROM
         end
       end
 
-      attr_reader :name, :root, :mappers,
+      attr_reader :name, :root, :mappers, :prefix,
         :model_builder, :model_class, :attributes
 
-      def initialize(name, root, mappers)
+      def initialize(name, root, mappers, options = {})
         @name = name
         @root = root
         @mappers = mappers
-        @attributes = root.header.zip
+        @prefix = options[:prefix]
+        @attributes = root.header.map { |attr| [prefix ? :"#{prefix}_#{attr}" : attr] }
       end
 
       def model(options)
@@ -41,7 +42,8 @@ module ROM
         self
       end
 
-      def attribute(name, options)
+      def attribute(name, options = {})
+        options[:from] = :"#{prefix}_#{name}" if prefix
         attributes << [name, options]
       end
 
