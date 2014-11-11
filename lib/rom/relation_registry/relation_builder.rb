@@ -1,7 +1,7 @@
 require 'inflecto'
 
 module ROM
-  class RelationRegistry
+  class RelationRegistry < Registry
 
     class RelationBuilder
       attr_reader :name, :relation, :schema
@@ -13,16 +13,12 @@ module ROM
       end
 
       def call(&block)
-        relations = schema.relations
-
         if block
           mod = Module.new
           mod.module_exec(&block)
 
-          mod.module_exec do
-            relations.each do |name, relation|
-              define_method(name) { relation.dataset }
-            end
+          schema.each do |name, relation|
+            mod.send(:define_method, name) { relation.dataset }
           end
         end
 

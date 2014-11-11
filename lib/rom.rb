@@ -29,6 +29,7 @@ require 'rom/adapter'
 require 'rom/repository'
 require 'rom/env'
 
+require 'rom/registry'
 require 'rom/schema'
 require 'rom/relation_registry'
 require 'rom/reader_registry'

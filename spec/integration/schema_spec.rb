@@ -32,7 +32,6 @@ describe 'Inferring schema from database' do
   let(:rom) { ROM.setup(sqlite: SEQUEL_TEST_DB_URI) }
 
   context "when database schema exists" do
-
     before do
       seed(rom.sqlite.connection)
     end
@@ -53,7 +52,7 @@ describe 'Inferring schema from database' do
     it "returns an empty schema" do
       schema = rom.schema
 
-      expect(schema.relations).to be_empty
+      expect(schema.sqlite).to be(nil)
     end
   end
 
@@ -61,7 +60,7 @@ describe 'Inferring schema from database' do
     it "returns an empty schema" do
       schema = ROM.setup(memory: 'memory://test').schema
 
-      expect(schema.relations).to be_empty
+      expect(schema.memory).to be(nil)
     end
   end
 end

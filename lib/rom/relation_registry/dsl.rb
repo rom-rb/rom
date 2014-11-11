@@ -9,18 +9,18 @@ module ROM
 
       def initialize(schema)
         @schema = schema
-        @relations = {}
+        @relations = RelationRegistry.new
       end
 
       def register(name, &block)
         builder = RelationBuilder.new(name, schema)
         relation = builder.call(&block)
 
-        relations[name] = relation
+        relations << relation
       end
 
       def call
-        RelationRegistry.new(relations)
+        relations
       end
 
     end

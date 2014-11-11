@@ -1,5 +1,5 @@
 module ROM
-  class ReaderRegistry
+  class ReaderRegistry < Registry
 
     class ModelBuilder
       attr_reader :options, :const_name, :klass

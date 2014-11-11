@@ -1,7 +1,7 @@
 require 'rom/reader_registry/mapper_builder'
 
 module ROM
-  class ReaderRegistry
+  class ReaderRegistry < Registry
 
     class DSL
       attr_reader :relations, :mappers, :readers
@@ -9,7 +9,7 @@ module ROM
       def initialize(relations)
         @relations = relations
         @mappers = {}
-        @readers = {}
+        @readers = ReaderRegistry.new
       end
 
       def call
@@ -22,7 +22,6 @@ module ROM
         builder = MapperBuilder.new(name, parent, mappers, options)
         builder.instance_exec(&block)
         builder.call
-
 
         readers[name] = Reader.new(name, parent, mappers) unless options[:parent]
 

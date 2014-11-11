@@ -1,7 +1,7 @@
 require 'rom/reader_registry/model_builder'
 
 module ROM
-  class ReaderRegistry
+  class ReaderRegistry < Registry
 
     class MapperBuilder
 
