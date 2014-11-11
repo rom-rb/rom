@@ -4,10 +4,10 @@ require 'rom/relation_registry/dsl'
 module ROM
 
   class RelationRegistry
-    include Concord.new(:relations, :mappers)
+    include Concord.new(:relations)
 
-    def self.define(schema, mappers, &block)
-      dsl = DSL.new(schema, mappers)
+    def self.define(schema, &block)
+      dsl = DSL.new(schema)
       dsl.instance_exec(&block)
       dsl.call
     end
@@ -26,15 +26,8 @@ module ROM
 
     private
 
-    def method_missing(name, *args)
-      options = args.first || {}
-      relation = relations[name]
-
-      if options[:mapper]
-        mappers[name].new(relation)
-      else
-        relation
-      end
+    def method_missing(name)
+      relations[name]
     end
 
   end

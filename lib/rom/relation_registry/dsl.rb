@@ -5,12 +5,10 @@ module ROM
   class RelationRegistry
 
     class DSL
+      attr_reader :schema, :relations
 
-      attr_reader :schema, :mappers, :relations
-
-      def initialize(schema, mappers)
+      def initialize(schema)
         @schema = schema
-        @mappers = mappers
         @relations = {}
       end
 
@@ -22,7 +20,7 @@ module ROM
       end
 
       def call
-        RelationRegistry.new(relations, mappers)
+        RelationRegistry.new(relations)
       end
 
     end
