@@ -1,11 +1,11 @@
-require 'rom/reader_registry/dsl'
+require 'rom/mapper_dsl'
 
 module ROM
 
   class ReaderRegistry < Registry
 
     def self.define(relations, &block)
-      dsl = DSL.new(relations)
+      dsl = MapperDSL.new(relations)
       dsl.instance_exec(&block)
       dsl.call
     end

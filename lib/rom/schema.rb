@@ -1,4 +1,4 @@
-require 'rom/schema/dsl'
+require 'rom/schema_dsl'
 
 module ROM
 
@@ -6,7 +6,7 @@ module ROM
 
     def self.define(env, &block)
       if block
-        dsl = DSL.new(env)
+        dsl = SchemaDSL.new(env)
         dsl.instance_exec(&block)
         dsl.call
       else
@@ -15,7 +15,7 @@ module ROM
     end
 
     def self.load_schema(env)
-      env.load_schema.each_with_object(Schema.new) do |(name, dataset, header), schema|
+      env.load_schema.each_with_object(new) do |(name, dataset, header), schema|
         schema[name] = Relation.new(dataset, header)
       end
     end
