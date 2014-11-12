@@ -1,5 +1,8 @@
 # encoding: utf-8
 
+require "codeclimate-test-reporter"
+CodeClimate::TestReporter.start
+
 require 'rom'
 require 'rom/adapter/memory'
 require 'rom/adapter/sequel'
