@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/rom-rb/rom-sql.git
-  revision: 204ae83ea26d8e0fae431072fe0e66fe8ee3f1b6
+  revision: 1982e31874d4ff70922c99e6c6859a81fb4dd488
   branch: master
   specs:
     rom-sql (0.0.1)
@@ -42,12 +42,7 @@ GEM
       equalizer (~> 0.0.8)
     arel (5.0.1.20140414130214)
     ast (2.0.0)
-    axiom-types (0.1.1)
-      descendants_tracker (~> 0.0.4)
-      ice_nine (~> 0.11.0)
-      thread_safe (~> 0.3, >= 0.3.1)
     benchmark-ips (2.0.0)
-    bson (2.3.0)
     builder (3.2.2)
     celluloid (0.16.0)
       timers (~> 4.0.0)
@@ -55,14 +50,9 @@ GEM
     codeclimate-test-reporter (0.4.1)
       simplecov (>= 0.7.1, < 1.0.0)
     coderay (1.1.0)
-    coercible (1.0.0)
-      descendants_tracker (~> 0.0.1)
     concord (0.1.5)
       adamantium (~> 0.2.0)
       equalizer (~> 0.0.9)
-    connection_pool (2.0.0)
-    descendants_tracker (0.0.4)
-      thread_safe (~> 0.3, >= 0.3.1)
     diff-lcs (1.2.5)
     docile (1.1.5)
     equalizer (0.0.9)
@@ -91,10 +81,6 @@ GEM
       thread_safe (~> 0.3, >= 0.3.1)
     method_source (0.8.2)
     minitest (5.4.2)
-    moped (2.0.1)
-      bson (~> 2.2)
-      connection_pool (~> 2.0)
-      optionable (~> 0.2.0)
     morpher (0.2.3)
       abstract_type (~> 0.0.7)
       adamantium (~> 0.2.0)
@@ -123,7 +109,6 @@ GEM
     mutant-rspec (0.6.5)
       mutant (~> 0.6.5)
       rspec-core (>= 2.14.1, < 3.2.0)
-    optionable (0.2.0)
     parallel (1.3.3)
     parser (2.2.0.pre.7)
       ast (>= 1.1, < 3.0)
@@ -171,11 +156,6 @@ GEM
       equalizer (~> 0.0.9)
       parser (~> 2.2.0.pre.4)
       procto (~> 0.0.2)
-    virtus (1.0.3)
-      axiom-types (~> 0.1)
-      coercible (~> 1.0)
-      descendants_tracker (~> 0.0, >= 0.0.3)
-      equalizer (~> 0.0, >= 0.0.9)
 
 PLATFORMS
   ruby
@@ -187,7 +167,6 @@ DEPENDENCIES
   guard
   guard-rspec
   jdbc-sqlite3
-  moped
   mutant
   mutant-rspec
   rake
@@ -196,6 +175,4 @@ DEPENDENCIES
   rspec-core (~> 3.1)
   rspec-expectations (~> 3.1)
   rubysl-bigdecimal
-  sequel
   sqlite3
-  virtus

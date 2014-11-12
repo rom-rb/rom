@@ -5,9 +5,6 @@ gemspec
 group :test do
   gem 'mutant'
   gem 'mutant-rspec'
-  gem 'sequel'
-  gem 'moped'
-  gem 'virtus'
   gem 'rubysl-bigdecimal', platforms: :rbx
   gem 'guard'
   gem 'guard-rspec'

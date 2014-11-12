@@ -10,8 +10,6 @@ require 'rom/adapter/memory'
 require 'rom-sql'
 require 'rom/sql/spec/support'
 
-require 'rom/adapter/mongo'
-
 include ROM
 
 root = Pathname(__FILE__).dirname
