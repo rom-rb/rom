@@ -25,15 +25,15 @@ describe 'Mappers / Renaming attributes' do
 
       register(:users) do
         def with_address
-          RA.wrap(
-            RA.join(users, addresses),
+          ROM::RA.wrap(
+            ROM::RA.join(users, addresses),
             address: [:address_id, :address_street]
           )
         end
 
         def with_addresses
-          RA.group(
-            RA.join(users, addresses),
+          ROM::RA.group(
+            ROM::RA.join(users, addresses),
             addresses: [:address_id, :address_street]
           )
         end

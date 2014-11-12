@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-describe RA, '.wrap' do
-  subject(:wrap) { RA.wrap(relation, options) }
+describe ROM::RA, '.wrap' do
+  subject(:wrap) { ROM::RA.wrap(relation, options) }
 
   let(:relation) do
-    Relation.new([{ name: 'Jane',
+    ROM::Relation.new([{ name: 'Jane',
        email: 'jane@doe.org',
        street: 'Street 1',
        zipcode: '1234',

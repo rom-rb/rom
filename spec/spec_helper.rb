@@ -10,8 +10,6 @@ require 'rom/adapter/memory'
 require 'rom-sql'
 require 'rom/sql/spec/support'
 
-include ROM
-
 root = Pathname(__FILE__).dirname
 
 Dir[root.join('shared/*.rb').to_s].each { |f| require f }

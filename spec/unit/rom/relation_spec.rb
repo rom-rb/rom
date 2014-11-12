@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe Relation do
-  subject(:relation) { Relation.new(dataset) }
+describe ROM::Relation do
+  subject(:relation) { ROM::Relation.new(dataset) }
 
   let(:dataset) { DB[:users] }
 

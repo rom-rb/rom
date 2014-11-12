@@ -1,35 +1,35 @@
 require 'spec_helper'
 
-describe Adapter do
+describe ROM::Adapter do
   before do
-    class TestAdapter < Adapter
+    class TestAdapter < ROM::Adapter
       def self.schemes
         [:test_scheme]
       end
 
       def initialize(uri); end
 
-      Adapter.register(self)
+      ROM::Adapter.register(self)
     end
   end
 
   describe '.setup' do
     it 'sets up connection based on a uri' do
-      adapter = Adapter.setup("test_scheme::memory")
+      adapter = ROM::Adapter.setup("test_scheme::memory")
 
       expect(adapter).to be_instance_of(TestAdapter)
     end
 
     it 'raises an exception if the scheme is not supported' do
       expect {
-        Adapter.setup("bogus:///non-existent")
+        ROM::Adapter.setup("bogus:///non-existent")
       }.to raise_error(ArgumentError, '"bogus:///non-existent" uri is not supported')
     end
   end
 
   describe '.[]' do
     it "looks up and return the adapter class for the given schema" do
-      expect(Adapter[:test_scheme]).to eq TestAdapter
+      expect(ROM::Adapter[:test_scheme]).to eq TestAdapter
     end
   end
 
@@ -40,17 +40,17 @@ describe Adapter do
           [:order_test]
         end
 
-        Adapter.register(self)
+        ROM::Adapter.register(self)
       end
 
-      adapter = Adapter.setup("order_test::memory")
+      adapter = ROM::Adapter.setup("order_test::memory")
       expect(adapter).to be_instance_of(OrderTestFirst)
 
       class OrderTestSecond < OrderTestFirst
-        Adapter.register(self)
+        ROM::Adapter.register(self)
       end
 
-      adapter = Adapter.setup("order_test::memory")
+      adapter = ROM::Adapter.setup("order_test::memory")
 
       expect(adapter).to be_instance_of(OrderTestSecond)
     end

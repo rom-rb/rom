@@ -8,7 +8,7 @@ describe 'Group operation' do
       register(:users) do
 
         def with_tasks
-          RA.group(natural_join(tasks), tasks: [:title, :priority])
+          ROM::RA.group(natural_join(tasks), tasks: [:title, :priority])
         end
 
         def by_name(name)

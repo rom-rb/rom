@@ -8,7 +8,7 @@ describe 'Wrap operation' do
       register(:users) do
 
         def with_task
-          RA.wrap(natural_join(tasks), task: [:title, :priority])
+          ROM::RA.wrap(natural_join(tasks), task: [:title, :priority])
         end
 
       end

@@ -38,7 +38,7 @@ describe 'Reading relations' do
       register(:users) do
 
         def with_tasks
-          RA.group(natural_join(tasks), tasks: [:title, :priority])
+          ROM::RA.group(natural_join(tasks), tasks: [:title, :priority])
         end
 
         def sorted
@@ -86,7 +86,7 @@ describe 'Reading relations' do
       register(:users) do
 
         def with_task
-          RA.wrap(natural_join(tasks), task: [:title, :priority])
+          ROM::RA.wrap(natural_join(tasks), task: [:title, :priority])
         end
 
         def sorted
