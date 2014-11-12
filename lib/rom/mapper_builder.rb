@@ -20,13 +20,12 @@ module ROM
       end
     end
 
-    attr_reader :name, :root, :mappers, :prefix,
+    attr_reader :name, :root, :prefix,
       :model_builder, :model_class, :attributes
 
-    def initialize(name, root, mappers, options = {})
+    def initialize(name, root, options = {})
       @name = name
       @root = root
-      @mappers = mappers
       @prefix = options[:prefix]
       @attributes = root.header.map { |attr| [prefix ? :"#{prefix}_#{attr}" : attr] }
     end
@@ -81,7 +80,7 @@ module ROM
 
       @model_class = model_builder.call(header) if model_builder
 
-      mappers[name] = Mapper.new(header, model_class)
+      Mapper.new(header, model_class)
     end
 
   end

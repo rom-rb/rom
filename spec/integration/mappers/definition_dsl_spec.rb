@@ -63,7 +63,9 @@ describe 'Mapper definition DSL' do
         define(:users) do
           model name: 'User'
         end
+      end
 
+      rom.mappers do
         define(:email_index, parent: users) do
           model name: 'UserWithoutName'
           exclude :name

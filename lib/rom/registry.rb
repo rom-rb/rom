@@ -24,8 +24,12 @@ module ROM
       elements[name] = element
     end
 
+    def key?(name)
+      elements.key?
+    end
+
     def respond_to_missing?(name, include_private = false)
-      elements.key?(name) || super
+      key?(name) || super
     end
 
     private

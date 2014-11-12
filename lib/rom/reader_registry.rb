@@ -4,8 +4,8 @@ module ROM
 
   class ReaderRegistry < Registry
 
-    def self.define(relations, &block)
-      dsl = MapperDSL.new(relations)
+    def call(relations, &block)
+      dsl = MapperDSL.new(relations, self)
       dsl.instance_exec(&block)
       dsl.call
     end

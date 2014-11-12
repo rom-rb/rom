@@ -7,11 +7,11 @@ module ROM
       super
       @schema = nil
       @relations = RelationRegistry.new
-      @readers = nil
+      @mappers = ReaderRegistry.new
     end
 
     def read(name)
-      @readers[name]
+      @mappers[name]
     end
 
     def relation(name, &block)
@@ -32,8 +32,11 @@ module ROM
     end
 
     def mappers(&block)
-      @readers = ReaderRegistry.define(relations, &block) if block
-      @readers
+      if block
+        @mappers.call(relations, &block)
+      else
+        @mappers
+      end
     end
 
     def [](name)

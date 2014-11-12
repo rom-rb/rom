@@ -3,12 +3,11 @@ require 'rom/mapper_builder'
 module ROM
 
   class MapperDSL
-    attr_reader :relations, :mappers, :readers
+    attr_reader :relations, :readers
 
-    def initialize(relations)
+    def initialize(relations, readers)
       @relations = relations
-      @mappers = {}
-      @readers = ReaderRegistry.new
+      @readers = readers
     end
 
     def call
@@ -18,10 +17,13 @@ module ROM
     def define(name, options = {}, &block)
       parent = options.fetch(:parent) { relations[name] }
 
-      builder = MapperBuilder.new(name, parent, mappers, options)
+      builder = MapperBuilder.new(name, parent, options)
       builder.instance_exec(&block)
-      builder.call
+      mapper = builder.call
 
+      mappers = options[:parent] ? readers[parent.name].mappers : {}
+
+      mappers[name] = mapper
       readers[name] = Reader.new(name, parent, mappers) unless options[:parent]
 
       self

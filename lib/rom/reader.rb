@@ -6,7 +6,7 @@ module ROM
 
     attr_reader :path, :relation, :header, :mappers, :mapper
 
-    def initialize(path, relation, mappers)
+    def initialize(path, relation, mappers = {})
       @path = path.to_s
       @relation = relation
       @header = relation.header
