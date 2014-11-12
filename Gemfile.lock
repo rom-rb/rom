@@ -1,3 +1,11 @@
+GIT
+  remote: https://github.com/rom-rb/rom-sql.git
+  revision: 204ae83ea26d8e0fae431072fe0e66fe8ee3f1b6
+  branch: master
+  specs:
+    rom-sql (0.0.1)
+      sequel (~> 4.16)
+
 PATH
   remote: .
   specs:
@@ -184,6 +192,7 @@ DEPENDENCIES
   mutant-rspec
   rake
   rom!
+  rom-sql!
   rspec-core (~> 3.1)
   rspec-expectations (~> 3.1)
   rubysl-bigdecimal

@@ -6,16 +6,17 @@ CodeClimate::TestReporter.start
 require 'rom'
 
 require 'rom/adapter/memory'
-require 'rom/adapter/sequel'
+
+require 'rom-sql'
+require 'rom/sql/spec/support'
+
 require 'rom/adapter/mongo'
 
 include ROM
 
 root = Pathname(__FILE__).dirname
 
-Dir[root.join('shared/*.rb').to_s].each { |f| puts f; require f }
-
-require root.join('support/db')
+Dir[root.join('shared/*.rb').to_s].each { |f| require f }
 
 RSpec.configure do |config|
   config.before do
