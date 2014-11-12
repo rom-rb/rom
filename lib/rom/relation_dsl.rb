@@ -6,9 +6,9 @@ module ROM
   class RelationDSL
     attr_reader :schema, :relations
 
-    def initialize(schema)
+    def initialize(schema, relations)
       @schema = schema
-      @relations = RelationRegistry.new
+      @relations = relations
     end
 
     def register(name, &block)

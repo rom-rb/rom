@@ -5,8 +5,8 @@ module ROM
 
   class RelationRegistry < Registry
 
-    def self.define(schema, &block)
-      dsl = RelationDSL.new(schema)
+    def call(schema, &block)
+      dsl = RelationDSL.new(schema, self)
       dsl.instance_exec(&block)
       dsl.call
     end

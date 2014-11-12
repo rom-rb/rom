@@ -6,6 +6,7 @@ module ROM
     def initialize(repositories)
       super
       @schema = nil
+      @relations = RelationRegistry.new
       @readers = nil
     end
 
@@ -13,9 +14,16 @@ module ROM
       @readers[name]
     end
 
+    def relation(name, &block)
+      relations << RelationBuilder.new(name, schema).call(&block)
+    end
+
     def relations(&block)
-      @relations = RelationRegistry.define(schema, &block) if block
-      @relations
+      if block
+        @relations.call(schema, &block)
+      else
+        @relations
+      end
     end
 
     def schema(&block)
