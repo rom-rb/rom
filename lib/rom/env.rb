@@ -5,7 +5,7 @@ module ROM
 
     def initialize(repositories)
       super
-      @schema = nil
+      @schema = Schema.new
       @relations = RelationRegistry.new
       @mappers = ReaderRegistry.new
     end
@@ -27,8 +27,11 @@ module ROM
     end
 
     def schema(&block)
-      @schema = Schema.define(self, &block) if block || @schema.nil?
-      @schema
+      if block || @schema.empty?
+        @schema.call(self, &block)
+      else
+        @schema
+      end
     end
 
     def mappers(&block)
@@ -48,7 +51,7 @@ module ROM
     end
 
     def load_schema
-      repositories.map { |_, repo| repo.schema }.reduce(:+)
+      repositories.values.map { |repo| repo.schema }.reduce(:+)
     end
 
     private

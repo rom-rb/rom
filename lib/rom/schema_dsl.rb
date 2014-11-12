@@ -40,9 +40,9 @@ module ROM
       end
     end
 
-    def initialize(env)
+    def initialize(env, schema = Schema.new)
       @env = env
-      @schema = Schema.new
+      @schema = schema
     end
 
     def base_relation(name, &block)
