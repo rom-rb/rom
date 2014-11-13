@@ -14,7 +14,7 @@ module ROM
         def initialize(relation, options)
           super
           @options = options
-          @header = relation.header + options.keys
+          @header = relation.header + options.keys - attribute_names
         end
 
         def each(&block)
@@ -27,7 +27,8 @@ module ROM
             right = tuple.reject { |k,_| !attribute_names.include?(k) }
 
             grouped[left] ||= {}
-            (grouped[left][key] ||= []) << right
+            grouped[left][key] ||= []
+            grouped[left][key] << right if right.values.any?
           end
 
           result.map { |k,v| k.merge(v) }.each(&block)
