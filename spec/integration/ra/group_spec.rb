@@ -4,18 +4,16 @@ describe 'Group operation' do
   include_context 'users and tasks'
 
   specify 'defining a grouped relation' do
-    rom.relations do
-      register(:users) do
+    rom.relation(:users) do
 
-        def with_tasks
-          ROM::RA.group(natural_join(tasks), tasks: [:title, :priority])
-        end
-
-        def by_name(name)
-          where(name: name)
-        end
-
+      def with_tasks
+        ROM::RA.group(natural_join(tasks), tasks: [:title, :priority])
       end
+
+      def by_name(name)
+        where(name: name)
+      end
+
     end
 
     users = rom.relations.users

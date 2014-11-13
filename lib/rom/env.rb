@@ -15,7 +15,7 @@ module ROM
     end
 
     def relation(name, &block)
-      relations << RelationBuilder.new(name, schema).call(&block)
+      relations << RelationBuilder.new(name, schema, relations).call(&block)
     end
 
     def relations(&block)

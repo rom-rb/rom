@@ -12,7 +12,7 @@ module ROM
     end
 
     def register(name, &block)
-      builder = RelationBuilder.new(name, schema)
+      builder = RelationBuilder.new(name, schema, relations)
       relation = builder.call(&block)
 
       relations << relation

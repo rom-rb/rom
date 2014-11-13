@@ -5,8 +5,11 @@ module ROM
   class Schema < Registry
 
     def self.load_schema(env, schema)
-      env.load_schema.each do |(name, dataset, header)|
-        schema[name] = Relation.new(dataset, header)
+      env.load_schema.each do |(name, dataset, header, ext)|
+        relation = Relation.new(dataset, header)
+        relation.extend(ext) if ext
+
+        schema[name] = relation
       end
     end
 
