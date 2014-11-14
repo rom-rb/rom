@@ -1,19 +1,21 @@
 require 'spec_helper'
 
 describe 'Defining schema' do
-  let(:rom) { ROM.setup(sqlite: SEQUEL_TEST_DB_URI) }
+  subject(:rom) { setup.finalize }
+
+  let(:setup) { ROM.setup(sqlite: SEQUEL_TEST_DB_URI) }
 
   before do
-    seed(rom.sqlite.connection)
+    seed(setup.sqlite.connection)
   end
 
   after do
-    deseed(rom.sqlite.connection)
+    deseed(setup.sqlite.connection)
   end
 
-  describe '.define' do
+  describe '.schema' do
     it 'returns schema with relations' do
-      rom.schema do
+      setup.schema do
         base_relation(:users) do
           repository :sqlite
         end
@@ -29,15 +31,17 @@ describe 'Defining schema' do
 end
 
 describe 'Inferring schema from database' do
-  let(:rom) { ROM.setup(sqlite: SEQUEL_TEST_DB_URI) }
+  subject(:rom) { setup.finalize }
+
+  let(:setup) { ROM.setup(sqlite: SEQUEL_TEST_DB_URI) }
 
   context "when database schema exists" do
     before do
-      seed(rom.sqlite.connection)
+      seed(setup.sqlite.connection)
     end
 
     after do
-      deseed(rom.sqlite.connection)
+      deseed(setup.sqlite.connection)
     end
 
     it "infers the schema from the database relations" do
@@ -58,9 +62,10 @@ describe 'Inferring schema from database' do
 
   context "for adapters that don't support inferring" do
     it "returns an empty schema" do
-      schema = ROM.setup(memory: 'memory://test').schema
+      setup = ROM.setup(memory: 'memory://test')
+      setup.finalize
 
-      expect(schema.memory).to be(nil)
+      expect(rom.schema.memory).to be(nil)
     end
   end
 end

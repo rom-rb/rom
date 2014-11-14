@@ -11,9 +11,14 @@ module ROM
       hash[name] = Repository.new(adapter)
     end
 
-    env = Env.new(repositories)
-    env.instance_exec(&block) if block
-    env
+    boot = Boot.new(repositories)
+
+    if block
+      boot.instance_exec(&block)
+      boot.finalize
+    end
+
+    boot
   end
 
 end
@@ -35,3 +40,5 @@ require 'rom/relation_registry'
 require 'rom/reader_registry'
 
 require 'rom/ra'
+
+require 'rom/boot'

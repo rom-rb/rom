@@ -5,8 +5,8 @@ module ROM
 
     attr_reader :elements
 
-    def initialize
-      @elements = {}
+    def initialize(elements = {})
+      @elements = elements
     end
 
     def each(&block)

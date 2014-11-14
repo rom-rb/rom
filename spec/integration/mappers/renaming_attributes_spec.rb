@@ -1,10 +1,12 @@
 require 'spec_helper'
 
 describe 'Mappers / Renaming attributes' do
-  let(:rom) { ROM.setup(memory: 'memory://test') }
+  subject(:rom) { setup.finalize }
+
+  let(:setup) { ROM.setup(memory: 'memory://test') }
 
   before do
-    rom.schema do
+    setup.schema do
       base_relation(:users) do
         repository :memory
 

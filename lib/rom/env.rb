@@ -1,11 +1,10 @@
 module ROM
 
   class Env
-    include Concord.new(:repositories)
+    include Concord::Public.new(:repositories, :schema)
 
-    def initialize(repositories)
+    def initialize(repositories, schema)
       super
-      @schema = Schema.new
       @relations = RelationRegistry.new
       @mappers = ReaderRegistry.new
     end
@@ -26,14 +25,6 @@ module ROM
       end
     end
 
-    def schema(&block)
-      if block || @schema.empty?
-        @schema.call(self, &block)
-      else
-        @schema
-      end
-    end
-
     def mappers(&block)
       if block
         @mappers.call(relations, &block)
@@ -48,10 +39,6 @@ module ROM
 
     def respond_to_missing?(name, include_private = false)
       repositories.key?(name)
-    end
-
-    def load_schema
-      repositories.values.map { |repo| repo.schema }.reduce(:+)
     end
 
     private

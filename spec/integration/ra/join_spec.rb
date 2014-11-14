@@ -2,18 +2,20 @@ require "spec_helper"
 require "rom/ra/operation/join"
 
 describe 'Join operation between two repositories' do
-  let(:rom) { ROM.setup(sqlite: SEQUEL_TEST_DB_URI, memory: "memory://test") }
+  subject(:rom) { setup.finalize }
+
+  let(:setup) { ROM.setup(sqlite: SEQUEL_TEST_DB_URI, memory: "memory://test") }
 
   before do
-    seed(rom.sqlite.connection)
+    seed(setup.sqlite.connection)
   end
 
   after do
-    deseed(rom.sqlite.connection)
+    deseed(setup.sqlite.connection)
   end
 
   specify 'defining a joined relation' do
-    rom.schema do
+    setup.schema do
       base_relation(:users) do
         repository :sqlite
       end

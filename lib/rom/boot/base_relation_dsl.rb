@@ -1,9 +1,7 @@
 module ROM
+  class Boot
 
-  class SchemaDSL
-    attr_reader :env, :schema
-
-    class BaseRelation
+    class BaseRelationDSL
       attr_reader :env, :name, :repositories, :attributes, :datasets
 
       def initialize(env, name)
@@ -36,23 +34,10 @@ module ROM
             dataset.header
           end
 
-        Relation.new(repository[name], header)
+        [repository[name], header]
       end
-    end
 
-    def initialize(env, schema = Schema.new)
-      @env = env
-      @schema = schema
-    end
-
-    def base_relation(name, &block)
-      schema[name] = BaseRelation.new(env, name).call(&block)
-    end
-
-    def call
-      schema
     end
 
   end
-
 end

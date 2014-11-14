@@ -1,7 +1,9 @@
 require 'spec_helper'
 
 describe 'Setting up ROM' do
-  subject(:rom) { ROM.setup(sqlite: SEQUEL_TEST_DB_URI) }
+  subject(:rom) { setup.finalize }
+
+  let(:setup) { ROM.setup(sqlite: SEQUEL_TEST_DB_URI) }
 
   let(:jane) { { id: 1, name: 'Jane' } }
   let(:joe) { { id: 2, name: 'Joe' } }

@@ -1,9 +1,10 @@
 RSpec.shared_context 'users and tasks' do
-  let(:rom) { ROM.setup(sqlite: SEQUEL_TEST_DB_URI) }
+  subject(:rom) { setup.finalize }
+
+  let(:setup) { ROM.setup(sqlite: SEQUEL_TEST_DB_URI) }
+  let(:conn) { setup.sqlite.connection }
 
   before do
-    conn = rom.sqlite.connection
-
     conn.run('create table users (name STRING, email STRING)')
     conn.run('create table tasks (name STRING, title STRING, priority INT)')
 
@@ -15,7 +16,7 @@ RSpec.shared_context 'users and tasks' do
 
     conn[:tasks].insert(name: "Jane", title: "be cool", priority: 2)
 
-    rom.schema do
+    setup.schema do
       base_relation(:users) do
         repository :sqlite
       end
@@ -27,7 +28,6 @@ RSpec.shared_context 'users and tasks' do
   end
 
   after do
-    conn = rom.sqlite.connection
     conn.drop_table? :users
     conn.drop_table? :tasks
   end
