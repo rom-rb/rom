@@ -1,6 +1,8 @@
 module ROM
 
   class Registry
+    include Enumerable
+
     attr_reader :elements
 
     def initialize
@@ -25,7 +27,7 @@ module ROM
     end
 
     def key?(name)
-      elements.key?
+      elements.key?(name)
     end
 
     def respond_to_missing?(name, include_private = false)

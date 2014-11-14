@@ -14,7 +14,21 @@ module ROM
     end
 
     def call(&block)
+      klass = build_class
+
+      klass.class_eval(&block) if block
+
+      new_relation = klass.new(relation.dataset, relation.header)
+      relation.adapter_extensions.each { |ext| new_relation.extend(ext) }
+      new_relation
+    end
+
+    def build_class
       klass_name = "#{Relation.name}[#{Inflecto.camelize(name)}]"
+
+      klass = relations.map(&:class).detect { |c| c.name == klass_name }
+      return klass if klass
+
       klass = Class.new(Relation)
 
       klass.class_eval <<-RUBY, __FILE__, __LINE__ + 1
@@ -45,19 +59,21 @@ module ROM
       instance_mod = Module.new
       relations = self.relations
 
+      builder = self
+
       schema.each do |name, relation|
-        klass_mod.send(:define_method, name) { relations[name] }
+        klass_mod.send(:define_method, name) { relations.key?(name) ? relations[name] : builder.new(name).build_class }
         instance_mod.send(:define_method, name) { relation.dataset }
       end
 
       klass.extend(klass_mod)
       klass.send(:include, instance_mod)
 
-      klass.class_eval(&block) if block
+      klass
+    end
 
-      new_relation = klass.new(relation.dataset, relation.header)
-      relation.adapter_extensions.each { |ext| new_relation.extend(ext) }
-      new_relation
+    def new(name)
+      self.class.new(name, schema, relations)
     end
 
   end
