@@ -5,7 +5,7 @@ describe "Adapter" do
     before(:all) do
       Class.new(ROM::SQL::Adapter) do
         def self.schemes
-          [:sqlite]
+          [:sqlite, :jdbc]
         end
 
         def extend_relation_class(klass)
