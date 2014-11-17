@@ -1,8 +1,6 @@
 require 'spec_helper'
 
 describe 'Mappers / Renaming attributes' do
-  subject(:rom) { setup.finalize }
-
   let(:setup) { ROM.setup(memory: 'memory://test') }
 
   before do
@@ -22,29 +20,27 @@ describe 'Mappers / Renaming attributes' do
       end
     end
 
-    rom.relations do
-      register(:addresses)
+    setup.relation(:addresses)
 
-      register(:users) do
-        def with_address
-          ROM::RA.wrap(
-            ROM::RA.join(users, addresses),
-            address: [:address_id, :address_street]
-          )
-        end
+    setup.relation(:users) do
+      def with_address
+        ROM::RA.wrap(
+          ROM::RA.join(users, addresses),
+          address: [:address_id, :address_street]
+        )
+      end
 
-        def with_addresses
-          ROM::RA.group(
-            ROM::RA.join(users, addresses),
-            addresses: [:address_id, :address_street]
-          )
-        end
+      def with_addresses
+        ROM::RA.group(
+          ROM::RA.join(users, addresses),
+          addresses: [:address_id, :address_street]
+        )
       end
     end
   end
 
   it 'maps renamed attributes for a base relation' do
-    rom.mappers do
+    setup.mappers do
       define(:users) do
         model name: 'User'
 
@@ -52,6 +48,8 @@ describe 'Mappers / Renaming attributes' do
         attribute :name, from: :user_name
       end
     end
+
+    rom = setup.finalize
 
     User.send(:include, Equalizer.new(:id, :name))
 
@@ -63,7 +61,7 @@ describe 'Mappers / Renaming attributes' do
   end
 
   it 'maps renamed attributes for a wrapped relation' do
-    rom.mappers do
+    setup.mappers do
       define(:users) do
         model name: 'User'
 
@@ -71,7 +69,7 @@ describe 'Mappers / Renaming attributes' do
         attribute :name, from: :user_name
       end
 
-      define(:with_address, parent: users) do
+      define(:with_address, parent: :users) do
         model name: 'UserWithAddress'
 
         attribute :id, from: :_id
@@ -83,6 +81,8 @@ describe 'Mappers / Renaming attributes' do
         end
       end
     end
+
+    rom = setup.finalize
 
     UserWithAddress.send(:include, Equalizer.new(:id, :name, :address))
 
@@ -97,7 +97,7 @@ describe 'Mappers / Renaming attributes' do
   end
 
   it 'maps renamed attributes for a grouped relation' do
-    rom.mappers do
+    setup.mappers do
       define(:users) do
         model name: 'User'
 
@@ -105,7 +105,7 @@ describe 'Mappers / Renaming attributes' do
         attribute :name, from: :user_name
       end
 
-      define(:with_addresses, parent: users) do
+      define(:with_addresses, parent: :users) do
         model name: 'UserWithAddresses'
 
         attribute :id, from: :_id
@@ -117,6 +117,8 @@ describe 'Mappers / Renaming attributes' do
         end
       end
     end
+
+    rom = setup.finalize
 
     UserWithAddresses.send(:include, Equalizer.new(:id, :name, :addresses))
 

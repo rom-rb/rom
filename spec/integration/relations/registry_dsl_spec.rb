@@ -4,7 +4,7 @@ describe 'Relation registration DSL' do
   include_context 'users and tasks'
 
   it 'allows to expose chainable relations' do
-    rom.relation(:tasks) do
+    setup.relation(:tasks) do
       def high_priority
         where { priority < 2 }
       end
@@ -14,7 +14,7 @@ describe 'Relation registration DSL' do
       end
     end
 
-    rom.relation(:users) do
+    setup.relation(:users) do
       def with_tasks
         natural_join(tasks)
       end

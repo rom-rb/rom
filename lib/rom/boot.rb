@@ -1,4 +1,6 @@
 require 'rom/boot/dsl'
+require 'rom/relation_builder'
+require 'rom/reader_builder'
 
 module ROM
 
@@ -8,7 +10,7 @@ module ROM
     def initialize(repositories)
       @repositories = repositories
       @schema = {}
-      @relations = []
+      @relations = {}
       @mappers = []
     end
 
@@ -16,8 +18,16 @@ module ROM
       @schema = DSL.new(self).schema(&block)
     end
 
+    def relation(name, &block)
+      @relations.update(name => block)
+    end
+
+    def mappers(&block)
+      @mappers.concat(DSL.new(self).mappers(&block))
+    end
+
     def finalize
-      relations =
+      base_relations =
         if @schema.any?
           relations = @schema.each_with_object({}) do |(name, args), h|
             h[name] = Relation.new(*args)
@@ -31,14 +41,30 @@ module ROM
           end
         end
 
-      Env.new(repositories, Schema.new(relations))
+      schema = Schema.new(base_relations)
+
+      relations = @relations.each_with_object({}) do |(name, block), h|
+        h[name] = RelationBuilder.new(name, schema, h).call(&block)
+      end
+
+      reader_builder = ReaderBuilder.new(relations)
+      readers = @mappers.each_with_object({}) do |(name, options, block), h|
+        h[name] = reader_builder.call(name, options, &block)
+      end
+
+      Env.new(
+        repositories,
+        schema,
+        RelationRegistry.new(relations),
+        ReaderRegistry.new(readers)
+      )
     end
 
     def [](name)
-      repositories[name]
+      repositories.fetch(name)
     end
 
-    def respond_to_missing?(name, include_private = false)
+    def respond_to_missing?(name, include_context = false)
       repositories.key?(name)
     end
 

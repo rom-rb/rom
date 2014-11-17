@@ -4,26 +4,23 @@ describe 'Reading relations' do
   include_context 'users and tasks'
 
   it 'exposes a relation reader' do
-    rom.relations do
+    setup.relation(:users) do
+      def by_name(name)
+        where(name: name)
+      end
 
-      register(:users) do
-
-        def by_name(name)
-          where(name: name)
-        end
-
-        def sorted
-          order(:name, :email)
-        end
-
+      def sorted
+        order(:name, :email)
       end
     end
 
-    rom.mappers do
+    setup.mappers do
       define(:users) do
         model name: 'User'
       end
     end
+
+    rom = setup.finalize
 
     users = rom.read(:users).sorted.by_name('Jane')
     user = users.first
@@ -34,31 +31,29 @@ describe 'Reading relations' do
   end
 
   it 'maps grouped relations' do
-    rom.relations do
-      register(:users) do
+    setup.relation(:users) do
+      def with_tasks
+        ROM::RA.group(natural_join(tasks), tasks: [:title, :priority])
+      end
 
-        def with_tasks
-          ROM::RA.group(natural_join(tasks), tasks: [:title, :priority])
-        end
-
-        def sorted
-          order(:name)
-        end
-
+      def sorted
+        order(:name)
       end
     end
 
-    rom.mappers do
+    setup.mappers do
       define(:users) do
         model name: 'User'
       end
 
-      define(:with_tasks, parent: users) do
+      define(:with_tasks, parent: :users) do
         model name: 'UserWithTasks'
 
         group tasks: [:title, :priority]
       end
     end
+
+    rom = setup.finalize
 
     User.send(:include, Equalizer.new(:name, :email))
     UserWithTasks.send(:include, Equalizer.new(:name, :email, :tasks))
@@ -82,31 +77,29 @@ describe 'Reading relations' do
   end
 
   it 'maps wrapped relations' do
-    rom.relations do
-      register(:users) do
+    setup.relation(:users) do
+      def with_task
+        ROM::RA.wrap(natural_join(tasks), task: [:title, :priority])
+      end
 
-        def with_task
-          ROM::RA.wrap(natural_join(tasks), task: [:title, :priority])
-        end
-
-        def sorted
-          order(:name)
-        end
-
+      def sorted
+        order(:name)
       end
     end
 
-    rom.mappers do
+    setup.mappers do
       define(:users) do
         model name: 'User'
       end
 
-      define(:with_task, parent: users) do
+      define(:with_task, parent: :users) do
         model name: 'UserWithTask'
 
         wrap task: [:title, :priority]
       end
     end
+
+    rom = setup.finalize
 
     User.send(:include, Equalizer.new(:name, :email))
     UserWithTask.send(:include, Equalizer.new(:name, :email, :task))

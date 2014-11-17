@@ -3,14 +3,12 @@ require 'spec_helper'
 describe 'Wrap operation' do
   include_context 'users and tasks'
 
+  subject(:rom) { setup.finalize }
+
   specify 'defining a grouped relation' do
-    rom.relations do
-      register(:users) do
-
-        def with_task
-          ROM::RA.wrap(natural_join(tasks), task: [:title, :priority])
-        end
-
+    setup.relation(:users) do
+      def with_task
+        ROM::RA.wrap(natural_join(tasks), task: [:title, :priority])
       end
     end
 

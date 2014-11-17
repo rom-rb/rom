@@ -6,13 +6,9 @@ describe 'Mapper definition DSL' do
   let(:header) { mapper.header }
 
   before do
-    rom.relations do
-      register(:users) do
-
-        def email_index
-          select(:email)
-        end
-
+    setup.relation(:users) do
+      def email_index
+        select(:email)
       end
     end
   end
@@ -21,7 +17,7 @@ describe 'Mapper definition DSL' do
     subject(:mapper) { rom.read(:users).mapper }
 
     before do
-      rom.mappers do
+      setup.mappers do
         define(:users) do
           model name: 'User'
         end
@@ -41,7 +37,7 @@ describe 'Mapper definition DSL' do
     subject(:mapper) { rom.read(:users).mapper }
 
     before do
-      rom.mappers do
+      setup.mappers do
         define(:users) do
           model name: 'User'
 
@@ -59,14 +55,14 @@ describe 'Mapper definition DSL' do
     subject(:mapper) { rom.read(:users).email_index.mapper }
 
     before do
-      rom.mappers do
+      setup.mappers do
         define(:users) do
           model name: 'User'
         end
       end
 
-      rom.mappers do
-        define(:email_index, parent: users) do
+      setup.mappers do
+        define(:email_index, parent: :users) do
           model name: 'UserWithoutName'
           exclude :name
         end

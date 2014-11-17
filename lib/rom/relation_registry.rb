@@ -1,5 +1,4 @@
 require 'rom/registry'
-require 'rom/relation_dsl'
 
 module ROM
 

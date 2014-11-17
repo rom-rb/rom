@@ -1,8 +1,6 @@
 require 'spec_helper'
 
 describe 'Mappers / Prefixing attributes' do
-  subject(:rom) { setup.finalize }
-
   let(:setup) { ROM.setup(memory: 'memory://test') }
 
   before do
@@ -16,11 +14,11 @@ describe 'Mappers / Prefixing attributes' do
       end
     end
 
-    rom.relations { register(:users) }
+    setup.relation(:users)
   end
 
   it 'automatically maps all attributes using the provided prefix' do
-    rom.mappers do
+    setup.mappers do
       define(:users, prefix: :user) do
         model name: 'User'
 
@@ -29,6 +27,8 @@ describe 'Mappers / Prefixing attributes' do
         attribute :email
       end
     end
+
+    rom = setup.finalize
 
     User.send(:include, Equalizer.new(:id, :name, :email))
 
