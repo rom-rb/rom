@@ -34,7 +34,7 @@ module ROM
             dataset.header
           end
 
-        [repository[name], header]
+        [repository[name], header, repository.adapter]
       end
 
     end

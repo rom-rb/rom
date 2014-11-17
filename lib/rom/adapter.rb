@@ -30,7 +30,15 @@ module ROM
     end
 
     def connection
-      raise NotImplemented, "#{self.class}#connection must be implemented"
+      raise NotImplementedError, "#{self.class}#connection must be implemented"
+    end
+
+    def extend_relation_class(klass)
+      klass
+    end
+
+    def extend_relation_instance(relation)
+      relation
     end
 
     def schema

@@ -13,14 +13,9 @@ module ROM
       @relation = schema[name]
     end
 
-    def call(&block)
-      klass = build_class
-
+    def call(klass, &block)
       klass.class_eval(&block) if block
-
-      new_relation = klass.new(relation.dataset, relation.header)
-      relation.adapter_extensions.each { |ext| new_relation.extend(ext) }
-      new_relation
+      klass.new(relation.dataset, relation.header)
     end
 
     def build_class
@@ -52,8 +47,6 @@ module ROM
           #{name.inspect}
         end
       RUBY
-
-      relation.adapter_inclusions.each { |ext| klass.send(:include, ext) }
 
       klass_mod = Module.new
       instance_mod = Module.new

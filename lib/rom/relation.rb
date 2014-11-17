@@ -8,13 +8,14 @@ module ROM
     undef_method :select
 
     attr_reader :header
-    attr_reader :adapter_inclusions, :adapter_extensions
+
+    def self.finalize(env, relation)
+      # noop
+    end
 
     def initialize(dataset, header = dataset.header)
       super
       @header = header.dup.freeze
-      @adapter_inclusions = []
-      @adapter_extensions = []
     end
 
     def each(&block)
