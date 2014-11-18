@@ -37,7 +37,7 @@ module ROM
           end
         else
           load_schema.each_with_object({}) do |(repo, schema), h|
-            schema.each do |(name, dataset, header)|
+            schema.each do |name, dataset, header|
               h[name] = Relation.new(dataset, header)
               adapter_relation_map[name] = repo.adapter
             end
