@@ -5,9 +5,6 @@ RSpec.shared_context 'users and tasks' do
   let(:conn) { setup.sqlite.connection }
 
   before do
-    conn.drop_table? :users
-    conn.drop_table? :tasks
-
     conn.run('create table users (name STRING, email STRING)')
     conn.run('create table tasks (name STRING, title STRING, priority INT)')
 
