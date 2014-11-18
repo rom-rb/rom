@@ -5,7 +5,7 @@ describe 'Wrap operation' do
 
   subject(:rom) { setup.finalize }
 
-  specify 'defining a grouped relation' do
+  specify 'defining a wrapped relation' do
     setup.relation(:users) do
       def with_task
         in_memory { wrap(natural_join(tasks), task: [:title, :priority]) }
