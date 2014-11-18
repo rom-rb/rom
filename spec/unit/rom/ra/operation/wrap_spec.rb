@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe ROM::RA, '.wrap' do
-  subject(:wrap) { ROM::RA.wrap(relation, options) }
+describe 'Wrap operation' do
+  subject(:wrap) { relation.in_memory { wrap(address: [:street, :zipcode, :city]) } }
 
   let(:relation) do
     ROM::Relation.new([{ name: 'Jane',
@@ -13,10 +13,6 @@ describe ROM::RA, '.wrap' do
 
   let(:header) do
     [:name, :email, :street, :zipcode, :city]
-  end
-
-  let(:options) do
-    { address: [:street, :zipcode, :city] }
   end
 
   it 'wraps given attributes under specified key' do

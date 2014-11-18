@@ -24,17 +24,15 @@ describe 'Mappers / Renaming attributes' do
 
     setup.relation(:users) do
       def with_address
-        ROM::RA.wrap(
-          ROM::RA.join(users, addresses),
-          address: [:address_id, :address_street]
-        )
+        in_memory {
+          wrap(join(users, addresses), address: [:address_id, :address_street])
+        }
       end
 
       def with_addresses
-        ROM::RA.group(
-          ROM::RA.join(users, addresses),
-          addresses: [:address_id, :address_street]
-        )
+        in_memory {
+          group(join(users, addresses), addresses: [:address_id, :address_street])
+        }
       end
     end
   end

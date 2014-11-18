@@ -33,7 +33,7 @@ describe 'Reading relations' do
   it 'maps grouped relations' do
     setup.relation(:users) do
       def with_tasks
-        ROM::RA.group(natural_join(tasks), tasks: [:title, :priority])
+        in_memory { group(natural_join(tasks), tasks: [:title, :priority]) }
       end
 
       def sorted
@@ -79,7 +79,7 @@ describe 'Reading relations' do
   it 'maps wrapped relations' do
     setup.relation(:users) do
       def with_task
-        ROM::RA.wrap(natural_join(tasks), task: [:title, :priority])
+        in_memory { wrap(natural_join(tasks), task: [:title, :priority]) }
       end
 
       def sorted

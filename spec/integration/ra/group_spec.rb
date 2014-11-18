@@ -7,7 +7,9 @@ describe 'Group operation' do
     setup.relation(:users) do
 
       def with_tasks
-        ROM::RA.group(natural_join(tasks), tasks: [:title, :priority])
+        in_memory {
+          group(natural_join(tasks), tasks: [:title, :priority])
+        }
       end
 
       def by_name(name)

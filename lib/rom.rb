@@ -1,4 +1,5 @@
 require 'concord'
+require 'charlatan'
 
 module ROM
 

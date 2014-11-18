@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe ROM::RA, '.group' do
-  subject(:group) { ROM::RA.group(relation, options) }
+describe 'Group operation' do
+  subject(:group) { opts = options; relation.in_memory { group(opts) } }
 
   let(:relation) do
     ROM::Relation.new(dataset, header)

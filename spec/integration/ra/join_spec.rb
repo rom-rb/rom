@@ -30,7 +30,7 @@ describe 'Join operation between two repositories' do
 
     setup.relation(:users) do
       def with_tasks
-        ROM::RA.join(users, tasks)
+        in_memory { join(users, tasks) }
       end
     end
 

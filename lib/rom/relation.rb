@@ -1,9 +1,10 @@
-require 'charlatan'
+require 'rom/ra'
 
 module ROM
 
   class Relation
     include Charlatan.new(:dataset)
+    include RA
 
     undef_method :select
 
