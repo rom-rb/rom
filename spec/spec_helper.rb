@@ -4,8 +4,10 @@
 require "bundler"
 Bundler.setup
 
-require "codeclimate-test-reporter"
-CodeClimate::TestReporter.start
+if RUBY_ENGINE == "rbx"
+  require "codeclimate-test-reporter"
+  CodeClimate::TestReporter.start
+end
 
 require 'rom'
 require 'rom/adapter/memory'
