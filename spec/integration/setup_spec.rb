@@ -9,4 +9,10 @@ describe 'Setting up ROM' do
   it 'configures relations' do
     expect(rom.memory.users).to match_array([joe, jane])
   end
+
+  it 'raises on double-finalize' do
+    expect {
+      2.times { setup.finalize }
+    }.to raise_error(ROM::EnvAlreadyFinalizedError)
+  end
 end

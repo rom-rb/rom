@@ -12,7 +12,9 @@ module ROM
       end
 
       def base_relation(name, &block)
-        schema[name] = BaseRelationDSL.new(env, name).call(&block)
+        dsl = BaseRelationDSL.new(env, name)
+        definition = dsl.call(&block)
+        (schema[dsl.repository] ||= []) << definition
       end
 
       def call

@@ -3,6 +3,8 @@ require 'addressable/uri'
 module ROM
 
   class Adapter
+    include Equalizer.new(:connection)
+
     @adapters = []
 
     attr_reader :uri

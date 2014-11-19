@@ -2,6 +2,7 @@ require 'concord'
 require 'charlatan'
 
 module ROM
+  EnvAlreadyFinalizedError = Class.new(StandardError)
 
   def self.setup(options, &block)
     adapters = options.each_with_object({}) do |(name, uri), hash|

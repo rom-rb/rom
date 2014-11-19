@@ -5,13 +5,15 @@ require 'rom/reader_builder'
 module ROM
 
   class Boot
-    attr_reader :repositories
+    attr_reader :repositories, :adapter_relation_map, :env
 
     def initialize(repositories)
       @repositories = repositories
       @schema = {}
       @relations = {}
       @mappers = []
+      @adapter_relation_map = {}
+      @env = nil
     end
 
     def schema(&block)
@@ -27,51 +29,13 @@ module ROM
     end
 
     def finalize
-      adapter_relation_map = {}
+      raise EnvAlreadyFinalizedError if env
 
-      base_relations =
-        if @schema.any?
-          relations = @schema.each_with_object({}) do |(name, (dataset, header, adapter)), h|
-            h[name] = Relation.new(dataset, header)
-            adapter_relation_map[name] = adapter
-          end
-        else
-          load_schema.each_with_object({}) do |(repo, schema), h|
-            schema.each do |name, dataset, header|
-              h[name] = Relation.new(dataset, header)
-              adapter_relation_map[name] = repo.adapter
-            end
-          end
-        end
+      schema = load_schema
+      relations = load_relations(schema)
+      readers = load_readers(relations)
 
-      schema = Schema.new(base_relations)
-
-      relations = @relations.each_with_object({}) do |(name, block), h|
-        builder = RelationBuilder.new(name, schema, h)
-        klass = builder.build_class
-
-        adapter = adapter_relation_map[name]
-
-        adapter.extend_relation_class(klass)
-        relation = builder.call(klass, &block)
-        adapter.extend_relation_instance(relation)
-
-        h[name] = relation
-      end
-
-      relations.each_value { |relation| relation.class.finalize(relations, relation) }
-
-      reader_builder = ReaderBuilder.new(relations)
-      readers = @mappers.each_with_object({}) do |(name, options, block), h|
-        h[name] = reader_builder.call(name, options, &block)
-      end
-
-      Env.new(
-        repositories,
-        schema,
-        RelationRegistry.new(relations),
-        ReaderRegistry.new(readers)
-      )
+      @env = Env.new(repositories, schema, relations, readers)
     end
 
     def [](name)
@@ -89,9 +53,47 @@ module ROM
     end
 
     def load_schema
-      repositories.values.each_with_object({}) do |repo, h|
-        h[repo] = repo.schema
+      repositories.values.each do |repo|
+        (@schema[repo] ||= []).concat(repo.schema)
       end
+
+      base_relations = @schema.each_with_object({}) do |(repo, schema), h|
+        schema.each do |name, dataset, header|
+          adapter_relation_map[name] = repo.adapter
+          h[name] = Relation.new(dataset, header)
+        end
+      end
+
+      Schema.new(base_relations)
+    end
+
+    def load_relations(schema)
+      relations = @relations.each_with_object({}) do |(name, block), h|
+        builder = RelationBuilder.new(name, schema, h)
+        klass = builder.build_class
+
+        adapter = adapter_relation_map[name]
+
+        adapter.extend_relation_class(klass)
+        relation = builder.call(klass, &block)
+        adapter.extend_relation_instance(relation)
+
+        h[name] = relation
+      end
+
+      relations.each_value { |relation| relation.class.finalize(relations, relation) }
+
+      RelationRegistry.new(relations)
+    end
+
+    def load_readers(relations)
+      reader_builder = ReaderBuilder.new(relations)
+
+      readers = @mappers.each_with_object({}) do |(name, options, block), h|
+        h[name] = reader_builder.call(name, options, &block)
+      end
+
+      RelationRegistry.new(readers)
     end
 
   end
