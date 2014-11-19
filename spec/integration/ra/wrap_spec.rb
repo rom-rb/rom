@@ -8,7 +8,7 @@ describe 'Wrap operation' do
   specify 'defining a wrapped relation' do
     setup.relation(:users) do
       def with_task
-        in_memory { wrap(natural_join(tasks), task: [:title, :priority]) }
+        in_memory { wrap(join(tasks), task: [:title, :priority]) }
       end
     end
 

@@ -1,7 +1,7 @@
 language: ruby
 env:
   - CODECLIMATE_REPO_TOKEN=f7c652b65a700fcf1032174afc5ea243b991e48bf73077cc34c148e1c800a2f7
-bundler_args: --without yard guard benchmarks
+bundler_args: --without sql benchmarks
 script: "bundle exec rake spec"
 rvm:
   - 2.0.0

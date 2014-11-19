@@ -6,17 +6,17 @@ describe 'Relation registration DSL' do
   it 'allows to expose chainable relations' do
     setup.relation(:tasks) do
       def high_priority
-        where { priority < 2 }
+        restrict { |tuple| tuple[:priority] < 2 }
       end
 
       def by_title(title)
-        where(title: title)
+        restrict(title: title)
       end
     end
 
     setup.relation(:users) do
       def with_tasks
-        natural_join(tasks)
+        in_memory { join(tasks) }
       end
     end
 
@@ -25,8 +25,13 @@ describe 'Relation registration DSL' do
     expect(tasks.class.name).to eql("ROM::Relation[Tasks]")
     expect(tasks.high_priority.inspect).to include("#<ROM::Relation[Tasks]")
 
-    expect(tasks.high_priority.by_title("be nice").to_a).to eql([name: "Joe", title: "be nice", priority: 1])
-    expect(tasks.by_title("be cool").to_a).to eql([name: "Jane", title: "be cool", priority: 2])
+    expect(tasks.high_priority.by_title("be nice")).to match_array(
+      [name: "Joe", title: "be nice", priority: 1]
+    )
+
+    expect(tasks.by_title("be cool")).to match_array(
+      [name: "Jane", title: "be cool", priority: 2]
+    )
 
     users = rom.relations.users
 

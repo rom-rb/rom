@@ -8,7 +8,7 @@ describe 'Mapper definition DSL' do
   before do
     setup.relation(:users) do
       def email_index
-        select(:email)
+        project(:email)
       end
     end
   end
@@ -76,6 +76,7 @@ describe 'Mapper definition DSL' do
     it 'builds a new model' do
       expect(mapper.model).to be(UserWithoutName)
     end
+
   end
 
 end

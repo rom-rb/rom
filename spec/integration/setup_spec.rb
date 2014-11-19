@@ -7,6 +7,6 @@ describe 'Setting up ROM' do
   let(:joe) { { name: 'Joe', email: 'joe@doe.org' } }
 
   it 'configures relations' do
-    expect(rom.sqlite.users.to_a).to eql([joe, jane])
+    expect(rom.memory.users).to match_array([joe, jane])
   end
 end

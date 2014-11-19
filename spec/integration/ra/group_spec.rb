@@ -8,12 +8,12 @@ describe 'Group operation' do
 
       def with_tasks
         in_memory {
-          group(natural_join(tasks), tasks: [:title, :priority])
+          group(join(tasks), tasks: [:title, :priority])
         }
       end
 
       def by_name(name)
-        where(name: name)
+        restrict(name: name)
       end
 
     end

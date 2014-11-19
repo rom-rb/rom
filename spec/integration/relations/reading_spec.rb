@@ -6,7 +6,7 @@ describe 'Reading relations' do
   it 'exposes a relation reader' do
     setup.relation(:users) do
       def by_name(name)
-        where(name: name)
+        restrict(name: name)
       end
 
       def sorted
@@ -33,7 +33,7 @@ describe 'Reading relations' do
   it 'maps grouped relations' do
     setup.relation(:users) do
       def with_tasks
-        in_memory { group(natural_join(tasks), tasks: [:title, :priority]) }
+        in_memory { group(join(tasks), tasks: [:title, :priority]) }
       end
 
       def sorted
@@ -79,7 +79,7 @@ describe 'Reading relations' do
   it 'maps wrapped relations' do
     setup.relation(:users) do
       def with_task
-        in_memory { wrap(natural_join(tasks), task: [:title, :priority]) }
+        in_memory { wrap(join(tasks), task: [:title, :priority]) }
       end
 
       def sorted

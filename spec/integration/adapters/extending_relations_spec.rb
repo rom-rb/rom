@@ -3,9 +3,9 @@ require "spec_helper"
 describe "Adapter" do
   include_context "users and tasks" do
     before(:all) do
-      Class.new(ROM::SQL::Adapter) do
+      Class.new(ROM::Adapter::Memory) do
         def self.schemes
-          [:sqlite, :jdbc]
+          [:memory]
         end
 
         def extend_relation_class(klass)
