@@ -50,29 +50,11 @@ module ROM
     end
 
     def group(options, &block)
-      if block
-        dsl = AttributeDSL.new
-        dsl.instance_exec(&block)
-
-        attributes << [options, header: dsl.header, type: Array]
-      else
-        options.each do |name, header|
-          attributes << [name, header: header.zip, type: Array]
-        end
-      end
+      attribute_dsl(options, Array, &block)
     end
 
     def wrap(options, &block)
-      if block
-        dsl = AttributeDSL.new
-        dsl.instance_exec(&block)
-
-        attributes << [options, header: dsl.header, type: Hash]
-      else
-        options.each do |name, header|
-          attributes << [name, header: header.zip, type: Hash]
-        end
-      end
+      attribute_dsl(options, Hash, &block)
     end
 
     def call
@@ -81,6 +63,20 @@ module ROM
       @model_class = model_builder.call(header) if model_builder
 
       Mapper.new(header, model_class)
+    end
+
+    private
+
+    def attribute_dsl(options, type, &block)
+      if block
+        dsl = AttributeDSL.new
+        dsl.instance_exec(&block)
+        attributes << [options, header: dsl.header, type: type]
+      else
+        options.each do |name, header|
+          attributes << [name, header: header.zip, type: type]
+        end
+      end
     end
 
   end
