@@ -1,5 +1,3 @@
-require 'inflecto'
-
 module ROM
 
   class RelationBuilder

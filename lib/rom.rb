@@ -1,5 +1,6 @@
 require 'concord'
 require 'charlatan'
+require 'inflecto'
 
 module ROM
   EnvAlreadyFinalizedError = Class.new(StandardError)
