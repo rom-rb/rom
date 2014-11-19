@@ -70,12 +70,13 @@ module ROM
     def load_relations(schema)
       relations = @relations.each_with_object({}) do |(name, block), h|
         builder = RelationBuilder.new(name, schema, h)
-        klass = builder.build_class
-
         adapter = adapter_relation_map[name]
 
-        adapter.extend_relation_class(klass)
-        relation = builder.call(klass, &block)
+        relation = builder.call { |klass|
+          adapter.extend_relation_class(klass)
+          klass.class_eval(&block) if block
+        }
+
         adapter.extend_relation_instance(relation)
 
         h[name] = relation
