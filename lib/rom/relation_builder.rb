@@ -3,24 +3,23 @@ require 'inflecto'
 module ROM
 
   class RelationBuilder
-    attr_reader :name, :schema, :relations, :relation
+    attr_reader :schema, :mod
 
-    def initialize(name, schema, relations)
-      @name = name
+    def initialize(schema)
       @schema = schema
-      @relations = relations
-
-      @relation = schema[name]
+      @mod = schema.each_with_object(Module.new) do |(name, relation), m|
+        m.send(:define_method, name) { relation.dataset }
+      end
     end
 
-    def call
-      klass_name = "#{Relation.name}[#{Inflecto.camelize(name)}]"
+    def call(name)
+      schema_relation = schema[name]
 
       klass = Class.new(Relation)
 
       klass.class_eval <<-RUBY, __FILE__, __LINE__ + 1
         def self.name
-          #{klass_name.inspect}
+          "#{Relation.name}[#{Inflecto.camelize(name)}]"
         end
 
         def self.inspect
@@ -36,15 +35,11 @@ module ROM
         end
       RUBY
 
-      mod = schema.each_with_object(Module.new) do |(name, relation), m|
-        m.send(:define_method, name) { relation.dataset }
-      end
-
       klass.send(:include, mod)
 
       yield(klass)
 
-      klass.new(relation.dataset, relation.header)
+      klass.new(schema_relation.dataset, schema_relation.header)
     end
 
   end
