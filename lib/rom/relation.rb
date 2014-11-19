@@ -24,6 +24,10 @@ module ROM
       dataset.each(&block)
     end
 
+    def inspect
+      "#<#{self.class.name} header=#\{header.inspect\} dataset=#\{dataset.inspect\}>"
+    end
+
     def insert(tuple)
       dataset.insert(tuple)
       self
