@@ -1,6 +1,8 @@
 module ROM
 
   class Env
+    include Adamantium::Flat
+
     attr_reader :repositories, :schema, :relations, :mappers
 
     def initialize(repositories, schema, relations, mappers)
