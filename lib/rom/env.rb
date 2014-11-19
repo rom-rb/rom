@@ -13,7 +13,7 @@ module ROM
     end
 
     def read(name)
-      @mappers[name]
+      mappers[name]
     end
 
     def [](name)

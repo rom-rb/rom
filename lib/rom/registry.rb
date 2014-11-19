@@ -18,18 +18,6 @@ module ROM
       elements[name]
     end
 
-    def <<(element)
-      self[element.name] = element
-    end
-
-    def []=(name, element)
-      elements[name] = element
-    end
-
-    def key?(name)
-      elements.key?(name)
-    end
-
     def respond_to_missing?(name, include_private = false)
       key?(name) || super
     end
