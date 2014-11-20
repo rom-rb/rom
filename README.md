@@ -19,7 +19,7 @@ capabilities and give you back the full power of your database. It is based on
 a couple of core concepts which makes it different from a typical ORM:
 
   * Quering a database is considered as a private implementation detail
-  * Abstract query interfaces are evil and a source of unneccessery complexity
+  * Abstract query interfaces are evil and a source of unnecessary complexity
   * Reading and mutating data are 2 distinct concerns and should be treated separately
   * It must be **simple** to use the full power of your database
 
@@ -30,40 +30,33 @@ accessing the data.
 ## Synopsis
 
 ``` ruby
-require 'rom'
-require 'rom/adapter/sequel'
+require 'rom-sql'
 
-rom = ROM.setup(sqlite: "sqlite::memory")
+setup = ROM.setup(sqlite: "sqlite::memory")
 
-rom.sqlite.connection.run(
-  <<-SQL
-  CREATE TABLE users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name STRING,
-    age INTEGER
-  )
-  SQL
-)
+setup.sqlite.connection.create_table :users do
+  primary_key :id
+  String :name
+  Integer :age
+end
 
-rom.relations do
-  register(:users) do
+setup.relation(:users) do
+  def by_name(name)
+    where(name: name)
+  end
 
-    def by_name(name)
-      where(name: name)
-    end
-
-    def adults
-      where { age >= 18 }
-    end
-
+  def adults
+    where { age >= 18 }
   end
 end
 
-rom.mappers do
+setup.mappers do
   define(:users) do
     model(name: 'User')
   end
 end
+
+rom = setup.finalize
 
 # accessing registered relations
 users = rom.relations.users
