@@ -2,8 +2,26 @@ require 'concord'
 require 'charlatan'
 require 'inflecto'
 
+require 'rom/version'
+require 'rom/support/registry'
+
+require 'rom/header'
+require 'rom/relation'
+require 'rom/mapper'
+require 'rom/reader'
+
+require 'rom/adapter'
+require 'rom/repository'
+require 'rom/env'
+
+require 'rom/boot'
+
 module ROM
   EnvAlreadyFinalizedError = Class.new(StandardError)
+
+  Schema = Class.new(Registry)
+  RelationRegistry = Class.new(Registry)
+  ReaderRegistry = Class.new(Registry)
 
   # Starts the setup process for schema, relations and mappers
   #
@@ -32,21 +50,3 @@ module ROM
   end
 
 end
-
-require 'rom/version'
-
-require 'rom/header'
-require 'rom/relation'
-require 'rom/mapper'
-require 'rom/reader'
-
-require 'rom/adapter'
-require 'rom/repository'
-require 'rom/env'
-
-require 'rom/registry'
-require 'rom/schema'
-require 'rom/relation_registry'
-require 'rom/reader_registry'
-
-require 'rom/boot'
