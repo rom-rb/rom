@@ -4,8 +4,8 @@ env:
 bundler_args: --without sql benchmarks
 script: "bundle exec rake spec"
 rvm:
-  - 2.0.0
-  - 2.1.2
+  - 2.0
+  - 2.1
   - rbx-2
   - jruby
   - ruby-head
