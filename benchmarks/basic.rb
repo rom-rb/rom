@@ -7,8 +7,7 @@ Bundler.require
 
 require 'benchmark/ips'
 
-require 'rom'
-require 'rom/adapter/sequel'
+require 'rom-sql'
 
 require 'active_record'
 
@@ -33,25 +32,23 @@ def env
   ROM_ENV
 end
 
-ROM_ENV = ROM.setup(sqlite: 'sqlite::memory') do
-  sqlite.connection.run("CREATE TABLE users (id SERIAL, name STRING, email STRING, age INT)")
+setup = ROM.setup(sqlite: 'sqlite::memory')
 
-  relations do
-    register(:users) do
+setup.sqlite.connection.run("CREATE TABLE users (id SERIAL, name STRING, email STRING, age INT)")
 
-      def all
-        order(:id)
-      end
-
-    end
-  end
-
-  mappers do
-    define(:users) do
-      model name: 'User'
-    end
+setup.relation(:users) do
+  def all
+    order(:id)
   end
 end
+
+setup.mappers do
+  define(:users) do
+    model name: 'User'
+  end
+end
+
+ROM_ENV = setup.finalize
 
 COUNT = ENV.fetch('COUNT', 1000).to_i
 
