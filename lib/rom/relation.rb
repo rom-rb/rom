@@ -23,8 +23,6 @@ module ROM
     include Charlatan.new(:dataset)
     include RA
 
-    undef_method :select
-
     attr_reader :header
 
     # @api private
