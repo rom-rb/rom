@@ -27,6 +27,14 @@ With that in mind ROM ships with adapters that allow you to connect to any
 database and exposes a DSL to define **relations** and **mappers** to simplify
 accessing the data.
 
+Database support:
+
+  * [rom-sql](https://github.com/rom-rb/rom-sql)
+  * [rom-mongo](https://github.com/rom-rb/rom-mongo)
+
+See [issues](https://github.com/rom-rb/rom/issues?q=is%3Aopen+is%3Aissue+label%3Aadapter+label%3Afeature)
+for a list of adapters that are planned to be added soon.
+
 ## Synopsis
 
 ``` ruby
