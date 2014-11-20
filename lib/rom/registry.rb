@@ -1,5 +1,6 @@
 module ROM
 
+  # @api private
   class Registry
     include Enumerable
 

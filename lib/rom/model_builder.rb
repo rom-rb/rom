@@ -1,5 +1,6 @@
 module ROM
 
+  # @api private
   class ModelBuilder
     attr_reader :options, :const_name, :klass
 

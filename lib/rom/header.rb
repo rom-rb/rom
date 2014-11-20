@@ -1,5 +1,6 @@
 module ROM
 
+  # @api private
   class Header
     include Enumerable
     include Equalizer.new(:attributes)

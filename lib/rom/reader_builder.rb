@@ -1,13 +1,16 @@
 module ROM
 
+  # @api private
   class ReaderBuilder
     attr_reader :relations, :readers
 
+    # @api private
     def initialize(relations)
       @relations = relations
       @readers = {}
     end
 
+    # @api private
     def call(name, options = {}, &block)
       parent = relations[options.fetch(:parent) { name }]
 

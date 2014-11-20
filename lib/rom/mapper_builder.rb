@@ -2,6 +2,7 @@ require 'rom/model_builder'
 
 module ROM
 
+  # @api private
   class MapperBuilder
 
     class AttributeDSL

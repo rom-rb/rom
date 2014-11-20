@@ -1,5 +1,6 @@
 module ROM
 
+  # @api private
   class Mapper
     attr_reader :header, :model, :mapping
 

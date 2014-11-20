@@ -5,6 +5,13 @@ require 'inflecto'
 module ROM
   EnvAlreadyFinalizedError = Class.new(StandardError)
 
+  # Starts the setup process for schema, relations and mappers
+  #
+  # @param [Hash] options repository URIs
+  #
+  # @return [Boot] boot object
+  #
+  # @api public
   def self.setup(options, &block)
     adapters = options.each_with_object({}) do |(name, uri), hash|
       hash[name] = Adapter.setup(uri)
@@ -41,7 +48,5 @@ require 'rom/registry'
 require 'rom/schema'
 require 'rom/relation_registry'
 require 'rom/reader_registry'
-
-require 'rom/ra'
 
 require 'rom/boot'

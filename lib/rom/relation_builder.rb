@@ -1,8 +1,10 @@
 module ROM
 
+  # @api private
   class RelationBuilder
     attr_reader :schema, :mod
 
+    # @api private
     def initialize(schema)
       @schema = schema
       @mod = schema.each_with_object(Module.new) do |(name, relation), m|
@@ -10,6 +12,7 @@ module ROM
       end
     end
 
+    # @api private
     def call(name)
       schema_relation = schema[name]
 

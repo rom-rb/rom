@@ -6,8 +6,8 @@ Gem::Specification.new do |gem|
   gem.name          = 'rom'
   gem.summary       = 'Ruby Object Mapper'
   gem.description   = gem.summary
-  gem.authors       = ['Piotr Solnica', 'Dan Kubb', 'Markus Schirp', 'Martin Gamsjaeger'].sort
-  gem.email         = ['piotr.solnica@gmail.com', 'dan.kubb@gmail.com', 'mbj@schirp-dso.com', 'gamsnjaga@gmail.com'].sort
+  gem.authors       = 'Piotr Solnica',
+  gem.email         = 'piotr.solnica@gmail.com'
   gem.homepage      = 'http://rom-rb.org'
   gem.require_paths = ['lib']
   gem.version       = ROM::VERSION.dup

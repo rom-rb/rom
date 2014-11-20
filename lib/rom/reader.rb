@@ -1,11 +1,17 @@
 module ROM
 
+  # Exposes mapped tuples via enumerable interface
+  #
+  # See example for each method
+  #
+  # @api public
   class Reader
     include Enumerable
     include Equalizer.new(:path, :relation, :mapper)
 
     attr_reader :path, :relation, :header, :mappers, :mapper
 
+    # @api private
     def initialize(path, relation, mappers = {})
       @path = path.to_s
       @relation = relation
@@ -18,16 +24,29 @@ module ROM
       @mapper = mappers.fetch(mapper_key.to_sym)
     end
 
+    # Yields tuples mapped to objects
+    #
+    # @example
+    #
+    #   # accessing root relation
+    #   rom.read(:users).each { |user| # ... }
+    #
+    #   # accessing virtual relations
+    #   rom.read(:users).adults.recent.active.each { |user| # ... }
+    #
+    # @api public
     def each
       relation.each { |tuple| yield(mapper.load(tuple)) }
     end
 
+    # @api private
     def respond_to_missing?(name, include_private = false)
       relation.respond_to?(name)
     end
 
     private
 
+    # @api private
     def method_missing(name, *args, &block)
       new_relation = relation.public_send(name, *args, &block)
 

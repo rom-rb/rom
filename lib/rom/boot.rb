@@ -4,9 +4,13 @@ require 'rom/reader_builder'
 
 module ROM
 
+  # Exposes DSL for defining schema, relations and mappers
+  #
+  # @api public
   class Boot
     attr_reader :repositories, :adapter_relation_map, :env
 
+    # @api private
     def initialize(repositories)
       @repositories = repositories
       @schema = {}
@@ -16,18 +20,63 @@ module ROM
       @env = nil
     end
 
+    # Schema definition DSL
+    #
+    # @example
+    #
+    #   setup.schema do
+    #     base_relation(:users) do
+    #       repository :sqlite
+    #
+    #       attribute :id
+    #       attribute :name
+    #     end
+    #   end
+    #
+    # @api public
     def schema(&block)
       @schema = DSL.new(self).schema(&block)
     end
 
+    # Relation definition DSL
+    #
+    # @example
+    #
+    #   setup.relation(:users) do
+    #     def names
+    #       project(:name)
+    #     end
+    #   end
+    #
+    # @api public
     def relation(name, &block)
       @relations.update(name => block)
     end
 
+    # Mapper definition DSL
+    #
+    # @example
+    #
+    #   setup.mappers do
+    #     define(:users) do
+    #       model name: 'User'
+    #     end
+    #
+    #     define(:names, parent: :users) do
+    #       exclude :id
+    #     end
+    #   end
+    #
+    # @api public
     def mappers(&block)
       @mappers.concat(DSL.new(self).mappers(&block))
     end
 
+    # Finalize the setup
+    #
+    # @return [Env] frozen env with access to repositories, schema, relations and mappers
+    #
+    # @api public
     def finalize
       raise EnvAlreadyFinalizedError if env
 
@@ -38,20 +87,24 @@ module ROM
       @env = Env.new(repositories, schema, relations, readers)
     end
 
+    # @api private
     def [](name)
       repositories.fetch(name)
     end
 
+    # @api private
     def respond_to_missing?(name, include_context = false)
       repositories.key?(name)
     end
 
     private
 
+    # @api private
     def method_missing(name, *args)
       repositories.fetch(name)
     end
 
+    # @api private
     def load_schema
       repositories.values.each do |repo|
         (@schema[repo] ||= []).concat(repo.schema)
@@ -67,6 +120,7 @@ module ROM
       Schema.new(base_relations)
     end
 
+    # @api private
     def load_relations(schema)
       builder = RelationBuilder.new(schema)
 
@@ -88,6 +142,7 @@ module ROM
       RelationRegistry.new(relations)
     end
 
+    # @api private
     def load_readers(relations)
       reader_builder = ReaderBuilder.new(relations)
 
