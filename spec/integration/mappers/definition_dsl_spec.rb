@@ -1,31 +1,23 @@
 require 'spec_helper'
 
-describe Env, '#mappers' do
+describe 'Mapper definition DSL' do
   include_context 'users and tasks'
 
   let(:header) { mapper.header }
 
   before do
-    rom.relations do
-      register(:users) do
-
-        def email_index
-          select(:email)
-        end
-
+    setup.relation(:users) do
+      def email_index
+        project(:email)
       end
     end
   end
 
-  after do
-    Object.send(:remove_const, :User) if Object.const_defined?(:User)
-  end
-
-  describe 'defining a default PORO mapper' do
+  describe 'default PORO mapper' do
     subject(:mapper) { rom.read(:users).mapper }
 
     before do
-      rom.mappers do
+      setup.mappers do
         define(:users) do
           model name: 'User'
         end
@@ -41,11 +33,11 @@ describe Env, '#mappers' do
     end
   end
 
-  describe 'defining a mapper with custom attributes' do
+  describe 'excluding attributes' do
     subject(:mapper) { rom.read(:users).mapper }
 
     before do
-      rom.mappers do
+      setup.mappers do
         define(:users) do
           model name: 'User'
 
@@ -59,28 +51,32 @@ describe Env, '#mappers' do
     end
   end
 
-  describe 'defining a mapper for a virtual relation' do
+  describe 'virtual relation mapper' do
     subject(:mapper) { rom.read(:users).email_index.mapper }
 
     before do
-      rom.mappers do
+      setup.mappers do
         define(:users) do
           model name: 'User'
         end
+      end
 
-        define(:email_index, parent: users) do
+      setup.mappers do
+        define(:email_index, parent: :users) do
+          model name: 'UserWithoutName'
           exclude :name
         end
       end
     end
 
-    it 'inherits the model from the parent by default' do
-      expect(mapper.model).to be(User)
+    it 'inherits the attributes from the parent by default' do
+      expect(header.keys).to eql(rom.mappers[:users].header - [:name])
     end
 
-    it 'only maps provided attributes' do
-      expect(header.keys).to eql([:email])
+    it 'builds a new model' do
+      expect(mapper.model).to be(UserWithoutName)
     end
+
   end
 
 end

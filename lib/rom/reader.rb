@@ -2,16 +2,20 @@ module ROM
 
   class Reader
     include Enumerable
-    include Equalizer.new(:name, :relation, :mapper)
+    include Equalizer.new(:path, :relation, :mapper)
 
-    attr_reader :name, :relation, :header, :mappers, :mapper
+    attr_reader :path, :relation, :header, :mappers, :mapper
 
-    def initialize(name, relation, mappers)
-      @name = name
+    def initialize(path, relation, mappers = {})
+      @path = path.to_s
       @relation = relation
       @header = relation.header
       @mappers = mappers
-      @mapper = mappers.fetch(name) { mappers.fetch(relation.name) }
+
+      names = @path.split('.')
+
+      mapper_key = names.reverse.detect { |name| mappers.key?(name.to_sym) }
+      @mapper = mappers.fetch(mapper_key.to_sym)
     end
 
     def each
@@ -25,7 +29,13 @@ module ROM
     private
 
     def method_missing(name, *args, &block)
-      self.class.new(name, relation.public_send(name, *args, &block), mappers)
+      new_relation = relation.public_send(name, *args, &block)
+
+      splits = path.split('.')
+      splits << name
+      new_path = splits.join('.')
+
+      self.class.new(new_path, new_relation, mappers)
     end
 
   end

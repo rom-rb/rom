@@ -3,6 +3,8 @@ require 'addressable/uri'
 module ROM
 
   class Adapter
+    include Equalizer.new(:connection)
+
     @adapters = []
 
     attr_reader :uri
@@ -18,7 +20,7 @@ module ROM
     end
 
     def self.register(adapter)
-      @adapters << adapter
+      @adapters.unshift adapter
     end
 
     def self.[](scheme)
@@ -30,7 +32,15 @@ module ROM
     end
 
     def connection
-      raise NotImplemented, "#{self.class}#connection must be implemented"
+      raise NotImplementedError, "#{self.class}#connection must be implemented"
+    end
+
+    def extend_relation_class(klass)
+      klass
+    end
+
+    def extend_relation_instance(relation)
+      relation
     end
 
     def schema

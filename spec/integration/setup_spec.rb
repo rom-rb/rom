@@ -1,19 +1,18 @@
 require 'spec_helper'
 
-describe ROM, '.setup' do
-  let(:rom) { ROM.setup(sqlite: SEQUEL_TEST_DB_URI) }
-  let(:jane) { { id: 1, name: 'Jane' } }
-  let(:joe) { { id: 2, name: 'Joe' } }
+describe 'Setting up ROM' do
+  include_context 'users and tasks'
 
-  before do
-    seed(rom.sqlite.connection)
-  end
-
-  after do
-    deseed(rom.sqlite.connection)
-  end
+  let(:jane) { { name: 'Jane', email: 'jane@doe.org' } }
+  let(:joe) { { name: 'Joe', email: 'joe@doe.org' } }
 
   it 'configures relations' do
-    expect(rom.sqlite.users.to_a).to eql([jane, joe])
+    expect(rom.memory.users).to match_array([joe, jane])
+  end
+
+  it 'raises on double-finalize' do
+    expect {
+      2.times { setup.finalize }
+    }.to raise_error(ROM::EnvAlreadyFinalizedError)
   end
 end

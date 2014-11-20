@@ -8,6 +8,39 @@ module ROM
         [:memory]
       end
 
+      class Dataset
+        include Charlatan.new(:data)
+
+        def each(&block)
+          return to_enum unless block
+          data.each(&block)
+        end
+
+        def restrict(criteria = nil, &block)
+          if criteria
+            find_all { |tuple| criteria.all? { |k, v| tuple[k] == v } }
+          else
+            find_all { |tuple| yield(tuple) }
+          end
+        end
+
+        def project(*names)
+          map { |tuple| tuple.reject { |key,_| names.include?(key) } }
+        end
+
+        def order(*names)
+          sort_by { |tuple| tuple.values_at(*names) }
+        end
+
+        def insert(tuple)
+          data << tuple
+        end
+
+        def header
+          []
+        end
+      end
+
       class Storage
         attr_reader :data
 
@@ -17,7 +50,7 @@ module ROM
         end
 
         def [](name)
-          data[name] ||= []
+          data[name] ||= Dataset.new([])
         end
       end
 

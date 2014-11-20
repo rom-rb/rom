@@ -1,22 +1,31 @@
-require 'charlatan'
+require 'rom/ra'
 
 module ROM
 
   class Relation
     include Charlatan.new(:dataset)
+    include RA
 
     undef_method :select
 
     attr_reader :header
 
-    def initialize(dataset, header = dataset.header.dup)
+    def self.finalize(env, relation)
+      # noop
+    end
+
+    def initialize(dataset, header = dataset.header)
       super
-      @header = header.freeze
+      @header = header.dup.freeze
     end
 
     def each(&block)
-      return dataset.to_enum unless block
+      return to_enum unless block
       dataset.each(&block)
+    end
+
+    def inspect
+      "#<#{self.class.name} header=#\{header.inspect\} dataset=#\{dataset.inspect\}>"
     end
 
     def insert(tuple)

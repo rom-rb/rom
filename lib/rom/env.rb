@@ -1,31 +1,19 @@
 module ROM
 
   class Env
-    include Concord.new(:repositories)
+    include Adamantium::Flat
 
-    def initialize(repositories)
-      super
-      @schema = nil
-      @readers = nil
+    attr_reader :repositories, :schema, :relations, :mappers
+
+    def initialize(repositories, schema, relations, mappers)
+      @repositories = repositories
+      @schema = schema
+      @relations = relations
+      @mappers = mappers
     end
 
     def read(name)
-      @readers[name]
-    end
-
-    def relations(&block)
-      @relations = RelationRegistry.define(schema, mappers, &block) if block
-      @relations
-    end
-
-    def schema(&block)
-      @schema = Schema.define(self, &block) if block || @schema.nil?
-      @schema
-    end
-
-    def mappers(&block)
-      @readers = ReaderRegistry.define(relations, &block) if block
-      @readers
+      mappers[name]
     end
 
     def [](name)
@@ -34,10 +22,6 @@ module ROM
 
     def respond_to_missing?(name, include_private = false)
       repositories.key?(name)
-    end
-
-    def load_schema
-      repositories.map { |_, repo| repo.schema }.reduce(:+)
     end
 
     private
