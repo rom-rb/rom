@@ -132,8 +132,6 @@ module ROM
           klass.class_eval(&block) if block
         }
 
-        adapter.extend_relation_instance(relation)
-
         h[name] = relation
       end
 
