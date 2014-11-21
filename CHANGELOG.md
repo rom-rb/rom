@@ -3,7 +3,7 @@
 This version is a rewrite that introduces a new, simplified architecture based
 on a new adapter interface.
 
-[Compare v0.2.0..master](https://github.com/rom-rb/rom/compare/v0.2.0..master)
+[Compare v0.2.0...master](https://github.com/rom-rb/rom/compare/v0.2.0...master)
 
 # v0.2.0 2014-04-06
 
@@ -21,20 +21,20 @@ on a new adapter interface.
 * [internal] renaming and optimizing relations happens on the schema level now (solnic)
 * [internal] environment will raise if unknown relation is referenced via `Environment#[]` (solnic)
 
-[Compare v0.1.2..v0.2.0](https://github.com/rom-rb/rom/compare/v0.1.2...v0.2.0)
+[Compare v0.1.2...v0.2.0](https://github.com/rom-rb/rom/compare/v0.1.2...v0.2.0)
 
 # v0.1.2 2013-09-02
 
 * [updated] [rom-relation](https://github.com/rom-rb/rom-relation/blob/v0.1.2/Changelog.md#v012-2013-09-02)
 
-[Compare v0.1.1..v0.1.2](https://github.com/rom-rb/rom/compare/v0.1.1...v0.1.2)
+[Compare v0.1.1...v0.1.2](https://github.com/rom-rb/rom/compare/v0.1.1...v0.1.2)
 
 # v0.1.1 2013-08-30
 
 * [updated] [rom-relation](https://github.com/rom-rb/rom-relation/blob/v0.1.1/Changelog.md#v011-2013-08-30)
 * [updated] [rom-session](https://github.com/rom-rb/rom-session/blob/v0.1.1/Changelog.md#v011-2013-08-30)
 
-[Compare v0.1.0..v0.1.1](https://github.com/rom-rb/rom/compare/v0.1.0...v0.1.1)
+[Compare v0.1.0...v0.1.1](https://github.com/rom-rb/rom/compare/v0.1.0...v0.1.1)
 
 # v0.1.0 2013-08-23
 
