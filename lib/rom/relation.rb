@@ -44,7 +44,7 @@ module ROM
 
     # @api public
     def inspect
-      "#<#{self.class.name} header=#\{header.inspect\} dataset=#\{dataset.inspect\}>"
+      "#<#{self.class.name} header=#{header.inspect} dataset=#{dataset.inspect}>"
     end
 
     # @api private
