@@ -16,6 +16,14 @@ describe "Adapter" do
           end
         end
 
+        def extend_relation_instance(relation)
+          relation.instance_eval do
+            def freaking_cool?
+              true
+            end
+          end
+        end
+
         ROM::Adapter.register(self)
       end
     end
@@ -27,5 +35,9 @@ describe "Adapter" do
 
   it "can extend relation class" do
     expect(rom.relations.users.class).to be_freaking_awesome
+  end
+
+  it "can extend relation instance" do
+    expect(rom.relations.users).to be_freaking_cool
   end
 end
