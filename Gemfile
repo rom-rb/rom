@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gemspec
 
-group :development do
+group :console do
   gem 'pry'
   gem 'pg'
 end
