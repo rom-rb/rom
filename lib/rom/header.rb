@@ -27,6 +27,10 @@ module ROM
           [name, header.mapping]
         end
 
+        def embedded?
+          true
+        end
+
       end
 
       def self.[](type)
@@ -62,6 +66,14 @@ module ROM
 
       def type
         meta.fetch(:type)
+      end
+
+      def aliased?
+        key != name
+      end
+
+      def embedded?
+        false
       end
 
       def mapping

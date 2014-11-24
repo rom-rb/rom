@@ -3,7 +3,7 @@ require 'spec_helper'
 require 'ostruct'
 
 describe ROM::Mapper do
-  subject(:mapper) { ROM::Mapper.new(ROM::Header.coerce(relation.header.zip), user_model) }
+  subject(:mapper) { ROM::Mapper.build(ROM::Header.coerce(relation.header.zip), user_model) }
 
   let(:relation) { ROM::Relation.new(dataset, [:id, :name]) }
   let(:dataset) { ROM::Adapter::Memory::Dataset.new([{id: 1, name: 'Jane'}, {id: 2, name: 'Joe'}]) }

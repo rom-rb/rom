@@ -63,7 +63,7 @@ module ROM
 
       @model_class = model_builder.call(header) if model_builder
 
-      Mapper.new(header, model_class)
+      Mapper.build(header, model_class)
     end
 
     private
