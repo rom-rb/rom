@@ -8,6 +8,8 @@ module ROM
   #
   # @api public
   class Boot
+    include Equalizer.new(:repositories, :schema, :relations, :mappers)
+
     attr_reader :repositories, :adapter_relation_map, :env
 
     # @api private
@@ -36,6 +38,7 @@ module ROM
     # @api public
     def schema(&block)
       @schema = DSL.new(self).schema(&block)
+      self
     end
 
     # Relation definition DSL
@@ -51,6 +54,7 @@ module ROM
     # @api public
     def relation(name, &block)
       @relations.update(name => block)
+      self
     end
 
     # Mapper definition DSL
@@ -70,6 +74,7 @@ module ROM
     # @api public
     def mappers(&block)
       @mappers.concat(DSL.new(self).mappers(&block))
+      self
     end
 
     # Finalize the setup
