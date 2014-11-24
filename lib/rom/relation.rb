@@ -21,6 +21,7 @@ module ROM
   # @api public
   class Relation
     include Charlatan.new(:dataset)
+    include Equalizer.new(:header, :dataset)
     include RA
 
     attr_reader :header
@@ -40,11 +41,6 @@ module ROM
     def each(&block)
       return to_enum unless block
       dataset.each(&block)
-    end
-
-    # @api public
-    def inspect
-      "#<#{self.class.name} header=#{header.inspect} dataset=#{dataset.inspect}>"
     end
 
     # @api private
