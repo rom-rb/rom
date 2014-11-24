@@ -1,9 +1,9 @@
-# v0.3.0 2014-11-24
+# v0.3.1 to-be-released
 
-This version is a rewrite that introduces a new, simplified architecture based
-on a new adapter interface.
+* [internal] add equalizer to `Env` (solnic)
+* [internal] return self in boot dsl methods (solnic)
 
-[Compare v0.2.0...v0.3.0](https://github.com/rom-rb/rom/compare/v0.2.0...v0.3.0)
+[Compare v0.3.0...master](https://github.com/rom-rb/rom/compare/v0.3.0...master)
 
 # v0.2.0 2014-04-06
 
