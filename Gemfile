@@ -2,6 +2,11 @@ source 'https://rubygems.org'
 
 gemspec
 
+group :development do
+  gem 'pry'
+  gem 'pg'
+end
+
 group :test do
   gem 'mutant'
   gem 'mutant-rspec'
