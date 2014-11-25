@@ -12,7 +12,7 @@
 * when schema is missing booting will gracefuly skip building relations and mappers (solnic)
 * in-memory join handles one-to-many and many-to-one correctly (solnic)
 
-[Compare v0.3.0...master](https://github.com/rom-rb/rom/compare/v0.3.0...master)
+[Compare v0.3.0...v0.3.1](https://github.com/rom-rb/rom/compare/v0.3.0...v0.3.1)
 
 ## v0.3.0 2014-11-24
 
