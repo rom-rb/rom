@@ -20,15 +20,13 @@ module ROM
         def each(&block)
           return to_enum unless block
 
-          join_map = right.each_with_object({}) { |tuple, h|
-            other = left.detect { |t| (tuple.to_a & t.to_a).any?  }
-            (h[other] ||= []) << tuple if other
+          join_map = left.each_with_object({}) { |tuple, h|
+            others = right.find_all { |t| (tuple.to_a & t.to_a).any? }
+            (h[tuple] ||= []).concat(others)
           }
 
           tuples = left.map { |tuple|
-            others = join_map[tuple]
-            next unless others.any?
-            others.map { |other| tuple.merge(other) }
+            join_map[tuple].map { |other| tuple.merge(other) }
           }.flatten
 
           tuples.each(&block)

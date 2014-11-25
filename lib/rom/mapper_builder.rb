@@ -16,7 +16,7 @@ module ROM
         Header.coerce(attributes)
       end
 
-      def attribute(name, options)
+      def attribute(name, options = {})
         attributes << [name, options]
       end
     end

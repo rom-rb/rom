@@ -11,6 +11,11 @@ module ROM
       class Dataset
         include Charlatan.new(:data)
 
+        def to_ary
+          data
+        end
+        alias_method :to_a, :to_ary
+
         def each(&block)
           return to_enum unless block
           data.each(&block)
