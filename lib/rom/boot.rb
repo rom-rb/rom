@@ -8,7 +8,7 @@ module ROM
   #
   # @api public
   class Boot
-    include Equalizer.new(:repositories, :schema, :relations, :mappers)
+    include Equalizer.new(:repositories, :env)
 
     attr_reader :repositories, :adapter_relation_map, :env
 
@@ -127,6 +127,8 @@ module ROM
 
     # @api private
     def load_relations(schema)
+      return RelationRegistry.new unless adapter_relation_map.any?
+
       builder = RelationBuilder.new(schema)
 
       relations = @relations.each_with_object({}) do |(name, block), h|
@@ -149,13 +151,15 @@ module ROM
 
     # @api private
     def load_readers(relations)
+      return ReaderRegistry.new unless adapter_relation_map.any?
+
       reader_builder = ReaderBuilder.new(relations)
 
       readers = @mappers.each_with_object({}) do |(name, options, block), h|
         h[name] = reader_builder.call(name, options, &block)
       end
 
-      RelationRegistry.new(readers)
+      ReaderRegistry.new(readers)
     end
 
   end

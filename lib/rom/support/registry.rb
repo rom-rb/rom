@@ -3,6 +3,7 @@ module ROM
   # @api private
   class Registry
     include Enumerable
+    include Equalizer.new(:elements)
 
     attr_reader :elements
 
