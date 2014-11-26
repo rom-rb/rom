@@ -8,6 +8,7 @@ group :console do
 end
 
 group :test do
+  gem 'virtus'
   gem 'mutant'
   gem 'mutant-rspec'
   gem 'rubysl-bigdecimal', platforms: :rbx

@@ -1,14 +1,16 @@
 require 'spec_helper'
 
-require 'ostruct'
-
 describe 'Commands / Create' do
   include_context 'users and tasks'
 
   subject(:command) { rom.command(:users).create }
 
   before do
-    UserParams = Class.new(OpenStruct)
+    UserParams = Class.new do
+      include Virtus.model
+      attribute :name
+      attribute :email
+    end
 
     UserValidator = Class.new do
       attr_reader :errors

@@ -8,7 +8,10 @@ describe 'Commands / Update' do
   subject(:command) { rom.command(:users).update(:all, name: 'Jane') }
 
   before do
-    UserParams = Class.new(OpenStruct)
+    UserParams = Class.new do
+      include Virtus.model
+      attribute :email
+    end
 
     UserValidator = Class.new do
       attr_reader :errors
@@ -47,7 +50,7 @@ describe 'Commands / Update' do
 
   end
 
-  it 'inserts tuple on successful validation' do
+  it 'update tuples on successful validation' do
     result = command.execute(email: 'jane.doe@test.com')
 
     expect(result).to match_array([{ name: 'Jane', email: 'jane.doe@test.com' }])

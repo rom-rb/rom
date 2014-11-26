@@ -10,6 +10,7 @@ module ROM
 
           def execute(tuple)
             attributes = input.new(tuple)
+
             validation = validator.call(attributes)
 
             if validation.success?
