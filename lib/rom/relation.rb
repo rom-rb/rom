@@ -43,24 +43,6 @@ module ROM
       dataset.each(&block)
     end
 
-    # @api private
-    def insert(tuple)
-      dataset.insert(tuple)
-      self
-    end
-
-    # @api private
-    def update(tuple)
-      dataset.update(tuple)
-      self
-    end
-
-    # @api private
-    def delete
-      dataset.delete
-      self
-    end
-
   end
 
 end

@@ -8,6 +8,10 @@ module ROM
         class Create
           include Concord.new(:relation, :input, :validator)
 
+          def self.build(relation, definition)
+            new(relation, definition.input, definition.validator)
+          end
+
           def execute(tuple)
             attributes = input.new(tuple)
 
@@ -24,6 +28,10 @@ module ROM
 
         class Update
           include Concord.new(:relation, :input, :validator)
+
+          def self.build(relation, definition)
+            new(relation, definition.input, definition.validator)
+          end
 
           def execute(params)
             attributes = input.new(params)
@@ -43,6 +51,24 @@ module ROM
             self.class.new(relation.public_send(*args, &block), input, validator)
           end
         end
+
+        class Delete
+          include Concord.new(:relation, :target)
+
+          def self.build(relation, target = relation)
+            new(relation, target)
+          end
+
+          def execute
+            target.to_a.each { |tuple| relation.delete(tuple) }
+
+            relation
+          end
+
+          def new(*args, &block)
+            self.class.new(relation, relation.public_send(*args, &block))
+          end
+        end
       end
 
       def self.schemes
@@ -53,7 +79,7 @@ module ROM
         include Charlatan.new(:data)
 
         def to_ary
-          data
+          data.dup
         end
         alias_method :to_a, :to_ary
 
@@ -80,6 +106,12 @@ module ROM
 
         def insert(tuple)
           data << tuple
+          self
+        end
+
+        def delete(tuple)
+          data.delete(tuple)
+          self
         end
 
         def header
@@ -114,11 +146,16 @@ module ROM
           case name
           when :create then Commands::Create
           when :update then Commands::Update
+          when :delete then Commands::Delete
           else
             raise ArgumentError, "#{name.inspect} is not a supported command type"
           end
 
-        klass.new(relation, definition.input, definition.validator)
+        if name == :create || name == :update
+          klass.build(relation, definition)
+        else
+          klass.build(relation)
+        end
       end
 
       Adapter.register(self)

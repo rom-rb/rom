@@ -9,7 +9,7 @@ module ROM
       def initialize(&block)
         @input = nil
         @validator = nil
-        instance_exec(&block)
+        instance_exec(&block) if block
       end
 
       def input(klass = nil)
