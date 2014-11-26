@@ -5,16 +5,17 @@ module ROM
   # @api public
   class Env
     include Adamantium::Flat
-    include Equalizer.new(:repositories, :schema, :relations, :mappers)
+    include Equalizer.new(:repositories, :schema, :relations, :mappers, :commands)
 
-    attr_reader :repositories, :schema, :relations, :mappers
+    attr_reader :repositories, :schema, :relations, :mappers, :commands
 
     # @api private
-    def initialize(repositories, schema, relations, mappers)
+    def initialize(repositories, schema, relations, mappers, commands)
       @repositories = repositories
       @schema = schema
       @relations = relations
       @mappers = mappers
+      @commands = commands
     end
 
     # Returns a reader with access to defined mappers
@@ -26,6 +27,10 @@ module ROM
     # @api public
     def read(name)
       mappers[name]
+    end
+
+    def command(name)
+      commands[name]
     end
 
     # @api private

@@ -4,6 +4,24 @@ module ROM
     class Memory < Adapter
       attr_reader :connection
 
+      module Commands
+        class Create
+          include Concord.new(:relation, :input, :validator)
+
+          def execute(tuple)
+            attributes = input.new(tuple)
+            validation = validator.call(attributes)
+
+            if validation.success?
+              result = relation.insert(attributes.to_h)
+              [result.to_a.last]
+            else
+              validation
+            end
+          end
+        end
+      end
+
       def self.schemes
         [:memory]
       end
@@ -66,6 +84,10 @@ module ROM
 
       def [](name)
         connection[name]
+      end
+
+      def command(relation, definition)
+        Commands::Create.new(relation, definition.input, definition.validator)
       end
 
       Adapter.register(self)

@@ -18,6 +18,7 @@ module ROM
       @schema = {}
       @relations = {}
       @mappers = []
+      @commands = {}
       @adapter_relation_map = {}
       @env = nil
     end
@@ -77,6 +78,10 @@ module ROM
       self
     end
 
+    def commands(name, &block)
+      @commands.update(name => DSL.new(self).commands(&block))
+    end
+
     # Finalize the setup
     #
     # @return [Env] frozen env with access to repositories, schema, relations and mappers
@@ -88,8 +93,9 @@ module ROM
       schema = load_schema
       relations = load_relations(schema)
       readers = load_readers(relations)
+      commands = load_commands(relations)
 
-      @env = Env.new(repositories, schema, relations, readers)
+      @env = Env.new(repositories, schema, relations, readers, commands)
     end
 
     # @api private
@@ -160,6 +166,22 @@ module ROM
       end
 
       ReaderRegistry.new(readers)
+    end
+
+    def load_commands(relations)
+      return CommandRegistry.new unless relations.elements.any?
+
+      commands = @commands.each_with_object({}) do |(name, definitions), h|
+        adapter = adapter_relation_map[name]
+
+        rel_commands = definitions.each_with_object({}) do |(command_name, definition), ch|
+          ch[command_name] = adapter.command(relations[name], definition)
+        end
+
+        h[name] = Registry.new(rel_commands)
+      end
+
+      CommandRegistry.new(commands)
     end
 
   end

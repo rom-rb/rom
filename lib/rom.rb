@@ -22,6 +22,7 @@ module ROM
   Schema = Class.new(Registry)
   RelationRegistry = Class.new(Registry)
   ReaderRegistry = Class.new(Registry)
+  CommandRegistry = Class.new(Registry)
 
   # Starts the setup process for schema, relations and mappers
   #
