@@ -174,8 +174,12 @@ module ROM
       commands = @commands.each_with_object({}) do |(name, definitions), h|
         adapter = adapter_relation_map[name]
 
-        rel_commands = definitions.each_with_object({}) do |(command_name, definition), ch|
-          ch[command_name] = adapter.command(command_name, relations[name], definition)
+        rel_commands = {}
+
+        definitions.each do |command_name, definition|
+          rel_commands[command_name] = adapter.command(
+            command_name, relations[name], definition
+          )
         end
 
         h[name] = CommandRegistry.new(rel_commands)
