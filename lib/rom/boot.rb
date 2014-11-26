@@ -169,19 +169,19 @@ module ROM
     end
 
     def load_commands(relations)
-      return CommandRegistry.new unless relations.elements.any?
+      return Registry.new unless relations.elements.any?
 
       commands = @commands.each_with_object({}) do |(name, definitions), h|
         adapter = adapter_relation_map[name]
 
         rel_commands = definitions.each_with_object({}) do |(command_name, definition), ch|
-          ch[command_name] = adapter.command(relations[name], definition)
+          ch[command_name] = adapter.command(command_name, relations[name], definition)
         end
 
-        h[name] = Registry.new(rel_commands)
+        h[name] = CommandRegistry.new(rel_commands)
       end
 
-      CommandRegistry.new(commands)
+      Registry.new(commands)
     end
 
   end

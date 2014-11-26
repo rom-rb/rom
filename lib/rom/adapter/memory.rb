@@ -20,6 +20,28 @@ module ROM
             end
           end
         end
+
+        class Update
+          include Concord.new(:relation, :input, :validator)
+
+          def execute(params)
+            attributes = input.new(params)
+
+            relation.map do |tuple|
+              validation = validator.call(attributes)
+
+              if validation.success?
+                tuple.update(attributes.to_h)
+              else
+                validation
+              end
+            end
+          end
+
+          def new(*args, &block)
+            self.class.new(relation.public_send(*args, &block), input, validator)
+          end
+        end
       end
 
       def self.schemes
@@ -86,8 +108,16 @@ module ROM
         connection[name]
       end
 
-      def command(relation, definition)
-        Commands::Create.new(relation, definition.input, definition.validator)
+      def command(name, relation, definition)
+        klass =
+          case name
+          when :create then Commands::Create
+          when :update then Commands::Update
+          else
+            raise ArgumentError, "#{name.inspect} is not a supported command type"
+          end
+
+        klass.new(relation, definition.input, definition.validator)
       end
 
       Adapter.register(self)
