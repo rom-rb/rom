@@ -4,6 +4,8 @@ module ROM
     class Memory < Adapter
       attr_reader :connection
 
+      attr_accessor :logger
+
       def self.schemes
         [:memory]
       end
