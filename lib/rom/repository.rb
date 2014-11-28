@@ -16,6 +16,24 @@ module ROM
       adapter[name]
     end
 
+    # Set a logger for the adapter
+    #
+    # @param [Object] logger
+    #
+    # @api public
+    def use_logger(logger)
+      adapter.logger = logger
+    end
+
+    # Return logger used by the adapter
+    #
+    # @return [Object] logger
+    #
+    # @api public
+    def logger
+      adapter.logger
+    end
+
     # Return the database connection provided by the adapter
     #
     # @api public
