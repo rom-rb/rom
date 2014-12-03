@@ -23,20 +23,6 @@ module ROM
   RelationRegistry = Class.new(Registry)
   ReaderRegistry = Class.new(Registry)
 
-  CommandRegistry = Class.new(Registry) do
-    private
-
-    def method_missing(name, *args, &block)
-      command = self[name]
-
-      if args.any?
-        command.new(*args, &block)
-      else
-        command
-      end
-    end
-  end
-
   # Starts the setup process for schema, relations and mappers
   #
   # @param [Hash] options repository URIs

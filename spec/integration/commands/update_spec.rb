@@ -5,7 +5,7 @@ require 'ostruct'
 describe 'Commands / Update' do
   include_context 'users and tasks'
 
-  subject(:command) { rom.command(:users).update(:all, name: 'Jane') }
+  subject(:users) { rom.commands.users }
 
   before do
     UserParams = Class.new do
@@ -14,8 +14,6 @@ describe 'Commands / Update' do
     end
 
     UserValidator = Class.new do
-      attr_reader :errors
-
       def self.call(params)
         new.validate(params)
       end
@@ -25,13 +23,7 @@ describe 'Commands / Update' do
       end
 
       def validate(params)
-        @success = !params.email.nil?
-        errors << 'oops' unless success?
-        self
-      end
-
-      def success?
-        @success
+        raise ArgumentError, ":email is required" unless params.email
       end
     end
 
@@ -51,16 +43,18 @@ describe 'Commands / Update' do
   end
 
   it 'update tuples on successful validation' do
-    result = command.execute(email: 'jane.doe@test.com')
+    result = users.try {
+      update(:all, name: 'Jane').set(email: 'jane.doe@test.com')
+    }
 
     expect(result).to match_array([{ name: 'Jane', email: 'jane.doe@test.com' }])
   end
 
   it 'returns validation object with errors on failed validation' do
-    result = command.execute(email: nil)
+    result = users.try { update(:all, name: 'Jane').set(email: nil) }
 
-    expect(result.all?(&:success?)).to_not be(true)
-    expect(result.first.errors).to eql(['oops'])
+    expect(result.error).to be_instance_of(ArgumentError)
+    expect(result.error.message).to eql(':email is required')
 
     expect(rom.relations.users.restrict(name: 'Jane')).to match_array([
       { name: 'Jane', email: 'jane@doe.org' }

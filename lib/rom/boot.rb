@@ -1,6 +1,7 @@
 require 'rom/boot/dsl'
 require 'rom/relation_builder'
 require 'rom/reader_builder'
+require 'rom/command_registry'
 
 module ROM
 

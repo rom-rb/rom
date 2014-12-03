@@ -12,16 +12,9 @@ module ROM
           end
 
           def execute(tuple)
-            attributes = input.new(tuple)
-
-            validation = validator.call(attributes)
-
-            if validation.success?
-              result = relation.insert(attributes.to_h)
-              [result.to_a.last]
-            else
-              validation
-            end
+            attributes = input[tuple]
+            validator.call(attributes)
+            [relation.insert(attributes.to_h).to_a.last]
           end
         end
 
@@ -34,17 +27,10 @@ module ROM
 
           def execute(params)
             attributes = input.new(params)
-
-            relation.map do |tuple|
-              validation = validator.call(attributes)
-
-              if validation.success?
-                tuple.update(attributes.to_h)
-              else
-                validation
-              end
-            end
+            validator.call(attributes)
+            relation.map { |tuple| tuple.update(attributes.to_h) }
           end
+          alias_method :set, :execute
 
           def new(*args, &block)
             self.class.new(relation.public_send(*args, &block), input, validator)
