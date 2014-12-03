@@ -14,6 +14,8 @@ describe 'Commands / Update' do
     end
 
     UserValidator = Class.new do
+      ValidationError = Class.new(ROM::CommandError)
+
       def self.call(params)
         new.validate(params)
       end
@@ -23,7 +25,7 @@ describe 'Commands / Update' do
       end
 
       def validate(params)
-        raise ArgumentError, ":email is required" unless params.email
+        raise ValidationError, ":email is required" unless params.email
       end
     end
 
@@ -53,7 +55,7 @@ describe 'Commands / Update' do
   it 'returns validation object with errors on failed validation' do
     result = users.try { update(:all, name: 'Jane').set(email: nil) }
 
-    expect(result.error).to be_instance_of(ArgumentError)
+    expect(result.error).to be_instance_of(ValidationError)
     expect(result.error.message).to eql(':email is required')
 
     expect(rom.relations.users.restrict(name: 'Jane')).to match_array([

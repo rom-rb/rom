@@ -58,7 +58,7 @@ module ROM
 
     def try(&f)
       Result::Success.new(Evaluator.new(self).instance_exec(&f))
-    rescue => e
+    rescue CommandError => e
       Result::Failure.new(e)
     end
   end

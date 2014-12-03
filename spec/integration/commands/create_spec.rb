@@ -18,13 +18,15 @@ describe 'Commands / Create' do
     end
 
     UserValidator = Class.new do
+      ValidationError = Class.new(ROM::CommandError)
+
       def self.call(params)
         new.validate(params)
       end
 
       def validate(params)
         unless params.name && params.email
-          raise ArgumentError, ":name and :email are required"
+          raise ValidationError, ":name and :email are required"
         end
       end
     end
@@ -79,7 +81,7 @@ describe 'Commands / Create' do
   it 'returns validation object with errors on failed validation' do
     result = users.try { create(name: 'Piotr') }
 
-    expect(result.error).to be_instance_of(ArgumentError)
+    expect(result.error).to be_instance_of(ValidationError)
     expect(result.error.message).to eql(":name and :email are required")
     expect(rom.relations.users.count).to be(2)
   end

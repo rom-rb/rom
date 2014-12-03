@@ -18,6 +18,7 @@ require 'rom/boot'
 
 module ROM
   EnvAlreadyFinalizedError = Class.new(StandardError)
+  CommandError = Class.new(StandardError)
 
   Schema = Class.new(Registry)
   RelationRegistry = Class.new(Registry)
