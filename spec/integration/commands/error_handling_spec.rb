@@ -11,7 +11,10 @@ describe 'Commands / Error handling'  do
   subject(:users) { rom.commands.users }
 
   it 'rescues from ROM::CommandError' do
-    expect(users.try { raise ROM::CommandError }).to be_instance_of(ROM::Result::Failure)
+    result = false
+    expect(users.try { raise ROM::CommandError } >-> test { result = true }).
+      to be_instance_of(ROM::Result::Failure)
+    expect(result).to be(false)
   end
 
   it 'raises other errors' do
