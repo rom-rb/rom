@@ -10,6 +10,8 @@ require 'rom/relation'
 require 'rom/mapper'
 require 'rom/reader'
 
+require 'rom/commands'
+
 require 'rom/adapter'
 require 'rom/repository'
 require 'rom/env'

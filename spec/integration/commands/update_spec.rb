@@ -8,24 +8,11 @@ describe 'Commands / Update' do
   subject(:users) { rom.commands.users }
 
   before do
-    UserParams = Class.new do
-      include Virtus.model
-      attribute :email
-    end
-
     UserValidator = Class.new do
       ValidationError = Class.new(ROM::CommandError)
 
       def self.call(params)
-        new.validate(params)
-      end
-
-      def initialize
-        @errors = []
-      end
-
-      def validate(params)
-        raise ValidationError, ":email is required" unless params.email
+        raise ValidationError, ":email is required" unless params[:email]
       end
     end
 
@@ -37,7 +24,7 @@ describe 'Commands / Update' do
 
     setup.commands(:users) do
       define(:update) do
-        input UserParams
+        input Hash
         validator UserValidator
       end
     end
