@@ -29,6 +29,13 @@ module ROM
       mappers[name]
     end
 
+    # Returns commands registry for the given relation
+    #
+    # @example
+    #
+    #   rom.command(:users).create
+    #
+    # @api public
     def command(name)
       commands[name]
     end
