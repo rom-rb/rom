@@ -33,6 +33,8 @@ describe 'Setting up ROM' do
 
   describe 'quick setup' do
     it 'exposes boot DSL inside the setup block' do
+      User = Class.new { include Virtus.value_object; values { attribute :name, String } }
+
       rom = ROM.setup(memory: 'memory://test') do
         schema do
           base_relation(:users) do
@@ -53,13 +55,14 @@ describe 'Setting up ROM' do
 
         mappers do
           define(:users) do
-            model OpenStruct
+            model User
           end
         end
       end
 
       rom.command(:users).create.call(name: 'Jane')
-      expect(rom.read(:users).by_name('Jane').to_a).to eql([OpenStruct.new(name: 'Jane')])
+
+      expect(rom.read(:users).by_name('Jane').to_a).to eql([User.new(name: 'Jane')])
     end
   end
 end
