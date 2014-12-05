@@ -8,8 +8,12 @@ module ROM
         new(relation, target)
       end
 
+      def call
+        execute
+      end
+
       def execute
-        raise NotImplementedError, "#{self.class}#execute must be implemented"
+        raise NotImplementedError, "#{self.class}##{__method__} must be implemented"
       end
 
       def new(*args, &block)

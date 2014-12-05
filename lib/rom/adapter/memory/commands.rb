@@ -9,14 +9,7 @@ module ROM
           def execute(tuple)
             attributes = input[tuple]
             validator.call(attributes)
-
-            tuple = relation.insert(attributes.to_h).to_a.last
-
-            if result == :one
-              tuple
-            else
-              [tuple]
-            end
+            [relation.insert(attributes.to_h).to_a.last]
           end
 
         end
@@ -28,7 +21,6 @@ module ROM
             validator.call(attributes)
             relation.map { |tuple| tuple.update(attributes.to_h) }
           end
-          alias_method :set, :execute
 
         end
 

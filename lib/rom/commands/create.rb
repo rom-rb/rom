@@ -20,8 +20,18 @@ module ROM
         end
       end
 
+      def call(params)
+        tuples = execute(params)
+
+        if result == :one
+          tuples.first
+        else
+          tuples
+        end
+      end
+
       def execute(tuple)
-        raise NotImplementedError, "#{self.class}#execute must be implemented"
+        raise NotImplementedError, "#{self.class}##{__method__} must be implemented"
       end
 
     end

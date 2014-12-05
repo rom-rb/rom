@@ -53,7 +53,7 @@ module ROM
         if args.size > 1
           command.new(*args, &block)
         else
-          command.execute(*args, &block)
+          command.call(*args, &block)
         end
       end
     end

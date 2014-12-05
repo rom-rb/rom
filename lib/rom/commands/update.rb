@@ -8,8 +8,13 @@ module ROM
         new(relation, definition.input, definition.validator)
       end
 
+      def call(params)
+        execute(params)
+      end
+      alias_method :set, :call
+
       def execute(params)
-        raise NotImplementedError, "#{self.class}#execute must be implemented"
+        raise NotImplementedError, "#{self.class}##{__method__} must be implemented"
       end
 
       def new(*args, &block)
