@@ -14,6 +14,10 @@ module ROM
           data[name] ||= Dataset.new([])
         end
 
+        def key?(name)
+          data.key?(name)
+        end
+
       end
 
     end

@@ -50,14 +50,18 @@ module ROM
 
     # @api private
     def respond_to_missing?(name, include_private = false)
-      adapter[name]
+      adapter.dataset?(name) || super
     end
 
     private
 
     # @api private
-    def method_missing(name)
-      adapter[name]
+    def method_missing(name, *args, &block)
+      if adapter.dataset?(name)
+        adapter[name]
+      else
+        super
+      end
     end
   end
 

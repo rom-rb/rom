@@ -23,6 +23,10 @@ module ROM
         connection[name]
       end
 
+      def dataset?(name)
+        connection.key?(name)
+      end
+
       Adapter.register(self)
     end
 
