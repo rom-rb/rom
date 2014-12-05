@@ -20,6 +20,10 @@ describe 'Commands / Update' do
       def all(criteria)
         restrict(criteria)
       end
+
+      def by_name(name)
+        restrict(name: name)
+      end
     end
 
     setup.commands(:users) do
@@ -48,6 +52,43 @@ describe 'Commands / Update' do
     expect(rom.relations.users.restrict(name: 'Jane')).to match_array([
       { name: 'Jane', email: 'jane@doe.org' }
     ])
+  end
+
+  describe '"result" option' do
+
+    it 'returns a single tuple when set to :one' do
+      setup.commands(:users) do
+
+        define(:update_one, type: :update) do
+          input Hash
+          validator Proc.new {}
+          result :one
+        end
+
+      end
+
+      result = users.try {
+        update_one(:by_name, 'Jane').set(email: 'jane.doe@test.com')
+      }
+
+      expect(result.value).to eql(name: 'Jane', email: 'jane.doe@test.com')
+    end
+
+    it 'allows only valid result types' do
+      expect {
+
+        setup.commands(:users) do
+          define(:create_one, type: :create) do
+            input Hash
+            validator Proc.new {}
+            result :invalid_type
+          end
+        end
+        setup.finalize
+
+      }.to raise_error(ArgumentError, /create command result/)
+    end
+
   end
 
 end

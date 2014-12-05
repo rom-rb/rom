@@ -1,15 +1,19 @@
+require 'rom/commands/with_options'
+
 module ROM
   module Commands
 
     class Update
-      include Concord.new(:relation, :input, :validator)
-
-      def self.build(relation, definition)
-        new(relation, definition.input, definition.validator)
-      end
+      include WithOptions
 
       def call(params)
-        execute(params)
+        tuples = execute(params)
+
+        if result == :one
+          tuples.first
+        else
+          tuples
+        end
       end
       alias_method :set, :call
 
@@ -18,7 +22,7 @@ module ROM
       end
 
       def new(*args, &block)
-        self.class.new(relation.public_send(*args, &block), input, validator)
+        self.class.new(relation.public_send(*args, &block), options)
       end
     end
 
