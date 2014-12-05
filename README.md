@@ -35,6 +35,9 @@ Database support:
 See [issues](https://github.com/rom-rb/rom/issues?q=is%3Aopen+is%3Aissue+label%3Aadapter+label%3Afeature)
 for a list of adapters that are planned to be added soon.
 
+ROM can be used with Rails next to ActiveRecord via [rom-rails](https://github.com/rom-rb/rom-rails) railtie.
+Integration with other frameworks is planned.
+
 ## Synopsis
 
 ``` ruby
