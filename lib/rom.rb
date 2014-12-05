@@ -47,9 +47,9 @@ module ROM
     if block
       boot.instance_exec(&block)
       boot.finalize
+    else
+      boot
     end
-
-    boot
   end
 
 end

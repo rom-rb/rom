@@ -30,4 +30,36 @@ describe 'Setting up ROM' do
       expect(rom.mappers).to eql(ROM::ReaderRegistry.new)
     end
   end
+
+  describe 'quick setup' do
+    it 'exposes boot DSL inside the setup block' do
+      rom = ROM.setup(memory: 'memory://test') do
+        schema do
+          base_relation(:users) do
+            repository :memory
+            attribute :name
+          end
+        end
+
+        relation(:users) do
+          def by_name(name)
+            restrict(name: name)
+          end
+        end
+
+        commands(:users) do
+          define(:create)
+        end
+
+        mappers do
+          define(:users) do
+            model OpenStruct
+          end
+        end
+      end
+
+      rom.command(:users).create.call(name: 'Jane')
+      expect(rom.read(:users).by_name('Jane').to_a).to eql([OpenStruct.new(name: 'Jane')])
+    end
+  end
 end
