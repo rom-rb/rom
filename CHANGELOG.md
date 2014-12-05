@@ -3,7 +3,13 @@
 ### Added
 
 * Command API (solnic)
+* Setup DSL is now available within the `ROM.setup` block (solnic)
 * Support for setting up a logger for an adapter (solnic)
+* New `Adapter#dataset?(name)` which every adapter must implement (solnic)
+
+### Fixed
+
+* method-missing in `Repository` and `Env` kindly calls `super` (solnic)
 
 [Compare v0.3.1...master](https://github.com/rom-rb/rom/compare/v0.3.1...master)
 
