@@ -43,8 +43,31 @@ module ROM
       relation
     end
 
+    def command(name, relation, definition)
+      type = definition.type || name
+
+      klass =
+        case type
+        when :create then command_namespace.const_get(:Create)
+        when :update then command_namespace.const_get(:Update)
+        when :delete then command_namespace.const_get(:Delete)
+        else
+          raise ArgumentError, "#{type.inspect} is not a supported command type"
+        end
+
+      if type == :create || type == :update
+        klass.new(relation, definition.to_h)
+      else
+        klass.build(relation)
+      end
+    end
+
     def schema
       []
+    end
+
+    def command_namespace
+      self.class.const_get(:Commands)
     end
 
   end
