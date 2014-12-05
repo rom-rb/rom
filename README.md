@@ -48,6 +48,8 @@ setup.sqlite.connection.create_table :users do
   Integer :age
 end
 
+# set up relations
+
 setup.relation(:users) do
   def by_name(name)
     where(name: name)
@@ -58,6 +60,14 @@ setup.relation(:users) do
   end
 end
 
+# set up commands
+
+setup.commands(:users) do
+  define(:create)
+end
+
+# set up mappers
+
 setup.mappers do
   define(:users) do
     model(name: 'User')
@@ -66,11 +76,13 @@ end
 
 rom = setup.finalize
 
+# accessing defined commands
+
+rom.command(:users).try { create(name: "Joe", age: 17) }
+rom.command(:users).try { create(name: "Jane", age: 18) }
+
 # accessing registered relations
 users = rom.relations.users
-
-users.insert(name: "Joe", age: 17)
-users.insert(name: "Jane", age: 18)
 
 puts users.by_name("Jane").adults.to_a.inspect
 # => [{:id=>2, :name=>"Jane", :age=>18}]
