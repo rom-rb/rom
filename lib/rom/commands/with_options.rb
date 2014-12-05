@@ -1,6 +1,7 @@
 module ROM
   module Commands
 
+    # TODO: find a better name for this module
     module WithOptions
       RESULTS = [:one, :many].freeze
 
