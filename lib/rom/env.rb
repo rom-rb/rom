@@ -40,14 +40,18 @@ module ROM
 
     # @api private
     def respond_to_missing?(name, include_private = false)
-      repositories.key?(name)
+      repositories.key?(name) || super
     end
 
     private
 
     # @api private
-    def method_missing(name, *args)
-      repositories.fetch(name)
+    def method_missing(name, *args, &block)
+      if repositories.key?(name)
+        repositories[name]
+      else
+        super
+      end
     end
   end
 
