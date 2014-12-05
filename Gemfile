@@ -19,6 +19,7 @@ end
 
 group :sql do
   gem 'rom-sql', git: 'https://github.com/rom-rb/rom-sql.git', branch: 'command-api'
+  gem 'sequel'
   gem 'jdbc-sqlite3', platforms: :jruby
   gem 'sqlite3', platforms: [:mri, :rbx]
 end
