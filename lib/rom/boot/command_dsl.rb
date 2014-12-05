@@ -10,8 +10,8 @@ module ROM
 
       def initialize(options, &block)
         @options = options
-        @input = nil
-        @validator = nil
+        @input = Hash
+        @validator = Proc.new {}
         @result = nil
         instance_exec(&block) if block
       end

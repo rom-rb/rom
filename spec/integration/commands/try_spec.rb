@@ -7,10 +7,7 @@ describe 'Commands / Try api' do
     setup.relation(:users)
 
     setup.commands(:users) do
-      define(:create) do
-        input Hash
-        validator Proc.new {}
-      end
+      define(:create)
     end
   end
 

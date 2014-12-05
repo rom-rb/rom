@@ -28,7 +28,6 @@ describe 'Commands / Update' do
 
     setup.commands(:users) do
       define(:update) do
-        input Hash
         validator UserValidator
       end
     end
@@ -60,8 +59,6 @@ describe 'Commands / Update' do
       setup.commands(:users) do
 
         define(:update_one, type: :update) do
-          input Hash
-          validator Proc.new {}
           result :one
         end
 
@@ -79,8 +76,6 @@ describe 'Commands / Update' do
 
         setup.commands(:users) do
           define(:create_one, type: :create) do
-            input Hash
-            validator Proc.new {}
             result :invalid_type
           end
         end

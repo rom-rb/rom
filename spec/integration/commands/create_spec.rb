@@ -7,37 +7,13 @@ describe 'Commands / Create' do
   let(:tasks) { rom.commands.tasks }
 
   before do
-    UserParams = Class.new do
-      include Virtus.model
-      attribute :name
-      attribute :email
-
-      def self.[](input)
-        new(input)
-      end
-    end
-
     UserValidator = Class.new do
       ValidationError = Class.new(ROM::CommandError)
 
       def self.call(params)
-        new.validate(params)
-      end
-
-      def validate(params)
-        unless params.name && params.email
+        unless params[:name] && params[:email]
           raise ValidationError, ":name and :email are required"
         end
-      end
-    end
-
-    TaskValidator = Class.new do
-      def self.call(params)
-        new.validate(params)
-      end
-
-      def validate(*)
-        # noop
       end
     end
 
@@ -46,16 +22,12 @@ describe 'Commands / Create' do
 
     setup.commands(:users) do
       define(:create) do
-        input UserParams
         validator UserValidator
       end
     end
 
     setup.commands(:tasks) do
-      define(:create) do
-        input Hash
-        validator TaskValidator
-      end
+      define(:create)
     end
 
   end
@@ -92,8 +64,6 @@ describe 'Commands / Create' do
       setup.commands(:users) do
 
         define(:create_one, type: :create) do
-          input Hash
-          validator Proc.new {}
           result :one
         end
 
@@ -113,8 +83,6 @@ describe 'Commands / Create' do
 
         setup.commands(:users) do
           define(:create_one, type: :create) do
-            input Hash
-            validator Proc.new {}
             result :invalid_type
           end
         end
