@@ -1,7 +1,8 @@
-## v0.3.2 to-be-released
+## v0.4.0 to-be-released
 
 ### Added
 
+* Command API (solnic)
 * Support for setting up a logger for an adapter (solnic)
 
 [Compare v0.3.1...master](https://github.com/rom-rb/rom/compare/v0.3.1...master)
