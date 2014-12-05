@@ -6,15 +6,6 @@ module ROM
     class Update
       include WithOptions
 
-      def call(params)
-        tuples = execute(params)
-
-        if result == :one
-          tuples.first
-        else
-          tuples
-        end
-      end
       alias_method :set, :call
 
       def execute(params)
