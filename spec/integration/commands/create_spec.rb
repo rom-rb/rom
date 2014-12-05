@@ -86,4 +86,43 @@ describe 'Commands / Create' do
     expect(rom.relations.users.count).to be(2)
   end
 
+  describe '"result" option' do
+
+    it 'returns a single tuple when set to :one' do
+      setup.commands(:users) do
+
+        define(:create_one, type: :create) do
+          input Hash
+          validator Proc.new {}
+          result :one
+        end
+
+      end
+
+      tuple = { name: 'Piotr', email: 'piotr@solnic.eu' }
+
+      result = users.try {
+        create_one(tuple)
+      }
+
+      expect(result.value).to eql(tuple)
+    end
+
+    it 'allows only valid result types' do
+      expect {
+
+        setup.commands(:users) do
+          define(:create_one, type: :create) do
+            input Hash
+            validator Proc.new {}
+            result :invalid_type
+          end
+        end
+        setup.finalize
+
+      }.to raise_error(ArgumentError, /create command result/)
+    end
+
+  end
+
 end

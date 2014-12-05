@@ -5,16 +5,35 @@ module ROM
       module Commands
 
         class Create
-          include Concord.new(:relation, :input, :validator)
+          include Concord.new(:relation, :options)
 
-          def self.build(relation, definition)
-            new(relation, definition.input, definition.validator)
+          attr_reader :validator, :input, :result
+
+          RESULTS = [:one, :many].freeze
+
+          def initialize(relation, options)
+            super
+
+            @validator = options.fetch(:validator)
+            @input = options.fetch(:input)
+            @result = options[:result] || :many
+
+            if !RESULTS.include?(result)
+              raise ArgumentError, "create command result #{@result.inspect} is not one of #{RESULTS.inspect}"
+            end
           end
 
           def execute(tuple)
             attributes = input[tuple]
             validator.call(attributes)
-            [relation.insert(attributes.to_h).to_a.last]
+
+            tuple = relation.insert(attributes.to_h).to_a.last
+
+            if result == :one
+              tuple
+            else
+              [tuple]
+            end
           end
         end
 

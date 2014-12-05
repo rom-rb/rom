@@ -79,16 +79,20 @@ module ROM
       end
 
       def command(name, relation, definition)
+        type = definition.type || name
+
         klass =
-          case name
+          case type
           when :create then Commands::Create
           when :update then Commands::Update
           when :delete then Commands::Delete
           else
-            raise ArgumentError, "#{name.inspect} is not a supported command type"
+            raise ArgumentError, "#{type.inspect} is not a supported command type"
           end
 
-        if name == :create || name == :update
+        if type == :create
+          klass.new(relation, definition.to_h)
+        elsif type == :update
           klass.build(relation, definition)
         else
           klass.build(relation)

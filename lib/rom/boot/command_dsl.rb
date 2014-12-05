@@ -6,10 +6,18 @@ module ROM
     attr_reader :commands
 
     class CommandDefinition
-      def initialize(&block)
+      attr_reader :options
+
+      def initialize(options, &block)
+        @options = options
         @input = nil
         @validator = nil
+        @result = nil
         instance_exec(&block) if block
+      end
+
+      def to_h
+        { input: input, validator: validator, result: result }
       end
 
       def input(klass = nil)
@@ -27,6 +35,18 @@ module ROM
           @validator
         end
       end
+
+      def result(value = nil)
+        if value
+          @result = value
+        else
+          @result
+        end
+      end
+
+      def type
+        options[:type]
+      end
     end
 
     def initialize
@@ -37,8 +57,8 @@ module ROM
       commands
     end
 
-    def define(name, &block)
-      commands[name] = CommandDefinition.new(&block)
+    def define(name, options = {}, &block)
+      commands[name] = CommandDefinition.new(options, &block)
       self
     end
 
