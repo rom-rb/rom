@@ -24,8 +24,8 @@ a couple of core concepts which makes it different from a typical ORM:
   * It must be **simple** to use the full power of your database
 
 With that in mind ROM ships with adapters that allow you to connect to any
-database and exposes a DSL to define **relations** and **mappers** to simplify
-accessing the data.
+database and exposes a DSL to define **relations**, **mappers** and **commands**
+to simplify accessing and changing the data.
 
 Database support:
 
