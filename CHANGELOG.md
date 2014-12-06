@@ -11,13 +11,12 @@
 
 * method-missing in `Repository` and `Env` kindly calls `super` (solnic)
 
-
 ### Changed
 
 * Abstract `Adapter` defines `:connection` reader so it doesn't have to be
   defined in adapter descendants (solnic)
 
-[Compare v0.3.1...master](https://github.com/rom-rb/rom/compare/v0.3.1...master)
+[Compare v0.3.1...v0.4.0](https://github.com/rom-rb/rom/compare/v0.3.1...v0.4.0)
 
 ## v0.3.1 2014-11-25
 
