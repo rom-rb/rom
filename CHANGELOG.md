@@ -1,4 +1,4 @@
-## v0.4.0 to-be-released
+## v0.4.0 2014-11-06
 
 ### Added
 
@@ -10,6 +10,12 @@
 ### Fixed
 
 * method-missing in `Repository` and `Env` kindly calls `super` (solnic)
+
+
+### Changed
+
+* Abstract `Adapter` defines `:connection` reader so it doesn't have to be
+  defined in adapter descendants (solnic)
 
 [Compare v0.3.1...master](https://github.com/rom-rb/rom/compare/v0.3.1...master)
 
