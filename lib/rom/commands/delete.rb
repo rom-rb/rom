@@ -14,16 +14,6 @@ module ROM
         @target = options[:target] || relation
       end
 
-      # Call the command
-      #
-      # @return [Array]
-      #
-      # @see Delete#execute
-      # @api public
-      def call
-        execute
-      end
-
       # Execute the command
       #
       # @abstract

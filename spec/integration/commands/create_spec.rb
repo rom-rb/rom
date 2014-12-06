@@ -88,7 +88,7 @@ describe 'Commands / Create' do
         end
         setup.finalize
 
-      }.to raise_error(ArgumentError, /create command result/)
+      }.to raise_error(ROM::InvalidOptionError)
     end
 
   end

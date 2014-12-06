@@ -22,6 +22,12 @@ module ROM
   EnvAlreadyFinalizedError = Class.new(StandardError)
   CommandError = Class.new(StandardError)
 
+  InvalidOptionError = Class.new(StandardError) do
+    def initialize(option, valid_values)
+      super("#{option} should be one of #{valid_values.inspect}")
+    end
+  end
+
   Schema = Class.new(Registry)
   RelationRegistry = Class.new(Registry)
   ReaderRegistry = Class.new(Registry)

@@ -5,9 +5,7 @@ module ROM
     #
     # TODO: find a better name for this module
     module WithOptions
-      RESULTS = [:one, :many].freeze
-
-      attr_reader :validator, :input, :result
+      attr_reader :validator, :input
 
       # @api private
       def initialize(relation, options)
@@ -15,24 +13,6 @@ module ROM
 
         @validator = options[:validator] || Proc.new {}
         @input = options[:input] || Hash
-        @result = options[:result] || :many
-
-        if !RESULTS.include?(result)
-          raise ArgumentError, "create command result #{@result.inspect} is not one of #{RESULTS.inspect}"
-        end
-      end
-
-      # Call the command and return one or many tuples
-      #
-      # @api public
-      def call(params)
-        tuples = execute(params)
-
-        if result == :one
-          tuples.first
-        else
-          tuples
-        end
       end
 
     end

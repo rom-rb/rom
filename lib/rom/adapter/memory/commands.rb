@@ -27,8 +27,9 @@ module ROM
         class Delete < ROM::Commands::Delete
 
           def execute
-            target.to_a.each { |tuple| relation.delete(tuple) }
-            relation
+            tuples = target.to_a
+            tuples.each { |tuple| relation.delete(tuple) }
+            tuples
           end
 
         end
