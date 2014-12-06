@@ -50,4 +50,21 @@ describe 'Commands / Delete' do
     expect(result.value).to eql(name: 'Jane', email: 'jane@doe.org')
   end
 
+  it 'raises error when result is set to :one and relation contains more tuples' do
+    setup.commands(:users) do
+      define(:delete) do
+        result :one
+      end
+    end
+
+    result = users.try { delete }
+
+    expect(result.error).to be_instance_of(ROM::TupleCountMismatchError)
+
+    expect(rom.relations.users.to_a).to match_array([
+      { name: 'Jane', email: 'jane@doe.org' },
+      { name: 'Joe', email: 'joe@doe.org' }
+    ])
+  end
+
 end

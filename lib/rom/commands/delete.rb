@@ -14,6 +14,12 @@ module ROM
         @target = options[:target] || relation
       end
 
+      # @see AbstractCommand#call
+      def call(*args)
+        assert_tuple_count
+        super
+      end
+
       # Execute the command
       #
       # @abstract

@@ -31,6 +31,29 @@ module ROM
         end
       end
 
+      # Target relation on which the command will operate
+      #
+      # By default this is set to the relation that's passed to the constructor.
+      # Specialized commands like Delete may set the target to a different relation.
+      #
+      # @return [Relation]
+      #
+      # @api public
+      def target
+        relation
+      end
+
+      # Assert that tuple count in the target relation corresponds to :result setting
+      #
+      # @raises TupleCountMismatchError
+      #
+      # @api private
+      def assert_tuple_count
+        if result == :one && target.size > 1
+          raise TupleCountMismatchError, "#{inspect} expects one tuple"
+        end
+      end
+
     end
 
   end

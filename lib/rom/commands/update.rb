@@ -13,6 +13,12 @@ module ROM
 
       alias_method :set, :call
 
+      # @see AbstractCommand#call
+      def call(*args)
+        assert_tuple_count
+        super
+      end
+
       # Execute the update command
       #
       # @return [Array] an array with updated tuples

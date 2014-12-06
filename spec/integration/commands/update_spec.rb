@@ -57,11 +57,9 @@ describe 'Commands / Update' do
 
     it 'returns a single tuple when set to :one' do
       setup.commands(:users) do
-
         define(:update_one, type: :update) do
           result :one
         end
-
       end
 
       result = users.try {
@@ -69,6 +67,25 @@ describe 'Commands / Update' do
       }
 
       expect(result.value).to eql(name: 'Jane', email: 'jane.doe@test.com')
+    end
+
+    it 'raises error when there is more than one tuple and result is set to :one' do
+      setup.commands(:users) do
+        define(:update_one, type: :update) do
+          result :one
+        end
+      end
+
+      result = users.try {
+        update_one.set(email: 'jane.doe@test.com')
+      }
+
+      expect(result.error).to be_instance_of(ROM::TupleCountMismatchError)
+
+      expect(rom.relations.users).to match_array([
+        { name: 'Jane', email: 'jane@doe.org' },
+        { name: 'Joe', email: 'joe@doe.org' }
+      ])
     end
 
     it 'allows only valid result types' do

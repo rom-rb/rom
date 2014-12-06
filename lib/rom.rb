@@ -21,6 +21,7 @@ require 'rom/boot'
 module ROM
   EnvAlreadyFinalizedError = Class.new(StandardError)
   CommandError = Class.new(StandardError)
+  TupleCountMismatchError = Class.new(CommandError)
 
   InvalidOptionError = Class.new(StandardError) do
     def initialize(option, valid_values)
