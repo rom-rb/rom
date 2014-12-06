@@ -7,12 +7,11 @@ module ROM
     module WithOptions
       RESULTS = [:one, :many].freeze
 
-      attr_reader :relation, :validator, :input, :result, :options
+      attr_reader :validator, :input, :result
 
       # @api private
       def initialize(relation, options)
-        @relation = relation
-        @options = options
+        super
 
         @validator = options[:validator] || Proc.new {}
         @input = options[:input] || Hash

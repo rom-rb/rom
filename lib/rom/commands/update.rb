@@ -8,7 +8,7 @@ module ROM
     # This command updates all tuples in its relation with new attributes
     #
     # @abstract
-    class Update
+    class Update < AbstractCommand
       include WithOptions
 
       alias_method :set, :call

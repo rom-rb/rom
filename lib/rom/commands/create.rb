@@ -8,7 +8,7 @@ module ROM
     # This command inserts a new tuple into a relation
     #
     # @abstract
-    class Create
+    class Create < AbstractCommand
       include WithOptions
 
       # Execute the command
