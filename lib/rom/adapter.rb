@@ -130,11 +130,7 @@ module ROM
           raise ArgumentError, "#{type.inspect} is not a supported command type"
         end
 
-      if type == :create || type == :update
-        klass.new(relation, definition.to_h)
-      else
-        klass.build(relation)
-      end
+      klass.new(relation, definition.to_h)
     end
 
     # Schema inference hook

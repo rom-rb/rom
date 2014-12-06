@@ -14,8 +14,8 @@ module ROM
         @relation = relation
         @options = options
 
-        @validator = options.fetch(:validator)
-        @input = options.fetch(:input)
+        @validator = options[:validator] || Proc.new {}
+        @input = options[:input] || Hash
         @result = options[:result] || :many
 
         if !RESULTS.include?(result)

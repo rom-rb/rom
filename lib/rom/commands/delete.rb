@@ -7,10 +7,12 @@ module ROM
     #
     # @abstract
     class Delete
-      include Concord.new(:relation, :target)
+      attr_reader :relation, :target, :options
 
-      def self.build(relation, target = relation)
-        new(relation, target)
+      def initialize(relation, options)
+        @relation = relation
+        @options = options
+        @target = options[:target] || relation
       end
 
       # Call the command
@@ -38,7 +40,7 @@ module ROM
       #
       # @api private
       def new(*args, &block)
-        self.class.new(relation, relation.public_send(*args, &block))
+        self.class.new(relation, options.merge(target: relation.public_send(*args, &block)))
       end
 
     end

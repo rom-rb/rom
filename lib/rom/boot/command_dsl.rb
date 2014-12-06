@@ -10,42 +10,23 @@ module ROM
 
       def initialize(options, &block)
         @options = options
-        @input = Hash
-        @validator = Proc.new {}
-        @result = nil
         instance_exec(&block) if block
       end
 
       def to_h
-        { input: input, validator: validator, result: result }
-      end
-
-      def input(klass = nil)
-        if klass
-          @input = klass
-        else
-          @input
-        end
-      end
-
-      def validator(klass = nil)
-        if klass
-          @validator = klass
-        else
-          @validator
-        end
-      end
-
-      def result(value = nil)
-        if value
-          @result = value
-        else
-          @result
-        end
+        options
       end
 
       def type
         options[:type]
+      end
+
+      def method_missing(name, *args, &block)
+        if args.size == 1
+          options[name] = args.first
+        else
+          super
+        end
       end
     end
 
