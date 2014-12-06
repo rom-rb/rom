@@ -6,8 +6,6 @@ module ROM
   class Adapter
 
     class Memory < Adapter
-      attr_reader :connection
-
       attr_accessor :logger
 
       def self.schemes
