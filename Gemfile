@@ -9,12 +9,18 @@ end
 
 group :test do
   gem 'virtus'
-  gem 'mutant'
-  gem 'mutant-rspec'
-  gem 'rubysl-bigdecimal', platforms: :rbx
   gem 'guard'
   gem 'guard-rspec'
-  gem 'codeclimate-test-reporter', require: false
+
+  platforms :rbx do
+    gem 'rubysl-bigdecimal', platforms: :rbx
+    gem 'codeclimate-test-reporter', require: false
+  end
+
+  platforms :mri do
+    gem 'mutant'
+    gem 'mutant-rspec'
+  end
 end
 
 group :sql do
