@@ -18,7 +18,7 @@ ROM is an experimental Ruby ORM that aims to bring powerful object mapping
 capabilities and give you back the full power of your database. It is based on
 a couple of core concepts which makes it different from a typical ORM:
 
-  * Quering a database is considered as a private implementation detail
+  * Querying a database is considered as a private implementation detail
   * Abstract query interfaces are evil and a source of unnecessary complexity
   * Reading and mutating data are 2 distinct concerns and should be treated separately
   * It must be **simple** to use the full power of your database
