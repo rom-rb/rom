@@ -5,6 +5,13 @@ module ROM
       class Dataset
         include Charlatan.new(:data)
 
+        attr_reader :header
+
+        def initialize(data, header)
+          super
+          @header = header
+        end
+
         def to_ary
           data.dup
         end
@@ -39,10 +46,6 @@ module ROM
         def delete(tuple)
           data.delete(tuple)
           self
-        end
-
-        def header
-          []
         end
 
       end

@@ -20,7 +20,7 @@ module ROM
         def each(&block)
           return to_enum unless block
 
-          results = relation.to_a.each_with_object([]) do |tuple, wrapped|
+          results = relation.each_with_object([]) do |tuple, wrapped|
             result = tuple.reject { |k,_| attribute_names.include?(k) }
             result[key] = tuple.reject { |k,_| !attribute_names.include?(k) }
 

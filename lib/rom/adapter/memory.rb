@@ -17,12 +17,16 @@ module ROM
         @connection = Storage.new
       end
 
-      def [](name)
-        connection[name]
+      def dataset(name, header = [])
+        connection.create_dataset(name, header)
       end
 
       def dataset?(name)
         connection.key?(name)
+      end
+
+      def [](name)
+        connection[name]
       end
 
       Adapter.register(self)

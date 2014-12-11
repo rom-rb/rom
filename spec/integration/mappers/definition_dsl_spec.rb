@@ -70,7 +70,7 @@ describe 'Mapper definition DSL' do
     end
 
     it 'inherits the attributes from the parent by default' do
-      expect(header.keys).to eql(rom.mappers[:users].header - [:name])
+      expect(header.keys).to eql([:email])
     end
 
     it 'builds a new model' do

@@ -3,8 +3,6 @@ require 'spec_helper'
 describe 'Wrap operation' do
   include_context 'users and tasks'
 
-  subject(:rom) { setup.finalize }
-
   specify 'defining a wrapped relation' do
     setup.relation(:users) do
       def with_task

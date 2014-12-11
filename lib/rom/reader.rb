@@ -15,13 +15,13 @@ module ROM
     def initialize(path, relation, mappers = {})
       @path = path.to_s
       @relation = relation
-      @header = relation.header
       @mappers = mappers
 
       names = @path.split('.')
 
       mapper_key = names.reverse.detect { |name| mappers.key?(name.to_sym) }
       @mapper = mappers.fetch(mapper_key.to_sym)
+      @header = mapper.header
     end
 
     # Yields tuples mapped to objects

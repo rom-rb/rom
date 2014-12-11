@@ -58,7 +58,7 @@ describe 'Reading relations' do
     User.send(:include, Equalizer.new(:name, :email))
     UserWithTasks.send(:include, Equalizer.new(:name, :email, :tasks))
 
-    expect(rom.read(:users).with_tasks.header).to eql([:name, :email, :tasks])
+    expect(rom.read(:users).with_tasks.header.keys).to eql([:name, :email, :tasks])
 
     user = rom.read(:users).sorted.first
 
@@ -104,7 +104,7 @@ describe 'Reading relations' do
     User.send(:include, Equalizer.new(:name, :email))
     UserWithTask.send(:include, Equalizer.new(:name, :email, :task))
 
-    expect(rom.read(:users).with_task.header).to eql([:name, :email, :task])
+    expect(rom.read(:users).with_task.header.keys).to eql([:name, :email, :task])
 
     user = rom.read(:users).sorted.with_task.first
 

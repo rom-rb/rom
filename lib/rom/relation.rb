@@ -24,6 +24,7 @@ module ROM
     include Equalizer.new(:header, :dataset)
     include RA
 
+    # @api private
     attr_reader :header
 
     # @api private

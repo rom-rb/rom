@@ -11,7 +11,11 @@ module ROM
         end
 
         def [](name)
-          data[name] ||= Dataset.new([])
+          data[name]
+        end
+
+        def create_dataset(name, header)
+          data[name] = Dataset.new([], header)
         end
 
         def key?(name)

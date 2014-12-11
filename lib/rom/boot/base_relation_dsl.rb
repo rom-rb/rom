@@ -2,12 +2,12 @@ module ROM
   class Boot
 
     class BaseRelationDSL
-      attr_reader :env, :name, :repositories, :attributes, :datasets
+      attr_reader :env, :name, :header
 
       def initialize(env, name)
         @env = env
         @name = name
-        @attributes = []
+        @header = []
       end
 
       def repository(name = nil)
@@ -19,22 +19,26 @@ module ROM
       end
 
       def attribute(name)
-        attributes << name
+        header << name
       end
 
       def call(&block)
         instance_exec(&block)
 
-        dataset = repository[name]
-
-        header =
-          if attributes.any?
-            attributes
+        dataset =
+          if adapter.respond_to?(:dataset)
+            adapter.dataset(name, header)
           else
-            dataset.header
+            adapter[name]
           end
 
-        [name, repository[name], header]
+        [name, dataset, dataset.header]
+      end
+
+      private
+
+      def adapter
+        repository.adapter
       end
 
     end
