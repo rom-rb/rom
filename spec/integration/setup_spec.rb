@@ -65,4 +65,41 @@ describe 'Setting up ROM' do
       expect(rom.read(:users).by_name('Jane').to_a).to eql([User.new(name: 'Jane')])
     end
   end
+
+  describe 'multi-step setup' do
+    it 'exposes boot DSL that can be invoked multiple times' do
+      User = Class.new { include Virtus.value_object; values { attribute :name, String } }
+
+      ROM.setup(memory: 'memory://test')
+
+      ROM.schema do
+        base_relation(:users) do
+          repository :memory
+          attribute :name
+        end
+      end
+
+      ROM.relation(:users) do
+        def by_name(name)
+          restrict(name: name)
+        end
+      end
+
+      ROM.commands(:users) do
+        define(:create)
+      end
+
+      ROM.mappers do
+        define(:users) do
+          model User
+        end
+      end
+
+      rom = ROM.finalize.env
+
+      rom.command(:users).create.call(name: 'Jane')
+
+      expect(rom.read(:users).by_name('Jane').to_a).to eql([User.new(name: 'Jane')])
+    end
+  end
 end

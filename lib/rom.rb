@@ -55,8 +55,45 @@ module ROM
       boot.instance_exec(&block)
       boot.finalize
     else
-      boot
+      @boot = boot
     end
+  end
+
+  # @api public
+  def self.schema(&block)
+    boot.schema(&block)
+  end
+
+  # @api public
+  def self.relation(*args, &block)
+    boot.relation(*args, &block)
+  end
+
+  # @api public
+  def self.commands(*args, &block)
+    boot.commands(*args, &block)
+  end
+
+  # @api public
+  def self.mappers(*args, &block)
+    boot.mappers(*args, &block)
+  end
+
+  # @api public
+  def self.env
+    @env
+  end
+
+  # @api public
+  def self.finalize
+    @env = boot.finalize
+    @boot = nil
+    self
+  end
+
+  # @api private
+  def self.boot
+    @boot
   end
 
 end
