@@ -32,7 +32,9 @@ module ROM
             adapter[name]
           end
 
-        [name, dataset, dataset.header]
+        base_header = dataset.respond_to?(:header) ? dataset.header : header
+
+        [name, dataset, base_header]
       end
 
       private
