@@ -9,6 +9,7 @@
 ### Changed
 
 * Schema can be defined in multiple steps (solnic)
+* Setting model in mapper DSL is no longer required and defaults to `Hash` (solnic)
 * Adapter datasets no longer have to return headers when they are provided by schema (solnic)
 
 [Compare v0.4.0...master](https://github.com/rom-rb/rom/compare/v0.4.0...master)
