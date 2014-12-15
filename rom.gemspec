@@ -5,7 +5,7 @@ require File.expand_path('../lib/rom/version', __FILE__)
 Gem::Specification.new do |gem|
   gem.name          = 'rom'
   gem.summary       = 'Ruby Object Mapper'
-  gem.description   = gem.summary
+  gem.description   = 'Persistence and mapping toolkit for Ruby'
   gem.authors       = 'Piotr Solnica',
   gem.email         = 'piotr.solnica@gmail.com'
   gem.homepage      = 'http://rom-rb.org'
