@@ -113,4 +113,22 @@ describe 'Reading relations' do
                        task: { title: "be cool", priority: 2 })
     )
   end
+
+  it 'maps hashes' do
+    setup.relation(:users) do
+      def by_name(name)
+        restrict(name: name)
+      end
+    end
+
+    setup.mappers do
+      define(:users)
+    end
+
+    rom = setup.finalize
+
+    user = rom.read(:users).by_name("Jane").first
+
+    expect(user).to eql(name: "Jane", email: "jane@doe.org")
+  end
 end

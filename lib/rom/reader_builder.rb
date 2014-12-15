@@ -18,7 +18,7 @@ module ROM
         parent = relations[options.fetch(:parent) { name }]
 
         builder = MapperBuilder.new(name, parent, options)
-        builder.instance_exec(&block)
+        builder.instance_exec(&block) if block
         mapper = builder.call
 
         mappers = options[:parent] ? readers.fetch(parent.name).mappers : {}

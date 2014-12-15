@@ -2,18 +2,18 @@ module ROM
 
   # @api private
   class Mapper
-    attr_reader :header, :model
+    attr_reader :header, :model, :loader
 
     class Basic < Mapper
       attr_reader :mapping
 
-      def initialize(header, model)
+      def initialize(*args)
         super
         @mapping = header.mapping
       end
 
       def load(tuple, mapping = self.mapping)
-        model.new(Hash[call(tuple, mapping)])
+        loader[Hash[call(tuple, mapping)]]
       end
 
       def call(tuple, mapping = self.mapping)
@@ -44,16 +44,24 @@ module ROM
           self
         end
 
-      klass.new(header, model)
+      loader =
+        if model
+          -> tuple { model.new(tuple) }
+        else
+          -> tuple { tuple }
+        end
+
+      klass.new(header, model, loader)
     end
 
-    def initialize(header, model)
+    def initialize(header, model, loader)
       @header = header
       @model = model
+      @loader = loader
     end
 
     def load(tuple)
-      model.new(tuple)
+      loader[tuple]
     end
 
   end
