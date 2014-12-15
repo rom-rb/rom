@@ -39,7 +39,10 @@ module ROM
     #
     # @api public
     def schema(&block)
-      @schema = DSL.new(self).schema(&block)
+      base_relations = DSL.new(self).schema(&block)
+      base_relations.each do |repo, relations|
+        (@schema[repo] ||= []).concat(relations)
+      end
       self
     end
 
