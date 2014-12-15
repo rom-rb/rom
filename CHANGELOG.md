@@ -1,4 +1,4 @@
-## v0.4.1 to-be-released
+## v0.4.1 2014-12-15
 
 ### Added
 
@@ -12,7 +12,7 @@
 * Setting model in mapper DSL is no longer required and defaults to `Hash` (solnic)
 * Adapter datasets no longer have to return headers when they are provided by schema (solnic)
 
-[Compare v0.4.0...master](https://github.com/rom-rb/rom/compare/v0.4.0...master)
+[Compare v0.4.0...v0.4.1](https://github.com/rom-rb/rom/compare/v0.4.0...v0.4.1)
 
 ## v0.4.0 2014-12-06
 
