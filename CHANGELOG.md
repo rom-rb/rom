@@ -1,3 +1,17 @@
+## v0.4.1 to-be-released
+
+### Added
+
+* Adapter can now implement `Adapter#dataset(name, header)` to return a dataset (solnic)
+* For multi-step setup the DSL is available in `ROM` too (solnic)
+* Global environment can be stored via `ROM.finalize` and accessible via `ROM.env` (solnic)
+
+### Changed
+
+* Adapter datasets no longer have to return headers when they are provided by schema (solnic)
+
+[Compare v0.4.0...master](https://github.com/rom-rb/rom/compare/v0.4.0...master)
+
 ## v0.4.0 2014-12-06
 
 ### Added
