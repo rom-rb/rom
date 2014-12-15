@@ -5,6 +5,7 @@
 * Adapter can now implement `Adapter#dataset(name, header)` to return a dataset (solnic)
 * For multi-step setup the DSL is available in `ROM` too (solnic)
 * Global environment can be stored via `ROM.finalize` and accessible via `ROM.env` (solnic)
+* Mapper won't infer attributes from the header if `:inherit_header` option is set to false (solnic)
 
 ### Changed
 

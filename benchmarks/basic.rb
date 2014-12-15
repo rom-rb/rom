@@ -40,12 +40,18 @@ setup.relation(:users) do
   def all
     order(:id)
   end
+
+  def user_json
+    all
+  end
 end
 
 setup.mappers do
   define(:users) do
     model name: 'User'
   end
+
+  define(:user_json, parent: :users)
 end
 
 ROM_ENV = setup.finalize
@@ -71,10 +77,14 @@ seed
 puts "LOADED #{env.schema.users.count} users via ROM/Sequel"
 puts "LOADED #{ARUser.count} users via ActiveRecord"
 
+puts "AAAAAAA: #{ROM_ENV.read(:users).user_json.to_a.inspect}"
+puts "AAAAAAA: #{ARUser.all.to_a.map(&:as_json).inspect}"
+
 USERS = ROM_ENV.read(:users).all
 
 Benchmark.ips do |x|
-  x.report("rom.relations.users.to_a") { ROM_ENV.relations.users.to_a }
-  x.report("rom.reader(:users).all.to_a") { USERS.to_a }
+  x.report("rom.read(:users).all.to_a") { USERS.to_a }
   x.report("ARUser.all.to_a") { ARUser.all.to_a }
+  x.report("rom.read(:user_json).all.to_a") { ROM_ENV.read(:users).user_json.to_a }
+  x.report("ARUser.all.map(&:as_json)") { ARUser.all.map(&:as_json) }
 end
