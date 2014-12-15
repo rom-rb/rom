@@ -34,20 +34,43 @@ describe 'Mapper definition DSL' do
   end
 
   describe 'excluding attributes' do
-    subject(:mapper) { rom.read(:users).mapper }
+    context 'using exclude' do
+      subject(:mapper) { rom.read(:users).mapper }
 
-    before do
-      setup.mappers do
-        define(:users) do
-          model name: 'User'
+      before do
+        setup.mappers do
+          define(:users) do
+            model name: 'User'
 
-          exclude :name
+            exclude :name
+          end
         end
+      end
+
+      it 'only maps provided attributes' do
+        expect(header.keys).to eql([:email])
       end
     end
 
-    it 'only maps provided attributes' do
-      expect(header.keys).to eql([:email])
+    context 'by setting :inherit_header to false' do
+      subject(:mapper) { rom.read(:users).email_index.mapper }
+
+      before do
+        setup.mappers do
+          define(:users) do
+            model name: 'User'
+          end
+
+          define(:email_index, parent: :users, inherit_header: false) do
+            model name: 'UserWithoutName'
+            attribute :email
+          end
+        end
+      end
+
+      it 'only maps provided attributes' do
+        expect(header.keys).to eql([:email])
+      end
     end
   end
 

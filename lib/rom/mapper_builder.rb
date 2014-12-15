@@ -28,7 +28,13 @@ module ROM
       @name = name
       @root = root
       @prefix = options[:prefix]
-      @attributes = root.header.map { |attr| [prefix ? :"#{prefix}_#{attr}" : attr] }
+
+      @attributes =
+        if options[:inherit_header]
+          root.header.map { |attr| [prefix ? :"#{prefix}_#{attr}" : attr] }
+        else
+          []
+        end
     end
 
     def model(options)
