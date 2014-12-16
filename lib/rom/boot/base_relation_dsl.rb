@@ -8,6 +8,7 @@ module ROM
         @env = env
         @name = name
         @header = []
+        @repository = nil
       end
 
       def repository(name = nil)
