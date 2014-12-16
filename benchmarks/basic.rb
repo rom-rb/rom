@@ -77,9 +77,6 @@ seed
 puts "LOADED #{env.schema.users.count} users via ROM/Sequel"
 puts "LOADED #{ARUser.count} users via ActiveRecord"
 
-puts "AAAAAAA: #{ROM_ENV.read(:users).user_json.to_a.inspect}"
-puts "AAAAAAA: #{ARUser.all.to_a.map(&:as_json).inspect}"
-
 USERS = ROM_ENV.read(:users).all
 
 Benchmark.ips do |x|
