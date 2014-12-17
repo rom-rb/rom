@@ -1,3 +1,13 @@
+## v0.5.0 to-be-released
+
+### Added
+
+* Mappers support tuple transformation using wrap and group operations (solnic)
+
+### Changed
+
+* `ROM::RA` interface is no longer mixed into relations by default (solnic)
+
 ## v0.4.1 2014-12-15
 
 ### Added
