@@ -5,8 +5,10 @@ describe 'Wrap operation' do
 
   specify 'defining a wrapped relation' do
     setup.relation(:users) do
+      include ROM::RA
+
       def with_task
-        in_memory { wrap(join(tasks), task: [:title, :priority]) }
+        wrap(join(tasks), task: [:title, :priority])
       end
     end
 

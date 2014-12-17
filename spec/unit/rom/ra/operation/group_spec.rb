@@ -1,10 +1,10 @@
 require 'spec_helper'
 
 describe 'Group operation' do
-  subject(:group) { opts = options; relation.in_memory { group(opts) } }
+  subject(:group) { relation.group(options) }
 
   let(:relation) do
-    ROM::Relation.new(dataset, header)
+    ROM::Relation.new(dataset, header).extend(ROM::RA)
   end
 
   let(:header) do

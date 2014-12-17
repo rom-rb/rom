@@ -15,8 +15,10 @@ describe 'Relation registration DSL' do
     end
 
     setup.relation(:users) do
+      include ROM::RA
+
       def with_tasks
-        in_memory { join(tasks) }
+        join(tasks)
       end
     end
 

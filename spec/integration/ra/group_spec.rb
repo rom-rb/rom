@@ -5,11 +5,10 @@ describe 'Group operation' do
 
   specify 'defining a grouped relation' do
     setup.relation(:users) do
+      include ROM::RA
 
       def with_tasks
-        in_memory {
-          group(join(tasks), tasks: [:title, :priority])
-        }
+        group(join(tasks), tasks: [:title, :priority])
       end
 
       def by_name(name)

@@ -1,5 +1,3 @@
-require 'rom/ra'
-
 module ROM
 
   # Base relation class
@@ -22,7 +20,6 @@ module ROM
   class Relation
     include Charlatan.new(:dataset)
     include Equalizer.new(:header, :dataset)
-    include RA
 
     # @api private
     attr_reader :header

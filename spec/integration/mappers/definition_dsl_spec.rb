@@ -107,8 +107,10 @@ describe 'Mapper definition DSL' do
       setup.relation(:tasks)
 
       setup.relation(:users) do
+        include ROM::RA
+
         def with_tasks
-          in_memory { join(tasks) }
+          join(tasks)
         end
       end
 
@@ -184,8 +186,10 @@ describe 'Mapper definition DSL' do
   describe 'wrapped relation mapper' do
     before do
       setup.relation(:tasks) do
+        include ROM::RA
+
         def with_user
-          in_memory { join(users) }
+          join(users)
         end
       end
 

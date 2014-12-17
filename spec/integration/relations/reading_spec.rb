@@ -32,8 +32,10 @@ describe 'Reading relations' do
 
   it 'maps grouped relations' do
     setup.relation(:users) do
+      include ROM::RA
+
       def with_tasks
-        in_memory { join(tasks) }
+        join(tasks)
       end
 
       def sorted
@@ -78,8 +80,10 @@ describe 'Reading relations' do
 
   it 'maps wrapped relations' do
     setup.relation(:users) do
+      include ROM::RA
+
       def with_task
-        in_memory { join(tasks) }
+        join(tasks)
       end
 
       def sorted

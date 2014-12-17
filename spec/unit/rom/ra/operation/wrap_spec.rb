@@ -1,14 +1,14 @@
 require 'spec_helper'
 
 describe 'Wrap operation' do
-  subject(:wrap) { relation.in_memory { wrap(address: [:street, :zipcode, :city]) } }
+  subject(:wrap) { relation.wrap(address: [:street, :zipcode, :city]) }
 
   let(:relation) do
     ROM::Relation.new([{ name: 'Jane',
        email: 'jane@doe.org',
        street: 'Street 1',
        zipcode: '1234',
-       city: 'Cracow' }], header)
+       city: 'Cracow' }], header).extend(ROM::RA)
   end
 
   let(:header) do

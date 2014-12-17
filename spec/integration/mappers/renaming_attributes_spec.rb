@@ -23,12 +23,14 @@ describe 'Mappers / Renaming attributes' do
     setup.relation(:addresses)
 
     setup.relation(:users) do
+      include ROM::RA
+
       def with_address
-        in_memory { join(addresses) }
+        join(addresses)
       end
 
       def with_addresses
-        in_memory { join(addresses) }
+        join(addresses)
       end
     end
   end

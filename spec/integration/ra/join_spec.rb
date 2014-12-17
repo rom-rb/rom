@@ -5,8 +5,10 @@ describe 'Join operation' do
 
   specify 'defining a joined one-to-many relation' do
     setup.relation(:users) do
+      include ROM::RA
+
       def with_tasks
-        in_memory { join(tasks) }
+        join(tasks)
       end
     end
 
@@ -27,8 +29,10 @@ describe 'Join operation' do
     setup.relation(:users)
 
     setup.relation(:tasks) do
+      include ROM::RA
+
       def with_user
-        in_memory { join(users) }
+        join(users)
       end
     end
 

@@ -17,6 +17,8 @@ require 'rom/adapter'
 require 'rom/repository'
 require 'rom/env'
 
+require 'rom/ra'
+
 require 'rom/boot'
 
 module ROM
