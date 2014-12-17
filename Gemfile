@@ -4,7 +4,7 @@ gemspec
 
 group :console do
   gem 'pry'
-  gem 'pg'
+  gem 'pg', platforms: [:mri]
 end
 
 group :test do
