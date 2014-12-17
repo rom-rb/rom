@@ -108,7 +108,7 @@ describe 'Mapper definition DSL' do
 
       setup.relation(:users) do
         def with_tasks
-          in_memory { group(join(tasks), tasks: [:title, :priority]) }
+          in_memory { join(tasks) }
         end
       end
 
@@ -185,7 +185,7 @@ describe 'Mapper definition DSL' do
     before do
       setup.relation(:tasks) do
         def with_user
-          in_memory { wrap(join(users), user: [:email]) }
+          in_memory { join(users) }
         end
       end
 

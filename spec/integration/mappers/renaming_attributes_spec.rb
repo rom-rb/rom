@@ -24,15 +24,11 @@ describe 'Mappers / Renaming attributes' do
 
     setup.relation(:users) do
       def with_address
-        in_memory {
-          wrap(join(users, addresses), address: [:address_id, :address_street])
-        }
+        in_memory { join(addresses) }
       end
 
       def with_addresses
-        in_memory {
-          group(join(users, addresses), addresses: [:address_id, :address_street])
-        }
+        in_memory { join(addresses) }
       end
     end
   end

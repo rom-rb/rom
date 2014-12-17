@@ -33,7 +33,7 @@ describe 'Reading relations' do
   it 'maps grouped relations' do
     setup.relation(:users) do
       def with_tasks
-        in_memory { group(join(tasks), tasks: [:title, :priority]) }
+        in_memory { join(tasks) }
       end
 
       def sorted
@@ -79,7 +79,7 @@ describe 'Reading relations' do
   it 'maps wrapped relations' do
     setup.relation(:users) do
       def with_task
-        in_memory { wrap(join(tasks), task: [:title, :priority]) }
+        in_memory { join(tasks) }
       end
 
       def sorted

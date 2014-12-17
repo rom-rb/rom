@@ -2,7 +2,7 @@ module ROM
 
   # @api private
   class Mapper
-    attr_reader :header, :model, :loader
+    attr_reader :header, :model, :loader, :transformer
 
     class Basic < Mapper
       attr_reader :mapping
@@ -22,6 +22,17 @@ module ROM
     end
 
     class Recursive < Basic
+      attr_reader :transformer
+
+      def initialize(*args)
+        super
+        @transformer = Transformer.build(header)
+      end
+
+      def process(relation)
+        transformer.call(relation).map { |tuple| load(tuple) }
+      end
+
       def call(tuple, mapping = self.mapping)
         tuple.map do |key, value|
           case value
@@ -58,6 +69,10 @@ module ROM
       @header = header
       @model = model
       @loader = loader
+    end
+
+    def process(relation)
+      relation.map { |tuple| load(tuple) }
     end
 
     def load(tuple)
