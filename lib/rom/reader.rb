@@ -35,8 +35,8 @@ module ROM
     #   rom.read(:users).adults.recent.active.each { |user| # ... }
     #
     # @api public
-    def each(&block)
-      mapper.process(relation).each(&block)
+    def each
+      mapper.process(relation) { |tuple| yield(tuple) }
     end
 
     # @api private

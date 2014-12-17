@@ -11,10 +11,10 @@ module ROM
       end
 
       def call(tuples)
-        tuples.map do |tuple|
+        tuples.each_with_object([]) do |tuple, arr|
           result = tuple.reject { |k,_| names.include?(k) }
           result[key] = tuple.reject { |k,_| !names.include?(k) }
-          result
+          arr << result
         end
       end
 

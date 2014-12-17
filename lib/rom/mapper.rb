@@ -30,7 +30,7 @@ module ROM
       end
 
       def process(relation)
-        transformer.call(relation).map { |tuple| load(tuple) }
+        transformer.call(relation).each { |tuple| yield(load(tuple)) }
       end
 
       def call(tuple, mapping = self.mapping)
@@ -72,7 +72,7 @@ module ROM
     end
 
     def process(relation)
-      relation.map { |tuple| load(tuple) }
+      relation.each { |tuple| yield(load(tuple)) }
     end
 
     def load(tuple)
