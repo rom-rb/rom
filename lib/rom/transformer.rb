@@ -3,56 +3,41 @@ module ROM
   class Transformer
     attr_reader :operations
 
-    class Wrap
-      attr_reader :attribute
+    class Operation
+      attr_reader :attribute, :key, :names
 
       def initialize(attribute)
         @attribute = attribute
-      end
-
-      def call(tuples)
-        tuples.each_with_object([]) do |tuple, arr|
-          result = tuple.reject { |k,_| names.include?(k) }
-          result[key] = tuple.reject { |k,_| !names.include?(k) }
-          arr << result
-        end
-      end
-
-      def key
-        attribute.key
-      end
-
-      def names
-        attribute.header.map(&:key)
+        @key = attribute.key
+        @names = attribute.header.map(&:key)
       end
     end
 
-    class Group
-      attr_reader :attribute
-
-      def initialize(attribute)
-        @attribute = attribute
-      end
-
+    class Wrap < Operation
       def call(tuples)
-        result = tuples.each_with_object({}) do |tuple, grouped|
-          left = tuple.reject { |k,_| names.include?(k) }
-          right = tuple.reject { |k,_| !names.include?(k) }
+        keys = tuples.first.keys - names
 
-          grouped[left] ||= {}
-          grouped[left][key] ||= []
-          grouped[left][key] << right if right.values.any?
-        end
+        tuples.map { |tuple|
+          root = Hash[keys.zip(tuple.values_at(*keys))]
+          child = Hash[names.zip(tuple.values_at(*names))]
 
-        result.map { |k,v| k.merge(v) }
+          root.merge(key => child)
+        }
       end
+    end
 
-      def key
-        attribute.key
-      end
+    class Group < Operation
+      def call(tuples)
+        keys = tuples.first.keys - names
 
-      def names
-        attribute.header.map(&:key)
+        tuples.
+          group_by { |tuple|
+            Hash[keys.zip(tuple.values_at(*keys))]
+          }.map { |root, children|
+            root.merge(
+             key => children.map { |child| Hash[names.zip(child.values_at(*names))] }
+            )
+          }
       end
     end
 

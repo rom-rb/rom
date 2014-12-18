@@ -30,7 +30,7 @@ module ROM
       end
 
       def process(relation)
-        transformer.call(relation).each { |tuple| yield(load(tuple)) }
+        transformer.call(relation.to_a).each { |tuple| yield(load(tuple)) }
       end
 
       def call(tuple, header = self.header)
