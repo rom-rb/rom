@@ -99,7 +99,6 @@ describe 'Mapper definition DSL' do
     it 'builds a new model' do
       expect(mapper.model).to be(UserWithoutName)
     end
-
   end
 
   describe 'grouped relation mapper' do
@@ -181,6 +180,39 @@ describe 'Mapper definition DSL' do
       )
     end
 
+    it 'allows defining grouped attributes mapped to a model via block' do
+      setup.mappers do
+        define(:with_tasks, parent: :users) do
+          model name: 'UserWithTasks'
+
+          attribute :name
+          attribute :email
+
+          group :tasks do
+            model name: 'Task'
+
+            attribute :title
+            attribute :priority
+          end
+        end
+      end
+
+      rom = setup.finalize
+
+      UserWithTasks.send(:include, Equalizer.new(:name, :email, :tasks))
+      Task.send(:include, Equalizer.new(:title, :priority))
+
+      jane = rom.read(:users).with_tasks.to_a.last
+
+      expect(jane).to eql(
+        UserWithTasks.new(
+          name: 'Jane',
+          email: 'jane@doe.org',
+          tasks: [Task.new(title: 'be cool', priority: 2)]
+        )
+      )
+    end
+
   end
 
   describe 'wrapped relation mapper' do
@@ -257,6 +289,37 @@ describe 'Mapper definition DSL' do
           title: 'be cool',
           priority: 2,
           user: { email: 'jane@doe.org' }
+        )
+      )
+    end
+
+    it 'allows defining wrapped attributes mapped to a model' do
+      setup.mappers do
+        define(:with_user, parent: :tasks) do
+          model name: 'TaskWithUser'
+
+          attribute :title
+          attribute :priority
+
+          wrap :user do
+            model name: 'User'
+            attribute :email
+          end
+        end
+      end
+
+      rom = setup.finalize
+
+      TaskWithUser.send(:include, Equalizer.new(:title, :priority, :user))
+      User.send(:include, Equalizer.new(:email))
+
+      jane = rom.read(:tasks).with_user.to_a.last
+
+      expect(jane).to eql(
+        TaskWithUser.new(
+          title: 'be cool',
+          priority: 2,
+          user: User.new(email: 'jane@doe.org')
         )
       )
     end

@@ -24,7 +24,7 @@ module ROM
         end
 
         def mapping
-          [name, header.mapping]
+          header.mapping
         end
 
         def embedded?
@@ -107,7 +107,7 @@ module ROM
     end
 
     def mapping
-      Hash[map(&:mapping)]
+      Hash[select { |a| !a.embedded? }.map(&:mapping)]
     end
 
     def values

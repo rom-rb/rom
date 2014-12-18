@@ -6,7 +6,7 @@ module ROM
   class MapperBuilder
 
     class AttributeDSL
-      attr_reader :attributes
+      attr_reader :attributes, :model_class, :model_builder
 
       def initialize
         @attributes = []
@@ -14,6 +14,20 @@ module ROM
 
       def header
         Header.coerce(attributes)
+      end
+
+      def model(options = nil)
+        if options.is_a?(Class)
+          @model_class = options
+        elsif options
+          @model_builder = ModelBuilder[options.fetch(:type) { :poro }].new(options)
+        end
+
+        if options
+          self
+        else
+          model_class || (model_builder && model_builder.call(header))
+        end
       end
 
       def attribute(name, options = {})
@@ -78,7 +92,7 @@ module ROM
       if block
         dsl = AttributeDSL.new
         dsl.instance_exec(&block)
-        attributes << [options, header: dsl.header, type: type]
+        attributes << [options, header: dsl.header, type: type, model: dsl.model]
       else
         options.each do |name, header|
           attributes << [name, header: header.zip, type: type]

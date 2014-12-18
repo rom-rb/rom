@@ -12,12 +12,12 @@ module ROM
         @mapping = header.mapping
       end
 
-      def load(tuple, mapping = self.mapping)
-        loader[Hash[call(tuple, mapping)]]
+      def load(tuple)
+        super(Hash[call(tuple)])
       end
 
-      def call(tuple, mapping = self.mapping)
-        tuple.map { |key, value| [mapping[key], value] }
+      def call(tuple)
+        tuple.map { |key, value| [header.mapping[key], value] }
       end
     end
 
@@ -33,11 +33,15 @@ module ROM
         transformer.call(relation).each { |tuple| yield(load(tuple)) }
       end
 
-      def call(tuple, mapping = self.mapping)
+      def call(tuple, header = self.header)
+        mapping = header.mapping
+
         tuple.map do |key, value|
           case value
-          when Hash  then [key, Hash[call(value, mapping[key])]]
-          when Array then [key, value.map { |v| Hash[call(v, mapping[key])] }]
+          when Hash
+            [key, loader[Hash[call(value, header[key])], header[key].model]]
+          when Array
+            [key, value.map { |v| loader[Hash[call(v, header[key])], header[key].model] }]
           else
             [mapping[key], value]
           end
@@ -55,12 +59,7 @@ module ROM
           self
         end
 
-      loader =
-        if model
-          -> tuple { model.new(tuple) }
-        else
-          -> tuple { tuple }
-        end
+      loader = Proc.new { |tuple, m| m ? m.new(tuple) : tuple }
 
       klass.new(header, model, loader)
     end
@@ -76,7 +75,7 @@ module ROM
     end
 
     def load(tuple)
-      loader[tuple]
+      loader[tuple, model]
     end
 
   end
