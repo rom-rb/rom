@@ -11,7 +11,7 @@ require 'rom-sql'
 
 require 'active_record'
 
-def env
+def rom
   ROM_ENV
 end
 
@@ -104,28 +104,36 @@ end.flatten
 
 def seed
   USER_SEED.each do |attributes|
-    env.schema.users.insert(attributes)
+    rom.schema.users.insert(attributes)
   end
 
   TASK_SEED.each do |attributes|
-    env.schema.tasks.insert(attributes)
+    rom.schema.tasks.insert(attributes)
   end
 end
 
 seed
 
-puts "LOADED #{env.schema.users.count} users via ROM/Sequel"
-puts "LOADED #{env.schema.tasks.count} tasks via ROM/Sequel"
+puts "INSERTED #{rom.schema.users.count} users via ROM/Sequel"
+puts "INSERTED #{rom.schema.tasks.count} tasks via ROM/Sequel"
+puts "*"*80
 
-USERS = ROM_ENV.read(:users).all
+USERS = rom.read(:users).all
 
 Benchmark.ips do |x|
-  x.report("rom.read(:users).all.to_a") { USERS.to_a }
-  x.report("ARUser.all.to_a") { ARUser.all.to_a }
+  x.report("[AR] Loading 1k user objects") { ARUser.all.to_a }
+  x.report("[ROM] Loading 1k user objects") { USERS.to_a }
+  x.compare!
+end
 
-  x.report("rom.read(:user_json).all.to_a") { ROM_ENV.read(:users).user_json.to_a.to_json }
-  x.report("ARUser.all.map(&:as_json)") { ARUser.all.to_a.to_json }
+Benchmark.ips do |x|
+  x.report("[AR] Loading 1k user objects with tasks") { ARUser.all.includes(:tasks).to_a }
+  x.report("[ROM] Loading 1k user objects with tasks") { USERS.with_tasks.to_a }
+  x.compare!
+end
 
-  x.report("rom.read(:users).all.with_tasks.to_a") { USERS.with_tasks.to_a }
-  x.report("ARUser.all.includes(:tasks).to_a") { ARUser.all.includes(:tasks).to_a }
+Benchmark.ips do |x|
+  x.report("[ROM] to_json on 1k user objects") { rom.read(:users).user_json.to_a.to_json }
+  x.report("[AR] to_json on 1k user objects") { ARUser.all.to_a.to_json }
+  x.compare!
 end
