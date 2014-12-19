@@ -33,7 +33,6 @@ module ROM
         super
       end
     end
-
   end
 
 end

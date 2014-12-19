@@ -53,7 +53,6 @@ module ROM
           raise TupleCountMismatchError, "#{inspect} expects one tuple"
         end
       end
-
     end
 
   end

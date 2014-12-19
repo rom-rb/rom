@@ -77,7 +77,6 @@ module ROM
     def load(tuple)
       loader[tuple, model]
     end
-
   end
 
 end

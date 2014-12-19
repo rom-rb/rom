@@ -33,6 +33,5 @@ module ROM
     def with_options(options)
       yield(DEFAULT_OPTIONS.merge(options))
     end
-
   end
 end

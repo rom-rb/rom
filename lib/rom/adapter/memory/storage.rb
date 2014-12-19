@@ -1,7 +1,6 @@
 module ROM
   class Adapter
     class Memory < Adapter
-
       class Storage
         attr_reader :data
 
@@ -21,9 +20,7 @@ module ROM
         def key?(name)
           data.key?(name)
         end
-
       end
-
     end
   end
 end

@@ -17,7 +17,6 @@ module ROM
       mappers << [name, options, block]
       self
     end
-
   end
 
 end

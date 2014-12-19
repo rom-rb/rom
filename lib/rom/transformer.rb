@@ -71,7 +71,6 @@ module ROM
       operations.each { |op| output = op.call(output) }
       output
     end
-
   end
 
 end

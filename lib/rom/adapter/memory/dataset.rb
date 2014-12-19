@@ -1,7 +1,6 @@
 module ROM
   class Adapter
     class Memory < Adapter
-
       class Dataset
         include Charlatan.new(:data)
 
@@ -47,9 +46,7 @@ module ROM
           data.delete(tuple)
           self
         end
-
       end
-
     end
   end
 end

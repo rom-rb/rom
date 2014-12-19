@@ -4,7 +4,6 @@ require 'rom/boot/command_dsl'
 
 module ROM
   class Boot
-
     class DSL
       attr_reader :env
 
@@ -30,8 +29,6 @@ module ROM
         dsl.instance_exec(&block)
         dsl.call
       end
-
     end
-
   end
 end

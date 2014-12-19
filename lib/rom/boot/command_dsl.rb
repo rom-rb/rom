@@ -42,7 +42,6 @@ module ROM
       commands[name] = CommandDefinition.new(options, &block)
       self
     end
-
   end
 
 end

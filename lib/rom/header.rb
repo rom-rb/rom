@@ -30,7 +30,6 @@ module ROM
         def embedded?
           true
         end
-
       end
 
       def self.[](type)
@@ -117,7 +116,6 @@ module ROM
     def [](name)
       attributes.fetch(name)
     end
-
   end
 
 end

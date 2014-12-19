@@ -1,7 +1,6 @@
 module ROM
   module RA
     class Operation
-
       class Group
         # FIXME: only reading from a relation should be allowed here so this is
         #       obviously too much
@@ -39,9 +38,7 @@ module ROM
         def attribute_names
           options.values.first
         end
-
       end
-
     end
   end
 end

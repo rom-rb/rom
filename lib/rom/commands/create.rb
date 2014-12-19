@@ -21,7 +21,6 @@ module ROM
       def execute(_tuple)
         raise NotImplementedError, "#{self.class}##{__method__} must be implemented"
       end
-
     end
 
   end

@@ -40,7 +40,6 @@ module ROM
       return to_enum unless block
       dataset.each(&block)
     end
-
   end
 
 end

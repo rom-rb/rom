@@ -4,7 +4,6 @@ module ROM
 
   # @api private
   class MapperBuilder
-
     class AttributeDSL
       attr_reader :attributes, :model_class, :model_builder
 
@@ -99,7 +98,6 @@ module ROM
         end
       end
     end
-
   end
 
 end

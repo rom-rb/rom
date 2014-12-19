@@ -56,7 +56,6 @@ module ROM
 
       self.class.new(new_path, new_relation, mappers)
     end
-
   end
 
 end

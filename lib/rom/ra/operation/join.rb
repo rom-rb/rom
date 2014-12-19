@@ -1,7 +1,6 @@
 module ROM
   module RA
     class Operation
-
       class Join
         include Charlatan.new(:left)
         include Enumerable
@@ -31,9 +30,7 @@ module ROM
 
           tuples.each(&block)
         end
-
       end
-
     end
   end
 end

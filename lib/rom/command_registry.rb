@@ -39,7 +39,6 @@ module ROM
   end
 
   class CommandRegistry < Registry
-
     class Evaluator
       include Concord.new(:registry)
 

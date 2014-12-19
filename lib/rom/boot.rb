@@ -191,7 +191,6 @@ module ROM
 
       Registry.new(commands)
     end
-
   end
 
 end

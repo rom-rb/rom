@@ -152,7 +152,6 @@ module ROM
     def command_namespace
       self.class.const_get(:Commands)
     end
-
   end
 
 end

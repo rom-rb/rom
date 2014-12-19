@@ -44,7 +44,6 @@ module ROM
     end
 
     class PORO < ModelBuilder
-
       def define_class(header)
         @klass = Class.new
 
@@ -60,9 +59,7 @@ module ROM
 
         self
       end
-
     end
-
   end
 
 end

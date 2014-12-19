@@ -37,7 +37,6 @@ module ROM
       def new(*args, &block)
         self.class.new(relation, options.merge(target: relation.public_send(*args, &block)))
       end
-
     end
 
   end
