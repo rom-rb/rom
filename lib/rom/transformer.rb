@@ -48,9 +48,13 @@ module ROM
         elsif type == Array
           Group.new(attribute)
         end
-      end
+      end.compact
 
-      new(operations.compact)
+      sorted_ops =
+        operations.select { |op| Group === op } +
+        operations.select { |op| Wrap === op }
+
+      new(sorted_ops.flatten)
     end
 
     def initialize(operations)

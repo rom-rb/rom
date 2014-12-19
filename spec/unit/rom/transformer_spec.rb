@@ -13,17 +13,25 @@ describe ROM::Transformer do
 
   let(:relation) do
     [{ name: 'Jane',
-      street: 'Street 1',
-      zipcode: '123',
-      title: 'Sing a song',
-      priority: 'high' }]
+       street: 'Street 1',
+       zipcode: '123',
+       title: 'Sing a song',
+       priority: 'high' },
+     { name: 'Jane',
+       street: 'Street 1',
+       zipcode: '123',
+       title: 'Relax',
+       priority: 'very-high' }]
   end
 
   it 'transforms a tuple' do
     expect(transformer.call(relation)).to eql([
       name: 'Jane',
       address: { street: 'Street 1', zipcode: '123' },
-      tasks: [{ title: 'Sing a song', priority: 'high' }]
+      tasks: [
+        { title: 'Sing a song', priority: 'high' },
+        { title: 'Relax', priority: 'very-high' }
+      ]
     ])
   end
 
