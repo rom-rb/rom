@@ -27,7 +27,7 @@ describe 'Defining schema' do
 
   describe '.schema' do
     it 'returns an empty schema if it was not defined' do
-      expect(schema.users).to be_nil
+      expect { schema.users }.to raise_error(NoMethodError)
     end
 
     context 'with an adapter that supports header injection' do

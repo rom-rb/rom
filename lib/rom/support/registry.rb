@@ -17,7 +17,7 @@ module ROM
     end
 
     def [](name)
-      elements[name]
+      elements.fetch(name)
     end
 
     def respond_to_missing?(name, include_private = false)
@@ -27,7 +27,11 @@ module ROM
     private
 
     def method_missing(name, *args)
-      self[name]
+      if elements.key?(name)
+        self[name]
+      else
+        super
+      end
     end
 
   end
