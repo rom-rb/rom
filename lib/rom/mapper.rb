@@ -50,9 +50,9 @@ module ROM
 
     def self.build(header, model)
       klass =
-        if header.any? { |attribute| attribute.embedded? }
+        if header.any?(&:embedded?)
           Recursive
-        elsif header.any? { |attribute| attribute.aliased? }
+        elsif header.any?(&:aliased?)
           Basic
         else
           self
