@@ -12,7 +12,7 @@ describe 'Commands / Error handling'  do
 
   it 'rescues from ROM::CommandError' do
     result = false
-    expect(users.try { raise ROM::CommandError } >-> test { result = true }).
+    expect(users.try { raise ROM::CommandError } >-> _test { result = true }).
       to be_instance_of(ROM::Result::Failure)
     expect(result).to be(false)
   end
