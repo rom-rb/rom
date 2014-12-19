@@ -2,7 +2,7 @@ module ROM
 
   # @api private
   class ModelBuilder
-    attr_reader :options, :const_name, :klass
+    attr_reader :options, :const_name, :namespace, :klass
 
     def self.[](type)
       case type
@@ -16,18 +16,31 @@ module ROM
       new(*args).call
     end
 
-    def initialize(options)
+    def initialize(options = {})
       @options = options
-      @const_name = options[:name]
+
+      if options[:name]
+        split = options[:name].split('::')
+
+        @const_name = split.last
+
+        @namespace =
+          if split.size > 1
+            Inflecto.constantize((split-[const_name]).join('::'))
+          else
+            Object
+          end
+      end
     end
 
     def define_const
-      Object.const_set(const_name, klass)
+      namespace.const_set(const_name, klass)
     end
 
     def call(header)
       define_class(header)
       define_const if const_name
+      @klass
     end
 
     class PORO < ModelBuilder

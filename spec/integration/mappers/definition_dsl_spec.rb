@@ -21,23 +21,11 @@ describe 'Mapper definition DSL' do
         define(:users) do
           model name: 'User'
         end
-
-        define(:email_index, parent: :users, inherit_header: false) do
-          model name: 'UserEmail'
-
-          attribute :email
-        end
       end
     end
 
     it 'defines a constant for the model class' do
       expect(mapper.model).to be(User)
-    end
-
-    it 'allows mapping only one attribute' do
-      # TODO: move this to a dedicated spec for model builder
-      object = rom.read(:users).email_index.mapper.model.new(email: 'jane@doe.org')
-      expect(object.email).to eql('jane@doe.org')
     end
 
     it 'uses all attributes from the relation header by default' do
