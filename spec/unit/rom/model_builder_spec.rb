@@ -11,6 +11,8 @@ describe ROM::ModelBuilder do
 
       expect(object.name).to eql('Jane')
 
+      expect { object.name = 'Jane' }.to raise_error(NoMethodError)
+
       klass = builder.call(name: :user_name, email: :user_email)
 
       object = klass.new(name: 'Jane', email: 'jane@doe.org')

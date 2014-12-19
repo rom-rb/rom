@@ -50,7 +50,7 @@ module ROM
 
         attributes = header.keys
 
-        @klass.send(:attr_accessor, *attributes)
+        @klass.send(:attr_reader, *attributes)
 
         @klass.class_eval <<-RUBY, __FILE__, __LINE__ + 1
           def initialize(params)
