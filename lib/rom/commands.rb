@@ -12,7 +12,7 @@ module ROM
 
         @result = options[:result] || :many
 
-        if !VALID_RESULTS.include?(result)
+        unless VALID_RESULTS.include?(result)
           raise InvalidOptionError.new(:result, VALID_RESULTS)
         end
       end
