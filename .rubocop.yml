@@ -18,6 +18,10 @@ Metrics/PerceivedComplexity:
 Lint/AssignmentInCondition:
   Enabled: false
 
+# The enforced style doesn’t match Vim’s defaults
+Style/AlignParameters:
+  Enabled: false
+
 # UTF-8 is perfectly fine in comments
 Style/AsciiComments:
   Enabled: false
