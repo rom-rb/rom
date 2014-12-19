@@ -1,4 +1,4 @@
-## v0.4.2 to-be-released
+## v0.4.2 2014-12-19
 
 ### Added
 
@@ -12,7 +12,7 @@
 * PORO model builder only defines attribute readers now (no writers!) (solnic)
 * Registry objects in Env will now raise `KeyError` when unknown name is referenced (solnic)
 
-[Compare v0.4.2...master](https://github.com/rom-rb/rom/compare/v0.4.2...master)
+[Compare v0.4.1...v0.4.2](https://github.com/rom-rb/rom/compare/v0.4.1...v0.4.2)
 
 ## v0.4.1 2014-12-15
 
