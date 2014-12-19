@@ -1,4 +1,4 @@
-## v0.5.0 to-be-released
+## v0.4.2 to-be-released
 
 ### Added
 
@@ -10,8 +10,9 @@
 * `ROM::RA` interface is no longer mixed into relations by default (solnic)
 * ~2.5 x speed up in aggregate mapping (solnic)
 * PORO model builder only defines attribute readers now (no writers!) (solnic)
+* Registry objects in Env will now raise `KeyError` when unknown name is referenced (solnic)
 
-[Compare v0.4.1...master](https://github.com/rom-rb/rom/compare/v0.4.1...master)
+[Compare v0.4.2...master](https://github.com/rom-rb/rom/compare/v0.4.2...master)
 
 ## v0.4.1 2014-12-15
 
