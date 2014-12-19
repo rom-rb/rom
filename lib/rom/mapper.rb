@@ -58,7 +58,7 @@ module ROM
           self
         end
 
-      loader = Proc.new { |tuple, m| m ? m.new(tuple) : tuple }
+      loader = proc { |tuple, m| m ? m.new(tuple) : tuple }
 
       klass.new(header, model, loader)
     end

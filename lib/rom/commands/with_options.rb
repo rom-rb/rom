@@ -10,7 +10,7 @@ module ROM
       def initialize(relation, options)
         super
 
-        @validator = options[:validator] || Proc.new {}
+        @validator = options[:validator] || proc {}
         @input = options[:input] || Hash
       end
     end
