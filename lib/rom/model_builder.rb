@@ -39,13 +39,10 @@ module ROM
 
         @klass.send(:attr_accessor, *attributes)
 
-        ivar_list = attributes.map { |name| "@#{name}" }.join(", ")
-        sym_list = attributes.map { |name| ":#{name}" }.join(", ")
-
         @klass.class_eval <<-RUBY, __FILE__, __LINE__ + 1
-            def initialize(params)
-        #{ivar_list} = params.values_at(#{sym_list})
-            end
+          def initialize(params)
+            #{attributes.map { |name| "@#{name} = params[:#{name}]" }.join("\n")}
+          end
         RUBY
 
         self
