@@ -32,8 +32,8 @@ module ROM
       def call(tuples)
         keys = nil
 
-        tuples.
-          group_by { |tuple|
+        tuples
+          .group_by { |tuple|
             keys ||= tuple.keys - names
             Hash[keys.zip(tuple.values_at(*keys))]
           }.map { |root, children|
