@@ -36,7 +36,7 @@ module ROM
     end
 
     attr_reader :name, :root, :prefix,
-      :model_builder, :model_class, :attributes
+                :model_builder, :model_class, :attributes
 
     def initialize(name, root, options = {})
       @name = name
