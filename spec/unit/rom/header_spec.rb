@@ -4,7 +4,6 @@ describe ROM::Header do
   describe '.coerce' do
     subject(:header) { ROM::Header.coerce(input) }
 
-
     context 'with a primitive type' do
       let(:input) { [[:name, type: String]] }
 
