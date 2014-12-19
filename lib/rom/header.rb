@@ -42,7 +42,7 @@ module ROM
       end
 
       def self.coerce(input)
-        if input.kind_of?(self)
+        if input.is_a?(self)
           input
         else
           name = input[0]
@@ -82,7 +82,7 @@ module ROM
     end
 
     def self.coerce(input)
-      if input.kind_of?(self)
+      if input.is_a?(self)
         input
       else
         attributes = input.each_with_object({}) { |pair, h|
