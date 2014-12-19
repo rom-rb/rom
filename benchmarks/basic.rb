@@ -52,8 +52,8 @@ setup.relation(:users) do
 end
 
 ActiveRecord::Base.establish_connection(
-  :adapter => "postgresql",
-  :database => "rom"
+  adapter: "postgresql",
+  database: "rom"
 )
 
 class ARUser < ActiveRecord::Base
@@ -90,10 +90,10 @@ ROM_ENV = setup.finalize
 COUNT = ENV.fetch('COUNT', 1000).to_i
 
 USER_SEED = COUNT.times.map do |i|
-  { :id    => i + 1,
-    :name  => "name #{i}",
-    :email => "email_#{i}@domain.com",
-    :age   => i*10 }
+  { id:    i + 1,
+    name:  "name #{i}",
+    email: "email_#{i}@domain.com",
+    age:   i*10 }
 end
 
 TASK_SEED = USER_SEED.map do |user|
