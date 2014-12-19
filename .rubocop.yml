@@ -14,36 +14,6 @@ Metrics/MethodLength:
 Metrics/PerceivedComplexity:
   Max: 8
 
-# FIXME: Document these
-Style/Documentation:
-  Exclude:
-    - benchmarks/basic.rb
-    - lib/rom.rb
-    - lib/rom/adapter/memory.rb
-    - lib/rom/adapter/memory/commands.rb
-    - lib/rom/adapter/memory/dataset.rb
-    - lib/rom/adapter/memory/storage.rb
-    - lib/rom/boot/base_relation_dsl.rb
-    - lib/rom/boot/command_dsl.rb
-    - lib/rom/boot/dsl.rb
-    - lib/rom/boot/mapper_dsl.rb
-    - lib/rom/boot/relation_dsl.rb
-    - lib/rom/boot/schema_dsl.rb
-    - lib/rom/command_registry.rb
-    - lib/rom/commands.rb
-    - lib/rom/header.rb
-    - lib/rom/mapper.rb
-    - lib/rom/mapper_builder.rb
-    - lib/rom/model_builder.rb
-    - lib/rom/ra/operation/group.rb
-    - lib/rom/ra/operation/join.rb
-    - lib/rom/ra/operation/wrap.rb
-    - lib/rom/transformer.rb
-    - lib/rom/version.rb
-    - spec/support/mutant.rb
-    - spec/unit/rom/adapter_spec.rb
-    - spec/unit/rom/model_builder_spec.rb
-
 # It’s quite readable when we know what we are doing
 Lint/AssignmentInCondition:
   Enabled: false
@@ -54,6 +24,10 @@ Style/AsciiComments:
 
 # Allow using braces for value-returning blocks
 Style/Blocks:
+  Enabled: false
+
+# Documentation checked by Inch CI
+Style/Documentation:
   Enabled: false
 
 # Early returns have their vices
