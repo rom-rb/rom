@@ -26,4 +26,8 @@ describe ROM::Transformer do
       tasks: [{ title: 'Sing a song', priority: 'high' }]
     ])
   end
+
+  it 'skip transforming if tuple is empty' do
+    expect(transformer.call([])).to eql([])
+  end
 end

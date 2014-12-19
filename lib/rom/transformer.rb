@@ -15,9 +15,8 @@ module ROM
 
     class Wrap < Operation
       def call(tuples)
-        keys = tuples.first.keys - names
-
         tuples.map { |tuple|
+          keys = tuple.keys - names
           root = Hash[keys.zip(tuple.values_at(*keys))]
           child = Hash[names.zip(tuple.values_at(*names))]
 
@@ -28,10 +27,9 @@ module ROM
 
     class Group < Operation
       def call(tuples)
-        keys = tuples.first.keys - names
-
         tuples.
           group_by { |tuple|
+            keys = tuple.keys - names
             Hash[keys.zip(tuple.values_at(*keys))]
           }.map { |root, children|
             root.merge(
