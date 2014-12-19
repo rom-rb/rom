@@ -6,7 +6,7 @@ Gem::Specification.new do |gem|
   gem.name          = 'rom'
   gem.summary       = 'Ruby Object Mapper'
   gem.description   = 'Persistence and mapping toolkit for Ruby'
-  gem.authors       = 'Piotr Solnica',
+  gem.author        = 'Piotr Solnica'
   gem.email         = 'piotr.solnica@gmail.com'
   gem.homepage      = 'http://rom-rb.org'
   gem.require_paths = ['lib']
