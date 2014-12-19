@@ -25,7 +25,7 @@ module ROM
     attr_reader :header
 
     # @api private
-    def self.finalize(env, relation)
+    def self.finalize(_env, _relation)
       # noop
     end
 

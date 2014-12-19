@@ -108,14 +108,14 @@ module ROM
     end
 
     # @api private
-    def respond_to_missing?(name, include_context = false)
+    def respond_to_missing?(name, _include_context = false)
       repositories.key?(name)
     end
 
     private
 
     # @api private
-    def method_missing(name, *args)
+    def method_missing(name, *_args)
       repositories.fetch(name)
     end
 

@@ -40,7 +40,7 @@ module ROM
     end
 
     # @api private
-    def respond_to_missing?(name, include_private = false)
+    def respond_to_missing?(name, _include_private = false)
       relation.respond_to?(name)
     end
 

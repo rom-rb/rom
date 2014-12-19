@@ -22,7 +22,7 @@ module ROM
           data.each(&block)
         end
 
-        def restrict(criteria = nil, &block)
+        def restrict(criteria = nil, &_block)
           if criteria
             find_all { |tuple| criteria.all? { |k, v| tuple[k] == v } }
           else

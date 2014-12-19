@@ -18,7 +18,7 @@ module ROM
       # @return [Array] an array with inserted tuples
       #
       # @api private
-      def execute(tuple)
+      def execute(_tuple)
         raise NotImplementedError, "#{self.class}##{__method__} must be implemented"
       end
 

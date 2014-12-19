@@ -7,7 +7,7 @@ describe ROM::Adapter do
         [:test_scheme]
       end
 
-      def initialize(uri); end
+      def initialize(_uri); end
 
       ROM::Adapter.register(self)
     end

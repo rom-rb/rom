@@ -28,7 +28,7 @@ module ROM
         @error = error
       end
 
-      def >(f)
+      def >(_f)
         self
       end
 

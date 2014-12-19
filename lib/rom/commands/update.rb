@@ -26,7 +26,7 @@ module ROM
       # @abstract
       #
       # @api private
-      def execute(params)
+      def execute(_params)
         raise NotImplementedError, "#{self.class}##{__method__} must be implemented"
       end
 
