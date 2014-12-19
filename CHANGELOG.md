@@ -3,11 +3,13 @@
 ### Added
 
 * Mappers support tuple transformation using wrap and group operations (solnic)
+* PORO model builder supports namespaced constants via `name: 'MyApp:Entities::User` (solnic)
 
 ### Changed
 
 * `ROM::RA` interface is no longer mixed into relations by default (solnic)
 * ~2.5 x speed up in aggregate mapping (solnic)
+* PORO model builder only defines attribute readers now (no writers!) (solnic)
 
 [Compare v0.4.1...master](https://github.com/rom-rb/rom/compare/v0.4.1...master)
 
