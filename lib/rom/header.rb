@@ -48,9 +48,7 @@ module ROM
 
           meta[:type] ||= Object
 
-          if meta.key?(:header)
-            meta[:header] = Header.coerce(meta[:header])
-          end
+          meta[:header] = Header.coerce(meta[:header]) if meta.key?(:header)
 
           self[meta[:type]].new(name, meta)
         end
