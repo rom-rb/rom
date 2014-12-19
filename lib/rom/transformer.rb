@@ -55,8 +55,8 @@ module ROM
       end.compact
 
       sorted_ops =
-        operations.select { |op| Group === op } +
-        operations.select { |op| Wrap === op }
+        operations.select { |op| op.is_a?(Group) } +
+        operations.select { |op| op.is_a?(Wrap) }
 
       new(sorted_ops.flatten)
     end
