@@ -1,5 +1,5 @@
 guard :rspec, cmd: "rspec" do
-  #run all specs if configuration is modified
+  # run all specs if configuration is modified
   watch('Guardfile')           { 'spec' }
   watch('Gemfile.lock')        { 'spec' }
   watch('spec/spec_helper.rb') { 'spec' }
