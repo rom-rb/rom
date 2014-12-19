@@ -14,7 +14,6 @@ describe 'Group operation' do
       def by_name(name)
         restrict(name: name)
       end
-
     end
 
     users = rom.relations.users

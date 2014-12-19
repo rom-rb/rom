@@ -31,7 +31,6 @@ describe 'Commands / Update' do
         validator UserValidator
       end
     end
-
   end
 
   it 'update tuples on successful validation' do
@@ -54,7 +53,6 @@ describe 'Commands / Update' do
   end
 
   describe '"result" option' do
-
     it 'returns a single tuple when set to :one' do
       setup.commands(:users) do
         define(:update_one, type: :update) do
@@ -90,17 +88,13 @@ describe 'Commands / Update' do
 
     it 'allows only valid result types' do
       expect {
-
         setup.commands(:users) do
           define(:create_one, type: :create) do
             result :invalid_type
           end
         end
         setup.finalize
-
       }.to raise_error(ROM::InvalidOptionError)
     end
-
   end
-
 end

@@ -30,5 +30,4 @@ describe ROM::Relation do
       expect(relation.each).to be_instance_of(Enumerator)
     end
   end
-
 end

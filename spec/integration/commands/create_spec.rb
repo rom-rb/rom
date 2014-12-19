@@ -29,7 +29,6 @@ describe 'Commands / Create' do
     setup.commands(:tasks) do
       define(:create)
     end
-
   end
 
   it 'inserts user on successful validation' do
@@ -59,14 +58,11 @@ describe 'Commands / Create' do
   end
 
   describe '"result" option' do
-
     it 'returns a single tuple when set to :one' do
       setup.commands(:users) do
-
         define(:create_one, type: :create) do
           result :one
         end
-
       end
 
       tuple = { name: 'Piotr', email: 'piotr@solnic.eu' }
@@ -80,17 +76,13 @@ describe 'Commands / Create' do
 
     it 'allows only valid result types' do
       expect {
-
         setup.commands(:users) do
           define(:create_one, type: :create) do
             result :invalid_type
           end
         end
         setup.finalize
-
       }.to raise_error(ROM::InvalidOptionError)
     end
-
   end
-
 end

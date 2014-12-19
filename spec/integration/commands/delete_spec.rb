@@ -66,5 +66,4 @@ describe 'Commands / Delete' do
       { name: 'Joe', email: 'joe@doe.org' }
     ])
   end
-
 end

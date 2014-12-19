@@ -35,5 +35,4 @@ describe ROM::Mapper do
       expect(result).to eql([jane, joe])
     end
   end
-
 end

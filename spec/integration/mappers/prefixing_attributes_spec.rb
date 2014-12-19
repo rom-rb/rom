@@ -38,5 +38,4 @@ describe 'Mappers / Prefixing attributes' do
 
     expect(jane).to eql(User.new(id: 123, name: 'Jane', email: 'jane@doe.org'))
   end
-
 end

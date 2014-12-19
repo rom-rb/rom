@@ -55,5 +55,4 @@ describe ROM::Adapter do
       expect(adapter).to be_instance_of(OrderTestSecond)
     end
   end
-
 end
