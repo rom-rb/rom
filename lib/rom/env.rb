@@ -1,5 +1,4 @@
 module ROM
-
   # Exposes defined repositories, schema, relations and mappers
   #
   # @api public
@@ -61,5 +60,4 @@ module ROM
       end
     end
   end
-
 end

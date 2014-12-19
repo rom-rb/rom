@@ -2,7 +2,6 @@ require 'rom/commands/with_options'
 
 module ROM
   module Commands
-
     # Update command
     #
     # This command updates all tuples in its relation with new attributes
@@ -37,6 +36,5 @@ module ROM
         self.class.new(relation.public_send(*args, &block), options)
       end
     end
-
   end
 end

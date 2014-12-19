@@ -1,5 +1,4 @@
 module ROM
-
   # Exposes mapped tuples via enumerable interface
   #
   # See example for each method
@@ -57,5 +56,4 @@ module ROM
       self.class.new(new_path, new_relation, mappers)
     end
   end
-
 end

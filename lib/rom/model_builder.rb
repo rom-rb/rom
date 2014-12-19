@@ -1,5 +1,4 @@
 module ROM
-
   # @api private
   class ModelBuilder
     attr_reader :options, :const_name, :namespace, :klass
@@ -61,5 +60,4 @@ module ROM
       end
     end
   end
-
 end

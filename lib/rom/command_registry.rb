@@ -1,5 +1,4 @@
 module ROM
-
   class Result
     attr_reader :value, :error
 
@@ -63,5 +62,4 @@ module ROM
       Result::Failure.new(e)
     end
   end
-
 end

@@ -1,5 +1,4 @@
 module ROM
-
   class Transformer
     attr_reader :operations
 
@@ -72,5 +71,4 @@ module ROM
       output
     end
   end
-
 end

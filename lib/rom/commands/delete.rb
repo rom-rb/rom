@@ -1,6 +1,5 @@
 module ROM
   module Commands
-
     # Delete command
     #
     # This command removes tuples from its target relation
@@ -38,6 +37,5 @@ module ROM
         self.class.new(relation, options.merge(target: relation.public_send(*args, &block)))
       end
     end
-
   end
 end

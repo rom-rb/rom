@@ -1,7 +1,6 @@
 require 'rom/model_builder'
 
 module ROM
-
   # @api private
   class MapperBuilder
     class AttributeDSL
@@ -99,5 +98,4 @@ module ROM
       end
     end
   end
-
 end

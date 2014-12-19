@@ -1,6 +1,5 @@
 module ROM
   module Commands
-
     # Common behavior for Create and Update commands
     #
     # TODO: find a better name for this module
@@ -14,8 +13,6 @@ module ROM
         @validator = options[:validator] || Proc.new {}
         @input = options[:input] || Hash
       end
-
     end
-
   end
 end

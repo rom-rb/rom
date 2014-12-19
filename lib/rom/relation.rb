@@ -1,5 +1,4 @@
 module ROM
-
   # Base relation class
   #
   # Relation is a proxy for the dataset object provided by the adapter, it
@@ -41,5 +40,4 @@ module ROM
       dataset.each(&block)
     end
   end
-
 end

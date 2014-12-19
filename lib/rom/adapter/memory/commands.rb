@@ -2,7 +2,6 @@ module ROM
   class Adapter
     class Memory < Adapter
       module Commands
-
         class Create < ROM::Commands::Create
           def execute(tuple)
             attributes = input[tuple]
@@ -26,7 +25,6 @@ module ROM
             tuples
           end
         end
-
       end
     end
   end

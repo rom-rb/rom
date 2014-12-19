@@ -2,7 +2,6 @@ require 'rom/commands/with_options'
 
 module ROM
   module Commands
-
     # Create command
     #
     # This command inserts a new tuple into a relation
@@ -22,6 +21,5 @@ module ROM
         raise NotImplementedError, "#{self.class}##{__method__} must be implemented"
       end
     end
-
   end
 end

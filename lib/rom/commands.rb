@@ -1,6 +1,5 @@
 module ROM
   module Commands
-
     class AbstractCommand
       VALID_RESULTS = [:one, :many].freeze
 
@@ -54,7 +53,6 @@ module ROM
         end
       end
     end
-
   end
 end
 

@@ -1,5 +1,4 @@
 module ROM
-
   # @api private
   class Header
     include Enumerable
@@ -117,5 +116,4 @@ module ROM
       attributes.fetch(name)
     end
   end
-
 end

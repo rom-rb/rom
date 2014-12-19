@@ -1,5 +1,4 @@
 module ROM
-
   # @api private
   class Mapper
     attr_reader :header, :model, :loader, :transformer
@@ -78,5 +77,4 @@ module ROM
       loader[tuple, model]
     end
   end
-
 end

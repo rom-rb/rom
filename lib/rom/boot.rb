@@ -4,7 +4,6 @@ require 'rom/reader_builder'
 require 'rom/command_registry'
 
 module ROM
-
   # Exposes DSL for defining schema, relations and mappers
   #
   # @api public
@@ -192,5 +191,4 @@ module ROM
       Registry.new(commands)
     end
   end
-
 end

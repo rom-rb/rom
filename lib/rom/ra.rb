@@ -3,12 +3,10 @@ require 'rom/ra/operation/group'
 require 'rom/ra/operation/wrap'
 
 module ROM
-
   # Experimental DSL for in-memory relational operations
   #
   # @api private
   module RA
-
     # Join two relations in-memory using natural-join
     #
     # @example
@@ -166,7 +164,5 @@ module ROM
 
       yield(relation, options)
     end
-
   end
-
 end

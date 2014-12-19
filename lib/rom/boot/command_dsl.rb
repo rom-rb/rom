@@ -1,7 +1,6 @@
 require 'rom/mapper_builder'
 
 module ROM
-
   class CommandDSL
     attr_reader :commands
 
@@ -43,5 +42,4 @@ module ROM
       self
     end
   end
-
 end

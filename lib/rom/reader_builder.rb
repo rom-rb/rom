@@ -1,5 +1,4 @@
 module ROM
-
   # @api private
   class ReaderBuilder
     DEFAULT_OPTIONS = { inherit_header: true }.freeze

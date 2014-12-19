@@ -1,7 +1,6 @@
 require 'addressable/uri'
 
 module ROM
-
   # Abstract adapter class
   #
   # @api public
@@ -153,5 +152,4 @@ module ROM
       self.class.const_get(:Commands)
     end
   end
-
 end
