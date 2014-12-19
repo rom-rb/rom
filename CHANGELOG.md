@@ -7,6 +7,9 @@
 ### Changed
 
 * `ROM::RA` interface is no longer mixed into relations by default (solnic)
+* ~2.5 x speed up in aggregate mapping (solnic)
+
+[Compare v0.4.1...master](https://github.com/rom-rb/rom/compare/v0.4.1...master)
 
 ## v0.4.1 2014-12-15
 
