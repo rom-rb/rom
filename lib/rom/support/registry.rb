@@ -4,10 +4,17 @@ module ROM
     include Enumerable
     include Equalizer.new(:elements)
 
-    attr_reader :elements
+    class ElementNotFoundError < KeyError
+      def initialize(key, name)
+        super("#{key.inspect} doesn't exist in #{name} registry")
+      end
+    end
+
+    attr_reader :elements, :name
 
     def initialize(elements = {})
       @elements = elements
+      @name = self.class.name
     end
 
     def each(&block)
@@ -15,8 +22,8 @@ module ROM
       elements.each(&block)
     end
 
-    def [](name)
-      elements.fetch(name)
+    def [](key)
+      elements.fetch(key) { raise ElementNotFoundError.new(key, name) }
     end
 
     def respond_to_missing?(name, include_private = false)
