@@ -55,4 +55,15 @@ describe ROM::Adapter do
       expect(adapter).to be_instance_of(OrderTestSecond)
     end
   end
+
+  describe '#disconnect' do
+    it 'does nothing' do
+      adapter_class = Class.new(ROM::Adapter) { def self.schemes; [:bazinga]; end }
+      ROM::Adapter.register(adapter_class)
+
+      adapter = adapter_class.new('bazinga://localhost')
+
+      expect(adapter.disconnect).to be(nil)
+    end
+  end
 end

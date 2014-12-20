@@ -143,6 +143,13 @@ module ROM
       []
     end
 
+    # Disconnect is optional and it's a no-op by default
+    #
+    # @api public
+    def disconnect
+      # noop
+    end
+
     # Return namespace with adapter-specific command classes
     #
     # @return [Module]
