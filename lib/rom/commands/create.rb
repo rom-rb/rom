@@ -18,8 +18,10 @@ module ROM
       #
       # @api private
       def execute(_tuple)
-        name = "#{self.class}##{__method__}"
-        raise NotImplementedError, "#{name} must be implemented"
+        raise(
+          NotImplementedError,
+          "#{self.class}##{__method__} must be implemented"
+        )
       end
     end
   end
