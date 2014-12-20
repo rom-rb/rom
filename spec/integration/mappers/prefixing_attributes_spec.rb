@@ -32,11 +32,11 @@ describe 'Mappers / Prefixing attributes' do
 
     User.send(:include, Equalizer.new(:id, :name, :email))
 
-    rom.schema.users << { user_id: 123, user_name: 'Jane', user_email: 'jane@doe.org' }
+    rom.schema.users << { user_id: 123, user_name: 'Jane',
+                          user_email: 'jane@doe.org' }
 
     jane = rom.read(:users).to_a.first
 
     expect(jane).to eql(User.new(id: 123, name: 'Jane', email: 'jane@doe.org'))
   end
-
 end

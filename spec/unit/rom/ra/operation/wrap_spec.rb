@@ -5,10 +5,10 @@ describe 'Wrap operation' do
 
   let(:relation) do
     ROM::Relation.new([{ name: 'Jane',
-       email: 'jane@doe.org',
-       street: 'Street 1',
-       zipcode: '1234',
-       city: 'Cracow' }], header).extend(ROM::RA)
+                         email: 'jane@doe.org',
+                         street: 'Street 1',
+                         zipcode: '1234',
+                         city: 'Cracow' }], header).extend(ROM::RA)
   end
 
   let(:header) do

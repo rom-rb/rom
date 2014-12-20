@@ -1,0 +1,73 @@
+# FIXME: Lower by refactoring biggest offenders
+Metrics/AbcSize:
+  Max: 24
+
+# FIXME: Lower by refactoring biggest offenders
+Metrics/MethodLength:
+  Max: 18
+
+# FIXME: Lower by refactoring biggest offenders
+Metrics/PerceivedComplexity:
+  Max: 8
+
+# It’s quite readable when we know what we are doing
+Lint/AssignmentInCondition:
+  Enabled: false
+
+# gemspec is a special snowflake
+Metrics/LineLength:
+  Exclude:
+    - rom.gemspec
+
+# The enforced style doesn’t match Vim’s defaults
+Style/AlignParameters:
+  Enabled: false
+
+# UTF-8 is perfectly fine in comments
+Style/AsciiComments:
+  Enabled: false
+
+# Allow using braces for value-returning blocks
+Style/Blocks:
+  Enabled: false
+
+# Documentation checked by Inch CI
+Style/Documentation:
+  Enabled: false
+
+# Early returns have their vices
+Style/GuardClause:
+  Enabled: false
+
+# Need to be skipped for >-> usage
+Style/Lambda:
+  Enabled: false
+
+# Multiline block chains are ok
+Style/MultilineBlockChain:
+  Enabled: false
+
+# Result::Success and Result::Failure use > for callbacks
+Style/OpMethod:
+  Exclude:
+    - lib/rom/command_registry.rb
+
+# Even a single escaped slash can be confusing
+Style/RegexpLiteral:
+  MaxSlashes: 0
+
+# Don’t introduce semantic fail/raise distinction
+Style/SignalException:
+  EnforcedStyle: only_raise
+
+# Need to be skipped for >-> usage
+Style/SpaceAroundOperators:
+  Enabled: false
+
+# Accept both single and double quotes
+Style/StringLiterals:
+  Enabled: false
+
+# Allow def self.foo; @foo; end
+Style/TrivialAccessors:
+  Enabled: false

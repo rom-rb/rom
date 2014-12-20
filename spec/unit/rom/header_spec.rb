@@ -4,11 +4,12 @@ describe ROM::Header do
   describe '.coerce' do
     subject(:header) { ROM::Header.coerce(input) }
 
-
     context 'with a primitive type' do
       let(:input) { [[:name, type: String]] }
 
-      let(:expected) { ROM::Header.new(name: ROM::Header::Attribute.coerce(input.first)) }
+      let(:expected) do
+        ROM::Header.new(name: ROM::Header::Attribute.coerce(input.first))
+      end
 
       it 'returns a header with coerced attributes' do
         expect(header).to eql(expected)
@@ -21,7 +22,9 @@ describe ROM::Header do
       let(:input) { [[:tasks, header: [[:title]], type: Array, model: model]] }
       let(:model) { Class.new }
 
-      let(:expected) { ROM::Header.new(tasks: ROM::Header::Attribute.coerce(input.first)) }
+      let(:expected) do
+        ROM::Header.new(tasks: ROM::Header::Attribute.coerce(input.first))
+      end
 
       it 'returns a header with coerced attributes' do
         expect(header).to eql(expected)
@@ -32,7 +35,8 @@ describe ROM::Header do
         expect(tasks.model).to be(model)
         expect(tasks.header).to eql(ROM::Header.coerce([[:title]]))
 
-        expect(input.first[1]).to eql(header: [[:title]], type: Array, model: model)
+        expect(input.first[1])
+          .to eql(header: [[:title]], type: Array, model: model)
       end
     end
 
@@ -40,7 +44,9 @@ describe ROM::Header do
       let(:input) { [[:task, header: [[:title]], type: Hash, model: model]] }
       let(:model) { Class.new }
 
-      let(:expected) { ROM::Header.new(task: ROM::Header::Attribute.coerce(input.first)) }
+      let(:expected) do
+        ROM::Header.new(task: ROM::Header::Attribute.coerce(input.first))
+      end
 
       it 'returns a header with coerced attributes' do
         expect(header).to eql(expected)
@@ -51,7 +57,8 @@ describe ROM::Header do
         expect(tasks.model).to be(model)
         expect(tasks.header).to eql(ROM::Header.coerce([[:title]]))
 
-        expect(input.first[1]).to eql(header: [[:title]], type: Hash, model: model)
+        expect(input.first[1])
+          .to eql(header: [[:title]], type: Hash, model: model)
       end
     end
   end

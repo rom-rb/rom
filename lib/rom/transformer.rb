@@ -1,5 +1,4 @@
 module ROM
-
   class Transformer
     attr_reader :operations
 
@@ -32,13 +31,15 @@ module ROM
       def call(tuples)
         keys = nil
 
-        tuples.
-          group_by { |tuple|
+        tuples
+          .group_by { |tuple|
             keys ||= tuple.keys - names
             Hash[keys.zip(tuple.values_at(*keys))]
           }.map { |root, children|
             root.merge(
-             key => children.map { |child| Hash[names.zip(child.values_at(*names))] }
+              key => children.map do |child|
+                Hash[names.zip(child.values_at(*names))]
+              end
             )
           }
       end
@@ -56,8 +57,8 @@ module ROM
       end.compact
 
       sorted_ops =
-        operations.select { |op| Group === op } +
-        operations.select { |op| Wrap === op }
+        operations.select { |op| op.is_a?(Group) } +
+        operations.select { |op| op.is_a?(Wrap) }
 
       new(sorted_ops.flatten)
     end
@@ -71,7 +72,5 @@ module ROM
       operations.each { |op| output = op.call(output) }
       output
     end
-
   end
-
 end

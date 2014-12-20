@@ -1,5 +1,4 @@
 module ROM
-
   # @api private
   class Mapper
     attr_reader :header, :model, :loader, :transformer
@@ -41,7 +40,10 @@ module ROM
           when Hash
             [key, loader[Hash[call(value, header[key])], header[key].model]]
           when Array
-            [key, value.map { |v| loader[Hash[call(v, header[key])], header[key].model] }]
+            loaded = value.map do |val|
+              loader[Hash[call(val, header[key])], header[key].model]
+            end
+            [key, loaded]
           else
             [mapping[key], value]
           end
@@ -51,15 +53,15 @@ module ROM
 
     def self.build(header, model)
       klass =
-        if header.any? { |attribute| attribute.embedded? }
+        if header.any?(&:embedded?)
           Recursive
-        elsif header.any? { |attribute| attribute.aliased? }
+        elsif header.any?(&:aliased?)
           Basic
         else
           self
         end
 
-      loader = Proc.new { |tuple, m| m ? m.new(tuple) : tuple }
+      loader = proc { |tuple, m| m ? m.new(tuple) : tuple }
 
       klass.new(header, model, loader)
     end
@@ -77,7 +79,5 @@ module ROM
     def load(tuple)
       loader[tuple, model]
     end
-
   end
-
 end

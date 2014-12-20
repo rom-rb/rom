@@ -33,7 +33,10 @@ describe 'Setting up ROM' do
 
   describe 'quick setup' do
     it 'exposes boot DSL inside the setup block' do
-      User = Class.new { include Virtus.value_object; values { attribute :name, String } }
+      User = Class.new do
+        include Virtus.value_object
+        values { attribute :name, String }
+      end
 
       rom = ROM.setup(memory: 'memory://test') do
         schema do
@@ -62,13 +65,17 @@ describe 'Setting up ROM' do
 
       rom.command(:users).create.call(name: 'Jane')
 
-      expect(rom.read(:users).by_name('Jane').to_a).to eql([User.new(name: 'Jane')])
+      expect(rom.read(:users).by_name('Jane').to_a)
+        .to eql([User.new(name: 'Jane')])
     end
   end
 
   describe 'multi-step setup' do
     it 'exposes boot DSL that can be invoked multiple times' do
-      User = Class.new { include Virtus.value_object; values { attribute :name, String } }
+      User = Class.new do
+        include Virtus.value_object
+        values { attribute :name, String }
+      end
 
       ROM.setup(memory: 'memory://test')
 
@@ -99,7 +106,8 @@ describe 'Setting up ROM' do
 
       rom.command(:users).create.call(name: 'Jane')
 
-      expect(rom.read(:users).by_name('Jane').to_a).to eql([User.new(name: 'Jane')])
+      expect(rom.read(:users).by_name('Jane').to_a)
+        .to eql([User.new(name: 'Jane')])
     end
   end
 end

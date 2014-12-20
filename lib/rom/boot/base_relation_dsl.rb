@@ -1,6 +1,5 @@
 module ROM
   class Boot
-
     class BaseRelationDSL
       attr_reader :env, :name, :header
 
@@ -43,8 +42,6 @@ module ROM
       def adapter
         repository.adapter
       end
-
     end
-
   end
 end

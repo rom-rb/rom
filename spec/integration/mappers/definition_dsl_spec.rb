@@ -212,7 +212,6 @@ describe 'Mapper definition DSL' do
         )
       )
     end
-
   end
 
   describe 'wrapped relation mapper' do
@@ -323,7 +322,5 @@ describe 'Mapper definition DSL' do
         )
       )
     end
-
   end
-
 end

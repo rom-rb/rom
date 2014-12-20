@@ -1,7 +1,6 @@
 require 'rom/mapper_builder'
 
 module ROM
-
   class MapperDSL
     attr_reader :mappers
 
@@ -17,7 +16,5 @@ module ROM
       mappers << [name, options, block]
       self
     end
-
   end
-
 end

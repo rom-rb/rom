@@ -1,6 +1,5 @@
 module ROM
   class Boot
-
     class RelationDSL
       attr_reader :schema, :relations
 
@@ -16,8 +15,6 @@ module ROM
       def call
         relations
       end
-
     end
-
   end
 end

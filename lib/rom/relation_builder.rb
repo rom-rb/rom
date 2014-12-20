@@ -1,5 +1,4 @@
 module ROM
-
   # @api private
   class RelationBuilder
     attr_reader :schema, :mod
@@ -42,7 +41,5 @@ module ROM
 
       klass.new(schema_relation.dataset, schema_relation.header)
     end
-
   end
-
 end

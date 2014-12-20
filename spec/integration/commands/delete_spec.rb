@@ -50,7 +50,7 @@ describe 'Commands / Delete' do
     expect(result.value).to eql(name: 'Jane', email: 'jane@doe.org')
   end
 
-  it 'raises error when result is set to :one and relation contains more tuples' do
+  it 'raises when result is set to :one and relation contains more tuples' do
     setup.commands(:users) do
       define(:delete) do
         result :one
@@ -66,5 +66,4 @@ describe 'Commands / Delete' do
       { name: 'Joe', email: 'joe@doe.org' }
     ])
   end
-
 end

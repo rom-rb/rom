@@ -1,5 +1,4 @@
 module ROM
-
   # @api private
   class ReaderBuilder
     DEFAULT_OPTIONS = { inherit_header: true }.freeze
@@ -24,7 +23,10 @@ module ROM
         mappers = options[:parent] ? readers.fetch(parent.name).mappers : {}
 
         mappers[name] = mapper
-        readers[name] = Reader.new(name, parent, mappers) unless options[:parent]
+
+        unless options[:parent]
+          readers[name] = Reader.new(name, parent, mappers)
+        end
       end
     end
 
@@ -33,6 +35,5 @@ module ROM
     def with_options(options)
       yield(DEFAULT_OPTIONS.merge(options))
     end
-
   end
 end

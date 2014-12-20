@@ -46,5 +46,4 @@ describe 'Join operation' do
       ]
     )
   end
-
 end

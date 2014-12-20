@@ -1,10 +1,8 @@
 require 'rom/model_builder'
 
 module ROM
-
   # @api private
   class MapperBuilder
-
     class AttributeDSL
       attr_reader :attributes, :model_class, :model_builder
 
@@ -20,7 +18,8 @@ module ROM
         if options.is_a?(Class)
           @model_class = options
         elsif options
-          @model_builder = ModelBuilder[options.fetch(:type) { :poro }].new(options)
+          type = options.fetch(:type) { :poro }
+          @model_builder = ModelBuilder[type].new(options)
         end
 
         if options
@@ -55,7 +54,8 @@ module ROM
       if options.is_a?(Class)
         @model_class = options
       else
-        @model_builder = ModelBuilder[options.fetch(:type) { :poro }].new(options)
+        type = options.fetch(:type) { :poro }
+        @model_builder = ModelBuilder[type].new(options)
       end
 
       self
@@ -92,14 +92,13 @@ module ROM
       if block
         dsl = AttributeDSL.new
         dsl.instance_exec(&block)
-        attributes << [options, header: dsl.header, type: type, model: dsl.model]
+        attributes << [options, header: dsl.header, type: type,
+                                model: dsl.model]
       else
         options.each do |name, header|
           attributes << [name, header: header.zip, type: type]
         end
       end
     end
-
   end
-
 end

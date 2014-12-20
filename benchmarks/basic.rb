@@ -52,8 +52,8 @@ setup.relation(:users) do
 end
 
 ActiveRecord::Base.establish_connection(
-  :adapter => "postgresql",
-  :database => "rom"
+  adapter: "postgresql",
+  database: "rom"
 )
 
 class ARUser < ActiveRecord::Base
@@ -90,10 +90,10 @@ ROM_ENV = setup.finalize
 COUNT = ENV.fetch('COUNT', 1000).to_i
 
 USER_SEED = COUNT.times.map do |i|
-  { :id    => i + 1,
-    :name  => "name #{i}",
-    :email => "email_#{i}@domain.com",
-    :age   => i*10 }
+  { id:    i + 1,
+    name:  "name #{i}",
+    email: "email_#{i}@domain.com",
+    age:   i*10 }
 end
 
 TASK_SEED = USER_SEED.map do |user|
@@ -127,13 +127,21 @@ Benchmark.ips do |x|
 end
 
 Benchmark.ips do |x|
-  x.report("[AR] Loading 1k user objects with tasks") { ARUser.all.includes(:tasks).to_a }
-  x.report("[ROM] Loading 1k user objects with tasks") { USERS.with_tasks.to_a }
+  x.report("[AR] Loading 1k user objects with tasks") do
+    ARUser.all.includes(:tasks).to_a
+  end
+  x.report("[ROM] Loading 1k user objects with tasks") do
+    USERS.with_tasks.to_a
+  end
   x.compare!
 end
 
 Benchmark.ips do |x|
-  x.report("[ROM] to_json on 1k user objects") { rom.read(:users).user_json.to_a.to_json }
-  x.report("[AR] to_json on 1k user objects") { ARUser.all.to_a.to_json }
+  x.report("[ROM] to_json on 1k user objects") do
+    rom.read(:users).user_json.to_a.to_json
+  end
+  x.report("[AR] to_json on 1k user objects") do
+    ARUser.all.to_a.to_json
+  end
   x.compare!
 end

@@ -1,6 +1,5 @@
 module ROM
   module Commands
-
     # Common behavior for Create and Update commands
     #
     # TODO: find a better name for this module
@@ -11,11 +10,9 @@ module ROM
       def initialize(relation, options)
         super
 
-        @validator = options[:validator] || Proc.new {}
+        @validator = options[:validator] || proc {}
         @input = options[:input] || Hash
       end
-
     end
-
   end
 end

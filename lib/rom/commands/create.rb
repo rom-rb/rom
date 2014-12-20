@@ -2,7 +2,6 @@ require 'rom/commands/with_options'
 
 module ROM
   module Commands
-
     # Create command
     #
     # This command inserts a new tuple into a relation
@@ -18,11 +17,12 @@ module ROM
       # @return [Array] an array with inserted tuples
       #
       # @api private
-      def execute(tuple)
-        raise NotImplementedError, "#{self.class}##{__method__} must be implemented"
+      def execute(_tuple)
+        raise(
+          NotImplementedError,
+          "#{self.class}##{__method__} must be implemented"
+        )
       end
-
     end
-
   end
 end

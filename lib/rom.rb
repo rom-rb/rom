@@ -98,5 +98,4 @@ module ROM
   def self.boot
     @boot
   end
-
 end

@@ -3,12 +3,10 @@ require 'rom/ra/operation/group'
 require 'rom/ra/operation/wrap'
 
 module ROM
-
   # Experimental DSL for in-memory relational operations
   #
   # @api private
   module RA
-
     # Join two relations in-memory using natural-join
     #
     # @example
@@ -92,7 +90,8 @@ module ROM
     #   rom.relations.tasks.insert user_id: 1, title: 'Relax'
     #
     #   rom.relations.users.with_tasks.to_a
-    #   => [{:user_id=>1, :name=>"Piotr", tasks: [{:title=>"Relax"}, {:title=>"Work"}]}]
+    #   => [{ user_id: 1, name: "Piotr",
+    #         tasks: [{ title: "Relax" }, { title: "Work" }] }]
     #
     # @api public
     def group(*args)
@@ -132,17 +131,21 @@ module ROM
     #
     #   setup.relation(:users) do
     #     def with_address
-    #       in_memory { wrap(join(addresses), address: [:street, :zipcode, :city]) }
+    #       in_memory do
+    #         wrap(join(addresses), address: [:street, :zipcode, :city])
+    #       end
     #     end
     #   end
     #
     #   rom = setup.finalize
     #
     #   rom.relations.users.insert user_id: 1, name: 'Piotr'
-    #   rom.relations.addresses.insert user_id: 1, street: 'Street 1', zipcode: '123', city: 'Kraków'
+    #   rom.relations.addresses.insert user_id: 1, street: 'Street 1',
+    #                                  zipcode: '123', city: 'Kraków'
     #
     #   rom.relations.users.with_address.to_a
-    #   => [{:user_id=>1, :name=>"Piotr", :address=>{:street=>"Street 1", :zipcode=>"123", :city=>"Kraków"}}]
+    #   => [{ user_id: 1, name: "Piotr",
+    #         address: { street: "Street 1", zipcode: "123", city: "Kraków" } }]
     #
     # @api public
     def wrap(*args)
@@ -166,7 +169,5 @@ module ROM
 
       yield(relation, options)
     end
-
   end
-
 end

@@ -6,7 +6,7 @@ Gem::Specification.new do |gem|
   gem.name          = 'rom'
   gem.summary       = 'Ruby Object Mapper'
   gem.description   = 'Persistence and mapping toolkit for Ruby'
-  gem.authors       = 'Piotr Solnica',
+  gem.author        = 'Piotr Solnica'
   gem.email         = 'piotr.solnica@gmail.com'
   gem.homepage      = 'http://rom-rb.org'
   gem.require_paths = ['lib']
@@ -24,4 +24,5 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'rake', '~> 10.3'
   gem.add_development_dependency 'rspec-core', '~> 3.1'
   gem.add_development_dependency 'rspec-expectations', '~> 3.1'
+  gem.add_development_dependency 'rubocop', '~> 0.28.0'
 end

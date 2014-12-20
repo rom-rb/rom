@@ -7,7 +7,7 @@ describe ROM::Adapter do
         [:test_scheme]
       end
 
-      def initialize(uri); end
+      def initialize(_uri); end
 
       ROM::Adapter.register(self)
     end
@@ -22,8 +22,8 @@ describe ROM::Adapter do
 
     it 'raises an exception if the scheme is not supported' do
       expect {
-        ROM::Adapter.setup("bogus:///non-existent")
-      }.to raise_error(ArgumentError, '"bogus:///non-existent" uri is not supported')
+        ROM::Adapter.setup("bogus://any-host")
+      }.to raise_error(ArgumentError, '"bogus://any-host" uri is not supported')
     end
   end
 
@@ -55,5 +55,4 @@ describe ROM::Adapter do
       expect(adapter).to be_instance_of(OrderTestSecond)
     end
   end
-
 end

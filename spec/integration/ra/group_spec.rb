@@ -14,7 +14,6 @@ describe 'Group operation' do
       def by_name(name)
         restrict(name: name)
       end
-
     end
 
     users = rom.relations.users
@@ -27,19 +26,22 @@ describe 'Group operation' do
             { title: "sleep well", priority: 2 }
           ]
         },
-        { name: "Jane", email: "jane@doe.org", tasks: [{ title: "be cool", priority: 2 }] }
+        { name: "Jane", email: "jane@doe.org",
+          tasks: [{ title: "be cool", priority: 2 }] }
       ]
     )
 
     expect(users.with_tasks.by_name("Jane").to_a).to eql(
       [
-        { name: "Jane", email: "jane@doe.org", tasks: [{ title: "be cool", priority: 2 }] }
+        { name: "Jane", email: "jane@doe.org",
+          tasks: [{ title: "be cool", priority: 2 }] }
       ]
     )
 
     expect(users.by_name("Jane").with_tasks.to_a).to eql(
       [
-        { name: "Jane", email: "jane@doe.org", tasks: [{ title: "be cool", priority: 2 }] }
+        { name: "Jane", email: "jane@doe.org",
+          tasks: [{ title: "be cool", priority: 2 }] }
       ]
     )
   end

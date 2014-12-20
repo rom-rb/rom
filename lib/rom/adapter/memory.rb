@@ -4,7 +4,6 @@ require 'rom/adapter/memory/commands'
 
 module ROM
   class Adapter
-
     class Memory < Adapter
       attr_accessor :logger
 
@@ -31,6 +30,5 @@ module ROM
 
       Adapter.register(self)
     end
-
   end
 end

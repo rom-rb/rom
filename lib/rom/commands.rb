@@ -1,6 +1,5 @@
 module ROM
   module Commands
-
     class AbstractCommand
       VALID_RESULTS = [:one, :many].freeze
 
@@ -13,7 +12,7 @@ module ROM
 
         @result = options[:result] || :many
 
-        if !VALID_RESULTS.include?(result)
+        unless VALID_RESULTS.include?(result)
           raise InvalidOptionError.new(:result, VALID_RESULTS)
         end
       end
@@ -34,7 +33,8 @@ module ROM
       # Target relation on which the command will operate
       #
       # By default this is set to the relation that's passed to the constructor.
-      # Specialized commands like Delete may set the target to a different relation.
+      # Specialized commands like Delete may set the target to a different
+      # relation.
       #
       # @return [Relation]
       #
@@ -43,7 +43,8 @@ module ROM
         relation
       end
 
-      # Assert that tuple count in the target relation corresponds to :result setting
+      # Assert that tuple count in the target relation corresponds to :result
+      # setting
       #
       # @raises TupleCountMismatchError
       #
@@ -53,9 +54,7 @@ module ROM
           raise TupleCountMismatchError, "#{inspect} expects one tuple"
         end
       end
-
     end
-
   end
 end
 

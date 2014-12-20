@@ -1,5 +1,4 @@
 module ROM
-
   class Result
     attr_reader :value, :error
 
@@ -28,7 +27,7 @@ module ROM
         @error = error
       end
 
-      def >(f)
+      def >(_f)
         self
       end
 
@@ -39,7 +38,6 @@ module ROM
   end
 
   class CommandRegistry < Registry
-
     class Evaluator
       include Concord.new(:registry)
 
@@ -64,5 +62,4 @@ module ROM
       Result::Failure.new(e)
     end
   end
-
 end

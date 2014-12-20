@@ -1,5 +1,4 @@
 module ROM
-
   # @api private
   class Header
     include Enumerable
@@ -30,7 +29,6 @@ module ROM
         def embedded?
           true
         end
-
       end
 
       def self.[](type)
@@ -42,7 +40,7 @@ module ROM
       end
 
       def self.coerce(input)
-        if input.kind_of?(self)
+        if input.is_a?(self)
           input
         else
           name = input[0]
@@ -50,9 +48,7 @@ module ROM
 
           meta[:type] ||= Object
 
-          if meta.key?(:header)
-            meta[:header] = Header.coerce(meta[:header])
-          end
+          meta[:header] = Header.coerce(meta[:header]) if meta.key?(:header)
 
           self[meta[:type]].new(name, meta)
         end
@@ -82,7 +78,7 @@ module ROM
     end
 
     def self.coerce(input)
-      if input.kind_of?(self)
+      if input.is_a?(self)
         input
       else
         attributes = input.each_with_object({}) { |pair, h|
@@ -117,7 +113,5 @@ module ROM
     def [](name)
       attributes.fetch(name)
     end
-
   end
-
 end

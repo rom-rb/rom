@@ -4,7 +4,6 @@ require 'rom/reader_builder'
 require 'rom/command_registry'
 
 module ROM
-
   # Exposes DSL for defining schema, relations and mappers
   #
   # @api public
@@ -88,7 +87,8 @@ module ROM
 
     # Finalize the setup
     #
-    # @return [Env] frozen env with access to repositories, schema, relations and mappers
+    # @return [Env] frozen env with access to repositories, schema, relations
+    #               and mappers
     #
     # @api public
     def finalize
@@ -108,14 +108,14 @@ module ROM
     end
 
     # @api private
-    def respond_to_missing?(name, include_context = false)
+    def respond_to_missing?(name, _include_context = false)
       repositories.key?(name)
     end
 
     private
 
     # @api private
-    def method_missing(name, *args)
+    def method_missing(name, *_args)
       repositories.fetch(name)
     end
 
@@ -154,7 +154,9 @@ module ROM
         h[name] = relation
       end
 
-      relations.each_value { |relation| relation.class.finalize(relations, relation) }
+      relations.each_value do |relation|
+        relation.class.finalize(relations, relation)
+      end
 
       RelationRegistry.new(relations)
     end
@@ -191,7 +193,5 @@ module ROM
 
       Registry.new(commands)
     end
-
   end
-
 end

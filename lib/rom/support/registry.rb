@@ -1,5 +1,4 @@
 module ROM
-
   # @api private
   class Registry
     include Enumerable
@@ -33,7 +32,5 @@ module ROM
         super
       end
     end
-
   end
-
 end

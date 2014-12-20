@@ -1,5 +1,4 @@
 module ROM
-
   # Repository exposes native database connection and schema when it's
   # supported by the adapter
   #
@@ -64,5 +63,4 @@ module ROM
       end
     end
   end
-
 end

@@ -2,7 +2,6 @@ require 'rom/boot/base_relation_dsl'
 
 module ROM
   class Boot
-
     class SchemaDSL
       attr_reader :env, :schema
 
@@ -20,8 +19,6 @@ module ROM
       def call
         schema
       end
-
     end
-
   end
 end

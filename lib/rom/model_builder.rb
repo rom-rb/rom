@@ -1,5 +1,4 @@
 module ROM
-
   # @api private
   class ModelBuilder
     attr_reader :options, :const_name, :namespace, :klass
@@ -44,25 +43,21 @@ module ROM
     end
 
     class PORO < ModelBuilder
-
       def define_class(header)
         @klass = Class.new
 
-        attributes = header.keys
+        attrs = header.keys
 
-        @klass.send(:attr_reader, *attributes)
+        @klass.send(:attr_reader, *attrs)
 
         @klass.class_eval <<-RUBY, __FILE__, __LINE__ + 1
           def initialize(params)
-            #{attributes.map { |name| "@#{name} = params[:#{name}]" }.join("\n")}
+            #{attrs.map { |name| "@#{name} = params[:#{name}]" }.join("\n")}
           end
         RUBY
 
         self
       end
-
     end
-
   end
-
 end

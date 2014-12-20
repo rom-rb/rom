@@ -18,17 +18,18 @@ describe 'Group operation' do
   context 'when group values are present' do
     let(:dataset) do
       [{ name: 'Jane',
-       email: 'jane@doe.org',
-       street: 'Street 1',
-       zipcode: '1234',
-       city: 'Cracow' }]
+         email: 'jane@doe.org',
+         street: 'Street 1',
+         zipcode: '1234',
+         city: 'Cracow' }]
     end
 
     it 'groups given attributes under specified key' do
       expect(group.to_a).to eql(
         [{ name: 'Jane',
            email: 'jane@doe.org',
-           addresses: [{ street: 'Street 1', zipcode: '1234', city: 'Cracow' }] }]
+           addresses: [{ street: 'Street 1', zipcode: '1234',
+                         city: 'Cracow' }] }]
       )
     end
 
@@ -40,10 +41,10 @@ describe 'Group operation' do
   context 'when group values are not present' do
     let(:dataset) do
       [{ name: 'Jane',
-       email: 'jane@doe.org',
-       street: nil,
-       zipcode: nil,
-       city: nil }]
+         email: 'jane@doe.org',
+         street: nil,
+         zipcode: nil,
+         city: nil }]
     end
 
     it 'sets empty array for grouped attributes' do

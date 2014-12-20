@@ -13,7 +13,7 @@ describe ROM::Mapper do
 
   let(:dataset) do
     ROM::Adapter::Memory::Dataset.new(
-      [{id: 1, name: 'Jane'}, {id: 2, name: 'Joe'}], [:id, :name]
+      [{ id: 1, name: 'Jane' }, { id: 2, name: 'Joe' }], [:id, :name]
     )
   end
 
@@ -35,5 +35,4 @@ describe ROM::Mapper do
       expect(result).to eql([jane, joe])
     end
   end
-
 end

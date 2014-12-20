@@ -1,5 +1,4 @@
 module ROM
-
   # Exposes mapped tuples via enumerable interface
   #
   # See example for each method
@@ -40,7 +39,7 @@ module ROM
     end
 
     # @api private
-    def respond_to_missing?(name, include_private = false)
+    def respond_to_missing?(name, _include_private = false)
       relation.respond_to?(name)
     end
 
@@ -56,7 +55,5 @@ module ROM
 
       self.class.new(new_path, new_relation, mappers)
     end
-
   end
-
 end

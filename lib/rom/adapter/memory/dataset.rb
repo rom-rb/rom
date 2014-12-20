@@ -1,7 +1,6 @@
 module ROM
   class Adapter
     class Memory < Adapter
-
       class Dataset
         include Charlatan.new(:data)
 
@@ -22,7 +21,7 @@ module ROM
           data.each(&block)
         end
 
-        def restrict(criteria = nil, &block)
+        def restrict(criteria = nil, &_block)
           if criteria
             find_all { |tuple| criteria.all? { |k, v| tuple[k] == v } }
           else
@@ -31,7 +30,7 @@ module ROM
         end
 
         def project(*names)
-          map { |tuple| tuple.reject { |key,_| names.include?(key) } }
+          map { |tuple| tuple.reject { |key, _| names.include?(key) } }
         end
 
         def order(*names)
@@ -47,9 +46,7 @@ module ROM
           data.delete(tuple)
           self
         end
-
       end
-
     end
   end
 end

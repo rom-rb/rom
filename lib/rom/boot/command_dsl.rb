@@ -1,7 +1,6 @@
 require 'rom/mapper_builder'
 
 module ROM
-
   class CommandDSL
     attr_reader :commands
 
@@ -42,7 +41,5 @@ module ROM
       commands[name] = CommandDefinition.new(options, &block)
       self
     end
-
   end
-
 end

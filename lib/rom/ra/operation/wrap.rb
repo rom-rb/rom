@@ -1,7 +1,6 @@
 module ROM
   module RA
     class Operation
-
       class Wrap
         # FIXME: only reading from a relation should be allowed here so this is
         #       obviously too much
@@ -21,8 +20,8 @@ module ROM
           return to_enum unless block
 
           results = relation.each_with_object([]) do |tuple, wrapped|
-            result = tuple.reject { |k,_| attribute_names.include?(k) }
-            result[key] = tuple.reject { |k,_| !attribute_names.include?(k) }
+            result = tuple.reject { |k, _| attribute_names.include?(k) }
+            result[key] = tuple.reject { |k, _| !attribute_names.include?(k) }
 
             wrapped << result
           end
@@ -37,9 +36,7 @@ module ROM
         def attribute_names
           options.values.first
         end
-
       end
-
     end
   end
 end
