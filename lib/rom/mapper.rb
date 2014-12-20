@@ -40,7 +40,10 @@ module ROM
           when Hash
             [key, loader[Hash[call(value, header[key])], header[key].model]]
           when Array
-            [key, value.map { |v| loader[Hash[call(v, header[key])], header[key].model] }]
+            loaded = value.map do |val|
+              loader[Hash[call(val, header[key])], header[key].model]
+            end
+            [key, loaded]
           else
             [mapping[key], value]
           end

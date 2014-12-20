@@ -83,12 +83,14 @@ describe 'Mappers / Renaming attributes' do
     UserWithAddress.send(:include, Equalizer.new(:id, :name, :address))
 
     rom.schema.users << { _id: 123, user_name: 'Jane' }
-    rom.schema.addresses << { _id: 123, address_id: 321, address_street: 'Street 1' }
+    rom.schema.addresses << { _id: 123, address_id: 321,
+                              address_street: 'Street 1' }
 
     jane = rom.read(:users).with_address.first
 
     expect(jane).to eql(
-      UserWithAddress.new(id: 123, name: 'Jane', address: { id: 321, street: 'Street 1' })
+      UserWithAddress.new(id: 123, name: 'Jane',
+                          address: { id: 321, street: 'Street 1' })
     )
   end
 
@@ -119,8 +121,10 @@ describe 'Mappers / Renaming attributes' do
     UserWithAddresses.send(:include, Equalizer.new(:id, :name, :addresses))
 
     rom.schema.users << { _id: 123, user_name: 'Jane' }
-    rom.schema.addresses << { _id: 123, address_id: 321, address_street: 'Street 1' }
-    rom.schema.addresses << { _id: 123, address_id: 654, address_street: 'Street 2' }
+    rom.schema.addresses << { _id: 123, address_id: 321,
+                              address_street: 'Street 1' }
+    rom.schema.addresses << { _id: 123, address_id: 654,
+                              address_street: 'Street 2' }
 
     jane = rom.read(:users).with_addresses.first
 

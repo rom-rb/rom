@@ -24,6 +24,7 @@ RSpec.configure do |config|
   end
 
   config.after do
-    (Object.constants - @constants).each { |name| Object.send(:remove_const, name) }
+    added_constants = Object.constants - @constants
+    added_constants.each { |name| Object.send(:remove_const, name) }
   end
 end

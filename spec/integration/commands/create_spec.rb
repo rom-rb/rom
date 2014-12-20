@@ -46,7 +46,8 @@ describe 'Commands / Create' do
       }
     }
 
-    expect(result).to match_array([{ name: 'Piotr', title: 'Finish command-api' }])
+    expect(result)
+      .to match_array([{ name: 'Piotr', title: 'Finish command-api' }])
   end
 
   it 'returns validation object with errors on failed validation' do

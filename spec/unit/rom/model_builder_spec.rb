@@ -21,23 +21,25 @@ describe ROM::ModelBuilder do
       expect(object.email).to eql('jane@doe.org')
     end
 
-    it 'defines a constant for the model when :name option is present' do
-      builder = ROM::ModelBuilder::PORO.new(name: 'User')
+    context 'when :name option is present' do
+      it 'defines a constant for the model' do
+        builder = ROM::ModelBuilder::PORO.new(name: 'User')
 
-      builder.call(name: :user_name, email: :user_email)
+        builder.call(name: :user_name, email: :user_email)
 
-      expect(Object.const_defined?(:User)).to be(true)
-    end
+        expect(Object.const_defined?(:User)).to be(true)
+      end
 
-    it 'defines a constant within a namespace for the model when :name option is present' do
-      module MyApp; module Entities; end; end
+      it 'defines a constant within a namespace for the model' do
+        module MyApp; module Entities; end; end
 
-      builder = ROM::ModelBuilder::PORO.new(name: 'MyApp::Entities::User')
+        builder = ROM::ModelBuilder::PORO.new(name: 'MyApp::Entities::User')
 
-      builder.call(name: :user_name, email: :user_email)
+        builder.call(name: :user_name, email: :user_email)
 
-      expect(MyApp::Entities.const_defined?(:User)).to be(true)
-      expect(Object.const_defined?(:User)).to be(false)
+        expect(MyApp::Entities.const_defined?(:User)).to be(true)
+        expect(Object.const_defined?(:User)).to be(false)
+      end
     end
   end
 end

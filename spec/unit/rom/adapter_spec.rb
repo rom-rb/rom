@@ -22,8 +22,8 @@ describe ROM::Adapter do
 
     it 'raises an exception if the scheme is not supported' do
       expect {
-        ROM::Adapter.setup("bogus:///non-existent")
-      }.to raise_error(ArgumentError, '"bogus:///non-existent" uri is not supported')
+        ROM::Adapter.setup("bogus://any-host")
+      }.to raise_error(ArgumentError, '"bogus://any-host" uri is not supported')
     end
   end
 

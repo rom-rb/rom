@@ -23,7 +23,10 @@ module ROM
         mappers = options[:parent] ? readers.fetch(parent.name).mappers : {}
 
         mappers[name] = mapper
-        readers[name] = Reader.new(name, parent, mappers) unless options[:parent]
+
+        unless options[:parent]
+          readers[name] = Reader.new(name, parent, mappers)
+        end
       end
     end
 

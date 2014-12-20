@@ -18,6 +18,7 @@ describe 'Commands / Error handling'  do
   end
 
   it 'raises other errors' do
-    expect { users.try { raise ArgumentError, 'test' } }.to raise_error(ArgumentError, 'test')
+    expect { users.try { raise ArgumentError, 'test' } }
+      .to raise_error(ArgumentError, 'test')
   end
 end

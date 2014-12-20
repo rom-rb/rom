@@ -2,10 +2,6 @@
 Metrics/AbcSize:
   Max: 24
 
-# FIXME: Lower by shortening biggest offenders
-Metrics/LineLength:
-  Max: 109
-
 # FIXME: Lower by refactoring biggest offenders
 Metrics/MethodLength:
   Max: 18
@@ -17,6 +13,11 @@ Metrics/PerceivedComplexity:
 # It’s quite readable when we know what we are doing
 Lint/AssignmentInCondition:
   Enabled: false
+
+# gemspec is a special snowflake
+Metrics/LineLength:
+  Exclude:
+    - rom.gemspec
 
 # The enforced style doesn’t match Vim’s defaults
 Style/AlignParameters:
@@ -54,10 +55,6 @@ Style/OpMethod:
 # Even a single escaped slash can be confusing
 Style/RegexpLiteral:
   MaxSlashes: 0
-
-# Allow for one-line class definitions
-Style/Semicolon:
-  AllowAsExpressionSeparator: true
 
 # Don’t introduce semantic fail/raise distinction
 Style/SignalException:

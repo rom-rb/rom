@@ -27,14 +27,16 @@ module ROM
       #
       # @api private
       def execute
-        raise NotImplementedError, "#{self.class}##{__method__} must be implemented"
+        name = "#{self.class}##{__method__}"
+        raise NotImplementedError, "#{name} must be implemented"
       end
 
       # Return new delete command with new target
       #
       # @api private
       def new(*args, &block)
-        self.class.new(relation, options.merge(target: relation.public_send(*args, &block)))
+        new_options = options.merge(target: relation.public_send(*args, &block))
+        self.class.new(relation, new_options)
       end
     end
   end

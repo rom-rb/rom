@@ -26,7 +26,8 @@ module ROM
       #
       # @api private
       def execute(_params)
-        raise NotImplementedError, "#{self.class}##{__method__} must be implemented"
+        name = "#{self.class}##{__method__}"
+        raise NotImplementedError, "#{name} must be implemented"
       end
 
       # Return new update command with new relation

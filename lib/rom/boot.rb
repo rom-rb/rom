@@ -87,7 +87,8 @@ module ROM
 
     # Finalize the setup
     #
-    # @return [Env] frozen env with access to repositories, schema, relations and mappers
+    # @return [Env] frozen env with access to repositories, schema, relations
+    #               and mappers
     #
     # @api public
     def finalize
@@ -153,7 +154,9 @@ module ROM
         h[name] = relation
       end
 
-      relations.each_value { |relation| relation.class.finalize(relations, relation) }
+      relations.each_value do |relation|
+        relation.class.finalize(relations, relation)
+      end
 
       RelationRegistry.new(relations)
     end

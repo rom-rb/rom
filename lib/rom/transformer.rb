@@ -37,7 +37,9 @@ module ROM
             Hash[keys.zip(tuple.values_at(*keys))]
           }.map { |root, children|
             root.merge(
-             key => children.map { |child| Hash[names.zip(child.values_at(*names))] }
+              key => children.map do |child|
+                Hash[names.zip(child.values_at(*names))]
+              end
             )
           }
       end

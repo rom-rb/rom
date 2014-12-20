@@ -28,7 +28,8 @@ describe 'Group operation' do
       expect(group.to_a).to eql(
         [{ name: 'Jane',
            email: 'jane@doe.org',
-           addresses: [{ street: 'Street 1', zipcode: '1234', city: 'Cracow' }] }]
+           addresses: [{ street: 'Street 1', zipcode: '1234',
+                         city: 'Cracow' }] }]
       )
     end
 
