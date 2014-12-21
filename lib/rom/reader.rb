@@ -15,11 +15,7 @@ module ROM
       @path = path.to_s
       @relation = relation
       @mappers = mappers
-
-      names = @path.split('.')
-
-      mapper_key = names.reverse.detect { |name| mappers.key?(name.to_sym) }
-      @mapper = mappers[mapper_key.to_sym]
+      @mapper = mappers.by_path(@path)
       @header = mapper.header
     end
 

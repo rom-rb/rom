@@ -7,7 +7,7 @@ describe ROM::Reader do
   let(:relation) { [jane, joe] }
   let(:jane) { { name: 'Jane' } }
   let(:joe) { { name: 'Joe' } }
-  let(:mappers) { { users: mapper } }
+  let(:mappers) { ROM::MapperRegistry.new(users: mapper) }
   let(:mapper) { double('mapper', header: []) }
 
   describe '#each' do
