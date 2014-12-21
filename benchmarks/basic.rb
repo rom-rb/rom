@@ -15,6 +15,26 @@ def rom
   ROM_ENV
 end
 
+def users
+  rom.read(:users)
+end
+
+def tasks
+  rom.read(:tasks)
+end
+
+def hr
+  puts "*"*80
+end
+
+def run(title)
+  puts "\n"
+  puts "=> benchmark: #{title}"
+  puts "\n"
+  yield
+  hr
+end
+
 setup = ROM.setup(pg: 'postgres://localhost/rom')
 
 conn = setup.pg.connection
@@ -42,6 +62,10 @@ setup.relation(:users) do
     select(:id, :name, :email, :age).order(:users__id)
   end
 
+  def first
+    all.limit(1)
+  end
+
   def user_json
     all
   end
@@ -50,6 +74,19 @@ setup.relation(:users) do
     association_left_join(:tasks, select: [:id, :title])
   end
 end
+
+setup.relation(:tasks) do
+  many_to_one :users, key: :user_id
+
+  def all
+    select(:id, :user_id, :title).order(:tasks__id)
+  end
+
+  def with_user
+    association_join(:users, select: [:id, :name, :email, :age])
+  end
+end
+
 
 ActiveRecord::Base.establish_connection(
   adapter: "postgresql",
@@ -63,9 +100,8 @@ end
 
 class ARTask < ActiveRecord::Base
   self.table_name = :tasks
+  belongs_to :user, class_name: 'ARUser', foreign_key: :user_id
 end
-
-setup.relation(:tasks)
 
 setup.mappers do
   define(:users) do
@@ -83,6 +119,19 @@ setup.mappers do
   end
 
   define(:user_json, parent: :users)
+
+  define(:tasks) do
+    model name: 'Task'
+
+    wrap :user do
+      model name: 'TaskUser'
+
+      attribute :id, from: :users_id
+      attribute :name
+      attribute :email
+      attribute :age
+    end
+  end
 end
 
 ROM_ENV = setup.finalize
@@ -114,34 +163,47 @@ end
 
 seed
 
+hr
 puts "INSERTED #{rom.schema.users.count} users via ROM/Sequel"
 puts "INSERTED #{rom.schema.tasks.count} tasks via ROM/Sequel"
-puts "*"*80
+hr
 
-USERS = rom.read(:users).all
-
-Benchmark.ips do |x|
-  x.report("[AR] Loading 1k user objects") { ARUser.all.to_a }
-  x.report("[ROM] Loading 1k user objects") { USERS.to_a }
-  x.compare!
+run("Loading ONE user object") do
+  Benchmark.ips do |x|
+    x.report("AR") { ARUser.first }
+    x.report("ROM") { users.first }
+    x.compare!
+  end
 end
 
-Benchmark.ips do |x|
-  x.report("[AR] Loading 1k user objects with tasks") do
-    ARUser.all.includes(:tasks).to_a
+run("Loading 1k user objects") do
+  Benchmark.ips do |x|
+    x.report("AR") { ARUser.all.to_a }
+    x.report("ROM") { users.all.to_a }
+    x.compare!
   end
-  x.report("[ROM] Loading 1k user objects with tasks") do
-    USERS.with_tasks.to_a
-  end
-  x.compare!
 end
 
-Benchmark.ips do |x|
-  x.report("[ROM] to_json on 1k user objects") do
-    rom.read(:users).user_json.to_a.to_json
+run("Loading 1k user objects with tasks") do
+  Benchmark.ips do |x|
+    x.report("AR") { ARTask.all.includes(:user).to_a }
+    x.report("ROM") { tasks.with_user.to_a }
+    x.compare!
   end
-  x.report("[AR] to_json on 1k user objects") do
-    ARUser.all.to_a.to_json
+end
+
+run("Loading 3k task objects with users") do
+  Benchmark.ips do |x|
+    x.report("AR") { ARUser.all.includes(:tasks).to_a }
+    x.report("ROM") { users.all.with_tasks.to_a }
+    x.compare!
   end
-  x.compare!
+end
+
+run("to_json on 1k user objects") do
+  Benchmark.ips do |x|
+    x.report("AR") { ARUser.all.to_a.to_json }
+    x.report("ROM") { users.user_json.to_a.to_json }
+    x.compare!
+  end
 end
