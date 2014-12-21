@@ -60,9 +60,7 @@ module ROM
 
     # @api private
     def new_path(name)
-      splits = path.split('.')
-      splits << name
-      splits.join('.')
+      path.dup << ".#{name}"
     end
   end
 end
