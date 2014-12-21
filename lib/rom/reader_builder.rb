@@ -1,3 +1,5 @@
+require 'rom/mapper_registry'
+
 module ROM
   # @api private
   class ReaderBuilder
@@ -20,7 +22,12 @@ module ROM
         builder.instance_exec(&block) if block
         mapper = builder.call
 
-        mappers = options[:parent] ? readers.fetch(parent.name).mappers : {}
+        mappers =
+          if options[:parent]
+            readers.fetch(parent.name).mappers
+          else
+            MapperRegistry.new
+          end
 
         mappers[name] = mapper
 
