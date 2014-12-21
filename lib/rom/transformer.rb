@@ -22,7 +22,7 @@ module ROM
           root = Hash[keys.zip(tuple.values_at(*keys))]
           child = Hash[names.zip(tuple.values_at(*names))]
 
-          root.merge(key => child)
+          root.merge(key => child.values.any? ? child : nil)
         }
       end
     end
@@ -36,11 +36,9 @@ module ROM
             keys ||= tuple.keys - names
             Hash[keys.zip(tuple.values_at(*keys))]
           }.map { |root, children|
-            root.merge(
-              key => children.map do |child|
-                Hash[names.zip(child.values_at(*names))]
-              end
-            )
+            children.map! { |child| Hash[names.zip(child.values_at(*names))] }
+            children.select! { |child| child.values.any? }
+            root.merge(key => children)
           }
       end
     end
