@@ -5,6 +5,8 @@ module ROM
   #
   # @api public
   class Reader
+    MapperMissingError = Class.new(StandardError)
+
     include Enumerable
     include Equalizer.new(:path, :relation, :mapper)
 
@@ -15,7 +17,7 @@ module ROM
       @path = path.to_s
       @relation = relation
       @mappers = mappers
-      @mapper = mappers.by_path(@path)
+      @mapper = mappers.by_path(@path) || raise(MapperMissingError, path)
       @header = mapper.header
     end
 

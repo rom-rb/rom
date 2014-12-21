@@ -10,6 +10,13 @@ describe ROM::Reader do
   let(:mappers) { ROM::MapperRegistry.new(users: mapper) }
   let(:mapper) { double('mapper', header: []) }
 
+  describe '#initialize' do
+    it 'raises error when mapper cannot be found' do
+      expect { ROM::Reader.new(:not_here, relation, mappers) }.
+        to raise_error(ROM::Reader::MapperMissingError, /not_here/)
+    end
+  end
+
   describe '#each' do
     it 'yields mapped tuples from relations' do
       expect(mapper).to receive(:process)
