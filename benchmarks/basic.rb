@@ -62,8 +62,8 @@ setup.relation(:users) do
     select(:id, :name, :email, :age).order(:users__id)
   end
 
-  def first
-    all.limit(1)
+  def by_name(name)
+    all.where(name: name).limit(1)
   end
 
   def user_json
@@ -96,6 +96,10 @@ ActiveRecord::Base.establish_connection(
 class ARUser < ActiveRecord::Base
   self.table_name = :users
   has_many :tasks, class_name: 'ARTask', foreign_key: :user_id
+
+  def self.by_name(name)
+    select(:id, :name, :email, :age).where(name: name).order(:id)
+  end
 end
 
 class ARTask < ActiveRecord::Base
@@ -170,8 +174,8 @@ hr
 
 run("Loading ONE user object") do
   Benchmark.ips do |x|
-    x.report("AR") { ARUser.first }
-    x.report("ROM") { users.first }
+    x.report("AR") { ARUser.by_name('name 1').first }
+    x.report("ROM") { users.by_name('name 1').first }
     x.compare!
   end
 end
