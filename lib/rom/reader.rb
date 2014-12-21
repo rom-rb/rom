@@ -47,13 +47,20 @@ module ROM
 
     # @api private
     def method_missing(name, *args, &block)
-      new_relation = relation.public_send(name, *args, &block)
+      if relation.respond_to?(name)
+        new_relation = relation.public_send(name, *args, &block)
 
-      splits = path.split('.')
-      splits << name
-      new_path = splits.join('.')
+        splits = path.split('.')
+        splits << name
+        new_path = splits.join('.')
 
-      self.class.new(new_path, new_relation, mappers)
+        self.class.new(new_path, new_relation, mappers)
+      else
+        raise(
+          NoRelationError,
+          "undefined relation #{name.inspect} within #{path.inspect}"
+        )
+      end
     end
   end
 end
