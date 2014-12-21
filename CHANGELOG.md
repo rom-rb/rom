@@ -1,3 +1,23 @@
+## v0.4.3 2014-12-21
+
+### Changed
+
+* Registry objects raise `ROM::Registry::ElementNotFoundError` when missing
+  element is referenced (rather than raw KeyError) (solnic)
+* Performance improvements in Reader (solnic)
+
+### Fixed
+
+* Wrap/group skips empty tuples now (solnic)
+* Readers raise a meaningful error when relation is missing (solnic)
+
+## Internal
+
+* Massive code clean-up and rubocop integration (chastell)
+* Refactored `Reader` and mapper-specific logic into `MapperRegistry` (solnic)
+
+[Compare v0.4.2...v0.4.3](https://github.com/rom-rb/rom/compare/v0.4.2...v0.4.3)
+
 ## v0.4.2 2014-12-19
 
 ### Added
