@@ -15,6 +15,8 @@ require 'rom/commands'
 
 require 'rom/adapter'
 require 'rom/repository'
+
+require 'rom/config'
 require 'rom/env'
 
 require 'rom/ra'
@@ -45,7 +47,9 @@ module ROM
   #
   # @api public
   def self.setup(options, &block)
-    adapters = options.each_with_object({}) do |(name, uri), hash|
+    config = Config.build(options)
+
+    adapters = config.each_with_object({}) do |(name, uri), hash|
       hash[name] = Adapter.setup(uri)
     end
 

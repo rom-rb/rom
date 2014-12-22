@@ -81,6 +81,13 @@ module ROM
       @adapters.detect { |adapter| adapter.schemes.include?(scheme.to_sym) }
     end
 
+    # Hook for adapters to normalize scheme name
+    #
+    # @api private
+    def self.normalize_scheme(scheme)
+      scheme
+    end
+
     # @api private
     def initialize(uri)
       @uri = uri
