@@ -18,14 +18,15 @@ module ROM
     def initialize(options = {})
       @options = options
 
-      if options[:name]
-        split = options[:name].split('::')
+      name = options[:name]
+      if name
+        parts = name.split('::')
 
-        @const_name = split.last
+        @const_name = parts.pop
 
         @namespace =
-          if split.size > 1
-            Inflecto.constantize((split-[const_name]).join('::'))
+          if parts.any?
+            Inflecto.constantize(parts.join('::'))
           else
             Object
           end
