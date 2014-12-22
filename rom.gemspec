@@ -23,6 +23,7 @@ Gem::Specification.new do |gem|
 
   gem.add_development_dependency 'rake', '~> 10.3'
   gem.add_development_dependency 'rspec-core', '~> 3.1'
+  gem.add_development_dependency 'rspec-mocks', '~> 3.1'
   gem.add_development_dependency 'rspec-expectations', '~> 3.1'
   gem.add_development_dependency 'rubocop', '~> 0.28.0'
 end

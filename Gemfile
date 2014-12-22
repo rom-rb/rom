@@ -9,8 +9,6 @@ end
 
 group :test do
   gem 'virtus'
-  gem 'guard'
-  gem 'guard-rspec'
 
   platforms :rbx do
     gem 'rubysl-bigdecimal', platforms: :rbx
