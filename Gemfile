@@ -29,6 +29,6 @@ group :sql do
 end
 
 group :benchmarks do
-  gem 'activerecord', '4.2.0.rc3'
+  gem 'activerecord', '4.2.0'
   gem 'benchmark-ips'
 end
