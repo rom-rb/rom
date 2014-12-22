@@ -23,6 +23,13 @@ module ROM
     # @api public
     attr_reader :connection
 
+    # Additional options hash
+    #
+    # @return [Hash]
+    #
+    # @api public
+    attr_reader :options
+
     # Setup an adapter instance with the given connection URI
     #
     # @example
@@ -40,14 +47,15 @@ module ROM
     # @return [Adapter]
     #
     # @api public
-    def self.setup(uri_string)
+    def self.setup(uri_string, options = {})
       uri = Addressable::URI.parse(uri_string)
+      adapter = self[uri.scheme]
 
-      unless adapter = self[uri.scheme]
+      unless adapter
         raise ArgumentError, "#{uri_string.inspect} uri is not supported"
       end
 
-      adapter.new(uri)
+      adapter.new(uri, options)
     end
 
     # Register adapter class
@@ -89,8 +97,9 @@ module ROM
     end
 
     # @api private
-    def initialize(uri)
+    def initialize(uri, options = {})
       @uri = uri
+      @options = options
     end
 
     # Extension hook for adding adapter-specific behavior to a relation class

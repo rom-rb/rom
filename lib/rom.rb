@@ -49,8 +49,15 @@ module ROM
   def self.setup(options, &block)
     config = Config.build(options)
 
-    adapters = config.each_with_object({}) do |(name, uri), hash|
-      hash[name] = Adapter.setup(uri)
+    adapters = config.each_with_object({}) do |(name, uri_or_opts), hash|
+      uri, opts =
+        if uri_or_opts.is_a?(Hash)
+          uri_or_opts.values_at(:uri, :options)
+        else
+          [uri_or_opts, {}]
+        end
+
+      hash[name] = Adapter.setup(uri, opts)
     end
 
     repositories = adapters.each_with_object({}) do |(name, adapter), hash|

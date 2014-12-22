@@ -7,8 +7,6 @@ describe ROM::Adapter do
         [:test_scheme]
       end
 
-      def initialize(_uri); end
-
       ROM::Adapter.register(self)
     end
   end
@@ -64,6 +62,18 @@ describe ROM::Adapter do
       adapter = adapter_class.new('bazinga://localhost')
 
       expect(adapter.disconnect).to be(nil)
+    end
+  end
+
+  describe '.setup' do
+    it 'supports connection uri and additional options' do
+      adapter_class = Class.new(ROM::Adapter) { def self.schemes; [:bazinga]; end }
+      ROM::Adapter.register(adapter_class)
+
+      adapter = ROM::Adapter.setup('bazinga://localhost', super: :option)
+
+      expect(adapter.uri).to eql(Addressable::URI.parse('bazinga://localhost'))
+      expect(adapter.options).to eql(super: :option)
     end
   end
 end

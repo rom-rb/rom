@@ -12,6 +12,14 @@ describe ROM::Config do
       expect(config).to eql(default: 'memory://localhost/test')
     end
 
+    it 'sets additional options' do
+      config = ROM::Config.build(raw_config.update(super: :option))
+
+      expect(config).to eql(
+        default: { uri: 'memory://localhost/test', options: { super: :option } }
+      )
+    end
+
     it 'builds absolute path to the database file when root is provided' do
       config = ROM::Config.build(
         adapter: 'memory', database: 'test', root: '/somewhere'

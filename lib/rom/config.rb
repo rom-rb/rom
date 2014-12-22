@@ -1,5 +1,14 @@
 module ROM
   class Config
+    BASE_OPTIONS = [
+      :adapter,
+      :database,
+      :password,
+      :username,
+      :hostname,
+      :root
+    ].freeze
+
     def self.build(config)
       return config_hash(config) if config.is_a?(String)
 
@@ -28,11 +37,18 @@ module ROM
           end
         end
 
-      config_hash("#{scheme}://#{path}")
+      other_keys = config.keys - BASE_OPTIONS
+      options = Hash[other_keys.zip(config.values_at(*other_keys))]
+
+      config_hash("#{scheme}://#{path}", options)
     end
 
-    def self.config_hash(uri)
-      { default: uri }
+    def self.config_hash(uri, options = {})
+      if options.any?
+        { default: { uri: uri, options: options } }
+      else
+        { default: uri }
+      end
     end
   end
 end

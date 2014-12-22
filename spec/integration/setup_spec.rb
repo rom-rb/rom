@@ -110,4 +110,14 @@ describe 'Setting up ROM' do
         .to eql([User.new(name: 'Jane')])
     end
   end
+
+  describe 'setup with extra options' do
+    it 'sets up connection uri and additional options' do
+      boot = ROM.setup(adapter: 'memory', database: 'test', super: 'option')
+      adapter = boot.default.adapter
+
+      expect(adapter.uri).to eql(Addressable::URI.parse('memory://localhost/test'))
+      expect(adapter.options).to eql(super: 'option')
+    end
+  end
 end
