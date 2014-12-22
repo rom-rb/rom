@@ -12,6 +12,14 @@ describe ROM::Config do
       expect(config).to eql(default: 'memory://localhost/test')
     end
 
+    it 'builds absolute path to the database file when root is provided' do
+      config = ROM::Config.build(
+        adapter: 'memory', database: 'test', root: '/somewhere'
+      )
+
+      expect(config).to eql(default: 'memory:///somewhere/test')
+    end
+
     it 'asks adapters to normalize scheme' do
       expect(ROM::Adapter[:memory]).to receive(:normalize_scheme).with('memory')
       ROM::Config.build(raw_config)

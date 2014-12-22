@@ -14,7 +14,7 @@ module ROM
       scheme = Adapter[adapter].normalize_scheme(adapter)
 
       path =
-        if adapter.include?('sqlite')
+        if root
           [root, database].compact.join('/')
         else
           db_path = [hostname, database].join('/')
