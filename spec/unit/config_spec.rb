@@ -25,6 +25,11 @@ describe ROM::Config do
       expect(config).to eql(default: 'test://localhost/rom')
     end
 
+    it 'returns original config hash if it is already in rom format' do
+      config = ROM::Config.build(test: 'test://localhost/rom')
+      expect(config).to eql(test: 'test://localhost/rom')
+    end
+
     it 'asks adapters to normalize scheme' do
       expect(ROM::Adapter[:memory]).to receive(:normalize_scheme).with('memory')
       ROM::Config.build(raw_config)
