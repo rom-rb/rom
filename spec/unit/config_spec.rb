@@ -20,6 +20,11 @@ describe ROM::Config do
       expect(config).to eql(default: 'memory:///somewhere/test')
     end
 
+    it 'turns a uri into configuration hash' do
+      config = ROM::Config.build('test://localhost/rom')
+      expect(config).to eql(default: 'test://localhost/rom')
+    end
+
     it 'asks adapters to normalize scheme' do
       expect(ROM::Adapter[:memory]).to receive(:normalize_scheme).with('memory')
       ROM::Config.build(raw_config)

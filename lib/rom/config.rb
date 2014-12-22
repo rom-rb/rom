@@ -1,6 +1,8 @@
 module ROM
   class Config
     def self.build(config)
+      return config_hash(config) if config.is_a?(String)
+
       return config unless config[:database]
 
       root = config[:root]
@@ -26,7 +28,11 @@ module ROM
           end
         end
 
-      { default: "#{scheme}://#{path}" }
+      config_hash("#{scheme}://#{path}")
+    end
+
+    def self.config_hash(uri)
+      { default: uri }
     end
   end
 end
