@@ -6,8 +6,6 @@ describe ROM::Adapter do
       def self.schemes
         [:test_scheme]
       end
-
-      ROM::Adapter.register(self)
     end
   end
 
@@ -37,16 +35,12 @@ describe ROM::Adapter do
         def self.schemes
           [:order_test]
         end
-
-        ROM::Adapter.register(self)
       end
 
       adapter = ROM::Adapter.setup("order_test::memory")
       expect(adapter).to be_instance_of(OrderTestFirst)
 
-      class OrderTestSecond < OrderTestFirst
-        ROM::Adapter.register(self)
-      end
+      OrderTestSecond = Class.new(OrderTestFirst)
 
       adapter = ROM::Adapter.setup("order_test::memory")
 
@@ -57,8 +51,6 @@ describe ROM::Adapter do
   describe '#disconnect' do
     it 'does nothing' do
       adapter_class = Class.new(ROM::Adapter) { def self.schemes; [:bazinga]; end }
-      ROM::Adapter.register(adapter_class)
-
       adapter = adapter_class.new('bazinga://localhost')
 
       expect(adapter.disconnect).to be(nil)
@@ -68,8 +60,6 @@ describe ROM::Adapter do
   describe '.setup' do
     it 'supports connection uri and additional options' do
       adapter_class = Class.new(ROM::Adapter) { def self.schemes; [:bazinga]; end }
-      ROM::Adapter.register(adapter_class)
-
       adapter = ROM::Adapter.setup('bazinga://localhost', super: :option)
 
       expect(adapter.uri).to eql(Addressable::URI.parse('bazinga://localhost'))

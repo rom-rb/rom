@@ -7,8 +7,6 @@ module ROM
   class Adapter
     include Equalizer.new(:connection)
 
-    @adapters = []
-
     # Return connection URI associated with the adapter
     #
     # @return [String]
@@ -29,6 +27,16 @@ module ROM
     #
     # @api public
     attr_reader :options
+
+    # @api private
+    def self.inherited(adapter)
+      Adapter.adapters.unshift(adapter)
+    end
+
+    # @api private
+    def self.adapters
+      @_adapters ||= []
+    end
 
     # Setup an adapter instance with the given connection URI
     #
@@ -75,7 +83,7 @@ module ROM
     #
     # @api public
     def self.register(adapter)
-      @adapters.unshift adapter
+      warn "Adapter.register is no longer needed [#{caller[0]}"
     end
 
     # Return adapter class for the given scheme
@@ -86,7 +94,7 @@ module ROM
     #
     # @api public
     def self.[](scheme)
-      @adapters.detect { |adapter| adapter.schemes.include?(scheme.to_sym) }
+      adapters.detect { |adapter| adapter.schemes.include?(scheme.to_sym) }
     end
 
     # Hook for adapters to normalize scheme name

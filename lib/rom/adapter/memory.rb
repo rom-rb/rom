@@ -27,8 +27,6 @@ module ROM
       def [](name)
         connection[name]
       end
-
-      Adapter.register(self)
     end
   end
 end

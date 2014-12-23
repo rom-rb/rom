@@ -23,8 +23,6 @@ describe "Adapter" do
             end
           end
         end
-
-        ROM::Adapter.register(self)
       end
     end
   end
