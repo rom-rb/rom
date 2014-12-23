@@ -44,7 +44,7 @@ module ROM
     end
 
     def self.build(header)
-      operations = header.map do |attribute|
+      operations = header.select(&:transform?).map do |attribute|
         type = attribute.type
 
         if type == Hash

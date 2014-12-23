@@ -70,6 +70,16 @@ module ROM
       attributes.delete([name])
     end
 
+    def embedded(name, options = {}, &block)
+      dsl = AttributeDSL.new
+      dsl.instance_exec(&block)
+
+      attributes << [
+        name,
+        { header: dsl.header, type: Array, model: dsl.model }.merge(options)
+      ]
+    end
+
     def group(options, &block)
       attribute_dsl(options, Array, &block)
     end
@@ -88,15 +98,15 @@ module ROM
 
     private
 
-    def attribute_dsl(options, type, &block)
+    def attribute_dsl(args, type, &block)
       if block
         dsl = AttributeDSL.new
         dsl.instance_exec(&block)
-        attributes << [options, header: dsl.header, type: type,
-                                model: dsl.model]
+        attributes << [args, header: dsl.header, type: type,
+                                model: dsl.model, transform: true]
       else
-        options.each do |name, header|
-          attributes << [name, header: header.zip, type: type]
+        args.each do |name, header|
+          attributes << [name, header: header.zip, type: type, transform: true]
         end
       end
     end

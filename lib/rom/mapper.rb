@@ -38,12 +38,14 @@ module ROM
         tuple.map do |key, value|
           case value
           when Hash
-            [key, loader[Hash[call(value, header[key])], header[key].model]]
+            attr = header.by_key(key)
+            [mapping[key], loader[Hash[call(value, attr)], attr.model]]
           when Array
             loaded = value.map do |val|
-              loader[Hash[call(val, header[key])], header[key].model]
+              attr = header.by_key(key)
+              loader[Hash[call(val, attr)], attr.model]
             end
-            [key, loaded]
+            [mapping[key], loaded]
           else
             [mapping[key], value]
           end

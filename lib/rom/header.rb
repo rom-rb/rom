@@ -29,6 +29,10 @@ module ROM
         def embedded?
           true
         end
+
+        def transform?
+          meta.fetch(:transform)
+        end
       end
 
       def self.[](type)
@@ -47,7 +51,7 @@ module ROM
           meta = (input[1] || {}).dup
 
           meta[:type] ||= Object
-
+          meta[:transform] ||= false
           meta[:header] = Header.coerce(meta[:header]) if meta.key?(:header)
 
           self[meta[:type]].new(name, meta)
@@ -72,6 +76,10 @@ module ROM
         false
       end
 
+      def transform?
+        false
+      end
+
       def mapping
         [key, name]
       end
@@ -91,6 +99,8 @@ module ROM
 
     def initialize(attributes)
       @attributes = attributes
+      @by_key = attributes.
+        values.each_with_object({}) { |attr, h| h[attr.key] = attr }
     end
 
     def each(&block)
@@ -103,11 +113,18 @@ module ROM
     end
 
     def mapping
-      Hash[select { |a| !a.embedded? }.map(&:mapping)]
+      Hash[
+        reject(&:embedded?).map(&:mapping) +
+        select(&:embedded?).map { |attr| [attr.key, attr.name] }
+      ]
     end
 
     def values
       attributes.values
+    end
+
+    def by_key(key)
+      @by_key.fetch(key)
     end
 
     def [](name)

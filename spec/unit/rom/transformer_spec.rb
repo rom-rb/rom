@@ -6,8 +6,8 @@ describe ROM::Transformer do
   let(:header) do
     ROM::Header.coerce([
       [:name],
-      [:address, type: Hash, header: [[:street], [:zipcode]]],
-      [:tasks, type: Array, header: [[:title], [:priority]]]
+      [:address, type: Hash, header: [[:street], [:zipcode]], transform: true],
+      [:tasks, type: Array, header: [[:title], [:priority]], transform: true]
     ])
   end
 
