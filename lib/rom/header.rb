@@ -4,7 +4,7 @@ module ROM
     include Enumerable
     include Equalizer.new(:attributes)
 
-    attr_reader :attributes
+    attr_reader :attributes, :mapping
 
     class Attribute
       include Equalizer.new(:name, :key, :type)
@@ -101,6 +101,10 @@ module ROM
       @attributes = attributes
       @by_key = attributes.
         values.each_with_object({}) { |attr, h| h[attr.key] = attr }
+      @mapping = Hash[
+        reject(&:embedded?).map(&:mapping) +
+        select(&:embedded?).map { |attr| [attr.key, attr.name] }
+      ]
     end
 
     def each(&block)
@@ -110,13 +114,6 @@ module ROM
 
     def keys
       attributes.keys
-    end
-
-    def mapping
-      Hash[
-        reject(&:embedded?).map(&:mapping) +
-        select(&:embedded?).map { |attr| [attr.key, attr.name] }
-      ]
     end
 
     def values
