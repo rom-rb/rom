@@ -3,20 +3,20 @@ require 'spec_helper'
 describe ROM::Config do
   describe '.build' do
     let(:raw_config) do
-      { adapter: 'memory', hostname: 'localhost', database: 'test' }
+      { adapter: 'memory', hostname: 'localhost', database: 'test', port: 312 }
     end
 
     it 'returns rom repository configuration hash' do
       config = ROM::Config.build(raw_config)
 
-      expect(config).to eql(default: 'memory://localhost/test')
+      expect(config).to eql(default: 'memory://localhost/test:312')
     end
 
     it 'sets additional options' do
       config = ROM::Config.build(raw_config.update(super: :option))
 
       expect(config).to eql(
-        default: { uri: 'memory://localhost/test', options: { super: :option } }
+        default: { uri: 'memory://localhost/test:312', options: { super: :option } }
       )
     end
 

@@ -6,6 +6,7 @@ module ROM
       :password,
       :username,
       :hostname,
+      :port,
       :root
     ].freeze
 
@@ -20,6 +21,7 @@ module ROM
       database = config[:database]
       password = config[:password]
       username = config[:username]
+      port = config[:port]
       hostname = config.fetch(:hostname) { 'localhost' }
 
       scheme = Adapter[adapter].normalize_scheme(adapter)
@@ -36,6 +38,8 @@ module ROM
             db_path
           end
         end
+
+      path << ":#{port}" if port
 
       other_keys = config.keys - BASE_OPTIONS
       options = Hash[other_keys.zip(config.values_at(*other_keys))]
