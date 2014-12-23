@@ -1,4 +1,4 @@
-## v0.4.3 2014-12-23
+## v0.5.0 2014-12-23
 
 ### Added
 
@@ -6,6 +6,7 @@
 
 ### Changed
 
+* Readers no longer expose adapter query DSL (solnic)
 * Registry objects raise `ROM::Registry::ElementNotFoundError` when missing
   element is referenced (rather than raw KeyError) (solnic)
 * Performance improvements in Reader (solnic)
