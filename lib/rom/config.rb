@@ -10,8 +10,8 @@ module ROM
       :root
     ].freeze
 
-    def self.build(config)
-      return config_hash(config) if config.is_a?(String)
+    def self.build(config, options = {})
+      return config_hash(config, options) if config.is_a?(String)
 
       return config unless config[:database]
 

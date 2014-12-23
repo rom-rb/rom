@@ -46,8 +46,8 @@ module ROM
   # @return [Boot] boot object
   #
   # @api public
-  def self.setup(options, &block)
-    config = Config.build(options)
+  def self.setup(*args, &block)
+    config = Config.build(*args)
 
     adapters = config.each_with_object({}) do |(name, uri_or_opts), hash|
       uri, opts =

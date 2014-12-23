@@ -112,12 +112,28 @@ describe 'Setting up ROM' do
   end
 
   describe 'setup with extra options' do
-    it 'sets up connection uri and additional options' do
-      boot = ROM.setup(adapter: 'memory', database: 'test', super: 'option')
-      adapter = boot.default.adapter
+    shared_examples 'adapter with extra options' do
+      subject(:adapter) { setup.default.adapter }
 
-      expect(adapter.uri).to eql(Addressable::URI.parse('memory://localhost/test'))
-      expect(adapter.options).to eql(super: 'option')
+      it 'has connection uri' do
+        expect(adapter.uri).to eql(Addressable::URI.parse('memory://localhost/test'))
+      end
+
+      it 'has extra options' do
+        expect(adapter.options).to eql(super: 'option')
+      end
+    end
+
+    context 'with a connection uri and options passed separately' do
+      let(:setup) { ROM.setup('memory://localhost/test', super: 'option') }
+
+      it_behaves_like 'adapter with extra options'
+    end
+
+    context 'with option hash' do
+      let(:setup) { ROM.setup(adapter: 'memory', database: 'test', super: 'option') }
+
+      it_behaves_like 'adapter with extra options'
     end
   end
 end
