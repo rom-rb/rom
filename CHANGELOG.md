@@ -1,4 +1,4 @@
-## v0.5.0 2014-12-23
+## v0.5.0 to-be-released
 
 ### Added
 
@@ -21,7 +21,7 @@
 * Massive code clean-up and rubocop integration (chastell)
 * Refactored `Reader` and mapper-specific logic into `MapperRegistry` (solnic)
 
-[Compare v0.4.2...v0.4.3](https://github.com/rom-rb/rom/compare/v0.4.2...v0.4.3)
+[Compare v0.4.2...v0.5.0](https://github.com/rom-rb/rom/compare/v0.4.2...v0.5.0)
 
 ## v0.4.2 2014-12-19
 
