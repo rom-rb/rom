@@ -62,8 +62,10 @@ module ROM
     end
 
     def attribute(name, options = {})
-      options[:from] = :"#{prefix}_#{name}" if prefix
-      attributes << [name, options]
+      add_attribute(name, options) do
+        options[:from] = :"#{prefix}_#{name}" if prefix
+        attributes << [name, options]
+      end
     end
 
     def exclude(name)
@@ -71,13 +73,15 @@ module ROM
     end
 
     def embedded(name, options = {}, &block)
-      dsl = AttributeDSL.new
-      dsl.instance_exec(&block)
+      add_attribute(name, options) do
+        dsl = AttributeDSL.new
+        dsl.instance_exec(&block)
 
-      attributes << [
-        name,
-        { header: dsl.header, type: Array, model: dsl.model }.merge(options)
-      ]
+        attributes << [
+          name,
+          { header: dsl.header, type: Array, model: dsl.model }.merge(options)
+        ]
+      end
     end
 
     def group(options, &block)
@@ -98,12 +102,20 @@ module ROM
 
     private
 
+    def add_attribute(name, options = {})
+      exclude(name)
+      exclude(options[:from])
+      yield
+    end
+
     def attribute_dsl(args, type, &block)
       if block
+        name = args
+
         dsl = AttributeDSL.new
         dsl.instance_exec(&block)
-        attributes << [args, header: dsl.header, type: type,
-                                model: dsl.model, transform: true]
+        attributes << [name, header: dsl.header, type: type,
+                       model: dsl.model, transform: true]
       else
         args.each do |name, header|
           attributes << [name, header: header.zip, type: type, transform: true]

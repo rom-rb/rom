@@ -4,22 +4,19 @@ describe 'Mappers / embedded' do
   let(:setup) { ROM.setup('memory://test') }
   let(:rom) { setup.finalize }
 
-  before do
+  it 'allows mapping embedded tuples' do
     setup.schema do
       base_relation(:users) do
         repository :default
         attribute 'name'
         attribute 'tasks'
-        attribute 'address'
       end
     end
 
     setup.relation(:users)
-  end
 
-  it 'allows mapping embedded tuples' do
     setup.mappers do
-      define(:users, inherit_header: false) do
+      define(:users) do
         model name: 'User'
 
         attribute :name, from: 'name'
@@ -37,13 +34,25 @@ describe 'Mappers / embedded' do
 
     jane = rom.read(:users).to_a.first
 
+    expect(rom.read(:users).mapper.header.map(&:name)).to eql([:name, :tasks])
+
     expect(jane.name).to eql('Jane')
     expect(jane.tasks).to eql([{ title: 'Task One' }, { title: 'Task Two' }])
   end
 
   it 'allows mapping embedded tuple' do
+    setup.schema do
+      base_relation(:users) do
+        repository :default
+        attribute 'name'
+        attribute 'address'
+      end
+    end
+
+    setup.relation(:users)
+
     setup.mappers do
-      define(:users, inherit_header: false) do
+      define(:users) do
         model name: 'User'
 
         attribute :name, from: 'name'
@@ -62,6 +71,8 @@ describe 'Mappers / embedded' do
     }
 
     jane = rom.read(:users).to_a.first
+
+    expect(rom.read(:users).mapper.header.map(&:name)).to eql([:name, :address])
 
     Address.send(:include, Equalizer.new(:street, :city))
 
