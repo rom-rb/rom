@@ -1,4 +1,8 @@
-## v0.4.3 2014-12-21
+## v0.4.3 2014-12-23
+
+### Added
+
+* Mapper DSL supports `embedded` interface for nested tuples (solnic)
 
 ### Changed
 
