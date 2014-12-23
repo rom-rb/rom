@@ -29,16 +29,22 @@ describe ROM::Reader do
     end
   end
 
-  describe '#method_missing' do
+  describe '.build' do
+    subject(:reader) { ROM::Reader.build(name, relation, mappers, [:all]) }
+
     before do
       relation.instance_exec do
+        def name
+          'users'
+        end
+
         def all(*args)
           find_all
         end
       end
     end
 
-    it 'forwards to relation and wraps the response and maintains the path' do
+    it 'defines methods from relation' do
       block = proc {}
 
       expect(relation).to receive(:all)

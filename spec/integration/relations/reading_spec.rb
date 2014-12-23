@@ -20,8 +20,6 @@ describe 'Reading relations' do
       end
     end
 
-    rom = setup.finalize
-
     users = rom.read(:users).sorted.by_name('Jane')
     user = users.first
 

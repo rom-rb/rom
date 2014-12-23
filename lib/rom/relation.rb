@@ -20,6 +20,10 @@ module ROM
     include Charlatan.new(:dataset)
     include Equalizer.new(:header, :dataset)
 
+    class << self
+      attr_accessor :relation_methods
+    end
+
     # @api private
     attr_reader :header
 

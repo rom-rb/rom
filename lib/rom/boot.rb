@@ -146,7 +146,10 @@ module ROM
 
         relation = builder.call(name) { |klass|
           adapter.extend_relation_class(klass)
+          methods = klass.public_instance_methods
           klass.class_eval(&block) if block
+          new_methods = (klass.public_instance_methods - methods)
+          klass.relation_methods = new_methods
         }
 
         adapter.extend_relation_instance(relation)

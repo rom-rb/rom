@@ -32,7 +32,9 @@ module ROM
         mappers[name] = mapper
 
         unless options[:parent]
-          readers[name] = Reader.new(name, parent, mappers)
+          readers[name] = Reader.build(
+            name, parent, mappers, parent.class.relation_methods
+          )
         end
       end
     end

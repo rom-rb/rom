@@ -10,7 +10,43 @@ module ROM
     include Enumerable
     include Equalizer.new(:path, :relation, :mapper)
 
-    attr_reader :path, :relation, :header, :mappers, :mapper
+    attr_reader :path, :relation, :mappers, :mapper
+
+    def self.build(name, relation, mappers, method_names = [])
+      klass = Class.new(self)
+
+      klass_name =
+        if relation.respond_to?(:name)
+          "#{self.name}[#{Inflecto.camelize(relation.name)}]"
+        else
+          self.name
+        end
+
+      klass.class_eval <<-RUBY, __FILE__, __LINE__ + 1
+        def self.name
+          #{klass_name.inspect}
+        end
+
+        def self.inspect
+          name
+        end
+
+        def self.to_s
+          name
+        end
+      RUBY
+
+      method_names.each do |method_name|
+        klass.class_eval <<-RUBY, __FILE__, __LINE__ + 1
+          def #{method_name}(*args, &block)
+            new_relation = relation.send(#{method_name.inspect}, *args, &block)
+            self.class.new(new_path(#{method_name.to_s.inspect}), new_relation, mappers)
+          end
+        RUBY
+      end
+
+      klass.new(name, relation, mappers)
+    end
 
     # @api private
     def initialize(path, relation, mappers = {})
@@ -18,7 +54,11 @@ module ROM
       @relation = relation
       @mappers = mappers
       @mapper = mappers.by_path(@path) || raise(MapperMissingError, path)
-      @header = mapper.header
+    end
+
+    # @api private
+    def header
+      mapper.header
     end
 
     # Yields tuples mapped to objects
@@ -36,24 +76,14 @@ module ROM
       mapper.process(relation) { |tuple| yield(tuple) }
     end
 
-    # @api private
-    def respond_to_missing?(name, _include_private = false)
-      relation.respond_to?(name)
-    end
-
     private
 
     # @api private
-    def method_missing(name, *args, &block)
-      if relation.respond_to?(name)
-        new_relation = relation.public_send(name, *args, &block)
-        self.class.new(new_path(name), new_relation, mappers)
-      else
-        raise(
-          NoRelationError,
-          "undefined relation #{name.inspect} within #{path.inspect}"
-        )
-      end
+    def method_missing(name)
+      raise(
+        NoRelationError,
+        "undefined relation #{name.inspect} within #{path.inspect}"
+      )
     end
 
     # @api private
