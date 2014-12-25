@@ -28,8 +28,8 @@ describe ROM::Mapper do
     it "yields all mapped objects" do
       result = []
 
-      relation.each do |tuple|
-        result << mapper.load(tuple)
+      mapper.process(relation).each do |tuple|
+        result << tuple
       end
 
       expect(result).to eql([jane, joe])

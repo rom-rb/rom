@@ -30,6 +30,17 @@ module ROM
       ]
     end
 
+    def to_transproc
+      embedded_ops = select(&:embedded?).map(&:to_transproc).reduce(:+)
+      base_ops = Transproc(:map_array, Transproc(:map_hash, mapping))
+
+      if embedded_ops
+        embedded_ops + base_ops
+      else
+        base_ops
+      end
+    end
+
     def each(&block)
       return to_enum unless block
       attributes.values.each(&block)

@@ -28,6 +28,40 @@ module ROM
         def transform?
           meta.fetch(:transform)
         end
+
+        def to_transproc
+          ops = []
+
+          if transform?
+            ops << Transproc(type == Array ? :group : :wrap, name, header.mapping.keys)
+          end
+
+          tuple_op =
+            if type == Array
+              Transproc(
+                :map_array,
+                Transproc(:map_key, key,
+                          Transproc(:map_array,
+                                    Transproc(:map_hash, mapping))))
+            else
+              Transproc(:map_array, Transproc(:map_key, key, Transproc(:map_hash, mapping)))
+            end
+
+          if model
+            model_op = Transproc(-> tuple { model.new(tuple) })
+
+            tuple_op +=
+              if type == Hash
+                Transproc(:map_array, Transproc(:map_key, key, model_op))
+              else
+                Transproc(:map_array, Transproc(:map_key, key, Transproc(:map_array, model_op)))
+              end
+          end
+
+          ops << tuple_op
+
+          ops.reduce(:+)
+        end
       end
 
       def self.[](type)

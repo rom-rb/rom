@@ -62,4 +62,19 @@ describe ROM::Header do
       end
     end
   end
+
+  describe '#to_transproc' do
+    it 'returns composed transformer' do
+      header = ROM::Header.coerce([
+        [:name, from: 'name'],
+        [:task, type: Hash, transform: true, header: [[:title, from: 'title']]]
+      ])
+
+      t = header.to_transproc
+
+      expect(t[[{ 'name' => 'Jade', 'title' => 'Task One' }]]).to eql([
+        { name: 'Jade', task: { title: 'Task One' } }
+      ])
+    end
+  end
 end

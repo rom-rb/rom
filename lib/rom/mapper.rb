@@ -1,85 +1,29 @@
 module ROM
   # @api private
   class Mapper
-    attr_reader :header, :model, :loader, :transformer
-
-    class Basic < Mapper
-      attr_reader :mapping
-
-      def initialize(*args)
-        super
-        @mapping = header.mapping
-      end
-
-      def load(tuple)
-        super(Hash[call(tuple)])
-      end
-
-      def call(tuple)
-        tuple.map { |key, value| [header.mapping[key], value] }
-      end
-    end
-
-    class Recursive < Basic
-      attr_reader :transformer
-
-      def initialize(*args)
-        super
-        @transformer = Transformer.build(header)
-      end
-
-      def process(relation)
-        transformer.call(relation.to_a).each { |tuple| yield(load(tuple)) }
-      end
-
-      def call(tuple, header = self.header)
-        mapping = header.mapping
-
-        tuple.map do |key, value|
-          case value
-          when Hash
-            attr = header.by_key[key]
-            [mapping[key], loader[Hash[call(value, attr)], attr.model]]
-          when Array
-            loaded = value.map do |val|
-              attr = header.by_key[key]
-              loader[Hash[call(val, attr)], attr.model]
-            end
-            [mapping[key], loaded]
-          else
-            [mapping[key], value]
-          end
-        end
-      end
-    end
+    attr_reader :transformer, :header, :model
 
     def self.build(header, model)
-      klass =
-        if header.any?(&:embedded?)
-          Recursive
-        elsif header.any?(&:aliased?)
-          Basic
+      transformer = header.to_transproc
+
+      loader =
+        if model
+          -> relation { transformer[relation].map { |tuple| model.new(tuple) } }
         else
-          self
+          -> relation { transformer[relation] }
         end
 
-      loader = proc { |tuple, m| m ? m.new(tuple) : tuple }
-
-      klass.new(header, model, loader)
+      new(loader, header, model)
     end
 
-    def initialize(header, model, loader)
+    def initialize(transformer, header, model = nil)
+      @transformer = transformer
       @header = header
       @model = model
-      @loader = loader
     end
 
-    def process(relation)
-      relation.each { |tuple| yield(load(tuple)) }
-    end
-
-    def load(tuple)
-      loader[tuple, model]
+    def process(relation, &block)
+      transformer[relation.to_a].each(&block)
     end
   end
 end

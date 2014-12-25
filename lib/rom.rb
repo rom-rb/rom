@@ -1,3 +1,7 @@
+require 'transproc'
+require 'transproc/hash'
+require 'transproc/array'
+
 require 'concord'
 require 'charlatan'
 require 'inflecto'
