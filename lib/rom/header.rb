@@ -1,14 +1,19 @@
 require 'rom/header/attribute'
+require 'rom/header/attribute/embedded'
+require 'rom/header/attribute/hash'
+require 'rom/header/attribute/array'
+require 'rom/header/attribute/wrap'
+require 'rom/header/attribute/group'
 
 module ROM
   # @api private
   class Header
     include Enumerable
-    include Equalizer.new(:attributes)
+    include Equalizer.new(:attributes, :model)
 
-    attr_reader :attributes, :mapping, :by_key
+    attr_reader :attributes, :model, :mapping, :tuple_proc
 
-    def self.coerce(input)
+    def self.coerce(input, model = nil)
       if input.is_a?(self)
         input
       else
@@ -16,29 +21,26 @@ module ROM
           h[pair.first] = Attribute.coerce(pair)
         }
 
-        new(attributes)
+        new(attributes, model)
       end
     end
 
-    def initialize(attributes)
+    def initialize(attributes, model = nil)
       @attributes = attributes
-      @by_key = attributes.
-        values.each_with_object({}) { |attr, h| h[attr.key] = attr }
-      @mapping = Hash[
-        reject(&:embedded?).map(&:mapping) +
-        select(&:embedded?).map { |attr| [attr.key, attr.name] }
-      ]
+      @model = model
+      initialize_tuple_proc
+    end
+
+    def t(*args)
+      Transproc(*args)
     end
 
     def to_transproc
-      embedded_ops = select(&:embedded?).map(&:to_transproc).reduce(:+)
-      base_ops = Transproc(:map_array, Transproc(:map_hash, mapping))
+      ops = []
+      ops += map(&:preprocessor).compact
+      ops << t(:map_array, tuple_proc) if tuple_proc
 
-      if embedded_ops
-        embedded_ops + base_ops
-      else
-        base_ops
-      end
+      ops.reduce(:+) || t(-> tuple { tuple })
     end
 
     def each(&block)
@@ -56,6 +58,19 @@ module ROM
 
     def [](name)
       attributes.fetch(name)
+    end
+
+    private
+
+    def initialize_tuple_proc
+      @mapping = attributes.values.reject(&:preprocessor).map(&:mapping).reduce(:merge)
+
+      ops = []
+      ops << t(:map_hash, mapping) if any?(&:aliased?)
+      ops += map(&:to_transproc).compact
+      ops << t(-> tuple { model.new(tuple) }) if model
+
+      @tuple_proc = ops.reduce(:+)
     end
   end
 end

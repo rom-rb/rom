@@ -63,7 +63,7 @@ describe 'Setting up ROM' do
         end
       end
 
-      rom.command(:users).create.call(name: 'Jane')
+      rom.command(:users).try { create(name: 'Jane') }
 
       expect(rom.read(:users).by_name('Jane').to_a)
         .to eql([User.new(name: 'Jane')])

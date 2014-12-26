@@ -37,17 +37,15 @@ module ROM
       namespace.const_set(const_name, klass)
     end
 
-    def call(header)
-      define_class(header)
+    def call(attrs)
+      define_class(attrs)
       define_const if const_name
       @klass
     end
 
     class PORO < ModelBuilder
-      def define_class(header)
+      def define_class(attrs)
         @klass = Class.new
-
-        attrs = header.keys
 
         @klass.send(:attr_reader, *attrs)
 

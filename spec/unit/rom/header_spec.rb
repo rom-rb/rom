@@ -32,8 +32,8 @@ describe ROM::Header do
         tasks = header[:tasks]
 
         expect(tasks.type).to be(Array)
-        expect(tasks.model).to be(model)
-        expect(tasks.header).to eql(ROM::Header.coerce([[:title]]))
+        expect(tasks.header.model).to be(model)
+        expect(tasks.header).to eql(ROM::Header.coerce([[:title]], model))
 
         expect(input.first[1])
           .to eql(header: [[:title]], type: Array, model: model)
@@ -54,8 +54,8 @@ describe ROM::Header do
         tasks = header[:task]
 
         expect(tasks.type).to be(Hash)
-        expect(tasks.model).to be(model)
-        expect(tasks.header).to eql(ROM::Header.coerce([[:title]]))
+        expect(tasks.header.model).to be(model)
+        expect(tasks.header).to eql(ROM::Header.coerce([[:title]], model))
 
         expect(input.first[1])
           .to eql(header: [[:title]], type: Hash, model: model)
@@ -67,7 +67,7 @@ describe ROM::Header do
     it 'returns composed transformer' do
       header = ROM::Header.coerce([
         [:name, from: 'name'],
-        [:task, type: Hash, transform: true, header: [[:title, from: 'title']]]
+        [:task, type: Hash, wrap: true, header: [[:title, from: 'title']]]
       ])
 
       t = header.to_transproc

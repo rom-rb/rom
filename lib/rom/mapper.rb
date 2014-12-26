@@ -3,23 +3,17 @@ module ROM
   class Mapper
     attr_reader :transformer, :header, :model
 
-    def self.build(header, model)
-      transformer = header.to_transproc
-
-      loader =
-        if model
-          -> relation { transformer[relation].map { |tuple| model.new(tuple) } }
-        else
-          -> relation { transformer[relation] }
-        end
-
-      new(loader, header, model)
+    def self.build(header)
+      new(header.to_transproc, header)
     end
 
-    def initialize(transformer, header, model = nil)
+    def initialize(transformer, header)
       @transformer = transformer
       @header = header
-      @model = model
+    end
+
+    def model
+      header.model
     end
 
     def process(relation, &block)

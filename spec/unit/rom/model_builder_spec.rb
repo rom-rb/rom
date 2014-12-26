@@ -5,7 +5,7 @@ describe ROM::ModelBuilder do
     it 'builds a class with a constructor accepting attributes' do
       builder = ROM::ModelBuilder::PORO.new
 
-      klass = builder.call(name: :user_name)
+      klass = builder.call([:name])
 
       object = klass.new(name: 'Jane')
 
@@ -13,7 +13,7 @@ describe ROM::ModelBuilder do
 
       expect { object.name = 'Jane' }.to raise_error(NoMethodError)
 
-      klass = builder.call(name: :user_name, email: :user_email)
+      klass = builder.call([:name, :email])
 
       object = klass.new(name: 'Jane', email: 'jane@doe.org')
 
@@ -25,7 +25,7 @@ describe ROM::ModelBuilder do
       it 'defines a constant for the model' do
         builder = ROM::ModelBuilder::PORO.new(name: 'User')
 
-        builder.call(name: :user_name, email: :user_email)
+        builder.call([:name, :email])
 
         expect(Object.const_defined?(:User)).to be(true)
       end
@@ -35,7 +35,7 @@ describe ROM::ModelBuilder do
 
         builder = ROM::ModelBuilder::PORO.new(name: 'MyApp::Entities::User')
 
-        builder.call(name: :user_name, email: :user_email)
+        builder.call([:name, :email])
 
         expect(MyApp::Entities.const_defined?(:User)).to be(true)
         expect(Object.const_defined?(:User)).to be(false)

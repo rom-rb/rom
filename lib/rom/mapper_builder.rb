@@ -11,7 +11,7 @@ module ROM
       end
 
       def header
-        Header.coerce(attributes)
+        Header.coerce(attributes, model)
       end
 
       def model(options = nil)
@@ -25,7 +25,7 @@ module ROM
         if options
           self
         else
-          model_class || (model_builder && model_builder.call(header))
+          model_class || (model_builder && model_builder.call(attributes.map(&:first)))
         end
       end
 
@@ -79,25 +79,27 @@ module ROM
 
         attributes << [
           name,
-          { header: dsl.header, type: Array, model: dsl.model }.merge(options)
+          { header: dsl.header, type: Array }.merge(options)
         ]
       end
     end
 
     def group(options, &block)
-      attribute_dsl(options, Array, &block)
+      attribute_dsl(options, type: Array, group: true, &block)
     end
 
     def wrap(options, &block)
-      attribute_dsl(options, Hash, &block)
+      attribute_dsl(options, type: Hash, wrap: true, &block)
     end
 
     def call
-      header = Header.coerce(attributes)
+      if model_builder
+        @model_class = model_builder.call(attributes.map(&:first))
+      end
 
-      @model_class = model_builder.call(header) if model_builder
+      header = Header.coerce(attributes, model_class)
 
-      Mapper.build(header, model_class)
+      Mapper.build(header)
     end
 
     private
@@ -108,17 +110,16 @@ module ROM
       yield
     end
 
-    def attribute_dsl(args, type, &block)
+    def attribute_dsl(args, options, &block)
       if block
         name = args
 
         dsl = AttributeDSL.new
         dsl.instance_exec(&block)
-        attributes << [name, header: dsl.header, type: type,
-                       model: dsl.model, transform: true]
+        attributes << [name, options.update(header: dsl.header)]
       else
         args.each do |name, header|
-          attributes << [name, header: header.zip, type: type, transform: true]
+          attributes << [name, options.update(header: header.zip)]
         end
       end
     end

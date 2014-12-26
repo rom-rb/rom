@@ -6,67 +6,13 @@ module ROM
 
       attr_reader :name, :key, :meta
 
-      class Embedded < Attribute
-        include Equalizer.new(:name, :type, :model, :header)
+      def self.[](meta)
+        type = meta[:type]
 
-        def model
-          meta[:model]
-        end
-
-        def header
-          meta.fetch(:header)
-        end
-
-        def mapping
-          header.mapping
-        end
-
-        def embedded?
-          true
-        end
-
-        def transform?
-          meta.fetch(:transform)
-        end
-
-        def to_transproc
-          ops = []
-
-          if transform?
-            ops << Transproc(type == Array ? :group : :wrap, name, header.mapping.keys)
-          end
-
-          tuple_op =
-            if type == Array
-              Transproc(
-                :map_array,
-                Transproc(:map_key, key,
-                          Transproc(:map_array,
-                                    Transproc(:map_hash, mapping))))
-            else
-              Transproc(:map_array, Transproc(:map_key, key, Transproc(:map_hash, mapping)))
-            end
-
-          if model
-            model_op = Transproc(-> tuple { model.new(tuple) })
-
-            tuple_op +=
-              if type == Hash
-                Transproc(:map_array, Transproc(:map_key, key, model_op))
-              else
-                Transproc(:map_array, Transproc(:map_key, key, Transproc(:map_array, model_op)))
-              end
-          end
-
-          ops << tuple_op
-
-          ops.reduce(:+)
-        end
-      end
-
-      def self.[](type)
-        if type == Array || type == Hash
-          Embedded
+        if type == ::Hash
+          meta[:wrap] ? Wrap : Hash
+        elsif type == ::Array
+          meta[:group] ? Group : Array
         else
           self
         end
@@ -80,10 +26,9 @@ module ROM
           meta = (input[1] || {}).dup
 
           meta[:type] ||= Object
-          meta[:transform] ||= false
-          meta[:header] = Header.coerce(meta[:header]) if meta.key?(:header)
+          meta[:header] = Header.coerce(meta[:header], meta[:model]) if meta.key?(:header)
 
-          self[meta[:type]].new(name, meta)
+          self[meta].new(name, meta)
         end
       end
 
@@ -91,6 +36,10 @@ module ROM
         @name = name
         @meta = meta
         @key = meta.fetch(:from) { name }
+      end
+
+      def t(*args)
+        Transproc(*args)
       end
 
       def type
@@ -101,16 +50,16 @@ module ROM
         key != name
       end
 
-      def embedded?
-        false
+      def to_transproc
+        nil
       end
 
-      def transform?
-        false
+      def preprocessor
+        nil
       end
 
       def mapping
-        [key, name]
+        { key => name }
       end
     end
   end
