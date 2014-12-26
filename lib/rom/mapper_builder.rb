@@ -99,7 +99,7 @@ module ROM
 
       header = Header.coerce(attributes, model_class)
 
-      Mapper.build(header)
+      Mapper.build(header, :transproc)
     end
 
     private

@@ -15,6 +15,8 @@ require 'rom/transformer'
 require 'rom/mapper'
 require 'rom/reader'
 
+require 'rom/processor/transproc'
+
 require 'rom/commands'
 
 require 'rom/adapter'

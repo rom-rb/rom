@@ -3,8 +3,12 @@ module ROM
   class Mapper
     attr_reader :transformer, :header, :model
 
-    def self.build(header)
-      new(header.to_transproc, header)
+    def self.processors
+      { transproc: Processor::Transproc }
+    end
+
+    def self.build(header, processor = :transproc)
+      new(processors[processor].build(header), header)
     end
 
     def initialize(transformer, header)
