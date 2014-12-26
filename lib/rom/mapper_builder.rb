@@ -14,6 +14,16 @@ module ROM
         Header.coerce(attributes, model)
       end
 
+      def embedded(name, options = {}, &block)
+        dsl = self.class.new
+        dsl.instance_exec(&block)
+
+        attributes << [
+          name,
+          { header: dsl.header, type: Array }.merge(options)
+        ]
+      end
+
       def model(options = nil)
         if options.is_a?(Class)
           @model_class = options
