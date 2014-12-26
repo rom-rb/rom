@@ -38,10 +38,6 @@ module ROM
         @key = meta.fetch(:from) { name }
       end
 
-      def t(*args)
-        Transproc(*args)
-      end
-
       def type
         meta.fetch(:type)
       end
@@ -50,12 +46,8 @@ module ROM
         key != name
       end
 
-      def to_transproc
-        nil
-      end
-
-      def preprocessor
-        nil
+      def preprocess?
+        false
       end
 
       def mapping

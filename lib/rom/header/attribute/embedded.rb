@@ -4,10 +4,6 @@ module ROM
       class Embedded < Attribute
         include Equalizer.new(:name, :type, :header)
 
-        def t(*args)
-          Transproc(*args)
-        end
-
         def header
           meta.fetch(:header)
         end

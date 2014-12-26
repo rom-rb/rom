@@ -5,8 +5,8 @@ module ROM
     class Attribute
       class Group < Array
 
-        def preprocessor
-          t(:group, name, header.mapping.keys)
+        def preprocess?
+          true
         end
 
       end

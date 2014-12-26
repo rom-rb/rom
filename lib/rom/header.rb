@@ -28,24 +28,20 @@ module ROM
     def initialize(attributes, model = nil)
       @attributes = attributes
       @model = model
-      initialize_tuple_proc
-    end
-
-    def t(*args)
-      Transproc(*args)
-    end
-
-    def to_transproc
-      ops = []
-      ops += map(&:preprocessor).compact
-      ops << t(:map_array!, tuple_proc) if tuple_proc
-
-      ops.reduce(:+) || t(-> tuple { tuple })
+      @mapping = reject(&:preprocess?).map(&:mapping).reduce(:merge)
     end
 
     def each(&block)
       return to_enum unless block
       attributes.values.each(&block)
+    end
+
+    def preprocess?
+      any?(&:preprocess?)
+    end
+
+    def aliased?
+      any?(&:aliased?)
     end
 
     def keys
@@ -58,19 +54,6 @@ module ROM
 
     def [](name)
       attributes.fetch(name)
-    end
-
-    private
-
-    def initialize_tuple_proc
-      @mapping = attributes.values.reject(&:preprocessor).map(&:mapping).reduce(:merge)
-
-      ops = []
-      ops << t(:map_hash!, mapping) if any?(&:aliased?)
-      ops += map(&:to_transproc).compact
-      ops << t(-> tuple { model.new(tuple) }) if model
-
-      @tuple_proc = ops.reduce(:+)
     end
   end
 end
