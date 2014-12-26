@@ -59,6 +59,52 @@ describe ROM::Processor::Transproc do
       end
     end
 
+    context 'with deeply nested hashes' do
+      context 'when no renaming is required' do
+        let(:relation) do
+          [
+            { 'user' => { 'name' => 'Jane', 'task' => { 'title' => 'Task One' } } },
+            { 'user' => { 'name' => 'Joe', 'task' => { 'title' => 'Task Two' } } }
+          ]
+        end
+
+        let(:attributes) do
+          [[
+            'user', type: Hash, header: [
+              ['name'],
+              ['task', type: Hash, header: [['title']]]
+            ]
+          ]]
+        end
+
+        it 'returns tuples' do
+          expect(transproc[relation]).to eql(relation)
+        end
+      end
+
+      context 'when renaming is required' do
+        let(:relation) do
+          [
+            { :user => { :name => 'Jane', :task => { :title => 'Task One' } } },
+            { :user => { :name => 'Joe', :task => { :title => 'Task Two' } } }
+          ]
+        end
+
+        let(:attributes) do
+          [[
+            'user', type: Hash, header: [
+              ['name'],
+              ['task', type: Hash, header: [['title']]]
+            ]
+          ]]
+        end
+
+        it 'returns tuples' do
+          expect(transproc[relation]).to eql(relation)
+        end
+      end
+    end
+
     context 'renaming keys' do
       context 'when only hash needs renaming' do
         let(:attributes) do
