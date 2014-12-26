@@ -6,7 +6,7 @@ module ROM
       class Hash < Embedded
 
         def to_transproc
-          t(:map_key, name, header.tuple_proc) if header.tuple_proc
+          t(:map_key!, name, header.tuple_proc) if header.tuple_proc
         end
 
       end

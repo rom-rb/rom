@@ -38,7 +38,7 @@ module ROM
     def to_transproc
       ops = []
       ops += map(&:preprocessor).compact
-      ops << t(:map_array, tuple_proc) if tuple_proc
+      ops << t(:map_array!, tuple_proc) if tuple_proc
 
       ops.reduce(:+) || t(-> tuple { tuple })
     end
@@ -66,7 +66,7 @@ module ROM
       @mapping = attributes.values.reject(&:preprocessor).map(&:mapping).reduce(:merge)
 
       ops = []
-      ops << t(:map_hash, mapping) if any?(&:aliased?)
+      ops << t(:map_hash!, mapping) if any?(&:aliased?)
       ops += map(&:to_transproc).compact
       ops << t(-> tuple { model.new(tuple) }) if model
 
