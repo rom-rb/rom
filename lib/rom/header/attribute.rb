@@ -54,5 +54,28 @@ module ROM
         { key => name }
       end
     end
+
+    class Embedded < Attribute
+      include Equalizer.new(:name, :type, :header)
+
+      def header
+        meta.fetch(:header)
+      end
+    end
+
+    Array = Class.new(Embedded)
+    Hash = Class.new(Embedded)
+
+    class Wrap < Hash
+      def preprocess?
+        true
+      end
+    end
+
+    class Group < Array
+      def preprocess?
+        true
+      end
+    end
   end
 end

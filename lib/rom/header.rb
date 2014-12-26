@@ -1,9 +1,4 @@
 require 'rom/header/attribute'
-require 'rom/header/attribute/embedded'
-require 'rom/header/attribute/hash'
-require 'rom/header/attribute/array'
-require 'rom/header/attribute/wrap'
-require 'rom/header/attribute/group'
 
 module ROM
   # @api private
