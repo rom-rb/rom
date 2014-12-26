@@ -6,7 +6,7 @@ module ROM
     include Enumerable
     include Equalizer.new(:attributes, :model)
 
-    attr_reader :attributes, :model, :mapping, :tuple_proc
+    attr_reader :attributes, :model, :mapping
 
     def self.coerce(input, model = nil)
       if input.is_a?(self)
