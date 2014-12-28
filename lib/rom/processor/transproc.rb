@@ -3,6 +3,25 @@ module ROM
     class Transproc
       attr_reader :header, :model, :mapping, :tuple_proc
 
+      EMPTY_FN = -> tuple { tuple }.freeze
+
+      class Composer
+        attr_reader :fns, :default
+
+        def initialize(default = nil)
+          @fns = []
+          @default = default
+        end
+
+        def <<(other)
+          fns.concat(Array(other).compact)
+        end
+
+        def to_fn
+          fns.compact.reduce(:+) || default
+        end
+      end
+
       def self.build(header)
         new(header).to_transproc
       end
@@ -10,16 +29,21 @@ module ROM
       def initialize(header)
         @header = header
         @model = header.model
-        @mapping = header.values.reject(&:preprocess?).map(&:mapping).reduce(:merge)
+        @mapping = header.mapping
         initialize_tuple_proc
       end
 
       def to_transproc
-        ops = []
-        ops += header.select(&:preprocess?).map { |attr| visit(attr, true) }
-        ops << t(:map_array!, tuple_proc) if tuple_proc
+        compose(EMPTY_FN) do |ops|
+          ops << header.select(&:preprocess?).map { |attr| visit(attr, true) }
+          ops << t(:map_array!, tuple_proc) if tuple_proc
+        end
+      end
 
-        ops.reduce(:+) || t(-> tuple { tuple })
+      def compose(default = nil, &block)
+        composer = Composer.new(default)
+        yield(composer)
+        composer.to_fn
       end
 
       private
@@ -46,15 +70,13 @@ module ROM
       end
 
       def visit_wrap(attribute, preprocess = false)
-        ops = []
-
         name = attribute.name
         keys = attribute.header.tuple_keys
 
-        ops << t(:fold, name, keys)
-        ops << visit_hash(attribute)
-
-        ops.compact.reduce(:+)
+        compose do |ops|
+          ops << t(:fold, name, keys)
+          ops << visit_hash(attribute)
+        end
       end
 
       def visit_group(attribute, preprocess = false)
@@ -64,26 +86,24 @@ module ROM
           keys = header.tuple_keys
           other = header.select(&:preprocess?)
 
-          ops = []
-          ops << t(:group, name, keys)
+          compose do |ops|
+            ops << t(:group, name, keys)
 
-          ops += other.map { |attr|
-            t(:map_array!, t(:map_key!, name, visit_group(attr, true)))
-          }
-
-          ops.compact.reduce(:+)
+            ops << other.map { |attr|
+              t(:map_array!, t(:map_key!, name, visit_group(attr, true)))
+            }
+          end
         else
           visit_array(attribute)
         end
       end
 
       def initialize_tuple_proc
-        ops = []
-        ops << t(:map_hash!, mapping) if header.aliased?
-        ops += header.map { |attr| visit(attr) }.compact
-        ops << t(-> tuple { model.new(tuple) }) if model
-
-        @tuple_proc = ops.reduce(:+)
+        @tuple_proc = compose do |ops|
+          ops << t(:map_hash!, mapping) if header.aliased?
+          ops << header.map { |attr| visit(attr) }
+          ops << t(-> tuple { model.new(tuple) }) if model
+        end
       end
 
       def with_tuple_proc(attribute)
