@@ -1,10 +1,3 @@
-[![Gem Version](https://badge.fury.io/rb/rom.svg)][gem]
-[![Build Status](https://travis-ci.org/rom-rb/rom.svg?branch=master)][travis]
-[![Dependency Status](https://gemnasium.com/rom-rb/rom.png)][gemnasium]
-[![Code Climate](https://codeclimate.com/github/rom-rb/rom/badges/gpa.svg)][codeclimate]
-[![Test Coverage](https://codeclimate.com/github/rom-rb/rom/badges/coverage.svg)][codeclimate]
-[![Inline docs](http://inch-ci.org/github/rom-rb/rom.svg?branch=master)][inchpages]
-
 [gem]: https://rubygems.org/gems/rom
 [travis]: https://travis-ci.org/rom-rb/rom
 [gemnasium]: https://gemnasium.com/rom-rb/rom
@@ -13,6 +6,13 @@
 [inchpages]: http://inch-ci.org/github/rom-rb/rom/
 
 # Ruby Object Mapper
+
+[![Gem Version](https://badge.fury.io/rb/rom.svg)][gem]
+[![Build Status](https://travis-ci.org/rom-rb/rom.svg?branch=master)][travis]
+[![Dependency Status](https://gemnasium.com/rom-rb/rom.png)][gemnasium]
+[![Code Climate](https://codeclimate.com/github/rom-rb/rom/badges/gpa.svg)][codeclimate]
+[![Test Coverage](https://codeclimate.com/github/rom-rb/rom/badges/coverage.svg)][codeclimate]
+[![Inline docs](http://inch-ci.org/github/rom-rb/rom.svg?branch=master)][inchpages]
 
 ROM is an experimental Ruby ORM that aims to bring powerful object mapping
 capabilities and give you back the full power of your database. It is based on
