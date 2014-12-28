@@ -24,8 +24,9 @@ describe 'Using in-memory adapter for cross-repo access' do
       base_relation :users_and_tasks do
         repository :main
 
-        attribute :user
-        attribute :tasks
+        attribute :user_id
+        attribute :name
+        attribute :title
       end
     end
 
@@ -42,9 +43,6 @@ describe 'Using in-memory adapter for cross-repo access' do
 
     setup.mappers do
       define(:users_and_tasks) do
-        attribute :user_id
-        attribute :name
-
         group tasks: [:title]
       end
     end
