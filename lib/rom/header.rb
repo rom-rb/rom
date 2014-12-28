@@ -40,10 +40,11 @@ module ROM
     end
 
     def tuple_keys
-      (
-        reject(&:preprocess?).map(&:key) +
-        select(&:embedded?).map(&:header).map(&:tuple_keys)
-      ).flatten
+      reject(&:preprocess?).map(&:key) + embedded.map(&:tuple_keys).flatten
+    end
+
+    def embedded
+      select(&:embedded?)
     end
 
     def keys

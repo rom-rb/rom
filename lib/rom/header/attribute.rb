@@ -42,6 +42,10 @@ module ROM
         meta.fetch(:type)
       end
 
+      def tuple_keys
+        header.tuple_keys
+      end
+
       def aliased?
         key != name
       end
@@ -73,9 +77,7 @@ module ROM
 
     Array = Class.new(Embedded)
     Hash = Class.new(Embedded)
-
-    class Wrap < Hash
-    end
+    Wrap = Class.new(Hash)
 
     class Group < Array
       def preprocess?
