@@ -25,7 +25,7 @@ module ROM
           name = input[0]
           meta = (input[1] || {}).dup
 
-          meta[:type] ||= Object
+          meta[:type] ||= :object
           meta[:header] = Header.coerce(meta[:header], meta[:model]) if meta.key?(:header)
 
           self[meta].new(name, meta)
@@ -40,6 +40,10 @@ module ROM
 
       def type
         meta.fetch(:type)
+      end
+
+      def typed?
+        type != :object
       end
 
       def tuple_keys

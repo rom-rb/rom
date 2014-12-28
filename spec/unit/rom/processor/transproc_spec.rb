@@ -14,6 +14,15 @@ describe ROM::Processor::Transproc do
     end
   end
 
+  context 'coercing values' do
+    let(:attributes) { [[:name, type: :string]] }
+    let(:relation) { [ { name: :Jane }, { name: :Joe } ] }
+
+    it 'returns tuples' do
+      expect(transproc[relation]).to eql([{ name: 'Jane' }, { name: 'Joe' }])
+    end
+  end
+
   context 'mapping to object' do
     let(:header) { ROM::Header.coerce(attributes, model) }
 

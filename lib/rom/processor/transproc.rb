@@ -1,3 +1,8 @@
+require 'transproc'
+require 'transproc/coercions'
+require 'transproc/hash'
+require 'transproc/array'
+
 require 'rom/processor'
 
 module ROM
@@ -56,7 +61,9 @@ module ROM
       end
 
       def visit_attribute(attribute, preprocess = false)
-        # noop
+        if attribute.typed?
+          t(:map_key!, attribute.name, t(:"to_#{attribute.type}"))
+        end
       end
 
       def visit_hash(attribute, preprocess = false)
