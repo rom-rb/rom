@@ -71,6 +71,8 @@ module ROM
     attr_reader :name, :root, :prefix,
       :model_builder, :model_class, :attributes
 
+    DEFAULT_PROCESSOR = :transproc
+
     def initialize(name, root, options = {})
       @name = name
       @root = root
@@ -82,6 +84,17 @@ module ROM
         else
           []
         end
+
+      @processor = DEFAULT_PROCESSOR
+    end
+
+    def processor(identifier = nil)
+      if identifier
+        @processor = identifier
+        self
+      else
+        @processor
+      end
     end
 
     def model(options)
@@ -137,7 +150,7 @@ module ROM
 
       header = Header.coerce(attributes, model_class)
 
-      Mapper.build(header, :transproc)
+      Mapper.build(header, processor)
     end
 
     private

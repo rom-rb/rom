@@ -1,6 +1,8 @@
+require 'rom/processor'
+
 module ROM
-  module Processor
-    class Transproc
+  class Processor
+    class Transproc < Processor
       attr_reader :header, :model, :mapping, :tuple_proc
 
       EMPTY_FN = -> tuple { tuple }.freeze

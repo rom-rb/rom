@@ -4,11 +4,16 @@ module ROM
     attr_reader :transformer, :header, :model
 
     def self.processors
-      { transproc: Processor::Transproc }
+      @_processors ||= {}
+    end
+
+    def self.register_processor(processor)
+      name = processor.name.split('::').last.downcase.to_sym
+      processors.update(name => processor)
     end
 
     def self.build(header, processor = :transproc)
-      new(processors[processor].build(header), header)
+      new(processors.fetch(processor).build(header), header)
     end
 
     def initialize(transformer, header)
