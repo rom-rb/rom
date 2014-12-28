@@ -34,26 +34,44 @@ module ROM
       end
 
       def visit_hash(attribute, preprocess = false)
-        tuple_proc = Transproc.new(attribute.header).tuple_proc
-        t(:map_key!, attribute.name, tuple_proc) if tuple_proc
+        with_tuple_proc(attribute) do |tuple_proc|
+          t(:map_key!, attribute.name, tuple_proc)
+        end
       end
 
       def visit_array(attribute, preprocess = false)
-        tuple_proc = Transproc.new(attribute.header).tuple_proc
-        t(:map_key!, attribute.name, t(:map_array!, tuple_proc)) if tuple_proc
+        with_tuple_proc(attribute) do |tuple_proc|
+          t(:map_key!, attribute.name, t(:map_array!, tuple_proc))
+        end
       end
 
       def visit_wrap(attribute, preprocess = false)
-        if preprocess
-          t(:wrap, attribute.name, attribute.header.mapping.keys)
-        else
-          visit_hash(attribute)
-        end
+        ops = []
+
+        name = attribute.name
+        keys = attribute.header.tuple_keys
+
+        ops << t(:fold, name, keys)
+        ops << visit_hash(attribute)
+
+        ops.compact.reduce(:+)
       end
 
       def visit_group(attribute, preprocess = false)
         if preprocess
-          t(:group, attribute.name, attribute.header.mapping.keys)
+          name = attribute.name
+          header = attribute.header
+          keys = header.tuple_keys
+          other = header.select(&:preprocess?)
+
+          ops = []
+          ops << t(:group, name, keys)
+
+          ops += other.map { |attr|
+            t(:map_array!, t(:map_key!, name, visit_group(attr, true)))
+          }
+
+          ops.compact.reduce(:+)
         else
           visit_array(attribute)
         end
@@ -68,8 +86,17 @@ module ROM
         @tuple_proc = ops.reduce(:+)
       end
 
+      def with_tuple_proc(attribute)
+        tuple_proc = new(attribute.header).tuple_proc
+        yield(tuple_proc) if tuple_proc
+      end
+
       def t(*args)
         Transproc(*args)
+      end
+
+      def new(*args)
+        self.class.new(*args)
       end
 
     end

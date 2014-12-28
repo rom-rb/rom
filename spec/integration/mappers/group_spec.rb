@@ -15,7 +15,13 @@ describe 'Mapper definition DSL' do
 
   describe 'grouped relation mapper' do
     before do
-      setup.relation(:tasks)
+      setup.relation(:tasks) do
+        include ROM::RA
+
+        def with_users
+          join(users)
+        end
+      end
 
       setup.relation(:users) do
         include ROM::RA
@@ -122,6 +128,46 @@ describe 'Mapper definition DSL' do
           email: 'jane@doe.org',
           tasks: [Task.new(title: 'be cool', priority: 2)]
         )
+      )
+    end
+
+    it 'allows defining nested grouped attributes mapped to a model via block' do
+      setup.mappers do
+        define(:tasks)
+
+        define(:with_users, parent: :tasks, inherit_header: false) do
+          model name: 'TaskWithUsers'
+
+          attribute :title
+          attribute :priority
+
+          group :users do
+            model name: 'TaskUser'
+
+            attribute :name
+
+            group :contacts do
+              model name: 'Contact'
+              attribute :email
+            end
+          end
+        end
+      end
+
+      rom = setup.finalize
+
+      TaskWithUsers.send(:include, Equalizer.new(:title, :priority, :users))
+      TaskUser.send(:include, Equalizer.new(:name, :contacts))
+      Contact.send(:include, Equalizer.new(:email))
+
+      task = rom.read(:tasks).with_users.to_a.first
+
+      expect(task).to eql(
+        TaskWithUsers.new(title: 'be nice', priority: 1, users: [
+          TaskUser.new(name: 'Joe', contacts: [
+            Contact.new(email: 'joe@doe.org')
+          ])
+        ])
       )
     end
   end

@@ -10,6 +10,10 @@ module ROM
         @attributes = []
       end
 
+      def attribute(name, options = {})
+        attributes << [name, options]
+      end
+
       def header
         Header.coerce(attributes, model)
       end
@@ -22,6 +26,14 @@ module ROM
           name,
           { header: dsl.header, type: Array }.merge(options)
         ]
+      end
+
+      def wrap(options, &block)
+        dsl(options, type: Hash, wrap: true, &block)
+      end
+
+      def group(options, &block)
+        dsl(options, type: Array, group: true, &block)
       end
 
       def model(options = nil)
@@ -39,8 +51,20 @@ module ROM
         end
       end
 
-      def attribute(name, options = {})
-        attributes << [name, options]
+      private
+
+      def dsl(args, options, &block)
+        if block
+          name = args
+
+          dsl = AttributeDSL.new
+          dsl.instance_exec(&block)
+          attributes << [name, options.update(header: dsl.header)]
+        else
+          args.each do |name, header|
+            attributes << [name, options.update(header: header.zip)]
+          end
+        end
       end
     end
 
@@ -94,12 +118,16 @@ module ROM
       end
     end
 
-    def group(options, &block)
-      attribute_dsl(options, type: Array, group: true, &block)
+    def group(*args, &block)
+      dsl = AttributeDSL.new
+      dsl.group(*args, &block)
+      attributes.concat(dsl.attributes)
     end
 
-    def wrap(options, &block)
-      attribute_dsl(options, type: Hash, wrap: true, &block)
+    def wrap(*args, &block)
+      dsl = AttributeDSL.new
+      dsl.wrap(*args, &block)
+      attributes.concat(dsl.attributes)
     end
 
     def call
@@ -118,20 +146,6 @@ module ROM
       exclude(name)
       exclude(options[:from])
       yield
-    end
-
-    def attribute_dsl(args, options, &block)
-      if block
-        name = args
-
-        dsl = AttributeDSL.new
-        dsl.instance_exec(&block)
-        attributes << [name, options.update(header: dsl.header)]
-      else
-        args.each do |name, header|
-          attributes << [name, options.update(header: header.zip)]
-        end
-      end
     end
   end
 end

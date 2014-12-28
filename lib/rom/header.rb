@@ -39,6 +39,13 @@ module ROM
       any?(&:aliased?)
     end
 
+    def tuple_keys
+      (
+        reject(&:preprocess?).map(&:key) +
+        select(&:embedded?).map(&:header).map(&:tuple_keys)
+      ).flatten
+    end
+
     def keys
       attributes.keys
     end

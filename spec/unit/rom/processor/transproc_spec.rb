@@ -164,6 +164,24 @@ describe ROM::Processor::Transproc do
       end
     end
 
+    context 'with deeply wrapped tuples' do
+      let(:attributes) do
+        [
+          ['user', type: Hash, wrap: true, header: [
+            ['name'],
+            ['task', type: Hash, wrap: true, header: [['title']]]
+          ]]
+        ]
+      end
+
+      it 'returns wrapped tuples' do
+        expect(transproc[relation]).to eql([
+          { 'user' => { 'name' => 'Jane', 'task' => { 'title' => 'Task One' } } },
+          { 'user' => { 'name' => 'Joe', 'task' => { 'title' => 'Task Two' } } }
+        ])
+      end
+    end
+
     context 'renaming keys' do
       context 'when only wrapped tuple requires renaming' do
         let(:attributes) do
@@ -261,6 +279,41 @@ describe ROM::Processor::Transproc do
               :tasks => [{ :title => 'Task One' }] }
           ])
         end
+      end
+    end
+
+    context 'nested grouping' do
+      let(:relation) do
+        [
+          { name: 'Jane', title: 'Task One', tag: 'red' },
+          { name: 'Jane', title: 'Task One', tag: 'green' },
+          { name: 'Joe', title: 'Task One', tag: 'blue' }
+        ]
+      end
+
+      let(:attributes) do
+        [
+          [:name],
+          [:tasks, type: Array, group: true, header: [
+            [:title],
+            [:tags, type: Array, group: true, header: [[:tag]]]
+          ]]
+        ]
+      end
+
+      it 'returns deeply grouped tuples' do
+        expect(transproc[relation]).to eql([
+          { name: 'Jane',
+            tasks: [
+              { title: 'Task One', tags: [{ tag: 'red' }, { tag: 'green' }] }
+            ],
+          },
+          { name: 'Joe',
+            tasks: [
+              { title: 'Task One', tags: [{ tag: 'blue' }] }
+            ]
+          }
+        ])
       end
     end
   end

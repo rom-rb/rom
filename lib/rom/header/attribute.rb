@@ -50,6 +50,10 @@ module ROM
         false
       end
 
+      def embedded?
+        false
+      end
+
       def mapping
         { key => name }
       end
@@ -61,15 +65,16 @@ module ROM
       def header
         meta.fetch(:header)
       end
+
+      def embedded?
+        true
+      end
     end
 
     Array = Class.new(Embedded)
     Hash = Class.new(Embedded)
 
     class Wrap < Hash
-      def preprocess?
-        true
-      end
     end
 
     class Group < Array
