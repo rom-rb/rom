@@ -3,9 +3,12 @@
 ### Added
 
 * Mapper DSL supports `embedded` interface for nested tuples (solnic)
+* Support for nested `group` mapping (solnic)
+* Support for nested `wrap` mapping (solnic)
 
 ### Changed
 
+* Mapping backend replaced by integration with transproc (solnic)
 * Readers no longer expose adapter query DSL (solnic)
 * Registry objects raise `ROM::Registry::ElementNotFoundError` when missing
   element is referenced (rather than raw KeyError) (solnic)
