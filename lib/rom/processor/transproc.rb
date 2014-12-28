@@ -25,7 +25,7 @@ module ROM
         end
 
         def to_fn
-          fns.compact.reduce(:+) || default
+          fns.reduce(:+) || default
         end
       end
 
