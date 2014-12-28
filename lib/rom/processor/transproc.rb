@@ -76,7 +76,7 @@ module ROM
         keys = attribute.header.tuple_keys
 
         compose do |ops|
-          ops << t(:fold, name, keys)
+          ops << t(:nest, name, keys)
           ops << visit_hash(attribute)
         end
       end
