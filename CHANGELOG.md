@@ -5,6 +5,7 @@
 * Mapper DSL supports `embedded` interface for nested tuples (solnic)
 * Support for nested `group` mapping (solnic)
 * Support for nested `wrap` mapping (solnic)
+* Interface for registering data mapping processors (solnic)
 
 ### Changed
 
