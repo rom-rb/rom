@@ -15,11 +15,13 @@ describe ROM::Processor::Transproc do
   end
 
   context 'coercing values' do
-    let(:attributes) { [[:name, type: :string]] }
-    let(:relation) { [ { name: :Jane }, { name: :Joe } ] }
+    let(:attributes) { [[:name, type: :string], [:age, type: :integer]] }
+    let(:relation) { [ { name: :Jane, age: '1', }, { name: :Joe, age: '2' } ] }
 
     it 'returns tuples' do
-      expect(transproc[relation]).to eql([{ name: 'Jane' }, { name: 'Joe' }])
+      expect(transproc[relation]).to eql([
+        { name: 'Jane', age: 1 }, { name: 'Joe', age: 2 }
+      ])
     end
   end
 
