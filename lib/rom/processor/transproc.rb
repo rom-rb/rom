@@ -8,26 +8,11 @@ require 'rom/processor'
 module ROM
   class Processor
     class Transproc < Processor
+      include ::Transproc::Composer
+
       attr_reader :header, :model, :mapping, :tuple_proc
 
       EMPTY_FN = -> tuple { tuple }.freeze
-
-      class Composer
-        attr_reader :fns, :default
-
-        def initialize(default = nil)
-          @fns = []
-          @default = default
-        end
-
-        def <<(other)
-          fns.concat(Array(other).compact)
-        end
-
-        def to_fn
-          fns.reduce(:+) || default
-        end
-      end
 
       def self.build(header)
         new(header).to_transproc
@@ -45,12 +30,6 @@ module ROM
           ops << header.select(&:preprocess?).map { |attr| visit(attr, true) }
           ops << t(:map_array!, tuple_proc) if tuple_proc
         end
-      end
-
-      def compose(default = nil, &block)
-        composer = Composer.new(default)
-        yield(composer)
-        composer.to_fn
       end
 
       private
