@@ -149,6 +149,7 @@ module ROM
           methods = klass.public_instance_methods
           klass.class_eval(&block) if block
           new_methods = (klass.public_instance_methods - methods)
+          new_methods -= (RA.instance_methods - Object.instance_methods)
           klass.relation_methods = new_methods
         }
 

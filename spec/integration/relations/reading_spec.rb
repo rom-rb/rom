@@ -67,6 +67,8 @@ describe 'Reading relations' do
       User.new(name: "Jane", email: "jane@doe.org")
     )
 
+    expect(rom.read(:users)).to_not respond_to(:join)
+
     user = rom.read(:users).with_tasks.sorted.first
 
     expect(user).to eql(
