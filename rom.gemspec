@@ -16,6 +16,7 @@ Gem::Specification.new do |gem|
   gem.license       = 'MIT'
 
   gem.add_runtime_dependency 'addressable', '~> 2.3'
+  gem.add_runtime_dependency 'transproc',   '~> 0.1'
   gem.add_runtime_dependency 'equalizer',   '~> 0.0', '>= 0.0.9'
   gem.add_runtime_dependency 'concord',     '~> 0.1', '>= 0.1.4'
   gem.add_runtime_dependency 'charlatan',   '~> 0.1', '>= 0.1'
