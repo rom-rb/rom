@@ -49,10 +49,6 @@ module ROM
         type != :object
       end
 
-      def tuple_keys
-        header.tuple_keys
-      end
-
       def aliased?
         key != name
       end
@@ -75,6 +71,10 @@ module ROM
 
       def header
         meta.fetch(:header)
+      end
+
+      def tuple_keys
+        header.tuple_keys
       end
 
       def embedded?
