@@ -25,3 +25,10 @@ task :devinit do
     `gem install #{name}`
   end
 end
+
+desc "Run mutant against a specific subject"
+task :mutant do
+  subject = ARGV.last
+  cmd = "mutant --include lib --require ./spec/spec_helper --use rspec #{subject}"
+  exec(cmd)
+end
