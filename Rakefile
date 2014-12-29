@@ -6,14 +6,14 @@ begin
   require "rubocop/rake_task"
 rescue LoadError; end
 
-if defined?(RuboCop)
+if defined?(RuboCop::RakeTask)
   task default: [:spec, :rubocop]
 
   RuboCop::RakeTask.new do |task|
     task.options << "--display-cop-names"
   end
 else
-  task default: [:spec, :rubocop]
+  task default: [:spec]
 end
 
 desc "Install extra development gems"
