@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe 'Mappers / Symbolizing atributes' do
   let(:setup) { ROM.setup(memory: 'memory://test') }
+  let(:rom) { setup.finalize }
 
   before do
     setup.schema do
@@ -17,15 +18,15 @@ describe 'Mappers / Symbolizing atributes' do
         repository :memory
 
         attribute 'title'
+        attribute 'task_priority'
+        attribute 'task_description'
       end
     end
   end
 
   it 'automatically maps all attributes using top-level settings' do
     setup.mappers do
-      define(:users, symbolize_keys: true, prefix: 'user') do
-        model name: 'User'
-
+      define(:users, symbolize_keys: true, inherit_header: false, prefix: 'user') do
         attribute :id
 
         wrap :details, prefix: 'first' do
@@ -36,34 +37,44 @@ describe 'Mappers / Symbolizing atributes' do
           attribute :email
         end
       end
-
-      define(:tasks, symbolize_keys: true) do
-        attribute :title
-      end
     end
-
-    rom = setup.finalize
-
-    User.send(:include, Equalizer.new(:id, :details, :contact))
 
     rom.schema.users << {
       'user_id' => 123,
-      'user_name' => 'Jane',
-      'user_email' => 'jane@doe.org'
+      'first_name' => 'Jane',
+      'email' => 'jane@doe.org'
     }
 
     jane = rom.read(:users).first
 
     expect(jane).to eql(
-      User.new(
-        id: 123, details: { name: 'Jane' }, contact: { email: 'jane@doe.org' }
-      )
+      id: 123, details: { name: 'Jane' }, contact: { email: 'jane@doe.org' }
     )
+  end
 
-    rom.schema.tasks << { 'title' => 'Task One' }
+  it 'automatically maps all attributes using settings for wrap block' do
+    setup.mappers do
+      define(:tasks, symbolize_keys: true) do
+        attribute :title
+
+        wrap :details, prefix: 'task' do
+          attribute :priority
+          attribute :description
+        end
+      end
+    end
+
+    rom.schema.tasks << {
+      'title' => 'Task One',
+      'task_priority' => 1,
+      'task_description' => 'It is a task'
+    }
 
     task = rom.read(:tasks).first
 
-    expect(task).to eql({ title: 'Task One' })
+    expect(task).to eql(
+      title: 'Task One',
+      details: { priority: 1, description: 'It is a task' }
+    )
   end
 end

@@ -5,15 +5,15 @@ require 'rom/mapper_builder/attribute_dsl'
 module ROM
   # @api private
   class MapperBuilder
-    attr_reader :name, :root, :prefix, :symbolize_keys,
+    attr_reader :name, :prefix, :root, :symbolize_keys,
       :model_builder, :model_class, :attributes
 
     DEFAULT_PROCESSOR = :transproc
 
     def initialize(name, root, options = {})
       @name = name
-      @root = root
       @options = options
+      @root = root
       @prefix = options[:prefix]
       @symbolize_keys = options[:symbolize_keys]
 

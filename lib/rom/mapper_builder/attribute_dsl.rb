@@ -91,7 +91,10 @@ module ROM
         if block
           name = name_or_attrs
 
-          dsl = AttributeDSL.new(@options)
+          dsl_options = @options.dup
+          dsl_options.update(prefix: options.fetch(:prefix) { prefix })
+
+          dsl = AttributeDSL.new(dsl_options)
           dsl.instance_exec(&block)
 
           with_attr_options(name, options) do |attr_options|
