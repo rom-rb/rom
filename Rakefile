@@ -16,16 +16,6 @@ else
   task default: [:spec]
 end
 
-desc "Install extra development gems"
-task :devinit do
-  puts "Installing extra development gem dependencies...\n\n"
-
-  %w(rubocop mutant mutant-rspec).each do |name|
-    puts "Installing #{name}..."
-    `gem install #{name}`
-  end
-end
-
 desc "Run mutant against a specific subject"
 task :mutant do
   subject = ARGV.last

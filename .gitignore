@@ -12,6 +12,7 @@ test/tmp
 test/version_tmp
 tmp
 Gemfile.lock
+Gemfile.dev.lock
 
 .idea/
 
