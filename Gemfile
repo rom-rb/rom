@@ -27,3 +27,14 @@ group :benchmarks do
   gem 'activerecord', '4.2.0'
   gem 'benchmark-ips'
 end
+
+group :tools do
+  gem 'rubocop'
+
+  gem 'guard'
+  gem 'guard-rspec'
+  gem 'guard-rubocop'
+
+  gem 'mutant'
+  gem 'mutant-rspec'
+end

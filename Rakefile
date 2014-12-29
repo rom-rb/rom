@@ -13,20 +13,7 @@ if defined?(RuboCop)
     task.options << "--display-cop-names"
   end
 else
-  task default: [:spec, :rubocop]
-end
-
-desc "Install extra development gems"
-task :devinit do
-  puts "Installing extra development gem dependencies...\n\n"
-
-  %w(
-    guard guard-rspec guard-rubocop rubocop mutant mutant-rspec
-    parser ruby-progressbar
-  ).each do |name|
-    puts "Installing #{name}..."
-    `gem install #{name}`
-  end
+  task default: [:spec]
 end
 
 desc "Run mutant against a specific subject"
