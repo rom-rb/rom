@@ -7,6 +7,12 @@
 * Support for nested `wrap` mapping (solnic)
 * Support for primitive type coercions (:to_string, :to_integer etc.) (solnic)
 * Interface for registering data mapping processors (solnic)
+* Remaining relations are automatically setup from the schema (solnic)
+* Each relation has now access to other relations (previously they only had
+  access to raw datasets) (solnic)
+* `ROM.setup` supports passing in *just an uri* which will setup a default repository (solnic)
+* `ROM.setup` supports passing in conventional database connection hash (solnic)
+* Adapters support extra options in addition to the base connection URI (solnic)
 
 ### Changed
 
