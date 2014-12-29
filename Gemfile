@@ -14,11 +14,6 @@ group :test do
     gem 'rubysl-bigdecimal', platforms: :rbx
     gem 'codeclimate-test-reporter', require: false
   end
-
-  platforms :mri do
-    gem 'mutant'
-    gem 'mutant-rspec'
-  end
 end
 
 group :sql do

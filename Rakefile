@@ -1,10 +1,9 @@
 require "rspec/core/rake_task"
-require "rubocop/rake_task"
 
 RSpec::Core::RakeTask.new(:spec)
 
 begin
-  require 'rubocop'
+  require "rubocop/rake_task"
 rescue LoadError; end
 
 if defined?(RuboCop)
@@ -15,4 +14,14 @@ if defined?(RuboCop)
   end
 else
   task default: [:spec, :rubocop]
+end
+
+desc "Install extra development gems"
+task :devinit do
+  puts "Installing extra development gem dependencies...\n\n"
+
+  %w(rubocop mutant mutant-rspec).each do |name|
+    puts "Installing #{name}..."
+    `gem install #{name}`
+  end
 end
