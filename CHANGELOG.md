@@ -6,6 +6,9 @@
 * Support for nested `group` mapping (solnic)
 * Support for nested `wrap` mapping (solnic)
 * Support for primitive type coercions (:to_string, :to_integer etc.) (solnic)
+* Support for top-level `:prefix` option in mapping DSL (solnic)
+* Support for top-level `:symbolize_keys` option in mapping DSL (solnic)
+* Support for `:prefix` option in wrap/group mapping DSL (solnic)
 * Interface for registering data mapping processors (solnic)
 * Remaining relations are automatically setup from the schema (solnic)
 * Each relation has now access to other relations (previously they only had
