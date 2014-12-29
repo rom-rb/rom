@@ -23,9 +23,11 @@ describe ROM::Adapter::Memory::Dataset do
 
   describe '#restrict' do
     it 'restricts data using criteria hash' do
-      expect(dataset.restrict(name: 'Jane')).to match_array([
+      expect(dataset.restrict(age: 10)).to match_array([
         { name: 'Jane', email: 'jane@doe.org', age: 10 }
       ])
+
+      expect(dataset.restrict(age: 10.0)).to match_array([])
     end
 
     it 'restricts data using block' do

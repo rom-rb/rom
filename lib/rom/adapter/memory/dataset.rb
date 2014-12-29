@@ -36,9 +36,9 @@ module ROM
           self.class.new(tuples, left.header + right.header)
         end
 
-        def restrict(criteria = nil, &_block)
+        def restrict(criteria = nil)
           if criteria
-            find_all { |tuple| criteria.all? { |k, v| tuple[k] == v } }
+            find_all { |tuple| criteria.all? { |k, v| tuple[k].eql?(v) } }
           else
             find_all { |tuple| yield(tuple) }
           end
