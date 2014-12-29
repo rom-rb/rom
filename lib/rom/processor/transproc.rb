@@ -99,10 +99,6 @@ module ROM
         yield(tuple_proc) if tuple_proc
       end
 
-      def t(*args)
-        Transproc(*args)
-      end
-
       def new(*args)
         self.class.new(*args)
       end
