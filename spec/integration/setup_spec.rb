@@ -12,9 +12,6 @@ describe 'Setting up ROM' do
     end
 
     it 'configures rom relations' do
-      setup.relation(:users)
-      setup.relation(:tasks)
-
       users = rom.relations.users
 
       expect(users).to be_kind_of(ROM::Relation)

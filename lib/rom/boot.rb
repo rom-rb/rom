@@ -143,20 +143,11 @@ module ROM
       builder = RelationBuilder.new(schema, relations)
 
       @relations.each do |name, block|
-        adapter = adapter_relation_map[name]
+        relations[name] = build_relation(name, builder, block)
+      end
 
-        relation = builder.call(name) { |klass|
-          adapter.extend_relation_class(klass)
-          methods = klass.public_instance_methods
-          klass.class_eval(&block) if block
-          new_methods = (klass.public_instance_methods - methods)
-          new_methods -= (RA.instance_methods - Object.instance_methods)
-          klass.relation_methods = new_methods
-        }
-
-        adapter.extend_relation_instance(relation)
-
-        relations[name] = relation
+      (schema.elements.keys - relations.keys).each do |name|
+        relations[name] = build_relation(name, builder)
       end
 
       relations.each_value do |relation|
@@ -164,6 +155,27 @@ module ROM
       end
 
       RelationRegistry.new(relations)
+    end
+
+    # @api private
+    def build_relation(name, builder, block = nil)
+      adapter = adapter_relation_map[name]
+
+      relation = builder.call(name) { |klass|
+        adapter.extend_relation_class(klass)
+        methods = klass.public_instance_methods
+
+        klass.class_eval(&block) if block
+
+        new_methods = (klass.public_instance_methods - methods)
+        new_methods -= (RA.instance_methods - Object.instance_methods)
+
+        klass.relation_methods = new_methods
+      }
+
+      adapter.extend_relation_instance(relation)
+
+      relation
     end
 
     # @api private
