@@ -16,16 +16,12 @@ describe 'Mapper definition DSL' do
   describe 'grouped relation mapper' do
     before do
       setup.relation(:tasks) do
-        include ROM::RA
-
         def with_users
           join(users)
         end
       end
 
       setup.relation(:users) do
-        include ROM::RA
-
         def with_tasks
           join(tasks)
         end

@@ -15,8 +15,6 @@ describe 'Relation registration DSL' do
     end
 
     setup.relation(:users) do
-      include ROM::RA
-
       def with_tasks
         join(tasks)
       end
@@ -37,7 +35,7 @@ describe 'Relation registration DSL' do
 
     users = rom.relations.users
 
-    expect(users.with_tasks.to_a).to eql(
+    expect(users.with_tasks).to match_array(
       [{ name: "Joe", email: "joe@doe.org", title: "be nice", priority: 1 },
        { name: "Joe", email: "joe@doe.org", title: "sleep well", priority: 2 },
        { name: "Jane", email: "jane@doe.org", title: "be cool", priority: 2 }]

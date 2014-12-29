@@ -21,6 +21,21 @@ module ROM
           data.each(&block)
         end
 
+        def join(*args)
+          left, right = args.size > 1 ? args : [self, args.first]
+
+          join_map = left.each_with_object({}) { |tuple, h|
+            others = right.find_all { |t| (tuple.to_a & t.to_a).any? }
+            (h[tuple] ||= []).concat(others)
+          }
+
+          tuples = left.map { |tuple|
+            join_map[tuple].map { |other| tuple.merge(other) }
+          }.flatten
+
+          self.class.new(tuples, left.header + right.header)
+        end
+
         def restrict(criteria = nil, &_block)
           if criteria
             find_all { |tuple| criteria.all? { |k, v| tuple[k] == v } }

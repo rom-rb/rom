@@ -21,8 +21,6 @@ require 'rom/repository'
 require 'rom/config'
 require 'rom/env'
 
-require 'rom/ra'
-
 require 'rom/boot'
 
 module ROM

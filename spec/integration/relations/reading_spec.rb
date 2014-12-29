@@ -34,8 +34,6 @@ describe 'Reading relations' do
     setup.relation(:tasks)
 
     setup.relation(:users) do
-      include ROM::RA
-
       def with_tasks
         join(tasks)
       end
@@ -87,8 +85,6 @@ describe 'Reading relations' do
     setup.relation(:tasks)
 
     setup.relation(:users) do
-      include ROM::RA
-
       def with_task
         join(tasks)
       end

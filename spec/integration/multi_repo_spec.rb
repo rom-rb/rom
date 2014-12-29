@@ -39,8 +39,6 @@ describe 'Using in-memory adapter for cross-repo access' do
     setup.relation(:tasks)
 
     setup.relation(:users_and_tasks) do
-      include ROM::RA
-
       def by_user(name)
         join(users.by_name(name), tasks)
       end

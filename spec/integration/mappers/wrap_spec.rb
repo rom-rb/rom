@@ -16,8 +16,6 @@ describe 'Mapper definition DSL' do
   describe 'wrapped relation mapper' do
     before do
       setup.relation(:tasks) do
-        include ROM::RA
-
         def with_user
           join(users)
         end

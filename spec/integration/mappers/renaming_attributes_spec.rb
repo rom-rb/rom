@@ -23,8 +23,6 @@ describe 'Mappers / Renaming attributes' do
     setup.relation(:addresses)
 
     setup.relation(:users) do
-      include ROM::RA
-
       def with_address
         join(addresses)
       end
