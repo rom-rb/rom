@@ -63,7 +63,9 @@ module ROM
         if options
           self
         else
-          model_class || (model_builder && model_builder.call(attributes.map(&:first)))
+          model_class || (
+            model_builder && model_builder.call(attributes.map(&:first))
+          )
         end
       end
 
@@ -76,9 +78,7 @@ module ROM
       def with_attr_options(name, options)
         attr_options = options.dup
 
-        if prefix
-          attr_options[:from] ||= :"#{prefix}_#{name}"
-        end
+        attr_options[:from] ||= :"#{prefix}_#{name}" if prefix
 
         if symbolize_keys
           attr_options.update(from: attr_options.fetch(:from) { name }.to_s)

@@ -1,7 +1,6 @@
 module ROM
   # @private
   class MapperRegistry < Registry
-
     # @api private
     def []=(name, mapper)
       elements[name] = mapper

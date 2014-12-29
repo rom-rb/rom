@@ -121,7 +121,9 @@ describe 'Mapper definition DSL' do
         TaskWithUser.new(
           title: 'be cool',
           priority: 2,
-          user: TaskUser.new(name: 'Jane', contact: Contact.new(email: 'jane@doe.org'))
+          user: TaskUser.new(
+            name: 'Jane', contact: Contact.new(email: 'jane@doe.org')
+          )
         )
       )
     end

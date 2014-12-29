@@ -129,7 +129,9 @@ describe 'Setting up ROM' do
       subject(:adapter) { setup.default.adapter }
 
       it 'has connection uri' do
-        expect(adapter.uri).to eql(Addressable::URI.parse('memory://localhost/test'))
+        expect(adapter.uri).to eql(
+          Addressable::URI.parse('memory://localhost/test')
+        )
       end
 
       it 'has extra options' do
@@ -144,7 +146,9 @@ describe 'Setting up ROM' do
     end
 
     context 'with option hash' do
-      let(:setup) { ROM.setup(adapter: 'memory', database: 'test', super: 'option') }
+      let(:setup) do
+        ROM.setup(adapter: 'memory', database: 'test', super: 'option')
+      end
 
       it_behaves_like 'adapter with extra options'
     end

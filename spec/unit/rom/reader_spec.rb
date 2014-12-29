@@ -12,8 +12,8 @@ describe ROM::Reader do
 
   describe '#initialize' do
     it 'raises error when mapper cannot be found' do
-      expect { ROM::Reader.new(:not_here, relation, mappers) }.
-        to raise_error(ROM::Reader::MapperMissingError, /not_here/)
+      expect { ROM::Reader.new(:not_here, relation, mappers) }
+        .to raise_error(ROM::Reader::MapperMissingError, /not_here/)
     end
   end
 
@@ -38,7 +38,7 @@ describe ROM::Reader do
           'users'
         end
 
-        def all(*args)
+        def all(*_args)
           find_all
         end
       end
@@ -62,8 +62,8 @@ describe ROM::Reader do
     end
 
     it 'raises error when relation does not respond to the method' do
-      expect { reader.not_here }.
-        to raise_error(ROM::NoRelationError, /not_here/)
+      expect { reader.not_here }
+        .to raise_error(ROM::NoRelationError, /not_here/)
     end
   end
 end

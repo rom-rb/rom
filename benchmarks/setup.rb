@@ -125,7 +125,6 @@ setup.relation(:tasks) do
   end
 end
 
-
 setup.mappers do
   define(:users) do
     model name: 'User'

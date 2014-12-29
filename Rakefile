@@ -3,7 +3,9 @@ require "rubocop/rake_task"
 
 RSpec::Core::RakeTask.new(:spec)
 
-require 'rubocop' rescue LoadError
+begin
+  require 'rubocop'
+rescue LoadError; end
 
 if defined?(RuboCop)
   task default: [:spec, :rubocop]

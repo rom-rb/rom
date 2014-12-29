@@ -1,10 +1,10 @@
 # FIXME: Lower by refactoring biggest offenders
 Metrics/AbcSize:
-  Max: 24
+  Max: 27
 
 # FIXME: Lower by refactoring biggest offenders
 Metrics/MethodLength:
-  Max: 18
+  Max: 29
 
 # FIXME: Lower by refactoring biggest offenders
 Metrics/PerceivedComplexity:
@@ -14,8 +14,16 @@ Metrics/PerceivedComplexity:
 Lint/AssignmentInCondition:
   Enabled: false
 
+Lint/HandleExceptions:
+  Exclude:
+    - Rakefile
+
+Metrics/ClassLength:
+  Max: 120
+
 # gemspec is a special snowflake
 Metrics/LineLength:
+  Max: 84
   Exclude:
     - rom.gemspec
 

@@ -39,25 +39,25 @@ module ROM
         send("visit_#{type}", attribute, preprocess)
       end
 
-      def visit_attribute(attribute, preprocess = false)
+      def visit_attribute(attribute, _preprocess = false)
         if attribute.typed?
           t(:map_key!, attribute.name, t(:"to_#{attribute.type}"))
         end
       end
 
-      def visit_hash(attribute, preprocess = false)
+      def visit_hash(attribute, _preprocess = false)
         with_tuple_proc(attribute) do |tuple_proc|
           t(:map_key!, attribute.name, tuple_proc)
         end
       end
 
-      def visit_array(attribute, preprocess = false)
+      def visit_array(attribute, _preprocess = false)
         with_tuple_proc(attribute) do |tuple_proc|
           t(:map_key!, attribute.name, t(:map_array!, tuple_proc))
         end
       end
 
-      def visit_wrap(attribute, preprocess = false)
+      def visit_wrap(attribute, _preprocess = false)
         name = attribute.name
         keys = attribute.header.tuple_keys
 
@@ -106,7 +106,6 @@ module ROM
       def new(*args)
         self.class.new(*args)
       end
-
     end
   end
 end

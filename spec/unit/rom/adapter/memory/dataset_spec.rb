@@ -1,7 +1,9 @@
 require 'spec_helper'
 
 describe ROM::Adapter::Memory::Dataset do
-  subject(:dataset) { ROM::Adapter::Memory::Dataset.new(data, [:name, :email, :age]) }
+  subject(:dataset) do
+    ROM::Adapter::Memory::Dataset.new(data, [:name, :email, :age])
+  end
 
   let(:data) do
     [

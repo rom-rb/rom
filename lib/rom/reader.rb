@@ -40,7 +40,9 @@ module ROM
         klass.class_eval <<-RUBY, __FILE__, __LINE__ + 1
           def #{method_name}(*args, &block)
             new_relation = relation.send(#{method_name.inspect}, *args, &block)
-            self.class.new(new_path(#{method_name.to_s.inspect}), new_relation, mappers)
+            self.class.new(
+              new_path(#{method_name.to_s.inspect}), new_relation, mappers
+            )
           end
         RUBY
       end

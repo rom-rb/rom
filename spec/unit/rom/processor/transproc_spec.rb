@@ -7,7 +7,7 @@ describe ROM::Processor::Transproc do
 
   context 'no mapping' do
     let(:attributes) { [[:name]] }
-    let(:relation) { [ { name: 'Jane' }, { name: 'Joe' } ] }
+    let(:relation) { [{ name: 'Jane' }, { name: 'Joe' }] }
 
     it 'returns tuples' do
       expect(transproc[relation]).to eql(relation)
@@ -16,7 +16,7 @@ describe ROM::Processor::Transproc do
 
   context 'coercing values' do
     let(:attributes) { [[:name, type: :string], [:age, type: :integer]] }
-    let(:relation) { [ { name: :Jane, age: '1', }, { name: :Joe, age: '2' } ] }
+    let(:relation) { [{ name: :Jane, age: '1' }, { name: :Joe, age: '2' }] }
 
     it 'returns tuples' do
       expect(transproc[relation]).to eql([
@@ -36,7 +36,7 @@ describe ROM::Processor::Transproc do
     end
 
     let(:attributes) { [[:name]] }
-    let(:relation) { [ { name: 'Jane' }, { name: 'Joe' } ] }
+    let(:relation) { [{ name: 'Jane' }, { name: 'Joe' }] }
 
     it 'returns tuples' do
       expect(transproc[relation]).to eql([
@@ -47,7 +47,7 @@ describe ROM::Processor::Transproc do
 
   context 'renaming keys' do
     let(:attributes) { [[:name, from: 'name']] }
-    let(:relation) { [ { 'name' => 'Jane' }, { 'name' => 'Joe' } ] }
+    let(:relation) { [{ 'name' => 'Jane' }, { 'name' => 'Joe' }] }
 
     it 'returns tuples with renamed keys' do
       expect(transproc[relation]).to eql([{ name: 'Jane' }, { name: 'Joe' }])
@@ -58,7 +58,7 @@ describe ROM::Processor::Transproc do
     let(:relation) do
       [
         { 'name' => 'Jane', 'task' => { 'title' => 'Task One' } },
-        { 'name' => 'Joe', 'task' => { 'title' => 'Task Two' } },
+        { 'name' => 'Joe', 'task' => { 'title' => 'Task Two' } }
       ]
     end
 
@@ -96,8 +96,8 @@ describe ROM::Processor::Transproc do
       context 'when renaming is required' do
         let(:relation) do
           [
-            { :user => { :name => 'Jane', :task => { :title => 'Task One' } } },
-            { :user => { :name => 'Joe', :task => { :title => 'Task Two' } } }
+            { user: { name: 'Jane', task: { title: 'Task One' } } },
+            { user: { name: 'Joe', task: { title: 'Task Two' } } }
           ]
         end
 
@@ -127,8 +127,8 @@ describe ROM::Processor::Transproc do
 
         it 'returns tuples with key renamed in the nested hash' do
           expect(transproc[relation]).to eql([
-            { 'name' => 'Jane', :task => { :title => 'Task One' } },
-            { 'name' => 'Joe', :task => { :title => 'Task Two' } },
+            { 'name' => 'Jane', :task => { title: 'Task One' } },
+            { 'name' => 'Joe', :task => { title: 'Task Two' } }
           ])
         end
       end
@@ -143,8 +143,8 @@ describe ROM::Processor::Transproc do
 
         it 'returns tuples with key renamed in the nested hash' do
           expect(transproc[relation]).to eql([
-            { :name => 'Jane', :task => { :title => 'Task One' } },
-            { :name => 'Joe', :task => { :title => 'Task Two' } },
+            { name: 'Jane', task: { title: 'Task One' } },
+            { name: 'Joe', task: { title: 'Task Two' } }
           ])
         end
       end
@@ -155,16 +155,16 @@ describe ROM::Processor::Transproc do
     let(:relation) do
       [
         { 'name' => 'Jane', 'title' => 'Task One' },
-        { 'name' => 'Joe', 'title' => 'Task Two' },
+        { 'name' => 'Joe', 'title' => 'Task Two' }
       ]
     end
 
     context 'when no mapping is needed' do
       let(:attributes) do
-          [
-            ['name'],
-            ['task', type: Hash, wrap: true, header: [['title']]]
-          ]
+        [
+          ['name'],
+          ['task', type: Hash, wrap: true, header: [['title']]]
+        ]
       end
 
       it 'returns wrapped tuples' do
@@ -204,8 +204,8 @@ describe ROM::Processor::Transproc do
 
         it 'returns wrapped tuples with renamed keys' do
           expect(transproc[relation]).to eql([
-            { 'name' => 'Jane', 'task' => { :title => 'Task One' } },
-            { 'name' => 'Joe', 'task' => { :title => 'Task Two' } }
+            { 'name' => 'Jane', 'task' => { title: 'Task One' } },
+            { 'name' => 'Joe', 'task' => { title: 'Task Two' } }
           ])
         end
       end
@@ -220,8 +220,8 @@ describe ROM::Processor::Transproc do
 
         it 'returns wrapped tuples with all keys renamed' do
           expect(transproc[relation]).to eql([
-            { :name => 'Jane', :task => { :title => 'Task One' } },
-            { :name => 'Joe', :task => { :title => 'Task Two' } }
+            { name: 'Jane', task: { title: 'Task One' } },
+            { name: 'Joe', task: { title: 'Task Two' } }
           ])
         end
       end
@@ -233,7 +233,7 @@ describe ROM::Processor::Transproc do
       [
         { 'name' => 'Jane', 'title' => 'Task One' },
         { 'name' => 'Jane', 'title' => 'Task Two' },
-        { 'name' => 'Joe', 'title' => 'Task One' },
+        { 'name' => 'Joe', 'title' => 'Task One' }
       ]
     end
 
@@ -267,9 +267,9 @@ describe ROM::Processor::Transproc do
         it 'returns grouped tuples with renamed keys' do
           expect(transproc[relation]).to eql([
             { 'name' => 'Jane',
-              'tasks' => [{ :title => 'Task One' }, { :title => 'Task Two' }] },
+              'tasks' => [{ title: 'Task One' }, { title: 'Task Two' }] },
             { 'name' => 'Joe',
-              'tasks' => [{ :title => 'Task One' }] }
+              'tasks' => [{ title: 'Task One' }] }
           ])
         end
       end
@@ -284,10 +284,10 @@ describe ROM::Processor::Transproc do
 
         it 'returns grouped tuples with all keys renamed' do
           expect(transproc[relation]).to eql([
-            { :name => 'Jane',
-              :tasks => [{ :title => 'Task One' }, { :title => 'Task Two' }] },
-            { :name => 'Joe',
-              :tasks => [{ :title => 'Task One' }] }
+            { name: 'Jane',
+              tasks: [{ title: 'Task One' }, { title: 'Task Two' }] },
+            { name: 'Joe',
+              tasks: [{ title: 'Task One' }] }
           ])
         end
       end
@@ -317,7 +317,7 @@ describe ROM::Processor::Transproc do
           { name: 'Jane',
             tasks: [
               { title: 'Task One', tags: [{ tag: 'red' }, { tag: 'green' }] }
-            ],
+            ]
           },
           { name: 'Joe',
             tasks: [

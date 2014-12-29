@@ -50,7 +50,12 @@ describe ROM::Adapter do
 
   describe '#disconnect' do
     it 'does nothing' do
-      adapter_class = Class.new(ROM::Adapter) { def self.schemes; [:bazinga]; end }
+      adapter_class = Class.new(ROM::Adapter) {
+        def self.schemes
+          [:bazinga]
+        end
+      }
+
       adapter = adapter_class.new('bazinga://localhost')
 
       expect(adapter.disconnect).to be(nil)
@@ -59,7 +64,12 @@ describe ROM::Adapter do
 
   describe '.setup' do
     it 'supports connection uri and additional options' do
-      adapter_class = Class.new(ROM::Adapter) { def self.schemes; [:bazinga]; end }
+      Class.new(ROM::Adapter) {
+        def self.schemes
+          [:bazinga]
+        end
+      }
+
       adapter = ROM::Adapter.setup('bazinga://localhost', super: :option)
 
       expect(adapter.uri).to eql(Addressable::URI.parse('bazinga://localhost'))

@@ -82,7 +82,7 @@ module ROM
     # @return [Array] registered adapters
     #
     # @api public
-    def self.register(adapter)
+    def self.register(_adapter)
       warn "Adapter.register is no longer needed [#{caller[0]}"
     end
 
@@ -105,7 +105,7 @@ module ROM
     end
 
     # @api private
-    def self.database_file?(scheme)
+    def self.database_file?(_scheme)
       false
     end
 

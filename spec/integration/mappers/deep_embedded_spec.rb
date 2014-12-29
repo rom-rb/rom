@@ -36,7 +36,7 @@ describe 'Mappers / deeply embedded tuples' do
       'name' => 'Jane',
       'tasks' => [
         { 'title' => 'Task One', 'priority' => { 'value' => 1, 'desc' => 'high' } },
-        { 'title' => 'Task Two', 'priority' => { 'value' => 3, 'desc' => 'low' } },
+        { 'title' => 'Task Two', 'priority' => { 'value' => 3, 'desc' => 'low' } }
       ]
     }
 
@@ -46,7 +46,7 @@ describe 'Mappers / deeply embedded tuples' do
 
     expect(jane.tasks).to eql([
       { title: 'Task One', priority: { value: 1, desc: 'high' } },
-      { title: 'Task Two', priority: { value: 3, desc: 'low' } },
+      { title: 'Task Two', priority: { value: 3, desc: 'low' } }
     ])
   end
 end

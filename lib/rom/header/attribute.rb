@@ -26,7 +26,10 @@ module ROM
           meta = (input[1] || {}).dup
 
           meta[:type] ||= :object
-          meta[:header] = Header.coerce(meta[:header], meta[:model]) if meta.key?(:header)
+
+          if meta.key?(:header)
+            meta[:header] = Header.coerce(meta[:header], meta[:model])
+          end
 
           self[meta].new(name, meta)
         end
