@@ -21,6 +21,7 @@
 * Registry objects raise `ROM::Registry::ElementNotFoundError` when missing
   element is referenced (rather than raw KeyError) (solnic)
 * Performance improvements in Reader (solnic)
+* `ROM::RA` was merged into in-memory adapter as this fits there perfectly (solnic)
 
 ### Fixed
 
