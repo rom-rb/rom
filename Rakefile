@@ -19,6 +19,10 @@ end
 desc "Run mutant against a specific subject"
 task :mutant do
   subject = ARGV.last
-  cmd = "mutant --include lib --require ./spec/spec_helper --use rspec #{subject}"
-  exec(cmd)
+  if subject == 'mutant'
+    abort "usage: rake mutant SUBJECT\nexample: rake mutant ROM::Header"
+  else
+    cmd = "mutant --include lib --require ./spec/spec_helper --use rspec #{subject}"
+    exec(cmd)
+  end
 end
