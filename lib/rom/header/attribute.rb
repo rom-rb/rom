@@ -68,7 +68,7 @@ module ROM
     end
 
     class Embedded < Attribute
-      include Equalizer.new(:name, :type, :header)
+      include Equalizer.new(:name, :key, :type, :header)
 
       def header
         meta.fetch(:header)

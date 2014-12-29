@@ -88,7 +88,7 @@ module ROM
 
       def initialize_tuple_proc
         @tuple_proc = compose do |ops|
-          ops << t(:map_hash!, mapping) if header.aliased?
+          ops << t(:map_hash, mapping) if header.aliased?
           ops << header.map { |attr| visit(attr) }
           ops << t(-> tuple { model.new(tuple) }) if model
         end
