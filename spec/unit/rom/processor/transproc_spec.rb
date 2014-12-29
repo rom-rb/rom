@@ -63,7 +63,7 @@ describe ROM::Processor::Transproc do
     end
 
     context 'when no mapping is needed' do
-      let(:attributes) { [['name'], ['task', type: Hash, header: [[:title]]]] }
+      let(:attributes) { [['name'], ['task', type: :hash, header: [[:title]]]] }
 
       it 'returns tuples' do
         expect(transproc[relation]).to eql(relation)
@@ -81,9 +81,9 @@ describe ROM::Processor::Transproc do
 
         let(:attributes) do
           [[
-            'user', type: Hash, header: [
+            'user', type: :hash, header: [
               ['name'],
-              ['task', type: Hash, header: [['title']]]
+              ['task', type: :hash, header: [['title']]]
             ]
           ]]
         end
@@ -103,9 +103,9 @@ describe ROM::Processor::Transproc do
 
         let(:attributes) do
           [[
-            'user', type: Hash, header: [
+            'user', type: :hash, header: [
               ['name'],
-              ['task', type: Hash, header: [['title']]]
+              ['task', type: :hash, header: [['title']]]
             ]
           ]]
         end
@@ -121,7 +121,7 @@ describe ROM::Processor::Transproc do
         let(:attributes) do
           [
             ['name'],
-            [:task, from: 'task', type: Hash, header: [[:title, from: 'title']]]
+            [:task, from: 'task', type: :hash, header: [[:title, from: 'title']]]
           ]
         end
 
@@ -137,7 +137,7 @@ describe ROM::Processor::Transproc do
         let(:attributes) do
           [
             [:name, from: 'name'],
-            [:task, from: 'task', type: Hash, header: [[:title, from: 'title']]]
+            [:task, from: 'task', type: :hash, header: [[:title, from: 'title']]]
           ]
         end
 
@@ -163,7 +163,7 @@ describe ROM::Processor::Transproc do
       let(:attributes) do
         [
           ['name'],
-          ['task', type: Hash, wrap: true, header: [['title']]]
+          ['task', type: :hash, wrap: true, header: [['title']]]
         ]
       end
 
@@ -178,9 +178,9 @@ describe ROM::Processor::Transproc do
     context 'with deeply wrapped tuples' do
       let(:attributes) do
         [
-          ['user', type: Hash, wrap: true, header: [
+          ['user', type: :hash, wrap: true, header: [
             ['name'],
-            ['task', type: Hash, wrap: true, header: [['title']]]
+            ['task', type: :hash, wrap: true, header: [['title']]]
           ]]
         ]
       end
@@ -198,7 +198,7 @@ describe ROM::Processor::Transproc do
         let(:attributes) do
           [
             ['name'],
-            ['task', type: Hash, wrap: true, header: [[:title, from: 'title']]]
+            ['task', type: :hash, wrap: true, header: [[:title, from: 'title']]]
           ]
         end
 
@@ -214,7 +214,7 @@ describe ROM::Processor::Transproc do
         let(:attributes) do
           [
             [:name, from: 'name'],
-            [:task, type: Hash, wrap: true, header: [[:title, from: 'title']]]
+            [:task, type: :hash, wrap: true, header: [[:title, from: 'title']]]
           ]
         end
 
@@ -241,7 +241,7 @@ describe ROM::Processor::Transproc do
       let(:attributes) do
         [
           ['name'],
-          ['tasks', type: Array, group: true, header: [['title']]]
+          ['tasks', type: :array, group: true, header: [['title']]]
         ]
       end
 
@@ -260,7 +260,7 @@ describe ROM::Processor::Transproc do
         let(:attributes) do
           [
             ['name'],
-            ['tasks', type: Array, group: true, header: [[:title, from: 'title']]]
+            ['tasks', type: :array, group: true, header: [[:title, from: 'title']]]
           ]
         end
 
@@ -278,7 +278,7 @@ describe ROM::Processor::Transproc do
         let(:attributes) do
           [
             [:name, from: 'name'],
-            [:tasks, type: Array, group: true, header: [[:title, from: 'title']]]
+            [:tasks, type: :array, group: true, header: [[:title, from: 'title']]]
           ]
         end
 
@@ -305,9 +305,9 @@ describe ROM::Processor::Transproc do
       let(:attributes) do
         [
           [:name],
-          [:tasks, type: Array, group: true, header: [
+          [:tasks, type: :array, group: true, header: [
             [:title],
-            [:tags, type: Array, group: true, header: [[:tag]]]
+            [:tags, type: :array, group: true, header: [[:tag]]]
           ]]
         ]
       end

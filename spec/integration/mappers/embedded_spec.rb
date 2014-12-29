@@ -57,7 +57,7 @@ describe 'Mappers / embedded' do
 
         attribute :name, from: 'name'
 
-        embedded :address, from: 'address', type: Hash do
+        embedded :address, from: 'address', type: :hash do
           model name: 'Address'
           attribute :street, from: 'street'
           attribute :city, from: 'city'

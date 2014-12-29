@@ -24,7 +24,7 @@ describe 'Mappers / deeply embedded tuples' do
         embedded :tasks, from: 'tasks' do
           attribute :title, from: 'title'
 
-          embedded :priority, from: 'priority', type: Hash do
+          embedded :priority, from: 'priority', type: :hash do
             attribute :value, from: 'value'
             attribute :desc, from: 'desc'
           end

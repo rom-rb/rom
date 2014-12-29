@@ -25,7 +25,7 @@ module ROM
 
           attributes << [
             name,
-            { header: dsl.header, type: Array }.merge(attr_options)
+            { header: dsl.header, type: :array }.merge(attr_options)
           ]
         end
       end
@@ -38,7 +38,7 @@ module ROM
             [args.first, {}]
           end
 
-        dsl(name, { type: Hash, wrap: true }.update(options), &block)
+        dsl(name, { type: :hash, wrap: true }.update(options), &block)
       end
 
       def group(*args, &block)
@@ -49,7 +49,7 @@ module ROM
             [args.first, {}]
           end
 
-        dsl(name, { type: Array, group: true }.update(options), &block)
+        dsl(name, { type: :array, group: true }.update(options), &block)
       end
 
       def model(options = nil)

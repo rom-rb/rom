@@ -9,9 +9,9 @@ module ROM
       def self.[](meta)
         type = meta[:type]
 
-        if type == ::Hash
+        if type == :hash
           meta[:wrap] ? Wrap : Hash
-        elsif type == ::Array
+        elsif type == :array
           meta[:group] ? Group : Array
         else
           self
