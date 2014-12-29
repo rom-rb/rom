@@ -7,7 +7,6 @@ require 'rom/support/registry'
 
 require 'rom/header'
 require 'rom/relation'
-require 'rom/transformer'
 require 'rom/mapper'
 require 'rom/reader'
 
