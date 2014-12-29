@@ -3,20 +3,20 @@ require 'spec_helper'
 describe ROM::Config do
   describe '.build' do
     let(:raw_config) do
-      { adapter: 'memory', hostname: 'localhost', database: 'test', port: 312 }
+      { adapter: 'memory', hostname: 'localhost', database: 'test' }
     end
 
     it 'returns rom repository configuration hash' do
       config = ROM::Config.build(raw_config)
 
-      expect(config).to eql(default: 'memory://localhost/test:312')
+      expect(config).to eql(default: 'memory://localhost/test')
     end
 
     it 'sets additional options' do
-      config = ROM::Config.build(raw_config.update(super: :option, root: '/somewhere'))
+      config = ROM::Config.build(raw_config.update(port: 312, root: '/somewhere'))
 
       expect(config).to eql(
-        default: { uri: 'memory://localhost/test:312', options: { super: :option } }
+        default: { uri: 'memory://localhost/test', options: { port: 312 } }
       )
 
       config = ROM::Config.build('memory://localhost/test', super: :option)
@@ -35,6 +35,11 @@ describe ROM::Config do
       )
 
       expect(config).to eql(default: 'memory:///somewhere/test')
+    end
+
+    it 'sets default password to an empty string' do
+      config = ROM::Config.build(raw_config.update(username: 'root'))
+      expect(config).to eql(default: 'memory://root:@localhost/test')
     end
 
     it 'turns a uri into configuration hash' do
