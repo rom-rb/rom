@@ -105,6 +105,11 @@ module ROM
     end
 
     # @api private
+    def self.database_file?(scheme)
+      false
+    end
+
+    # @api private
     def initialize(uri, options = {})
       @uri = uri
       @options = options

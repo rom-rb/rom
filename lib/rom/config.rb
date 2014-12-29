@@ -17,17 +17,18 @@ module ROM
 
       root = config[:root]
 
-      adapter = config[:adapter]
+      raw_scheme = config[:adapter]
       database = config[:database]
       password = config[:password]
       username = config[:username]
       port = config[:port]
       hostname = config.fetch(:hostname) { 'localhost' }
 
-      scheme = Adapter[adapter].normalize_scheme(adapter)
+      adapter = Adapter[raw_scheme]
+      scheme = adapter.normalize_scheme(raw_scheme)
 
       path =
-        if root
+        if adapter.database_file?(scheme)
           [root, database].compact.join('/')
         else
           db_path = [hostname, database].join('/')

@@ -13,7 +13,7 @@ describe ROM::Config do
     end
 
     it 'sets additional options' do
-      config = ROM::Config.build(raw_config.update(super: :option))
+      config = ROM::Config.build(raw_config.update(super: :option, root: '/somewhere'))
 
       expect(config).to eql(
         default: { uri: 'memory://localhost/test:312', options: { super: :option } }
@@ -26,7 +26,10 @@ describe ROM::Config do
       )
     end
 
-    it 'builds absolute path to the database file when root is provided' do
+    it 'builds absolute path to the database file when database is a file' do
+      expect(ROM::Adapter[:memory]).to receive(:database_file?)
+        .with('memory').and_return(true)
+
       config = ROM::Config.build(
         adapter: 'memory', database: 'test', root: '/somewhere'
       )
