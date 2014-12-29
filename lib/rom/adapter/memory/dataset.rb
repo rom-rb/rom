@@ -45,7 +45,7 @@ module ROM
         end
 
         def project(*names)
-          map { |tuple| tuple.reject { |key, _| names.include?(key) } }
+          map { |tuple| tuple.reject { |key| !names.include?(key) } }
         end
 
         def order(*names)
