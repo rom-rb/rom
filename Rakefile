@@ -20,7 +20,10 @@ desc "Install extra development gems"
 task :devinit do
   puts "Installing extra development gem dependencies...\n\n"
 
-  %w(rubocop mutant mutant-rspec).each do |name|
+  %w(
+    guard guard-rspec guard-rubocop rubocop mutant mutant-rspec
+    parser ruby-progressbar
+  ).each do |name|
     puts "Installing #{name}..."
     `gem install #{name}`
   end
