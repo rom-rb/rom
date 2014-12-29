@@ -7,8 +7,24 @@ describe 'Setting up ROM' do
     let(:jane) { { name: 'Jane', email: 'jane@doe.org' } }
     let(:joe) { { name: 'Joe', email: 'joe@doe.org' } }
 
-    it 'configures relations' do
+    it 'configures schema relations' do
       expect(rom.memory.users).to match_array([joe, jane])
+    end
+
+    it 'configures rom relations' do
+      setup.relation(:users)
+      setup.relation(:tasks)
+
+      users = rom.relations.users
+
+      expect(users).to be_kind_of(ROM::Relation)
+      expect(users).to respond_to(:tasks)
+
+      tasks = users.tasks
+
+      expect(tasks).to be_kind_of(ROM::Relation)
+      expect(tasks).to respond_to(:users)
+      expect(tasks.users).to be(users)
     end
 
     it 'raises on double-finalize' do

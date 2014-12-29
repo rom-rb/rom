@@ -4,6 +4,8 @@ describe 'Reading relations' do
   include_context 'users and tasks'
 
   it 'exposes a relation reader' do
+    setup.relation(:tasks)
+
     setup.relation(:users) do
       def by_name(name)
         restrict(name: name)
@@ -29,6 +31,8 @@ describe 'Reading relations' do
   end
 
   it 'maps grouped relations' do
+    setup.relation(:tasks)
+
     setup.relation(:users) do
       include ROM::RA
 
@@ -80,6 +84,8 @@ describe 'Reading relations' do
   end
 
   it 'maps wrapped relations' do
+    setup.relation(:tasks)
+
     setup.relation(:users) do
       include ROM::RA
 

@@ -139,9 +139,10 @@ module ROM
     def load_relations(schema)
       return RelationRegistry.new unless adapter_relation_map.any?
 
-      builder = RelationBuilder.new(schema)
+      relations = {}
+      builder = RelationBuilder.new(schema, relations)
 
-      relations = @relations.each_with_object({}) do |(name, block), h|
+      @relations.each do |name, block|
         adapter = adapter_relation_map[name]
 
         relation = builder.call(name) { |klass|
@@ -155,7 +156,7 @@ module ROM
 
         adapter.extend_relation_instance(relation)
 
-        h[name] = relation
+        relations[name] = relation
       end
 
       relations.each_value do |relation|

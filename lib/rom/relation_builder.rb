@@ -4,10 +4,13 @@ module ROM
     attr_reader :schema, :mod
 
     # @api private
-    def initialize(schema)
+    def initialize(schema, relations)
       @schema = schema
-      @mod = schema.each_with_object(Module.new) do |(name, relation), m|
-        m.send(:define_method, name) { relation.dataset }
+
+      @mod = Module.new
+
+      @mod.module_exec do
+        define_method(:__relations__) { relations }
       end
     end
 
@@ -32,6 +35,20 @@ module ROM
 
         def name
           #{name.inspect}
+        end
+
+        def respond_to_missing?(name, _include_private = false)
+          __relations__.key?(name) || super
+        end
+
+        private
+
+        def method_missing(name, *args, &block)
+          if __relations__.key?(name)
+            __relations__[name]
+          else
+            super
+          end
         end
       RUBY
 
