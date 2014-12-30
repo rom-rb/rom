@@ -63,6 +63,22 @@ describe ROM::Header do
     end
   end
 
+  describe '#mapping' do
+    it 'return mapping hash for primitive attributes' do
+      header = ROM::Header.coerce([[:title], [:name, from: :user_name]])
+
+      expect(header.mapping).to eql(title: :title, user_name: :name)
+    end
+
+    it 'returns an empty hash when there are no primitive attributes' do
+      header = ROM::Header.coerce([
+        [:city, type: :hash, wrap: true, header: [[:name]]]
+      ])
+
+      expect(header.mapping).to eql({})
+    end
+  end
+
   describe '#tuple_keys' do
     it 'return primitive attribute keys' do
       header = ROM::Header.coerce([[:title], [:name, from: :user_name]])
