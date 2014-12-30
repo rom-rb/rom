@@ -1,7 +1,4 @@
-require 'transproc'
-require 'transproc/coercions'
-require 'transproc/hash'
-require 'transproc/array'
+require 'transproc/all'
 
 require 'rom/processor'
 
@@ -27,39 +24,39 @@ module ROM
 
       def to_transproc
         compose(EMPTY_FN) do |ops|
-          ops << header.groups.map { |attr| visit(attr, true) }
+          ops << header.groups.map { |attr| visit_group(attr, true) }
           ops << t(:map_array!, tuple_proc) if tuple_proc
         end
       end
 
       private
 
-      def visit(attribute, preprocess = false)
+      def visit(attribute)
         type = attribute.class.name.split('::').last.downcase
-        send("visit_#{type}", attribute, preprocess)
+        send("visit_#{type}", attribute)
       end
 
-      def visit_attribute(attribute, _preprocess = false)
+      def visit_attribute(attribute)
         if attribute.typed?
           t(:map_key!, attribute.name, t(:"to_#{attribute.type}"))
         end
       end
 
-      def visit_hash(attribute, _preprocess = false)
+      def visit_hash(attribute)
         with_tuple_proc(attribute) do |tuple_proc|
           t(:map_key!, attribute.name, tuple_proc)
         end
       end
 
-      def visit_array(attribute, _preprocess = false)
+      def visit_array(attribute)
         with_tuple_proc(attribute) do |tuple_proc|
           t(:map_key!, attribute.name, t(:map_array!, tuple_proc))
         end
       end
 
-      def visit_wrap(attribute, _preprocess = false)
+      def visit_wrap(attribute)
         name = attribute.name
-        keys = attribute.header.tuple_keys
+        keys = attribute.tuple_keys
 
         compose do |ops|
           ops << t(:nest!, name, keys)
@@ -71,7 +68,8 @@ module ROM
         if preprocess
           name = attribute.name
           header = attribute.header
-          keys = header.tuple_keys
+          keys = attribute.tuple_keys
+
           other = header.groups
 
           compose do |ops|
