@@ -28,11 +28,7 @@ module ROM
 
       def embedded(name, options = {}, &block)
         with_attr_options(name, options) do |attr_options|
-          dsl_options = @options.merge(options)
-          dsl_options.update(prefix: options.fetch(:prefix) { prefix })
-
-          dsl = self.class.new([], dsl_options)
-          dsl.instance_exec(&block)
+          dsl = new(options, &block)
 
           add_attribute(
             name,
@@ -92,12 +88,7 @@ module ROM
       end
 
       def attributes_from_block(name, options, &block)
-        dsl_options = @options.dup
-        dsl_options.update(prefix: options.fetch(:prefix) { prefix })
-
-        dsl = self.class.new([], dsl_options)
-        dsl.instance_exec(&block)
-
+        dsl = new(options, &block)
         add_attribute(name, options.update(header: dsl.header))
       end
 
@@ -112,6 +103,14 @@ module ROM
       def add_attribute(name, options)
         exclude(name, name.to_s)
         attributes << [name, options]
+      end
+
+      def new(options, &block)
+        dsl_options = @options.merge(options)
+        dsl_options.update(prefix: options.fetch(:prefix) { prefix })
+        dsl = self.class.new([], dsl_options)
+        dsl.instance_exec(&block)
+        dsl
       end
     end
   end
