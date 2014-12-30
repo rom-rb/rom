@@ -35,9 +35,7 @@ describe 'Setting up ROM' do
     it 'builds empty registries if there is no schema' do
       setup = ROM.setup(memory: 'memory://test')
 
-      setup.relation(:users)
-
-      rom = setup.finalize
+      rom = setup.relation(:users).finalize
 
       expect(rom.relations).to eql(ROM::RelationRegistry.new)
       expect(rom.mappers).to eql(ROM::ReaderRegistry.new)

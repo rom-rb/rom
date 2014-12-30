@@ -42,12 +42,22 @@ describe 'Defining schema' do
             attribute :title
           end
         end
+
+        setup.schema do
+          base_relation(:tags) do
+            repository :memory
+            attribute :name
+          end
+        end
       end
 
       it_behaves_like 'valid schema' do
         it 'registers all base relations' do
           expect(schema.tasks.dataset).to be(rom.memory.tasks)
           expect(schema.tasks.header).to eql([:title])
+
+          expect(schema.tags.dataset).to be(rom.memory.tags)
+          expect(schema.tags.header).to eql([:name])
         end
       end
     end

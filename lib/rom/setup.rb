@@ -39,10 +39,7 @@ module ROM
     #
     # @api public
     def schema(&block)
-      dsl = SchemaDSL.new(self, @schema, &block)
-      dsl.schema.each do |repo, relations|
-        (@schema[repo] ||= []).concat(relations)
-      end
+      SchemaDSL.new(self, @schema, &block)
       self
     end
 
@@ -86,6 +83,7 @@ module ROM
     def commands(name, &block)
       dsl = CommandDSL.new(&block)
       @commands.update(name => dsl.commands)
+      self
     end
 
     # Finalize the setup
