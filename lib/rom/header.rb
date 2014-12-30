@@ -51,10 +51,6 @@ module ROM
       attributes.keys
     end
 
-    def values
-      attributes.values
-    end
-
     def [](name)
       attributes.fetch(name)
     end
