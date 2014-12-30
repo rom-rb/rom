@@ -40,7 +40,6 @@ module ROM
     # @api public
     def schema(&block)
       SchemaDSL.new(self, @schema, &block)
-      self
     end
 
     # Relation definition DSL
@@ -56,7 +55,6 @@ module ROM
     # @api public
     def relation(name, &block)
       @relations.update(name => block)
-      self
     end
 
     # Mapper definition DSL
@@ -77,13 +75,11 @@ module ROM
     def mappers(&block)
       dsl = MapperDSL.new(&block)
       @mappers.concat(dsl.mappers)
-      self
     end
 
     def commands(name, &block)
       dsl = CommandDSL.new(&block)
       @commands.update(name => dsl.commands)
-      self
     end
 
     # Finalize the setup
@@ -115,7 +111,7 @@ module ROM
     private
 
     # @api private
-    def method_missing(name, *_args)
+    def method_missing(name, *)
       if repositories.key?(name)
         repositories.fetch(name)
       else
