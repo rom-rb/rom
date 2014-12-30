@@ -29,31 +29,21 @@ module ROM
 
           attributes << [
             name,
-            { header: dsl.header, type: :array }.merge(attr_options)
+            { header: dsl.header, type: :array }.update(attr_options)
           ]
         end
       end
 
       def wrap(*args, &block)
-        name, options =
-          if args.size > 1
-            args
-          else
-            [args.first, {}]
-          end
-
-        dsl(name, { type: :hash, wrap: true }.update(options), &block)
+        with_name_and_options(*args) do |name, options|
+          dsl(name, { type: :hash, wrap: true }.update(options), &block)
+        end
       end
 
       def group(*args, &block)
-        name, options =
-          if args.size > 1
-            args
-          else
-            [args.first, {}]
-          end
-
-        dsl(name, { type: :array, group: true }.update(options), &block)
+        with_name_and_options(*args) do |name, options|
+          dsl(name, { type: :array, group: true }.update(options), &block)
+        end
       end
 
       def header
@@ -74,6 +64,17 @@ module ROM
         yield(attr_options)
       end
 
+      def with_name_and_options(*args)
+        name, options =
+          if args.size > 1
+            args
+          else
+            [args.first, {}]
+          end
+
+        yield(name, options)
+      end
+
       def dsl(name_or_attrs, options, &block)
         if block
           name = name_or_attrs
@@ -81,7 +82,7 @@ module ROM
           dsl_options = @options.dup
           dsl_options.update(prefix: options.fetch(:prefix) { prefix })
 
-          dsl = AttributeDSL.new(dsl_options)
+          dsl = self.class.new(dsl_options)
           dsl.instance_exec(&block)
 
           with_attr_options(name, options) do |attr_options|
