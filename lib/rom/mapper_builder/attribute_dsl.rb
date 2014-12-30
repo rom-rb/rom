@@ -1,15 +1,19 @@
+require 'rom/mapper_builder/model_dsl'
+
 module ROM
   class MapperBuilder
     # @api private
     class AttributeDSL
-      attr_reader :attributes, :model_class, :model_builder, :options,
-        :symbolize_keys, :prefix
+      include ModelDSL
+
+      attr_reader :attributes, :options, :symbolize_keys, :prefix
 
       def initialize(options = {})
         @attributes = []
         @options = options
         @symbolize_keys = options.fetch(:symbolize_keys) { false }
         @prefix = options.fetch(:prefix) { false }
+        super
       end
 
       def attribute(name, options = {})
@@ -50,23 +54,6 @@ module ROM
           end
 
         dsl(name, { type: :array, group: true }.update(options), &block)
-      end
-
-      def model(options = nil)
-        if options.is_a?(Class)
-          @model_class = options
-        elsif options
-          type = options.fetch(:type) { :poro }
-          @model_builder = ModelBuilder[type].new(options)
-        end
-
-        if options
-          self
-        else
-          model_class || (
-            model_builder && model_builder.call(attributes.map(&:first))
-          )
-        end
       end
 
       def header

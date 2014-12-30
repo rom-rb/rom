@@ -5,8 +5,9 @@ require 'rom/mapper_builder/attribute_dsl'
 module ROM
   # @api private
   class MapperBuilder
-    attr_reader :name, :prefix, :root, :symbolize_keys,
-      :model_builder, :model_class, :attributes
+    include ModelDSL
+
+    attr_reader :name, :root, :prefix, :symbolize_keys, :attributes
 
     DEFAULT_PROCESSOR = :transproc
 
@@ -25,6 +26,8 @@ module ROM
         end
 
       @processor = DEFAULT_PROCESSOR
+
+      super
     end
 
     def processor(identifier = nil)
@@ -34,16 +37,6 @@ module ROM
       else
         @processor
       end
-    end
-
-    def model(options)
-      if options.is_a?(Class)
-        @model_class = options
-      else
-        type = options.fetch(:type) { :poro }
-        @model_builder = ModelBuilder[type].new(options)
-      end
-      self
     end
 
     def attribute(name, options = {})
@@ -75,10 +68,7 @@ module ROM
     end
 
     def call
-      if model_builder
-        @model_class = model_builder.call(attributes.map(&:first))
-      end
-      header = Header.coerce(attributes, model_class)
+      header = Header.coerce(attributes, model)
       Mapper.build(header, processor)
     end
 
