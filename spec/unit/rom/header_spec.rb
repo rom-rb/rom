@@ -62,4 +62,25 @@ describe ROM::Header do
       end
     end
   end
+
+  describe '#tuple_keys' do
+    it 'return primitive attribute keys' do
+      header = ROM::Header.coerce([[:title], [:name, from: :user_name]])
+      expect(header.tuple_keys).to eql([:title, :user_name])
+    end
+
+    it 'return primitive attribute, wrap and group keys' do
+      header = ROM::Header.coerce([
+        [:title],
+        [:comments, type: :array, header: [[:author], [:text]]],
+        [:location, type: :hash, header: [[:lat], [:lng]]],
+        [:city, type: :hash, wrap: true, header: [[:name, from: :city_name]]],
+        [:tags, type: :array, group: true, header: [[:name, from: :tag_name]]]
+      ])
+
+      expect(header.tuple_keys).to match_array([
+        :title, :comments, :location, :city_name, :tag_name
+      ])
+    end
+  end
 end

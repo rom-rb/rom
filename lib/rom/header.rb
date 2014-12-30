@@ -23,7 +23,7 @@ module ROM
     def initialize(attributes, model = nil)
       @attributes = attributes
       @model = model
-      @mapping = reject(&:preprocess?).map(&:mapping).reduce(:merge)
+      @mapping = by_type(Attribute, Array, Hash).map(&:mapping).reduce(:merge)
     end
 
     def each(&block)
@@ -31,20 +31,12 @@ module ROM
       attributes.values.each(&block)
     end
 
-    def preprocess?
-      any?(&:preprocess?)
-    end
-
     def aliased?
       any?(&:aliased?)
     end
 
     def tuple_keys
-      reject(&:preprocess?).map(&:key) + embedded.map(&:tuple_keys).flatten
-    end
-
-    def embedded
-      select(&:embedded?)
+      (mapping.keys + groups.map(&:tuple_keys) + wraps.map(&:tuple_keys)).flatten
     end
 
     def keys
@@ -53,6 +45,20 @@ module ROM
 
     def [](name)
       attributes.fetch(name)
+    end
+
+    def groups
+      by_type(Group)
+    end
+
+    def wraps
+      by_type(Wrap)
+    end
+
+    private
+
+    def by_type(*types)
+      select { |attribute| types.include?(attribute.class) }
     end
   end
 end

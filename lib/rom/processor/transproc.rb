@@ -27,7 +27,7 @@ module ROM
 
       def to_transproc
         compose(EMPTY_FN) do |ops|
-          ops << header.select(&:preprocess?).map { |attr| visit(attr, true) }
+          ops << header.groups.map { |attr| visit(attr, true) }
           ops << t(:map_array!, tuple_proc) if tuple_proc
         end
       end
@@ -72,7 +72,7 @@ module ROM
           name = attribute.name
           header = attribute.header
           keys = header.tuple_keys
-          other = header.select(&:preprocess?)
+          other = header.groups
 
           compose do |ops|
             ops << t(:group, name, keys)

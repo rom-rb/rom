@@ -49,10 +49,6 @@ module ROM
         key != name
       end
 
-      def preprocess?
-        false
-      end
-
       def embedded?
         false
       end
@@ -81,11 +77,6 @@ module ROM
     Array = Class.new(Embedded)
     Hash = Class.new(Embedded)
     Wrap = Class.new(Hash)
-
-    class Group < Array
-      def preprocess?
-        true
-      end
-    end
+    Group = Class.new(Array)
   end
 end
