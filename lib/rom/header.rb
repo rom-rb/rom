@@ -9,7 +9,7 @@ module ROM
     attr_reader :attributes, :model, :mapping
 
     def self.coerce(input, model = nil)
-      if input.is_a?(self)
+      if input.instance_of?(self)
         input
       else
         attributes = input.each_with_object({}) { |pair, h|
@@ -27,7 +27,6 @@ module ROM
     end
 
     def each(&block)
-      return to_enum unless block
       attributes.values.each(&block)
     end
 
