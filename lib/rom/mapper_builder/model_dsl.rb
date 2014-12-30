@@ -7,11 +7,6 @@ module ROM
 
       DEFAULT_TYPE = :poro
 
-      def initialize(*)
-        @klass = nil
-        @builder = nil
-      end
-
       def model(options = nil)
         if options.is_a?(Class)
           @klass = options

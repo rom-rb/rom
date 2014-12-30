@@ -8,15 +8,14 @@ module ROM
 
       attr_reader :attributes, :options, :symbolize_keys, :prefix
 
-      def initialize(attributes, options = {})
+      def initialize(attributes, options)
         @attributes = attributes
         @options = options
-        @symbolize_keys = options.fetch(:symbolize_keys) { false }
-        @prefix = options.fetch(:prefix) { false }
-        super
+        @symbolize_keys = options[:symbolize_keys]
+        @prefix = options[:prefix]
       end
 
-      def attribute(name, options = {})
+      def attribute(name, options = EMPTY_HASH)
         with_attr_options(name, options) do |attr_options|
           add_attribute(name, attr_options)
         end
@@ -26,13 +25,14 @@ module ROM
         names.each { |name| attributes.delete([name]) }
       end
 
-      def embedded(name, options = {}, &block)
-        with_attr_options(name, options) do |attr_options|
+      def embedded(name, options, &block)
+        with_attr_options(name) do |attr_options|
           dsl = new(options, &block)
 
+          attr_options.update(options)
+
           add_attribute(
-            name,
-            { header: dsl.header, type: :array }.update(attr_options)
+            name, { header: dsl.header, type: :array }.update(attr_options)
           )
         end
       end
@@ -55,11 +55,10 @@ module ROM
 
       private
 
-      def with_attr_options(name, options)
+      def with_attr_options(name, options = EMPTY_HASH)
         attr_options = options.dup
 
-        attr_prefix = options[:prefix] || prefix
-        attr_options[:from] ||= :"#{attr_prefix}_#{name}" if attr_prefix
+        attr_options[:from] ||= :"#{prefix}_#{name}" if prefix
 
         if symbolize_keys
           attr_options.update(from: attr_options.fetch(:from) { name }.to_s)
@@ -106,9 +105,7 @@ module ROM
       end
 
       def new(options, &block)
-        dsl_options = @options.merge(options)
-        dsl_options.update(prefix: options.fetch(:prefix) { prefix })
-        dsl = self.class.new([], dsl_options)
+        dsl = self.class.new([], @options.merge(options))
         dsl.instance_exec(&block)
         dsl
       end

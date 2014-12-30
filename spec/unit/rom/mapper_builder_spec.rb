@@ -268,6 +268,11 @@ describe ROM::MapperBuilder do
       let(:attributes) do
         [
           [:name, from: :user_name],
+          [:birthday, from: :user_birthday, type: :hash, header: [
+            [:year, from: :bd_year],
+            [:month, from: :bd_month],
+            [:day, from: :bd_day]]
+          ],
           [:address, from: :user_address, type: :hash, header: [[:city]]],
           [:contact, type: :hash, wrap: true, header: [
             [:mobile, from: :contact_mobile]]
@@ -280,6 +285,12 @@ describe ROM::MapperBuilder do
 
       it 'excludes from aliasing the ones which override it' do
         builder.attribute :name
+
+        builder.embedded :birthday, type: :hash, prefix: :bd do
+          attribute :year
+          attribute :month
+          attribute :day
+        end
 
         builder.embedded :address, type: :hash, prefix: false do
           attribute :city

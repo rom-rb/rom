@@ -38,6 +38,8 @@ module ROM
   RelationRegistry = Class.new(Registry)
   ReaderRegistry = Class.new(Registry)
 
+  EMPTY_HASH = {}.freeze
+
   # Starts the setup process for schema, relations and mappers
   #
   # @param [Hash] options repository URIs
