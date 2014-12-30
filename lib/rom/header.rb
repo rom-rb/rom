@@ -51,6 +51,14 @@ module ROM
       by_type(Wrap)
     end
 
+    def primitives
+      to_a - non_primitives
+    end
+
+    def non_primitives
+      groups + wraps
+    end
+
     private
 
     def by_type(*types)
@@ -58,15 +66,11 @@ module ROM
     end
 
     def initialize_mapping
-      @mapping = by_type(Attribute, Array, Hash).map(&:mapping).reduce(:merge) || {}
+      @mapping = primitives.map(&:mapping).reduce(:merge) || {}
     end
 
     def initialize_tuple_keys
-      mapping_keys = mapping.keys
-      groups_tuple_keys = groups.map(&:tuple_keys)
-      wraps_tuple_keys = wraps.map(&:tuple_keys)
-
-      @tuple_keys = (mapping_keys + wraps_tuple_keys + groups_tuple_keys).flatten
+      @tuple_keys = mapping.keys + non_primitives.map(&:tuple_keys).flatten
     end
   end
 end
