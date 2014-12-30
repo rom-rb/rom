@@ -9,9 +9,9 @@ module ROM
       def self.[](meta)
         type = meta[:type]
 
-        if type == :hash
+        if type.equal?(:hash)
           meta[:wrap] ? Wrap : Hash
-        elsif type == :array
+        elsif type.equal?(:array)
           meta[:group] ? Group : Array
         else
           self
@@ -19,23 +19,19 @@ module ROM
       end
 
       def self.coerce(input)
-        if input.is_a?(self)
-          input
-        else
-          name = input[0]
-          meta = (input[1] || {}).dup
+        name = input[0]
+        meta = (input[1] || {}).dup
 
-          meta[:type] ||= :object
+        meta[:type] ||= :object
 
-          if meta.key?(:header)
-            meta[:header] = Header.coerce(meta[:header], meta[:model])
-          end
-
-          self[meta].new(name, meta)
+        if meta.key?(:header)
+          meta[:header] = Header.coerce(meta[:header], meta[:model])
         end
+
+        self[meta].new(name, meta)
       end
 
-      def initialize(name, meta = {})
+      def initialize(name, meta)
         @name = name
         @meta = meta
         @key = meta.fetch(:from) { name }
