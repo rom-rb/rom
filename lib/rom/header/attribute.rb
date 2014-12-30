@@ -49,10 +49,6 @@ module ROM
         key != name
       end
 
-      def embedded?
-        false
-      end
-
       def mapping
         { key => name }
       end
@@ -67,10 +63,6 @@ module ROM
 
       def tuple_keys
         header.tuple_keys
-      end
-
-      def embedded?
-        true
       end
     end
 
