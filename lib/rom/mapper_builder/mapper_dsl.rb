@@ -35,13 +35,13 @@ module ROM
       end
 
       def wrap(*args, &block)
-        with_name_and_options(*args) do |name, options|
+        with_name_or_options(*args) do |name, options|
           dsl(name, { type: :hash, wrap: true }.update(options), &block)
         end
       end
 
       def group(*args, &block)
-        with_name_and_options(*args) do |name, options|
+        with_name_or_options(*args) do |name, options|
           dsl(name, { type: :array, group: true }.update(options), &block)
         end
       end
@@ -64,7 +64,7 @@ module ROM
         yield(attr_options)
       end
 
-      def with_name_and_options(*args)
+      def with_name_or_options(*args)
         name, options =
           if args.size > 1
             args
@@ -77,24 +77,28 @@ module ROM
 
       def dsl(name_or_attrs, options, &block)
         if block
-          name = name_or_attrs
-
-          dsl_options = @options.dup
-          dsl_options.update(prefix: options.fetch(:prefix) { prefix })
-
-          dsl = self.class.new(dsl_options)
-          dsl.instance_exec(&block)
-
-          with_attr_options(name, options) do |attr_options|
-            attributes << [name, attr_options.update(header: dsl.header)]
-          end
+          attributes_from_block(name_or_attrs, options, &block)
         else
-          attrs = name_or_attrs
+          attributes_from_hash(name_or_attrs, options)
+        end
+      end
 
-          attrs.each do |root, header|
-            with_attr_options(name, options) do |attr_options|
-              attributes << [root, attr_options.update(header: header.zip)]
-            end
+      def attributes_from_block(name, options, &block)
+        dsl_options = @options.dup
+        dsl_options.update(prefix: options.fetch(:prefix) { prefix })
+
+        dsl = self.class.new(dsl_options)
+        dsl.instance_exec(&block)
+
+        with_attr_options(name, options) do |attr_options|
+          attributes << [name, attr_options.update(header: dsl.header)]
+        end
+      end
+
+      def attributes_from_hash(hash, options)
+        hash.each do |name, header|
+          with_attr_options(name, options) do |attr_options|
+            attributes << [name, attr_options.update(header: header.zip)]
           end
         end
       end
