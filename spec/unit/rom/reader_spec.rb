@@ -44,6 +44,10 @@ describe ROM::Reader do
       end
     end
 
+    it 'sets reader class name' do
+      expect(reader.class.name).to eql("ROM::Reader[Users]")
+    end
+
     it 'defines methods from relation' do
       block = proc {}
 

@@ -15,12 +15,7 @@ module ROM
     def self.build(name, relation, mappers, method_names = [])
       klass = Class.new(self)
 
-      klass_name =
-        if relation.respond_to?(:name)
-          "#{self.name}[#{Inflecto.camelize(relation.name)}]"
-        else
-          self.name
-        end
+      klass_name = "#{self.name}[#{Inflecto.camelize(relation.name)}]"
 
       klass.class_eval <<-RUBY, __FILE__, __LINE__ + 1
         def self.name
