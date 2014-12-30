@@ -1,4 +1,4 @@
-require 'rom/boot/dsl'
+require 'rom/setup/dsl'
 require 'rom/relation_builder'
 require 'rom/reader_builder'
 require 'rom/command_registry'
@@ -7,7 +7,7 @@ module ROM
   # Exposes DSL for defining schema, relations and mappers
   #
   # @api public
-  class Boot
+  class Setup
     include Equalizer.new(:repositories, :env)
 
     attr_reader :repositories, :adapter_relation_map, :env

@@ -1,7 +1,7 @@
-require 'rom/boot/base_relation_dsl'
+require 'rom/setup/base_relation_dsl'
 
 module ROM
-  class Boot
+  class Setup
     class SchemaDSL
       attr_reader :env, :schema
 

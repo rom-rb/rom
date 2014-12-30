@@ -1,5 +1,5 @@
 module ROM
-  class Boot
+  class Setup
     class RelationDSL
       attr_reader :schema, :relations
 

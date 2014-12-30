@@ -1,9 +1,9 @@
-require 'rom/boot/schema_dsl'
-require 'rom/boot/mapper_dsl'
-require 'rom/boot/command_dsl'
+require 'rom/setup/schema_dsl'
+require 'rom/setup/mapper_dsl'
+require 'rom/setup/command_dsl'
 
 module ROM
-  class Boot
+  class Setup
     class DSL
       attr_reader :env
 

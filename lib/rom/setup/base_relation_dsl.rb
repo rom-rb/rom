@@ -1,5 +1,5 @@
 module ROM
-  class Boot
+  class Setup
     class BaseRelationDSL
       attr_reader :env, :name, :header
 

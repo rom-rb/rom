@@ -20,7 +20,7 @@ require 'rom/repository'
 require 'rom/config'
 require 'rom/env'
 
-require 'rom/boot'
+require 'rom/setup'
 
 module ROM
   EnvAlreadyFinalizedError = Class.new(StandardError)
@@ -42,7 +42,7 @@ module ROM
   #
   # @param [Hash] options repository URIs
   #
-  # @return [Boot] boot object
+  # @return [Setup] boot object
   #
   # @api public
   def self.setup(*args, &block)
@@ -63,7 +63,7 @@ module ROM
       hash[name] = Repository.new(adapter)
     end
 
-    boot = Boot.new(repositories)
+    boot = Setup.new(repositories)
 
     if block
       boot.instance_exec(&block)
