@@ -21,6 +21,8 @@ module ROM
           options[:type]
         end
 
+        private
+
         def method_missing(name, *args, &block)
           if args.size == 1
             options[name] = args.first
@@ -30,12 +32,9 @@ module ROM
         end
       end
 
-      def initialize
+      def initialize(&block)
         @commands = {}
-      end
-
-      def call
-        commands
+        instance_exec(&block)
       end
 
       def define(name, options = {}, &block)

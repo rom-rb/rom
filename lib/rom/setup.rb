@@ -1,4 +1,7 @@
-require 'rom/setup/dsl'
+require 'rom/setup/schema_dsl'
+require 'rom/setup/mapper_dsl'
+require 'rom/setup/command_dsl'
+
 require 'rom/relation_builder'
 require 'rom/reader_builder'
 require 'rom/command_registry'
@@ -38,8 +41,8 @@ module ROM
     #
     # @api public
     def schema(&block)
-      base_relations = DSL.new(self).schema(&block)
-      base_relations.each do |repo, relations|
+      dsl = SchemaDSL.new(self, @schema, &block)
+      dsl.schema.each do |repo, relations|
         (@schema[repo] ||= []).concat(relations)
       end
       self
@@ -77,12 +80,14 @@ module ROM
     #
     # @api public
     def mappers(&block)
-      @mappers.concat(DSL.new(self).mappers(&block))
+      dsl = MapperDSL.new(&block)
+      @mappers.concat(dsl.mappers)
       self
     end
 
     def commands(name, &block)
-      @commands.update(name => DSL.new(self).commands(&block))
+      dsl = CommandDSL.new(&block)
+      @commands.update(name => dsl.commands)
     end
 
     # Finalize the setup

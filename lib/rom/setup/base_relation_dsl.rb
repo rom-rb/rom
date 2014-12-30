@@ -3,11 +3,12 @@ module ROM
     class BaseRelationDSL
       attr_reader :env, :name, :header
 
-      def initialize(env, name)
+      def initialize(env, name, &block)
         @env = env
         @name = name
         @header = []
         @repository = nil
+        instance_exec(&block)
       end
 
       def repository(name = nil)
@@ -22,9 +23,7 @@ module ROM
         header << name
       end
 
-      def call(&block)
-        instance_exec(&block)
-
+      def call
         dataset =
           if adapter.respond_to?(:dataset)
             adapter.dataset(name, header)

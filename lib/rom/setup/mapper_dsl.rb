@@ -5,12 +5,9 @@ module ROM
     class MapperDSL
       attr_reader :mappers
 
-      def initialize
+      def initialize(&block)
         @mappers = []
-      end
-
-      def call
-        mappers
+        instance_exec(&block)
       end
 
       def define(name, options = {}, &block)
