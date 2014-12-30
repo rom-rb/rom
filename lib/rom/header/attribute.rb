@@ -4,7 +4,7 @@ module ROM
     class Attribute
       include Equalizer.new(:name, :key, :type)
 
-      attr_reader :name, :key, :meta
+      attr_reader :name, :key, :type, :meta
 
       def self.[](meta)
         type = meta[:type]
@@ -35,10 +35,7 @@ module ROM
         @name = name
         @meta = meta
         @key = meta.fetch(:from) { name }
-      end
-
-      def type
-        meta.fetch(:type)
+        @type = meta.fetch(:type)
       end
 
       def typed?
@@ -57,8 +54,11 @@ module ROM
     class Embedded < Attribute
       include Equalizer.new(:name, :key, :type, :header)
 
-      def header
-        meta.fetch(:header)
+      attr_reader :header
+
+      def initialize(*)
+        super
+        @header = meta.fetch(:header)
       end
 
       def tuple_keys
