@@ -1,3 +1,5 @@
+require 'rom/model_builder'
+
 module ROM
   class MapperBuilder
     module ModelDSL

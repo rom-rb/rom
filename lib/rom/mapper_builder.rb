@@ -1,6 +1,5 @@
-require 'rom/model_builder'
-
-require 'rom/mapper_builder/attribute_dsl'
+require 'rom/mapper_builder/model_dsl'
+require 'rom/mapper_builder/mapper_dsl'
 
 module ROM
   # @api private
@@ -50,7 +49,7 @@ module ROM
     private
 
     def method_missing(name, *args, &block)
-      if AttributeDSL.public_instance_methods.include?(name)
+      if MapperDSL.public_instance_methods.include?(name)
         attribute_dsl(name, *args, &block)
       else
         super
@@ -58,7 +57,7 @@ module ROM
     end
 
     def attribute_dsl(method, *args, &block)
-      dsl = AttributeDSL.new(options)
+      dsl = MapperDSL.new(options)
       dsl.public_send(method, *args, &block)
       add_attributes(dsl.attributes)
     end
