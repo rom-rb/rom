@@ -20,7 +20,13 @@ task :mutant do
   if subject == 'mutant'
     abort "usage: rake mutant SUBJECT\nexample: rake mutant ROM::Header"
   else
-    cmd = "mutant --include lib --require ./spec/spec_helper --use rspec #{subject}"
-    exec(cmd)
+    opts = {
+      'include' => 'lib',
+      'require' => 'rom',
+      'use' => 'rspec',
+      'ignore-subject' => "#{subject}#respond_to_missing?"
+    }.to_a.map { |k, v| "--#{k} #{v}" }.join(' ')
+
+    exec("bundle exec mutant #{opts} #{subject}")
   end
 end
