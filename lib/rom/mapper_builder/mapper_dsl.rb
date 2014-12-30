@@ -8,8 +8,8 @@ module ROM
 
       attr_reader :attributes, :options, :symbolize_keys, :prefix
 
-      def initialize(options = {})
-        @attributes = []
+      def initialize(attributes, options = {})
+        @attributes = attributes
         @options = options
         @symbolize_keys = options.fetch(:symbolize_keys) { false }
         @prefix = options.fetch(:prefix) { false }
@@ -18,19 +18,23 @@ module ROM
 
       def attribute(name, options = {})
         with_attr_options(name, options) do |attr_options|
-          attributes << [name, attr_options]
+          add_attribute(name, attr_options)
         end
+      end
+
+      def exclude(*names)
+        names.each { |name| attributes.delete([name]) }
       end
 
       def embedded(name, options = {}, &block)
         with_attr_options(name, options) do |attr_options|
-          dsl = self.class.new(@options)
+          dsl = self.class.new([], @options)
           dsl.instance_exec(&block)
 
-          attributes << [
+          add_attribute(
             name,
             { header: dsl.header, type: :array }.update(attr_options)
-          ]
+          )
         end
       end
 
@@ -87,20 +91,25 @@ module ROM
         dsl_options = @options.dup
         dsl_options.update(prefix: options.fetch(:prefix) { prefix })
 
-        dsl = self.class.new(dsl_options)
+        dsl = self.class.new([], dsl_options)
         dsl.instance_exec(&block)
 
         with_attr_options(name, options) do |attr_options|
-          attributes << [name, attr_options.update(header: dsl.header)]
+          add_attribute(name, attr_options.update(header: dsl.header))
         end
       end
 
       def attributes_from_hash(hash, options)
         hash.each do |name, header|
           with_attr_options(name, options) do |attr_options|
-            attributes << [name, attr_options.update(header: header.zip)]
+            add_attribute(name, attr_options.update(header: header.zip))
           end
         end
+      end
+
+      def add_attribute(name, options)
+        exclude(name, name.to_s)
+        attributes << [name, options]
       end
     end
   end

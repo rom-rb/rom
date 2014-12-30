@@ -4,9 +4,7 @@ require 'rom/mapper_builder/mapper_dsl'
 module ROM
   # @api private
   class MapperBuilder
-    include ModelDSL
-
-    attr_reader :name, :root, :options, :prefix, :symbolize_keys, :attributes
+    attr_reader :name, :root, :options, :prefix, :symbolize_keys, :dsl
 
     DEFAULT_PROCESSOR = :transproc
 
@@ -17,16 +15,16 @@ module ROM
       @prefix = options[:prefix]
       @symbolize_keys = options[:symbolize_keys]
 
-      @attributes =
+      attributes =
         if options[:inherit_header]
           root.header.map { |attr| [prefix ? :"#{prefix}_#{attr}" : attr] }
         else
           []
         end
 
-      @processor = DEFAULT_PROCESSOR
+      @dsl = MapperDSL.new(attributes, options)
 
-      super
+      @processor = DEFAULT_PROCESSOR
     end
 
     def processor(identifier = nil)
@@ -37,37 +35,17 @@ module ROM
       end
     end
 
-    def exclude(name)
-      attributes.delete([name])
-    end
-
     def call
-      header = Header.coerce(attributes, model)
-      Mapper.build(header, processor)
+      Mapper.build(dsl.header, processor)
     end
 
     private
 
     def method_missing(name, *args, &block)
-      if MapperDSL.public_instance_methods.include?(name)
-        attribute_dsl(name, *args, &block)
+      if dsl.respond_to?(name)
+        dsl.public_send(name, *args, &block)
       else
         super
-      end
-    end
-
-    def attribute_dsl(method, *args, &block)
-      dsl = MapperDSL.new(options)
-      dsl.public_send(method, *args, &block)
-      add_attributes(dsl.attributes)
-    end
-
-    def add_attributes(attrs)
-      Array(attrs).each do |attr|
-        exclude(attr.first.to_s)
-        exclude(attr.first)
-        exclude(attr.last[:from])
-        attributes << attr
       end
     end
   end
