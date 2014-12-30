@@ -7,7 +7,7 @@ module ROM
   class MapperBuilder
     include ModelDSL
 
-    attr_reader :name, :root, :prefix, :symbolize_keys, :attributes
+    attr_reader :name, :root, :options, :prefix, :symbolize_keys, :attributes
 
     DEFAULT_PROCESSOR = :transproc
 
@@ -33,38 +33,13 @@ module ROM
     def processor(identifier = nil)
       if identifier
         @processor = identifier
-        self
       else
         @processor
       end
     end
 
-    def attribute(name, options = {})
-      dsl = AttributeDSL.new(@options)
-      dsl.attribute(name, options)
-      add_attributes(dsl.attributes)
-    end
-
     def exclude(name)
       attributes.delete([name])
-    end
-
-    def embedded(name, options = {}, &block)
-      dsl = AttributeDSL.new(@options.merge(options))
-      dsl.embedded(name, options, &block)
-      add_attributes(dsl.attributes)
-    end
-
-    def group(*args, &block)
-      dsl = AttributeDSL.new(@options)
-      dsl.group(*args, &block)
-      add_attributes(dsl.attributes)
-    end
-
-    def wrap(*args, &block)
-      dsl = AttributeDSL.new(@options)
-      dsl.wrap(*args, &block)
-      add_attributes(dsl.attributes)
     end
 
     def call
@@ -73,6 +48,20 @@ module ROM
     end
 
     private
+
+    def method_missing(name, *args, &block)
+      if AttributeDSL.public_instance_methods.include?(name)
+        attribute_dsl(name, *args, &block)
+      else
+        super
+      end
+    end
+
+    def attribute_dsl(method, *args, &block)
+      dsl = AttributeDSL.new(options)
+      dsl.public_send(method, *args, &block)
+      add_attributes(dsl.attributes)
+    end
 
     def add_attributes(attrs)
       Array(attrs).each do |attr|
