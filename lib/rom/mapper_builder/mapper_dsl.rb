@@ -28,7 +28,10 @@ module ROM
 
       def embedded(name, options = {}, &block)
         with_attr_options(name, options) do |attr_options|
-          dsl = self.class.new([], @options)
+          dsl_options = @options.merge(options)
+          dsl_options.update(prefix: options.fetch(:prefix) { prefix })
+
+          dsl = self.class.new([], dsl_options)
           dsl.instance_exec(&block)
 
           add_attribute(
@@ -59,7 +62,8 @@ module ROM
       def with_attr_options(name, options)
         attr_options = options.dup
 
-        attr_options[:from] ||= :"#{prefix}_#{name}" if prefix
+        attr_prefix = options[:prefix] || prefix
+        attr_options[:from] ||= :"#{attr_prefix}_#{name}" if attr_prefix
 
         if symbolize_keys
           attr_options.update(from: attr_options.fetch(:from) { name }.to_s)
@@ -94,9 +98,7 @@ module ROM
         dsl = self.class.new([], dsl_options)
         dsl.instance_exec(&block)
 
-        with_attr_options(name, options) do |attr_options|
-          add_attribute(name, attr_options.update(header: dsl.header))
-        end
+        add_attribute(name, options.update(header: dsl.header))
       end
 
       def attributes_from_hash(hash, options)
