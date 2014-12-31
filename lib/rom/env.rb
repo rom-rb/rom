@@ -41,6 +41,10 @@ module ROM
       commands[name]
     end
 
+    # Return repository identified by its name
+    #
+    # @return [Repository]
+    #
     # @api private
     def [](name)
       repositories.fetch(name)
@@ -53,6 +57,10 @@ module ROM
 
     private
 
+    # Return repository if the method matches repository name
+    #
+    # @return [Repository]
+    #
     # @api private
     def method_missing(name, *args, &block)
       if repositories.key?(name)

@@ -10,8 +10,39 @@ module ROM
     include Enumerable
     include Equalizer.new(:path, :relation, :mapper)
 
-    attr_reader :path, :relation, :mappers, :mapper
+    # @return [String] access path used to read a relation
+    #
+    # @api private
+    attr_reader :path
 
+    # @return [Relation] relation used by the reader
+    #
+    # @api private
+    attr_reader :relation
+
+    # @return [MapperRegistry] registry of mappers used by the reader
+    #
+    # @api private
+    attr_reader :mappers
+
+    # @return [Mapper] mapper to read the relation
+    #
+    # @api private
+    attr_reader :mapper
+
+    # Build a reader subclass for the relation and instantiate it
+    #
+    # This method defines public methods on the class narrowing down data access
+    # only to the methods exposed by a given relation
+    #
+    # @param [Symbol] name of the root relation
+    # @param [Relation] relation that the reader will use
+    # @param [MapperRegistry] registry of mappers
+    # @param [Array<Symbol>] a list of method names exposed by the relation
+    #
+    # @return [Reader]
+    #
+    # @api private
     def self.build(name, relation, mappers, method_names = [])
       klass = Class.new(self)
 

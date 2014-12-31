@@ -21,12 +21,21 @@ module ROM
     include Equalizer.new(:header, :dataset)
 
     class << self
+      # Relation methods that were defined inside setup.relation DSL
+      #
+      # @return [Array<Symbol>]
+      #
+      # @api private
       attr_accessor :relation_methods
     end
 
+    # @return [Array] relation base header
+    #
     # @api private
     attr_reader :header
 
+    # Hook to finalize a relation after its instance was created
+    #
     # @api private
     def self.finalize(_env, _relation)
       # noop
@@ -38,6 +47,10 @@ module ROM
       @header = header.dup.freeze
     end
 
+    # Yield dataset tuples
+    #
+    # @yield [Hash]
+    #
     # @api private
     def each(&block)
       return to_enum unless block

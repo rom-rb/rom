@@ -5,6 +5,29 @@ module ROM
   module Global
     # Starts the setup process for schema, relations, mappers and commands
     #
+    # @example
+    #
+    #   ROM.setup('sqlite::memory')
+    #
+    #   ROM.relation(:users) do
+    #     # ...
+    #   end
+    #
+    #   ROM.mappers do
+    #     define(:users) do
+    #       # ...
+    #     end
+    #   end
+    #
+    #   ROM.commands(:users) do
+    #     define(:create) do
+    #       # ...
+    #     end
+    #   end
+    #
+    #   ROM.finalize # builds the env
+    #   ROM.env # returns the env registry
+    #
     # @param [Hash] options repository URIs
     #
     # @return [Setup] boot object
@@ -38,11 +61,15 @@ module ROM
       end
     end
 
+    # @see ROM::Setup#schema
+    #
     # @api public
     def schema(&block)
       boot.schema(&block)
     end
 
+    # @see ROM::Setup#relation
+    #
     # @api public
     def relation(*args, &block)
       boot.relation(*args, &block)
