@@ -1,4 +1,4 @@
-## v0.5.0 to-be-released
+## v0.5.0 2014-12-31
 
 ### Added
 
@@ -25,6 +25,7 @@
   element is referenced (rather than raw KeyError) (solnic)
 * Performance improvements in Reader (solnic)
 * `ROM::RA` was merged into in-memory adapter as this fits there perfectly (solnic)
+* It is no longer needed to explicitly execute a delete command in try block (solnic)
 
 ### Fixed
 
