@@ -27,13 +27,13 @@ describe 'Commands / Delete' do
   end
 
   it 'deletes tuples matching restriction' do
-    result = users.try { delete(:by_name, 'Joe').call }
+    result = users.try { delete(:by_name, 'Joe') }
 
     expect(result).to match_array([{ name: 'Joe', email: 'joe@doe.org' }])
   end
 
   it 'returns untouched relation if there are no tuples to delete' do
-    result = users.try { delete(:by_name, 'Not here').call }
+    result = users.try { delete(:by_name, 'Not here') }
 
     expect(result).to match_array([])
   end
@@ -45,7 +45,7 @@ describe 'Commands / Delete' do
       end
     end
 
-    result = users.try { delete_one(:by_name, 'Jane').call }
+    result = users.try { delete_one(:by_name, 'Jane') }
 
     expect(result.value).to eql(name: 'Jane', email: 'jane@doe.org')
   end

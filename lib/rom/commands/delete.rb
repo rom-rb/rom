@@ -38,7 +38,8 @@ module ROM
       # @api private
       def new(*args, &block)
         new_options = options.merge(target: relation.public_send(*args, &block))
-        self.class.new(relation, new_options)
+        command = self.class.new(relation, new_options)
+        command.call
       end
     end
   end
