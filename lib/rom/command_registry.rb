@@ -1,48 +1,21 @@
+require 'rom/commands/result'
+
 module ROM
-  class Result
-    attr_reader :value, :error
-
-    def to_ary
-      raise NotImplementedError
-    end
-    alias_method :to_a, :to_ary
-
-    class Success < Result
-      def initialize(value)
-        @value = value
-      end
-
-      def >(f)
-        f.call(value)
-      end
-
-      def to_ary
-        value
-      end
-      alias_method :to_a, :to_ary
-    end
-
-    class Failure < Result
-      def initialize(error)
-        @error = error
-      end
-
-      def >(_f)
-        self
-      end
-
-      def to_ary
-        error
-      end
-    end
-  end
-
+  # Command registry exposes "try" interface for executing commands
+  #
+  # @public
   class CommandRegistry < Registry
     class Evaluator
       include Concord.new(:registry)
 
       private
 
+      # Call a command when method is matching command name
+      #
+      # TODO: this will be replaced by explicit definition of methods for all
+      #       registered commands
+      #
+      # @api public
       def method_missing(name, *args, &block)
         command = registry[name]
 
@@ -56,10 +29,21 @@ module ROM
       end
     end
 
+    # Try to execute a command in a block
+    #
+    # @example
+    #
+    #   rom.command(:users).try { create(name: 'Jane') }
+    #   rom.command(:users).try { update(:by_id, 1).set(name: 'Jane Doe') }
+    #   rom.command(:users).try { delete(:by_id, 1) }
+    #
+    # @return [Commands::Result]
+    #
+    # @api public
     def try(&f)
-      Result::Success.new(Evaluator.new(self).instance_exec(&f))
+      Commands::Result::Success.new(Evaluator.new(self).instance_exec(&f))
     rescue CommandError => e
-      Result::Failure.new(e)
+      Commands::Result::Failure.new(e)
     end
   end
 end
