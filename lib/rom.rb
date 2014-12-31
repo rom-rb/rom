@@ -20,6 +20,7 @@ require 'rom/repository'
 require 'rom/config'
 require 'rom/env'
 
+require 'rom/global'
 require 'rom/setup'
 
 module ROM
@@ -40,75 +41,5 @@ module ROM
 
   EMPTY_HASH = {}.freeze
 
-  # Starts the setup process for schema, relations and mappers
-  #
-  # @param [Hash] options repository URIs
-  #
-  # @return [Setup] boot object
-  #
-  # @api public
-  def self.setup(*args, &block)
-    config = Config.build(*args)
-
-    adapters = config.each_with_object({}) do |(name, uri_or_opts), hash|
-      uri, opts =
-        if uri_or_opts.is_a?(Hash)
-          uri_or_opts.values_at(:uri, :options)
-        else
-          [uri_or_opts, {}]
-        end
-
-      hash[name] = Adapter.setup(uri, opts)
-    end
-
-    repositories = adapters.each_with_object({}) do |(name, adapter), hash|
-      hash[name] = Repository.new(adapter)
-    end
-
-    boot = Setup.new(repositories)
-
-    if block
-      boot.instance_exec(&block)
-      boot.finalize
-    else
-      @boot = boot
-    end
-  end
-
-  # @api public
-  def self.schema(&block)
-    boot.schema(&block)
-  end
-
-  # @api public
-  def self.relation(*args, &block)
-    boot.relation(*args, &block)
-  end
-
-  # @api public
-  def self.commands(*args, &block)
-    boot.commands(*args, &block)
-  end
-
-  # @api public
-  def self.mappers(*args, &block)
-    boot.mappers(*args, &block)
-  end
-
-  # @api public
-  def self.env
-    @env
-  end
-
-  # @api public
-  def self.finalize
-    @env = boot.finalize
-    @boot = nil
-    self
-  end
-
-  # @api private
-  def self.boot
-    @boot
-  end
+  extend Global
 end
