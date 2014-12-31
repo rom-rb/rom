@@ -33,7 +33,7 @@ module ROM
         )
       end
 
-      # Return new delete command with new target
+      # Create a new delete command scoped to specific relation and execute it
       #
       # @api private
       def new(*args, &block)
