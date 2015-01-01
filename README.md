@@ -14,23 +14,20 @@
 [![Test Coverage](https://codeclimate.com/github/rom-rb/rom/badges/coverage.svg)][codeclimate]
 [![Inline docs](http://inch-ci.org/github/rom-rb/rom.svg?branch=master)][inchpages]
 
-ROM is an experimental Ruby ORM that aims to bring powerful object mapping
-capabilities and give you back the full power of your database. It is based on
-a couple of core concepts which makes it different from a typical ORM:
+Ruby Object Mapper (ROM) is an experimental Ruby library with the goal to
+provide powerful object mapping capabilities without limiting the full power of
+your datastore.
 
-  * Querying a database is considered as a private implementation detail
-  * Abstract query interfaces are evil and a source of unnecessary complexity
-  * Reading and mutating data are 2 distinct concerns and should be treated separately
-  * It must be **simple** to use the full power of your database
+Learn more:
 
-With that in mind ROM ships with adapters that allow you to connect to any
-database and exposes a DSL to define **relations**, **mappers** and **commands**
-to simplify accessing and changing the data.
+* [Introduction[(http://rom-rb.org/introduction/)
+* [Rails tutorial](http://rom-rb.org/tutorials/rails/)
 
-Database support:
+## Adapters
 
   * [rom-sql](https://github.com/rom-rb/rom-sql)
   * [rom-mongo](https://github.com/rom-rb/rom-mongo)
+  * [rom-yaml](https://github.com/rom-rb/rom-yaml)
 
 See [issues](https://github.com/rom-rb/rom/issues?q=is%3Aopen+is%3Aissue+label%3Aadapter+label%3Afeature)
 for a list of adapters that are planned to be added soon.
@@ -84,12 +81,6 @@ rom = setup.finalize
 rom.command(:users).try { create(name: "Joe", age: 17) }
 rom.command(:users).try { create(name: "Jane", age: 18) }
 
-# accessing registered relations
-users = rom.relations.users
-
-puts users.by_name("Jane").adults.to_a.inspect
-# => [{:id=>2, :name=>"Jane", :age=>18}]
-
 # reading relations using defined mappers
 puts rom.read(:users).by_name("Jane").adults.to_a.inspect
 # => [#<User:0x007fdba161cc48 @id=2, @name="Jane", @age=18>]
@@ -102,6 +93,7 @@ for details.
 
 ## Community
 
+* [Official Blog](http://rom-rb.org/blog/)
 * [![Gitter chat](https://badges.gitter.im/rom-rb/chat.png)](https://gitter.im/rom-rb/chat)
 * [Ruby Object Mapper](https://groups.google.com/forum/#!forum/rom-rb) mailing list
 
