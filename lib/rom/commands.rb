@@ -50,9 +50,21 @@ module ROM
       #
       # @api private
       def assert_tuple_count
-        if result == :one && target.size > 1
+        if result == :one && tuple_count > 1
           raise TupleCountMismatchError, "#{inspect} expects one tuple"
         end
+      end
+
+      # Return number of tuples in the target relation
+      #
+      # This should be overridden by adapters when `#count` is not available
+      # in the relation objects
+      #
+      # @return [Fixnum]
+      #
+      # @api private
+      def tuple_count
+        target.count
       end
     end
   end
