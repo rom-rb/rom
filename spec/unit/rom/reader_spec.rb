@@ -29,6 +29,17 @@ describe ROM::Reader do
     end
   end
 
+  describe '#to_ary' do
+    it 'casts relation to an array with loaded objects' do
+      expect(mapper).to receive(:process)
+        .with(relation)
+        .and_yield(jane).and_yield(joe)
+
+      result = reader.to_ary
+      expect(result).to eql(relation)
+    end
+  end
+
   describe '.build' do
     subject(:reader) { ROM::Reader.build(name, relation, mappers, [:all]) }
 

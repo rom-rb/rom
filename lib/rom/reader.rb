@@ -10,6 +10,8 @@ module ROM
     include Enumerable
     include Equalizer.new(:path, :relation, :mapper)
 
+    alias_method :to_ary, :to_a
+
     # @return [String] access path used to read a relation
     #
     # @api private
