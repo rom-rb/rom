@@ -1,3 +1,9 @@
+## v0.5.1 to-be-released
+
+### Added
+
+* `to_ary` alias in `Reader` which addresses issue #80 (solnic)
+
 ## v0.5.0 2014-12-31
 
 ### Added
