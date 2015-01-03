@@ -181,14 +181,20 @@ TASK_SEED = USER_SEED.map do |user|
 end.flatten
 
 def seed
+  hr
+
+  puts "SEEDING #{USER_SEED.count} users"
   USER_SEED.each do |attributes|
     rom.schema.users.insert(attributes)
   end
 
+  puts "SEEDING #{TASK_SEED.count} tasks"
   TASK_SEED.each do |attributes|
     id = rom.schema.tasks.insert(attributes)
     3.times { |i| rom.schema.tags.insert(task_id: id, name: "Tag #{i}") }
   end
+
+  hr
 end
 
 seed
