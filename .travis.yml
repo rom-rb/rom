@@ -10,6 +10,9 @@ rvm:
   - rbx-2
   - jruby
   - ruby-head
+env:
+  global:
+    - JRUBY_OPTS='--dev -J-Xmx1024M'
 matrix:
   allow_failures:
     - rvm: ruby-head
