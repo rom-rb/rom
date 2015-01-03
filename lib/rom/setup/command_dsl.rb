@@ -6,19 +6,15 @@ module ROM
       attr_reader :commands
 
       class CommandDefinition
-        attr_reader :options
+        include Options
+
+        option :type, type: Symbol, reader: true, allow: [:create, :update, :delete]
+
+        alias_method :to_h, :options
 
         def initialize(options, &block)
-          @options = options
+          super
           instance_exec(&block) if block
-        end
-
-        def to_h
-          options
-        end
-
-        def type
-          options[:type]
         end
 
         private
