@@ -11,7 +11,7 @@ run("Loading ONE user object") do
   end
 end
 
-run("Loading 1k user objects") do
+run("Loading ALL user objects") do
   Benchmark.ips do |x|
     x.report("AR") { ARUser.all.to_a }
     x.report("ROM") { users.all.to_a }
@@ -19,7 +19,7 @@ run("Loading 1k user objects") do
   end
 end
 
-run("Loading 1k users with their tasks") do
+run("Loading ALL users with their tasks") do
   Benchmark.ips do |x|
     x.report("AR") { ARUser.all.includes(:tasks).to_a }
     x.report("ROM") { users.all.with_tasks.to_a }
@@ -27,7 +27,7 @@ run("Loading 1k users with their tasks") do
   end
 end
 
-run("Loading 3k tasks with their users") do
+run("Loading ALL tasks with their users") do
   Benchmark.ips do |x|
     x.report("AR") { ARTask.all.includes(:user).to_a }
     x.report("ROM") { tasks.with_user.to_a }
@@ -35,7 +35,7 @@ run("Loading 3k tasks with their users") do
   end
 end
 
-run("Loading 3k tasks with their users and tags") do
+run("Loading ALL tasks with their users and tags") do
   Benchmark.ips do |x|
     x.report("AR") { ARTask.all.includes(:user).includes(:tags).to_a }
     x.report("ROM") { tasks.all.with_user.with_tags.to_a }
@@ -43,7 +43,7 @@ run("Loading 3k tasks with their users and tags") do
   end
 end
 
-run("to_json on 1k user objects") do
+run("to_json on ALL user objects") do
   Benchmark.ips do |x|
     x.report("AR") { ARUser.all.to_a.to_json }
     x.report("ROM") { users.user_json.to_a.to_json }
