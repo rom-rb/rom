@@ -1,7 +1,11 @@
 module ROM
   # @api private
   class ModelBuilder
-    attr_reader :options, :const_name, :namespace, :klass
+    include Options
+
+    option :name, reader: true
+
+    attr_reader :const_name, :namespace, :klass
 
     def self.[](type)
       case type
@@ -16,9 +20,8 @@ module ROM
     end
 
     def initialize(options = {})
-      @options = options
+      super
 
-      name = options[:name]
       if name
         parts = name.split('::')
 
