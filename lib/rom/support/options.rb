@@ -19,53 +19,85 @@ module ROM
       end
     end
 
-    module ClassMethods
-      DEFAULTS = { type: Object, reader: false, allow: [] }.freeze
+    class Option
+      attr_reader :name, :type, :allow
 
-      def option_definitions
-        @__options__ ||= {}
+      def initialize(name, options = {})
+        @name   = name
+        @type   = options.fetch(:type, Object)
+        @reader = options.fetch(:reader, false)
+        @allow  = options.fetch(:allow, [])
       end
 
-      def option(name, settings = {})
-        option_definitions[name] = DEFAULTS.merge(settings)
-        attr_reader(name) if option_definitions[name][:reader]
+      def reader?
+        @reader
       end
 
-      def assert_valid_options(options)
-        options.each do |key, value|
-          assert_option_key(key)
-          assert_option_value(key, value)
+      def type_matches?(value)
+        value.is_a?(type)
+      end
+
+      def allow?(value)
+        allow.none? || allow.include?(value)
+      end
+    end
+
+    class Definitions
+      def initialize
+        @options = {}
+      end
+
+      def define(option)
+        @options[option.name] = option
+      end
+
+      def validate_options(options)
+        options.each do |name, value|
+          validate_option_value(name, value)
         end
       end
 
-      def assert_option_key(key)
-        unless option_definitions.key?(key)
+      def each(&block)
+        @options.each(&block)
+      end
+
+      private
+
+      def validate_option_value(name, value)
+        option = @options.fetch(name) do
           raise InvalidOptionKeyError,
-            "#{key.inspect} is not a valid option"
-        end
-      end
-
-      def assert_option_value(key, value)
-        type, allow = option_definitions[key].values_at(:type, :allow)
-
-        unless value.is_a?(type)
-          raise InvalidOptionValueError,
-            "#{key.inspect}:#{value.inspect} has incorrect type"
+            "#{name.inspect} is not a valid option"
         end
 
-        if allow.any? && !allow.include?(value)
+        unless option.type_matches?(value)
           raise InvalidOptionValueError,
-            "#{key.inspect}:#{value.inspect} has incorrect value"
+            "#{name.inspect}:#{value.inspect} has incorrect type"
+        end
+
+        unless option.allow?(value)
+          raise InvalidOptionValueError,
+            "#{name.inspect}:#{value.inspect} has incorrect value"
         end
       end
     end
 
+    module ClassMethods
+      def option_definitions
+        @__options__ ||= Definitions.new
+      end
+
+      def option(name, settings = {})
+        option = Option.new(name, settings)
+        option_definitions.define(option)
+        attr_reader(name) if option.reader?
+      end
+    end
+
     def initialize(*args)
-      options = args.last
-      self.class.assert_valid_options(options)
-      @options = options
-      self.class.option_definitions.each do |name, settings|
-        instance_variable_set("@#{name}", @options[name]) if settings[:reader]
+      @options = args.last
+      self.class.option_definitions.validate_options(@options)
+      self.class.option_definitions.each do |name, option|
+        instance_variable_set("@#{name}", @options[name]) if option.reader?
       end
     end
   end
