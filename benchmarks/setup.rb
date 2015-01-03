@@ -36,7 +36,9 @@ def run(title)
   hr
 end
 
-setup = ROM.setup(pg: 'postgres://localhost/rom')
+DATABASE_URL = ENV.fetch('DATABASE_URL', 'postgres://localhost/rom')
+
+setup = ROM.setup(pg: DATABASE_URL)
 
 conn = setup.pg.connection
 
@@ -63,10 +65,7 @@ conn.create_table :tags do
   String :name
 end
 
-ActiveRecord::Base.establish_connection(
-  adapter: "postgresql",
-  database: "rom"
-)
+ActiveRecord::Base.establish_connection(DATABASE_URL)
 
 class ARUser < ActiveRecord::Base
   self.table_name = :users
