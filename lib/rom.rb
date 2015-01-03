@@ -4,6 +4,7 @@ require 'inflecto'
 
 require 'rom/version'
 require 'rom/support/registry'
+require 'rom/support/class_builder'
 
 require 'rom/header'
 require 'rom/relation'
