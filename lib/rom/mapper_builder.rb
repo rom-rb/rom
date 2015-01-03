@@ -4,16 +4,22 @@ require 'rom/mapper_builder/mapper_dsl'
 module ROM
   # @api private
   class MapperBuilder
-    attr_reader :name, :root, :options, :prefix, :symbolize_keys, :dsl
+    include Options
+
+    option :parent, type: Symbol
+    option :prefix, reader: true
+    option :symbolize_keys, reader: true, allow: [true, false]
+    option :inherit_header, allow: [true, false]
+
+    attr_reader :name, :root, :dsl
 
     DEFAULT_PROCESSOR = :transproc
 
     def initialize(name, root, options = {})
+      super
+
       @name = name
-      @options = options
       @root = root
-      @prefix = options[:prefix]
-      @symbolize_keys = options[:symbolize_keys]
 
       attributes =
         if options[:inherit_header]
