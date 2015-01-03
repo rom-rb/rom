@@ -35,6 +35,8 @@ group :tools do
   gem 'guard-rspec'
   gem 'guard-rubocop'
 
-  gem 'mutant'
-  gem 'mutant-rspec'
+  platform :mri do
+    gem 'mutant'
+    gem 'mutant-rspec'
+  end
 end
