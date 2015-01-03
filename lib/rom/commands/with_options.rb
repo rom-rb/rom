@@ -4,14 +4,18 @@ module ROM
     #
     # TODO: find a better name for this module
     module WithOptions
-      attr_reader :validator, :input
+      def self.included(klass)
+        klass.class_eval do
+          option :validator, reader: true
+          option :input, reader: true
+        end
+      end
 
       # @api private
-      def initialize(relation, options)
+      def initialize(_relation, _options)
         super
-
-        @validator = options[:validator] || proc {}
-        @input = options[:input] || Hash
+        @validator ||= proc {}
+        @input ||= Hash
       end
     end
   end

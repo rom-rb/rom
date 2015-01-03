@@ -4,6 +4,7 @@ require 'inflecto'
 
 require 'rom/version'
 require 'rom/support/registry'
+require 'rom/support/options'
 require 'rom/support/class_builder'
 
 require 'rom/header'
@@ -31,11 +32,8 @@ module ROM
   NoRelationError = Class.new(StandardError)
   MapperMissingError = Class.new(StandardError)
 
-  InvalidOptionError = Class.new(StandardError) do
-    def initialize(option, valid_values)
-      super("#{option} should be one of #{valid_values.inspect}")
-    end
-  end
+  InvalidOptionValueError = Class.new(StandardError)
+  InvalidOptionKeyError = Class.new(StandardError)
 
   Schema = Class.new(Registry)
   RelationRegistry = Class.new(Registry)

@@ -95,7 +95,7 @@ describe 'Commands / Update' do
           end
         end
         setup.finalize
-      }.to raise_error(ROM::InvalidOptionError)
+      }.to raise_error(ROM::InvalidOptionValueError)
     end
   end
 end

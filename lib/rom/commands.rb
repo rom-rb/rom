@@ -1,20 +1,19 @@
 module ROM
   module Commands
     class AbstractCommand
-      VALID_RESULTS = [:one, :many].freeze
+      include Options
 
-      attr_reader :relation, :options, :result
+      option :type, allow: [:create, :update, :delete]
+      option :result, reader: true, allow: [:one, :many]
+      option :target
+
+      attr_reader :relation
 
       # @api private
       def initialize(relation, options)
+        super
         @relation = relation
-        @options = options
-
-        @result = options[:result] || :many
-
-        unless VALID_RESULTS.include?(result)
-          raise InvalidOptionError.new(:result, VALID_RESULTS)
-        end
+        @result ||= :many
       end
 
       # Call the command and return one or many tuples
