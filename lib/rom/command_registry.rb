@@ -8,6 +8,15 @@ module ROM
     class Evaluator
       include Concord.new(:registry)
 
+      # Evaluate a block by executing it or passing +self+ depending on block arity
+      def evaluate(&block)
+        if block.arity > 0
+          yield self
+        else
+          instance_exec(&block)
+        end
+      end
+
       private
 
       # Call a command when method is matching command name
@@ -31,17 +40,22 @@ module ROM
 
     # Try to execute a command in a block
     #
+    # @yield [command] Passes command to the block
+    #
     # @example
     #
     #   rom.command(:users).try { create(name: 'Jane') }
     #   rom.command(:users).try { update(:by_id, 1).set(name: 'Jane Doe') }
     #   rom.command(:users).try { delete(:by_id, 1) }
     #
+    #   rom.command(:users).try { |command| command.create(name: 'Jane') }
+    #   rom.command(:users).try { |command| command.delete(:by_id, 1) }
+    #
     # @return [Commands::Result]
     #
     # @api public
     def try(&f)
-      Commands::Result::Success.new(Evaluator.new(self).instance_exec(&f))
+      Commands::Result::Success.new(Evaluator.new(self).evaluate(&f))
     rescue CommandError => e
       Commands::Result::Failure.new(e)
     end

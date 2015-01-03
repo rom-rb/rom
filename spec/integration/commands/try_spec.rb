@@ -21,6 +21,14 @@ describe 'Commands / Try api' do
     expect(result.value).to eql([input])
   end
 
+  it 'passes command functions into the block' do
+    input = { name: 'Piotr', email: 'piotr@test.com' }
+
+    result = user_commands.try { |command| command.create(input) }
+
+    expect(result.value).to eql([input])
+  end
+
   it 'raises on method missing' do
     expect { users.try { not_here } }.to raise_error(NameError)
   end
