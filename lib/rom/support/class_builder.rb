@@ -1,12 +1,9 @@
 module ROM
   class ClassBuilder
-    attr_reader :options, :name, :parent
+    include Options
 
-    def initialize(options)
-      @options = options
-      @name = options.fetch(:name)
-      @parent = options.fetch(:parent)
-    end
+    option :name, type: String, reader: true
+    option :parent, type: Class, reader: true
 
     def call
       klass = Class.new(parent)
