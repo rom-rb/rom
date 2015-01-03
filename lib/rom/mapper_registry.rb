@@ -8,7 +8,9 @@ module ROM
 
     # @api private
     def by_path(path)
-      elements[paths(path).detect { |name| elements.key?(name) }]
+      elements.fetch(paths(path).detect { |name| elements.key?(name) }) {
+        raise(MapperMissingError, path)
+      }
     end
 
     private

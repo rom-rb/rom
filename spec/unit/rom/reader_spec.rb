@@ -13,7 +13,7 @@ describe ROM::Reader do
   describe '#initialize' do
     it 'raises error when mapper cannot be found' do
       expect { ROM::Reader.new(:not_here, relation, mappers) }
-        .to raise_error(ROM::Reader::MapperMissingError, /not_here/)
+        .to raise_error(ROM::MapperMissingError, /not_here/)
     end
   end
 
