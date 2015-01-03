@@ -1,4 +1,11 @@
 module ROM
+  # Helper module for classes with a constructor accepting option hash
+  #
+  # This allows us to DRY up code as option hash is a very common pattern used
+  # accross the codebase. It is an internal implementation detail not meant to
+  # be used outside of the library
+  #
+  # @private
   module Options
     attr_reader :options
 
