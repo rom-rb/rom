@@ -1,7 +1,12 @@
 require 'rom/mapper_registry'
 
 module ROM
-  # @api private
+  # This class builds a ROM::Reader subclass for a specific relation
+  #
+  # It is used by the mapper DSL which invokes it when `define(:rel_name)` is
+  # used.
+  #
+  # @private
   class ReaderBuilder
     DEFAULT_OPTIONS = { inherit_header: true }.freeze
 
@@ -50,12 +55,19 @@ module ROM
       end
     end
 
+    # @param [RelationRegistry]
+    #
     # @api private
     def initialize(relations)
       @relations = relations
       @readers = {}
     end
 
+    # Builds a reader instance with its mappers and stores it in readers hash
+    #
+    # @param [Symbol] relation name
+    # @param [Hash] options for reader mappers
+    #
     # @api private
     def call(name, input_options = {}, &block)
       with_options(input_options) do |options|
@@ -84,6 +96,7 @@ module ROM
 
     private
 
+    # @api private
     def with_options(options)
       yield(DEFAULT_OPTIONS.merge(options))
     end
