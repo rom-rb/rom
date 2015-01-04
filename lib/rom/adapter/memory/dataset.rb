@@ -1,3 +1,5 @@
+require 'charlatan'
+
 module ROM
   class Adapter
     class Memory < Adapter

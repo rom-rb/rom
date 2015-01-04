@@ -1,3 +1,4 @@
+require 'equalizer'
 require 'addressable/uri'
 
 module ROM
