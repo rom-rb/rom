@@ -18,5 +18,6 @@ group :red_green_refactor, halt_on_fail: true do
 
   guard :rubocop do
     watch(%r{\Alib/(.+)\.rb\z})
+    watch(%r{\Aspec/.+\.rb\z})
   end
 end
