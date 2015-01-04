@@ -1,5 +1,5 @@
 group :red_green_refactor, halt_on_fail: true do
-  guard :rspec, cmd: "rspec" do
+  guard :rspec, cmd: "rspec", all_on_start: true do
     # run all specs if configuration is modified
     watch('Guardfile')           { 'spec' }
     watch('Gemfile.lock')        { 'spec' }
