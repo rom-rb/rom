@@ -65,12 +65,8 @@ module ROM
 
           private
 
-          def method_missing(name, *args, &block)
-            if __relations__.key?(name)
-              __relations__[name]
-            else
-              super
-            end
+          def method_missing(name, *)
+            __relations__.fetch(name) { super }
           end
         RUBY
       end

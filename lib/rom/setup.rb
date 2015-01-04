@@ -146,11 +146,7 @@ module ROM
     #
     # @api private
     def method_missing(name, *)
-      if repositories.key?(name)
-        repositories.fetch(name)
-      else
-        super
-      end
+      repositories.fetch(name) { super }
     end
   end
 end
