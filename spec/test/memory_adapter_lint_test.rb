@@ -10,3 +10,12 @@ class MemoryAdapterLintTest < MiniTest::Unit::TestCase
     @adapter = ROM::Adapter::Memory
   end
 end
+
+class MemoryAdapterDatasetLintTest < MiniTest::Unit::TestCase
+  include ROM::Adapter::Lint::TestEnumerableDataset
+
+  def setup
+    @data  = [{ name: 'Jane', age: 24 }, { name: 'Joe', age: 25 }]
+    @dataset = ROM::Adapter::Memory::Dataset.new(@data, [:name, :age])
+  end
+end
