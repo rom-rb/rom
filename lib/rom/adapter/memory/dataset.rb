@@ -1,27 +1,17 @@
-require 'charlatan'
+require 'rom/adapter/data_proxy'
 
 module ROM
   class Adapter
     class Memory < Adapter
       class Dataset
-        include Charlatan.new(:data)
+        include DataProxy
 
-        attr_reader :header
-
-        def initialize(data, header)
-          super
-          @header = header
-        end
+        forward :find_all
 
         def to_ary
           data.dup
         end
         alias_method :to_a, :to_ary
-
-        def each(&block)
-          return to_enum unless block
-          data.each(&block)
-        end
 
         def join(*args)
           left, right = args.size > 1 ? args : [self, args.first]
