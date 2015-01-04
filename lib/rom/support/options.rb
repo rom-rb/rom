@@ -23,10 +23,10 @@ module ROM
       attr_reader :name, :type, :allow
 
       def initialize(name, options = {})
-        @name   = name
-        @type   = options.fetch(:type, Object)
-        @reader = options.fetch(:reader, false)
-        @allow  = options.fetch(:allow, [])
+        @name = name
+        @type = options.fetch(:type) { Object }
+        @reader = options.fetch(:reader) { false }
+        @allow = options.fetch(:allow) { [] }
       end
 
       def reader?
