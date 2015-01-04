@@ -30,6 +30,6 @@ describe 'Commands / Try api' do
   end
 
   it 'raises on method missing' do
-    expect { users.try { not_here } }.to raise_error(NameError)
+    expect { user_commands.try { not_here } }.to raise_error(NameError)
   end
 end
