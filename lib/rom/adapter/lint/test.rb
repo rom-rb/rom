@@ -1,7 +1,7 @@
 module ROM
   class Adapter
     module Lint
-      module Test
+      module TestAdapter
         attr_reader :adapter
 
         def test_schemes

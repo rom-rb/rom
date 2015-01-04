@@ -4,7 +4,7 @@ require 'rom/adapter/lint/test'
 require 'minitest/autorun'
 
 class MemoryAdapterLintTest < MiniTest::Unit::TestCase
-  include ROM::Adapter::Lint::Test
+  include ROM::Adapter::Lint::TestAdapter
 
   def setup
     @adapter = ROM::Adapter::Memory
