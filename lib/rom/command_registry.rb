@@ -28,8 +28,6 @@ module ROM
       def method_missing(name, *args, &block)
         command = registry[name]
 
-        super unless command
-
         if args.size > 1
           command.new(*args, &block)
         else
