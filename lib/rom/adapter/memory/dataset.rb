@@ -6,12 +6,7 @@ module ROM
       class Dataset
         include DataProxy
 
-        forward :find_all
-
-        def to_ary
-          data.dup
-        end
-        alias_method :to_a, :to_ary
+        forward Enumerable
 
         def join(*args)
           left, right = args.size > 1 ? args : [self, args.first]

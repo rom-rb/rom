@@ -25,11 +25,18 @@ module ROM
 
       module ClassMethods
         def forward(*methods)
-          methods.each do |name|
+          method_names =
+            if methods.size == 1 && methods.first.is_a?(Module)
+              methods.first.public_instance_methods
+            else
+              methods
+            end
+
+          (method_names - [:each, :to_a, :to_ary]).each do |method_name|
             class_eval <<-RUBY, __FILE__, __LINE__ + 1
-              def #{name}(*args, &block)
+              def #{method_name}(*args, &block)
                 self.class.new(
-                  data.public_send(#{name.inspect}, *args, &block),
+                  data.public_send(#{method_name.inspect}, *args, &block),
                   header
                 )
               end
