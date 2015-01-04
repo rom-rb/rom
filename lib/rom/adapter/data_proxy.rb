@@ -24,21 +24,17 @@ module ROM
       alias_method :to_a, :to_ary
 
       module ClassMethods
-        def forward(*methods)
-          method_names =
-            if methods.size == 1 && methods.first.is_a?(Module)
-              methods.first.public_instance_methods
-            else
-              methods
-            end
-
-          (method_names - [:each, :to_a, :to_ary]).each do |method_name|
+        def forward(methods)
+          (Array(methods) - [:each, :to_ary, :to_a]).each do |method_name|
             class_eval <<-RUBY, __FILE__, __LINE__ + 1
               def #{method_name}(*args, &block)
-                self.class.new(
-                  data.public_send(#{method_name.inspect}, *args, &block),
-                  header
-                )
+                response = data.public_send(#{method_name.inspect}, *args, &block)
+
+                if response.is_a?(data.class)
+                  self.class.new(response, header)
+                else
+                  response
+                end
               end
             RUBY
           end

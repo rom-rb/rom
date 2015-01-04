@@ -6,7 +6,11 @@ module ROM
       class Dataset
         include DataProxy
 
-        forward Enumerable
+        # TODO: that's not all, we need to cherry-pick from:
+        #       Array.public_instance_methods - Enumerable.public_instance_methods
+        forward(
+          Enumerable.public_instance_methods + [:map!, :map, :size, :flatten]
+        )
 
         def join(*args)
           left, right = args.size > 1 ? args : [self, args.first]
@@ -43,6 +47,7 @@ module ROM
           data << tuple
           self
         end
+        alias_method :<<, :insert
 
         def delete(tuple)
           data.delete(tuple)
