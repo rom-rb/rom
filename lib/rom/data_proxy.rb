@@ -14,23 +14,18 @@ module ROM
     end
 
     def initialize(data, header)
-      @data =
-        if tuple_proc
-          data.map { |tuple| tuple_proc[tuple] }
-        else
-          data
-        end
-
+      @data = data
       @header = header
+      @tuple_proc ||= -> tuple { tuple }
     end
 
     def each(&block)
       return to_enum unless block_given?
-      data.each(&block)
+      data.each { |tuple| yield(tuple_proc[tuple]) }
     end
 
     def to_a
-      data.dup
+      map { |tuple| tuple_proc[tuple] }
     end
     alias_method :to_ary, :to_a
 

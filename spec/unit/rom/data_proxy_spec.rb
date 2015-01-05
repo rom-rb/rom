@@ -1,20 +1,16 @@
 require 'spec_helper'
 
-require 'rom/data_proxy'
+require 'rom/array_dataset'
 
-describe ROM::DataProxy do
+describe ROM::ArrayDataset do
   subject(:dataset) { klass.new(data, []) }
 
   describe 'with array' do
     let(:klass) do
-      Class.new do
-        include ROM::DataProxy
-
-        forward :find_all
-
+      Class.new(ROM::ArrayDataset) do
         def initialize(*args)
-          @tuple_proc = Transproc(:symbolize_keys)
           super
+          @tuple_proc = Transproc(:symbolize_keys)
         end
       end
     end
