@@ -37,21 +37,13 @@ module ROM
         def test_each
           result = []
           dataset.each { |tuple| result << tuple }
-          assert_equal result, data
+          assert_equal result, data,
+            "#{dataset.class}#each must yield tuples"
         end
 
         def test_to_a
-          assert_equal dataset.to_a, data
-        end
-
-        def test_find_all
-          block = -> tuple { tuple[:name] == 'Jane' }
-
-          expected = data.find_all(&block)
-          result = dataset.find_all(&block)
-
-          assert_instance_of dataset.class, result
-          assert_equal expected, result.to_a
+          assert_equal dataset.to_a, data,
+            "#{dataset.inspect}#to_a must cast dataset to an array"
         end
       end
     end
