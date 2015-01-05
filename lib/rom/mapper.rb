@@ -52,7 +52,7 @@ module ROM
       header.model
     end
 
-    # Process a relation using the transfomer
+    # Process a relation using the transformer
     #
     # @api private
     def process(relation, &block)
