@@ -5,6 +5,9 @@ module ROM
         attr_reader :adapter
 
         def test_schemes
+          assert_respond_to adapter, :schemes,
+            "#{adapter}.schemes must be implemented"
+
           assert_instance_of Array, adapter.schemes,
             "#{adapter}.schemes must return an array with supported URI schemes"
 
@@ -43,7 +46,7 @@ module ROM
 
         def test_to_a
           assert_equal dataset.to_a, data,
-            "#{dataset.inspect}#to_a must cast dataset to an array"
+            "#{dataset.class}#to_a must cast dataset to an array"
         end
       end
     end
