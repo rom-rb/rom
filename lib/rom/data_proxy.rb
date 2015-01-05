@@ -36,7 +36,9 @@ module ROM
             def #{method_name}(*args, &block)
               response = data.public_send(#{method_name.inspect}, *args, &block)
 
-              if response.is_a?(data.class)
+              if response.equal?(data)
+                self
+              elsif response.is_a?(data.class)
                 self.class.new(response, header)
               else
                 response
