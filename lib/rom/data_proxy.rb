@@ -24,11 +24,6 @@ module ROM
       data.each { |tuple| yield(tuple_proc[tuple]) }
     end
 
-    def to_a
-      map { |tuple| tuple_proc[tuple] }
-    end
-    alias_method :to_ary, :to_a
-
     module ClassMethods
       def forward(*methods)
         (Array(methods).flatten - NON_FORWARDABLE).each do |method_name|

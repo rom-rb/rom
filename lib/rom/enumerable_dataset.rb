@@ -5,6 +5,8 @@ module ROM
     include DataProxy
     include Enumerable
 
+    alias_method :to_ary, :to_a
+
     [
       :chunk, :collect, :collect_concat, :drop_while, :find_all, :flat_map,
       :grep, :map, :reject, :select, :sort, :sort_by, :take_while
