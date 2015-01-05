@@ -1,15 +1,9 @@
-require 'rom/data_proxy'
+require 'rom/array_dataset'
 
 module ROM
   class Adapter
     class Memory < Adapter
-      class Dataset
-        include DataProxy
-
-        forward(
-          Enumerable.public_instance_methods + [:last, :size, :map, :map!, :flatten]
-        )
-
+      class Dataset < ArrayDataset
         def join(*args)
           left, right = args.size > 1 ? args : [self, args.first]
 
