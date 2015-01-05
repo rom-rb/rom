@@ -19,7 +19,7 @@ module ROM
       @tuple_proc ||= -> tuple { tuple }
     end
 
-    def each(&block)
+    def each
       return to_enum unless block_given?
       data.each { |tuple| yield(tuple_proc[tuple]) }
     end
