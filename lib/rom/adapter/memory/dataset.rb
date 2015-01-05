@@ -1,4 +1,4 @@
-require 'rom/adapter/data_proxy'
+require 'rom/data_proxy'
 
 module ROM
   class Adapter
@@ -6,10 +6,8 @@ module ROM
       class Dataset
         include DataProxy
 
-        # TODO: that's not all, we need to cherry-pick from:
-        #       Array.public_instance_methods - Enumerable.public_instance_methods
         forward(
-          Enumerable.public_instance_methods + [:map!, :map, :size, :flatten]
+          Enumerable.public_instance_methods + [:last, :size, :map, :map!, :flatten]
         )
 
         def join(*args)
