@@ -26,7 +26,7 @@ module ROM
           assert_instance_of Array, adapter.schemes,
             "#{adapter}.schemes must return an array with supported URI schemes"
 
-          assert adapter.schemes.size > 0,
+          assert adapter.schemes.any?,
             "#{adapter}.schemes must return at least one supported URI scheme"
         end
 
