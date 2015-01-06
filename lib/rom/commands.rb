@@ -1,3 +1,5 @@
+require 'rom/support/options'
+
 module ROM
   module Commands
     class AbstractCommand

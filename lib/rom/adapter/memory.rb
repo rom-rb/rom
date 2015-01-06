@@ -1,3 +1,5 @@
+require 'rom/adapter'
+
 require 'rom/adapter/memory/storage'
 require 'rom/adapter/memory/dataset'
 require 'rom/adapter/memory/commands'

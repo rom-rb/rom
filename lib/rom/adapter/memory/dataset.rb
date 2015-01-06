@@ -1,30 +1,15 @@
+require 'rom/array_dataset'
+
 module ROM
   class Adapter
     class Memory < Adapter
       class Dataset
-        include Charlatan.new(:data)
-
-        attr_reader :header
-
-        def initialize(data, header)
-          super
-          @header = header
-        end
-
-        def to_ary
-          data.dup
-        end
-        alias_method :to_a, :to_ary
-
-        def each(&block)
-          return to_enum unless block
-          data.each(&block)
-        end
+        include ArrayDataset
 
         def join(*args)
           left, right = args.size > 1 ? args : [self, args.first]
 
-          join_map = left.to_a.each_with_object({}) { |tuple, h|
+          join_map = left.each_with_object({}) { |tuple, h|
             others = right.to_a.find_all { |t| (tuple.to_a & t.to_a).any? }
             (h[tuple] ||= []).concat(others)
           }
@@ -56,6 +41,7 @@ module ROM
           data << tuple
           self
         end
+        alias_method :<<, :insert
 
         def delete(tuple)
           data.delete(tuple)

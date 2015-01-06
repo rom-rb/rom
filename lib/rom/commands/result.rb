@@ -46,7 +46,7 @@ module ROM
         #
         # @api public
         def to_ary
-          value
+          value.to_ary
         end
       end
 

@@ -1,3 +1,5 @@
+require 'rom/commands'
+
 module ROM
   class Adapter
     class Memory < Adapter
