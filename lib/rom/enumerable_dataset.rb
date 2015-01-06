@@ -1,4 +1,4 @@
-require 'rom/data_proxy'
+require 'rom/support/data_proxy'
 
 module ROM
   class EnumerableDataset
