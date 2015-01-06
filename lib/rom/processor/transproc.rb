@@ -7,7 +7,7 @@ module ROM
     class Transproc < Processor
       include ::Transproc::Composer
 
-      attr_reader :header, :model, :mapping, :tuple_proc
+      attr_reader :header, :model, :mapping, :row_proc
 
       EMPTY_FN = -> tuple { tuple }.freeze
 
@@ -19,13 +19,13 @@ module ROM
         @header = header
         @model = header.model
         @mapping = header.mapping
-        initialize_tuple_proc
+        initialize_row_proc
       end
 
       def to_transproc
         compose(EMPTY_FN) do |ops|
           ops << header.groups.map { |attr| visit_group(attr, true) }
-          ops << t(:map_array!, tuple_proc) if tuple_proc
+          ops << t(:map_array!, row_proc) if row_proc
         end
       end
 
@@ -43,14 +43,14 @@ module ROM
       end
 
       def visit_hash(attribute)
-        with_tuple_proc(attribute) do |tuple_proc|
-          t(:map_key!, attribute.name, tuple_proc)
+        with_row_proc(attribute) do |row_proc|
+          t(:map_key!, attribute.name, row_proc)
         end
       end
 
       def visit_array(attribute)
-        with_tuple_proc(attribute) do |tuple_proc|
-          t(:map_key!, attribute.name, t(:map_array!, tuple_proc))
+        with_row_proc(attribute) do |row_proc|
+          t(:map_key!, attribute.name, t(:map_array!, row_proc))
         end
       end
 
@@ -84,17 +84,17 @@ module ROM
         end
       end
 
-      def initialize_tuple_proc
-        @tuple_proc = compose do |ops|
+      def initialize_row_proc
+        @row_proc = compose do |ops|
           ops << t(:map_hash!, mapping) if header.aliased?
           ops << header.map { |attr| visit(attr) }
           ops << t(-> tuple { model.new(tuple) }) if model
         end
       end
 
-      def with_tuple_proc(attribute)
-        tuple_proc = new(attribute.header).tuple_proc
-        yield(tuple_proc) if tuple_proc
+      def with_row_proc(attribute)
+        row_proc = new(attribute.header).row_proc
+        yield(row_proc) if row_proc
       end
 
       def new(*args)

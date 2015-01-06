@@ -5,7 +5,7 @@ module ROM
   #
   # This module is intended to be used by adapters
   #
-  # Class that includes this module can define `tuple_proc` class method which
+  # Class that includes this module can define `row_proc` class method which
   # must return a proc-like object which will be used to process each element
   # in the enumerable
   #
@@ -13,7 +13,7 @@ module ROM
   #   class MyDataset
   #     include ROM::EnumerableDataset
   #
-  #     def self.tuple_proc
+  #     def self.row_proc
   #       -> tuple { tuple.each_with_object({}) { |(k,v), h| h[k.to_sym] = v } }
   #     end
   #   end
@@ -45,7 +45,7 @@ module ROM
       class_eval <<-RUBY, __FILE__, __LINE__ + 1
         def #{method}(*args, &block)
           return to_enum unless block
-          self.class.new(super(*args, &block), header, tuple_proc)
+          self.class.new(super(*args, &block), header, row_proc)
         end
       RUBY
     end

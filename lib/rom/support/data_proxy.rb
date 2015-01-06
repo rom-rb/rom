@@ -1,7 +1,7 @@
 module ROM
   # Helper module for dataset classes
   #
-  # It provides a constructor accepting data, header and an optional tuple_proc.
+  # It provides a constructor accepting data, header and an optional row_proc.
   # This module is used internally by EnumerableDataset and ArrayDataset.
   #
   # @private
@@ -23,7 +23,7 @@ module ROM
     # @return [Proc] tuple processing proc
     #
     # @api private
-    attr_reader :tuple_proc
+    attr_reader :row_proc
 
     # Extends the class with `forward` DSL and Equalizer using `data` attribute
     #
@@ -44,20 +44,20 @@ module ROM
     # @param [Proc] tuple processing proc
     #
     # @api private
-    def initialize(data, header, tuple_proc = self.class.tuple_proc)
+    def initialize(data, header, row_proc = self.class.row_proc)
       @data = data
       @header = header
-      @tuple_proc = tuple_proc
+      @row_proc = row_proc
     end
 
-    # Iterate over data using tuple_proc
+    # Iterate over data using row_proc
     #
     # @return [Enumerator] if block is not given
     #
     # @api private
     def each
       return to_enum unless block_given?
-      data.each { |tuple| yield(tuple_proc[tuple]) }
+      data.each { |tuple| yield(row_proc[tuple]) }
     end
 
     module ClassMethods
@@ -66,7 +66,7 @@ module ROM
       # @return [Proc]
       #
       # @api private
-      def tuple_proc
+      def row_proc
         -> tuple { tuple }
       end
 
@@ -94,7 +94,7 @@ module ROM
               if response.equal?(data)
                 self
               elsif response.is_a?(data.class)
-                self.class.new(response, header, tuple_proc)
+                self.class.new(response, header, row_proc)
               else
                 response
               end

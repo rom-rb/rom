@@ -7,7 +7,7 @@ describe ROM::EnumerableDataset do
     Class.new do
       include ROM::EnumerableDataset
 
-      def self.tuple_proc
+      def self.row_proc
         Transproc(:symbolize_keys)
       end
     end

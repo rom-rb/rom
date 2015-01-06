@@ -6,7 +6,7 @@ shared_examples_for "an enumerable dataset" do
   end
 
   describe '#each' do
-    it 'yields tuples through tuple_proc' do
+    it 'yields tuples through row_proc' do
       result = []
 
       dataset.each { |tuple| result << tuple }
@@ -21,7 +21,7 @@ shared_examples_for "an enumerable dataset" do
   end
 
   describe '#find_all' do
-    it 'yields tuples through tuple_proc' do
+    it 'yields tuples through row_proc' do
       result = dataset.find_all { |tuple| tuple[:name] == 'Jane' }
 
       expect(result).to be_instance_of(klass)

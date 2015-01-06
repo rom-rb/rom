@@ -7,7 +7,7 @@ describe ROM::ArrayDataset do
     Class.new do
       include ROM::ArrayDataset
 
-      def self.tuple_proc
+      def self.row_proc
         Transproc(:symbolize_keys)
       end
     end
