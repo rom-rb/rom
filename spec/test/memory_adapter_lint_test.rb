@@ -3,7 +3,7 @@ require 'rom/adapter/lint/test'
 
 require 'minitest/autorun'
 
-class MemoryAdapterLintTest < MiniTest::Test
+class MemoryAdapterLintTest < Minitest::Test
   include ROM::Adapter::Lint::TestAdapter
 
   def setup
@@ -12,7 +12,7 @@ class MemoryAdapterLintTest < MiniTest::Test
   end
 end
 
-class MemoryAdapterDatasetLintTest < MiniTest::Test
+class MemoryAdapterDatasetLintTest < Minitest::Test
   include ROM::Adapter::Lint::TestEnumerableDataset
 
   def setup

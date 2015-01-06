@@ -6,7 +6,7 @@ module ROM
       #
       # @example
       #
-      #   class MyAdapterTest < MiniTest::Test
+      #   class MyAdapterTest < Minitest::Test
       #     include ROM::Adapter::Lint::TestAdapter
       #
       #     def setup
@@ -54,7 +54,7 @@ module ROM
       #
       # @example
       #
-      #  class MyDatasetLintTest < MiniTest::Test
+      #  class MyDatasetLintTest < Minitest::Test
       #    include ROM::Adapter::Lint::TestEnumerableDataset
       #
       #     def setup
