@@ -6,6 +6,11 @@ module ROM
 
     alias_method :to_ary, :to_a
 
+    def self.included(klass)
+      return unless klass.is_a?(Class)
+      klass.send(:include, DataProxy)
+    end
+
     [
       :chunk, :collect, :collect_concat, :drop_while, :find_all, :flat_map,
       :grep, :map, :reject, :select, :sort, :sort_by, :take_while
