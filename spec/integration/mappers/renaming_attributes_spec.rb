@@ -7,20 +7,12 @@ describe 'Mappers / Renaming attributes' do
     setup.schema do
       base_relation(:users) do
         repository :memory
-
-        attribute :_id
-        attribute :user_name
       end
 
       base_relation(:addresses) do
         repository :memory
-
-        attribute :address_id
-        attribute :address_street
       end
     end
-
-    setup.relation(:addresses)
 
     setup.relation(:users) do
       def with_address

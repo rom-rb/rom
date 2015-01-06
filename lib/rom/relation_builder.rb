@@ -30,7 +30,7 @@ module ROM
     # @return [Relation]
     #
     # @api private
-    def call(name, header)
+    def call(name)
       dataset = schema[name]
       klass_name = "#{Relation.name}[#{Inflecto.camelize(name)}]"
 
@@ -39,7 +39,7 @@ module ROM
 
       yield(klass)
 
-      klass.new(dataset, header)
+      klass.new(dataset)
     end
 
     private

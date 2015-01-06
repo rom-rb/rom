@@ -8,8 +8,6 @@ describe 'Mappers / deeply embedded tuples' do
     setup.schema do
       base_relation(:users) do
         repository :default
-        attribute 'name'
-        attribute 'tasks'
       end
     end
 

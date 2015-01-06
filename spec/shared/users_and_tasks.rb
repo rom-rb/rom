@@ -7,17 +7,10 @@ RSpec.shared_context 'users and tasks' do
     setup.schema do
       base_relation(:users) do
         repository :memory
-
-        attribute :name
-        attribute :email
       end
 
       base_relation(:tasks) do
         repository :memory
-
-        attribute :name
-        attribute :title
-        attribute :priority
       end
     end
 

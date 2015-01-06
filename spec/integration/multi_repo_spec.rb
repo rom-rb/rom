@@ -11,22 +11,14 @@ describe 'Using in-memory adapter for cross-repo access' do
     setup.schema do
       base_relation :users do
         repository :left
-        attribute :user_id
-        attribute :name
       end
 
       base_relation :tasks do
         repository :right
-        attribute :user_id
-        attribute :title
       end
 
       base_relation :users_and_tasks do
         repository :main
-
-        attribute :user_id
-        attribute :name
-        attribute :title
       end
     end
 

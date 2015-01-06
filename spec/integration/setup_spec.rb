@@ -55,7 +55,6 @@ describe 'Setting up ROM' do
         schema do
           base_relation(:users) do
             repository :memory
-            attribute :name
           end
         end
 
@@ -95,7 +94,6 @@ describe 'Setting up ROM' do
       ROM.schema do
         base_relation(:users) do
           repository :memory
-          attribute :name
         end
       end
 

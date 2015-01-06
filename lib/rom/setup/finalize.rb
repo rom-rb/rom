@@ -8,7 +8,7 @@ module ROM
   class Setup
     # @private
     class Finalize
-      attr_reader :repositories, :adapter_relation_map, :dataset_header_map
+      attr_reader :repositories, :adapter_relation_map
 
       # @api private
       def initialize(repositories, schema, relations, mappers, commands)
@@ -18,7 +18,6 @@ module ROM
         @mappers = mappers
         @commands = commands
         @adapter_relation_map = {}
-        @dataset_header_map = {}
       end
 
       # @api private
@@ -40,9 +39,8 @@ module ROM
         end
 
         base_relations = @schema.each_with_object({}) do |(repo, schema), h|
-          schema.each do |name, dataset, header|
+          schema.each do |name, dataset|
             adapter_relation_map[name] = repo.adapter
-            dataset_header_map[name] = header
             h[name] = dataset
           end
         end
@@ -75,9 +73,8 @@ module ROM
       # @api private
       def build_relation(name, builder, block = nil)
         adapter = adapter_relation_map[name]
-        header = dataset_header_map[name]
 
-        relation = builder.call(name, header) do |klass|
+        relation = builder.call(name) do |klass|
           adapter.extend_relation_class(klass)
           methods = klass.public_instance_methods
 

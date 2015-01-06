@@ -8,12 +8,8 @@ describe 'Mappers / embedded' do
     setup.schema do
       base_relation(:users) do
         repository :default
-        attribute 'name'
-        attribute 'tasks'
       end
     end
-
-    setup.relation(:users)
 
     setup.mappers do
       define(:users) do
@@ -44,12 +40,8 @@ describe 'Mappers / embedded' do
     setup.schema do
       base_relation(:users) do
         repository :default
-        attribute 'name'
-        attribute 'address'
       end
     end
-
-    setup.relation(:users)
 
     setup.mappers do
       define(:users) do

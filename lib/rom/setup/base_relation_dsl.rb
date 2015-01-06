@@ -20,6 +20,13 @@ module ROM
       end
 
       def attribute(name)
+        warn <<-STRING
+          ===========================================================
+          Defining attributes in schema is no longer needed please
+          move those definitions to the mappers (#{caller[0]})
+          ===========================================================
+        STRING
+
         header << name
       end
 
@@ -31,9 +38,7 @@ module ROM
             adapter[name]
           end
 
-        base_header = dataset.respond_to?(:header) ? dataset.header : header
-
-        [name, dataset, base_header]
+        [name, dataset]
       end
 
       private

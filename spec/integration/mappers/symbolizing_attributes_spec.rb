@@ -8,18 +8,10 @@ describe 'Mappers / Symbolizing atributes' do
     setup.schema do
       base_relation(:users) do
         repository :memory
-
-        attribute 'user_id'
-        attribute 'first_name'
-        attribute 'email'
       end
 
       base_relation(:tasks) do
         repository :memory
-
-        attribute 'title'
-        attribute 'task_priority'
-        attribute 'task_description'
       end
     end
   end

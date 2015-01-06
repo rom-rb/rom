@@ -31,8 +31,8 @@ describe 'Mapper definition DSL' do
       expect(mapper.model).to be(User)
     end
 
-    it 'uses all attributes from the relation header by default' do
-      expect(header.keys).to eql(rom.relations.users.header)
+    it 'defines header with attributes' do
+      expect(header.keys).to eql([:name, :email])
     end
   end
 

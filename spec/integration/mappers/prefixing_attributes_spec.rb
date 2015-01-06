@@ -7,10 +7,6 @@ describe 'Mappers / Prefixing attributes' do
     setup.schema do
       base_relation(:users) do
         repository :memory
-
-        attribute :user_id
-        attribute :user_name
-        attribute :user_email
       end
     end
 

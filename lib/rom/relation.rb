@@ -18,7 +18,9 @@ module ROM
   # @api public
   class Relation
     include Charlatan.new(:dataset)
-    include Equalizer.new(:header, :dataset)
+    include Equalizer.new(:dataset)
+
+    attr_reader :dataset
 
     class << self
       # Relation methods that were defined inside setup.relation DSL
@@ -29,22 +31,11 @@ module ROM
       attr_accessor :relation_methods
     end
 
-    # @return [Array] relation base header
-    #
-    # @api private
-    attr_reader :header
-
     # Hook to finalize a relation after its instance was created
     #
     # @api private
     def self.finalize(_env, _relation)
       # noop
-    end
-
-    # @api private
-    def initialize(dataset, header = dataset.header)
-      super
-      @header = header.dup.freeze
     end
 
     # Yield dataset tuples

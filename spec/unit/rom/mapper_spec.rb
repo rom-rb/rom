@@ -4,11 +4,11 @@ require 'ostruct'
 
 describe ROM::Mapper do
   subject(:mapper) do
-    ROM::Mapper.build(ROM::Header.coerce(relation.header.zip, user_model))
+    ROM::Mapper.build(ROM::Header.coerce([:id, :name].zip, user_model))
   end
 
   let(:relation) do
-    ROM::Relation.new(dataset, [:id, :name])
+    ROM::Relation.new(dataset)
   end
 
   let(:dataset) do
