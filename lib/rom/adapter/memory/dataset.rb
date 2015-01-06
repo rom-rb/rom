@@ -10,7 +10,7 @@ module ROM
           left, right = args.size > 1 ? args : [self, args.first]
 
           join_map = left.each_with_object({}) { |tuple, h|
-            others = right.find_all { |t| (tuple.to_a & t.to_a).any? }
+            others = right.to_a.find_all { |t| (tuple.to_a & t.to_a).any? }
             (h[tuple] ||= []).concat(others)
           }
 
