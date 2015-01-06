@@ -1,8 +1,7 @@
 require 'rom/support/data_proxy'
 
 module ROM
-  class EnumerableDataset
-    include DataProxy
+  module EnumerableDataset
     include Enumerable
 
     alias_method :to_ary, :to_a

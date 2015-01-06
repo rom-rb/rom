@@ -3,7 +3,9 @@ require 'rom/array_dataset'
 module ROM
   class Adapter
     class Memory < Adapter
-      class Dataset < ArrayDataset
+      class Dataset
+        include ArrayDataset
+
         def join(*args)
           left, right = args.size > 1 ? args : [self, args.first]
 

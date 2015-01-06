@@ -1,7 +1,5 @@
 module ROM
   module DataProxy
-    attr_reader :data, :header, :tuple_proc
-
     NON_FORWARDABLE = [
       :each, :to_a, :to_ary, :kind_of?, :instance_of?, :is_a?
     ].freeze
@@ -10,13 +8,15 @@ module ROM
       klass.class_eval do
         extend ClassMethods
         include Equalizer.new(:data)
-      end
-    end
 
-    def initialize(data, header, tuple_proc = self.class.tuple_proc)
-      @data = data
-      @header = header
-      @tuple_proc = tuple_proc
+        attr_reader :data, :header, :tuple_proc
+
+        def initialize(data, header, tuple_proc = self.class.tuple_proc)
+          @data = data
+          @header = header
+          @tuple_proc = tuple_proc
+        end
+      end
     end
 
     def each
