@@ -17,6 +17,6 @@ class MemoryAdapterDatasetLintTest < Minitest::Test
 
   def setup
     @data  = [{ name: 'Jane', age: 24 }, { name: 'Joe', age: 25 }]
-    @dataset = ROM::Adapter::Memory::Dataset.new(@data, [:name, :age])
+    @dataset = ROM::Adapter::Memory::Dataset.new(@data)
   end
 end
