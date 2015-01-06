@@ -5,6 +5,7 @@
 * `to_ary` alias in `Reader` which addresses issue #80 (solnic)
 * `tuple_count` interface in AbstractCommand which can be overridden by adapter (solnic)
 * Optionally pass command to block in CommandRegistry#try addressed by issue #83 (splattael)
+* Referencing an unknown method in CommandRegistry#try block raises ElementNotFoundError (rather than NoMethodError) #89 (splattael)
 
 ## v0.5.0 2014-12-31
 
