@@ -18,10 +18,21 @@ module ROM
     end
 
     forward(
-      :*, :+, :-, :compact, :compact!, :delete_if, :flatten, :flatten!, :keep_if,
-      :map!, :length, :pop, :reject, :reject!, :reverse, :reverse!, :sample,
-      :select!, :size, :shift, :shuffle, :shuffle!, :slice, :slice!, :sort!,
-      :sort_by!, :uniq, :uniq!, :unshift, :values_at
+      :*, :+, :-, :compact, :compact!, :flatten, :flatten!, :length, :pop,
+      :reverse, :reverse!, :sample, :select!, :size, :shift, :shuffle, :shuffle!,
+      :slice, :slice!, :sort!, :sort_by!, :uniq, :uniq!, :unshift, :values_at
     )
+
+    [
+      :map!, :combination, :cycle, :delete_if, :keep_if, :permutation, :reject!,
+      :select!, :sort_by!
+    ].each do |method|
+      class_eval <<-RUBY, __FILE__, __LINE__ + 1
+        def #{method}(*args, &block)
+          return to_enum unless block
+          self.class.new(data.send(:#{method}, *args, &block), header, row_proc)
+        end
+      RUBY
+    end
   end
 end
