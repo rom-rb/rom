@@ -1,11 +1,38 @@
 require 'rom/support/data_proxy'
 
 module ROM
+  # A helper module that adds data-proxy behavior to an enumerable object
+  #
+  # This module is intended to be used by adapters
+  #
+  # Class that includes this module can define `tuple_proc` class method which
+  # must return a proc-like object which will be used to process each element
+  # in the enumerable
+  #
+  # @example
+  #   class MyDataset
+  #     include ROM::EnumerableDataset
+  #
+  #     def self.tuple_proc
+  #       -> tuple { tuple.each_with_object({}) { |(k,v), h| h[k.to_sym] = v } }
+  #     end
+  #   end
+  #
+  #   ds = MyDataset.new([{ 'name' => 'Jane' }, [:name])
+  #   ds.to_a # => { :name => 'Jane' }
+  #
+  # @public
   module EnumerableDataset
     include Enumerable
 
     alias_method :to_ary, :to_a
 
+    # Included hook which extends a class with DataProxy behavior
+    #
+    # This module can also be included into other modules so we apply the
+    # extension only for classes
+    #
+    # @api private
     def self.included(klass)
       return unless klass.is_a?(Class)
       klass.send(:include, DataProxy)

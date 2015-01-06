@@ -1,10 +1,18 @@
 require 'rom/enumerable_dataset'
 
 module ROM
+  # A helper module that adds data-proxy behavior to an array-like object
+  #
+  # @see EnumerableDataset
+  #
+  # @public
   module ArrayDataset
     extend DataProxy::ClassMethods
     include EnumerableDataset
 
+    # Extends the class with data-proxy behavior
+    #
+    # @api private
     def self.included(klass)
       klass.send(:include, DataProxy)
     end
