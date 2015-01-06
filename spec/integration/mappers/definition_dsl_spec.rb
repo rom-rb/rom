@@ -20,6 +20,9 @@ describe 'Mapper definition DSL' do
       setup.mappers do
         define(:users) do
           model name: 'User'
+
+          attribute :name
+          attribute :email
         end
       end
     end
@@ -34,24 +37,6 @@ describe 'Mapper definition DSL' do
   end
 
   describe 'excluding attributes' do
-    context 'using exclude' do
-      subject(:mapper) { rom.read(:users).mapper }
-
-      before do
-        setup.mappers do
-          define(:users) do
-            model name: 'User'
-
-            exclude :name
-          end
-        end
-      end
-
-      it 'only maps provided attributes' do
-        expect(header.keys).to eql([:email])
-      end
-    end
-
     context 'by setting :inherit_header to false' do
       subject(:mapper) { rom.read(:users).email_index.mapper }
 
@@ -59,6 +44,9 @@ describe 'Mapper definition DSL' do
         setup.mappers do
           define(:users) do
             model name: 'User'
+
+            attribute :name
+            attribute :email
           end
 
           define(:email_index, parent: :users, inherit_header: false) do
@@ -81,6 +69,9 @@ describe 'Mapper definition DSL' do
       setup.mappers do
         define(:users) do
           model name: 'User'
+
+          attribute :name
+          attribute :email
         end
       end
 

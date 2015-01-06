@@ -22,7 +22,7 @@ module ROM
       end
 
       def exclude(*names)
-        names.each { |name| attributes.delete([name]) }
+        attributes.delete_if { |attr| names.include?(attr.first) }
       end
 
       def embedded(name, options, &block)

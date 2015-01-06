@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe ROM::MapperBuilder do
-  subject(:builder) { ROM::MapperBuilder.new(:users, relation, options) }
+  subject(:builder) { ROM::MapperBuilder.new(:users, options) }
 
   let(:options) { {} }
   let(:relation) { double('relation', header: []) }

@@ -19,6 +19,9 @@ describe 'Reading relations' do
     setup.mappers do
       define(:users) do
         model name: 'User'
+
+        attribute :name
+        attribute :email
       end
     end
 
@@ -46,6 +49,9 @@ describe 'Reading relations' do
     setup.mappers do
       define(:users) do
         model name: 'User'
+
+        attribute :name
+        attribute :email
       end
 
       define(:with_tasks, parent: :users) do
@@ -97,6 +103,9 @@ describe 'Reading relations' do
     setup.mappers do
       define(:users) do
         model name: 'User'
+
+        attribute :name
+        attribute :email
       end
 
       define(:with_task, parent: :users) do

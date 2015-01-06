@@ -9,21 +9,21 @@ module ROM
     option :parent, type: Symbol
     option :prefix, reader: true
     option :symbolize_keys, reader: true, allow: [true, false]
-    option :inherit_header, allow: [true, false]
+    option :inherit_header, reader: true, allow: [true, false]
+    option :header, type: Header
 
-    attr_reader :name, :root, :dsl
+    attr_reader :name, :dsl
 
     DEFAULT_PROCESSOR = :transproc
 
-    def initialize(name, root, options = {})
+    def initialize(name, options = {}, &block)
       super
 
       @name = name
-      @root = root
 
       attributes =
-        if options[:inherit_header]
-          root.header.map { |attr| [prefix ? :"#{prefix}_#{attr}" : attr] }
+        if options[:inherit_header] && options[:header]
+          options[:header].map { |attr| [attr.name, attr.meta] }
         else
           []
         end
@@ -31,6 +31,8 @@ module ROM
       @dsl = MapperDSL.new(attributes, options)
 
       @processor = DEFAULT_PROCESSOR
+
+      instance_eval(&block) if block
     end
 
     def processor(identifier = nil)

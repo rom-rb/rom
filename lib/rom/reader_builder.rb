@@ -71,30 +71,34 @@ module ROM
     # @api private
     def call(name, input_options = {}, &block)
       with_options(input_options) do |options|
-        parent = relations[options.fetch(:parent) { name }]
+        relation = relations[options.fetch(:parent) { name }]
+        parent = readers[options[:parent]]
 
-        builder = MapperBuilder.new(name, parent, options)
-        builder.instance_exec(&block) if block
+        options[:header] = parent.header if parent && options[:inherit_header]
+
+        builder = MapperBuilder.new(name, options, &block)
         mapper = builder.call
 
         mappers =
           if options[:parent]
-            readers.fetch(parent.name).mappers
+            readers.fetch(relation.name).mappers
           else
             MapperRegistry.new
           end
 
         mappers[name] = mapper
 
-        unless options[:parent]
-          readers[name] = self.class.build(
-            name, parent, mappers, parent.class.relation_methods
-          )
-        end
+        build_reader(name, relation, mappers) unless options[:parent]
       end
     end
 
     private
+
+    def build_reader(name, relation, mappers)
+      readers[name] = self.class.build(
+        name, relation, mappers, relation.class.relation_methods
+      )
+    end
 
     # @api private
     def with_options(options)
