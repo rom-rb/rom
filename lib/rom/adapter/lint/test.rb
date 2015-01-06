@@ -2,7 +2,7 @@ module ROM
   class Adapter
     module Lint
       module TestAdapter
-        attr_reader :adapter
+        attr_reader :adapter, :uri
 
         def test_schemes
           assert_respond_to adapter, :schemes,
@@ -30,7 +30,7 @@ module ROM
         private
 
         def adapter_instance
-          Adapter.setup("#{adapter.schemes.first}://localhost/test")
+          Adapter.setup(uri)
         end
       end
 

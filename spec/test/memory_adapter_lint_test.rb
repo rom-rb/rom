@@ -8,6 +8,7 @@ class MemoryAdapterLintTest < MiniTest::Test
 
   def setup
     @adapter = ROM::Adapter::Memory
+    @uri = "memory://localhost/test"
   end
 end
 
