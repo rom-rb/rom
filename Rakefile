@@ -1,7 +1,15 @@
 require "rspec/core/rake_task"
 
 RSpec::Core::RakeTask.new(:spec)
-task default: [:spec]
+task default: [:ci]
+
+desc "Run CI tasks"
+task ci: [:spec, :lint]
+
+desc "Run adapter lint tests against memory adapter"
+task :lint do
+  exec 'bundle exec ruby spec/test/memory_adapter_lint_test.rb'
+end
 
 begin
   require "rubocop/rake_task"
