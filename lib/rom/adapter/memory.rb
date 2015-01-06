@@ -18,8 +18,8 @@ module ROM
         @connection = Storage.new
       end
 
-      def dataset(name, header = [])
-        connection.create_dataset(name, header)
+      def dataset(name)
+        connection.create_dataset(name)
       end
 
       def dataset?(name)

@@ -26,7 +26,7 @@ module ROM
       def call
         dataset =
           if adapter.respond_to?(:dataset)
-            adapter.dataset(name, header)
+            adapter.dataset(name)
           else
             adapter[name]
           end

@@ -6,7 +6,7 @@ describe ROM::Setup do
       it 'builds relation from inferred schema' do
         adapter = double('adapter').as_null_object
         repo = double('repo', adapter: adapter).as_null_object
-        dataset = double('dataset')
+        dataset = double('dataset', header: [:name, :email])
 
         allow(repo).to receive(:schema).and_return([
           [:users, dataset, [:name, :email]]

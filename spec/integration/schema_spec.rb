@@ -20,8 +20,8 @@ describe 'Defining schema' do
     it 'returns schema with relations' do
       users = schema.users
 
-      expect(users.dataset.to_a).to eql(rom.memory.users.to_a)
-      expect(users.header).to eql([:id, :name])
+      expect(rom.relations.users.header).to eql([:id, :name])
+      expect(users.to_a).to eql(rom.memory.users.to_a)
     end
   end
 
@@ -53,25 +53,13 @@ describe 'Defining schema' do
 
       it_behaves_like 'valid schema' do
         it 'registers all base relations' do
-          expect(schema.tasks.dataset).to be(rom.memory.tasks)
-          expect(schema.tasks.header).to eql([:title])
+          expect(schema.tasks).to be(rom.memory.tasks)
+          expect(rom.relations.tasks.header).to eql([:title])
 
-          expect(schema.tags.dataset).to be(rom.memory.tags)
-          expect(schema.tags.header).to eql([:name])
+          expect(schema.tags).to be(rom.memory.tags)
+          expect(rom.relations.tags.header).to eql([:name])
         end
       end
-    end
-
-    context 'with an adapter that does not support header injection' do
-      before do
-        ROM::Adapter::Memory::Dataset.send(:undef_method, :header)
-      end
-
-      after do
-        ROM::Adapter::Memory::Dataset.send(:attr_reader, :header)
-      end
-
-      it_behaves_like 'valid schema'
     end
   end
 end

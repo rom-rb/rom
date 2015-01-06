@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe ROM::Adapter::Memory::Dataset do
   subject(:dataset) do
-    ROM::Adapter::Memory::Dataset.new(data, [:name, :email, :age])
+    ROM::Adapter::Memory::Dataset.new(data)
   end
 
   let(:data) do

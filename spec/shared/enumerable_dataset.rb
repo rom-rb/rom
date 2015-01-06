@@ -1,5 +1,5 @@
 shared_examples_for "an enumerable dataset" do
-  subject(:dataset) { klass.new(data, []) }
+  subject(:dataset) { klass.new(data) }
 
   let(:data) do
     [{ 'name' => 'Jane' }, { 'name' => 'Joe' }]

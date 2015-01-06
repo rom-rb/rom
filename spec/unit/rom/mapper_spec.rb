@@ -8,12 +8,12 @@ describe ROM::Mapper do
   end
 
   let(:relation) do
-    ROM::Relation.new(dataset, dataset.header)
+    ROM::Relation.new(dataset, [:id, :name])
   end
 
   let(:dataset) do
     ROM::Adapter::Memory::Dataset.new(
-      [{ id: 1, name: 'Jane' }, { id: 2, name: 'Joe' }], [:id, :name]
+      [{ id: 1, name: 'Jane' }, { id: 2, name: 'Joe' }]
     )
   end
 

@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 describe ROM::Relation do
-  subject(:relation) { ROM::Relation.new(dataset, dataset.header) }
+  subject(:relation) { ROM::Relation.new(dataset, [:id, :name]) }
 
-  let(:dataset) { ROM::Adapter::Memory::Dataset.new([jane, joe], [:id, :name]) }
+  let(:dataset) { ROM::Adapter::Memory::Dataset.new([jane, joe]) }
 
   let(:jane) { { id: 1, name: 'Jane' } }
   let(:joe) { { id: 2, name: 'Joe' } }
@@ -11,7 +11,6 @@ describe ROM::Relation do
   describe "#header" do
     it "return's duplicated and frozen dataset header" do
       expect(relation.header).to be_frozen
-      expect(relation.header).not_to be(dataset.header)
     end
   end
 

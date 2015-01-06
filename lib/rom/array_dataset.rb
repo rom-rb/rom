@@ -30,7 +30,7 @@ module ROM
       class_eval <<-RUBY, __FILE__, __LINE__ + 1
         def #{method}(*args, &block)
           return to_enum unless block
-          self.class.new(data.send(:#{method}, *args, &block), header, row_proc)
+          self.class.new(data.send(:#{method}, *args, &block))
         end
       RUBY
     end

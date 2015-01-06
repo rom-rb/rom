@@ -18,7 +18,7 @@ module ROM
             join_map[tuple].map { |other| tuple.merge(other) }
           }.flatten
 
-          self.class.new(tuples, left.header + right.header)
+          self.class.new(tuples, row_proc)
         end
 
         def restrict(criteria = nil)

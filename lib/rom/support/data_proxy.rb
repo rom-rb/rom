@@ -15,11 +15,6 @@ module ROM
     # @api private
     attr_reader :data
 
-    # @return [Array<Symbol>] Header with tuple attribute names
-    #
-    # @api private
-    attr_reader :header
-
     # @return [Proc] tuple processing proc
     #
     # @api private
@@ -44,9 +39,8 @@ module ROM
     # @param [Proc] tuple processing proc
     #
     # @api private
-    def initialize(data, header, row_proc = self.class.row_proc)
+    def initialize(data, row_proc = self.class.row_proc)
       @data = data
-      @header = header
       @row_proc = row_proc
     end
 
@@ -94,7 +88,7 @@ module ROM
               if response.equal?(data)
                 self
               elsif response.is_a?(data.class)
-                self.class.new(response, header, row_proc)
+                self.class.new(response)
               else
                 response
               end

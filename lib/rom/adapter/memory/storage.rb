@@ -4,8 +4,7 @@ module ROM
       class Storage
         attr_reader :data
 
-        def initialize(*)
-          super
+        def initialize
           @data = {}
         end
 
@@ -13,8 +12,8 @@ module ROM
           data[name]
         end
 
-        def create_dataset(name, header)
-          data[name] = Dataset.new([], header)
+        def create_dataset(name)
+          data[name] = Dataset.new([])
         end
 
         def key?(name)
