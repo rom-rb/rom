@@ -1,6 +1,21 @@
 module ROM
   class Adapter
     module Lint
+      # This is a simple lint-test for an adapter class to ensure the basic
+      # interfaces are in place
+      #
+      # @example
+      #
+      #   class MyAdapterTest < MiniTest::Test
+      #     include ROM::Adapter::Lint::TestAdapter
+      #
+      #     def setup
+      #       @adapter = MyAdapter
+      #       @uri = "super_db://something"
+      #     end
+      #   end
+      #
+      # @public
       module TestAdapter
         attr_reader :adapter, :uri
 
@@ -34,6 +49,20 @@ module ROM
         end
       end
 
+      # This is a simple lint-test for an adapter dataset class to ensure the
+      # basic behavior is correct
+      #
+      # @example
+      #
+      #  class MyDatasetLintTest < MiniTest::Test
+      #    include ROM::Adapter::Lint::TestEnumerableDataset
+      #
+      #     def setup
+      #       @data  = [{ name: 'Jane', age: 24 }, { name: 'Joe', age: 25 }]
+      #       @dataset = MyDataset.new(@data, [:name, :age])
+      #     end
+      #   end
+      # @public
       module TestEnumerableDataset
         attr_reader :dataset, :data
 
