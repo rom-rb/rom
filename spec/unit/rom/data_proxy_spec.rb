@@ -8,9 +8,8 @@ describe ROM::ArrayDataset do
   describe 'with array' do
     let(:klass) do
       Class.new(ROM::ArrayDataset) do
-        def initialize(*args)
-          super
-          @tuple_proc = Transproc(:symbolize_keys)
+        def self.tuple_proc
+          Transproc(:symbolize_keys)
         end
       end
     end

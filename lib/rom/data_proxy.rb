@@ -13,10 +13,10 @@ module ROM
       end
     end
 
-    def initialize(data, header)
+    def initialize(data, header, tuple_proc = self.class.tuple_proc)
       @data = data
       @header = header
-      @tuple_proc ||= -> tuple { tuple }
+      @tuple_proc = tuple_proc
     end
 
     def each
@@ -25,6 +25,10 @@ module ROM
     end
 
     module ClassMethods
+      def tuple_proc
+        -> tuple { tuple }
+      end
+
       def forward(*methods)
         (Array(methods).flatten - NON_FORWARDABLE).each do |method_name|
           class_eval <<-RUBY, __FILE__, __LINE__ + 1
@@ -34,7 +38,7 @@ module ROM
               if response.equal?(data)
                 self
               elsif response.is_a?(data.class)
-                self.class.new(response, header)
+                self.class.new(response, header, tuple_proc)
               else
                 response
               end
