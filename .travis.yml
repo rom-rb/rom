@@ -10,12 +10,14 @@ rvm:
   - rbx-2
   - jruby
   - ruby-head
+  - jruby-head
 env:
   global:
     - JRUBY_OPTS='--dev -J-Xmx1024M'
 matrix:
   allow_failures:
     - rvm: ruby-head
+    - rvm: jruby-head
 notifications:
   webhooks:
     urls:
