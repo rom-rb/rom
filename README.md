@@ -12,7 +12,7 @@
 [![Dependency Status](https://gemnasium.com/rom-rb/rom.png)][gemnasium]
 [![Code Climate](https://codeclimate.com/github/rom-rb/rom/badges/gpa.svg)][codeclimate]
 [![Test Coverage](https://codeclimate.com/github/rom-rb/rom/badges/coverage.svg)][codeclimate]
-[![Inline docs](http://inch-ci.org/github/rom-rb/rom.svg?branch=master)][inchpages]
+[![Inline docs](http://inch-ci.org/github/rom-rb/rom.svg?branch=master&style=flat)][inchpages]
 
 Ruby Object Mapper (ROM) is an experimental Ruby library with the goal to
 provide powerful object mapping capabilities without limiting the full power of
