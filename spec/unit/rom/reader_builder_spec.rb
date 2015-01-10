@@ -52,5 +52,10 @@ describe ROM::Reader do
       expect { reader.not_here }
         .to raise_error(ROM::NoRelationError, /not_here/)
     end
+
+    it 'raises error when relation does not respond to the method with args' do
+      expect { reader.find_by_id(1) }
+        .to raise_error(ROM::NoRelationError, /find_by_id/)
+    end
   end
 end

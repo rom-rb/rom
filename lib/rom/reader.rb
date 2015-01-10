@@ -61,7 +61,7 @@ module ROM
     private
 
     # @api private
-    def method_missing(name)
+    def method_missing(name, *)
       raise(
         NoRelationError,
         "undefined relation #{name.inspect} within #{path.inspect}"
