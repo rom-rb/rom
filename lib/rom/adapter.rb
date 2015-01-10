@@ -6,8 +6,6 @@ module ROM
   #
   # @api public
   class Adapter
-    include Equalizer.new(:connection)
-
     # Return connection URI associated with the adapter
     #
     # @return [String]
@@ -114,6 +112,15 @@ module ROM
     def initialize(uri, options = {})
       @uri = uri
       @options = options
+      setup_connection
+    end
+
+    # Hook called in constructor so that specialized adapters can implement
+    # setting up their connections without the need to override constructor
+    #
+    # @api private
+    def setup_connection
+      # noop
     end
 
     # Extension hook for adding adapter-specific behavior to a relation class
