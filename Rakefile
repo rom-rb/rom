@@ -8,7 +8,7 @@ desc "Run CI tasks"
 task ci: [:spec, :lint]
 
 desc "Run adapter lint tests and specs against memory adapter"
-task :lint => [:"lint:test"]
+task lint: ["lint:test"]
 
 namespace :lint do
   Rake::TestTask.new(:test) do |test|
