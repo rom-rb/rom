@@ -19,6 +19,8 @@ Dir[root.join('support/*.rb').to_s].each { |f| require f }
 Dir[root.join('shared/*.rb').to_s].each { |f| require f }
 
 RSpec.configure do |config|
+  config.expect_with :rspec, :minitest
+
   config.before do
     @constants = Object.constants
   end
