@@ -1,5 +1,4 @@
 require 'rom/adapter/lint/common'
-require 'rspec'
 
 module ROM
   class Adapter
