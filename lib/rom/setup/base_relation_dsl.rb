@@ -12,10 +12,10 @@ module ROM
       end
 
       def repository(name = nil)
-        if @repository
-          @repository
-        else
+        if name
           @repository = env[name]
+        else
+          @repository
         end
       end
 
