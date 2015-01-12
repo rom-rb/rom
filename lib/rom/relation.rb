@@ -54,9 +54,7 @@ module ROM
     #
     # @api public
     def to_a
-      ary = []
-      each { |tuple| ary << tuple }
-      ary
+      to_enum.to_a
     end
   end
 end
