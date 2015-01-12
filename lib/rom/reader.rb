@@ -58,6 +58,36 @@ module ROM
       mapper.process(relation) { |tuple| yield(tuple) }
     end
 
+    # Returns a single tuple from the relation if there is one.
+    #
+    # @raise [ROM::TupleCountMismatchError] if the relation contains more than
+    #   one tuple
+    #
+    # @api public
+    def one
+      if relation.count > 1
+        raise(
+          TupleCountMismatchError,
+          'The relation consists of more than one tuple'
+        )
+      else
+        mapper.process(relation).first
+      end
+    end
+
+    # Like [one], but additionally raises an error if the relation is empty.
+    #
+    # @raise [ROM::TupleCountMismatchError] if the relation does not contain
+    #   exactly one tuple
+    #
+    # @api public
+    def one!
+      one || raise(
+        TupleCountMismatchError,
+        'The relation does not contain any tuples'
+      )
+    end
+
     private
 
     # @api private

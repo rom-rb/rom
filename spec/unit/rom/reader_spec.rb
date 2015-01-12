@@ -29,6 +29,58 @@ describe ROM::Reader do
     end
   end
 
+  shared_examples_for 'one and one!' do |method|
+    context 'with a single tuple' do
+      let(:relation) { [jane] }
+
+      it 'returns a single tuple' do
+        expect(mapper).to receive(:process)
+          .with(relation)
+          .and_return(relation)
+
+        expect(reader.public_send(method)).to eql(jane)
+      end
+    end
+
+    context 'with more than one tuple' do
+      it 'raises an error' do
+        expect { reader.public_send(method) }.to raise_error(ROM::TupleCountMismatchError)
+      end
+    end
+  end
+
+  describe '#one' do
+    it_should_behave_like 'one and one!', :one
+
+    context 'without any tuple' do
+      let(:relation) { [] }
+
+      it 'returns nil' do
+        expect(mapper).to receive(:process)
+          .with(relation)
+          .and_return(relation)
+
+        expect(reader.one).to be_nil
+      end
+    end
+  end
+
+  describe '#one!' do
+    it_should_behave_like 'one and one!', :one!
+
+    context 'without any tuple' do
+      let(:relation) { [] }
+
+      it 'raises an error' do
+        expect(mapper).to receive(:process)
+          .with(relation)
+          .and_return(relation)
+
+        expect { reader.one! }.to raise_error(ROM::TupleCountMismatchError)
+      end
+    end
+  end
+
   describe '#to_ary' do
     it 'casts relation to an array with loaded objects' do
       expect(mapper).to receive(:process)
