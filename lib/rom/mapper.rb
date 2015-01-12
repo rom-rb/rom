@@ -56,7 +56,7 @@ module ROM
     #
     # @api private
     def process(relation, &block)
-      transformer[relation.to_a].each(&block)
+      transformer[relation].each(&block)
     end
   end
 end
