@@ -23,4 +23,10 @@ describe ROM::Relation do
       expect(relation.each).to be_instance_of(Enumerator)
     end
   end
+
+  describe "#to_a" do
+    it "materializes relation to an array" do
+      expect(relation.to_a).to eql([jane, joe])
+    end
+  end
 end

@@ -47,5 +47,16 @@ module ROM
       return to_enum unless block
       dataset.each(&block)
     end
+
+    # Materialize relation into an array
+    #
+    # @return [Array<Hash>]
+    #
+    # @api public
+    def to_a
+      ary = []
+      each { |tuple| ary << tuple }
+      ary
+    end
   end
 end
