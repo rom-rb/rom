@@ -1,6 +1,5 @@
 module ROM
-  # Repository exposes native database connection and schema when it's
-  # supported by the adapter
+  # Repository exposes schema if supported by the adapter
   #
   # @api public
   class Repository
@@ -31,13 +30,6 @@ module ROM
     # @api public
     def logger
       adapter.logger
-    end
-
-    # Return the database connection provided by the adapter
-    #
-    # @api public
-    def connection
-      adapter.connection
     end
 
     # Return the schema provided by the adapter
