@@ -2,10 +2,23 @@
 
 ### Added
 
+* `Reader#one` and `Reader#one!` which can be used to retrieve one object from a relation (aflatter)
+* Adapters can use helper modules for datasets: `ArrayDataset` and `EnumerableDataset` (solnic)
+* Adapters can implement `setup_connection` which is called in the constructor (it's a no-op by default) (solnic)
+* Adapter interface can now be tested via a lint test (solnic + splattael)
 * `to_ary` alias in `Reader` which addresses issue #80 (solnic)
 * `tuple_count` interface in AbstractCommand which can be overridden by adapter (solnic)
 * Optionally pass command to block in CommandRegistry#try addressed by issue #83 (splattael)
 * Referencing an unknown method in CommandRegistry#try block raises ElementNotFoundError (rather than NoMethodError) #89 (splattael)
+
+### Changed
+
+* Repository no longer exposes adapter's connection object (it can vary accross adapters) (aflatter)
+* [breaking] defining attributes in schema is no longer needed; The only place to define attributes is mapper definition DSL (solnic)
+* Relation no longer needs a header object and only operates on an adapters dataset (solnic)
+* Adapter's dataset no longer require header (solnic)
+
+[Compare v0.5.0...master](https://github.com/rom-rb/rom/compare/v0.5.0...master)
 
 ## v0.5.0 2014-12-31
 
