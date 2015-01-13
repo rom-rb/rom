@@ -4,16 +4,13 @@ module ROM
   # @api public
   class Env
     include Adamantium::Flat
-    include Equalizer.new(
-      :repositories, :schema, :relations, :mappers, :commands
-    )
+    include Equalizer.new(:repositories, :relations, :mappers, :commands)
 
-    attr_reader :repositories, :schema, :relations, :mappers, :commands
+    attr_reader :repositories, :relations, :mappers, :commands
 
     # @api private
-    def initialize(repositories, schema, relations, mappers, commands)
+    def initialize(repositories, relations, mappers, commands)
       @repositories = repositories
-      @schema = schema
       @relations = relations
       @mappers = mappers
       @commands = commands

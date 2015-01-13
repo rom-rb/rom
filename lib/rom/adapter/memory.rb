@@ -18,7 +18,7 @@ module ROM
       end
 
       def dataset(name)
-        connection.create_dataset(name)
+        self[name] || connection.create_dataset(name)
       end
 
       def dataset?(name)

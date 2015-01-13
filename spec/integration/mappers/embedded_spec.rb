@@ -5,11 +5,7 @@ describe 'Mappers / embedded' do
   let(:rom) { setup.finalize }
 
   it 'allows mapping embedded tuples' do
-    setup.schema do
-      base_relation(:users) do
-        repository :default
-      end
-    end
+    setup.relation(:users)
 
     setup.mappers do
       define(:users) do
@@ -23,7 +19,7 @@ describe 'Mappers / embedded' do
       end
     end
 
-    rom.schema.users << {
+    rom.relations.users << {
       'name' => 'Jane',
       'tasks' => [{ 'title' => 'Task One' }, { 'title' => 'Task Two' }]
     }
@@ -37,11 +33,7 @@ describe 'Mappers / embedded' do
   end
 
   it 'allows mapping embedded tuple' do
-    setup.schema do
-      base_relation(:users) do
-        repository :default
-      end
-    end
+    setup.relation(:users)
 
     setup.mappers do
       define(:users) do
@@ -57,7 +49,7 @@ describe 'Mappers / embedded' do
       end
     end
 
-    rom.schema.users << {
+    rom.relations.users << {
       'name' => 'Jane',
       'address' => { 'street' => 'Somewhere 1', 'city' => 'NYC' }
     }

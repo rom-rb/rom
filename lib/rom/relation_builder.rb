@@ -7,15 +7,13 @@ module ROM
   #
   # @private
   class RelationBuilder
-    attr_reader :schema, :mod
+    attr_reader :mod
 
     # @param [Schema]
     # @param [Hash] relation registry
     #
     # @api private
-    def initialize(schema, relations)
-      @schema = schema
-
+    def initialize(relations)
       @mod = Module.new
 
       @mod.module_exec do
@@ -30,12 +28,14 @@ module ROM
     # @return [Relation]
     #
     # @api private
-    def call(name)
-      dataset = schema[name]
+    def call(name, adapter)
+      dataset = adapter.dataset(name)
       klass_name = "#{Relation.name}[#{Inflecto.camelize(name)}]"
 
       klass = build_class(name, klass_name)
       klass.send(:include, mod)
+
+      adapter.extend_relation_class(klass)
 
       yield(klass)
 

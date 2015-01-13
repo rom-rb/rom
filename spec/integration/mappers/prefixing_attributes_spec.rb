@@ -1,15 +1,9 @@
 require 'spec_helper'
 
 describe 'Mappers / Prefixing attributes' do
-  let(:setup) { ROM.setup(memory: 'memory://test') }
+  let(:setup) { ROM.setup('memory://test') }
 
   before do
-    setup.schema do
-      base_relation(:users) do
-        repository :memory
-      end
-    end
-
     setup.relation(:users)
   end
 
@@ -28,8 +22,11 @@ describe 'Mappers / Prefixing attributes' do
 
     User.send(:include, Equalizer.new(:id, :name, :email))
 
-    rom.schema.users << { user_id: 123, user_name: 'Jane',
-                          user_email: 'jane@doe.org' }
+    rom.relations.users << {
+      user_id: 123,
+      user_name: 'Jane',
+      user_email: 'jane@doe.org'
+    }
 
     jane = rom.read(:users).to_a.first
 

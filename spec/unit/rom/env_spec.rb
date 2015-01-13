@@ -6,11 +6,11 @@ describe ROM::Env do
   before { setup.relation(:users) }
 
   it 'exposes repositories on method-missing' do
-    expect(rom.memory).to be(rom.repositories[:memory])
+    expect(rom.default).to be(rom.repositories[:default])
   end
 
   it 'responds to methods corresponding to repository names' do
-    expect(rom).to respond_to(:memory)
+    expect(rom).to respond_to(:default)
   end
 
   it 'raises exception when unknown repository is referenced' do

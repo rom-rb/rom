@@ -8,29 +8,15 @@ describe 'Using in-memory adapter for cross-repo access' do
       main: 'memory://localhost/main'
     )
 
-    setup.schema do
-      base_relation :users do
-        repository :left
-      end
-
-      base_relation :tasks do
-        repository :right
-      end
-
-      base_relation :users_and_tasks do
-        repository :main
-      end
-    end
-
-    setup.relation(:users) do
+    setup.relation(:users, repository: :left) do
       def by_name(name)
         restrict(name: name)
       end
     end
 
-    setup.relation(:tasks)
+    setup.relation(:tasks, repository: :right)
 
-    setup.relation(:users_and_tasks) do
+    setup.relation(:users_and_tasks, repository: :main) do
       def by_user(name)
         join(users.by_name(name), tasks)
       end

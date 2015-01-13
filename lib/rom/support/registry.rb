@@ -27,7 +27,7 @@ module ROM
     end
 
     def respond_to_missing?(name, include_private = false)
-      key?(name) || super
+      elements.key?(name) || super
     end
 
     private
