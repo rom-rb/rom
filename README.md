@@ -28,6 +28,7 @@ Learn more:
   * [rom-sql](https://github.com/rom-rb/rom-sql)
   * [rom-mongo](https://github.com/rom-rb/rom-mongo)
   * [rom-yaml](https://github.com/rom-rb/rom-yaml)
+  * [rom-csv](https://github.com/rom-rb/rom-yaml)
 
 See [issues](https://github.com/rom-rb/rom/issues?q=is%3Aopen+is%3Aissue+label%3Aadapter+label%3Afeature)
 for a list of adapters that are planned to be added soon.
@@ -40,9 +41,9 @@ Integration with other frameworks is planned.
 ``` ruby
 require 'rom-sql'
 
-setup = ROM.setup(sqlite: "sqlite::memory")
+setup = ROM.setup("sqlite::memory")
 
-setup.sqlite.connection.create_table :users do
+setup.default.adapter.connection.create_table :users do
   primary_key :id
   String :name
   Integer :age
