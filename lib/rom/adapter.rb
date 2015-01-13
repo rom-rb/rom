@@ -112,14 +112,14 @@ module ROM
     def initialize(uri, options = {})
       @uri = uri
       @options = options
-      setup_connection
+      setup
     end
 
     # Hook called in constructor so that specialized adapters can implement
     # setting up their connections without the need to override constructor
     #
     # @api private
-    def setup_connection
+    def setup
       # noop
     end
 
