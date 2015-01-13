@@ -4,7 +4,7 @@ require 'rom/setup/command_dsl'
 require 'rom/setup/finalize'
 
 module ROM
-  # Exposes DSL for defining schema, relations, mappers and commands
+  # Exposes DSL for defining relations, mappers and commands
   #
   # @public
   class Setup
@@ -87,7 +87,7 @@ module ROM
 
     # Finalize the setup
     #
-    # @return [Env] frozen env with access to repositories, schema, relations,
+    # @return [Env] frozen env with access to repositories, relations,
     #                mappers and commands
     #
     # @api public
@@ -95,7 +95,7 @@ module ROM
       raise EnvAlreadyFinalizedError if env
 
       finalize = Finalize.new(
-        repositories, @schema, @relations, @mappers, @commands
+        repositories, @relations, @mappers, @commands
       )
 
       @env = finalize.run!
