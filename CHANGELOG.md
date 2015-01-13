@@ -4,7 +4,7 @@
 
 * `Reader#one` and `Reader#one!` which can be used to retrieve one object from a relation (aflatter)
 * Adapters can use helper modules for datasets: `ArrayDataset` and `EnumerableDataset` (solnic)
-* Adapters can implement `setup_connection` which is called in the constructor (it's a no-op by default) (solnic)
+* Adapters can implement `setup` which is called in the constructor (it's a no-op by default) (solnic)
 * Adapter interface can now be tested via a lint test (solnic + splattael)
 * `to_ary` alias in `Reader` which addresses issue #80 (solnic)
 * `tuple_count` interface in AbstractCommand which can be overridden by adapter (solnic)
