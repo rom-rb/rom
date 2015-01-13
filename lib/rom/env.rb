@@ -1,5 +1,5 @@
 module ROM
-  # Exposes defined repositories, schema, relations and mappers
+  # Exposes defined repositories, relations and mappers
   #
   # @api public
   class Env
