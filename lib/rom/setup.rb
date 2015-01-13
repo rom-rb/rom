@@ -1,11 +1,10 @@
-require 'rom/setup/schema_dsl'
 require 'rom/setup/mapper_dsl'
 require 'rom/setup/command_dsl'
 
 require 'rom/setup/finalize'
 
 module ROM
-  # Exposes DSL for defining schema, relations, mappers and commands
+  # Exposes DSL for defining relations, mappers and commands
   #
   # @public
   class Setup
@@ -17,30 +16,10 @@ module ROM
     # @api private
     def initialize(repositories)
       @repositories = repositories
-      @schema = {}
       @relations = {}
       @mappers = []
       @commands = {}
-      @adapter_relation_map = {}
       @env = nil
-    end
-
-    # Schema definition DSL
-    #
-    # @example
-    #
-    #   setup.schema do
-    #     base_relation(:users) do
-    #       repository :sqlite
-    #
-    #       attribute :id
-    #       attribute :name
-    #     end
-    #   end
-    #
-    # @api public
-    def schema(&block)
-      SchemaDSL.new(self, @schema, &block)
     end
 
     # Relation definition DSL
@@ -54,8 +33,8 @@ module ROM
     #   end
     #
     # @api public
-    def relation(name, &block)
-      @relations.update(name => block)
+    def relation(name, options = {}, &block)
+      @relations.update(name => [options, block])
     end
 
     # Mapper definition DSL
@@ -108,7 +87,7 @@ module ROM
 
     # Finalize the setup
     #
-    # @return [Env] frozen env with access to repositories, schema, relations,
+    # @return [Env] frozen env with access to repositories, relations,
     #                mappers and commands
     #
     # @api public
@@ -116,7 +95,7 @@ module ROM
       raise EnvAlreadyFinalizedError if env
 
       finalize = Finalize.new(
-        repositories, @schema, @relations, @mappers, @commands
+        repositories, @relations, @mappers, @commands
       )
 
       @env = finalize.run!

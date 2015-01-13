@@ -1,19 +1,12 @@
 require 'spec_helper'
 
 describe 'Mappers / Symbolizing atributes' do
-  let(:setup) { ROM.setup(memory: 'memory://test') }
+  let(:setup) { ROM.setup('memory://test') }
   let(:rom) { setup.finalize }
 
   before do
-    setup.schema do
-      base_relation(:users) do
-        repository :memory
-      end
-
-      base_relation(:tasks) do
-        repository :memory
-      end
-    end
+    setup.relation(:users)
+    setup.relation(:tasks)
   end
 
   it 'automatically maps all attributes using top-level settings' do
@@ -31,7 +24,7 @@ describe 'Mappers / Symbolizing atributes' do
       end
     end
 
-    rom.schema.users << {
+    rom.relations.users << {
       'user_id' => 123,
       'first_name' => 'Jane',
       'email' => 'jane@doe.org'
@@ -56,7 +49,7 @@ describe 'Mappers / Symbolizing atributes' do
       end
     end
 
-    rom.schema.tasks << {
+    rom.relations.tasks << {
       'title' => 'Task One',
       'task_priority' => 1,
       'task_description' => 'It is a task'

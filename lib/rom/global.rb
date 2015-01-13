@@ -3,7 +3,7 @@ module ROM
   #
   # @public
   module Global
-    # Starts the setup process for schema, relations, mappers and commands
+    # Starts the setup process for relations, mappers and commands
     #
     # @example
     #
@@ -59,13 +59,6 @@ module ROM
       else
         @boot = boot
       end
-    end
-
-    # @see ROM::Setup#schema
-    #
-    # @api public
-    def schema(&block)
-      boot.schema(&block)
     end
 
     # @see ROM::Setup#relation

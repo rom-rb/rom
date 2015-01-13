@@ -5,12 +5,6 @@ describe 'Mappers / deeply embedded tuples' do
   let(:rom) { setup.finalize }
 
   it 'allows mapping embedded tuples' do
-    setup.schema do
-      base_relation(:users) do
-        repository :default
-      end
-    end
-
     setup.relation(:users)
 
     setup.mappers do
@@ -30,7 +24,7 @@ describe 'Mappers / deeply embedded tuples' do
       end
     end
 
-    rom.schema.users << {
+    rom.relations.users << {
       'name' => 'Jane',
       'tasks' => [
         { 'title' => 'Task One', 'priority' => { 'value' => 1, 'desc' => 'high' } },

@@ -3,12 +3,12 @@ require 'spec_helper'
 describe ROM::Repository do
   include_context 'users and tasks'
 
-  subject(:repository) { rom.memory }
+  subject(:repository) { rom.default }
 
   before { setup.relation(:users) }
 
   it 'exposes datasets on method-missing' do
-    expect(repository.users).to be(rom.memory[:users])
+    expect(repository.users).to be(rom.default[:users])
   end
 
   it 'responds to methods corresponding to dataset names' do

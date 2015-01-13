@@ -1,18 +1,10 @@
 require 'spec_helper'
 
 describe 'Mappers / Renaming attributes' do
-  let(:setup) { ROM.setup(memory: 'memory://test') }
+  let(:setup) { ROM.setup('memory://test') }
 
   before do
-    setup.schema do
-      base_relation(:users) do
-        repository :memory
-      end
-
-      base_relation(:addresses) do
-        repository :memory
-      end
-    end
+    setup.relation(:addresses)
 
     setup.relation(:users) do
       def with_address
@@ -39,7 +31,7 @@ describe 'Mappers / Renaming attributes' do
 
     User.send(:include, Equalizer.new(:id, :name))
 
-    rom.schema.users << { _id: 123, user_name: 'Jane' }
+    rom.relations.users << { _id: 123, user_name: 'Jane' }
 
     jane = rom.read(:users).to_a.first
 
@@ -72,8 +64,8 @@ describe 'Mappers / Renaming attributes' do
 
     UserWithAddress.send(:include, Equalizer.new(:id, :name, :address))
 
-    rom.schema.users << { _id: 123, user_name: 'Jane' }
-    rom.schema.addresses << { _id: 123, address_id: 321,
+    rom.relations.users << { _id: 123, user_name: 'Jane' }
+    rom.relations.addresses << { _id: 123, address_id: 321,
                               address_street: 'Street 1' }
 
     jane = rom.read(:users).with_address.first
@@ -110,10 +102,10 @@ describe 'Mappers / Renaming attributes' do
 
     UserWithAddresses.send(:include, Equalizer.new(:id, :name, :addresses))
 
-    rom.schema.users << { _id: 123, user_name: 'Jane' }
-    rom.schema.addresses << { _id: 123, address_id: 321,
+    rom.relations.users << { _id: 123, user_name: 'Jane' }
+    rom.relations.addresses << { _id: 123, address_id: 321,
                               address_street: 'Street 1' }
-    rom.schema.addresses << { _id: 123, address_id: 654,
+    rom.relations.addresses << { _id: 123, address_id: 654,
                               address_street: 'Street 2' }
 
     jane = rom.read(:users).with_addresses.first

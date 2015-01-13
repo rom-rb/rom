@@ -7,8 +7,13 @@ describe 'Setting up ROM' do
     let(:jane) { { name: 'Jane', email: 'jane@doe.org' } }
     let(:joe) { { name: 'Joe', email: 'joe@doe.org' } }
 
+    before do
+      setup.relation(:users)
+      setup.relation(:tasks)
+    end
+
     it 'configures schema relations' do
-      expect(rom.memory.users).to match_array([joe, jane])
+      expect(rom.default.users).to match_array([joe, jane])
     end
 
     it 'configures rom relations' do
@@ -33,9 +38,7 @@ describe 'Setting up ROM' do
 
   context 'without schema' do
     it 'builds empty registries if there is no schema' do
-      setup = ROM.setup(memory: 'memory://test')
-
-      setup.relation(:users)
+      setup = ROM.setup('memory://test')
 
       rom = setup.finalize
 
@@ -51,13 +54,7 @@ describe 'Setting up ROM' do
         values { attribute :name, String }
       end
 
-      rom = ROM.setup(memory: 'memory://test') do
-        schema do
-          base_relation(:users) do
-            repository :memory
-          end
-        end
-
+      rom = ROM.setup('memory://test') do
         relation(:users) do
           def by_name(name)
             restrict(name: name)
@@ -89,13 +86,7 @@ describe 'Setting up ROM' do
         values { attribute :name, String }
       end
 
-      ROM.setup(memory: 'memory://test')
-
-      ROM.schema do
-        base_relation(:users) do
-          repository :memory
-        end
-      end
+      ROM.setup('memory://test')
 
       ROM.relation(:users) do
         def by_name(name)

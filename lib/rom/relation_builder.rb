@@ -1,24 +1,20 @@
 module ROM
   # This class builds a ROM::Relation subclass and instantiates it by injecting
-  # dataset defined in the schema along with its header
+  # dataset defined
   #
   # Relation objects created by this builder are accessible through relation
   # registry in the env object
   #
   # @private
   class RelationBuilder
-    attr_reader :schema, :mod
+    attr_reader :mod
 
     # @param [Schema]
     # @param [Hash] relation registry
     #
     # @api private
-    def initialize(schema, relations)
-      @schema = schema
-
-      @mod = Module.new
-
-      @mod.module_exec do
+    def initialize(relations)
+      @mod = Module.new do
         define_method(:__relations__) { relations }
       end
     end
@@ -30,12 +26,14 @@ module ROM
     # @return [Relation]
     #
     # @api private
-    def call(name)
-      dataset = schema[name]
+    def call(name, adapter)
+      dataset = adapter.dataset(name)
       klass_name = "#{Relation.name}[#{Inflecto.camelize(name)}]"
 
       klass = build_class(name, klass_name)
       klass.send(:include, mod)
+
+      adapter.extend_relation_class(klass)
 
       yield(klass)
 

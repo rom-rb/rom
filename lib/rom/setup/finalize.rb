@@ -8,59 +8,51 @@ module ROM
   class Setup
     # @private
     class Finalize
-      attr_reader :repositories, :adapter_relation_map
+      attr_reader :repositories, :datasets, :adapter_relation_map
 
       # @api private
-      def initialize(repositories, schema, relations, mappers, commands)
+      def initialize(repositories, relations, mappers, commands)
         @repositories = repositories
-        @schema = schema
         @relations = relations
         @mappers = mappers
         @commands = commands
+        @datasets = {}
         @adapter_relation_map = {}
       end
 
       # @api private
       def run!
-        schema = load_schema
-        relations = load_relations(schema)
+        load_datasets
+
+        relations = load_relations
         readers = load_readers(relations)
         commands = load_commands(relations)
 
-        Env.new(repositories, schema, relations, readers, commands)
+        Env.new(repositories, relations, readers, commands)
       end
 
       private
 
-      # @api private
-      def load_schema
-        repositories.each_value do |repo|
-          (@schema[repo] ||= []).concat(repo.schema)
+      def load_datasets
+        repositories.each do |key, repository|
+          datasets[key] = repository.schema
         end
-
-        base_relations = @schema.each_with_object({}) do |(repo, schema), h|
-          schema.each do |name, dataset|
-            adapter_relation_map[name] = repo.adapter
-            h[name] = dataset
-          end
-        end
-
-        Schema.new(base_relations)
       end
 
       # @api private
-      def load_relations(schema)
-        return RelationRegistry.new unless adapter_relation_map.any?
-
+      def load_relations
         relations = {}
-        builder = RelationBuilder.new(schema, relations)
+        builder = RelationBuilder.new(relations)
 
-        @relations.each do |name, block|
-          relations[name] = build_relation(name, builder, block)
+        @relations.each do |name, (options, block)|
+          relations[name] = build_relation(name, builder, options, block)
         end
 
-        (schema.elements.keys - relations.keys).each do |name|
-          relations[name] = build_relation(name, builder)
+        datasets.each do |repository, schema|
+          schema.each do |name|
+            next if relations.key?(name)
+            relations[name] = build_relation(name, builder, repository: repository)
+          end
         end
 
         relations.each_value do |relation|
@@ -71,19 +63,18 @@ module ROM
       end
 
       # @api private
-      def build_relation(name, builder, block = nil)
-        adapter = adapter_relation_map[name]
+      def build_relation(name, builder, options = {}, block = nil)
+        repo_name = options.fetch(:repository) { :default }
+        adapter = repositories[repo_name].adapter
 
-        relation = builder.call(name) do |klass|
-          adapter.extend_relation_class(klass)
+        relation = builder.call(name, adapter) do |klass|
           methods = klass.public_instance_methods
-
           klass.class_eval(&block) if block
-
           klass.relation_methods = klass.public_instance_methods - methods
         end
 
         adapter.extend_relation_instance(relation)
+        adapter_relation_map[name] = adapter
 
         relation
       end
@@ -102,7 +93,7 @@ module ROM
       end
 
       def load_commands(relations)
-        return Registry.new unless relations.elements.any?
+        return CommandRegistry.new unless adapter_relation_map.any?
 
         commands = @commands.each_with_object({}) do |(name, definitions), h|
           adapter = adapter_relation_map[name]
