@@ -1,6 +1,6 @@
 module ROM
   # This class builds a ROM::Relation subclass and instantiates it by injecting
-  # dataset defined in the schema along with its header
+  # dataset defined
   #
   # Relation objects created by this builder are accessible through relation
   # registry in the env object
