@@ -34,8 +34,8 @@ module ROM
       private
 
       def load_datasets
-        repositories.each_value do |repository|
-          datasets[repositories.key(repository)] = repository.schema
+        repositories.each do |key, repository|
+          datasets[key] = repository.schema
         end
       end
 
