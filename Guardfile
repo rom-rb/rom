@@ -13,7 +13,7 @@ group :red_green_refactor, halt_on_fail: true do
     # run a spec if it is modified
     watch(%r{\Aspec/(?:unit|integration)/.+_spec\.rb\z})
 
-    notification :tmux, display_message: true
+    notification :tmux, display_message: true if ENV.key?('TMUX')
   end
 
   guard :rubocop do
