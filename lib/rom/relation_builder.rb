@@ -14,9 +14,7 @@ module ROM
     #
     # @api private
     def initialize(relations)
-      @mod = Module.new
-
-      @mod.module_exec do
+      @mod = Module.new do
         define_method(:__relations__) { relations }
       end
     end
