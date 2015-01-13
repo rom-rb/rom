@@ -44,7 +44,8 @@ describe ROM::Reader do
 
     context 'with more than one tuple' do
       it 'raises an error' do
-        expect { reader.public_send(method) }.to raise_error(ROM::TupleCountMismatchError)
+        expect { reader.public_send(method) }
+          .to raise_error(ROM::TupleCountMismatchError)
       end
     end
   end
