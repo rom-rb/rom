@@ -10,6 +10,7 @@
 * `tuple_count` interface in AbstractCommand which can be overridden by adapter (solnic)
 * Optionally pass command to block in CommandRegistry#try addressed by issue #83 (splattael)
 * Referencing an unknown method in CommandRegistry#try block raises ElementNotFoundError (rather than NoMethodError) #89 (splattael)
+* Make storage in memory adapter thread-safe #110 (splattael)
 
 ### Changed
 
