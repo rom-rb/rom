@@ -14,8 +14,9 @@
 
 ### Changed
 
+* Schema DSL was **removed** - attributes can be specified only in mapper DSL
+  and default repository can be changed when defining a relation (solnic)
 * Repository no longer exposes adapter's connection object (it can vary accross adapters) (aflatter)
-* [breaking] defining attributes in schema is no longer needed; The only place to define attributes is mapper definition DSL (solnic)
 * Relation no longer needs a header object and only operates on an adapters dataset (solnic)
 * Adapter's dataset no longer require header (solnic)
 
