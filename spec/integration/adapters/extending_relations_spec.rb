@@ -25,6 +25,10 @@ describe "Adapter" do
         end
       end
     end
+
+    after(:all) do
+      ROM::Adapter.adapters.shift
+    end
   end
 
   before do

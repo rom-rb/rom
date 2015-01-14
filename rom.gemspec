@@ -27,4 +27,5 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'rspec-core', '~> 3.1'
   gem.add_development_dependency 'rspec-mocks', '~> 3.1'
   gem.add_development_dependency 'rspec-expectations', '~> 3.1'
+  gem.add_development_dependency 'minitest', '~> 5.5'
 end

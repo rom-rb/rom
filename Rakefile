@@ -7,11 +7,16 @@ task default: [:ci]
 desc "Run CI tasks"
 task ci: [:spec, :lint]
 
-Rake::TestTask.new(:lint) do |test|
-  test.description = "Run adapter lint tests against memory adapter"
-  test.test_files = FileList.new('spec/test/*_test.rb')
-  test.libs << 'test'
-  test.verbose = true
+desc "Run adapter lint tests and specs against memory adapter"
+task lint: ["lint:test"]
+
+namespace :lint do
+  Rake::TestTask.new(:test) do |test|
+    test.description = "Run adapter lint tests against memory adapter"
+    test.test_files = FileList.new('spec/test/*_test.rb')
+    test.libs << 'test'
+    test.verbose = true
+  end
 end
 
 begin
