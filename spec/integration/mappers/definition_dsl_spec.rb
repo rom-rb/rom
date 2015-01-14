@@ -100,8 +100,6 @@ describe 'Mapper definition DSL' do
         end
       end
 
-      setup.relation(:users)
-
       setup.mappers do
         define(:tasks) do
           model name: 'Task'

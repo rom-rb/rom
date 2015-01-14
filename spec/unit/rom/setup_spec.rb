@@ -21,6 +21,17 @@ describe ROM::Setup do
     end
   end
 
+  describe '#relation' do
+    it 'raises error when same relation is defined more than once' do
+      setup = ROM::Setup.new(repo: 'memory://test')
+      setup.relation(:users)
+
+      expect { setup.relation(:users) }.to raise_error(
+        ROM::RelationAlreadyDefinedError, /users/
+      )
+    end
+  end
+
   describe '#method_missing' do
     it 'returns a repository if it is defined' do
       repo = double('repo')

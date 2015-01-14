@@ -27,6 +27,7 @@ require 'rom/setup'
 
 module ROM
   EnvAlreadyFinalizedError = Class.new(StandardError)
+  RelationAlreadyDefinedError = Class.new(StandardError)
   CommandError = Class.new(StandardError)
   TupleCountMismatchError = Class.new(CommandError)
   NoRelationError = Class.new(StandardError)

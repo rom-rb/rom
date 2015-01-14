@@ -34,6 +34,9 @@ module ROM
     #
     # @api public
     def relation(name, options = {}, &block)
+      if @relations.key?(name)
+        raise RelationAlreadyDefinedError, "#{name.inspect} is already defined"
+      end
       @relations.update(name => [options, block])
     end
 

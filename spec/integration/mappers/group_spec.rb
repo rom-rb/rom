@@ -5,14 +5,6 @@ describe 'Mapper definition DSL' do
 
   let(:header) { mapper.header }
 
-  before do
-    setup.relation(:users) do
-      def email_index
-        project(:email)
-      end
-    end
-  end
-
   describe 'grouped relation mapper' do
     before do
       setup.relation(:tasks) do
