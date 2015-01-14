@@ -1,10 +1,10 @@
 require 'rom/memory'
-require 'rom/adapter/lint/test'
+require 'rom/lint/test'
 
 require 'minitest/autorun'
 
 class MemoryRepositoryLintTest < Minitest::Test
-  include ROM::Adapter::Lint::TestRepository
+  include ROM::Lint::TestRepository
 
   def setup
     @repository = ROM::Memory::Repository
@@ -12,8 +12,8 @@ class MemoryRepositoryLintTest < Minitest::Test
   end
 end
 
-class MemoryAdapterDatasetLintTest < Minitest::Test
-  include ROM::Adapter::Lint::TestEnumerableDataset
+class MemoryDatasetLintTest < Minitest::Test
+  include ROM::Lint::TestEnumerableDataset
 
   def setup
     @data  = [{ name: 'Jane', age: 24 }, { name: 'Joe', age: 25 }]
