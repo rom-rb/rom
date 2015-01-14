@@ -21,6 +21,7 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency 'concord',     '~> 0.1', '>= 0.1.4'
   gem.add_runtime_dependency 'charlatan',   '~> 0.1', '>= 0.1'
   gem.add_runtime_dependency 'inflecto',    '~> 0.0', '>= 0.0.2'
+  gem.add_runtime_dependency 'thread_safe', '~> 0.3'
 
   gem.add_development_dependency 'rake', '~> 10.3'
   gem.add_development_dependency 'rspec-core', '~> 3.1'
