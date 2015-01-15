@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe ROM::Repository do
-  before do
-    class TestRepository < ROM::Repository
+  let(:test_repository) do
+    Class.new(ROM::Repository) do
       def self.schemes
         [:test_scheme]
       end
@@ -10,10 +10,12 @@ describe ROM::Repository do
   end
 
   describe '.setup' do
+    before { test_repository }
+
     it 'sets up connection based on a uri' do
       repository = ROM::Repository.setup("test_scheme::memory")
 
-      expect(repository).to be_instance_of(TestRepository)
+      expect(repository).to be_instance_of(test_repository)
     end
 
     it 'raises an exception if the scheme is not supported' do
@@ -25,26 +27,32 @@ describe ROM::Repository do
 
   describe '.[]' do
     it "looks up and return the repository class for the given schema" do
-      expect(ROM::Repository[:test_scheme]).to eq TestRepository
+      test_repository
+
+      expect(ROM::Repository[:test_scheme]).to eq test_repository
+    end
+
+    it "returns nil w/o registered repositories" do
+      expect(ROM::Repository[:test_scheme]).to eq nil
     end
   end
 
   describe 'Registration order' do
     it "prefers the last-defined repository" do
-      class OrderTestFirst < TestRepository
+      order_test_first = Class.new(test_repository) do
         def self.schemes
           [:order_test]
         end
       end
 
       repository = ROM::Repository.setup("order_test::memory")
-      expect(repository).to be_instance_of(OrderTestFirst)
+      expect(repository).to be_instance_of(order_test_first)
 
-      OrderTestSecond = Class.new(OrderTestFirst)
+      order_test_second = Class.new(order_test_first)
 
       repository = ROM::Repository.setup("order_test::memory")
 
-      expect(repository).to be_instance_of(OrderTestSecond)
+      expect(repository).to be_instance_of(order_test_second)
     end
   end
 
