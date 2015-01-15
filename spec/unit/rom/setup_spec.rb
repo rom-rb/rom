@@ -25,23 +25,19 @@ describe ROM::Setup do
       let(:env) { setup.finalize }
 
       it 'builds empty repositories' do
-        expect(env.repositories).to be_none
-        expect(env.repositories).to be_instance_of(Hash)
+        expect(env.repositories).to eql({})
       end
 
       it 'builds empty relations' do
-        expect(env.relations).to be_none
-        expect(env.relations).to be_instance_of(ROM::RelationRegistry)
+        expect(env.relations).to eql(ROM::RelationRegistry.new)
       end
 
       it 'builds empty mappers' do
-        expect(env.mappers).to be_none
-        expect(env.mappers).to be_instance_of(ROM::ReaderRegistry)
+        expect(env.mappers).to eql(ROM::ReaderRegistry.new)
       end
 
       it 'builds empty commands' do
-        expect(env.commands).to be_none
-        expect(env.commands).to be_instance_of(ROM::Registry)
+        expect(env.commands).to eql(ROM::Registry.new)
       end
     end
   end
