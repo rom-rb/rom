@@ -1,8 +1,9 @@
 require 'thread_safe'
+require 'rom/adapter/memory/dataset'
 
 module ROM
-  class Adapter
-    class Memory < Adapter
+  module Adapter
+    module Memory
       class Storage
         attr_reader :data
 

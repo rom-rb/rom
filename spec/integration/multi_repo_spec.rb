@@ -33,10 +33,10 @@ describe 'Using in-memory adapter for cross-repo access' do
       end
     end
 
-    repositories[:left].users << { user_id: 1, name: 'Joe' }
-    repositories[:left].users << { user_id: 2, name: 'Jane' }
-    repositories[:right].tasks << { user_id: 1, title: 'Have fun' }
-    repositories[:right].tasks << { user_id: 2, title: 'Have fun' }
+    repositories[:left][:users] << { user_id: 1, name: 'Joe' }
+    repositories[:left][:users] << { user_id: 2, name: 'Jane' }
+    repositories[:right][:tasks] << { user_id: 1, title: 'Have fun' }
+    repositories[:right][:tasks] << { user_id: 2, title: 'Have fun' }
 
     expect(rom.read(:users_and_tasks).by_user('Jane').to_a).to eql([
       { user_id: 2, name: 'Jane', tasks: [{ title: 'Have fun' }] }

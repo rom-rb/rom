@@ -2,7 +2,7 @@ require 'spec_helper'
 
 require 'logger'
 
-describe 'Adapters / Setting logger' do
+describe 'Repositories / Setting logger' do
   let(:logger_class) do
     Class.new do
       attr_reader :messages
@@ -22,13 +22,13 @@ describe 'Adapters / Setting logger' do
   end
 
   it 'sets up a logger for a given adapter' do
-    setup = ROM.setup(memory: 'memory://localhost')
+    setup = ROM.setup('memory://localhost')
 
-    setup.memory.use_logger(logger)
+    setup.default.use_logger(logger)
 
     rom = setup.finalize
 
-    rom.repositories[:memory].logger.info("test")
+    rom.repositories[:default].logger.info("test")
 
     expect(logger.messages).to eql(["test"])
   end

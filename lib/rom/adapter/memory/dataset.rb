@@ -1,8 +1,8 @@
 require 'rom/array_dataset'
 
 module ROM
-  class Adapter
-    class Memory < Adapter
+  module Adapter
+    module Memory
       class Dataset
         include ArrayDataset
 

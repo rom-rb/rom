@@ -36,7 +36,7 @@ module ROM
       username = config[:username]
       hostname = config.fetch(:hostname) { 'localhost' }
 
-      adapter = Adapter[raw_scheme]
+      adapter = Repository[raw_scheme]
       scheme = adapter.normalize_scheme(raw_scheme)
 
       path =

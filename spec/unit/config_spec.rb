@@ -27,7 +27,7 @@ describe ROM::Config do
     end
 
     it 'builds absolute path to the database file when database is a file' do
-      expect(ROM::Adapter[:memory]).to receive(:database_file?)
+      expect(ROM::Repository[:memory]).to receive(:database_file?)
         .with('memory').and_return(true)
 
       config = ROM::Config.build(
@@ -53,7 +53,7 @@ describe ROM::Config do
     end
 
     it 'asks adapters to normalize scheme' do
-      expect(ROM::Adapter[:memory]).to receive(:normalize_scheme).with('memory')
+      expect(ROM::Repository[:memory]).to receive(:normalize_scheme).with('memory')
       ROM::Config.build(raw_config)
     end
   end

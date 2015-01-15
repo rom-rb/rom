@@ -1,8 +1,8 @@
 require 'rom/commands'
 
 module ROM
-  class Adapter
-    class Memory < Adapter
+  module Adapter
+    module Memory
       module Commands
         class Create < ROM::Commands::Create
           def execute(tuple)
