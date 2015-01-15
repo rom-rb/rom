@@ -10,7 +10,6 @@
 * `tuple_count` interface in AbstractCommand which can be overridden by adapter (solnic)
 * Optionally pass command to block in CommandRegistry#try addressed by issue #83 (splattael)
 * Referencing an unknown method in CommandRegistry#try block raises ElementNotFoundError (rather than NoMethodError) #89 (splattael)
-* Make storage in memory adapter thread-safe #110 (splattael)
 
 ### Changed
 
@@ -19,6 +18,7 @@
 * Repository no longer exposes adapter's connection object (it can vary accross adapters) (aflatter)
 * Relation no longer needs a header object and only operates on an adapters dataset (solnic)
 * Adapter's dataset no longer require header (solnic)
+* Make storage in memory adapter thread-safe #110 (splattael)
 
 [Compare v0.5.0...master](https://github.com/rom-rb/rom/compare/v0.5.0...master)
 
