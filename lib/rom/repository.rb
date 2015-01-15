@@ -72,7 +72,7 @@ module ROM
     #
     # @api public
     def self.[](scheme)
-      @__registered__.detect { |repository| repository.schemes.include?(scheme.to_sym) }
+      registered.detect { |repository| repository.schemes.include?(scheme.to_sym) }
     end
 
     # Hook for adapters to normalize scheme name
