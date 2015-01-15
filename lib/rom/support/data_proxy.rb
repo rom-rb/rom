@@ -1,3 +1,5 @@
+require 'equalizer'
+
 module ROM
   # Helper module for dataset classes
   #

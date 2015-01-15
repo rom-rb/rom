@@ -3,11 +3,11 @@ require 'rom/adapter/lint/test'
 
 require 'minitest/autorun'
 
-class MemoryAdapterLintTest < Minitest::Test
-  include ROM::Adapter::Lint::TestAdapter
+class MemoryRepositoryLintTest < Minitest::Test
+  include ROM::Adapter::Lint::TestRepository
 
   def setup
-    @adapter = ROM::Adapter::Memory
+    @repository = ROM::Adapter::Memory::Repository
     @uri = "memory://localhost/test"
   end
 end
