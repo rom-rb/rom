@@ -91,8 +91,6 @@ module ROM
       end
 
       def load_commands(relations)
-        return CommandRegistry.new unless adapter_relation_map.any?
-
         commands = @commands.each_with_object({}) do |(name, definitions), h|
           adapter = adapter_relation_map[name]
 
