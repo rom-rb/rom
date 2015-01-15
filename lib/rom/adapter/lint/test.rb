@@ -1,16 +1,16 @@
 module ROM
   module Adapter
     module Lint
-      # This is a simple lint-test for an adapter class to ensure the basic
-      # interfaces are in place
+      # This is a simple lint-test for adapter's repository class to ensure the
+      # basic interfaces are in place
       #
       # @example
       #
       #   class MyAdapterTest < Minitest::Test
-      #     include ROM::Adapter::Lint::TestAdapter
+      #     include ROM::Adapter::Lint::TestRepository
       #
       #     def setup
-      #       @adapter = MyAdapter
+      #       @repository = MyRepository
       #       @uri = "super_db://something"
       #     end
       #   end
