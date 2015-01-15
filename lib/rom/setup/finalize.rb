@@ -81,8 +81,6 @@ module ROM
 
       # @api private
       def load_readers(relations)
-        return ReaderRegistry.new unless adapter_relation_map.any?
-
         reader_builder = ReaderBuilder.new(relations)
 
         readers = @mappers.each_with_object({}) do |(name, options, block), h|
