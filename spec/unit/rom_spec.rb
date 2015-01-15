@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'rom/adapter/memory'
 
 describe ROM do
   describe '.setup' do
@@ -8,7 +9,7 @@ describe ROM do
       )
 
       expect(boot[:default]).to be(boot.repositories[:default])
-      expect(boot.default.adapter.uri.to_s).to eql("memory://localhost/test")
+      expect(boot.default.uri.to_s).to eql("memory://localhost/test")
     end
   end
 end

@@ -1,9 +1,9 @@
 require "spec_helper"
 
-describe "Adapter" do
+describe "Repository" do
   include_context "users and tasks" do
     before(:all) do
-      Class.new(ROM::Adapter::Memory) do
+      Class.new(ROM::Adapter::Memory::Repository) do
         def self.schemes
           [:memory]
         end

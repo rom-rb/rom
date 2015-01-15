@@ -1,61 +1,61 @@
 module ROM
-  class Adapter
+  module Adapter
     module Lint
-      # This is a simple lint-test for an adapter class to ensure the basic
-      # interfaces are in place
+      # This is a simple lint-test for adapter's repository class to ensure the
+      # basic interfaces are in place
       #
       # @example
       #
       #   class MyAdapterTest < Minitest::Test
-      #     include ROM::Adapter::Lint::TestAdapter
+      #     include ROM::Adapter::Lint::TestRepository
       #
       #     def setup
-      #       @adapter = MyAdapter
+      #       @repository = MyRepository
       #       @uri = "super_db://something"
       #     end
       #   end
       #
       # @public
-      module TestAdapter
-        attr_reader :adapter, :uri
+      module TestRepository
+        attr_reader :repository, :uri
 
         def test_schemes
-          assert_respond_to adapter, :schemes,
-            "#{adapter}.schemes must be implemented"
+          assert_respond_to repository, :schemes,
+            "#{repository}.schemes must be implemented"
 
-          assert_instance_of Array, adapter.schemes,
-            "#{adapter}.schemes must return an array with supported URI schemes"
+          assert_instance_of Array, repository.schemes,
+            "#{repository}.schemes must return an array with supported URI schemes"
 
-          assert adapter.schemes.any?,
-            "#{adapter}.schemes must return at least one supported URI scheme"
+          assert repository.schemes.any?,
+            "#{repository}.schemes must return at least one supported URI scheme"
         end
 
         def test_setup
-          assert_instance_of adapter, adapter_instance
+          assert_instance_of repository, repository_instance
         end
 
         def test_dataset_reader
-          assert_respond_to adapter_instance, :[]
+          assert_respond_to repository_instance, :[]
         end
 
         def test_dataset_predicate
-          assert_respond_to adapter_instance, :dataset?
+          assert_respond_to repository_instance, :dataset?
         end
 
         private
 
-        def adapter_instance
-          Adapter.setup(uri)
+        def repository_instance
+          Repository.setup(uri)
         end
       end
 
-      # This is a simple lint-test for an adapter dataset class to ensure the
+      # This is a simple lint-test for an repository dataset class to ensure the
       # basic behavior is correct
       #
       # @example
       #
       #  class MyDatasetLintTest < Minitest::Test
-      #    include ROM::Adapter::Lint::TestEnumerableDataset
+      #    include ROM::Repository::Lint::TestEnumerableDataset
       #
       #     def setup
       #       @data  = [{ name: 'Jane', age: 24 }, { name: 'Joe', age: 25 }]

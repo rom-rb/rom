@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'rom/adapter/memory/storage'
 
 describe ROM::Adapter::Memory::Storage do
   subject(:storage) do

@@ -1,13 +1,15 @@
 RSpec.shared_context 'users and tasks' do
+  require 'rom/adapter/memory'
+
   subject(:rom) { setup.finalize }
 
   let(:setup) { ROM.setup("memory://localhost") }
 
   before do
-    db = setup.default.adapter
+    repository = setup.default
 
-    users = db.dataset(:users)
-    tasks = db.dataset(:tasks)
+    users = repository.dataset(:users)
+    tasks = repository.dataset(:tasks)
 
     users.insert(name: "Joe", email: "joe@doe.org")
     users.insert(name: "Jane", email: "jane@doe.org")

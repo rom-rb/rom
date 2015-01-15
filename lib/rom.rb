@@ -16,7 +16,6 @@ require 'rom/processor/transproc'
 
 require 'rom/commands'
 
-require 'rom/adapter'
 require 'rom/repository'
 
 require 'rom/config'

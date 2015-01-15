@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'rom/adapter/memory/dataset'
 
 describe ROM::Adapter::Memory::Dataset do
   subject(:dataset) do
