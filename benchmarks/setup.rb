@@ -38,9 +38,9 @@ end
 
 DATABASE_URL = ENV.fetch('DATABASE_URL', 'postgres://localhost/rom')
 
-setup = ROM.setup(pg: DATABASE_URL)
+setup = ROM.setup(DATABASE_URL)
 
-conn = setup.pg.connection
+conn = setup.default.connection
 
 conn.drop_table?(:users)
 conn.drop_table?(:tasks)
@@ -185,13 +185,13 @@ def seed
 
   puts "SEEDING #{USER_SEED.count} users"
   USER_SEED.each do |attributes|
-    rom.schema.users.insert(attributes)
+    rom.relations.users.insert(attributes)
   end
 
   puts "SEEDING #{TASK_SEED.count} tasks"
   TASK_SEED.each do |attributes|
-    id = rom.schema.tasks.insert(attributes)
-    3.times { |i| rom.schema.tags.insert(task_id: id, name: "Tag #{i}") }
+    id = rom.relations.tasks.insert(attributes)
+    3.times { |i| rom.relations.tags.insert(task_id: id, name: "Tag #{i}") }
   end
 
   hr
@@ -200,7 +200,7 @@ end
 seed
 
 hr
-puts "INSERTED #{rom.schema.users.count} users via ROM/Sequel"
-puts "INSERTED #{rom.schema.tasks.count} tasks via ROM/Sequel"
-puts "INSERTED #{rom.schema.tags.count} tags via ROM/Sequel"
+puts "INSERTED #{rom.relations.users.count} users via ROM/Sequel"
+puts "INSERTED #{rom.relations.tasks.count} tasks via ROM/Sequel"
+puts "INSERTED #{rom.relations.tags.count} tags via ROM/Sequel"
 hr
