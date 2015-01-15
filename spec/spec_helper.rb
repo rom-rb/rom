@@ -9,9 +9,7 @@ if RUBY_ENGINE == "rbx"
   CodeClimate::TestReporter.start
 end
 
-require 'virtus'
 require 'rom'
-require 'rom/adapter/memory'
 
 root = Pathname(__FILE__).dirname
 

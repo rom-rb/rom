@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'rom/adapter/memory'
 
 describe ROM do
   describe '.setup' do

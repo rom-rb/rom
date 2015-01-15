@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'rom/adapter/memory'
 
 describe 'Mappers / deeply embedded tuples' do
   let(:setup) { ROM.setup('memory://test') }

@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'rom/adapter/memory/dataset'
 
 describe ROM::Relation do
   subject(:relation) { ROM::Relation.new(dataset) }

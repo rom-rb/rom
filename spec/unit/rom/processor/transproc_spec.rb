@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'virtus'
 
 describe ROM::Processor::Transproc do
   subject(:transproc) { ROM::Processor::Transproc.build(header) }

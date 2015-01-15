@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'rom/adapter/memory'
 
 describe 'Using in-memory adapter for cross-repo access' do
   let(:setup) do

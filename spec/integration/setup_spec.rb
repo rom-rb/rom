@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'virtus'
 
 describe 'Setting up ROM' do
   context 'with existing schema' do

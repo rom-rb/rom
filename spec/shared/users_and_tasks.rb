@@ -1,4 +1,6 @@
 RSpec.shared_context 'users and tasks' do
+  require 'rom/adapter/memory'
+
   subject(:rom) { setup.finalize }
 
   let(:setup) { ROM.setup("memory://localhost") }
