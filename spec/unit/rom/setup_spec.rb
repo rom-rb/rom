@@ -19,6 +19,18 @@ describe ROM::Setup do
         expect(users.dataset).to be(dataset)
       end
     end
+
+    context 'empty setup' do
+      let(:setup) { ROM::Setup.new({}) }
+      let(:env) { setup.finalize }
+
+      it 'builds empty env' do
+        expect(env.repositories).to be_none
+        expect(env.relations).to be_none
+        expect(env.mappers).to be_none
+        expect(env.commands).to be_none
+      end
+    end
   end
 
   describe '#relation' do
