@@ -2,16 +2,14 @@ require 'spec_helper'
 require 'rom/adapter/memory/storage'
 
 describe ROM::Adapter::Memory::Storage do
-  subject(:storage) do
-    ROM::Adapter::Memory::Storage.new
-  end
-
   describe 'thread safe' do
     let(:threads) { 4 }
     let(:operations) { 5000 }
 
     describe 'data' do
       it 'create datasets properly' do
+        storage = ROM::Adapter::Memory::Storage.new
+
         threaded_operations do |thread, operation|
           key = "#{thread}:#{operation}"
           storage.create_dataset(key)
@@ -22,10 +20,10 @@ describe ROM::Adapter::Memory::Storage do
     end
 
     describe 'dataset' do
-      before { storage.create_dataset(:ary) }
-      let(:dataset) { storage[:ary] }
-
       it 'inserts data in proper order' do
+        storage = ROM::Adapter::Memory::Storage.new
+        dataset = storage.create_dataset(:ary)
+
         threaded_operations do
           dataset << :data
         end
