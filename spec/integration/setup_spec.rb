@@ -13,7 +13,7 @@ describe 'Setting up ROM' do
     end
 
     it 'configures schema relations' do
-      expect(rom.default.users).to match_array([joe, jane])
+      expect(rom.repositories[:default].users).to match_array([joe, jane])
     end
 
     it 'configures rom relations' do

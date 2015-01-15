@@ -28,7 +28,7 @@ describe 'Adapters / Setting logger' do
 
     rom = setup.finalize
 
-    rom.memory.logger.info("test")
+    rom.repositories[:memory].logger.info("test")
 
     expect(logger.messages).to eql(["test"])
   end

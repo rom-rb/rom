@@ -1,13 +1,18 @@
 require 'spec_helper'
 
 describe 'Using in-memory adapter for cross-repo access' do
-  it 'works' do
-    setup = ROM.setup(
+  let(:setup) do
+    ROM.setup(
       left: 'memory://localhost/users',
       right: 'memory://localhost/tasks',
       main: 'memory://localhost/main'
     )
+  end
 
+  let(:repositories) { rom.repositories }
+  let(:rom) { setup.finalize }
+
+  it 'works' do
     setup.relation(:users, repository: :left) do
       def by_name(name)
         restrict(name: name)
@@ -28,12 +33,10 @@ describe 'Using in-memory adapter for cross-repo access' do
       end
     end
 
-    rom = setup.finalize
-
-    rom.left.users << { user_id: 1, name: 'Joe' }
-    rom.left.users << { user_id: 2, name: 'Jane' }
-    rom.right.tasks << { user_id: 1, title: 'Have fun' }
-    rom.right.tasks << { user_id: 2, title: 'Have fun' }
+    repositories[:left].users << { user_id: 1, name: 'Joe' }
+    repositories[:left].users << { user_id: 2, name: 'Jane' }
+    repositories[:right].tasks << { user_id: 1, title: 'Have fun' }
+    repositories[:right].tasks << { user_id: 2, title: 'Have fun' }
 
     expect(rom.read(:users_and_tasks).by_user('Jane').to_a).to eql([
       { user_id: 2, name: 'Jane', tasks: [{ title: 'Have fun' }] }
