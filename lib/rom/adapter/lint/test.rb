@@ -55,7 +55,7 @@ module ROM
       # @example
       #
       #  class MyDatasetLintTest < Minitest::Test
-      #    include ROM::repository::Lint::TestEnumerableDataset
+      #    include ROM::Repository::Lint::TestEnumerableDataset
       #
       #     def setup
       #       @data  = [{ name: 'Jane', age: 24 }, { name: 'Joe', age: 25 }]
