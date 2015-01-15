@@ -18,7 +18,6 @@ require 'rom/commands'
 
 require 'rom/repository'
 
-require 'rom/config'
 require 'rom/env'
 
 require 'rom/global'

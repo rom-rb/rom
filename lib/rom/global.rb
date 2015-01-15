@@ -33,8 +33,12 @@ module ROM
     # @return [Setup] boot object
     #
     # @api public
-    def setup(*args, &block)
-      config = Config.build(*args)
+    def setup(uri_or_config, options = {}, &block)
+      config = if uri_or_config.is_a?(String)
+                 {default: {uri: uri_or_config, options: options}}
+               else
+                 uri_or_config
+               end
 
       repositories = config.each_with_object({}) do |(name, uri_or_opts), hash|
         uri, opts =
