@@ -26,14 +26,14 @@ module ROM
     # @return [Relation]
     #
     # @api private
-    def call(name, adapter)
-      dataset = adapter.dataset(name)
+    def call(name, repository)
+      dataset = repository.dataset(name)
       klass_name = "#{Relation.name}[#{Inflecto.camelize(name)}]"
 
       klass = build_class(name, klass_name)
       klass.send(:include, mod)
 
-      adapter.extend_relation_class(klass)
+      repository.extend_relation_class(klass)
 
       yield(klass)
 
