@@ -15,6 +15,7 @@
 
 * Schema DSL was **removed** - attributes can be specified only in mapper DSL
   and default repository can be changed when defining a relation (solnic)
+* Adapter/Repository has been collapsed to *just* `Repository` (solnic)
 * Repository no longer exposes adapter's connection object (it can vary accross adapters) (aflatter)
 * Relation no longer needs a header object and only operates on an adapters dataset (solnic)
 * Adapter's dataset no longer require header (solnic)
