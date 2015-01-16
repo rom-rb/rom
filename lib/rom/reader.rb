@@ -88,6 +88,13 @@ module ROM
       )
     end
 
+    # Return a new reader with a specific mapper
+    #
+    # @api private
+    def with_mapper(name)
+      self.class.new(new_path(name), relation, mappers)
+    end
+
     private
 
     # @api private

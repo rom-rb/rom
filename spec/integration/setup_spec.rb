@@ -44,7 +44,7 @@ describe 'Setting up ROM' do
       rom = setup.finalize
 
       expect(rom.relations).to eql(ROM::RelationRegistry.new)
-      expect(rom.mappers).to eql(ROM::ReaderRegistry.new)
+      expect(rom.readers).to eql(ROM::ReaderRegistry.new)
     end
   end
 
