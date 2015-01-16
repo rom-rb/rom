@@ -28,7 +28,7 @@ Learn more:
   * [rom-sql](https://github.com/rom-rb/rom-sql)
   * [rom-mongo](https://github.com/rom-rb/rom-mongo)
   * [rom-yaml](https://github.com/rom-rb/rom-yaml)
-  * [rom-csv](https://github.com/rom-rb/rom-yaml)
+  * [rom-csv](https://github.com/rom-rb/rom-csv)
 
 See [issues](https://github.com/rom-rb/rom/issues?q=is%3Aopen+is%3Aissue+label%3Aadapter+label%3Afeature)
 for a list of adapters that are planned to be added soon.
