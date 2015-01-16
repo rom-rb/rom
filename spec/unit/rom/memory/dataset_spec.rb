@@ -1,10 +1,8 @@
 require 'spec_helper'
-require 'rom/adapter/memory/dataset'
+require 'rom/memory/dataset'
 
-describe ROM::Adapter::Memory::Dataset do
-  subject(:dataset) do
-    ROM::Adapter::Memory::Dataset.new(data)
-  end
+describe ROM::Memory::Dataset do
+  subject(:dataset) { described_class.new(data) }
 
   let(:data) do
     [

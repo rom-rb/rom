@@ -1,5 +1,5 @@
 RSpec.shared_context 'users and tasks' do
-  require 'rom/adapter/memory'
+  require 'rom/memory'
 
   subject(:rom) { setup.finalize }
 
