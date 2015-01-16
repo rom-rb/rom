@@ -66,8 +66,8 @@ describe 'Mappers / Renaming attributes' do
     UserWithAddress.send(:include, Equalizer.new(:id, :name, :address))
 
     rom.relations.users << { _id: 123, user_name: 'Jane' }
-    rom.relations.addresses << { _id: 123, address_id: 321,
-                              address_street: 'Street 1' }
+    rom.relations.addresses <<
+      { _id: 123, address_id: 321, address_street: 'Street 1' }
 
     jane = rom.read(:users).with_address.first
 
@@ -104,10 +104,10 @@ describe 'Mappers / Renaming attributes' do
     UserWithAddresses.send(:include, Equalizer.new(:id, :name, :addresses))
 
     rom.relations.users << { _id: 123, user_name: 'Jane' }
-    rom.relations.addresses << { _id: 123, address_id: 321,
-                              address_street: 'Street 1' }
-    rom.relations.addresses << { _id: 123, address_id: 654,
-                              address_street: 'Street 2' }
+    rom.relations.addresses <<
+      { _id: 123, address_id: 321, address_street: 'Street 1' }
+    rom.relations.addresses <<
+      { _id: 123, address_id: 654, address_street: 'Street 2' }
 
     jane = rom.read(:users).with_addresses.first
 
