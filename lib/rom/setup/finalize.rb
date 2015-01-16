@@ -33,6 +33,7 @@ module ROM
 
       private
 
+      # @api private
       def load_datasets
         repositories.each do |key, repository|
           datasets[key] = repository.schema
@@ -89,6 +90,7 @@ module ROM
         ReaderRegistry.new(readers)
       end
 
+      # @api private
       def load_commands(relations)
         commands = @commands.each_with_object({}) do |(name, definitions), h|
           repository = repository_relation_map[name]
