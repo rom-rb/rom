@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'rom/adapter/memory/dataset'
+require 'rom/memory/dataset'
 
 require 'ostruct'
 
@@ -13,7 +13,7 @@ describe ROM::Mapper do
   end
 
   let(:dataset) do
-    ROM::Adapter::Memory::Dataset.new(
+    ROM::Memory::Dataset.new(
       [{ id: 1, name: 'Jane' }, { id: 2, name: 'Joe' }]
     )
   end

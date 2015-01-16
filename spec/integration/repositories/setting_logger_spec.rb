@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'rom/adapter/memory'
+require 'rom/memory'
 
 require 'logger'
 
