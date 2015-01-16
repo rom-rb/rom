@@ -39,7 +39,7 @@ describe 'Setting up ROM' do
 
   context 'without schema' do
     it 'builds empty registries if there is no schema' do
-      setup = ROM.setup(:memory, 'memory://test')
+      setup = ROM.setup(:memory)
 
       rom = setup.finalize
 
@@ -55,7 +55,7 @@ describe 'Setting up ROM' do
         values { attribute :name, String }
       end
 
-      rom = ROM.setup(:memory, 'memory://test') do
+      rom = ROM.setup(:memory) do
         relation(:users) do
           def by_name(name)
             restrict(name: name)
@@ -87,7 +87,7 @@ describe 'Setting up ROM' do
         values { attribute :name, String }
       end
 
-      ROM.setup(:memory, 'memory://test')
+      ROM.setup(:memory)
 
       ROM.relation(:users) do
         def by_name(name)

@@ -6,10 +6,8 @@ require 'minitest/autorun'
 class MemoryRepositoryLintTest < Minitest::Test
   include ROM::Adapter::Lint::TestRepository
 
-  def setup
-    @repository = ROM::Memory::Repository
-    @uri = "memory://localhost/test"
-    @scheme = :memory
+  def repository_instance
+    ROM::Memory::Repository.new
   end
 end
 

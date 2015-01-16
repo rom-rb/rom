@@ -5,26 +5,12 @@ module ROM
   #
   # @api public
   class Repository
-    # Return connection URI associated with the repository
-    #
-    # @return [String]
-    #
-    # @api public
-    attr_reader :uri
-
     # Return connection object
     #
     # @return [Object] type varies depending on the repository
     #
     # @api public
     attr_reader :connection
-
-    # Additional options hash
-    #
-    # @return [Hash]
-    #
-    # @api public
-    attr_reader :options
 
     # @api private
     def self.inherited(klass)
@@ -59,7 +45,7 @@ module ROM
     # @return [Repository]
     #
     # @api public
-    def self.setup(repository_or_scheme, uri_string = nil, options = {})
+    def self.setup(repository_or_scheme, *args)
       case repository_or_scheme
       when String
         fail ArgumentError, <<-STRING.gsub(/^ {10}/, '')
@@ -67,10 +53,9 @@ module ROM
           See https://github.com/rom-rb/rom/blob/master/CHANGELOG.md
         STRING
       when Symbol
-        uri = Addressable::URI.parse(uri_string)
-        class_from_symbol(repository_or_scheme).new(uri, options)
+        class_from_symbol(repository_or_scheme).new(*args)
       else
-        (uri_string.nil? && options.empty?) ? repository_or_scheme : fail(
+        args.empty? ? repository_or_scheme : fail(
           ArgumentError,
           "Can't accept uri or options to repository when passing an instance"
         )
@@ -95,13 +80,6 @@ module ROM
       registered.detect do |repository|
         repository.schemes.include?(type.to_sym)
       end
-    end
-
-    # @api private
-    def initialize(uri, options = {})
-      @uri = uri
-      @options = options
-      setup
     end
 
     # @api public

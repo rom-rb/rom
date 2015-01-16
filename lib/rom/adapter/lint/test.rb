@@ -9,17 +9,13 @@ module ROM
       #   class MyAdapterTest < Minitest::Test
       #     include ROM::Adapter::Lint::TestRepository
       #
-      #     def setup
-      #       @scheme = :myrepo
-      #       @repository = MyRepository
-      #       @uri = "super_db://something"
+      #     def repository_instance
+      #       MyRepository.new("super_db://something")
       #     end
       #   end
       #
       # @public
       module TestRepository
-        attr_reader :repository, :uri, :scheme
-
         def test_schemes
           assert_respond_to repository, :schemes,
             "#{repository}.schemes must be implemented"
@@ -43,10 +39,17 @@ module ROM
           assert_respond_to repository_instance, :dataset?
         end
 
+        def repository_instance
+          fail(
+            NotImplementedError,
+            'Implement #repository_instance and return a repository instance'
+          )
+        end
+
         private
 
-        def repository_instance
-          Repository.setup(scheme, uri)
+        def repository
+          repository_instance.class
         end
       end
 

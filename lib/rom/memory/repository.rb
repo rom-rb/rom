@@ -11,7 +11,7 @@ module ROM
         [:memory]
       end
 
-      def setup
+      def initialize
         @connection = Storage.new
       end
 
