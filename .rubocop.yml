@@ -4,7 +4,7 @@ Metrics/AbcSize:
 
 # FIXME: Lower by refactoring biggest offenders
 Metrics/MethodLength:
-  Max: 29
+  Max: 15
 
 # FIXME: Lower by refactoring biggest offenders
 Metrics/PerceivedComplexity:

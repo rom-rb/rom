@@ -34,23 +34,8 @@ module ROM
     #
     # @api public
     def setup(uri_or_config, options = {}, &block)
-      config = if uri_or_config.is_a?(String)
-                 { default: { uri: uri_or_config, options: options } }
-               else
-                 uri_or_config
-               end
-
-      repositories = config.each_with_object({}) do |(name, uri_or_opts), hash|
-        uri, opts =
-          if uri_or_opts.is_a?(Hash)
-            uri_or_opts.values_at(:uri, :options)
-          else
-            [uri_or_opts, {}]
-          end
-
-        hash[name] = Repository.setup(uri, opts)
-      end
-
+      config = setup_config(uri_or_config, options)
+      repositories = setup_repostories(config)
       boot = Setup.new(repositories)
 
       if block
@@ -95,6 +80,29 @@ module ROM
     # @api private
     def boot
       @boot
+    end
+
+    # @api private
+    def setup_config(uri_or_config, options)
+      if uri_or_config.is_a?(String)
+        { default: { uri: uri_or_config, options: options } }
+      else
+        uri_or_config
+      end
+    end
+
+    # @api private
+    def setup_repostories(config)
+      config.each_with_object({}) do |(name, uri_or_opts), hash|
+        uri, opts =
+          if uri_or_opts.is_a?(Hash)
+            uri_or_opts.values_at(:uri, :options)
+          else
+            [uri_or_opts, {}]
+          end
+
+        hash[name] = Repository.setup(uri, opts)
+      end
     end
   end
 end
