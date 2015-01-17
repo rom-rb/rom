@@ -1,35 +1,27 @@
 require 'spec_helper'
 
 describe ROM::Repository do
-  let(:test_repository) do
-    Class.new(ROM::Repository) do
-      attr_reader :args
-
-      def initialize(*args)
-        @args = args
-      end
-
-      def self.schemes
-        [:test_scheme]
-      end
-    end
-  end
-
   describe '.setup' do
-    before { test_repository }
+    it 'sets up a repository based on a type' do
+      repository_class = Class.new(ROM::Repository) do
+        attr_reader :args
+        def initialize(*args); @args = args; end
+      end
 
-    it 'sets up a repository based on a scheme' do
+      allow(ROM::Repository).to receive(:class_from_symbol)
+        .with(:wormhole).and_return(repository_class)
+
       args = %w(hello world)
-      repository = ROM::Repository.setup(:test_scheme, *args)
+      repository = ROM::Repository.setup(:wormhole, *args)
 
-      expect(repository).to be_instance_of(test_repository)
+      expect(repository).to be_instance_of(repository_class)
       expect(repository.args).to eq(args)
     end
 
-    it 'raises an exception if the scheme is not supported' do
+    it 'raises an exception if the type is not supported' do
       expect {
         ROM::Repository.setup(:bogus, "memory://test")
-      }.to raise_error(ArgumentError, ':bogus scheme is not supported')
+      }.to raise_error(ArgumentError, ':bogus is not supported')
     end
 
     it 'accepts a repository instance' do
@@ -37,27 +29,16 @@ describe ROM::Repository do
       expect(ROM::Repository.setup(repository)).to be(repository)
     end
 
-    it 'raises an exception if instance and uri are passed' do
+    it 'raises an exception if instance and arguments are passed' do
       repository = ROM::Repository.new
 
       expect { ROM::Repository.setup(repository, 'foo://bar') }.to raise_error(
         ArgumentError,
-        "Can't accept uri or options to repository when passing an instance"
+        "Can't accept arguments when passing an instance"
       )
     end
 
-    it 'raises an exception if instance and options are passed' do
-      repository = ROM::Repository.new
-
-      expect {
-        ROM::Repository.setup(repository, 'foo://bar', foo: 'bar')
-      }.to raise_error(
-        ArgumentError,
-        "Can't accept uri or options to repository when passing an instance"
-      )
-    end
-
-    it 'raises an exception if scheme is not passed explicitely' do
+    it 'raises an exception if a URI string is passed' do
       expect { ROM::Repository.setup('memory://test') }.to raise_error(
         ArgumentError,
         /URIs without an explicit scheme are not supported anymore/
@@ -65,34 +46,15 @@ describe ROM::Repository do
     end
   end
 
-  describe '.[]' do
-    it "looks up and return the repository class for the given schema" do
-      test_repository
-
-      expect(ROM::Repository[:test_scheme]).to eq test_repository
+  describe '.class_from_symbol' do
+    it 'instantiates a repository based on type' do
+      klass = ROM::Repository.class_from_symbol(:memory)
+      expect(klass).to be(ROM::Memory::Repository)
     end
 
-    it "returns nil w/o registered repositories" do
-      expect(ROM::Repository[:test_scheme]).to eq nil
-    end
-  end
-
-  describe 'Registration order' do
-    it "prefers the last-defined repository" do
-      order_test_first = Class.new(test_repository) do
-        def self.schemes
-          [:order_test]
-        end
-      end
-
-      repository = ROM::Repository.setup(:order_test, 'order_test::memory')
-      expect(repository).to be_instance_of(order_test_first)
-
-      order_test_second = Class.new(order_test_first)
-
-      repository = ROM::Repository.setup(:order_test, 'order_test::memory')
-
-      expect(repository).to be_instance_of(order_test_second)
+    it 'raises an exception if the type is not supported' do
+      expect { ROM::Repository.class_from_symbol(:bogus) }
+        .to raise_error(ArgumentError, ':bogus is not supported')
     end
   end
 

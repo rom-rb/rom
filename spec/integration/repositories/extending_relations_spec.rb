@@ -2,12 +2,8 @@ require "spec_helper"
 
 describe "Repository" do
   include_context "users and tasks" do
-    before(:all) do
+    let(:repository_class) do
       Class.new(ROM::Memory::Repository) do
-        def self.schemes
-          [:memory]
-        end
-
         def extend_relation_class(klass)
           klass.class_eval do
             def self.freaking_awesome?
@@ -25,6 +21,8 @@ describe "Repository" do
         end
       end
     end
+
+    let(:setup) { ROM.setup(repository_class.new) }
   end
 
   before do

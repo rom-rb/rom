@@ -5,13 +5,16 @@ module ROM
   module Global
     # Starts the setup process for relations, mappers and commands.
     #
-    # @overload setup(scheme, uri, options = {})
-    #   Sets up a single-repository environment given a repository type and its
-    #   arguments.
+    # @overload setup(type, *args)
+    #   Sets up a single-repository environment given a repository type provided
+    #   under the ROM umbrella. For custom repositories, create an instance and
+    #   pass it directly.
     #
-    #   @param [Symbol] scheme
-    #   @param [String] uri
-    #   @param [Hash] options
+    #   @param [Symbol] type
+    #   @param [Array] *args
+    #
+    # @overload setup(repository)
+    #   @param [Repository] repository
     #
     # @overload setup(repositories)
     #   Sets up multiple repositories.

@@ -16,17 +16,6 @@ module ROM
       #
       # @public
       module TestRepository
-        def test_schemes
-          assert_respond_to repository, :schemes,
-            "#{repository}.schemes must be implemented"
-
-          assert_instance_of Array, repository.schemes,
-            "#{repository}.schemes must return an array with supported URI schemes"
-
-          assert repository.schemes.any?,
-            "#{repository}.schemes must return at least one supported URI scheme"
-        end
-
         def test_setup
           assert_instance_of repository, repository_instance
         end

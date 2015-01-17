@@ -5,6 +5,13 @@ module ROM
   #
   # @api public
   class Repository
+    UMBRELLA_REPOSITORIES = {
+      csv: 'CSV',
+      memory: 'Memory',
+      sql: 'SQL',
+      yaml: 'YAML'
+    }.freeze
+
     # Return connection object
     #
     # @return [Object] type varies depending on the repository
@@ -12,38 +19,6 @@ module ROM
     # @api public
     attr_reader :connection
 
-    # @api private
-    def self.inherited(klass)
-      Repository.registered.unshift(klass)
-    end
-
-    # @api private
-    def self.registered
-      @__registered__ ||= []
-    end
-
-    # Setup a repository instance with the given connection URI
-    #
-    # @example
-    #
-    #   Repository = Class.new(ROM::Repository) do
-    #     def self.schemes
-    #       [:foo]
-    #     end
-    #   end
-    #
-    #   repository = Repository.setup(:foo, 'mysql://localhost/test')
-    #
-    #   repository.uri.scheme # => 'mysql'
-    #   repository.uri.host # => 'localhost'
-    #   repository.uri.path # => '/test'
-    #
-    # @param [Symbol,Repository] repository_or_scheme
-    # @param [String] uri_string
-    # @param [Hash] options
-    #
-    # @return [Repository]
-    #
     # @api public
     def self.setup(repository_or_scheme, *args)
       case repository_or_scheme
@@ -55,31 +30,24 @@ module ROM
       when Symbol
         class_from_symbol(repository_or_scheme).new(*args)
       else
-        args.empty? ? repository_or_scheme : fail(
-          ArgumentError,
-          "Can't accept uri or options to repository when passing an instance"
-        )
+        if args.empty?
+          repository_or_scheme
+        else
+          fail ArgumentError, "Can't accept arguments when passing an instance"
+        end
       end
     end
 
     # @api private
-    def self.class_from_symbol(sym)
-      self[sym] || fail(
-        ArgumentError, "#{sym.inspect} scheme is not supported"
-      )
-    end
-
-    # Return repository class for the given scheme
-    #
-    # @see Repository.register
-    #
-    # @return [Class] repository class
-    #
-    # @api public
-    def self.[](type)
-      registered.detect do |repository|
-        repository.schemes.include?(type.to_sym)
+    def self.class_from_symbol(type)
+      begin
+        require "rom/#{type}"
+      rescue LoadError
+        fail ArgumentError, "#{type.inspect} is not supported"
       end
+
+      klass_name = UMBRELLA_REPOSITORIES.fetch(type)
+      ROM.const_get(klass_name).const_get('Repository')
     end
 
     # @api public
