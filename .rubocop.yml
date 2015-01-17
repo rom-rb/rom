@@ -6,10 +6,6 @@ Metrics/AbcSize:
 Metrics/MethodLength:
   Max: 15
 
-# FIXME: Lower by refactoring biggest offenders
-Metrics/PerceivedComplexity:
-  Max: 8
-
 # It’s quite readable when we know what we are doing
 Lint/AssignmentInCondition:
   Enabled: false
