@@ -1,6 +1,6 @@
 # FIXME: Lower by refactoring biggest offenders
 Metrics/AbcSize:
-  Max: 27
+  Max: 22
 
 # FIXME: Lower by refactoring biggest offenders
 Metrics/MethodLength:
