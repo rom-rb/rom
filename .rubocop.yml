@@ -14,9 +14,6 @@ Lint/HandleExceptions:
   Exclude:
     - Rakefile
 
-Metrics/ClassLength:
-  Max: 120
-
 # gemspec is a special snowflake
 Metrics/LineLength:
   Max: 84
