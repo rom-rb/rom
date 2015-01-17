@@ -58,7 +58,7 @@ module ROM
 
       # Return number of tuples in the target relation
       #
-      # This should be overridden by adapters when `#count` is not available
+      # This should be overridden by repositories when `#count` is not available
       # in the relation objects
       #
       # @return [Fixnum]
