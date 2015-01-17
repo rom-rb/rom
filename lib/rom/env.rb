@@ -24,21 +24,14 @@ module ROM
     #   rom.read(:users).adults.to_a
     #
     #   # or with explicit mapper name
-    #   rom.read(:users, mapper: :some_mapper).to_a
+    #   rom.read(:users).with(:some_mapper).to_a
     #
     # @param [Symbol] name of the registered reader
     # @param [Hash] option hash
     #
     # @api public
-    def read(name, options = {})
-      reader = readers[name]
-      mapper = options[:mapper]
-
-      if mapper
-        reader.with_mapper(mapper)
-      else
-        reader
-      end
+    def read(name)
+      readers[name]
     end
 
     # Returns commands registry for the given relation
