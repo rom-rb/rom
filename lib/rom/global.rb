@@ -35,7 +35,7 @@ module ROM
     # @api public
     def setup(uri_or_config, options = {}, &block)
       config = if uri_or_config.is_a?(String)
-                 {default: {uri: uri_or_config, options: options}}
+                 { default: { uri: uri_or_config, options: options } }
                else
                  uri_or_config
                end
