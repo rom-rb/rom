@@ -24,6 +24,31 @@ describe ROM::Repository do
       }.to raise_error(ArgumentError, ':bogus scheme is not supported')
     end
 
+    it 'accepts a repository instance' do
+      repository = ROM::Repository.new('memory://test')
+      expect(ROM::Repository.setup(repository)).to be(repository)
+    end
+
+    it 'raises an exception if instance and uri are passed' do
+      repository = ROM::Repository.new('memory://test')
+
+      expect { ROM::Repository.setup(repository, 'foo://bar') }.to raise_error(
+        ArgumentError,
+        "Can't accept uri or options to repository when passing an instance"
+      )
+    end
+
+    it 'raises an exception if instance and options are passed' do
+      repository = ROM::Repository.new('memory://test')
+
+      expect {
+        ROM::Repository.setup(repository, 'foo://bar', foo: 'bar')
+      }.to raise_error(
+        ArgumentError,
+        "Can't accept uri or options to repository when passing an instance"
+      )
+    end
+
     it 'raises an exception if scheme is not passed explicitely' do
       expect { ROM::Repository.setup('memory://test') }.to raise_error(
         ArgumentError,

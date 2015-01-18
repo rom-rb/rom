@@ -52,27 +52,36 @@ module ROM
     #   repository.uri.host # => 'localhost'
     #   repository.uri.path # => '/test'
     #
-    # @param [Symbol] scheme
+    # @param [Symbol,Repository] repository_or_scheme
     # @param [String] uri_string
     # @param [Hash] options
     #
     # @return [Repository]
     #
     # @api public
-    def self.setup(scheme, uri_string = nil, options = {})
-      unless scheme.is_a?(Symbol)
+    def self.setup(repository_or_scheme, uri_string = nil, options = {})
+      case repository_or_scheme
+      when String
         fail ArgumentError, <<-STRING.gsub(/^ {10}/, '')
           URIs without an explicit scheme are not supported anymore.
           See https://github.com/rom-rb/rom/blob/master/CHANGELOG.md
         STRING
-      end
-
-      if klass = self[scheme]
+      when Symbol
         uri = Addressable::URI.parse(uri_string)
-        klass.new(uri, options)
+        class_from_symbol(repository_or_scheme).new(uri, options)
       else
-        fail ArgumentError, "#{scheme.inspect} scheme is not supported"
+        (uri_string.nil? && options.empty?) ? repository_or_scheme : fail(
+          ArgumentError,
+          "Can't accept uri or options to repository when passing an instance"
+        )
       end
+    end
+
+    # @api private
+    def self.class_from_symbol(sym)
+      self[sym] || fail(
+        ArgumentError, "#{sym.inspect} scheme is not supported"
+      )
     end
 
     # Return repository class for the given scheme
