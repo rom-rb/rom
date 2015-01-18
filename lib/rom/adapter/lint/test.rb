@@ -10,6 +10,7 @@ module ROM
       #     include ROM::Adapter::Lint::TestRepository
       #
       #     def setup
+      #       @scheme = :myrepo
       #       @repository = MyRepository
       #       @uri = "super_db://something"
       #     end
@@ -17,7 +18,7 @@ module ROM
       #
       # @public
       module TestRepository
-        attr_reader :repository, :uri
+        attr_reader :repository, :uri, :scheme
 
         def test_schemes
           assert_respond_to repository, :schemes,
@@ -45,7 +46,7 @@ module ROM
         private
 
         def repository_instance
-          Repository.setup(uri)
+          Repository.setup(scheme, uri)
         end
       end
 

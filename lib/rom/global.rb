@@ -3,11 +3,37 @@ module ROM
   #
   # @public
   module Global
-    # Starts the setup process for relations, mappers and commands
+    # Starts the setup process for relations, mappers and commands.
+    #
+    # @overload setup(scheme, uri, options = {})
+    #   Sets up a single-repository environment given a repository type and its
+    #   arguments.
+    #
+    #   @param [Symbol] scheme
+    #   @param [String] uri
+    #   @param [Hash] options
+    #
+    # @overload setup(repositories)
+    #   Sets up multiple repositories.
+    #
+    #   @param [Hash{Symbol=>Symbol,Array}] repositories
+    #
+    # @return [Setup] boot object
     #
     # @example
+    #   # Use the in-memory adapter shipped with ROM as the default repository.
+    #   env = ROM.setup(:memory, 'memory://test')
+    #   # Use `rom-sql` with an in-memory sqlite database as default repository.
+    #   ROM.setup(:sql, 'sqlite::memory')
+    #   # Registers a `default` and a `warehouse` repository.
+    #   env = ROM.setup(
+    #     default: [:sql, 'sqlite::memory'],
+    #     warehouse: [:sql, 'postgres://localhost/warehouse']
+    #   )
     #
-    #   ROM.setup('sqlite::memory')
+    # @example A full environment
+    #
+    #   ROM.setup(:memory, 'memory://test')
     #
     #   ROM.relation(:users) do
     #     # ...
@@ -28,13 +54,9 @@ module ROM
     #   ROM.finalize # builds the env
     #   ROM.env # returns the env registry
     #
-    # @param [Hash] options repository URIs
-    #
-    # @return [Setup] boot object
-    #
     # @api public
-    def setup(uri_or_config, options = {}, &block)
-      config = setup_config(uri_or_config, options)
+    def setup(*args, &block)
+      config = setup_config(*args)
       repositories = setup_repostories(config)
       boot = Setup.new(repositories)
 
@@ -83,25 +105,16 @@ module ROM
     end
 
     # @api private
-    def setup_config(uri_or_config, options)
-      if uri_or_config.is_a?(String)
-        { default: { uri: uri_or_config, options: options } }
-      else
-        uri_or_config
-      end
+    def setup_config(*args)
+      # Support simple single-repository setups.
+      args.first.is_a?(Hash) ? args.first : {default: args}
     end
 
     # @api private
     def setup_repostories(config)
-      config.each_with_object({}) do |(name, uri_or_opts), hash|
-        uri, opts =
-          if uri_or_opts.is_a?(Hash)
-            uri_or_opts.values_at(:uri, :options)
-          else
-            [uri_or_opts, {}]
-          end
-
-        hash[name] = Repository.setup(uri, opts)
+      config.each_with_object({}) do |(name, spec), hash|
+        repository, *args = *Array(spec)
+        hash[name] = Repository.setup(repository, *args)
       end
     end
   end

@@ -23,7 +23,7 @@ describe 'Repositories / Setting logger' do
   end
 
   it 'sets up a logger for a given repository' do
-    setup = ROM.setup('memory://localhost')
+    setup = ROM.setup(:memory, 'memory://test')
 
     setup.default.use_logger(logger)
 

@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'rom/memory'
 
 describe 'Mappers / Prefixing attributes' do
-  let(:setup) { ROM.setup('memory://test') }
+  let(:setup) { ROM.setup(:memory, 'memory://test') }
 
   before do
     setup.relation(:users)

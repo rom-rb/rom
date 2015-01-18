@@ -12,16 +12,38 @@ describe ROM::Repository do
   describe '.setup' do
     before { test_repository }
 
-    it 'sets up connection based on a uri' do
-      repository = ROM::Repository.setup("test_scheme::memory")
+    it 'sets up a repository based on a scheme' do
+      repository = ROM::Repository.setup(:test_scheme, 'some::memory')
 
       expect(repository).to be_instance_of(test_repository)
     end
 
     it 'raises an exception if the scheme is not supported' do
       expect {
-        ROM::Repository.setup("bogus://any-host")
-      }.to raise_error(ArgumentError, '"bogus://any-host" uri is not supported')
+        ROM::Repository.setup(:bogus, "memory://test")
+      }.to raise_error(ArgumentError, ':bogus scheme is not supported')
+    end
+
+    it 'raises an exception if scheme is not passed explicitely' do
+      expect { ROM::Repository.setup('memory://test') }.to raise_error(
+        ArgumentError,
+        /URIs without an explicit scheme are not supported anymore/
+      )
+    end
+
+    it 'supports connection uri and additional options' do
+      uri = Addressable::URI.parse('foo://localhost')
+
+      Class.new(ROM::Repository) {
+        def self.schemes
+          [:bazinga]
+        end
+      }
+
+      repository = ROM::Repository.setup(:bazinga, uri.to_s, super: :option)
+
+      expect(repository.uri).to eql(uri)
+      expect(repository.options).to eql(super: :option)
     end
   end
 
@@ -45,12 +67,12 @@ describe ROM::Repository do
         end
       end
 
-      repository = ROM::Repository.setup("order_test::memory")
+      repository = ROM::Repository.setup(:order_test, 'order_test::memory')
       expect(repository).to be_instance_of(order_test_first)
 
       order_test_second = Class.new(order_test_first)
 
-      repository = ROM::Repository.setup("order_test::memory")
+      repository = ROM::Repository.setup(:order_test, 'order_test::memory')
 
       expect(repository).to be_instance_of(order_test_second)
     end
@@ -67,21 +89,6 @@ describe ROM::Repository do
       repository = repository_class.new('bazinga://localhost')
 
       expect(repository.disconnect).to be(nil)
-    end
-  end
-
-  describe '.setup' do
-    it 'supports connection uri and additional options' do
-      Class.new(ROM::Repository) {
-        def self.schemes
-          [:bazinga]
-        end
-      }
-
-      repository = ROM::Repository.setup('bazinga://localhost', super: :option)
-
-      expect(repository.uri).to eql(Addressable::URI.parse('bazinga://localhost'))
-      expect(repository.options).to eql(super: :option)
     end
   end
 end

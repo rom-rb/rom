@@ -9,6 +9,7 @@ class MemoryRepositoryLintTest < Minitest::Test
   def setup
     @repository = ROM::Memory::Repository
     @uri = "memory://localhost/test"
+    @scheme = :memory
   end
 end
 

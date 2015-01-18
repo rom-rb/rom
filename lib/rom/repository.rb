@@ -40,28 +40,39 @@ module ROM
     #
     # @example
     #
-    #   Repository = Class.new(ROM::Repository)
+    #   Repository = Class.new(ROM::Repository) do
+    #     def self.schemes
+    #       [:foo]
+    #     end
+    #   end
     #
-    #   repository = Repository.new('mysql://localhost/test')
+    #   repository = Repository.setup(:foo, 'mysql://localhost/test')
     #
     #   repository.uri.scheme # => 'mysql'
     #   repository.uri.host # => 'localhost'
     #   repository.uri.path # => '/test'
     #
+    # @param [Symbol] scheme
     # @param [String] uri_string
+    # @param [Hash] options
     #
     # @return [Repository]
     #
     # @api public
-    def self.setup(uri_string, options = {})
-      uri = Addressable::URI.parse(uri_string)
-      klass = self[uri.scheme]
-
-      unless klass
-        raise ArgumentError, "#{uri_string.inspect} uri is not supported"
+    def self.setup(scheme, uri_string = nil, options = {})
+      unless scheme.is_a?(Symbol)
+        fail ArgumentError, <<-STRING.gsub(/^ {10}/, '')
+          URIs without an explicit scheme are not supported anymore.
+          See https://github.com/rom-rb/rom/blob/master/CHANGELOG.md
+        STRING
       end
 
-      klass.new(uri, options)
+      if klass = self[scheme]
+        uri = Addressable::URI.parse(uri_string)
+        klass.new(uri, options)
+      else
+        fail ArgumentError, "#{scheme.inspect} scheme is not supported"
+      end
     end
 
     # Return repository class for the given scheme
@@ -71,8 +82,10 @@ module ROM
     # @return [Class] repository class
     #
     # @api public
-    def self.[](scheme)
-      registered.detect { |repository| repository.schemes.include?(scheme.to_sym) }
+    def self.[](type)
+      registered.detect do |repository|
+        repository.schemes.include?(type.to_sym)
+      end
     end
 
     # @api private
