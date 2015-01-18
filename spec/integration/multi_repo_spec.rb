@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'rom/memory'
 
-describe 'Using in-memory adapter for cross-repo access' do
+describe 'Using in-memory repositories for cross-repo access' do
   let(:setup) do
     ROM.setup(
       left: 'memory://localhost/users',
