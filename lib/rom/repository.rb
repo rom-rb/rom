@@ -5,6 +5,7 @@ module ROM
   #
   # @api public
   class Repository
+
     # Return connection URI associated with the repository
     #
     # @return [String]
@@ -54,6 +55,30 @@ module ROM
     # @api public
     def self.unregister(klass)
       Repository.registered.delete(klass)
+    end
+
+    # Repository auto-registration is on by default
+    @@auto_register_adapters = true
+
+    # Turn on adapter auto-registration when inheriting from Repository
+    #
+    # @example
+    #   Repsitory.enable_auto_registration!
+    #
+    # @api public
+    def self.enable_auto_registration!
+      @@auto_register_adapters = true
+    end
+
+    # Turn off adapter auto-registration when inheriting from Repository
+    #
+    # @example
+    #
+    #   Repository.disable_auto_registration!
+    #
+    # @api public
+    def self.disable_auto_registration!
+      @@auto_register_adapters = false
     end
 
     # @api private
