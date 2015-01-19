@@ -26,9 +26,39 @@ module ROM
     # @api public
     attr_reader :options
 
+    # Register a repository adapter
+    #
+    # @example
+    #
+    #   Repository.register(MyRepositoryAdapter)
+    #
+    # @param [Repository] klass
+    #
+    # @return [Array] registered adapters
+    #
+    # @api public
+    def self.register(klass)
+      Repository.registered.unshift(klass)
+    end
+
+    # Unregister a repository adapter
+    #
+    # @example
+    #
+    #   Repository.unregister(MyRepositoryAdapter)
+    #
+    # @param [Repository] klass
+    #
+    # @return [Repository]
+    #
+    # @api public
+    def self.unregister(klass)
+      Repository.registered.delete(klass)
+    end
+
     # @api private
     def self.inherited(klass)
-      Repository.registered.unshift(klass)
+      register(klass) if @@auto_register_adapters
     end
 
     # @api private
