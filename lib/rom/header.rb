@@ -150,7 +150,7 @@ module ROM
     #
     # @api private
     def initialize_tuple_keys
-      @tuple_keys = mapping.keys + non_primitives.map(&:tuple_keys).flatten
+      @tuple_keys = mapping.keys + non_primitives.flat_map(&:tuple_keys)
     end
   end
 end

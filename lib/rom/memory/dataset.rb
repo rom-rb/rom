@@ -13,9 +13,9 @@ module ROM
           (h[tuple] ||= []).concat(others)
         }
 
-        tuples = left.map { |tuple|
+        tuples = left.flat_map { |tuple|
           join_map[tuple].map { |other| tuple.merge(other) }
-        }.flatten
+        }
 
         self.class.new(tuples, row_proc)
       end
