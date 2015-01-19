@@ -124,7 +124,7 @@ describe 'Mapper definition DSL' do
 
       rom = setup.finalize
 
-      TaskWithUser.send(:include, Equalizer.new(:title, :priority, :user))
+      TaskWithUser.include(Equalizer.new(:title, :priority, :user))
 
       jane = rom.read(:tasks).with_user.to_a.last
 
@@ -153,7 +153,7 @@ describe 'Mapper definition DSL' do
 
       rom = setup.finalize
 
-      TaskWithUser.send(:include, Equalizer.new(:title, :priority, :user))
+      TaskWithUser.include(Equalizer.new(:title, :priority, :user))
 
       jane = rom.read(:tasks).with_user.to_a.last
 
@@ -183,8 +183,8 @@ describe 'Mapper definition DSL' do
 
       rom = setup.finalize
 
-      TaskWithUser.send(:include, Equalizer.new(:title, :priority, :user))
-      User.send(:include, Equalizer.new(:email))
+      TaskWithUser.include(Equalizer.new(:title, :priority, :user))
+      User.include(Equalizer.new(:email))
 
       jane = rom.read(:tasks).with_user.to_a.last
 

@@ -30,7 +30,7 @@ describe 'Mappers / Renaming attributes' do
 
     rom = setup.finalize
 
-    User.send(:include, Equalizer.new(:id, :name))
+    User.include(Equalizer.new(:id, :name))
 
     rom.relations.users << { _id: 123, user_name: 'Jane' }
 
@@ -63,7 +63,7 @@ describe 'Mappers / Renaming attributes' do
 
     rom = setup.finalize
 
-    UserWithAddress.send(:include, Equalizer.new(:id, :name, :address))
+    UserWithAddress.include(Equalizer.new(:id, :name, :address))
 
     rom.relations.users << { _id: 123, user_name: 'Jane' }
     rom.relations.addresses <<
@@ -101,7 +101,7 @@ describe 'Mappers / Renaming attributes' do
 
     rom = setup.finalize
 
-    UserWithAddresses.send(:include, Equalizer.new(:id, :name, :addresses))
+    UserWithAddresses.include(Equalizer.new(:id, :name, :addresses))
 
     rom.relations.users << { _id: 123, user_name: 'Jane' }
     rom.relations.addresses <<

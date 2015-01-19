@@ -21,7 +21,7 @@ describe 'Mappers / Prefixing attributes' do
 
     rom = setup.finalize
 
-    User.send(:include, Equalizer.new(:id, :name, :email))
+    User.include(Equalizer.new(:id, :name, :email))
 
     rom.relations.users << {
       user_id: 123,
