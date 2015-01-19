@@ -82,7 +82,7 @@ module ROM
       def forward(*methods)
         # FIXME: we should probably raise if one of the non-forwardable methods
         #       was provided
-        (Array(methods).flatten - NON_FORWARDABLE).each do |method_name|
+        (methods - NON_FORWARDABLE).each do |method_name|
           class_eval <<-RUBY, __FILE__, __LINE__ + 1
             def #{method_name}(*args, &block)
               response = data.public_send(#{method_name.inspect}, *args, &block)
