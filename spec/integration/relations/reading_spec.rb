@@ -166,7 +166,7 @@ describe 'Reading relations' do
 
     rom = setup.finalize
 
-    user = rom.read(:users).with(:prefixer).first
+    user = rom.read(:users).with_mapper(:prefixer).first
 
     expect(user).to eql(user_name: 'Joe', user_email: "joe@doe.org")
   end

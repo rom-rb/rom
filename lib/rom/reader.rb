@@ -31,11 +31,11 @@ module ROM
     attr_reader :mapper
 
     # @api private
-    def initialize(path, relation, mappers = {})
+    def initialize(path, relation, mappers, mapper = nil)
       @path = path.to_s
       @relation = relation
       @mappers = mappers
-      @mapper = mappers.by_path(@path)
+      @mapper = mapper || mappers.by_path(@path)
     end
 
     # @api private
@@ -91,8 +91,8 @@ module ROM
     # Return a new reader with a specific mapper
     #
     # @api private
-    def with(name)
-      self.class.new(new_path(name), relation, mappers)
+    def with_mapper(name)
+      self.class.new(path, relation, mappers, mappers.by_path(new_path(name)))
     end
 
     private
