@@ -1,6 +1,10 @@
 RSpec.shared_context 'users and tasks' do
   require 'rom/memory'
 
+  before(:context) do
+    register_repo ROM::Memory::Repository
+  end
+
   subject(:rom) { setup.finalize }
 
   let(:setup) { ROM.setup("memory://localhost") }

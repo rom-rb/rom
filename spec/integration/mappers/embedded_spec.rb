@@ -5,6 +5,10 @@ describe 'Mappers / embedded' do
   let(:setup) { ROM.setup('memory://test') }
   let(:rom) { setup.finalize }
 
+  before do
+    register_repo ROM::Memory::Repository
+  end
+
   it 'allows mapping embedded tuples' do
     setup.relation(:users)
 

@@ -2,8 +2,8 @@ require "spec_helper"
 
 describe "Repository" do
   include_context "users and tasks" do
-    before(:all) do
-      Class.new(ROM::Memory::Repository) do
+    before(:context) do
+      extending_repo = Class.new(ROM::Memory::Repository) do
         def self.schemes
           [:memory]
         end
@@ -24,6 +24,8 @@ describe "Repository" do
           end
         end
       end
+
+      register_repo extending_repo
     end
   end
 

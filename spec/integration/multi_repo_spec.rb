@@ -13,6 +13,10 @@ describe 'Using in-memory repositories for cross-repo access' do
   let(:repositories) { rom.repositories }
   let(:rom) { setup.finalize }
 
+  before do
+    register_repo ROM::Memory::Repository
+  end
+
   it 'works' do
     setup.relation(:users, repository: :left) do
       def by_name(name)

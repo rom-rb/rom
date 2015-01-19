@@ -5,6 +5,7 @@ describe 'Mappers / Prefixing attributes' do
   let(:setup) { ROM.setup('memory://test') }
 
   before do
+    register_repo ROM::Memory::Repository
     setup.relation(:users)
   end
 

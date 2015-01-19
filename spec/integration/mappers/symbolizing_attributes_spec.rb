@@ -6,6 +6,7 @@ describe 'Mappers / Symbolizing atributes' do
   let(:rom) { setup.finalize }
 
   before do
+    register_repo ROM::Memory::Repository
     setup.relation(:users)
     setup.relation(:tasks)
   end
