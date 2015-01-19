@@ -14,7 +14,7 @@ module ROM
     #
     # @api private
     def self.included(klass)
-      klass.send(:include, DataProxy)
+      klass.include(DataProxy)
     end
 
     forward(

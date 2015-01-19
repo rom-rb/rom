@@ -31,7 +31,7 @@ module ROM
       klass_name = "#{Relation.name}[#{Inflecto.camelize(name)}]"
 
       klass = build_class(name, klass_name)
-      klass.send(:include, mod)
+      klass.include(mod)
 
       repository.extend_relation_class(klass)
 

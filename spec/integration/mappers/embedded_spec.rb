@@ -59,7 +59,7 @@ describe 'Mappers / embedded' do
 
     expect(rom.read(:users).mapper.header.map(&:name)).to eql([:name, :address])
 
-    Address.send(:include, Equalizer.new(:street, :city))
+    Address.include(Equalizer.new(:street, :city))
 
     expect(jane.name).to eql('Jane')
     expect(jane.address).to eql(Address.new(street: 'Somewhere 1', city: 'NYC'))
