@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'rom/lint/spec'
 require 'rom/memory/dataset'
 
 describe ROM::Memory::Dataset do
@@ -12,14 +13,7 @@ describe ROM::Memory::Dataset do
     ]
   end
 
-  describe '#to_a' do
-    it 'returns array with tuples' do
-      result = dataset.to_a
-
-      expect(result).to eql(data)
-      expect(result).to_not equal(data)
-    end
-  end
+  it_behaves_like "a rom enumerable dataset"
 
   describe '#project' do
     it 'projects tuples with the provided keys' do
