@@ -1,13 +1,14 @@
 module ROM
   # Base relation class
   #
-  # Relation is a proxy for the dataset object provided by the adapter, it
-  # forwards every method to the dataset that's why "native" interface of the
-  # underlying adapter is available in the relation. This interface, however, is
-  # considered private and should not be used outside of the relation instance.
+  # Relation is a proxy for the dataset object provided by the repository. It
+  # forwards every method to the dataset, which is why the "native" interface of
+  # the underlying repository is available in the relation. This interface,
+  # however, is considered private and should not be used outside of the
+  # relation instance.
   #
   # ROM builds sub-classes of this class for every relation defined in the env
-  # for easy inspection and extensibility - every adapter can provide extensions
+  # for easy inspection and extensibility - every repository can provide extensions
   # for those sub-classes but there is always a vanilla relation instance stored
   # in the schema registry.
   #

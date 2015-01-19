@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe ROM::Setup do
   describe '#finalize' do
-    context 'with an adapter that supports schema inferring' do
+    context 'with repository that supports schema inferring' do
       it 'builds relation from inferred schema' do
         repo = double('repo').as_null_object
         dataset = double('dataset')

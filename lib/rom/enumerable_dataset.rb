@@ -3,7 +3,7 @@ require 'rom/support/data_proxy'
 module ROM
   # A helper module that adds data-proxy behavior to an enumerable object
   #
-  # This module is intended to be used by adapters
+  # This module is intended to be used by repositories
   #
   # Class that includes this module can define `row_proc` class method which
   # must return a proc-like object which will be used to process each element
