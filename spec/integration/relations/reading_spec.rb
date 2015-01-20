@@ -148,4 +148,26 @@ describe 'Reading relations' do
 
     expect(user).to eql(name: "Jane", email: "jane@doe.org")
   end
+
+  it 'allows cherry-picking of a mapper' do
+    setup.relation(:users)
+
+    setup.mappers do
+      define(:users) do
+        attribute :name
+        attribute :email
+      end
+
+      define(:prefixer, parent: :users) do
+        attribute :user_name, from: :name
+        attribute :user_email, from: :email
+      end
+    end
+
+    rom = setup.finalize
+
+    user = rom.read(:users).with_mapper(:prefixer).first
+
+    expect(user).to eql(user_name: 'Joe', user_email: "joe@doe.org")
+  end
 end

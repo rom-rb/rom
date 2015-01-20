@@ -31,8 +31,8 @@ describe ROM::Setup do
         expect(env.relations).to eql(ROM::RelationRegistry.new)
       end
 
-      it 'builds empty mappers' do
-        expect(env.mappers).to eql(ROM::ReaderRegistry.new)
+      it 'builds empty readers' do
+        expect(env.readers).to eql(ROM::ReaderRegistry.new)
       end
 
       it 'builds empty commands' do
