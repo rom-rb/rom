@@ -25,7 +25,7 @@ module ROM
       def to_transproc
         compose(EMPTY_FN) do |ops|
           ops << header.groups.map { |attr| visit_group(attr, true) }
-          ops << t(:map_array!, row_proc) if row_proc
+          ops << t(:map_array, row_proc) if row_proc
         end
       end
 
@@ -38,19 +38,19 @@ module ROM
 
       def visit_attribute(attribute)
         if attribute.typed?
-          t(:map_key!, attribute.name, t(:"to_#{attribute.type}"))
+          t(:map_key, attribute.name, t(:"to_#{attribute.type}"))
         end
       end
 
       def visit_hash(attribute)
         with_row_proc(attribute) do |row_proc|
-          t(:map_key!, attribute.name, row_proc)
+          t(:map_key, attribute.name, row_proc)
         end
       end
 
       def visit_array(attribute)
         with_row_proc(attribute) do |row_proc|
-          t(:map_key!, attribute.name, t(:map_array!, row_proc))
+          t(:map_key, attribute.name, t(:map_array, row_proc))
         end
       end
 
@@ -59,7 +59,7 @@ module ROM
         keys = attribute.tuple_keys
 
         compose do |ops|
-          ops << t(:nest!, name, keys)
+          ops << t(:nest, name, keys)
           ops << visit_hash(attribute)
         end
       end
@@ -76,7 +76,7 @@ module ROM
             ops << t(:group, name, keys)
 
             ops << other.map { |attr|
-              t(:map_array!, t(:map_key!, name, visit_group(attr, true)))
+              t(:map_array, t(:map_key, name, visit_group(attr, true)))
             }
           end
         else
@@ -86,7 +86,7 @@ module ROM
 
       def initialize_row_proc
         @row_proc = compose do |ops|
-          ops << t(:map_hash!, mapping) if header.aliased?
+          ops << t(:map_hash, mapping) if header.aliased?
           ops << header.map { |attr| visit(attr) }
           ops << t(-> tuple { model.new(tuple) }) if model
         end
