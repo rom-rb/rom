@@ -22,6 +22,10 @@ describe 'Repositories / Setting logger' do
     logger_class.new
   end
 
+  before do
+    register_repo ROM::Memory::Repository
+  end
+
   it 'sets up a logger for a given repository' do
     setup = ROM.setup('memory://localhost')
 

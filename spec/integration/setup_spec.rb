@@ -1,7 +1,12 @@
 require 'spec_helper'
 require 'virtus'
+require 'rom/memory'
 
 describe 'Setting up ROM' do
+  before do
+    register_repo ROM::Memory::Repository
+  end
+
   context 'with existing schema' do
     include_context 'users and tasks'
 

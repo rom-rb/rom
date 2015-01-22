@@ -16,6 +16,15 @@ root = Pathname(__FILE__).dirname
 Dir[root.join('support/*.rb').to_s].each { |f| require f }
 Dir[root.join('shared/*.rb').to_s].each { |f| require f }
 
+ROM::Repository.disable_auto_registration!
+
+# Helper to register a repository unless it is already registered
+def register_repo(klass)
+  return if ROM::Repository.registered.include?(klass)
+
+  ROM::Repository.register(klass)
+end
+
 RSpec.configure do |config|
   config.before do
     @constants = Object.constants
@@ -27,6 +36,6 @@ RSpec.configure do |config|
     added_constants.each { |name| Object.send(:remove_const, name) }
 
     added_repos = ROM::Repository.registered - @repos
-    added_repos.each { |repo| ROM::Repository.registered.delete(repo) }
+    added_repos.each { |repo| ROM::Repository.unregister(repo) }
   end
 end

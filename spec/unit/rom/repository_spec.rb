@@ -10,7 +10,9 @@ describe ROM::Repository do
   end
 
   describe '.setup' do
-    before { test_repository }
+    before do
+      register_repo test_repository
+    end
 
     it 'sets up connection based on a uri' do
       repository = ROM::Repository.setup("test_scheme::memory")
@@ -27,7 +29,7 @@ describe ROM::Repository do
 
   describe '.[]' do
     it "looks up and return the repository class for the given schema" do
-      test_repository
+      register_repo test_repository
 
       expect(ROM::Repository[:test_scheme]).to eq test_repository
     end
@@ -45,10 +47,14 @@ describe ROM::Repository do
         end
       end
 
+      register_repo order_test_first
+
       repository = ROM::Repository.setup("order_test::memory")
       expect(repository).to be_instance_of(order_test_first)
 
       order_test_second = Class.new(order_test_first)
+
+      register_repo order_test_second
 
       repository = ROM::Repository.setup("order_test::memory")
 
@@ -72,7 +78,7 @@ describe ROM::Repository do
 
   describe '.setup' do
     it 'supports connection uri and additional options' do
-      Class.new(ROM::Repository) {
+      register_repo Class.new(ROM::Repository) {
         def self.schemes
           [:bazinga]
         end
