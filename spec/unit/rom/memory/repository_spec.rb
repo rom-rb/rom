@@ -3,7 +3,8 @@ require 'rom/lint/spec'
 require 'rom/memory'
 
 describe ROM::Memory::Repository do
-  before(:context) do
+  before do
+    pending
     # FIXME: Remove when we get a way to control registration in specs
     ROM::Repository.registered.unshift(ROM::Memory::Repository)
   end
