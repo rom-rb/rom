@@ -3,6 +3,28 @@ module ROM
   #
   # @public
   module Global
+    # Register adapter namespace under a specified identifier
+    #
+    # @param [Symbol]
+    # @param [Class,Module]
+    #
+    # @return [self]
+    #
+    # @api private
+    def register_adapter(identifier, adapter)
+      adapters[identifier] = adapter
+      self
+    end
+
+    # Return identifier => adapter map
+    #
+    # @return [Hash]
+    #
+    # @api private
+    def adapters
+      @__adapters__ ||= {}
+    end
+
     # Starts the setup process for relations, mappers and commands.
     #
     # @overload setup(type, *args)

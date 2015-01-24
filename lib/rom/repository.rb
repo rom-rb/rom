@@ -5,13 +5,6 @@ module ROM
   #
   # @api public
   class Repository
-    UMBRELLA_REPOSITORIES = {
-      csv: 'CSV',
-      memory: 'Memory',
-      sql: 'SQL',
-      yaml: 'YAML'
-    }.freeze
-
     # Return connection object
     #
     # @return [Object] type varies depending on the repository
@@ -46,8 +39,8 @@ module ROM
         fail ArgumentError, "#{type.inspect} is not supported"
       end
 
-      klass_name = UMBRELLA_REPOSITORIES.fetch(type)
-      ROM.const_get(klass_name).const_get('Repository')
+      adapter = ROM.adapters.fetch(type)
+      adapter.const_get(:Repository)
     end
 
     # @api public
