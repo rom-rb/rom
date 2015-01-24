@@ -36,7 +36,7 @@ module ROM
       begin
         require "rom/#{type}"
       rescue LoadError
-        raise ArgumentError, "#{type.inspect} is not supported"
+        raise AdapterLoadError, "Failed to load adapter rom/#{type}"
       end
 
       adapter = ROM.adapters.fetch(type)

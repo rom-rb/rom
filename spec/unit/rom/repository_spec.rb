@@ -24,7 +24,7 @@ describe ROM::Repository do
     it 'raises an exception if the type is not supported' do
       expect {
         ROM::Repository.setup(:bogus, "memory://test")
-      }.to raise_error(ArgumentError, ':bogus is not supported')
+      }.to raise_error(ROM::AdapterLoadError, /bogus/)
     end
 
     it 'accepts a repository instance' do
@@ -57,7 +57,7 @@ describe ROM::Repository do
 
     it 'raises an exception if the type is not supported' do
       expect { ROM::Repository.class_from_symbol(:bogus) }
-        .to raise_error(ArgumentError, ':bogus is not supported')
+        .to raise_error(ROM::AdapterLoadError, /bogus/)
     end
   end
 
