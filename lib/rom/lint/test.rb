@@ -33,11 +33,11 @@ module ROM
     module TestRepository
       extend ROM::Lint::Test
 
-      attr_reader :repository, :uri
+      attr_reader :identifier, :repository, :uri
 
       ROM::Lint::Repository.each_lint do |name, linter|
         define_test_method name do
-          assert linter.new(repository, uri).lint(name)
+          assert linter.new(identifier, repository, uri).lint(name)
         end
       end
     end

@@ -1,3 +1,4 @@
+require 'rom'
 require 'rom/memory'
 require 'rom/lint/test'
 
@@ -5,6 +6,11 @@ require 'minitest/autorun'
 
 class MemoryRepositoryLintTest < Minitest::Test
   include ROM::Lint::TestRepository
+
+  def setup
+    @repository = ROM::Memory::Repository
+    @identifier = :memory
+  end
 
   def repository_instance
     ROM::Memory::Repository.new
