@@ -3,11 +3,7 @@ require 'rom/memory'
 
 describe 'Using in-memory repositories for cross-repo access' do
   let(:setup) do
-    ROM.setup(
-      left: 'memory://localhost/users',
-      right: 'memory://localhost/tasks',
-      main: 'memory://localhost/main'
-    )
+    ROM.setup(left: :memory, right: :memory, main: :memory)
   end
 
   let(:repositories) { rom.repositories }

@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'rom/memory'
 
 describe 'Mappers / Symbolizing atributes' do
-  let(:setup) { ROM.setup('memory://test') }
+  let(:setup) { ROM.setup(:memory) }
   let(:rom) { setup.finalize }
 
   before do

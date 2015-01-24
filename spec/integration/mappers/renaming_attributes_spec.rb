@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'rom/memory'
 
 describe 'Mappers / Renaming attributes' do
-  let(:setup) { ROM.setup('memory://test') }
+  let(:setup) { ROM.setup(:memory) }
 
   before do
     setup.relation(:addresses)

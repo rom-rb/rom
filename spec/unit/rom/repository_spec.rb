@@ -1,87 +1,71 @@
 require 'spec_helper'
 
 describe ROM::Repository do
-  let(:test_repository) do
-    Class.new(ROM::Repository) do
-      def self.schemes
-        [:test_scheme]
-      end
-    end
-  end
-
   describe '.setup' do
-    before { test_repository }
+    it 'sets up a repository based on a type' do
+      repository_class = Class.new(ROM::Repository) do
+        attr_reader :args
 
-    it 'sets up connection based on a uri' do
-      repository = ROM::Repository.setup("test_scheme::memory")
-
-      expect(repository).to be_instance_of(test_repository)
-    end
-
-    it 'raises an exception if the scheme is not supported' do
-      expect {
-        ROM::Repository.setup("bogus://any-host")
-      }.to raise_error(ArgumentError, '"bogus://any-host" uri is not supported')
-    end
-  end
-
-  describe '.[]' do
-    it "looks up and return the repository class for the given schema" do
-      test_repository
-
-      expect(ROM::Repository[:test_scheme]).to eq test_repository
-    end
-
-    it "returns nil w/o registered repositories" do
-      expect(ROM::Repository[:test_scheme]).to eq nil
-    end
-  end
-
-  describe 'Registration order' do
-    it "prefers the last-defined repository" do
-      order_test_first = Class.new(test_repository) do
-        def self.schemes
-          [:order_test]
+        def initialize(*args)
+          @args = args
         end
       end
 
-      repository = ROM::Repository.setup("order_test::memory")
-      expect(repository).to be_instance_of(order_test_first)
+      allow(ROM::Repository).to receive(:class_from_symbol)
+        .with(:wormhole).and_return(repository_class)
 
-      order_test_second = Class.new(order_test_first)
+      args = %w(hello world)
+      repository = ROM::Repository.setup(:wormhole, *args)
 
-      repository = ROM::Repository.setup("order_test::memory")
+      expect(repository).to be_instance_of(repository_class)
+      expect(repository.args).to eq(args)
+    end
 
-      expect(repository).to be_instance_of(order_test_second)
+    it 'raises an exception if the type is not supported' do
+      expect {
+        ROM::Repository.setup(:bogus, "memory://test")
+      }.to raise_error(ROM::AdapterLoadError, /bogus/)
+    end
+
+    it 'accepts a repository instance' do
+      repository = ROM::Repository.new
+      expect(ROM::Repository.setup(repository)).to be(repository)
+    end
+
+    it 'raises an exception if instance and arguments are passed' do
+      repository = ROM::Repository.new
+
+      expect { ROM::Repository.setup(repository, 'foo://bar') }.to raise_error(
+        ArgumentError,
+        "Can't accept arguments when passing an instance"
+      )
+    end
+
+    it 'raises an exception if a URI string is passed' do
+      expect { ROM::Repository.setup('memory://test') }.to raise_error(
+        ArgumentError,
+        /URIs without an explicit scheme are not supported anymore/
+      )
+    end
+  end
+
+  describe '.class_from_symbol' do
+    it 'instantiates a repository based on type' do
+      klass = ROM::Repository.class_from_symbol(:memory)
+      expect(klass).to be(ROM::Memory::Repository)
+    end
+
+    it 'raises an exception if the type is not supported' do
+      expect { ROM::Repository.class_from_symbol(:bogus) }
+        .to raise_error(ROM::AdapterLoadError, /bogus/)
     end
   end
 
   describe '#disconnect' do
     it 'does nothing' do
-      repository_class = Class.new(ROM::Repository) {
-        def self.schemes
-          [:bazinga]
-        end
-      }
-
-      repository = repository_class.new('bazinga://localhost')
-
+      repository_class = Class.new(ROM::Repository)
+      repository = repository_class.new
       expect(repository.disconnect).to be(nil)
-    end
-  end
-
-  describe '.setup' do
-    it 'supports connection uri and additional options' do
-      Class.new(ROM::Repository) {
-        def self.schemes
-          [:bazinga]
-        end
-      }
-
-      repository = ROM::Repository.setup('bazinga://localhost', super: :option)
-
-      expect(repository.uri).to eql(Addressable::URI.parse('bazinga://localhost'))
-      expect(repository.options).to eql(super: :option)
     end
   end
 end

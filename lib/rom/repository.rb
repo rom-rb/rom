@@ -5,13 +5,6 @@ module ROM
   #
   # @api public
   class Repository
-    # Return connection URI associated with the repository
-    #
-    # @return [String]
-    #
-    # @api public
-    attr_reader :uri
-
     # Return connection object
     #
     # @return [Object] type varies depending on the repository
@@ -19,67 +12,35 @@ module ROM
     # @api public
     attr_reader :connection
 
-    # Additional options hash
-    #
-    # @return [Hash]
-    #
     # @api public
-    attr_reader :options
-
-    # @api private
-    def self.inherited(klass)
-      Repository.registered.unshift(klass)
+    def self.setup(repository_or_scheme, *args)
+      case repository_or_scheme
+      when String
+        raise ArgumentError, <<-STRING.gsub(/^ {10}/, '')
+          URIs without an explicit scheme are not supported anymore.
+          See https://github.com/rom-rb/rom/blob/master/CHANGELOG.md
+        STRING
+      when Symbol
+        class_from_symbol(repository_or_scheme).new(*args)
+      else
+        if args.empty?
+          repository_or_scheme
+        else
+          raise ArgumentError, "Can't accept arguments when passing an instance"
+        end
+      end
     end
 
     # @api private
-    def self.registered
-      @__registered__ ||= []
-    end
-
-    # Setup a repository instance with the given connection URI
-    #
-    # @example
-    #
-    #   Repository = Class.new(ROM::Repository)
-    #
-    #   repository = Repository.new('mysql://localhost/test')
-    #
-    #   repository.uri.scheme # => 'mysql'
-    #   repository.uri.host # => 'localhost'
-    #   repository.uri.path # => '/test'
-    #
-    # @param [String] uri_string
-    #
-    # @return [Repository]
-    #
-    # @api public
-    def self.setup(uri_string, options = {})
-      uri = Addressable::URI.parse(uri_string)
-      klass = self[uri.scheme]
-
-      unless klass
-        raise ArgumentError, "#{uri_string.inspect} uri is not supported"
+    def self.class_from_symbol(type)
+      begin
+        require "rom/#{type}"
+      rescue LoadError
+        raise AdapterLoadError, "Failed to load adapter rom/#{type}"
       end
 
-      klass.new(uri, options)
-    end
-
-    # Return repository class for the given scheme
-    #
-    # @see Repository.register
-    #
-    # @return [Class] repository class
-    #
-    # @api public
-    def self.[](scheme)
-      registered.detect { |repository| repository.schemes.include?(scheme.to_sym) }
-    end
-
-    # @api private
-    def initialize(uri, options = {})
-      @uri = uri
-      @options = options
-      setup
+      adapter = ROM.adapters.fetch(type)
+      adapter.const_get(:Repository)
     end
 
     # @api public

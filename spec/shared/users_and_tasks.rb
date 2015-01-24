@@ -3,7 +3,7 @@ RSpec.shared_context 'users and tasks' do
 
   subject(:rom) { setup.finalize }
 
-  let(:setup) { ROM.setup("memory://localhost") }
+  let(:setup) { ROM.setup(:memory) }
 
   before do
     repository = setup.default

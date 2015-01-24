@@ -4,7 +4,7 @@ require 'rom/lint/enumerable_dataset'
 RSpec.shared_examples "a rom repository" do
   ROM::Lint::Repository.each_lint do |name, linter|
     it name do
-      result = linter.new(repository, uri).lint(name)
+      result = linter.new(identifier, repository, uri).lint(name)
       expect(result).to be_truthy
     end
   end

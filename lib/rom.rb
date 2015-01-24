@@ -24,11 +24,13 @@ require 'rom/global'
 require 'rom/setup'
 
 module ROM
+  AdapterLoadError = Class.new(StandardError)
+
   EnvAlreadyFinalizedError = Class.new(StandardError)
   RelationAlreadyDefinedError = Class.new(StandardError)
+  NoRelationError = Class.new(StandardError)
   CommandError = Class.new(StandardError)
   TupleCountMismatchError = Class.new(CommandError)
-  NoRelationError = Class.new(StandardError)
   MapperMissingError = Class.new(StandardError)
 
   InvalidOptionValueError = Class.new(StandardError)

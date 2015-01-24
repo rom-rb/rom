@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'rom/memory'
 
 describe 'Mappers / deeply embedded tuples' do
-  let(:setup) { ROM.setup('memory://test') }
+  let(:setup) { ROM.setup(:memory) }
   let(:rom) { setup.finalize }
 
   it 'allows mapping embedded tuples' do

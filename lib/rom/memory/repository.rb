@@ -7,11 +7,7 @@ module ROM
     class Repository < ROM::Repository
       attr_reader :logger
 
-      def self.schemes
-        [:memory]
-      end
-
-      def setup
+      def initialize
         @connection = Storage.new
       end
 

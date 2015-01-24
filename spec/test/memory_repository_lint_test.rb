@@ -1,3 +1,4 @@
+require 'rom'
 require 'rom/memory'
 require 'rom/lint/test'
 
@@ -8,7 +9,11 @@ class MemoryRepositoryLintTest < Minitest::Test
 
   def setup
     @repository = ROM::Memory::Repository
-    @uri = "memory://localhost/test"
+    @identifier = :memory
+  end
+
+  def repository_instance
+    ROM::Memory::Repository.new
   end
 end
 
