@@ -16,7 +16,7 @@ module ROM
     def self.setup(repository_or_scheme, *args)
       case repository_or_scheme
       when String
-        fail ArgumentError, <<-STRING.gsub(/^ {10}/, '')
+        raise ArgumentError, <<-STRING.gsub(/^ {10}/, '')
           URIs without an explicit scheme are not supported anymore.
           See https://github.com/rom-rb/rom/blob/master/CHANGELOG.md
         STRING
@@ -26,7 +26,7 @@ module ROM
         if args.empty?
           repository_or_scheme
         else
-          fail ArgumentError, "Can't accept arguments when passing an instance"
+          raise ArgumentError, "Can't accept arguments when passing an instance"
         end
       end
     end
@@ -36,7 +36,7 @@ module ROM
       begin
         require "rom/#{type}"
       rescue LoadError
-        fail ArgumentError, "#{type.inspect} is not supported"
+        raise ArgumentError, "#{type.inspect} is not supported"
       end
 
       adapter = ROM.adapters.fetch(type)

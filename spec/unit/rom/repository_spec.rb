@@ -5,7 +5,10 @@ describe ROM::Repository do
     it 'sets up a repository based on a type' do
       repository_class = Class.new(ROM::Repository) do
         attr_reader :args
-        def initialize(*args); @args = args; end
+
+        def initialize(*args)
+          @args = args
+        end
       end
 
       allow(ROM::Repository).to receive(:class_from_symbol)

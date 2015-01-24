@@ -132,7 +132,7 @@ module ROM
     # @api private
     def setup_config(*args)
       # Support simple single-repository setups.
-      args.first.is_a?(Hash) ? args.first : {default: args}
+      args.first.is_a?(Hash) ? args.first : { default: args }
     end
 
     # @api private

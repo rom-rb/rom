@@ -14,8 +14,10 @@ module ROM
       def lint_repository_setup
         return if repository_instance.instance_of? repository
 
-        complain "#{repository}::setup must return a repository instance but \
-                 returned #{repository_instance.inspect}"
+        complain <<-STRING
+          #{repository}::setup must return a repository instance but
+          returned #{repository_instance.inspect}
+        STRING
       end
 
       def lint_dataset_reader

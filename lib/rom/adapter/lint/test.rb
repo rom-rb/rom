@@ -29,7 +29,7 @@ module ROM
         end
 
         def repository_instance
-          fail(
+          raise(
             NotImplementedError,
             'Implement #repository_instance and return a repository instance'
           )
