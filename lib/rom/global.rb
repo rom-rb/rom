@@ -138,7 +138,7 @@ module ROM
     # @api private
     def setup_repostories(config)
       config.each_with_object({}) do |(name, spec), hash|
-        repository, *args = *Array(spec)
+        repository, *args = Array(spec)
         hash[name] = Repository.setup(repository, *args)
       end
     end

@@ -38,7 +38,7 @@ end
 
 DATABASE_URL = ENV.fetch('DATABASE_URL', 'postgres://localhost/rom')
 
-setup = ROM.setup(DATABASE_URL)
+setup = ROM.setup(:sql, DATABASE_URL)
 
 conn = setup.default.connection
 
