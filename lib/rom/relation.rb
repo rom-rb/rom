@@ -37,7 +37,13 @@ module ROM
       attr_accessor :relation_methods
     end
 
-    attr_reader :dataset
+    attr_reader :dataset, :__registry__
+
+    # @api private
+    def initialize(dataset, registry = {})
+      super
+      @__registry__ = registry
+    end
 
     # Hook to finalize a relation after its instance was created
     #
@@ -63,6 +69,16 @@ module ROM
     # @api public
     def to_a
       to_enum.to_a
+    end
+
+    def respond_to_missing?(name, _include_private = false)
+      __registry__.key?(name) || super
+    end
+
+    private
+
+    def method_missing(name, *)
+      __registry__.fetch(name) { super }
     end
   end
 end

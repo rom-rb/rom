@@ -7,16 +7,11 @@ module ROM
   #
   # @private
   class RelationBuilder
-    attr_reader :mod
+    attr_reader :relations
 
-    # @param [Schema]
-    # @param [Hash] relation registry
-    #
     # @api private
     def initialize(relations)
-      @mod = Module.new do
-        define_method(:__relations__) { relations }
-      end
+      @relations = relations
     end
 
     # Builds relation class and return its instance
@@ -31,13 +26,12 @@ module ROM
       klass_name = "#{Relation.name}[#{Inflecto.camelize(name)}]"
 
       klass = build_class(name, klass_name)
-      klass.send(:include, mod)
 
       repository.extend_relation_class(klass)
 
       yield(klass)
 
-      klass.new(dataset)
+      klass.new(dataset, relations)
     end
 
     private
@@ -55,16 +49,6 @@ module ROM
         klass.class_eval <<-RUBY, __FILE__, __LINE__ + 1
           def name
             #{name.inspect}
-          end
-
-          def respond_to_missing?(name, _include_private = false)
-            __relations__.key?(name) || super
-          end
-
-          private
-
-          def method_missing(name, *)
-            __relations__.fetch(name) { super }
           end
         RUBY
       end
