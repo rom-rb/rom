@@ -57,7 +57,8 @@ module ROM
         end
 
         Relation.descendants.each do |klass|
-          relations[klass.base_name] = klass.new(repositories[klass.repository])
+          next if relations[klass.base_name]
+          relations[klass.base_name] = klass.new(repositories[klass.repository], relations)
         end
 
         relations.each_value do |relation|
@@ -69,10 +70,13 @@ module ROM
 
       # @api private
       def build_relation(name, builder, options = {}, block = nil)
-        repository = repositories[options.fetch(:repository) { :default }]
+        repo_name = options.fetch(:repository) { :default }
+        repository = repositories[repo_name]
 
         relation = builder.call(name, repository) do |klass|
           methods = klass.public_instance_methods
+          klass.repository(repo_name)
+          klass.base_name(name)
           klass.class_eval(&block) if block
           klass.relation_methods = klass.public_instance_methods - methods
         end

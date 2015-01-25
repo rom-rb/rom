@@ -25,8 +25,7 @@ module ROM
       dataset = repository.dataset(name)
       klass_name = "#{Relation.name}[#{Inflecto.camelize(name)}]"
 
-      klass = build_class(name, klass_name)
-
+      klass = build_class(klass_name)
       repository.extend_relation_class(klass)
 
       yield(klass)
@@ -44,14 +43,8 @@ module ROM
     # @return [Class]
     #
     # @api private
-    def build_class(name, klass_name)
-      ClassBuilder.new(name: klass_name, parent: Relation).call do |klass|
-        klass.class_eval <<-RUBY, __FILE__, __LINE__ + 1
-          def name
-            #{name.inspect}
-          end
-        RUBY
-      end
+    def build_class(klass_name)
+      ClassBuilder.new(name: klass_name, parent: Relation).call
     end
   end
 end

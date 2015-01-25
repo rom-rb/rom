@@ -37,11 +37,13 @@ module ROM
       attr_accessor :relation_methods
     end
 
-    attr_reader :dataset, :__registry__
+    attr_reader :name, :dataset, :__registry__
 
     # @api private
     def initialize(dataset, registry = {})
       super
+      @name = self.class.base_name
+      @dataset = dataset
       @__registry__ = registry
     end
 
