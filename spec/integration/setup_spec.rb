@@ -48,6 +48,25 @@ describe 'Setting up ROM' do
     end
   end
 
+  describe 'defining classes' do
+    it 'sets up registries based on class definitions' do
+      ROM.setup(:memory)
+
+      class UserRelation < ROM::Relation
+        base_name :users
+        repository :default
+
+        def by_name(name)
+          restrict(name: name)
+        end
+      end
+
+      rom = ROM.finalize.env
+
+      expect(rom.relations.users).to be_kind_of(UserRelation)
+    end
+  end
+
   describe 'quick setup' do
     it 'exposes boot DSL inside the setup block' do
       User = Class.new do

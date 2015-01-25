@@ -1,3 +1,5 @@
+require 'rom/relation/dsl'
+
 module ROM
   # Base relation class
   #
@@ -18,10 +20,13 @@ module ROM
   #
   # @api public
   class Relation
+    extend DescendantsTracker
+
     include Charlatan.new(:dataset)
     include Equalizer.new(:dataset)
+    include DSL
 
-    attr_reader :dataset
+    defines :repository, :base_name
 
     class << self
       # Relation methods that were defined inside setup.relation DSL
@@ -31,6 +36,8 @@ module ROM
       # @api private
       attr_accessor :relation_methods
     end
+
+    attr_reader :dataset
 
     # Hook to finalize a relation after its instance was created
     #

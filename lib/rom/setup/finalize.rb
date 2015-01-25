@@ -56,6 +56,10 @@ module ROM
           end
         end
 
+        Relation.descendants.each do |klass|
+          relations[klass.base_name] = klass.new(repositories[klass.repository])
+        end
+
         relations.each_value do |relation|
           relation.class.finalize(relations, relation)
         end

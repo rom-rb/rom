@@ -1,3 +1,4 @@
+require 'descendants_tracker'
 require 'concord'
 require 'charlatan'
 require 'inflecto'
@@ -5,6 +6,7 @@ require 'inflecto'
 require 'rom/version'
 require 'rom/support/registry'
 require 'rom/support/options'
+require 'rom/support/class_macros'
 require 'rom/support/class_builder'
 
 require 'rom/header'
