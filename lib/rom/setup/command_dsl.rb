@@ -1,5 +1,3 @@
-require 'rom/mapper_builder'
-
 module ROM
   class Setup
     class CommandDSL

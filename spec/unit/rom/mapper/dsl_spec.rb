@@ -1,12 +1,16 @@
 require 'spec_helper'
 
-describe ROM::MapperBuilder do
-  subject(:builder) { ROM::MapperBuilder.new(:users, options) }
+describe ROM::Mapper do
+  subject(:mapper) do
+    klass = Class.new(parent)
+    options.each { |k, v| klass.send(k, v) }
+    klass
+  end
+
+  let(:parent) { Class.new(ROM::Mapper) }
 
   let(:options) { {} }
-  let(:relation) { double('relation', header: []) }
   let(:header) { mapper.header }
-  let(:mapper) { builder.call }
 
   let(:expected_header) { ROM::Header.coerce(attributes) }
 
@@ -15,7 +19,7 @@ describe ROM::MapperBuilder do
       let(:attributes) { [[:name]] }
 
       it 'adds an attribute for the header' do
-        builder.attribute :name
+        mapper.attribute :name
 
         expect(header).to eql(expected_header)
       end
@@ -25,7 +29,7 @@ describe ROM::MapperBuilder do
       let(:attributes) { [[:name, from: :user_name]] }
 
       it 'adds an aliased attribute for the header' do
-        builder.attribute :name, from: :user_name
+        mapper.attribute :name, from: :user_name
 
         expect(header).to eql(expected_header)
       end
@@ -36,7 +40,7 @@ describe ROM::MapperBuilder do
       let(:options) { { prefix: :user } }
 
       it 'adds an aliased attribute for the header using configured :prefix' do
-        builder.attribute :name
+        mapper.attribute :name
 
         expect(header).to eql(expected_header)
       end
@@ -47,21 +51,21 @@ describe ROM::MapperBuilder do
       let(:options) { { symbolize_keys: true } }
 
       it 'adds an attribute with symbolized alias' do
-        builder.attribute :name
+        mapper.attribute :name
 
         expect(header).to eql(expected_header)
       end
     end
   end
 
-  describe 'overriding inherited attributes from the relation header' do
+  describe 'overriding inherited attributes' do
     context 'when name matches' do
       let(:attributes) { [[:name, type: :string]] }
 
       it 'excludes the inherited attribute' do
-        allow(relation).to receive(:header).and_return([:name])
+        parent.attribute :name
 
-        builder.attribute :name, type: :string
+        mapper.attribute :name, type: :string
 
         expect(header).to eql(expected_header)
       end
@@ -71,9 +75,9 @@ describe ROM::MapperBuilder do
       let(:attributes) { [[:name, from: 'name', type: :string]] }
 
       it 'excludes the inherited attribute' do
-        allow(relation).to receive(:header).and_return(['name'])
+        parent.attribute 'name'
 
-        builder.attribute :name, from: 'name', type: :string
+        mapper.attribute :name, from: 'name', type: :string
 
         expect(header).to eql(expected_header)
       end
@@ -87,9 +91,9 @@ describe ROM::MapperBuilder do
       end
 
       it 'excludes the inherited attribute' do
-        allow(relation).to receive(:header).and_return([:city_name])
+        parent.attribute :city_name
 
-        builder.wrap :city do
+        mapper.wrap :city do
           attribute :name, from: :city_name
         end
 
@@ -105,9 +109,9 @@ describe ROM::MapperBuilder do
       end
 
       it 'excludes the inherited attribute' do
-        allow(relation).to receive(:header).and_return([:tag_name])
+        parent.attribute :tag_name
 
-        builder.group :tags do
+        mapper.group :tags do
           attribute :name, from: :tag_name
         end
 
@@ -123,9 +127,9 @@ describe ROM::MapperBuilder do
       end
 
       it 'excludes the inherited attribute' do
-        allow(relation).to receive(:header).and_return([:city])
+        parent.attribute :city
 
-        builder.embedded :city, type: :hash do
+        mapper.embedded :city, type: :hash do
           attribute :name, from: :city_name
         end
 
@@ -141,9 +145,9 @@ describe ROM::MapperBuilder do
       end
 
       it 'excludes the inherited attribute' do
-        allow(relation).to receive(:header).and_return([:tags])
+        parent.attribute :tags
 
-        builder.embedded :tags, type: :array do
+        mapper.embedded :tags, type: :array do
           attribute :name, from: :tag_name
         end
 
@@ -156,8 +160,7 @@ describe ROM::MapperBuilder do
     let(:attributes) { [[:name, from: 'name']] }
 
     it 'removes an attribute from the inherited header' do
-      allow(relation).to receive(:header).and_return(['name'])
-      builder.attribute :name, from: 'name'
+      mapper.attribute :name, from: 'name'
       expect(header).to eql(expected_header)
     end
   end
@@ -167,7 +170,7 @@ describe ROM::MapperBuilder do
       let(:attributes) { [[:city, type: :hash, header: [[:name]]]] }
 
       it 'adds an embedded hash attribute' do
-        builder.embedded :city, type: :hash do
+        mapper.embedded :city, type: :hash do
           attribute :name
         end
 
@@ -179,7 +182,7 @@ describe ROM::MapperBuilder do
       let(:attributes) { [[:tags, type: :array, header: [[:name]]]] }
 
       it 'adds an embedded array attribute' do
-        builder.embedded :tags, type: :array do
+        mapper.embedded :tags, type: :array do
           attribute :name
         end
 
@@ -192,7 +195,7 @@ describe ROM::MapperBuilder do
     let(:attributes) { [[:city, type: :hash,  wrap: true, header: [[:name]]]] }
 
     it 'adds an wrapped hash attribute using a block to define attributes' do
-      builder.wrap :city do
+      mapper.wrap :city do
         attribute :name
       end
 
@@ -200,7 +203,7 @@ describe ROM::MapperBuilder do
     end
 
     it 'adds an wrapped hash attribute using a options define attributes' do
-      builder.wrap city: [:name]
+      mapper.wrap city: [:name]
 
       expect(header).to eql(expected_header)
     end
@@ -210,7 +213,7 @@ describe ROM::MapperBuilder do
     let(:attributes) { [[:tags, type: :array, group: true, header: [[:name]]]] }
 
     it 'adds a group attribute using a block to define attributes' do
-      builder.group :tags do
+      mapper.group :tags do
         attribute :name
       end
 
@@ -218,7 +221,7 @@ describe ROM::MapperBuilder do
     end
 
     it 'adds a group attribute using a options define attributes' do
-      builder.group tags: [:name]
+      mapper.group tags: [:name]
 
       expect(header).to eql(expected_header)
     end
@@ -246,17 +249,17 @@ describe ROM::MapperBuilder do
       end
 
       it 'sets aliased attributes using prefix automatically' do
-        builder.attribute :name
+        mapper.attribute :name
 
-        builder.embedded :address, type: :hash do
+        mapper.embedded :address, type: :hash do
           attribute :city
         end
 
-        builder.wrap :contact do
+        mapper.wrap :contact do
           attribute :mobile
         end
 
-        builder.group :tasks do
+        mapper.group :tasks do
           attribute :title
         end
 
@@ -284,23 +287,23 @@ describe ROM::MapperBuilder do
       end
 
       it 'excludes from aliasing the ones which override it' do
-        builder.attribute :name
+        mapper.attribute :name
 
-        builder.embedded :birthday, type: :hash, prefix: :bd do
+        mapper.embedded :birthday, type: :hash, prefix: :bd do
           attribute :year
           attribute :month
           attribute :day
         end
 
-        builder.embedded :address, type: :hash, prefix: false do
+        mapper.embedded :address, type: :hash, prefix: false do
           attribute :city
         end
 
-        builder.wrap :contact, prefix: :contact do
+        mapper.wrap :contact, prefix: :contact do
           attribute :mobile
         end
 
-        builder.group :tasks, prefix: :task do
+        mapper.group :tasks, prefix: :task do
           attribute :title
         end
 
