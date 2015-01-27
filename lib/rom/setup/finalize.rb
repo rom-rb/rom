@@ -1,5 +1,5 @@
-require 'rom/reader_builder'
 require 'rom/command_registry'
+require 'rom/mapper_registry'
 
 require 'rom/env'
 
@@ -73,7 +73,7 @@ module ROM
           relation = relations[name]
           methods = relation.exposed_relations
 
-          readers[name] = ReaderBuilder.build(
+          readers[name] = Reader.build(
             name, relation, MapperRegistry.new(mappers), methods
           )
         end
