@@ -96,7 +96,7 @@ module ROM
 
     def build_reader(name, relation, mappers)
       readers[name] = self.class.build(
-        name, relation, mappers, relation.class.relation_methods
+        name, relation, mappers, relation.exposed_relations
       )
     end
 

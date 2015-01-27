@@ -74,11 +74,9 @@ module ROM
         repository = repositories[repo_name]
 
         relation = builder.call(name, repository) do |klass|
-          methods = klass.public_instance_methods
           klass.repository(repo_name)
           klass.base_name(name)
           klass.class_eval(&block) if block
-          klass.relation_methods = klass.public_instance_methods - methods
         end
 
         repository.extend_relation_instance(relation)
@@ -101,8 +99,7 @@ module ROM
           name = klass.base_relation
           relation = relations[name]
 
-          # TODO: calculate which methods should be exposed
-          methods = relation.public_methods - relation.dataset.public_methods
+          methods = relation.exposed_relations
           # TODO: build mapper map from all Mapper.descendants
           mappers = MapperRegistry.new(name => klass.build)
 

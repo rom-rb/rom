@@ -28,15 +28,6 @@ module ROM
 
     defines :repository, :base_name
 
-    class << self
-      # Relation methods that were defined inside setup.relation DSL
-      #
-      # @return [Array<Symbol>]
-      #
-      # @api private
-      attr_accessor :relation_methods
-    end
-
     attr_reader :name, :dataset, :__registry__
 
     # @api private
@@ -73,6 +64,12 @@ module ROM
       to_enum.to_a
     end
 
+    # @api private
+    def exposed_relations
+      public_methods - dataset.public_methods - [:name, :dataset, :__registry__]
+    end
+
+    # @api private
     def respond_to_missing?(name, _include_private = false)
       __registry__.key?(name) || super
     end
