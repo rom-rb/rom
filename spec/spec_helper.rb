@@ -10,7 +10,11 @@ if RUBY_ENGINE == "rbx"
 end
 
 require 'rom'
-require 'byebug'
+
+begin
+  require 'byebug'
+rescue LoadError
+end
 
 root = Pathname(__FILE__).dirname
 

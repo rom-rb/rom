@@ -28,6 +28,8 @@ module ROM
 
     defines :repository, :base_name
 
+    repository :default
+
     attr_reader :name, :dataset, :__registry__
 
     # @api private
