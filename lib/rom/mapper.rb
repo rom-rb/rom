@@ -9,7 +9,9 @@ module ROM
     include DSL
     include Equalizer.new(:transformer, :header)
 
-    defines :relation, :symbolize_keys, :prefix
+    defines :relation, :symbolize_keys, :prefix, :inherit_header
+
+    inherit_header true
 
     # @return [Object] transformer object built by a processor
     #
@@ -45,6 +47,28 @@ module ROM
     # @api private
     def self.build(header = self.header, processor = :transproc)
       new(Mapper.processors.fetch(processor).build(header), header)
+    end
+
+    # @api private
+    def self.build_class(name, options = {}, &block)
+      class_name = "ROM::Mapper[#{name}]"
+
+      parent = options[:parent]
+      inherit_header = options.fetch(:inherit_header) { Mapper.inherit_header }
+
+      parent_class =
+        if parent
+          descendants.detect { |klass| klass.relation == parent }
+        else
+          self
+        end
+
+      ClassBuilder.new(name: class_name, parent: parent_class).call do |klass|
+        klass.relation(name)
+        klass.inherit_header(inherit_header)
+
+        klass.class_eval(&block) if block
+      end
     end
 
     # @api private

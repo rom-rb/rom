@@ -9,6 +9,14 @@ module ROM
       end
 
       module ClassMethods
+        def inherited(klass)
+          super
+
+          klass.instance_variable_set('@attributes', nil)
+          klass.instance_variable_set('@header', nil)
+          klass.instance_variable_set('@dsl', nil)
+        end
+
         def base_relation
           if superclass.relation
             superclass.relation
@@ -17,19 +25,24 @@ module ROM
           end
         end
 
-        def options
-          { prefix: prefix, symbolize_keys: symbolize_keys }
-        end
-
-        def attributes
-          @attributes ||= []
-        end
-
         def header
           @header ||= dsl.header
         end
 
         private
+
+        def options
+          { prefix: prefix, symbolize_keys: symbolize_keys }
+        end
+
+        def attributes
+          @attributes ||=
+            if superclass.respond_to?(:attributes, true) && inherit_header
+              superclass.attributes.dup
+            else
+              []
+            end
+        end
 
         def dsl
           @dsl ||= MapperBuilder::MapperDSL.new(attributes, options)

@@ -10,9 +10,8 @@ module ROM
       attr_reader :repositories, :datasets
 
       # @api private
-      def initialize(repositories, mappers, commands)
+      def initialize(repositories, commands)
         @repositories = repositories
-        @mappers = mappers
         @commands = commands
         @datasets = {}
       end
@@ -68,11 +67,7 @@ module ROM
 
       # @api private
       def load_readers(relations)
-        reader_builder = ReaderBuilder.new(relations)
-
-        readers = @mappers.each_with_object({}) do |(name, options, block), h|
-          h[name] = reader_builder.call(name, options, &block)
-        end
+        readers = {}
 
         Mapper.registry.each do |name, mappers|
           relation = relations[name]

@@ -17,7 +17,6 @@ module ROM
     def initialize(repositories)
       @repositories = repositories
       @relations = {}
-      @mappers = []
       @commands = {}
       @env = nil
     end
@@ -57,8 +56,7 @@ module ROM
     #
     # @api public
     def mappers(&block)
-      dsl = MapperDSL.new(&block)
-      @mappers.concat(dsl.mappers)
+      MapperDSL.new(&block)
     end
 
     # Command definition DSL
@@ -98,9 +96,7 @@ module ROM
     def finalize
       raise EnvAlreadyFinalizedError if env
 
-      finalize = Finalize.new(
-        repositories, @mappers, @commands
-      )
+      finalize = Finalize.new(repositories, @commands)
 
       @env = finalize.run!
     end

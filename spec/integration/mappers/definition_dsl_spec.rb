@@ -73,9 +73,7 @@ describe 'Mapper definition DSL' do
           attribute :name
           attribute :email
         end
-      end
 
-      setup.mappers do
         define(:email_index, parent: :users) do
           model name: 'UserWithoutName'
           exclude :name
