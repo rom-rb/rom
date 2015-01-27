@@ -36,6 +36,8 @@ group :tools do
   gem 'guard-rspec'
   gem 'guard-rubocop'
 
+  gem 'byebug'
+
   platform :mri do
     gem 'mutant', '0.7.4'
     gem 'mutant-rspec'
