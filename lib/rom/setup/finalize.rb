@@ -95,6 +95,20 @@ module ROM
           h[name] = reader_builder.call(name, options, &block)
         end
 
+        Mapper.descendants.each do |klass|
+          next unless klass.relation
+
+          name = klass.relation
+          relation = relations[name]
+
+          # TODO: calculate which methods should be exposed
+          methods = relation.public_methods - relation.dataset.public_methods
+          # TODO: build mapper map from all Mapper.descendants
+          mappers = MapperRegistry.new(name => klass.build)
+
+          readers[name] = ReaderBuilder.build(name, relation, mappers, methods)
+        end
+
         ReaderRegistry.new(readers)
       end
 

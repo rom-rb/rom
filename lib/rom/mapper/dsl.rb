@@ -10,7 +10,11 @@ module ROM
 
       module ClassMethods
         def dsl
-          @dsl ||= MapperBuilder::MapperDSL.new(attributes, {})
+          @dsl ||= MapperBuilder::MapperDSL.new(attributes, prefix: prefix)
+        end
+
+        def options
+          { prefix: prefix, symbolize_keys: symbolize_keys }
         end
 
         def attributes

@@ -5,6 +5,7 @@ module ROM
   #
   # @private
   class Mapper
+    extend DescendantsTracker
     include DSL
 
     defines :relation, :symbolize_keys, :prefix

@@ -25,5 +25,6 @@ RSpec.configure do |config|
     added_constants = Object.constants - @constants
     added_constants.each { |name| Object.send(:remove_const, name) }
     ROM::Relation.instance_variable_set('@descendants', [])
+    ROM::Mapper.instance_variable_set('@descendants', [])
   end
 end
