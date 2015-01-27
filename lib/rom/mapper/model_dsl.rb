@@ -1,7 +1,7 @@
 require 'rom/model_builder'
 
 module ROM
-  class MapperBuilder
+  class Mapper
     module ModelDSL
       attr_reader :attributes, :builder, :klass
 

@@ -1,9 +1,9 @@
-require 'rom/mapper_builder/model_dsl'
+require 'rom/mapper/model_dsl'
 
 module ROM
-  class MapperBuilder
+  class Mapper
     # @api private
-    class MapperDSL
+    class AttributeDSL
       include ModelDSL
 
       attr_reader :attributes, :options, :symbolize_keys, :prefix

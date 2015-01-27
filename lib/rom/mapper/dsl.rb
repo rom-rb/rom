@@ -1,4 +1,4 @@
-require 'rom/mapper_builder/mapper_dsl'
+require 'rom/mapper/attribute_dsl'
 
 module ROM
   class Mapper
@@ -45,7 +45,7 @@ module ROM
         end
 
         def dsl
-          @dsl ||= MapperBuilder::MapperDSL.new(attributes, options)
+          @dsl ||= AttributeDSL.new(attributes, options)
         end
 
         def method_missing(name, *args, &block)
