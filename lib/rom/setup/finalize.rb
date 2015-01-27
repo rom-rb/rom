@@ -93,17 +93,13 @@ module ROM
           h[name] = reader_builder.call(name, options, &block)
         end
 
-        Mapper.descendants.each do |klass|
-          next unless klass.base_relation
-
-          name = klass.base_relation
+        Mapper.registry.each do |name, mappers|
           relation = relations[name]
-
           methods = relation.exposed_relations
-          # TODO: build mapper map from all Mapper.descendants
-          mappers = MapperRegistry.new(name => klass.build)
 
-          readers[name] = ReaderBuilder.build(name, relation, mappers, methods)
+          readers[name] = ReaderBuilder.build(
+            name, relation, MapperRegistry.new(mappers), methods
+          )
         end
 
         ReaderRegistry.new(readers)

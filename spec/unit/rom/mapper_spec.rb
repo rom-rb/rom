@@ -33,6 +33,17 @@ describe ROM::Mapper do
   let(:jane) { user_model.new(id: 1, name: 'Jane') }
   let(:joe) { user_model.new(id: 2, name: 'Joe') }
 
+  describe '.registry' do
+    it 'builds mapper class registry for base and virtual relations' do
+      base = Class.new(ROM::Mapper) { relation(:users) }
+      virt = Class.new(base) { relation(:active) }
+
+      registry = ROM::Mapper.registry
+
+      expect(registry).to eql(users: { users: base.build, active: virt.build })
+    end
+  end
+
   describe '.relation' do
     it 'inherits from parent' do
       base = Class.new(ROM::Mapper) { relation(:users) }

@@ -7,6 +7,7 @@ module ROM
   class Mapper
     extend DescendantsTracker
     include DSL
+    include Equalizer.new(:transformer, :header)
 
     defines :relation, :symbolize_keys, :prefix
 
@@ -44,6 +45,13 @@ module ROM
     # @api private
     def self.build(header = self.header, processor = :transproc)
       new(Mapper.processors.fetch(processor).build(header), header)
+    end
+
+    # @api private
+    def self.registry
+      Mapper.descendants.each_with_object({}) do |klass, h|
+        (h[klass.base_relation] ||= {})[klass.relation] = klass.build
+      end
     end
 
     # @api private
