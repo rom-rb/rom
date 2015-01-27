@@ -31,6 +31,17 @@ module ROM
     attr_reader :name, :dataset, :__registry__
 
     # @api private
+    def self.build_class(name, options = {}, &block)
+      class_name = "ROM::Relation[#{Inflecto.camelize(name)}]"
+
+      ClassBuilder.new(name: class_name, parent: self).call do |klass|
+        klass.repository(options.fetch(:repository) { :default })
+        klass.base_name(name)
+        klass.class_eval(&block) if block
+      end
+    end
+
+    # @api private
     def initialize(dataset, registry = {})
       super
       @name = self.class.base_name

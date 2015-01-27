@@ -1,4 +1,3 @@
-require 'rom/relation_builder'
 require 'rom/reader_builder'
 require 'rom/command_registry'
 
@@ -43,22 +42,23 @@ module ROM
       # @api private
       def load_relations
         relations = {}
-        builder = RelationBuilder.new(relations)
-
-        @relations.each do |name, (options, block)|
-          relations[name] = build_relation(name, builder, options, block)
-        end
 
         datasets.each do |repository, schema|
           schema.each do |name|
             next if relations.key?(name)
-            relations[name] = build_relation(name, builder, repository: repository)
+            Relation.build_class(name).repository(repository)
           end
         end
 
         Relation.descendants.each do |klass|
-          next if relations[klass.base_name]
-          relations[klass.base_name] = klass.new(repositories[klass.repository], relations)
+          repository = repositories[klass.repository]
+          dataset = repository.dataset(klass.base_name)
+
+          repository.extend_relation_class(klass)
+          relation = klass.new(dataset, relations)
+          repository.extend_relation_instance(relation)
+
+          relations[klass.base_name] = relation
         end
 
         relations.each_value do |relation|
@@ -66,23 +66,6 @@ module ROM
         end
 
         RelationRegistry.new(relations)
-      end
-
-      # @api private
-      def build_relation(name, builder, options = {}, block = nil)
-        repo_name = options.fetch(:repository) { :default }
-        repository = repositories[repo_name]
-
-        relation = builder.call(name, repository) do |klass|
-          klass.repository(repo_name)
-          klass.base_name(name)
-          klass.class_eval(&block) if block
-        end
-
-        repository.extend_relation_instance(relation)
-        repository_relation_map[name] = repository
-
-        relation
       end
 
       # @api private
@@ -108,7 +91,7 @@ module ROM
       # @api private
       def load_commands(relations)
         commands = @commands.each_with_object({}) do |(name, definitions), h|
-          repository = repository_relation_map[name]
+          repository = repositories[relations[name].class.repository]
 
           rel_commands = {}
 

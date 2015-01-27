@@ -37,7 +37,8 @@ module ROM
       if @relations.key?(name)
         raise RelationAlreadyDefinedError, "#{name.inspect} is already defined"
       end
-      @relations.update(name => [options, block])
+
+      @relations[name] = Relation.build_class(name, options, &block)
     end
 
     # Mapper definition DSL
