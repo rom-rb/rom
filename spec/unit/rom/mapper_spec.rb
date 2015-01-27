@@ -4,8 +4,16 @@ require 'rom/memory/dataset'
 require 'ostruct'
 
 describe ROM::Mapper do
-  subject(:mapper) do
-    ROM::Mapper.build(ROM::Header.coerce([:id, :name].zip, user_model))
+  subject(:mapper) { mapper_class.build }
+
+  let(:mapper_class) do
+    user_model = self.user_model
+
+    Class.new(ROM::Mapper) do
+      attribute :id
+      attribute :name
+      model user_model
+    end
   end
 
   let(:relation) do

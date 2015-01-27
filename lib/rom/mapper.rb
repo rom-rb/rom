@@ -1,8 +1,14 @@
+require 'rom/mapper/dsl'
+
 module ROM
   # Mapper is a simple object that uses a transformer to load relations
   #
   # @private
   class Mapper
+    include DSL
+
+    defines :relation, :symbolize_keys, :prefix
+
     # @return [Object] transformer object built by a processor
     #
     # @api private
@@ -35,8 +41,8 @@ module ROM
     # @return [Mapper]
     #
     # @api private
-    def self.build(header, processor = :transproc)
-      new(processors.fetch(processor).build(header), header)
+    def self.build(header = self.header, processor = :transproc)
+      new(Mapper.processors.fetch(processor).build(header), header)
     end
 
     # @api private
