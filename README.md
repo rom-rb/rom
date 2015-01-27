@@ -39,40 +39,31 @@ Integration with other frameworks is planned.
 ## Synopsis
 
 ``` ruby
-require 'rom-sql'
+setup = ROM.setup(:memory)
 
-setup = ROM.setup("sqlite::memory")
+class UserRelation < ROM::Relation
+  base_name :users
 
-setup.default.adapter.connection.create_table :users do
-  primary_key :id
-  String :name
-  Integer :age
-end
-
-# set up relations
-
-setup.relation(:users) do
   def by_name(name)
-    where(name: name)
+    restrict(name: name)
   end
 
   def adults
-    where { age >= 18 }
+    find_all { |user| user[:age] >= 18 }
   end
 end
 
-# set up commands
+class UserMapper < ROM::Mapper
+  relation :users
+
+  model name: 'User'
+
+  attribute :name
+  attribute :age
+end
 
 setup.commands(:users) do
   define(:create)
-end
-
-# set up mappers
-
-setup.mappers do
-  define(:users) do
-    model(name: 'User')
-  end
 end
 
 rom = setup.finalize
