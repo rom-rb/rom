@@ -9,8 +9,12 @@ module ROM
       end
 
       module ClassMethods
-        def dsl
-          @dsl ||= MapperBuilder::MapperDSL.new(attributes, options)
+        def base_relation
+          if superclass.relation
+            superclass.relation
+          else
+            relation
+          end
         end
 
         def options
@@ -23,6 +27,12 @@ module ROM
 
         def header
           @header ||= dsl.header
+        end
+
+        private
+
+        def dsl
+          @dsl ||= MapperBuilder::MapperDSL.new(attributes, options)
         end
 
         def method_missing(name, *args, &block)

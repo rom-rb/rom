@@ -33,6 +33,24 @@ describe ROM::Mapper do
   let(:jane) { user_model.new(id: 1, name: 'Jane') }
   let(:joe) { user_model.new(id: 2, name: 'Joe') }
 
+  describe '.relation' do
+    it 'inherits from parent' do
+      base = Class.new(ROM::Mapper) { relation(:users) }
+      virt = Class.new(base)
+
+      expect(virt.relation).to be(:users)
+      expect(virt.base_relation).to be(:users)
+    end
+
+    it 'allows overriding' do
+      base = Class.new(ROM::Mapper) { relation(:users) }
+      virt = Class.new(base) { relation(:active) }
+
+      expect(virt.relation).to be(:active)
+      expect(virt.base_relation).to be(:users)
+    end
+  end
+
   describe "#each" do
     it "yields all mapped objects" do
       result = []

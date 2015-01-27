@@ -96,9 +96,9 @@ module ROM
         end
 
         Mapper.descendants.each do |klass|
-          next unless klass.relation
+          next unless klass.base_relation
 
-          name = klass.relation
+          name = klass.base_relation
           relation = relations[name]
 
           # TODO: calculate which methods should be exposed
