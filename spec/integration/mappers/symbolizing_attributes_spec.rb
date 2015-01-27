@@ -11,17 +11,20 @@ describe 'Mappers / Symbolizing atributes' do
   end
 
   it 'automatically maps all attributes using top-level settings' do
-    setup.mappers do
-      define(:users, symbolize_keys: true, inherit_header: false, prefix: 'user') do
-        attribute :id
+    class UserMapper < ROM::Mapper
+      relation :users
 
-        wrap :details, prefix: 'first' do
-          attribute :name
-        end
+      symbolize_keys true
+      prefix 'user'
 
-        wrap :contact, prefix: false do
-          attribute :email
-        end
+      attribute :id
+
+      wrap :details, prefix: 'first' do
+        attribute :name
+      end
+
+      wrap :contact, prefix: false do
+        attribute :email
       end
     end
 
@@ -39,14 +42,15 @@ describe 'Mappers / Symbolizing atributes' do
   end
 
   it 'automatically maps all attributes using settings for wrap block' do
-    setup.mappers do
-      define(:tasks, symbolize_keys: true) do
-        attribute :title
+    class TaskMapper < ROM::Mapper
+      relation :tasks
+      symbolize_keys true
 
-        wrap :details, prefix: 'task' do
-          attribute :priority
-          attribute :description
-        end
+      attribute :title
+
+      wrap :details, prefix: 'task' do
+        attribute :priority
+        attribute :description
       end
     end
 
