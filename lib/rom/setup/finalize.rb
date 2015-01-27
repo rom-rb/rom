@@ -10,9 +10,8 @@ module ROM
       attr_reader :repositories, :datasets
 
       # @api private
-      def initialize(repositories, relations, mappers, commands)
+      def initialize(repositories, mappers, commands)
         @repositories = repositories
-        @relations = relations
         @mappers = mappers
         @commands = commands
         @datasets = {}

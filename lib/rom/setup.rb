@@ -99,7 +99,7 @@ module ROM
       raise EnvAlreadyFinalizedError if env
 
       finalize = Finalize.new(
-        repositories, @relations, @mappers, @commands
+        repositories, @mappers, @commands
       )
 
       @env = finalize.run!
