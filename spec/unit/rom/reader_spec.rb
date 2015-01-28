@@ -34,15 +34,17 @@ describe ROM::Reader do
     it 'defines methods from relation' do
       block = proc {}
 
+      user_id = 1
+
       expect(relation).to receive(:all)
-        .with(1, &block)
+        .with(user_id, &block)
         .and_return([joe])
 
       expect(mapper).to receive(:process)
         .with([joe])
         .and_yield(joe)
 
-      result = reader.all(1, &block)
+      result = reader.all(user_id, &block)
 
       expect(result.path).to eql('users.all')
       expect(result.to_a).to eql([joe])
