@@ -39,7 +39,7 @@ Integration with other frameworks is planned.
 ## Synopsis
 
 ``` ruby
-setup = ROM.setup(:memory)
+ROM.setup(:memory)
 
 class UserRelation < ROM::Relation
   base_name :users
@@ -62,11 +62,13 @@ class UserMapper < ROM::Mapper
   attribute :age
 end
 
-setup.commands(:users) do
-  define(:create)
+class CreateUser < ROM::Command
+  type :create
+  relation :users
+  result :one
 end
 
-rom = setup.finalize
+rom = ROM.finalize.env
 
 # accessing defined commands
 
