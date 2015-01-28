@@ -7,11 +7,12 @@ module ROM
   class Setup
     # @private
     class Finalize
-      attr_reader :repositories, :datasets
+      attr_reader :repositories, :datasets, :relations
 
       # @api private
-      def initialize(repositories)
+      def initialize(repositories, relations = {})
         @repositories = repositories
+        @relations = relations
         @datasets = {}
       end
 
@@ -41,10 +42,10 @@ module ROM
 
         datasets.each do |repository, schema|
           schema.each do |name|
-            next if relations.key?(name)
+            next if @relations.key?(name)
             klass = Relation.build_class(name)
             klass.repository(repository)
-            repositories[repository].extend_relation_class(klass)
+            klass.base_name(name)
           end
         end
 

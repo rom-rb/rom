@@ -11,7 +11,7 @@ module ROM
     include Equalizer.new(:repositories, :env)
 
     # @api private
-    attr_reader :repositories, :env
+    attr_reader :repositories, :relations, :env
 
     # @api private
     def initialize(repositories)
@@ -32,14 +32,14 @@ module ROM
     #
     # @api public
     def relation(name, options = {}, &block)
-      if @relations.key?(name)
+      if relations.key?(name)
         raise RelationAlreadyDefinedError, "#{name.inspect} is already defined"
       end
 
       klass = Relation.build_class(name, options)
       klass.class_eval(&block) if block
 
-      @relations[name] = klass
+      relations[name] = klass
     end
 
     # Mapper definition DSL
@@ -96,7 +96,7 @@ module ROM
     # @api public
     def finalize
       raise EnvAlreadyFinalizedError if env
-      finalize = Finalize.new(repositories)
+      finalize = Finalize.new(repositories, relations)
       @env = finalize.run!
     end
 
