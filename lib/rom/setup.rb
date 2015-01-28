@@ -37,10 +37,6 @@ module ROM
       end
 
       klass = Relation.build_class(name, options)
-
-      repository = repositories[klass.repository]
-      repository.extend_relation_class(klass)
-
       klass.class_eval(&block) if block
 
       @relations[name] = klass

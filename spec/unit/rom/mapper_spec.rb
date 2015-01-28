@@ -17,13 +17,7 @@ describe ROM::Mapper do
   end
 
   let(:relation) do
-    ROM::Relation.new(dataset)
-  end
-
-  let(:dataset) do
-    ROM::Memory::Dataset.new(
-      [{ id: 1, name: 'Jane' }, { id: 2, name: 'Joe' }]
-    )
+    [{ id: 1, name: 'Jane' }, { id: 2, name: 'Joe' }]
   end
 
   let(:user_model) do

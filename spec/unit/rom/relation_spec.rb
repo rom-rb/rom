@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'rom/memory/dataset'
 
 describe ROM::Relation do
-  subject(:relation) { ROM::Relation.new(dataset) }
+  subject(:relation) { Class.new(ROM::Relation).new(dataset) }
 
   let(:dataset) { ROM::Memory::Dataset.new([jane, joe]) }
 
