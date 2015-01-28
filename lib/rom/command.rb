@@ -12,6 +12,19 @@ module ROM
     repository :default
     result :many
 
+    def self.build_class(name, relation, options = {}, &block)
+      type = options.fetch(:type) { name }
+      class_name = "ROM::Command[#{relation}][#{type}]"
+
+      ClassBuilder.new(name: class_name, parent: self).call do |klass|
+        klass.type(type)
+        klass.register_as(name)
+        klass.relation(relation)
+        klass.class_eval(&block) if block
+        options.each { |k, v| klass.send(k, v) }
+      end
+    end
+
     def self.adapter(name = nil)
       return @adapter unless name
 
