@@ -16,8 +16,7 @@ require 'rom/reader'
 
 require 'rom/processor/transproc'
 
-require 'rom/commands'
-
+require 'rom/command'
 require 'rom/repository'
 
 require 'rom/env'

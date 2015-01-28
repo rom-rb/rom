@@ -1,5 +1,3 @@
-require 'rom/commands/with_options'
-
 module ROM
   module Commands
     # Update command
@@ -7,16 +5,13 @@ module ROM
     # This command updates all tuples in its relation with new attributes
     #
     # @abstract
-    class Update < AbstractCommand
-      include WithOptions
-
-      alias_method :set, :call
-
+    module Update
       # @see AbstractCommand#call
       def call(*args)
         assert_tuple_count
         super
       end
+      alias_method :set, :call
 
       # Execute the update command
       #

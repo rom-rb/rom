@@ -75,30 +75,6 @@ module ROM
       relation
     end
 
-    # Builds a command
-    #
-    # @param [Symbol] name of the command
-    # @param [Relation] relation used by the command
-    # @param [CommandDSL::Definition] command definition object
-    #
-    # @return [Object] created command instance
-    #
-    # @api public
-    def command(name, relation, definition)
-      type = definition.type || name
-
-      klass =
-        case type
-        when :create then command_namespace.const_get(:Create)
-        when :update then command_namespace.const_get(:Update)
-        when :delete then command_namespace.const_get(:Delete)
-        else
-          raise ArgumentError, "#{type.inspect} is not a supported command type"
-        end
-
-      klass.new(relation, definition.to_h)
-    end
-
     # Schema inference hook
     #
     # Every repository that supports schema inference should implement this method
@@ -117,13 +93,16 @@ module ROM
       # noop
     end
 
-    # Return namespace with repository-specific command classes
+    # Return namespace with repository-specific command modules
     #
     # @return [Module]
     #
     # @api private
     def command_namespace
-      self.class.const_get(:Commands)
+      raise(
+        NotImplementedError,
+        "#{self.class}#command_namespace is not implemented"
+      )
     end
   end
 end

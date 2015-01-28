@@ -5,10 +5,11 @@ module ROM
     # This command removes tuples from its target relation
     #
     # @abstract
-    class Delete < AbstractCommand
+    module Delete
       attr_reader :target
 
-      def initialize(relation, options)
+      # @api private
+      def initialize(relation, options = {})
         super
         @target = options[:target] || relation
       end

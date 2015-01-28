@@ -7,13 +7,13 @@ module ROM
   class Setup
     # @private
     class Finalize
-      attr_reader :repositories, :datasets
+      attr_reader :repositories, :datasets, :relation_adapter_map
 
       # @api private
-      def initialize(repositories, commands)
+      def initialize(repositories)
         @repositories = repositories
-        @commands = commands
         @datasets = {}
+        @relation_adapter_map = {}
       end
 
       # @api private
@@ -83,17 +83,9 @@ module ROM
 
       # @api private
       def load_commands(relations)
-        commands = @commands.each_with_object({}) do |(name, definitions), h|
-          repository = repositories[relations[name].class.repository]
+        registry = Command.registry(relations, repositories)
 
-          rel_commands = {}
-
-          definitions.each do |command_name, definition|
-            rel_commands[command_name] = repository.command(
-              command_name, relations[name], definition
-            )
-          end
-
+        commands = registry.each_with_object({}) do |(name, rel_commands), h|
           h[name] = CommandRegistry.new(rel_commands)
         end
 

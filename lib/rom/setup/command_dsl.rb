@@ -1,39 +1,24 @@
 module ROM
   class Setup
     class CommandDSL
-      attr_reader :commands
+      attr_reader :relation
 
-      class CommandDefinition
-        include Options
-
-        option :type, type: Symbol, reader: true, allow: [:create, :update, :delete]
-
-        alias_method :to_h, :options
-
-        def initialize(options, &block)
-          super
-          instance_exec(&block) if block
-        end
-
-        private
-
-        def method_missing(name, *args, &block)
-          if args.size == 1
-            options[name] = args.first
-          else
-            super
-          end
-        end
-      end
-
-      def initialize(&block)
-        @commands = {}
+      def initialize(relation, &block)
+        @relation = relation
         instance_exec(&block)
       end
 
       def define(name, options = {}, &block)
-        commands[name] = CommandDefinition.new(options, &block)
-        self
+        type = options.fetch(:type) { name }
+        class_name = "ROM::Command[#{relation}][#{type}]"
+
+        ClassBuilder.new(name: class_name, parent: Command).call do |klass|
+          klass.type(type)
+          klass.register_as(name)
+          klass.relation(relation)
+          klass.class_eval(&block) if block
+          options.each { |k, v| klass.send(k, v) }
+        end
       end
     end
   end

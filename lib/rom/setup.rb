@@ -17,7 +17,6 @@ module ROM
     def initialize(repositories)
       @repositories = repositories
       @relations = {}
-      @commands = {}
       @env = nil
     end
 
@@ -83,8 +82,7 @@ module ROM
     #
     # @api public
     def commands(name, &block)
-      dsl = CommandDSL.new(&block)
-      @commands.update(name => dsl.commands)
+      CommandDSL.new(name, &block)
     end
 
     # Finalize the setup
@@ -95,9 +93,7 @@ module ROM
     # @api public
     def finalize
       raise EnvAlreadyFinalizedError if env
-
-      finalize = Finalize.new(repositories, @commands)
-
+      finalize = Finalize.new(repositories)
       @env = finalize.run!
     end
 

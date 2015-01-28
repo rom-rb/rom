@@ -83,6 +83,11 @@ module ROM
     end
 
     # @api private
+    def repository
+      self.class.repository
+    end
+
+    # @api private
     def respond_to_missing?(name, _include_private = false)
       __registry__.key?(name) || super
     end

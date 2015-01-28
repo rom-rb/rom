@@ -1,5 +1,3 @@
-require 'rom/commands/with_options'
-
 module ROM
   module Commands
     # Create command
@@ -7,9 +5,7 @@ module ROM
     # This command inserts a new tuple into a relation
     #
     # @abstract
-    class Create < AbstractCommand
-      include WithOptions
-
+    module Create
       # Execute the command
       #
       # @abstract
