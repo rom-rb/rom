@@ -32,6 +32,17 @@ module ROM
 
     attr_reader :name, :dataset, :__registry__
 
+    def self.base_name(*args)
+      if repositories.key?(repository)
+        repositories[repository].extend_relation_class(self)
+      end
+      super
+    end
+
+    def self.repositories
+      ROM.repositories || {}
+    end
+
     # @api private
     def self.build_class(name, options = {})
       class_name = "ROM::Relation[#{Inflecto.camelize(name)}]"

@@ -7,13 +7,12 @@ module ROM
   class Setup
     # @private
     class Finalize
-      attr_reader :repositories, :datasets, :relation_adapter_map
+      attr_reader :repositories, :datasets
 
       # @api private
       def initialize(repositories)
         @repositories = repositories
         @datasets = {}
-        @relation_adapter_map = {}
       end
 
       # @api private

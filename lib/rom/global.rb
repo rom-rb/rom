@@ -111,6 +111,11 @@ module ROM
     end
 
     # @api public
+    def repositories
+      boot.repositories if boot
+    end
+
+    # @api public
     def env
       @env
     end

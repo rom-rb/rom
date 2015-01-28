@@ -54,7 +54,6 @@ describe 'Setting up ROM' do
 
       class UserRelation < ROM::Relation
         base_name :users
-        repository :default
 
         def by_name(name)
           restrict(name: name)
@@ -63,13 +62,13 @@ describe 'Setting up ROM' do
 
       class TaskRelation < ROM::Relation
         base_name :tasks
-        repository :default
       end
 
       rom = ROM.finalize.env
 
       expect(rom.relations.users).to be_kind_of(UserRelation)
       expect(rom.relations.users.tasks).to be(rom.relations.tasks)
+
       expect(rom.relations.tasks).to be_kind_of(TaskRelation)
       expect(rom.relations.tasks.users).to be(rom.relations.users)
     end
