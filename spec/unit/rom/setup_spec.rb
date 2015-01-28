@@ -43,7 +43,7 @@ describe ROM::Setup do
 
   describe '#relation' do
     it 'raises error when same relation is defined more than once' do
-      setup = ROM::Setup.new(repo: 'memory://test')
+      setup = ROM.setup(:memory)
       setup.relation(:users)
 
       expect { setup.relation(:users) }.to raise_error(

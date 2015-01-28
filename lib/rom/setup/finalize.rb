@@ -43,7 +43,9 @@ module ROM
         datasets.each do |repository, schema|
           schema.each do |name|
             next if relations.key?(name)
-            Relation.build_class(name).repository(repository)
+            klass = Relation.build_class(name)
+            klass.repository(repository)
+            repositories[repository].extend_relation_class(klass)
           end
         end
 
@@ -51,7 +53,6 @@ module ROM
           repository = repositories[klass.repository]
           dataset = repository.dataset(klass.base_name)
 
-          repository.extend_relation_class(klass)
           relation = klass.new(dataset, relations)
           repository.extend_relation_instance(relation)
 

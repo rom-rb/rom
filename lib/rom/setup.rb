@@ -36,7 +36,14 @@ module ROM
         raise RelationAlreadyDefinedError, "#{name.inspect} is already defined"
       end
 
-      @relations[name] = Relation.build_class(name, options, &block)
+      klass = Relation.build_class(name, options)
+
+      repository = repositories[klass.repository]
+      repository.extend_relation_class(klass)
+
+      klass.class_eval(&block) if block
+
+      @relations[name] = klass
     end
 
     # Mapper definition DSL
