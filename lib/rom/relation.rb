@@ -33,15 +33,7 @@ module ROM
     attr_reader :name, :dataset, :__registry__
 
     def self.[](type)
-      Relation.repository_classes.fetch(type) do
-        adapter = ROM.adapters.fetch(type)
-        klass = adapter.const_get(:Relation)
-        Relation.repository_classes[type] = klass
-      end
-    end
-
-    def self.repository_classes
-      @__repository_classes__ ||= {}
+      ROM.adapters.fetch(type).const_get(:Relation)
     end
 
     # @api private

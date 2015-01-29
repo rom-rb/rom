@@ -27,8 +27,6 @@ RSpec.configure do |config|
   end
 
   config.after do
-    ROM::Relation.instance_variable_set("@__repository_classes__", {})
-
     [ROM::Relation, ROM::Mapper, ROM::Command].each { |klass| clear_descendants(klass) }
 
     added_constants = Object.constants - @constants
