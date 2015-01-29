@@ -2,9 +2,10 @@
 
 ### Added
 
+* It is now possible to define custom relation, mapper and command classes during setup (solnic)
 * `Reader#one` and `Reader#one!` which can be used to retrieve one object from a relation (aflatter)
 * Adapters can use helper modules for datasets: `ArrayDataset` and `EnumerableDataset` (solnic)
-* Adapter interface can now be tested via a lint test (solnic + splattael)
+* Adapter interface can now be tested via a lint test (elskwid + solnic + splattael)
 * `to_ary` alias in `Reader` which addresses issue #80 (solnic)
 * `tuple_count` interface in AbstractCommand which can be overridden by adapter (solnic)
 * Optionally pass command to block in CommandRegistry#try addressed by issue #83 (splattael)
@@ -14,10 +15,15 @@
 
 * Schema DSL was **removed** - attributes can be specified only in mapper DSL
   and default repository can be changed when defining a relation (solnic)
+* `.setup` interface requires either an adapter identifier or can accept a repository
+  instance (aflatter)
+* Adapter interface no longer requires specific constructor to be defined (aflatter)
+* Adapters no longer need to handle connection URIs (aflatter)
 * Adapter/Repository has been collapsed to *just* `Repository` (solnic)
 * Relation no longer needs a header object and only operates on an adapters dataset (solnic)
 * Adapter's dataset no longer require header (solnic)
 * Make storage in memory adapter thread-safe #110 (splattael)
+* An Adapter can provide its own Relation subclass with custom behavior (solnic)
 
 [Compare v0.5.0...master](https://github.com/rom-rb/rom/compare/v0.5.0...master)
 
