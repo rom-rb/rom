@@ -1,41 +1,15 @@
-require 'rom/mapper_builder'
-
 module ROM
   class Setup
     class CommandDSL
-      attr_reader :commands
+      attr_reader :relation
 
-      class CommandDefinition
-        include Options
-
-        option :type, type: Symbol, reader: true, allow: [:create, :update, :delete]
-
-        alias_method :to_h, :options
-
-        def initialize(options, &block)
-          super
-          instance_exec(&block) if block
-        end
-
-        private
-
-        def method_missing(name, *args, &block)
-          if args.size == 1
-            options[name] = args.first
-          else
-            super
-          end
-        end
-      end
-
-      def initialize(&block)
-        @commands = {}
+      def initialize(relation, &block)
+        @relation = relation
         instance_exec(&block)
       end
 
       def define(name, options = {}, &block)
-        commands[name] = CommandDefinition.new(options, &block)
-        self
+        Command.build_class(name, relation, options, &block)
       end
     end
   end

@@ -1,6 +1,5 @@
-require 'rom/relation_builder'
-require 'rom/reader_builder'
 require 'rom/command_registry'
+require 'rom/mapper_registry'
 
 require 'rom/env'
 
@@ -8,22 +7,23 @@ module ROM
   class Setup
     # @private
     class Finalize
-      attr_reader :repositories, :datasets, :repository_relation_map
+      attr_reader :repositories, :repo_adapter, :datasets, :relations
 
       # @api private
-      def initialize(repositories, relations, mappers, commands)
+      def initialize(repositories, relations = {})
         @repositories = repositories
         @relations = relations
-        @mappers = mappers
-        @commands = commands
-        @datasets = {}
-        @repository_relation_map = {}
+        @repo_adapter_map = ROM.repositories
+        initialize_datasets
+      end
+
+      # @api private
+      def adapter_for(repository)
+        @repo_adapter_map.fetch(repositories[repository])
       end
 
       # @api private
       def run!
-        load_datasets
-
         relations = load_relations
         readers = load_readers(relations)
         commands = load_commands(relations)
@@ -34,26 +34,35 @@ module ROM
       private
 
       # @api private
-      def load_datasets
-        repositories.each do |key, repository|
-          datasets[key] = repository.schema
+      def initialize_datasets
+        @datasets = repositories.each_with_object({}) do |(key, repository), h|
+          h[key] = repository.schema
         end
       end
 
       # @api private
       def load_relations
         relations = {}
-        builder = RelationBuilder.new(relations)
-
-        @relations.each do |name, (options, block)|
-          relations[name] = build_relation(name, builder, options, block)
-        end
 
         datasets.each do |repository, schema|
           schema.each do |name|
-            next if relations.key?(name)
-            relations[name] = build_relation(name, builder, repository: repository)
+            next if @relations.key?(name)
+            klass = Relation.build_class(name, adapter: adapter_for(repository))
+            klass.repository(repository)
+            klass.base_name(name)
           end
+        end
+
+        Relation.descendants.each do |klass|
+          next unless klass.superclass != Relation
+
+          repository = repositories[klass.repository]
+          dataset = repository.dataset(klass.base_name)
+
+          relation = klass.new(dataset, relations)
+          repository.extend_relation_instance(relation)
+
+          relations[klass.base_name] = relation
         end
 
         relations.each_value do |relation|
@@ -64,27 +73,16 @@ module ROM
       end
 
       # @api private
-      def build_relation(name, builder, options = {}, block = nil)
-        repository = repositories[options.fetch(:repository) { :default }]
-
-        relation = builder.call(name, repository) do |klass|
-          methods = klass.public_instance_methods
-          klass.class_eval(&block) if block
-          klass.relation_methods = klass.public_instance_methods - methods
-        end
-
-        repository.extend_relation_instance(relation)
-        repository_relation_map[name] = repository
-
-        relation
-      end
-
-      # @api private
       def load_readers(relations)
-        reader_builder = ReaderBuilder.new(relations)
+        readers = {}
 
-        readers = @mappers.each_with_object({}) do |(name, options, block), h|
-          h[name] = reader_builder.call(name, options, &block)
+        Mapper.registry.each do |name, mappers|
+          relation = relations[name]
+          methods = relation.exposed_relations
+
+          readers[name] = Reader.build(
+            name, relation, MapperRegistry.new(mappers), methods
+          )
         end
 
         ReaderRegistry.new(readers)
@@ -92,17 +90,9 @@ module ROM
 
       # @api private
       def load_commands(relations)
-        commands = @commands.each_with_object({}) do |(name, definitions), h|
-          repository = repository_relation_map[name]
+        registry = Command.registry(relations, repositories)
 
-          rel_commands = {}
-
-          definitions.each do |command_name, definition|
-            rel_commands[command_name] = repository.command(
-              command_name, relations[name], definition
-            )
-          end
-
+        commands = registry.each_with_object({}) do |(name, rel_commands), h|
           h[name] = CommandRegistry.new(rel_commands)
         end
 

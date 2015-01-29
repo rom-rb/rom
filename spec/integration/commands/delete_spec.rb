@@ -11,13 +11,13 @@ describe 'Commands / Delete' do
         restrict(name: name)
       end
     end
-
-    setup.commands(:users) do
-      define(:delete)
-    end
   end
 
   it 'deletes all tuples when there is no restriction' do
+    setup.commands(:users) do
+      define(:delete)
+    end
+
     result = users.try { delete }
 
     expect(result).to match_array([
@@ -27,12 +27,20 @@ describe 'Commands / Delete' do
   end
 
   it 'deletes tuples matching restriction' do
+    setup.commands(:users) do
+      define(:delete)
+    end
+
     result = users.try { delete(:by_name, 'Joe') }
 
     expect(result).to match_array([{ name: 'Joe', email: 'joe@doe.org' }])
   end
 
   it 'returns untouched relation if there are no tuples to delete' do
+    setup.commands(:users) do
+      define(:delete)
+    end
+
     result = users.try { delete(:by_name, 'Not here') }
 
     expect(result).to match_array([])

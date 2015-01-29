@@ -1,3 +1,5 @@
+require 'rom/relation/dsl'
+
 module ROM
   # Base relation class
   #
@@ -18,18 +20,39 @@ module ROM
   #
   # @api public
   class Relation
+    extend DescendantsTracker
+
     include Charlatan.new(:dataset)
     include Equalizer.new(:dataset)
+    include DSL
 
-    attr_reader :dataset
+    defines :repository, :base_name
 
-    class << self
-      # Relation methods that were defined inside setup.relation DSL
-      #
-      # @return [Array<Symbol>]
-      #
-      # @api private
-      attr_accessor :relation_methods
+    repository :default
+
+    attr_reader :name, :dataset, :__registry__
+
+    def self.[](type)
+      ROM.adapters.fetch(type).const_get(:Relation)
+    end
+
+    # @api private
+    def self.build_class(name, options = {})
+      class_name = "ROM::Relation[#{Inflecto.camelize(name)}]"
+      adapter = options.fetch(:adapter)
+
+      ClassBuilder.new(name: class_name, parent: self[adapter]).call do |klass|
+        klass.repository(options.fetch(:repository) { :default })
+        klass.base_name(name)
+      end
+    end
+
+    # @api private
+    def initialize(dataset, registry = {})
+      super
+      @dataset = dataset
+      @name = self.class.base_name
+      @__registry__ = registry
     end
 
     # Hook to finalize a relation after its instance was created
@@ -56,6 +79,27 @@ module ROM
     # @api public
     def to_a
       to_enum.to_a
+    end
+
+    # @api private
+    def exposed_relations
+      public_methods - dataset.public_methods - [:name, :dataset, :__registry__]
+    end
+
+    # @api private
+    def repository
+      self.class.repository
+    end
+
+    # @api private
+    def respond_to_missing?(name, _include_private = false)
+      __registry__.key?(name) || super
+    end
+
+    private
+
+    def method_missing(name, *)
+      __registry__.fetch(name) { super }
     end
   end
 end

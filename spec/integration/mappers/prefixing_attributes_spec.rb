@@ -9,14 +9,15 @@ describe 'Mappers / Prefixing attributes' do
   end
 
   it 'automatically maps all attributes using the provided prefix' do
-    setup.mappers do
-      define(:users, prefix: :user) do
-        model name: 'User'
+    class UserMapper < ROM::Mapper
+      relation :users
+      prefix :user
 
-        attribute :id
-        attribute :name
-        attribute :email
-      end
+      model name: 'User'
+
+      attribute :id
+      attribute :name
+      attribute :email
     end
 
     rom = setup.finalize

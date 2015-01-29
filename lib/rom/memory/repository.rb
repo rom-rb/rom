@@ -4,6 +4,8 @@ require 'rom/memory/commands'
 
 module ROM
   module Memory
+    Relation = Class.new(ROM::Relation)
+
     class Repository < ROM::Repository
       attr_reader :logger
 

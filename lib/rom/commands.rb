@@ -8,14 +8,18 @@ module ROM
       option :type, allow: [:create, :update, :delete]
       option :result, reader: true, allow: [:one, :many]
       option :target
+      option :validator, reader: true
+      option :input, reader: true
 
       attr_reader :relation
 
       # @api private
-      def initialize(relation, options)
+      def initialize(relation, options = {})
         super
         @relation = relation
         @result ||= :many
+        @validator ||= proc {}
+        @input ||= Hash
       end
 
       # Call the command and return one or many tuples

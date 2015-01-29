@@ -4,16 +4,16 @@ describe ROM::Setup do
   describe '#finalize' do
     context 'with repository that supports schema inferring' do
       it 'builds relation from inferred schema' do
-        repo = double('repo').as_null_object
+        setup = ROM.setup(:memory)
+        repo = setup.default
         dataset = double('dataset')
 
         allow(repo).to receive(:schema).and_return([:users])
         allow(repo).to receive(:dataset).with(:users).and_return(dataset)
 
-        setup = ROM::Setup.new(memory: repo)
-        env = setup.finalize
+        rom = setup.finalize
 
-        users = env.relations.users
+        users = rom.relations.users
 
         expect(users.dataset).to be(dataset)
       end
@@ -43,7 +43,7 @@ describe ROM::Setup do
 
   describe '#relation' do
     it 'raises error when same relation is defined more than once' do
-      setup = ROM::Setup.new(repo: 'memory://test')
+      setup = ROM.setup(:memory)
       setup.relation(:users)
 
       expect { setup.relation(:users) }.to raise_error(

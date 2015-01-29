@@ -1,9 +1,9 @@
-require 'rom/mapper_builder/model_dsl'
+require 'rom/mapper/model_dsl'
 
 module ROM
-  class MapperBuilder
+  class Mapper
     # @api private
-    class MapperDSL
+    class AttributeDSL
       include ModelDSL
 
       attr_reader :attributes, :options, :symbolize_keys, :prefix
@@ -88,13 +88,16 @@ module ROM
 
       def attributes_from_block(name, options, &block)
         dsl = new(options, &block)
-        add_attribute(name, options.update(header: dsl.header))
+        header = dsl.header
+        add_attribute(name, options.update(header: header))
+        header.each { |attr| exclude(attr.key) }
       end
 
       def attributes_from_hash(hash, options)
         hash.each do |name, header|
           with_attr_options(name, options) do |attr_options|
             add_attribute(name, attr_options.update(header: header.zip))
+            header.each { |attr| exclude(attr) }
           end
         end
       end

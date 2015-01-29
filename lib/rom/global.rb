@@ -82,8 +82,7 @@ module ROM
     # @api public
     def setup(*args, &block)
       config = setup_config(*args)
-      repositories = setup_repostories(config)
-      boot = Setup.new(repositories)
+      boot = Setup.new(setup_repositories(config), adapters.keys.first)
 
       if block
         boot.instance_exec(&block)
@@ -122,6 +121,11 @@ module ROM
       self
     end
 
+    # @api private
+    def repositories
+      @repositories ||= {}
+    end
+
     private
 
     # @api private
@@ -136,10 +140,12 @@ module ROM
     end
 
     # @api private
-    def setup_repostories(config)
+    def setup_repositories(config)
       config.each_with_object({}) do |(name, spec), hash|
-        repository, *args = Array(spec)
-        hash[name] = Repository.setup(repository, *args)
+        identifier, *args = Array(spec)
+        repository = Repository.setup(identifier, *args)
+        repositories[repository] = identifier
+        hash[name] = repository
       end
     end
   end

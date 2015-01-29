@@ -11,14 +11,13 @@ module ROM
     include Equalizer.new(:repositories, :env)
 
     # @api private
-    attr_reader :repositories, :env
+    attr_reader :repositories, :relations, :default_adapter, :env
 
     # @api private
-    def initialize(repositories)
+    def initialize(repositories, default_adapter = nil)
       @repositories = repositories
       @relations = {}
-      @mappers = []
-      @commands = {}
+      @default_adapter = default_adapter
       @env = nil
     end
 
@@ -34,10 +33,15 @@ module ROM
     #
     # @api public
     def relation(name, options = {}, &block)
-      if @relations.key?(name)
+      if relations.key?(name)
         raise RelationAlreadyDefinedError, "#{name.inspect} is already defined"
       end
-      @relations.update(name => [options, block])
+
+      klass_opts = { adapter: default_adapter }.merge(options)
+      klass = Relation.build_class(name, klass_opts)
+      klass.class_eval(&block) if block
+
+      relations[name] = klass
     end
 
     # Mapper definition DSL
@@ -56,8 +60,7 @@ module ROM
     #
     # @api public
     def mappers(&block)
-      dsl = MapperDSL.new(&block)
-      @mappers.concat(dsl.mappers)
+      MapperDSL.new(&block)
     end
 
     # Command definition DSL
@@ -84,8 +87,7 @@ module ROM
     #
     # @api public
     def commands(name, &block)
-      dsl = CommandDSL.new(&block)
-      @commands.update(name => dsl.commands)
+      CommandDSL.new(name, &block)
     end
 
     # Finalize the setup
@@ -96,11 +98,7 @@ module ROM
     # @api public
     def finalize
       raise EnvAlreadyFinalizedError if env
-
-      finalize = Finalize.new(
-        repositories, @relations, @mappers, @commands
-      )
-
+      finalize = Finalize.new(repositories, relations)
       @env = finalize.run!
     end
 

@@ -2,12 +2,32 @@ require 'spec_helper'
 require 'rom/memory/dataset'
 
 describe ROM::Relation do
-  subject(:relation) { ROM::Relation.new(dataset) }
+  subject(:relation) { Class.new(ROM::Relation).new(dataset) }
 
   let(:dataset) { ROM::Memory::Dataset.new([jane, joe]) }
 
   let(:jane) { { id: 1, name: 'Jane' } }
   let(:joe) { { id: 2, name: 'Joe' } }
+
+  describe '.[]' do
+    before do
+      module TestAdapter
+        class Relation < ROM::Relation
+          def test_relation?
+            true
+          end
+        end
+      end
+
+      ROM.register_adapter(:test, TestAdapter)
+    end
+
+    it 'returns relation subclass from the registered adapter' do
+      relation = ROM::Relation[:test].new([])
+
+      expect(relation).to be_test_relation
+    end
+  end
 
   describe "#each" do
     it "yields all objects" do
