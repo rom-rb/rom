@@ -24,24 +24,13 @@ module ROM
 
     include Charlatan.new(:dataset)
     include Equalizer.new(:dataset)
+    include DSL
+
+    defines :repository, :base_name
+
+    repository :default
 
     attr_reader :name, :dataset, :__registry__
-
-    def self.inherited(klass)
-      klass.class_eval do
-        include DSL
-
-        defines :repository, :base_name
-
-        repository :default
-
-        def initialize(dataset, registry = {})
-          super
-          @name = self.class.base_name
-        end
-      end
-      super
-    end
 
     def self.[](type)
       Relation.repository_classes.fetch(type) do
@@ -76,6 +65,7 @@ module ROM
     def initialize(dataset, registry = {})
       super
       @dataset = dataset
+      @name = self.class.base_name
       @__registry__ = registry
     end
 
