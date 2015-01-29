@@ -9,13 +9,9 @@ describe 'Repository' do
   before do
     module ROM
       module Memory
-        module Relation
-          def self.included(klass)
-            klass.class_eval do
-              def self.freaking_awesome?
-                true
-              end
-            end
+        class Relation < ROM::Relation
+          def self.freaking_awesome?
+            true
           end
 
           def freaking_cool?

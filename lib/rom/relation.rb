@@ -35,14 +35,8 @@ module ROM
     def self.[](type)
       Relation.repository_classes.fetch(type) do
         adapter = ROM.adapters.fetch(type)
-        ext = adapter.const_get(:Relation) if adapter.const_defined?(:Relation)
-
-        klass = Class.new(self)
-        klass.send(:include, ext) if ext
-
+        klass = adapter.const_get(:Relation)
         Relation.repository_classes[type] = klass
-
-        klass
       end
     end
 

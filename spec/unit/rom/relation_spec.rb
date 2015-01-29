@@ -12,7 +12,7 @@ describe ROM::Relation do
   describe '.[]' do
     before do
       module TestAdapter
-        module Relation
+        class Relation < ROM::Relation
           def test_relation?
             true
           end
@@ -22,7 +22,7 @@ describe ROM::Relation do
       ROM.register_adapter(:test, TestAdapter)
     end
 
-    it 'returns relation subclass with adapter extensions applied' do
+    it 'returns relation subclass from the registered adapter' do
       relation = ROM::Relation[:test].new([])
 
       expect(relation).to be_test_relation
