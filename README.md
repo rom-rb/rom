@@ -41,7 +41,7 @@ Integration with other frameworks is planned.
 ``` ruby
 ROM.setup(:memory)
 
-class UserRelation < ROM::Relation
+class UserRelation < ROM::Relation[:memory]
   base_name :users
 
   def by_name(name)
