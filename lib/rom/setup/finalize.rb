@@ -7,19 +7,23 @@ module ROM
   class Setup
     # @private
     class Finalize
-      attr_reader :repositories, :datasets, :relations
+      attr_reader :repositories, :repo_adapter, :datasets, :relations
 
       # @api private
       def initialize(repositories, relations = {})
         @repositories = repositories
         @relations = relations
-        @datasets = {}
+        @repo_adapter_map = ROM.repositories
+        initialize_datasets
+      end
+
+      # @api private
+      def adapter_for(repository)
+        @repo_adapter_map.fetch(repositories[repository])
       end
 
       # @api private
       def run!
-        load_datasets
-
         relations = load_relations
         readers = load_readers(relations)
         commands = load_commands(relations)
@@ -30,9 +34,9 @@ module ROM
       private
 
       # @api private
-      def load_datasets
-        repositories.each do |key, repository|
-          datasets[key] = repository.schema
+      def initialize_datasets
+        @datasets = repositories.each_with_object({}) do |(key, repository), h|
+          h[key] = repository.schema
         end
       end
 
@@ -43,13 +47,15 @@ module ROM
         datasets.each do |repository, schema|
           schema.each do |name|
             next if @relations.key?(name)
-            klass = Relation.build_class(name)
+            klass = Relation.build_class(name, adapter: adapter_for(repository))
             klass.repository(repository)
             klass.base_name(name)
           end
         end
 
         Relation.descendants.each do |klass|
+          next unless klass.superclass != Relation
+
           repository = repositories[klass.repository]
           dataset = repository.dataset(klass.base_name)
 

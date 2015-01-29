@@ -11,12 +11,13 @@ module ROM
     include Equalizer.new(:repositories, :env)
 
     # @api private
-    attr_reader :repositories, :relations, :env
+    attr_reader :repositories, :relations, :default_adapter, :env
 
     # @api private
-    def initialize(repositories)
+    def initialize(repositories, default_adapter = nil)
       @repositories = repositories
       @relations = {}
+      @default_adapter = default_adapter
       @env = nil
     end
 
@@ -36,7 +37,8 @@ module ROM
         raise RelationAlreadyDefinedError, "#{name.inspect} is already defined"
       end
 
-      klass = Relation.build_class(name, options)
+      klass_opts = { adapter: default_adapter }.merge(options)
+      klass = Relation.build_class(name, klass_opts)
       klass.class_eval(&block) if block
 
       relations[name] = klass

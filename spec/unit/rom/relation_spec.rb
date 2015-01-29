@@ -9,6 +9,26 @@ describe ROM::Relation do
   let(:jane) { { id: 1, name: 'Jane' } }
   let(:joe) { { id: 2, name: 'Joe' } }
 
+  describe '.[]' do
+    before do
+      module TestAdapter
+        module Relation
+          def test_relation?
+            true
+          end
+        end
+      end
+
+      ROM.register_adapter(:test, TestAdapter)
+    end
+
+    it 'returns relation subclass with adapter extensions applied' do
+      relation = ROM::Relation[:test].new([])
+
+      expect(relation).to be_test_relation
+    end
+  end
+
   describe "#each" do
     it "yields all objects" do
       result = []

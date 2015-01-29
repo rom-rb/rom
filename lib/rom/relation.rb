@@ -30,15 +30,10 @@ module ROM
     def self.inherited(klass)
       klass.class_eval do
         include DSL
-        defines :repository, :base_name
-        repository :default
 
-        def self.base_name(*args)
-          if !@base_name && repositories.key?(repository)
-            repositories[repository].extend_relation_class(self)
-          end
-          super
-        end
+        defines :repository, :base_name
+
+        repository :default
 
         def initialize(dataset, registry = {})
           super
@@ -48,15 +43,30 @@ module ROM
       super
     end
 
-    def self.repositories
-      ROM.repositories || {}
+    def self.[](type)
+      Relation.repository_classes.fetch(type) do
+        adapter = ROM.adapters.fetch(type)
+        ext = adapter.const_get(:Relation) if adapter.const_defined?(:Relation)
+
+        klass = Class.new(self)
+        klass.send(:include, ext) if ext
+
+        Relation.repository_classes[type] = klass
+
+        klass
+      end
+    end
+
+    def self.repository_classes
+      @__repository_classes__ ||= {}
     end
 
     # @api private
     def self.build_class(name, options = {})
       class_name = "ROM::Relation[#{Inflecto.camelize(name)}]"
+      adapter = options.fetch(:adapter)
 
-      ClassBuilder.new(name: class_name, parent: self).call do |klass|
+      ClassBuilder.new(name: class_name, parent: self[adapter]).call do |klass|
         klass.repository(options.fetch(:repository) { :default })
         klass.base_name(name)
       end

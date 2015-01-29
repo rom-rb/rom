@@ -52,7 +52,7 @@ describe 'Setting up ROM' do
     it 'sets up registries based on class definitions' do
       ROM.setup(:memory)
 
-      class UserRelation < ROM::Relation
+      class UserRelation < ROM::Relation[:memory]
         base_name :users
 
         def by_name(name)
@@ -60,7 +60,7 @@ describe 'Setting up ROM' do
         end
       end
 
-      class TaskRelation < ROM::Relation
+      class TaskRelation < ROM::Relation[:memory]
         base_name :tasks
       end
 
