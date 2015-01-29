@@ -41,6 +41,17 @@ Integration with other frameworks is planned.
 ``` ruby
 ROM.setup(:memory)
 
+# This is our domain-specific class
+class User
+  attr_reader :name, :age
+
+  def initialize(attributes)
+    @name, @age = attributes.values_at(:name, :age)
+  end
+end
+
+# Here we define user relation which encapsulates accessing user data that
+# we can map to domain objects
 class UserRelation < ROM::Relation[:memory]
   base_name :users
 
@@ -53,25 +64,29 @@ class UserRelation < ROM::Relation[:memory]
   end
 end
 
+# Even though mappers can be derived from model definitions here's how you
+# could define it explicitly
 class UserMapper < ROM::Mapper
   relation :users
 
-  model name: 'User'
+  model User
 
   attribute :name
   attribute :age
 end
 
+# You can define specialized commands that handle creating, updating and deleting
+# data, those classes can use external input param handlers and validators too
 class CreateUser < ROM::Command
   type :create
   relation :users
   result :one
 end
 
+# finalize the setup and retrieve object registry (aka ROM env)
 rom = ROM.finalize.env
 
 # accessing defined commands
-
 rom.command(:users).try { create(name: "Joe", age: 17) }
 rom.command(:users).try { create(name: "Jane", age: 18) }
 
