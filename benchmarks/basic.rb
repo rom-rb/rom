@@ -46,7 +46,7 @@ end
 run("to_json on ALL user objects") do
   Benchmark.ips do |x|
     x.report("AR") { ARUser.all.to_a.to_json }
-    x.report("ROM") { users.user_json.to_a.to_json }
+    x.report("ROM") { users.all.to_a.to_json }
     x.compare!
   end
 end

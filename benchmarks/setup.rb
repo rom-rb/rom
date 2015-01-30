@@ -7,6 +7,7 @@ require 'benchmark/ips'
 require 'rom-sql'
 
 require 'active_record'
+require 'byebug'
 
 def rom
   ROM_ENV
@@ -87,78 +88,92 @@ class ARTag < ActiveRecord::Base
   belongs_to :task, class_name: 'ARTask', foreign_key: :task_id
 end
 
-setup.relation(:users) do
-  one_to_many :tasks, key: :user_id
+module Relations
+  class Users < ROM::Relation[:sql]
+    base_name :users
 
-  def all
-    select(:id, :name, :email, :age).order(:users__id)
-  end
+    one_to_many :tasks, key: :user_id
 
-  def by_name(name)
-    all.where(name: name).limit(1)
-  end
+    def all
+      select(:id, :name, :email, :age).order(:users__id)
+    end
 
-  def user_json
-    all
-  end
+    def by_name(name)
+      all.where(name: name).limit(1)
+    end
 
-  def with_tasks
-    association_left_join(:tasks, select: [:id, :title])
-  end
-end
-
-setup.relation(:tasks) do
-  many_to_one :users, key: :user_id
-  one_to_many :tags, key: :task_id
-
-  def all
-    select(:id, :user_id, :title).order(:tasks__id)
-  end
-
-  def with_user
-    association_left_join(:users, select: [:id, :name, :email, :age])
-  end
-
-  def with_tags
-    association_left_join(:tags, select: [:id, :task_id, :name])
-  end
-end
-
-setup.mappers do
-  define(:users) do
-    model name: 'User'
-  end
-
-  define(:with_tasks, parent: :users) do
-    model name: 'UserWithTasks'
-
-    group :tasks do
-      model name: 'UserTask'
-      attribute :id, from: :tasks_id
-      attribute :title
+    def with_tasks
+      association_left_join(:tasks, select: [:id, :title])
     end
   end
 
-  define(:user_json, parent: :users)
+  class Tasks < ROM::Relation[:sql]
+    base_name :tasks
 
-  define(:tasks) do
-    model name: 'Task'
+    many_to_one :users, key: :user_id
+    one_to_many :tags, key: :task_id
 
-    wrap :user do
-      model name: 'TaskUser'
+    def all
+      select(:id, :user_id, :title).order(:tasks__id)
+    end
 
-      attribute :id, from: :users_id
+    def with_user
+      association_left_join(:users, select: [:id, :name, :email, :age])
+    end
+
+    def with_tags
+      association_left_join(:tags, select: [:id, :task_id, :name])
+    end
+  end
+end
+
+module Mappers
+  module Users
+    class Base < ROM::Mapper
+      relation :users
+
+      model name: 'User'
+
       attribute :name
       attribute :email
       attribute :age
     end
 
-    group :tags do
-      model name: 'Tag'
+    class WithTasks < Base
+      model name: 'UserWithTasks'
 
-      attribute :id, from: :tags_id
-      attribute :task_id
-      attribute :name, from: :tags_name
+      relation :with_tasks
+
+      group :tasks do
+        model name: 'UserTask'
+        attribute :id, from: :tasks_id
+        attribute :title
+      end
+    end
+  end
+
+  module Tasks
+    class Base < ROM::Mapper
+      relation :tasks
+
+      model name: 'Task'
+
+      wrap :user do
+        model name: 'TaskUser'
+
+        attribute :id, from: :users_id
+        attribute :name
+        attribute :email
+        attribute :age
+      end
+
+      group :tags do
+        model name: 'Tag'
+
+        attribute :id, from: :tags_id
+        attribute :task_id
+        attribute :name, from: :tags_name
+      end
     end
   end
 end
