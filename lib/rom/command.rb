@@ -23,7 +23,7 @@ module ROM
       new(relation, self.options.merge(options))
     end
 
-    def self.registry(relations, repositories = {})
+    def self.registry(relations)
       Command.descendants.each_with_object({}) do |klass, h|
         rel_name = klass.relation
 

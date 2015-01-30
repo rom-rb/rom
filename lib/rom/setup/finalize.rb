@@ -90,7 +90,7 @@ module ROM
 
       # @api private
       def load_commands(relations)
-        registry = Command.registry(relations, repositories)
+        registry = Command.registry(relations)
 
         commands = registry.each_with_object({}) do |(name, rel_commands), h|
           h[name] = CommandRegistry.new(rel_commands)
