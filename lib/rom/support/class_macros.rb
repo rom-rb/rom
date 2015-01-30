@@ -7,8 +7,6 @@ module ROM
 
       args.each do |name|
         mod.module_eval <<-RUBY, __FILE__, __LINE__ + 1
-          @@macros = [#{args.map(&:inspect).join(', ')}]
-
           def #{name}(value = Undefined)
             if value == Undefined
               @#{name}
@@ -16,21 +14,25 @@ module ROM
               @#{name} = value
             end
           end
-
-          def inherited(klass)
-            super
-            macros.each do |name|
-              klass.public_send(name, public_send(name))
-            end
-          end
-
-          def macros
-            @@macros || []
-          end
         RUBY
-
-        extend(mod)
       end
+
+      mod.module_eval <<-RUBY, __FILE__, __LINE__ + 1
+        @@macros = #{args.inspect}
+
+        def inherited(klass)
+          super
+          macros.each do |name|
+            klass.public_send(name, public_send(name))
+          end
+        end
+
+        def macros
+          @@macros
+        end
+      RUBY
+
+      extend(mod)
     end
   end
 end
