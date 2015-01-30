@@ -3,9 +3,7 @@ require 'rom/commands'
 module ROM
   module Memory
     module Commands
-      module Create
-        include ROM::Commands::Create
-
+      class Create < ROM::Commands::Create
         def execute(tuple)
           attributes = input[tuple]
           validator.call(attributes)
@@ -13,9 +11,7 @@ module ROM
         end
       end
 
-      module Update
-        include ROM::Commands::Update
-
+      class Update < ROM::Commands::Update
         def execute(params)
           attributes = input[params]
           validator.call(attributes)
@@ -23,9 +19,7 @@ module ROM
         end
       end
 
-      module Delete
-        include ROM::Commands::Delete
-
+      class Delete < ROM::Commands::Delete
         def execute
           tuples = target.to_a
           tuples.each { |tuple| relation.delete(tuple) }

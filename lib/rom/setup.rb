@@ -87,7 +87,7 @@ module ROM
     #
     # @api public
     def commands(name, &block)
-      CommandDSL.new(name, &block)
+      CommandDSL.new(name, default_adapter, &block)
     end
 
     # Finalize the setup

@@ -1,3 +1,5 @@
+require 'rom/command'
+
 module ROM
   module Commands
     # Delete command
@@ -5,7 +7,7 @@ module ROM
     # This command removes tuples from its target relation
     #
     # @abstract
-    module Delete
+    class Delete < Command
       attr_reader :target
 
       # @api private

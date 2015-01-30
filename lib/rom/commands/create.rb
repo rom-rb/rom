@@ -1,3 +1,5 @@
+require 'rom/command'
+
 module ROM
   module Commands
     # Create command
@@ -5,7 +7,7 @@ module ROM
     # This command inserts a new tuple into a relation
     #
     # @abstract
-    module Create
+    class Create < Command
       # Execute the command
       #
       # @abstract
@@ -13,7 +15,7 @@ module ROM
       # @return [Array] an array with inserted tuples
       #
       # @api private
-      def execute(_tuple)
+      def execute(*)
         raise(
           NotImplementedError,
           "#{self.class}##{__method__} must be implemented"

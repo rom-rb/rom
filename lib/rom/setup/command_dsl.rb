@@ -1,15 +1,18 @@
 module ROM
   class Setup
     class CommandDSL
-      attr_reader :relation
+      attr_reader :relation, :adapter
 
-      def initialize(relation, &block)
+      def initialize(relation, adapter = nil, &block)
         @relation = relation
+        @adapter = adapter
         instance_exec(&block)
       end
 
       def define(name, options = {}, &block)
-        Command.build_class(name, relation, options, &block)
+        Command.build_class(
+          name, relation, { adapter: adapter }.merge(options), &block
+        )
       end
     end
   end

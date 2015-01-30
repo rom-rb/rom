@@ -64,10 +64,17 @@ describe 'Setting up ROM' do
         base_name :tasks
       end
 
+      class CreateUser < ROM::Commands::Update[:memory]
+        relation :users
+        register_as :create
+      end
+
       rom = ROM.finalize.env
 
       expect(rom.relations.users).to be_kind_of(UserRelation)
       expect(rom.relations.users.tasks).to be(rom.relations.tasks)
+
+      expect(rom.commands.users[:create]).to be_kind_of(CreateUser)
 
       expect(rom.relations.tasks).to be_kind_of(TaskRelation)
       expect(rom.relations.tasks.users).to be(rom.relations.users)

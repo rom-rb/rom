@@ -7,52 +7,32 @@ module ROM
     extend DescendantsTracker
     extend ClassMacros
 
-    defines :relation, :repository, :type, :result,
+    defines :adapter, :relation, :repository, :type, :result,
       :input, :validator, :register_as
 
     repository :default
     result :many
 
+    def self.[](adapter)
+      adapter_namespace(adapter).const_get(Inflecto.demodulize(name))
+    end
+
+    def self.adapter_namespace(adapter)
+      ROM.adapters.fetch(adapter).const_get(:Commands)
+    end
+
     def self.build_class(name, relation, options = {}, &block)
       type = options.fetch(:type) { name }
       class_name = "ROM::Command[#{relation}][#{type}]"
+      adapter = options.fetch(:adapter)
+      parent = adapter_namespace(adapter).const_get(Inflecto.classify(type))
 
-      ClassBuilder.new(name: class_name, parent: self).call do |klass|
+      ClassBuilder.new(name: class_name, parent: parent).call do |klass|
         klass.type(type)
         klass.register_as(name)
         klass.relation(relation)
         klass.class_eval(&block) if block
         options.each { |k, v| klass.send(k, v) }
-      end
-    end
-
-    def self.adapter(name = nil)
-      return @adapter unless name
-
-      unless type
-        raise ArgumentError, "#{self}.type must be specified before `adapter`"
-      end
-
-      commands = ROM.adapters.fetch(name).const_get(:Commands)
-      mod = command_mod(commands)
-
-      include(mod)
-
-      @adapter = name
-
-      self
-    end
-
-    def self.command_mod(commands)
-      case type
-      when :create then commands.const_get(:Create)
-      when :update then commands.const_get(:Update)
-      when :delete then commands.const_get(:Delete)
-      else
-        raise(
-          ArgumentError,
-          "#{type.inspect} is not a supported command type for #{inspect}"
-        )
       end
     end
 
@@ -63,14 +43,11 @@ module ROM
     def self.registry(relations, repositories = {})
       Command.descendants.each_with_object({}) do |klass, h|
         rel_name = klass.relation
+
+        next unless rel_name
+
         relation = relations[rel_name]
-        repository = repositories[relation.repository]
-
         name = klass.register_as || klass.type
-
-        unless klass.adapter
-          klass.send(:include, klass.command_mod(repository.command_namespace))
-        end
 
         (h[rel_name] ||= {})[name] = klass.build(relation)
       end

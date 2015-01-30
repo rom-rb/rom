@@ -1,3 +1,5 @@
+require 'rom/command'
+
 module ROM
   module Commands
     # Update command
@@ -5,7 +7,7 @@ module ROM
     # This command updates all tuples in its relation with new attributes
     #
     # @abstract
-    module Update
+    class Update < Command
       # @see AbstractCommand#call
       def call(*args)
         assert_tuple_count

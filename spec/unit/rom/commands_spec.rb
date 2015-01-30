@@ -9,9 +9,7 @@ describe 'Commands' do
 
   describe '.build' do
     it 'returns create command when type is set to :create' do
-      klass = Class.new(ROM::Command) do
-        type :create
-        adapter :memory
+      klass = Class.new(ROM::Commands::Create[:memory]) do
         relation :users
       end
 
@@ -21,9 +19,7 @@ describe 'Commands' do
     end
 
     it 'returns update command when type is set to :update' do
-      klass = Class.new(ROM::Command) do
-        type :update
-        adapter :memory
+      klass = Class.new(ROM::Commands::Update[:memory]) do
         relation :users
       end
 
@@ -33,21 +29,13 @@ describe 'Commands' do
     end
 
     it 'returns delete command when type is set to :delete' do
-      klass = Class.new(ROM::Command) do
-        type :delete
-        adapter :memory
+      klass = Class.new(ROM::Commands::Delete[:memory]) do
         relation :users
       end
 
       command = klass.build(users)
 
       expect(command).to be_kind_of(ROM::Memory::Commands::Delete)
-    end
-
-    it 'raises error if type is not specified before adapter' do
-      expect {
-        Class.new(ROM::Command) { adapter :memory }
-      }.to raise_error(ArgumentError, /type/)
     end
   end
 
