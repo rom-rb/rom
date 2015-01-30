@@ -43,21 +43,21 @@ describe 'Commands' do
     it 'builds a hash with commands grouped by relations' do
       commands = {}
 
-      [:create, :update, :delete].each do |command_type|
-        commands[command_type] = Class.new(ROM::Command) do
-          type command_type
-          adapter :memory
+      [:Create, :Update, :Delete].each do |command_type|
+        klass = Class.new(ROM::Commands.const_get(command_type)) do
           relation :users
         end
+        klass.class_eval "def self.name; 'Test::#{command_type}'; end"
+        commands[command_type] = klass
       end
 
       registry = ROM::Command.registry(rom.relations)
 
       expect(registry).to eql(
         users: {
-          create: commands[:create].build(users),
-          update: commands[:update].build(users),
-          delete: commands[:delete].build(users)
+          create: commands[:Create].build(users),
+          update: commands[:Update].build(users),
+          delete: commands[:Delete].build(users)
         }
       )
     end

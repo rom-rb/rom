@@ -7,10 +7,8 @@ module ROM
 
     include Equalizer.new(:relation, :options)
 
-    defines :adapter, :relation, :repository, :type, :result,
-      :input, :validator, :register_as
+    defines :relation, :result, :input, :validator, :register_as
 
-    repository :default
     result :many
 
     def self.[](adapter)
@@ -32,10 +30,14 @@ module ROM
         next unless rel_name
 
         relation = relations[rel_name]
-        name = klass.register_as || klass.type
+        name = klass.register_as || klass.default_name
 
         (h[rel_name] ||= {})[name] = klass.build(relation)
       end
+    end
+
+    def self.default_name
+      Inflecto.underscore(Inflecto.demodulize(name)).to_sym
     end
 
     def self.options

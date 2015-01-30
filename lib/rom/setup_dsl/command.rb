@@ -7,11 +7,9 @@ module ROM
       parent = adapter_namespace(adapter).const_get(Inflecto.classify(type))
 
       ClassBuilder.new(name: class_name, parent: parent).call do |klass|
-        klass.type(type)
         klass.register_as(name)
         klass.relation(relation)
         klass.class_eval(&block) if block
-        options.each { |k, v| klass.send(k, v) }
       end
     end
   end
