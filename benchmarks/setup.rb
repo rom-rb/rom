@@ -83,7 +83,7 @@ class ARTask < ActiveRecord::Base
   has_many :tags, class_name: 'ARTag', foreign_key: :task_id
 
   def self.by_title(title)
-    select(:id, :user_id, :title).where(title: name).order(:id)
+    select(:id, :user_id, :title).where(title: title).order(:id)
   end
 end
 
