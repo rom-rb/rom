@@ -1,3 +1,5 @@
+require 'rom/setup_dsl/mapper'
+
 module ROM
   class Setup
     class MapperDSL

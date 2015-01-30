@@ -24,6 +24,9 @@ require 'rom/env'
 require 'rom/global'
 require 'rom/setup'
 
+# TODO: consider to make this part optional and don't require it here
+require 'rom/setup_dsl/setup'
+
 module ROM
   AdapterLoadError = Class.new(StandardError)
 

@@ -1,3 +1,5 @@
+require 'rom/setup_dsl/command'
+
 module ROM
   class Setup
     class CommandDSL
