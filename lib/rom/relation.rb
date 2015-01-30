@@ -1,5 +1,3 @@
-require 'rom/relation/dsl'
-
 module ROM
   # Base relation class
   #
@@ -21,10 +19,10 @@ module ROM
   # @api public
   class Relation
     extend DescendantsTracker
+    extend ClassMacros
 
     include Charlatan.new(:dataset)
     include Equalizer.new(:dataset)
-    include DSL
 
     defines :repository, :base_name
 
