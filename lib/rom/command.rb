@@ -1,13 +1,14 @@
-require 'rom/commands'
+require 'rom/commands/abstract'
 
 module ROM
-  class Command < Commands::AbstractCommand
+  class Command < Commands::Abstract
     include Equalizer.new(:relation, :options)
 
     extend DescendantsTracker
     extend ClassMacros
 
-    defines :type, :relation, :repository, :input, :validator, :result, :register_as
+    defines :relation, :repository, :type, :result,
+      :input, :validator, :register_as
 
     repository :default
     result :many
