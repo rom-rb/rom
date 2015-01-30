@@ -81,6 +81,10 @@ class ARTask < ActiveRecord::Base
   self.table_name = :tasks
   belongs_to :user, class_name: 'ARUser', foreign_key: :user_id
   has_many :tags, class_name: 'ARTag', foreign_key: :task_id
+
+  def self.by_title(title)
+    select(:id, :user_id, :title).where(title: name).order(:id)
+  end
 end
 
 class ARTag < ActiveRecord::Base
@@ -112,6 +116,10 @@ module Relations
 
     many_to_one :users, key: :user_id
     one_to_many :tags, key: :task_id
+
+    def by_title(title)
+      where(title: title)
+    end
 
     def all
       select(:id, :user_id, :title).order(:tasks__id)

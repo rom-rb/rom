@@ -27,6 +27,14 @@ run("Loading ALL users with their tasks") do
   end
 end
 
+run("Loading ONE task with its user and tags") do
+  Benchmark.ips do |x|
+    x.report("AR") { ARTask.all.includes(:user).includes(:tags).first }
+    x.report("ROM") { tasks.with_user.with_tags.by_title('task 1').first }
+    x.compare!
+  end
+end
+
 run("Loading ALL tasks with their users") do
   Benchmark.ips do |x|
     x.report("AR") { ARTask.all.includes(:user).to_a }
