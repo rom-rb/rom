@@ -77,8 +77,8 @@ end
 
 # You can define specialized commands that handle creating, updating and deleting
 # data, those classes can use external input param handlers and validators too
-class CreateUser < ROM::Command
-  type :create
+class CreateUser < ROM::Command::Create[:memory]
+  register_as :create
   relation :users
   result :one
 end
