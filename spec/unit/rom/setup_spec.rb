@@ -40,6 +40,21 @@ describe ROM::Setup do
         expect(rom.relations.oranges).to be_orange
         expect(rom.relations.apples).to_not eq(rom.relations.oranges)
       end
+
+      it "raises an error when registering relations with the same `register_as`" do
+        setup = ROM.setup(:memory)
+        Class.new(ROM::Relation[:memory]) {
+          base_name :guests
+          register_as :users
+        }
+        Class.new(ROM::Relation[:memory]) {
+          base_name :admins
+          register_as :users
+        }
+        expect { setup.finalize }.to raise_error(
+          ROM::RelationAlreadyDefinedError, /register_as :users/
+        )
+      end
     end
 
     context 'empty setup' do
@@ -65,6 +80,14 @@ describe ROM::Setup do
   end
 
   describe '#relation' do
+    it 'can register with same base_name if register_as differs' do
+      setup = ROM.setup(:memory)
+      setup.relation(:users) { register_as :admins }
+      expect {
+        setup.relation(:users) { register_as :guests }
+      }.to_not raise_error
+    end
+
     it 'raises error when same relation is defined more than once' do
       setup = ROM.setup(:memory)
       setup.relation(:users)
