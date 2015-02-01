@@ -1,4 +1,4 @@
-require 'rom/array_dataset'
+require 'rom/support/array_dataset'
 
 module ROM
   module Memory

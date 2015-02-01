@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-require 'rom/enumerable_dataset'
+require 'rom/support/enumerable_dataset'
 
 describe ROM::EnumerableDataset do
   let(:klass) do

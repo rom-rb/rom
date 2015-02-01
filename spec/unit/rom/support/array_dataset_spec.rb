@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-require 'rom/array_dataset'
+require 'rom/support/array_dataset'
 
 describe ROM::ArrayDataset do
   let(:klass) do

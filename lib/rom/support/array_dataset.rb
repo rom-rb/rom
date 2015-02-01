@@ -1,4 +1,4 @@
-require 'rom/enumerable_dataset'
+require 'rom/support/enumerable_dataset'
 
 module ROM
   # A helper module that adds data-proxy behavior to an array-like object
