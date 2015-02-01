@@ -38,7 +38,7 @@ module ROM
     def initialize(dataset, registry = {})
       super
       @dataset = dataset
-      @name = self.class.base_name
+      @name = self.class.base_name || default_name
       @__registry__ = registry
     end
 
@@ -84,6 +84,11 @@ module ROM
     end
 
     private
+
+    def default_name
+      return unless self.class.name
+      self.class.name.split('::').join('_').downcase
+    end
 
     def method_missing(name, *)
       __registry__.fetch(name) { super }
