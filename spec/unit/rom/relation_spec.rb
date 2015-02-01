@@ -34,26 +34,26 @@ describe ROM::Relation do
       context 'with Relation inside module' do
         before do
           module Test
-            class Relation < ROM::Relation; end
+            class SuperRelation < ROM::Relation; end
           end
         end
 
         it 'returns name based on module and class' do
-          relation = Test::Relation.new([])
+          relation = Test::SuperRelation.new([])
 
-          expect(relation.name).to eq(:test_relation)
+          expect(relation.name).to eq(:test_super_relation)
         end
       end
 
       context 'with Relation without module' do
         before do
-          class Relation < ROM::Relation; end
+          class SuperRelation < ROM::Relation; end
         end
 
         it 'returns name based only on class' do
-          relation = Relation.new([])
+          relation = SuperRelation.new([])
 
-          expect(relation.name).to eq(:relation)
+          expect(relation.name).to eq(:super_relation)
         end
       end
     end

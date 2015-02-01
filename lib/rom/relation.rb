@@ -34,11 +34,21 @@ module ROM
       ROM.adapters.fetch(type).const_get(:Relation)
     end
 
+    def self.inherited(klass)
+      super
+      klass.base_name(klass.default_name)
+    end
+
+    def self.default_name
+      return unless name
+      Inflecto.underscore(name).gsub('/', '_').to_sym
+    end
+
     # @api private
     def initialize(dataset, registry = {})
       super
       @dataset = dataset
-      @name = self.class.base_name || default_name
+      @name = self.class.base_name
       @__registry__ = registry
     end
 
@@ -84,11 +94,6 @@ module ROM
     end
 
     private
-
-    def default_name
-      return unless self.class.name
-      self.class.name.split('::').join('_').downcase.to_sym
-    end
 
     def method_missing(name, *)
       __registry__.fetch(name) { super }
