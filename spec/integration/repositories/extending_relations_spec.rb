@@ -47,25 +47,4 @@ describe 'Repository' do
       end
     end
   end
-
-  context 'registering under a different name' do
-    it_behaves_like 'extended relation' do
-      before do
-        Class.new(ROM::Relation[:memory]) {
-          base_name :guests
-          register_as :users
-        }
-        Class.new(ROM::Relation[:memory]) {
-          base_name :guests
-          register_as :admins
-        }
-      end
-
-      it 'can register multiple relation with the same base_name' do
-        expect(rom.relations.users).to be_freaking_cool
-        expect(rom.relations.admins).to be_freaking_cool
-        expect(rom.relations.users).to_not eq(rom.relations.admins)
-      end
-    end
-  end
 end

@@ -17,6 +17,29 @@ describe ROM::Setup do
 
         expect(users.dataset).to be(dataset)
       end
+
+      it 'can register multiple relations with same base_name' do
+        setup = ROM.setup(:memory)
+        Class.new(ROM::Relation[:memory]) {
+          base_name :fruits
+          register_as :apples
+          def apple?
+            true
+          end
+        }
+        Class.new(ROM::Relation[:memory]) {
+          base_name :fruits
+          register_as :oranges
+          def orange?
+            true
+          end
+        }
+        rom = setup.finalize
+
+        expect(rom.relations.apples).to be_apple
+        expect(rom.relations.oranges).to be_orange
+        expect(rom.relations.apples).to_not eq(rom.relations.oranges)
+      end
     end
 
     context 'empty setup' do
