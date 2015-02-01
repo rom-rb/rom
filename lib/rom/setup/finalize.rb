@@ -62,7 +62,7 @@ module ROM
           relation = klass.new(dataset, relations)
           repository.extend_relation_instance(relation)
 
-          relations[klass.base_name] = relation
+          relations[klass.register_as || klass.base_name] = relation
         end
 
         relations.each_value do |relation|

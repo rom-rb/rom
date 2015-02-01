@@ -47,4 +47,19 @@ describe 'Repository' do
       end
     end
   end
+
+  context 'registering under a different name' do
+    it_behaves_like 'extended relation' do
+      before do
+        Class.new(ROM::Relation[:memory]) {
+          base_name :guests
+          register_as :users
+        }
+        Class.new(ROM::Relation[:memory]) {
+          base_name :guests
+          register_as :admins
+        }
+      end
+    end
+  end
 end

@@ -24,7 +24,7 @@ module ROM
     include Charlatan.new(:dataset)
     include Equalizer.new(:dataset)
 
-    defines :repository, :base_name
+    defines :repository, :base_name, :register_as
 
     repository :default
 
