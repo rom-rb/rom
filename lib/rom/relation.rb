@@ -87,7 +87,7 @@ module ROM
 
     def default_name
       return unless self.class.name
-      self.class.name.split('::').join('_').downcase
+      self.class.name.split('::').join('_').downcase.to_sym
     end
 
     def method_missing(name, *)

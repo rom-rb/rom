@@ -47,7 +47,7 @@ describe ROM::Relation do
         it 'returns name based on module and class' do
           relation = ROM::Relation[:test].new([])
 
-          expect(relation.name).to eq('test_relation')
+          expect(relation.name).to eq(:test_relation)
         end
       end
 
@@ -65,7 +65,7 @@ describe ROM::Relation do
         it 'returns name based only on class' do
           relation = ROM::Relation[:test].new([])
 
-          expect(relation.name).to eq('relation')
+          expect(relation.name).to eq(:relation)
         end
       end
     end
