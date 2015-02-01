@@ -91,6 +91,15 @@ describe ROM::Relation do
     end
   end
 
+  describe ".register_as" do
+    it "defaults to base_name" do
+      rel = Class.new(ROM::Relation) { base_name :users }
+      expect(rel.register_as).to eq(:users)
+      rel.register_as(:guests)
+      expect(rel.register_as).to eq(:guests)
+    end
+  end
+
   describe "#to_a" do
     it "materializes relation to an array" do
       expect(relation.to_a).to eql([jane, joe])

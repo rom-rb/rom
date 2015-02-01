@@ -52,6 +52,10 @@ module ROM
       @__registry__ = registry
     end
 
+    def self.register_as(value = ROM::ClassMacros::Undefined)
+      super || base_name
+    end
+
     # Hook to finalize a relation after its instance was created
     #
     # @api private

@@ -60,6 +60,12 @@ describe 'Repository' do
           register_as :admins
         }
       end
+
+      it 'can register multiple relation with the same base_name' do
+        expect(rom.relations.users).to be_freaking_cool
+        expect(rom.relations.admins).to be_freaking_cool
+        expect(rom.relations.users).to_not eq(rom.relations.admins)
+      end
     end
   end
 end
