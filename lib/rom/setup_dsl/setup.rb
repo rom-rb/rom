@@ -20,12 +20,7 @@ module ROM
       klass_opts = { adapter: default_adapter }.merge(options)
       klass = Relation.build_class(name, klass_opts)
       klass.class_eval(&block) if block
-
-      key = klass.register_as
-      if relations.key?(key)
-        raise RelationAlreadyDefinedError, "Relation with `register_as #{key.inspect}` registered more than once"
-      end
-      relations[key] = klass
+      relations[klass.register_as] = klass
     end
 
     # Mapper definition DSL

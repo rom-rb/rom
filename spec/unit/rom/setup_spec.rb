@@ -79,25 +79,6 @@ describe ROM::Setup do
     end
   end
 
-  describe '#relation' do
-    it 'can register with same base_name if register_as differs' do
-      setup = ROM.setup(:memory)
-      setup.relation(:users) { register_as :admins }
-      expect {
-        setup.relation(:users) { register_as :guests }
-      }.to_not raise_error
-    end
-
-    it 'raises error when same relation is defined more than once' do
-      setup = ROM.setup(:memory)
-      setup.relation(:users)
-
-      expect { setup.relation(:users) }.to raise_error(
-        ROM::RelationAlreadyDefinedError, /users/
-      )
-    end
-  end
-
   describe '#method_missing' do
     it 'returns a repository if it is defined' do
       repo = double('repo')
