@@ -1,7 +1,5 @@
 module ROM
   module ClassMacros
-    Undefined = Object.new.freeze
-
     def defines(*args)
       mod = Module.new
 

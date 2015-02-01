@@ -4,6 +4,7 @@ require 'charlatan'
 require 'inflecto'
 
 require 'rom/version'
+require 'rom/support/undefined'
 require 'rom/support/registry'
 require 'rom/support/options'
 require 'rom/support/class_macros'

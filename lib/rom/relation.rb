@@ -52,7 +52,7 @@ module ROM
       @__registry__ = registry
     end
 
-    def self.register_as(value = ROM::ClassMacros::Undefined)
+    def self.register_as(value = Undefined)
       super || base_name
     end
 
