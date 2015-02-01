@@ -34,18 +34,12 @@ describe ROM::Relation do
       context 'with Relation inside module' do
         before do
           module Test
-            class Relation < ROM::Relation
-              def test_relation?
-                true
-              end
-            end
+            class Relation < ROM::Relation; end
           end
-
-          ROM.register_adapter(:test, Test)
         end
 
         it 'returns name based on module and class' do
-          relation = ROM::Relation[:test].new([])
+          relation = Test::Relation.new([])
 
           expect(relation.name).to eq(:test_relation)
         end
@@ -53,17 +47,11 @@ describe ROM::Relation do
 
       context 'with Relation without module' do
         before do
-          class Relation < ROM::Relation
-            def test_relation?
-              true
-            end
-          end
-
-          ROM.register_adapter(:test, Relation)
+          class Relation < ROM::Relation; end
         end
 
         it 'returns name based only on class' do
-          relation = ROM::Relation[:test].new([])
+          relation = Relation.new([])
 
           expect(relation.name).to eq(:relation)
         end
@@ -77,12 +65,10 @@ describe ROM::Relation do
             base_name :foo_bar
           end
         end
-
-        ROM.register_adapter(:test, TestAdapter)
       end
 
       it 'returns name based on base_name' do
-        relation = ROM::Relation[:test].new([])
+        relation = TestAdapter::Relation.new([])
 
         expect(relation.name).to eq(:foo_bar)
       end
