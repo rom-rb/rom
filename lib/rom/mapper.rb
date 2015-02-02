@@ -10,7 +10,7 @@ module ROM
     include DSL
     include Equalizer.new(:transformer, :header)
 
-    defines :relation, :symbolize_keys, :prefix, :inherit_header
+    defines :relation, :register_as, :symbolize_keys, :prefix, :inherit_header
 
     inherit_header true
 
@@ -53,7 +53,8 @@ module ROM
     # @api private
     def self.registry
       Mapper.descendants.each_with_object({}) do |klass, h|
-        (h[klass.base_relation] ||= {})[klass.relation] = klass.build
+        name = klass.register_as || klass.relation
+        (h[klass.base_relation] ||= {})[name] = klass.build
       end
     end
 

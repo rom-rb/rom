@@ -29,12 +29,21 @@ describe ROM::Mapper do
 
   describe '.registry' do
     it 'builds mapper class registry for base and virtual relations' do
-      base = Class.new(ROM::Mapper) { relation(:users) }
-      virt = Class.new(base) { relation(:active) }
+      users = Class.new(ROM::Mapper) { relation(:users) }
+      active = Class.new(users) { relation(:active) }
+      admins = Class.new(users) { relation(:admins) }
+      custom = Class.new(users) { register_as(:custom) }
 
       registry = ROM::Mapper.registry
 
-      expect(registry).to eql(users: { users: base.build, active: virt.build })
+      expect(registry).to eql(
+        users: {
+          users: users.build,
+          active: active.build,
+          admins: admins.build,
+          custom: custom.build
+        }
+      )
     end
   end
 
