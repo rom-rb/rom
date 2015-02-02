@@ -30,8 +30,14 @@ module ROM
     # @param [Hash] option hash
     #
     # @api public
-    def read(name)
-      readers[name]
+    def read(name, &block)
+      reader = readers[name]
+
+      if block
+        reader.instance_eval(&block)
+      else
+        reader
+      end
     end
 
     # Returns commands registry for the given relation

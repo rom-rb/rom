@@ -167,7 +167,39 @@ describe 'Reading relations' do
     end
 
     rom = setup.finalize
-    user = rom.read(:users).with_mapper(:prefixer).first
+    user = rom.read(:users).map(:prefixer).first
+
+    expect(user).to eql(user_name: 'Joe', user_email: "joe@doe.org")
+  end
+
+  it 'allows passing a block to retrieve relations for mapping' do
+    setup.relation(:users) do
+      def by_name(name)
+        restrict(name: name)
+      end
+    end
+
+    setup.mappers do
+      define(:users) do
+        attribute :name
+        attribute :email
+      end
+
+      define(:prefixer, parent: :users) do
+        attribute :user_name, from: :name
+        attribute :user_email, from: :email
+      end
+    end
+
+    rom = setup.finalize
+
+    expect { rom.read(:users) { not_here } }.to raise_error(
+      ROM::NoRelationError, /not_here/)
+
+    expect { rom.read(:users) { by_name('Joe') }.map(:not_here) }.to raise_error(
+      ROM::MapperMissingError, /not_here/)
+
+    user = rom.read(:users) { by_name('Joe') }.map(:prefixer).first
 
     expect(user).to eql(user_name: 'Joe', user_email: "joe@doe.org")
   end

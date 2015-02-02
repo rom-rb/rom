@@ -131,11 +131,26 @@ module ROM
       )
     end
 
-    # Return a new reader with a specific mapper
+    # Map tuples using a specific mapper if name is provided
     #
-    # @api private
-    def with_mapper(name)
-      self.class.new(path, relation, mappers, mappers.by_path(new_path(name)))
+    # Defaults to Enumerable#map behavior
+    #
+    # @example
+    #
+    #   rom.read(:users).map(:my_mapper_name)
+    #   rom.read(:users).map { |user| ... }
+    #
+    # @param [Symbol] mapper name
+    #
+    # @return [Array,Reader]
+    #
+    # @api public
+    def map(*args)
+      if args.any?
+        mappers[args[0]].process(relation)
+      else
+        super
+      end
     end
 
     private
