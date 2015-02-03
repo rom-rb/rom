@@ -74,8 +74,8 @@ module ROM
     # Process a relation using the transformer
     #
     # @api private
-    def process(relation, &block)
-      transformer[relation.to_a].each(&block)
+    def call(relation)
+      transformer[relation.to_a]
     end
   end
 end

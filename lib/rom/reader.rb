@@ -98,7 +98,7 @@ module ROM
     #
     # @api public
     def each
-      mapper.process(relation) { |tuple| yield(tuple) }
+      mapper.call(relation).each { |tuple| yield(tuple) }
     end
 
     # Returns a single tuple from the relation if there is one.
@@ -114,7 +114,7 @@ module ROM
           'The relation consists of more than one tuple'
         )
       else
-        mapper.process(relation).first
+        mapper.call(relation).first
       end
     end
 
@@ -147,7 +147,7 @@ module ROM
     # @api public
     def map(*args)
       if args.any?
-        mappers[args[0]].process(relation)
+        mappers[args[0]].call(relation)
       else
         super
       end

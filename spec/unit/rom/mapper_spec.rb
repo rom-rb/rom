@@ -69,7 +69,7 @@ describe ROM::Mapper do
     it "yields all mapped objects" do
       result = []
 
-      mapper.process(relation).each do |tuple|
+      mapper.call(relation).each do |tuple|
         result << tuple
       end
 

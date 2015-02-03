@@ -40,9 +40,9 @@ describe ROM::Reader do
         .with(user_id, &block)
         .and_return([joe])
 
-      expect(mapper).to receive(:process)
+      expect(mapper).to receive(:call)
         .with([joe])
-        .and_yield(joe)
+        .and_return([joe])
 
       result = reader.all(user_id, &block)
 
@@ -70,9 +70,9 @@ describe ROM::Reader do
 
   describe '#each' do
     it 'yields mapped tuples from relations' do
-      expect(mapper).to receive(:process)
+      expect(mapper).to receive(:call)
         .with(relation)
-        .and_yield(jane).and_yield(joe)
+        .and_return(relation)
 
       result = []
       reader.each { |user| result << user }
@@ -85,7 +85,7 @@ describe ROM::Reader do
       let(:relation) { [jane] }
 
       it 'returns a single tuple' do
-        expect(mapper).to receive(:process)
+        expect(mapper).to receive(:call)
           .with(relation)
           .and_return(relation)
 
@@ -108,7 +108,7 @@ describe ROM::Reader do
       let(:relation) { [] }
 
       it 'returns nil' do
-        expect(mapper).to receive(:process)
+        expect(mapper).to receive(:call)
           .with(relation)
           .and_return(relation)
 
@@ -124,7 +124,7 @@ describe ROM::Reader do
       let(:relation) { [] }
 
       it 'raises an error' do
-        expect(mapper).to receive(:process)
+        expect(mapper).to receive(:call)
           .with(relation)
           .and_return(relation)
 
@@ -135,9 +135,9 @@ describe ROM::Reader do
 
   describe '#to_ary' do
     it 'casts relation to an array with loaded objects' do
-      expect(mapper).to receive(:process)
+      expect(mapper).to receive(:call)
         .with(relation)
-        .and_yield(jane).and_yield(joe)
+        .and_return(relation)
 
       result = reader.to_ary
       expect(result).to eql(relation)
