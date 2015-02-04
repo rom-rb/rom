@@ -3,6 +3,9 @@ require 'concord'
 require 'charlatan'
 require 'inflecto'
 
+module ROM
+  Undefined = Object.new.freeze
+end
 require 'rom/version'
 require 'rom/support/registry'
 require 'rom/support/options'

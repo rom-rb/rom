@@ -62,7 +62,13 @@ module ROM
           relation = klass.new(dataset, relations)
           repository.extend_relation_instance(relation)
 
-          relations[klass.base_name] = relation
+          name = klass.register_as
+          if relations.key?(name)
+            raise RelationAlreadyDefinedError,
+              "Relation with `register_as #{name.inspect}` registered more " \
+              "than once"
+          end
+          relations[name] = relation
         end
 
         relations.each_value do |relation|

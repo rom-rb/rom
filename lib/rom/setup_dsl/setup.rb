@@ -17,15 +17,10 @@ module ROM
     #
     # @api public
     def relation(name, options = {}, &block)
-      if relations.key?(name)
-        raise RelationAlreadyDefinedError, "#{name.inspect} is already defined"
-      end
-
       klass_opts = { adapter: default_adapter }.merge(options)
       klass = Relation.build_class(name, klass_opts)
       klass.class_eval(&block) if block
-
-      relations[name] = klass
+      relations[klass.register_as] = klass
     end
 
     # Mapper definition DSL

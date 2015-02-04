@@ -24,7 +24,7 @@ module ROM
     include Charlatan.new(:dataset)
     include Equalizer.new(:dataset)
 
-    defines :repository, :base_name
+    defines :repository, :base_name, :register_as
 
     repository :default
 
@@ -50,6 +50,10 @@ module ROM
       @dataset = dataset
       @name = self.class.base_name
       @__registry__ = registry
+    end
+
+    def self.register_as(value = Undefined)
+      super || base_name
     end
 
     # Hook to finalize a relation after its instance was created

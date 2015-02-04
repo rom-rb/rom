@@ -17,6 +17,44 @@ describe ROM::Setup do
 
         expect(users.dataset).to be(dataset)
       end
+
+      it 'can register multiple relations with same base_name' do
+        setup = ROM.setup(:memory)
+        Class.new(ROM::Relation[:memory]) {
+          base_name :fruits
+          register_as :apples
+          def apple?
+            true
+          end
+        }
+        Class.new(ROM::Relation[:memory]) {
+          base_name :fruits
+          register_as :oranges
+          def orange?
+            true
+          end
+        }
+        rom = setup.finalize
+
+        expect(rom.relations.apples).to be_apple
+        expect(rom.relations.oranges).to be_orange
+        expect(rom.relations.apples).to_not eq(rom.relations.oranges)
+      end
+
+      it "raises an error when registering relations with the same `register_as`" do
+        setup = ROM.setup(:memory)
+        Class.new(ROM::Relation[:memory]) {
+          base_name :guests
+          register_as :users
+        }
+        Class.new(ROM::Relation[:memory]) {
+          base_name :admins
+          register_as :users
+        }
+        expect { setup.finalize }.to raise_error(
+          ROM::RelationAlreadyDefinedError, /register_as :users/
+        )
+      end
     end
 
     context 'empty setup' do
@@ -38,17 +76,6 @@ describe ROM::Setup do
       it 'builds empty commands' do
         expect(env.commands).to eql(ROM::Registry.new)
       end
-    end
-  end
-
-  describe '#relation' do
-    it 'raises error when same relation is defined more than once' do
-      setup = ROM.setup(:memory)
-      setup.relation(:users)
-
-      expect { setup.relation(:users) }.to raise_error(
-        ROM::RelationAlreadyDefinedError, /users/
-      )
     end
   end
 
