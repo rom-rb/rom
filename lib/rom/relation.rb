@@ -59,10 +59,12 @@ module ROM
 
     def self.registry(repositories)
       registry = {}
-      descendants = self.descendants
+      descendants = self.descendants.select { |klass| klass.superclass != self }
 
       descendants.each do |klass|
-        repository = repositories[klass.repository]
+        # TODO: raise a meaningful error here and add spec covering the case
+        #       where klass' repository points to non-existant repo
+        repository = repositories.fetch(klass.repository)
         dataset = repository.dataset(klass.base_name)
 
         relation = klass.new(dataset, registry)
