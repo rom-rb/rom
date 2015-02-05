@@ -32,15 +32,24 @@ module ROM
 
     def self.inherited(klass)
       super
-      klass.base_name(klass.default_name)
+
+      return if self == ROM::Relation
+
+      klass.class_eval do
+        base_name(default_name)
+
+        def self.register_as(value = Undefined)
+          if value == Undefined
+            @register_as || base_name
+          else
+            super
+          end
+        end
+      end
     end
 
     def self.[](type)
       ROM.adapters.fetch(type).const_get(:Relation)
-    end
-
-    def self.register_as(value = Undefined)
-      super || base_name
     end
 
     def self.default_name

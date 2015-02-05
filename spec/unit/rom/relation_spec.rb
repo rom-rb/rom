@@ -30,11 +30,13 @@ describe ROM::Relation do
   end
 
   describe '#name' do
+    before { ROM.setup(:memory) }
+
     context 'missing base_name' do
       context 'with Relation inside module' do
         before do
           module Test
-            class SuperRelation < ROM::Relation; end
+            class SuperRelation < ROM::Relation[:memory]; end
           end
         end
 
@@ -47,7 +49,7 @@ describe ROM::Relation do
 
       context 'with Relation without module' do
         before do
-          class SuperRelation < ROM::Relation; end
+          class SuperRelation < ROM::Relation[:memory]; end
         end
 
         it 'returns name based only on class' do
@@ -61,7 +63,7 @@ describe ROM::Relation do
     context 'manualy set base_name' do
       before do
         module TestAdapter
-          class Relation < ROM::Relation
+          class Relation < ROM::Relation[:memory]
             base_name :foo_bar
           end
         end
@@ -92,20 +94,22 @@ describe ROM::Relation do
   end
 
   describe ".register_as" do
+    before { ROM.setup(:memory) }
+
     it "defaults to base_name with a generated class" do
-      rel = Class.new(ROM::Relation) { base_name :users }
+      rel = Class.new(ROM::Relation[:memory]) { base_name :users }
       expect(rel.register_as).to eq(:users)
       rel.register_as(:guests)
       expect(rel.register_as).to eq(:guests)
     end
 
     it "defaults to base_name with a defined class that has base_name inferred" do
-      class Users < ROM::Relation; end
+      class Users < ROM::Relation[:memory]; end
       expect(Users.register_as).to eq(:users)
     end
 
     it "defaults to base_name with a defined class that has base_name set manually" do
-      class Users < ROM::Relation
+      class Users < ROM::Relation[:memory]
         base_name :guests
       end
       expect(Users.register_as).to eq(:guests)
