@@ -66,6 +66,7 @@ describe 'Commands' do
   describe '#>>' do
     let(:users) { double('users') }
     let(:tasks) { double('tasks') }
+    let(:logs) { [] }
 
     it 'composes two commands' do
       user_input = { name: 'Jane' }
@@ -86,12 +87,25 @@ describe 'Commands' do
         end
       }.build(tasks)
 
-      command = create_user >> create_task
+      create_log = Class.new(ROM::Commands::Create) {
+        result :one
+
+        def execute(task_tuple)
+          relation << task_tuple
+        end
+      }.build(logs)
+
+      command = create_user.curry(user_input)
+      command >>= create_task.curry(task_input)
+      command >>= create_log
 
       expect(users).to receive(:insert).with(user_input).and_return(user_tuple)
       expect(tasks).to receive(:insert).with(task_tuple).and_return(task_tuple)
 
-      expect(command.call(user_input, task_input)).to eql(task_tuple)
+      result = command.call
+
+      expect(result).to eql(task_tuple)
+      expect(logs).to include(task_tuple)
     end
   end
 end

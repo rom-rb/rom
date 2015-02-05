@@ -1,5 +1,23 @@
 module ROM
   module Commands
+    class CompositeCommand
+      include Equalizer.new(:left, :right)
+
+      attr_reader :left, :right
+
+      def initialize(left, right)
+        @left, @right = left, right
+      end
+
+      def call(*args)
+        right.call(left.call(*args))
+      end
+
+      def >>(other)
+        self.class.new(self, other)
+      end
+    end
+
     class Abstract
       include Options
 
@@ -8,6 +26,7 @@ module ROM
       option :target
       option :validator, reader: true
       option :input, reader: true
+      option :args, type: Array, reader: true
 
       attr_reader :relation
 
@@ -18,19 +37,25 @@ module ROM
         @result ||= :many
         @validator ||= proc {}
         @input ||= Hash
+        @args ||= []
       end
 
       # Call the command and return one or many tuples
       #
       # @api public
       def call(*args)
-        tuples = execute(*args)
+        tuples = execute(*(args + @args))
 
         if result == :one
           tuples.first
         else
           tuples
         end
+      end
+
+      # @api public
+      def curry(*args)
+        self.class.new(relation, options.merge(args: args))
       end
 
       # Compose a command with another one
@@ -48,7 +73,7 @@ module ROM
       #
       # @api public
       def >>(other)
-        proc { |*args| other.call(call(args.first), args.last) }
+        CompositeCommand.new(self, other)
       end
 
       # Target relation on which the command will operate
