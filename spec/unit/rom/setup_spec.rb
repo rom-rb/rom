@@ -13,9 +13,24 @@ describe ROM::Setup do
 
         rom = setup.finalize
 
-        users = rom.relations.users
+        expect(rom.relations.users.dataset).to be(dataset)
+      end
 
-        expect(users.dataset).to be(dataset)
+      it 'skips inferring a relation when there is a defined one already' do
+        setup = ROM.setup(:memory)
+        repo = setup.default
+        dataset = double('dataset')
+
+        allow(repo).to receive(:schema).and_return([:users])
+        allow(repo).to receive(:dataset).with(:users).and_return(dataset)
+
+        class Users < ROM::Relation[:memory]; end
+
+        expect { setup.finalize }.not_to raise_error
+
+        rom = setup.env
+
+        expect(rom.relations.users).to be_instance_of(Users)
       end
 
       it 'can register multiple relations with same base_name' do
