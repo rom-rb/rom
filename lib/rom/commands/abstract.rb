@@ -48,10 +48,12 @@ module ROM
       #
       # @example
       #
-      #   create_user_with_task = create_user >> create_task
-      #   create_user_with_task.call({ name: 'Jane' }, { title: 'Task One' })
+      #   command = users.create.curry(name: 'Jane')
+      #   command >>= tasks.create.curry(title: 'Task One')
       #
-      # @return [Proc]
+      #   command.call # creates user, passes it to tasks and creates task
+      #
+      # @return [Composite]
       #
       # @api public
       def >>(other)
