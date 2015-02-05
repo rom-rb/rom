@@ -67,8 +67,6 @@ module ROM
       #   create_user_with_task = create_user >> create_task
       #   create_user_with_task.call({ name: 'Jane' }, { title: 'Task One' })
       #
-      # TODO: this should return "composed" command object for further composing
-      #
       # @return [Proc]
       #
       # @api public
