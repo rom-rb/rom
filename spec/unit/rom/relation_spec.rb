@@ -92,11 +92,23 @@ describe ROM::Relation do
   end
 
   describe ".register_as" do
-    it "defaults to base_name" do
+    it "defaults to base_name with a generated class" do
       rel = Class.new(ROM::Relation) { base_name :users }
       expect(rel.register_as).to eq(:users)
       rel.register_as(:guests)
       expect(rel.register_as).to eq(:guests)
+    end
+
+    it "defaults to base_name with a defined class that has base_name inferred" do
+      class Users < ROM::Relation; end
+      expect(Users.register_as).to eq(:users)
+    end
+
+    it "defaults to base_name with a defined class that has base_name set manually" do
+      class Users < ROM::Relation
+        base_name :guests
+      end
+      expect(Users.register_as).to eq(:guests)
     end
   end
 

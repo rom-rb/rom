@@ -30,13 +30,17 @@ module ROM
 
     attr_reader :name, :dataset, :__registry__
 
+    def self.inherited(klass)
+      super
+      klass.base_name(klass.default_name)
+    end
+
     def self.[](type)
       ROM.adapters.fetch(type).const_get(:Relation)
     end
 
-    def self.inherited(klass)
-      super
-      klass.base_name(klass.default_name)
+    def self.register_as(value = Undefined)
+      super || base_name
     end
 
     def self.default_name
@@ -79,10 +83,6 @@ module ROM
       @dataset = dataset
       @name = self.class.base_name
       @__registry__ = registry
-    end
-
-    def self.register_as(value = Undefined)
-      super || base_name
     end
 
     # Hook to finalize a relation after its instance was created
