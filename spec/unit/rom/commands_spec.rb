@@ -62,4 +62,36 @@ describe 'Commands' do
       )
     end
   end
+
+  describe '#>>' do
+    let(:users) { double('users') }
+    let(:tasks) { double('tasks') }
+
+    it 'composes two commands' do
+      user_input = { name: 'Jane' }
+      user_tuple = { user_id: 1, name: 'Jane' }
+
+      task_input = { title: 'Task One' }
+      task_tuple = { user_id: 1, title: 'Task One' }
+
+      create_user = Class.new(ROM::Commands::Create) {
+        def execute(user_input)
+          relation.insert(user_input)
+        end
+      }.build(users)
+
+      create_task = Class.new(ROM::Commands::Create) {
+        def execute(user_tuple, task_input)
+          relation.insert(task_input.merge(user_id: user_tuple[:user_id]))
+        end
+      }.build(tasks)
+
+      command = create_user >> create_task
+
+      expect(users).to receive(:insert).with(user_input).and_return(user_tuple)
+      expect(tasks).to receive(:insert).with(task_tuple).and_return(task_tuple)
+
+      expect(command.call(user_input, task_input)).to eql(task_tuple)
+    end
+  end
 end

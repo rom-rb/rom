@@ -33,6 +33,24 @@ module ROM
         end
       end
 
+      # Compose a command with another one
+      #
+      # The other one will be called with the result from the first one
+      #
+      # @example
+      #
+      #   create_user_with_task = create_user >> create_task
+      #   create_user_with_task.call({ name: 'Jane' }, { title: 'Task One' })
+      #
+      # TODO: this should return "composed" command object for further composing
+      #
+      # @return [Proc]
+      #
+      # @api public
+      def >>(other)
+        proc { |*args| other.call(call(args.first), args.last) }
+      end
+
       # Target relation on which the command will operate
       #
       # By default this is set to the relation that's passed to the constructor.
