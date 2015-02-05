@@ -1,23 +1,7 @@
+require 'rom/commands/composite'
+
 module ROM
   module Commands
-    class CompositeCommand
-      include Equalizer.new(:left, :right)
-
-      attr_reader :left, :right
-
-      def initialize(left, right)
-        @left, @right = left, right
-      end
-
-      def call(*args)
-        right.call(left.call(*args))
-      end
-
-      def >>(other)
-        self.class.new(self, other)
-      end
-    end
-
     class Abstract
       include Options
 
@@ -71,7 +55,7 @@ module ROM
       #
       # @api public
       def >>(other)
-        CompositeCommand.new(self, other)
+        Composite.new(self, other)
       end
 
       # Target relation on which the command will operate
