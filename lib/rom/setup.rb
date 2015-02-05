@@ -8,12 +8,11 @@ module ROM
     include Equalizer.new(:repositories, :env)
 
     # @api private
-    attr_reader :repositories, :relations, :default_adapter, :env
+    attr_reader :repositories, :default_adapter, :env
 
     # @api private
     def initialize(repositories, default_adapter = nil)
       @repositories = repositories
-      @relations = {}
       @default_adapter = default_adapter
       @env = nil
     end
@@ -26,7 +25,7 @@ module ROM
     # @api public
     def finalize
       raise EnvAlreadyFinalizedError if env
-      finalize = Finalize.new(repositories, relations)
+      finalize = Finalize.new(repositories)
       @env = finalize.run!
     end
 

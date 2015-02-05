@@ -20,7 +20,7 @@ module ROM
       klass_opts = { adapter: default_adapter }.merge(options)
       klass = Relation.build_class(name, klass_opts)
       klass.class_eval(&block) if block
-      relations[klass.register_as] = klass
+      klass
     end
 
     # Mapper definition DSL

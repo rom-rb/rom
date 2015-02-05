@@ -44,6 +44,35 @@ module ROM
       Inflecto.underscore(name).gsub('/', '_').to_sym
     end
 
+    def self.registry(repositories)
+      registry = {}
+      descendants = self.descendants
+
+      descendants.each do |klass|
+        repository = repositories[klass.repository]
+        dataset = repository.dataset(klass.base_name)
+
+        relation = klass.new(dataset, registry)
+        repository.extend_relation_instance(relation)
+
+        name = klass.register_as
+
+        if registry.key?(name)
+          raise RelationAlreadyDefinedError,
+            "Relation with `register_as #{name.inspect}` registered more " \
+            "than once"
+        end
+
+        registry[name] = relation
+      end
+
+      registry.each_value do |relation|
+        relation.class.finalize(registry, relation)
+      end
+
+      registry
+    end
+
     # @api private
     def initialize(dataset, registry = {})
       super

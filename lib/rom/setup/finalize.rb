@@ -7,12 +7,11 @@ module ROM
   class Setup
     # @private
     class Finalize
-      attr_reader :repositories, :repo_adapter, :datasets, :relations
+      attr_reader :repositories, :repo_adapter, :datasets
 
       # @api private
       def initialize(repositories, relations = {})
         @repositories = repositories
-        @relations = relations
         @repo_adapter_map = ROM.repositories
         initialize_datasets
       end
@@ -24,6 +23,8 @@ module ROM
 
       # @api private
       def run!
+        infer_schema_relations
+
         relations = load_relations
         readers = load_readers(relations)
         commands = load_commands(relations)
@@ -42,39 +43,7 @@ module ROM
 
       # @api private
       def load_relations
-        relations = {}
-
-        datasets.each do |repository, schema|
-          schema.each do |name|
-            next if @relations.key?(name)
-            klass = Relation.build_class(name, adapter: adapter_for(repository))
-            klass.repository(repository)
-            klass.base_name(name)
-          end
-        end
-
-        Relation.descendants.each do |klass|
-          next unless klass.superclass != Relation
-
-          repository = repositories[klass.repository]
-          dataset = repository.dataset(klass.base_name)
-
-          relation = klass.new(dataset, relations)
-          repository.extend_relation_instance(relation)
-
-          name = klass.register_as
-          if relations.key?(name)
-            raise RelationAlreadyDefinedError,
-              "Relation with `register_as #{name.inspect}` registered more " \
-              "than once"
-          end
-          relations[name] = relation
-        end
-
-        relations.each_value do |relation|
-          relation.class.finalize(relations, relation)
-        end
-
+        relations = Relation.registry(repositories)
         RelationRegistry.new(relations)
       end
 
@@ -103,6 +72,16 @@ module ROM
         end
 
         Registry.new(commands)
+      end
+
+      def infer_schema_relations
+        datasets.each do |repository, schema|
+          schema.each do |name|
+            klass = Relation.build_class(name, adapter: adapter_for(repository))
+            klass.repository(repository)
+            klass.base_name(name)
+          end
+        end
       end
     end
   end

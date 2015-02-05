@@ -20,20 +20,25 @@ describe ROM::Setup do
 
       it 'can register multiple relations with same base_name' do
         setup = ROM.setup(:memory)
+
         Class.new(ROM::Relation[:memory]) {
           base_name :fruits
           register_as :apples
+
           def apple?
             true
           end
         }
+
         Class.new(ROM::Relation[:memory]) {
           base_name :fruits
           register_as :oranges
+
           def orange?
             true
           end
         }
+
         rom = setup.finalize
 
         expect(rom.relations.apples).to be_apple
@@ -43,14 +48,17 @@ describe ROM::Setup do
 
       it "raises an error when registering relations with the same `register_as`" do
         setup = ROM.setup(:memory)
+
         Class.new(ROM::Relation[:memory]) {
           base_name :guests
           register_as :users
         }
+
         Class.new(ROM::Relation[:memory]) {
           base_name :admins
           register_as :users
         }
+
         expect { setup.finalize }.to raise_error(
           ROM::RelationAlreadyDefinedError, /register_as :users/
         )
