@@ -5,6 +5,7 @@ module ROM
   class Env
     include Adamantium::Flat
     include Equalizer.new(:repositories, :relations, :readers, :commands)
+    include Commands
 
     attr_reader :repositories, :relations, :readers, :commands
 
@@ -14,6 +15,21 @@ module ROM
       @relations = relations
       @readers = readers
       @commands = commands
+    end
+
+    # @api public
+    def try(&block)
+      begin
+        response = block.call
+
+        if response.kind_of?(Command)
+          try { response.call }
+        else
+          Result::Success.new(response)
+        end
+      rescue CommandError => e
+        Result::Failure.new(e)
+      end
     end
 
     # Returns a reader with access to defined mappers
