@@ -1,4 +1,3 @@
-require 'rom/commands/evaluator'
 require 'rom/commands/result'
 
 module ROM
@@ -24,10 +23,18 @@ module ROM
     # @return [Commands::Result]
     #
     # @api public
-    def try(&f)
-      Result::Success.new(Evaluator.new(self).evaluate(&f))
-    rescue CommandError => e
-      Result::Failure.new(e)
+    def try(&block)
+      begin
+        response = block.call
+
+        if response.kind_of?(Command) || response.kind_of?(Composite)
+          try { response.call }
+        else
+          Result::Success.new(response)
+        end
+      rescue CommandError => e
+        Result::Failure.new(e)
+      end
     end
   end
 end

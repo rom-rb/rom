@@ -20,38 +20,44 @@ describe 'Commands / Create' do
     setup.relation(:users)
     setup.relation(:tasks)
 
-    setup.commands(:users) do
-      define(:create) do
-        validator UserValidator
-      end
+    class CreateUser < ROM::Commands::Create[:memory]
+      relation :users
+      register_as :create
+      result :one
+      validator UserValidator
     end
 
-    setup.commands(:tasks) do
-      define(:create)
+    class CreateTask < ROM::Commands::Create[:memory]
+      relation :tasks
+      register_as :create
+      result :one
+
+      def execute(user, task)
+        super(task.merge(name: user[:name]))
+      end
     end
   end
 
   it 'inserts user on successful validation' do
-    result = users.try { create(name: 'Piotr', email: 'piotr@solnic.eu') }
+    result = users.try do
+      users.create.call(name: 'Piotr', email: 'piotr@solnic.eu')
+    end
 
-    expect(result).to match_array([{ name: 'Piotr', email: 'piotr@solnic.eu' }])
+    expect(result.value).to eql(name: 'Piotr', email: 'piotr@solnic.eu')
   end
 
   it 'inserts user and associated task when things go well' do
     result = users.try {
-      create(name: 'Piotr', email: 'piotr@solnic.eu')
-    } >-> users {
-      tasks.try {
-        create(name: users.first[:name], title: 'Finish command-api')
-      }
+      command = users.create.curry(name: 'Piotr', email: 'piotr@solnic.eu')
+      command >>= tasks.create.curry(title: 'Finish command-api')
+      command
     }
 
-    expect(result)
-      .to match_array([{ name: 'Piotr', title: 'Finish command-api' }])
+    expect(result.value).to eql(name: 'Piotr', title: 'Finish command-api')
   end
 
   it 'returns validation object with errors on failed validation' do
-    result = users.try { create(name: 'Piotr') }
+    result = users.try { users.create.call(name: 'Piotr') }
 
     expect(result.error).to be_instance_of(ValidationError)
     expect(result.error.message).to eql(":name and :email are required")
@@ -69,7 +75,7 @@ describe 'Commands / Create' do
       tuple = { name: 'Piotr', email: 'piotr@solnic.eu' }
 
       result = users.try {
-        create_one(tuple)
+        users.create_one.call(tuple)
       }
 
       expect(result.value).to eql(tuple)
