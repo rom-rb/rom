@@ -13,7 +13,7 @@ Lint/AssignmentInCondition:
 # No need to handle LoadError in Rakefile
 Lint/HandleExceptions:
   Exclude:
-    - Rakefile
+    - rakelib/*.rake
     - spec/spec_helper.rb
 
 # gemspec is a special snowflake
