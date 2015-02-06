@@ -10,7 +10,7 @@ module ROM
       attr_reader :repositories, :repo_adapter, :datasets
 
       # @api private
-      def initialize(repositories, relations = {})
+      def initialize(repositories)
         @repositories = repositories
         @repo_adapter_map = ROM.repositories
         initialize_datasets
@@ -65,7 +65,7 @@ module ROM
 
       # @api private
       def load_commands(relations)
-        registry = Command.registry(relations)
+        registry = Command.registry(relations, repositories)
 
         commands = registry.each_with_object({}) do |(name, rel_commands), h|
           h[name] = CommandRegistry.new(rel_commands)

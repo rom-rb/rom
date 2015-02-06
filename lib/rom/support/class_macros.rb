@@ -7,7 +7,7 @@ module ROM
         mod.module_eval <<-RUBY, __FILE__, __LINE__ + 1
           def #{name}(value = Undefined)
             if value == Undefined
-              @#{name}
+              defined?(@#{name}) && @#{name}
             else
               @#{name} = value
             end
@@ -15,18 +15,12 @@ module ROM
         RUBY
       end
 
-      mod.module_eval <<-RUBY, __FILE__, __LINE__ + 1
-        @@macros = #{args.inspect}
+      delegates = args.map { |name| "klass.#{name}(#{name})" }.join("\n")
 
+      mod.module_eval <<-RUBY, __FILE__, __LINE__ + 1
         def inherited(klass)
           super
-          macros.each do |name|
-            klass.public_send(name, public_send(name))
-          end
-        end
-
-        def macros
-          @@macros
+          #{delegates}
         end
       RUBY
 

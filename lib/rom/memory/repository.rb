@@ -4,7 +4,7 @@ require 'rom/memory/commands'
 
 module ROM
   module Memory
-    class Relation < ROM::Relation;end
+    class Relation < ROM::Relation; end
 
     class Repository < ROM::Repository
       attr_reader :logger
