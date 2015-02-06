@@ -7,7 +7,7 @@ module ROM
         mod.module_eval <<-RUBY, __FILE__, __LINE__ + 1
           def #{name}(value = Undefined)
             if value == Undefined
-              @#{name}
+              defined?(@#{name}) && @#{name}
             else
               @#{name} = value
             end
