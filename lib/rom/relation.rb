@@ -68,7 +68,6 @@ module ROM
         dataset = repository.dataset(klass.base_name)
 
         relation = klass.new(dataset, registry)
-        repository.extend_relation_instance(relation)
 
         name = klass.register_as
 

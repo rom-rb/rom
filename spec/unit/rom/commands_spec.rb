@@ -37,6 +37,27 @@ describe 'Commands' do
 
       expect(command).to be_kind_of(ROM::Memory::Commands::Delete)
     end
+
+    it 'extends command with a db-specific behavior' do
+      klass = Class.new(ROM::Commands::Create[:memory]) do
+        relation :users
+      end
+
+      setup.repositories[:default].instance_exec do
+        def extend_command_class(klass, dataset)
+          klass.class_eval do
+            def super_command?
+              true
+            end
+          end
+          klass
+        end
+      end
+
+      command = klass.build(users)
+
+      expect(command).to be_super_command
+    end
   end
 
   describe '.registry' do
@@ -51,7 +72,7 @@ describe 'Commands' do
         commands[command_type] = klass
       end
 
-      registry = ROM::Command.registry(rom.relations)
+      registry = ROM::Command.registry(rom.relations, setup.repositories)
 
       expect(registry).to eql(
         users: {
