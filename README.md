@@ -87,8 +87,8 @@ end
 rom = ROM.finalize.env
 
 # accessing defined commands
-rom.command(:users).try { create(name: "Joe", age: 17) }
-rom.command(:users).try { create(name: "Jane", age: 18) }
+rom.command(:users).create.call(name: "Joe", age: 17)
+rom.command(:users).create.call(name: "Joe", age: 17)
 
 # reading relations using defined mappers
 puts rom.read(:users).by_name("Jane").adults.to_a.inspect
