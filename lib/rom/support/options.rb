@@ -20,17 +20,22 @@ module ROM
     end
 
     class Option
-      attr_reader :name, :type, :allow
+      attr_reader :name, :type, :allow, :default
 
       def initialize(name, options = {})
         @name = name
         @type = options.fetch(:type) { Object }
         @reader = options.fetch(:reader) { false }
         @allow = options.fetch(:allow) { [] }
+        @default = options[:default] if options.key?(:default)
       end
 
       def reader?
         @reader
+      end
+
+      def default?
+        !@default.nil?
       end
 
       def type_matches?(value)
@@ -54,6 +59,16 @@ module ROM
       def validate_options(options)
         options.each do |name, value|
           validate_option_value(name, value)
+        end
+      end
+
+      def set_defaults(object, options)
+        each do |name, option|
+          if option.default? && !options.key?(name)
+            default = option.default
+            value = default.is_a?(Proc) ? default.call(object) : default
+            options.update(name => value)
+          end
         end
       end
 
@@ -94,9 +109,11 @@ module ROM
     end
 
     def initialize(*args)
-      @options = args.last
-      self.class.option_definitions.validate_options(@options)
-      self.class.option_definitions.each do |name, option|
+      @options = args.last.dup
+      definitions = self.class.option_definitions
+      definitions.set_defaults(self, @options)
+      definitions.validate_options(@options)
+      definitions.each do |name, option|
         instance_variable_set("@#{name}", @options[name]) if option.reader?
       end
     end

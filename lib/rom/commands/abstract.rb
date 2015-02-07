@@ -10,15 +10,14 @@ module ROM
       option :target
       option :validator, reader: true
       option :input, reader: true
-      option :args, type: Array, reader: true
+      option :curry_args, type: Array, reader: true, default: []
 
       attr_reader :relation
 
       # @api private
       def initialize(relation, options = {})
-        super
         @relation = relation
-        @options[:args] ||= []
+        super
       end
 
       # Execute the command
@@ -39,7 +38,7 @@ module ROM
       #
       # @api public
       def call(*args)
-        tuples = execute(*(args + options[:args]))
+        tuples = execute(*(args + curry_args))
 
         if result == :one
           tuples.first
@@ -50,7 +49,7 @@ module ROM
 
       # @api public
       def curry(*args)
-        self.class.new(relation, options.merge(args: args))
+        self.class.new(relation, options.merge(curry_args: args))
       end
 
       # Compose a command with another one

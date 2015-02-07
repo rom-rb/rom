@@ -3,7 +3,7 @@ module ROM
     include Options
 
     option :name, type: String, reader: true
-    option :parent, type: Class, reader: true
+    option :parent, type: Class, reader: true, parent: Object
 
     def call
       klass = Class.new(parent)
