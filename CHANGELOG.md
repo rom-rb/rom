@@ -3,6 +3,7 @@
 ### Added
 
 * It is now possible to define custom relation, mapper and command classes during setup (solnic)
+* Commands are now composable via `>>` operator (solnic)
 * `Reader#one` and `Reader#one!` which can be used to retrieve one object from a relation (aflatter)
 * Relation `base_name` is inferred from the class name by default (gotar)
 * Relation can be registered under a custom name via `register_as` option (mcls)
@@ -11,11 +12,10 @@
 * Adapter interface can now be tested via a lint test (elskwid + solnic + splattael)
 * `to_ary` alias in `Reader` which addresses issue #80 (solnic)
 * `tuple_count` interface in AbstractCommand which can be overridden by adapter (solnic)
-* Optionally pass command to block in CommandRegistry#try addressed by issue #83 (splattael)
-* Referencing an unknown method in CommandRegistry#try block raises ElementNotFoundError (rather than NoMethodError) #89 (splattael)
 
 ### Changed
 
+* [BREAKING] Command API was simplified - commands should be accessed directly in `.try` block (solnic)
 * Schema DSL was **removed** - attributes can be specified only in mapper DSL
   and default repository can be changed when defining a relation (solnic)
 * `.setup` interface requires either an adapter identifier or can accept a repository
