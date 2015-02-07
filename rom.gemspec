@@ -14,6 +14,7 @@ Gem::Specification.new do |gem|
   gem.files         = `git ls-files`.split("\n").reject { |name| name.include?('benchmarks') }
   gem.test_files    = `git ls-files -- {spec}/*`.split("\n")
   gem.license       = 'MIT'
+  gem.required_ruby_version = '~> 2.0'
 
   gem.add_runtime_dependency 'addressable', '~> 2.3'
   gem.add_runtime_dependency 'transproc',   '~> 0.1'
