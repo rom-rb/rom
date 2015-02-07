@@ -35,7 +35,7 @@ describe 'Commands / Update' do
 
   it 'update tuples on successful validation' do
     result = users.try {
-      users.update.new(:all, name: 'Jane').set(email: 'jane.doe@test.com')
+      users.update.all(name: 'Jane').set(email: 'jane.doe@test.com')
     }
 
     expect(result)
@@ -43,7 +43,7 @@ describe 'Commands / Update' do
   end
 
   it 'returns validation object with errors on failed validation' do
-    result = users.try { users.update.new(:all, name: 'Jane').set(email: nil) }
+    result = users.try { users.update.all(name: 'Jane').set(email: nil) }
 
     expect(result.error).to be_instance_of(ValidationError)
     expect(result.error.message).to eql(':email is required')
@@ -62,7 +62,7 @@ describe 'Commands / Update' do
       end
 
       result = users.try {
-        users.update_one.new(:by_name, 'Jane').set(email: 'jane.doe@test.com')
+        users.update_one.by_name('Jane').set(email: 'jane.doe@test.com')
       }
 
       expect(result.value).to eql(name: 'Jane', email: 'jane.doe@test.com')

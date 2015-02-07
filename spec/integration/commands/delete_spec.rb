@@ -31,7 +31,7 @@ describe 'Commands / Delete' do
       define(:delete)
     end
 
-    result = users.try { users.delete.new(:by_name, 'Joe').call }
+    result = users.try { users.delete.by_name('Joe').call }
 
     expect(result).to match_array([{ name: 'Joe', email: 'joe@doe.org' }])
   end
@@ -41,7 +41,7 @@ describe 'Commands / Delete' do
       define(:delete)
     end
 
-    result = users.try { users.delete.new(:by_name, 'Not here').call }
+    result = users.try { users.delete.by_name('Not here').call }
 
     expect(result).to match_array([])
   end
@@ -53,7 +53,7 @@ describe 'Commands / Delete' do
       end
     end
 
-    result = users.try { users.delete_one.new(:by_name, 'Jane').call }
+    result = users.try { users.delete_one.by_name('Jane').call }
 
     expect(result.value).to eql(name: 'Jane', email: 'jane@doe.org')
   end

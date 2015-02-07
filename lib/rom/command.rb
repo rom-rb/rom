@@ -9,6 +9,8 @@ module ROM
 
     defines :relation, :result, :input, :validator, :register_as
 
+    input Hash
+    validator proc {}
     result :many
 
     def self.[](adapter)

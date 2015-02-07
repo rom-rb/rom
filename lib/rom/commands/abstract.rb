@@ -18,17 +18,14 @@ module ROM
       def initialize(relation, options = {})
         super
         @relation = relation
-        @result ||= :many
-        @validator ||= proc {}
-        @input ||= Hash
-        @args ||= []
+        @options[:args] ||= []
       end
 
       # Call the command and return one or many tuples
       #
       # @api public
       def call(*args)
-        tuples = execute(*(args + @args))
+        tuples = execute(*(args + options[:args]))
 
         if result == :one
           tuples.first
@@ -95,6 +92,17 @@ module ROM
       # @api private
       def tuple_count
         target.count
+      end
+
+      private
+
+      # @api private
+      def method_missing(name, *args, &block)
+        if relation.respond_to?(name)
+          self.class.build(relation.__send__(name, *args, &block), options)
+        else
+          super
+        end
       end
     end
   end

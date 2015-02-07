@@ -5,7 +5,13 @@ describe 'Commands' do
 
   let(:users) { rom.relations.users }
 
-  before { setup.relation(:users) }
+  before do
+    setup.relation(:users) do
+      def by_id(id)
+        restrict(id: id)
+      end
+    end
+  end
 
   describe '.build' do
     it 'returns create command when type is set to :create' do
@@ -127,6 +133,16 @@ describe 'Commands' do
 
       expect(result).to eql(task_tuple)
       expect(logs).to include(task_tuple)
+    end
+  end
+
+  describe 'access to exposed relations' do
+    it 'exposes relation' do
+      command = ROM::Commands::Update[:memory].build(users)
+
+      users.insert(id: 1, name: 'Jane')
+
+      expect(command.by_id(1).relation).to eql(users.by_id(1))
     end
   end
 end
