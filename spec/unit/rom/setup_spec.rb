@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'rom/memory'
 
 describe ROM::Setup do
   describe '#finalize' do
@@ -17,42 +18,49 @@ describe ROM::Setup do
       end
 
       it 'skips inferring a relation when there is a defined one already' do
+        users = Class.new(ROM::Relation[:memory]) do
+          base_name :users
+          register_as :users
+        end
+
         setup = ROM.setup(:memory)
+        setup.register_relation(users)
+
         repo = setup.default
         dataset = double('dataset')
 
         allow(repo).to receive(:schema).and_return([:users])
         allow(repo).to receive(:dataset).with(:users).and_return(dataset)
 
-        class Users < ROM::Relation[:memory]; end
-
         expect { setup.finalize }.not_to raise_error
 
         rom = setup.env
 
-        expect(rom.relations.users).to be_instance_of(Users)
+        expect(rom.relations.users).to be_instance_of(users)
       end
 
       it 'can register multiple relations with same base_name' do
-        setup = ROM.setup(:memory)
-
-        Class.new(ROM::Relation[:memory]) {
+        apples = Class.new(ROM::Relation[:memory]) do
           base_name :fruits
           register_as :apples
 
           def apple?
             true
           end
-        }
+        end
 
-        Class.new(ROM::Relation[:memory]) {
+        oranges = Class.new(ROM::Relation[:memory]) do
           base_name :fruits
           register_as :oranges
 
           def orange?
             true
           end
-        }
+        end
+
+        setup = ROM.setup(:memory)
+        setup.register_relation(apples)
+        setup.register_relation(oranges)
 
         rom = setup.finalize
 
@@ -60,21 +68,24 @@ describe ROM::Setup do
         expect(rom.relations.oranges).to be_orange
         expect(rom.relations.apples).to_not eq(rom.relations.oranges)
       end
+    end
 
+    describe '#register_relation' do
       it "raises an error when registering relations with the same `register_as`" do
         setup = ROM.setup(:memory)
 
-        Class.new(ROM::Relation[:memory]) {
+        guests = Class.new(ROM::Relation[:memory]) {
           base_name :guests
           register_as :users
         }
 
-        Class.new(ROM::Relation[:memory]) {
+        admins = Class.new(ROM::Relation[:memory]) {
           base_name :admins
           register_as :users
         }
 
-        expect { setup.finalize }.to raise_error(
+        expect { setup.register_relation(guests) }.to_not raise_error
+        expect { setup.register_relation(admins) }.to raise_error(
           ROM::RelationAlreadyDefinedError, /register_as :users/
         )
       end

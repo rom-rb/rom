@@ -14,7 +14,23 @@ module ROM
     def initialize(repositories, default_adapter = nil)
       @repositories = repositories
       @default_adapter = default_adapter
+      @relation_classes = {}
       @env = nil
+    end
+
+    # @api public
+    def register_relation(klass)
+      name = klass.register_as
+
+      if @relation_classes.key?(name)
+        raise(
+          RelationAlreadyDefinedError,
+          "Relation with `register_as #{name.inspect}` registered more " \
+          "than once"
+        )
+      end
+
+      @relation_classes[name] = klass
     end
 
     # Finalize the setup
@@ -25,8 +41,11 @@ module ROM
     # @api public
     def finalize
       raise EnvAlreadyFinalizedError if env
-      finalize = Finalize.new(repositories)
-      @env = finalize.run!
+
+      @env = Finalize.new(
+        repositories: repositories,
+        relation_classes: @relation_classes
+      ).run!
     end
 
     # Returns repository identified by name

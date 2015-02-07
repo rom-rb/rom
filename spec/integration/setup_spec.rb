@@ -49,24 +49,28 @@ describe 'Setting up ROM' do
   end
 
   describe 'defining classes' do
+    class UserRelation < ROM::Relation[:memory]
+      base_name :users
+
+      def by_name(name)
+        restrict(name: name)
+      end
+    end
+
+    class TaskRelation < ROM::Relation[:memory]
+      base_name :tasks
+    end
+
     it 'sets up registries based on class definitions' do
-      ROM.setup(:memory)
-
-      class UserRelation < ROM::Relation[:memory]
-        base_name :users
-
-        def by_name(name)
-          restrict(name: name)
-        end
-      end
-
-      class TaskRelation < ROM::Relation[:memory]
-        base_name :tasks
-      end
+      setup = ROM.setup(:memory)
 
       class CreateUser < ROM::Commands::Update[:memory]
         relation :users
         register_as :create
+      end
+
+      [UserRelation, TaskRelation].each do |klass|
+        setup.register_relation(klass)
       end
 
       rom = ROM.finalize.env

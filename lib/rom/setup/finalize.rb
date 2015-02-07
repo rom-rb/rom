@@ -10,8 +10,9 @@ module ROM
       attr_reader :repositories, :repo_adapter, :datasets
 
       # @api private
-      def initialize(repositories)
-        @repositories = repositories
+      def initialize(options = {})
+        @repositories = options.fetch(:repositories)
+        @relation_classes = options.fetch(:relation_classes)
         @repo_adapter_map = ROM.repositories
         initialize_datasets
       end
@@ -43,8 +44,23 @@ module ROM
 
       # @api private
       def load_relations
-        relations = Relation.registry(repositories)
-        RelationRegistry.new(relations)
+        registry = {}
+
+        @relation_classes.each do |name, klass|
+          # TODO: raise a meaningful error here and add spec covering the case
+          #       where klass' repository points to non-existant repo
+          repository = repositories.fetch(klass.repository)
+          dataset = repository.dataset(klass.base_name)
+
+          relation = klass.new(dataset, registry)
+          registry[name] = relation
+        end
+
+        registry.each_value do |relation|
+          relation.class.finalize(registry, relation)
+        end
+
+        RelationRegistry.new(registry)
       end
 
       # @api private
@@ -77,10 +93,11 @@ module ROM
       def infer_schema_relations
         datasets.each do |repository, schema|
           schema.each do |name|
-            next if Relation.descendants.any? { |klass| klass.base_name == name }
+            next if @relation_classes.values.any? { |klass| klass.base_name == name }
             klass = Relation.build_class(name, adapter: adapter_for(repository))
             klass.repository(repository)
             klass.base_name(name)
+            @relation_classes[name] = klass
           end
         end
       end

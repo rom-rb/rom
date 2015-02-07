@@ -20,6 +20,7 @@ module ROM
       klass_opts = { adapter: default_adapter }.merge(options)
       klass = Relation.build_class(name, klass_opts)
       klass.class_eval(&block) if block
+      register_relation(klass)
       klass
     end
 
