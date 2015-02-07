@@ -48,8 +48,8 @@ describe 'Commands / Create' do
 
   it 'inserts user and associated task when things go well' do
     result = users.try {
-      command = users.create.curry(name: 'Piotr', email: 'piotr@solnic.eu')
-      command >>= tasks.create.curry(title: 'Finish command-api')
+      command = users.create.with(name: 'Piotr', email: 'piotr@solnic.eu')
+      command >>= tasks.create.with(title: 'Finish command-api')
       command
     }
 

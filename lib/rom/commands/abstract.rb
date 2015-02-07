@@ -47,10 +47,17 @@ module ROM
         end
       end
 
+      # Curry this command with provided args
+      #
+      # Curried command can be called without args
+      #
+      # @return [Command]
+      #
       # @api public
       def curry(*args)
         self.class.new(relation, options.merge(curry_args: args))
       end
+      alias_method :with, :curry
 
       # Compose a command with another one
       #
