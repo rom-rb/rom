@@ -64,11 +64,10 @@ module ROM
 
       def set_defaults(object, options)
         each do |name, option|
-          if option.default? && !options.key?(name)
-            default = option.default
-            value = default.is_a?(Proc) ? default.call(object) : default
-            options.update(name => value)
-          end
+          next unless option.default? && !options.key?(name)
+          default = option.default
+          value = default.is_a?(Proc) ? default.call(object) : default
+          options.update(name => value)
         end
       end
 

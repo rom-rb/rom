@@ -50,7 +50,7 @@ describe 'Commands' do
       end
 
       setup.repositories[:default].instance_exec do
-        def extend_command_class(klass, dataset)
+        def extend_command_class(klass, _)
           klass.class_eval do
             def super_command?
               true

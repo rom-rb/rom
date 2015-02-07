@@ -61,7 +61,7 @@ module ROM
     # @return [Class]
     #
     # @api public
-    def extend_command_class(klass, dataset)
+    def extend_command_class(klass, _dataset)
       klass
     end
 
