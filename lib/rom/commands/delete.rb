@@ -21,28 +21,6 @@ module ROM
         assert_tuple_count
         super
       end
-
-      # Execute the command
-      #
-      # @abstract
-      #
-      # @return [Array] an array with removed tuples
-      #
-      # @api private
-      def execute
-        raise(
-          NotImplementedError,
-          "#{self.class}##{__method__} must be implemented"
-        )
-      end
-
-      # Create a new delete command scoped to specific relation and execute it
-      #
-      # @api private
-      def new(*args, &block)
-        new_options = options.merge(target: relation.public_send(*args, &block))
-        self.class.new(relation, new_options)
-      end
     end
   end
 end

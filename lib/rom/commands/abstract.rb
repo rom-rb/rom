@@ -21,6 +21,20 @@ module ROM
         @options[:args] ||= []
       end
 
+      # Execute the command
+      #
+      # @abstract
+      #
+      # @return [Array] an array with inserted tuples
+      #
+      # @api private
+      def execute(*)
+        raise(
+          NotImplementedError,
+          "#{self.class}##{__method__} must be implemented"
+        )
+      end
+
       # Call the command and return one or many tuples
       #
       # @api public
@@ -55,6 +69,13 @@ module ROM
       # @api public
       def >>(other)
         Composite.new(self, other)
+      end
+
+      # Return new update command with new relation
+      #
+      # @api private
+      def new(*args, &block)
+        self.class.build(relation.public_send(*args, &block), options)
       end
 
       # Target relation on which the command will operate
@@ -99,7 +120,7 @@ module ROM
       # @api private
       def method_missing(name, *args, &block)
         if relation.respond_to?(name)
-          self.class.build(relation.__send__(name, *args, &block), options)
+          new(name, *args, &block)
         else
           super
         end
