@@ -66,7 +66,7 @@ module ROM
       methods.each do |method|
         class_eval <<-RUBY, __FILE__, __LINE__ + 1
           def #{method}(*args, &block)
-            self.class.new(dataset.__send__(:#{method}, *args, &block), __registry__)
+            __new__(dataset.__send__(:#{method}, *args, &block))
           end
         RUBY
       end
@@ -148,6 +148,13 @@ module ROM
     # @api private
     def repository
       self.class.repository
+    end
+
+    private
+
+    # @api private
+    def __new__(dataset)
+      self.class.new(dataset, __registry__)
     end
   end
 end
