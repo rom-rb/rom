@@ -30,7 +30,7 @@ module ROM
       class Success < Result
         # @api private
         def initialize(value)
-          @value = value
+          @value = value.is_a?(self.class) ? value.value : value
         end
 
         # Call next command on continuation
