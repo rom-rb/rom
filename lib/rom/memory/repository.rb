@@ -4,7 +4,22 @@ require 'rom/memory/commands'
 
 module ROM
   module Memory
-    class Relation < ROM::Relation; end
+    class Relation < ROM::Relation
+      include Enumerable
+
+      forward :join, :project, :restrict, :order
+
+      def insert(*args)
+        dataset.insert(*args)
+        self
+      end
+      alias_method :<<, :insert
+
+      def delete(*args)
+        dataset.delete(*args)
+        self
+      end
+    end
 
     class Repository < ROM::Repository
       attr_reader :logger

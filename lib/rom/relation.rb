@@ -21,7 +21,6 @@ module ROM
     extend DescendantsTracker
     extend ClassMacros
 
-    include Charlatan.new(:dataset)
     include Equalizer.new(:dataset)
 
     defines :repository, :base_name, :register_as
@@ -45,11 +44,32 @@ module ROM
             super
           end
         end
+
+        # @api private
+        def respond_to_missing?(name, _include_private = false)
+          __registry__.key?(name) || super
+        end
+
+        private
+
+        def method_missing(name, *)
+          __registry__.fetch(name) { super }
+        end
       end
     end
 
     def self.[](type)
       ROM.adapters.fetch(type).const_get(:Relation)
+    end
+
+    def self.forward(*methods)
+      methods.each do |method|
+        class_eval <<-RUBY, __FILE__, __LINE__ + 1
+          def #{method}(*args, &block)
+            self.class.new(dataset.__send__(:#{method}, *args, &block), __registry__)
+          end
+        RUBY
+      end
     end
 
     def self.default_name
@@ -89,7 +109,6 @@ module ROM
 
     # @api private
     def initialize(dataset, registry = {})
-      super
       @dataset = dataset
       @name = self.class.base_name
       @__registry__ = registry
@@ -129,17 +148,6 @@ module ROM
     # @api private
     def repository
       self.class.repository
-    end
-
-    # @api private
-    def respond_to_missing?(name, _include_private = false)
-      __registry__.key?(name) || super
-    end
-
-    private
-
-    def method_missing(name, *)
-      __registry__.fetch(name) { super }
     end
   end
 end
