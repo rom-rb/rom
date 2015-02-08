@@ -13,6 +13,24 @@ describe 'Commands' do
     end
   end
 
+  describe '.build_class' do
+    it 'creates a command class constant' do
+      klass = ROM::Command.build_class(:create, :users, adapter: :memory) do
+        def super?
+          true
+        end
+      end
+
+      expect(klass.name).to eql('ROM::Memory::Commands::Create[Users]')
+      expect(klass.register_as).to eql(:create)
+
+      command = klass.build(rom.relations.users)
+
+      expect(command).to be_a(ROM::Memory::Commands::Create)
+      expect(command).to be_super
+    end
+  end
+
   describe '.build' do
     it 'returns create command when type is set to :create' do
       klass = Class.new(ROM::Commands::Create[:memory]) do
@@ -44,25 +62,31 @@ describe 'Commands' do
       expect(command).to be_kind_of(ROM::Memory::Commands::Delete)
     end
 
-    it 'extends command with a db-specific behavior' do
-      klass = Class.new(ROM::Commands::Create[:memory]) do
-        relation :users
-      end
-
-      setup.repositories[:default].instance_exec do
-        def extend_command_class(klass, _)
-          klass.class_eval do
-            def super_command?
-              true
+    describe 'extending command with a db-specific behavior' do
+      before do
+        setup.repositories[:default].instance_exec do
+          def extend_command_class(klass, _)
+            klass.class_eval do
+              def super_command?
+                true
+              end
             end
+            klass
           end
-          klass
         end
       end
 
-      command = klass.build(users)
+      it 'applies to defined classes' do
+        klass = Class.new(ROM::Commands::Create[:memory]) { relation :users }
+        command = klass.build(users)
+        expect(command).to be_super_command
+      end
 
-      expect(command).to be_super_command
+      it 'applies to generated classes' do
+        klass = ROM::Command.build_class(:create, :users, adapter: :memory)
+        command = klass.build(users)
+        expect(command).to be_super_command
+      end
     end
   end
 
