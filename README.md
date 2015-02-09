@@ -52,9 +52,7 @@ end
 
 # Here we define user relation which encapsulates accessing user data that
 # we can map to domain objects
-class UserRelation < ROM::Relation[:memory]
-  base_name :users
-
+class Users < ROM::Relation[:memory]
   def by_name(name)
     restrict(name: name)
   end
