@@ -1,3 +1,6 @@
+require 'rom/setup'
+require 'rom/repository'
+
 module ROM
   # Globally accessible public interface exposed via ROM module
   #
