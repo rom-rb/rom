@@ -27,7 +27,7 @@ module ROM
         @type = options.fetch(:type) { Object }
         @reader = options.fetch(:reader) { false }
         @allow = options.fetch(:allow) { [] }
-        @default = options[:default] if options.key?(:default)
+        @default = options.fetch(:default) { Undefined }
       end
 
       def reader?
@@ -35,7 +35,7 @@ module ROM
       end
 
       def default?
-        !@default.nil?
+        @default != Undefined
       end
 
       def default_value(object)

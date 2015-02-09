@@ -67,5 +67,13 @@ describe ROM::Options do
 
       expect(object.options).to eql(args: [object])
     end
+
+    it 'allow nil as default value' do
+      klass.option :args, default: nil
+
+      object = klass.new({})
+
+      expect(object.options).to eql(args: nil)
+    end
   end
 end
