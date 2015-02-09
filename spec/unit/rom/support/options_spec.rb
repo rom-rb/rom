@@ -1,8 +1,6 @@
 require 'spec_helper'
 
 describe ROM::Options do
-  subject(:object) { klass.new(options) }
-
   let(:klass) do
     Class.new do
       include ROM::Options
@@ -50,6 +48,24 @@ describe ROM::Options do
     it 'copies klass options to descendant' do
       other = Class.new(klass)
       expect(other.option_definitions).to eql(klass.option_definitions)
+    end
+
+    it 'sets option defaults statically' do
+      default_value = []
+      klass.option :args, default: default_value
+
+      object = klass.new({})
+
+      expect(object.options).to eql(args: default_value)
+      expect(object.options[:args]).to equal(default_value)
+    end
+
+    it 'sets option defaults dynamically via proc' do
+      klass.option :args, default: proc { |*a| a }
+
+      object = klass.new({})
+
+      expect(object.options).to eql(args: [object])
     end
   end
 end
