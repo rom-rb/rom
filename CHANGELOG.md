@@ -8,6 +8,7 @@
 * Relation `base_name` is inferred from the class name by default (gotar)
 * Relation can be registered under a custom name via `register_as` option (mcls)
 * Env#read supports mapping with a specific mapper via `map` (solnic)
+* Env#read yields a reader for a specific relation if block is provided (solnic)
 * Adapters can use helper modules for datasets: `ArrayDataset` and `EnumerableDataset` (solnic)
 * Adapter interface can now be tested via a lint test (elskwid + solnic + splattael)
 * `to_ary` alias in `Reader` which addresses issue #80 (solnic)
