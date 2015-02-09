@@ -51,7 +51,7 @@ describe ROM::Options do
     end
 
     it 'does not interfere with its parent`s option definitions' do
-      other = Class.new(klass) do
+      Class.new(klass) do
         option :child, default: :nope
       end
       object = klass.new({})
