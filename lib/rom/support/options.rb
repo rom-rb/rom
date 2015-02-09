@@ -73,11 +73,17 @@ module ROM
         end
       end
 
-      def each(&block)
-        @options.each(&block)
+      def set_option_values(object, options)
+        each do |name, option|
+          object.instance_variable_set("@#{name}", options[name]) if option.reader?
+        end
       end
 
       private
+
+      def each(&block)
+        @options.each(&block)
+      end
 
       def validate_option_value(name, value)
         option = @options.fetch(name) do
@@ -114,9 +120,7 @@ module ROM
       definitions = self.class.option_definitions
       definitions.set_defaults(self, @options)
       definitions.validate_options(@options)
-      definitions.each do |name, option|
-        instance_variable_set("@#{name}", @options[name]) if option.reader?
-      end
+      definitions.set_option_values(self, @options)
     end
   end
 end
