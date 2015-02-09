@@ -12,6 +12,10 @@ describe ROM::Options do
   end
 
   describe '.new' do
+    it 'works without passing a hash' do
+      expect { klass.new }.not_to raise_error
+    end
+
     it 'sets options hash' do
       object = klass.new(name: 'foo')
       expect(object.options).to eql(name: 'foo')
@@ -54,7 +58,7 @@ describe ROM::Options do
       Class.new(klass) do
         option :child, default: :nope
       end
-      object = klass.new({})
+      object = klass.new
       expect(object.options).to eql({})
     end
 
@@ -62,7 +66,7 @@ describe ROM::Options do
       default_value = []
       klass.option :args, default: default_value
 
-      object = klass.new({})
+      object = klass.new
 
       expect(object.options).to eql(args: default_value)
       expect(object.options[:args]).to equal(default_value)
@@ -71,7 +75,7 @@ describe ROM::Options do
     it 'sets option defaults dynamically via proc' do
       klass.option :args, default: proc { |*a| a }
 
-      object = klass.new({})
+      object = klass.new
 
       expect(object.options).to eql(args: [object])
     end
@@ -79,7 +83,7 @@ describe ROM::Options do
     it 'allow nil as default value' do
       klass.option :args, default: nil
 
-      object = klass.new({})
+      object = klass.new
 
       expect(object.options).to eql(args: nil)
     end
