@@ -43,7 +43,8 @@ describe 'Repository' do
   context 'using class definition' do
     it_behaves_like 'extended relation' do
       before do
-        Class.new(ROM::Relation[:memory]) { base_name :users }
+        klass = Class.new(ROM::Relation[:memory]) { base_name :users }
+        setup.register_relation(klass)
       end
     end
   end
