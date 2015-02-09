@@ -13,6 +13,7 @@ module ROM
       @relations = relations
       @readers = readers
       @commands = commands
+      freeze
     end
 
     # Returns a reader with access to defined mappers
