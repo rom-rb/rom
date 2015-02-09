@@ -33,11 +33,11 @@ describe ROM::Setup do
         expect(rom.relations.users).to be_instance_of(Users)
       end
 
-      it 'can register multiple relations with same base_name' do
+      it 'can register multiple relations with same dataset' do
         setup = ROM.setup(:memory)
 
         Class.new(ROM::Relation[:memory]) {
-          base_name :fruits
+          dataset :fruits
           register_as :apples
 
           def apple?
@@ -46,7 +46,7 @@ describe ROM::Setup do
         }
 
         Class.new(ROM::Relation[:memory]) {
-          base_name :fruits
+          dataset :fruits
           register_as :oranges
 
           def orange?
@@ -65,12 +65,12 @@ describe ROM::Setup do
         setup = ROM.setup(:memory)
 
         Class.new(ROM::Relation[:memory]) {
-          base_name :guests
+          dataset :guests
           register_as :users
         }
 
         Class.new(ROM::Relation[:memory]) {
-          base_name :admins
+          dataset :admins
           register_as :users
         }
 

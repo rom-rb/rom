@@ -53,7 +53,7 @@ describe 'Setting up ROM' do
       ROM.setup(:memory)
 
       class UserRelation < ROM::Relation[:memory]
-        base_name :users
+        dataset :users
 
         def by_name(name)
           restrict(name: name)
@@ -61,7 +61,7 @@ describe 'Setting up ROM' do
       end
 
       class TaskRelation < ROM::Relation[:memory]
-        base_name :tasks
+        dataset :tasks
       end
 
       class CreateUser < ROM::Commands::Update[:memory]

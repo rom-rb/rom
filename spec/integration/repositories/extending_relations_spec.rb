@@ -43,7 +43,7 @@ describe 'Repository' do
   context 'using class definition' do
     it_behaves_like 'extended relation' do
       before do
-        Class.new(ROM::Relation[:memory]) { base_name :users }
+        Class.new(ROM::Relation[:memory]) { dataset :users }
       end
     end
   end

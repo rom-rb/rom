@@ -23,7 +23,7 @@ module ROM
 
     include Equalizer.new(:dataset)
 
-    defines :repository, :base_name, :register_as
+    defines :repository, :dataset, :register_as
 
     repository :default
 
@@ -35,11 +35,11 @@ module ROM
       return if self == ROM::Relation
 
       klass.class_eval do
-        base_name(default_name)
+        dataset(default_name)
 
         def self.register_as(value = Undefined)
           if value == Undefined
-            @register_as || base_name
+            @register_as || dataset
           else
             super
           end
@@ -85,7 +85,7 @@ module ROM
         # TODO: raise a meaningful error here and add spec covering the case
         #       where klass' repository points to non-existant repo
         repository = repositories.fetch(klass.repository)
-        dataset = repository.dataset(klass.base_name)
+        dataset = repository.dataset(klass.dataset)
 
         relation = klass.new(dataset, registry)
 
@@ -110,7 +110,7 @@ module ROM
     # @api private
     def initialize(dataset, registry = {})
       @dataset = dataset
-      @name = self.class.base_name
+      @name = self.class.dataset
       @__registry__ = registry
     end
 

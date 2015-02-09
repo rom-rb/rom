@@ -7,7 +7,7 @@ module ROM
 
       ClassBuilder.new(name: class_name, parent: self[adapter]).call do |klass|
         klass.repository(options.fetch(:repository) { :default })
-        klass.base_name(name)
+        klass.dataset(name)
       end
     end
   end

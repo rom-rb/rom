@@ -77,10 +77,10 @@ module ROM
       def infer_schema_relations
         datasets.each do |repository, schema|
           schema.each do |name|
-            next if Relation.descendants.any? { |klass| klass.base_name == name }
+            next if Relation.descendants.any? { |klass| klass.dataset == name }
             klass = Relation.build_class(name, adapter: adapter_for(repository))
             klass.repository(repository)
-            klass.base_name(name)
+            klass.dataset(name)
           end
         end
       end

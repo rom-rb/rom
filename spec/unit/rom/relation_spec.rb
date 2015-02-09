@@ -32,7 +32,7 @@ describe ROM::Relation do
   describe '#name' do
     before { ROM.setup(:memory) }
 
-    context 'missing base_name' do
+    context 'missing dataset' do
       context 'with Relation inside module' do
         before do
           module Test
@@ -60,16 +60,16 @@ describe ROM::Relation do
       end
     end
 
-    context 'manualy set base_name' do
+    context 'manualy set dataset' do
       before do
         module TestAdapter
           class Relation < ROM::Relation[:memory]
-            base_name :foo_bar
+            dataset :foo_bar
           end
         end
       end
 
-      it 'returns name based on base_name' do
+      it 'returns name based on dataset' do
         relation = TestAdapter::Relation.new([])
 
         expect(relation.name).to eq(:foo_bar)
@@ -96,21 +96,21 @@ describe ROM::Relation do
   describe ".register_as" do
     before { ROM.setup(:memory) }
 
-    it "defaults to base_name with a generated class" do
-      rel = Class.new(ROM::Relation[:memory]) { base_name :users }
+    it "defaults to dataset with a generated class" do
+      rel = Class.new(ROM::Relation[:memory]) { dataset :users }
       expect(rel.register_as).to eq(:users)
       rel.register_as(:guests)
       expect(rel.register_as).to eq(:guests)
     end
 
-    it "defaults to base_name with a defined class that has base_name inferred" do
+    it "defaults to dataset with a defined class that has dataset inferred" do
       class Users < ROM::Relation[:memory]; end
       expect(Users.register_as).to eq(:users)
     end
 
-    it "defaults to base_name with a defined class that has base_name set manually" do
+    it "defaults to dataset with a defined class that has dataset set manually" do
       class Users < ROM::Relation[:memory]
-        base_name :guests
+        dataset :guests
       end
       expect(Users.register_as).to eq(:guests)
     end
