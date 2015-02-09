@@ -38,6 +38,10 @@ module ROM
         !@default.nil?
       end
 
+      def default_value(object)
+        default.is_a?(Proc) ? default.call(object) : default
+      end
+
       def type_matches?(value)
         value.is_a?(type)
       end
@@ -65,9 +69,7 @@ module ROM
       def set_defaults(object, options)
         each do |name, option|
           next unless option.default? && !options.key?(name)
-          default = option.default
-          value = default.is_a?(Proc) ? default.call(object) : default
-          options.update(name => value)
+          options[name] = option.default_value(object)
         end
       end
 
