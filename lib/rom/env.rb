@@ -34,7 +34,7 @@ module ROM
       reader = readers[name]
 
       if block
-        reader.instance_eval(&block)
+        yield(reader)
       else
         reader
       end
