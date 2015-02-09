@@ -46,8 +46,16 @@ describe ROM::Options do
     end
 
     it 'copies klass options to descendant' do
-      other = Class.new(klass)
-      expect(other.option_definitions).to eql(klass.option_definitions)
+      other = Class.new(klass).new(name: 'foo')
+      expect(other.options).to eql(name: 'foo')
+    end
+
+    it 'does not interfere with its parent`s option definitions' do
+      other = Class.new(klass) do
+        option :child, default: :nope
+      end
+      object = klass.new({})
+      expect(object.options).to eql({})
     end
 
     it 'sets option defaults statically' do

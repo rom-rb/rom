@@ -14,7 +14,7 @@ module ROM
         extend(ClassMethods)
 
         def self.inherited(descendant)
-          descendant.instance_variable_set('@__options__', option_definitions)
+          descendant.instance_variable_set('@__options__', option_definitions.dup)
         end
       end
     end
@@ -54,6 +54,11 @@ module ROM
     class Definitions
       def initialize
         @options = {}
+      end
+
+      def initialize_copy(source)
+        super
+        @options = @options.dup
       end
 
       def define(option)
