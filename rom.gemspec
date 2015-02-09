@@ -16,12 +16,9 @@ Gem::Specification.new do |gem|
   gem.license       = 'MIT'
   gem.required_ruby_version = '~> 2.0'
 
-  gem.add_runtime_dependency 'addressable', '~> 2.3'
   gem.add_runtime_dependency 'transproc',   '~> 0.1'
   gem.add_runtime_dependency 'equalizer',   '~> 0.0', '>= 0.0.9'
-  gem.add_runtime_dependency 'concord',     '~> 0.1', '>= 0.1.4'
   gem.add_runtime_dependency 'descendants_tracker', '~> 0.0', '>= 0.0.4'
-  gem.add_runtime_dependency 'charlatan',   '~> 0.1', '>= 0.1'
   gem.add_runtime_dependency 'inflecto',    '~> 0.0', '>= 0.0.2'
   gem.add_runtime_dependency 'thread_safe', '~> 0.3'
 

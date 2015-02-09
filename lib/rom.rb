@@ -1,6 +1,5 @@
 require 'descendants_tracker'
-require 'concord'
-require 'charlatan'
+require 'equalizer'
 require 'inflecto'
 
 require 'rom/version'

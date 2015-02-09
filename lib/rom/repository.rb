@@ -1,5 +1,3 @@
-require 'addressable/uri'
-
 module ROM
   # Abstract repository class
   #

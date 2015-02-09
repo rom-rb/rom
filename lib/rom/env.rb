@@ -3,7 +3,6 @@ module ROM
   #
   # @api public
   class Env
-    include Adamantium::Flat
     include Equalizer.new(:repositories, :relations, :readers, :commands)
 
     attr_reader :repositories, :relations, :readers, :commands
