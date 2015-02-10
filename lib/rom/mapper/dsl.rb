@@ -32,7 +32,9 @@ module ROM
         private
 
         def options
-          { prefix: prefix, symbolize_keys: symbolize_keys }
+          { prefix: prefix,
+            prefix_separator: prefix_separator,
+            symbolize_keys: symbolize_keys }
         end
 
         def attributes

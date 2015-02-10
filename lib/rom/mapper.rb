@@ -10,9 +10,11 @@ module ROM
     include DSL
     include Equalizer.new(:transformer, :header)
 
-    defines :relation, :register_as, :symbolize_keys, :prefix, :inherit_header
+    defines :relation, :register_as, :symbolize_keys,
+      :prefix, :prefix_separator, :inherit_header
 
     inherit_header true
+    prefix_separator '_'.freeze
 
     # @return [Object] transformer object built by a processor
     #

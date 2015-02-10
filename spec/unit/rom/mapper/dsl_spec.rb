@@ -46,6 +46,17 @@ describe ROM::Mapper do
       end
     end
 
+    context 'prefixed attribute using custom separator' do
+      let(:attributes) { [[:name, from: :'u.name']] }
+      let(:options) { { prefix: :u, prefix_separator: '.' } }
+
+      it 'adds an aliased attribute for the header using configured :prefix' do
+        mapper.attribute :name
+
+        expect(header).to eql(expected_header)
+      end
+    end
+
     context 'symbolized attribute' do
       let(:attributes) { [[:name, from: 'name']] }
       let(:options) { { symbolize_keys: true } }

@@ -7,13 +7,14 @@ module ROM
     class AttributeDSL
       include ModelDSL
 
-      attr_reader :attributes, :options, :symbolize_keys, :prefix
+      attr_reader :attributes, :options, :symbolize_keys, :prefix, :prefix_separator
 
       def initialize(attributes, options)
         @attributes = attributes
         @options = options
-        @symbolize_keys = options[:symbolize_keys]
-        @prefix = options[:prefix]
+        @symbolize_keys = options.fetch(:symbolize_keys)
+        @prefix = options.fetch(:prefix)
+        @prefix_separator = options.fetch(:prefix_separator)
       end
 
       def attribute(name, options = EMPTY_HASH)
@@ -59,7 +60,7 @@ module ROM
       def with_attr_options(name, options = EMPTY_HASH)
         attr_options = options.dup
 
-        attr_options[:from] ||= :"#{prefix}_#{name}" if prefix
+        attr_options[:from] ||= :"#{prefix}#{prefix_separator}#{name}" if prefix
 
         if symbolize_keys
           attr_options.update(from: attr_options.fetch(:from) { name }.to_s)
