@@ -40,6 +40,22 @@ module ROM
           other.call(value)
         end
 
+        # Yield to block with value of result
+        #
+        # @api public
+        def and_then(&blk)
+          self > blk
+        end
+
+        # Ignore block and return self
+        #
+        # @return [self]
+        #
+        # @api public
+        def or_else(&_)
+          self
+        end
+
         # Return the value
         #
         # @return [Array]
@@ -66,6 +82,22 @@ module ROM
         # @api public
         def >(_other)
           self
+        end
+
+        # Do not yield to block, return self
+        #
+        # @return [self]
+        #
+        # @api public
+        def and_then(&blk)
+          self > blk
+        end
+
+        # Yield to block with error of result
+        #
+        # @api public
+        def or_else(&blk)
+          blk.call(error)
         end
 
         # Return the error
