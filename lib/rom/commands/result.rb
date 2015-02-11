@@ -4,6 +4,16 @@ module ROM
     #
     # @public
     class Result
+      # Wrap a value in a Result type if it's not already wrapped
+      #
+      # @return [Success, Failure]
+      #
+      # @api public
+      def self.wrap(value)
+        return value if value.kind_of?(Result)
+        new(value)
+      end
+
       # Return command execution result
       #
       # @api public
@@ -23,6 +33,11 @@ module ROM
         raise NotImplementedError
       end
       alias_method :to_a, :to_ary
+
+      def wrap(*args)
+        self.class.wrap(*args)
+      end
+      private :wrap
 
       # Success result has a value and no error
       #
@@ -44,7 +59,7 @@ module ROM
         #
         # @api public
         def and_then(&blk)
-          self > blk
+          wrap(self > blk)
         end
 
         # Ignore block and return self
@@ -97,7 +112,7 @@ module ROM
         #
         # @api public
         def or_else(&blk)
-          blk.call(error)
+          wrap(blk.call(error))
         end
 
         # Return the error
