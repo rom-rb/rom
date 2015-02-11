@@ -5,8 +5,13 @@ module ROM
   #
   # @api public
   class Reader
+    extend ClassMacros
+    extend DescendantsTracker
+
     include Enumerable
     include Equalizer.new(:path, :relation, :mapper)
+
+    defines :relation, :decors
 
     alias_method :to_ary, :to_a
 
@@ -60,17 +65,23 @@ module ROM
       klass_name = "#{Reader.name}[#{Inflecto.camelize(relation.name)}]"
 
       ClassBuilder.new(name: klass_name, parent: Reader).call do |klass|
-        method_names.each do |method_name|
-          klass.class_eval <<-RUBY, __FILE__, __LINE__ + 1
-            def #{method_name}(*args, &block)
-              new_relation = relation.send(#{method_name.inspect}, *args, &block)
-              self.class.new(
-                new_path(#{method_name.to_s.inspect}), new_relation, mappers
-              )
-            end
-          RUBY
-        end
+        define_relation_methods(klass, method_names)
       end
+    end
+
+    # @api private
+    def self.define_relation_methods(klass, method_names)
+      method_names.each do |method_name|
+        klass.class_eval <<-RUBY, __FILE__, __LINE__ + 1
+          def #{method_name}(*args, &block)
+            new_relation = relation.send(#{method_name.inspect}, *args, &block)
+            self.class.new(
+              new_path(#{method_name.to_s.inspect}), new_relation, mappers
+            )
+          end
+        RUBY
+      end
+      klass
     end
 
     # @api private
@@ -153,7 +164,42 @@ module ROM
       end
     end
 
+    # Decorate mapped objects with a registered decor
+    #
+    # @example
+    #
+    #   class UserReader < ROM::Reader
+    #     relation :users
+    #
+    #     decors user_presenter: UserPresenter
+    #   end
+    #
+    #   rom.read(:users).decorate(:user_presenter)
+    #
+    # @param [Symbol] decor type
+    #
+    # @return [Reader]
+    #
+    # @api public
+    def decorate(type)
+      decorator = proc do |relation|
+        decor = self.class.decors[type]
+        mapper.call(relation).map { |object| decor.call(object) }
+      end
+
+      __new__(relation, decorator)
+    end
+
     private
+
+    def __new__(relation, mapper)
+      self.class.new(path, relation, mappers, mapper)
+    end
+
+    # @api private
+    def new_path(name)
+      path.dup << ".#{name}"
+    end
 
     # @api private
     def method_missing(name, *)
@@ -161,11 +207,6 @@ module ROM
         NoRelationError,
         "undefined relation #{name.inspect} within #{path.inspect}"
       )
-    end
-
-    # @api private
-    def new_path(name)
-      path.dup << ".#{name}"
     end
   end
 end
