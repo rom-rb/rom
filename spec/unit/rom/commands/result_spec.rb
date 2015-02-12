@@ -1,33 +1,25 @@
 require 'spec_helper'
 
 describe ROM::Commands::Result do
-  describe ".wrap" do
-    context ROM::Commands::Result::Success do
-      it "wraps unwrapped values in success" do
-        value = double(:value)
-        wrapped = described_class.wrap(value)
-        expect(wrapped).to be_a described_class
-        expect(wrapped.value).to eq(value)
-      end
+  describe ".success" do
+    subject(:result) { ROM::Commands::Result.success(value) }
 
-      it "leaves wrapped values alone" do
-        value = ROM::Commands::Result::Failure.new("Failure to launch")
-        expect(described_class.wrap(value)).to eq(value)
-      end
+    let(:value) { double(:value) }
+
+    it "wraps the value in a success" do
+      expect(result).to be_a(ROM::Commands::Result::Success)
+      expect(result.value).to eq(value)
     end
+  end
 
-    context ROM::Commands::Result::Failure do
-      it "wraps unwrapped values in failure" do
-        value = double(:value)
-        wrapped = described_class.wrap(value)
-        expect(wrapped).to be_a described_class
-        expect(wrapped.error).to eq(value)
-      end
+  describe ".failure" do
+    subject(:result) { ROM::Commands::Result.failure(error) }
 
-      it "leaves wrapped values alone" do
-        value = ROM::Commands::Result::Success.new("We did it!")
-        expect(described_class.wrap(value)).to eq(value)
-      end
+    let(:error) { double(:error) }
+
+    it "wraps the value in a failure" do
+      expect(result).to be_a(ROM::Commands::Result::Failure)
+      expect(result.error).to eq(error)
     end
   end
 

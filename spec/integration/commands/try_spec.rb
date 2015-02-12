@@ -10,8 +10,8 @@ describe 'Commands / Control Flow' do
 
   subject(:users) { rom.commands.users }
 
-  let(:on_success) { RecordCalls.new }
-  let(:on_failure) { RecordCalls.new }
+  let(:on_success) { RecordCalls.new { |value, result| result.success(value) } }
+  let(:on_failure) { RecordCalls.new { |error, result| result.failure(error) } }
 
   describe "a successful command" do
     let(:run_command) do
@@ -26,7 +26,7 @@ describe 'Commands / Control Flow' do
 
     it "calls the block registered via #and_then" do
       expect(on_success.call_count).to eq(1)
-      expect(on_success.calls.first).to eq [[{ name: "Bob" }]]
+      expect(on_success.calls.first).to eq [[{ name: "Bob" }], ROM::Commands::Result]
     end
 
     it "ignores the block registered via #or_else" do
@@ -53,7 +53,7 @@ describe 'Commands / Control Flow' do
 
     it "calls the block registered via #or_else" do
       expect(on_failure.call_count).to eq(1)
-      expect(on_failure.calls.first).to eq [error]
+      expect(on_failure.calls.first).to eq [error, ROM::Commands::Result]
     end
   end
 
@@ -65,12 +65,14 @@ describe 'Commands / Control Flow' do
     end
 
     let(:upcase_names) do
-      proc { |users|
-        users.map { |user|
-          user.tap do |user|
-            user[:name] = user[:name].upcase
-          end
-        }
+      proc { |users, result|
+        result.success(
+          users.map { |user|
+            user.tap do |user|
+              user[:name] = user[:name].upcase
+            end
+          }
+        )
       }
     end
 
@@ -80,7 +82,7 @@ describe 'Commands / Control Flow' do
 
     it "calls each block with the result of the previous" do
       expect(on_success.call_count).to eq(1)
-      expect(on_success.calls.first).to eq [[{ name: "BOB" }]]
+      expect(on_success.calls.first).to eq [[{ name: "BOB" }], ROM::Commands::Result]
     end
   end
 end

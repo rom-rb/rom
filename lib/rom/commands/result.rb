@@ -4,14 +4,12 @@ module ROM
     #
     # @public
     class Result
-      # Wrap a value in a Result type if it's not already wrapped
-      #
-      # @return [Success, Failure]
-      #
-      # @api public
-      def self.wrap(value)
-        return value if value.kind_of?(Result)
-        new(value)
+      def self.success(value)
+        Success.new(value)
+      end
+
+      def self.failure(error)
+        Failure.new(error)
       end
 
       # Return command execution result
@@ -34,11 +32,6 @@ module ROM
       end
       alias_method :to_a, :to_ary
 
-      def wrap(*args)
-        self.class.wrap(*args)
-      end
-      private :wrap
-
       # Success result has a value and no error
       #
       # @public
@@ -52,14 +45,14 @@ module ROM
         #
         # @api public
         def >(other)
-          other.call(value)
+          other.call(value, Result)
         end
 
         # Yield to block with value of result
         #
         # @api public
         def and_then(&blk)
-          wrap(self > blk)
+          self > blk
         end
 
         # Ignore block and return self
@@ -112,7 +105,7 @@ module ROM
         #
         # @api public
         def or_else(&blk)
-          wrap(blk.call(error))
+          blk.call(error, Result)
         end
 
         # Return the error
