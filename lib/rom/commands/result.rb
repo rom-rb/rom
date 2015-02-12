@@ -4,10 +4,16 @@ module ROM
     #
     # @public
     class Result
+      # Wrap the value in a ROM::Commands::Success
+      #
+      # @api public
       def self.success(value)
         Success.new(value)
       end
 
+      # Wrap the error in a ROM::Commands::Failure
+      #
+      # @api public
       def self.failure(error)
         Failure.new(error)
       end
@@ -36,6 +42,8 @@ module ROM
       #
       # @public
       class Success < Result
+        include Equalizer.new(:class, :value)
+
         # @api private
         def initialize(value)
           @value = value.is_a?(self.class) ? value.value : value
@@ -78,6 +86,8 @@ module ROM
       #
       # @public
       class Failure < Result
+        include Equalizer.new(:class, :error)
+
         # @api private
         def initialize(error)
           @error = error
