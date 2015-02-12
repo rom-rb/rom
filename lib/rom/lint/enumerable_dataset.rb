@@ -2,6 +2,10 @@ require 'rom/lint/linter'
 
 module ROM
   module Lint
+    # Ensures that a [ROM::EnumerableDataset] extension correctly yields
+    # arrays and tuples
+    #
+    # @public
     class EnumerableDataset < ROM::Lint::Linter
       attr_reader :dataset, :data
 

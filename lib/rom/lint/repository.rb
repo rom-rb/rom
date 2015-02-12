@@ -2,6 +2,10 @@ require 'rom/lint/linter'
 
 module ROM
   module Lint
+    # Ensures that a [ROM::Repository] extension provides datasets through the
+    # expected methods
+    #
+    # @public
     class Repository < ROM::Lint::Linter
       attr_reader :identifier, :repository, :uri
 

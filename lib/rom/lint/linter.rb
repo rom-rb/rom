@@ -1,5 +1,19 @@
 module ROM
   module Lint
+    # Base class for building linters that check source code
+    #
+    # Linters are used by authors of ROM adapters to verify that their
+    # integration comnplies with the ROM api.
+    #
+    # Most of the time, authors won't need to construct linters directly
+    # because the provided test helpers will automatically run when required
+    # in tests and specs.
+    #
+    # @example
+    #   require 'rom/lint/spec'
+    # 
+    #
+    # @public
     class Linter
       Failure = Class.new(StandardError)
 
