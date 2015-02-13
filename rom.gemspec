@@ -20,7 +20,6 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency 'equalizer',   '~> 0.0', '>= 0.0.9'
   gem.add_runtime_dependency 'descendants_tracker', '~> 0.0', '>= 0.0.4'
   gem.add_runtime_dependency 'inflecto',    '~> 0.0', '>= 0.0.2'
-  gem.add_runtime_dependency 'thread_safe', '~> 0.3'
 
   gem.add_development_dependency 'rake', '~> 10.3'
   gem.add_development_dependency 'rspec-core', '~> 3.1'
