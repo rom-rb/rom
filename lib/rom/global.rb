@@ -146,7 +146,7 @@ module ROM
     def setup_repositories(config)
       config.each_with_object({}) do |(name, spec), hash|
         identifier, *args = Array(spec)
-        repository = Repository.setup(identifier, *args)
+        repository = Repository.setup(identifier, *(args.flatten))
         hash[name] = repository
 
         repositories[repository] = identifier unless identifier.is_a?(Repository)
