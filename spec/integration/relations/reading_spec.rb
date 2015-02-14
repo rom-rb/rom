@@ -194,14 +194,16 @@ describe 'Reading relations' do
     rom = setup.finalize
 
     expect {
-      rom.read(:users) { |users| users.not_here }
-    }.to raise_error(ROM::NoRelationError, /not_here/)
+      rom.relation(:users) { |users| users.not_here }
+    }.to raise_error(NoMethodError, /not_here/)
 
     expect {
-      rom.read(:users) { |users| users.by_name('Joe') }.map(:not_here)
+      rom.relation(:users) { |users| users.by_name('Joe') }.map_with(:not_here)
     }.to raise_error(ROM::MapperMissingError, /not_here/)
 
-    user = rom.read(:users) { |users| users.by_name('Joe') }.map(:prefixer).first
+    user = rom.relation(:users) { |users|
+      users.by_name('Joe')
+    }.map_with(:prefixer).first
 
     expect(user).to eql(user_name: 'Joe', user_email: "joe@doe.org")
   end
