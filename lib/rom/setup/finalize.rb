@@ -13,12 +13,16 @@ module ROM
   class Setup
     # @private
     class Finalize
-      attr_reader :repositories, :repo_adapter, :datasets
+      attr_reader :repositories, :repo_adapter, :datasets,
+        :relation_classes, :mapper_classes, :command_classes
 
       # @api private
-      def initialize(repositories)
+      def initialize(repositories, relation_classes, mapper_classes, command_classes)
         @repositories = repositories
         @repo_adapter_map = ROM.repositories
+        @relation_classes = relation_classes
+        @mapper_classes = mapper_classes
+        @command_classes = command_classes
         initialize_datasets
       end
 
@@ -49,7 +53,7 @@ module ROM
 
       # @api private
       def load_relations
-        relations = Relation.registry(repositories)
+        relations = Relation.registry(repositories, relation_classes)
         RelationRegistry.new(relations)
       end
 
@@ -57,7 +61,7 @@ module ROM
       def load_readers(relations)
         readers = {}
 
-        Mapper.registry.each do |name, mappers|
+        Mapper.registry(mapper_classes).each do |name, mappers|
           relation = relations[name]
           methods = relation.exposed_relations
 
@@ -71,7 +75,7 @@ module ROM
 
       # @api private
       def load_commands(relations)
-        registry = Command.registry(relations, repositories)
+        registry = Command.registry(relations, repositories, command_classes)
 
         commands = registry.each_with_object({}) do |(name, rel_commands), h|
           h[name] = CommandRegistry.new(rel_commands)
@@ -83,7 +87,7 @@ module ROM
       def infer_schema_relations
         datasets.each do |repository, schema|
           schema.each do |name|
-            next if Relation.descendants.any? { |klass| klass.dataset == name }
+            next if relation_classes.any? { |klass| klass.dataset == name }
             klass = Relation.build_class(name, adapter: adapter_for(repository))
             klass.repository(repository)
             klass.dataset(name)

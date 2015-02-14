@@ -2,7 +2,6 @@ require 'rom/commands/abstract'
 
 module ROM
   class Command < Commands::Abstract
-    extend DescendantsTracker
     extend ClassMacros
 
     include Equalizer.new(:relation, :options)
@@ -12,6 +11,13 @@ module ROM
     input Hash
     validator proc {}
     result :many
+
+    # @api private
+    def self.inherited(klass)
+      super
+      return if klass.superclass == ROM::Command
+      ROM.register_command(klass)
+    end
 
     def self.[](adapter)
       adapter_namespace(adapter).const_get(Inflecto.demodulize(name))
@@ -25,8 +31,8 @@ module ROM
       new(relation, self.options.merge(options))
     end
 
-    def self.registry(relations, repositories)
-      Command.descendants.each_with_object({}) do |klass, h|
+    def self.registry(relations, repositories, descendants)
+      descendants.each_with_object({}) do |klass, h|
         rel_name = klass.relation
 
         next unless rel_name

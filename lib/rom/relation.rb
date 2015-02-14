@@ -18,7 +18,6 @@ module ROM
   #
   # @api public
   class Relation
-    extend DescendantsTracker
     extend ClassMacros
 
     include Equalizer.new(:dataset)
@@ -56,6 +55,8 @@ module ROM
           __registry__.fetch(name) { super }
         end
       end
+
+      ROM.register_relation(klass)
     end
 
     def self.[](type)
@@ -77,9 +78,8 @@ module ROM
       Inflecto.underscore(name).gsub('/', '_').to_sym
     end
 
-    def self.registry(repositories)
+    def self.registry(repositories, descendants)
       registry = {}
-      descendants = self.descendants.select { |klass| klass.superclass != self }
 
       descendants.each do |klass|
         # TODO: raise a meaningful error here and add spec covering the case

@@ -34,7 +34,7 @@ describe ROM::Mapper do
       admins = Class.new(users) { relation(:admins) }
       custom = Class.new(users) { register_as(:custom) }
 
-      registry = ROM::Mapper.registry
+      registry = ROM::Mapper.registry([users, active, admins, custom])
 
       expect(registry).to eql(
         users: {

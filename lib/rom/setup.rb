@@ -8,12 +8,16 @@ module ROM
     include Equalizer.new(:repositories, :env)
 
     # @api private
-    attr_reader :repositories, :default_adapter, :env
+    attr_reader :repositories, :default_adapter,
+      :relation_classes, :mapper_classes, :command_classes, :env
 
     # @api private
     def initialize(repositories, default_adapter = nil)
       @repositories = repositories
       @default_adapter = default_adapter
+      @relation_classes = []
+      @mapper_classes = []
+      @command_classes = []
       @env = nil
     end
 
@@ -25,7 +29,9 @@ module ROM
     # @api public
     def finalize
       raise EnvAlreadyFinalizedError if env
-      finalize = Finalize.new(repositories)
+      finalize = Finalize.new(
+        repositories, relation_classes, mapper_classes, command_classes
+      )
       @env = finalize.run!
     end
 
@@ -36,6 +42,21 @@ module ROM
     # @api private
     def [](name)
       repositories.fetch(name)
+    end
+
+    # @api private
+    def register_relation(klass)
+      @relation_classes << klass
+    end
+
+    # @api private
+    def register_mapper(klass)
+      @mapper_classes << klass
+    end
+
+    # @api private
+    def register_command(klass)
+      @command_classes << klass
     end
 
     # Hook for respond_to? used internally

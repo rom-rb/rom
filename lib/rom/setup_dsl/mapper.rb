@@ -9,7 +9,7 @@ module ROM
 
       parent_class =
         if parent
-          descendants.detect { |klass| klass.relation == parent }
+          ROM.boot.mapper_classes.detect { |klass| klass.relation == parent }
         else
           self
         end

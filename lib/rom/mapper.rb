@@ -5,8 +5,6 @@ module ROM
   #
   # @private
   class Mapper
-    extend DescendantsTracker
-
     include DSL
     include Equalizer.new(:transformer, :header)
 
@@ -25,6 +23,12 @@ module ROM
     #
     # @api private
     attr_reader :header
+
+    # @api private
+    def self.inherited(klass)
+      super
+      ROM.register_mapper(klass)
+    end
 
     # @return [Hash] registered processors
     #
@@ -53,8 +57,8 @@ module ROM
     end
 
     # @api private
-    def self.registry
-      Mapper.descendants.each_with_object({}) do |klass, h|
+    def self.registry(descendants)
+      descendants.each_with_object({}) do |klass, h|
         name = klass.register_as || klass.relation
         (h[klass.base_relation] ||= {})[name] = klass.build
       end

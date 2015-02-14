@@ -102,7 +102,9 @@ describe 'Commands' do
         commands[command_type] = klass
       end
 
-      registry = ROM::Command.registry(rom.relations, setup.repositories)
+      registry = ROM::Command.registry(
+        rom.relations, setup.repositories, commands.values
+      )
 
       expect(registry).to eql(
         users: {

@@ -19,6 +19,21 @@ module ROM
       self
     end
 
+    # @api private
+    def register_relation(klass)
+      boot.register_relation(klass) if boot
+    end
+
+    # @api private
+    def register_mapper(klass)
+      boot.register_mapper(klass) if boot
+    end
+
+    # @api private
+    def register_command(klass)
+      boot.register_command(klass) if boot
+    end
+
     # Return identifier => adapter map
     #
     # @return [Hash]
@@ -85,13 +100,13 @@ module ROM
     # @api public
     def setup(*args, &block)
       config = setup_config(*args)
-      boot = Setup.new(setup_repositories(config), adapters.keys.first)
+      @boot = Setup.new(setup_repositories(config), adapters.keys.first)
 
       if block
-        boot.instance_exec(&block)
-        boot.finalize
+        @boot.instance_exec(&block)
+        @boot.finalize
       else
-        @boot = boot
+        @boot
       end
     end
 
@@ -129,12 +144,12 @@ module ROM
       @repositories ||= {}
     end
 
-    private
-
     # @api private
     def boot
       @boot
     end
+
+    private
 
     # @api private
     def setup_config(*args)
