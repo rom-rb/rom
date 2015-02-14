@@ -11,7 +11,7 @@ module ROM
     #
     # @example
     #   require 'rom/lint/spec'
-    # 
+    #
     #
     # @public
     class Linter
