@@ -61,9 +61,16 @@ module ROM
           relation = relations[name]
           methods = relation.exposed_relations
 
-          readers[name] = Reader.build(
-            name, relation, MapperRegistry.new(mappers), methods
-          )
+          reader_class = Reader.descendants.detect { |klass| klass.relation == name }
+
+          klass =
+            if reader_class
+              Reader.define_relation_methods(reader_class, methods)
+            else
+              Reader.build_class(relation, methods)
+            end
+
+          readers[name] = klass.new(name, relation, MapperRegistry.new(mappers))
         end
 
         ReaderRegistry.new(readers)
