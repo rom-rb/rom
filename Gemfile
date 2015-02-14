@@ -38,8 +38,9 @@ group :tools do
 
   gem 'byebug'
 
-  platform :mri do
-    gem 'mutant', '0.7.4'
-    gem 'mutant-rspec'
-  end
+  # TODO: mutant-rspec blocks rspec upgrade re-add when it's bumped in mutant
+  # platform :mri do
+  #   gem 'mutant', '0.7.4'
+  #   gem 'mutant-rspec'
+  # end
 end
