@@ -1,10 +1,24 @@
 module ROM
+  # Internal support class for generating classes
+  #
+  # @private
   class ClassBuilder
     include Options
 
     option :name, type: String, reader: true
     option :parent, type: Class, reader: true, parent: Object
 
+    # Generate a class based on options
+    #
+    # @example
+    #   builder = ROM::ClasBuilder.new(name: 'MyClass')
+    #
+    #   klass = builder.call
+    #   klass.name # => "MyClass"
+    #
+    # @return [Class]
+    #
+    # @api private
     def call
       klass = Class.new(parent)
 
