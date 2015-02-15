@@ -10,6 +10,7 @@ end
 group :test do
   gem 'virtus'
   gem 'minitest'
+  gem 'thread_safe'
 
   platforms :rbx do
     gem 'rubysl-bigdecimal', platforms: :rbx
