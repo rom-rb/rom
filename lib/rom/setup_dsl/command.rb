@@ -1,5 +1,13 @@
 module ROM
+  # Setup DSL-specific command extensions
+  #
+  # @private
   class Command
+    # Generate a command subclass
+    #
+    # This is used by Setup#commands DSL and its `define` block
+    #
+    # @api private
     def self.build_class(name, relation, options = {}, &block)
       type = options.fetch(:type) { name }
       command_type = Inflecto.classify(type)
@@ -14,6 +22,9 @@ module ROM
       end
     end
 
+    # Create a command subclass name based on adapter, type and relation
+    #
+    # @api private
     def self.generate_class_name(adapter, command_type, relation)
       pieces = ['ROM']
       pieces << Inflecto.classify(adapter)

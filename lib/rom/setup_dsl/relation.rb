@@ -1,5 +1,12 @@
 module ROM
+  # Setup DSL-specific relation extensions
+  #
+  # @private
   class Relation
+    # Generate a relation subclass
+    #
+    # This is used by Setup#relation DSL
+    #
     # @api private
     def self.build_class(name, options = {})
       class_name = "ROM::Relation[#{Inflecto.camelize(name)}]"
