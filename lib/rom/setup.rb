@@ -7,9 +7,35 @@ module ROM
   class Setup
     include Equalizer.new(:repositories, :env)
 
+    # @return [Hash] configured repositories
+    #
     # @api private
-    attr_reader :repositories, :default_adapter,
-      :relation_classes, :mapper_classes, :command_classes, :env
+    attr_reader :repositories
+
+    # @return [Symbol] default (first) adapter
+    #
+    # @api private
+    attr_reader :default_adapter
+
+    # @return [Array] registered relation subclasses
+    #
+    # @api private
+    attr_reader :relation_classes
+
+    # @return [Array] registered mapper subclasses
+    #
+    # @api private
+    attr_reader :mapper_classes
+
+    # @return [Array] registered command subclasses
+    #
+    # @api private
+    attr_reader :command_classes
+
+    # @return [Env] finalized env after setup phase is over
+    #
+    # @api private
+    attr_reader :env
 
     # @api private
     def initialize(repositories, default_adapter = nil)
@@ -35,7 +61,7 @@ module ROM
       @env = finalize.run!
     end
 
-    # Returns repository identified by name
+    # Return repository identified by name
     #
     # @return [Repository]
     #
