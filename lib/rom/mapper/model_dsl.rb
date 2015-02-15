@@ -2,11 +2,34 @@ require 'rom/model_builder'
 
 module ROM
   class Mapper
+    # Model DSL allows setting a model class
+    #
+    # @private
     module ModelDSL
       attr_reader :attributes, :builder, :klass
 
       DEFAULT_TYPE = :poro
 
+      # Set or generate a model
+      #
+      # @example
+      #   class MyDefinition
+      #     include ROM::Mapper::ModelDSL
+      #
+      #     def initialize
+      #       @attributes = [[:name], [:title]]
+      #     end
+      #   end
+      #
+      #   definition = MyDefinition.new
+      #
+      #   # just set a model constant
+      #   definition.model(User)
+      #
+      #   # generate model class for the attributes
+      #   definition.model(name: 'User')
+      #
+      # @api public
       def model(options = nil)
         if options.is_a?(Class)
           @klass = options
@@ -20,6 +43,9 @@ module ROM
 
       private
 
+      # Build a model class using a specialized builder
+      #
+      # @api private
       def build_class
         return klass if klass
         return builder.call(attributes.map(&:first)) if builder

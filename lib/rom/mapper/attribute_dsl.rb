@@ -3,12 +3,21 @@ require 'rom/mapper/model_dsl'
 
 module ROM
   class Mapper
-    # @api private
+    # Mapper attribute DSL exposed by mapper subclasses
+    #
+    # This class is private even though its methods are exposed by mappers.
+    # Typically it's not meant to be used directly.
+    #
+    # @private
     class AttributeDSL
       include ModelDSL
 
       attr_reader :attributes, :options, :symbolize_keys, :prefix, :prefix_separator
 
+      # @param [Array] attribute accumulator array
+      # @param [Hash] options
+      #
+      # @api private
       def initialize(attributes, options)
         @attributes = attributes
         @options = options
@@ -17,16 +26,58 @@ module ROM
         @prefix_separator = options.fetch(:prefix_separator)
       end
 
+      # Define a mapping attribute with its options
+      #
+      # @example
+      #   dsl = AttributeDSL.new([])
+      #
+      #   dsl.attribute(:name)
+      #   dsl.attribute(:email, from: 'user_email')
+      #
+      # @api public
       def attribute(name, options = EMPTY_HASH)
         with_attr_options(name, options) do |attr_options|
           add_attribute(name, attr_options)
         end
       end
 
+      # Remove an attribute
+      #
+      # @example
+      #   dsl = AttributeDSL.new([[:name]])
+      #
+      #   dsl.exclude(:name)
+      #   dsl.attributes # => []
+      #
+      # @api public
       def exclude(*names)
         attributes.delete_if { |attr| names.include?(attr.first) }
       end
 
+      # Define an embedded attribute
+      #
+      # Block exposes the attribute dsl too
+      #
+      # @example
+      #   dsl = AttributeDSL.new([])
+      #
+      #   dsl.embedded :tags, type: :array do
+      #     attribute :name
+      #   end
+      #
+      #   dsl.embedded :address, type: :hash do
+      #     model Address
+      #     attribute :name
+      #   end
+      #
+      # @param [Symbol] attribute name
+      #
+      # @param [Hash] options
+      # @option options [Symbol] :type Embedded type can be :hash or :array
+      # @option options [Symbol] :prefix Prefix that should be used for
+      #                                  its attributes
+      #
+      # @api public
       def embedded(name, options, &block)
         with_attr_options(name) do |attr_options|
           dsl = new(options, &block)
@@ -39,24 +90,68 @@ module ROM
         end
       end
 
+      # Define an embedded hash attribute that requires "wrapping" transformation
+      #
+      # Typically this is used in sql context when relation is a join.
+      #
+      # @example
+      #   dsl = AttributeDSL.new([])
+      #
+      #   dsl.wrap(address: [:street, :zipcode, :city])
+      #
+      #   dsl.wrap(:address) do
+      #     model Address
+      #     attribute :street
+      #     attribute :zipcode
+      #     attribute :city
+      #   end
+      #
+      # @see AttributeDSL#embedded
+      #
+      # @api public
       def wrap(*args, &block)
         with_name_or_options(*args) do |name, options|
           dsl(name, { type: :hash, wrap: true }.update(options), &block)
         end
       end
 
+      # Define an embedded hash attribute that requires "grouping" transformation
+      #
+      # Typically this is used in sql context when relation is a join.
+      #
+      # @example
+      #   dsl = AttributeDSL.new([])
+      #
+      #   dsl.group(tags: [:name])
+      #
+      #   dsl.group(:tags) do
+      #     model Tag
+      #     attribute :name
+      #   end
+      #
+      # @see AttributeDSL#embedded
+      #
+      # @api public
       def group(*args, &block)
         with_name_or_options(*args) do |name, options|
           dsl(name, { type: :array, group: true }.update(options), &block)
         end
       end
 
+      # Generate a header from attribute definitions
+      #
+      # @return [Header]
+      #
+      # @api private
       def header
         Header.coerce(attributes, model)
       end
 
       private
 
+      # Handle attribute options common for all definitions
+      #
+      # @api private
       def with_attr_options(name, options = EMPTY_HASH)
         attr_options = options.dup
 
@@ -69,6 +164,9 @@ module ROM
         yield(attr_options)
       end
 
+      # Handle "name or options" syntax used by `wrap` and `group`
+      #
+      # @api private
       def with_name_or_options(*args)
         name, options =
           if args.size > 1
@@ -80,6 +178,11 @@ module ROM
         yield(name, options)
       end
 
+      # Create another instance of the dsl for nested definitions
+      #
+      # This is used by embedded, wrap and group
+      #
+      # @api private
       def dsl(name_or_attrs, options, &block)
         if block
           attributes_from_block(name_or_attrs, options, &block)
@@ -88,6 +191,11 @@ module ROM
         end
       end
 
+      # Define attributes from a nested block
+      #
+      # Used by embedded, wrap and group
+      #
+      # @api private
       def attributes_from_block(name, options, &block)
         dsl = new(options, &block)
         header = dsl.header
@@ -95,6 +203,11 @@ module ROM
         header.each { |attr| exclude(attr.key) }
       end
 
+      # Define attributes from the `name => attributes` hash syntax
+      #
+      # Used by wrap and group
+      #
+      # @api private
       def attributes_from_hash(hash, options)
         hash.each do |name, header|
           with_attr_options(name, options) do |attr_options|
@@ -104,11 +217,19 @@ module ROM
         end
       end
 
+      # Add a new attribute and make sure it overrides previous definition
+      #
+      # @api private
       def add_attribute(name, options)
         exclude(name, name.to_s)
         attributes << [name, options]
       end
 
+      # Create a new dsl instance of potentially overidden options
+      #
+      # Embedded, wrap and group can override top-level options like `prefix`
+      #
+      # @api private
       def new(options, &block)
         dsl = self.class.new([], @options.merge(options))
         dsl.instance_exec(&block)
