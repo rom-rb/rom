@@ -3,7 +3,7 @@ module ROM
   #
   # See example for each method
   #
-  # @api public
+  # @public
   class Reader
     include Enumerable
     include Equalizer.new(:path, :relation, :mapper)

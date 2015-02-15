@@ -44,16 +44,22 @@ module ROM
       repositories.fetch(name)
     end
 
+    # Relation sub-classes are being registered with this method during setup
+    #
     # @api private
     def register_relation(klass)
       @relation_classes << klass
     end
 
+    # Mapper sub-classes are being registered with this method during setup
+    #
     # @api private
     def register_mapper(klass)
       @mapper_classes << klass
     end
 
+    # Command sub-classes are being registered with this method during setup
+    #
     # @api private
     def register_command(klass)
       @command_classes << klass

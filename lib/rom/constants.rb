@@ -1,3 +1,4 @@
+# Constants and errors common in the whole library
 module ROM
   Undefined = Object.new.freeze
 

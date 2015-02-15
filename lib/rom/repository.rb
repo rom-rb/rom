@@ -10,6 +10,21 @@ module ROM
     # @api public
     attr_reader :connection
 
+    # Setup a repository
+    #
+    # @example
+    #   module SuperDB
+    #     class Repository < ROM::Repository
+    #       def initialize(options)
+    #       end
+    #     end
+    #   end
+    #
+    #   ROM.register_adapter(:super_db, SuperDB)
+    #
+    #   Repository.setup(:super_db, some: 'options')
+    #   # SuperDB::Repository.new(some: 'options') is called
+    #
     # @api public
     def self.setup(repository_or_scheme, *args)
       case repository_or_scheme
@@ -29,6 +44,12 @@ module ROM
       end
     end
 
+    # Get repository subclass for a specific adapter
+    #
+    # @param [Symbol] adapter identifier
+    #
+    # @return [Class]
+    #
     # @api private
     def self.class_from_symbol(type)
       begin
@@ -41,11 +62,15 @@ module ROM
       adapter.const_get(:Repository)
     end
 
+    # A generic interface for setting up a logger
+    #
     # @api public
     def use_logger(*)
       # noop
     end
 
+    # A generic interface for returning default logger
+    #
     # @api public
     def logger
       # noop

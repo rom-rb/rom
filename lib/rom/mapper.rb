@@ -24,6 +24,8 @@ module ROM
     # @api private
     attr_reader :header
 
+    # Register suclasses during setup phase
+    #
     # @api private
     def self.inherited(klass)
       super

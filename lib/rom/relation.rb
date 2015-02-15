@@ -28,6 +28,12 @@ module ROM
 
     attr_reader :name, :dataset, :__registry__
 
+    # Register adapter relation subclasses during setup phase
+    #
+    # In adition those subclasses are extended with an interface for accessing
+    # relation registry and to define `register_as` setting
+    #
+    # @api private
     def self.inherited(klass)
       super
 
@@ -59,10 +65,28 @@ module ROM
       ROM.register_relation(klass)
     end
 
+    # Return adapter-specific relation subclass
+    #
+    # @example
+    #   ROM::Relation[:memory]
+    #   # => ROM::Memory::Relation
+    #
+    # @return [Class]
+    #
+    # @api public
     def self.[](type)
       ROM.adapters.fetch(type).const_get(:Relation)
     end
 
+    # Dynamically define a method that will forward to the dataset and wrap
+    # response in the relation itself
+    #
+    # @example
+    #   class SomeAdapterRelation < ROM::Relation
+    #     forward :super_query
+    #   end
+    #
+    # @api public
     def self.forward(*methods)
       methods.each do |method|
         class_eval <<-RUBY, __FILE__, __LINE__ + 1
@@ -73,11 +97,26 @@ module ROM
       end
     end
 
+    # Return default relation name used for `register_as` setting
+    #
+    # @return [Symbol]
+    #
+    # @api private
     def self.default_name
       return unless name
       Inflecto.underscore(name).gsub('/', '_').to_sym
     end
 
+    # Build relation registry of specified descendant classes
+    #
+    # This is used by the setup
+    #
+    # @param [Hash] repositories
+    # @param [Array] a list of relation descendants
+    #
+    # @return [Hash]
+    #
+    # @api private
     def self.registry(repositories, descendants)
       registry = {}
 

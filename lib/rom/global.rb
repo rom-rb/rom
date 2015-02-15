@@ -19,16 +19,22 @@ module ROM
       self
     end
 
+    # Relation subclass registration during setup phase
+    #
     # @api private
     def register_relation(klass)
       boot.register_relation(klass) if boot
     end
 
+    # Mapper subclass registration during setup phase
+    #
     # @api private
     def register_mapper(klass)
       boot.register_mapper(klass) if boot
     end
 
+    # Command subclass registration during setup phase
+    #
     # @api private
     def register_command(klass)
       boot.register_command(klass) if boot
