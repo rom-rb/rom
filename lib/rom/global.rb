@@ -50,40 +50,6 @@ module ROM
       end
     end
 
-    # Register adapter namespace under a specified identifier
-    #
-    # @param [Symbol]
-    # @param [Class,Module]
-    #
-    # @return [self]
-    #
-    # @api private
-    def register_adapter(identifier, adapter)
-      adapters[identifier] = adapter
-      self
-    end
-
-    # Relation subclass registration during setup phase
-    #
-    # @api private
-    def register_relation(klass)
-      boot.register_relation(klass) if boot
-    end
-
-    # Mapper subclass registration during setup phase
-    #
-    # @api private
-    def register_mapper(klass)
-      boot.register_mapper(klass) if boot
-    end
-
-    # Command subclass registration during setup phase
-    #
-    # @api private
-    def register_command(klass)
-      boot.register_command(klass) if boot
-    end
-
     # Starts the setup process for relations, mappers and commands.
     #
     # @overload setup(type, *args)
@@ -151,23 +117,64 @@ module ROM
       end
     end
 
-    # @see ROM::Setup#relation
+    # Global relation setup DSL
+    #
+    # @example
+    #   ROM.setup(:memory)
+    #
+    #   ROM.relation(:users) do
+    #     def by_name(name)
+    #       restrict(name: name)
+    #     end
+    #   end
     #
     # @api public
     def relation(*args, &block)
       boot.relation(*args, &block)
     end
 
+    # Global commands setup DSL
+    #
+    # @example
+    #   ROM.setup(:memory)
+    #
+    #   ROM.commands(:users) do
+    #     define(:create) do
+    #       # ..
+    #     end
+    #   end
+    #
     # @api public
     def commands(*args, &block)
       boot.commands(*args, &block)
     end
 
+    # Global mapper setup DSL
+    #
+    # @example
+    #   ROM.setup(:memory)
+    #
+    #   ROM.mappers do
+    #     define(:uses) do
+    #       # ..
+    #     end
+    #   end
+    #
     # @api public
     def mappers(*args, &block)
       boot.mappers(*args, &block)
     end
 
+    # Finalize the setup and store default global env under ROM.env
+    #
+    # @example
+    #   ROM.setup(:memory)
+    #   ROM.finalize # => ROM
+    #   ROM.boot # => nil
+    #   ROM.env # => the env
+    #
+    # @return [ROM]
+    #
     # @api public
     def finalize
       @env = boot.finalize
@@ -176,14 +183,51 @@ module ROM
       @boot = nil
     end
 
+    # Register adapter namespace under a specified identifier
+    #
+    # @param [Symbol]
+    # @param [Class,Module]
+    #
+    # @return [self]
+    #
+    # @api private
+    def register_adapter(identifier, adapter)
+      adapters[identifier] = adapter
+      self
+    end
+
+    # Relation subclass registration during setup phase
+    #
+    # @api private
+    def register_relation(klass)
+      boot.register_relation(klass) if boot
+    end
+
+    # Mapper subclass registration during setup phase
+    #
+    # @api private
+    def register_mapper(klass)
+      boot.register_mapper(klass) if boot
+    end
+
+    # Command subclass registration during setup phase
+    #
+    # @api private
+    def register_command(klass)
+      boot.register_command(klass) if boot
+    end
+
     private
 
+    # Helper method to handle single- or multi-repo setup options
+    #
     # @api private
     def setup_config(*args)
-      # Support simple single-repository setups.
       args.first.is_a?(Hash) ? args.first : { default: args }
     end
 
+    # Build repositories using the setup interface
+    #
     # @api private
     def setup_repositories(config)
       config.each_with_object({}) do |(name, spec), hash|
