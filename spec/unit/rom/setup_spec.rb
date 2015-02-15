@@ -78,6 +78,15 @@ describe ROM::Setup do
           ROM::RelationAlreadyDefinedError, /register_as :users/
         )
       end
+
+      it 'resets boot to nil' do
+        setup = ROM.setup(:memory)
+
+        allow(setup).to receive(:env).and_raise(StandardError)
+
+        expect { ROM.finalize }.to raise_error(StandardError)
+        expect(ROM.boot).to be(nil)
+      end
     end
 
     context 'empty setup' do

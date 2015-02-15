@@ -171,8 +171,9 @@ module ROM
     # @api public
     def finalize
       @env = boot.finalize
-      @boot = nil
       self
+    ensure
+      @boot = nil
     end
 
     private
