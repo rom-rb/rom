@@ -44,6 +44,11 @@ module ROM
         data.key?(name)
       end
 
+      # Return registered datasets count
+      #
+      # @return [Integer]
+      #
+      # @api private
       def size
         data.size
       end

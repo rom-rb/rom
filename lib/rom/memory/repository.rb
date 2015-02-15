@@ -52,10 +52,6 @@ module ROM
       def [](name)
         connection[name]
       end
-
-      def command_namespace
-        Memory::Commands
-      end
     end
   end
 end
