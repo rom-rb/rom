@@ -2,6 +2,17 @@ require 'rom/commands/composite'
 
 module ROM
   module Commands
+    # Abstract command class
+    #
+    # Provides a constructor accepting relation with options and basic behavior
+    # for calling, currying and composing commands.
+    #
+    # Typically command subclasses should inherit from specialized
+    # Create/Update/Delete, not this one.
+    #
+    # @abstract
+    #
+    # @private
     class Abstract
       include Options
 
@@ -52,6 +63,8 @@ module ROM
       # Curried command can be called without args
       #
       # @return [Command]
+      #
+      # @alias with
       #
       # @api public
       def curry(*args)
