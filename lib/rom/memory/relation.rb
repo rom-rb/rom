@@ -3,7 +3,7 @@ module ROM
     # Relation subclass for memory adapter
     #
     # @example
-    #   class Users < ROM::Relation[:memory
+    #   class Users < ROM::Relation[:memory]
     #   end
     #
     # @public
