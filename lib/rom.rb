@@ -1,3 +1,4 @@
+require 'descendants_tracker'
 require 'equalizer'
 require 'inflecto'
 
