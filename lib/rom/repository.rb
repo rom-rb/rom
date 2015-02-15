@@ -78,8 +78,8 @@ module ROM
 
     # Extension hook for adding repository-specific behavior to a command class
     #
-    # @param [Class] command class
-    # @param [Object] dataset
+    # @param [Class] klass command class
+    # @param [Object] _dataset dataset that will be used with this command class
     #
     # @return [Class]
     #
