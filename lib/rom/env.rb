@@ -5,7 +5,25 @@ module ROM
   class Env
     include Equalizer.new(:repositories, :relations, :readers, :commands)
 
-    attr_reader :repositories, :relations, :readers, :commands
+    # @return [Hash] configured repositories
+    #
+    # @api public
+    attr_reader :repositories
+
+    # @return [RelationRegistry] relation registry
+    #
+    # @api public
+    attr_reader :relations
+
+    # @return [ReaderRegistry] reader registry
+    #
+    # @api public
+    attr_reader :readers
+
+    # @return [Registry] command registry
+    #
+    # @api public
+    attr_reader :commands
 
     # @api private
     def initialize(repositories, relations, readers, commands)
