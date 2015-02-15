@@ -6,6 +6,50 @@ module ROM
   #
   # @public
   module Global
+    # Set base global registries in ROM constant
+    #
+    # @api private
+    def self.extended(rom)
+      super
+
+      rom.instance_variable_set('@adapters', {})
+      rom.instance_variable_set('@repositories', {})
+
+      rom.module_exec do
+        class << self
+          # An internal adapter identifier => adapter module map used by setup
+          #
+          # @return [Hash<Symbol=>Module>]
+          #
+          # @api private
+          attr_reader :adapters
+
+          # An internal repo => identifier map used by the setup
+          #
+          # @return [Hash]
+          #
+          # @api private
+          attr_reader :repositories
+
+          # Setup object created during env setup phase
+          #
+          # This gets set to nil after setup is finalized
+          #
+          # @return [Setup]
+          #
+          # @api private
+          attr_reader :boot
+
+          # Return global default ROM environment configured by the setup
+          #
+          # @return [Env]
+          #
+          # @api public
+          attr_reader :env
+        end
+      end
+    end
+
     # Register adapter namespace under a specified identifier
     #
     # @param [Symbol]
@@ -38,15 +82,6 @@ module ROM
     # @api private
     def register_command(klass)
       boot.register_command(klass) if boot
-    end
-
-    # Return identifier => adapter map
-    #
-    # @return [Hash]
-    #
-    # @api private
-    def adapters
-      @__adapters__ ||= {}
     end
 
     # Starts the setup process for relations, mappers and commands.
@@ -134,25 +169,10 @@ module ROM
     end
 
     # @api public
-    def env
-      @env
-    end
-
-    # @api public
     def finalize
       @env = boot.finalize
       @boot = nil
       self
-    end
-
-    # @api private
-    def repositories
-      @repositories ||= {}
-    end
-
-    # @api private
-    def boot
-      @boot
     end
 
     private
