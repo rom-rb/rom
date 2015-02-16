@@ -15,17 +15,26 @@ module ROM
     #
     # @public
     class Linter
+      # A failure raised by +complain+
       Failure = Class.new(StandardError)
 
-      def self.lints
-        public_instance_methods(true).grep(/^lint_/).map(&:to_s)
-      end
-
+      # Iterate over all lint methods
+      #
+      # @yield [String, ROM::Lint]
+      #
+      # @api public
       def self.each_lint
         return to_enum unless block_given?
         lints.each { |lint| yield lint, self }
       end
 
+      # Run a lint method
+      #
+      # @param [String] lint name
+      #
+      # @raise [ROM::Lint::Linter::Failure] if linting fails
+      #
+      # @api public
       def lint(name)
         public_send name
         true # for assertions
@@ -33,6 +42,20 @@ module ROM
 
       private
 
+      # Return a list a lint methods
+      #
+      # @return [String]
+      #
+      # @api private
+      def self.lints
+        public_instance_methods(true).grep(/^lint_/).map(&:to_s)
+      end
+
+      # Raise a failure if a lint verification fails
+      #
+      # @raise [ROM::Lint::Linter::Failure]
+      #
+      # @api private
       def complain(*args)
         raise Failure, *args
       end
