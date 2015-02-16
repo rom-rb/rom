@@ -11,20 +11,22 @@ describe 'Mappers / Symbolizing atributes' do
   end
 
   it 'automatically maps all attributes using top-level settings' do
-    class UserMapper < ROM::Mapper
-      relation :users
+    module ROMSpec
+      class UserMapper < ROM::Mapper
+        relation :users
 
-      symbolize_keys true
-      prefix 'user'
+        symbolize_keys true
+        prefix 'user'
 
-      attribute :id
+        attribute :id
 
-      wrap :details, prefix: 'first' do
-        attribute :name
-      end
+        wrap :details, prefix: 'first' do
+          attribute :name
+        end
 
-      wrap :contact, prefix: false do
-        attribute :email
+        wrap :contact, prefix: false do
+          attribute :email
+        end
       end
     end
 
@@ -42,15 +44,17 @@ describe 'Mappers / Symbolizing atributes' do
   end
 
   it 'automatically maps all attributes using settings for wrap block' do
-    class TaskMapper < ROM::Mapper
-      relation :tasks
-      symbolize_keys true
+    module ROMSpec
+      class TaskMapper < ROM::Mapper
+        relation :tasks
+        symbolize_keys true
 
-      attribute :title
+        attribute :title
 
-      wrap :details, prefix: 'task' do
-        attribute :priority
-        attribute :description
+        wrap :details, prefix: 'task' do
+          attribute :priority
+          attribute :description
+        end
       end
     end
 

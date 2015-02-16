@@ -9,11 +9,11 @@ describe 'Mappers / Prefixing attributes' do
   end
 
   it 'automatically maps all attributes using the provided prefix' do
-    class UserMapper < ROM::Mapper
+    class ROMSpec::UserMapper < ROM::Mapper
       relation :users
       prefix :user
 
-      model name: 'User'
+      model name: 'ROMSpec::User'
 
       attribute :id
       attribute :name
@@ -22,7 +22,7 @@ describe 'Mappers / Prefixing attributes' do
 
     rom = setup.finalize
 
-    User.send(:include, Equalizer.new(:id, :name, :email))
+    ROMSpec::User.send(:include, Equalizer.new(:id, :name, :email))
 
     rom.relations.users << {
       user_id: 123,
@@ -32,6 +32,6 @@ describe 'Mappers / Prefixing attributes' do
 
     jane = rom.read(:users).to_a.first
 
-    expect(jane).to eql(User.new(id: 123, name: 'Jane', email: 'jane@doe.org'))
+    expect(jane).to eql(ROMSpec::User.new(id: 123, name: 'Jane', email: 'jane@doe.org'))
   end
 end

@@ -21,16 +21,16 @@ describe ROM::Setup do
         repo = setup.default
         dataset = double('dataset')
 
-        allow(repo).to receive(:schema).and_return([:users])
-        allow(repo).to receive(:dataset).with(:users).and_return(dataset)
+        allow(repo).to receive(:schema).and_return([:rom_spec_users])
+        allow(repo).to receive(:dataset).with(:rom_spec_users).and_return(dataset)
 
-        class Users < ROM::Relation[:memory]; end
+        class ROMSpec::Users < ROM::Relation[:memory]; end
 
         expect { setup.finalize }.not_to raise_error
 
         rom = setup.env
 
-        expect(rom.relations.users).to be_instance_of(Users)
+        expect(rom.relations.rom_spec_users).to be_instance_of(ROMSpec::Users)
       end
 
       it 'can register multiple relations with same dataset' do

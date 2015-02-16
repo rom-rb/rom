@@ -11,7 +11,7 @@ describe ROM::Relation do
 
   describe '.[]' do
     before do
-      module TestAdapter
+      module ROMSpec::TestAdapter
         class Relation < ROM::Relation
           def test_relation?
             true
@@ -19,7 +19,7 @@ describe ROM::Relation do
         end
       end
 
-      ROM.register_adapter(:test, TestAdapter)
+      ROM.register_adapter(:test, ROMSpec::TestAdapter)
     end
 
     it 'returns relation subclass from the registered adapter' do
@@ -35,34 +35,34 @@ describe ROM::Relation do
     context 'missing dataset' do
       context 'with Relation inside module' do
         before do
-          module Test
+          module ROMSpec::Test
             class SuperRelation < ROM::Relation[:memory]; end
           end
         end
 
         it 'returns name based on module and class' do
-          relation = Test::SuperRelation.new([])
+          relation = ROMSpec::Test::SuperRelation.new([])
 
-          expect(relation.name).to eq(:test_super_relation)
+          expect(relation.name).to eq(:rom_spec_test_super_relation)
         end
       end
 
       context 'with Relation without module' do
         before do
-          class SuperRelation < ROM::Relation[:memory]; end
+          class ROMSpec::SuperRelation < ROM::Relation[:memory]; end
         end
 
         it 'returns name based only on class' do
-          relation = SuperRelation.new([])
+          relation = ROMSpec::SuperRelation.new([])
 
-          expect(relation.name).to eq(:super_relation)
+          expect(relation.name).to eq(:rom_spec_super_relation)
         end
       end
     end
 
     context 'manualy set dataset' do
       before do
-        module TestAdapter
+        module ROMSpec::TestAdapter
           class Relation < ROM::Relation[:memory]
             dataset :foo_bar
           end
@@ -70,7 +70,7 @@ describe ROM::Relation do
       end
 
       it 'returns name based on dataset' do
-        relation = TestAdapter::Relation.new([])
+        relation = ROMSpec::TestAdapter::Relation.new([])
 
         expect(relation.name).to eq(:foo_bar)
       end
@@ -104,15 +104,15 @@ describe ROM::Relation do
     end
 
     it "defaults to dataset with a defined class that has dataset inferred" do
-      class Users < ROM::Relation[:memory]; end
-      expect(Users.register_as).to eq(:users)
+      class ROMSpec::Users < ROM::Relation[:memory]; end
+      expect(ROMSpec::Users.register_as).to eq(:rom_spec_users)
     end
 
     it "defaults to dataset with a defined class that has dataset set manually" do
-      class Users < ROM::Relation[:memory]
+      class ROMSpec::Users < ROM::Relation[:memory]
         dataset :guests
       end
-      expect(Users.register_as).to eq(:guests)
+      expect(ROMSpec::Users.register_as).to eq(:guests)
     end
   end
 
