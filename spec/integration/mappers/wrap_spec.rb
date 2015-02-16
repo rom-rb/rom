@@ -17,7 +17,7 @@ describe 'Mapper definition DSL' do
 
       setup.mappers do
         define(:tasks) do
-          model name: 'Task'
+          model name: 'Test::Task'
 
           attribute :title
           attribute :priority
@@ -28,7 +28,7 @@ describe 'Mapper definition DSL' do
     it 'allows defining wrapped attributes via options hash' do
       setup.mappers do
         define(:with_user, parent: :tasks) do
-          model name: 'TaskWithUser'
+          model name: 'Test::TaskWithUser'
 
           attribute :title
           attribute :priority
@@ -39,12 +39,12 @@ describe 'Mapper definition DSL' do
 
       rom = setup.finalize
 
-      TaskWithUser.send(:include, Equalizer.new(:title, :priority, :user))
+      Test::TaskWithUser.send(:include, Equalizer.new(:title, :priority, :user))
 
       jane = rom.read(:tasks).with_user.to_a.last
 
       expect(jane).to eql(
-        TaskWithUser.new(
+        Test::TaskWithUser.new(
           title: 'be cool',
           priority: 2,
           user: { email: 'jane@doe.org' }
@@ -55,7 +55,7 @@ describe 'Mapper definition DSL' do
     it 'allows defining wrapped attributes via options block' do
       setup.mappers do
         define(:with_user, parent: :tasks) do
-          model name: 'TaskWithUser'
+          model name: 'Test::TaskWithUser'
 
           attribute :title
           attribute :priority
@@ -68,12 +68,12 @@ describe 'Mapper definition DSL' do
 
       rom = setup.finalize
 
-      TaskWithUser.send(:include, Equalizer.new(:title, :priority, :user))
+      Test::TaskWithUser.send(:include, Equalizer.new(:title, :priority, :user))
 
       jane = rom.read(:tasks).with_user.to_a.last
 
       expect(jane).to eql(
-        TaskWithUser.new(
+        Test::TaskWithUser.new(
           title: 'be cool',
           priority: 2,
           user: { email: 'jane@doe.org' }
@@ -84,17 +84,17 @@ describe 'Mapper definition DSL' do
     it 'allows defining nested wrapped attributes via a block' do
       setup.mappers do
         define(:with_user, parent: :tasks, inherit_header: false) do
-          model name: 'TaskWithUser'
+          model name: 'Test::TaskWithUser'
 
           attribute :title
           attribute :priority
 
           wrap :user do
-            model name: 'TaskUser'
+            model name: 'Test::TaskUser'
             attribute :name
 
             wrap :contact do
-              model name: 'Contact'
+              model name: 'Test::Contact'
               attribute :email
             end
           end
@@ -103,18 +103,18 @@ describe 'Mapper definition DSL' do
 
       rom = setup.finalize
 
-      TaskWithUser.send(:include, Equalizer.new(:title, :priority, :user))
-      TaskUser.send(:include, Equalizer.new(:name, :contact))
-      Contact.send(:include, Equalizer.new(:email))
+      Test::TaskWithUser.send(:include, Equalizer.new(:title, :priority, :user))
+      Test::TaskUser.send(:include, Equalizer.new(:name, :contact))
+      Test::Contact.send(:include, Equalizer.new(:email))
 
       jane = rom.read(:tasks).with_user.to_a.last
 
       expect(jane).to eql(
-        TaskWithUser.new(
+        Test::TaskWithUser.new(
           title: 'be cool',
           priority: 2,
-          user: TaskUser.new(
-            name: 'Jane', contact: Contact.new(email: 'jane@doe.org')
+          user: Test::TaskUser.new(
+            name: 'Jane', contact: Test::Contact.new(email: 'jane@doe.org')
           )
         )
       )
@@ -123,13 +123,13 @@ describe 'Mapper definition DSL' do
     it 'allows defining wrapped attributes mapped to a model' do
       setup.mappers do
         define(:with_user, parent: :tasks) do
-          model name: 'TaskWithUser'
+          model name: 'Test::TaskWithUser'
 
           attribute :title
           attribute :priority
 
           wrap :user do
-            model name: 'User'
+            model name: 'Test::User'
             attribute :email
           end
         end
@@ -137,16 +137,16 @@ describe 'Mapper definition DSL' do
 
       rom = setup.finalize
 
-      TaskWithUser.send(:include, Equalizer.new(:title, :priority, :user))
-      User.send(:include, Equalizer.new(:email))
+      Test::TaskWithUser.send(:include, Equalizer.new(:title, :priority, :user))
+      Test::User.send(:include, Equalizer.new(:email))
 
       jane = rom.read(:tasks).with_user.to_a.last
 
       expect(jane).to eql(
-        TaskWithUser.new(
+        Test::TaskWithUser.new(
           title: 'be cool',
           priority: 2,
-          user: User.new(email: 'jane@doe.org')
+          user: Test::User.new(email: 'jane@doe.org')
         )
       )
     end

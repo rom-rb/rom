@@ -52,7 +52,7 @@ describe 'Setting up ROM' do
     it 'sets up registries based on class definitions' do
       ROM.setup(:memory)
 
-      class UserRelation < ROM::Relation[:memory]
+      class Test::UserRelation < ROM::Relation[:memory]
         dataset :users
 
         def by_name(name)
@@ -60,32 +60,34 @@ describe 'Setting up ROM' do
         end
       end
 
-      class TaskRelation < ROM::Relation[:memory]
+      class Test::TaskRelation < ROM::Relation[:memory]
         dataset :tasks
       end
 
-      class CreateUser < ROM::Commands::Update[:memory]
+      class Test::CreateUser < ROM::Commands::Update[:memory]
         relation :users
         register_as :create
       end
 
       rom = ROM.finalize.env
 
-      expect(rom.relations.users).to be_kind_of(UserRelation)
+      expect(rom.relations.users).to be_kind_of(Test::UserRelation)
       expect(rom.relations.users.tasks).to be(rom.relations.tasks)
 
-      expect(rom.commands.users[:create]).to be_kind_of(CreateUser)
+      expect(rom.commands.users[:create]).to be_kind_of(Test::CreateUser)
 
-      expect(rom.relations.tasks).to be_kind_of(TaskRelation)
+      expect(rom.relations.tasks).to be_kind_of(Test::TaskRelation)
       expect(rom.relations.tasks.users).to be(rom.relations.users)
     end
   end
 
   describe 'quick setup' do
     it 'exposes boot DSL inside the setup block' do
-      User = Class.new do
-        include Virtus.value_object
-        values { attribute :name, String }
+      module Test
+        User = Class.new do
+          include Virtus.value_object
+          values { attribute :name, String }
+        end
       end
 
       rom = ROM.setup(:memory) do
@@ -101,7 +103,7 @@ describe 'Setting up ROM' do
 
         mappers do
           define(:users) do
-            model User
+            model Test::User
           end
         end
       end
@@ -109,15 +111,17 @@ describe 'Setting up ROM' do
       rom.commands.users.create.call(name: 'Jane')
 
       expect(rom.read(:users).by_name('Jane').to_a)
-        .to eql([User.new(name: 'Jane')])
+        .to eql([Test::User.new(name: 'Jane')])
     end
   end
 
   describe 'multi-step setup' do
     it 'exposes boot DSL that can be invoked multiple times' do
-      User = Class.new do
-        include Virtus.value_object
-        values { attribute :name, String }
+      module Test
+        User = Class.new do
+          include Virtus.value_object
+          values { attribute :name, String }
+        end
       end
 
       ROM.setup(:memory)
@@ -134,7 +138,7 @@ describe 'Setting up ROM' do
 
       ROM.mappers do
         define(:users) do
-          model User
+          model Test::User
         end
       end
 
@@ -143,7 +147,7 @@ describe 'Setting up ROM' do
       rom.command(:users).create.call(name: 'Jane')
 
       expect(rom.read(:users).by_name('Jane').to_a)
-        .to eql([User.new(name: 'Jane')])
+        .to eql([Test::User.new(name: 'Jane')])
     end
   end
 end

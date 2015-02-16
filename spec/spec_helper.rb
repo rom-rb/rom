@@ -21,13 +21,13 @@ root = Pathname(__FILE__).dirname
 Dir[root.join('support/*.rb').to_s].each { |f| require f }
 Dir[root.join('shared/*.rb').to_s].each { |f| require f }
 
-RSpec.configure do |config|
-  config.before do
-    @constants = Object.constants
-  end
+# Namespace holding all objects created during specs
+module Test
+end
 
+RSpec.configure do |config|
   config.after do
-    added_constants = Object.constants - @constants - [:ThreadSafe]
-    added_constants.each { |name| Object.send(:remove_const, name) }
+    added_constants = Test.constants
+    added_constants.each { |name| Test.send(:remove_const, name) }
   end
 end
