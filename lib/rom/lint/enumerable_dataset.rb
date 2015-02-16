@@ -7,13 +7,30 @@ module ROM
     #
     # @public
     class EnumerableDataset < ROM::Lint::Linter
-      attr_reader :dataset, :data
+      # The linted subject
+      #
+      # @api public
+      attr_reader :dataset
 
+      # The expected data
+      #
+      # @api public
+      attr_reader :data
+
+      # Create a linter for EnumerableDataset
+      #
+      # @param [EnumerableDataset] dataset the linted subject
+      # @param [Object] data the expected data
+      #
+      # @api public
       def initialize(dataset, data)
         @dataset = dataset
         @data = data
       end
 
+      # Lint: Ensure that +dataset+ yield tuples via +each+
+      #
+      # @api public
       def lint_each
         result = []
         dataset.each { |tuple| result << tuple }
@@ -22,6 +39,9 @@ module ROM
         complain "#{dataset.class}#each must yield tuples"
       end
 
+      # Lint: Ensure that +dataset+'s array equals to expected +data+
+      #
+      # @api public
       def lint_to_a
         return if dataset.to_a == data
 
