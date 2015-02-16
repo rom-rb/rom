@@ -73,7 +73,7 @@ describe 'Mappers / Renaming attributes' do
 
     expect(jane).to eql(
       Test::UserWithAddress.new(id: 123, name: 'Jane',
-                                   address: { id: 321, street: 'Street 1' })
+                                address: { id: 321, street: 'Street 1' })
     )
   end
 
