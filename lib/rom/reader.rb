@@ -57,7 +57,7 @@ module ROM
     #
     # @api private
     def self.build_class(relation, method_names)
-      klass_name = "#{Reader.name}[#{Inflecto.camelize(relation.name)}]"
+      klass_name = "#{Reader.name}[#{Inflector.camelize(relation.name)}]"
 
       ClassBuilder.new(name: klass_name, parent: Reader).call do |klass|
         method_names.each do |method_name|
