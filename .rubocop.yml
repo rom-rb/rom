@@ -73,3 +73,8 @@ Style/StringLiterals:
 # Allow def self.foo; @foo; end
 Style/TrivialAccessors:
   Enabled: false
+
+# Allow compact style for specs
+Style/ClassAndModuleChildren:
+  Exclude:
+    - spec/**/*_spec.rb

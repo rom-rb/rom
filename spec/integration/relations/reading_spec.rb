@@ -129,7 +129,7 @@ describe 'Reading relations' do
 
     expect(user).to eql(
       ROMSpec::UserWithTask.new(name: "Jane", email: "jane@doe.org",
-                       task: { title: "be cool", priority: 2 })
+                                task: { title: "be cool", priority: 2 })
     )
   end
 
