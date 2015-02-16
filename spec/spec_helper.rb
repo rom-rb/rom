@@ -27,7 +27,7 @@ RSpec.configure do |config|
   end
 
   config.after do
-    added_constants = Object.constants - @constants
+    added_constants = Object.constants - @constants - [:ThreadSafe]
     added_constants.each { |name| Object.send(:remove_const, name) }
   end
 end
