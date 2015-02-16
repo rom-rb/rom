@@ -23,11 +23,17 @@ Dir[root.join('shared/*.rb').to_s].each { |f| require f }
 
 # Namespace holding all objects created during specs
 module Test
+  def self.remove_constants
+    constants.each(&method(:remove_const))
+  end
 end
 
 RSpec.configure do |config|
   config.after do
-    added_constants = Test.constants
-    added_constants.each { |name| Test.send(:remove_const, name) }
+    Test.remove_constants
+  end
+
+  config.around do |example|
+    ConstantLeakFinder.find(example)
   end
 end
