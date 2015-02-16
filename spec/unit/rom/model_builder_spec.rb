@@ -32,13 +32,13 @@ describe ROM::ModelBuilder do
       end
 
       it 'defines a constant within a namespace for the model' do
-        module ROMSpec::MyApp; module Entities; end; end
+        module Test::MyApp; module Entities; end; end
 
-        builder = ROM::ModelBuilder::PORO.new(name: 'ROMSpec::MyApp::Entities::User')
+        builder = ROM::ModelBuilder::PORO.new(name: 'Test::MyApp::Entities::User')
 
         builder.call([:name, :email])
 
-        expect(ROMSpec::MyApp::Entities.const_defined?(:User)).to be(true)
+        expect(Test::MyApp::Entities.const_defined?(:User)).to be(true)
         expect(Object.const_defined?(:User)).to be(false)
       end
     end

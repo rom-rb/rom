@@ -10,7 +10,7 @@ describe 'Mappers / deeply embedded tuples' do
 
     setup.mappers do
       define(:users) do
-        model name: 'ROMSpec::User'
+        model name: 'Test::User'
 
         attribute :name, from: 'name'
 

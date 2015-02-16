@@ -11,7 +11,7 @@ describe 'Mappers / Symbolizing atributes' do
   end
 
   it 'automatically maps all attributes using top-level settings' do
-    module ROMSpec
+    module Test
       class UserMapper < ROM::Mapper
         relation :users
 
@@ -44,7 +44,7 @@ describe 'Mappers / Symbolizing atributes' do
   end
 
   it 'automatically maps all attributes using settings for wrap block' do
-    module ROMSpec
+    module Test
       class TaskMapper < ROM::Mapper
         relation :tasks
         symbolize_keys true

@@ -22,12 +22,12 @@ Dir[root.join('support/*.rb').to_s].each { |f| require f }
 Dir[root.join('shared/*.rb').to_s].each { |f| require f }
 
 # Namespace holding all objects created during specs
-module ROMSpec
+module Test
 end
 
 RSpec.configure do |config|
   config.after do
-    added_constants = ROMSpec.constants
-    added_constants.each { |name| ROMSpec.send(:remove_const, name) }
+    added_constants = Test.constants
+    added_constants.each { |name| Test.send(:remove_const, name) }
   end
 end

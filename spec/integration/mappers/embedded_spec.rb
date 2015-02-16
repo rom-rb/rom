@@ -10,7 +10,7 @@ describe 'Mappers / embedded' do
 
     setup.mappers do
       define(:users) do
-        model name: 'ROMSpec::User'
+        model name: 'Test::User'
 
         attribute :name, from: 'name'
 
@@ -38,12 +38,12 @@ describe 'Mappers / embedded' do
 
     setup.mappers do
       define(:users) do
-        model name: 'ROMSpec::User'
+        model name: 'Test::User'
 
         attribute :name, from: 'name'
 
         embedded :address, from: 'address', type: :hash do
-          model name: 'ROMSpec::Address'
+          model name: 'Test::Address'
           attribute :street, from: 'street'
           attribute :city, from: 'city'
         end
@@ -59,9 +59,9 @@ describe 'Mappers / embedded' do
 
     expect(rom.read(:users).mapper.header.map(&:name)).to eql([:name, :address])
 
-    ROMSpec::Address.send(:include, Equalizer.new(:street, :city))
+    Test::Address.send(:include, Equalizer.new(:street, :city))
 
     expect(jane.name).to eql('Jane')
-    expect(jane.address).to eql(ROMSpec::Address.new(street: 'Somewhere 1', city: 'NYC'))
+    expect(jane.address).to eql(Test::Address.new(street: 'Somewhere 1', city: 'NYC'))
   end
 end

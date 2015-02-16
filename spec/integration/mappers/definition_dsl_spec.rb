@@ -19,7 +19,7 @@ describe 'Mapper definition DSL' do
     before do
       setup.mappers do
         define(:users) do
-          model name: 'ROMSpec::User'
+          model name: 'Test::User'
 
           attribute :name
           attribute :email
@@ -28,7 +28,7 @@ describe 'Mapper definition DSL' do
     end
 
     it 'defines a constant for the model class' do
-      expect(mapper.model).to be(ROMSpec::User)
+      expect(mapper.model).to be(Test::User)
     end
 
     it 'defines header with attributes' do
@@ -43,14 +43,14 @@ describe 'Mapper definition DSL' do
       before do
         setup.mappers do
           define(:users) do
-            model name: 'ROMSpec::User'
+            model name: 'Test::User'
 
             attribute :name
             attribute :email
           end
 
           define(:email_index, parent: :users, inherit_header: false) do
-            model name: 'ROMSpec::UserWithoutName'
+            model name: 'Test::UserWithoutName'
             attribute :email
           end
         end
@@ -68,14 +68,14 @@ describe 'Mapper definition DSL' do
     before do
       setup.mappers do
         define(:users) do
-          model name: 'ROMSpec::User'
+          model name: 'Test::User'
 
           attribute :name
           attribute :email
         end
 
         define(:email_index, parent: :users) do
-          model name: 'ROMSpec::UserWithoutName'
+          model name: 'Test::UserWithoutName'
           exclude :name
         end
       end
@@ -86,7 +86,7 @@ describe 'Mapper definition DSL' do
     end
 
     it 'builds a new model' do
-      expect(mapper.model).to be(ROMSpec::UserWithoutName)
+      expect(mapper.model).to be(Test::UserWithoutName)
     end
   end
 
@@ -100,7 +100,7 @@ describe 'Mapper definition DSL' do
 
       setup.mappers do
         define(:tasks) do
-          model name: 'ROMSpec::Task'
+          model name: 'Test::Task'
 
           attribute :title
           attribute :priority
@@ -111,7 +111,7 @@ describe 'Mapper definition DSL' do
     it 'allows defining wrapped attributes via options hash' do
       setup.mappers do
         define(:with_user, parent: :tasks) do
-          model name: 'ROMSpec::TaskWithUser'
+          model name: 'Test::TaskWithUser'
 
           attribute :title
           attribute :priority
@@ -122,12 +122,12 @@ describe 'Mapper definition DSL' do
 
       rom = setup.finalize
 
-      ROMSpec::TaskWithUser.send(:include, Equalizer.new(:title, :priority, :user))
+      Test::TaskWithUser.send(:include, Equalizer.new(:title, :priority, :user))
 
       jane = rom.read(:tasks).with_user.to_a.last
 
       expect(jane).to eql(
-        ROMSpec::TaskWithUser.new(
+        Test::TaskWithUser.new(
           title: 'be cool',
           priority: 2,
           user: { email: 'jane@doe.org' }
@@ -138,7 +138,7 @@ describe 'Mapper definition DSL' do
     it 'allows defining wrapped attributes via options block' do
       setup.mappers do
         define(:with_user, parent: :tasks) do
-          model name: 'ROMSpec::TaskWithUser'
+          model name: 'Test::TaskWithUser'
 
           attribute :title
           attribute :priority
@@ -151,12 +151,12 @@ describe 'Mapper definition DSL' do
 
       rom = setup.finalize
 
-      ROMSpec::TaskWithUser.send(:include, Equalizer.new(:title, :priority, :user))
+      Test::TaskWithUser.send(:include, Equalizer.new(:title, :priority, :user))
 
       jane = rom.read(:tasks).with_user.to_a.last
 
       expect(jane).to eql(
-        ROMSpec::TaskWithUser.new(
+        Test::TaskWithUser.new(
           title: 'be cool',
           priority: 2,
           user: { email: 'jane@doe.org' }
@@ -167,13 +167,13 @@ describe 'Mapper definition DSL' do
     it 'allows defining wrapped attributes mapped to a model' do
       setup.mappers do
         define(:with_user, parent: :tasks) do
-          model name: 'ROMSpec::TaskWithUser'
+          model name: 'Test::TaskWithUser'
 
           attribute :title
           attribute :priority
 
           wrap :user do
-            model name: 'ROMSpec::User'
+            model name: 'Test::User'
             attribute :email
           end
         end
@@ -181,16 +181,16 @@ describe 'Mapper definition DSL' do
 
       rom = setup.finalize
 
-      ROMSpec::TaskWithUser.send(:include, Equalizer.new(:title, :priority, :user))
-      ROMSpec::User.send(:include, Equalizer.new(:email))
+      Test::TaskWithUser.send(:include, Equalizer.new(:title, :priority, :user))
+      Test::User.send(:include, Equalizer.new(:email))
 
       jane = rom.read(:tasks).with_user.to_a.last
 
       expect(jane).to eql(
-        ROMSpec::TaskWithUser.new(
+        Test::TaskWithUser.new(
           title: 'be cool',
           priority: 2,
-          user: ROMSpec::User.new(email: 'jane@doe.org')
+          user: Test::User.new(email: 'jane@doe.org')
         )
       )
     end

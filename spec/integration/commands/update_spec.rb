@@ -8,7 +8,7 @@ describe 'Commands / Update' do
   subject(:users) { rom.commands.users }
 
   before do
-    module ROMSpec
+    module Test
       UserValidator = Class.new do
         ValidationError = Class.new(ROM::CommandError)
 
@@ -30,7 +30,7 @@ describe 'Commands / Update' do
 
     setup.commands(:users) do
       define(:update) do
-        validator ROMSpec::UserValidator
+        validator Test::UserValidator
       end
     end
   end
@@ -47,7 +47,7 @@ describe 'Commands / Update' do
   it 'returns validation object with errors on failed validation' do
     result = users.try { users.update.all(name: 'Jane').set(email: nil) }
 
-    expect(result.error).to be_instance_of(ROMSpec::ValidationError)
+    expect(result.error).to be_instance_of(Test::ValidationError)
     expect(result.error.message).to eql(':email is required')
 
     expect(rom.relations.users.restrict(name: 'Jane')).to match_array([

@@ -7,7 +7,7 @@ describe 'Commands / Create' do
   let(:tasks) { rom.commands.tasks }
 
   before do
-    module ROMSpec
+    module Test
       UserValidator = Class.new do
         ValidationError = Class.new(ROM::CommandError)
 
@@ -22,14 +22,14 @@ describe 'Commands / Create' do
     setup.relation(:users)
     setup.relation(:tasks)
 
-    class ROMSpec::CreateUser < ROM::Commands::Create[:memory]
+    class Test::CreateUser < ROM::Commands::Create[:memory]
       relation :users
       register_as :create
       result :one
-      validator ROMSpec::UserValidator
+      validator Test::UserValidator
     end
 
-    class ROMSpec::CreateTask < ROM::Commands::Create[:memory]
+    class Test::CreateTask < ROM::Commands::Create[:memory]
       relation :tasks
       register_as :create
       result :one
@@ -61,7 +61,7 @@ describe 'Commands / Create' do
   it 'returns validation object with errors on failed validation' do
     result = users.try { users.create.call(name: 'Piotr') }
 
-    expect(result.error).to be_instance_of(ROMSpec::ValidationError)
+    expect(result.error).to be_instance_of(Test::ValidationError)
     expect(result.error.message).to eql(":name and :email are required")
     expect(rom.relations.users.count).to be(2)
   end

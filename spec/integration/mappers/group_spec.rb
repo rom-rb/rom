@@ -21,7 +21,7 @@ describe 'Mapper definition DSL' do
 
       setup.mappers do
         define(:users) do
-          model name: 'ROMSpec::User'
+          model name: 'Test::User'
 
           attribute :name
           attribute :email
@@ -32,7 +32,7 @@ describe 'Mapper definition DSL' do
     it 'allows defining grouped attributes via options hash' do
       setup.mappers do
         define(:with_tasks, parent: :users) do
-          model name: 'ROMSpec::UserWithTasks'
+          model name: 'Test::UserWithTasks'
 
           attribute :name
           attribute :email
@@ -43,12 +43,12 @@ describe 'Mapper definition DSL' do
 
       rom = setup.finalize
 
-      ROMSpec::UserWithTasks.send(:include, Equalizer.new(:name, :email, :tasks))
+      Test::UserWithTasks.send(:include, Equalizer.new(:name, :email, :tasks))
 
       jane = rom.read(:users).with_tasks.to_a.last
 
       expect(jane).to eql(
-        ROMSpec::UserWithTasks.new(
+        Test::UserWithTasks.new(
           name: 'Jane',
           email: 'jane@doe.org',
           tasks: [{ title: 'be cool', priority: 2 }]
@@ -59,7 +59,7 @@ describe 'Mapper definition DSL' do
     it 'allows defining grouped attributes via block' do
       setup.mappers do
         define(:with_tasks, parent: :users) do
-          model name: 'ROMSpec::UserWithTasks'
+          model name: 'Test::UserWithTasks'
 
           attribute :name
           attribute :email
@@ -73,12 +73,12 @@ describe 'Mapper definition DSL' do
 
       rom = setup.finalize
 
-      ROMSpec::UserWithTasks.send(:include, Equalizer.new(:name, :email, :tasks))
+      Test::UserWithTasks.send(:include, Equalizer.new(:name, :email, :tasks))
 
       jane = rom.read(:users).with_tasks.to_a.last
 
       expect(jane).to eql(
-        ROMSpec::UserWithTasks.new(
+        Test::UserWithTasks.new(
           name: 'Jane',
           email: 'jane@doe.org',
           tasks: [{ title: 'be cool', priority: 2 }]
@@ -89,13 +89,13 @@ describe 'Mapper definition DSL' do
     it 'allows defining grouped attributes mapped to a model via block' do
       setup.mappers do
         define(:with_tasks, parent: :users) do
-          model name: 'ROMSpec::UserWithTasks'
+          model name: 'Test::UserWithTasks'
 
           attribute :name
           attribute :email
 
           group :tasks do
-            model name: 'ROMSpec::Task'
+            model name: 'Test::Task'
 
             attribute :title
             attribute :priority
@@ -105,16 +105,16 @@ describe 'Mapper definition DSL' do
 
       rom = setup.finalize
 
-      ROMSpec::UserWithTasks.send(:include, Equalizer.new(:name, :email, :tasks))
-      ROMSpec::Task.send(:include, Equalizer.new(:title, :priority))
+      Test::UserWithTasks.send(:include, Equalizer.new(:name, :email, :tasks))
+      Test::Task.send(:include, Equalizer.new(:title, :priority))
 
       jane = rom.read(:users).with_tasks.to_a.last
 
       expect(jane).to eql(
-        ROMSpec::UserWithTasks.new(
+        Test::UserWithTasks.new(
           name: 'Jane',
           email: 'jane@doe.org',
-          tasks: [ROMSpec::Task.new(title: 'be cool', priority: 2)]
+          tasks: [Test::Task.new(title: 'be cool', priority: 2)]
         )
       )
     end
@@ -124,18 +124,18 @@ describe 'Mapper definition DSL' do
         define(:tasks)
 
         define(:with_users, parent: :tasks, inherit_header: false) do
-          model name: 'ROMSpec::TaskWithUsers'
+          model name: 'Test::TaskWithUsers'
 
           attribute :title
           attribute :priority
 
           group :users do
-            model name: 'ROMSpec::TaskUser'
+            model name: 'Test::TaskUser'
 
             attribute :name
 
             group :contacts do
-              model name: 'ROMSpec::Contact'
+              model name: 'Test::Contact'
               attribute :email
             end
           end
@@ -144,16 +144,16 @@ describe 'Mapper definition DSL' do
 
       rom = setup.finalize
 
-      ROMSpec::TaskWithUsers.send(:include, Equalizer.new(:title, :priority, :users))
-      ROMSpec::TaskUser.send(:include, Equalizer.new(:name, :contacts))
-      ROMSpec::Contact.send(:include, Equalizer.new(:email))
+      Test::TaskWithUsers.send(:include, Equalizer.new(:title, :priority, :users))
+      Test::TaskUser.send(:include, Equalizer.new(:name, :contacts))
+      Test::Contact.send(:include, Equalizer.new(:email))
 
       task = rom.read(:tasks).with_users.to_a.first
 
       expect(task).to eql(
-        ROMSpec::TaskWithUsers.new(title: 'be nice', priority: 1, users: [
-          ROMSpec::TaskUser.new(name: 'Joe', contacts: [
-            ROMSpec::Contact.new(email: 'joe@doe.org')
+        Test::TaskWithUsers.new(title: 'be nice', priority: 1, users: [
+          Test::TaskUser.new(name: 'Joe', contacts: [
+            Test::Contact.new(email: 'joe@doe.org')
           ])
         ])
       )
