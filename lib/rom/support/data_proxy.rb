@@ -37,8 +37,7 @@ module ROM
     # Constructor for dataset objects
     #
     # @param [Object] data
-    # @param [Array<Symbol>] tuple attribute names
-    # @param [Proc] tuple processing proc
+    # @param [Proc] row_proc processing proc
     #
     # @api private
     def initialize(data, row_proc = self.class.row_proc)

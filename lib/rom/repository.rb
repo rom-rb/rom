@@ -46,7 +46,7 @@ module ROM
 
     # Get repository subclass for a specific adapter
     #
-    # @param [Symbol] adapter identifier
+    # @param [Symbol] type adapter identifier
     #
     # @return [Class]
     #

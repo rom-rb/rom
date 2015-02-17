@@ -45,7 +45,6 @@ module ROM
     #   rom.read(:users).with(:some_mapper).to_a
     #
     # @param [Symbol] name of the registered reader
-    # @param [Hash] option hash
     #
     # @api public
     def read(name, &block)

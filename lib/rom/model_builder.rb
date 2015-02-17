@@ -21,7 +21,7 @@ module ROM
 
     # Return model builder subclass based on type
     #
-    # @param [Symbol]
+    # @param [Symbol] type
     #
     # @return [Class]
     #

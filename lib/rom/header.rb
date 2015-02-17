@@ -31,9 +31,9 @@ module ROM
 
     # Coerce array with attribute definitions into a header object
     #
-    # @param [Array<Array>] attribute name/option pairs
+    # @param [Array<Array>] input attribute name/option pairs
     #
-    # @param [Class] optional model
+    # @param [Class] model optional
     #
     # @return [Header]
     #

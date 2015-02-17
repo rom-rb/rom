@@ -30,7 +30,7 @@ module ROM
 
       # Run a lint method
       #
-      # @param [String] lint name
+      # @param [String] name
       #
       # @raise [ROM::Lint::Linter::Failure] if linting fails
       #

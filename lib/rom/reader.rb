@@ -56,7 +56,7 @@ module ROM
     # only to the methods exposed by a given relation
     #
     # @param [Relation] relation that the reader will use
-    # @param [Array<Symbol>] a list of method names exposed by the relation
+    # @param [Array<Symbol>] method_names a list of method names exposed by the relation
     #
     # @return [Class]
     #
@@ -145,7 +145,7 @@ module ROM
     #   rom.read(:users).map(:my_mapper_name)
     #   rom.read(:users).map { |user| ... }
     #
-    # @param [Symbol] mapper name
+    # @param [Symbol] *args
     #
     # @return [Array,Reader]
     #

@@ -14,7 +14,7 @@ module ROM
 
       attr_reader :attributes, :options, :symbolize_keys, :prefix, :prefix_separator
 
-      # @param [Array] attribute accumulator array
+      # @param [Array] attributes accumulator array
       # @param [Hash] options
       #
       # @api private
@@ -70,7 +70,7 @@ module ROM
       #     attribute :name
       #   end
       #
-      # @param [Symbol] attribute name
+      # @param [Symbol] name attribute
       #
       # @param [Hash] options
       # @option options [Symbol] :type Embedded type can be :hash or :array

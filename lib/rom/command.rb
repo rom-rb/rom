@@ -60,7 +60,7 @@ module ROM
     #
     #   command = CreateUser.build(rom.relations[:users])
     #
-    # @param [Relation] a relation
+    # @param [Relation] relation
     # @param [Hash] options
     #
     # @return [Command]
@@ -72,9 +72,9 @@ module ROM
 
     # Build command registry hash for provided relations
     #
-    # @param [RelationRegistry] relations
+    # @param [RelationRegistry] relations registry
     # @param [Hash] repositories
-    # @param [Array] a list of command subclasses
+    # @param [Array] descendants a list of command subclasses
     #
     # @return [Hash]
     #

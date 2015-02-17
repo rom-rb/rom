@@ -33,7 +33,7 @@ module ROM
 
       # Return attribute class for a give meta hash
       #
-      # @param [Hash] hash with type information and optional transformation info
+      # @param [Hash] meta hash with type information and optional transformation info
       #
       # @return [Class]
       #
@@ -52,7 +52,7 @@ module ROM
 
       # Coerce an array with attribute meta-data into an attribute object
       #
-      # @param [Array<Symbol,Hash>] name/options pair
+      # @param [Array<Symbol,Hash>] input attribute name/options pair
       #
       # @return [Attribute]
       #

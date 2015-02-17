@@ -185,8 +185,8 @@ module ROM
 
     # Register adapter namespace under a specified identifier
     #
-    # @param [Symbol]
-    # @param [Class,Module]
+    # @param [Symbol] identifier
+    # @param [Class,Module] adapter
     #
     # @return [self]
     #
