@@ -112,7 +112,7 @@ module ROM
     # This is used by the setup
     #
     # @param [Hash] repositories
-    # @param [Array] a list of relation descendants
+    # @param [Array] descendants a list of relation descendants
     #
     # @return [Hash]
     #

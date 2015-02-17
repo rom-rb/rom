@@ -17,8 +17,6 @@ module ROM
       # @example
       #   users.insert(name: 'Jane')
       #
-      # @alias :<<
-      #
       # @return [Relation]
       #
       # @api public

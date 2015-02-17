@@ -145,8 +145,6 @@ module ROM
     #   rom.read(:users).map(:my_mapper_name)
     #   rom.read(:users).map { |user| ... }
     #
-    # @param [Symbol] *args
-    #
     # @return [Array,Reader]
     #
     # @api public

@@ -64,8 +64,6 @@ module ROM
       #
       # @return [Command]
       #
-      # @alias with
-      #
       # @api public
       def curry(*args)
         self.class.new(relation, options.merge(curry_args: args))
@@ -113,7 +111,7 @@ module ROM
       # Assert that tuple count in the target relation corresponds to :result
       # setting
       #
-      # @raises TupleCountMismatchError
+      # @raise TupleCountMismatchError
       #
       # @api private
       def assert_tuple_count
