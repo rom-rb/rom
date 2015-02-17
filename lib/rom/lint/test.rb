@@ -35,7 +35,7 @@ module ROM
     #     end
     #   end
     #
-    # @public
+    # @api public
     module TestRepository
       extend ROM::Lint::Test
 
@@ -74,7 +74,7 @@ module ROM
     #       @dataset = MyDataset.new(@data, [:name, :age])
     #     end
     #   end
-    # @public
+    # @api public
     module TestEnumerableDataset
       extend ROM::Lint::Test
 

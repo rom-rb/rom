@@ -5,7 +5,7 @@ module ROM
     # Ensures that a [ROM::Repository] extension provides datasets through the
     # expected methods
     #
-    # @public
+    # @api public
     class Repository < ROM::Lint::Linter
       # The repository identifier e.g. +:memory+
       #

@@ -3,7 +3,7 @@ require 'rom/commands/result'
 module ROM
   # Command registry exposes "try" interface for executing commands
   #
-  # @public
+  # @api public
   class CommandRegistry < Registry
     include Commands
 

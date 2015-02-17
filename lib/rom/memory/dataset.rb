@@ -4,7 +4,7 @@ module ROM
   module Memory
     # In-memory dataset
     #
-    # @public
+    # @api public
     class Dataset
       include ArrayDataset
 

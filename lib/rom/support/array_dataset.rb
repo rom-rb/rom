@@ -5,7 +5,7 @@ module ROM
   #
   # @see EnumerableDataset
   #
-  # @public
+  # @api public
   module ArrayDataset
     extend DataProxy::ClassMethods
     include EnumerableDataset

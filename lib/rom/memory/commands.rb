@@ -4,11 +4,11 @@ module ROM
   module Memory
     # Memory adapter commands namespace
     #
-    # @public
+    # @api public
     module Commands
       # In-memory create command
       #
-      # @public
+      # @api public
       class Create < ROM::Commands::Create
         # @see ROM::Commands::Create#execute
         def execute(tuple)
@@ -20,7 +20,7 @@ module ROM
 
       # In-memory update command
       #
-      # @public
+      # @api public
       class Update < ROM::Commands::Update
         # @see ROM::Commands::Update#execute
         def execute(params)
@@ -32,7 +32,7 @@ module ROM
 
       # In-memory delete command
       #
-      # @public
+      # @api public
       class Delete < ROM::Commands::Delete
         # @see ROM::Commands::Delete#execute
         def execute

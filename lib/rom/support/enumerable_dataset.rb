@@ -21,7 +21,7 @@ module ROM
   #   ds = MyDataset.new([{ 'name' => 'Jane' }, [:name])
   #   ds.to_a # => { :name => 'Jane' }
   #
-  # @public
+  # @api public
   module EnumerableDataset
     include Enumerable
 

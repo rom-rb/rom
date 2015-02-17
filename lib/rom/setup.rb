@@ -3,7 +3,7 @@ require 'rom/setup/finalize'
 module ROM
   # Exposes DSL for defining relations, mappers and commands
   #
-  # @public
+  # @api public
   class Setup
     include Equalizer.new(:repositories, :env)
 

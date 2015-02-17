@@ -5,7 +5,7 @@ module ROM
     # Ensures that a [ROM::EnumerableDataset] extension correctly yields
     # arrays and tuples
     #
-    # @public
+    # @api public
     class EnumerableDataset < ROM::Lint::Linter
       # The linted subject
       #

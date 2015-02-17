@@ -6,7 +6,7 @@ require 'rom/setup_dsl/command_dsl'
 module ROM
   # This extends Setup class with the DSL methods
   #
-  # @public
+  # @api public
   class Setup
     # Relation definition DSL
     #

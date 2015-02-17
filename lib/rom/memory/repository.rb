@@ -11,7 +11,7 @@ module ROM
     #   repository.dataset(:users)
     #   repository[:users].insert(name: 'Jane')
     #
-    # @public
+    # @api public
     class Repository < ROM::Repository
       # @return [Object] default logger
       #

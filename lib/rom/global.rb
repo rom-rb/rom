@@ -4,7 +4,7 @@ require 'rom/repository'
 module ROM
   # Globally accessible public interface exposed via ROM module
   #
-  # @public
+  # @api public
   module Global
     # Set base global registries in ROM constant
     #

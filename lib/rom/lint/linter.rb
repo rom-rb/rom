@@ -13,7 +13,7 @@ module ROM
     #   require 'rom/lint/spec'
     #
     #
-    # @public
+    # @api public
     class Linter
       # A failure raised by +complain+
       Failure = Class.new(StandardError)

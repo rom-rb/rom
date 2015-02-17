@@ -6,7 +6,7 @@ module ROM
     #   class Users < ROM::Relation[:memory]
     #   end
     #
-    # @public
+    # @api public
     class Relation < ROM::Relation
       include Enumerable
 

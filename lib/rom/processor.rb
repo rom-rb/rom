@@ -5,7 +5,7 @@ module ROM
   #
   # Every ROM processor should inherit from this class
   #
-  # @public
+  # @api public
   class Processor
     # Hook used to auto-register a processor class
     #

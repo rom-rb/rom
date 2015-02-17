@@ -2,7 +2,7 @@ module ROM
   module Commands
     # Composite command that consists of left and right commands
     #
-    # @public
+    # @api public
     class Composite
       include Equalizer.new(:left, :right)
 

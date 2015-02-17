@@ -2,7 +2,7 @@ module ROM
   module Commands
     # Abstract result class for success and error results
     #
-    # @public
+    # @api public
     class Result
       # Return command execution result
       #
@@ -26,7 +26,7 @@ module ROM
 
       # Success result has a value and no error
       #
-      # @public
+      # @api public
       class Success < Result
         # @api private
         def initialize(value)
@@ -52,7 +52,7 @@ module ROM
 
       # Failure result has an error and no value
       #
-      # @public
+      # @api public
       class Failure < Result
         # @api private
         def initialize(error)
