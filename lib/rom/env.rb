@@ -69,7 +69,7 @@ module ROM
           relations[name]
         end
 
-      Relation::Loaded.new(tuples.to_a, mappers[name])
+      Relation::Loaded.new(tuples, mappers[name])
     end
 
     # Returns a reader with access to defined mappers
