@@ -48,7 +48,12 @@ module ROM
         connection.key?(name)
       end
 
-      # @see ROM::Repository#[]
+      # Return dataset with the given name
+      #
+      # @param (see ROM::Repository#[])
+      # @return [Memory::Dataset]
+      #
+      # @api public
       def [](name)
         connection[name]
       end

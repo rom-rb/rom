@@ -25,6 +25,11 @@ module ROM
   module EnumerableDataset
     include Enumerable
 
+    # Coerce a dataset to an array
+    #
+    # @return [Array]
+    #
+    # @api public
     alias_method :to_ary, :to_a
 
     # Included hook which extends a class with DataProxy behavior
