@@ -39,7 +39,7 @@ module ROM
 
       # Build a transproc function from the header
       #
-      # @param [Header
+      # @param [ROM::Header] header
       #
       # @return [Transproc::Function]
       #
@@ -74,7 +74,7 @@ module ROM
       #
       # This forwards to a specialized visitor based on the attribute type
       #
-      # @param [Header::Attribute]
+      # @param [Header::Attribute] attribute
       #
       # @api private
       def visit(attribute)
@@ -86,7 +86,7 @@ module ROM
       #
       # If it's a typed attribute a coercion transformation is added
       #
-      # @param [Header::Attribute]
+      # @param [Header::Attribute] attribute
       #
       # @api private
       def visit_attribute(attribute)
@@ -97,7 +97,7 @@ module ROM
 
       # Visit hash attribute
       #
-      # @param [Header::Attribute::Hash]
+      # @param [Header::Attribute::Hash] attribute
       #
       # @api private
       def visit_hash(attribute)
@@ -108,7 +108,7 @@ module ROM
 
       # Visit array attribute
       #
-      # @param [Header::Attribute::Array]
+      # @param [Header::Attribute::Array] attribute
       #
       # @api private
       def visit_array(attribute)
@@ -121,7 +121,7 @@ module ROM
       #
       # :nest transformation is added to handle wrapping
       #
-      # @param [Header::Attribute::Wrap]
+      # @param [Header::Attribute::Wrap] attribute
       #
       # @api private
       def visit_wrap(attribute)
@@ -139,7 +139,7 @@ module ROM
       # :group transformation is added to handle grouping during preprocessing.
       # Otherwise we simply use array visitor for the attribute.
       #
-      # @param [Header::Attribute::Group]
+      # @param [Header::Attribute::Group] attribute
       # @param [Boolean] preprocess true if we are building a relation preprocessing
       #                             function that is applied to the whole relation
       #
@@ -179,7 +179,7 @@ module ROM
 
       # Yield row proc for a given attribute if any
       #
-      # @param [Header::Attribute]
+      # @param [Header::Attribute] attribute
       #
       # @api private
       def with_row_proc(attribute)
