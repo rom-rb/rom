@@ -15,26 +15,26 @@ describe ROM::Relation::Loaded do
     end
   end
 
-  describe '#map' do
+  describe '#as' do
     let(:mappers) { { email_list: email_mapper, upcase: upcase_mapper } }
     let(:email_mapper) { proc { |data| data.map { |t| t[:email] } } }
     let(:upcase_mapper) { proc { |data| data.map(&:upcase) } }
 
     it 'maps relation using specified mapper' do
-      expect(users.map_with(:email_list)).to match_array(
+      expect(users.as(:email_list)).to match_array(
         %w(joe@doe.org jane@doe.org)
       )
     end
 
     it 'allows mappping with multiple mappers' do
-      expect(users.map_with(:email_list, :upcase)).to match_array(
+      expect(users.as(:email_list, :upcase)).to match_array(
         %w(JOE@DOE.ORG JANE@DOE.ORG)
       )
     end
 
     describe 'enumerable chaining' do
       it 'allows chain enumerable method calls' do
-        result = users.map_with(:email_list).take(1).map(&:upcase)
+        result = users.as(:email_list).take(1).map(&:upcase)
         expect(result).to match_array(%w(JOE@DOE.ORG))
       end
     end

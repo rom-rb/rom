@@ -25,7 +25,7 @@ describe ROM::Env do
 
   describe '#relation' do
     it 'yields selected relation to the block and returns a reader' do
-      result = rom.relation(:users) { |r| r.by_name('Jane') }.map_with(:name_list)
+      result = rom.relation(:users) { |r| r.by_name('Jane') }.as(:name_list)
       expect(result).to match_array([{ name: 'Jane' }])
     end
   end

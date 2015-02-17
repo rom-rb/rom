@@ -36,11 +36,12 @@ module ROM
       # @return [Array] array of mapped tuples
       #
       # @api public
-      def map_with(*names)
+      def as(*names)
         result = data
         names.each { |name| result = mappers[name].call(result) }
         result
       end
+      alias_method :map_with, :as
     end
   end
 end

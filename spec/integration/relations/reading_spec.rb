@@ -198,7 +198,7 @@ describe 'Reading relations' do
     }.to raise_error(NoMethodError, /not_here/)
 
     expect {
-      rom.relation(:users) { |users| users.by_name('Joe') }.map_with(:not_here)
+      rom.relation(:users) { |users| users.by_name('Joe') }.as(:not_here)
     }.to raise_error(ROM::MapperMissingError, /not_here/)
 
     user = rom.relation(:users) { |users|
