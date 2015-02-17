@@ -11,6 +11,7 @@ group :test do
   gem 'virtus'
   gem 'minitest'
   gem 'thread_safe'
+  gem 'activesupport'
 
   platforms :rbx do
     gem 'rubysl-bigdecimal', platforms: :rbx
