@@ -3,7 +3,7 @@ module ROM
   #
   # @private
   module Inflector
-    begin
+    def self.setup
       @inflector =
         begin
           require 'active_support/inflector'
@@ -13,8 +13,11 @@ module ROM
           ::Inflecto
         end
     rescue LoadError
-      raise 'Unable to find an inflector library'
+      raise LoadError,
+            "No inflector library could be found: "\
+            "please install either the `activesupport` or `inflecto` gem."
     end
+    setup
 
     def self.camelize(input)
       @inflector.camelize(input)
