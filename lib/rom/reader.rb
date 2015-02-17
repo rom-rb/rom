@@ -34,8 +34,8 @@ module ROM
     #
     # @param [Symbol] name of the root relation
     # @param [Relation] relation that the reader will use
-    # @param [MapperRegistry] registry of mappers
-    # @param [Array<Symbol>] a list of method names exposed by the relation
+    # @param [MapperRegistry] mappers registry of mappers
+    # @param [Array<Symbol>] method_names a list of method names exposed by the relation
     #
     # @return [Reader]
     #
