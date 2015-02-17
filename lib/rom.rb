@@ -1,10 +1,10 @@
 require 'equalizer'
-require 'inflecto'
 
 require 'rom/version'
 require 'rom/constants'
 
 # internal ROM support lib
+require 'rom/support/inflector'
 require 'rom/support/registry'
 require 'rom/support/options'
 require 'rom/support/class_macros'

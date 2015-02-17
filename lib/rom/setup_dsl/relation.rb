@@ -9,7 +9,7 @@ module ROM
     #
     # @api private
     def self.build_class(name, options = {})
-      class_name = "ROM::Relation[#{Inflecto.camelize(name)}]"
+      class_name = "ROM::Relation[#{Inflector.camelize(name)}]"
       adapter = options.fetch(:adapter)
 
       ClassBuilder.new(name: class_name, parent: self[adapter]).call do |klass|

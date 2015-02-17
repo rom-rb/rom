@@ -38,7 +38,7 @@ module ROM
     #
     # @api public
     def self.[](adapter)
-      adapter_namespace(adapter).const_get(Inflecto.demodulize(name))
+      adapter_namespace(adapter).const_get(Inflector.demodulize(name))
     end
 
     # Return namespaces that contains command subclasses of a specific adapter
@@ -103,7 +103,7 @@ module ROM
     #
     # @api private
     def self.default_name
-      Inflecto.underscore(Inflecto.demodulize(name)).to_sym
+      Inflector.underscore(Inflector.demodulize(name)).to_sym
     end
 
     # Return default options based on class macros

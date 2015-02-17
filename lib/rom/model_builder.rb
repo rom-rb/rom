@@ -54,7 +54,7 @@ module ROM
 
         @namespace =
           if parts.any?
-            Inflecto.constantize(parts.join('::'))
+            Inflector.constantize(parts.join('::'))
           else
             Object
           end
