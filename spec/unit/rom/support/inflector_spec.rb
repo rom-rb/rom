@@ -86,16 +86,4 @@ describe ROM::Inflector do
       expect { api.select_backend(:foo) }.to raise_error(NameError)
     end
   end
-
-  context 'an inflector library cannot be found' do
-    before do
-      if api.instance_variables.include?(:@inflector)
-        api.remove_instance_variable(:@inflector)
-      end
-      stub_const("ROM::Inflector::BACKENDS", {})
-    end
-    it 'raises a LoadError' do
-      expect { api.inflector }.to raise_error(LoadError)
-    end
-  end
 end
