@@ -34,22 +34,56 @@ describe ROM::Inflector do
   subject(:api) { ROM::Inflector }
 
   context 'with detected inflector' do
-    it_behaves_like 'an inflector'
+    before do
+      if api.instance_variables.include?(:@inflector)
+        api.__send__(:remove_instance_variable, :@inflector)
+      end
+    end
+
+    it 'prefers ActiveSupport::Inflector' do
+      expect(api.inflector == ::ActiveSupport::Inflector).to be true
+    end
+  end
+
+  context 'with automatic detection' do
+    before do
+      if api.instance_variables.include?(:@inflector)
+        api.__send__(:remove_instance_variable, :@inflector)
+      end
+    end
+
+    it 'automatically selects an inflector backend' do
+      expect(api.inflector).not_to be nil
+    end
   end
 
   context 'with ActiveSupport::Inflector' do
     before do
-      require 'active_support/inflector'
-      api.instance_variable_set(:@inflector, ::ActiveSupport::Inflector)
+      api.select_backend(:activesupport)
     end
+
+    it 'is ActiveSupport::Inflector' do
+      expect(api.inflector).to be(::ActiveSupport::Inflector)
+    end
+
     it_behaves_like 'an inflector'
   end
 
   context 'with Inflecto' do
     before do
-      require 'inflecto'
-      api.instance_variable_set(:@inflector, ::Inflecto)
+      api.select_backend(:inflecto)
     end
+
+    it 'is Inflecto' do
+      expect(api.inflector).to be(::Inflecto)
+    end
+
     it_behaves_like 'an inflector'
+  end
+
+  context 'an unrecognized inflector library is selected' do
+    it 'raises a NameError' do
+      expect { api.select_backend(:foo) }.to raise_error(NameError)
+    end
   end
 end
