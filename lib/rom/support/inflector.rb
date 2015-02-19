@@ -4,13 +4,19 @@ module ROM
   # @private
   module Inflector
     BACKENDS = {
-      activesupport: ['active_support/inflector', 'ActiveSupport::Inflector'],
-      inflecto: ['inflecto', 'Inflecto']
+      activesupport: [
+        'active_support/inflector',
+        proc { ::ActiveSupport::Inflector }
+      ],
+      inflecto: [
+        'inflecto',
+        proc { ::Inflecto }
+      ]
     }.freeze
 
-    def self.realize_backend(path, inflector_class)
+    def self.realize_backend(path, inflector_backend_factory)
       require path
-      Object.const_get(inflector_class)
+      inflector_backend_factory.call
     rescue LoadError
       nil
     end
