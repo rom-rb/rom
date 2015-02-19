@@ -4,8 +4,8 @@ module ROM
   # @private
   module Inflector
     BACKENDS = {
-      activesupport: ['active_support/inflector', '::ActiveSupport::Inflector'],
-      inflecto: ['inflecto', '::Inflecto']
+      activesupport: ['active_support/inflector', 'ActiveSupport::Inflector'],
+      inflecto: ['inflecto', 'Inflecto']
     }.freeze
 
     def self.realize_backend(path, inflector_class)
