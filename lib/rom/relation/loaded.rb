@@ -1,11 +1,11 @@
-require 'rom/support/array_dataset'
-
 module ROM
   class Relation
     # Wraps loaded data from a relation and gives access to its mappers
     #
     # @public
     class Loaded
+      include Enumerable
+
       # Materialized relation
       #
       # @return [Relation]
@@ -22,6 +22,16 @@ module ROM
       def initialize(relation, mappers)
         @relation = relation.to_a
         @mappers = mappers
+      end
+
+      # Yield relation tuples
+      #
+      # @yield [Hash]
+      #
+      # @api public
+      def each(&block)
+        return to_enum unless block
+        relation.each(&block)
       end
 
       # Returns a single tuple from the relation if there is one.

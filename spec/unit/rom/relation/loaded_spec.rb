@@ -9,6 +9,21 @@ describe ROM::Relation::Loaded do
 
   before { setup.relation(:users) }
 
+  describe '#each' do
+    it 'yields tuples from relation' do
+      result = []
+      users.each { |tuple| result << tuple }
+      expect(result).to match_array([
+        { name: 'Jane', email: 'jane@doe.org' },
+        { name: 'Joe', email: 'joe@doe.org' }
+      ])
+    end
+
+    it 'returns enumerator when block is not provided' do
+      expect(users.each.to_a).to eql(users.relation.to_a)
+    end
+  end
+
   describe '#one' do
     it 'returns first tuple' do
       rom.relations.users.delete(name: 'Joe', email: 'joe@doe.org')
