@@ -63,7 +63,7 @@ describe ROM::Inflector do
     end
 
     it 'is ActiveSupport::Inflector' do
-      expect(api.inflector == ::ActiveSupport::Inflector).to be true
+      expect(api.inflector).to be(::ActiveSupport::Inflector)
     end
 
     it_behaves_like 'an inflector'
@@ -75,7 +75,7 @@ describe ROM::Inflector do
     end
 
     it 'is Inflecto' do
-      expect(api.inflector == ::Inflecto).to be true
+      expect(api.inflector).to be(::Inflecto)
     end
 
     it_behaves_like 'an inflector'
