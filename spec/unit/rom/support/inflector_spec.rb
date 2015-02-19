@@ -35,48 +35,67 @@ describe ROM::Inflector do
 
   context 'with detected inflector' do
     before do
-      api.remove_instance_variable(:@inflector)
-      api.setup
+      if api.instance_variables.include?(:@inflector)
+        api.remove_instance_variable(:@inflector)
+      end
     end
-    it_behaves_like 'an inflector'
+
+    it 'prefers ActiveSupport::Inflector' do
+      expect(api.inflector == ::ActiveSupport::Inflector).to be true
+    end
+  end
+
+  context 'with automatic detection' do
+    before do
+      if api.instance_variables.include?(:@inflector)
+        api.remove_instance_variable(:@inflector)
+      end
+    end
+
+    it 'automatically selects an inflector backend' do
+      expect(api.inflector).not_to be nil
+    end
   end
 
   context 'with ActiveSupport::Inflector' do
     before do
-      require 'active_support/inflector'
-      api.instance_variable_set(:@inflector, ::ActiveSupport::Inflector)
+      api.select_backend(:activesupport)
     end
+
+    it 'is ActiveSupport::Inflector' do
+      expect(api.inflector == ::ActiveSupport::Inflector).to be true
+    end
+
     it_behaves_like 'an inflector'
   end
 
   context 'with Inflecto' do
     before do
-      require 'inflecto'
-      api.instance_variable_set(:@inflector, ::Inflecto)
+      api.select_backend(:inflecto)
     end
+
+    it 'is Inflecto' do
+      expect(api.inflector == ::Inflecto).to be true
+    end
+
     it_behaves_like 'an inflector'
   end
 
-  context 'without an inflector library' do
-    around do |example|
-      begin
+  context 'an unrecognized inflector library is selected' do
+    it 'raises a NameError' do
+      expect { api.select_backend(:foo) }.to raise_error(NameError)
+    end
+  end
+
+  context 'an inflector library cannot be found' do
+    before do
+      if api.instance_variables.include?(:@inflector)
         api.remove_instance_variable(:@inflector)
-        original_load_path = $LOAD_PATH.dup
-        # Remove inflectors from the load path
-        Gem::Specification.each do |g|
-          if g.name == 'activesupport' || g.name == 'inflecto'
-            $LOAD_PATH.delete(g.lib_dirs_glob)
-          end
-        end
-        example.run
-      ensure
-        # restore the load path
-        $LOAD_PATH.clear.concat(original_load_path)
-        api.setup
       end
+      stub_const("ROM::Inflector::BACKENDS", {})
     end
     it 'raises a LoadError' do
-      expect { api.setup }.to raise_error(LoadError)
+      expect { api.inflector }.to raise_error(LoadError)
     end
   end
 end
