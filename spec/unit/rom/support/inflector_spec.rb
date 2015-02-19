@@ -36,7 +36,7 @@ describe ROM::Inflector do
   context 'with detected inflector' do
     before do
       if api.instance_variables.include?(:@inflector)
-        api.remove_instance_variable(:@inflector)
+        api.__send__(:remove_instance_variable, :@inflector)
       end
     end
 
@@ -48,7 +48,7 @@ describe ROM::Inflector do
   context 'with automatic detection' do
     before do
       if api.instance_variables.include?(:@inflector)
-        api.remove_instance_variable(:@inflector)
+        api.__send__(:remove_instance_variable, :@inflector)
       end
     end
 
