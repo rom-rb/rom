@@ -26,7 +26,14 @@ describe ROM::Env do
   describe '#relation' do
     it 'yields selected relation to the block and returns a loaded relation' do
       result = rom.relation(:users) { |r| r.by_name('Jane') }.as(:name_list)
-      expect(result).to match_array([{ name: 'Jane' }])
+
+      expect(result.call).to match_array([{ name: 'Jane' }])
+    end
+
+    it 'returns lazy-mapped relation' do
+      by_name = rom.relation(:users).as(:name_list).by_name
+
+      expect(by_name['Jane']).to match_array([{ name: 'Jane' }])
     end
   end
 

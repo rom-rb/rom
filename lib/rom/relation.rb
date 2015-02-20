@@ -192,8 +192,8 @@ module ROM
     end
 
     # @api public
-    def to_lazy
-      Lazy.new(self)
+    def to_lazy(*args)
+      Lazy.new(self, *args)
     end
 
     private
