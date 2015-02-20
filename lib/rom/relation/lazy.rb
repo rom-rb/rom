@@ -3,6 +3,8 @@ require 'rom/relation/loaded'
 module ROM
   class Relation
     class Composite
+      include Equalizer.new(:left, :right)
+
       attr_reader :left, :right
 
       def initialize(left, right)
@@ -39,6 +41,8 @@ module ROM
     end
 
     class Lazy
+      include Equalizer.new(:relation, :options)
+
       include Options
 
       option :name, type: Symbol, reader: true
