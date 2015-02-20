@@ -75,7 +75,7 @@ module ROM
           if method.arity == all_args.size
             Loaded.new(relation.__send__(name, *all_args), mappers)
           else
-            self.class.new(relation, name: name, curry_args: all_args)
+            self.class.new(relation, options.merge(name: name, curry_args: all_args))
           end
         else
           Loaded.new(relation, mappers)
@@ -90,7 +90,7 @@ module ROM
       private
 
       def method_missing(name, *args)
-        self.class.new(relation, name: name, curry_args: args)
+        self.class.new(relation, options.merge(name: name, curry_args: args))
       end
     end
   end
