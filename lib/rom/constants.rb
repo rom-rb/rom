@@ -14,5 +14,6 @@ module ROM
   InvalidOptionValueError = Class.new(StandardError)
   InvalidOptionKeyError = Class.new(StandardError)
 
+  EMPTY_ARRAY = [].freeze
   EMPTY_HASH = {}.freeze
 end

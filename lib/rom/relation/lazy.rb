@@ -47,7 +47,7 @@ module ROM
 
       option :name, type: Symbol, reader: true
       option :arity, type: Integer, reader: true, default: -1
-      option :curry_args, type: Array, reader: true
+      option :curry_args, type: Array, reader: true, default: EMPTY_ARRAY
       option :mappers, reader: true, default: EMPTY_HASH
 
       attr_reader :relation, :arity
@@ -95,16 +95,22 @@ module ROM
 
       def method_missing(name, *args, &block)
         if relation.respond_to?(name)
-          __new__(
-            relation,
-            name: name, curry_args: args, arity: relation.method(name).arity
-          )
+          arity = relation.method(name).arity
+
+          if arity == -1 || arity == args.size
+            __new__(relation.__send__(name, *args, *block))
+          else
+            __new__(
+              relation,
+              name: name, curry_args: args, arity: arity
+            )
+          end
         else
           super
         end
       end
 
-      def __new__(relation, new_opts)
+      def __new__(relation, new_opts = {})
         self.class.new(relation, options.merge(new_opts))
       end
     end
