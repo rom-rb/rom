@@ -94,7 +94,7 @@ end
 
 module Relations
   class Users < ROM::Relation[:sql]
-    base_name :users
+    dataset :users
 
     one_to_many :tasks, key: :user_id
 
@@ -112,7 +112,7 @@ module Relations
   end
 
   class Tasks < ROM::Relation[:sql]
-    base_name :tasks
+    dataset :tasks
 
     many_to_one :users, key: :user_id
     one_to_many :tags, key: :task_id
