@@ -46,15 +46,15 @@ module ROM
       include Options
 
       option :name, type: Symbol, reader: true
+      option :arity, type: Integer, reader: true, default: -1
       option :curry_args, type: Array, reader: true
       option :mappers, reader: true, default: EMPTY_HASH
 
-      attr_reader :relation, :method
+      attr_reader :relation, :arity
 
       def initialize(relation, options = {})
         super
         @relation = relation
-        @method = relation.method(name) if name
       end
 
       def >>(other)
@@ -63,7 +63,7 @@ module ROM
 
       def map_with(*names)
         [self, *names.map { |name| mappers[name] }]
-          .reduce { |l, r| Composite.new(l, r) }
+          .reduce { |a, e| Composite.new(a, e) }
       end
       alias_method :as, :map_with
 
@@ -73,13 +73,13 @@ module ROM
       alias_method :to_ary, :to_a
 
       def call(*args)
-        if name
+        if arity != -1
           all_args = curry_args + args
 
-          if method.arity == all_args.size
+          if arity == all_args.size
             Loaded.new(relation.__send__(name, *all_args), mappers)
           else
-            self.class.new(relation, options.merge(name: name, curry_args: all_args))
+            __new__(relation, curry_args: all_args)
           end
         else
           Loaded.new(relation, mappers)
@@ -93,8 +93,19 @@ module ROM
 
       private
 
-      def method_missing(name, *args)
-        self.class.new(relation, options.merge(name: name, curry_args: args))
+      def method_missing(name, *args, &block)
+        if relation.respond_to?(name)
+          __new__(
+            relation,
+            name: name, curry_args: args, arity: relation.method(name).arity
+          )
+        else
+          super
+        end
+      end
+
+      def __new__(relation, new_opts)
+        self.class.new(relation, options.merge(new_opts))
       end
     end
   end

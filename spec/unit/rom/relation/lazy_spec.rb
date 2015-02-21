@@ -11,6 +11,22 @@ describe ROM::Relation::Lazy do
       def by_name(name)
         restrict(name: name)
       end
+
+      def by_email(email)
+        restrict(name: email)
+      end
+
+      def by_name_and_email(name, email)
+        by_name(name).by_email(email)
+      end
+
+      def all(*args)
+        if args.any?
+          restrict(*args)
+        else
+          self
+        end
+      end
     end
 
     setup.relation(:tasks) do
@@ -18,6 +34,29 @@ describe ROM::Relation::Lazy do
         names = users.map { |u| u[:name] }
         restrict { |t| names.include?(t[:name]) }
       end
+    end
+  end
+
+  describe '#method_missing' do
+    it 'forwards to relation and auto-curries' do
+      relation = users.by_name_and_email('Jane')
+
+      expect(relation.name).to eql(:by_name_and_email)
+      expect(relation.curry_args).to eql(['Jane'])
+
+      expect(relation['jane@doe.org']).to match_array(
+        rom.relations.users.by_name_and_email('Jane', 'jane@doe.org')
+      )
+    end
+
+    it 'forwards to relation and return lazy when arity is unknown' do
+      relation = users.all
+      expect(relation.name).to eql(:all)
+      expect(relation).to match_array(rom.relations.users.all)
+    end
+
+    it 'raises NoMethodError when relation does not respond to a method' do
+      expect { users.not_here }.to raise_error(NoMethodError, /not_here/)
     end
   end
 
