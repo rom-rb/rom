@@ -87,8 +87,8 @@ module ROM
       # @alias []
       #
       # @api public
-      def call(*args)
-        Loaded.new(relation, mappers)
+      def call
+        Loaded.new(relation)
       end
       alias_method :[], :call
 

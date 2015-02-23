@@ -1,6 +1,6 @@
 module ROM
   class Relation
-    # Wraps loaded data from a relation and gives access to its mappers
+    # Materializes a relation and exposes interface to access the data
     #
     # @public
     class Loaded
@@ -13,15 +13,9 @@ module ROM
       # @api private
       attr_reader :relation
 
-      # @return [ROM::MapperRegistry]
-      #
       # @api private
-      attr_reader :mappers
-
-      # @api private
-      def initialize(relation, mappers)
+      def initialize(relation)
         @relation = relation.to_a
-        @mappers = mappers
       end
 
       # Yield relation tuples
@@ -63,28 +57,6 @@ module ROM
           'The relation does not contain any tuples'
         )
       end
-
-      # Map loaded relation using a specified mapper
-      #
-      # @example
-      #
-      #   loaded = rom.relation(:users) { |r| r.by_name('Jane') }
-      #
-      #   # mapping with a single mapper
-      #   loaded.map_with(:entity_mapper)
-      #
-      #   # mapping with a multiple mappers
-      #   loaded.map_with(:entity_mapper, :presenter_decorator)
-      #
-      # @return [Array] array of mapped tuples
-      #
-      # @api public
-      def as(*names)
-        result = relation
-        names.each { |name| result = mappers[name].call(result) }
-        result
-      end
-      alias_method :map_with, :as
     end
   end
 end

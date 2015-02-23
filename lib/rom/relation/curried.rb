@@ -18,7 +18,7 @@ module ROM
           all_args = curry_args + args
 
           if arity == all_args.size
-            Loaded.new(relation.__send__(name, *all_args), mappers)
+            Loaded.new(relation.__send__(name, *all_args))
           else
             __new__(relation, curry_args: all_args)
           end
