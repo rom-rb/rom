@@ -36,6 +36,13 @@ module ROM
       def curried?
         true
       end
+
+      private
+
+      # @api private
+      def __new__(relation, new_opts = {})
+        Curried.new(relation, options.update(new_opts))
+      end
     end
   end
 end

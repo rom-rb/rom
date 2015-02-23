@@ -20,6 +20,10 @@ describe ROM::Relation::Lazy do
         by_name(name).by_email(email)
       end
 
+      def by_name_and_email_sorted(name, email, order_by)
+        by_name_and_email(name, email).order(order_by)
+      end
+
       def all(*args)
         if args.any?
           restrict(*args)
@@ -39,13 +43,18 @@ describe ROM::Relation::Lazy do
 
   describe '#method_missing' do
     it 'forwards to relation and auto-curries' do
-      relation = users.by_name_and_email('Jane')
+      relation = users.by_name_and_email_sorted('Jane')
 
-      expect(relation.name).to eql(:by_name_and_email)
+      expect(relation.name).to eql(:by_name_and_email_sorted)
       expect(relation.curry_args).to eql(['Jane'])
 
-      expect(relation['jane@doe.org']).to match_array(
-        rom.relations.users.by_name_and_email('Jane', 'jane@doe.org')
+      relation = relation['jane@doe.org']
+
+      expect(relation.name).to eql(:by_name_and_email_sorted)
+      expect(relation.curry_args).to eql(['Jane', 'jane@doe.org'])
+
+      expect(relation[:email]).to match_array(
+        rom.relations.users.by_name_and_email_sorted('Jane', 'jane@doe.org', :email)
       )
     end
 
