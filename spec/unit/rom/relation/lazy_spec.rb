@@ -81,6 +81,10 @@ describe ROM::Relation::Lazy do
       expect(users.call.to_a).to eql(rom.relations.users.to_a)
     end
 
+    it 'does not allow currying on already curried relation' do
+      expect { users.by_name.by_email }.to raise_error(NoMethodError, /by_email/)
+    end
+
     describe 'using mappers' do
       subject(:users) { rom.relations.users.to_lazy(mappers: mappers) }
 

@@ -93,20 +93,20 @@ module ROM
 
       private
 
-      def method_missing(name, *args, &block)
-        if relation.respond_to?(name)
-          arity = relation.method(name).arity
+      def method_missing(meth, *args, &block)
+        if !relation.respond_to?(meth) || (name && meth != name)
+          super
+        else
+          arity = relation.method(meth).arity
 
           if arity == -1 || arity == args.size
-            __new__(relation.__send__(name, *args, *block))
+            __new__(relation.__send__(meth, *args, &block))
           else
             __new__(
               relation,
-              name: name, curry_args: args, arity: arity
+              name: meth, curry_args: args, arity: arity
             )
           end
-        else
-          super
         end
       end
 
