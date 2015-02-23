@@ -7,6 +7,12 @@ module ROM
       option :arity, type: Integer, reader: true, default: -1
       option :curry_args, type: Array, reader: true, default: EMPTY_ARRAY
 
+      # Load relation if args match the arity
+      #
+      # @return [Loaded,Lazy,Curried]
+      # @see Lazy#call
+      #
+      # @api public
       def call(*args)
         if arity != -1
           all_args = curry_args + args
@@ -22,6 +28,11 @@ module ROM
       end
       alias_method :[], :call
 
+      # Return if this lazy relation is curried
+      #
+      # @return [true]
+      #
+      # @api private
       def curried?
         true
       end
