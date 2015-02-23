@@ -8,6 +8,10 @@ describe ROM::Relation::Lazy do
 
   before do
     setup.relation(:users) do
+      def first
+        to_a.first
+      end
+
       def by_name(name)
         restrict(name: name)
       end
@@ -73,6 +77,10 @@ describe ROM::Relation::Lazy do
       relation = users.all(name: 'Jane')
       expect(relation).to_not be_curried
       expect(relation).to match_array(rom.relations.users.by_name('Jane').to_a)
+    end
+
+    it 'returns original response if it is not a relation' do
+      expect(users.first).to eql(name: 'Joe', email: 'joe@doe.org')
     end
 
     it 'raises NoMethodError when relation does not respond to a method' do

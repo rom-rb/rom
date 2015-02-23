@@ -144,7 +144,12 @@ module ROM
           arity = relation.method(meth).arity
 
           if arity == -1 || arity == args.size
-            __new__(relation.__send__(meth, *args, &block))
+            response = relation.__send__(meth, *args, &block)
+            if response.is_a?(Relation)
+              __new__(response)
+            else
+              response
+            end
           else
             Curried.new(relation, name: meth, curry_args: args, arity: arity)
           end
