@@ -69,7 +69,12 @@ module ROM
       # @api private
       def method_missing(name, *args, &block)
         if left.respond_to?(name)
-          self.class.new(left.__send__(name, *args, &block), right)
+          response = left.__send__(name, *args, &block)
+          if response.is_a?(left.class)
+            self.class.new(response, right)
+          else
+            response
+          end
         else
           super
         end

@@ -41,6 +41,10 @@ describe ROM::Relation::Lazy do
     end
   end
 
+  it_behaves_like 'a relation that returns one tuple' do
+    let(:relation) { users }
+  end
+
   describe '#method_missing' do
     it 'forwards to relation and auto-curries' do
       relation = users.by_name_and_email_sorted('Jane')
@@ -115,7 +119,9 @@ describe ROM::Relation::Lazy do
         { name: 'Jane', title: 'be cool', priority: 2 }
       ])
     end
-  end
 
-  it_behaves_like 'a relation that returns one tuple'
+    it_behaves_like 'a relation that returns one tuple' do
+      let(:relation) { rom.relation(:users) >> proc { |r| r } }
+    end
+  end
 end

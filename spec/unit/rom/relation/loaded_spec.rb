@@ -22,5 +22,7 @@ describe ROM::Relation::Loaded do
     end
   end
 
-  it_behaves_like 'a relation that returns one tuple'
+  it_behaves_like 'a relation that returns one tuple' do
+    let(:relation) { users }
+  end
 end
