@@ -111,9 +111,8 @@ describe ROM::Relation::Lazy do
     it 'composes two relations' do
       other = users.by_name('Jane') >> tasks.for_users
 
-      expect(other.to_a).to eql([
-        [{ name: 'Jane', email: 'jane@doe.org' }],
-        [{ name: 'Jane', title: 'be cool', priority: 2 }]
+      expect(other).to match_array([
+        { name: 'Jane', title: 'be cool', priority: 2 }
       ])
     end
   end

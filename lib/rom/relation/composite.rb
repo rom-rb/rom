@@ -47,14 +47,15 @@ module ROM
       end
       alias_method :[], :call
 
-      # Return results from the left and the composite result
+      # Coerce composite relation to an array
       #
-      # @return [Array<Array>]
+      # @return [Array]
       #
-      # @api private
+      # @api public
       def to_a
-        [left.to_a, call.to_a]
+        call.to_a
       end
+      alias_method :to_ary, :to_a
 
       # @api private
       def respond_to_missing?(name, include_private = false)
