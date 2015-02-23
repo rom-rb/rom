@@ -69,7 +69,11 @@ module ROM
           relations[name]
         end
 
-      relation.to_lazy(mappers: mappers[name])
+      if mappers.elements.key?(name)
+        relation.to_lazy(mappers: mappers[name])
+      else
+        relation.to_lazy
+      end
     end
 
     # Returns a reader with access to defined mappers
