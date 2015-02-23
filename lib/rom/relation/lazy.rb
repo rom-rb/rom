@@ -92,6 +92,28 @@ module ROM
       end
       alias_method :[], :call
 
+      # Delegate to loaded relation and return one object
+      #
+      # @return [Object]
+      #
+      # @see Loaded#one
+      #
+      # @api public
+      def one
+        call.one
+      end
+
+      # Delegate to loaded relation and return one object
+      #
+      # @return [Object]
+      #
+      # @see Loaded#one
+      #
+      # @api public
+      def one!
+        call.one!
+      end
+
       # @api private
       def respond_to_missing?(name, include_private = false)
         relation.respond_to?(name) || super

@@ -116,4 +116,6 @@ describe ROM::Relation::Lazy do
       ])
     end
   end
+
+  it_behaves_like 'a relation that returns one tuple'
 end
