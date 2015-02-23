@@ -52,15 +52,13 @@ describe ROM::Relation::Lazy do
     it 'forwards to relation and does not auto-curry when it is not needed' do
       relation = users.by_name('Jane')
 
-      expect(relation.name).to be(nil)
-      expect(relation.curry_args).to be_empty
-
+      expect(relation).to_not be_curried
       expect(relation).to match_array(rom.relations.users.by_name('Jane'))
     end
 
     it 'forwards to relation and return lazy when arity is unknown' do
       relation = users.all(name: 'Jane')
-      expect(relation.name).to be(nil)
+      expect(relation).to_not be_curried
       expect(relation).to match_array(rom.relations.users.by_name('Jane').to_a)
     end
 

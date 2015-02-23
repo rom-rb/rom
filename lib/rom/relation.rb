@@ -1,4 +1,5 @@
 require 'rom/relation/lazy'
+require 'rom/relation/curried'
 
 module ROM
   # Base relation class

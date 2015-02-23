@@ -7,9 +7,6 @@ module ROM
       include Equalizer.new(:relation, :options)
       include Options
 
-      option :name, type: Symbol, reader: true
-      option :arity, type: Integer, reader: true, default: -1
-      option :curry_args, type: Array, reader: true, default: EMPTY_ARRAY
       option :mappers, reader: true, default: EMPTY_HASH
 
       attr_reader :relation
@@ -35,17 +32,7 @@ module ROM
       alias_method :to_ary, :to_a
 
       def call(*args)
-        if arity != -1
-          all_args = curry_args + args
-
-          if arity == all_args.size
-            Loaded.new(relation.__send__(name, *all_args), mappers)
-          else
-            __new__(relation, curry_args: all_args)
-          end
-        else
-          Loaded.new(relation, mappers)
-        end
+        Loaded.new(relation, mappers)
       end
       alias_method :[], :call
 
@@ -53,10 +40,14 @@ module ROM
         relation.respond_to?(name) || super
       end
 
+      def curried?
+        false
+      end
+
       private
 
       def method_missing(meth, *args, &block)
-        if !relation.respond_to?(meth) || (name && meth != name)
+        if !relation.respond_to?(meth) || (curried? && name != meth)
           super
         else
           arity = relation.method(meth).arity
@@ -64,16 +55,13 @@ module ROM
           if arity == -1 || arity == args.size
             __new__(relation.__send__(meth, *args, &block))
           else
-            __new__(
-              relation,
-              name: meth, curry_args: args, arity: arity
-            )
+            Curried.new(relation, name: meth, curry_args: args, arity: arity)
           end
         end
       end
 
       def __new__(relation, new_opts = {})
-        self.class.new(relation, options.merge(new_opts))
+        Lazy.new(relation, options.merge(new_opts))
       end
     end
   end
