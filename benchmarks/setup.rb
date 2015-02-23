@@ -14,15 +14,19 @@ def rom
 end
 
 def users
-  rom.read(:users)
+  rom.relation(:users)
 end
 
 def tasks
-  rom.read(:tasks)
+  rom.relation(:tasks)
+end
+
+def tasks_with_user_and_tags
+  tasks.with_user.with_tags.as(:task_with_user_and_tags)
 end
 
 def tags
-  rom.read(:tags)
+  rom.relation(:tags)
 end
 
 def hr
@@ -142,6 +146,7 @@ module Mappers
 
       model name: 'User'
 
+      attribute :id
       attribute :name
       attribute :email
       attribute :age
@@ -150,7 +155,7 @@ module Mappers
     class WithTasks < Base
       model name: 'UserWithTasks'
 
-      relation :with_tasks
+      register_as :user_with_tasks
 
       group :tasks do
         model name: 'UserTask'
@@ -166,6 +171,15 @@ module Mappers
 
       model name: 'Task'
 
+      attribute :id
+      attribute :title
+    end
+
+    class WithUser < Base
+      register_as :task_with_user
+
+      model name: 'TaskWithUser'
+
       wrap :user do
         model name: 'TaskUser'
 
@@ -174,6 +188,12 @@ module Mappers
         attribute :email
         attribute :age
       end
+    end
+
+    class WithUserAndTags < WithUser
+      register_as :task_with_user_and_tags
+
+      model name: 'TaskWithUserAndTags'
 
       group :tags do
         model name: 'Tag'
@@ -192,7 +212,7 @@ COUNT = ENV.fetch('COUNT', 1000).to_i
 
 USER_SEED = COUNT.times.map do |i|
   { id:    i + 1,
-    name:  "name #{i}",
+    name:  "User #{i}",
     email: "email_#{i}@domain.com",
     age:   i*10 }
 end
