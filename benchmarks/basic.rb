@@ -6,10 +6,10 @@ require_relative 'setup'
 run("Loading ONE user object") do
   Benchmark.ips do |x|
     x.report("AR") do
-      ARUser.by_name('name 1').first
+      ARUser.by_name('User 1').first
     end
     x.report("ROM") do
-      users.by_name('name 1').as(:users).one
+      users.by_name('User 1').as(:users).one
     end
     x.compare!
   end
