@@ -37,13 +37,13 @@ module ROM
       #
       # Optional args are passed to the left object
       #
-      # @return [Array]
+      # @return [Loaded]
       #
       # @alias []
       #
       # @api public
       def call(*args)
-        right.call(left.call(*args))
+        Loaded.new(right.call(left.call(*args)))
       end
       alias_method :[], :call
 
@@ -56,6 +56,28 @@ module ROM
         call.to_a
       end
       alias_method :to_ary, :to_a
+
+      # Delegate to loaded relation and return one object
+      #
+      # @return [Object]
+      #
+      # @see Loaded#one
+      #
+      # @api public
+      def one
+        call.one
+      end
+
+      # Delegate to loaded relation and return one object
+      #
+      # @return [Object]
+      #
+      # @see Loaded#one
+      #
+      # @api public
+      def one!
+        call.one!
+      end
 
       # @api private
       def respond_to_missing?(name, include_private = false)

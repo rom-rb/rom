@@ -122,6 +122,16 @@ describe ROM::Relation::Lazy do
 
     it_behaves_like 'a relation that returns one tuple' do
       let(:relation) { rom.relation(:users) >> proc { |r| r } }
+
+      describe 'using a mapper' do
+        it 'returns one mapped tuple' do
+          mapper = proc { |r| r.map { |t| t[:name].upcase } }
+          relation = users.by_name('Jane') >> mapper
+
+          expect(relation.one).to eql('JANE')
+          expect(relation.one!).to eql('JANE')
+        end
+      end
     end
   end
 end
