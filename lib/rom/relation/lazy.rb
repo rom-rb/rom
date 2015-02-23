@@ -5,7 +5,6 @@ module ROM
   class Relation
     class Lazy
       include Equalizer.new(:relation, :options)
-
       include Options
 
       option :name, type: Symbol, reader: true
@@ -13,7 +12,7 @@ module ROM
       option :curry_args, type: Array, reader: true, default: EMPTY_ARRAY
       option :mappers, reader: true, default: EMPTY_HASH
 
-      attr_reader :relation, :arity
+      attr_reader :relation
 
       def initialize(relation, options = {})
         super
