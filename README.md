@@ -58,7 +58,7 @@ class Users < ROM::Relation[:memory]
   end
 
   def adults
-    find_all { |user| user[:age] >= 18 }
+    restrict { |user| user[:age] >= 18 }
   end
 end
 
@@ -87,10 +87,10 @@ rom = ROM.finalize.env
 
 # accessing defined commands
 rom.command(:users).create.call(name: "Joe", age: 17)
-rom.command(:users).create.call(name: "Joe", age: 17)
+rom.command(:users).create.call(name: "Jane", age: 18)
 
 # reading relations using defined mappers
-puts rom.relation(:users) { |r| r.by_name("Jane").adults }.as(:entities)
+puts rom.relation(:users) { |r| r.by_name("Jane").adults }.as(:entities).to_a.inspect
 # => [#<User:0x007fdba161cc48 @id=2, @name="Jane", @age=18>]
 ```
 

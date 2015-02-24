@@ -62,14 +62,18 @@ module ROM
     #
     # @api public
     def relation(name, &block)
-      tuples =
+      relation =
         if block
           yield(relations[name])
         else
           relations[name]
         end
 
-      Relation::Loaded.new(tuples, mappers[name])
+      if mappers.elements.key?(name)
+        relation.to_lazy(mappers: mappers[name])
+      else
+        relation.to_lazy
+      end
     end
 
     # Returns a reader with access to defined mappers

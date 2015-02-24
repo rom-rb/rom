@@ -1,27 +1,29 @@
 module ROM
   class Relation
-    # Wraps loaded data from a relation and gives access to its mappers
+    # Materializes a relation and exposes interface to access the data
     #
     # @public
     class Loaded
       include Enumerable
 
-      # Materialized relation
+      # Source relation
       #
       # @return [Relation]
       #
       # @api private
-      attr_reader :relation
+      attr_reader :source
 
-      # @return [ROM::MapperRegistry]
+      # Materialized relation
+      #
+      # @return [Object]
       #
       # @api private
-      attr_reader :mappers
+      attr_reader :collection
 
       # @api private
-      def initialize(relation, mappers)
-        @relation = relation.to_a
-        @mappers = mappers
+      def initialize(source, collection = source.to_a)
+        @source = source
+        @collection = collection
       end
 
       # Yield relation tuples
@@ -31,7 +33,12 @@ module ROM
       # @api public
       def each(&block)
         return to_enum unless block
-        relation.each(&block)
+        collection.each(&block)
+      end
+
+      # @api public
+      def new(collection)
+        self.class.new(source, collection)
       end
 
       # Returns a single tuple from the relation if there is one.
@@ -41,13 +48,13 @@ module ROM
       #
       # @api public
       def one
-        if relation.size > 1
+        if collection.count > 1
           raise(
             TupleCountMismatchError,
             'The relation consists of more than one tuple'
           )
         else
-          relation.first
+          collection.first
         end
       end
 
@@ -63,28 +70,6 @@ module ROM
           'The relation does not contain any tuples'
         )
       end
-
-      # Map loaded relation using a specified mapper
-      #
-      # @example
-      #
-      #   loaded = rom.relation(:users) { |r| r.by_name('Jane') }
-      #
-      #   # mapping with a single mapper
-      #   loaded.map_with(:entity_mapper)
-      #
-      #   # mapping with a multiple mappers
-      #   loaded.map_with(:entity_mapper, :presenter_decorator)
-      #
-      # @return [Array] array of mapped tuples
-      #
-      # @api public
-      def as(*names)
-        result = relation
-        names.each { |name| result = mappers[name].call(result) }
-        result
-      end
-      alias_method :map_with, :as
     end
   end
 end

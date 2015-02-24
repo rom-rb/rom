@@ -203,7 +203,7 @@ describe 'Reading relations' do
 
     user = rom.relation(:users) { |users|
       users.by_name('Joe')
-    }.map_with(:prefixer).first
+    }.map_with(:prefixer).call.first
 
     expect(user).to eql(user_name: 'Joe', user_email: "joe@doe.org")
   end

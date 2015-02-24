@@ -1,3 +1,6 @@
+require 'rom/relation/lazy'
+require 'rom/relation/curried'
+
 module ROM
   # Base relation class
   #
@@ -187,6 +190,11 @@ module ROM
     # @api private
     def repository
       self.class.repository
+    end
+
+    # @api public
+    def to_lazy(*args)
+      Lazy.new(self, *args)
     end
 
     private
