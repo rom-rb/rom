@@ -19,7 +19,7 @@ module ROM
 
     def each(&block)
       return to_enum unless block
-      elements.each(&block)
+      elements.each { |element| yield(element) }
     end
 
     def [](key)

@@ -64,7 +64,7 @@ module ROM
     #
     # @api private
     def each(&block)
-      attributes.values.each(&block)
+      attributes.each_value { |attribute| yield(attribute) }
     end
 
     # Return if there are any aliased attributes

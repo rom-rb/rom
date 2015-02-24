@@ -170,7 +170,7 @@ module ROM
     # @api private
     def each(&block)
       return to_enum unless block
-      dataset.each(&block)
+      dataset.each { |tuple| yield(tuple) }
     end
 
     # Materialize relation into an array

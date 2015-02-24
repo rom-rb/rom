@@ -33,7 +33,7 @@ module ROM
       # @api public
       def each(&block)
         return to_enum unless block
-        collection.each(&block)
+        collection.each { |object| yield(object) }
       end
 
       # @api public
