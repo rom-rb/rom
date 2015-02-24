@@ -66,7 +66,6 @@ end
 # could define it explicitly
 class UserMapper < ROM::Mapper
   relation :users
-  register_as :entities
 
   model User
 
@@ -90,7 +89,7 @@ rom.command(:users).create.call(name: "Joe", age: 17)
 rom.command(:users).create.call(name: "Jane", age: 18)
 
 # reading relations using defined mappers
-puts rom.relation(:users) { |r| r.by_name("Jane").adults }.as(:entities).to_a.inspect
+puts rom.relation(:users) { |r| r.by_name("Jane").adults }.as(:users).to_a.inspect
 # => [#<User:0x007fdba161cc48 @id=2, @name="Jane", @age=18>]
 ```
 
