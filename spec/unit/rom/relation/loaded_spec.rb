@@ -18,7 +18,7 @@ describe ROM::Relation::Loaded do
     end
 
     it 'returns enumerator when block is not provided' do
-      expect(users.each.to_a).to eql(users.relation.to_a)
+      expect(users.each.to_a).to eql(users.collection.to_a)
     end
   end
 

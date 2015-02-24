@@ -1,3 +1,5 @@
+require 'rom/relation/loaded'
+
 module ROM
   class Relation
     # Left-to-right relation composition used for data-pipelining
@@ -43,7 +45,14 @@ module ROM
       #
       # @api public
       def call(*args)
-        Loaded.new(right.call(left.call(*args)))
+        relation = left.call(*args)
+        response = right.call(relation)
+
+        if relation.is_a?(Loaded)
+          relation.new(response)
+        else
+          Loaded.new(relation, response)
+        end
       end
       alias_method :[], :call
 
