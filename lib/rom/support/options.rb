@@ -2,11 +2,30 @@ module ROM
   # Helper module for classes with a constructor accepting option hash
   #
   # This allows us to DRY up code as option hash is a very common pattern used
-  # accross the codebase. It is an internal implementation detail not meant to
-  # be used outside of the library
+  # across the codebase. It is an internal implementation detail not meant to
+  # be used outside of ROM
   #
-  # @private
+  # @example
+  #   class User
+  #     include Options
+  #
+  #     option :name, type: String, reader: true
+  #     option :admin, allow: [true, false], reader: true, default: false
+  #
+  #     def initialize(options={})
+  #       super
+  #     end
+  #   end
+  #
+  #   user = User.new(name: 'Piotr')
+  #   user.name # => "Piotr"
+  #   user.admin # => false
+  #
+  # @api public
   module Options
+    # @return [Hash<Option>] Option definitions
+    #
+    # @api public
     attr_reader :options
 
     def self.included(klass)
@@ -20,6 +39,9 @@ module ROM
       end
     end
 
+    # Defines a single option
+    #
+    # @api private
     class Option
       attr_reader :name, :type, :allow, :default
 
@@ -52,6 +74,9 @@ module ROM
       end
     end
 
+    # Manage all available options
+    #
+    # @api private
     class Definitions
       def initialize
         @options = {}
@@ -109,11 +134,28 @@ module ROM
       end
     end
 
+    # @api private
     module ClassMethods
+      # Available options
+      #
+      # @return [Definitions]
+      #
+      # @api private
       def option_definitions
         @__options__ ||= Definitions.new
       end
 
+      # Defines an option
+      #
+      # @param [Symbol] name option name
+      #
+      # @param [Hash] settings option settings
+      # @option settings [Class] :type Restrict option type. Default: +Object+
+      # @option settings [Boolean] :reader Define a reader? Default: +false+
+      # @option settings [Array] :allow Only allow certain values. Default: Allow anything
+      # @option settings [Object] :default Set default value if option is missing. Default: +nil+
+      #
+      # @api public
       def option(name, settings = {})
         option = Option.new(name, settings)
         option_definitions.define(option)
@@ -121,6 +163,21 @@ module ROM
       end
     end
 
+    # Initialize options provided as optional last argument hash
+    #
+    # @example
+    #   class Commands
+    #     include Options
+    #
+    #     # ...
+    #
+    #     def initialize(relations, options={})
+    #       @relation = relation
+    #       super
+    #     end
+    #   end
+    #
+    # @param [Array] args
     def initialize(*args)
       options = args.last ? args.last.dup : {}
       definitions = self.class.option_definitions
