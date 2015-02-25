@@ -2,7 +2,7 @@ module ROM
   class Relation
     # Materializes a relation and exposes interface to access the data
     #
-    # @public
+    # @api public
     class Loaded
       include Enumerable
 

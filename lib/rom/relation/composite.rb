@@ -41,8 +41,6 @@ module ROM
       #
       # @return [Loaded]
       #
-      # @alias []
-      #
       # @api public
       def call(*args)
         relation = left.call(*args)

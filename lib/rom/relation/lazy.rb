@@ -84,8 +84,6 @@ module ROM
       #
       # @return [Relation::Loaded]
       #
-      # @alias []
-      #
       # @api public
       def call
         Loaded.new(relation)
