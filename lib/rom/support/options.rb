@@ -122,11 +122,12 @@ module ROM
     end
 
     def initialize(*args)
-      @options = args.last ? args.last.dup : {}
+      options = args.last ? args.last.dup : {}
       definitions = self.class.option_definitions
-      definitions.set_defaults(self, @options)
-      definitions.validate_options(@options)
-      definitions.set_option_values(self, @options)
+      definitions.set_defaults(self, options)
+      definitions.validate_options(options)
+      definitions.set_option_values(self, options)
+      @options = options.freeze
     end
   end
 end

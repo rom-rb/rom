@@ -87,5 +87,12 @@ describe ROM::Options do
 
       expect(object.options).to eql(args: nil)
     end
+
+    it 'options are frozen' do
+      object = klass.new
+
+      expect { object.options[:foo] = :bar }
+        .to raise_error(RuntimeError, /frozen/)
+    end
   end
 end
