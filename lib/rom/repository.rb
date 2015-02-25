@@ -12,6 +12,18 @@ module ROM
 
     # Setup a repository
     #
+    # @overload setup(type, *args)
+    #   Sets up a single-repository given a repository type.
+    #   For custom repositories, create an instance and pass it directly.
+    #
+    #   @param [Symbol] type
+    #   @param [Array] *args
+    #
+    # @overload setup(repository)
+    #   @param [Repository] repository
+    #
+    # @return [Repository] a specific repository subclass
+    #
     # @example
     #   module SuperDB
     #     class Repository < ROM::Repository
@@ -24,6 +36,10 @@ module ROM
     #
     #   Repository.setup(:super_db, some: 'options')
     #   # SuperDB::Repository.new(some: 'options') is called
+    #
+    #   # or alternatively
+    #   super_db = Repository.setup(SuperDB::Repository.new(some: 'options'))
+    #   Repository.setup(super_db)
     #
     # @api public
     def self.setup(repository_or_scheme, *args)
