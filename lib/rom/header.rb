@@ -63,7 +63,7 @@ module ROM
     # @yield [Attribute]
     #
     # @api private
-    def each(&block)
+    def each
       attributes.each_value { |attribute| yield(attribute) }
     end
 
