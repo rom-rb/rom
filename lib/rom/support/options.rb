@@ -15,6 +15,7 @@ module ROM
 
         def self.inherited(descendant)
           descendant.instance_variable_set('@__options__', option_definitions.dup)
+          super
         end
       end
     end

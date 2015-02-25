@@ -23,13 +23,14 @@ module ROM
   class Relation
     extend ClassMacros
 
+    include Options
     include Equalizer.new(:dataset)
 
     defines :repository, :dataset, :register_as
 
     repository :default
 
-    attr_reader :name, :dataset, :__registry__
+    attr_reader :name, :dataset
 
     # Register adapter relation subclasses during setup phase
     #
@@ -44,6 +45,8 @@ module ROM
 
       klass.class_eval do
         dataset(default_name)
+
+        option :__registry__, type: Hash, default: {}, reader: true
 
         def self.register_as(value = Undefined)
           if value == Undefined
@@ -129,7 +132,7 @@ module ROM
         repository = repositories.fetch(klass.repository)
         dataset = repository.dataset(klass.dataset)
 
-        relation = klass.new(dataset, registry)
+        relation = klass.new(dataset, __registry__: registry)
 
         name = klass.register_as
 
@@ -150,10 +153,10 @@ module ROM
     end
 
     # @api private
-    def initialize(dataset, registry = {})
+    def initialize(dataset, options = {})
       @dataset = dataset
       @name = self.class.dataset
-      @__registry__ = registry
+      super
     end
 
     # Hook to finalize a relation after its instance was created
@@ -200,8 +203,8 @@ module ROM
     private
 
     # @api private
-    def __new__(dataset)
-      self.class.new(dataset, __registry__)
+    def __new__(dataset, new_opts = {})
+      self.class.new(dataset, options.merge(new_opts))
     end
   end
 end
