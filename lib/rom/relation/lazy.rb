@@ -36,10 +36,18 @@ module ROM
       # @api private
       attr_reader :relation
 
+      # Map of exposed relation methods
+      #
+      # @return [Hash<Symbol=>TrueClass>]
+      #
+      # @api private
+      attr_reader :methods
+
       # @api private
       def initialize(relation, options = {})
         super
         @relation = relation
+        @methods = Hash[relation.exposed_relations.product([true])]
       end
 
       # Compose two relation with a left-to-right composition
@@ -114,7 +122,7 @@ module ROM
 
       # @api private
       def respond_to_missing?(name, include_private = false)
-        relation.respond_to?(name) || super
+        methods[name] || super
       end
 
       # Return if this lazy relation is curried
@@ -136,7 +144,7 @@ module ROM
       #
       # @api private
       def method_missing(meth, *args, &block)
-        if !relation.respond_to?(meth) || (curried? && name != meth)
+        if !methods[meth] || (curried? && name != meth)
           super
         else
           arity = relation.method(meth).arity
