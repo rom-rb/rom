@@ -41,7 +41,7 @@ module ROM
 
       # @api private
       def __new__(relation, new_opts = {})
-        Curried.new(relation, options.update(new_opts))
+        Curried.new(relation, options.merge(new_opts))
       end
     end
   end
