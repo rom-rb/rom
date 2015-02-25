@@ -86,6 +86,16 @@ module ROM
         call.one!
       end
 
+      # Yield composite relation objects
+      #
+      # @yield [Object]
+      #
+      # @api public
+      def each(&block)
+        return to_enum unless block
+        call.each { |object| yield(object) }
+      end
+
       # @api private
       def respond_to_missing?(name, include_private = false)
         left.respond_to?(name) || super

@@ -40,4 +40,18 @@ describe ROM::Relation::Composite do
       ])
     end
   end
+
+  describe '#each' do
+    let(:relation) { users >> name_list >> upcaser }
+
+    it 'calls and iterates' do
+      result = []
+      relation.each { |object| result << object }
+      expect(result).to match_array(%w(JANE JOE))
+    end
+
+    it 'returns enumerator if block is not provided' do
+      expect(relation.each.to_a).to match_array(%w(JANE JOE))
+    end
+  end
 end
