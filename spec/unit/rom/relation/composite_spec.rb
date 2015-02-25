@@ -54,4 +54,12 @@ describe ROM::Relation::Composite do
       expect(relation.each.to_a).to match_array(%w(JANE JOE))
     end
   end
+
+  describe '#first' do
+    let(:relation) { users >> name_list >> upcaser }
+
+    it 'calls and returns the first object' do
+      expect(relation.first).to eql('JOE')
+    end
+  end
 end

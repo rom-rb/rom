@@ -96,6 +96,15 @@ module ROM
         call.each { |object| yield(object) }
       end
 
+      # Return first object from the called relation
+      #
+      # @return [Object]
+      #
+      # @api public
+      def first
+        call.first
+      end
+
       # @api private
       def respond_to_missing?(name, include_private = false)
         left.respond_to?(name) || super
