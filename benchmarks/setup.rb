@@ -7,7 +7,11 @@ require 'benchmark/ips'
 require 'rom-sql'
 
 require 'active_record'
-require 'byebug'
+
+begin
+  require 'byebug'
+rescue LoadError
+end
 
 def rom
   ROM_ENV
@@ -30,15 +34,51 @@ def tags
 end
 
 def hr
-  puts "*"*80
+  puts "*" * 80
 end
 
-def run(title)
+def puts(*)
+  super unless VERIFY
+end
+
+def run(title, &block)
+  if VERIFY
+    Verifier.run(&block)
+  else
+    benchmark(title, &block)
+  end
+end
+
+def benchmark(title)
   puts "\n"
   puts "=> benchmark: #{title}"
   puts "\n"
-  yield
+  Benchmark.ips do |x|
+    def x.verify(*); end
+    yield x
+    x.compare!
+  end
   hr
+end
+
+class Verifier
+  def initialize
+    @verify = nil
+    yield self
+  end
+
+  def self.run(&block)
+    new(&block)
+  end
+
+  def report(name)
+    result = yield
+    @verify.call(result) or raise "Expectation failed: #{name}"
+  end
+
+  def verify(&block)
+    @verify = block
+  end
 end
 
 DATABASE_URL = ENV.fetch('DATABASE_URL', 'postgres://localhost/rom')
@@ -208,18 +248,19 @@ end
 
 ROM_ENV = setup.finalize
 
+VERIFY = ENV.fetch('VERIFY') { false }
 COUNT = ENV.fetch('COUNT', 1000).to_i
 
 USER_SEED = COUNT.times.map do |i|
   { id:    i + 1,
-    name:  "User #{i}",
+    name:  "User #{i + 1}",
     email: "email_#{i}@domain.com",
     age:   i*10 }
 end
 
 TASK_SEED = USER_SEED.map do |user|
   3.times.map do |i|
-    { user_id: user[:id], title: "Task #{i}" }
+    { user_id: user[:id], title: "Task #{i + 1}" }
   end
 end.flatten
 
