@@ -17,10 +17,6 @@ module ROM
   # for those sub-classes but there is always a vanilla relation instance stored
   # in the schema registry.
   #
-  # Relation instances also have access to the experimental ROM::RA interface
-  # giving in-memory relational operations that are very handy, especially when
-  # dealing with joined relations or data coming from different sources.
-  #
   # @api public
   class Relation
     extend ClassMacros
