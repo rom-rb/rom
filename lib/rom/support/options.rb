@@ -29,14 +29,8 @@ module ROM
     attr_reader :options
 
     def self.included(klass)
-      klass.class_eval do
-        extend(ClassMethods)
-
-        def self.inherited(descendant)
-          descendant.instance_variable_set('@__options__', option_definitions.dup)
-          super
-        end
-      end
+      klass.extend ClassMethods
+      klass.option_definitions = Definitions.new
     end
 
     # Defines a single option
@@ -141,9 +135,7 @@ module ROM
       # @return [Definitions]
       #
       # @api private
-      def option_definitions
-        @__options__ ||= Definitions.new
-      end
+      attr_accessor :option_definitions
 
       # Defines an option
       #
@@ -160,6 +152,12 @@ module ROM
         option = Option.new(name, settings)
         option_definitions.define(option)
         attr_reader(name) if option.reader?
+      end
+
+      # @api private
+      def inherited(descendant)
+        descendant.option_definitions = option_definitions.dup
+        super
       end
     end
 
