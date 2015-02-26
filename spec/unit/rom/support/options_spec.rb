@@ -106,5 +106,14 @@ describe ROM::Options do
       expect { Class.new(klass).new }
         .to raise_error /hook called/
     end
+
+    it 'does not modify passed options' do
+      options = {}
+      klass.option :foo, default: :bar
+
+      klass.new(options)
+
+      expect(options).to eq({})
+    end
   end
 end
