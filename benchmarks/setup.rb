@@ -21,8 +21,8 @@ def tasks
   rom.relation(:tasks)
 end
 
-def tasks_with_user_and_tags
-  tasks.with_user.with_tags.as(:task_with_user_and_tags)
+def tasks_with_user_and_tags(&block)
+  rom.relation(:tasks, &block).with_user.with_tags.as(:task_with_user_and_tags)
 end
 
 def tags

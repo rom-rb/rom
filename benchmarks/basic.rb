@@ -46,12 +46,12 @@ run("Loading ONE task with its user and tags") do
         .includes(:user)
         .includes(:tags)
         .where(users: { name: 'User 1' }, tasks: { title: 'Task 1' })
-        .to_a
+        .first
     end
     x.report("ROM") do
       tasks_with_user_and_tags do |relation|
         relation.where(users__name: 'User 1', tasks__title: 'Task 1')
-      end.to_a
+      end.one
     end
     x.compare!
   end
