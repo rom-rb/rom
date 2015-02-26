@@ -14,41 +14,37 @@ module ROM
 
       rom.instance_variable_set('@adapters', {})
       rom.instance_variable_set('@repositories', {})
-
-      rom.module_exec do
-        class << self
-          # An internal adapter identifier => adapter module map used by setup
-          #
-          # @return [Hash<Symbol=>Module>]
-          #
-          # @api private
-          attr_reader :adapters
-
-          # An internal repo => identifier map used by the setup
-          #
-          # @return [Hash]
-          #
-          # @api private
-          attr_reader :repositories
-
-          # Setup object created during env setup phase
-          #
-          # This gets set to nil after setup is finalized
-          #
-          # @return [Setup]
-          #
-          # @api private
-          attr_reader :boot
-
-          # Return global default ROM environment configured by the setup
-          #
-          # @return [Env]
-          #
-          # @api public
-          attr_reader :env
-        end
-      end
     end
+
+    # An internal adapter identifier => adapter module map used by setup
+    #
+    # @return [Hash<Symbol=>Module>]
+    #
+    # @api private
+    attr_reader :adapters
+
+    # An internal repo => identifier map used by the setup
+    #
+    # @return [Hash]
+    #
+    # @api private
+    attr_reader :repositories
+
+    # Setup object created during env setup phase
+    #
+    # This gets set to nil after setup is finalized
+    #
+    # @return [Setup]
+    #
+    # @api private
+    attr_reader :boot
+
+    # Return global default ROM environment configured by the setup
+    #
+    # @return [Env]
+    #
+    # @api public
+    attr_reader :env
 
     # Starts the setup process for relations, mappers and commands.
     #
