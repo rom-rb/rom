@@ -1,3 +1,4 @@
+require 'set'
 require 'rom/relation/registry_reader'
 require 'rom/relation/lazy'
 require 'rom/relation/curried'
@@ -48,7 +49,7 @@ module ROM
         include ROM::Relation::RegistryReader
 
         dataset(default_name)
-        exposed_relations Hash.new
+        exposed_relations Set.new
 
         def self.register_as(value = Undefined)
           if value == Undefined
@@ -60,7 +61,7 @@ module ROM
 
         def self.method_added(name)
           super
-          exposed_relations[name] = public_instance_methods.include?(name)
+          exposed_relations << name if public_instance_methods.include?(name)
         end
       end
 

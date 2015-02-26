@@ -122,7 +122,7 @@ module ROM
 
       # @api private
       def respond_to_missing?(name, include_private = false)
-        methods[name] || super
+        methods.include?(name) || super
       end
 
       # Return if this lazy relation is curried
@@ -144,7 +144,7 @@ module ROM
       #
       # @api private
       def method_missing(meth, *args, &block)
-        if !methods[meth] || (curried? && name != meth)
+        if !methods.include?(meth) || (curried? && name != meth)
           super
         else
           arity = relation.method(meth).arity

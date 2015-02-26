@@ -39,7 +39,7 @@ describe ROM::Relation do
         end
       }
 
-      expect(relation_class.exposed_relations).to include(foo: true, bar: true)
+      expect(relation_class.exposed_relations).to include(:foo, :bar)
     end
   end
 

@@ -89,7 +89,7 @@ module ROM
 
         Mapper.registry(mapper_classes).each do |name, mappers|
           relation = relations[name]
-          methods = relation.exposed_relations.keys
+          methods = relation.exposed_relations
 
           readers[name] = Reader.build(
             name, relation, MapperRegistry.new(mappers), methods
