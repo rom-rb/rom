@@ -51,7 +51,7 @@ run("Loading ONE task with its user and tags") do
     x.report("ROM") do
       tasks_with_user_and_tags do |relation|
         relation.where(users__name: 'User 1', tasks__title: 'Task 1')
-      end.one
+      end.first
     end
     x.compare!
   end
