@@ -3,21 +3,25 @@
 ### Added
 
 * It is now possible to define custom relation, mapper and command classes during setup (solnic)
+* New `Env#relation` interface for reading and mapping relations which supports:
+  * `Relation::Lazy` with auto-currying, mapping and composition features (solnic)
+  * `Relation::Composite` allowing data-pipelining with arbitrary objects (solnic)
+  * Passing a block which yields relation with adapter query DSL available (solnic)
+* Relations can be extended with plugins using Options API (solnic)
 * Commands are now composable via `>>` operator (solnic)
-* `Reader#one` and `Reader#one!` which can be used to retrieve one object from a relation (aflatter)
-* Relation `base_name` is inferred from the class name by default (gotar)
+* Mappers support `prefix_separator` option (solnic)
+* Mappers can be registered under custom names (solnic)
+* Relation `dataset` name is inferred from the class name by default (gotar)
 * Relation can be registered under a custom name via `register_as` option (mcls)
-* Env#read supports mapping with a specific mapper via `map` (solnic)
-* Env#read yields a reader for a specific relation if block is provided (solnic)
 * Adapters can use helper modules for datasets: `ArrayDataset` and `EnumerableDataset` (solnic)
 * Adapter interface can now be tested via a lint test (elskwid + solnic + splattael)
-* `to_ary` alias in `Reader` which addresses issue #80 (solnic)
 * `tuple_count` interface in AbstractCommand which can be overridden by adapter (solnic)
+* Custom Inflector API that auto-detects a specific inflection engine (mjtko)
 
 ### Changed
 
 * [BREAKING] Command API was simplified - commands should be accessed directly in `.try` block (solnic)
-* Schema DSL was **removed** - attributes can be specified only in mapper DSL
+* [BREAKING] Schema DSL was **removed** - attributes can be specified only in mapper DSL
   and default repository can be changed when defining a relation (solnic)
 * `.setup` interface requires either an adapter identifier or can accept a repository
   instance (aflatter)
@@ -25,9 +29,12 @@
 * Adapters no longer need to handle connection URIs (aflatter)
 * Adapter/Repository has been collapsed to *just* `Repository` (solnic)
 * Relation no longer needs a header object and only operates on an adapters dataset (solnic)
-* Adapter's dataset no longer require header (solnic)
+* Relation no longer uses on Charlatan with method_missing magic (solnic)
+* Adapter's dataset no longer requires header (solnic)
 * Make storage in memory adapter thread-safe #110 (splattael)
 * An Adapter can provide its own Relation subclass with custom behavior (solnic)
+* Relation provides its "public interface" using method_added hook (splattael + solnic)
+* ROM no longer depends on charlatan, concord and inflecto gems (mjtko + solnic)
 
 [Compare v0.5.0...master](https://github.com/rom-rb/rom/compare/v0.5.0...master)
 
