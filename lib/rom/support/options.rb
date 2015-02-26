@@ -152,8 +152,8 @@ module ROM
       # @param [Hash] settings option settings
       # @option settings [Class] :type Restrict option type. Default: +Object+
       # @option settings [Boolean] :reader Define a reader? Default: +false+
-      # @option settings [Array] :allow Only allow certain values. Default: Allow anything
-      # @option settings [Object] :default Set default value if option is missing. Default: +nil+
+      # @option settings [Array] :allow Allow certain values. Default: Allow anything
+      # @option settings [Object] :default Set default value for missing option
       #
       # @api public
       def option(name, settings = {})

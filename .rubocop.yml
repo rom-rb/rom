@@ -15,6 +15,7 @@ Lint/HandleExceptions:
   Exclude:
     - rakelib/*.rake
     - spec/spec_helper.rb
+    - benchmarks/setup.rb
 
 # gemspec is a special snowflake
 Metrics/LineLength:
@@ -78,3 +79,7 @@ Style/TrivialAccessors:
 Style/ClassAndModuleChildren:
   Exclude:
     - spec/**/*_spec.rb
+
+# Allow logical `or`/`and` in conditionals
+Style/AndOr:
+  EnforcedStyle: conditionals

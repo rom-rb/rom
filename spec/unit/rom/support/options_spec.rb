@@ -97,14 +97,14 @@ describe ROM::Options do
 
     it 'call parent`s `inherited` hook' do
       m = Module.new do
-        def inherited(base)
+        def inherited(_base)
           raise "hook called"
         end
       end
       klass.extend m
 
       expect { Class.new(klass).new }
-        .to raise_error /hook called/
+        .to raise_error(/hook called/)
     end
 
     it 'does not modify passed options' do
