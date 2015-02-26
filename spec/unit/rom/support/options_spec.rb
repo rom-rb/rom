@@ -94,5 +94,17 @@ describe ROM::Options do
       expect { object.options[:foo] = :bar }
         .to raise_error(RuntimeError, /frozen/)
     end
+
+    it 'call parent`s `inherited` hook' do
+      m = Module.new do
+        def inherited(base)
+          raise "hook called"
+        end
+      end
+      klass.extend m
+
+      expect { Class.new(klass).new }
+        .to raise_error /hook called/
+    end
   end
 end
