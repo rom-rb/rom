@@ -1,3 +1,4 @@
+require 'rom/relation/registry_reader'
 require 'rom/relation/lazy'
 require 'rom/relation/curried'
 
@@ -26,11 +27,11 @@ module ROM
     include Options
     include Equalizer.new(:dataset)
 
-    defines :repository, :dataset, :register_as
+    defines :repository, :dataset, :register_as, :exposed_relations
 
     repository :default
 
-    attr_reader :name, :dataset
+    attr_reader :name, :dataset, :exposed_relations
 
     # Register adapter relation subclasses during setup phase
     #
@@ -44,9 +45,10 @@ module ROM
       return if self == ROM::Relation
 
       klass.class_eval do
-        dataset(default_name)
+        include ROM::Relation::RegistryReader
 
-        option :__registry__, type: Hash, default: {}, reader: true
+        dataset(default_name)
+        exposed_relations Hash.new
 
         def self.register_as(value = Undefined)
           if value == Undefined
@@ -56,15 +58,9 @@ module ROM
           end
         end
 
-        # @api private
-        def respond_to_missing?(name, _include_private = false)
-          __registry__.key?(name) || super
-        end
-
-        private
-
-        def method_missing(name, *)
-          __registry__.fetch(name) { super }
+        def self.method_added(name)
+          super
+          exposed_relations[name] = public_instance_methods.include?(name)
         end
       end
 
@@ -156,6 +152,7 @@ module ROM
     def initialize(dataset, options = {})
       @dataset = dataset
       @name = self.class.dataset
+      @exposed_relations = self.class.exposed_relations
       super
     end
 
@@ -183,11 +180,6 @@ module ROM
     # @api public
     def to_a
       to_enum.to_a
-    end
-
-    # @api private
-    def exposed_relations
-      public_methods - dataset.public_methods - [:name, :dataset, :__registry__]
     end
 
     # @api private

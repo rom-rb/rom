@@ -7,14 +7,10 @@ describe ROM::Relation::Lazy do
   let(:tasks) { rom.relations.tasks.to_lazy }
 
   before do
-    module Test::Plugin
-      def pager
-        all
-      end
-    end
-
     setup.relation(:users) do
-      include Test::Plugin
+      def repository
+        :default
+      end
 
       def by_name(name)
         restrict(name: name)
@@ -85,10 +81,6 @@ describe ROM::Relation::Lazy do
 
     it 'returns original response if it is not a relation' do
       expect(users.repository).to be(:default)
-    end
-
-    it 'gives access to an interfaces from a plugin' do
-      expect(users.pager).to eql(users.all)
     end
 
     it 'raises NoMethodError when relation does not respond to a method' do

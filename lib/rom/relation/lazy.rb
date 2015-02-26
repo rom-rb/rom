@@ -47,7 +47,7 @@ module ROM
       def initialize(relation, options = {})
         super
         @relation = relation
-        @methods = Hash[relation.exposed_relations.product([true])]
+        @methods = @relation.exposed_relations
       end
 
       # Compose two relation with a left-to-right composition
