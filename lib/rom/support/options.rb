@@ -64,7 +64,7 @@ module ROM
       end
 
       def allow?(value)
-        allow.none? || allow.include?(value)
+        allow.empty? || allow.include?(value)
       end
     end
 
