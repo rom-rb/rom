@@ -18,7 +18,11 @@ def rom
 end
 
 def users
-  rom.relation(:users)
+  @users ||= rom.relation(:users).as(:users)
+end
+
+def users_with_tasks
+  @user_with_tasks ||= rom.relation(:users).with_tasks.as(:user_with_tasks)
 end
 
 def tasks
@@ -143,7 +147,8 @@ module Relations
     one_to_many :tasks, key: :user_id
 
     def all
-      select(:id, :name, :email, :age).order(:users__id)
+      select(:users__id, :users__name, :users__email, :users__age)
+        .order(:users__id)
     end
 
     def by_name(name)

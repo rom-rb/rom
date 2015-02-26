@@ -11,7 +11,7 @@ run("Loading ONE user object") do |x|
     ARUser.by_name('User 1').first
   end
   x.report("ROM") do
-    users.by_name('User 1').as(:users).one
+    users.by_name('User 1').first
   end
 end
 
@@ -23,7 +23,7 @@ run("Loading ALL user objects") do |x|
     ARUser.all.to_a
   end
   x.report("ROM") do
-    users.all.as(:users).to_a
+    users.all.to_a
   end
 end
 
@@ -32,10 +32,10 @@ run("Loading ALL users with their tasks") do |x|
     users.size == COUNT
   end
   x.report("AR") do
-    ARUser.all.includes(:tasks).to_a
+    ARUser.includes(:tasks).all.to_a
   end
   x.report("ROM") do
-    users.all.with_tasks.as(:user_with_tasks).to_a
+    users_with_tasks.all.to_a
   end
 end
 
