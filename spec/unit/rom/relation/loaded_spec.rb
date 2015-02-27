@@ -22,6 +22,15 @@ describe ROM::Relation::Loaded do
     end
   end
 
+  describe '#to_ary' do
+    it 'coerces to an array' do
+      expect(users.to_ary).to match_array([
+        { name: 'Jane', email: 'jane@doe.org' },
+        { name: 'Joe', email: 'joe@doe.org' }
+      ])
+    end
+  end
+
   it_behaves_like 'a relation that returns one tuple' do
     let(:relation) { users }
   end

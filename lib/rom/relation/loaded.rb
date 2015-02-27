@@ -6,6 +6,13 @@ module ROM
     class Loaded
       include Enumerable
 
+      # Coerce loaded relation to an array
+      #
+      # @return [Array]
+      #
+      # @api public
+      alias_method :to_ary, :to_a
+
       # Source relation
       #
       # @return [Relation]
