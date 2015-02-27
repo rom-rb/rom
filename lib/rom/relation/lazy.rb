@@ -98,6 +98,16 @@ module ROM
       end
       alias_method :[], :call
 
+      # Yield relation tuples
+      #
+      # @yield [Object]
+      #
+      # @api public
+      def each(&block)
+        return to_enum unless block
+        to_a.each { |tuple| yield(tuple) }
+      end
+
       # Delegate to loaded relation and return one object
       #
       # @return [Object]

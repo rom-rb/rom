@@ -119,6 +119,45 @@ describe ROM::Relation::Lazy do
     end
   end
 
+  describe '#each' do
+    it 'yields relation tuples' do
+      result = []
+      users.each { |tuple| result << tuple }
+      expect(result).to match_array([
+        { name: 'Jane', email: 'jane@doe.org' },
+        { name: 'Joe', email: 'joe@doe.org' }
+      ])
+    end
+
+    it 'returns an enumerator if block is not provided' do
+      expect(users.each.to_a).to match_array([
+        { name: 'Jane', email: 'jane@doe.org' },
+        { name: 'Joe', email: 'joe@doe.org' }
+      ])
+    end
+
+    it 'raises when relation is curried and arity does not match' do
+      expect { users.by_name.each {} }.to raise_error(
+        ArgumentError, 'ROM::Relation[Users]#by_name arity is 1 (0 args given)'
+      )
+    end
+  end
+
+  describe '#to_ary' do
+    it 'returns an array with relation tuples' do
+      expect(users.to_ary).to match_array([
+        { name: 'Jane', email: 'jane@doe.org' },
+        { name: 'Joe', email: 'joe@doe.org' }
+      ])
+    end
+
+    it 'raises when relation is curried and arity does not match' do
+      expect { users.by_name.to_ary }.to raise_error(
+        ArgumentError, 'ROM::Relation[Users]#by_name arity is 1 (0 args given)'
+      )
+    end
+  end
+
   describe '#>>' do
     it 'composes two relations' do
       other = users.by_name('Jane') >> tasks.for_users

@@ -28,6 +28,16 @@ module ROM
       end
       alias_method :[], :call
 
+      # @api public
+      def to_a
+        raise(
+          ArgumentError,
+          "#{relation.class}##{name} arity is #{arity} " \
+          "(#{curry_args.size} args given)"
+        )
+      end
+      alias_method :to_ary, :to_a
+
       # Return if this lazy relation is curried
       #
       # @return [true]
