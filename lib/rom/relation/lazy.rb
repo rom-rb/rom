@@ -96,7 +96,6 @@ module ROM
       def call
         Loaded.new(relation)
       end
-      alias_method :[], :call
 
       # Yield relation tuples
       #
@@ -128,6 +127,15 @@ module ROM
       # @api public
       def one!
         call.one!
+      end
+
+      # Return first tuple from a relation coerced to an array
+      #
+      # @return [Object]
+      #
+      # @api public
+      def first
+        to_a.first
       end
 
       # @api private

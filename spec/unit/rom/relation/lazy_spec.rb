@@ -119,6 +119,18 @@ describe ROM::Relation::Lazy do
     end
   end
 
+  describe '#first' do
+    it 'return first tuple' do
+      expect(users.first).to eql(name: 'Joe', email: 'joe@doe.org')
+    end
+
+    it 'raises when relation is curried and arity does not match' do
+      expect { users.by_name.first }.to raise_error(
+        ArgumentError, 'ROM::Relation[Users]#by_name arity is 1 (0 args given)'
+      )
+    end
+  end
+
   describe '#each' do
     it 'yields relation tuples' do
       result = []
