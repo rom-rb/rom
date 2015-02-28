@@ -102,9 +102,7 @@ module ROM
             validate_option_value(option, name, options[name])
           end
 
-          if option.reader?
-            option.assign_reader_value(object, options[name])
-          end
+          option.assign_reader_value(object, options[name]) if option.reader?
         end
       end
 
