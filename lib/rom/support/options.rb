@@ -45,10 +45,15 @@ module ROM
         @reader = options.fetch(:reader) { false }
         @allow = options.fetch(:allow) { [] }
         @default = options.fetch(:default) { Undefined }
+        @ivar = :"@#{name}" if @reader
       end
 
       def reader?
         @reader
+      end
+
+      def assign_reader_value(object, value)
+        object.instance_variable_set(@ivar, value)
       end
 
       def default?
@@ -85,22 +90,21 @@ module ROM
         @options[option.name] = option
       end
 
-      def validate_options(options)
-        options.each do |name, value|
-          validate_option_value(name, value)
-        end
-      end
+      def process(object, options)
+        ensure_known_options(options)
 
-      def set_defaults(object, options)
         each do |name, option|
-          next unless option.default? && !options.key?(name)
-          options[name] = option.default_value(object)
-        end
-      end
+          if option.default? && !options.key?(name)
+            options[name] = option.default_value(object)
+          end
 
-      def set_option_values(object, options)
-        each do |name, option|
-          object.instance_variable_set("@#{name}", options[name]) if option.reader?
+          if options.key?(name)
+            validate_option_value(option, name, options[name])
+          end
+
+          if option.reader?
+            option.assign_reader_value(object, options[name])
+          end
         end
       end
 
@@ -110,12 +114,16 @@ module ROM
         @options.each(&block)
       end
 
-      def validate_option_value(name, value)
-        option = @options.fetch(name) do
-          raise InvalidOptionKeyError,
-            "#{name.inspect} is not a valid option"
+      def ensure_known_options(options)
+        options.each_key do |name|
+          @options.fetch(name) do
+            raise InvalidOptionKeyError,
+              "#{name.inspect} is not a valid option"
+          end
         end
+      end
 
+      def validate_option_value(option, name, value)
         unless option.type_matches?(value)
           raise InvalidOptionValueError,
             "#{name.inspect}:#{value.inspect} has incorrect type"
@@ -178,10 +186,7 @@ module ROM
     # @param [Array] args
     def initialize(*args)
       options = args.last ? args.last.dup : {}
-      definitions = self.class.option_definitions
-      definitions.set_defaults(self, options)
-      definitions.validate_options(options)
-      definitions.set_option_values(self, options)
+      self.class.option_definitions.process(self, options)
       @options = options.freeze
     end
   end
