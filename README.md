@@ -26,6 +26,7 @@ Learn more:
 ## Adapters
 
   * [rom-sql](https://github.com/rom-rb/rom-sql)
+  * [rom-yesql](https://github.com/rom-rb/rom-yesql)
   * [rom-mongo](https://github.com/rom-rb/rom-mongo)
   * [rom-yaml](https://github.com/rom-rb/rom-yaml)
   * [rom-csv](https://github.com/rom-rb/rom-csv)
