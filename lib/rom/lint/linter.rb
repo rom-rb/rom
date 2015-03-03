@@ -36,7 +36,9 @@ module ROM
       #
       # @api public
       def lint(name)
+        before_lint
         public_send name
+        after_lint
         true # for assertions
       end
 
@@ -58,6 +60,18 @@ module ROM
       # @api private
       def complain(*args)
         raise Failure, *args
+      end
+
+      # Hook method executed before each lint method run
+      #
+      # @api private
+      def before_lint
+      end
+
+      # Hook method executed after each lint method run
+      #
+      # @api private
+      def after_lint
       end
     end
   end

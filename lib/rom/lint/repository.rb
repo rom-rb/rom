@@ -31,6 +31,7 @@ module ROM
         @identifier = identifier
         @repository = repository
         @uri = uri
+        @repository_instance = setup_repository_instance
       end
 
       # Lint: Ensure that +repository+ setups up its instance
@@ -63,15 +64,30 @@ module ROM
         complain "#{repository_instance} must respond to dataset?"
       end
 
+      private
+
+      # Repository instance
+      #
+      # @api private
+      attr_reader :repository_instance
+
       # Setup repository instance
       #
-      # @api public
-      def repository_instance
+      # @api private
+      def setup_repository_instance
         if uri
           ROM::Repository.setup(identifier, uri)
         else
           ROM::Repository.setup(identifier)
         end
+      end
+
+      # Run Repository#disconnect
+      #
+      # @api private
+      def after_lint
+        super
+        repository_instance.disconnect
       end
     end
   end
