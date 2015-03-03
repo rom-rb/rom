@@ -50,10 +50,11 @@ module ROM
         infer_schema_relations
 
         relations = load_relations
-        readers = load_readers(relations)
+        mappers = load_mappers
         commands = load_commands(relations)
+        readers = load_readers(relations, mappers)
 
-        Env.new(repositories, relations, readers, commands)
+        Env.new(repositories, relations, mappers, commands, readers)
       end
 
       private
@@ -81,19 +82,28 @@ module ROM
         RelationRegistry.new(relations)
       end
 
+      # @api private
+      def load_mappers
+        mapper_registry = Mapper.registry(mapper_classes).each_with_object({})
+        registry_hash = mapper_registry.each do |(name, mappers), h|
+          h[name] = MapperRegistry.new(mappers)
+        end
+        Registry.new(registry_hash)
+      end
+
       # Build entire reader and mapper registries
       #
       # @api private
-      def load_readers(relations)
+      def load_readers(relations, mappers)
         readers = {}
 
-        Mapper.registry(mapper_classes).each do |name, mappers|
+        mappers.each do |name, rel_mappers|
+          next unless rel_mappers.key?(name)
+
           relation = relations[name]
           methods = relation.exposed_relations
 
-          readers[name] = Reader.build(
-            name, relation, MapperRegistry.new(mappers), methods
-          )
+          readers[name] = Reader.build(name, relation, rel_mappers, methods)
         end
 
         ReaderRegistry.new(readers)

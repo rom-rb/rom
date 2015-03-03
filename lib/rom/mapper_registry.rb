@@ -12,6 +12,11 @@ module ROM
     end
 
     # @api private
+    def key?(name)
+      elements.key?(name)
+    end
+
+    # @api private
     def by_path(path)
       elements.fetch(paths(path).detect { |name| elements.key?(name) }) {
         raise(MapperMissingError, path)

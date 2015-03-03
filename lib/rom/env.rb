@@ -33,12 +33,12 @@ module ROM
     attr_reader :mappers
 
     # @api private
-    def initialize(repositories, relations, readers, commands)
+    def initialize(repositories, relations, mappers, commands, readers = nil)
       @repositories = repositories
       @relations = relations
-      @readers = readers
+      @mappers = mappers
       @commands = commands
-      initialize_mappers
+      @readers = readers
       freeze
     end
 
@@ -108,16 +108,6 @@ module ROM
     # @api public
     def command(name)
       commands[name]
-    end
-
-    private
-
-    # @api private
-    def initialize_mappers
-      elements = readers.each_with_object({}) { |(name, reader), h|
-        h[name] = reader.mappers
-      }
-      @mappers = Registry.new(elements)
     end
   end
 end
