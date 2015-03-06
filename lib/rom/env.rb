@@ -88,15 +88,17 @@ module ROM
     #
     # @param [Symbol] name of the registered reader
     #
+    # @deprecated
+    #
     # @api public
     def read(name, &block)
-      reader = readers[name]
-
-      if block
-        yield(reader)
-      else
-        reader
-      end
+      warn <<-MSG
+        #{self.class}#read is deprecated.
+        Please use `#{self.class}#relation(#{name.inspect})` instead.
+        For mapping append `.map_with(:your_mapper_name)`
+        [#{caller[0]}]
+      MSG
+      relation(name, &block)
     end
 
     # Returns commands registry for the given relation

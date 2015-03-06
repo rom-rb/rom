@@ -34,7 +34,7 @@ describe 'Mappers / Renaming attributes' do
 
     rom.relations.users << { _id: 123, user_name: 'Jane' }
 
-    jane = rom.read(:users).to_a.first
+    jane = rom.relation(:users).as(:users).first
 
     expect(jane).to eql(Test::User.new(id: 123, name: 'Jane'))
   end
@@ -66,10 +66,11 @@ describe 'Mappers / Renaming attributes' do
     Test::UserWithAddress.send(:include, Equalizer.new(:id, :name, :address))
 
     rom.relations.users << { _id: 123, user_name: 'Jane' }
+
     rom.relations.addresses <<
       { _id: 123, address_id: 321, address_street: 'Street 1' }
 
-    jane = rom.read(:users).with_address.first
+    jane = rom.relation(:users).with_address.as(:with_address).first
 
     expect(jane).to eql(
       Test::UserWithAddress.new(id: 123, name: 'Jane',
@@ -104,12 +105,13 @@ describe 'Mappers / Renaming attributes' do
     Test::UserWithAddresses.send(:include, Equalizer.new(:id, :name, :addresses))
 
     rom.relations.users << { _id: 123, user_name: 'Jane' }
+
     rom.relations.addresses <<
       { _id: 123, address_id: 321, address_street: 'Street 1' }
     rom.relations.addresses <<
       { _id: 123, address_id: 654, address_street: 'Street 2' }
 
-    jane = rom.read(:users).with_addresses.first
+    jane = rom.relation(:users).with_addresses.as(:with_addresses).first
 
     expect(jane).to eql(
       Test::UserWithAddresses.new(

@@ -14,12 +14,14 @@ describe 'Mapper definition DSL' do
   end
 
   describe 'default PORO mapper' do
-    subject(:mapper) { rom.read(:users).mapper }
+    subject(:mapper) { rom.mappers.users.entity }
 
     before do
       setup.mappers do
         define(:users) do
           model name: 'Test::User'
+
+          register_as :entity
 
           attribute :name
           attribute :email
@@ -38,7 +40,7 @@ describe 'Mapper definition DSL' do
 
   describe 'excluding attributes' do
     context 'by setting :inherit_header to false' do
-      subject(:mapper) { rom.read(:users).email_index.mapper }
+      subject(:mapper) { rom.mappers.users.email_index }
 
       before do
         setup.mappers do
@@ -63,7 +65,7 @@ describe 'Mapper definition DSL' do
   end
 
   describe 'virtual relation mapper' do
-    subject(:mapper) { rom.read(:users).email_index.mapper }
+    subject(:mapper) { rom.mappers.users.email_index }
 
     before do
       setup.mappers do
@@ -124,7 +126,7 @@ describe 'Mapper definition DSL' do
 
       Test::TaskWithUser.send(:include, Equalizer.new(:title, :priority, :user))
 
-      jane = rom.read(:tasks).with_user.to_a.last
+      jane = rom.relation(:tasks).with_user.as(:with_user).to_a.last
 
       expect(jane).to eql(
         Test::TaskWithUser.new(
@@ -153,7 +155,7 @@ describe 'Mapper definition DSL' do
 
       Test::TaskWithUser.send(:include, Equalizer.new(:title, :priority, :user))
 
-      jane = rom.read(:tasks).with_user.to_a.last
+      jane = rom.relation(:tasks).with_user.as(:with_user).to_a.last
 
       expect(jane).to eql(
         Test::TaskWithUser.new(
@@ -184,7 +186,7 @@ describe 'Mapper definition DSL' do
       Test::TaskWithUser.send(:include, Equalizer.new(:title, :priority, :user))
       Test::User.send(:include, Equalizer.new(:email))
 
-      jane = rom.read(:tasks).with_user.to_a.last
+      jane = rom.relation(:tasks).with_user.as(:with_user).to_a.last
 
       expect(jane).to eql(
         Test::TaskWithUser.new(

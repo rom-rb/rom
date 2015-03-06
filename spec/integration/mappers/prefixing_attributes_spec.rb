@@ -30,7 +30,7 @@ describe 'Mappers / Prefixing attributes' do
       user_email: 'jane@doe.org'
     }
 
-    jane = rom.read(:users).to_a.first
+    jane = rom.relation(:users).as(:users).first
 
     expect(jane).to eql(Test::User.new(id: 123, name: 'Jane', email: 'jane@doe.org'))
   end

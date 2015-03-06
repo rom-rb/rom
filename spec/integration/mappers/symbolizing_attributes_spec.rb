@@ -36,7 +36,7 @@ describe 'Mappers / Symbolizing atributes' do
       'email' => 'jane@doe.org'
     }
 
-    jane = rom.read(:users).first
+    jane = rom.relation(:users).as(:users).first
 
     expect(jane).to eql(
       id: 123, details: { name: 'Jane' }, contact: { email: 'jane@doe.org' }
@@ -64,7 +64,7 @@ describe 'Mappers / Symbolizing atributes' do
       'task_description' => 'It is a task'
     }
 
-    task = rom.read(:tasks).first
+    task = rom.relation(:tasks).as(:tasks).first
 
     expect(task).to eql(
       title: 'Task One',

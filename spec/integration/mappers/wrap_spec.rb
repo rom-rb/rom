@@ -41,7 +41,7 @@ describe 'Mapper definition DSL' do
 
       Test::TaskWithUser.send(:include, Equalizer.new(:title, :priority, :user))
 
-      jane = rom.read(:tasks).with_user.to_a.last
+      jane = rom.relation(:tasks).with_user.as(:with_user).to_a.last
 
       expect(jane).to eql(
         Test::TaskWithUser.new(
@@ -70,7 +70,7 @@ describe 'Mapper definition DSL' do
 
       Test::TaskWithUser.send(:include, Equalizer.new(:title, :priority, :user))
 
-      jane = rom.read(:tasks).with_user.to_a.last
+      jane = rom.relation(:tasks).with_user.as(:with_user).to_a.last
 
       expect(jane).to eql(
         Test::TaskWithUser.new(
@@ -107,7 +107,7 @@ describe 'Mapper definition DSL' do
       Test::TaskUser.send(:include, Equalizer.new(:name, :contact))
       Test::Contact.send(:include, Equalizer.new(:email))
 
-      jane = rom.read(:tasks).with_user.to_a.last
+      jane = rom.relation(:tasks).with_user.as(:with_user).to_a.last
 
       expect(jane).to eql(
         Test::TaskWithUser.new(
@@ -140,7 +140,7 @@ describe 'Mapper definition DSL' do
       Test::TaskWithUser.send(:include, Equalizer.new(:title, :priority, :user))
       Test::User.send(:include, Equalizer.new(:email))
 
-      jane = rom.read(:tasks).with_user.to_a.last
+      jane = rom.relation(:tasks).with_user.as(:with_user).to_a.last
 
       expect(jane).to eql(
         Test::TaskWithUser.new(

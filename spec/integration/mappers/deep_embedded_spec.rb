@@ -33,7 +33,7 @@ describe 'Mappers / deeply embedded tuples' do
       ]
     }
 
-    jane = rom.read(:users).to_a.first
+    jane = rom.relation(:users).as(:users).first
 
     expect(jane.name).to eql('Jane')
 

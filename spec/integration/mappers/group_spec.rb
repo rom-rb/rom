@@ -45,7 +45,7 @@ describe 'Mapper definition DSL' do
 
       Test::UserWithTasks.send(:include, Equalizer.new(:name, :email, :tasks))
 
-      jane = rom.read(:users).with_tasks.to_a.last
+      jane = rom.relation(:users).with_tasks.map_with(:with_tasks).to_a.last
 
       expect(jane).to eql(
         Test::UserWithTasks.new(
@@ -75,7 +75,7 @@ describe 'Mapper definition DSL' do
 
       Test::UserWithTasks.send(:include, Equalizer.new(:name, :email, :tasks))
 
-      jane = rom.read(:users).with_tasks.to_a.last
+      jane = rom.relation(:users).with_tasks.map_with(:with_tasks).to_a.last
 
       expect(jane).to eql(
         Test::UserWithTasks.new(
@@ -108,7 +108,7 @@ describe 'Mapper definition DSL' do
       Test::UserWithTasks.send(:include, Equalizer.new(:name, :email, :tasks))
       Test::Task.send(:include, Equalizer.new(:title, :priority))
 
-      jane = rom.read(:users).with_tasks.to_a.last
+      jane = rom.relation(:users).with_tasks.map_with(:with_tasks).to_a.last
 
       expect(jane).to eql(
         Test::UserWithTasks.new(
@@ -148,7 +148,7 @@ describe 'Mapper definition DSL' do
       Test::TaskUser.send(:include, Equalizer.new(:name, :contacts))
       Test::Contact.send(:include, Equalizer.new(:email))
 
-      task = rom.read(:tasks).with_users.to_a.first
+      task = rom.relation(:tasks).with_users.map_with(:with_users).first
 
       expect(task).to eql(
         Test::TaskWithUsers.new(title: 'be nice', priority: 1, users: [

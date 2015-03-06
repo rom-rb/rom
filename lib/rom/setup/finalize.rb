@@ -1,6 +1,5 @@
 require 'rom/relation'
 require 'rom/mapper'
-require 'rom/reader'
 require 'rom/command'
 
 require 'rom/support/registry'
@@ -52,9 +51,8 @@ module ROM
         relations = load_relations
         mappers = load_mappers
         commands = load_commands(relations)
-        readers = load_readers(relations, mappers)
 
-        Env.new(repositories, relations, mappers, commands, readers)
+        Env.new(repositories, relations, mappers, commands)
       end
 
       private
@@ -89,24 +87,6 @@ module ROM
           h[name] = MapperRegistry.new(mappers)
         end
         Registry.new(registry_hash)
-      end
-
-      # Build entire reader and mapper registries
-      #
-      # @api private
-      def load_readers(relations, mappers)
-        readers = {}
-
-        mappers.each do |name, rel_mappers|
-          next unless rel_mappers.key?(name)
-
-          relation = relations[name]
-          methods = relation.exposed_relations
-
-          readers[name] = Reader.build(name, relation, rel_mappers, methods)
-        end
-
-        ReaderRegistry.new(readers)
       end
 
       # Build entire command registries

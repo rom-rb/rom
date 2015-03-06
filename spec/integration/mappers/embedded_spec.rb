@@ -25,9 +25,7 @@ describe 'Mappers / embedded' do
       'tasks' => [{ 'title' => 'Task One' }, { 'title' => 'Task Two' }]
     }
 
-    jane = rom.read(:users).to_a.first
-
-    expect(rom.read(:users).mapper.header.map(&:name)).to eql([:name, :tasks])
+    jane = rom.relation(:users).map_with(:users).first
 
     expect(jane.name).to eql('Jane')
     expect(jane.tasks).to eql([{ title: 'Task One' }, { title: 'Task Two' }])
@@ -55,9 +53,7 @@ describe 'Mappers / embedded' do
       'address' => { 'street' => 'Somewhere 1', 'city' => 'NYC' }
     }
 
-    jane = rom.read(:users).to_a.first
-
-    expect(rom.read(:users).mapper.header.map(&:name)).to eql([:name, :address])
+    jane = rom.relation(:users).as(:users).first
 
     Test::Address.send(:include, Equalizer.new(:street, :city))
 

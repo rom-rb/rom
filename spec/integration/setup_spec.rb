@@ -44,7 +44,7 @@ describe 'Setting up ROM' do
       rom = setup.finalize
 
       expect(rom.relations).to eql(ROM::RelationRegistry.new)
-      expect(rom.readers).to eql(ROM::ReaderRegistry.new)
+      expect(rom.mappers).to eql(ROM::Registry.new)
     end
   end
 
@@ -110,7 +110,7 @@ describe 'Setting up ROM' do
 
       rom.commands.users.create.call(name: 'Jane')
 
-      expect(rom.read(:users).by_name('Jane').to_a)
+      expect(rom.relation(:users).by_name('Jane').as(:users).to_a)
         .to eql([Test::User.new(name: 'Jane')])
     end
   end
@@ -146,7 +146,7 @@ describe 'Setting up ROM' do
 
       rom.command(:users).create.call(name: 'Jane')
 
-      expect(rom.read(:users).by_name('Jane').to_a)
+      expect(rom.relation(:users).by_name('Jane').as(:users).to_a)
         .to eql([Test::User.new(name: 'Jane')])
     end
   end

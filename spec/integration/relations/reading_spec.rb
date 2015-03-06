@@ -27,7 +27,7 @@ describe 'Reading relations' do
 
     rom = setup.finalize
 
-    users = rom.read(:users).sorted.by_name('Jane')
+    users = rom.relation(:users).sorted.by_name('Jane').as(:users)
     user = users.first
 
     expect(user).to be_an_instance_of(Test::User)
@@ -68,18 +68,13 @@ describe 'Reading relations' do
     Test::User.send(:include, Equalizer.new(:name, :email))
     Test::UserWithTasks.send(:include, Equalizer.new(:name, :email, :tasks))
 
-    keys = rom.read(:users).with_tasks.header.keys
-    expect(keys).to eql([:name, :email, :tasks])
-
-    user = rom.read(:users).sorted.first
+    user = rom.relation(:users).sorted.as(:users).first
 
     expect(user).to eql(
       Test::User.new(name: "Jane", email: "jane@doe.org")
     )
 
-    expect(rom.read(:users)).to_not respond_to(:join)
-
-    user = rom.read(:users).with_tasks.sorted.first
+    user = rom.relation(:users).with_tasks.sorted.as(:with_tasks).first
 
     expect(user).to eql(
       Test::UserWithTasks.new(
@@ -122,10 +117,7 @@ describe 'Reading relations' do
     Test::User.send(:include, Equalizer.new(:name, :email))
     Test::UserWithTask.send(:include, Equalizer.new(:name, :email, :task))
 
-    keys = rom.read(:users).with_task.header.keys
-    expect(keys).to eql([:name, :email, :task])
-
-    user = rom.read(:users).sorted.with_task.first
+    user = rom.relation(:users).sorted.with_task.as(:with_task).first
 
     expect(user).to eql(
       Test::UserWithTask.new(name: "Jane", email: "jane@doe.org",
@@ -146,7 +138,7 @@ describe 'Reading relations' do
 
     rom = setup.finalize
 
-    user = rom.read(:users).by_name("Jane").first
+    user = rom.relation(:users).by_name("Jane").as(:users).first
 
     expect(user).to eql(name: "Jane", email: "jane@doe.org")
   end
@@ -167,7 +159,7 @@ describe 'Reading relations' do
     end
 
     rom = setup.finalize
-    user = rom.read(:users).map(:prefixer).first
+    user = rom.relation(:users).map_with(:prefixer).first
 
     expect(user).to eql(user_name: 'Joe', user_email: "joe@doe.org")
   end

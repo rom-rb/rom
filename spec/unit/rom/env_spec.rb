@@ -46,7 +46,7 @@ describe ROM::Env do
 
   describe '#mappers' do
     it 'returns mappers for all relations' do
-      expect(rom.mappers.users).to eql(rom.readers.users.mappers)
+      expect(rom.mappers.users[:name_list]).to_not be(nil)
     end
   end
 end

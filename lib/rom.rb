@@ -13,7 +13,6 @@ require 'rom/support/class_builder'
 # core parts
 require 'rom/relation'
 require 'rom/mapper'
-require 'rom/reader'
 require 'rom/command'
 
 # default mapper processor using Transproc gem
@@ -33,5 +32,4 @@ module ROM
   extend Global
 
   RelationRegistry = Class.new(Registry)
-  ReaderRegistry = Class.new(Registry)
 end
