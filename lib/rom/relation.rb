@@ -1,5 +1,3 @@
-require 'set'
-
 require 'rom/relation/class_interface'
 
 require 'rom/relation/lazy'
@@ -26,6 +24,13 @@ module ROM
     include Options
     include Equalizer.new(:dataset)
 
+    # Dataset used by the relation
+    #
+    # This object is provided by the repository during the setup
+    #
+    # @return [Object]
+    #
+    # @api private
     attr_reader :dataset
 
     # @api private
@@ -44,7 +49,7 @@ module ROM
       dataset.each { |tuple| yield(tuple) }
     end
 
-    # Materialize relation into an array
+    # Materialize a relation into an array
     #
     # @return [Array<Hash>]
     #
@@ -53,6 +58,12 @@ module ROM
       to_enum.to_a
     end
 
+    # Turn relation into a lazy-loadable and composable relation
+    #
+    # @see Lazy
+    #
+    # @return [Lazy]
+    #
     # @api public
     def to_lazy(*args)
       Lazy.new(self, *args)

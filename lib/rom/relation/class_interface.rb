@@ -1,3 +1,4 @@
+require 'set'
 require 'rom/relation/registry_reader'
 
 module ROM
@@ -25,8 +26,32 @@ module ROM
           dataset(default_name)
           exposed_relations Set.new
 
-          attr_reader :name, :exposed_relations
+          # Relation's dataset name
+          #
+          # In example a table name in an SQL database
+          #
+          # @return [Symbol]
+          #
+          # @api public
+          attr_reader :name
 
+          # A set with public method names that return "virtual" relations
+          #
+          # Only those methods are exposed directly on relations return by
+          # Env#relation interface
+          #
+          # @return [Set]
+          #
+          # @api private
+          attr_reader :exposed_relations
+
+          # Set or get name under which a relation will be registered
+          #
+          # This defaults to `dataset` name
+          #
+          # @return [Symbol]
+          #
+          # @api public
           def self.register_as(value = Undefined)
             if value == Undefined
               @register_as || dataset
@@ -35,17 +60,25 @@ module ROM
             end
           end
 
+          # Hook used to collect public method names
+          #
+          # @api private
           def self.method_added(name)
             super
             exposed_relations << name if public_instance_methods.include?(name)
           end
 
+          # @api private
           def initialize(dataset, options = {})
             @name = self.class.dataset
             @exposed_relations = self.class.exposed_relations
             super
           end
 
+          # Return name of the source repository of this relation
+          #
+          # @return [Symbol]
+          #
           # @api private
           def repository
             self.class.repository
