@@ -20,8 +20,9 @@
 
 ### Changed
 
-* [BREAKING] Command API was simplified - commands should be accessed directly in `.try` block (solnic)
 * [BREAKING] Schema DSL was **removed** - attributes can be specified only in mapper DSL
+* [BREAKING] Reader was **removed** in favor of relation interface with explicit mapping (solnic)
+* [BREAKING] Command API was simplified - commands should be accessed directly in `.try` block (solnic)
   and default repository can be changed when defining a relation (solnic)
 * `.setup` interface requires either an adapter identifier or can accept a repository
   instance (aflatter)
