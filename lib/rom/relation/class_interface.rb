@@ -54,7 +54,7 @@ module ROM
           # @api public
           def self.register_as(value = Undefined)
             if value == Undefined
-              @register_as || dataset
+              super() || dataset
             else
               super
             end
