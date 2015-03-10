@@ -8,10 +8,6 @@ describe ROM::Relation::Lazy do
 
   before do
     setup.relation(:users) do
-      def repository
-        :default
-      end
-
       def by_name(name)
         restrict(name: name)
       end
