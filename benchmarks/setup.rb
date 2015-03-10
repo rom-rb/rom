@@ -53,6 +53,43 @@ def run(title, &block)
   end
 end
 
+# Enable and start GC before each job run. Disable GC afterwards.
+#
+# Inspired by https://www.omniref.com/ruby/2.2.1/symbols/Benchmark/bm?#annotation=4095926&line=182
+#
+# Benchmark::IPS relies on the name `Benchmark::Suite`.
+class Benchmark::Suite
+  def self.current
+    new
+  end
+
+  def warming(*)
+    run_gc
+  end
+
+  def running(*)
+    run_gc
+  end
+
+  def warmup_stats(*)
+  end
+
+  def add_report(*)
+  end
+
+  def quiet?
+    true # seems odd but is valid for Benchmark::IPS <= 2.1.1
+  end
+
+  private
+
+  def run_gc
+    GC.enable
+    GC.start
+    GC.disable
+  end
+end
+
 def benchmark(title)
   puts "\n"
   puts "=> benchmark: #{title}"
