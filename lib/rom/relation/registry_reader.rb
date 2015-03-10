@@ -4,7 +4,7 @@ module ROM
       # @api private
       def self.included(klass)
         super
-        klass.option :__registry__, type: Hash, default: {}, reader: true
+        klass.option :__registry__, type: Hash, default: EMPTY_HASH, reader: true
       end
 
       # @api private

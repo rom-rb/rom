@@ -21,7 +21,7 @@ module ROM
       option :target
       option :validator, reader: true
       option :input, reader: true
-      option :curry_args, type: Array, reader: true, default: []
+      option :curry_args, type: Array, reader: true, default: EMPTY_ARRAY
 
       attr_reader :relation
 
