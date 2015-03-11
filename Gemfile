@@ -29,7 +29,7 @@ end
 
 group :benchmarks do
   gem 'activerecord', '4.2.0'
-  gem 'benchmark-ips', '2.1.1'
+  gem 'benchmark-ips', git: 'https://github.com/evanphx/benchmark-ips.git', branch: 'master'
 end
 
 group :tools do
