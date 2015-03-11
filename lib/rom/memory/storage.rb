@@ -1,4 +1,9 @@
-require 'thread_safe'
+begin
+  require 'thread_safe'
+rescue LoadError
+  raise LoadError, 'Please install the `thread_safe` gem.'
+end
+
 require 'rom/memory/dataset'
 
 module ROM
