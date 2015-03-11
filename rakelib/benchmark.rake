@@ -1,6 +1,8 @@
 desc "Run benchmarks (tweak count via COUNT envvar)"
 task :benchmark do
-  sh "ruby benchmarks/basic.rb"
+  FileList["benchmarks/**/*_bench.rb"].each do |bench|
+    sh "ruby #{bench}"
+  end
 end
 
 namespace :benchmark do
