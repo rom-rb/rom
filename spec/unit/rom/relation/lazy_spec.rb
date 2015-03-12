@@ -12,6 +12,10 @@ describe ROM::Relation::Lazy do
         restrict(name: name)
       end
 
+      def by_name_sorted(name, order_by = :name)
+        by_name(name).order(order_by)
+      end
+
       def by_email(email)
         restrict(name: email)
       end
@@ -125,6 +129,10 @@ describe ROM::Relation::Lazy do
         ArgumentError, 'ROM::Relation[Users]#by_name arity is 1 (0 args given)'
       )
     end
+
+    it 'does not raise when relation is curried and arity matches' do
+      expect { users.by_name_sorted('Joe').first }.to_not raise_error
+    end
   end
 
   describe '#each' do
@@ -149,6 +157,10 @@ describe ROM::Relation::Lazy do
         ArgumentError, 'ROM::Relation[Users]#by_name arity is 1 (0 args given)'
       )
     end
+
+    it 'does not raise when relation is curried and arity matches' do
+      expect { users.by_name_sorted('Jane').first }.to_not raise_error
+    end
   end
 
   describe '#to_ary' do
@@ -163,6 +175,10 @@ describe ROM::Relation::Lazy do
       expect { users.by_name.to_ary }.to raise_error(
         ArgumentError, 'ROM::Relation[Users]#by_name arity is 1 (0 args given)'
       )
+    end
+
+    it 'does not raise when relation is curried and arity matches' do
+      expect { users.by_name_sorted('Jane').first }.to_not raise_error
     end
   end
 
