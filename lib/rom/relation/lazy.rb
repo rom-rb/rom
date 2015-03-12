@@ -167,7 +167,7 @@ module ROM
         else
           arity = relation.method(meth).arity
 
-          if arity == -1 || arity == args.size
+          if arity < 0 || arity == args.size
             response = relation.__send__(meth, *args, &block)
             if response.is_a?(Relation)
               __new__(response)
