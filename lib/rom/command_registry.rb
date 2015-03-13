@@ -1,4 +1,5 @@
 require 'rom/commands/result'
+require 'unsound'
 
 module ROM
   # Specialized registry class for commands
@@ -43,15 +44,33 @@ module ROM
     #
     # @api public
     def try(&block)
-      response = block.call
-
-      if response.is_a?(Command) || response.is_a?(Composite)
-        try { response.call }
-      else
-        Result::Success.new(response)
+      Unsound::Control.try do
+        execute(&block)
+      end.or_else do |error|
+        case error
+        when CommandError
+          Unsound::Data::Left.new(error)
+        else
+          raise error
+        end
       end
-    rescue CommandError => e
-      Result::Failure.new(e)
+    end
+
+    # Execute a command, recursively executing if the result
+    # is also a command
+    #
+    # @yield calls the block to execute the command
+    #
+    # @return the result of calling the chain of commands
+    #
+    # @api public
+    def execute(&block)
+      response = block.call
+      if response.is_a?(Command) || response.is_a?(Composite)
+        execute(&response)
+      else
+        response
+      end
     end
 
     # Return a command from the registry

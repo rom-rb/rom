@@ -20,25 +20,25 @@ describe 'ROM::CommandRegistry' do
     it 'returns a success result object on successful execution' do
       result = users.try { users.create.call(name: 'Jane') }
 
-      expect(result).to match_array([{ name: 'Jane' }])
+      expect(result.value).to eq([{ name: 'Jane' }])
     end
 
     it 'returns a success result on successful curried-command execution' do
       result = users.try { users.create.curry(name: 'Jane') }
 
-      expect(result).to match_array([{ name: 'Jane' }])
+      expect(result.value).to eq([{ name: 'Jane' }])
     end
 
     it 'returns a failure result object on failed execution' do
       result = users.try { users.create.call({}) }
 
-      expect(result.value).to be(nil)
+      expect(result.value).to be_kind_of(ROM::CommandError)
     end
 
     it 'returns a failure result on unsuccessful curried-command execution' do
       result = users.try { users.create.curry({}) }
 
-      expect(result.value).to be(nil)
+      expect(result.value).to be_kind_of(ROM::CommandError)
     end
 
     it 'allows checking if a command is available using respond_to?' do

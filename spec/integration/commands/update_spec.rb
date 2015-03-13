@@ -40,15 +40,22 @@ describe 'Commands / Update' do
       users.update.all(name: 'Jane').call(email: 'jane.doe@test.com')
     }
 
-    expect(result)
+    expect(result.value)
       .to match_array([{ name: 'Jane', email: 'jane.doe@test.com' }])
   end
 
   it 'returns validation object with errors on failed validation' do
     result = users.try { users.update.all(name: 'Jane').call(email: nil) }
 
-    expect(result.error).to be_instance_of(Test::ValidationError)
-    expect(result.error.message).to eql(':email is required')
+    result.either(
+      ->(error) {
+        expect(error).to be_instance_of(Test::ValidationError)
+        expect(error.message).to eql(':email is required')
+      },
+      ->(_) {
+        raise "Expected validation to have failed"
+      }
+    )
 
     expect(rom.relations.users.restrict(name: 'Jane')).to match_array([
       { name: 'Jane', email: 'jane@doe.org' }
@@ -81,7 +88,7 @@ describe 'Commands / Update' do
         users.update_one.call(email: 'jane.doe@test.com')
       }
 
-      expect(result.error).to be_instance_of(ROM::TupleCountMismatchError)
+      expect(result.value).to be_instance_of(ROM::TupleCountMismatchError)
 
       expect(rom.relations.users).to match_array([
         { name: 'Jane', email: 'jane@doe.org' },

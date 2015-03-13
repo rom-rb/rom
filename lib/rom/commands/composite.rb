@@ -30,6 +30,15 @@ module ROM
       end
       alias_method :[], :call
 
+      # Allow a composite to be used where procs are accepted
+      #
+      # @return [Proc]
+      #
+      # @api public
+      def to_proc
+        lambda { |*args| call(*args) }
+      end
+
       # @api private
       def graph?
         left.is_a?(Graph)

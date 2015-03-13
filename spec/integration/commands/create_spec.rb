@@ -85,8 +85,16 @@ describe 'Commands / Create' do
   it 'returns validation object with errors on failed validation' do
     result = users.try { users.create.call(name: 'Piotr') }
 
-    expect(result.error).to be_instance_of(Test::ValidationError)
-    expect(result.error.message).to eql(":name and :email are required")
+    result.either(
+      ->(error) {
+        expect(error).to be_instance_of(Test::ValidationError)
+        expect(error.message).to eql(":name and :email are required")
+      },
+      ->(_) {
+        raise "Expected validation to have failed"
+      }
+    )
+
     expect(rom.relations.users.count).to be(2)
   end
 
