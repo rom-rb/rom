@@ -12,6 +12,7 @@ test/tmp
 test/version_tmp
 tmp
 Gemfile.lock
+vendor/
 
 .idea/
 
@@ -19,5 +20,3 @@ Gemfile.lock
 .yardoc
 _yardoc
 doc/
-
-Gemfile.lock
