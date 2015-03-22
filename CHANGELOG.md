@@ -37,7 +37,7 @@
 * Relation provides its "public interface" using method_added hook (splattael + solnic)
 * ROM no longer depends on charlatan, concord and inflecto gems (mjtko + solnic)
 
-[Compare v0.5.0...master](https://github.com/rom-rb/rom/compare/v0.5.0...master)
+[Compare v0.5.0...v0.6.0](https://github.com/rom-rb/rom/compare/v0.5.0...v0.6.0)
 
 ## v0.5.0 2014-12-31
 
