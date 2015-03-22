@@ -21,7 +21,7 @@ your datastore.
 Learn more:
 
 * [Introduction](http://rom-rb.org/introduction/)
-* [Rails tutorial](http://rom-rb.org/tutorials/rails/)
+* [Rails tutorial](http://rom-rb.org/tutorials/todo-app-with-rails/)
 
 ## Adapters
 
