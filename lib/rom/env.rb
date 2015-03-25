@@ -92,7 +92,7 @@ module ROM
     #
     # @api public
     def read(name, &block)
-      warn <<-MSG
+      warn <<-MSG.gsub(/^\s+/, '')
         #{self.class}#read is deprecated.
         Please use `#{self.class}#relation(#{name.inspect})` instead.
         For mapping append `.map_with(:your_mapper_name)`
