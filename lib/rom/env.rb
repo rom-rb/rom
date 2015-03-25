@@ -17,11 +17,6 @@ module ROM
     # @api public
     attr_reader :relations
 
-    # @return [ReaderRegistry] reader registry
-    #
-    # @api public
-    attr_reader :readers
-
     # @return [Registry] command registry
     #
     # @api public
@@ -33,12 +28,11 @@ module ROM
     attr_reader :mappers
 
     # @api private
-    def initialize(repositories, relations, mappers, commands, readers = nil)
+    def initialize(repositories, relations, mappers, commands)
       @repositories = repositories
       @relations = relations
       @mappers = mappers
       @commands = commands
-      @readers = readers
       freeze
     end
 
