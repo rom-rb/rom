@@ -7,6 +7,13 @@ module ROM
   class CommandRegistry < Registry
     include Commands
 
+    attr_reader :options
+
+    def initialize(elements, options = {})
+      super(elements)
+      @options = options
+    end
+
     # Try to execute a command in a block
     #
     # @yield [command] Passes command to the block
@@ -30,6 +37,26 @@ module ROM
       end
     rescue CommandError => e
       Result::Failure.new(e)
+    end
+
+    def [](name)
+      command = super
+      mapper = options[:mapper]
+      if mapper
+        command.curry >> mapper
+      else
+        command
+      end
+    end
+
+    # @api private
+    def as(mapper_name)
+      with(mapper: options[:mappers][mapper_name])
+    end
+
+    # @api private
+    def with(new_options)
+      self.class.new(elements, options.merge(new_options))
     end
   end
 end

@@ -57,6 +57,7 @@ module ROM
           tuples
         end
       end
+      alias_method :[], :call
 
       # Curry this command with provided args
       #

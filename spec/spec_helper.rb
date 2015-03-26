@@ -10,6 +10,7 @@ if RUBY_ENGINE == "rbx"
 end
 
 require 'rom'
+require 'anima'
 
 begin
   require 'byebug'

@@ -33,7 +33,11 @@ module ROM
     private
 
     def method_missing(name, *)
-      elements.fetch(name) { super }
+      if elements.key?(name)
+        self[name]
+      else
+        super
+      end
     end
   end
 end

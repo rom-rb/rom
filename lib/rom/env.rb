@@ -103,7 +103,11 @@ module ROM
     #
     # @api public
     def command(name)
-      commands[name]
+      if mappers.elements.key?(name)
+        commands[name].with(mappers: mappers[name])
+      else
+        commands[name]
+      end
     end
   end
 end

@@ -29,8 +29,17 @@ module ROM
       #
       # @api public
       def call(*args)
-        right.call(left.call(*args))
+        if result == :one
+          if right.is_a?(Command)
+            right.call([left.call(*args)].first)
+          else
+            right.call([left.call(*args)]).first
+          end
+        else
+          right.call(left.call(*args))
+        end
       end
+      alias_method :[], :call
 
       # Compose another composite command from self and other
       #
@@ -41,6 +50,11 @@ module ROM
       # @api public
       def >>(other)
         self.class.new(self, other)
+      end
+
+      # @api private
+      def result
+        left.result
       end
     end
   end
