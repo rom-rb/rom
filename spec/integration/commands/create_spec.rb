@@ -8,6 +8,8 @@ describe 'Commands / Create' do
 
   before do
     module Test
+      User = Class.new
+
       UserValidator = Class.new do
         ValidationError = Class.new(ROM::CommandError)
 
@@ -67,31 +69,72 @@ describe 'Commands / Create' do
   end
 
   describe '"result" option' do
-    it 'returns a single tuple when set to :one' do
-      setup.commands(:users) do
-        define(:create_one, type: :create) do
-          result :one
-        end
-      end
-
-      tuple = { name: 'Piotr', email: 'piotr@solnic.eu' }
-
-      result = users.try {
-        users.create_one.call(tuple)
-      }
-
-      expect(result.value).to eql(tuple)
-    end
-
-    it 'allows only valid result types' do
-      expect {
+    context 'when set to :one' do
+      it 'returns a single tuple' do
         setup.commands(:users) do
           define(:create_one, type: :create) do
-            result :invalid_type
+            result :one
           end
         end
-        setup.finalize
-      }.to raise_error(ROM::InvalidOptionValueError)
+
+        tuple = { name: 'Piotr', email: 'piotr@solnic.eu' }
+
+        result = users.try {
+          users.create_one.call(tuple)
+        }
+
+        expect(result.value).to eql(tuple)
+      end
+    end
+
+    context 'when set to a Class' do
+      let(:user) { double('Test::User') }
+
+      before do
+        allow(Test::User).to receive(:new).and_return(user)
+      end
+
+      it 'returns an instance of given Class' do
+        setup.commands(:users) do
+          define(:create_one, type: :create) do
+            result Test::User
+          end
+        end
+
+        tuple = { name: 'Piotr', email: 'piotr@solnic.eu' }
+
+        result = users.try {
+          users.create_one.call(tuple)
+        }
+
+        expect(Test::User).to have_received(:new).with(tuple)
+        expect(result.value).to eql(user)
+      end
+    end
+
+    context 'when set to Array[Class]' do
+      let(:user) { double('Test::User') }
+
+      before do
+        allow(Test::User).to receive(:new).and_return(user)
+      end
+
+      it 'returns a collection of instances of given Class' do
+        setup.commands(:users) do
+          define(:create_many, type: :create) do
+            result Array[Test::User]
+          end
+        end
+
+        tuple = { name: 'Piotr', email: 'piotr@solnic.eu' }
+
+        result = users.try {
+          users.create_many.call(tuple)
+        }
+
+        expect(Test::User).to have_received(:new).with(tuple)
+        expect(result.value).to match_array([user])
+      end
     end
   end
 end

@@ -17,7 +17,7 @@ module ROM
       include Options
 
       option :type, allow: [:create, :update, :delete]
-      option :result, reader: true, allow: [:one, :many]
+      option :result, reader: true
       option :target
       option :validator, reader: true
       option :input, reader: true
@@ -51,7 +51,12 @@ module ROM
       def call(*args)
         tuples = execute(*(args + curry_args))
 
-        if result == :one
+        case result
+        when Array
+          tuples.map { |attributes| result.first.new(attributes) }
+        when Class
+          result.new(tuples.first)
+        when :one
           tuples.first
         else
           tuples
