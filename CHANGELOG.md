@@ -1,3 +1,12 @@
+## v0.6.1 to-be-released
+
+### Changed
+
+* gemspec no longer specifies required_ruby_version so that rom can be installed on jruby (solnic)
+* Obsolete `Env#readers` was removed (splattael)
+
+[Compare v0.6.0...master](https://github.com/rom-rb/rom/compare/v0.6.0...master)
+
 ## v0.6.0 2015-03-22
 
 ### Added
