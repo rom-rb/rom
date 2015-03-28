@@ -38,6 +38,18 @@ describe 'Commands / Create' do
         super(task.merge(name: user[:name]))
       end
     end
+
+    Test::User = Class.new do
+      include Anima.new(:name, :email)
+    end
+
+    class Test::UserMapper < ROM::Mapper
+      relation :users
+      register_as :entity
+      model Test::User
+      attribute :name
+      attribute :email
+    end
   end
 
   it 'inserts user on successful validation' do
@@ -92,6 +104,30 @@ describe 'Commands / Create' do
         end
         setup.finalize
       }.to raise_error(ROM::InvalidOptionValueError)
+    end
+  end
+
+  describe 'sending result through a mapper' do
+    let(:attributes) do
+      { name: 'Jane', email: 'jane@doe.org' }
+    end
+
+    it 'uses registered mapper to process the result for :one result' do
+      command = rom.command(:users).as(:entity).create
+      result = command[attributes]
+
+      expect(result).to eql(Test::User.new(attributes))
+    end
+
+    it 'uses registered mapper to process the result for :many results' do
+      setup.commands(:users) do
+        define(:create_many, type: :create)
+      end
+
+      command = rom.command(:users).as(:entity).create_many
+      result = command[attributes]
+
+      expect(result).to eql([Test::User.new(attributes)])
     end
   end
 end

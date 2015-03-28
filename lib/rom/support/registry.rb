@@ -12,14 +12,18 @@ module ROM
 
     attr_reader :elements, :name
 
-    def initialize(elements = {})
+    def initialize(elements = {}, name = self.class.name)
       @elements = elements
-      @name = self.class.name
+      @name = name
     end
 
     def each(&block)
       return to_enum unless block
       elements.each { |element| yield(element) }
+    end
+
+    def key?(name)
+      elements.key?(name)
     end
 
     def [](key)

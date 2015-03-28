@@ -63,7 +63,7 @@ module ROM
           relations[name]
         end
 
-      if mappers.elements.key?(name)
+      if mappers.key?(name)
         relation.to_lazy(mappers: mappers[name])
       else
         relation.to_lazy
@@ -99,11 +99,19 @@ module ROM
     #
     # @example
     #
+    #   # plain command returning tuples
     #   rom.command(:users).create
+    #
+    #   # allow auto-mapping using registered mappers
+    #   rom.command(:users).as(:entity)
     #
     # @api public
     def command(name)
-      commands[name]
+      if mappers.key?(name)
+        commands[name].with(mappers: mappers[name])
+      else
+        commands[name]
+      end
     end
   end
 end
