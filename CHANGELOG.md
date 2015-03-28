@@ -1,5 +1,9 @@
 ## v0.6.1 to-be-released
 
+### Added
+
+* Ability to auto-map command result via `rom.command(:rel_name).as(:mapper_name)` (solnic)
+
 ### Changed
 
 * gemspec no longer specifies required_ruby_version so that rom can be installed on jruby (solnic)
