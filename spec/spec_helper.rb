@@ -17,6 +17,9 @@ begin
 rescue LoadError
 end
 
+require "active_support"
+ROM::Inflector = ActiveSupport::Inflector
+
 root = Pathname(__FILE__).dirname
 
 Dir[root.join('support/*.rb').to_s].each { |f| require f }
