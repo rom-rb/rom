@@ -8,6 +8,7 @@ describe "ROM::PluginRegistry" do
 
   before do
     Test::CommandPlugin   = Module.new
+    Test::MapperPlugin    = Module.new
     Test::RelationPlugin  = Module.new do
       def self.included(mod)
         mod.exposed_relations << :plugged_in
@@ -19,8 +20,9 @@ describe "ROM::PluginRegistry" do
     end
 
     setup.plugins do
-      register :publisher, Test::CommandPlugin,   type: :command
-      register :pager,  Test::RelationPlugin,  type: :relation
+      register :publisher,  Test::CommandPlugin,  type: :command
+      register :pager,      Test::RelationPlugin, type: :relation
+      register :translater, Test::MapperPlugin,   type: :mapper
     end
 
   end
@@ -34,7 +36,7 @@ describe "ROM::PluginRegistry" do
   end
 
 
-  it "makes global plugins available" do
+  it "makes command plugins available" do
     setup.relation(:users)
 
     test_class = Class.new(ROM::Commands::Create[:memory]) do
@@ -46,6 +48,18 @@ describe "ROM::PluginRegistry" do
     expect(env.command(:users).create).to be_kind_of Test::CommandPlugin
   end
 
+  it "inclues plugins in mappers" do
+    setup.relation(:users)
+
+    test_class = Class.new(ROM::Mapper) do
+      relation :users
+      register_as :translator
+      use :translater
+    end
+
+    expect(env.mappers[:users][:translator]).to be_kind_of Test::MapperPlugin
+
+  end
 
 
 
