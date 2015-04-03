@@ -56,6 +56,29 @@ module ROM
       def result
         left.result
       end
+
+      # @api private
+      def respond_to_missing?(name, include_private = false)
+        left.respond_to?(name) || super
+      end
+
+      private
+
+      # Allow calling methods on the left side object
+      #
+      # @api private
+      def method_missing(name, *args, &block)
+        if left.respond_to?(name)
+          response = left.__send__(name, *args, &block)
+          if response.is_a?(left.class)
+            self.class.new(response, right)
+          else
+            response
+          end
+        else
+          super
+        end
+      end
     end
   end
 end

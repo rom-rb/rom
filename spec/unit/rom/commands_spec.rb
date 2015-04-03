@@ -160,6 +160,23 @@ describe 'Commands' do
       expect(result).to eql(task_tuple)
       expect(logs).to include(task_tuple)
     end
+
+    it 'forwards methods to the left' do
+      user_input = { name: 'Jane' }
+      user_tuple = { user_id: 1, name: 'Jane' }
+
+      create_user = Class.new(ROM::Commands::Create) {
+        def execute(user_input)
+          relation.insert(user_input)
+        end
+      }.build(users)
+
+      command = create_user >> proc {}
+
+      expect(users).to receive(:insert).with(user_input).and_return(user_tuple)
+
+      command.with(user_input).call
+    end
   end
 
   describe 'access to exposed relations' do
