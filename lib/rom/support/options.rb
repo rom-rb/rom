@@ -106,6 +106,10 @@ module ROM
         end
       end
 
+      def names
+        @options.keys
+      end
+
       private
 
       def each(&block)
