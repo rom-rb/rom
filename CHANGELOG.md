@@ -1,4 +1,4 @@
-## v0.6.1 to-be-released
+## v0.6.1 2015-04-03
 
 ### Added
 
