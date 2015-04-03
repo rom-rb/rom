@@ -27,6 +27,4 @@ describe "ROM::PluginRegistry" do
     expect(env.command(:users).create).to be_kind_of GlobalExtension
   end
 
-
-
 end
