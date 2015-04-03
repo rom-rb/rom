@@ -60,6 +60,13 @@ module ROM
             end
           end
 
+          # Include a registered plugin
+          #
+          # @api public
+          def self.use(plugin)
+            self.include(ROM.plugin_registry.fetch(plugin))
+          end
+
           # Hook used to collect public method names
           #
           # @api private
