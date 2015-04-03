@@ -70,6 +70,9 @@ module ROM
       new(relation, self.options.merge(options))
     end
 
+    def self.use(plugin)
+    end
+
     # Build command registry hash for provided relations
     #
     # @param [RelationRegistry] relations registry

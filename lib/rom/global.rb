@@ -161,6 +161,18 @@ module ROM
       boot.mappers(*args, &block)
     end
 
+    # Global plugin setup DSL
+    #
+    # @example
+    #   ROM.setup(:memory)
+    #
+    #   ROM.plugins do
+    #     register :publisher, Plugin::Publisher, type: :command
+    #   end
+    def plugins(*args, &block)
+      boot.plugins(*args, block)
+    end
+
     # Finalize the setup and store default global env under ROM.env
     #
     # @example

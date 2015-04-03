@@ -2,6 +2,7 @@ require 'rom/setup_dsl/relation'
 
 require 'rom/setup_dsl/mapper_dsl'
 require 'rom/setup_dsl/command_dsl'
+require 'rom/setup_dsl/plugin_dsl'
 
 module ROM
   # This extends Setup class with the DSL methods
@@ -71,5 +72,22 @@ module ROM
     def commands(name, &block)
       CommandDSL.new(name, default_adapter, &block)
     end
+
+    # Plugin definition DSL
+    #
+    # @example
+    #
+    #   setup.plugin do
+    #     register :publisher, ROM::Plugin::Publisher, type: :command
+    #
+    #     adapter :sql  do
+    #       register :pagination, ROM::SQL::Plugin::Pagination, type: :relation
+    #     end
+    #   end
+    def plugins(&block)
+      PluginDSL.new(&block)
+    end
+
+
   end
 end
