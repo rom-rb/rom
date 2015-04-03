@@ -27,6 +27,15 @@ module ROM
           klass.instance_variable_set('@dsl', nil)
         end
 
+        # include the registered plugin
+        #
+        # @param [Symbol] plugin
+        #
+        # @api public
+        def use(plugin)
+          self.include(ROM.plugin_registry.fetch(plugin))
+        end
+
         # Return base_relation used for creating mapper registry
         #
         # This is used to "gather" mappers under same root name
