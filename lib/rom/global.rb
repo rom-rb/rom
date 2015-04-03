@@ -14,6 +14,7 @@ module ROM
 
       rom.instance_variable_set('@adapters', {})
       rom.instance_variable_set('@repositories', {})
+      rom.instance_variable_set('@plugin_registry', {})
     end
 
     # An internal adapter identifier => adapter module map used by setup
@@ -29,6 +30,13 @@ module ROM
     #
     # @api private
     attr_reader :repositories
+
+    # An internal identifier => plugin map used by the setup
+    #
+    # @return [Hash]
+    #
+    # @api private
+    attr_reader :plugin_registry
 
     # Setup object created during env setup phase
     #
