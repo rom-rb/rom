@@ -84,7 +84,7 @@ module ROM
     #       register :pagination, ROM::SQL::Plugin::Pagination, type: :relation
     #     end
     #   end
-    def plugins(&block)
+    def plugins(*args, &block)
       PluginDSL.new(&block)
     end
 
