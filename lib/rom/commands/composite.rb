@@ -29,14 +29,16 @@ module ROM
       #
       # @api public
       def call(*args)
+        response = left.call(*args)
+
         if result == :one
-          if right.is_a?(Command)
-            right.call([left.call(*args)].first)
+          if right.is_a?(Command) || right.is_a?(Commands::Composite)
+            right.call([response].first)
           else
-            right.call([left.call(*args)]).first
+            right.call([response]).first
           end
         else
-          right.call(left.call(*args))
+          right.call(response)
         end
       end
       alias_method :[], :call
