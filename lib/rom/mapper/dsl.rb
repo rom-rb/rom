@@ -33,7 +33,7 @@ module ROM
         #
         # @api public
         def use(plugin)
-          self.include(ROM.plugin_registry.fetch(plugin))
+          self.send(:include, ROM.plugin_registry.fetch(plugin))
         end
 
         # Return base_relation used for creating mapper registry
