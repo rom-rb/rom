@@ -58,10 +58,15 @@ describe "ROM::PluginRegistry" do
     end
 
     expect(env.mappers[:users][:translator]).to be_kind_of Test::MapperPlugin
-
   end
 
-
+  it "restricts plugins to defined type" do
+    expect { 
+      setup.relation(:users) do
+        use :publisher
+      end
+    }.to raise_error ROM::UnknownPluginError
+  end
 
 
 
