@@ -40,5 +40,9 @@ describe 'ROM::CommandRegistry' do
 
       expect(result.value).to be(nil)
     end
+
+    it 'allows checking if a command is available using respond_to?' do
+      expect(users).to respond_to(:create)
+    end
   end
 end

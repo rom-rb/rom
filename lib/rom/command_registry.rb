@@ -109,6 +109,13 @@ module ROM
 
     private
 
+    # Allow checking if a certain command is available using dot-notation
+    #
+    # @api private
+    def respond_to_missing?(name, include_private = false)
+      registry.key?(name) || super
+    end
+
     # Allow retrieving commands using dot-notation
     #
     # @api private
