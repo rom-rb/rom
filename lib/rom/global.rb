@@ -1,5 +1,6 @@
 require 'rom/setup'
 require 'rom/repository'
+require 'rom/plugin_registry'
 
 module ROM
   # Globally accessible public interface exposed via ROM module
@@ -14,7 +15,7 @@ module ROM
 
       rom.instance_variable_set('@adapters', {})
       rom.instance_variable_set('@repositories', {})
-      rom.instance_variable_set('@plugin_registry', {})
+      rom.instance_variable_set('@plugin_registry', PluginRegistry.new)
     end
 
     # An internal adapter identifier => adapter module map used by setup

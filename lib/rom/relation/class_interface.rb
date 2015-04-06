@@ -64,7 +64,7 @@ module ROM
           #
           # @api public
           def self.use(plugin)
-            ROM.plugin_registry.fetch(plugin).apply_to(self)
+            ROM.plugin_registry[plugin].apply_to(self)
           end
 
           # Hook used to collect public method names
