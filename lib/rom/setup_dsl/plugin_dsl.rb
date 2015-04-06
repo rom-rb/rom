@@ -9,7 +9,7 @@ module ROM
       end
 
       def register(name, mod, options = {})
-        ROM.plugin_registry[name] = Plugin.new(mod, options)
+        ROM.plugin_registry.register(name, mod, options)
       end
 
     end

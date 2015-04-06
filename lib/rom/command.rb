@@ -71,7 +71,7 @@ module ROM
     end
 
     def self.use(plugin)
-      ROM.plugin_registry.fetch(plugin).apply_to(self)
+      ROM.plugin_registry[plugin].apply_to(self)
     end
 
     # Build command registry hash for provided relations
