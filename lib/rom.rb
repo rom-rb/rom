@@ -11,9 +11,11 @@ require 'rom/support/class_macros'
 require 'rom/support/class_builder'
 
 # core parts
+require 'rom/plugin'
 require 'rom/relation'
 require 'rom/mapper'
 require 'rom/command'
+
 
 # default mapper processor using Transproc gem
 require 'rom/processor/transproc'
