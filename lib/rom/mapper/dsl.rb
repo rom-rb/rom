@@ -33,7 +33,7 @@ module ROM
         #
         # @api public
         def use(plugin)
-          ROM.plugin_registry[plugin].apply_to(self)
+          ROM.plugin_registry.mappers[plugin].apply_to(self)
         end
 
         # Return base_relation used for creating mapper registry
