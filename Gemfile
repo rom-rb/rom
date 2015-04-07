@@ -2,6 +2,8 @@ source 'https://rubygems.org'
 
 gemspec
 
+gem 'transproc', github: 'aflatter/transproc', branch: 'unwrap'
+
 group :console do
   gem 'pry'
   gem 'pg', platforms: [:mri]

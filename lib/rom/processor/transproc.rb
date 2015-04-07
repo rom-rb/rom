@@ -134,6 +134,16 @@ module ROM
         end
       end
 
+      def visit_unwrap(attribute)
+        name = attribute.name
+        keys = attribute.header.map(&:name)
+
+        compose do |ops|
+          ops << visit_hash(attribute)
+          ops << t(:unwrap, name, keys)
+        end
+      end
+
       # Visit group hash attribute
       #
       # :group transformation is added to handle grouping during preprocessing.
