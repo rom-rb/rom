@@ -31,7 +31,7 @@ module ROM
       # @api private
       attr_reader :meta
 
-      # Return attribute class for a give meta hash
+      # Return attribute class for a given meta hash
       #
       # @param [Hash] meta hash with type information and optional transformation info
       #
