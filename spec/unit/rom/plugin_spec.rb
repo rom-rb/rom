@@ -69,5 +69,29 @@ describe "ROM::PluginRegistry" do
   end
 
 
+  it "allows definition of adapter restricted plugins" do
+    Test::LazyPlugin = Module.new do
+      def self.included(mod)
+        mod.exposed_relations << :lazy?
+      end
+
+      def lazy?
+        true
+      end
+    end
+
+    setup.plugins do
+      adapter :memory do
+        register :lazy, Test::LazyPlugin, type: :relation
+      end
+    end
+
+    setup.relation(:users) do
+      use :lazy
+    end
+
+    expect(env.relation(:users)).to be_lazy
+  end
+
 
 end
