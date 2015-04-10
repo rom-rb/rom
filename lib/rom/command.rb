@@ -70,8 +70,9 @@ module ROM
       new(relation, self.options.merge(options))
     end
 
-    def self.use(plugin)
-      ROM.plugin_registry.commands[plugin].apply_to(self)
+    def self.use(plugin, options = {})
+      adapter = options.fetch(:adapter, :default)
+      ROM.plugin_registry.commands.fetch(plugin, adapter).apply_to(self)
     end
 
     # Build command registry hash for provided relations
