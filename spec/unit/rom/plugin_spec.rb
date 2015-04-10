@@ -61,7 +61,7 @@ describe "ROM::PluginRegistry" do
   end
 
   it "restricts plugins to defined type" do
-    expect { 
+    expect {
       setup.relation(:users) do
         use :publisher
       end
@@ -87,10 +87,34 @@ describe "ROM::PluginRegistry" do
     end
 
     setup.relation(:users) do
-      use :lazy
+      use :lazy, adapter: :memory
     end
 
     expect(env.relation(:users)).to be_lazy
+  end
+
+  it "respects adapter restrictions" do
+    Test::LazyPlugin = Module.new
+    Test::LazySQLPlugin = Module.new
+
+    setup.plugins do
+      register :lazy, Test::LazyPlugin, type: :command
+
+      adapter :sql do
+        register :lazy, Test::LazySQLPlugin, type: :command
+      end
+    end
+
+    setup.relation(:users)
+
+    test_class = Class.new(ROM::Commands::Create[:memory]) do
+      relation :users
+      register_as :create
+      use :lazy, adapter: :memory
+    end
+
+    expect(env.command(:users).create).not_to be_kind_of Test::LazySQLPlugin
+    expect(env.command(:users).create).to be_kind_of Test::LazyPlugin
   end
 
 

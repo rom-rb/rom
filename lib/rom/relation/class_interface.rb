@@ -63,8 +63,9 @@ module ROM
           # Include a registered plugin
           #
           # @api public
-          def self.use(plugin)
-            ROM.plugin_registry.relations[plugin].apply_to(self)
+          def self.use(plugin, options = {})
+            adapter = options.fetch(:adapter, :default)
+            ROM.plugin_registry.relations.fetch(plugin, adapter).apply_to(self)
           end
 
           # Hook used to collect public method names
