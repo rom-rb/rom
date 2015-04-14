@@ -1,3 +1,11 @@
+## v0.6.2 2015-04-14
+
+### Changed
+
+* Updated to transproc 0.2.0 (solnic)
+
+[Compare v0.6.1...v0.6.2](https://github.com/rom-rb/rom/compare/v0.6.1...v0.6.2)
+
 ## v0.6.1 2015-04-04
 
 ### Added
