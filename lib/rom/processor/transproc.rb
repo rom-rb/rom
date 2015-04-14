@@ -91,7 +91,7 @@ module ROM
       # @api private
       def visit_attribute(attribute)
         if attribute.typed?
-          t(:map_key, attribute.name, t(:"to_#{attribute.type}"))
+          t(:map_value, attribute.name, t(:"to_#{attribute.type}"))
         end
       end
 
@@ -102,7 +102,7 @@ module ROM
       # @api private
       def visit_hash(attribute)
         with_row_proc(attribute) do |row_proc|
-          t(:map_key, attribute.name, row_proc)
+          t(:map_value, attribute.name, row_proc)
         end
       end
 
@@ -113,7 +113,7 @@ module ROM
       # @api private
       def visit_array(attribute)
         with_row_proc(attribute) do |row_proc|
-          t(:map_key, attribute.name, t(:map_array, row_proc))
+          t(:map_value, attribute.name, t(:map_array, row_proc))
         end
       end
 
@@ -156,7 +156,7 @@ module ROM
             ops << t(:group, name, keys)
 
             ops << other.map { |attr|
-              t(:map_array, t(:map_key, name, visit_group(attr, true)))
+              t(:map_array, t(:map_value, name, visit_group(attr, true)))
             }
           end
         else
