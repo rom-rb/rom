@@ -181,7 +181,7 @@ module ROM
       # @api private
       def initialize_row_proc
         @row_proc = compose do |ops|
-          ops << t(:map_hash, mapping) if header.aliased?
+          ops << t(:rename_keys, mapping) if header.aliased?
           ops << header.map { |attr| visit(attr) }
           ops << t(-> tuple { model.new(tuple) }) if model
         end
