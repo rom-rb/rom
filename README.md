@@ -5,7 +5,7 @@
 [coveralls]: https://coveralls.io/r/rom-rb/rom
 [inchpages]: http://inch-ci.org/github/rom-rb/rom/
 
-# Ruby Object Mapper
+# Ruby Object Mapper [![Gitter chat](https://badges.gitter.im/rom-rb/chat.png)](https://gitter.im/rom-rb/chat)
 
 [![Gem Version](https://badge.fury.io/rb/rom.svg)][gem]
 [![Build Status](https://travis-ci.org/rom-rb/rom.svg?branch=master)][travis]
@@ -103,7 +103,6 @@ for details.
 ## Community
 
 * [Official Blog](http://rom-rb.org/blog/)
-* [![Gitter chat](https://badges.gitter.im/rom-rb/chat.png)](https://gitter.im/rom-rb/chat)
 * [Ruby Object Mapper](https://groups.google.com/forum/#!forum/rom-rb) mailing list
 
 ## Credits
