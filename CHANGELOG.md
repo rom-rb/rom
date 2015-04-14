@@ -4,6 +4,10 @@
 
 * Updated to transproc 0.2.0 (solnic)
 
+### Fixed
+
+* `CommandRegistry#respond_to_missing?` behavior (hecrj)
+
 [Compare v0.6.1...v0.6.2](https://github.com/rom-rb/rom/compare/v0.6.1...v0.6.2)
 
 ## v0.6.1 2015-04-04
