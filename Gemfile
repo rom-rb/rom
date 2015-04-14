@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gemspec
 
-gem 'transproc', github: 'aflatter/transproc', branch: 'unwrap'
+gem "transproc", github: "solnic/transproc", branch: "master"
 
 group :console do
   gem 'pry'
