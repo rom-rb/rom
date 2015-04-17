@@ -27,9 +27,11 @@ module ROM
           klass.instance_variable_set('@dsl', nil)
         end
 
-        # include the registered plugin
+        # include a registered plugin in this mapper
         #
         # @param [Symbol] plugin
+        # @param [Hash] options
+        # @option options [Symbol] :adapter (:default) first adapter to check for plugin
         #
         # @api public
         def use(plugin, options = {})
