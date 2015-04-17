@@ -60,7 +60,11 @@ module ROM
             end
           end
 
-          # Include a registered plugin
+          # include a registered plugin in this mapper
+          #
+          # @param [Symbol] plugin
+          # @param [Hash] options
+          # @option options [Symbol] :adapter (:default) first adapter to check for plugin
           #
           # @api public
           def self.use(plugin, options = {})
