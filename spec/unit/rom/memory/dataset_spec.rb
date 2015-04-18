@@ -44,7 +44,7 @@ describe ROM::Memory::Dataset do
 
   describe '#order' do
     it 'sorts data using provided attribute names' do
-      expect(dataset.order(:name)).to match_array([
+      expect(dataset.order(:name).to_a).to eq([
         { name: 'Jade', email: 'jade@doe.org', age: 11 },
         { name: 'Jane', email: 'jane@doe.org', age: 10 },
         { name: 'Joe', email: 'joe@doe.org', age: 12 }
