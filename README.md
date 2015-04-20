@@ -30,7 +30,7 @@ Learn more:
   * [rom-mongo](https://github.com/rom-rb/rom-mongo)
   * [rom-yaml](https://github.com/rom-rb/rom-yaml)
   * [rom-csv](https://github.com/rom-rb/rom-csv)
-  * [rom-neo4j](https://github.com/maetl/rom-neo4j)
+  * [rom-neo4j](https://github.com/rom-rb/rom-neo4j)
   * [rom-event_store](https://github.com/rom-rb/rom-event_store)
   * [rom-influxdb](https://github.com/rom-rb/rom-influxdb)
 
@@ -41,7 +41,7 @@ for a list of adapters that are planned to be added soon.
 
 * [rom-lotus](https://github.com/rom-rb/rom-lotus)
 * [rom-rails](https://github.com/rom-rb/rom-rails)
-* [rom-roda](https://github.com/maetl/rom-roda)
+* [rom-roda](https://github.com/rom-rb/rom-roda)
 
 ## Synopsis
 
