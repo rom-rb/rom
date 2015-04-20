@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/rom-rb/rom.png?label=ready&title=Ready)](https://waffle.io/rom-rb/rom)
 [gem]: https://rubygems.org/gems/rom
 [travis]: https://travis-ci.org/rom-rb/rom
 [gemnasium]: https://gemnasium.com/rom-rb/rom
