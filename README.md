@@ -103,8 +103,7 @@ puts rom.relation(:users) { |r| r.by_name("Jane").adults }.as(:entity).to_a.insp
 
 ## ROADMAP
 
-ROM is on its way towards 1.0.0. Please refer to [issues](https://github.com/rom-rb/rom/issues)
-for details.
+ROM is on its way towards 1.0.0. You can see an overview of tasks scheduled for 1.0.0 on our [waffle board](https://waffle.io/rom-rb/rom?label=1.0.0). Please notice that most of the 1.0.0 features/changes will become part of minor (0.x) upgrades before 1.0.0 final gets released.
 
 ## Community
 
