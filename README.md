@@ -1,4 +1,3 @@
-[![Stories in Ready](https://badge.waffle.io/rom-rb/rom.png?label=ready&title=Ready)](https://waffle.io/rom-rb/rom)
 [gem]: https://rubygems.org/gems/rom
 [travis]: https://travis-ci.org/rom-rb/rom
 [gemnasium]: https://gemnasium.com/rom-rb/rom
@@ -6,7 +5,7 @@
 [coveralls]: https://coveralls.io/r/rom-rb/rom
 [inchpages]: http://inch-ci.org/github/rom-rb/rom/
 
-# Ruby Object Mapper [![Gitter chat](https://badges.gitter.im/rom-rb/chat.svg)](https://gitter.im/rom-rb/chat)
+# Ruby Object Mapper [![Gitter chat](https://badges.gitter.im/rom-rb/chat.svg)](https://gitter.im/rom-rb/chat) [![Stories in Ready](https://badge.waffle.io/rom-rb/rom.png?label=ready&title=Ready)](https://waffle.io/rom-rb/rom)
 
 [![Gem Version](https://badge.fury.io/rb/rom.svg)][gem]
 [![Build Status](https://travis-ci.org/rom-rb/rom.svg?branch=master)][travis]
