@@ -32,6 +32,7 @@ Learn more:
   * [rom-csv](https://github.com/rom-rb/rom-csv)
   * [rom-neo4j](https://github.com/maetl/rom-neo4j)
   * [rom-event_store](https://github.com/rom-rb/rom-event_store)
+  * [rom-influxdb](https://github.com/rom-rb/rom-influxdb)
 
 See [issues](https://github.com/rom-rb/rom/issues?q=is%3Aopen+is%3Aissue+label%3Aadapter+label%3Afeature)
 for a list of adapters that are planned to be added soon.
