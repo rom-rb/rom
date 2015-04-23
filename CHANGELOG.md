@@ -1,3 +1,11 @@
+## v0.6.3 to-be-released
+
+### Added
+
+* `ROM::Memory::Relation#take` (solnic)
+
+[Compare v0.6.2...master](https://github.com/rom-rb/rom/compare/v0.6.2...master)
+
 ## v0.6.2 2015-04-14
 
 ### Changed
