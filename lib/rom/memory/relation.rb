@@ -10,7 +10,7 @@ module ROM
     class Relation < ROM::Relation
       include Enumerable
 
-      forward :join, :project, :restrict, :order
+      forward :take, :join, :project, :restrict, :order
 
       # Insert tuples into the relation
       #
