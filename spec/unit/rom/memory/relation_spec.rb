@@ -15,6 +15,15 @@ describe ROM::Memory::Relation do
     ])
   end
 
+  describe '#take' do
+    it 'takes given number of tuples' do
+      expect(relation.take(2)).to match_array([
+        { name: 'Jane', email: 'jane@doe.org', age: 10 },
+        { name: 'Jade', email: 'jade@doe.org', age: 11 }
+      ])
+    end
+  end
+
   describe '#project' do
     it 'projects tuples with the provided keys' do
       expect(relation.project(:name, :age)).to match_array([
