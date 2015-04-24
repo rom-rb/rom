@@ -7,6 +7,7 @@ module ROM
   EnvAlreadyFinalizedError = Class.new(StandardError)
   RelationAlreadyDefinedError = Class.new(StandardError)
   NoRelationError = Class.new(StandardError)
+  NoAssociationError = Class.new(StandardError)
   CommandError = Class.new(StandardError)
   TupleCountMismatchError = Class.new(CommandError)
   MapperMissingError = Class.new(StandardError)
