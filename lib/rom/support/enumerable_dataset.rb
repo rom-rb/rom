@@ -41,7 +41,11 @@ module ROM
     # @api private
     def self.included(klass)
       return unless klass.is_a?(Class)
-      klass.send(:include, DataProxy)
+
+      klass.class_eval do
+        include Options
+        include DataProxy
+      end
     end
 
     forward :take
@@ -53,7 +57,7 @@ module ROM
       class_eval <<-RUBY, __FILE__, __LINE__ + 1
         def #{method}(*args, &block)
           return to_enum unless block
-          self.class.new(super(*args, &block))
+          self.class.new(super(*args, &block), options)
         end
       RUBY
     end
