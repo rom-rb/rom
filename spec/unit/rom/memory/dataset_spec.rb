@@ -15,4 +15,17 @@ describe ROM::Memory::Dataset do
   end
 
   it_behaves_like "a rom enumerable dataset"
+
+  describe 'subclassing' do
+    it 'supports options' do
+      descendant = Class.new(ROM::Memory::Dataset) do
+        option :path, reader: true
+      end
+
+      dataset = descendant.new([1, 2, 3], path: '/data')
+
+      expect(dataset.to_a).to eql([1, 2, 3])
+      expect(dataset.path).to eql('/data')
+    end
+  end
 end

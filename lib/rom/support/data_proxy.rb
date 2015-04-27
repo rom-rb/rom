@@ -30,19 +30,22 @@ module ROM
     def self.included(klass)
       klass.class_eval do
         extend ClassMethods
+
         include Equalizer.new(:data)
+
+        option :row_proc, reader: true, default: proc { |obj| obj.class.row_proc }
       end
     end
 
-    # Constructor for dataset objects
-    #
-    # @param [Object] data
-    # @param [Proc] row_proc processing proc
+    # Wrapped data array
     #
     # @api private
-    def initialize(data, row_proc = self.class.row_proc)
+    attr_reader :data
+
+    # @api private
+    def initialize(data, options = {})
       @data = data
-      @row_proc = row_proc
+      super(data, options)
     end
 
     # Iterate over data using row_proc
