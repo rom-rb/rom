@@ -1,5 +1,6 @@
 require 'rom/relation/loaded'
 require 'rom/relation/composite'
+require 'rom/relation/graph'
 
 module ROM
   class Relation
@@ -62,6 +63,17 @@ module ROM
       # @api public
       def >>(other)
         Composite.new(self, other)
+      end
+
+      # Eager load other relation for this relation
+      #
+      # @param [Relation] other The other relation to eager load
+      #
+      # @return [Relation::Graph]
+      #
+      # @api public
+      def eager_load(other)
+        Graph.new(self, other)
       end
 
       # Build a relation pipeline using registered mappers
