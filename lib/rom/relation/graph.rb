@@ -17,13 +17,11 @@ module ROM
       end
 
       # @api public
-      def each
-        call.each { |root, node| yield(root, node) }
-      end
+      def call(*args)
+        left = root.call(*args)
+        right = node.call(left)
 
-      # @api public
-      def call
-        [root.call, node.call(root.call)]
+        [left, right]
       end
     end
   end
