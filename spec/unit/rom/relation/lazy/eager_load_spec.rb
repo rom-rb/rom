@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'Eager loading' do
+describe ROM::Relation::Lazy, '#eager_load' do
   include_context 'users and tasks'
 
   before do
