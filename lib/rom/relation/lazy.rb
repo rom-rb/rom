@@ -65,15 +65,15 @@ module ROM
         Composite.new(self, other)
       end
 
-      # Eager load other relation for this relation
+      # Eager load other relation(s) for this relation
       #
-      # @param [Relation] other The other relation to eager load
+      # @param [Array<Relation>] others The other relation(s) to eager load
       #
       # @return [Relation::Graph]
       #
       # @api public
-      def eager_load(other)
-        Graph.new(self, other)
+      def eager_load(*others)
+        Graph.new(self, others)
       end
 
       # Build a relation pipeline using registered mappers
