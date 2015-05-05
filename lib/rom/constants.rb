@@ -10,6 +10,7 @@ module ROM
   CommandError = Class.new(StandardError)
   TupleCountMismatchError = Class.new(CommandError)
   MapperMissingError = Class.new(StandardError)
+  UnknownPluginError = Class.new(StandardError)
 
   InvalidOptionValueError = Class.new(StandardError)
   InvalidOptionKeyError = Class.new(StandardError)

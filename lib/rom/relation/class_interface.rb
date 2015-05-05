@@ -60,6 +60,18 @@ module ROM
             end
           end
 
+          # include a registered plugin in this mapper
+          #
+          # @param [Symbol] plugin
+          # @param [Hash] options
+          # @option options [Symbol] :adapter (:default) first adapter to check for plugin
+          #
+          # @api public
+          def self.use(plugin, options = {})
+            adapter = options.fetch(:adapter, :default)
+            ROM.plugin_registry.relations.fetch(plugin, adapter).apply_to(self)
+          end
+
           # Hook used to collect public method names
           #
           # @api private

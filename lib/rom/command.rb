@@ -70,6 +70,25 @@ module ROM
       new(relation, self.options.merge(options))
     end
 
+    # Use a configured plugin in this relation
+    #
+    # @example
+    #   class CreateUser < ROM::Commands::Create[:memory]
+    #     use :pagintion
+    #
+    #     per_page 30
+    #   end
+    #
+    # @param [Symbol] plugin
+    # @param [Hash] options
+    # @option options [Symbol] :adapter (:default) first adapter to check for plugin
+    #
+    # @api public
+    def self.use(plugin, options = {})
+      adapter = options.fetch(:adapter, :default)
+      ROM.plugin_registry.commands.fetch(plugin, adapter).apply_to(self)
+    end
+
     # Build command registry hash for provided relations
     #
     # @param [RelationRegistry] relations registry

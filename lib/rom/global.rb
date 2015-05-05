@@ -1,5 +1,6 @@
 require 'rom/setup'
 require 'rom/repository'
+require 'rom/plugin_registry'
 
 module ROM
   # Globally accessible public interface exposed via ROM module
@@ -14,6 +15,7 @@ module ROM
 
       rom.instance_variable_set('@adapters', {})
       rom.instance_variable_set('@repositories', {})
+      rom.instance_variable_set('@plugin_registry', PluginRegistry.new)
     end
 
     # An internal adapter identifier => adapter module map used by setup
@@ -29,6 +31,13 @@ module ROM
     #
     # @api private
     attr_reader :repositories
+
+    # An internal identifier => plugin map used by the setup
+    #
+    # @return [Hash]
+    #
+    # @api private
+    attr_reader :plugin_registry
 
     # Setup object created during env setup phase
     #
@@ -159,6 +168,18 @@ module ROM
     # @api public
     def mappers(*args, &block)
       boot.mappers(*args, &block)
+    end
+
+    # Global plugin setup DSL
+    #
+    # @example
+    #   ROM.setup(:memory)
+    #
+    #   ROM.plugins do
+    #     register :publisher, Plugin::Publisher, type: :command
+    #   end
+    def plugins(*args, &block)
+      boot.plugins(*args, block)
     end
 
     # Finalize the setup and store default global env under ROM.env
