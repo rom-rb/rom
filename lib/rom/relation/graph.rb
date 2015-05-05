@@ -4,11 +4,11 @@ module ROM
   class Relation
     # @api public
     class Graph
-      attr_reader :root, :node
+      attr_reader :root, :nodes
 
-      def initialize(root, node)
+      def initialize(root, nodes)
         @root = root
-        @node = node
+        @nodes = nodes
       end
 
       # @api public
@@ -19,7 +19,7 @@ module ROM
       # @api public
       def call(*args)
         left = root.call(*args)
-        right = node.call(left)
+        right = nodes.map { |node| node.call(left) }
 
         [left, right]
       end
