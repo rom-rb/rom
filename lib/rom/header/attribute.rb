@@ -51,6 +51,8 @@ module ROM
           end
         elsif type.equal?(:array)
           meta[:group] ? Group : Array
+        elsif meta[:combine]
+          Combined
         else
           self
         end
@@ -142,6 +144,9 @@ module ROM
 
     # Hash is an embedded attribute type
     Hash = Class.new(Embedded)
+
+    # TODO
+    Combined = Class.new(Embedded)
 
     # Wrap is a special type of Hash attribute that requires wrapping
     # transformation

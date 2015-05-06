@@ -110,6 +110,11 @@ module ROM
       by_type(Wrap)
     end
 
+    # @api private
+    def combined
+      by_type(Combined)
+    end
+
     # Return all primitive attributes (no Group and Wrap)
     #
     # @return [Array<Attribute>]
