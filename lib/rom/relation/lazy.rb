@@ -72,7 +72,7 @@ module ROM
       # @return [Relation::Graph]
       #
       # @api public
-      def eager_load(*others)
+      def combine(*others)
         Graph.new(self, others)
       end
 
