@@ -138,6 +138,13 @@ module ROM
         end
       end
 
+      # TODO
+      #
+      # @api public
+      def combine(name, options, &block)
+        dsl(name, { combine: true, keys: options }, &block)
+      end
+
       # Generate a header from attribute definitions
       #
       # @return [Header]
