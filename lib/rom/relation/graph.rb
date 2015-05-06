@@ -22,7 +22,7 @@ module ROM
     #   rom.relations[:users] << { name: 'Jane' }
     #   rom.relations[:tasks] << { user: 'Jane', title: 'Do something' }
     #
-    #   rom.relation(:users).eager_load(rom.relation(:tasks).for_users)
+    #   rom.relation(:users).combine(rom.relation(:tasks).for_users)
     #
     # @api public
     class Graph
@@ -50,7 +50,7 @@ module ROM
       #
       # @example
       #   users_and_tasks = rom.relation(:users)
-      #     .eager_load(rom.relation(:tasks).for_users)
+      #     .combine(rom.relation(:tasks).for_users)
       #
       #   users_and_tasks >> proc { |users, children|
       #     tasks = children.first
