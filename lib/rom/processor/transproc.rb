@@ -179,11 +179,15 @@ module ROM
       #
       # @api private
       def visit_combined(attribute, preprocess = false)
-        return unless preprocess
-
-        t(:combine, [
-          [attribute.key, attribute.meta[:keys]]
-        ])
+        if preprocess
+          t(:combine, [
+            [attribute.name, attribute.meta[:keys]]
+          ])
+        else
+          with_row_proc(attribute) do |row_proc|
+            t(:map_value, attribute.name, t(:map_array, row_proc))
+          end
+        end
       end
 
       # Build row_proc
