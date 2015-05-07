@@ -27,6 +27,11 @@ describe 'Mapper definition DSL' do
             model name: 'Test::Task'
 
             attribute :title
+
+            wrap :meta do
+              attribute :user, from: :name
+              attribute :priority
+            end
           end
         end
       end
@@ -37,14 +42,14 @@ describe 'Mapper definition DSL' do
 
     let(:joe) {
       Test::User.new(name: 'Joe', email: 'joe@doe.org', tasks: [
-        Test::Task.new(name: 'Joe', title: 'be nice', priority: 1),
-        Test::Task.new(name: 'Joe', title: 'sleep well', priority: 2)
+        Test::Task.new(title: 'be nice', meta: { user: 'Joe', priority: 1 }),
+        Test::Task.new(title: 'sleep well', meta: { user: 'Joe', priority: 2 })
       ])
     }
 
     let(:jane) {
       Test::User.new(name: 'Jane', email: 'jane@doe.org', tasks: [
-        Test::Task.new(name: 'Jane', title: 'be cool', priority: 2)
+        Test::Task.new(title: 'be cool', meta: { user: 'Jane', priority: 2 })
       ])
     }
 
@@ -52,7 +57,7 @@ describe 'Mapper definition DSL' do
       rom
 
       Test::User.send(:include, Equalizer.new(:name, :email, :tasks))
-      Test::Task.send(:include, Equalizer.new(:title))
+      Test::Task.send(:include, Equalizer.new(:title, :meta))
 
       result = users.as(:entity).combine(tasks.for_users)
 
