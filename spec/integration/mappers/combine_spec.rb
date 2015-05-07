@@ -54,7 +54,7 @@ describe 'Mapper definition DSL' do
       Test::User.send(:include, Equalizer.new(:name, :email, :tasks))
       Test::Task.send(:include, Equalizer.new(:title))
 
-      result = users.combine(tasks.for_users) >> rom.mappers.users[:entity]
+      result = users.as(:entity).combine(tasks.for_users)
 
       expect(result).to match_array([joe, jane])
     end

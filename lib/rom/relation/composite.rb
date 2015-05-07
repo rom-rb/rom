@@ -118,7 +118,7 @@ module ROM
       def method_missing(name, *args, &block)
         if left.respond_to?(name)
           response = left.__send__(name, *args, &block)
-          if response.is_a?(left.class)
+          if response.is_a?(left.class) || response.is_a?(Graph)
             self.class.new(response, right)
           else
             response
