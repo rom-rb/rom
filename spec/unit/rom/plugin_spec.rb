@@ -39,7 +39,7 @@ describe "ROM::PluginRegistry" do
   it "makes command plugins available" do
     setup.relation(:users)
 
-    test_class = Class.new(ROM::Commands::Create[:memory]) do
+    Class.new(ROM::Commands::Create[:memory]) do
       relation :users
       register_as :create
       use :publisher
@@ -51,7 +51,7 @@ describe "ROM::PluginRegistry" do
   it "inclues plugins in mappers" do
     setup.relation(:users)
 
-    test_class = Class.new(ROM::Mapper) do
+    Class.new(ROM::Mapper) do
       relation :users
       register_as :translator
       use :translater
@@ -107,7 +107,7 @@ describe "ROM::PluginRegistry" do
 
     setup.relation(:users)
 
-    test_class = Class.new(ROM::Commands::Create[:memory]) do
+    Class.new(ROM::Commands::Create[:memory]) do
       relation :users
       register_as :create
       use :lazy, adapter: :memory
