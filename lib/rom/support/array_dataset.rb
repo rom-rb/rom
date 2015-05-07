@@ -22,8 +22,8 @@ module ROM
 
     forward(
       :*, :+, :-, :compact, :compact!, :flatten, :flatten!, :length, :pop,
-      :reverse, :reverse!, :sample, :select!, :size, :shift, :shuffle, :shuffle!,
-      :slice, :slice!, :sort!, :sort_by!, :uniq, :uniq!, :unshift, :values_at
+      :reverse, :reverse!, :sample, :size, :shift, :shuffle, :shuffle!,
+      :slice, :slice!, :sort!, :uniq, :uniq!, :unshift, :values_at
     )
 
     [
