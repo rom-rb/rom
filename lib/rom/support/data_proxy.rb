@@ -12,6 +12,8 @@ module ROM
       :each, :to_a, :to_ary, :kind_of?, :instance_of?, :is_a?
     ].freeze
 
+    # Wrapped data array
+    #
     # @return [Object] Data object for the iterator
     #
     # @api private
@@ -36,11 +38,6 @@ module ROM
         option :row_proc, reader: true, default: proc { |obj| obj.class.row_proc }
       end
     end
-
-    # Wrapped data array
-    #
-    # @api private
-    attr_reader :data
 
     # @api private
     def initialize(data, options = {})
