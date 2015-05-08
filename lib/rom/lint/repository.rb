@@ -22,6 +22,11 @@ module ROM
       # @api public
       attr_reader :uri
 
+      # Repository instance used in lint tests
+      #
+      # @api private
+      attr_reader :repository_instance
+
       # Create a repository linter
       #
       # @param [Symbol] identifier
@@ -65,11 +70,6 @@ module ROM
       end
 
       private
-
-      # Repository instance
-      #
-      # @api private
-      attr_reader :repository_instance
 
       # Setup repository instance
       #
