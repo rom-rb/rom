@@ -10,6 +10,10 @@ describe 'Mapper definition DSL' do
           names = users.map { |user| user[:name] }
           restrict { |task| names.include?(task[:name]) }
         end
+
+        def tags(_tasks)
+          [{ name: 'blue', task: 'be cool' }]
+        end
       end
 
       setup.relation(:users)
@@ -32,6 +36,12 @@ describe 'Mapper definition DSL' do
               attribute :user, from: :name
               attribute :priority
             end
+
+            combine :tags, title: :task do
+              model name: 'Test::Tag'
+
+              attribute :name
+            end
           end
         end
       end
@@ -42,14 +52,18 @@ describe 'Mapper definition DSL' do
 
     let(:joe) {
       Test::User.new(name: 'Joe', email: 'joe@doe.org', tasks: [
-        Test::Task.new(title: 'be nice', meta: { user: 'Joe', priority: 1 }),
-        Test::Task.new(title: 'sleep well', meta: { user: 'Joe', priority: 2 })
+        Test::Task.new(title: 'be nice', meta: { user: 'Joe', priority: 1 }, tags: []),
+        Test::Task.new(title: 'sleep well', meta: { user: 'Joe', priority: 2 }, tags: [])
       ])
     }
 
     let(:jane) {
       Test::User.new(name: 'Jane', email: 'jane@doe.org', tasks: [
-        Test::Task.new(title: 'be cool', meta: { user: 'Jane', priority: 2 })
+        Test::Task.new(
+          title: 'be cool',
+          meta: { user: 'Jane', priority: 2 },
+          tags: [Test::Tag.new(name: 'blue')]
+        )
       ])
     }
 
@@ -59,7 +73,7 @@ describe 'Mapper definition DSL' do
       Test::User.send(:include, Equalizer.new(:name, :email, :tasks))
       Test::Task.send(:include, Equalizer.new(:title, :meta))
 
-      result = users.as(:entity).combine(tasks.for_users)
+      result = users.as(:entity).combine(tasks.for_users.combine(tasks.tags))
 
       expect(result).to match_array([joe, jane])
     end
