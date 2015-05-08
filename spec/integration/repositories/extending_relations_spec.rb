@@ -22,6 +22,15 @@ describe 'Repository' do
     end
   end
 
+  after do
+    ROM::Memory::Relation.class_eval do
+      undef_method :freaking_cool?
+      class << self
+        undef_method :freaking_awesome?
+      end
+    end
+  end
+
   shared_examples_for 'extended relation' do
     it 'can extend relation class' do
       expect(rom.relations.users.class).to be_freaking_awesome
