@@ -138,7 +138,21 @@ module ROM
         end
       end
 
-      # TODO
+      # Define an embedded combined attribute that requires "combine" transformation
+      #
+      # Typically this can be used to process results of eager-loading
+      #
+      # @example
+      #   dsl = AttributeDSL.new([])
+      #
+      #   dsl.combine(:tags, user_id: :id) do
+      #     model Tag
+      #
+      #     attribute :name
+      #   end
+      #
+      # @param [Symbol] name
+      # @param [Hash] options The option hash to setup "join keys"
       #
       # @api public
       def combine(name, options, &block)

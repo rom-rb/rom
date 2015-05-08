@@ -139,7 +139,8 @@ module ROM
     # Hash is an embedded attribute type
     Hash = Class.new(Embedded)
 
-    # TODO
+    # Combined is an embedded attribute type describing combination of multiple
+    # relations
     Combined = Class.new(Embedded)
 
     # Wrap is a special type of Hash attribute that requires wrapping
