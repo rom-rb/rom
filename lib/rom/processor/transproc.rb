@@ -63,7 +63,7 @@ module ROM
       # @api private
       def to_transproc
         compose(EMPTY_FN) do |ops|
-          ops << header.combined.map { |attr| visit_combined(attr, true) }
+          ops << t(:combine, header.combined.map(&method(:combined_args)))
           ops << header.groups.map { |attr| visit_group(attr, true) }
           ops << t(:map_array, row_proc) if row_proc
         end
@@ -169,12 +169,8 @@ module ROM
       #
       # @api private
       def visit_combined(attribute, preprocess = false)
-        if preprocess
-          t(:combine, [combined_args(attribute)])
-        else
-          with_row_proc(attribute) do |row_proc|
-            t(:map_value, attribute.name, t(:map_array, row_proc))
-          end
+        with_row_proc(attribute) do |row_proc|
+          t(:map_value, attribute.name, t(:map_array, row_proc))
         end
       end
 
