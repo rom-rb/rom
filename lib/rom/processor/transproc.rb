@@ -170,13 +170,23 @@ module ROM
       # @api private
       def visit_combined(attribute, preprocess = false)
         if preprocess
-          t(:combine, [
-            [attribute.name, attribute.meta[:keys]]
-          ])
+          t(:combine, [combined_args(attribute)])
         else
           with_row_proc(attribute) do |row_proc|
             t(:map_value, attribute.name, t(:map_array, row_proc))
           end
+        end
+      end
+
+      # @api private
+      def combined_args(attribute)
+        other = attribute.header.combined
+
+        if other.any?
+          children = other.map(&method(:combined_args))
+          [attribute.name, attribute.meta[:keys], children]
+        else
+          [attribute.name, attribute.meta[:keys]]
         end
       end
 
