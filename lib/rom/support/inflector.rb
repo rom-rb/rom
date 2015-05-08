@@ -39,7 +39,7 @@ module ROM
     end
 
     def self.inflector
-      @inflector || select_backend
+      defined?(@inflector) && @inflector || select_backend
     end
 
     def self.camelize(input)
