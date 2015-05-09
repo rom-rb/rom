@@ -41,12 +41,12 @@ module ROM
       def self.[](meta)
         type = meta[:type]
 
-        if type.equal?(:hash)
+        if meta[:combine]
+          Combined
+        elsif type.equal?(:hash)
           meta[:wrap] ? Wrap : Hash
         elsif type.equal?(:array)
           meta[:group] ? Group : Array
-        elsif meta[:combine]
-          Combined
         else
           self
         end

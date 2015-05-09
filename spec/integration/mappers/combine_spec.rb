@@ -31,7 +31,7 @@ describe 'Mapper definition DSL' do
           attribute :name
           attribute :email
 
-          combine :tasks, name: :name do
+          combine :tasks, on: { name: :name } do
             model name: 'Test::Task'
 
             attribute :title
@@ -41,14 +41,14 @@ describe 'Mapper definition DSL' do
               attribute :priority
             end
 
-            combine :tags, title: :task do
+            combine :tags, on: { title: :task } do
               model name: 'Test::Tag'
 
               attribute :name
             end
           end
 
-          combine :addresses, name: :user do
+          combine :address, on: { name: :user }, type: :hash do
             model name: 'Test::Address'
 
             attribute :city
@@ -68,9 +68,7 @@ describe 'Mapper definition DSL' do
           Test::Task.new(title: 'be nice', meta: { user: 'Joe', priority: 1 }, tags: []),
           Test::Task.new(title: 'sleep well', meta: { user: 'Joe', priority: 2 }, tags: [])
         ],
-        addresses: [
-          Test::Address.new(city: 'Boston')
-        ]
+        address: Test::Address.new(city: 'Boston')
       )
     }
 
@@ -85,16 +83,14 @@ describe 'Mapper definition DSL' do
             tags: [Test::Tag.new(name: 'blue')]
           )
         ],
-        addresses: [
-          Test::Address.new(city: 'NYC')
-        ]
+        address: Test::Address.new(city: 'NYC')
       )
     }
 
     it 'works' do
       rom
 
-      Test::User.send(:include, Equalizer.new(:name, :email, :tasks))
+      Test::User.send(:include, Equalizer.new(:name, :email, :tasks, :address))
       Test::Task.send(:include, Equalizer.new(:title, :meta))
       Test::Address.send(:include, Equalizer.new(:city))
 

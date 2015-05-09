@@ -152,11 +152,16 @@ module ROM
       #   end
       #
       # @param [Symbol] name
-      # @param [Hash] options The option hash to setup "join keys"
+      # @param [Hash] options
+      #   @option options [Hash] :on The "join keys"
+      #   @option options [Symbol] :type The type, either :array (default) or :hash
       #
       # @api public
       def combine(name, options, &block)
-        dsl(name, { combine: true, keys: options }, &block)
+        dsl(name, {
+          combine: true,
+          type: options.fetch(:type, :array),
+          keys: options.fetch(:on) }, &block)
       end
 
       # Generate a header from attribute definitions

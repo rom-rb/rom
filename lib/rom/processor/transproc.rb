@@ -113,7 +113,14 @@ module ROM
       # @api private
       def visit_combined(attribute)
         with_row_proc(attribute) do |row_proc|
-          t(:map_value, attribute.name, t(:map_array, row_proc))
+          array_proc =
+            if attribute.type == :hash
+              t(:map_array, row_proc) >> -> arr { arr.first }
+            else
+              t(:map_array, row_proc)
+            end
+
+          t(:map_value, attribute.name, array_proc)
         end
       end
 
