@@ -1,4 +1,4 @@
-## v0.6.3 to-be-released
+## v0.7.0 to-be-released
 
 ### Added
 
