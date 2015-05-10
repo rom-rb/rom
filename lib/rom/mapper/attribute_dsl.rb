@@ -138,6 +138,32 @@ module ROM
         end
       end
 
+      # Define an embedded combined attribute that requires "combine" transformation
+      #
+      # Typically this can be used to process results of eager-loading
+      #
+      # @example
+      #   dsl = AttributeDSL.new([])
+      #
+      #   dsl.combine(:tags, user_id: :id) do
+      #     model Tag
+      #
+      #     attribute :name
+      #   end
+      #
+      # @param [Symbol] name
+      # @param [Hash] options
+      #   @option options [Hash] :on The "join keys"
+      #   @option options [Symbol] :type The type, either :array (default) or :hash
+      #
+      # @api public
+      def combine(name, options, &block)
+        dsl(name, {
+          combine: true,
+          type: options.fetch(:type, :array),
+          keys: options.fetch(:on) }, &block)
+      end
+
       # Generate a header from attribute definitions
       #
       # @return [Header]
