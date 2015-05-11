@@ -1,5 +1,4 @@
 require 'set'
-require 'rom/relation/registry_reader'
 
 module ROM
   class Relation
@@ -17,7 +16,8 @@ module ROM
 
         klass.class_eval do
           extend ClassMacros
-          include RegistryReader
+
+          use :registry_reader
 
           defines :repository, :dataset, :register_as, :exposed_relations
 
@@ -58,18 +58,6 @@ module ROM
             else
               super
             end
-          end
-
-          # include a registered plugin in this mapper
-          #
-          # @param [Symbol] plugin
-          # @param [Hash] options
-          # @option options [Symbol] :adapter (:default) first adapter to check for plugin
-          #
-          # @api public
-          def self.use(plugin, options = {})
-            adapter = options.fetch(:adapter, :default)
-            ROM.plugin_registry.relations.fetch(plugin, adapter).apply_to(self)
           end
 
           # Hook used to collect public method names
@@ -130,6 +118,18 @@ module ROM
             end
           RUBY
         end
+      end
+
+      # Include a registered plugin in this relation class
+      #
+      # @param [Symbol] plugin
+      # @param [Hash] options
+      # @option options [Symbol] :adapter (:default) first adapter to check for plugin
+      #
+      # @api public
+      def use(plugin, options = {})
+        adapter = options.fetch(:adapter, :default)
+        ROM.plugin_registry.relations.fetch(plugin, adapter).apply_to(self)
       end
 
       # Return default relation name used for `register_as` setting
