@@ -19,12 +19,17 @@ describe "ROM::PluginRegistry" do
       end
     end
 
-    setup.plugins do
+    ROM.plugins do
       register :publisher,  Test::CommandPlugin,  type: :command
       register :pager,      Test::RelationPlugin, type: :relation
       register :translater, Test::MapperPlugin,   type: :mapper
     end
+  end
 
+  around do |example|
+    orig_plugins = ROM.plugin_registry
+    example.run
+    ROM.instance_variable_set('@plugin_registry', orig_plugins)
   end
 
   it "includes relation plugins" do
@@ -80,7 +85,7 @@ describe "ROM::PluginRegistry" do
       end
     end
 
-    setup.plugins do
+    ROM.plugins do
       adapter :memory do
         register :lazy, Test::LazyPlugin, type: :relation
       end
@@ -97,7 +102,7 @@ describe "ROM::PluginRegistry" do
     Test::LazyPlugin = Module.new
     Test::LazySQLPlugin = Module.new
 
-    setup.plugins do
+    ROM.plugins do
       register :lazy, Test::LazyPlugin, type: :command
 
       adapter :sql do
@@ -116,6 +121,4 @@ describe "ROM::PluginRegistry" do
     expect(env.command(:users).create).not_to be_kind_of Test::LazySQLPlugin
     expect(env.command(:users).create).to be_kind_of Test::LazyPlugin
   end
-
-
 end

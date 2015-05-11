@@ -1,7 +1,8 @@
 require 'rom/setup'
 require 'rom/repository'
 require 'rom/plugin_registry'
-require 'rom/plugins/relation/registry_reader'
+
+require 'rom/global/plugin_dsl'
 
 module ROM
   # Globally accessible public interface exposed via ROM module
@@ -115,10 +116,6 @@ module ROM
       config = setup_config(*args)
       @boot = Setup.new(setup_repositories(config), adapters.keys.first)
 
-      @boot.plugins do
-        register :registry_reader, Plugins::Relation::RegistryReader, type: :relation
-      end
-
       if block
         @boot.instance_exec(&block)
         @boot.finalize
@@ -178,13 +175,13 @@ module ROM
     # Global plugin setup DSL
     #
     # @example
-    #   ROM.setup(:memory)
-    #
     #   ROM.plugins do
     #     register :publisher, Plugin::Publisher, type: :command
     #   end
+    #
+    # @example
     def plugins(*args, &block)
-      boot.plugins(*args, block)
+      PluginDSL.new(plugin_registry, *args, &block)
     end
 
     # Finalize the setup and store default global env under ROM.env
