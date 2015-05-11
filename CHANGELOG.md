@@ -4,7 +4,14 @@
 
 * `combine` interface in Relation and Mapper which allows simple and explicit
   eager-loading that works with all adapters (solnic)
+* Plugin interface for Relation, Mapper and Command (cflipse)
+* `Memory::Dataset` accepts options hash now which makes it more flexible for
+  any adapter that wants to subclass it (solnic)
 * `ROM::Memory::Relation#take` (solnic)
+
+### Internal
+
+* Fixed all the warnings \o/ (splattael)
 
 [Compare v0.6.2...master](https://github.com/rom-rb/rom/compare/v0.6.2...master)
 
