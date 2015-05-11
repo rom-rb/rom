@@ -2,6 +2,8 @@
 
 ### Added
 
+* `combine` interface in Relation and Mapper which allows simple and explicit
+  eager-loading that works with all adapters (solnic)
 * `ROM::Memory::Relation#take` (solnic)
 
 [Compare v0.6.2...master](https://github.com/rom-rb/rom/compare/v0.6.2...master)
