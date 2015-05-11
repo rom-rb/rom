@@ -35,3 +35,10 @@ module ROM
 
   RelationRegistry = Class.new(Registry)
 end
+
+# register core plugins
+require 'rom/plugins/relation/registry_reader'
+
+ROM.plugins do
+  register :registry_reader, ROM::Plugins::Relation::RegistryReader, type: :relation
+end

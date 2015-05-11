@@ -29,9 +29,9 @@ module ROM
 
     # @api private
     def initialize
-      @mappers    = InternalPluginRegistry.new
-      @commands   = InternalPluginRegistry.new
-      @relations  = InternalPluginRegistry.new
+      @mappers = InternalPluginRegistry.new
+      @commands = InternalPluginRegistry.new
+      @relations = InternalPluginRegistry.new
     end
 
     # Register a plugin for future use
@@ -127,7 +127,7 @@ module ROM
     # @api public
     def fetch(name, adapter_name = :default)
       adapter(adapter_name)[name] || adapter(:default)[name] ||
-        raise(UnknownPluginError, name) 
+        raise(UnknownPluginError, name)
     end
 
     alias [] fetch
