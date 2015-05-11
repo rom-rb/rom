@@ -1,6 +1,7 @@
 require 'rom/setup'
 require 'rom/repository'
 require 'rom/plugin_registry'
+require 'rom/plugins/relation/registry_reader'
 
 module ROM
   # Globally accessible public interface exposed via ROM module
@@ -113,6 +114,10 @@ module ROM
     def setup(*args, &block)
       config = setup_config(*args)
       @boot = Setup.new(setup_repositories(config), adapters.keys.first)
+
+      @boot.plugins do
+        register :registry_reader, Plugins::Relation::RegistryReader, type: :relation
+      end
 
       if block
         @boot.instance_exec(&block)
