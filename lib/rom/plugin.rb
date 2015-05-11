@@ -3,7 +3,6 @@ module ROM
   #
   # @private
   class Plugin
-
     # @return [Module] a module representing the plugin
     #
     # @api private
@@ -20,7 +19,6 @@ module ROM
       @options  = options
     end
 
-
     # Apply this plugin to the provided class
     #
     # @param klass [Class]
@@ -29,7 +27,5 @@ module ROM
     def apply_to(klass)
       klass.send(:include, mod)
     end
-
   end
-
 end
