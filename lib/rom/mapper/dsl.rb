@@ -74,7 +74,8 @@ module ROM
         def options
           { prefix: prefix,
             prefix_separator: prefix_separator,
-            symbolize_keys: symbolize_keys }
+            symbolize_keys: symbolize_keys,
+            reject_keys: reject_keys }
         end
 
         # Return default attributes that might have been inherited from the

@@ -9,9 +9,10 @@ module ROM
     include Equalizer.new(:transformer, :header)
 
     defines :relation, :register_as, :symbolize_keys,
-      :prefix, :prefix_separator, :inherit_header
+      :prefix, :prefix_separator, :inherit_header, :reject_keys
 
     inherit_header true
+    reject_keys false
     prefix_separator '_'.freeze
 
     # @return [Object] transformer object built by a processor

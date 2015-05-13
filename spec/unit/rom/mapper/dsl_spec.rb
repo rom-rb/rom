@@ -69,6 +69,18 @@ describe ROM::Mapper do
     end
   end
 
+  describe 'reject_keys' do
+    let(:attributes) { [[:name, type: :string]] }
+    let(:options) { { reject_keys: true } }
+
+    it 'sets rejected_keys for the header' do
+      mapper.reject_keys true
+      mapper.attribute :name, type: :string
+
+      expect(header).to eql(expected_header)
+    end
+  end
+
   describe 'overriding inherited attributes' do
     context 'when name matches' do
       let(:attributes) { [[:name, type: :string]] }
