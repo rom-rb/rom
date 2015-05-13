@@ -202,7 +202,8 @@ module ROM
       def initialize_row_proc
         @row_proc = compose do |ops|
           if header.reject_keys
-            ops << t(:accept_keys, header.tuple_keys)
+            all_keys = header.tuple_keys + header.non_primitives.map(&:key)
+            ops << t(:accept_keys, all_keys)
           end
 
           if header.aliased?
