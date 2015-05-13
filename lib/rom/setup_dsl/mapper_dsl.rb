@@ -6,10 +6,11 @@ module ROM
     #
     # @private
     class MapperDSL
-      attr_reader :mappers
+      attr_reader :registry
 
       # @api private
-      def initialize(&block)
+      def initialize(registry, &block)
+        @registry = registry
         instance_exec(&block)
       end
 
@@ -24,6 +25,13 @@ module ROM
       def define(name, options = {}, &block)
         Mapper.build_class(name, options, &block)
         self
+      end
+
+      # TODO
+      #
+      # @api public
+      def register(relation, mappers)
+        registry.register_mapper(relation => mappers)
       end
     end
   end

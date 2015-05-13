@@ -17,14 +17,15 @@ module ROM
     # @private
     class Finalize
       attr_reader :repositories, :repo_adapter, :datasets,
-        :relation_classes, :mapper_classes, :command_classes
+        :relation_classes, :mapper_classes, :mappers, :command_classes
 
       # @api private
-      def initialize(repositories, relation_classes, mapper_classes, command_classes)
+      def initialize(repositories, relation_classes, mappers, command_classes)
         @repositories = repositories
         @repo_adapter_map = ROM.repositories
         @relation_classes = relation_classes
-        @mapper_classes = mapper_classes
+        @mapper_classes = mappers.select { |mapper| mapper.is_a?(Class) }
+        @mappers = (mappers - @mapper_classes).reduce(:merge) || {}
         @command_classes = command_classes
         initialize_datasets
       end
@@ -83,9 +84,19 @@ module ROM
       # @api private
       def load_mappers
         mapper_registry = Mapper.registry(mapper_classes).each_with_object({})
-        registry_hash = mapper_registry.each do |(name, mappers), h|
-          h[name] = MapperRegistry.new(mappers)
+
+        registry_hash = mapper_registry.each do |(relation, mappers), h|
+          h[relation] = MapperRegistry.new(mappers)
         end
+
+        mappers.each do |relation, mappers|
+          if registry_hash.key?(relation)
+            mappers.each { |name, mapper| registry[name] = mapper }
+          else
+            registry_hash[relation] = MapperRegistry.new(mappers)
+          end
+        end
+
         Registry.new(registry_hash)
       end
 
