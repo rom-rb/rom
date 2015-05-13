@@ -4,7 +4,8 @@ require 'virtus'
 describe ROM::Processor::Transproc do
   subject(:transproc) { ROM::Processor::Transproc.build(header) }
 
-  let(:header) { ROM::Header.coerce(attributes) }
+  let(:header) { ROM::Header.coerce(attributes, options) }
+  let(:options) { {} }
 
   context 'no mapping' do
     let(:attributes) { [[:name]] }
@@ -27,7 +28,7 @@ describe ROM::Processor::Transproc do
   end
 
   context 'mapping to object' do
-    let(:header) { ROM::Header.coerce(attributes, model) }
+    let(:options) { { model: model } }
 
     let(:model) do
       Class.new do
@@ -46,11 +47,24 @@ describe ROM::Processor::Transproc do
     end
   end
 
-  context 'renaming keys' do
+  context 'rejecting keys' do
     let(:attributes) { [[:name, from: 'name']] }
     let(:relation) { [{ 'name' => 'Jane' }, { 'name' => 'Joe' }] }
 
     it 'returns tuples with renamed keys' do
+      expect(transproc[relation]).to eql([{ name: 'Jane' }, { name: 'Joe' }])
+    end
+  end
+
+  context 'renaming keys' do
+    let(:attributes) { [[:name, from: 'name']] }
+    let(:options) { { reject_keys: true } }
+
+    let(:relation) do
+      [{ 'name' => 'Jane', 'age' => 21 }, { 'name' => 'Joe', age: 22 }]
+    end
+
+    it 'returns tuples with rejected keys' do
       expect(transproc[relation]).to eql([{ name: 'Jane' }, { name: 'Joe' }])
     end
   end

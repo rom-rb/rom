@@ -33,7 +33,7 @@ describe ROM::Header do
 
         expect(tasks.type).to be(:array)
         expect(tasks.header.model).to be(model)
-        expect(tasks.header).to eql(ROM::Header.coerce([[:title]], model))
+        expect(tasks.header).to eql(ROM::Header.coerce([[:title]], model: model))
 
         expect(input.first[1])
           .to eql(header: [[:title]], type: :array, model: model)
@@ -55,7 +55,7 @@ describe ROM::Header do
 
         expect(tasks.type).to be(:hash)
         expect(tasks.header.model).to be(model)
-        expect(tasks.header).to eql(ROM::Header.coerce([[:title]], model))
+        expect(tasks.header).to eql(ROM::Header.coerce([[:title]], model: model))
 
         expect(input.first[1])
           .to eql(header: [[:title]], type: :hash, model: model)

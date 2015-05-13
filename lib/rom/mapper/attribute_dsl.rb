@@ -12,7 +12,8 @@ module ROM
     class AttributeDSL
       include ModelDSL
 
-      attr_reader :attributes, :options, :symbolize_keys, :prefix, :prefix_separator
+      attr_reader :attributes, :options, :symbolize_keys, :prefix,
+        :prefix_separator, :reject_keys
 
       # @param [Array] attributes accumulator array
       # @param [Hash] options
@@ -24,6 +25,7 @@ module ROM
         @symbolize_keys = options.fetch(:symbolize_keys)
         @prefix = options.fetch(:prefix)
         @prefix_separator = options.fetch(:prefix_separator)
+        @reject_keys = options.fetch(:reject_keys)
       end
 
       # Define a mapping attribute with its options
@@ -176,7 +178,7 @@ module ROM
       #
       # @api private
       def header
-        Header.coerce(attributes, model)
+        Header.coerce(attributes, model: model, reject_keys: reject_keys)
       end
 
       private

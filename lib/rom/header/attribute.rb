@@ -68,7 +68,7 @@ module ROM
         meta[:type] ||= :object
 
         if meta.key?(:header)
-          meta[:header] = Header.coerce(meta[:header], meta[:model])
+          meta[:header] = Header.coerce(meta[:header], model: meta[:model])
         end
 
         self[meta].new(name, meta)

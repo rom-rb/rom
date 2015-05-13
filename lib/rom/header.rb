@@ -1,3 +1,6 @@
+require 'equalizer'
+
+require 'rom/support/options'
 require 'rom/header/attribute'
 
 module ROM
@@ -9,15 +12,18 @@ module ROM
   # @private
   class Header
     include Enumerable
+    include Options
     include Equalizer.new(:attributes, :model)
-
-    # @api private
-    attr_reader :attributes
 
     # @return [Class] optional model associated with a header
     #
     # @api private
-    attr_reader :model
+    option :model, reader: true
+
+    option :reject_keys, reader: true, default: false
+
+    # @api private
+    attr_reader :attributes
 
     # @return [Hash] attribute key/name mapping for all primitive attributes
     #
@@ -38,7 +44,7 @@ module ROM
     # @return [Header]
     #
     # @api private
-    def self.coerce(input, model = nil)
+    def self.coerce(input, options = {})
       if input.instance_of?(self)
         input
       else
@@ -46,14 +52,14 @@ module ROM
           h[pair.first] = Attribute.coerce(pair)
         }
 
-        new(attributes, model)
+        new(attributes, options)
       end
     end
 
     # @api private
-    def initialize(attributes, model = nil)
+    def initialize(attributes, options = {})
+      super
       @attributes = attributes
-      @model = model
       initialize_mapping
       initialize_tuple_keys
     end
