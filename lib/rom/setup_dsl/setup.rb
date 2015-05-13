@@ -42,7 +42,7 @@ module ROM
     #
     # @api public
     def mappers(&block)
-      MapperDSL.new(&block)
+      MapperDSL.new(self, &block)
     end
 
     # Command definition DSL
