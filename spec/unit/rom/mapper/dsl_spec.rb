@@ -396,4 +396,10 @@ describe ROM::Mapper do
       end
     end
   end
+
+  describe '#method_missing' do
+    it 'responds to DSL methods' do
+      expect(mapper).to respond_to(:attribute)
+    end
+  end
 end

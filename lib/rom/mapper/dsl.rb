@@ -65,6 +65,11 @@ module ROM
           @header ||= dsl.header
         end
 
+        # @api private
+        def respond_to_missing?(name, _include_private = false)
+          dsl.respond_to?(name) || super
+        end
+
         private
 
         # Return default Attribute DSL options based on settings of the mapper
