@@ -14,9 +14,19 @@
   any adapter that wants to subclass it (solnic)
 * `ROM::Memory::Relation#take` (solnic)
 
+### Changed
+
+* `Commands::Update#set` was deprecated in favor of `call` (solnic)
+
+### Fixed
+
+* `Command` respond to missing properly now (solnic)
+* `Mapper::DSL` respond to missing properly now (solnic)
+
 ### Internal
 
 * Fixed all the warnings \o/ (splattael)
+* Introduced `Deprecations` helper module (solnic)
 
 [Compare v0.6.2...master](https://github.com/rom-rb/rom/compare/v0.6.2...master)
 
