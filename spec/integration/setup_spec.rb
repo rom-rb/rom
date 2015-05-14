@@ -90,7 +90,7 @@ describe 'Setting up ROM' do
         end
       end
 
-      rom = ROM.setup(:memory) do
+      rom = ROM.setup(:memory) {
         relation(:users) do
           def by_name(name)
             restrict(name: name)
@@ -106,7 +106,7 @@ describe 'Setting up ROM' do
             model Test::User
           end
         end
-      end
+      }
 
       rom.commands.users.create.call(name: 'Jane')
 

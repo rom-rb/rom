@@ -33,13 +33,13 @@ describe ROM::Memory::Storage do
     end
 
     def threaded_operations
-      threads.times.map do |thread|
+      threads.times.map { |thread|
         Thread.new do
           operations.times do |operation|
             yield thread, operation
           end
         end
-      end.each(&:join)
+      }.each(&:join)
     end
   end
 end

@@ -9,7 +9,10 @@ shared_examples_for "an enumerable dataset" do
     it 'yields tuples through row_proc' do
       result = []
 
-      dataset.each { |tuple| result << tuple }
+      dataset.each do |tuple|
+        result << tuple
+      end
+
       expect(result).to match_array([{ name: 'Jane' }, { name: 'Joe' }])
     end
   end

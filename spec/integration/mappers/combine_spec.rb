@@ -65,8 +65,10 @@ describe 'Mapper definition DSL' do
         name: 'Joe',
         email: 'joe@doe.org',
         tasks: [
-          Test::Task.new(title: 'be nice', meta: { user: 'Joe', priority: 1 }, tags: []),
-          Test::Task.new(title: 'sleep well', meta: { user: 'Joe', priority: 2 }, tags: [])
+          Test::Task.new(title: 'be nice', meta: { user: 'Joe', priority: 1 },
+                         tags: []),
+          Test::Task.new(title: 'sleep well', meta: { user: 'Joe', priority: 2 },
+                         tags: [])
         ],
         address: Test::Address.new(city: 'Boston')
       )

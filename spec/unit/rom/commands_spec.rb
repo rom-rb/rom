@@ -15,11 +15,11 @@ describe 'Commands' do
 
   describe '.build_class' do
     it 'creates a command class constant' do
-      klass = ROM::Command.build_class(:create, :users, adapter: :memory) do
+      klass = ROM::Command.build_class(:create, :users, adapter: :memory) {
         def super?
           true
         end
-      end
+      }
 
       expect(klass.name).to eql('ROM::Memory::Commands::Create[Users]')
       expect(klass.register_as).to eql(:create)

@@ -33,7 +33,9 @@ module ROM
       # @api public
       def lint_each
         result = []
-        dataset.each { |tuple| result << tuple }
+        dataset.each do |tuple|
+          result << tuple
+        end
         return if result == data
 
         complain "#{dataset.class}#each must yield tuples"

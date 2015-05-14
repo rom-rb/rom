@@ -27,7 +27,9 @@ describe ROM::ArrayDataset do
     describe '#map!' do
       context 'with a block' do
         it 'returns a new dataset with mapped data' do
-          dataset.map! { |row| row.merge(age: 21) }
+          dataset.map! do |row|
+            row.merge(age: 21)
+          end
 
           expect(dataset).to match_array([
             { name: 'Jane', age: 21 }, { name: 'Joe', age: 21 }

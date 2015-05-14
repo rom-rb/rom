@@ -10,7 +10,9 @@ describe ROM::Relation::Loaded do
   describe '#each' do
     it 'yields tuples from relation' do
       result = []
-      users.each { |tuple| result << tuple }
+      users.each do |tuple|
+        result << tuple
+      end
       expect(result).to match_array([
         { name: 'Jane', email: 'jane@doe.org' },
         { name: 'Joe', email: 'joe@doe.org' }

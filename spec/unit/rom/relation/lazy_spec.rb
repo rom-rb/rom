@@ -138,7 +138,9 @@ describe ROM::Relation::Lazy do
   describe '#each' do
     it 'yields relation tuples' do
       result = []
-      users.each { |tuple| result << tuple }
+      users.each do |tuple|
+        result << tuple
+      end
       expect(result).to match_array([
         { name: 'Jane', email: 'jane@doe.org' },
         { name: 'Joe', email: 'joe@doe.org' }

@@ -210,22 +210,24 @@ module ROM
       #
       # @api private
       def initialize_row_proc
-        @row_proc = compose do |ops|
-          if header.reject_keys
-            all_keys = header.tuple_keys + header.non_primitives.map(&:key)
-            ops << t(:accept_keys, all_keys)
-          end
+        @row_proc = compose { |ops|
+          process_header_keys(ops)
 
-          if header.aliased?
-            ops << t(:rename_keys, mapping)
-          end
-
+          ops << t(:rename_keys, mapping) if header.aliased?
           ops << header.map { |attr| visit(attr) }
+          ops << t(-> tuple { model.new(tuple) }) if model
+        }
+      end
 
-          if model
-            ops << t(-> tuple { model.new(tuple) })
-          end
+      # Process row_proc header keys
+      #
+      # @api private
+      def process_header_keys(ops)
+        if header.reject_keys
+          all_keys = header.tuple_keys + header.non_primitives.map(&:key)
+          ops << t(:accept_keys, all_keys)
         end
+        ops
       end
 
       # Yield row proc for a given attribute if any

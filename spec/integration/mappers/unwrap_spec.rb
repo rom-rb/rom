@@ -9,9 +9,9 @@ describe 'Mapper definition DSL' do
     before do
       setup.relation(:tasks) do
         def with_user
-          tuples = map do |tuple|
+          tuples = map { |tuple|
             tuple.merge(user: users.restrict(name: tuple[:name]).first)
-          end
+          }
 
           self.class.new(tuples)
         end
@@ -43,10 +43,10 @@ describe 'Mapper definition DSL' do
 
       result = rom.relation(:tasks).with_user.as(:with_user).to_a.last
 
-      expect(result).to eql({title: 'be cool',
-                             priority: 2,
-                             name: 'Jane',
-                             email: 'jane@doe.org'})
+      expect(result).to eql(title: 'be cool',
+                            priority: 2,
+                            name: 'Jane',
+                            email: 'jane@doe.org')
     end
 
     it 'unwraps nested attributes via options block' do
@@ -66,10 +66,10 @@ describe 'Mapper definition DSL' do
 
       result = rom.relation(:tasks).with_user.as(:with_user).to_a.last
 
-      expect(result).to eql({title: 'be cool',
-                             priority: 2,
-                             name: 'Jane',
-                             user_email: 'jane@doe.org'})
+      expect(result).to eql(title: 'be cool',
+                            priority: 2,
+                            name: 'Jane',
+                            user_email: 'jane@doe.org')
     end
   end
 end

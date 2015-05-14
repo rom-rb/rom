@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe "ROM::PluginRegistry" do
-
   subject(:env) { setup.finalize }
 
   let(:setup) { ROM.setup(:memory) }
@@ -40,7 +39,6 @@ describe "ROM::PluginRegistry" do
     expect(env.relation(:users).plugged_in).to eq "a relation"
   end
 
-
   it "makes command plugins available" do
     setup.relation(:users)
 
@@ -72,7 +70,6 @@ describe "ROM::PluginRegistry" do
       end
     }.to raise_error ROM::UnknownPluginError
   end
-
 
   it "allows definition of adapter restricted plugins" do
     Test::LazyPlugin = Module.new do

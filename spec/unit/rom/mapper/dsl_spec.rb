@@ -3,7 +3,9 @@ require 'spec_helper'
 describe ROM::Mapper do
   subject(:mapper) do
     klass = Class.new(parent)
-    options.each { |k, v| klass.send(k, v) }
+    options.each do |k, v|
+      klass.send(k, v)
+    end
     klass
   end
 

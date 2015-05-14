@@ -51,9 +51,9 @@ run("Loading ONE task with its user and tags") do |x|
       .first
   end
   x.report("ROM") do
-    tasks_with_user_and_tags do |relation|
+    tasks_with_user_and_tags { |relation|
       relation.where(users__name: 'User 1', tasks__title: 'Task 1')
-    end.first
+    }.first
   end
 end
 

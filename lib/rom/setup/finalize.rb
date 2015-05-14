@@ -85,9 +85,9 @@ module ROM
       def load_mappers
         mapper_registry = Mapper.registry(mapper_classes).each_with_object({})
 
-        registry_hash = mapper_registry.each do |(relation, mappers), h|
+        registry_hash = mapper_registry.each { |(relation, mappers), h|
           h[relation] = MapperRegistry.new(mappers)
-        end
+        }
 
         mappers.each do |relation, mappers|
           if registry_hash.key?(relation)
