@@ -1,10 +1,12 @@
 require 'rom/relation/loaded'
+require 'rom/support/deprecations'
 
 module ROM
   # Exposes defined repositories, relations and mappers
   #
   # @api public
   class Env
+    extend Deprecations
     include Equalizer.new(:repositories, :relations, :mappers, :commands)
 
     # @return [Hash] configured repositories
@@ -69,31 +71,7 @@ module ROM
         relation.to_lazy
       end
     end
-
-    # Returns a reader with access to defined mappers
-    #
-    # @example
-    #
-    #   # with a mapper derived from relation access path "users.adults"
-    #   rom.read(:users).adults.to_a
-    #
-    #   # or with explicit mapper name
-    #   rom.read(:users).with(:some_mapper).to_a
-    #
-    # @param [Symbol] name of the registered reader
-    #
-    # @deprecated
-    #
-    # @api public
-    def read(name, &block)
-      warn <<-MSG.gsub(/^\s+/, '')
-        #{self.class}#read is deprecated.
-        Please use `#{self.class}#relation(#{name.inspect})` instead.
-        For mapping append `.map_with(:your_mapper_name)`
-        [#{caller[0]}]
-      MSG
-      relation(name, &block)
-    end
+    deprecate :read, :relation, "For mapping append `.map_with(:your_mapper_name)`"
 
     # Returns commands registry for the given relation
     #
