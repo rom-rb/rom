@@ -82,13 +82,19 @@ module ROM
       # @api public
       def embedded(name, options, &block)
         with_attr_options(name) do |attr_options|
-          dsl = new(options, &block)
+          mapper = options[:mapper]
 
-          attr_options.update(options)
-
-          add_attribute(
-            name, { header: dsl.header, type: :array }.update(attr_options)
-          )
+          if mapper
+            attributes_from_mapper(
+              mapper, name, { type: :array }.update(attr_options)
+            )
+          else
+            dsl = new(options, &block)
+            attr_options.update(options)
+            add_attribute(
+              name, { header: dsl.header, type: :array }.update(attr_options)
+            )
+          end
         end
       end
 
@@ -112,8 +118,14 @@ module ROM
       #
       # @api public
       def wrap(*args, &block)
-        with_name_or_options(*args) do |name, options|
-          dsl(name, { type: :hash, wrap: true }.update(options), &block)
+        with_name_or_options(*args) do |name, options, mapper|
+          wrap_options = { type: :hash, wrap: true }.update(options)
+
+          if mapper
+            attributes_from_mapper(mapper, name, wrap_options)
+          else
+            dsl(name, wrap_options, &block)
+          end
         end
       end
 
@@ -141,8 +153,14 @@ module ROM
       #
       # @api public
       def group(*args, &block)
-        with_name_or_options(*args) do |name, options|
-          dsl(name, { type: :array, group: true }.update(options), &block)
+        with_name_or_options(*args) do |name, options, mapper|
+          group_options = { type: :array, group: true }.update(options)
+
+          if mapper
+            attributes_from_mapper(mapper, name, group_options)
+          else
+            dsl(name, group_options, &block)
+          end
         end
       end
 
@@ -209,7 +227,7 @@ module ROM
             [args.first, {}]
           end
 
-        yield(name, options)
+        yield(name, options, options[:mapper])
       end
 
       # Create another instance of the dsl for nested definitions
@@ -248,6 +266,19 @@ module ROM
             add_attribute(name, attr_options.update(header: header.zip))
             header.each { |attr| exclude(attr) }
           end
+        end
+      end
+
+      # Infer mapper header for an embedded attribute
+      #
+      # @api private
+      def attributes_from_mapper(mapper, name, options)
+        if mapper.is_a?(Class)
+          add_attribute(name, { header: mapper.header }.update(options))
+        else
+          raise(
+            ArgumentError, ":mapper must be a class #{mapper.inspect}"
+          )
         end
       end
 

@@ -334,4 +334,66 @@ describe ROM::Mapper do
       end
     end
   end
+
+  context 'reusing mappers' do
+    describe '#group' do
+      let(:task_mapper) do
+        Class.new(ROM::Mapper) { attribute :title }
+      end
+
+      let(:attributes) do
+        [
+          [:name],
+          [:tasks, type: :array, group: true, header: task_mapper.header]
+        ]
+      end
+
+      it 'uses other mapper header' do
+        mapper.attribute :name
+        mapper.group :tasks, mapper: task_mapper
+
+        expect(header).to eql(expected_header)
+      end
+    end
+
+    describe '#wrap' do
+      let(:task_mapper) do
+        Class.new(ROM::Mapper) { attribute :title }
+      end
+
+      let(:attributes) do
+        [
+          [:name],
+          [:task, type: :hash, wrap: true, header: task_mapper.header]
+        ]
+      end
+
+      it 'uses other mapper header' do
+        mapper.attribute :name
+        mapper.wrap :task, mapper: task_mapper
+
+        expect(header).to eql(expected_header)
+      end
+    end
+
+    describe '#embedded' do
+      let(:task_mapper) do
+        Class.new(ROM::Mapper) { attribute :title }
+      end
+
+      let(:attributes) do
+        [
+          [:name],
+          [:task, type: :array, header: task_mapper.header]
+        ]
+      end
+
+      it 'uses other mapper header' do
+        mapper.attribute :name
+        mapper.embedded :task, mapper: task_mapper, type: :hash
+
+        expect(header).to eql(expected_header)
+      end
+    end
+  end
 end
