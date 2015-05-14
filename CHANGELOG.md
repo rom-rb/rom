@@ -4,6 +4,11 @@
 
 * `combine` interface in Relation and Mapper which allows simple and explicit
   eager-loading that works with all adapters (solnic)
+* `reject_keys` option in mapper which will filter out unspecified keys from
+  input tuples (solnic)
+* `unwrap` mapping operation (aflatter)
+* Arbitrary objects can be registered as mappers via `register` in mapping DSL (solnic)
+* Ability to reuse existing mappers in `group`, `wrap` and `embedded` mappings (solnic)
 * Plugin interface for Relation, Mapper and Command (cflipse)
 * `Memory::Dataset` accepts options hash now which makes it more flexible for
   any adapter that wants to subclass it (solnic)
