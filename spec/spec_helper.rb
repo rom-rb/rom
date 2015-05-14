@@ -19,8 +19,12 @@ end
 
 root = Pathname(__FILE__).dirname
 
-Dir[root.join('support/*.rb').to_s].each { |f| require f }
-Dir[root.join('shared/*.rb').to_s].each { |f| require f }
+Dir[root.join('support/*.rb').to_s].each do |f|
+  require f
+end
+Dir[root.join('shared/*.rb').to_s].each do |f|
+  require f
+end
 
 # Namespace holding all objects created during specs
 module Test

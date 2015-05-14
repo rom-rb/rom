@@ -5,7 +5,6 @@ module ROM
   #
   # @api private
   class PluginRegistry
-
     # Internal registry for command plugins
     #
     # @return [InternalPluginRegistry]
@@ -39,8 +38,10 @@ module ROM
     # @param [Symbol] name The registration name for the plugin
     # @param [Module] mod The plugin to register
     # @param [Hash] options optional configuration data
-    # @option options [Symbol] :type What type of plugin this is (command, relation or mapper)
-    # @option options [Symbol] :adapter (:default) which adapter this plugin applies to. Leave blank for all adapters
+    # @option options [Symbol] :type What type of plugin this is (command,
+    # relation or mapper)
+    # @option options [Symbol] :adapter (:default) which adapter this plugin
+    # applies to. Leave blank for all adapters
     def register(name, mod, options = {})
       type    = options.fetch(:type)
       adapter = options.fetch(:adapter, :default)
@@ -66,7 +67,6 @@ module ROM
   #
   # @api private
   class AdapterPluginRegistry < Registry
-
     # Assign a plugin to this adapter registry
     #
     # @param [Symbol] name The registered plugin name
@@ -93,7 +93,6 @@ module ROM
   #
   # @api private
   class InternalPluginRegistry
-
     # Return the existing registries
     #
     # @return [Hash]
@@ -103,7 +102,7 @@ module ROM
 
     # @api private
     def initialize
-      @registries = Hash.new{|h,v| h[v] = AdapterPluginRegistry.new }
+      @registries = Hash.new { |h, v| h[v] = AdapterPluginRegistry.new }
     end
 
     # Return the plugin registry for a specific adapter
@@ -132,6 +131,4 @@ module ROM
 
     alias [] fetch
   end
-
-
 end

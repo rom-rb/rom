@@ -65,9 +65,9 @@ describe 'Commands / Create' do
   end
 
   it 'inserts user on successful validation' do
-    result = users.try do
+    result = users.try {
       users.create.call(name: 'Piotr', email: 'piotr@solnic.eu')
-    end
+    }
 
     expect(result.value).to eql(name: 'Piotr', email: 'piotr@solnic.eu')
   end

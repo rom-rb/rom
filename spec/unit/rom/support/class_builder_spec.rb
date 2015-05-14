@@ -30,11 +30,11 @@ describe ROM::ClassBuilder do
     end
 
     it 'yields created class' do
-      klass = builder.call do |yielded_class|
+      klass = builder.call { |yielded_class|
         yielded_class.class_eval do
           def self.testing; end
         end
-      end
+      }
 
       expect(klass).to respond_to(:testing)
     end

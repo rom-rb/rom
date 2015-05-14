@@ -185,9 +185,9 @@ module ROM
       # @api public
       def combine(name, options, &block)
         dsl(name, {
-          combine: true,
-          type: options.fetch(:type, :array),
-          keys: options.fetch(:on) }, &block)
+              combine: true,
+              type: options.fetch(:type, :array),
+              keys: options.fetch(:on) }, &block)
       end
 
       # Generate a header from attribute definitions

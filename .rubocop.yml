@@ -10,6 +10,15 @@ AllCops:
 Lint/AssignmentInCondition:
   Enabled: false
 
+Style/BlockDelimiters:
+  EnforcedStyle: semantic
+  FunctionalMethods:
+    - let
+    - let!
+    - subject
+    - watch
+    - before
+
 # No need to handle LoadError in Rakefile
 Lint/HandleExceptions:
   Exclude:

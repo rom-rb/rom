@@ -46,7 +46,9 @@ describe ROM::Relation::Composite do
 
     it 'calls and iterates' do
       result = []
-      relation.each { |object| result << object }
+      relation.each do |object|
+        result << object
+      end
       expect(result).to match_array(%w(JANE JOE))
     end
 

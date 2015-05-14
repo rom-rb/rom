@@ -36,23 +36,23 @@ describe ROM::Setup do
       it 'can register multiple relations with same dataset' do
         setup = ROM.setup(:memory)
 
-        Class.new(ROM::Relation[:memory]) {
+        Class.new(ROM::Relation[:memory]) do
           dataset :fruits
           register_as :apples
 
           def apple?
             true
           end
-        }
+        end
 
-        Class.new(ROM::Relation[:memory]) {
+        Class.new(ROM::Relation[:memory]) do
           dataset :fruits
           register_as :oranges
 
           def orange?
             true
           end
-        }
+        end
 
         rom = setup.finalize
 
@@ -64,15 +64,15 @@ describe ROM::Setup do
       it "raises an error when registering relations with the same `register_as`" do
         setup = ROM.setup(:memory)
 
-        Class.new(ROM::Relation[:memory]) {
+        Class.new(ROM::Relation[:memory]) do
           dataset :guests
           register_as :users
-        }
+        end
 
-        Class.new(ROM::Relation[:memory]) {
+        Class.new(ROM::Relation[:memory]) do
           dataset :admins
           register_as :users
-        }
+        end
 
         expect { setup.finalize }.to raise_error(
           ROM::RelationAlreadyDefinedError, /register_as :users/

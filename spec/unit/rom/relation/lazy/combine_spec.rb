@@ -29,7 +29,9 @@ describe ROM::Relation::Lazy, '#combine' do
         user_tasks = tasks.for_users(users)
 
         for_tasks(user_tasks).map { |tag|
-          tag.merge(user: user_tasks.detect { |task| task[:title] == tag[:task] }[:name])
+          tag.merge(user: user_tasks.detect { |task|
+            task[:title] == tag[:task]
+          } [:name])
         }
       end
     end
@@ -63,17 +65,17 @@ describe ROM::Relation::Lazy, '#combine' do
   let(:map_user_with_tasks_and_tags) {
     proc { |users, (tasks, tags)|
       users.map { |user|
-      user_tasks = tasks.select { |task| task[:name] == user[:name] }
+        user_tasks = tasks.select { |task| task[:name] == user[:name] }
 
-      user_tags = tasks.flat_map { |task|
-        tags.select { |tag| tag[:task] == task[:title] }
+        user_tags = tasks.flat_map { |task|
+          tags.select { |tag| tag[:task] == task[:title] }
+        }
+
+        user.merge(
+          tasks: user_tasks,
+          tags: user_tags
+        )
       }
-
-      user.merge(
-        tasks: user_tasks,
-        tags: user_tags
-      )
-    }
     }
   }
 
@@ -99,7 +101,7 @@ describe ROM::Relation::Lazy, '#combine' do
     ]
 
     user_with_tasks_and_tags = users.by_name('Jane')
-      .combine(tasks.for_users, tags.for_users)
+                               .combine(tasks.for_users, tags.for_users)
 
     result = user_with_tasks_and_tags >> map_user_with_tasks_and_tags
 
@@ -119,7 +121,7 @@ describe ROM::Relation::Lazy, '#combine' do
     ]
 
     user_with_tasks = users.by_name('Jane')
-      .combine(tasks.for_users.combine(tags.for_tasks))
+                      .combine(tasks.for_users.combine(tags.for_tasks))
 
     result = user_with_tasks >> map_user_with_tasks
 

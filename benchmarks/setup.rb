@@ -257,18 +257,18 @@ ROM_ENV = setup.finalize
 VERIFY = ENV.fetch('VERIFY') { false }
 COUNT = ENV.fetch('COUNT', 1000).to_i
 
-USER_SEED = COUNT.times.map do |i|
+USER_SEED = COUNT.times.map { |i|
   { id:    i + 1,
     name:  "User #{i + 1}",
     email: "email_#{i}@domain.com",
     age:   i*10 }
-end
+}
 
-TASK_SEED = USER_SEED.map do |user|
+TASK_SEED = USER_SEED.map { |user|
   3.times.map do |i|
     { user_id: user[:id], title: "Task #{i + 1}" }
   end
-end.flatten
+}.flatten
 
 def seed
   hr
