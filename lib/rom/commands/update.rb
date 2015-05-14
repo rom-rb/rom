@@ -1,4 +1,5 @@
 require 'rom/command'
+require 'rom/support/deprecations'
 
 module ROM
   module Commands
@@ -8,12 +9,14 @@ module ROM
     #
     # @abstract
     class Update < Command
+      extend Deprecations
+
       # @see AbstractCommand#call
       def call(*args)
         assert_tuple_count
         super
       end
-      alias_method :set, :call
+      deprecate :set, :call
     end
   end
 end
