@@ -43,6 +43,8 @@ module ROM
 
         if meta[:combine]
           Combined
+        elsif meta[:unwrap]
+          Unwrap
         elsif type.equal?(:hash)
           meta[:wrap] ? Wrap : Hash
         elsif type.equal?(:array)
@@ -146,6 +148,10 @@ module ROM
     # Wrap is a special type of Hash attribute that requires wrapping
     # transformation
     Wrap = Class.new(Hash)
+
+    # Unwrap is a special type of Hash attribute that requires unwrapping
+    # transformation
+    Unwrap = Class.new(Hash)
 
     # Group is a special type of Array attribute that requires grouping
     # transformation

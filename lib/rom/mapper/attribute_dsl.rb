@@ -129,6 +129,12 @@ module ROM
         end
       end
 
+      def unwrap(*args, &block)
+        with_name_or_options(*args) do |name, options|
+          dsl(name, { type: :hash, unwrap: true }.update(options), &block)
+        end
+      end
+
       # Define an embedded hash attribute that requires "grouping" transformation
       #
       # Typically this is used in sql context when relation is a join.
