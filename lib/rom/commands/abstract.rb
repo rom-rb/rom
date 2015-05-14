@@ -133,6 +133,11 @@ module ROM
         target.count
       end
 
+      # @api private
+      def respond_to_missing?(name, _include_private = false)
+        relation.respond_to?(name) || super
+      end
+
       private
 
       # @api private

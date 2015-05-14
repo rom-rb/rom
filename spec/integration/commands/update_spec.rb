@@ -100,4 +100,24 @@ describe 'Commands / Update' do
       }.to raise_error(ROM::InvalidOptionValueError)
     end
   end
+
+  describe 'piping results through mappers' do
+    it 'allows scoping to a virtual relation' do
+      user_model = Class.new { include Anima.new(:name, :email) }
+
+      setup.mappers do
+        define(:users) do
+          model user_model
+          register_as :entity
+        end
+      end
+
+      command = rom.command(:users).as(:entity).update.by_name('Jane')
+
+      attributes = { name: 'Jane Doe', email: 'jane@doe.org' }
+      result = command[attributes]
+
+      expect(result).to eql([user_model.new(attributes)])
+    end
+  end
 end
