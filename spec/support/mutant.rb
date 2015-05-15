@@ -1,7 +1,10 @@
 module Mutant
-  class Subject
-    def tests
-      config.integration.all_tests
-    end
-  end
-end
+  class Selector
+    # Expression based test selector
+    class Expression < self
+      def call(subject)
+        integration.all_tests
+      end
+    end # Expression
+  end # Selector
+end # Mutant
