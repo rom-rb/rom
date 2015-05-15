@@ -184,10 +184,16 @@ module ROM
       #
       # @api public
       def combine(name, options, &block)
-        dsl(name, {
-              combine: true,
-              type: options.fetch(:type, :array),
-              keys: options.fetch(:on) }, &block)
+        dsl = new(options, &block)
+
+        attr_opts = {
+          type: options.fetch(:type, :array),
+          keys: options.fetch(:on),
+          combine: true,
+          header: dsl.header,
+        }
+
+        add_attribute(name, attr_opts)
       end
 
       # Generate a header from attribute definitions

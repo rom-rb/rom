@@ -399,6 +399,25 @@ describe ROM::Mapper do
     end
   end
 
+  describe '#combine' do
+    let(:attributes) do
+      [
+        [:title],
+        [:tasks, combine: true, type: :array, header: [[:title]]]
+      ]
+    end
+
+    it 'adds combine attributes' do
+      mapper.attribute :title
+
+      mapper.combine :tasks, on: { title: :title } do
+        attribute :title
+      end
+
+      expect(header).to eql(expected_header)
+    end
+  end
+
   describe '#method_missing' do
     it 'responds to DSL methods' do
       expect(mapper).to respond_to(:attribute)
