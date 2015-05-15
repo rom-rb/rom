@@ -46,9 +46,24 @@ module ROM
 
       # Sort a dataset
       #
+      # @param [Array<Symbol>] names
+      #   Names of fields to order tuples by
+      #
+      # @option [Boolean] :nils_first (false)
+      #   Whether `nil` values should be placed before others
+      #
       # @api public
       def order(*names)
-        sort_by { |tuple| tuple.values_at(*names) }
+        options = names.last.is_a?(Hash) ? names.pop : {}
+        place   = options[:nils_first] ? -1 : 1
+        compare = ->(a, b) {
+          return a <=> b unless a.nil? ^ b.nil?
+          a.nil? ? place : -place
+        }
+
+        sort do |a, b|
+          names.map { |n| compare.call a[n], b[n] }.detect { |r| r != 0 } || 0
+        end
       end
 
       # Insert tuple into a dataset
