@@ -17,6 +17,7 @@
 ### Changed
 
 * `Commands::Update#set` was deprecated in favor of `call` (solnic)
+* `group` mapping reject empty tuples (solnic)
 
 ### Fixed
 
