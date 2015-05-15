@@ -50,11 +50,12 @@ module ROM
       #   Names of fields to order tuples by
       #
       # @option [Boolean] :nils_first (false)
-      #   Whether nil values should be placed before other ones
+      #   Whether `nil` values should be placed before others
       #
       # @api public
-      def order(*names, nils_first: false)
-        place   = nils_first ? -1 : 1
+      def order(*names)
+        options = names.last.is_a?(Hash) ? names.pop : {}
+        place   = options[:nils_first] ? -1 : 1
         compare = ->(a, b) {
           return  place if a.nil?
           return -place if b.nil?
