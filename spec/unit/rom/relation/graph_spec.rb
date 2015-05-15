@@ -6,7 +6,11 @@ describe ROM::Relation::Graph do
   include_context 'users and tasks'
 
   before do
-    setup.relation(:users)
+    setup.relation(:users) do
+      def by_name(name)
+        restrict(name: name)
+      end
+    end
 
     setup.relation(:tasks) do
       def for_users(users)
@@ -32,6 +36,14 @@ describe ROM::Relation::Graph do
       expect(graph).to match_array([
         users.to_a,
         [tasks.for_users(users).to_a]
+      ])
+    end
+
+    it 'returns empty arrays when left was empty' do
+      graph = ROM::Relation::Graph.new(users.by_name('Not here'), [tasks.for_users])
+
+      expect(graph).to match_array([
+        [], [ROM::Relation::Loaded.new(tasks.for_users, [])]
       ])
     end
   end

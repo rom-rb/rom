@@ -83,7 +83,13 @@ module ROM
       # @api public
       def call(*args)
         left = root.call(*args)
-        right = nodes.map { |node| node.call(left) }
+
+        right =
+          if left.count > 0
+            nodes.map { |node| node.call(left) }
+          else
+            nodes.map { |node| Loaded.new(node, []) }
+          end
 
         Loaded.new(self, [left, right])
       end
