@@ -8,7 +8,9 @@ module ROM
     # This class is private even though its methods are exposed by mappers.
     # Typically it's not meant to be used directly.
     #
-    # @private
+    # TODO: break this madness down into smaller pieces
+    #
+    # @api private
     class AttributeDSL
       include ModelDSL
 
