@@ -37,6 +37,11 @@ module ROM
       # Default no-op row_proc
       EMPTY_FN = -> tuple { tuple }.freeze
 
+      # Filter out empty tuples from an array
+      FILTER_EMPTY = Transproc(
+        -> arr { arr.reject { |row| row.values.all?(&:nil?) } }
+      )
+
       # Build a transproc function from the header
       #
       # @param [ROM::Header] header
@@ -182,6 +187,7 @@ module ROM
 
           compose do |ops|
             ops << t(:group, name, keys)
+            ops << t(:map_array, t(:map_value, name, FILTER_EMPTY))
 
             ops << other.map { |attr|
               t(:map_array, t(:map_value, name, visit_group(attr, true)))
@@ -236,8 +242,17 @@ module ROM
       #
       # @api private
       def with_row_proc(attribute)
-        row_proc = new(attribute.header).row_proc
+        row_proc = row_proc_from(attribute)
         yield(row_proc) if row_proc
+      end
+
+      # Build a row_proc from a given attribute
+      #
+      # This is used by embedded attribute visitors
+      #
+      # @api private
+      def row_proc_from(attribute)
+        new(attribute.header).row_proc
       end
 
       # Return a new instance of the processor

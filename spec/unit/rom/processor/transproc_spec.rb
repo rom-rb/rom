@@ -274,7 +274,8 @@ describe ROM::Processor::Transproc do
       [
         { 'name' => 'Jane', 'title' => 'Task One' },
         { 'name' => 'Jane', 'title' => 'Task Two' },
-        { 'name' => 'Joe', 'title' => 'Task One' }
+        { 'name' => 'Joe', 'title' => 'Task One' },
+        { 'name' => 'Joe', 'title' => nil }
       ]
     end
 
