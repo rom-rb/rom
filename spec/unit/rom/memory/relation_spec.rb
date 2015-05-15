@@ -11,9 +11,10 @@ describe ROM::Memory::Relation do
     ROM::Memory::Dataset.new([
       { name: 'Jane', email: 'jane@doe.org', age: 10 },
       { name: 'Jade', email: 'jade@doe.org', age: 11 },
-      { name: 'Joe',  email: 'joe@doe.org', age: 12 },
-      { name: 'Jack', email: nil, age: 9 },
-      { name: 'Jill', email: 'jill@doe.org' }
+      { name: 'Joe',  email: 'joe@doe.org',  age: 12 },
+      { name: 'Jack',                        age: 9  },
+      { name: 'Jill', email: 'jill@doe.org'          },
+      { name: 'John'                                 }
     ])
   end
 
@@ -31,9 +32,10 @@ describe ROM::Memory::Relation do
       expect(relation.project(:name, :age)).to match_array([
         { name: 'Jane', age: 10 },
         { name: 'Jade', age: 11 },
-        { name: 'Joe', age: 12 },
-        { name: 'Jack', age: 9 },
-        { name: 'Jill' }
+        { name: 'Joe',  age: 12 },
+        { name: 'Jack', age: 9  },
+        { name: 'Jill'          },
+        { name: 'John'          }
       ])
     end
   end
@@ -50,7 +52,7 @@ describe ROM::Memory::Relation do
     it 'restricts data using block' do
       expect(relation.restrict { |tuple| tuple[:age].to_i > 10 }).to match_array([
         { name: 'Jade', email: 'jade@doe.org', age: 11 },
-        { name: 'Joe', email: 'joe@doe.org', age: 12 }
+        { name: 'Joe',  email: 'joe@doe.org',  age: 12 }
       ])
     end
   end
@@ -58,31 +60,34 @@ describe ROM::Memory::Relation do
   describe '#order' do
     it 'sorts data using provided attribute names' do
       expect(relation.order(:email).to_a).to eq([
-        { name: 'Jade', email: 'jade@doe.org', age: 11  },
-        { name: 'Jane', email: 'jane@doe.org', age: 10  },
-        { name: 'Jill', email: 'jill@doe.org'           },
-        { name: 'Joe',  email: 'joe@doe.org',  age: 12  },
-        { name: 'Jack', email: nil,            age: 9   }
+        { name: 'Jade', email: 'jade@doe.org', age: 11 },
+        { name: 'Jane', email: 'jane@doe.org', age: 10 },
+        { name: 'Jill', email: 'jill@doe.org'          },
+        { name: 'Joe',  email: 'joe@doe.org',  age: 12 },
+        { name: 'Jack',                        age: 9  },
+        { name: 'John'                                 }
       ])
     end
 
     it 'places nil before other values when required' do
       expect(relation.order(:email, nils_first: true).to_a).to eq([
-        { name: 'Jack', email: nil,            age: 9   },
-        { name: 'Jade', email: 'jade@doe.org', age: 11  },
-        { name: 'Jane', email: 'jane@doe.org', age: 10  },
-        { name: 'Jill', email: 'jill@doe.org'           },
-        { name: 'Joe',  email: 'joe@doe.org',  age: 12  }
+        { name: 'Jack',                        age: 9  },
+        { name: 'John'                                 },
+        { name: 'Jade', email: 'jade@doe.org', age: 11 },
+        { name: 'Jane', email: 'jane@doe.org', age: 10 },
+        { name: 'Jill', email: 'jill@doe.org'          },
+        { name: 'Joe',  email: 'joe@doe.org',  age: 12 }
       ])
     end
 
     it 'sorts tuples by multiple fields' do
       expect(relation.order(:age, :email).to_a).to eq([
-        { name: 'Jack', email: nil,            age: 9   },
-        { name: 'Jane', email: 'jane@doe.org', age: 10  },
-        { name: 'Jade', email: 'jade@doe.org', age: 11  },
-        { name: 'Joe',  email: 'joe@doe.org',  age: 12  },
-        { name: 'Jill', email: 'jill@doe.org' }
+        { name: 'Jack',                        age: 9  },
+        { name: 'Jane', email: 'jane@doe.org', age: 10 },
+        { name: 'Jade', email: 'jade@doe.org', age: 11 },
+        { name: 'Joe',  email: 'joe@doe.org',  age: 12 },
+        { name: 'Jill', email: 'jill@doe.org'          },
+        { name: 'John'                                 }
       ])
     end
   end

@@ -57,9 +57,8 @@ module ROM
         options = names.last.is_a?(Hash) ? names.pop : {}
         place   = options[:nils_first] ? -1 : 1
         compare = ->(a, b) {
-          return  place if a.nil?
-          return -place if b.nil?
-          a <=> b
+          return a <=> b unless a.nil? ^ b.nil?
+          a.nil? ? place : -place
         }
 
         sort do |a, b|
