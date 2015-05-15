@@ -11,7 +11,8 @@ describe ROM::Memory::Relation do
     ROM::Memory::Dataset.new([
       { name: 'Jane', email: 'jane@doe.org', age: 10 },
       { name: 'Jade', email: 'jade@doe.org', age: 11 },
-      { name: 'Joe', email: 'joe@doe.org', age: 12 }
+      { name: 'Joe',  email: 'joe@doe.org', age: 12 },
+      { name: 'Jack', email: nil, age: 9 },
     ])
   end
 
@@ -29,7 +30,8 @@ describe ROM::Memory::Relation do
       expect(relation.project(:name, :age)).to match_array([
         { name: 'Jane', age: 10 },
         { name: 'Jade', age: 11 },
-        { name: 'Joe', age: 12 }
+        { name: 'Joe', age: 12 },
+        { name: 'Jack', age: 9 }
       ])
     end
   end
@@ -53,10 +55,20 @@ describe ROM::Memory::Relation do
 
   describe '#order' do
     it 'sorts data using provided attribute names' do
-      expect(relation.order(:name).to_a).to eq([
+      expect(relation.order(:email).to_a).to eq([
         { name: 'Jade', email: 'jade@doe.org', age: 11 },
         { name: 'Jane', email: 'jane@doe.org', age: 10 },
-        { name: 'Joe', email: 'joe@doe.org', age: 12 }
+        { name: 'Joe',  email: 'joe@doe.org',  age: 12 },
+        { name: 'Jack', email: nil, age: 9 }
+      ])
+    end
+
+    it 'places nil before other values when required' do
+      expect(relation.order(:email, nils_first: true).to_a).to eq([
+        { name: 'Jack', email: nil, age: 9 },
+        { name: 'Jade', email: 'jade@doe.org', age: 11 },
+        { name: 'Jane', email: 'jane@doe.org', age: 10 },
+        { name: 'Joe',  email: 'joe@doe.org',  age: 12 }
       ])
     end
   end
