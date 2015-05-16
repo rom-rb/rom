@@ -1,5 +1,6 @@
 require 'rom/relation/loaded'
 require 'rom/relation/composite'
+require 'rom/relation/materializable'
 
 module ROM
   class Relation
@@ -26,6 +27,8 @@ module ROM
     #
     # @api public
     class Graph
+      include Materializable
+
       # Root aka parent relation
       #
       # @return [Relation::Lazy]
@@ -65,16 +68,6 @@ module ROM
       def >>(other)
         Composite.new(self, other)
       end
-
-      # Coerce this relation graph to an array
-      #
-      # @return [Array]
-      #
-      # @api public
-      def to_a
-        call.to_a
-      end
-      alias_method :to_ary, :to_a
 
       # Materialize this relation graph
       #

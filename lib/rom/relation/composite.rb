@@ -1,4 +1,5 @@
 require 'rom/relation/loaded'
+require 'rom/relation/materializable'
 
 module ROM
   class Relation
@@ -7,6 +8,7 @@ module ROM
     # @api public
     class Composite
       include Equalizer.new(:left, :right)
+      include Materializable
 
       # @return [Lazy,Curried,Composite,#call]
       #
@@ -53,57 +55,6 @@ module ROM
         end
       end
       alias_method :[], :call
-
-      # Coerce composite relation to an array
-      #
-      # @return [Array]
-      #
-      # @api public
-      def to_a
-        call.to_a
-      end
-      alias_method :to_ary, :to_a
-
-      # Delegate to loaded relation and return one object
-      #
-      # @return [Object]
-      #
-      # @see Loaded#one
-      #
-      # @api public
-      def one
-        call.one
-      end
-
-      # Delegate to loaded relation and return one object
-      #
-      # @return [Object]
-      #
-      # @see Loaded#one
-      #
-      # @api public
-      def one!
-        call.one!
-      end
-
-      # Yield composite relation objects
-      #
-      # @yield [Object]
-      #
-      # @api public
-      def each(&block)
-        return to_enum unless block
-        call.each { |object| yield(object) }
-      end
-
-      # Return first object from the called relation
-      #
-      # @return [Object]
-      #
-      # @api public
-      def first
-        call.first
-      end
 
       # @api private
       def respond_to_missing?(name, include_private = false)

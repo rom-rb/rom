@@ -1,6 +1,7 @@
 require 'rom/relation/loaded'
 require 'rom/relation/composite'
 require 'rom/relation/graph'
+require 'rom/relation/materializable'
 
 module ROM
   class Relation
@@ -29,6 +30,7 @@ module ROM
     class Lazy
       include Equalizer.new(:relation, :options)
       include Options
+      include Materializable
 
       option :mappers, reader: true, default: EMPTY_HASH
 
@@ -90,16 +92,6 @@ module ROM
       end
       alias_method :as, :map_with
 
-      # Coerce lazy relation to an array
-      #
-      # @return [Array]
-      #
-      # @api public
-      def to_a
-        call.to_a
-      end
-      alias_method :to_ary, :to_a
-
       # Load relation
       #
       # @return [Relation::Loaded]
@@ -107,47 +99,6 @@ module ROM
       # @api public
       def call
         Loaded.new(relation)
-      end
-
-      # Yield relation tuples
-      #
-      # @yield [Object]
-      #
-      # @api public
-      def each(&block)
-        return to_enum unless block
-        to_a.each { |tuple| yield(tuple) }
-      end
-
-      # Delegate to loaded relation and return one object
-      #
-      # @return [Object]
-      #
-      # @see Loaded#one
-      #
-      # @api public
-      def one
-        call.one
-      end
-
-      # Delegate to loaded relation and return one object
-      #
-      # @return [Object]
-      #
-      # @see Loaded#one
-      #
-      # @api public
-      def one!
-        call.one!
-      end
-
-      # Return first tuple from a relation coerced to an array
-      #
-      # @return [Object]
-      #
-      # @api public
-      def first
-        to_a.first
       end
 
       # @api private

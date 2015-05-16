@@ -157,6 +157,13 @@ module ROM
         end
       end
 
+      # Visit unwrap attribute
+      #
+      # :unwrap transformation is added to handle unwrapping
+      #
+      # @param [Header::Attributes::Unwrap]
+      #
+      # @api private
       def visit_unwrap(attribute)
         name = attribute.name
         keys = attribute.header.map(&:name)

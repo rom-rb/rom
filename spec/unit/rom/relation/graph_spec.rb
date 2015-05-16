@@ -5,6 +5,16 @@ describe ROM::Relation::Graph do
 
   include_context 'users and tasks'
 
+  it_behaves_like 'materializable relation' do
+    let(:mapper) do
+      Transproc(:combine, [[:tasks, name: :name]])
+    end
+
+    let(:relation) do
+      ROM::Relation::Graph.new(users.by_name('Jane'), [tasks.for_users]) >> mapper
+    end
+  end
+
   before do
     setup.relation(:users) do
       def by_name(name)
