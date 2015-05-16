@@ -1,5 +1,4 @@
 require 'rom/relation/loaded'
-require 'rom/relation/composite'
 require 'rom/relation/materializable'
 require 'rom/pipeline'
 
