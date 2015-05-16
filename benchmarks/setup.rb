@@ -37,6 +37,11 @@ def tags
   rom.relation(:tags)
 end
 
+def users_with_combined_tasks
+  @users_with_combined_tasks ||= rom.relation(:users).as(:user_with_combined_tasks)
+    .combine(rom.relation(:tasks).for_users)
+end
+
 def hr
   puts "*" * 80
 end
@@ -182,6 +187,10 @@ module Relations
     def with_tags
       association_left_join(:tags, select: [:id, :task_id, :name])
     end
+
+    def for_users(users)
+      all.where(user_id: users.map { |u| u[:id] })
+    end
   end
 end
 
@@ -196,6 +205,20 @@ module Mappers
       attribute :name
       attribute :email
       attribute :age
+    end
+
+    class WithCombinedTasks < Base
+      model name: 'UserWithCombinedTasks'
+
+      register_as :user_with_combined_tasks
+
+      combine :tasks, on: { id: :user_id } do
+        model name: 'CombinedTask'
+
+        attribute :id
+        attribute :user_id
+        attribute :title
+      end
     end
 
     class WithTasks < Base

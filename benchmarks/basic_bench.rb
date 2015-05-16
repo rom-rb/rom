@@ -39,6 +39,18 @@ run("Loading ALL users with their tasks") do |x|
   end
 end
 
+run("Loading ALL users with their tasks using `combine` in ROM") do |x|
+  x.verify do |users|
+    users_with_combined_tasks.to_a.size == COUNT
+  end
+  x.report("AR") do
+    ARUser.includes(:tasks).all.to_a
+  end
+  x.report("ROM") do
+    users_with_combined_tasks.to_a
+  end
+end
+
 run("Loading ONE task with its user and tags") do |x|
   x.verify do |task|
     task.title == 'Task 1'
