@@ -26,6 +26,8 @@ describe 'Using in-memory repositories for cross-repo access' do
 
     setup.mappers do
       define(:users_and_tasks) do
+        attribute :user_id
+        attribute :name
         group tasks: [:title]
       end
     end
