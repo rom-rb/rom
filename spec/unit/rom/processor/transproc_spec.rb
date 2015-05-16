@@ -58,7 +58,7 @@ describe ROM::Processor::Transproc do
       ]
     end
 
-    it 'returns tuples with rejected keys' do
+    it 'returns tuples with renamed keys' do
       expect(transproc[relation]).to eql([{ name: 'Jane' }, { name: 'Joe' }])
     end
   end
@@ -113,7 +113,7 @@ describe ROM::Processor::Transproc do
     end
 
     context 'when no mapping is needed' do
-      let(:attributes) { [['name'], ['task', type: :hash, header: [[:title]]]] }
+      let(:attributes) { [['name'], ['task', type: :hash, header: [['title']]]] }
 
       it 'returns tuples' do
         expect(transproc[relation]).to eql(relation)
@@ -146,22 +146,25 @@ describe ROM::Processor::Transproc do
       context 'when renaming is required' do
         let(:relation) do
           [
-            { user: { name: 'Jane', task: { title: 'Task One' } } },
-            { user: { name: 'Joe', task: { title: 'Task Two' } } }
+            { 'user' => { 'name' => 'Jane', 'task' => { 'title' => 'Task One' } } },
+            { 'user' => { 'name' => 'Joe', 'task' => { 'title' => 'Task Two' } } }
           ]
         end
 
         let(:attributes) do
           [[
-            'user', type: :hash, header: [
-              ['name'],
-              ['task', type: :hash, header: [['title']]]
+            :user, from: 'user', type: :hash, header: [
+              [:name, from: 'name'],
+              [:task, from: 'task', type: :hash, header: [[:title, from: 'title']]]
             ]
           ]]
         end
 
         it 'returns tuples' do
-          expect(transproc[relation]).to eql(relation)
+          expect(transproc[relation]).to eql([
+            { user: { name: 'Jane', task: { title: 'Task One' } } },
+            { user: { name: 'Joe', task: { title: 'Task Two' } } }
+          ])
         end
       end
     end
