@@ -20,7 +20,7 @@ module ROM
     # @api private
     option :model, reader: true
 
-    option :reject_keys, reader: true, default: false
+    option :reject_keys, reader: true, default: true
 
     # @api private
     attr_reader :attributes
