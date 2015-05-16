@@ -46,13 +46,13 @@ module ROM
       # @return [Hash<Symbol=>TrueClass>]
       #
       # @api private
-      attr_reader :methods
+      attr_reader :exposed_relations
 
       # @api private
       def initialize(relation, options = {})
         super
         @relation = relation
-        @methods = @relation.exposed_relations
+        @exposed_relations = @relation.exposed_relations
       end
 
       # Eager load other relation(s) for this relation
@@ -91,7 +91,7 @@ module ROM
 
       # @api private
       def respond_to_missing?(name, include_private = false)
-        methods.include?(name) || super
+        exposed_relations.include?(name) || super
       end
 
       # Return if this lazy relation is curried
@@ -113,13 +113,14 @@ module ROM
       #
       # @api private
       def method_missing(meth, *args, &block)
-        if !methods.include?(meth) || (curried? && name != meth)
+        if !exposed_relations.include?(meth) || (curried? && name != meth)
           super
         else
           arity = relation.method(meth).arity
 
           if arity < 0 || arity == args.size
             response = relation.__send__(meth, *args, &block)
+
             if response.is_a?(Relation)
               __new__(response)
             else
