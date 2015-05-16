@@ -53,16 +53,13 @@ module ROM
       #   Whether `nil` values should be placed before others
       #
       # @api public
-      def order(*names)
-        options = names.last.is_a?(Hash) ? names.pop : {}
-        place   = options[:nils_first] ? -1 : 1
-        compare = ->(a, b) {
-          return a <=> b unless a.nil? ^ b.nil?
-          a.nil? ? place : -place
-        }
+      def order(*fields)
+        nils_first = fields.pop[:nils_first] if fields.last.is_a?(Hash)
 
         sort do |a, b|
-          names.map { |n| compare.call a[n], b[n] }.detect { |r| r != 0 } || 0
+          fields # finds the first difference between selected fields of tuples
+            .map { |n| __compare a[n], b[n], nils_first }
+            .detect { |r| r != 0 } || 0
         end
       end
 
@@ -81,6 +78,14 @@ module ROM
       def delete(tuple)
         data.delete(tuple)
         self
+      end
+
+      private
+
+      # Compares two values, that are either comparable, or can be nils
+      def __compare(a, b, nils_first)
+        return a <=> b unless a.nil? ^ b.nil?
+        (nils_first ^ b.nil?) ? -1 : 1
       end
     end
   end
