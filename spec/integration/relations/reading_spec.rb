@@ -133,7 +133,10 @@ describe 'Reading relations' do
     end
 
     setup.mappers do
-      define(:users)
+      define(:users) do
+        attribute :name
+        attribute :email
+      end
     end
 
     rom = setup.finalize

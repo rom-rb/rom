@@ -46,9 +46,21 @@ module ROM
 
       # Sort a dataset
       #
+      # @param [Array<Symbol>] names
+      #   Names of fields to order tuples by
+      #
+      # @option [Boolean] :nils_first (false)
+      #   Whether `nil` values should be placed before others
+      #
       # @api public
-      def order(*names)
-        sort_by { |tuple| tuple.values_at(*names) }
+      def order(*fields)
+        nils_first = fields.pop[:nils_first] if fields.last.is_a?(Hash)
+
+        sort do |a, b|
+          fields # finds the first difference between selected fields of tuples
+            .map { |n| __compare a[n], b[n], nils_first }
+            .detect { |r| r != 0 } || 0
+        end
       end
 
       # Insert tuple into a dataset
@@ -66,6 +78,14 @@ module ROM
       def delete(tuple)
         data.delete(tuple)
         self
+      end
+
+      private
+
+      # Compares two values, that are either comparable, or can be nils
+      def __compare(a, b, nils_first)
+        return a <=> b unless a.nil? ^ b.nil?
+        (nils_first ^ b.nil?) ? -1 : 1
       end
     end
   end

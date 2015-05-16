@@ -104,6 +104,7 @@ describe 'Setting up ROM' do
         mappers do
           define(:users) do
             model Test::User
+            attribute :name
           end
         end
       }
@@ -139,6 +140,7 @@ describe 'Setting up ROM' do
       ROM.mappers do
         define(:users) do
           model Test::User
+          attribute :name
         end
       end
 
