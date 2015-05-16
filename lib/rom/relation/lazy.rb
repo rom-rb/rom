@@ -1,7 +1,7 @@
 require 'rom/relation/loaded'
-require 'rom/relation/composite'
 require 'rom/relation/graph'
 require 'rom/relation/materializable'
+require 'rom/pipeline'
 
 module ROM
   class Relation
@@ -31,6 +31,7 @@ module ROM
       include Equalizer.new(:relation, :options)
       include Options
       include Materializable
+      include Pipeline
 
       option :mappers, reader: true, default: EMPTY_HASH
 
@@ -51,20 +52,6 @@ module ROM
         super
         @relation = relation
         @methods = @relation.exposed_relations
-      end
-
-      # Compose two relation with a left-to-right composition
-      #
-      # @example
-      #   users.by_name('Jane') >> tasks.for_users
-      #
-      # @param [Relation] other The right relation
-      #
-      # @return [Relation::Composite]
-      #
-      # @api public
-      def >>(other)
-        Composite.new(self, other)
       end
 
       # Eager load other relation(s) for this relation

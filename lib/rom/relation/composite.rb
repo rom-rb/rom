@@ -1,5 +1,6 @@
 require 'rom/relation/loaded'
 require 'rom/relation/materializable'
+require 'rom/pipeline'
 
 module ROM
   class Relation
@@ -9,6 +10,7 @@ module ROM
     class Composite
       include Equalizer.new(:left, :right)
       include Materializable
+      include Pipeline
 
       # @return [Lazy,Curried,Composite,#call]
       #
@@ -24,17 +26,6 @@ module ROM
       def initialize(left, right)
         @left = left
         @right = right
-      end
-
-      # Compose with another callable object
-      #
-      # @param [#call]
-      #
-      # @return [Composite]
-      #
-      # @api public
-      def >>(other)
-        self.class.new(self, other)
       end
 
       # Call the pipeline by passing results from left to right

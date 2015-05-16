@@ -1,6 +1,7 @@
 require 'rom/relation/loaded'
 require 'rom/relation/composite'
 require 'rom/relation/materializable'
+require 'rom/pipeline'
 
 module ROM
   class Relation
@@ -28,6 +29,7 @@ module ROM
     # @api public
     class Graph
       include Materializable
+      include Pipeline
 
       # Root aka parent relation
       #
@@ -47,26 +49,6 @@ module ROM
       def initialize(root, nodes)
         @root = root
         @nodes = nodes
-      end
-
-      # Compose left-to-right data pipeline
-      #
-      # @example
-      #   users_and_tasks = rom.relation(:users)
-      #     .combine(rom.relation(:tasks).for_users)
-      #
-      #   users_and_tasks >> proc { |users, children|
-      #     tasks = children.first
-      #     # do stuff
-      #   }
-      #
-      # @param [#call] other The right-side processing object
-      #
-      # @return [Relation::Composite]
-      #
-      # @api public
-      def >>(other)
-        Composite.new(self, other)
       end
 
       # Materialize this relation graph
