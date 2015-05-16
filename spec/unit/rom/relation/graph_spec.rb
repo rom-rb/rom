@@ -32,6 +32,24 @@ describe ROM::Relation::Graph do
   let(:users) { rom.relation(:users) }
   let(:tasks) { rom.relation(:tasks) }
 
+  describe '#method_missing' do
+    it 'responds to the root methods' do
+      expect(graph).to respond_to(:by_name)
+    end
+
+    it 'forwards methods to the root and decorates response' do
+      expect(graph.by_name('Jane')).to be_instance_of(ROM::Relation::Graph)
+    end
+
+    it 'returns original response from the root' do
+      expect(graph.mappers).to eql(users.mappers)
+    end
+
+    it 'raises method error' do
+      expect { graph.not_here }.to raise_error(NoMethodError, /not_here/)
+    end
+  end
+
   describe '#call' do
     it 'materializes relations' do
       expect(graph.call).to match_array([

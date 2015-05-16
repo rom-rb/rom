@@ -17,30 +17,21 @@ module ROM
       Relation::Composite.new(self, other)
     end
 
-    # Base composite class with left-to-right pipeline behavior
+    # Send data through specified mappers
+    #
+    # @return [Relation::Composite]
+    #
+    # @api public
+    def map_with(*names)
+      [self, *names.map { |name| mappers[name] }]
+        .reduce { |a, e| Relation::Composite.new(a, e) }
+    end
+    alias_method :as, :map_with
+
+    # Forwards messages to the left side of a pipeline
     #
     # @api private
-    class Composite
-      include Equalizer.new(:left, :right)
-
-      # @api private
-      attr_reader :left
-
-      # @api private
-      attr_reader :right
-
-      # @api private
-      def initialize(left, right)
-        @left, @right = left, right
-      end
-
-      # Compose this composite with another object
-      #
-      # @api public
-      def >>(other)
-        self.class.new(self, other)
-      end
-
+    module Proxy
       # @api private
       def respond_to_missing?(name, include_private = false)
         left.respond_to?(name) || super
@@ -68,6 +59,32 @@ module ROM
         else
           super
         end
+      end
+    end
+
+    # Base composite class with left-to-right pipeline behavior
+    #
+    # @api private
+    class Composite
+      include Equalizer.new(:left, :right)
+      include Proxy
+
+      # @api private
+      attr_reader :left
+
+      # @api private
+      attr_reader :right
+
+      # @api private
+      def initialize(left, right)
+        @left, @right = left, right
+      end
+
+      # Compose this composite with another object
+      #
+      # @api public
+      def >>(other)
+        self.class.new(self, other)
       end
     end
   end

@@ -29,6 +29,7 @@ module ROM
     class Graph
       include Materializable
       include Pipeline
+      include Pipeline::Proxy
 
       # Root aka parent relation
       #
@@ -43,6 +44,9 @@ module ROM
       #
       # @api private
       attr_reader :nodes
+
+      alias_method :left, :root
+      alias_method :right, :nodes
 
       # @api private
       def initialize(root, nodes)

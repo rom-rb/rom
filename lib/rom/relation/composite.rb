@@ -33,7 +33,7 @@ module ROM
 
       # @api private
       #
-      # @see Pipeline::Composite#decorate?
+      # @see Pipeline::Proxy#decorate?
       #
       # @api private
       def decorate?(response)

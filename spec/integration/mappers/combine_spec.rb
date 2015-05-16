@@ -96,10 +96,10 @@ describe 'Mapper definition DSL' do
       Test::Task.send(:include, Equalizer.new(:title, :meta))
       Test::Address.send(:include, Equalizer.new(:city))
 
-      result = users.as(:entity).combine(
+      result = users.combine(
         tasks.for_users.combine(tasks.tags),
         users.addresses
-      )
+      ).as(:entity)
 
       expect(result).to match_array([joe, jane])
     end
