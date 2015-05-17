@@ -228,7 +228,7 @@ module ROM
 
           ops << t(:rename_keys, mapping) if header.aliased?
           ops << header.map { |attr| visit(attr) }
-          ops << t(-> tuple { model.new(tuple) }) if model
+          ops << t(:constructor_inject, model) if model
         }
       end
 
