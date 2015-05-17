@@ -135,7 +135,7 @@ describe 'Commands' do
       }.build(users)
 
       create_task = Class.new(ROM::Commands::Create) {
-        def execute(user_tuple, task_input)
+        def execute(task_input, user_tuple)
           relation.insert(task_input.merge(user_id: user_tuple[:user_id]))
         end
       }.build(tasks)

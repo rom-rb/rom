@@ -49,7 +49,7 @@ module ROM
       #
       # @api public
       def call(*args)
-        tuples = execute(*(args + curry_args))
+        tuples = execute(*(curry_args + args))
 
         if result == :one
           tuples.first

@@ -34,7 +34,7 @@ describe 'Commands / Create' do
       register_as :create
       result :one
 
-      def execute(user, task)
+      def execute(task, user)
         super(task.merge(name: user.to_h[:name]))
       end
     end
