@@ -71,5 +71,28 @@ describe 'Mapper definition DSL' do
                             name: 'Jane',
                             user_email: 'jane@doe.org')
     end
+
+    it 'unwraps specified attributes via options block' do
+      setup.mappers do
+        define(:with_user, parent: :tasks) do
+          attribute :title
+          attribute :priority
+
+          unwrap :user do
+            attribute :task_user_name, from: :name
+          end
+        end
+      end
+
+      rom = setup.finalize
+
+      result = rom.relation(:tasks).with_user.as(:with_user).to_a.last
+
+      expect(result).to eql(title: 'be cool',
+                            priority: 2,
+                            name: 'Jane',
+                            task_user_name: 'Jane',
+                            user: { email: 'jane@doe.org' })
+    end
   end
 end
