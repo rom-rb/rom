@@ -1,4 +1,4 @@
-## v0.7.0 to-be-released
+## v0.7.0 2015-05-17
 
 ### Added
 
@@ -30,7 +30,7 @@
 * Fixed all the warnings \o/ (splattael)
 * Introduced `Deprecations` helper module (solnic)
 
-[Compare v0.6.2...master](https://github.com/rom-rb/rom/compare/v0.6.2...master)
+[Compare v0.6.2...v0.7.0](https://github.com/rom-rb/rom/compare/v0.6.2...v0.7.0)
 
 ## v0.6.2 2015-04-14
 
