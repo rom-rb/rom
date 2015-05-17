@@ -16,6 +16,7 @@
 
 ### Changed
 
+* [BREAKING] `Command#call` applies curried args first (solnic)
 * `Commands::Update#set` was deprecated in favor of `call` (solnic)
 * `group` mapping reject empty tuples (solnic)
 
