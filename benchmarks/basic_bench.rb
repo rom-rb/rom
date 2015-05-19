@@ -41,7 +41,7 @@ end
 
 run("Loading ALL users with their tasks using `combine` in ROM") do |x|
   x.verify do |users|
-    users_with_combined_tasks.to_a.size == COUNT
+    users.to_a.size == COUNT
   end
   x.report("AR") do
     ARUser.includes(:tasks).all.to_a
