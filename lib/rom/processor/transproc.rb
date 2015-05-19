@@ -91,7 +91,7 @@ module ROM
 
       # Visit plain attribute
       #
-      # It will call block transformation if its used
+      # It will call block transformation if it's used
       #
       # If it's a typed attribute a coercion transformation is added
       #

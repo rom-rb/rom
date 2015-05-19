@@ -37,8 +37,8 @@ module ROM
       #
       #   dsl.attribute(:name)
       #   dsl.attribute(:email, from: 'user_email')
-      #   dsl.attribute(:name do 'John' end)
-      #   dsl.attribute(:name do |t| t.upcase end)
+      #   dsl.attribute(:name) { 'John' }
+      #   dsl.attribute(:name) { |t| t.upcase }
       #
       # @api public
       def attribute(name, options = EMPTY_HASH, &block)
