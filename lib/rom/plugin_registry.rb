@@ -129,6 +129,6 @@ module ROM
         raise(UnknownPluginError, name)
     end
 
-    alias [] fetch
+    alias_method :[], :fetch
   end
 end
