@@ -6,10 +6,6 @@ AllCops:
   Exclude:
     - tmp/**/*
 
-# It’s quite readable when we know what we are doing
-Lint/AssignmentInCondition:
-  Enabled: false
-
 Style/BlockDelimiters:
   EnforcedStyle: semantic
   FunctionalMethods:

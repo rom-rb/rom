@@ -99,7 +99,8 @@ module ROM
       #
       # @api private
       def visit_attribute(attribute)
-        if coercer = attribute.meta[:coercer]
+        coercer = attribute.meta[:coercer]
+        if coercer
           t(:map_value, attribute.name, coercer)
         elsif attribute.typed?
           t(:map_value, attribute.name, t(:"to_#{attribute.type}"))
