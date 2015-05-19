@@ -45,7 +45,7 @@ module ROM
         with_attr_options(name, options) do |attr_options|
           raise ArgumentError,
             "can't specify type and block at the same time" if options[:type] && block
-          attr_options.merge!(coercer: block) if block
+          attr_options[:coercer] = block if block
           add_attribute(name, attr_options)
         end
       end
