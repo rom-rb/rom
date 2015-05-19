@@ -158,5 +158,27 @@ describe 'Mapper definition DSL' do
         ])
       )
     end
+
+    it 'allows defining grouped attributes with the same name as their keys' do
+      setup.mappers do
+        define(:with_tasks, parent: :users) do
+
+          attribute :name
+          attribute :email
+
+          group title: [:title, :priority]
+        end
+      end
+
+      rom = setup.finalize
+
+      jane = rom.relation(:users).with_tasks.map_with(:with_tasks).to_a.last
+
+      expect(jane).to eql(
+        name: 'Jane',
+        email: 'jane@doe.org',
+        title: [{ title: 'be cool', priority: 2 }]
+      )
+    end
   end
 end
