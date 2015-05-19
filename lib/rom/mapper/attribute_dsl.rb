@@ -30,17 +30,22 @@ module ROM
         @reject_keys = options.fetch(:reject_keys)
       end
 
-      # Define a mapping attribute with its options
+      # Define a mapping attribute with its options and/or block
       #
       # @example
       #   dsl = AttributeDSL.new([])
       #
       #   dsl.attribute(:name)
       #   dsl.attribute(:email, from: 'user_email')
+      #   dsl.attribute(:name do 'John' end)
+      #   dsl.attribute(:name do |t| t.upcase end)
       #
       # @api public
-      def attribute(name, options = EMPTY_HASH)
+      def attribute(name, options = EMPTY_HASH, &block)
         with_attr_options(name, options) do |attr_options|
+          raise ArgumentError,
+            "can't specify type and block at the same time" if options[:type] && block
+          attr_options.merge!(coercer: block) if block
           add_attribute(name, attr_options)
         end
       end
@@ -192,7 +197,7 @@ module ROM
           type: options.fetch(:type, :array),
           keys: options.fetch(:on),
           combine: true,
-          header: dsl.header,
+          header: dsl.header
         }
 
         add_attribute(name, attr_opts)

@@ -91,13 +91,17 @@ module ROM
 
       # Visit plain attribute
       #
+      # It will call block transformation if its used
+      #
       # If it's a typed attribute a coercion transformation is added
       #
       # @param [Header::Attribute] attribute
       #
       # @api private
       def visit_attribute(attribute)
-        if attribute.typed?
+        if attribute.meta[:coercer]
+          t(:map_value, attribute.name, attribute.meta[:coercer])
+        elsif attribute.typed?
           t(:map_value, attribute.name, t(:"to_#{attribute.type}"))
         end
       end
