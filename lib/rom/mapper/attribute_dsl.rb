@@ -265,7 +265,7 @@ module ROM
         dsl = new(options, &block)
         header = dsl.header
         add_attribute(name, options.update(header: header))
-        header.each { |attr| exclude(attr.key) }
+        header.each { |attr| exclude(attr.key) unless name == attr.key }
       end
 
       # Define attributes from the `name => attributes` hash syntax
@@ -277,7 +277,7 @@ module ROM
         hash.each do |name, header|
           with_attr_options(name, options) do |attr_options|
             add_attribute(name, attr_options.update(header: header.zip))
-            header.each { |attr| exclude(attr) }
+            header.each { |attr| exclude(attr) unless name == attr }
           end
         end
       end
