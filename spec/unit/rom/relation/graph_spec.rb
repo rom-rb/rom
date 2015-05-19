@@ -23,7 +23,7 @@ describe ROM::Relation::Graph do
     end
 
     setup.relation(:tasks) do
-      def for_users(users)
+      def for_users(_users)
         self
       end
     end
