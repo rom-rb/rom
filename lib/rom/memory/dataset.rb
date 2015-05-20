@@ -30,18 +30,15 @@ module ROM
       #
       # @api public
       def restrict(criteria = nil)
-        if criteria
-          find_all do |tuple|
-            criteria.all? do |k, v|
-              if v.is_a?(Array)
-                v.include?(tuple[k])
-              else
-                tuple[k].eql?(v)
-              end
+        return find_all { |tuple| yield(tuple) } unless criteria
+        find_all do |tuple|
+          criteria.all? do |k, v|
+            case v
+            when Array then v.include?(tuple[k])
+            when Regexp then tuple[k].match(v)
+            else tuple[k].eql?(v)
             end
           end
-        else
-          find_all { |tuple| yield(tuple) }
         end
       end
 
