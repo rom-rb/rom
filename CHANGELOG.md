@@ -4,6 +4,10 @@
 
 * Support for passing a block for custom coercion to `attribute` (gotar)
 
+### Changed
+
+* [rom/memory] `restrict` operation supports array as a value (gotar)
+
 [Compare v0.7.0...HEAD](https://github.com/rom-rb/rom/compare/v0.7.0...HEAD)
 
 ## v0.7.0 2015-05-17
