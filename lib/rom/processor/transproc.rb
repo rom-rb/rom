@@ -194,6 +194,7 @@ module ROM
           name = attribute.name
           header = attribute.header
           keys = attribute.tuple_keys
+          fold = attribute.meta[:fold]
 
           other = header.groups
 
@@ -201,9 +202,13 @@ module ROM
             ops << t(:group, name, keys)
             ops << t(:map_array, t(:map_value, name, FILTER_EMPTY))
 
-            ops << other.map { |attr|
-              t(:map_array, t(:map_value, name, visit_group(attr, true)))
-            }
+            if fold
+              ops << t(:map_array, t(:fold, name, keys.first))
+            else
+              ops << other.map { |attr|
+                t(:map_array, t(:map_value, name, visit_group(attr, true)))
+              }
+            end
           end
         else
           visit_array(attribute)

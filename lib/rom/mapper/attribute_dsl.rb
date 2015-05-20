@@ -171,6 +171,26 @@ module ROM
         end
       end
 
+      # Define an embedded hash attribute that requires "fold" transformation
+      #
+      # Typically this is used in sql context to fold single joined field
+      # to the array of values.
+      #
+      # @example
+      #   dsl = AttributeDSL.new([])
+      #
+      #   dsl.fold(tags: [:name])
+      #
+      # @see AttributeDSL#embedded
+      #
+      # @api public
+      def fold(*args)
+        with_name_or_options(*args) do |name, *|
+          fold_options = { type: :array, fold: true }
+          dsl(name, fold_options)
+        end
+      end
+
       # Define an embedded combined attribute that requires "combine" transformation
       #
       # Typically this can be used to process results of eager-loading
