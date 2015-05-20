@@ -49,6 +49,13 @@ describe ROM::Memory::Relation do
         { name: 'Joe', email: 'joe@doe.org', age: 12 }
       ])
     end
+
+    it 'allows to use array as value' do
+      expect(relation.restrict(age: [10, 11])).to match_array([
+        { name: 'Jane', email: 'jane@doe.org', age: 10 },
+        { name: 'Jade', email: 'jade@doe.org', age: 11 }
+      ])
+    end
   end
 
   describe '#order' do
