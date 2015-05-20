@@ -31,7 +31,15 @@ module ROM
       # @api public
       def restrict(criteria = nil)
         if criteria
-          find_all { |tuple| criteria.all? { |k, v| tuple[k].eql?(v) } }
+          find_all do |tuple|
+            criteria.all? do |k, v|
+              if v.is_a?(Array)
+                v.include?(tuple[k])
+              else
+                tuple[k].eql?(v)
+              end
+            end
+          end
         else
           find_all { |tuple| yield(tuple) }
         end
