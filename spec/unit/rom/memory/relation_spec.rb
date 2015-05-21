@@ -50,8 +50,15 @@ describe ROM::Memory::Relation do
       ])
     end
 
-    it 'allows to use array as value' do
+    it 'allows to use array as a value' do
       expect(relation.restrict(age: [10, 11])).to match_array([
+        { name: 'Jane', email: 'jane@doe.org', age: 10 },
+        { name: 'Jade', email: 'jade@doe.org', age: 11 }
+      ])
+    end
+
+    it 'allows to use regexp as a value' do
+      expect(relation.restrict(name: /\w{4}/)).to match_array([
         { name: 'Jane', email: 'jane@doe.org', age: 10 },
         { name: 'Jade', email: 'jade@doe.org', age: 11 }
       ])
