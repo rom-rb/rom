@@ -9,7 +9,7 @@ module ROM
 
     include Equalizer.new(:relation, :options)
 
-    defines :relation, :result, :input, :validator, :register_as
+    defines :adapter, :relation, :result, :input, :validator, :register_as
 
     input Hash
     validator proc {}
@@ -85,7 +85,6 @@ module ROM
     #
     # @api public
     def self.use(plugin, options = {})
-      adapter = options.fetch(:adapter, :default)
       ROM.plugin_registry.commands.fetch(plugin, adapter).apply_to(self)
     end
 

@@ -10,6 +10,8 @@ module ROM
     class Relation < ROM::Relation
       include Enumerable
 
+      adapter :memory
+
       forward :take, :join, :project, :restrict, :order
 
       # Insert tuples into the relation

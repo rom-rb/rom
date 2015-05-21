@@ -10,6 +10,8 @@ module ROM
       #
       # @api public
       class Create < ROM::Commands::Create
+        adapter :memory
+
         # @see ROM::Commands::Create#execute
         def execute(tuple)
           attributes = input[tuple]
@@ -22,6 +24,8 @@ module ROM
       #
       # @api public
       class Update < ROM::Commands::Update
+        adapter :memory
+
         # @see ROM::Commands::Update#execute
         def execute(params)
           attributes = input[params]
@@ -34,6 +38,8 @@ module ROM
       #
       # @api public
       class Delete < ROM::Commands::Delete
+        adapter :memory
+
         # @see ROM::Commands::Delete#execute
         def execute
           tuples = target.to_a

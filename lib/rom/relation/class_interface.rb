@@ -12,11 +12,12 @@ module ROM
       def inherited(klass)
         super
 
+        klass.extend ClassMacros
+        klass.defines :adapter
+
         return if klass.superclass == ROM::Relation
 
         klass.class_eval do
-          extend ClassMacros
-
           use :registry_reader
 
           defines :repository, :dataset, :register_as, :exposed_relations
@@ -128,7 +129,6 @@ module ROM
       #
       # @api public
       def use(plugin, options = {})
-        adapter = options.fetch(:adapter, :default)
         ROM.plugin_registry.relations.fetch(plugin, adapter).apply_to(self)
       end
 

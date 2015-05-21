@@ -89,7 +89,7 @@ describe "ROM::PluginRegistry" do
     end
 
     setup.relation(:users) do
-      use :lazy, adapter: :memory
+      use :lazy
     end
 
     expect(env.relation(:users)).to be_lazy
@@ -97,10 +97,15 @@ describe "ROM::PluginRegistry" do
 
   it "respects adapter restrictions" do
     Test::LazyPlugin = Module.new
+    Test::LazyMemoryPlugin = Module.new
     Test::LazySQLPlugin = Module.new
 
     ROM.plugins do
       register :lazy, Test::LazyPlugin, type: :command
+
+      adapter :memory do
+        register :lazy_command, Test::LazyMemoryPlugin, type: :command
+      end
 
       adapter :sql do
         register :lazy, Test::LazySQLPlugin, type: :command
@@ -112,10 +117,17 @@ describe "ROM::PluginRegistry" do
     Class.new(ROM::Commands::Create[:memory]) do
       relation :users
       register_as :create
-      use :lazy, adapter: :memory
+      use :lazy
+    end
+
+    Class.new(ROM::Commands::Update[:memory]) do
+      relation :users
+      register_as :update
+      use :lazy_command
     end
 
     expect(env.command(:users).create).not_to be_kind_of Test::LazySQLPlugin
     expect(env.command(:users).create).to be_kind_of Test::LazyPlugin
+    expect(env.command(:users).update).to be_kind_of Test::LazyMemoryPlugin
   end
 end
