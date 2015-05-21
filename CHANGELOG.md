@@ -3,6 +3,9 @@
 ### Added
 
 * Support for passing a block for custom coercion to `attribute` (gotar)
+* Adapter `Relation` and command classes can specify `adapter` identifier
+  which allows using adapter-specific plugins w/o the need to specify adapter
+  when calling `use` (solnic)
 
 ### Changed
 
