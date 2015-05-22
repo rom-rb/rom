@@ -2,8 +2,6 @@ source 'https://rubygems.org'
 
 gemspec
 
-gem 'transproc', github: 'solnic/transproc'
-
 group :console do
   gem 'pry'
   gem 'pg', platforms: [:mri]
