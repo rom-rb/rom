@@ -3,6 +3,8 @@
 ### Added
 
 * Support for passing a block for custom coercion to `attribute` (gotar)
+* `fold` mapping operation which groups keys from input tuples to array
+  of values from the first of listed keys (nepalez)
 * Adapter `Relation` and command classes can specify `adapter` identifier
   which allows using adapter-specific plugins w/o the need to specify adapter
   when calling `use` (solnic)

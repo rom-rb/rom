@@ -47,6 +47,8 @@ module ROM
           Unwrap
         elsif type.equal?(:hash)
           meta[:wrap] ? Wrap : Hash
+        elsif meta[:fold]
+          Group
         elsif type.equal?(:array)
           meta[:group] ? Group : Array
         else
