@@ -14,7 +14,7 @@
 * [rom/memory] `restrict` operation supports array as a value (gotar)
 * [rom/memory] `restrict` operation supports regexp as a value (gotar)
 
-[Compare v0.7.0...HEAD](https://github.com/rom-rb/rom/compare/v0.7.0...HEAD)
+[Compare v0.7.0...v0.7.1](https://github.com/rom-rb/rom/compare/v0.7.0...v0.7.1)
 
 ## v0.7.0 2015-05-17
 
