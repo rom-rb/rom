@@ -136,6 +136,25 @@ module ROM
         end
       end
 
+      # Define an embedded hash attribute that requires "unwrapping" transformation
+      #
+      # Typically this is used in no-sql context to normalize data before
+      # inserting to sql repository.
+      #
+      # @example
+      #   dsl = AttributeDSL.new([])
+      #
+      #   dsl.unwrap(address: [:street, :zipcode, :city])
+      #
+      #   dsl.unwrap(:address) do
+      #     attribute :street
+      #     attribute :zipcode
+      #     attribute :city
+      #   end
+      #
+      # @see AttributeDSL#embedded
+      #
+      # @api public
       def unwrap(*args, &block)
         with_name_or_options(*args) do |name, options|
           dsl(name, { type: :hash, unwrap: true }.update(options), &block)
