@@ -77,7 +77,8 @@ module ROM
 
       # @api private
       def initialize(left, right)
-        @left, @right = left, right
+        @left = left
+        @right = right
       end
 
       # Compose this composite with another object

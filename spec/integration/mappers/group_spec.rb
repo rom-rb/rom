@@ -162,7 +162,6 @@ describe 'Mapper definition DSL' do
     it 'allows defining grouped attributes with the same name as their keys' do
       setup.mappers do
         define(:with_tasks, parent: :users) do
-
           attribute :name
           attribute :email
 

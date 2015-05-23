@@ -39,7 +39,7 @@ end
 
 def users_with_combined_tasks
   @users_with_combined_tasks ||= rom.relation(:users).as(:user_with_combined_tasks)
-    .combine(rom.relation(:tasks).for_users)
+                                 .combine(rom.relation(:tasks).for_users)
 end
 
 def hr

@@ -1,10 +1,12 @@
 shared_examples_for 'materializable relation' do
   describe '#each' do
     it 'yields objects' do
-      count = relation.to_a.count
+      count = relation.to_a.size
       result = []
 
-      relation.each { |object| result << object }
+      relation.each do |object|
+        result << object
+      end
 
       expect(result.count).to eql(count)
     end
