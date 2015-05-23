@@ -34,7 +34,7 @@ group :benchmarks do
 end
 
 group :tools do
-  gem 'rubocop'
+  gem 'rubocop', '~> 0.31'
 
   gem 'guard'
   gem 'guard-rspec'
@@ -43,7 +43,7 @@ group :tools do
   gem 'byebug'
 
   platform :mri do
-    gem 'mutant', '>= 0.7.7'
+    gem 'mutant', '>= 0.7.7', github: 'mbj/mutant'
     gem 'mutant-rspec'
   end
 end
