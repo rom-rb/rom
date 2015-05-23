@@ -1,3 +1,10 @@
+## Prepared for the next release
+
+### Fixed
+
+* `order` memory repository operation sorts tuples by multiple keys
+  when some keys contain empty values (nepalez)
+
 ## v0.7.1 2015-05-22
 
 ### Added
