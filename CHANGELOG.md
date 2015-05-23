@@ -1,9 +1,11 @@
-## Prepared for the next release
+## v0.7.2 to-be-released
 
 ### Fixed
 
 * `order` memory repository operation sorts tuples by multiple keys
   when some keys contain empty values (nepalez)
+
+[Compare v0.7.1...HEAD](https://github.com/rom-rb/rom/compare/v0.7.1...HEAD)
 
 ## v0.7.1 2015-05-22
 
