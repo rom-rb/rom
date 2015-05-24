@@ -109,6 +109,9 @@ describe 'Commands / Update' do
         define(:users) do
           model user_model
           register_as :entity
+
+          attribute :name
+          attribute :email
         end
       end
 

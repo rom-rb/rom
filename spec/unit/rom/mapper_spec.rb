@@ -29,8 +29,15 @@ describe ROM::Mapper do
 
   describe '.registry' do
     it 'builds mapper class registry for base and virtual relations' do
-      users = Class.new(ROM::Mapper) { relation(:users) }
-      entity = Class.new(ROM::Mapper) { relation(:users); register_as(:entity) }
+      users  = Class.new(ROM::Mapper) {
+        relation :users
+        reject_keys false
+      }
+      entity = Class.new(ROM::Mapper) {
+        relation :users
+        register_as :entity
+        reject_keys false
+      }
       active = Class.new(users) { relation(:active) }
       admins = Class.new(users) { relation(:admins) }
       custom = Class.new(users) { register_as(:custom) }
@@ -39,7 +46,7 @@ describe ROM::Mapper do
 
       expect(registry).to eql(
         users: {
-          users: users.build,
+          users:  users.build,
           entity: entity.build,
           active: active.build,
           admins: admins.build,

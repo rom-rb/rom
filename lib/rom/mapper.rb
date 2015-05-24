@@ -12,7 +12,7 @@ module ROM
       :prefix, :prefix_separator, :inherit_header, :reject_keys
 
     inherit_header true
-    reject_keys false
+    reject_keys true
     prefix_separator '_'.freeze
 
     # @return [Object] transformer object built by a processor
