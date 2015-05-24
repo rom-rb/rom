@@ -349,7 +349,7 @@ module ROM
       # @api private
       def new(options, &block)
         dsl = self.class.new([], @options.merge(options))
-        dsl.instance_exec(&block)
+        dsl.instance_exec(&block) unless block.nil?
         dsl
       end
     end

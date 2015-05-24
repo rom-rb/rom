@@ -416,6 +416,21 @@ describe ROM::Mapper do
 
       expect(header).to eql(expected_header)
     end
+
+    it 'works without a block' do
+      expected_header = ROM::Header.coerce(
+        [
+          [:title],
+          [:tasks, combine: true, type: :array, header: []]
+        ]
+      )
+
+      mapper.attribute :title
+
+      mapper.combine :tasks, on: { title: :title }
+
+      expect(header).to eql(expected_header)
+    end
   end
 
   describe '#method_missing' do
