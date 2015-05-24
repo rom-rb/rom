@@ -36,7 +36,7 @@ module ROM
     # @example
     #
     #   rom.command(:users).try { create(name: 'Jane') }
-    #   rom.command(:users).try { update(:by_id, 1).set(name: 'Jane Doe') }
+    #   rom.command(:users).try { update(:by_id, 1).call(name: 'Jane Doe') }
     #   rom.command(:users).try { delete(:by_id, 1) }
     #
     # @return [Commands::Result]
