@@ -76,9 +76,9 @@ module ROM
       # @api private
       def setup_gateway_instance
         if uri
-          ROM::Repository.setup(identifier, uri)
+          ROM::Gateway.setup(identifier, uri)
         else
-          ROM::Repository.setup(identifier)
+          ROM::Gateway.setup(identifier)
         end
       end
 
