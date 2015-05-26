@@ -52,6 +52,10 @@ Style/Lambda:
 Style/MultilineBlockChain:
   Enabled: false
 
+# Multiline operation chains are indented
+Style/MultilineOperationIndentation:
+  EnforcedStyle: indented
+
 # Result::Success and Result::Failure use > for callbacks
 Style/OpMethod:
   Exclude:
