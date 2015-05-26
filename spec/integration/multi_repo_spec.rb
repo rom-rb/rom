@@ -1,12 +1,12 @@
 require 'spec_helper'
 require 'rom/memory'
 
-describe 'Using in-memory repositories for cross-repo access' do
+describe 'Using in-memory gateways for cross-repo access' do
   let(:setup) do
     ROM.setup(left: :memory, right: :memory, main: :memory)
   end
 
-  let(:repositories) { rom.repositories }
+  let(:gateways) { rom.gateways }
   let(:rom) { setup.finalize }
 
   it 'works' do
@@ -30,10 +30,10 @@ describe 'Using in-memory repositories for cross-repo access' do
       end
     end
 
-    repositories[:left][:users] << { user_id: 1, name: 'Joe' }
-    repositories[:left][:users] << { user_id: 2, name: 'Jane' }
-    repositories[:right][:tasks] << { user_id: 1, title: 'Have fun' }
-    repositories[:right][:tasks] << { user_id: 2, title: 'Have fun' }
+    gateways[:left][:users] << { user_id: 1, name: 'Joe' }
+    gateways[:left][:users] << { user_id: 2, name: 'Jane' }
+    gateways[:right][:tasks] << { user_id: 1, title: 'Have fun' }
+    gateways[:right][:tasks] << { user_id: 2, title: 'Have fun' }
 
     user_and_tasks = rom.relation(:users_and_tasks)
                      .by_user('Jane')

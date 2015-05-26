@@ -91,13 +91,13 @@ module ROM
     # Build command registry hash for provided relations
     #
     # @param [RelationRegistry] relations registry
-    # @param [Hash] repositories
+    # @param [Hash] gateways
     # @param [Array] descendants a list of command subclasses
     #
     # @return [Hash]
     #
     # @api private
-    def self.registry(relations, repositories, descendants)
+    def self.registry(relations, gateways, descendants)
       descendants.each_with_object({}) do |klass, h|
         rel_name = klass.relation
 
@@ -106,8 +106,8 @@ module ROM
         relation = relations[rel_name]
         name = klass.register_as || klass.default_name
 
-        repository = repositories[relation.class.repository]
-        repository.extend_command_class(klass, relation.dataset)
+        gateway = gateways[relation.class.repository]
+        gateway.extend_command_class(klass, relation.dataset)
 
         (h[rel_name] ||= {})[name] = klass.build(relation)
       end

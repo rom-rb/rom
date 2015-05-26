@@ -14,7 +14,7 @@ module ROM
     # @api private
     attr_reader :gateways
 
-    # Deprecated accessor for repositories.
+    # Deprecated accessor for gateways.
     #
     # @see gateways
     deprecate :repositories, :gateways

@@ -16,7 +16,7 @@ module ROM
       super
 
       rom.instance_variable_set('@adapters', {})
-      rom.instance_variable_set('@repositories', {})
+      rom.instance_variable_set('@gateways', {})
       rom.instance_variable_set('@plugin_registry', PluginRegistry.new)
     end
 
@@ -27,12 +27,12 @@ module ROM
     # @api private
     attr_reader :adapters
 
-    # An internal repo => identifier map used by the setup
+    # An internal gateway => identifier map used by the setup
     #
     # @return [Hash]
     #
     # @api private
-    attr_reader :repositories
+    attr_reader :gateways
 
     # An internal identifier => plugin map used by the setup
     #
@@ -61,19 +61,19 @@ module ROM
     #
     # @overload setup(type, *args)
     #   Sets up a single-repository environment given a repository type provided
-    #   under the ROM umbrella. For custom repositories, create an instance and
+    #   under the ROM umbrella. For custom gateways, create an instance and
     #   pass it directly.
     #
     #   @param [Symbol] type
     #   @param [Array] *args
     #
-    # @overload setup(repository)
-    #   @param [Repository] repository
+    # @overload setup(gateway)
+    #   @param [Gateway] gateway
     #
-    # @overload setup(repositories)
-    #   Sets up multiple repositories.
+    # @overload setup(gateways)
+    #   Sets up multiple gateways.
     #
-    #   @param [Hash{Symbol=>Symbol,Array}] repositories
+    #   @param [Hash{Symbol=>Symbol,Array}] gateways
     #
     # @return [Setup] boot object
     #
@@ -114,7 +114,7 @@ module ROM
     # @api public
     def setup(*args, &block)
       config = setup_config(*args)
-      @boot = Setup.new(setup_repositories(config), adapters.keys.first)
+      @boot = Setup.new(setup_gateways(config), adapters.keys.first)
 
       if block
         @boot.instance_exec(&block)
@@ -245,16 +245,16 @@ module ROM
       args.first.is_a?(Hash) ? args.first : { default: args }
     end
 
-    # Build repositories using the setup interface
+    # Build gateways using the setup interface
     #
     # @api private
-    def setup_repositories(config)
+    def setup_gateways(config)
       config.each_with_object({}) do |(name, spec), hash|
         identifier, *args = Array(spec)
-        repository = Repository.setup(identifier, *(args.flatten))
-        hash[name] = repository
+        gateway = Gateway.setup(identifier, *(args.flatten))
+        hash[name] = gateway
 
-        repositories[repository] = identifier unless identifier.is_a?(Repository)
+        gateways[gateway] = identifier unless identifier.is_a?(Gateway)
       end
     end
   end

@@ -93,8 +93,8 @@ describe ROM::Setup do
       let(:setup) { ROM::Setup.new({}) }
       let(:env) { setup.finalize }
 
-      it 'builds empty repositories' do
-        expect(env.repositories).to eql({})
+      it 'builds empty gateways' do
+        expect(env.gateways).to eql({})
       end
 
       it 'builds empty relations' do

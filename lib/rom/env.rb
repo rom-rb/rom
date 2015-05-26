@@ -2,17 +2,19 @@ require 'rom/relation/loaded'
 require 'rom/support/deprecations'
 
 module ROM
-  # Exposes defined repositories, relations and mappers
+  # Exposes defined gateways, relations and mappers
   #
   # @api public
   class Env
     extend Deprecations
-    include Equalizer.new(:repositories, :relations, :mappers, :commands)
+    include Equalizer.new(:gateways, :relations, :mappers, :commands)
 
-    # @return [Hash] configured repositories
+    # @return [Hash] configured gateways
     #
     # @api public
-    attr_reader :repositories
+    attr_reader :gateways
+
+    deprecate :repositories, :gateways
 
     # @return [RelationRegistry] relation registry
     #
@@ -30,8 +32,8 @@ module ROM
     attr_reader :mappers
 
     # @api private
-    def initialize(repositories, relations, mappers, commands)
-      @repositories = repositories
+    def initialize(gateways, relations, mappers, commands)
+      @gateways = gateways
       @relations = relations
       @mappers = mappers
       @commands = commands

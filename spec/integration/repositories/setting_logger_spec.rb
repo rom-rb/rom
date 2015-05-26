@@ -29,7 +29,7 @@ describe 'Repositories / Setting logger' do
 
     rom = setup.finalize
 
-    rom.repositories[:default].logger.info("test")
+    rom.gateways[:default].logger.info("test")
 
     expect(logger.messages).to eql(["test"])
   end
