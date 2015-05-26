@@ -1,4 +1,4 @@
-require 'rom/lint/repository'
+require 'rom/lint/gateway'
 require 'rom/lint/enumerable_dataset'
 
 module ROM
