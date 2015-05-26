@@ -1,16 +1,23 @@
 require 'rom/setup/finalize'
+require 'rom/support/deprecations'
 
 module ROM
   # Exposes DSL for defining relations, mappers and commands
   #
   # @api public
   class Setup
+    extend Deprecations
     include Equalizer.new(:gateways, :env)
 
     # @return [Hash] configured gateways
     #
     # @api private
     attr_reader :gateways
+
+    # Deprecated accessor for repositories.
+    #
+    # @see gateways
+    deprecate :repositories, :gateways
 
     # @return [Symbol] default (first) adapter
     #
