@@ -125,7 +125,7 @@ module ROM
           schema.each do |name|
             next if relation_classes.any? { |klass| klass.dataset == name }
             klass = Relation.build_class(name, adapter: adapter_for(gateway))
-            klass.repository(gateway)
+            klass.gateway(gateway)
             klass.dataset(name)
           end
         end

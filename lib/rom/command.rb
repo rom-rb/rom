@@ -106,7 +106,7 @@ module ROM
         relation = relations[rel_name]
         name = klass.register_as || klass.default_name
 
-        gateway = gateways[relation.class.repository]
+        gateway = gateways[relation.class.gateway]
         gateway.extend_command_class(klass, relation.dataset)
 
         (h[rel_name] ||= {})[name] = klass.build(relation)

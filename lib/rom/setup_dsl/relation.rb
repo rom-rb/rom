@@ -13,7 +13,18 @@ module ROM
       adapter = options.fetch(:adapter)
 
       ClassBuilder.new(name: class_name, parent: self[adapter]).call do |klass|
-        klass.repository(options.fetch(:repository) { :default })
+        klass.gateway(options.fetch(:gateway) {
+          if options.key?(:repository)
+          warn <<-MSG.gsub(/^\s+/, '')
+            The repository key is deprecated and will be removed in 1.0.0.
+            Please use `gateway: :#{options.fetch(:repository)}` instead.
+            #{caller.detect { |l| !l.include?('lib/rom')}}
+          MSG
+            options.fetch(:repository)
+          else
+            :default
+          end
+        })
         klass.dataset(name)
       end
     end

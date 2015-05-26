@@ -10,15 +10,15 @@ describe 'Using in-memory gateways for cross-repo access' do
   let(:rom) { setup.finalize }
 
   it 'works' do
-    setup.relation(:users, repository: :left) do
+    setup.relation(:users, gateway: :left) do
       def by_name(name)
         restrict(name: name)
       end
     end
 
-    setup.relation(:tasks, repository: :right)
+    setup.relation(:tasks, gateway: :right)
 
-    setup.relation(:users_and_tasks, repository: :main) do
+    setup.relation(:users_and_tasks, gateway: :main) do
       def by_user(name)
         join(users.by_name(name), tasks)
       end

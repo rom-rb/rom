@@ -13,6 +13,7 @@ module ROM
         super
 
         klass.extend ClassMacros
+        klass.extend Deprecations
         klass.defines :adapter
 
         return if klass.superclass == ROM::Relation
@@ -20,9 +21,12 @@ module ROM
         klass.class_eval do
           use :registry_reader
 
-          defines :repository, :dataset, :register_as, :exposed_relations
+          defines :gateway, :dataset, :register_as, :exposed_relations
 
-          repository :default
+          deprecate_class_method :repository, :gateway
+          deprecate :repository, :gateway
+
+          gateway :default
 
           dataset(default_name)
           exposed_relations Set.new
@@ -76,13 +80,13 @@ module ROM
             super
           end
 
-          # Return name of the source repository of this relation
+          # Return name of the source gateway of this relation
           #
           # @return [Symbol]
           #
           # @api private
-          def repository
-            self.class.repository
+          def gateway
+            self.class.gateway
           end
         end
 
@@ -146,20 +150,20 @@ module ROM
       #
       # This is used by the setup
       #
-      # @param [Hash] repositories
+      # @param [Hash] gateways
       # @param [Array] descendants a list of relation descendants
       #
       # @return [Hash]
       #
       # @api private
-      def registry(repositories, descendants)
+      def registry(gateways, descendants)
         registry = {}
 
         descendants.each do |klass|
           # TODO: raise a meaningful error here and add spec covering the case
-          #       where klass' repository points to non-existant repo
-          repository = repositories.fetch(klass.repository)
-          dataset = repository.dataset(klass.dataset)
+          #       where klass' gateway points to non-existant repo
+          gateway = gateways.fetch(klass.gateway)
+          dataset = gateway.dataset(klass.dataset)
 
           relation = klass.new(dataset, __registry__: registry)
 

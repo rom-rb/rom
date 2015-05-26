@@ -12,7 +12,7 @@ class MemoryRepositoryLintTest < Minitest::Test
     @identifier = :memory
   end
 
-  def repository_instance
+  def gateway_instance
     ROM::Memory::Gateway.new
   end
 end

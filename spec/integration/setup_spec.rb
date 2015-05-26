@@ -48,6 +48,16 @@ describe 'Setting up ROM' do
     end
   end
 
+  context 'with old syntax' do
+    it 'warns when old repository key is used' do
+      setup = ROM.setup(data: :memory)
+
+      expect {
+        setup.relation(:users, repository: :data)
+      }.to output(/use `gateway: :data`/).to_stderr
+    end
+  end
+
   describe 'defining classes' do
     it 'sets up registries based on class definitions' do
       ROM.setup(:memory)
