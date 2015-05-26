@@ -21,12 +21,50 @@ module ROM
       end
     end
 
-    # This is a simple lint-test for repository class to ensure the
+    # This is a simple lint-test for gateway class to ensure the
     # basic interfaces are in place
     #
     # @example
     #
-    #   class MyRepoTest < Minitest::Test
+    #   class MyGatewayTest < Minitest::Test
+    #     include ROM::Lint::TestGateway
+    #
+    #     def setup
+    #       @gateway = MyGateway
+    #       @uri = "super_db://something"
+    #     end
+    #   end
+    #
+    # @api public
+    module TestGateway
+      extend ROM::Lint::Test
+
+      # Returns the gateway identifier e.g. +:memory+
+      #
+      # @api public
+      attr_reader :identifier
+
+      # Returns the gateway class
+      #
+      # @api public
+      attr_reader :gateway
+
+      # Returns gateway's URI e.g. "super_db://something"
+      #
+      # @api public
+      attr_reader :uri
+
+      ROM::Lint::Gateway.each_lint do |name, linter|
+        define_test_method name do
+          assert linter.new(identifier, gateway, uri).lint(name)
+        end
+      end
+    end
+
+    # This is a transitional lint-test loader for repository class
+    # to ensure that the basic interfaces are in place
+    #
+    #   class MyRepositoryTest < Minitest::Test
     #     include ROM::Lint::TestRepository
     #
     #     def setup
@@ -35,39 +73,33 @@ module ROM
     #     end
     #   end
     #
+    # @see [ROM::Lint::TestGateway]
+    #
     # @api public
     module TestRepository
-      extend ROM::Lint::Test
+      extend TestGateway
 
-      # Returns the repository identifier e.g. +:memory+
-      #
-      # @api public
-      attr_reader :identifier
-
-      # Returns the repository class
+      # Returns the reposiotry class
       #
       # @api public
       attr_reader :repository
 
-      # Returns repostory's URI e.g. "super_db://something"
-      #
-      # @api public
-      attr_reader :uri
-
-      ROM::Lint::Repository.each_lint do |name, linter|
-        define_test_method name do
-          assert linter.new(identifier, repository, uri).lint(name)
-        end
+      def setup
+        warn <<-MSG.gsub(/^\s+/, '')
+[Adapter]::Repository is deprecated and will be removed in 1.0.0.
+Please use [Adapter]::Gateway instead.
+        MSG
+        @gateway = repository
       end
     end
 
-    # This is a simple lint-test for an repository dataset class to ensure the
+    # This is a simple lint-test for a gateway dataset class to ensure the
     # basic behavior is correct
     #
     # @example
     #
     #  class MyDatasetLintTest < Minitest::Test
-    #    include ROM::Repository::Lint::TestEnumerableDataset
+    #    include ROM::Lint::TestEnumerableDataset
     #
     #     def setup
     #       @data  = [{ name: 'Jane', age: 24 }, { name: 'Joe', age: 25 }]
