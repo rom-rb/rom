@@ -36,8 +36,8 @@ describe 'Using in-memory repositories for cross-repo access' do
     repositories[:right][:tasks] << { user_id: 2, title: 'Have fun' }
 
     user_and_tasks = rom.relation(:users_and_tasks)
-                     .by_user('Jane')
-                     .as(:users_and_tasks)
+      .by_user('Jane')
+      .as(:users_and_tasks)
 
     expect(user_and_tasks).to match_array([
       { user_id: 2, name: 'Jane', tasks: [{ title: 'Have fun' }] }
