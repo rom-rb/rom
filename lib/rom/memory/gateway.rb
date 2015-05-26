@@ -7,12 +7,12 @@ module ROM
     # In-memory repository interface
     #
     # @example
-    #   repository = ROM::Memory::Repository.new
+    #   repository = ROM::Memory::Gateway.new
     #   repository.dataset(:users)
     #   repository[:users].insert(name: 'Jane')
     #
     # @api public
-    class Repository < ROM::Repository
+    class Gateway < ROM::Gateway
       # @return [Object] default logger
       #
       # @api public
@@ -43,14 +43,14 @@ module ROM
         self[name] || connection.create_dataset(name)
       end
 
-      # @see ROM::Repository#dataset?
+      # @see ROM::Gateway#dataset?
       def dataset?(name)
         connection.key?(name)
       end
 
       # Return dataset with the given name
       #
-      # @param (see ROM::Repository#[])
+      # @param (see ROM::Gateway#[])
       # @return [Memory::Dataset]
       #
       # @api public
