@@ -22,7 +22,7 @@ describe 'Repositories / Setting logger' do
     logger_class.new
   end
 
-  it 'sets up a logger for a given repository' do
+  it 'sets up a logger for a given gateway' do
     setup = ROM.setup(:memory)
 
     setup.default.use_logger(logger)

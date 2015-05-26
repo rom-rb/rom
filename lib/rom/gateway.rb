@@ -60,7 +60,7 @@ module ROM
       end
     end
 
-    # Get repository subclass for a specific adapter
+    # Get gateway subclass for a specific adapter
     #
     # @param [Symbol] type adapter identifier
     #

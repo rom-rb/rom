@@ -60,7 +60,7 @@ module ROM
     # Starts the setup process for relations, mappers and commands.
     #
     # @overload setup(type, *args)
-    #   Sets up a single-repository environment given a repository type provided
+    #   Sets up a single-gateway environment given a gateway type provided
     #   under the ROM umbrella. For custom gateways, create an instance and
     #   pass it directly.
     #
@@ -78,11 +78,11 @@ module ROM
     # @return [Setup] boot object
     #
     # @example
-    #   # Use the in-memory adapter shipped with ROM as the default repository.
+    #   # Use the in-memory adapter shipped with ROM as the default gateway.
     #   env = ROM.setup(:memory, 'memory://test')
-    #   # Use `rom-sql` with an in-memory sqlite database as default repository.
+    #   # Use `rom-sql` with an in-memory sqlite database as default gateway.
     #   ROM.setup(:sql, 'sqlite::memory')
-    #   # Registers a `default` and a `warehouse` repository.
+    #   # Registers a `default` and a `warehouse` gateway.
     #   env = ROM.setup(
     #     default: [:sql, 'sqlite::memory'],
     #     warehouse: [:sql, 'postgres://localhost/warehouse']

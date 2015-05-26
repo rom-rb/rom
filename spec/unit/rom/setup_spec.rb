@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe ROM::Setup do
   describe '#finalize' do
-    context 'with repository that supports schema inferring' do
+    context 'with gateway that supports schema inferring' do
       it 'builds relation from inferred schema' do
         setup = ROM.setup(:memory)
         repo = setup.default
@@ -112,7 +112,7 @@ describe ROM::Setup do
   end
 
   describe '#method_missing' do
-    it 'returns a repository if it is defined' do
+    it 'returns a gateway if it is defined' do
       repo = double('repo')
       setup = ROM::Setup.new(repo: repo)
 
@@ -127,7 +127,7 @@ describe ROM::Setup do
   end
 
   describe '#[]' do
-    it 'returns a repository if it is defined' do
+    it 'returns a gateway if it is defined' do
       repo = double('repo')
       setup = ROM::Setup.new(repo: repo)
 

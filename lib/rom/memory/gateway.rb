@@ -1,15 +1,15 @@
-require 'rom/repository'
+require 'rom/gateway'
 require 'rom/memory/storage'
 require 'rom/memory/commands'
 
 module ROM
   module Memory
-    # In-memory repository interface
+    # In-memory gateway interface
     #
     # @example
-    #   repository = ROM::Memory::Gateway.new
-    #   repository.dataset(:users)
-    #   repository[:users].insert(name: 'Jane')
+    #   gateway = ROM::Memory::Gateway.new
+    #   gateway.dataset(:users)
+    #   gateway[:users].insert(name: 'Jane')
     #
     # @api public
     class Gateway < ROM::Gateway
@@ -23,7 +23,7 @@ module ROM
         @connection = Storage.new
       end
 
-      # Set default logger for the repository
+      # Set default logger for the gateway
       #
       # @param [Object] logger object
       #
@@ -32,7 +32,7 @@ module ROM
         @logger = logger
       end
 
-      # Register a dataset in the repository
+      # Register a dataset in the gateway
       #
       # If dataset already exists it will be returned
       #

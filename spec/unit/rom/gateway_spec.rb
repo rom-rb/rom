@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe ROM::Gateway do
   describe '.setup' do
-    it 'sets up a repository based on a type' do
-      repository_class = Class.new(ROM::Gateway) do
+    it 'sets up a gateway based on a type' do
+      gateway_class = Class.new(ROM::Gateway) do
         attr_reader :args
 
         def initialize(*args)
@@ -12,13 +12,13 @@ describe ROM::Gateway do
       end
 
       allow(ROM::Gateway).to receive(:class_from_symbol)
-        .with(:wormhole).and_return(repository_class)
+        .with(:wormhole).and_return(gateway_class)
 
       args = %w(hello world)
-      repository = ROM::Gateway.setup(:wormhole, *args)
+      gateway = ROM::Gateway.setup(:wormhole, *args)
 
-      expect(repository).to be_instance_of(repository_class)
-      expect(repository.args).to eq(args)
+      expect(gateway).to be_instance_of(gateway_class)
+      expect(gateway.args).to eq(args)
     end
 
     it 'raises an exception if the type is not supported' do
@@ -27,15 +27,15 @@ describe ROM::Gateway do
       }.to raise_error(ROM::AdapterLoadError, /bogus/)
     end
 
-    it 'accepts a repository instance' do
-      repository = ROM::Gateway.new
-      expect(ROM::Gateway.setup(repository)).to be(repository)
+    it 'accepts a gateway instance' do
+      gateway = ROM::Gateway.new
+      expect(ROM::Gateway.setup(gateway)).to be(gateway)
     end
 
     it 'raises an exception if instance and arguments are passed' do
-      repository = ROM::Gateway.new
+      gateway = ROM::Gateway.new
 
-      expect { ROM::Gateway.setup(repository, 'foo://bar') }.to raise_error(
+      expect { ROM::Gateway.setup(gateway, 'foo://bar') }.to raise_error(
         ArgumentError,
         "Can't accept arguments when passing an instance"
       )
@@ -50,7 +50,7 @@ describe ROM::Gateway do
   end
 
   describe '.class_from_symbol' do
-    it 'instantiates a repository based on type' do
+    it 'instantiates a gateway based on type' do
       klass = ROM::Gateway.class_from_symbol(:memory)
       expect(klass).to be(ROM::Memory::Gateway)
     end
@@ -63,9 +63,9 @@ describe ROM::Gateway do
 
   describe '#disconnect' do
     it 'does nothing' do
-      repository_class = Class.new(ROM::Gateway)
-      repository = repository_class.new
-      expect(repository.disconnect).to be(nil)
+      gateway_class = Class.new(ROM::Gateway)
+      gateway = gateway_class.new
+      expect(gateway.disconnect).to be(nil)
     end
   end
 end

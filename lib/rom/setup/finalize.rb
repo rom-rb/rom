@@ -30,13 +30,13 @@ module ROM
         initialize_datasets
       end
 
-      # Return adapter identifier for a given repository object
+      # Return adapter identifier for a given gateway object
       #
       # @return [Symbol]
       #
       # @api private
-      def adapter_for(repository)
-        @repo_adapter_map.fetch(gateways[repository])
+      def adapter_for(gateway)
+        @repo_adapter_map.fetch(gateways[gateway])
       end
 
       # Run the finalization process
@@ -62,12 +62,12 @@ module ROM
       #
       # Not all gateways can do that, by default an empty array is returned
       #
-      # @return [Hash] repository name => array with datasets map
+      # @return [Hash] gateway name => array with datasets map
       #
       # @api private
       def initialize_datasets
-        @datasets = gateways.each_with_object({}) do |(key, repository), h|
-          h[key] = repository.schema
+        @datasets = gateways.each_with_object({}) do |(key, gateway), h|
+          h[key] = gateway.schema
         end
       end
 
@@ -121,11 +121,11 @@ module ROM
       #
       # @api private
       def infer_schema_relations
-        datasets.each do |repository, schema|
+        datasets.each do |gateway, schema|
           schema.each do |name|
             next if relation_classes.any? { |klass| klass.dataset == name }
-            klass = Relation.build_class(name, adapter: adapter_for(repository))
-            klass.repository(repository)
+            klass = Relation.build_class(name, adapter: adapter_for(gateway))
+            klass.repository(gateway)
             klass.dataset(name)
           end
         end
