@@ -78,6 +78,10 @@ module ROM
       if adapter.const_defined?(:Gateway)
         adapter.const_get(:Gateway)
       else
+        warn <<-MSG.gsub(/^\s+/, '')
+          Repository is deprecated and will be remove in 1.0.0.
+          Please rename #{adapter}::Repository to #{adapter}::Gateway
+        MSG
         adapter.const_get(:Repository)
       end
     end
