@@ -75,7 +75,11 @@ module ROM
       end
 
       adapter = ROM.adapters.fetch(type)
-      adapter.const_get(:Repository)
+      if adapter.const_defined?(:Gateway)
+        adapter.const_get(:Gateway)
+      else
+        adapter.const_get(:Repository)
+      end
     end
 
     # A generic interface for setting up a logger

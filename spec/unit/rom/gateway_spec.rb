@@ -55,6 +55,21 @@ describe ROM::Gateway do
       expect(klass).to be(ROM::Memory::Repository)
     end
 
+    it 'prefers to instantiate a gateway based on type' do
+      pending  "Fails on assumed load"
+      module TestAdapter
+        class Repository < ROM::Repository
+        end
+        class Gateway < ROM::Gateway
+        end
+      end
+
+      ROM.register_adapter(:test, TestAdapter)
+
+      klass = ROM::Gateway.class_from_symbol(:test)
+      expect(klass).to be(TestAdapater::Gateway)
+    end
+
     it 'raises an exception if the type is not supported' do
       expect { ROM::Gateway.class_from_symbol(:bogus) }
         .to raise_error(ROM::AdapterLoadError, /bogus/)
