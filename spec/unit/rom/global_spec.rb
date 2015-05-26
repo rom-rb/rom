@@ -8,7 +8,7 @@ describe ROM do
 
       setup = ROM.setup(test: repo)
 
-      expect(setup.repositories[:test]).to be(repo)
+      expect(setup.gateways[:test]).to be(repo)
     end
   end
 

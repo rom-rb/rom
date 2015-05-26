@@ -5,12 +5,12 @@ module ROM
   #
   # @api public
   class Setup
-    include Equalizer.new(:repositories, :env)
+    include Equalizer.new(:gateways, :env)
 
-    # @return [Hash] configured repositories
+    # @return [Hash] configured gateways
     #
     # @api private
-    attr_reader :repositories
+    attr_reader :gateways
 
     # @return [Symbol] default (first) adapter
     #
@@ -38,8 +38,8 @@ module ROM
     attr_reader :env
 
     # @api private
-    def initialize(repositories, default_adapter = nil)
-      @repositories = repositories
+    def initialize(gateways, default_adapter = nil)
+      @gateways = gateways
       @default_adapter = default_adapter
       @relation_classes = []
       @mapper_classes = []
@@ -49,25 +49,25 @@ module ROM
 
     # Finalize the setup
     #
-    # @return [Env] frozen env with access to repositories, relations,
+    # @return [Env] frozen env with access to gateways, relations,
     #                mappers and commands
     #
     # @api public
     def finalize
       raise EnvAlreadyFinalizedError if env
       finalize = Finalize.new(
-        repositories, relation_classes, mapper_classes, command_classes
+        gateways, relation_classes, mapper_classes, command_classes
       )
       @env = finalize.run!
     end
 
-    # Return repository identified by name
+    # Return gateway identified by name
     #
-    # @return [Repository]
+    # @return [Gateway]
     #
     # @api private
     def [](name)
-      repositories.fetch(name)
+      gateways.fetch(name)
     end
 
     # Relation sub-classes are being registered with this method during setup
@@ -95,18 +95,18 @@ module ROM
     #
     # @api private
     def respond_to_missing?(name, _include_context = false)
-      repositories.key?(name)
+      gateways.key?(name)
     end
 
     private
 
-    # Returns repository if method is a name of a registered repository
+    # Returns gateway if method is a name of a registered gateway
     #
-    # @return [Repository]
+    # @return [Gateway]
     #
     # @api private
     def method_missing(name, *)
-      repositories.fetch(name) { super }
+      gateways.fetch(name) { super }
     end
   end
 end
