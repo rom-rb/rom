@@ -20,3 +20,4 @@ vendor/
 .yardoc
 _yardoc
 doc/
+.ruby-version
