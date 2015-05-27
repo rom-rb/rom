@@ -1,18 +1,18 @@
-require 'rom/repository'
+require 'rom/gateway'
 require 'rom/memory/storage'
 require 'rom/memory/commands'
 
 module ROM
   module Memory
-    # In-memory repository interface
+    # In-memory gateway interface
     #
     # @example
-    #   repository = ROM::Memory::Repository.new
-    #   repository.dataset(:users)
-    #   repository[:users].insert(name: 'Jane')
+    #   gateway = ROM::Memory::Gateway.new
+    #   gateway.dataset(:users)
+    #   gateway[:users].insert(name: 'Jane')
     #
     # @api public
-    class Repository < ROM::Repository
+    class Gateway < ROM::Gateway
       # @return [Object] default logger
       #
       # @api public
@@ -23,7 +23,7 @@ module ROM
         @connection = Storage.new
       end
 
-      # Set default logger for the repository
+      # Set default logger for the gateway
       #
       # @param [Object] logger object
       #
@@ -32,7 +32,7 @@ module ROM
         @logger = logger
       end
 
-      # Register a dataset in the repository
+      # Register a dataset in the gateway
       #
       # If dataset already exists it will be returned
       #
@@ -43,14 +43,14 @@ module ROM
         self[name] || connection.create_dataset(name)
       end
 
-      # @see ROM::Repository#dataset?
+      # @see ROM::Gateway#dataset?
       def dataset?(name)
         connection.key?(name)
       end
 
       # Return dataset with the given name
       #
-      # @param (see ROM::Repository#[])
+      # @param (see ROM::Gateway#[])
       # @return [Memory::Dataset]
       #
       # @api public

@@ -139,7 +139,7 @@ module ROM
       # Define an embedded hash attribute that requires "unwrapping" transformation
       #
       # Typically this is used in no-sql context to normalize data before
-      # inserting to sql repository.
+      # inserting to sql gateway.
       #
       # @example
       #   dsl = AttributeDSL.new([])

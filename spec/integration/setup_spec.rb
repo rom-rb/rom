@@ -14,7 +14,7 @@ describe 'Setting up ROM' do
     end
 
     it 'configures schema relations' do
-      expect(rom.repositories[:default][:users]).to match_array([joe, jane])
+      expect(rom.gateways[:default][:users]).to match_array([joe, jane])
     end
 
     it 'configures rom relations' do
@@ -45,6 +45,16 @@ describe 'Setting up ROM' do
 
       expect(rom.relations).to eql(ROM::RelationRegistry.new)
       expect(rom.mappers).to eql(ROM::Registry.new)
+    end
+  end
+
+  context 'with old syntax' do
+    it 'warns when old repository key is used' do
+      setup = ROM.setup(data: :memory)
+
+      expect {
+        setup.relation(:users, repository: :data)
+      }.to output(/use `gateway: :data`/).to_stderr
     end
   end
 

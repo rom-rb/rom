@@ -6,14 +6,14 @@ require 'rom/relation/curried'
 module ROM
   # Base relation class
   #
-  # Relation is a proxy for the dataset object provided by the repository. It
+  # Relation is a proxy for the dataset object provided by the gateway. It
   # forwards every method to the dataset, which is why the "native" interface of
-  # the underlying repository is available in the relation. This interface,
+  # the underlying gateway is available in the relation. This interface,
   # however, is considered private and should not be used outside of the
   # relation instance.
   #
   # ROM builds sub-classes of this class for every relation defined in the env
-  # for easy inspection and extensibility - every repository can provide extensions
+  # for easy inspection and extensibility - every gateway can provide extensions
   # for those sub-classes but there is always a vanilla relation instance stored
   # in the schema registry.
   #
@@ -26,7 +26,7 @@ module ROM
 
     # Dataset used by the relation
     #
-    # This object is provided by the repository during the setup
+    # This object is provided by the gateway during the setup
     #
     # @return [Object]
     #

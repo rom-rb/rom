@@ -36,8 +36,8 @@ describe ROM::Relation::Lazy, '#combine' do
       end
     end
 
-    setup.repositories[:default].dataset(:tags).insert(task: 'be cool', name: 'red')
-    setup.repositories[:default].dataset(:tags).insert(task: 'be cool', name: 'green')
+    setup.gateways[:default].dataset(:tags).insert(task: 'be cool', name: 'red')
+    setup.gateways[:default].dataset(:tags).insert(task: 'be cool', name: 'green')
   end
 
   let(:users) { rom.relation(:users) }

@@ -5,15 +5,15 @@ require 'rom/lint/test'
 require 'minitest/autorun'
 
 class MemoryRepositoryLintTest < Minitest::Test
-  include ROM::Lint::TestRepository
+  include ROM::Lint::TestGateway
 
   def setup
-    @repository = ROM::Memory::Repository
+    @gateway = ROM::Memory::Gateway
     @identifier = :memory
   end
 
-  def repository_instance
-    ROM::Memory::Repository.new
+  def gateway_instance
+    ROM::Memory::Gateway.new
   end
 end
 

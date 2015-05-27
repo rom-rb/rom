@@ -64,7 +64,7 @@ describe 'Commands' do
 
     describe 'extending command with a db-specific behavior' do
       before do
-        setup.repositories[:default].instance_exec do
+        setup.gateways[:default].instance_exec do
           def extend_command_class(klass, _)
             klass.class_eval do
               def super_command?
@@ -103,7 +103,7 @@ describe 'Commands' do
       end
 
       registry = ROM::Command.registry(
-        rom.relations, setup.repositories, commands.values
+        rom.relations, setup.gateways, commands.values
       )
 
       expect(registry).to eql(

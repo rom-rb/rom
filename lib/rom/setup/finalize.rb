@@ -16,13 +16,13 @@ module ROM
     #
     # @private
     class Finalize
-      attr_reader :repositories, :repo_adapter, :datasets,
+      attr_reader :gateways, :repo_adapter, :datasets,
         :relation_classes, :mapper_classes, :mappers, :command_classes
 
       # @api private
-      def initialize(repositories, relation_classes, mappers, command_classes)
-        @repositories = repositories
-        @repo_adapter_map = ROM.repositories
+      def initialize(gateways, relation_classes, mappers, command_classes)
+        @gateways = gateways
+        @repo_adapter_map = ROM.gateways
         @relation_classes = relation_classes
         @mapper_classes = mappers.select { |mapper| mapper.is_a?(Class) }
         @mappers = (mappers - @mapper_classes).reduce(:merge) || {}
@@ -30,13 +30,13 @@ module ROM
         initialize_datasets
       end
 
-      # Return adapter identifier for a given repository object
+      # Return adapter identifier for a given gateway object
       #
       # @return [Symbol]
       #
       # @api private
-      def adapter_for(repository)
-        @repo_adapter_map.fetch(repositories[repository])
+      def adapter_for(gateway)
+        @repo_adapter_map.fetch(gateways[gateway])
       end
 
       # Run the finalization process
@@ -53,21 +53,21 @@ module ROM
         mappers = load_mappers
         commands = load_commands(relations)
 
-        Env.new(repositories, relations, mappers, commands)
+        Env.new(gateways, relations, mappers, commands)
       end
 
       private
 
-      # Infer all datasets using configured repositories
+      # Infer all datasets using configured gateways
       #
-      # Not all repositories can do that, by default an empty array is returned
+      # Not all gateways can do that, by default an empty array is returned
       #
-      # @return [Hash] repository name => array with datasets map
+      # @return [Hash] gateway name => array with datasets map
       #
       # @api private
       def initialize_datasets
-        @datasets = repositories.each_with_object({}) do |(key, repository), h|
-          h[key] = repository.schema
+        @datasets = gateways.each_with_object({}) do |(key, gateway), h|
+          h[key] = gateway.schema
         end
       end
 
@@ -77,7 +77,7 @@ module ROM
       #
       # @api private
       def load_relations
-        relations = Relation.registry(repositories, relation_classes)
+        relations = Relation.registry(gateways, relation_classes)
         RelationRegistry.new(relations)
       end
 
@@ -106,7 +106,7 @@ module ROM
       #
       # @api private
       def load_commands(relations)
-        registry = Command.registry(relations, repositories, command_classes)
+        registry = Command.registry(relations, gateways, command_classes)
 
         commands = registry.each_with_object({}) do |(name, rel_commands), h|
           h[name] = CommandRegistry.new(rel_commands)
@@ -115,17 +115,17 @@ module ROM
         Registry.new(commands)
       end
 
-      # For every dataset infered from repositories we infer a relation
+      # For every dataset infered from gateways we infer a relation
       #
       # Relations explicitly defined are being skipped
       #
       # @api private
       def infer_schema_relations
-        datasets.each do |repository, schema|
+        datasets.each do |gateway, schema|
           schema.each do |name|
             next if relation_classes.any? { |klass| klass.dataset == name }
-            klass = Relation.build_class(name, adapter: adapter_for(repository))
-            klass.repository(repository)
+            klass = Relation.build_class(name, adapter: adapter_for(gateway))
+            klass.gateway(gateway)
             klass.dataset(name)
           end
         end

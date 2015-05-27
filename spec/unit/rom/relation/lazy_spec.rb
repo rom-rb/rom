@@ -80,7 +80,7 @@ describe ROM::Relation::Lazy do
     end
 
     it 'returns original response if it is not a relation' do
-      expect(users.repository).to be(:default)
+      expect(users.gateway).to be(:default)
     end
 
     it 'raises NoMethodError when relation does not respond to a method' do
