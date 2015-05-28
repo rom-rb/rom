@@ -1,10 +1,18 @@
+require 'rom/pipeline'
+
 module ROM
   module Commands
     # Command graph
     #
     # @api private
     class Graph
+      include Pipeline
+      include Pipeline::Proxy
+
       attr_reader :root, :nodes
+
+      alias_method :left, :root
+      alias_method :right, :nodes
 
       # @api private
       def initialize(root, nodes)
@@ -15,10 +23,13 @@ module ROM
       # @api public
       def call(*args)
         left = root.call(*args)
-        right = nodes.map do |node|
-          node.call(left)
+        right = nodes.map { |node| node.call(left) }
+
+        if result == :one
+          [[left], right]
+        else
+          [left, right]
         end
-        [left, *right]
       end
     end
   end

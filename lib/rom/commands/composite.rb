@@ -14,12 +14,14 @@ module ROM
       def call(*args)
         response = left.call(*args)
 
-        if result == :one
+        if result == :one && !graph?
           if right.is_a?(Command) || right.is_a?(Commands::Composite)
             right.call([response].first)
           else
             right.call([response]).first
           end
+        elsif result == :one && graph?
+          right.call(response).first
         else
           right.call(response)
         end
@@ -27,8 +29,18 @@ module ROM
       alias_method :[], :call
 
       # @api private
+      def graph?
+        left.is_a?(Graph)
+      end
+
+      # @api private
       def result
         left.result
+      end
+
+      # @api private
+      def decorate?(response)
+        super || response.is_a?(Graph)
       end
     end
   end
