@@ -1,4 +1,5 @@
 require 'rom/commands/composite'
+require 'rom/commands/graph'
 
 module ROM
   module Commands
@@ -87,6 +88,11 @@ module ROM
       # @api public
       def >>(other)
         Composite.new(self, other)
+      end
+
+      # @api public
+      def combine(*others)
+        Graph.new(self, others)
       end
 
       # Return new update command with new relation
