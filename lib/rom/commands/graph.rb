@@ -25,7 +25,7 @@ module ROM
         left = root.call(*args)
         right = nodes.map { |node| node.call(left) }
 
-        if result == :one
+        if result.equal?(:one)
           [[left], right]
         else
           [left, right]

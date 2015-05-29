@@ -53,11 +53,9 @@ describe ROM::Commands::Graph do
 
   let(:create_user) { rom.command(:users).create }
   let(:create_task) { rom.command(:tasks).create }
-  let(:create_tags) { rom.command(:tags).create }
 
-  let(:create_many_users) { rom.command(:users).create_many }
   let(:create_many_tasks) { rom.command(:tasks).create_many }
-  let(:create_tags) { rom.command(:tags).create }
+  let(:create_many_tags) { rom.command(:tags).create_many }
 
   let(:user) { { name: 'Jane' } }
   let(:task) { { title: 'One' } }
@@ -71,10 +69,6 @@ describe ROM::Commands::Graph do
     setup.commands(:users) do
       define(:create) do
         result :one
-      end
-
-      define(:create) do
-        register_as :create_many
       end
     end
 
@@ -98,8 +92,14 @@ describe ROM::Commands::Graph do
 
     setup.commands(:tags) do
       define(:create) do
-        def execute(tags, task)
-          super(tags.map { |t| t.merge(task: task[:title]) })
+        register_as :create_many
+
+        def execute(tags, tasks)
+          super(
+            Array([tasks]).flatten.map { |task|
+              tags.map { |tag| tag.merge(task: task[:title]) }
+            }.flatten
+          )
         end
       end
     end
@@ -111,17 +111,17 @@ describe ROM::Commands::Graph do
         subject(:command) do
           create_user.with(user)
             .combine(create_task.with(task)
-            .combine(create_tags.with(tags)))
+            .combine(create_many_tags.with(tags)))
         end
       end
     end
 
-    context 'when result is :many in root and its direct children' do
+    context 'when result is :many for root direct children' do
       it_behaves_like 'a persisted graph' do
         subject(:command) do
-          create_many_users.with([user])
+          create_user.with(user)
             .combine(create_many_tasks.with([task])
-            .combine(create_tags.with(tags)))
+            .combine(create_many_tags.with(tags)))
         end
       end
     end
@@ -131,7 +131,7 @@ describe ROM::Commands::Graph do
     subject(:command) do
       rom.command(:users).as(:entity).create.with(user)
         .combine(create_task.with(task)
-        .combine(create_tags.with(tags)))
+        .combine(create_many_tags.with(tags)))
     end
 
     before do
