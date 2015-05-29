@@ -92,8 +92,9 @@ module ROM
           mapper = options[:mapper]
 
           if mapper
+            embedded_options = { type: :array }.update(options)
             attributes_from_mapper(
-              mapper, name, { type: :array }.update(attr_options)
+              mapper, name, embedded_options.update(attr_options)
             )
           else
             dsl = new(options, &block)
