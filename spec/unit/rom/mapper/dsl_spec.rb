@@ -236,14 +236,14 @@ describe ROM::Mapper do
     it 'raises an exception when using a block and options to define attributes' do
       expect {
         mapper.wrap(city: [:name]) { attribute :other_name }
-      }.to raise_error(ROM::MapperMisconfigured)
+      }.to raise_error(ROM::MapperMisconfiguredError)
     end
 
     it 'raises an exception when using options and a mapper to define attributes' do
       task_mapper = Class.new(ROM::Mapper) { attribute :title }
       expect {
         mapper.wrap city: [:name], mapper: task_mapper
-      }.to raise_error(ROM::MapperMisconfigured)
+      }.to raise_error(ROM::MapperMisconfiguredError)
     end
   end
 

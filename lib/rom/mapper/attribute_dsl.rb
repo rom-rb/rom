@@ -164,10 +164,10 @@ module ROM
       # @api public
       def wrap(*args, &block)
         if args.first.is_a?(Hash) && block_given?
-          raise ROM::MapperMisconfigured, 'Cannot configure `wrap` using both options and a block'
+          raise ROM::MapperMisconfiguredError, 'Cannot configure `wrap` using both options and a block'
         end
         if args.first.is_a?(Hash) && args.first[:mapper]
-          raise ROM::MapperMisconfigured, 'Cannot configure `wrap` using both options and a mapper'
+          raise ROM::MapperMisconfiguredError, 'Cannot configure `wrap` using both options and a mapper'
         end
 
         with_name_or_options(*args) do |name, options, mapper|
