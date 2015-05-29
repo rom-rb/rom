@@ -84,7 +84,7 @@ module ROM
     # @option options [Symbol] :adapter (:default) first adapter to check for plugin
     #
     # @api public
-    def self.use(plugin, options = {})
+    def self.use(plugin, _options = {})
       ROM.plugin_registry.commands.fetch(plugin, adapter).apply_to(self)
     end
 
