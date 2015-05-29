@@ -4,6 +4,8 @@
 
 * `order` memory repository operation sorts tuples by multiple keys
   when some keys contain empty values (nepalez)
+* `Mapper::AttributeDSL#embedded` now honors `option[:type]` when used
+  with `option[:mapper]`
 
 ### Changed
 
