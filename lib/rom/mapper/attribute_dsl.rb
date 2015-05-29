@@ -191,6 +191,24 @@ module ROM
         end
       end
 
+      # Define an embedded array attribute that requires "ungrouping" transformation
+      #
+      # Typically this is used in non-sql context being prepared for import to sql.
+      #
+      # @example
+      #   dsl = AttributeDSL.new([])
+      #   dsl.ungroup(tags: [:name])
+      #
+      # @see AttributeDSL#embedded
+      #
+      # @api public
+      def ungroup(*args, &block)
+        with_name_or_options(*args) do |name, options, *|
+          ungroup_options = { type: :array, ungroup: true }.update(options)
+          dsl(name, ungroup_options, &block)
+        end
+      end
+
       # Define an embedded hash attribute that requires "fold" transformation
       #
       # Typically this is used in sql context to fold single joined field

@@ -98,22 +98,31 @@ module ROM
       attributes.fetch(name)
     end
 
-    # Return all Group attributes
+    # Return all Combined attributes
     #
-    # @return [Array<Group>]
+    # @return [Array<Combined>]
     #
     # @api private
-    def groups
-      by_type(Group)
+    def combined
+      by_type(Combined)
     end
 
-    # Return all Fold attributes
+    # Returns all attributes that require preprocessing
     #
-    # @return [Array<Fold>]
+    # @return [Array<Group,Fold>]
     #
     # @api private
-    def folds
-      by_type(Fold)
+    def preprocessed
+      by_type(Group, Fold)
+    end
+
+    # Returns all attributes that require postprocessing
+    #
+    # @return [Array<Ungroup>]
+    #
+    # @api private
+    def postprocessed
+      by_type(Ungroup)
     end
 
     # Return all Wrap attributes
@@ -125,31 +134,22 @@ module ROM
       by_type(Wrap)
     end
 
-    # Return all Combined attributes
+    # Return all non-primitive attributes
     #
-    # @return [Array<Combined>]
+    # @return [Array<Group,Fold,Ungroup,Unfold,Wrap>]
     #
     # @api private
-    def combined
-      by_type(Combined)
+    def non_primitives
+      preprocessed + postprocessed + wraps
     end
 
-    # Return all primitive attributes (no Group and Wrap)
+    # Return all primitive attributes that doesn't nest other ones
     #
     # @return [Array<Attribute>]
     #
     # @api private
     def primitives
       to_a - non_primitives
-    end
-
-    # Return all non-primitive attributes (only Group and Wrap types)
-    #
-    # @return [Array<Group,Wrap>]
-    #
-    # @api private
-    def non_primitives
-      groups + wraps
     end
 
     private
