@@ -386,7 +386,7 @@ describe ROM::Mapper do
       let(:attributes) do
         [
           [:name],
-          [:task, type: :array, header: task_mapper.header]
+          [:task, type: :hash, header: task_mapper.header]
         ]
       end
 
