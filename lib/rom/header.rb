@@ -116,6 +116,10 @@ module ROM
       by_type(Wrap)
     end
 
+    # Return all Combined attributes
+    #
+    # @return [Array<Combined>]
+    #
     # @api private
     def combined
       by_type(Combined)
