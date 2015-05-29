@@ -13,10 +13,13 @@ module ROM
         adapter :memory
 
         # @see ROM::Commands::Create#execute
-        def execute(tuple)
-          attributes = input[tuple]
-          validator.call(attributes)
-          [relation.insert(attributes.to_h).to_a.last]
+        def execute(tuples)
+          Array([tuples]).flatten.map do |tuple|
+            attributes = input[tuple]
+            validator.call(attributes)
+            relation.insert(attributes.to_h)
+            tuple
+          end.to_a
         end
       end
 
