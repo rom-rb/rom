@@ -1,4 +1,5 @@
 require 'rom/relation/loaded'
+require 'rom/commands/graph'
 require 'rom/support/deprecations'
 
 module ROM
@@ -85,12 +86,28 @@ module ROM
     #   # allow auto-mapping using registered mappers
     #   rom.command(:users).as(:entity)
     #
+    #   # allow build up a command graph for nested input
+    #   command = rom.command(
+    #     [:users, [:create, [:tasks, [:create]]]],
+    #     { users: [{ name: 'Jane', tasks: [{ title: 'One' }] }] }
+    #   )
+    #
+    #   command.call
+    #
     # @api public
-    def command(name)
-      if mappers.key?(name)
-        commands[name].with(mappers: mappers[name])
+    def command(options, *args)
+      case options
+      when Symbol
+        name = options
+        if mappers.key?(name)
+          commands[name].with(mappers: mappers[name])
+        else
+          commands[name]
+        end
+      when Array
+        Commands::Graph.build(commands, options, *args)
       else
-        commands[name]
+        raise ArgumentError, "#{self.class}#command accepts a symbol or a hash"
       end
     end
   end
