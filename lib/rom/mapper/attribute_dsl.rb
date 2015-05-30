@@ -204,10 +204,10 @@ module ROM
       # @see AttributeDSL#embedded
       #
       # @api public
-      def fold(*args)
+      def fold(*args, &block)
         with_name_or_options(*args) do |name, *|
           fold_options = { type: :array, fold: true }
-          dsl(name, fold_options)
+          dsl(name, fold_options, &block)
         end
       end
 

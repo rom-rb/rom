@@ -50,5 +50,21 @@ describe 'Mapper definition DSL' do
         { name: 'Jane', email: 'jane@doe.org', priorities: [2] }
       ]
     end
+
+    it 'accepts the block syntax' do
+      setup.mappers do
+        define(:users) do
+          fold :priorities do
+            attribute :priority
+            attribute :title
+          end
+        end
+      end
+
+      expect(actual).to eql [
+        { name: 'Joe', email: 'joe@doe.org', priorities: [1, 2] },
+        { name: 'Jane', email: 'jane@doe.org', priorities: [2] }
+      ]
+    end
   end
 end
