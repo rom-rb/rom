@@ -53,6 +53,8 @@ module ROM
           Ungroup
         elsif meta[:fold]
           Fold
+        elsif meta[:unfold]
+          Unfold
         elsif type.equal?(:hash)
           Hash
         elsif type.equal?(:array)
@@ -172,5 +174,9 @@ module ROM
     # Fold is a special type of Array attribute that requires folding
     # transformation
     Fold = Class.new(Array)
+
+    # Unfold is a special type of Array attribute that requires unfolding
+    # transformation
+    Unfold = Class.new(Array)
   end
 end

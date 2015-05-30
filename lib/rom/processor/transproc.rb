@@ -262,6 +262,29 @@ module ROM
         end
       end
 
+      # Visit unfold hash attribute
+      #
+      # :unfold transformation is added to handle unfolding during preprocessing.
+      #
+      # @param [Header::Attribute::Unfold] attribute
+      # @param [Boolean] preprocess true if we are building a relation preprocessing
+      #                             function that is applied to the whole relation
+      #
+      # @api private
+      def visit_unfold(attribute, preprocess = false)
+        if preprocess
+          name = attribute.name
+          header = attribute.header
+          key = header.keys.first
+
+          compose do |ops|
+            ops << t(:map_array, t(:map_value, name, t(:insert_key, key)))
+            ops << t(:map_array, t(:reject_keys, [key] - [name]))
+            ops << t(:ungroup, name, [key])
+          end
+        end
+      end
+
       # @api private
       def combined_args(attribute)
         other = attribute.header.combined

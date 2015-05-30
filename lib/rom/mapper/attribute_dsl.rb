@@ -229,6 +229,36 @@ module ROM
         end
       end
 
+      # Define an embedded hash attribute that requires "unfold" transformation
+      #
+      # Typically this is used in non-sql context to convert array of
+      # values (like in Cassandra 'SET' or 'LIST' types) to array of tuples.
+      #
+      # Source values are assigned to the first key, the other keys being left blank.
+      #
+      # @example
+      #   dsl = AttributeDSL.new([])
+      #
+      #   dsl.unfold(tags: [:name, :type], from: :tags_list)
+      #
+      #   dsl.unfold :tags, from: :tags_list do
+      #     attribute :name, from: :tag_name
+      #     attribute :type, from: :tag_type
+      #   end
+      #
+      # @see AttributeDSL#embedded
+      #
+      # @api public
+      def unfold(name, options = EMPTY_HASH)
+        with_attr_options(name, options) do |attr_options|
+          old_name = attr_options.fetch(:from, name)
+          dsl(old_name, type: :array, unfold: true) do
+            attribute name, attr_options
+            yield if block_given?
+          end
+        end
+      end
+
       # Define an embedded combined attribute that requires "combine" transformation
       #
       # Typically this can be used to process results of eager-loading

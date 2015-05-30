@@ -118,11 +118,11 @@ module ROM
 
     # Returns all attributes that require postprocessing
     #
-    # @return [Array<Ungroup>]
+    # @return [Array<Ungroup,Unfold>]
     #
     # @api private
     def postprocessed
-      by_type(Ungroup)
+      by_type(Ungroup, Unfold)
     end
 
     # Return all Wrap attributes
