@@ -45,12 +45,16 @@ module ROM
           Combined
         elsif meta[:unwrap]
           Unwrap
-        elsif type.equal?(:hash)
-          meta[:wrap] ? Wrap : Hash
-        elsif meta[:fold]
+        elsif meta[:wrap]
+          Wrap
+        elsif meta[:group]
           Group
+        elsif meta[:fold]
+          Fold
+        elsif type.equal?(:hash)
+          Hash
         elsif type.equal?(:array)
-          meta[:group] ? Group : Array
+          Array
         else
           self
         end
@@ -158,5 +162,9 @@ module ROM
     # Group is a special type of Array attribute that requires grouping
     # transformation
     Group = Class.new(Array)
+
+    # Fold is a special type of Array attribute that requires folding
+    # transformation
+    Fold = Class.new(Array)
   end
 end

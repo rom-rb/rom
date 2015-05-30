@@ -107,6 +107,15 @@ module ROM
       by_type(Group)
     end
 
+    # Return all Fold attributes
+    #
+    # @return [Array<Fold>]
+    #
+    # @api private
+    def folds
+      by_type(Fold)
+    end
+
     # Return all Wrap attributes
     #
     # @return [Array<Wrap>]

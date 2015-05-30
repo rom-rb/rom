@@ -71,6 +71,7 @@ module ROM
           combined = header.combined
           ops << t(:combine, combined.map(&method(:combined_args))) if combined.any?
           ops << header.groups.map { |attr| visit_group(attr, true) }
+          ops << header.folds.map { |attr| visit_fold(attr, true) }
           ops << t(:map_array, row_proc) if row_proc
         end
       end
@@ -194,24 +195,41 @@ module ROM
           name = attribute.name
           header = attribute.header
           keys = attribute.tuple_keys
-          fold = attribute.meta[:fold]
 
           other = header.groups
 
           compose do |ops|
             ops << t(:group, name, keys)
             ops << t(:map_array, t(:map_value, name, FILTER_EMPTY))
-
-            if fold
-              ops << t(:map_array, t(:fold, name, keys.first))
-            else
-              ops << other.map { |attr|
-                t(:map_array, t(:map_value, name, visit_group(attr, true)))
-              }
-            end
+            ops << other.map { |attr|
+              t(:map_array, t(:map_value, name, visit_group(attr, true)))
+            }
           end
         else
           visit_array(attribute)
+        end
+      end
+
+      # Visit fold hash attribute
+      #
+      # :fold transformation is added to handle folding during preprocessing.
+      #
+      # @param [Header::Attribute::Fold] attribute
+      # @param [Boolean] preprocess true if we are building a relation preprocessing
+      #                             function that is applied to the whole relation
+      #
+      # @api private
+      def visit_fold(attribute, preprocess = false)
+        if preprocess
+          name = attribute.name
+          header = attribute.header
+          keys = attribute.tuple_keys
+
+          compose do |ops|
+            ops << t(:group, name, keys)
+            ops << t(:map_array, t(:map_value, name, FILTER_EMPTY))
+            ops << t(:map_array, t(:fold, name, keys.first))
+          end
         end
       end
 
