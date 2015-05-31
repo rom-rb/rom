@@ -41,9 +41,9 @@ describe 'Building up a command graph from nested input' do
       ]
     ]
 
-    command = rom.command(options, input)
+    command = rom.command(options)
 
-    command.call
+    command.call(input)
 
     expect(rom.relation(:users)).to match_array([
       { name: 'Jane' }

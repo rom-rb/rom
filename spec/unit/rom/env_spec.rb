@@ -39,9 +39,7 @@ describe ROM::Env do
     end
 
     it 'accepts an array with graph options and input' do
-      expect(
-        rom.command([:users, [:create]], { users: [{ name: 'Jane' }] })
-      ).to be_kind_of(ROM::Commands::Create)
+      expect(rom.command([:users, [:create]])).to be_kind_of(ROM::Commands::Create)
     end
 
     it 'raises ArgumentError when unsupported arg was passed' do

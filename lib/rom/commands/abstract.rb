@@ -50,7 +50,12 @@ module ROM
       #
       # @api public
       def call(*args)
-        tuples = execute(*(curry_args + args))
+        tuples =
+          if curry_args.first.is_a?(Proc)
+            execute(*([curry_args.first.call(args.first)]+args[1..args.size]))
+          else
+            execute(*(curry_args + args))
+          end
 
         if result == :one
           tuples.first

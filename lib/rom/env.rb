@@ -95,7 +95,7 @@ module ROM
     #   command.call
     #
     # @api public
-    def command(options, *args)
+    def command(options)
       case options
       when Symbol
         name = options
@@ -105,7 +105,7 @@ module ROM
           commands[name]
         end
       when Array
-        Commands::Graph.build(commands, options, *args)
+        Commands::Graph.build(commands, options)
       else
         raise ArgumentError, "#{self.class}#command accepts a symbol or a hash"
       end

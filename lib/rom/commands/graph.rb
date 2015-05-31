@@ -19,12 +19,12 @@ module ROM
       alias_method :right, :nodes
 
       # @api private
-      def self.build(registry, options, input)
-        options.reduce { |spec, other| build_command(registry, spec, other, input) }
+      def self.build(registry, options, root = nil)
+        options.reduce { |spec, other| build_command(registry, spec, other, root) }
       end
 
       # @api private
-      def self.build_command(registry, spec, other, input)
+      def self.build_command(registry, spec, other, root = nil)
         name, nodes = other
 
         key, relation =
@@ -34,10 +34,12 @@ module ROM
             [spec, spec]
           end
 
-        command = registry[relation][name].with(input.fetch(key))
+        input_proc = -> input { root ? input.fetch(root).fetch(key) : input.fetch(key) }
+
+        command = registry[relation][name].with(input_proc)
 
         if nodes
-          command.combine(build(registry, nodes, input.fetch(key)))
+          command.combine(build(registry, nodes, key))
         else
           command
         end
@@ -68,7 +70,13 @@ module ROM
       # @api public
       def call(*args)
         left = root.call(*args)
-        right = nodes.map { |node| node.call(left) }
+        right = nodes.map do |node|
+          if node.curry_args.first.is_a?(Proc)
+            node.call(*args, left)
+          else
+            node.call(left)
+          end
+        end
 
         if result.equal?(:one)
           [[left], right]
