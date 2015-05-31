@@ -46,12 +46,6 @@ describe ROM::Env do
       expect(rom.command([:users, [:create]])).to be_kind_of(ROM::Commands::Lazy)
     end
 
-    it 'raises error if graph is request for a root command with :many results' do
-      expect {
-        rom.command([:tasks, [:create, [:users, :create]]])
-      }.to raise_error(ArgumentError, /:many/)
-    end
-
     it 'raises ArgumentError when unsupported arg was passed' do
       expect { rom.command({ oops: 'sorry' }) }.to raise_error(ArgumentError)
     end

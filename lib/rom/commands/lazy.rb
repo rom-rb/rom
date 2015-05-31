@@ -25,13 +25,26 @@ module ROM
       #
       # @api public
       def call(*args)
-        input = evaluator[args.first]
-        other = args[1..args.size]
+        if args.size > 1 && args.last.is_a?(Array)
+          results = []
 
-        if result.equal?(:many)
-          command.call(input, *other)
+          args.last.each_with_index do |item, index|
+            input = evaluator[args.first, index]
+            other = args[2..args.size]
+
+            results.concat(command.call(input, item, *other))
+          end
+
+          results
         else
-          command.call(*([input] + other))
+          input = evaluator[args.first]
+          other = args[1..args.size]
+
+          if result.equal?(:many)
+            command.call(input, *other)
+          else
+            command.call(*([input] + other))
+          end
         end
       end
 

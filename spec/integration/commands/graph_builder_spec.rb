@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'Building up a command graph from nested input' do
+describe 'Building up a command graph for nested input' do
   let(:rom) { setup.finalize }
   let(:setup) { ROM.setup(:memory) }
 
@@ -14,17 +14,6 @@ describe 'Building up a command graph from nested input' do
       define(:create) do
         input Transproc(:accept_keys, [:name])
         result :one
-      end
-    end
-
-    setup.commands(:tasks) do
-      define(:create) do
-        input Transproc(:accept_keys, [:title, :user])
-        result :one
-
-        def execute(tuple, user)
-          super(tuple.merge(user: user.fetch(:name)))
-        end
       end
     end
 
@@ -49,7 +38,18 @@ describe 'Building up a command graph from nested input' do
     end
   end
 
-  it 'creates a command graph for nested input' do
+  it 'creates a command graph for nested input :one result as root' do
+    setup.commands(:tasks) do
+      define(:create) do
+        input Transproc(:accept_keys, [:title, :user])
+        result :one
+
+        def execute(tuple, user)
+          super(tuple.merge(user: user.fetch(:name)))
+        end
+      end
+    end
+
     input = {
       user: {
         name: 'Jane',
@@ -96,6 +96,61 @@ describe 'Building up a command graph from nested input' do
       { name: 'red', task: 'Task One' },
       { name: 'green', task: 'Task One' },
       { name: 'blue', task: 'Task One' }
+    ])
+  end
+
+  it 'creates a command graph for nested input with :many results as root' do
+    setup.commands(:tasks) do
+      define(:create) do
+        input Transproc(:accept_keys, [:title, :user])
+
+        def execute(tuples, user)
+          super(tuples.map { |t| t.merge(user: user.fetch(:name)) })
+        end
+      end
+    end
+
+    input = {
+      user: {
+        name: 'Jane',
+        tasks: [
+          {
+            title: 'Task One',
+            tags: [{ name: 'red' }, { name: 'green' }]
+          },
+          {
+            title: 'Task Two',
+            tags: [{ name: 'blue' }]
+          }
+        ]
+      }
+    }
+
+    options = [
+      { user: :users }, [
+        :create, [
+          [:tasks, [:create, [:tags, [:create]]]],
+        ]
+      ]
+    ]
+
+    command = rom.command(options)
+
+    command.call(input)
+
+    expect(rom.relation(:users)).to match_array([
+      { name: 'Jane' }
+    ])
+
+    expect(rom.relation(:tasks)).to match_array([
+      { title: 'Task One', user: 'Jane' },
+      { title: 'Task Two', user: 'Jane' }
+    ])
+
+    expect(rom.relation(:tags)).to match_array([
+      { name: 'red', task: 'Task One' },
+      { name: 'green', task: 'Task One' },
+      { name: 'blue', task: 'Task Two' }
     ])
   end
 end

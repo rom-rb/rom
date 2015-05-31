@@ -36,24 +36,25 @@ module ROM
 
         tuple_path = Array[*path] << key
 
-        evaluator = -> input do
-          tuple_path.reduce(input) { |a,e| a.fetch(e) }
+        input_proc = -> *args do
+          input, index = args
+
+          if index
+            tuple_path[0..tuple_path.size-2]
+              .reduce(input) { |a,e| a.fetch(e) }
+              .at(index)[tuple_path.last]
+          else
+            tuple_path.reduce(input) { |a,e| a.fetch(e) }
+          end
         end
 
-        command = registry[relation][name].with(evaluator)
+        command = registry[relation][name].with(input_proc)
 
         if nodes
-          if command.result.equal?(:many)
-            raise(
-              ArgumentError,
-              'command with :many results cannot be used as a root'
-            )
+          if nodes.all? { |node| node.is_a?(Array) }
+            command.combine(*nodes.map { |node| build(registry, node, tuple_path) })
           else
-            if nodes.all? { |node| node.is_a?(Array) }
-              command.combine(*nodes.map { |node| build(registry, node, tuple_path) })
-            else
-              command.combine(build(registry, nodes, tuple_path))
-            end
+            command.combine(build(registry, nodes, tuple_path))
           end
         else
           command
