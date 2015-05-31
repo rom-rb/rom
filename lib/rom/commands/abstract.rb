@@ -1,5 +1,6 @@
 require 'rom/commands/composite'
 require 'rom/commands/graph'
+require 'rom/commands/lazy'
 
 module ROM
   module Commands
@@ -50,14 +51,9 @@ module ROM
       #
       # @api public
       def call(*args)
-        tuples =
-          if curry_args.first.is_a?(Proc)
-            execute(*([curry_args.first.call(args.first)]+args[1..args.size]))
-          else
-            execute(*(curry_args + args))
-          end
+        tuples = execute(*(curry_args + args))
 
-        if result == :one
+        if result.equal?(:one)
           tuples.first
         else
           tuples
@@ -73,7 +69,11 @@ module ROM
       #
       # @api public
       def curry(*args)
-        self.class.new(relation, options.merge(curry_args: args))
+        if curry_args.empty? && args.first.is_a?(Proc)
+          Lazy.new(self, args.first)
+        else
+          self.class.new(relation, options.merge(curry_args: args))
+        end
       end
       alias_method :with, :curry
 
@@ -105,6 +105,11 @@ module ROM
       # @api private
       def new(*args, &block)
         self.class.build(relation.public_send(*args, &block), options)
+      end
+
+      # @api private
+      def lazy?
+        false
       end
 
       # Target relation on which the command will operate

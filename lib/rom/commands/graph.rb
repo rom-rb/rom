@@ -19,12 +19,12 @@ module ROM
       alias_method :right, :nodes
 
       # @api private
-      def self.build(registry, options, root = nil)
-        options.reduce { |spec, other| build_command(registry, spec, other, root) }
+      def self.build(registry, options, path = EMPTY_ARRAY)
+        options.reduce { |spec, other| build_command(registry, spec, other, path) }
       end
 
       # @api private
-      def self.build_command(registry, spec, other, root = nil)
+      def self.build_command(registry, spec, other, path)
         name, nodes = other
 
         key, relation =
@@ -34,12 +34,27 @@ module ROM
             [spec, spec]
           end
 
-        input_proc = -> input { root ? input.fetch(root).fetch(key) : input.fetch(key) }
+        tuple_path = Array[*path] << key
 
-        command = registry[relation][name].with(input_proc)
+        evaluator = -> input do
+          tuple_path.reduce(input) { |a,e| a.fetch(e) }
+        end
+
+        command = registry[relation][name].with(evaluator)
 
         if nodes
-          command.combine(build(registry, nodes, key))
+          if command.result.equal?(:many)
+            raise(
+              ArgumentError,
+              'command with :many results cannot be used as a root'
+            )
+          else
+            if nodes.all? { |node| node.is_a?(Array) }
+              command.combine(*nodes.map { |node| build(registry, node, tuple_path) })
+            else
+              command.combine(build(registry, nodes, tuple_path))
+            end
+          end
         else
           command
         end
@@ -70,9 +85,10 @@ module ROM
       # @api public
       def call(*args)
         left = root.call(*args)
+
         right = nodes.map do |node|
-          if node.curry_args.first.is_a?(Proc)
-            node.call(*args, left)
+          if node.lazy?
+            node.call(args.first, left)
           else
             node.call(left)
           end

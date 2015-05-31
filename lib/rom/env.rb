@@ -107,7 +107,7 @@ module ROM
       when Array
         Commands::Graph.build(commands, options)
       else
-        raise ArgumentError, "#{self.class}#command accepts a symbol or a hash"
+        raise ArgumentError, "#{self.class}#command accepts a symbol or an array"
       end
     end
   end

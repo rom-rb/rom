@@ -16,6 +16,10 @@ describe ROM::Env do
       define(:create)
     end
 
+    setup.commands(:tasks) do
+      define(:create)
+    end
+
     setup.mappers do
       define(:users) do
         attribute :name
@@ -39,7 +43,13 @@ describe ROM::Env do
     end
 
     it 'accepts an array with graph options and input' do
-      expect(rom.command([:users, [:create]])).to be_kind_of(ROM::Commands::Create)
+      expect(rom.command([:users, [:create]])).to be_kind_of(ROM::Commands::Lazy)
+    end
+
+    it 'raises error if graph is request for a root command with :many results' do
+      expect {
+        rom.command([:tasks, [:create, [:users, :create]]])
+      }.to raise_error(ArgumentError, /:many/)
     end
 
     it 'raises ArgumentError when unsupported arg was passed' do
