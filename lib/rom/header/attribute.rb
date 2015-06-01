@@ -39,29 +39,8 @@ module ROM
       #
       # @api private
       def self.[](meta)
-        type = meta[:type]
-
-        if meta[:combine]
-          Combined
-        elsif meta[:wrap]
-          Wrap
-        elsif meta[:unwrap]
-          Unwrap
-        elsif meta[:group]
-          Group
-        elsif meta[:ungroup]
-          Ungroup
-        elsif meta[:fold]
-          Fold
-        elsif meta[:unfold]
-          Unfold
-        elsif type.equal?(:hash)
-          Hash
-        elsif type.equal?(:array)
-          Array
-        else
-          self
-        end
+        key = (meta.keys & TYPE_MAP.keys).first
+        TYPE_MAP.fetch(key || meta[:type], self)
       end
 
       # Coerce an array with attribute meta-data into an attribute object
@@ -182,5 +161,20 @@ module ROM
     # Unfold is a special type of Array attribute that requires unfolding
     # transformation
     Unfold = Class.new(Array)
+
+    # TYPE_MAP is a (hash) map of ROM::Header identifiers to ROM::Header types
+    #
+    # @private
+    TYPE_MAP = {
+      combine: Combined,
+      wrap: Wrap,
+      unwrap: Unwrap,
+      group: Group,
+      ungroup: Ungroup,
+      fold: Fold,
+      unfold: Unfold,
+      hash: Hash,
+      array: Array
+    }
   end
 end
