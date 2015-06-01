@@ -134,16 +134,16 @@ module ROM
       by_type(Wrap)
     end
 
-    # Return all non-primitive attributes
+    # Return all non-primitive attributes that don't require mapping
     #
-    # @return [Array<Group,Fold,Ungroup,Unfold,Wrap>]
+    # @return [Array<Group,Fold,Ungroup,Unfold,Wrap,Unwrap>]
     #
     # @api private
     def non_primitives
-      preprocessed + postprocessed + wraps
+      preprocessed + wraps
     end
 
-    # Return all primitive attributes that doesn't nest other ones
+    # Return all primitive attributes that require mapping
     #
     # @return [Array<Attribute>]
     #

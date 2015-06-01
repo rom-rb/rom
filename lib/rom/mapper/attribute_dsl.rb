@@ -157,8 +157,14 @@ module ROM
       #
       # @api public
       def unwrap(*args, &block)
-        with_name_or_options(*args) do |name, options|
-          dsl(name, { type: :hash, unwrap: true }.update(options), &block)
+        with_name_or_options(*args) do |name, options, mapper|
+          unwrap_options = { type: :hash, unwrap: true }.update(options)
+
+          if mapper
+            attributes_from_mapper(mapper, name, unwrap_options)
+          else
+            dsl(name, unwrap_options, &block)
+          end
         end
       end
 
