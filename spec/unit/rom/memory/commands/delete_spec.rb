@@ -1,5 +1,7 @@
 require 'spec_helper'
 
+require 'rom/memory'
+
 describe ROM::Memory::Commands::Create do
   include_context 'users and tasks'
 
