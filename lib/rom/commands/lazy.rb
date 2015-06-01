@@ -30,8 +30,8 @@ module ROM
         size = args.size
 
         if size > 1 && last.is_a?(Array)
-          last.map do |item|
-            command.call(evaluator[first, last.index(item)], item)
+          last.map.with_index do |item, index|
+            command.call(evaluator[first, index], item)
           end
         else
           command.call(evaluator[first], *args[1..size-1])
