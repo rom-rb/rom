@@ -45,11 +45,10 @@ module ROM
 
         # @see ROM::Commands::Delete#execute
         def execute
-          tuples = target.to_a
-          tuples.each do |tuple|
-            relation.delete(tuple)
+          relation.to_a.map do |tuple|
+            target.delete(tuple)
+            tuple
           end
-          tuples
         end
       end
     end

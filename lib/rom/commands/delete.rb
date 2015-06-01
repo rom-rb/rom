@@ -21,6 +21,11 @@ module ROM
         assert_tuple_count
         super
       end
+
+      # @api private
+      def new(new_relation)
+        self.class.build(new_relation, options.merge(target: relation))
+      end
     end
   end
 end

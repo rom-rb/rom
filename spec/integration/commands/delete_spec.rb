@@ -24,6 +24,8 @@ describe 'Commands / Delete' do
       { name: 'Jane', email: 'jane@doe.org' },
       { name: 'Joe', email: 'joe@doe.org' }
     ])
+
+    expect(rom.relation(:users)).to match_array([])
   end
 
   it 'deletes tuples matching restriction' do
@@ -34,6 +36,10 @@ describe 'Commands / Delete' do
     result = users.try { users.delete.by_name('Joe').call }
 
     expect(result).to match_array([{ name: 'Joe', email: 'joe@doe.org' }])
+
+    expect(rom.relation(:users)).to match_array([
+      { name: 'Jane', email: 'jane@doe.org' },
+    ])
   end
 
   it 'returns untouched relation if there are no tuples to delete' do

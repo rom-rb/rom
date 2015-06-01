@@ -20,7 +20,7 @@ module ROM
 
       option :type, allow: [:create, :update, :delete]
       option :result, reader: true, allow: [:one, :many]
-      option :target
+      option :target, reader: true
       option :validator, reader: true
       option :input, reader: true
       option :curry_args, type: Array, reader: true, default: EMPTY_ARRAY
@@ -161,7 +161,7 @@ module ROM
       #
       # @api private
       def tuple_count
-        target.count
+        relation.count
       end
 
       # @api private
