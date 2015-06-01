@@ -143,6 +143,10 @@ module ROM
       def tuple_keys
         header.tuple_keys
       end
+
+      def pop_keys
+        header.pop_keys
+      end
     end
 
     # Array is an embedded attribute type
