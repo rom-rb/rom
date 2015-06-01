@@ -222,7 +222,6 @@ module ROM
       def visit_fold(attribute, preprocess = false)
         if preprocess
           name = attribute.name
-          header = attribute.header
           keys = attribute.tuple_keys
 
           compose do |ops|
