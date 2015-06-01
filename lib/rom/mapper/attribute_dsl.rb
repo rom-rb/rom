@@ -191,6 +191,24 @@ module ROM
         end
       end
 
+      # Define an embedded array attribute that requires "ungrouping" transformation
+      #
+      # Typically this is used in non-sql context being prepared for import to sql.
+      #
+      # @example
+      #   dsl = AttributeDSL.new([])
+      #   dsl.ungroup(tags: [:name])
+      #
+      # @see AttributeDSL#embedded
+      #
+      # @api public
+      def ungroup(*args, &block)
+        with_name_or_options(*args) do |name, options, *|
+          ungroup_options = { type: :array, ungroup: true }.update(options)
+          dsl(name, ungroup_options, &block)
+        end
+      end
+
       # Define an embedded hash attribute that requires "fold" transformation
       #
       # Typically this is used in sql context to fold single joined field
@@ -208,6 +226,36 @@ module ROM
         with_name_or_options(*args) do |name, *|
           fold_options = { type: :array, fold: true }
           dsl(name, fold_options, &block)
+        end
+      end
+
+      # Define an embedded hash attribute that requires "unfold" transformation
+      #
+      # Typically this is used in non-sql context to convert array of
+      # values (like in Cassandra 'SET' or 'LIST' types) to array of tuples.
+      #
+      # Source values are assigned to the first key, the other keys being left blank.
+      #
+      # @example
+      #   dsl = AttributeDSL.new([])
+      #
+      #   dsl.unfold(tags: [:name, :type], from: :tags_list)
+      #
+      #   dsl.unfold :tags, from: :tags_list do
+      #     attribute :name, from: :tag_name
+      #     attribute :type, from: :tag_type
+      #   end
+      #
+      # @see AttributeDSL#embedded
+      #
+      # @api public
+      def unfold(name, options = EMPTY_HASH)
+        with_attr_options(name, options) do |attr_options|
+          old_name = attr_options.fetch(:from, name)
+          dsl(old_name, type: :array, unfold: true) do
+            attribute name, attr_options
+            yield if block_given?
+          end
         end
       end
 

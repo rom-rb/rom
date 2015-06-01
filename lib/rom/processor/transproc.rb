@@ -70,9 +70,9 @@ module ROM
         compose(EMPTY_FN) do |ops|
           combined = header.combined
           ops << t(:combine, combined.map(&method(:combined_args))) if combined.any?
-          ops << header.groups.map { |attr| visit_group(attr, true) }
-          ops << header.folds.map { |attr| visit_fold(attr, true) }
+          ops << header.preprocessed.map { |attr| visit(attr, true) }
           ops << t(:map_array, row_proc) if row_proc
+          ops << header.postprocessed.map { |attr| visit(attr, true) }
         end
       end
 
@@ -83,11 +83,12 @@ module ROM
       # This forwards to a specialized visitor based on the attribute type
       #
       # @param [Header::Attribute] attribute
+      # @param [Array] args Allows to send `preprocess: true`
       #
       # @api private
-      def visit(attribute)
+      def visit(attribute, *args)
         type = attribute.class.name.split('::').last.downcase
-        send("visit_#{type}", attribute)
+        send("visit_#{type}", attribute, *args)
       end
 
       # Visit plain attribute
@@ -196,14 +197,43 @@ module ROM
           header = attribute.header
           keys = attribute.tuple_keys
 
-          other = header.groups
+          others = header.preprocessed
 
           compose do |ops|
             ops << t(:group, name, keys)
             ops << t(:map_array, t(:map_value, name, FILTER_EMPTY))
-            ops << other.map { |attr|
-              t(:map_array, t(:map_value, name, visit_group(attr, true)))
+            ops << others.map { |attr|
+              t(:map_array, t(:map_value, name, visit(attr, true)))
             }
+          end
+        else
+          visit_array(attribute)
+        end
+      end
+
+      # Visit ungroup attribute
+      #
+      # :ungroup transforation is added to handle ungrouping during preprocessing.
+      # Otherwise we simply use array visitor for the attribute.
+      #
+      # @param [Header::Attribute::Ungroup] attribute
+      # @param [Boolean] preprocess true if we are building a relation preprocessing
+      #                             function that is applied to the whole relation
+      #
+      # @api private
+      def visit_ungroup(attribute, preprocess = false)
+        if preprocess
+          name = attribute.name
+          header = attribute.header
+          keys = header.map(&:name)
+
+          others = header.postprocessed
+
+          compose do |ops|
+            ops << others.map { |attr|
+              t(:map_array, t(:map_value, name, visit(attr, true)))
+            }
+            ops << t(:ungroup, name, keys)
           end
         else
           visit_array(attribute)
@@ -228,6 +258,29 @@ module ROM
             ops << t(:group, name, keys)
             ops << t(:map_array, t(:map_value, name, FILTER_EMPTY))
             ops << t(:map_array, t(:fold, name, keys.first))
+          end
+        end
+      end
+
+      # Visit unfold hash attribute
+      #
+      # :unfold transformation is added to handle unfolding during preprocessing.
+      #
+      # @param [Header::Attribute::Unfold] attribute
+      # @param [Boolean] preprocess true if we are building a relation preprocessing
+      #                             function that is applied to the whole relation
+      #
+      # @api private
+      def visit_unfold(attribute, preprocess = false)
+        if preprocess
+          name = attribute.name
+          header = attribute.header
+          key = header.keys.first
+
+          compose do |ops|
+            ops << t(:map_array, t(:map_value, name, t(:insert_key, key)))
+            ops << t(:map_array, t(:reject_keys, [key] - [name]))
+            ops << t(:ungroup, name, [key])
           end
         end
       end
