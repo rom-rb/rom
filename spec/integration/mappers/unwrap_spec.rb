@@ -78,7 +78,7 @@ describe 'Mapper definition DSL' do
           attribute :title
           attribute :priority
 
-          unwrap :user do
+          unwrap :contact, from: :user do
             attribute :task_user_name, from: :name
           end
         end
@@ -92,7 +92,7 @@ describe 'Mapper definition DSL' do
                             priority: 2,
                             name: 'Jane',
                             task_user_name: 'Jane',
-                            user: { email: 'jane@doe.org' })
+                            contact: { email: 'jane@doe.org' })
     end
   end
 end

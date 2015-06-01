@@ -269,6 +269,62 @@ describe ROM::Processor::Transproc do
     end
   end
 
+  context 'unwrapping tuples' do
+    let(:relation) do
+      [
+        { 'user' => { 'name' => 'Leo', 'task' => { 'title' => 'Task 1' } } },
+        { 'user' => { 'name' => 'Joe', 'task' => { 'title' => 'Task 2' } } }
+      ]
+    end
+
+    context 'when no mapping is needed' do
+      let(:attributes) do
+        [
+          ['user', type: :hash, unwrap: true, header: [['name'], ['task']]]
+        ]
+      end
+
+      it 'returns unwrapped tuples' do
+        expect(transproc[relation]).to eql([
+          { 'name' => 'Leo', 'task' => { 'title' => 'Task 1' } },
+          { 'name' => 'Joe', 'task' => { 'title' => 'Task 2' } }
+        ])
+      end
+    end
+
+    context 'partially' do
+      context 'without renaming the rest of the wrap' do
+        let(:attributes) do
+          [
+            ['user', type: :hash, unwrap: true, header: [['task']]]
+          ]
+        end
+
+        it 'returns unwrapped tuples' do
+          expect(transproc[relation]).to eql([
+            { 'user' => { 'name' => 'Leo' }, 'task' => { 'title' => 'Task 1' } },
+            { 'user' => { 'name' => 'Joe' }, 'task' => { 'title' => 'Task 2' } }
+          ])
+        end
+      end
+
+      context 'with renaming the rest of the wrap' do
+        let(:attributes) do
+          [
+            ['man', from: 'user', type: :hash, unwrap: true, header: [['task']]]
+          ]
+        end
+
+        it 'returns unwrapped tuples' do
+          expect(transproc[relation]).to eql([
+            { 'man' => { 'name' => 'Leo' }, 'task' => { 'title' => 'Task 1' } },
+            { 'man' => { 'name' => 'Joe' }, 'task' => { 'title' => 'Task 2' } }
+          ])
+        end
+      end
+    end
+  end
+
   context 'grouping tuples' do
     let(:relation) do
       [
