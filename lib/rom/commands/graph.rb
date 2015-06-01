@@ -1,4 +1,5 @@
 require 'rom/pipeline'
+require 'rom/support/options'
 require 'rom/commands/graph/class_interface'
 
 module ROM
@@ -9,6 +10,7 @@ module ROM
     class Graph
       extend ClassInterface
 
+      include Options
       include Pipeline
       include Pipeline::Proxy
 
@@ -21,8 +23,11 @@ module ROM
       alias_method :left, :root
       alias_method :right, :nodes
 
+      option :mappers, reader: true, default: proc { MapperRegistry.new }
+
       # @api private
-      def initialize(root, nodes)
+      def initialize(root, nodes, options = {})
+        super
         @root = root
         @nodes = nodes
       end
@@ -48,10 +53,17 @@ module ROM
         left = root.call(*args)
 
         right = nodes.map do |node|
-          if node.lazy?
-            node.call(args.first, left)
+          response =
+            if node.lazy?
+              node.call(args.first, left)
+            else
+              node.call(left)
+            end
+
+          if node.result.equal?(:one) && !node.graph?
+            [response]
           else
-            node.call(left)
+            response
           end
         end
 
@@ -60,6 +72,25 @@ module ROM
         else
           [left, right]
         end
+      end
+
+      # Return a new graph with updated options
+      #
+      # @api private
+      def with(new_options)
+        self.class.new(root, nodes, options.merge(new_options))
+      end
+
+      # Return name of the root relation
+      #
+      # @api private
+      def name
+        root.relation.name
+      end
+
+      # @api private
+      def graph?
+        true
       end
     end
   end

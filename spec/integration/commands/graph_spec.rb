@@ -153,4 +153,44 @@ describe 'Building up a command graph for nested input' do
       { name: 'blue', task: 'Task Two' }
     ])
   end
+
+  it 'works with auto-mapping' do
+    setup.mappers do
+      define(:users) do
+        register_as :entity
+        reject_keys true
+
+        model name: 'Test::User'
+
+        attribute :name
+
+        combine :task, type: :hash, on: { name: :user } do
+          model name: 'Test::Task'
+          attribute :title
+        end
+      end
+    end
+
+    setup.commands(:tasks) do
+      define(:create) do
+        input Transproc(:accept_keys, [:title, :user])
+        result :one
+
+        def execute(tuple, user)
+          super(tuple.merge(user: user.fetch(:name)))
+        end
+      end
+    end
+
+    input = { user: { name: 'Jane', task: { title: 'Task One' } } }
+
+    command = rom.command([
+      { user: :users }, [:create, [{ task: :tasks }, [:create]]]
+    ]).as(:entity)
+
+    result = command.call(input).first
+
+    expect(result).to be_instance_of(Test::User)
+    expect(result.task).to be_instance_of(Test::Task)
+  end
 end

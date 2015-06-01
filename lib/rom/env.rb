@@ -105,7 +105,14 @@ module ROM
           commands[name]
         end
       when Array
-        Commands::Graph.build(commands, options)
+        graph = Commands::Graph.build(commands, options)
+        name = graph.name
+
+        if mappers.key?(name)
+          graph.with(mappers: mappers[graph.name])
+        else
+          graph
+        end
       else
         raise ArgumentError, "#{self.class}#command accepts a symbol or an array"
       end

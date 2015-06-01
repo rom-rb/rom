@@ -112,6 +112,11 @@ module ROM
         false
       end
 
+      # @api private
+      def graph?
+        false
+      end
+
       # Target relation on which the command will operate
       #
       # By default this is set to the relation that's passed to the constructor.
@@ -123,6 +128,13 @@ module ROM
       # @api public
       def target
         relation
+      end
+
+      # Return name of this command's relation
+      #
+      # @api private
+      def name
+        relation.name
       end
 
       # Assert that tuple count in the target relation corresponds to :result
