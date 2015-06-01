@@ -323,6 +323,25 @@ describe ROM::Processor::Transproc do
         end
       end
     end
+
+    context 'deeply' do
+      let(:attributes) do
+        [
+          ['user', type: :hash, unwrap: true, header: [
+            ['name'],
+            ['title'],
+            ['task', type: :hash, unwrap: true, header: [['title']]]
+          ]]
+        ]
+      end
+
+      it 'returns unwrapped tuples' do
+        expect(transproc[relation]).to eql([
+          { 'name' => 'Leo', 'title' => 'Task 1' },
+          { 'name' => 'Joe', 'title' => 'Task 2' }
+        ])
+      end
+    end
   end
 
   context 'grouping tuples' do

@@ -35,6 +35,11 @@ module ROM
     # @api private
     attr_reader :tuple_keys
 
+    # @return [Array] all attribute names that are popping from a tuple
+    #
+    # @api private
+    attr_reader :pop_keys
+
     # Coerce array with attribute definitions into a header object
     #
     # @param [Array<Array>] input attribute name/option pairs
@@ -62,6 +67,7 @@ module ROM
       @attributes = attributes
       initialize_mapping
       initialize_tuple_keys
+      initialize_pop_keys
     end
 
     # Iterate over attributes
@@ -175,6 +181,13 @@ module ROM
     # @api private
     def initialize_tuple_keys
       @tuple_keys = mapping.keys + non_primitives.flat_map(&:tuple_keys)
+    end
+
+    # Set all tuple keys from all attributes popping from Unwrap and Ungroup
+    #
+    # @api private
+    def initialize_pop_keys
+      @pop_keys = mapping.values + non_primitives.flat_map(&:tuple_keys)
     end
   end
 end

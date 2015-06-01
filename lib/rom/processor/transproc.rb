@@ -173,7 +173,7 @@ module ROM
       # @api private
       def visit_unwrap(attribute)
         name = attribute.name
-        keys = attribute.header.map(&:name)
+        keys = attribute.pop_keys
 
         compose do |ops|
           ops << visit_hash(attribute)
