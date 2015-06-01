@@ -103,8 +103,8 @@ module ROM
       # Return new update command with new relation
       #
       # @api private
-      def new(*args, &block)
-        self.class.build(relation.public_send(*args, &block), options)
+      def new(relation)
+        self.class.build(relation, options)
       end
 
       # @api private
@@ -128,13 +128,6 @@ module ROM
       # @api public
       def target
         relation
-      end
-
-      # Return name of this command's relation
-      #
-      # @api private
-      def name
-        relation.name
       end
 
       # Assert that tuple count in the target relation corresponds to :result
@@ -171,7 +164,13 @@ module ROM
       # @api private
       def method_missing(name, *args, &block)
         if relation.respond_to?(name)
-          new(name, *args, &block)
+          response = relation.public_send(name, *args, &block)
+
+          if response.instance_of?(relation.class)
+            new(response)
+          else
+            response
+          end
         else
           super
         end
