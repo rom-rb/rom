@@ -46,7 +46,7 @@ module ROM
         # @see ROM::Commands::Delete#execute
         def execute
           relation.to_a.map do |tuple|
-            target.delete(tuple)
+            source.delete(tuple)
             tuple
           end
         end

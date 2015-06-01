@@ -1,3 +1,5 @@
+require 'rom/support/deprecations'
+
 require 'rom/commands/composite'
 require 'rom/commands/graph'
 require 'rom/commands/lazy'
@@ -17,20 +19,26 @@ module ROM
     # @private
     class Abstract
       include Options
+      extend Deprecations
 
       option :type, allow: [:create, :update, :delete]
+      option :source, reader: true
       option :result, reader: true, allow: [:one, :many]
-      option :target, reader: true
       option :validator, reader: true
       option :input, reader: true
       option :curry_args, type: Array, reader: true, default: EMPTY_ARRAY
 
+      # @attr_reader [Relation] relation The command's relation
       attr_reader :relation
+
+      deprecate :target, :relation,
+        'Source relation is now available as `Command#source`'
 
       # @api private
       def initialize(relation, options = {})
-        @relation = relation
         super
+        @relation = relation
+        @source = options[:source] || relation
       end
 
       # Execute the command
@@ -72,7 +80,7 @@ module ROM
         if curry_args.empty? && args.first.is_a?(Proc)
           Lazy.new(self, args.first)
         else
-          self.class.new(relation, options.merge(curry_args: args))
+          self.class.build(relation, options.merge(curry_args: args))
         end
       end
       alias_method :with, :curry
@@ -100,13 +108,6 @@ module ROM
         Graph.new(self, others)
       end
 
-      # Return new update command with new relation
-      #
-      # @api private
-      def new(relation)
-        self.class.build(relation, options)
-      end
-
       # @api private
       def lazy?
         false
@@ -127,20 +128,7 @@ module ROM
         result.equal?(:many)
       end
 
-      # Target relation on which the command will operate
-      #
-      # By default this is set to the relation that's passed to the constructor.
-      # Specialized commands like Delete may set the target to a different
-      # relation.
-      #
-      # @return [Relation]
-      #
-      # @api public
-      def target
-        relation
-      end
-
-      # Assert that tuple count in the target relation corresponds to :result
+      # Assert that tuple count in the relation corresponds to :result
       # setting
       #
       # @raise TupleCountMismatchError
@@ -152,7 +140,7 @@ module ROM
         end
       end
 
-      # Return number of tuples in the target relation
+      # Return number of tuples in the relation relation
       #
       # This should be overridden by gateways when `#count` is not available
       # in the relation objects
@@ -167,6 +155,11 @@ module ROM
       # @api private
       def respond_to_missing?(name, _include_private = false)
         relation.respond_to?(name) || super
+      end
+
+      # @api private
+      def new(new_relation)
+        self.class.build(new_relation, options.merge(source: relation))
       end
 
       private
