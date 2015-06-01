@@ -53,7 +53,7 @@ module ROM
       def call(*args)
         tuples = execute(*(curry_args + args))
 
-        if result.equal?(:one)
+        if one?
           tuples.first
         else
           tuples
@@ -117,6 +117,16 @@ module ROM
         false
       end
 
+      # @api private
+      def one?
+        result.equal?(:one)
+      end
+
+      # @api private
+      def many?
+        result.equal?(:many)
+      end
+
       # Target relation on which the command will operate
       #
       # By default this is set to the relation that's passed to the constructor.
@@ -137,7 +147,7 @@ module ROM
       #
       # @api private
       def assert_tuple_count
-        if result == :one && tuple_count > 1
+        if one? && tuple_count > 1
           raise TupleCountMismatchError, "#{inspect} expects one tuple"
         end
       end

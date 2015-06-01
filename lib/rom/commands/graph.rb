@@ -60,14 +60,14 @@ module ROM
               node.call(left)
             end
 
-          if node.result.equal?(:one) && !node.graph?
+          if node.one? && !node.graph?
             [response]
           else
             response
           end
         end
 
-        if result.equal?(:one)
+        if one?
           [[left], right]
         else
           [left, right]
@@ -79,13 +79,6 @@ module ROM
       # @api private
       def with(new_options)
         self.class.new(root, nodes, options.merge(new_options))
-      end
-
-      # Return name of the root relation
-      #
-      # @api private
-      def name
-        root.relation.name
       end
 
       # @api private

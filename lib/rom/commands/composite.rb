@@ -14,13 +14,13 @@ module ROM
       def call(*args)
         response = left.call(*args)
 
-        if result == :one && !graph?
+        if one? && !graph?
           if right.is_a?(Command) || right.is_a?(Commands::Composite)
             right.call([response].first)
           else
             right.call([response]).first
           end
-        elsif result == :one && graph?
+        elsif one? && graph?
           right.call(response).first
         else
           right.call(response)
