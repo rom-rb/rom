@@ -1,5 +1,6 @@
 require 'rom/commands/composite'
 require 'rom/commands/graph'
+require 'rom/commands/lazy'
 
 module ROM
   module Commands
@@ -52,7 +53,7 @@ module ROM
       def call(*args)
         tuples = execute(*(curry_args + args))
 
-        if result == :one
+        if result.equal?(:one)
           tuples.first
         else
           tuples
@@ -68,7 +69,11 @@ module ROM
       #
       # @api public
       def curry(*args)
-        self.class.new(relation, options.merge(curry_args: args))
+        if curry_args.empty? && args.first.is_a?(Proc)
+          Lazy.new(self, args.first)
+        else
+          self.class.new(relation, options.merge(curry_args: args))
+        end
       end
       alias_method :with, :curry
 
@@ -102,6 +107,16 @@ module ROM
         self.class.build(relation.public_send(*args, &block), options)
       end
 
+      # @api private
+      def lazy?
+        false
+      end
+
+      # @api private
+      def graph?
+        false
+      end
+
       # Target relation on which the command will operate
       #
       # By default this is set to the relation that's passed to the constructor.
@@ -113,6 +128,13 @@ module ROM
       # @api public
       def target
         relation
+      end
+
+      # Return name of this command's relation
+      #
+      # @api private
+      def name
+        relation.name
       end
 
       # Assert that tuple count in the target relation corresponds to :result

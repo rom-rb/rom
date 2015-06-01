@@ -18,7 +18,7 @@ module ROM
             attributes = input[tuple]
             validator.call(attributes)
             relation.insert(attributes.to_h)
-            tuple
+            attributes
           end.to_a
         end
       end

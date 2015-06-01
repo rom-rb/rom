@@ -12,6 +12,14 @@ describe ROM::Env do
 
     setup.relation(:tasks)
 
+    setup.commands(:users) do
+      define(:create)
+    end
+
+    setup.commands(:tasks) do
+      define(:create)
+    end
+
     setup.mappers do
       define(:users) do
         attribute :name
@@ -22,6 +30,24 @@ describe ROM::Env do
         attribute :name
         exclude :email
       end
+    end
+  end
+
+  describe '#command' do
+    it 'returns registered command registry' do
+      expect(rom.command(:users)).to be_instance_of(ROM::CommandRegistry)
+    end
+
+    it 'returns registered command' do
+      expect(rom.command(:users).create).to be_kind_of(ROM::Commands::Create)
+    end
+
+    it 'accepts an array with graph options and input' do
+      expect(rom.command([:users, [:create]])).to be_kind_of(ROM::Commands::Lazy)
+    end
+
+    it 'raises ArgumentError when unsupported arg was passed' do
+      expect { rom.command({ oops: 'sorry' }) }.to raise_error(ArgumentError)
     end
   end
 
