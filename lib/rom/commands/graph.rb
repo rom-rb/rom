@@ -18,6 +18,16 @@ module ROM
       alias_method :left, :root
       alias_method :right, :nodes
 
+      # Build a command graph recursively
+      #
+      # This is used by `Env#command` when array with options is passed in
+      #
+      # @param [Registry] registry The command registry from env
+      # @param [Array] options The options array
+      # @param [Array] path The path for input evaluator proc
+      #
+      # @return [Graph]
+      #
       # @api private
       def self.build(registry, options, path = EMPTY_ARRAY)
         options.reduce { |spec, other| build_command(registry, spec, other, path) }
