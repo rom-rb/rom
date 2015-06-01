@@ -1,5 +1,10 @@
 ## v0.8.0 to-be-released
 
+### Added
+
+* `ungroup` and `unfold` mapper operations inverses `group` and `fold`
+  correspondingly (nepalez)
+
 ### Fixed
 
 * `order` memory repository operation sorts tuples by multiple keys
