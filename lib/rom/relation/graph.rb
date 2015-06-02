@@ -54,6 +54,17 @@ module ROM
         @nodes = nodes
       end
 
+      # Combine this graph with more nodes
+      #
+      # @param [Array<Relation::Lazy>]
+      #
+      # @return [Graph]
+      #
+      # @api public
+      def combine(*others)
+        self.class.new(root, nodes + others)
+      end
+
       # Materialize this relation graph
       #
       # @return [Loaded]

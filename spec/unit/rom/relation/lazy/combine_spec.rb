@@ -101,7 +101,30 @@ describe ROM::Relation::Lazy, '#combine' do
     ]
 
     user_with_tasks_and_tags = users.by_name('Jane')
-                               .combine(tasks.for_users, tags.for_users)
+      .combine(tasks.for_users, tags.for_users)
+
+    result = user_with_tasks_and_tags >> map_user_with_tasks_and_tags
+
+    expect(result).to match_array(expected)
+  end
+
+  it 'supports more than one eagerly-loaded relation via chaining' do
+    expected = [
+      {
+        name: 'Jane',
+        email: 'jane@doe.org',
+        tasks: [
+          { name: 'Jane', title: 'be cool', priority: 2 }
+        ],
+        tags: [
+          { task: 'be cool', name: 'red', user: 'Jane' },
+          { task: 'be cool', name: 'green', user: 'Jane' }
+        ]
+      }
+    ]
+
+    user_with_tasks_and_tags = users.by_name('Jane')
+      .combine(tasks.for_users).combine(tags.for_users)
 
     result = user_with_tasks_and_tags >> map_user_with_tasks_and_tags
 
