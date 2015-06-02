@@ -225,7 +225,7 @@ module ROM
         if preprocess
           name = attribute.name
           header = attribute.header
-          keys = header.map(&:name)
+          keys = attribute.pop_keys
 
           others = header.postprocessed
 
@@ -275,9 +275,15 @@ module ROM
         if preprocess
           name = attribute.name
           header = attribute.header
-          key = header.keys.first
+          keys = attribute.pop_keys
+          key = keys.first
+
+          others = header.postprocessed
 
           compose do |ops|
+            ops << others.map { |attr|
+              t(:map_array, t(:map_value, name, visit(attr, true)))
+            }
             ops << t(:map_array, t(:map_value, name, t(:insert_key, key)))
             ops << t(:map_array, t(:reject_keys, [key] - [name]))
             ops << t(:ungroup, name, [key])
