@@ -2,13 +2,17 @@
 
 ### Added
 
-* `ungroup` and `unfold` mapper operations inverses `group` and `fold`
-  correspondingly (nepalez)
+* `ungroup` and `unfold` mapper operations inverses `group` and `fold` (nepalez)
+
+### Changed
+
+* `prefix` and `prefix_separator` mapper operations can be used inside block (nepalez)
 
 ### Fixed
 
-* `order` memory repository operation sorts tuples by multiple keys
-  when some keys contain empty values (nepalez)
+* `order` memory repository operation sorts tuples containing empty values (nepalez)
+* `unwrap` mapper operation can be nested deeply (nepalez)
+* partial `unwrap` can rename the rest of the wrapped attribute using `:from` (nepalez) 
 * `Mapper::AttributeDSL#embedded` now honors `option[:type]` when used
   with `option[:mapper]`
 
