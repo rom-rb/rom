@@ -85,6 +85,12 @@ describe ROM::Relation::Lazy, '#combine' do
     }
   }
 
+  it 'raises error when composite relation is passed as a node' do
+    expect {
+      users.combine(tasks >> proc {})
+    }.to raise_error(ROM::UnsupportedRelationError)
+  end
+
   it 'supports more than one eagerly-loaded relation' do
     expected = [
       {

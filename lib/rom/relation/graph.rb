@@ -1,4 +1,5 @@
 require 'rom/relation/loaded'
+require 'rom/relation/composite'
 require 'rom/relation/materializable'
 require 'rom/pipeline'
 
@@ -47,6 +48,16 @@ module ROM
 
       alias_method :left, :root
       alias_method :right, :nodes
+
+      # @api private
+      def self.build(root, nodes)
+        if nodes.any? { |node| node.instance_of?(Composite) }
+          raise UnsupportedRelationError,
+            "Combining with composite relations is not supported"
+        else
+          new(root, nodes)
+        end
+      end
 
       # @api private
       def initialize(root, nodes)

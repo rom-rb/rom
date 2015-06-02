@@ -63,7 +63,7 @@ module ROM
       #
       # @api public
       def combine(*others)
-        Graph.new(self, others)
+        Graph.build(self, others)
       end
 
       # Build a relation pipeline using registered mappers
