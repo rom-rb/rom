@@ -97,9 +97,9 @@ setup = ROM.setup(:sql, DATABASE_URL)
 
 conn = setup.default.connection
 
-conn.drop_table?(:users)
-conn.drop_table?(:tasks)
 conn.drop_table?(:tags)
+conn.drop_table?(:tasks)
+conn.drop_table?(:users)
 
 conn.create_table :users do
   primary_key :id
