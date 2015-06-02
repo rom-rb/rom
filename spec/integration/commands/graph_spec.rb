@@ -164,9 +164,14 @@ describe 'Building up a command graph for nested input' do
 
         attribute :name
 
-        combine :task, type: :hash, on: { name: :user } do
+        combine :tasks, on: { name: :user } do
           model name: 'Test::Task'
           attribute :title
+
+          combine :tags, on: { title: :task } do
+            model name: 'Test::Tag'
+            attribute :name
+          end
         end
       end
     end
@@ -174,23 +179,43 @@ describe 'Building up a command graph for nested input' do
     setup.commands(:tasks) do
       define(:create) do
         input Transproc(:accept_keys, [:title, :user])
-        result :one
 
-        def execute(tuple, user)
-          super(tuple.merge(user: user.fetch(:name)))
+        def execute(tuples, user)
+          super(tuples.map { |t| t.merge(user: user.fetch(:name)) })
         end
       end
     end
 
-    input = { user: { name: 'Jane', task: { title: 'Task One' } } }
+    input = {
+      user: {
+        name: 'Jane',
+        tasks: [
+          {
+            title: 'Task One',
+            tags: [{ name: 'red' }, { name: 'green' }]
+          },
+          {
+            title: 'Task Two',
+            tags: [{ name: 'blue' }]
+          }
+        ]
+      }
+    }
 
-    command = rom.command([
-      { user: :users }, [:create, [{ task: :tasks }, [:create]]]
-    ]).as(:entity)
+    options = [
+      { user: :users }, [
+        :create, [
+          [:tasks, [:create, [:tags, [:create]]]],
+        ]
+      ]
+    ]
 
-    result = command.call(input).first
+    command = rom.command(options).as(:entity)
+
+    result = command.call(input).one
 
     expect(result).to be_instance_of(Test::User)
-    expect(result.task).to be_instance_of(Test::Task)
+    expect(result.tasks.first).to be_instance_of(Test::Task)
+    expect(result.tasks.first.tags.first).to be_instance_of(Test::Tag)
   end
 end
