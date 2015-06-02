@@ -1,8 +1,10 @@
+require 'rom/pipeline'
+require 'rom/mapper_registry'
+
 require 'rom/relation/loaded'
 require 'rom/relation/composite'
 require 'rom/relation/graph'
 require 'rom/relation/materializable'
-require 'rom/pipeline'
 
 module ROM
   class Relation
@@ -34,7 +36,7 @@ module ROM
       include Materializable
       include Pipeline
 
-      option :mappers, reader: true, default: EMPTY_HASH
+      option :mappers, reader: true, default: proc { MapperRegistry.new }
 
       # @return [Relation]
       #

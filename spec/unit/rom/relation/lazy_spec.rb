@@ -49,6 +49,14 @@ describe ROM::Relation::Lazy do
     let(:relation) { users }
   end
 
+  describe '#map_with' do
+    it 'raises error when unknown mapper was selected' do
+      expect {
+        users.as(:not_here)
+      }.to raise_error(ROM::MapperMissingError, /not_here/)
+    end
+  end
+
   describe '#method_missing' do
     it 'forwards to relation and auto-curries' do
       relation = users.by_name_and_email_sorted('Jane')
