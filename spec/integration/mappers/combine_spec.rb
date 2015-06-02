@@ -17,8 +17,12 @@ describe 'Mapper definition DSL' do
       end
 
       setup.relation(:users) do
-        def addresses(_users_)
+        def addresses(_users)
           [{ city: 'NYC', user: 'Jane' }, { city: 'Boston', user: 'Joe' }]
+        end
+
+        def books(_users)
+          [{ title: 'Book One', user: 'Jane' }, { title: 'Book Two', user: 'Joe' }]
         end
       end
 
@@ -53,6 +57,8 @@ describe 'Mapper definition DSL' do
 
             attribute :city
           end
+
+          combine :book, on: { name: :user }, type: :hash
         end
       end
     end
@@ -70,7 +76,8 @@ describe 'Mapper definition DSL' do
           Test::Task.new(title: 'sleep well', meta: { user: 'Joe', priority: 2 },
                          tags: [])
         ],
-        address: Test::Address.new(city: 'Boston')
+        address: Test::Address.new(city: 'Boston'),
+        book: { title: 'Book Two', user: 'Joe' }
       )
     }
 
@@ -85,20 +92,22 @@ describe 'Mapper definition DSL' do
             tags: [Test::Tag.new(name: 'blue')]
           )
         ],
-        address: Test::Address.new(city: 'NYC')
+        address: Test::Address.new(city: 'NYC'),
+        book: { title: 'Book One', user: 'Jane' }
       )
     }
 
     it 'works' do
       rom
 
-      Test::User.send(:include, Equalizer.new(:name, :email, :tasks, :address))
+      Test::User.send(:include, Equalizer.new(:name, :email, :tasks, :address, :book))
       Test::Task.send(:include, Equalizer.new(:title, :meta))
       Test::Address.send(:include, Equalizer.new(:city))
 
       result = users.combine(
         tasks.for_users.combine(tasks.tags),
-        users.addresses
+        users.addresses,
+        users.books
       ).as(:entity)
 
       expect(result).to match_array([joe, jane])
