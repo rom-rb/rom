@@ -14,8 +14,7 @@ module ROM
     class AttributeDSL
       include ModelDSL
 
-      attr_reader :attributes, :options, :symbolize_keys, :prefix,
-        :prefix_separator, :reject_keys
+      attr_reader :attributes, :options, :symbolize_keys, :reject_keys
 
       # @param [Array] attributes accumulator array
       # @param [Hash] options
@@ -28,6 +27,38 @@ module ROM
         @prefix = options.fetch(:prefix)
         @prefix_separator = options.fetch(:prefix_separator)
         @reject_keys = options.fetch(:reject_keys)
+      end
+
+      # Redefine the prefix for the following attributes
+      #
+      # @example
+      #
+      #   dsl = AttributeDSL.new([])
+      #   dsl.attribute(:prefix, 'user')
+      #
+      # @api public
+      def prefix(value = Undefined)
+        if value.equal?(Undefined)
+          @prefix
+        else
+          @prefix = value
+        end
+      end
+
+      # Redefine the prefix separator for the following attributes
+      #
+      # @example
+      #
+      #   dsl = AttributeDSL.new([])
+      #   dsl.attribute(:prefix_separator, '.')
+      #
+      # @api public
+      def prefix_separator(value = Undefined)
+        if value.equal?(Undefined)
+          @prefix_separator
+        else
+          @prefix_separator = value
+        end
       end
 
       # Define a mapping attribute with its options and/or block
@@ -314,7 +345,10 @@ module ROM
       def with_attr_options(name, options = EMPTY_HASH)
         attr_options = options.dup
 
-        attr_options[:from] ||= :"#{prefix}#{prefix_separator}#{name}" if prefix
+        if @prefix
+          attr_options[:from] ||= "#{@prefix}#{@prefix_separator}#{name}"
+          attr_options[:from] = attr_options[:from].to_sym if name.is_a? Symbol
+        end
 
         if symbolize_keys
           attr_options.update(from: attr_options.fetch(:from) { name }.to_s)
