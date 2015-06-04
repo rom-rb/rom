@@ -61,12 +61,7 @@ module ROM
       else
 
         step_transformers = steps.map do |s|
-          mapper = new(Mapper.processors.fetch(processor).build(s.header), s.header)
-          if mapper.transformer.is_a?(Transproc::Function) || mapper.transformer.is_a?(Transproc::Composite)
-            mapper.transformer
-          else
-            Transproc(mapper.transformer)
-          end
+          new(Mapper.processors.fetch(processor).build(s.header), s.header).transformer
         end.inject(:+)
 
         new(step_transformers, header)

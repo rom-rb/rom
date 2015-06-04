@@ -37,8 +37,10 @@ describe 'Mapper definition DSL' do
           step do
             model name: 'Test::UserWithTasks'
             attribute :name
+          end
+
+          step do
             attribute :email
-          #  attribute :abcd
           end
 
           #step do
