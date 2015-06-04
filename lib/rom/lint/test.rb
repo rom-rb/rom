@@ -85,9 +85,8 @@ module ROM
       attr_reader :repository
 
       def setup
-        warn <<-MSG.gsub(/^\s+/, '')
-[Adapter]::Repository is deprecated and will be removed in 1.0.0.
-Please use [Adapter]::Gateway instead.
+        ROM::Deprecations.announce "[Adapter]::Repository is", <<-MSG
+          Please use [Adapter]::Gateway instead.
         MSG
         @gateway = repository
       end

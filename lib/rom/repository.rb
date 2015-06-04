@@ -8,11 +8,8 @@ module ROM
   # @api public
   class Repository < Gateway
     def self.inherited(_klass)
-      warn <<-MSG.gsub(/^\s+/, '')
-        Inheriting from ROM::Repository is deprecated and will be removed in 1.0.0.
+      ROM::Deprecations.announce "Inheriting from ROM::Repository is", <<-MSG
         Please inherit from ROM::Gateway instead.
-
-        #{caller.detect { |l| !l.include?('lib/rom') }}
       MSG
     end
   end

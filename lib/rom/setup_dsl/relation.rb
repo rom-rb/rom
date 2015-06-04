@@ -15,10 +15,8 @@ module ROM
       ClassBuilder.new(name: class_name, parent: self[adapter]).call do |klass|
         klass.gateway(options.fetch(:gateway) {
           if options.key?(:repository)
-          warn <<-MSG.gsub(/^\s+/, '')
-            The repository key is deprecated and will be removed in 1.0.0.
+          ROM::Deprecations.announce "The :repository key is", <<-MSG
             Please use `gateway: :#{options.fetch(:repository)}` instead.
-            #{caller.detect { |l| !l.include?('lib/rom')}}
           MSG
             options.fetch(:repository)
           else

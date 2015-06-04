@@ -3,9 +3,8 @@ require 'rom/lint/enumerable_dataset'
 
 RSpec.shared_examples "a rom repository" do
   before(:all) do
-    warn <<-MSG.gsub(/^\s+/, '')
-[Adapter]::Repository is deprecated and will be removed in 1.0.0.
-Please use [Adapter]::Gateway instead.
+    ROM::Deprecations.announce "[Adapter]::Repository is", <<-MSG
+      Please use [Adapter]::Gateway instead.
     MSG
   end
 
