@@ -25,28 +25,27 @@ describe 'Mapper definition DSL' do
       end
     end
 
-    it 'allows defining grouped attributes via options hash' do
+    it 'processes the mapper step by step' do
       setup.mappers do
         define(:with_tasks, parent: :users) do
-          model name: 'Test::UserWithTasks'
 
-          #attribute :name
-          #attribute :email
+          step do
+            attribute :an_email, from: :email
+          end
 
-          #group tasks: [:title, :priority]
+          step do
+            attribute :name
+            attribute :title
+            attribute :priority
+            attribute :email, from: :an_email
+          end
+
           step do
             model name: 'Test::UserWithTasks'
             attribute :name
-          end
-
-          step do
             attribute :email
+            group tasks: [:title, :priority]
           end
-
-          #step do
-          #  model name: 'Test::UserWithTasks'
-          #  group tasks: [:title, :priority]
-          #end
 
         end
       end
@@ -57,13 +56,9 @@ describe 'Mapper definition DSL' do
 
       jane = rom.relation(:users).with_tasks.map_with(:with_tasks).to_a.last
 
-      expect(jane).to eql(
-        Test::UserWithTasks.new(
-          name: 'Jane',
-          email: 'jane@doe.org',
-          #tasks: [{ title: 'be cool', priority: 2 }]
-        )
-      )
+      expect(jane.name).to eql('Jane')
+      expect(jane.email).to eql('jane@doe.org')
+      expect(jane.tasks).to eql([{ title: 'be cool', priority: 2 }])
     end
 
   end
