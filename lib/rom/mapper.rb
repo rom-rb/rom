@@ -56,7 +56,21 @@ module ROM
     #
     # @api private
     def self.build(header = self.header, processor = :transproc)
-      new(Mapper.processors.fetch(processor).build(header), header)
+      if steps.empty?
+        new(Mapper.processors.fetch(processor).build(header), header)
+      else
+
+        step_transformers = steps.map do |s|
+          mapper = new(Mapper.processors.fetch(processor).build(s.header), s.header)
+          if mapper.transformer.is_a?(Transproc::Function) || mapper.transformer.is_a?(Transproc::Composite)
+            mapper.transformer
+          else
+            Transproc(mapper.transformer)
+          end
+        end.inject(:+)
+
+        new(step_transformers, header)
+      end
     end
 
     # @api private
