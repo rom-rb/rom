@@ -56,14 +56,16 @@ module ROM
     #
     # @api private
     def self.build(header = self.header, processor = :transproc)
+      processor = Mapper.processors.fetch(processor)
+
       if steps.empty?
-        new(Mapper.processors.fetch(processor).build(header), header)
+        new(processor.build(header), header)
+      elsif attributes.any?
+        raise(MapperMisconfiguredError, "cannot mix outer attributes and steps")
       else
-
-        step_transformers = steps.map do |s|
-          new(Mapper.processors.fetch(processor).build(s.header), s.header).transformers.first
-        end
-
+        step_transformers = steps.map(&:header).map { |step_header|
+          new(processor.build(step_header), step_header).transformers.first
+        }
         new(step_transformers, header)
       end
     end

@@ -105,8 +105,7 @@ module ROM
       #   end
       #
       # @api public
-      def step(options=EMPTY_HASH, &block)
-        raise(ArgumentError, "cannot mix outer attributes and steps") unless attributes.empty?
+      def step(options = EMPTY_HASH, &block)
         steps << new(options, &block)
       end
 
