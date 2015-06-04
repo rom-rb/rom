@@ -297,6 +297,15 @@ module ROM
         end
       end
 
+      # Visit excluded attribute
+      #
+      # @param [Header::Attribute::Exclude] attribute
+      #
+      # @api private
+      def visit_exclude(attribute)
+        t(:reject_keys, [attribute.name])
+      end
+
       # @api private
       def combined_args(attribute)
         other = attribute.header.combined
