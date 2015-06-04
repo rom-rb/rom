@@ -50,6 +50,17 @@ module ROM
       processors.update(name => processor)
     end
 
+    # Prepares an array of headers for a potentially multistep mapper
+    #
+    # @return [Array<Header>]
+    #
+    # @api private
+    def self.headers(header)
+      return [header] if steps.empty?
+      return steps.map(&:header) if attributes.empty?
+      raise(MapperMisconfiguredError, "cannot mix outer attributes and steps")
+    end
+
     # Build a mapper using provided processor type
     #
     # @return [Mapper]
@@ -57,17 +68,8 @@ module ROM
     # @api private
     def self.build(header = self.header, processor = :transproc)
       processor = Mapper.processors.fetch(processor)
-
-      if steps.empty?
-        new(processor.build(header), header)
-      elsif attributes.any?
-        raise(MapperMisconfiguredError, "cannot mix outer attributes and steps")
-      else
-        step_transformers = steps.map(&:header).map { |step_header|
-          new(processor.build(step_header), step_header).transformers.first
-        }
-        new(step_transformers, header)
-      end
+      transformers = headers(header).map(&processor.method(:build))
+      new(transformers, header)
     end
 
     # @api private
