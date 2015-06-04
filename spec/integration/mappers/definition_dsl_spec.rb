@@ -84,7 +84,12 @@ describe 'Mapper definition DSL' do
     end
 
     it 'inherits the attributes from the parent by default' do
-      expect(header.keys).to eql([:email])
+      expect(header.keys).to eql([:name, :email])
+    end
+
+    it 'excludes an inherited attribute when requested' do
+      name = header.attributes[:name]
+      expect(name).to be_kind_of ROM::Header::Exclude
     end
 
     it 'builds a new model' do

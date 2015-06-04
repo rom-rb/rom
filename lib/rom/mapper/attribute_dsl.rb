@@ -82,17 +82,8 @@ module ROM
         end
       end
 
-      # Remove an attribute
-      #
-      # @example
-      #   dsl = AttributeDSL.new([[:name]])
-      #
-      #   dsl.exclude(:name)
-      #   dsl.attributes # => []
-      #
-      # @api public
-      def exclude(*names)
-        attributes.delete_if { |attr| names.include?(attr.first) }
+      def exclude(name)
+        attributes << [name, { exclude: true }]
       end
 
       # Perform transformations sequentially
@@ -354,6 +345,13 @@ module ROM
 
       private
 
+      # Remove the attribute used somewhere else (in wrap, group, model etc.)
+      #
+      # @api private
+      def remove(*names)
+        attributes.delete_if { |attr| names.include?(attr.first) }
+      end
+
       # Handle attribute options common for all definitions
       #
       # @api private
@@ -408,7 +406,7 @@ module ROM
         dsl = new(options, &block)
         header = dsl.header
         add_attribute(name, options.update(header: header))
-        header.each { |attr| exclude(attr.key) unless name == attr.key }
+        header.each { |attr| remove(attr.key) unless name == attr.key }
       end
 
       # Define attributes from the `name => attributes` hash syntax
@@ -420,7 +418,7 @@ module ROM
         hash.each do |name, header|
           with_attr_options(name, options) do |attr_options|
             add_attribute(name, attr_options.update(header: header.zip))
-            header.each { |attr| exclude(attr) unless name == attr }
+            header.each { |attr| remove(attr) unless name == attr }
           end
         end
       end
@@ -442,7 +440,7 @@ module ROM
       #
       # @api private
       def add_attribute(name, options)
-        exclude(name, name.to_s)
+        remove(name, name.to_s)
         attributes << [name, options]
       end
 

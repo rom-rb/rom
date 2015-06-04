@@ -162,6 +162,9 @@ module ROM
     # transformation
     Unfold = Class.new(Array)
 
+    # Exclude is a special type of Attribute to be removed
+    Exclude = Class.new(Attribute)
+
     # TYPE_MAP is a (hash) map of ROM::Header identifiers to ROM::Header types
     #
     # @private
@@ -174,7 +177,8 @@ module ROM
       fold: Fold,
       unfold: Unfold,
       hash: Hash,
-      array: Array
+      array: Array,
+      exclude: Exclude
     }
   end
 end
