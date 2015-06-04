@@ -10,6 +10,7 @@ module ROM
   CommandError = Class.new(StandardError)
   TupleCountMismatchError = Class.new(CommandError)
   MapperMissingError = Class.new(StandardError)
+  MapperMisconfiguredError = Class.new(StandardError)
   UnknownPluginError = Class.new(StandardError)
   UnsupportedRelationError = Class.new(StandardError)
 

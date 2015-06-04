@@ -14,7 +14,7 @@ module ROM
     class AttributeDSL
       include ModelDSL
 
-      attr_reader :attributes, :options, :symbolize_keys, :reject_keys
+      attr_reader :attributes, :options, :symbolize_keys, :reject_keys, :steps
 
       # @param [Array] attributes accumulator array
       # @param [Hash] options
@@ -27,6 +27,7 @@ module ROM
         @prefix = options.fetch(:prefix)
         @prefix_separator = options.fetch(:prefix_separator)
         @reject_keys = options.fetch(:reject_keys)
+        @steps = []
       end
 
       # Redefine the prefix for the following attributes
@@ -92,6 +93,20 @@ module ROM
       # @api public
       def exclude(*names)
         attributes.delete_if { |attr| names.include?(attr.first) }
+      end
+
+      # Perform transformations sequentially
+      #
+      # @example
+      #   dsl = AttributeDSL.new()
+      #
+      #   dsl.step do
+      #     attribute :name
+      #   end
+      #
+      # @api public
+      def step(options = EMPTY_HASH, &block)
+        steps << new(options, &block)
       end
 
       # Define an embedded attribute

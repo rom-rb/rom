@@ -1,12 +1,12 @@
 require 'rom/mapper/dsl'
 
 module ROM
-  # Mapper is a simple object that uses a transformer to load relations
+  # Mapper is a simple object that uses transformers to load relations
   #
   # @private
   class Mapper
     include DSL
-    include Equalizer.new(:transformer, :header)
+    include Equalizer.new(:transformers, :header)
 
     defines :relation, :register_as, :symbolize_keys,
       :prefix, :prefix_separator, :inherit_header, :reject_keys
@@ -15,12 +15,12 @@ module ROM
     reject_keys false
     prefix_separator '_'.freeze
 
-    # @return [Object] transformer object built by a processor
+    # @return [Object] transformers object built by a processor
     #
     # @api private
-    attr_reader :transformer
+    attr_reader :transformers
 
-    # @return [Header] header that was used to build the transformer
+    # @return [Header] header that was used to build the transformers
     #
     # @api private
     attr_reader :header
@@ -56,7 +56,18 @@ module ROM
     #
     # @api private
     def self.build(header = self.header, processor = :transproc)
-      new(Mapper.processors.fetch(processor).build(header), header)
+      processor = Mapper.processors.fetch(processor)
+
+      if steps.empty?
+        new(processor.build(header), header)
+      elsif attributes.any?
+        raise(MapperMisconfiguredError, "cannot mix outer attributes and steps")
+      else
+        step_transformers = steps.map(&:header).map { |step_header|
+          new(processor.build(step_header), step_header).transformers.first
+        }
+        new(step_transformers, header)
+      end
     end
 
     # @api private
@@ -68,8 +79,8 @@ module ROM
     end
 
     # @api private
-    def initialize(transformer, header)
-      @transformer = transformer
+    def initialize(transformers, header)
+      @transformers = Array(transformers)
       @header = header
     end
 
@@ -80,11 +91,11 @@ module ROM
       header.model
     end
 
-    # Process a relation using the transformer
+    # Process a relation using the transformers
     #
     # @api private
     def call(relation)
-      transformer[relation.to_a]
+      transformers.reduce(relation.to_a) { |a, e| e.call(a) }
     end
   end
 end
