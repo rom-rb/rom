@@ -2,24 +2,23 @@
 
 ### Added
 
-* `ungroup` and `unfold` mapper operations inverses `group` and `fold` (nepalez)
-
-### Changed
-
-* `prefix` and `prefix_separator` mapper operations can be used inside block (nepalez)
-
-### Fixed
-
-* `order` memory repository operation sorts tuples containing empty values (nepalez)
-* `unwrap` mapper operation can be nested deeply (nepalez)
-* partial `unwrap` can rename the rest of the wrapped attribute using `:from` (nepalez) 
-* `Mapper::AttributeDSL#embedded` now honors `option[:type]` when used
-  with `option[:mapper]`
+* New `step` mapper operation that allows multistep transformations inside a single mapper (dekz)
+* New `ungroup` and `unfold` mapper operations inverse `group` and `fold` (nepalez)
+* Support deep nesting of `unwrap` mapper operations (nepalez)
+* Support usage of `exclude` in a root of the mapper (nepalez)
+* Support usage of `prefix` and `prefix_separator` mapper operations inside blocks (nepalez)
+* Support renaming of the rest of an attribute after `unwrap` (nepalez)
 
 ### Changed
 
 * `Repository` class has been renamed to `Gateway` with proper deprecation
   warnings (cflipse)
+
+### Fixed
+
+* `order` memory repository operation sorts tuples containing empty values (nepalez)
+* `Mapper::AttributeDSL#embedded` now honors `option[:type]` when used
+  with `option[:mapper]`
 
 [Compare v0.7.1...HEAD](https://github.com/rom-rb/rom/compare/v0.7.1...HEAD)
 
