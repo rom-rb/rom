@@ -263,6 +263,19 @@ describe ROM::Mapper do
 
       expect(header).to eql(expected_header)
     end
+
+    it 'raises an exception when using a block and options to define attributes' do
+      expect {
+        mapper.group(cities: [:name]) { attribute :other_name }
+      }.to raise_error(ROM::MapperMisconfiguredError)
+    end
+
+    it 'raises an exception when using options and a mapper to define attributes' do
+      task_mapper = Class.new(ROM::Mapper) { attribute :title }
+      expect {
+        mapper.group cities: [:name], mapper: task_mapper
+      }.to raise_error(ROM::MapperMisconfiguredError)
+    end
   end
 
   describe 'top-level :prefix option' do

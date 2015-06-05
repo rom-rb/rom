@@ -163,12 +163,7 @@ module ROM
       #
       # @api public
       def wrap(*args, &block)
-        if args.first.is_a?(Hash) && block_given?
-          raise ROM::MapperMisconfiguredError, 'Cannot configure `wrap` using both options and a block'
-        end
-        if args.first.is_a?(Hash) && args.first[:mapper]
-          raise ROM::MapperMisconfiguredError, 'Cannot configure `wrap` using both options and a mapper'
-        end
+        ensure_mapper_configuration('wrap', args, block_given?)
 
         with_name_or_options(*args) do |name, options, mapper|
           wrap_options = { type: :hash, wrap: true }.update(options)
@@ -230,6 +225,8 @@ module ROM
       #
       # @api public
       def group(*args, &block)
+        ensure_mapper_configuration('group', args, block_given?)
+
         with_name_or_options(*args) do |name, options, mapper|
           group_options = { type: :array, group: true }.update(options)
 
@@ -460,6 +457,20 @@ module ROM
         dsl = self.class.new([], @options.merge(options))
         dsl.instance_exec(&block) unless block.nil?
         dsl
+      end
+
+      # Ensure the mapping configuration isn't ambiguous
+      #
+      # @api private
+      def ensure_mapper_configuration(method_name, args, block_present)
+        if args.first.is_a?(Hash) && block_present
+          raise MapperMisconfiguredError,
+                "Cannot configure `#{method_name}#` using both options and a block"
+        end
+        if args.first.is_a?(Hash) && args.first[:mapper]
+          raise MapperMisconfiguredError,
+                "Cannot configure `#{method_name}#` using both options and a mapper"
+        end
       end
     end
   end
