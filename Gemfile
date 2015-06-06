@@ -43,7 +43,6 @@ group :tools do
   gem 'byebug'
 
   platform :mri do
-    gem 'mutant', '>= 0.7.7', github: 'mbj/mutant'
-    gem 'mutant-rspec'
+    gem 'mutant-rspec', '~> 0.7.9'
   end
 end
