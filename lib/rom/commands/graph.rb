@@ -63,6 +63,8 @@ module ROM
                 end
             rescue => err
               raise CommandFailure.new(node, err)
+            rescue CommandFailure => err
+              raise err
             end
 
             if node.one? && !node.graph?
@@ -79,6 +81,8 @@ module ROM
           end
         rescue => err
           raise CommandFailure.new(root, err)
+        rescue CommandFailure => err
+          raise err
         end
       end
 

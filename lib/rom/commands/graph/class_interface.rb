@@ -31,21 +31,27 @@ module ROM
               [spec, spec]
             end
 
+          command = registry[relation][name]
+
           tuple_path = Array[*path] << key
 
           input_proc = -> *args do
             input, index = args
 
-            if index
-              tuple_path[0..tuple_path.size-2]
-                .reduce(input) { |a,e| a.fetch(e) }
-                .at(index)[tuple_path.last]
-            else
-              tuple_path.reduce(input) { |a,e| a.fetch(e) }
+            begin
+              if index
+                tuple_path[0..tuple_path.size-2]
+                  .reduce(input) { |a,e| a.fetch(e) }
+                  .at(index)[tuple_path.last]
+              else
+                tuple_path.reduce(input) { |a,e| a.fetch(e) }
+              end
+            rescue KeyError => err
+              raise CommandFailure.new(command, err)
             end
           end
 
-          command = registry[relation][name].with(input_proc)
+          command = command.with(input_proc)
 
           if nodes
             if nodes.all? { |node| node.is_a?(Array) }

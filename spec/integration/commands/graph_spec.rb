@@ -218,4 +218,18 @@ describe 'Building up a command graph for nested input' do
     expect(result.tasks.first).to be_instance_of(Test::Task)
     expect(result.tasks.first.tags.first).to be_instance_of(Test::Tag)
   end
+
+  it 'raises a proper error when the input has invalid structure' do
+    input = { user: { name: 'Jane' } }
+
+    options = [
+      { user: :users }, [:create, [{ book: :books }, [:create]]]
+    ]
+
+    command = rom.command(options)
+
+    expect {
+      command.call(input)
+    }.to raise_error(ROM::CommandFailure, /book/)
+  end
 end
