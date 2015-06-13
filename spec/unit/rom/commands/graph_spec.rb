@@ -125,6 +125,24 @@ describe ROM::Commands::Graph do
         end
       end
     end
+
+    context 'when error is raised' do
+      subject(:command) do
+        create_user.with(user).combine(create_many_tasks.with([task]))
+      end
+
+      it 're-raises the error providing proper context when root fails' do
+        allow(command.root).to receive(:call).and_raise(StandardError, 'ooops')
+
+        expect { command.call }.to raise_error(ROM::CommandFailure, /oops/)
+      end
+
+      it 're-raises the error providing proper context when a node fails' do
+        allow(command.nodes[0]).to receive(:call).and_raise(StandardError, 'ooops')
+
+        expect { command.call }.to raise_error(ROM::CommandFailure, /oops/)
+      end
+    end
   end
 
   describe 'pipeline' do

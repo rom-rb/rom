@@ -17,6 +17,17 @@ module ROM
   InvalidOptionValueError = Class.new(StandardError)
   InvalidOptionKeyError = Class.new(StandardError)
 
+  class CommandFailure < StandardError
+    attr_reader :command
+    attr_reader :original_error
+
+    def initialize(command, err)
+      super("command: #{command.inspect}; original message: #{err.message}")
+      @command = command
+      @original_error = original_error
+    end
+  end
+
   EMPTY_ARRAY = [].freeze
   EMPTY_HASH = {}.freeze
 end
