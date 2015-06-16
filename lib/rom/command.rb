@@ -50,6 +50,8 @@ module ROM
     # @api private
     def self.adapter_namespace(adapter)
       ROM.adapters.fetch(adapter).const_get(:Commands)
+    rescue KeyError
+      raise AdapterNotPresentError.new(adapter, :relation)
     end
 
     # Build a command class for a specific relation with options

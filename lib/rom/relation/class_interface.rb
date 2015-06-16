@@ -102,8 +102,10 @@ module ROM
       # @return [Class]
       #
       # @api public
-      def [](type)
-        ROM.adapters.fetch(type).const_get(:Relation)
+      def [](adapter)
+        ROM.adapters.fetch(adapter).const_get(:Relation)
+      rescue KeyError
+        raise AdapterNotPresentError.new(adapter, :relation)
       end
 
       # Dynamically define a method that will forward to the dataset and wrap

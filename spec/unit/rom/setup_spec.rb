@@ -140,4 +140,18 @@ describe ROM::Setup do
       expect { setup[:not_here] }.to raise_error(KeyError, /not_here/)
     end
   end
+
+  describe 'defining components when adapter was not registered' do
+    it 'raises error when trying to define a relation' do
+      expect {
+        Class.new(ROM::Relation[:not_here])
+      }.to raise_error(ROM::AdapterNotPresentError, /not_here/)
+    end
+
+    it 'raises error when trying to define a command' do
+      expect {
+        Class.new(ROM::Commands::Create[:not_here])
+      }.to raise_error(ROM::AdapterNotPresentError, /not_here/)
+    end
+  end
 end

@@ -14,7 +14,7 @@ require 'rom/support/class_builder'
 require 'rom/plugin'
 require 'rom/relation'
 require 'rom/mapper'
-require 'rom/command'
+require 'rom/commands'
 
 # default mapper processor using Transproc gem
 require 'rom/processor/transproc'

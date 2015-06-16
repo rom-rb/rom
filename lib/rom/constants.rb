@@ -4,6 +4,15 @@ module ROM
 
   AdapterLoadError = Class.new(StandardError)
 
+  class AdapterNotPresentError < StandardError
+    def initialize(adapter, component)
+      super(
+        "Failed to find #{component} class for #{adapter} adapter. " \
+        "Make sure ROM setup was started and the adapter identifier is correct."
+      )
+    end
+  end
+
   EnvAlreadyFinalizedError = Class.new(StandardError)
   RelationAlreadyDefinedError = Class.new(StandardError)
   NoRelationError = Class.new(StandardError)
