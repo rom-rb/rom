@@ -13,12 +13,15 @@
 
 * `Repository` class has been renamed to `Gateway` with proper deprecation
   warnings (cflipse)
+* `combine` in mapper can be used without a block (kwando)
+* `wrap` and `group` in mapper will raise error if `:mapper` is set along with
+  block or options (vrish88)
 
 ### Fixed
 
 * `order` memory repository operation sorts tuples containing empty values (nepalez)
 * `Mapper::AttributeDSL#embedded` now honors `option[:type]` when used
-  with `option[:mapper]`
+  with `option[:mapper]` (c0)
 
 [Compare v0.7.1...HEAD](https://github.com/rom-rb/rom/compare/v0.7.1...HEAD)
 
