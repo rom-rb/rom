@@ -30,7 +30,10 @@ describe ROM::Mapper do
   describe '.registry' do
     it 'builds mapper class registry for base and virtual relations' do
       users = Class.new(ROM::Mapper) { relation(:users) }
-      entity = Class.new(ROM::Mapper) { relation(:users); register_as(:entity) }
+      entity = Class.new(ROM::Mapper) do
+        relation(:users)
+        register_as(:entity)
+      end
       active = Class.new(users) { relation(:active) }
       admins = Class.new(users) { relation(:admins) }
       custom = Class.new(users) { register_as(:custom) }

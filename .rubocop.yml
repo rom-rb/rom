@@ -5,6 +5,7 @@ inherit_from: .rubocop_todo.yml
 AllCops:
   Exclude:
     - tmp/**/*
+    - vendor/**/*
 
 Style/BlockDelimiters:
   EnforcedStyle: semantic
@@ -35,10 +36,6 @@ Style/AlignParameters:
 Style/AsciiComments:
   Enabled: false
 
-# Allow using braces for value-returning blocks
-Style/Blocks:
-  Enabled: false
-
 # Documentation checked by Inch CI
 Style/Documentation:
   Enabled: false
@@ -55,14 +52,14 @@ Style/Lambda:
 Style/MultilineBlockChain:
   Enabled: false
 
+# Multiline operation chains are indented
+Style/MultilineOperationIndentation:
+  EnforcedStyle: indented
+
 # Result::Success and Result::Failure use > for callbacks
 Style/OpMethod:
   Exclude:
     - lib/rom/command_registry.rb
-
-# Even a single escaped slash can be confusing
-Style/RegexpLiteral:
-  MaxSlashes: 0
 
 # Don’t introduce semantic fail/raise distinction
 Style/SignalException:

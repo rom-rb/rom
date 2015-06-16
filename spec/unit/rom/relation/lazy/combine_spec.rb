@@ -150,7 +150,7 @@ describe ROM::Relation::Lazy, '#combine' do
     ]
 
     user_with_tasks = users.by_name('Jane')
-                      .combine(tasks.for_users.combine(tags.for_tasks))
+      .combine(tasks.for_users.combine(tags.for_tasks))
 
     result = user_with_tasks >> map_user_with_tasks
 
