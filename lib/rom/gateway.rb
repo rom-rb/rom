@@ -68,13 +68,16 @@ module ROM
     #
     # @api private
     def self.class_from_symbol(type)
-      begin
-        require "rom/#{type}"
-      rescue LoadError
-        raise AdapterLoadError, "Failed to load adapter rom/#{type}"
+      adapter = ROM.adapters.fetch(type) do
+        begin
+          require "rom/#{type}"
+        rescue LoadError
+          raise AdapterLoadError, "Failed to load adapter rom/#{type}"
+        end
+
+        ROM.adapters.fetch(type)
       end
 
-      adapter = ROM.adapters.fetch(type)
       if adapter.const_defined?(:Gateway)
         adapter.const_get(:Gateway)
       else

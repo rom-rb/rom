@@ -50,6 +50,25 @@ describe ROM::Gateway do
   end
 
   describe '.class_from_symbol' do
+    context 'when adapter is already present' do
+      before do
+        module Test
+          module Adapter
+            class Gateway
+            end
+          end
+        end
+
+        ROM.register_adapter(:test_adapter, Test::Adapter)
+      end
+
+      it 'does not try to require an adapter if it is already present' do
+        klass = ROM::Gateway.class_from_symbol(:test_adapter)
+
+        expect(klass).to be(Test::Adapter::Gateway)
+      end
+    end
+
     it 'instantiates a gateway based on type' do
       klass = ROM::Gateway.class_from_symbol(:memory)
       expect(klass).to be(ROM::Memory::Gateway)
