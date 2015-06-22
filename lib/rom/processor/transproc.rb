@@ -3,6 +3,8 @@ require 'transproc/all'
 require 'rom/processor'
 
 require 'rom/processor/transproc/combine_processor'
+require 'rom/processor/transproc/attributes_processor'
+require 'rom/processor/transproc/rows_processor'
 
 module ROM
   class Processor
@@ -31,11 +33,6 @@ module ROM
       # @api private
       attr_reader :mapping
 
-      # @return [Proc] row-processing proc
-      #
-      # @api private
-      attr_reader :row_proc
-
       # Default no-op row_proc
       EMPTY_FN = -> tuple { tuple }.freeze
 
@@ -60,7 +57,6 @@ module ROM
         @header = header
         @model = header.model
         @mapping = header.mapping
-        initialize_row_proc
       end
 
       # Coerce mapper header to a transproc data mapping function
@@ -85,292 +81,15 @@ module ROM
       end
 
       def rows_processor
-        t(:map_array, row_proc) if row_proc
+        RowsProcessor.new(header).to_transproc
       end
 
       def header_postprocessor
-        header.postprocessed.map(&method(:visit_with_preprocess))
+        AttributesProcessor.new(header.postprocessed).to_transproc
       end
 
       def header_preprocessor
-        header.preprocessed.map(&method(:visit_with_preprocess))
-      end
-
-      def visit_with_preprocess(attr)
-        visit(attr, true)
-      end
-
-      # Visit an attribute from the header
-      #
-      # This forwards to a specialized visitor based on the attribute type
-      #
-      # @param [Header::Attribute] attribute
-      # @param [Array] args Allows to send `preprocess: true`
-      #
-      # @api private
-      def visit(attribute, *args)
-        type = attribute.class.name.split('::').last.downcase
-        send("visit_#{type}", attribute, *args)
-      end
-
-      # Visit plain attribute
-      #
-      # It will call block transformation if it's used
-      #
-      # If it's a typed attribute a coercion transformation is added
-      #
-      # @param [Header::Attribute] attribute
-      #
-      # @api private
-      def visit_attribute(attribute)
-        coercer = attribute.meta[:coercer]
-        if coercer
-          t(:map_value, attribute.name, coercer)
-        elsif attribute.typed?
-          t(:map_value, attribute.name, t(:"to_#{attribute.type}"))
-        end
-      end
-
-      # Visit hash attribute
-      #
-      # @param [Header::Attribute::Hash] attribute
-      #
-      # @api private
-      def visit_hash(attribute)
-        with_row_proc(attribute) do |row_proc|
-          t(:map_value, attribute.name, row_proc)
-        end
-      end
-
-      # Visit combined attribute
-      #
-      # @api private
-      def visit_combined(attribute)
-        op = with_row_proc(attribute) do |row_proc|
-          array_proc =
-            if attribute.type == :hash
-              t(:map_array, row_proc) >> -> arr { arr.first }
-            else
-              t(:map_array, row_proc)
-            end
-
-          t(:map_value, attribute.name, array_proc)
-        end
-
-        if op
-          op
-        elsif attribute.type == :hash
-          t(:map_value, attribute.name, -> arr { arr.first })
-        end
-      end
-
-      # Visit array attribute
-      #
-      # @param [Header::Attribute::Array] attribute
-      #
-      # @api private
-      def visit_array(attribute)
-        with_row_proc(attribute) do |row_proc|
-          t(:map_value, attribute.name, t(:map_array, row_proc))
-        end
-      end
-
-      # Visit wrapped hash attribute
-      #
-      # :nest transformation is added to handle wrapping
-      #
-      # @param [Header::Attribute::Wrap] attribute
-      #
-      # @api private
-      def visit_wrap(attribute)
-        name = attribute.name
-        keys = attribute.tuple_keys
-
-        compose do |ops|
-          ops << t(:nest, name, keys)
-          ops << visit_hash(attribute)
-        end
-      end
-
-      # Visit unwrap attribute
-      #
-      # :unwrap transformation is added to handle unwrapping
-      #
-      # @param [Header::Attributes::Unwrap]
-      #
-      # @api private
-      def visit_unwrap(attribute)
-        name = attribute.name
-        keys = attribute.pop_keys
-
-        compose do |ops|
-          ops << visit_hash(attribute)
-          ops << t(:unwrap, name, keys)
-        end
-      end
-
-      # Visit group hash attribute
-      #
-      # :group transformation is added to handle grouping during preprocessing.
-      # Otherwise we simply use array visitor for the attribute.
-      #
-      # @param [Header::Attribute::Group] attribute
-      # @param [Boolean] preprocess true if we are building a relation preprocessing
-      #                             function that is applied to the whole relation
-      #
-      # @api private
-      def visit_group(attribute, preprocess = false)
-        if preprocess
-          name = attribute.name
-          header = attribute.header
-          keys = attribute.tuple_keys
-
-          others = header.preprocessed
-
-          compose do |ops|
-            ops << t(:group, name, keys)
-            ops << t(:map_array, t(:map_value, name, FILTER_EMPTY))
-            ops << others.map { |attr|
-              t(:map_array, t(:map_value, name, visit(attr, true)))
-            }
-          end
-        else
-          visit_array(attribute)
-        end
-      end
-
-      # Visit ungroup attribute
-      #
-      # :ungroup transforation is added to handle ungrouping during preprocessing.
-      # Otherwise we simply use array visitor for the attribute.
-      #
-      # @param [Header::Attribute::Ungroup] attribute
-      # @param [Boolean] preprocess true if we are building a relation preprocessing
-      #                             function that is applied to the whole relation
-      #
-      # @api private
-      def visit_ungroup(attribute, preprocess = false)
-        if preprocess
-          name = attribute.name
-          header = attribute.header
-          keys = attribute.pop_keys
-
-          others = header.postprocessed
-
-          compose do |ops|
-            ops << others.map { |attr|
-              t(:map_array, t(:map_value, name, visit(attr, true)))
-            }
-            ops << t(:ungroup, name, keys)
-          end
-        else
-          visit_array(attribute)
-        end
-      end
-
-      # Visit fold hash attribute
-      #
-      # :fold transformation is added to handle folding during preprocessing.
-      #
-      # @param [Header::Attribute::Fold] attribute
-      # @param [Boolean] preprocess true if we are building a relation preprocessing
-      #                             function that is applied to the whole relation
-      #
-      # @api private
-      def visit_fold(attribute, preprocess = false)
-        if preprocess
-          name = attribute.name
-          keys = attribute.tuple_keys
-
-          compose do |ops|
-            ops << t(:group, name, keys)
-            ops << t(:map_array, t(:map_value, name, FILTER_EMPTY))
-            ops << t(:map_array, t(:fold, name, keys.first))
-          end
-        end
-      end
-
-      # Visit unfold hash attribute
-      #
-      # :unfold transformation is added to handle unfolding during preprocessing.
-      #
-      # @param [Header::Attribute::Unfold] attribute
-      # @param [Boolean] preprocess true if we are building a relation preprocessing
-      #                             function that is applied to the whole relation
-      #
-      # @api private
-      def visit_unfold(attribute, preprocess = false)
-        if preprocess
-          name = attribute.name
-          header = attribute.header
-          keys = attribute.pop_keys
-          key = keys.first
-
-          others = header.postprocessed
-
-          compose do |ops|
-            ops << others.map { |attr|
-              t(:map_array, t(:map_value, name, visit(attr, true)))
-            }
-            ops << t(:map_array, t(:map_value, name, t(:insert_key, key)))
-            ops << t(:map_array, t(:reject_keys, [key] - [name]))
-            ops << t(:ungroup, name, [key])
-          end
-        end
-      end
-
-      # Visit excluded attribute
-      #
-      # @param [Header::Attribute::Exclude] attribute
-      #
-      # @api private
-      def visit_exclude(attribute)
-        t(:reject_keys, [attribute.name])
-      end
-
-      # Build row_proc
-      #
-      # This transproc function is applied to each row in a dataset
-      #
-      # @api private
-      def initialize_row_proc
-        @row_proc = compose { |ops|
-          process_header_keys(ops)
-
-          ops << t(:rename_keys, mapping) if header.aliased?
-          ops << header.map { |attr| visit(attr) }
-          ops << t(:constructor_inject, model) if model
-        }
-      end
-
-      # Process row_proc header keys
-      #
-      # @api private
-      def process_header_keys(ops)
-        if header.reject_keys
-          all_keys = header.tuple_keys + header.non_primitives.map(&:key)
-          ops << t(:accept_keys, all_keys)
-        end
-        ops
-      end
-
-      # Yield row proc for a given attribute if any
-      #
-      # @param [Header::Attribute] attribute
-      #
-      # @api private
-      def with_row_proc(attribute)
-        row_proc = row_proc_from(attribute)
-        yield(row_proc) if row_proc
-      end
-
-      # Build a row_proc from a given attribute
-      #
-      # This is used by embedded attribute visitors
-      #
-      # @api private
-      def row_proc_from(attribute)
-        new(attribute.header).row_proc
+        AttributesProcessor.new(header.preprocessed).to_transproc
       end
 
       # Return a new instance of the processor
