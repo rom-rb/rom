@@ -2,6 +2,8 @@ require 'transproc/all'
 
 require 'rom/processor'
 
+require 'rom/processor/transproc/combine_processor'
+
 module ROM
   class Processor
     # Data mapping transformer builder using Transproc
@@ -68,15 +70,35 @@ module ROM
       # @api private
       def to_transproc
         compose(EMPTY_FN) do |ops|
-          combined = header.combined
-          ops << t(:combine, combined.map(&method(:combined_args))) if combined.any?
-          ops << header.preprocessed.map { |attr| visit(attr, true) }
-          ops << t(:map_array, row_proc) if row_proc
-          ops << header.postprocessed.map { |attr| visit(attr, true) }
+          processors.each { |processor| ops << send(processor) }
         end
       end
 
       private
+
+      def processors
+        [:combine_processor, :header_preprocessor, :rows_processor, :header_postprocessor]
+      end
+
+      def combine_processor
+        CombineProcessor.new(header.combined).to_transproc
+      end
+
+      def rows_processor
+        t(:map_array, row_proc) if row_proc
+      end
+
+      def header_postprocessor
+        header.postprocessed.map(&method(:visit_with_preprocess))
+      end
+
+      def header_preprocessor
+        header.preprocessed.map(&method(:visit_with_preprocess))
+      end
+
+      def visit_with_preprocess(attr)
+        visit(attr, true)
+      end
 
       # Visit an attribute from the header
       #
@@ -304,18 +326,6 @@ module ROM
       # @api private
       def visit_exclude(attribute)
         t(:reject_keys, [attribute.name])
-      end
-
-      # @api private
-      def combined_args(attribute)
-        other = attribute.header.combined
-
-        if other.any?
-          children = other.map(&method(:combined_args))
-          [attribute.name, attribute.meta[:keys], children]
-        else
-          [attribute.name, attribute.meta[:keys]]
-        end
       end
 
       # Build row_proc
