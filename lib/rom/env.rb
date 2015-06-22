@@ -41,10 +41,9 @@ module ROM
       freeze
     end
 
-    # Load relation by name
+    # Get lazy relation identified by its name
     #
     # @example
-    #
     #   rom.relation(:users)
     #   rom.relation(:users).by_name('Jane')
     #
@@ -61,7 +60,7 @@ module ROM
     #
     # @yield [Relation]
     #
-    # @return [Relation::Loaded]
+    # @return [Relation::Lazy]
     #
     # @api public
     def relation(name, &block)
