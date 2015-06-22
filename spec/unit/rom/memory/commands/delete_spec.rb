@@ -2,10 +2,10 @@ require 'spec_helper'
 
 require 'rom/memory'
 
-describe ROM::Memory::Commands::Create do
+describe ROM::Memory::Commands::Delete do
   include_context 'users and tasks'
 
-  subject(:command) { ROM::Memory::Commands::Create.build(users) }
+  subject(:command) { ROM::Memory::Commands::Delete.build(users) }
 
   let(:users) { rom.relations[:users] }
 
