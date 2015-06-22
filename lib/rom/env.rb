@@ -96,6 +96,8 @@ module ROM
     #
     # @param [Array,Symbol] options Either graph options or registered command name
     #
+    # @return [Command, Command::Graph]
+    #
     # @api public
     def command(options)
       case options
