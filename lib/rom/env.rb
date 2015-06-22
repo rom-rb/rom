@@ -19,12 +19,12 @@ module ROM
 
     # @return [RelationRegistry] relation registry
     #
-    # @api public
+    # @api private
     attr_reader :relations
 
     # @return [Registry] command registry
     #
-    # @api public
+    # @api private
     attr_reader :commands
 
     # @return [Registry] mapper registry
@@ -46,12 +46,16 @@ module ROM
     # @example
     #
     #   rom.relation(:users)
-    #   rom.relation(:users) { |r| r.by_name('Jane') }
+    #   rom.relation(:users).by_name('Jane')
+    #
+    #   # block syntax allows accessing lower-level query DSLs (usage is discouraged though)
+    #   rom.relation { |r| r.restrict(name: 'Jane') }
     #
     #   # with mapping
     #   rom.relation(:users).map_with(:presenter)
     #
-    #   rom.relation(:users) { |r| r.page(1) }.map_with(:presenter, :json_serializer)
+    #   # using multiple mappers
+    #   rom.relation(:users).page(1).map_with(:presenter, :json_serializer)
     #
     # @param [Symbol] name of the relation to load
     #
@@ -83,16 +87,15 @@ module ROM
     #   # plain command returning tuples
     #   rom.command(:users).create
     #
-    #   # allow auto-mapping using registered mappers
+    #   # allows auto-mapping using registered mappers
     #   rom.command(:users).as(:entity)
     #
-    #   # allow build up a command graph for nested input
-    #   command = rom.command(
-    #     [:users, [:create, [:tasks, [:create]]]],
-    #     { users: [{ name: 'Jane', tasks: [{ title: 'One' }] }] }
-    #   )
+    #   # allows building up a command graph for nested input
+    #   command = rom.command([:users, [:create, [:tasks, [:create]]]])
     #
-    #   command.call
+    #   command.call(users: [{ name: 'Jane', tasks: [{ title: 'One' }] }])
+    #
+    # @param [Array,Symbol] options Either graph options or registered command name
     #
     # @api public
     def command(options)
