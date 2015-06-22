@@ -1,4 +1,4 @@
-## v0.8.0 to-be-released
+## v0.8.0 2015-06-22
 
 ### Added
 
@@ -23,7 +23,7 @@
 * `Mapper::AttributeDSL#embedded` now honors `option[:type]` when used
   with `option[:mapper]` (c0)
 
-[Compare v0.7.1...HEAD](https://github.com/rom-rb/rom/compare/v0.7.1...HEAD)
+[Compare v0.7.1...v0.8.0](https://github.com/rom-rb/rom/compare/v0.7.1...v0.8.0)
 
 ## v0.7.1 2015-05-22
 
