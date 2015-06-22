@@ -5,6 +5,8 @@ require 'rom/processor'
 require 'rom/processor/transproc/combine_processor'
 require 'rom/processor/transproc/attributes_processor'
 require 'rom/processor/transproc/rows_processor'
+require 'rom/processor/transproc/preprocessor'
+require 'rom/processor/transproc/postprocessor'
 
 module ROM
   class Processor
@@ -66,37 +68,17 @@ module ROM
       # @api private
       def to_transproc
         compose(EMPTY_FN) do |ops|
-          processors.each { |processor| ops << send(processor) }
+          processors.each { |processor| ops << processor.new(@header).to_transproc }
         end
       end
 
       private
 
-      def processors
-        [:combine_processor, :header_preprocessor, :rows_processor, :header_postprocessor]
-      end
-
-      def combine_processor
-        CombineProcessor.new(header.combined).to_transproc
-      end
-
-      def rows_processor
-        RowsProcessor.new(header).to_transproc
-      end
-
-      def header_postprocessor
-        AttributesProcessor.new(header.postprocessed).to_transproc
-      end
-
-      def header_preprocessor
-        AttributesProcessor.new(header.preprocessed).to_transproc
-      end
-
-      # Return a new instance of the processor
+      # List of processors
       #
       # @api private
-      def new(*args)
-        self.class.new(*args)
+      def processors
+        [CombineProcessor, Preprocessor, RowsProcessor, Postprocessor]
       end
     end
   end
