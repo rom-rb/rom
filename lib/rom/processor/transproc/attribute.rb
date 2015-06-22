@@ -111,14 +111,10 @@ module ROM
         # @api private
         def process_group
           if @preprocess
-            others = header.preprocessed
-
             compose do |ops|
               ops << t(:group, name, tuple_keys)
               ops << t(:map_array, t(:map_value, name, FILTER_EMPTY))
-              ops << others.map { |attr|
-                t(:map_array, t(:map_value, name, Attribute.new(attr, true).to_transproc))
-              }
+              ops << process_preprocessed
             end
           else
             process_array
@@ -133,12 +129,8 @@ module ROM
         # @api private
         def process_ungroup
           if @preprocess
-            others = header.postprocessed
-
             compose do |ops|
-              ops << others.map { |attr|
-                t(:map_array, t(:map_value, name, visit(attr, true)))
-              }
+              ops << process_postprocessed
               ops << t(:ungroup, name, pop_keys)
             end
           else
@@ -169,12 +161,8 @@ module ROM
         def process_unfold
           if @preprocess
             key = pop_keys.first
-            others = header.postprocessed
-
             compose do |ops|
-              ops << others.map { |attr|
-                t(:map_array, t(:map_value, name, Attribute.new(attr, true).to_transproc))
-              }
+              ops << process_postprocessed
               ops << t(:map_array, t(:map_value, name, t(:insert_key, key)))
               ops << t(:map_array, t(:reject_keys, [key] - [name]))
               ops << t(:ungroup, name, [key])
@@ -187,6 +175,20 @@ module ROM
         # @api private
         def process_exclude
           t(:reject_keys, [name])
+        end
+
+        def process_postprocessed
+          process_others(header.postprocessed)
+        end
+
+        def process_preprocessed
+          process_others(header.preprocessed)
+        end
+
+        def process_others(others)
+          others.map { |attr|
+            t(:map_array, t(:map_value, name, Attribute.new(attr, true).to_transproc))
+          }
         end
 
         # Yield row proc for a given attribute if any
