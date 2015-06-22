@@ -2,6 +2,7 @@
 
 ### Added
 
+* Commands can be combined into a single command that can work with a nested input (solnic)
 * New `step` mapper operation that allows multistep transformations inside a single mapper (dekz)
 * New `ungroup` and `unfold` mapper operations inverse `group` and `fold` (nepalez)
 * Support deep nesting of `unwrap` mapper operations (nepalez)
