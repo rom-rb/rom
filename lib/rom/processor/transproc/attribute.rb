@@ -52,22 +52,7 @@ module ROM
         #
         # @api private
         def visit_combined
-          op = with_row_proc do |row_proc|
-            array_proc =
-              if type == :hash
-                t(:map_array, row_proc) >> -> arr { arr.first }
-              else
-                t(:map_array, row_proc)
-              end
-
-            t(:map_value, name, array_proc)
-          end
-
-          if op
-            op
-          elsif type == :hash
-            t(:map_value, name, -> arr { arr.first })
-          end
+          process_combined_with_row_proc || process_combined
         end
 
         # Visit array attribute
@@ -234,6 +219,20 @@ module ROM
         # @api private
         def attribute_type
           @attribute.class.name.split('::').last.downcase
+        end
+
+        def process_combined
+          t(:map_value, name, combined_proc)
+        end
+
+        def process_combined_with_row_proc
+          with_row_proc do |row_proc|
+            t(:map_value, name, t(:map_array, row_proc) >> combined_proc)
+          end
+        end
+
+        def combined_proc
+          type == :hash ? -> arr { arr.first } : ROM::Processor::Transproc::EMPTY_FN
         end
       end
     end
