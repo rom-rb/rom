@@ -17,41 +17,41 @@ module ROM
           @preprocess = preprocess
         end
 
-        # Process an attribute from the header
+        # Visit an attribute from the header
         #
         # This forwards to a specialized visitor based on the attribute type
         #
         # @api private
         def to_transproc
-          send("process_#{attribute_type}")
+          send("visit_#{attribute_type}")
         end
 
         private
 
-        # Process plain attribute
+        # Visit plain attribute
         #
         # It will call block transformation if it's used
         #
         # If it's a typed attribute a coercion transformation is added
         #
         # @api private
-        def process_attribute
+        def visit_attribute
           t(:map_value, name, coercer) if coercer
         end
 
-        # Process hash attribute
+        # Visit hash attribute
         #
         # @api private
-        def process_hash
+        def visit_hash
           with_row_proc do |row_proc|
             t(:map_value, name, row_proc)
           end
         end
 
-        # Process combined attribute
+        # Visit combined attribute
         #
         # @api private
-        def process_combined
+        def visit_combined
           op = with_row_proc do |row_proc|
             array_proc =
               if type == :hash
@@ -70,46 +70,46 @@ module ROM
           end
         end
 
-        # Process array attribute
+        # Visit array attribute
         #
         # @api private
-        def process_array
+        def visit_array
           with_row_proc do |row_proc|
             t(:map_value, name, t(:map_array, row_proc))
           end
         end
 
-        # Process wrapped hash attribute
+        # Visit wrapped hash attribute
         #
         # :nest transformation is added to handle wrapping
         #
         # @api private
-        def process_wrap
+        def visit_wrap
           compose do |ops|
             ops << t(:nest, name, tuple_keys)
-            ops << process_hash
+            ops << visit_hash
           end
         end
 
-        # Process unwrap attribute
+        # Visit unwrap attribute
         #
         # :unwrap transformation is added to handle unwrapping
         #
         # @api private
-        def process_unwrap
+        def visit_unwrap
           compose do |ops|
-            ops << process_hash
+            ops << visit_hash
             ops << t(:unwrap, name, pop_keys)
           end
         end
 
-        # Process group hash attribute
+        # Visit group hash attribute
         #
         # :group transformation is added to handle grouping during preprocessing.
         # Otherwise we simply use array visitor for the attribute.
         #
         # @api private
-        def process_group
+        def visit_group
           if @preprocess
             compose do |ops|
               ops << t(:group, name, tuple_keys)
@@ -117,33 +117,33 @@ module ROM
               ops << process_preprocessed
             end
           else
-            process_array
+            visit_array
           end
         end
 
-        # Process ungroup attribute
+        # Visit ungroup attribute
         #
         # :ungroup transforation is added to handle ungrouping during preprocessing.
         # Otherwise we simply use array visitor for the attribute.
         #
         # @api private
-        def process_ungroup
+        def visit_ungroup
           if @preprocess
             compose do |ops|
               ops << process_postprocessed
               ops << t(:ungroup, name, pop_keys)
             end
           else
-            process_array
+            visit_array
           end
         end
 
-        # Process fold hash attribute
+        # Visit fold hash attribute
         #
         # :fold transformation is added to handle folding during preprocessing.
         #
         # @api private
-        def process_fold
+        def visit_fold
           if @preprocess
             compose do |ops|
               ops << t(:group, name, tuple_keys)
@@ -153,12 +153,12 @@ module ROM
           end
         end
 
-        # Process unfold hash attribute
+        # Visit unfold hash attribute
         #
         # :unfold transformation is added to handle unfolding during preprocessing.
         #
         # @api private
-        def process_unfold
+        def visit_unfold
           if @preprocess
             key = pop_keys.first
             compose do |ops|
@@ -170,10 +170,10 @@ module ROM
           end
         end
 
-        # Process excluded attribute
+        # Visit excluded attribute
         #
         # @api private
-        def process_exclude
+        def visit_exclude
           t(:reject_keys, [name])
         end
 
