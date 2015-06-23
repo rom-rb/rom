@@ -208,22 +208,33 @@ module ROM
           RowsProcessor.new(header).row_proc
         end
 
+        # Finds a proper coercer to user
+        #
+        # @api private
         def coercer
           meta_coercer || type_coercer
         end
 
+        # Coercer from attribute meta
+        #
+        # @api private
         def meta_coercer
           @attribute.meta[:coercer]
         end
 
+        # Typed coercer
+        #
+        # @api private
         def type_coercer
           t(:"to_#{type}") if typed?
         end
 
+        # Attribute class type
+        #
+        # @api private
         def attribute_type
           @attribute.class.name.split('::').last.downcase
         end
-
       end
     end
   end
