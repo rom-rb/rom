@@ -141,6 +141,14 @@ describe ROM::Commands::Graph do
         allow(command.nodes[0]).to receive(:call).and_raise(StandardError, 'ooops')
 
         expect { command.call }.to raise_error(ROM::CommandFailure, /oops/)
+
+        begin
+          command.call
+        rescue ROM::CommandFailure => e
+          expect(e.original_error).to be_a(ROM::CommandFailure)
+          expect(e.original_error.message).to include('ooops')
+          expect(e.backtrace).to eql(e.original_error.backtrace)
+        end
       end
     end
   end

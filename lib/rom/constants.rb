@@ -33,7 +33,8 @@ module ROM
     def initialize(command, err)
       super("command: #{command.inspect}; original message: #{err.message}")
       @command = command
-      @original_error = original_error
+      @original_error = err
+      set_backtrace(err.backtrace)
     end
   end
 
