@@ -14,7 +14,7 @@
 [![Test Coverage](https://codeclimate.com/github/rom-rb/rom/badges/coverage.svg)][codeclimate]
 [![Inline docs](http://inch-ci.org/github/rom-rb/rom.svg?branch=master&style=flat)][inchpages]
 
-Ruby Object Mapper (ROM) is a data mapping and persistence toolkit for Ruby library
+Ruby Object Mapper (ROM) is a data mapping and persistence toolkit for Ruby
 with the goal to provide powerful object mapping capabilities without limiting the
 full power of your datastore.
 
