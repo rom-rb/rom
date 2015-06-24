@@ -1,3 +1,11 @@
+## v0.8.1 to-be-released
+
+### Fixed
+
+* `ROM::CommandError` properly sets original error and backtrace (solnic)
+
+[Compare v0.8.0...HEAD](https://github.com/rom-rb/rom/compare/v0.8.0...HEAD)
+
 ## v0.8.0 2015-06-22
 
 ### Added
