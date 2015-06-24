@@ -14,14 +14,15 @@
 [![Test Coverage](https://codeclimate.com/github/rom-rb/rom/badges/coverage.svg)][codeclimate]
 [![Inline docs](http://inch-ci.org/github/rom-rb/rom.svg?branch=master&style=flat)][inchpages]
 
-Ruby Object Mapper (ROM) is an experimental Ruby library with the goal to
-provide powerful object mapping capabilities without limiting the full power of
-your datastore.
+Ruby Object Mapper (ROM) is a data mapping and persistence toolkit for Ruby library
+with the goal to provide powerful object mapping capabilities without limiting the
+full power of your datastore.
 
 Learn more:
 
 * [Introduction](http://rom-rb.org/introduction/)
-* [Rails tutorial](http://rom-rb.org/tutorials/todo-app-with-rails/)
+* [Guides](http://rom-rb.org/introduction/)
+* [Tutorials](http://rom-rb.org/tutorials/)
 
 ## Adapters
 
@@ -43,64 +44,6 @@ for a list of adapters that are planned to be added soon.
 * [rom-lotus](https://github.com/rom-rb/rom-lotus)
 * [rom-rails](https://github.com/rom-rb/rom-rails)
 * [rom-roda](https://github.com/rom-rb/rom-roda)
-
-## Synopsis
-
-``` ruby
-ROM.setup(:memory)
-
-# This is our domain-specific class
-class User
-  attr_reader :name, :age
-
-  def initialize(attributes)
-    @name, @age = attributes.values_at(:name, :age)
-  end
-end
-
-# Here we define user relation which encapsulates accessing user data that
-# we can map to domain objects
-class Users < ROM::Relation[:memory]
-  def by_name(name)
-    restrict(name: name)
-  end
-
-  def adults
-    restrict { |user| user[:age] >= 18 }
-  end
-end
-
-# Even though mappers can be derived from model definitions here's how you
-# could define it explicitly
-class UserMapper < ROM::Mapper
-  relation :users
-  register_as :entity
-
-  model User
-
-  attribute :name
-  attribute :age
-end
-
-# You can define specialized commands that handle creating, updating and deleting
-# data, those classes can use external input param handlers and validators too
-class CreateUser < ROM::Commands::Create[:memory]
-  register_as :create
-  relation :users
-  result :one
-end
-
-# finalize the setup and retrieve object registry (aka ROM env)
-rom = ROM.finalize.env
-
-# accessing defined commands
-rom.command(:users).create.call(name: "Joe", age: 17)
-rom.command(:users).create.call(name: "Jane", age: 18)
-
-# reading relations using defined mappers
-puts rom.relation(:users) { |r| r.by_name("Jane").adults }.as(:entity).to_a.inspect
-# => [#<User:0x007fdba161cc48 @id=2, @name="Jane", @age=18>]
-```
 
 ## ROADMAP
 
