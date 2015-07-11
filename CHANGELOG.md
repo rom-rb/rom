@@ -4,6 +4,10 @@
 
 * `ROM::CommandError` properly sets original error and backtrace (solnic)
 
+### Changed
+
+* Internal transproc processor has been updated to the new API (solnic)
+
 [Compare v0.8.0...HEAD](https://github.com/rom-rb/rom/compare/v0.8.0...HEAD)
 
 ## v0.8.0 2015-06-22
