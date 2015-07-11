@@ -8,6 +8,8 @@ group :console do
 end
 
 group :test do
+  gem 'transproc', github: 'solnic/transproc', branch: 'master'
+
   gem 'virtus'
   gem 'anima'
   gem 'minitest'
