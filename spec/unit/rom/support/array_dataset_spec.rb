@@ -8,7 +8,7 @@ describe ROM::ArrayDataset do
       include ROM::ArrayDataset
 
       def self.row_proc
-        Transproc(:symbolize_keys)
+        T(:symbolize_keys)
       end
     end
   end

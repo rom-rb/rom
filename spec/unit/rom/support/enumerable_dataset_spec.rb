@@ -8,7 +8,7 @@ describe ROM::EnumerableDataset do
       include ROM::EnumerableDataset
 
       def self.row_proc
-        Transproc(:symbolize_keys)
+        T(:symbolize_keys)
       end
     end
   end

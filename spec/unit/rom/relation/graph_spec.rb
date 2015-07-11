@@ -7,7 +7,7 @@ describe ROM::Relation::Graph do
 
   it_behaves_like 'materializable relation' do
     let(:mapper) do
-      Transproc(:combine, [[:tasks, name: :name]])
+      T(:combine, [[:tasks, name: :name]])
     end
 
     let(:relation) do
