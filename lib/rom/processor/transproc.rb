@@ -14,6 +14,23 @@ module ROM
     class Transproc < Processor
       include ::Transproc::Composer
 
+      module Functions
+        extend ::Transproc::Registry
+
+        import ::Transproc::Coercions
+        import ::Transproc::ArrayTransformations
+        import ::Transproc::HashTransformations
+        import ::Transproc::ClassTransformations
+
+        def self.identity(tuple)
+          tuple
+        end
+
+        def self.filter_empty(arr)
+          arr.reject { |row| row.values.all?(&:nil?) }
+        end
+      end
+
       # @return [Header] header from a mapper
       #
       # @api private
@@ -33,14 +50,6 @@ module ROM
       #
       # @api private
       attr_reader :row_proc
-
-      # Default no-op row_proc
-      EMPTY_FN = -> tuple { tuple }.freeze
-
-      # Filter out empty tuples from an array
-      FILTER_EMPTY = Transproc(
-        -> arr { arr.reject { |row| row.values.all?(&:nil?) } }
-      )
 
       # Build a transproc function from the header
       #
@@ -67,7 +76,7 @@ module ROM
       #
       # @api private
       def to_transproc
-        compose(EMPTY_FN) do |ops|
+        compose(t(:identity)) do |ops|
           combined = header.combined
           ops << t(:combine, combined.map(&method(:combined_args))) if combined.any?
           ops << header.preprocessed.map { |attr| visit(attr, true) }
@@ -207,7 +216,7 @@ module ROM
 
           compose do |ops|
             ops << t(:group, name, keys)
-            ops << t(:map_array, t(:map_value, name, FILTER_EMPTY))
+            ops << t(:map_array, t(:map_value, name, t(:filter_empty)))
             ops << others.map { |attr|
               t(:map_array, t(:map_value, name, visit(attr, true)))
             }
@@ -262,7 +271,7 @@ module ROM
 
           compose do |ops|
             ops << t(:group, name, keys)
-            ops << t(:map_array, t(:map_value, name, FILTER_EMPTY))
+            ops << t(:map_array, t(:map_value, name, t(:filter_empty)))
             ops << t(:map_array, t(:fold, name, keys.first))
           end
         end
@@ -368,6 +377,11 @@ module ROM
       # @api private
       def new(*args)
         self.class.new(*args)
+      end
+
+      # @api private
+      def t(*args)
+        Functions[*args]
       end
     end
   end

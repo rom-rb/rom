@@ -33,6 +33,10 @@ module Test
   end
 end
 
+def T(*args)
+  ROM::Processor::Transproc::Functions[*args]
+end
+
 RSpec.configure do |config|
   config.after do
     Test.remove_constants

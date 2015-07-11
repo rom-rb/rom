@@ -12,14 +12,14 @@ describe 'Building up a command graph for nested input' do
 
     setup.commands(:users) do
       define(:create) do
-        input Transproc(:accept_keys, [:name])
+        input T(:accept_keys, [:name])
         result :one
       end
     end
 
     setup.commands(:books) do
       define(:create) do
-        input Transproc(:accept_keys, [:title, :user])
+        input T(:accept_keys, [:title, :user])
 
         def execute(tuples, user)
           super(tuples.map { |t| t.merge(user: user.fetch(:name)) })
@@ -29,7 +29,7 @@ describe 'Building up a command graph for nested input' do
 
     setup.commands(:tags) do
       define(:create) do
-        input Transproc(:accept_keys, [:name, :task])
+        input T(:accept_keys, [:name, :task])
 
         def execute(tuples, task)
           super(tuples.map { |t| t.merge(task: task.fetch(:title)) })
@@ -41,7 +41,7 @@ describe 'Building up a command graph for nested input' do
   it 'creates a command graph for nested input :one result as root' do
     setup.commands(:tasks) do
       define(:create) do
-        input Transproc(:accept_keys, [:title, :user])
+        input T(:accept_keys, [:title, :user])
         result :one
 
         def execute(tuple, user)
@@ -102,7 +102,7 @@ describe 'Building up a command graph for nested input' do
   it 'creates a command graph for nested input with :many results as root' do
     setup.commands(:tasks) do
       define(:create) do
-        input Transproc(:accept_keys, [:title, :user])
+        input T(:accept_keys, [:title, :user])
 
         def execute(tuples, user)
           super(tuples.map { |t| t.merge(user: user.fetch(:name)) })
@@ -178,7 +178,7 @@ describe 'Building up a command graph for nested input' do
 
     setup.commands(:tasks) do
       define(:create) do
-        input Transproc(:accept_keys, [:title, :user])
+        input T(:accept_keys, [:title, :user])
 
         def execute(tuples, user)
           super(tuples.map { |t| t.merge(user: user.fetch(:name)) })
