@@ -8,7 +8,7 @@
 
 * Internal transproc processor has been updated to the new API (solnic)
 
-[Compare v0.8.0...HEAD](https://github.com/rom-rb/rom/compare/v0.8.0...HEAD)
+[Compare v0.8.0...v0.8.1](https://github.com/rom-rb/rom/compare/v0.8.0...v0.8.1)
 
 ## v0.8.0 2015-06-22
 
