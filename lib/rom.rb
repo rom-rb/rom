@@ -19,9 +19,8 @@ require 'rom/commands'
 # default mapper processor using Transproc gem
 require 'rom/processor/transproc'
 
-# support for global-style setup
-require 'rom/global'
-require 'rom/setup'
+# rom environments
+require 'rom/environment'
 
 # TODO: consider to make this part optional and don't require it here
 require 'rom/setup_dsl/setup'
@@ -30,9 +29,20 @@ require 'rom/setup_dsl/setup'
 require 'rom/env'
 
 module ROM
-  extend Global
+  @environment = ROM::Environment.new
 
-  RelationRegistry = Class.new(Registry)
+  class << self
+    def method_missing(method, *args, &block)
+      if @environment.respond_to?(method)
+        @environment.__send__(method, *args, &block)
+      else
+        super
+      end
+    end
+    def respond_to_missing?(method, _include_private = false)
+      @environment.respond_to?(method) || super
+    end
+  end
 end
 
 # register core plugins

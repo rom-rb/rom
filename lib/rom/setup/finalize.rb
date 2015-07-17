@@ -3,6 +3,7 @@ require 'rom/mapper'
 require 'rom/command'
 
 require 'rom/support/registry'
+require 'rom/relation_registry'
 require 'rom/command_registry'
 require 'rom/mapper_registry'
 

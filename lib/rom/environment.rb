@@ -2,24 +2,19 @@ require 'rom/setup'
 require 'rom/repository'
 require 'rom/plugin_registry'
 
-require 'rom/global/plugin_dsl'
+require 'rom/environment/plugin_dsl'
 
 module ROM
   # Globally accessible public interface exposed via ROM module
   #
   # @api public
-  module Global
-    # Set base global registries in ROM constant
-    #
+  class Environment
     # @api private
-    def self.extended(rom)
-      super
-
-      rom.instance_variable_set('@adapters', {})
-      rom.instance_variable_set('@gateways', {})
-      rom.instance_variable_set('@plugin_registry', PluginRegistry.new)
+    def initialize
+      @adapters = {}
+      @gateways = {}
+      @plugin_registry = PluginRegistry.new
     end
-
     # An internal adapter identifier => adapter module map used by setup
     #
     # @return [Hash<Symbol=>Module>]
@@ -79,37 +74,39 @@ module ROM
     #
     # @example
     #   # Use the in-memory adapter shipped with ROM as the default gateway.
-    #   env = ROM.setup(:memory, 'memory://test')
+    #   rom = ROM::Environment.new
+    #   env = rom.setup(:memory, 'memory://test')
     #   # Use `rom-sql` with an in-memory sqlite database as default gateway.
-    #   ROM.setup(:sql, 'sqlite::memory')
+    #   rom.setup(:sql, 'sqlite::memory')
     #   # Registers a `default` and a `warehouse` gateway.
-    #   env = ROM.setup(
+    #   env = rom.setup(
     #     default: [:sql, 'sqlite::memory'],
     #     warehouse: [:sql, 'postgres://localhost/warehouse']
     #   )
     #
     # @example A full environment
     #
-    #   ROM.setup(:memory, 'memory://test')
+    #   rom = ROM::Environment.new
+    #   rom.setup(:memory, 'memory://test')
     #
-    #   ROM.relation(:users) do
+    #   rom.relation(:users) do
     #     # ...
     #   end
     #
-    #   ROM.mappers do
+    #   rom.mappers do
     #     define(:users) do
     #       # ...
     #     end
     #   end
     #
-    #   ROM.commands(:users) do
+    #   rom.commands(:users) do
     #     define(:create) do
     #       # ...
     #     end
     #   end
     #
-    #   ROM.finalize # builds the env
-    #   ROM.env # returns the env registry
+    #   rom.finalize # builds the env
+    #   rom.env # returns the env registry
     #
     # @api public
     def setup(*args, &block)
@@ -127,9 +124,10 @@ module ROM
     # Global relation setup DSL
     #
     # @example
-    #   ROM.setup(:memory)
+    #   rom = ROM::Environment.new
+    #   rom.setup(:memory)
     #
-    #   ROM.relation(:users) do
+    #   rom.relation(:users) do
     #     def by_name(name)
     #       restrict(name: name)
     #     end
@@ -143,9 +141,10 @@ module ROM
     # Global commands setup DSL
     #
     # @example
-    #   ROM.setup(:memory)
+    #   rom = ROM::Environment.new
+    #   rom.setup(:memory)
     #
-    #   ROM.commands(:users) do
+    #   rom.commands(:users) do
     #     define(:create) do
     #       # ..
     #     end
@@ -159,9 +158,10 @@ module ROM
     # Global mapper setup DSL
     #
     # @example
-    #   ROM.setup(:memory)
+    #   rom = ROM::Environment.new
+    #   rom.setup(:memory)
     #
-    #   ROM.mappers do
+    #   rom.mappers do
     #     define(:uses) do
     #       # ..
     #     end
@@ -175,7 +175,8 @@ module ROM
     # Global plugin setup DSL
     #
     # @example
-    #   ROM.plugins do
+    #   rom = ROM::Environment.new
+    #   rom.plugins do
     #     register :publisher, Plugin::Publisher, type: :command
     #   end
     #
@@ -187,10 +188,11 @@ module ROM
     # Finalize the setup and store default global env under ROM.env
     #
     # @example
-    #   ROM.setup(:memory)
-    #   ROM.finalize # => ROM
-    #   ROM.boot # => nil
-    #   ROM.env # => the env
+    #   rom = ROM::Environment.new
+    #   rom.setup(:memory)
+    #   rom.finalize # => rom
+    #   rom.boot # => nil
+    #   rom.env # => the env
     #
     # @return [ROM]
     #

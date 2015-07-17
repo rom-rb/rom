@@ -1,5 +1,5 @@
 module ROM
-  module Global
+  class Environment
     # plugin registration DSL
     #
     # @private
