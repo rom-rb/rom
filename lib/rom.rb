@@ -9,6 +9,8 @@ require 'rom/support/registry'
 require 'rom/support/options'
 require 'rom/support/class_macros'
 require 'rom/support/class_builder'
+require 'rom/support/guarded_inheritance_hook'
+require 'rom/support/inheritance_hook'
 
 # core parts
 require 'rom/plugin'
@@ -51,3 +53,6 @@ require 'rom/plugins/relation/registry_reader'
 ROM.plugins do
   register :registry_reader, ROM::Plugins::Relation::RegistryReader, type: :relation
 end
+ROM::Relation.on(:inherited) { |relation| ROM.register_relation(relation) }
+ROM::Command.on(:inherited) { |command| ROM.register_command(command) }
+ROM::Mapper.on(:inherited) { |mapper| ROM.register_mapper(mapper) }

@@ -89,8 +89,6 @@ module ROM
             self.class.gateway
           end
         end
-
-        ROM.register_relation(klass)
       end
 
       # Return adapter-specific relation subclass

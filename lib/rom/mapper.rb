@@ -5,6 +5,7 @@ module ROM
   #
   # @private
   class Mapper
+    extend ROM::Support::InheritanceHook
     include DSL
     include Equalizer.new(:transformers, :header)
 
@@ -24,14 +25,6 @@ module ROM
     #
     # @api private
     attr_reader :header
-
-    # Register suclasses during setup phase
-    #
-    # @api private
-    def self.inherited(klass)
-      super
-      ROM.register_mapper(klass)
-    end
 
     # @return [Hash] registered processors
     #
