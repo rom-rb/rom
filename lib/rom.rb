@@ -13,6 +13,7 @@ require 'rom/support/guarded_inheritance_hook'
 require 'rom/support/inheritance_hook'
 
 # core parts
+require 'rom/environment_plugin'
 require 'rom/plugin'
 require 'rom/relation'
 require 'rom/mapper'
@@ -33,6 +34,10 @@ require 'rom/setup_dsl/setup'
 # env with registries
 require 'rom/env'
 
+# register core plugins
+require 'rom/environment_plugins/auto_registration'
+require 'rom/plugins/relation/registry_reader'
+
 module ROM
   extend Global
 
@@ -51,15 +56,11 @@ module ROM
       @environment.respond_to?(method) || super
     end
   end
+
+  plugins do
+    register :auto_registration, ROM::EnvironmentPlugins::AutoRegistration, type: :environment
+    register :registry_reader, ROM::Plugins::Relation::RegistryReader, type: :relation
+  end
+
+  use :auto_registration
 end
-
-# register core plugins
-require 'rom/plugins/relation/registry_reader'
-
-ROM.plugins do
-  register :registry_reader, ROM::Plugins::Relation::RegistryReader, type: :relation
-end
-
-ROM::Relation.on(:inherited) { |relation| ROM.register_relation(relation) }
-ROM::Command.on(:inherited) { |command| ROM.register_command(command) }
-ROM::Mapper.on(:inherited) { |mapper| ROM.register_mapper(mapper) }

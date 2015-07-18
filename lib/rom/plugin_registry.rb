@@ -5,6 +5,12 @@ module ROM
   #
   # @api private
   class PluginRegistry
+    # Internal registry for environment plugins
+    #
+    # @return [EnvironmentPluginRegistry]
+    #
+    # @api private
+    attr_reader :environment
     # Internal registry for command plugins
     #
     # @return [InternalPluginRegistry]
@@ -28,6 +34,7 @@ module ROM
 
     # @api private
     def initialize
+      @environment = EnvironmentPluginRegistry.new
       @mappers = InternalPluginRegistry.new
       @commands = InternalPluginRegistry.new
       @relations = InternalPluginRegistry.new
@@ -46,7 +53,7 @@ module ROM
       type    = options.fetch(:type)
       adapter = options.fetch(:adapter, :default)
 
-      plugins_for(type, adapter)[name] = Plugin.new(mod, options)
+      plugins_for(type, adapter).register(name, mod, options)
     end
 
     private
@@ -56,27 +63,17 @@ module ROM
     # @api private
     def plugins_for(type, adapter)
       case type
-      when :command   then commands.adapter(adapter)
-      when :mapper    then mappers.adapter(adapter)
-      when :relation  then relations.adapter(adapter)
+      when :environment then environment
+      when :command     then commands.adapter(adapter)
+      when :mapper      then mappers.adapter(adapter)
+      when :relation    then relations.adapter(adapter)
       end
     end
   end
-
-  # A registry storing specific plugins
+  # Abstract registry defining common behaviour
   #
   # @api private
-  class AdapterPluginRegistry < Registry
-    # Assign a plugin to this adapter registry
-    #
-    # @param [Symbol] name The registered plugin name
-    # @param [Plugin] plugin The plugin to register
-    #
-    # @api private
-    def []=(name, plugin)
-      elements[name] = plugin
-    end
-
+  class PluginRegistryBase < Registry
     # Retrieve a registered plugin
     #
     # @param [Symbol] name The plugin to retrieve
@@ -86,6 +83,46 @@ module ROM
     # @api public
     def [](name)
       elements[name]
+    end
+  end
+  # A registry storing environment specific plugins
+  #
+  # @api private
+  class EnvironmentPluginRegistry < PluginRegistryBase
+    # Assign a plugin to this environment registry
+    #
+    # @param [Symbol] name The registered plugin name
+    # @param [Module] mod The plugin to register
+    # @param [Hash] options optional configuration data
+    #
+    # @api private
+    def register(name, mod, options)
+      elements[name] = EnvironmentPlugin.new(mod, options)
+    end
+    # Return an environment plugin
+    #
+    # @param [Symbol] name The name of the environment plugin
+    #
+    # @raises [UnknownPluginError] if no plugin is found with the given name
+    #
+    # @api public
+    def fetch(name)
+      self[name] || raise(UnknownPluginError, name)
+    end
+  end
+  # A registry storing adapter specific plugins
+  #
+  # @api private
+  class AdapterPluginRegistry < PluginRegistryBase
+    # Assign a plugin to this adapter registry
+    #
+    # @param [Symbol] name The registered plugin name
+    # @param [Module] mod The plugin to register
+    # @param [Hash] options optional configuration data
+    #
+    # @api private
+    def register(name, mod, options)
+      elements[name] = Plugin.new(mod, options)
     end
   end
 
