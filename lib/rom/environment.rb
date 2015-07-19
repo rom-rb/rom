@@ -1,40 +1,17 @@
 require 'rom/setup'
 require 'rom/repository'
-require 'rom/plugin_registry'
-
-require 'rom/environment/plugin_dsl'
 
 module ROM
   # Globally accessible public interface exposed via ROM module
   #
   # @api public
   class Environment
-    # @api private
-    def initialize
-      @adapters = {}
-      @gateways = {}
-      @plugin_registry = PluginRegistry.new
-    end
-    # An internal adapter identifier => adapter module map used by setup
-    #
-    # @return [Hash<Symbol=>Module>]
-    #
-    # @api private
-    attr_reader :adapters
-
     # An internal gateway => identifier map used by the setup
     #
     # @return [Hash]
     #
     # @api private
     attr_reader :gateways
-
-    # An internal identifier => plugin map used by the setup
-    #
-    # @return [Hash]
-    #
-    # @api private
-    attr_reader :plugin_registry
 
     # Setup object created during env setup phase
     #
@@ -51,6 +28,16 @@ module ROM
     #
     # @api public
     attr_reader :env
+
+    # @api private
+    def initialize
+      @gateways = {}
+    end
+
+    # @api private
+    def adapters
+      ROM.adapters
+    end
 
     # Starts the setup process for relations, mappers and commands.
     #
@@ -172,19 +159,6 @@ module ROM
       boot.mappers(*args, &block)
     end
 
-    # Global plugin setup DSL
-    #
-    # @example
-    #   rom = ROM::Environment.new
-    #   rom.plugins do
-    #     register :publisher, Plugin::Publisher, type: :command
-    #   end
-    #
-    # @example
-    def plugins(*args, &block)
-      PluginDSL.new(plugin_registry, *args, &block)
-    end
-
     # Finalize the setup and store default global env under ROM.env
     #
     # @example
@@ -202,19 +176,6 @@ module ROM
       self
     ensure
       @boot = nil
-    end
-
-    # Register adapter namespace under a specified identifier
-    #
-    # @param [Symbol] identifier
-    # @param [Class,Module] adapter
-    #
-    # @return [self]
-    #
-    # @api private
-    def register_adapter(identifier, adapter)
-      adapters[identifier] = adapter
-      self
     end
 
     # Relation subclass registration during setup phase

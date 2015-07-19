@@ -21,6 +21,9 @@ require 'rom/commands'
 # default mapper processor using Transproc gem
 require 'rom/processor/transproc'
 
+# rom Global
+require 'rom/global'
+
 # rom environments
 require 'rom/environment'
 
@@ -31,6 +34,8 @@ require 'rom/setup_dsl/setup'
 require 'rom/env'
 
 module ROM
+  extend Global
+
   @environment = ROM::Environment.new
 
   class << self
@@ -41,6 +46,7 @@ module ROM
         super
       end
     end
+
     def respond_to_missing?(method, _include_private = false)
       @environment.respond_to?(method) || super
     end
@@ -53,6 +59,7 @@ require 'rom/plugins/relation/registry_reader'
 ROM.plugins do
   register :registry_reader, ROM::Plugins::Relation::RegistryReader, type: :relation
 end
+
 ROM::Relation.on(:inherited) { |relation| ROM.register_relation(relation) }
 ROM::Command.on(:inherited) { |command| ROM.register_command(command) }
 ROM::Mapper.on(:inherited) { |mapper| ROM.register_mapper(mapper) }
