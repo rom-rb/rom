@@ -21,7 +21,7 @@ full power of your datastore.
 Learn more:
 
 * [Introduction](http://rom-rb.org/introduction/)
-* [Guides](http://rom-rb.org/introduction/)
+* [Guides](http://rom-rb.org/guides/)
 * [Tutorials](http://rom-rb.org/tutorials/)
 
 ## Adapters
