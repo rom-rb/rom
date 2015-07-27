@@ -13,7 +13,7 @@ RSpec.describe 'ROM repository' do
     end
   end
 
-  let(:struct) { user_repo.struct_for(users) }
+  let(:struct) { user_repo.mapper_builder.struct_builder[users] }
 
   let(:users) { rom.relations[:users] }
 
