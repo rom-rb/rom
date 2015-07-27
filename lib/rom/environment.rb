@@ -39,6 +39,18 @@ module ROM
       ROM.adapters
     end
 
+    # @api private
+    def plugin_registry
+      ROM.plugin_registry
+    end
+
+    # Apply
+    #
+    # @api public
+    def use(plugin)
+      plugin_registry.environment.fetch(plugin).apply_to(self)
+    end
+
     # Starts the setup process for relations, mappers and commands.
     #
     # @overload setup(type, *args)
