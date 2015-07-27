@@ -1,12 +1,14 @@
 RSpec.describe 'ROM repository' do
   include_context 'database'
 
-  subject(:user_repo) { repo_class.new(users) }
+  subject(:user_repo) { repo_class.new(rom) }
 
   let(:repo_class) do
     Class.new(ROM::Repository::Base) do
+      relations :users
+
       def all
-        load { relation.select(:id, :name).order(:name, :id) }
+        load { users.select(:id, :name).order(:name, :id) }
       end
     end
   end

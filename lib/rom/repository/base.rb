@@ -4,10 +4,22 @@ module ROM
   class Repository
     class Base # :trollface:
       class ROM::Repository::Base
-        attr_reader :relation, :models, :mappers
+        attr_reader :models, :mappers
 
-        def initialize(relation)
-          @relation = relation
+        def self.relations(*names)
+          if names.any?
+            attr_reader(*names)
+            @relations = names
+          else
+            @relations
+          end
+        end
+
+        def initialize(env)
+          self.class.relations.each do |name|
+            instance_variable_set("@#{name}", env.relations[name])
+          end
+
           @mappers = {}
           @models = {}
         end
@@ -20,7 +32,7 @@ module ROM
         def mapper_for(relation)
           mappers[relation] ||=
             begin
-              builder = ROM::ClassBuilder.new(name: "Mapper[#{component_name}]", parent: ROM::Mapper)
+              builder = ROM::ClassBuilder.new(name: "Mapper[#{component_name(relation)}]", parent: ROM::Mapper)
 
               mapper = builder.call do |klass|
                 klass.model model_for(relation)
@@ -37,12 +49,12 @@ module ROM
         def model_for(relation)
           header = relation.columns
 
-          models[header] ||= ROM::ClassBuilder.new(name: "ROM::Struct[#{component_name}]", parent: Object).call do |klass|
+          models[header] ||= ROM::ClassBuilder.new(name: "ROM::Struct[#{component_name(relation)}]", parent: Object).call do |klass|
             klass.send(:include, Anima.new(*header))
           end
         end
 
-        def component_name
+        def component_name(relation)
           Inflector.classify(Inflector.singularize(relation.name))
         end
       end
