@@ -4,7 +4,7 @@ module ROM
   class Repository
     class Base # :trollface:
       class ROM::Repository::Base
-        attr_reader :models, :mappers
+        attr_reader :structs, :mappers
 
         def self.relations(*names)
           if names.any?
@@ -21,7 +21,7 @@ module ROM
           end
 
           @mappers = {}
-          @models = {}
+          @structs = {}
         end
 
         def load
@@ -35,7 +35,7 @@ module ROM
               builder = ROM::ClassBuilder.new(name: "Mapper[#{component_name(relation)}]", parent: ROM::Mapper)
 
               mapper = builder.call do |klass|
-                klass.model model_for(relation)
+                klass.model struct_for(relation)
 
                 relation.columns.each do |col|
                   klass.attribute col
@@ -46,10 +46,10 @@ module ROM
             end
         end
 
-        def model_for(relation)
+        def struct_for(relation)
           header = relation.columns
 
-          models[header] ||= ROM::ClassBuilder.new(name: "ROM::Struct[#{component_name(relation)}]", parent: Object).call do |klass|
+          structs[header] ||= ROM::ClassBuilder.new(name: "ROM::Struct[#{component_name(relation)}]", parent: Object).call do |klass|
             klass.send(:include, Anima.new(*header))
           end
         end

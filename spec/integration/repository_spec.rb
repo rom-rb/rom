@@ -13,12 +13,12 @@ RSpec.describe 'ROM repository' do
     end
   end
 
-  let(:model) { user_repo.model_for(users) }
+  let(:struct) { user_repo.struct_for(users) }
 
   let(:users) { rom.relations[:users] }
 
-  let(:jane) { model.new(id: 1, name: 'Jane') }
-  let(:joe) { model.new(id: 2, name: 'Joe') }
+  let(:jane) { struct.new(id: 1, name: 'Jane') }
+  let(:joe) { struct.new(id: 2, name: 'Joe') }
 
   it 'works' do
     conn[:users].insert name: 'Jane'
