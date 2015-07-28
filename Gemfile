@@ -2,7 +2,6 @@ source 'https://rubygems.org'
 
 gem 'rspec'
 gem 'anima'
-gem 'charlatan'
 gem 'rom'
 gem 'rom-sql'
 gem 'pg'
