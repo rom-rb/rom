@@ -1,7 +1,7 @@
 require 'anima'
 
 module ROM
-  class Repository
+  class Repository < Gateway
     class StructBuilder
       attr_reader :registry
 

@@ -1,7 +1,7 @@
 require 'rom/support/options'
 
 module ROM
-  class Repository
+  class Repository < Gateway
     class LoadingProxy
       include Options
 

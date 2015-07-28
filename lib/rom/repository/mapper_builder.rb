@@ -1,7 +1,7 @@
 require 'rom/repository/header_builder'
 
 module ROM
-  class Repository
+  class Repository < Gateway
     class MapperBuilder
       attr_reader :header_builder
 
