@@ -39,6 +39,7 @@ module ROM
         children = nodes.map do |node|
           [node[1],
            combine: true,
+           # TODO: find a way of configuring :hash too (aka "has_one"/"belongs_to")
            type: :array,
            keys: { id: combine_key(root) },
            header: Header.coerce(*visit(node))]
@@ -46,9 +47,12 @@ module ROM
 
         attributes = root_attrs + children
 
+        # TODO: find a way of configuring how keys should be named
+        #       right now we default to child relation name
         [attributes, model: struct_builder[root[1], attributes.map(&:first)]]
       end
 
+      # TODO: this should be an injectible strategy so we can easily configure it
       def combine_key(node)
         :"#{Inflector.singularize(node[1])}_id"
       end

@@ -12,6 +12,8 @@ RSpec.describe 'ROM repository' do
       end
 
       def users_with_tasks
+        # TODO: figure out an interface for combining a single child
+        #       right now combine by default assumes an array of children
         users.combine(tasks.for_users)
       end
     end
