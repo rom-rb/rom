@@ -67,7 +67,7 @@ class UserRepository < ROM::Repository::Base
   end
 
   def with_tasks
-    users.combine(tasks: tasks.for_users)
+    users.combine(many: { tasks: tasks.for_users })
   end
 end
 
