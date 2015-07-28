@@ -1,5 +1,5 @@
 require 'rom/header'
-require 'rom/repository/ext/relation'
+
 require 'rom/repository/struct_builder'
 
 module ROM

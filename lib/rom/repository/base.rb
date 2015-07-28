@@ -1,3 +1,5 @@
+require 'rom/repository/ext/relation'
+
 require 'rom/repository/mapper_builder'
 require 'rom/repository/loading_proxy'
 
