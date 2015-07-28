@@ -14,6 +14,7 @@ module ROM
       end
 
       def call(name, columns)
+        # TODO: figure out how to generate unique identifiers for struct classes
         registry[columns] ||=
           begin
             ROM::ClassBuilder.new(name: "ROM::Struct[#{component_name(name)}]", parent: Object).call do |klass|
