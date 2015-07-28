@@ -1,4 +1,7 @@
+require 'charlatan'
+
 require 'rom/repository/mapper_builder'
+require 'rom/repository/loading_proxy'
 
 module ROM
   class Repository
@@ -21,14 +24,11 @@ module ROM
 
         def initialize(env, mapper_builder)
           self.class.relations.each do |name|
-            instance_variable_set("@#{name}", env.relations[name])
+            instance_variable_set(
+              "@#{name}", LoadingProxy.new(env.relations[name], mapper_builder)
+            )
           end
           @mapper_builder = mapper_builder
-        end
-
-        def load
-          result = yield
-          mapper_builder[result].call(result)
         end
       end
     end
