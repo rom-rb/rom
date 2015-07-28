@@ -37,11 +37,12 @@ module ROM
         root_attrs, _options = visit(root)
 
         children = nodes.map do |node|
+          type = node.last[:combine_type] == :many ? :array : :hash
+
           [
             node[1],
             combine: true,
-            # TODO: find a way of configuring :hash too (aka "has_one"/"belongs_to")
-            type: :array,
+            type: type,
             keys: { id: combine_key(root) },
             header: call(node)
           ]

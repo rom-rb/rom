@@ -7,6 +7,7 @@ module ROM
 
       option :name, reader: true, type: Symbol
       option :mapper_builder, reader: true, default: proc { MapperBuilder.new }
+      option :meta, reader: true, type: Hash, default: EMPTY_HASH
 
       attr_reader :relation
       attr_reader :mapper
@@ -22,12 +23,13 @@ module ROM
       end
 
       def combine(options)
-        nodes = options.map { |key, relation| relation.named(key) }
-        __new__(relation.combine(*nodes))
-      end
+        nodes = options.flat_map do |type, relations|
+          relations.map { |key, relation|
+            __new__(relation, name: key, meta: { combine_type: type })
+          }
+        end
 
-      def named(new_name)
-        __new__(relation, name: new_name)
+        __new__(relation.combine(*nodes))
       end
 
       def __new__(relation, new_options = {})
@@ -40,9 +42,9 @@ module ROM
 
       def to_ast
         if relation.is_a?(Relation::Graph)
-          [:graph, left.to_ast, nodes.map(&:to_ast)]
+          [:graph, left.to_ast, nodes.map(&:to_ast), meta]
         else
-          [:relation, name, columns]
+          [:relation, name, columns, meta]
         end
       end
 

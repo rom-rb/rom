@@ -19,10 +19,10 @@ RSpec.describe 'header builder', '#call' do
     let(:ast) do
       [
         :graph,
-        [:relation, :users, [:id, :name]],
+        [:relation, :users, [:id, :name], {}],
         [
-          [:relation, :tasks, [:user_id, :title]],
-          [:relation, :tags, [:user_id, :tag]]
+          [:relation, :tasks, [:user_id, :title], combine_type: :many],
+          [:relation, :tags, [:user_id, :tag], combine_type: :many]
         ]
       ]
     end
