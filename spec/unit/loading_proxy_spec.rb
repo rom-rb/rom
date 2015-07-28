@@ -1,8 +1,8 @@
-RSpec.describe 'relation ext' do
+RSpec.describe 'loading proxy' do
   include_context 'database'
 
-  let(:users) { ROM::Repository::LoadingProxy.new(:users, rom.relation(:users)) }
-  let(:tasks) { ROM::Repository::LoadingProxy.new(:users, rom.relation(:tasks)) }
+  let(:users) { ROM::Repository::LoadingProxy.new(rom.relation(:users), name: :users) }
+  let(:tasks) { ROM::Repository::LoadingProxy.new(rom.relation(:tasks), name: :tasks) }
 
   before do
     setup.relation(:users)

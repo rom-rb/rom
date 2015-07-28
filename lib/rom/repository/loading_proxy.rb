@@ -1,22 +1,19 @@
+require 'rom/support/options'
+
 module ROM
   class Repository
     class LoadingProxy
-      attr_reader :name
+      include Options
+
+      option :name, reader: true, type: Symbol
+      option :mapper_builder, reader: true, default: proc { MapperBuilder.new }
 
       attr_reader :relation
-
-      attr_reader :mapper_builder
-
       attr_reader :mapper
 
-      def self.new(name, relation, mapper_builder = MapperBuilder.new)
+      def initialize(relation, options = {})
         super
-      end
-
-      def initialize(name, relation, mapper_builder)
-        @name = name
         @relation = relation
-        @mapper_builder = mapper_builder
         @mapper = mapper_builder[to_ast]
       end
 
@@ -26,15 +23,15 @@ module ROM
 
       def combine(options)
         nodes = options.map { |key, relation| relation.named(key) }
-        __new__(name, relation.combine(*nodes))
+        __new__(relation.combine(*nodes))
       end
 
       def named(new_name)
-        __new__(new_name, relation)
+        __new__(relation, name: new_name)
       end
 
-      def __new__(*args)
-        self.class.new(*args, mapper_builder)
+      def __new__(relation, new_options = {})
+        self.class.new(relation, options.merge(new_options))
       end
 
       def to_a
@@ -60,7 +57,7 @@ module ROM
           result = relation.__send__(meth, *args)
 
           if result.is_a?(Relation::Lazy) || result.is_a?(Relation::Graph)
-            __new__(name, result)
+            __new__(result)
           else
             result
           end

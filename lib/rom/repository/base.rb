@@ -5,8 +5,6 @@ module ROM
   class Repository
     class Base # :trollface:
       class ROM::Repository::Base
-        attr_reader :mapper_builder
-
         def self.relations(*names)
           if names.any?
             attr_reader(*names)
@@ -22,11 +20,11 @@ module ROM
 
         def initialize(env, mapper_builder)
           self.class.relations.each do |name|
-            instance_variable_set(
-              "@#{name}", LoadingProxy.new(name, env.relation(name), mapper_builder)
+            proxy = LoadingProxy.new(
+              env.relation(name), name: name, mapper_builder: mapper_builder
             )
+            instance_variable_set("@#{name}", proxy)
           end
-          @mapper_builder = mapper_builder
         end
       end
     end
