@@ -23,7 +23,7 @@ module ROM
         def initialize(env, mapper_builder)
           self.class.relations.each do |name|
             instance_variable_set(
-              "@#{name}", LoadingProxy.new(env.relation(name), mapper_builder)
+              "@#{name}", LoadingProxy.new(name, env.relation(name), mapper_builder)
             )
           end
           @mapper_builder = mapper_builder

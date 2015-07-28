@@ -6,27 +6,25 @@ RSpec.describe 'header builder', '#call' do
   let(:tag_struct) { builder.struct_builder[:tags, [:user_id, :tag]] }
 
   describe 'with a relation' do
-    let(:relation) { double(to_ast: [:relation, :users, [:id, :name]]) }
+    let(:ast) { [:relation, :users, [:id, :name]] }
 
     it 'produces a valid header' do
       header = ROM::Header.coerce([[:id], [:name]], model: user_struct)
 
-      expect(builder[relation]).to eql(header)
+      expect(builder[ast]).to eql(header)
     end
   end
 
   describe 'with a graph' do
-    let(:relation) do
-      double(
-        to_ast: [
-          :graph,
-          [:relation, :users, [:id, :name]],
-          [
-            [:relation, :tasks, [:user_id, :title]],
-            [:relation, :tags, [:user_id, :tag]]
-          ]
+    let(:ast) do
+      [
+        :graph,
+        [:relation, :users, [:id, :name]],
+        [
+          [:relation, :tasks, [:user_id, :title]],
+          [:relation, :tags, [:user_id, :tag]]
         ]
-      )
+      ]
     end
 
     it 'produces a valid header' do
@@ -44,7 +42,7 @@ RSpec.describe 'header builder', '#call' do
         model: builder.struct_builder[:users, [:id, :name, :tasks, :tags]]
       )
 
-      expect(builder[relation]).to eql(header)
+      expect(builder[ast]).to eql(header)
     end
   end
 end

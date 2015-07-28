@@ -14,7 +14,7 @@ RSpec.describe 'ROM repository' do
       def users_with_tasks
         # TODO: figure out an interface for combining a single child
         #       right now combine by default assumes an array of children
-        users.combine(tasks.for_users)
+        users.combine(user_tasks: tasks.for_users)
       end
     end
   end
@@ -28,11 +28,11 @@ RSpec.describe 'ROM repository' do
   let(:user_with_tasks_struct) { repo.users_with_tasks.mapper.model }
 
   let(:jane) { user_struct.new(id: 1, name: 'Jane') }
-  let(:jane_with_tasks) { user_with_tasks_struct.new(id: 1, name: 'Jane', tasks: [jane_task]) }
+  let(:jane_with_tasks) { user_with_tasks_struct.new(id: 1, name: 'Jane', user_tasks: [jane_task]) }
   let(:jane_task) { task_struct.new(id: 2, user_id: 1, title: 'Jane Task') }
 
   let(:joe) { user_struct.new(id: 2, name: 'Joe') }
-  let(:joe_with_tasks) { user_with_tasks_struct.new(id: 2, name: 'Joe', tasks: [joe_task]) }
+  let(:joe_with_tasks) { user_with_tasks_struct.new(id: 2, name: 'Joe', user_tasks: [joe_task]) }
   let(:joe_task) { task_struct.new(id: 1, user_id: 2, title: 'Joe Task') }
 
   before do

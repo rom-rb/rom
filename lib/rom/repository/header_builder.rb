@@ -15,8 +15,8 @@ module ROM
         @struct_builder = struct_builder
       end
 
-      def call(relation)
-        Header.coerce(*visit(relation.to_ast))
+      def call(ast)
+        Header.coerce(*visit(ast))
       end
       alias_method :[], :call
 
@@ -37,18 +37,18 @@ module ROM
         root_attrs, _options = visit(root)
 
         children = nodes.map do |node|
-          [node[1],
-           combine: true,
-           # TODO: find a way of configuring :hash too (aka "has_one"/"belongs_to")
-           type: :array,
-           keys: { id: combine_key(root) },
-           header: Header.coerce(*visit(node))]
+          [
+            node[1],
+            combine: true,
+            # TODO: find a way of configuring :hash too (aka "has_one"/"belongs_to")
+            type: :array,
+            keys: { id: combine_key(root) },
+            header: call(node)
+          ]
         end
 
         attributes = root_attrs + children
 
-        # TODO: find a way of configuring how keys should be named
-        #       right now we default to child relation name
         [attributes, model: struct_builder[root[1], attributes.map(&:first)]]
       end
 
