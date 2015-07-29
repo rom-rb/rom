@@ -14,17 +14,20 @@ module ROM
       end
 
       def call(name, columns)
-        registry[columns] ||=
-          begin
-            ROM::ClassBuilder.new(name: "ROM::Struct[#{component_name(name)}]", parent: Object).call do |klass|
-              klass.send(:include, Anima.new(*columns))
-            end
-          end
+        registry[columns] ||= build_class(name) { |klass|
+          klass.send(:include, Anima.new(*columns))
+        }
       end
       alias_method :[], :call
 
-      def component_name(name)
-        Inflector.classify(Inflector.singularize(name))
+      private
+
+      def build_class(name, &block)
+        ROM::ClassBuilder.new(name: class_name(name), parent: Object).call(&block)
+      end
+
+      def class_name(name)
+        "ROM::Struct[#{Inflector.classify(Inflector.singularize(name))}]"
       end
     end
   end
