@@ -21,6 +21,18 @@ module ROM
         to_a.each { |item| yield(item) }
       end
 
+      def first
+        to_a.first
+      end
+
+      def one
+        (relation >> mapper).one
+      end
+
+      def one!
+        (relation >> mapper).one!
+      end
+
       def to_a
         (relation >> mapper).to_a
       end

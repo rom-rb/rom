@@ -7,6 +7,10 @@ RSpec.describe 'ROM repository' do
     Class.new(ROM::Repository::Base) do
       relations :users, :tasks
 
+      def find(criteria)
+        users.where(criteria)
+      end
+
       def all_users
         users.select(:id, :name).order(:name, :id)
       end
@@ -98,6 +102,38 @@ RSpec.describe 'ROM repository' do
 
     it 'returns an enumerator when block is not given' do
       expect(repo.all_users.each.to_a).to eql([jane, joe])
+    end
+  end
+
+  describe 'retrieving a single struct' do
+    before do
+      conn[:users].insert name: 'Jane'
+      conn[:users].insert name: 'Joe'
+    end
+
+    describe '#first' do
+      it 'returns exactly one struct' do
+        expect(repo.all_users.first).to eql(jane)
+      end
+    end
+
+    describe '#one' do
+      it 'returns exactly one struct' do
+        expect(repo.find(id: 1).one).to eql(jane)
+
+        expect(repo.find(id: 3).one).to be(nil)
+
+        expect { repo.find(id: [1,2]).one }.to raise_error(ROM::TupleCountMismatchError)
+      end
+    end
+
+    describe '#one!' do
+      it 'returns exactly one struct' do
+        expect(repo.find(id: 1).one!).to eql(jane)
+
+        expect { repo.find(id: [1, 2]).one! }.to raise_error(ROM::TupleCountMismatchError)
+        expect { repo.find(id: [3]).one! }.to raise_error(ROM::TupleCountMismatchError)
+      end
     end
   end
 end
