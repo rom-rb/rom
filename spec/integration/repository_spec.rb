@@ -15,16 +15,20 @@ RSpec.describe 'ROM repository' do
         users.select(:id, :name).order(:name, :id)
       end
 
+      def task_with_user
+        combine(tasks.where(id: 2), one: { owner: [users, user_id: :id] })
+      end
+
       def users_with_tasks
-        combine(users, many: { all_tasks: tasks })
+        combine(users, many: { all_tasks: [tasks, id: :user_id] })
       end
 
       def users_with_task
-        combine(users, one: { task: tasks })
+        combine(users, one: { task: [tasks, id: :user_id] })
       end
 
       def users_with_task_by_title(title)
-        combine(users, one: { task: tasks.where(title: title) })
+        combine(users, one: { task: [tasks.where(title: title), id: :user_id] })
       end
     end
   end
@@ -37,12 +41,14 @@ RSpec.describe 'ROM repository' do
 
   let(:user_with_tasks_struct) { mapper_for(repo.users_with_tasks).model }
   let(:user_with_task_struct) { mapper_for(repo.users_with_task).model }
+  let(:task_with_user_struct) { mapper_for(repo.task_with_user).model }
 
   let(:jane) { user_struct.new(id: 1, name: 'Jane') }
   let(:jane_with_tasks) { user_with_tasks_struct.new(id: 1, name: 'Jane', all_tasks: [jane_task]) }
   let(:jane_with_task) { user_with_task_struct.new(id: 1, name: 'Jane', task: jane_task) }
   let(:jane_without_task) { user_with_task_struct.new(id: 1, name: 'Jane', task: nil) }
   let(:jane_task) { task_struct.new(id: 2, user_id: 1, title: 'Jane Task') }
+  let(:task_with_user) { task_with_user_struct.new(id: 2, user_id: 1, title: 'Jane Task', owner: jane) }
 
   let(:joe) { user_struct.new(id: 2, name: 'Joe') }
   let(:joe_with_tasks) { user_with_tasks_struct.new(id: 2, name: 'Joe', all_tasks: [joe_task]) }
@@ -84,6 +90,16 @@ RSpec.describe 'ROM repository' do
     conn[:tasks].insert user_id: jane_id, title: 'Jane Task'
 
     expect(repo.users_with_task_by_title('Joe Task').to_a).to eql([jane_without_task, joe_with_task])
+  end
+
+  it 'loads a combined relation with one parent' do
+    jane_id = conn[:users].insert name: 'Jane'
+    joe_id = conn[:users].insert name: 'Joe'
+
+    conn[:tasks].insert user_id: joe_id, title: 'Joe Task'
+    conn[:tasks].insert user_id: jane_id, title: 'Jane Task'
+
+    expect(repo.task_with_user.first).to eql(task_with_user)
   end
 
   describe '#each' do

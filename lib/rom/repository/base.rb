@@ -30,8 +30,8 @@ module ROM
 
       def combine(root, options)
         combine_opts = options.each_with_object({}) do |(type, relations), result|
-          result[type] = relations.each_with_object({}) do |(key, relation), h|
-            h[key] = relation.__send__(:for_combine)
+          result[type] = relations.each_with_object({}) do |(key, (relation, *args)), h|
+            h[key] = [relation.for_combine(*args), *args]
           end
         end
         root.combine(combine_opts)

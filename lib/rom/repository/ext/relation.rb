@@ -9,16 +9,9 @@ module ROM
         klass.exposed_relations << :columns << :select << :order << :where << :primary_key << :foreign_key << :for_combine
       end
 
-      def for_combine(relation)
-        primary_key = relation.source.primary_key
-        foreign_key = relation.source.foreign_key
-
-        where(foreign_key => relation.map { |tuple| tuple[primary_key] })
-      end
-
-      # TODO: this should be an injectible strategy so we can easily configure it
-      def foreign_key
-        :"#{Inflector.singularize(name)}_id"
+      def for_combine(keys, relation)
+        pk, fk = keys.to_a.flatten
+        where(fk => relation.map { |tuple| tuple[pk] })
       end
     end
   end
