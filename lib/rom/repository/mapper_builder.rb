@@ -7,17 +7,21 @@ module ROM
 
       attr_reader :registry
 
+      def self.registry
+        @__registry__ ||= {}
+      end
+
       def self.new(header_builder = HeaderBuilder.new)
         super
       end
 
       def initialize(header_builder)
         @header_builder = header_builder
-        @registry = {}
+        @registry = self.class.registry
       end
 
-      def call(relation)
-        registry[relation] ||= Mapper.build(header_builder[relation])
+      def call(ast)
+        registry[ast.hash] ||= Mapper.build(header_builder[ast])
       end
       alias_method :[], :call
     end

@@ -38,4 +38,6 @@ RSpec.configure do |config|
   config.after do
     Test.remove_constants
   end
+
+  config.include(MapperRegistry)
 end

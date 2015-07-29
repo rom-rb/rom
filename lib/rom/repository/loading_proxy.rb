@@ -37,14 +37,6 @@ module ROM
         (relation >> mapper).to_a
       end
 
-      def mapper
-        mapper_builder[to_ast]
-      end
-
-      def header
-        relation.columns
-      end
-
       def combine(options)
         nodes = options.flat_map do |type, relations|
           relations.map { |key, relation|
@@ -57,10 +49,6 @@ module ROM
         __new__(relation.combine(*nodes))
       end
 
-      def __new__(relation, new_options = {})
-        self.class.new(relation, options.merge(new_options))
-      end
-
       def to_ast
         attr_ast = header.map { |name| [:attribute, name] }
         node_ast = nodes.map(&:to_ast)
@@ -68,8 +56,12 @@ module ROM
         [:relation, name, [:header, attr_ast + node_ast], meta]
       end
 
-      def nodes
-        relation.is_a?(Relation::Graph) ? relation.nodes : []
+      def mapper
+        mapper_builder[to_ast]
+      end
+
+      def header
+        relation.columns
       end
 
       def respond_to_missing?(name, include_private = false)
@@ -77,6 +69,14 @@ module ROM
       end
 
       private
+
+      def __new__(relation, new_options = {})
+        self.class.new(relation, options.merge(new_options))
+      end
+
+      def nodes
+        relation.is_a?(Relation::Graph) ? relation.nodes : []
+      end
 
       def method_missing(meth, *args)
         if relation.respond_to?(meth)

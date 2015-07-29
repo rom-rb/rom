@@ -35,8 +35,8 @@ RSpec.describe 'ROM repository' do
   let(:user_struct) { repo.users.mapper.model }
   let(:task_struct) { repo.tasks.mapper.model }
 
-  let(:user_with_tasks_struct) { repo.users_with_tasks.mapper.model }
-  let(:user_with_task_struct) { repo.users_with_task.mapper.model }
+  let(:user_with_tasks_struct) { mapper_for(repo.users_with_tasks).model }
+  let(:user_with_task_struct) { mapper_for(repo.users_with_task).model }
 
   let(:jane) { user_struct.new(id: 1, name: 'Jane') }
   let(:jane_with_tasks) { user_with_tasks_struct.new(id: 1, name: 'Jane', all_tasks: [jane_task]) }
