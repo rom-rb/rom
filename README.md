@@ -29,35 +29,7 @@ Few ideas about structs:
 ``` ruby
 require 'rom-repository'
 
-ROM.setup(:sql, 'sqlite::memory')
-
-conn = ROM::SQL.gateway.connection
-
-conn.create_table(:users) do
-  primary_key :id
-  column :name, String
-end
-
-conn.create_table(:tasks) do
-  primary_key :id
-  foreign_key :user_id, :users
-  column :title, String
-end
-
-jane_id = conn[:users].insert name: 'Jane'
-joe_id = conn[:users].insert name: 'Joe'
-
-conn[:tasks].insert user_id: joe_id, title: 'Joe Task'
-conn[:tasks].insert user_id: jane_id, title: 'Jane Task'
-
-class Users < ROM::Relation[:sql]
-end
-
-class Tasks < ROM::Relation[:sql]
-  def for_users(users)
-    where(user_id: users.map { |u| u[:id] })
-  end
-end
+ROM.setup(:sql, 'postgres://localhost/rom')
 
 class UserRepository < ROM::Repository::Base
   relations :users, :tasks
@@ -67,7 +39,7 @@ class UserRepository < ROM::Repository::Base
   end
 
   def with_tasks
-    users.combine(many: { tasks: tasks.for_users })
+    combine(users, many: { tasks: tasks.order(:title) })
   end
 end
 
