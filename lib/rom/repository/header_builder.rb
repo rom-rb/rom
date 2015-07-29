@@ -27,35 +27,29 @@ module ROM
       end
 
       def visit_relation(*args)
-        name, columns = args
+        name, header, meta = args
 
-        [columns.map { |col| [col] }, model: struct_builder[name, columns]]
-      end
+        options = [
+          visit(header),
+          model: struct_builder[name, header[1].map { |a| a[1] }]
+        ]
 
-      def visit_graph(*args)
-        root, nodes = args
-        root_attrs, _options = visit(root)
+        if meta[:combine_type]
+          type = meta[:combine_type] == :many ? :array : :hash
+          key = meta.fetch(:key)
 
-        children = nodes.map do |node|
-          type = node.last[:combine_type] == :many ? :array : :hash
-
-          [
-            node[1],
-            combine: true,
-            type: type,
-            keys: { id: combine_key(root) },
-            header: call(node)
-          ]
+          [name, combine: true, type: type, keys: key, header: Header.coerce(*options)]
+        else
+          options
         end
-
-        attributes = root_attrs + children
-
-        [attributes, model: struct_builder[root[1], attributes.map(&:first)]]
       end
 
-      # TODO: this should be an injectible strategy so we can easily configure it
-      def combine_key(node)
-        :"#{Inflector.singularize(node[1])}_id"
+      def visit_header(header)
+        header.map { |attribute| visit(attribute) }
+      end
+
+      def visit_attribute(name)
+        [name]
       end
     end
   end

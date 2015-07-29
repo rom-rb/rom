@@ -6,7 +6,9 @@ RSpec.describe 'header builder', '#call' do
   let(:tag_struct) { builder.struct_builder[:tags, [:user_id, :tag]] }
 
   describe 'with a relation' do
-    let(:ast) { [:relation, :users, [:id, :name]] }
+    let(:ast) do
+      [:relation, :users, [:header, [[:attribute, :id], [:attribute, :name]]], {}]
+    end
 
     it 'produces a valid header' do
       header = ROM::Header.coerce([[:id], [:name]], model: user_struct)
@@ -18,12 +20,31 @@ RSpec.describe 'header builder', '#call' do
   describe 'with a graph' do
     let(:ast) do
       [
-        :graph,
-        [:relation, :users, [:id, :name], {}],
-        [
-          [:relation, :tasks, [:user_id, :title], combine_type: :many],
-          [:relation, :tags, [:user_id, :tag], combine_type: :many]
-        ]
+        :relation, :users, [
+          :header, [
+            [:attribute, :id],
+            [:attribute, :name],
+            [
+              :relation, :tasks, [
+                :header, [
+                  [:attribute, :user_id],
+                  [:attribute, :title]
+                ]
+              ],
+              { key: { id: :user_id }, combine_type: :many }
+            ],
+            [
+              :relation, :tags, [
+                :header, [
+                  [:attribute, :user_id],
+                  [:attribute, :tag]
+                ]
+              ],
+              { key: { id: :user_id }, combine_type: :many }
+            ]
+          ]
+        ],
+        {}
       ]
     end
 

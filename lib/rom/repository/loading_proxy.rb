@@ -10,22 +10,26 @@ module ROM
       option :meta, reader: true, type: Hash, default: EMPTY_HASH
 
       attr_reader :relation
-      attr_reader :mapper
 
       def initialize(relation, options = {})
         super
         @relation = relation
-        @mapper = mapper_builder[to_ast]
       end
 
-      def columns
+      def mapper
+        mapper_builder[to_ast]
+      end
+
+      def header
         relation.columns
       end
 
       def combine(options)
         nodes = options.flat_map do |type, relations|
           relations.map { |key, relation|
-            __new__(relation, name: key, meta: { combine_type: type })
+            __new__(relation, name: key, meta: {
+              key: { primary_key => foreign_key }, combine_type: type
+            })
           }
         end
 
@@ -41,15 +45,22 @@ module ROM
       end
 
       def to_ast
+        attrs = header.map { |name| [:attribute, name] }
+
         if relation.is_a?(Relation::Graph)
-          [:graph, left.to_ast, nodes.map(&:to_ast), meta]
+          [:relation, name, [:header, attrs + nodes.map(&:to_ast)], meta]
         else
-          [:relation, name, columns, meta]
+          [:relation, name, [:header, attrs], meta]
         end
       end
 
       def respond_to_missing?(name, include_private = false)
         relation.respond_to?(name) || super
+      end
+
+      # TODO: this should be an injectible strategy so we can easily configure it
+      def foreign_key
+        :"#{Inflector.singularize(name)}_id"
       end
 
       private

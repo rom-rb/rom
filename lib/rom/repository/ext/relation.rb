@@ -6,7 +6,7 @@ module ROM
       # could be easily exposed by lazy relations for cases like repository
       def self.inherited(klass)
         super
-        klass.exposed_relations << :columns << :select << :order << :where
+        klass.exposed_relations << :columns << :select << :order << :where << :primary_key
       end
     end
   end
