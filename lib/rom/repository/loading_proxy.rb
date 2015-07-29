@@ -62,13 +62,14 @@ module ROM
       end
 
       def to_ast
-        attrs = header.map { |name| [:attribute, name] }
+        attr_ast = header.map { |name| [:attribute, name] }
+        node_ast = nodes.map(&:to_ast)
 
-        if relation.is_a?(Relation::Graph)
-          [:relation, name, [:header, attrs + nodes.map(&:to_ast)], meta]
-        else
-          [:relation, name, [:header, attrs], meta]
-        end
+        [:relation, name, [:header, attr_ast + node_ast], meta]
+      end
+
+      def nodes
+        relation.is_a?(Relation::Graph) ? relation.nodes : []
       end
 
       def respond_to_missing?(name, include_private = false)
