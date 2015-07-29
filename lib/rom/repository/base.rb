@@ -27,6 +27,15 @@ module ROM
           instance_variable_set("@#{name}", proxy)
         end
       end
+
+      def combine(root, options)
+        combine_opts = options.each_with_object({}) do |(type, relations), result|
+          result[type] = relations.each_with_object({}) do |(key, relation), h|
+            h[key] = relation.__send__(:for_combine)
+          end
+        end
+        root.combine(combine_opts)
+      end
     end
   end
 end

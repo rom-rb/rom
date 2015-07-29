@@ -58,11 +58,6 @@ module ROM
         relation.respond_to?(name) || super
       end
 
-      # TODO: this should be an injectible strategy so we can easily configure it
-      def foreign_key
-        :"#{Inflector.singularize(name)}_id"
-      end
-
       private
 
       def method_missing(meth, *args)

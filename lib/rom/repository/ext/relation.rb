@@ -6,7 +6,19 @@ module ROM
       # could be easily exposed by lazy relations for cases like repository
       def self.inherited(klass)
         super
-        klass.exposed_relations << :columns << :select << :order << :where << :primary_key
+        klass.exposed_relations << :columns << :select << :order << :where << :primary_key << :foreign_key << :for_combine
+      end
+
+      def for_combine(relation)
+        primary_key = relation.source.primary_key
+        foreign_key = relation.source.foreign_key
+
+        where(foreign_key => relation.map { |tuple| tuple[primary_key] })
+      end
+
+      # TODO: this should be an injectible strategy so we can easily configure it
+      def foreign_key
+        :"#{Inflector.singularize(name)}_id"
       end
     end
   end
@@ -17,6 +29,7 @@ module ROM
       # TODO: this will go away when Lazy exposes the whole query interface
       undef_method :select # Object#select bites me once again
     end
+
     class Curried < Lazy
       def columns
         relation.columns

@@ -12,11 +12,11 @@ RSpec.describe 'ROM repository' do
       end
 
       def users_with_tasks
-        users.combine(many: { all_tasks: tasks.for_users })
+        combine(users, many: { all_tasks: tasks })
       end
 
       def users_with_task
-        users.combine(one: { task: tasks.for_users })
+        combine(users, one: { task: tasks })
       end
     end
   end
@@ -39,14 +39,6 @@ RSpec.describe 'ROM repository' do
   let(:joe_with_tasks) { user_with_tasks_struct.new(id: 2, name: 'Joe', all_tasks: [joe_task]) }
   let(:joe_with_task) { user_with_task_struct.new(id: 2, name: 'Joe', task: joe_task) }
   let(:joe_task) { task_struct.new(id: 1, user_id: 2, title: 'Joe Task') }
-
-  before do
-    setup.relation(:tasks) do
-      def for_users(users)
-        where(user_id: users.map { |u| u[:id] })
-      end
-    end
-  end
 
   it 'loads a single relation' do
     conn[:users].insert name: 'Jane'
