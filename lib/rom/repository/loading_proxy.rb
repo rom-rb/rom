@@ -16,6 +16,15 @@ module ROM
         @relation = relation
       end
 
+      def each
+        return to_enum unless block_given?
+        to_a.each { |item| yield(item) }
+      end
+
+      def to_a
+        (relation >> mapper).to_a
+      end
+
       def mapper
         mapper_builder[to_ast]
       end
@@ -38,10 +47,6 @@ module ROM
 
       def __new__(relation, new_options = {})
         self.class.new(relation, options.merge(new_options))
-      end
-
-      def to_a
-        (relation >> mapper).to_a
       end
 
       def to_ast

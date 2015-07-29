@@ -81,4 +81,23 @@ RSpec.describe 'ROM repository' do
 
     expect(repo.users_with_task_by_title('Joe Task').to_a).to eql([jane_without_task, joe_with_task])
   end
+
+  describe '#each' do
+    before do
+      conn[:users].insert name: 'Jane'
+      conn[:users].insert name: 'Joe'
+    end
+
+    it 'yields loaded structs' do
+      result = []
+
+      repo.all_users.each { |user| result << user }
+
+      expect(result).to eql([jane, joe])
+    end
+
+    it 'returns an enumerator when block is not given' do
+      expect(repo.all_users.each.to_a).to eql([jane, joe])
+    end
+  end
 end
