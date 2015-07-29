@@ -13,8 +13,9 @@ module ROM
         @registry = self.class.registry
       end
 
-      def call(name, columns)
-        registry[columns] ||= build_class(name) { |klass|
+      def call(*args)
+        name, columns = args
+        registry[args.hash] ||= build_class(name) { |klass|
           klass.send(:include, Anima.new(*columns))
         }
       end
