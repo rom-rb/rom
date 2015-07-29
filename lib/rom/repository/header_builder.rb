@@ -31,7 +31,7 @@ module ROM
 
         options = [
           visit(header),
-          model: struct_builder[name, header[1].map { |a| a[1] }]
+          model: struct_builder[meta.fetch(:base_name), header[1].map { |a| a[1] }]
         ]
 
         if meta[:combine_type]

@@ -12,7 +12,12 @@ RSpec.describe 'loading proxy' do
   describe '#to_ast' do
     it 'returns valid ast for a single relation' do
       expect(users.to_ast).to eql(
-        [:relation, :users, [:header, [[:attribute, :id], [:attribute, :name]]], {}]
+        [
+          :relation, :users, [
+            :header, [[:attribute, :id], [:attribute, :name]]
+          ],
+          base_name: :users
+        ]
       )
     end
 
@@ -33,11 +38,11 @@ RSpec.describe 'loading proxy' do
                     [:attribute, :title]
                   ]
                 ],
-                { keys: { id: :user_id }, combine_type: :many }
+                { base_name: :tasks, keys: { id: :user_id }, combine_type: :many }
               ]
             ]
           ],
-          {}
+          base_name: :users
         ]
       )
     end

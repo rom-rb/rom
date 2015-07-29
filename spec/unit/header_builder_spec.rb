@@ -7,7 +7,12 @@ RSpec.describe 'header builder', '#call' do
 
   describe 'with a relation' do
     let(:ast) do
-      [:relation, :users, [:header, [[:attribute, :id], [:attribute, :name]]], {}]
+      [
+        :relation, :users, [
+          :header, [[:attribute, :id], [:attribute, :name]]
+        ],
+        base_name: :users
+      ]
     end
 
     it 'produces a valid header' do
@@ -31,7 +36,7 @@ RSpec.describe 'header builder', '#call' do
                   [:attribute, :title]
                 ]
               ],
-              { keys: { id: :user_id }, combine_type: :many }
+              { base_name: :tasks, keys: { id: :user_id }, combine_type: :many }
             ],
             [
               :relation, :tags, [
@@ -40,11 +45,11 @@ RSpec.describe 'header builder', '#call' do
                   [:attribute, :tag]
                 ]
               ],
-              { keys: { id: :user_id }, combine_type: :many }
+              { base_name: :tags, keys: { id: :user_id }, combine_type: :many }
             ]
           ]
         ],
-        {}
+        base_name: :users
       ]
     end
 

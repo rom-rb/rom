@@ -28,6 +28,10 @@ module ROM
     class Lazy
       # TODO: this will go away when Lazy exposes the whole query interface
       undef_method :select # Object#select bites me once again
+
+      def base_name
+        relation.name
+      end
     end
 
     class Curried < Lazy

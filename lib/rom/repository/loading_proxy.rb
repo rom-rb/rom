@@ -52,6 +52,7 @@ module ROM
       def to_ast
         attr_ast = header.map { |name| [:attribute, name] }
         node_ast = nodes.map(&:to_ast)
+        meta = options[:meta].merge(base_name: relation.base_name)
 
         [:relation, name, [:header, attr_ast + node_ast], meta]
       end
