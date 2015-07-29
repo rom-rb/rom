@@ -1,5 +1,7 @@
 require 'anima'
 
+require 'rom/struct'
+
 module ROM
   class Repository < Gateway
     class StructBuilder
@@ -24,7 +26,7 @@ module ROM
       private
 
       def build_class(name, &block)
-        ROM::ClassBuilder.new(name: class_name(name), parent: Object).call(&block)
+        ROM::ClassBuilder.new(name: class_name(name), parent: Struct).call(&block)
       end
 
       def class_name(name)

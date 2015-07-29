@@ -12,6 +12,11 @@ RSpec.describe 'struct builder', '#call' do
 
     expect(user.id).to be(1)
     expect(user.name).to eql('Jane')
+
+    expect(user[:id]).to be(1)
+    expect(user[:name]).to eql('Jane')
+
+    expect(Hash[user]).to eql(id: 1, name: 'Jane')
   end
 
   it 'stores struct in the registry' do
