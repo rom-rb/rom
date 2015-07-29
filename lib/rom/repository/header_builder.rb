@@ -36,9 +36,9 @@ module ROM
 
         if meta[:combine_type]
           type = meta[:combine_type] == :many ? :array : :hash
-          key = meta.fetch(:key)
+          keys = meta.fetch(:keys)
 
-          [name, combine: true, type: type, keys: key, header: Header.coerce(*options)]
+          [name, combine: true, type: type, keys: keys, header: Header.coerce(*options)]
         else
           options
         end

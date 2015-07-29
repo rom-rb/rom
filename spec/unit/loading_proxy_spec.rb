@@ -33,7 +33,7 @@ RSpec.describe 'loading proxy' do
                     [:attribute, :title]
                   ]
                 ],
-                { key: { id: :user_id }, combine_type: :many }
+                { keys: { id: :user_id }, combine_type: :many }
               ]
             ]
           ],

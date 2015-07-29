@@ -49,7 +49,7 @@ module ROM
         nodes = options.flat_map do |type, relations|
           relations.map { |key, relation|
             __new__(relation, name: key, meta: {
-              key: { primary_key => foreign_key }, combine_type: type
+              keys: { primary_key => foreign_key }, combine_type: type
             })
           }
         end

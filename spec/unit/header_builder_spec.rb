@@ -31,7 +31,7 @@ RSpec.describe 'header builder', '#call' do
                   [:attribute, :title]
                 ]
               ],
-              { key: { id: :user_id }, combine_type: :many }
+              { keys: { id: :user_id }, combine_type: :many }
             ],
             [
               :relation, :tags, [
@@ -40,7 +40,7 @@ RSpec.describe 'header builder', '#call' do
                   [:attribute, :tag]
                 ]
               ],
-              { key: { id: :user_id }, combine_type: :many }
+              { keys: { id: :user_id }, combine_type: :many }
             ]
           ]
         ],
