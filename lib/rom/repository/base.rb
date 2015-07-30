@@ -33,19 +33,20 @@ module ROM
 
       def combine(root, options)
         combine_opts = options.each_with_object({}) do |(type, relations), result|
-          result[type] = relations.each_with_object({}) do |(key, (relation, *args)), h|
-            h[key] = [relation.curried? ? relation : relation.for_combine(*args), *args]
+          result[type] = relations.each_with_object({}) do |(name, (relation, keys)), h|
+            h[name] = [relation.curried? ? relation : relation.for_combine(keys), keys]
           end
         end
         root.combine(combine_opts)
       end
 
       def combine_parents(root, options)
-        combine(root, options.each_with_object({}) { |(type, relations), h|
+        combine_opts = options.each_with_object({}) { |(type, relations), h|
           h[type] = relations.each_with_object({}) { |(key, relation), r|
             r[key] = [relation, combine_keys(relation, :parent)]
           }
-        })
+        }
+        combine(root, combine_opts)
       end
 
       def combine_children(root, options)
