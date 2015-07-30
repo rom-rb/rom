@@ -7,16 +7,16 @@ RSpec.describe 'ROM repository' do
     Class.new(ROM::Repository::Base) do
       relations :users, :tasks
 
-      def find(criteria)
-        users.where(criteria)
+      def find_users(criteria)
+        users.find(criteria)
       end
 
       def all_users
-        users.select(:id, :name).order(:name, :id)
+        users.all
       end
 
       def task_with_user
-        combine(tasks.where(id: 2), one: { owner: [users, user_id: :id] })
+        combine(tasks.find(id: 2), one: { owner: [users, user_id: :id] })
       end
 
       def users_with_tasks
@@ -28,7 +28,25 @@ RSpec.describe 'ROM repository' do
       end
 
       def users_with_task_by_title(title)
-        combine(users, one: { task: [tasks.where(title: title), id: :user_id] })
+        combine(users, one: { task: [tasks.find(title: title), id: :user_id] })
+      end
+    end
+  end
+
+  before do
+    setup.relation(:users) do
+      def all
+        select(:id, :name).order(:name, :id)
+      end
+
+      def find(criteria)
+        where(criteria)
+      end
+    end
+
+    setup.relation(:tasks) do
+      def find(criteria)
+        where(criteria)
       end
     end
   end
@@ -135,20 +153,20 @@ RSpec.describe 'ROM repository' do
 
     describe '#one' do
       it 'returns exactly one struct' do
-        expect(repo.find(id: 1).one).to eql(jane)
+        expect(repo.find_users(id: 1).one).to eql(jane)
 
-        expect(repo.find(id: 3).one).to be(nil)
+        expect(repo.find_users(id: 3).one).to be(nil)
 
-        expect { repo.find(id: [1,2]).one }.to raise_error(ROM::TupleCountMismatchError)
+        expect { repo.find_users(id: [1,2]).one }.to raise_error(ROM::TupleCountMismatchError)
       end
     end
 
     describe '#one!' do
       it 'returns exactly one struct' do
-        expect(repo.find(id: 1).one!).to eql(jane)
+        expect(repo.find_users(id: 1).one!).to eql(jane)
 
-        expect { repo.find(id: [1, 2]).one! }.to raise_error(ROM::TupleCountMismatchError)
-        expect { repo.find(id: [3]).one! }.to raise_error(ROM::TupleCountMismatchError)
+        expect { repo.find_users(id: [1, 2]).one! }.to raise_error(ROM::TupleCountMismatchError)
+        expect { repo.find_users(id: [3]).one! }.to raise_error(ROM::TupleCountMismatchError)
       end
     end
   end
