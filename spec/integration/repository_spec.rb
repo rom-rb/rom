@@ -20,7 +20,7 @@ RSpec.describe 'ROM repository' do
       end
 
       def users_with_tasks
-        combine_children(users, many: { all_tasks: tasks })
+        combine_children(users, many: { all_tasks: tasks.for_users })
       end
 
       def users_with_task
