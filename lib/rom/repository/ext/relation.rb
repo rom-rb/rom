@@ -3,7 +3,22 @@ module ROM
     class Relation < ROM::Relation
       def self.inherited(klass)
         super
-        klass.exposed_relations.merge(Set[:columns, :for_combine])
+        klass.class_eval do
+          exposed_relations.merge(Set[:columns, :for_combine])
+          defines :attributes
+          attributes({})
+
+          option :attributes, reader: true, default: -> relation { relation.class.attributes }
+        end
+      end
+
+      def self.view(name, names, &block)
+        attributes[name] = names
+        define_method(name, &block)
+      end
+
+      def columns
+        self.class.attributes.fetch(name, dataset.columns)
       end
 
       def for_combine(keys, relation)
@@ -25,12 +40,14 @@ module ROM
         relation.name
       end
 
-      def columns
-        relation.columns
-      end
-
       def primary_key
         relation.primary_key
+      end
+    end
+
+    class Curried < Lazy
+      def columns
+        relation.attributes.fetch(options[:name], relation.columns)
       end
     end
   end

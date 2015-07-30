@@ -48,7 +48,7 @@ module ROM
       end
 
       def to_ast
-        attr_ast = header.map { |name| [:attribute, name] }
+        attr_ast = columns.map { |name| [:attribute, name] }
         node_ast = nodes.map(&:to_ast)
         meta = options[:meta].merge(base_name: relation.base_name)
 
@@ -57,10 +57,6 @@ module ROM
 
       def mapper
         mapper_builder[to_ast]
-      end
-
-      def header
-        relation.columns
       end
 
       def primary_key
