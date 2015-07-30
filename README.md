@@ -35,11 +35,11 @@ class UserRepository < ROM::Repository::Base
   relations :users, :tasks
 
   def by_id(id)
-    users.where(id: id)
+    users.find(id: id)
   end
 
   def with_tasks
-    combine(users, many: { tasks: tasks.order(:title) })
+    combine_children(users, many: { tasks: tasks })
   end
 end
 
