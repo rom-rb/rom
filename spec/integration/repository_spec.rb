@@ -16,19 +16,19 @@ RSpec.describe 'ROM repository' do
       end
 
       def task_with_user
-        combine(tasks.find(id: 2), one: { owner: [users, user_id: :id] })
+        combine_parents(tasks.find(id: 2), one: { owner: users })
       end
 
       def users_with_tasks
-        combine(users, many: { all_tasks: [tasks, id: :user_id] })
+        combine_children(users, many: { all_tasks: tasks })
       end
 
       def users_with_task
-        combine(users, one: { task: [tasks, id: :user_id] })
+        combine_children(users, one: { task: tasks })
       end
 
       def users_with_task_by_title(title)
-        combine(users, one: { task: [tasks.find(title: title), id: :user_id] })
+        combine_children(users, one: { task: tasks.find(title: title) })
       end
     end
   end

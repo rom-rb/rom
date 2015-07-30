@@ -65,6 +65,14 @@ module ROM
         relation.columns
       end
 
+      def primary_key
+        relation.primary_key
+      end
+
+      def foreign_key
+        :"#{Inflector.singularize(base_name)}_id"
+      end
+
       def respond_to_missing?(name, include_private = false)
         relation.respond_to?(name) || super
       end

@@ -36,6 +36,30 @@ module ROM
         end
         root.combine(combine_opts)
       end
+
+      def combine_parents(root, options)
+        combine(root, options.each_with_object({}) { |(type, relations), h|
+          h[type] = relations.each_with_object({}) { |(key, relation), r|
+            r[key] = [relation, combine_keys(relation, :parent)]
+          }
+        })
+      end
+
+      def combine_children(root, options)
+        combine(root, options.each_with_object({}) { |(type, relations), h|
+          h[type] = relations.each_with_object({}) { |(key, relation), r|
+            r[key] = [relation, combine_keys(root, :children)]
+          }
+        })
+      end
+
+      def combine_keys(relation, type)
+        if type == :parent
+          { relation.foreign_key => relation.primary_key }
+        else
+          { relation.primary_key => relation.foreign_key }
+        end
+      end
     end
   end
 end

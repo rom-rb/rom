@@ -22,6 +22,10 @@ module ROM
       def columns
         relation.columns
       end
+
+      def primary_key
+        relation.primary_key
+      end
     end
   end
 end
