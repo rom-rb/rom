@@ -48,6 +48,10 @@ RSpec.describe 'ROM repository' do
       def find(criteria)
         where(criteria)
       end
+
+      def for_users(users)
+        where(user_id: users.map { |u| u[:id] })
+      end
     end
   end
 

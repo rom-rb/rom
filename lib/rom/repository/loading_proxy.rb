@@ -40,9 +40,7 @@ module ROM
       def combine(options)
         nodes = options.flat_map do |type, relations|
           relations.map { |key, (relation, keys)|
-            __new__(relation, name: key, meta: {
-              keys: keys, combine_type: type
-            })
+            __new__(relation, name: key, meta: { keys: keys, combine_type: type })
           }
         end
 
