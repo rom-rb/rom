@@ -4,7 +4,7 @@ shared_context 'database' do
   let(:rom) { setup.finalize }
 
   before do
-    [:tasks, :users].each { |table| conn.drop_table?(table) }
+    [:tags, :tasks, :users].each { |table| conn.drop_table?(table) }
 
     conn.create_table :users do
       primary_key :id
@@ -15,6 +15,12 @@ shared_context 'database' do
       primary_key :id
       foreign_key :user_id, :users, null: false, on_delete: :cascade
       column :title, String
+    end
+
+    conn.create_table :tags do
+      primary_key :id
+      foreign_key :task_id, :tasks, null: false, on_delete: :cascade
+      column :name, String
     end
   end
 end

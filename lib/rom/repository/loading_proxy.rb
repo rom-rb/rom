@@ -40,7 +40,7 @@ module ROM
       def combine(options)
         nodes = options.flat_map do |type, relations|
           relations.map { |key, (relation, keys)|
-            __new__(relation, name: key, meta: { keys: keys, combine_type: type })
+            relation.with(name: key, meta: { keys: keys, combine_type: type })
           }
         end
 
@@ -73,6 +73,10 @@ module ROM
 
       def respond_to_missing?(name, include_private = false)
         relation.respond_to?(name) || super
+      end
+
+      def with(new_options)
+        __new__(relation, new_options)
       end
 
       private
