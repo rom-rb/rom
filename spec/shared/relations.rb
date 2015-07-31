@@ -1,4 +1,4 @@
-shared_context 'relations' do
+RSpec.shared_context 'relations' do
   let(:users) { rom.relation(:users) }
   let(:tasks) { rom.relation(:tasks) }
   let(:tags) { rom.relation(:tags) }

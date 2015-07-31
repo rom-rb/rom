@@ -1,12 +1,57 @@
 RSpec.describe 'loading proxy' do
   include_context 'database'
+  include_context 'repo'
+  include_context 'structs'
+  include_context 'relations'
+  include_context 'seeds'
 
-  let(:users) { ROM::Repository::LoadingProxy.new(rom.relation(:users), name: :users) }
-  let(:tasks) { ROM::Repository::LoadingProxy.new(rom.relation(:tasks), name: :tasks) }
+  let(:users) do
+    ROM::Repository::LoadingProxy.new(rom.relation(:users), name: :users)
+  end
 
-  before do
-    setup.relation(:users)
-    setup.relation(:tasks)
+  let(:tasks) do
+    ROM::Repository::LoadingProxy.new(rom.relation(:tasks), name: :tasks)
+  end
+
+  describe '#each' do
+    it 'yields loaded structs' do
+      result = []
+
+      users.each { |user| result << user }
+
+      expect(result).to eql([jane, joe])
+    end
+
+    it 'returns an enumerator when block is not given' do
+      expect(repo.all_users.each.to_a).to eql([jane, joe])
+    end
+  end
+
+  describe 'retrieving a single struct' do
+    describe '#first' do
+      it 'returns exactly one struct' do
+        expect(users.first).to eql(jane)
+      end
+    end
+
+    describe '#one' do
+      it 'returns exactly one struct' do
+        expect(users.find(id: 1).one).to eql(jane)
+
+        expect(users.find(id: 3).one).to be(nil)
+
+        expect { users.find(id: [1,2]).one }.to raise_error(ROM::TupleCountMismatchError)
+      end
+    end
+
+    describe '#one!' do
+      it 'returns exactly one struct' do
+        expect(users.find(id: 1).one!).to eql(jane)
+
+        expect { repo.find_users(id: [1, 2]).one! }.to raise_error(ROM::TupleCountMismatchError)
+        expect { repo.find_users(id: [3]).one! }.to raise_error(ROM::TupleCountMismatchError)
+      end
+    end
   end
 
   describe '#to_ast' do
