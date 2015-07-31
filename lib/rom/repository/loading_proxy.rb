@@ -1,8 +1,10 @@
 require 'rom/support/options'
+require 'rom/relation/materializable'
 
 module ROM
   class Repository < Gateway
     class LoadingProxy
+      include Relation::Materializable
       include Options
 
       option :name, reader: true, type: Symbol
@@ -16,25 +18,8 @@ module ROM
         @relation = relation
       end
 
-      def each
-        return to_enum unless block_given?
-        to_a.each { |item| yield(item) }
-      end
-
-      def first
-        to_a.first
-      end
-
-      def one
-        (relation >> mapper).one
-      end
-
-      def one!
-        (relation >> mapper).one!
-      end
-
-      def to_a
-        (relation >> mapper).to_a
+      def call(*args)
+        (combine? ? relation : (relation >> mapper)).call(*args)
       end
 
       def combine(options)
@@ -73,6 +58,10 @@ module ROM
 
       def with(new_options)
         __new__(relation, new_options)
+      end
+
+      def combine?
+        options[:meta][:combine_type]
       end
 
       private
