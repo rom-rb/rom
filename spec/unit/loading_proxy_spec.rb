@@ -23,7 +23,7 @@ RSpec.describe 'loading proxy' do
     end
 
     it 'returns an enumerator when block is not given' do
-      expect(repo.all_users.each.to_a).to eql([jane, joe])
+      expect(users.each.to_a).to eql([jane, joe])
     end
   end
 
@@ -48,8 +48,8 @@ RSpec.describe 'loading proxy' do
       it 'returns exactly one struct' do
         expect(users.find(id: 1).one!).to eql(jane)
 
-        expect { repo.find_users(id: [1, 2]).one! }.to raise_error(ROM::TupleCountMismatchError)
-        expect { repo.find_users(id: [3]).one! }.to raise_error(ROM::TupleCountMismatchError)
+        expect { users.find(id: [1, 2]).one! }.to raise_error(ROM::TupleCountMismatchError)
+        expect { users.find(id: [3]).one! }.to raise_error(ROM::TupleCountMismatchError)
       end
     end
   end
