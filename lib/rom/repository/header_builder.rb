@@ -22,15 +22,15 @@ module ROM
 
       private
 
-      def visit(ast)
-        __send__("visit_#{ast.first}", *ast[1..ast.size-1])
+      def visit(ast, *args)
+        __send__("visit_#{ast.first}", *(ast[1..ast.size-1] + args))
       end
 
       def visit_relation(*args)
         name, header, meta = args
 
         options = [
-          visit(header),
+          visit_header(header[1], meta),
           model: struct_builder[meta.fetch(:base_name), header[1].map { |a| a[1] }]
         ]
 
@@ -39,17 +39,23 @@ module ROM
           keys = meta.fetch(:keys)
 
           [name, combine: true, type: type, keys: keys, header: Header.coerce(*options)]
+        elsif meta[:wrap]
+          [name, wrap: true, type: :hash, header: Header.coerce(*options)]
         else
           options
         end
       end
 
-      def visit_header(header)
-        header.map { |attribute| visit(attribute) }
+      def visit_header(header, meta = {})
+        header.map { |attribute| visit(attribute, meta) }
       end
 
-      def visit_attribute(name)
-        [name]
+      def visit_attribute(name, meta = {})
+        if meta[:wrap]
+          [name, from: :"#{meta[:base_name]}_#{name}"]
+        else
+          [name]
+        end
       end
     end
   end

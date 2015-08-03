@@ -13,6 +13,10 @@ RSpec.shared_context 'structs' do
     repo.tags.mapper.model
   end
 
+  let(:tag_with_task_struct) do
+    mapper_for(repo.tag_with_wrapped_task).model
+  end
+
   let(:user_with_tasks_struct) do
     mapper_for(repo.users_with_tasks).model
   end
@@ -51,6 +55,14 @@ RSpec.shared_context 'structs' do
 
   let(:tag) do
     tag_struct.new(id: 1, task_id: 2, name: 'red')
+  end
+
+  let(:task) do
+    task_struct.new(id: 2, user_id: 1, title: 'Jane Task')
+  end
+
+  let(:tag_with_task) do
+    tag_with_task_struct.new(id: 1, task_id: 2, name: 'red', task: task)
   end
 
   let(:task_with_tag) do

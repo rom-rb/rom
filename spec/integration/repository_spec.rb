@@ -29,4 +29,8 @@ RSpec.describe 'ROM repository' do
   it 'loads nested combined relations' do
     expect(repo.users_with_tasks_and_tags.first).to eql(user_with_task_and_tags)
   end
+
+  it 'loads a wrapped relation' do
+    expect(repo.tag_with_wrapped_task.first).to eql(tag_with_task)
+  end
 end

@@ -4,7 +4,7 @@ module ROM
       def self.inherited(klass)
         super
         klass.class_eval do
-          exposed_relations.merge(Set[:columns, :for_combine])
+          exposed_relations.merge(Set[:columns, :for_combine, :for_wrap])
           defines :attributes
           attributes({})
 
@@ -30,6 +30,14 @@ module ROM
           pk, fk = keys.to_a.flatten
           where(fk => relation.map { |tuple| tuple[pk] })
         end
+      end
+
+      def for_wrap(name, keys)
+        other = __registry__[name]
+
+        inner_join(name, keys)
+          .select(*qualified.header.columns)
+          .select_append(*other.prefix(other.name).qualified.header)
       end
     end
   end

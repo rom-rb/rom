@@ -39,6 +39,10 @@ RSpec.shared_context('repo') do
       def users_with_task_by_title(title)
         combine_children(users, one: { task: tasks.find(title: title) })
       end
+
+      def tag_with_wrapped_task
+        wrap_parent(tags, task: tasks)
+      end
     end
   end
 end

@@ -31,6 +31,14 @@ module ROM
         end
       end
 
+      def wrap_parent(child, options)
+        child.wrap(
+          options.each_with_object({}) { |(name, parent), h|
+            h[name] = [parent, combine_keys(parent, :children)]
+          }
+        )
+      end
+
       def combine(root, options)
         combine_opts = options.each_with_object({}) do |(type, relations), result|
           result[type] = relations.each_with_object({}) do |(name, (relation, keys)), h|
@@ -56,6 +64,8 @@ module ROM
           }
         })
       end
+
+      private
 
       def combine_keys(relation, type)
         if type == :parent

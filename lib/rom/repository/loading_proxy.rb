@@ -22,6 +22,22 @@ module ROM
         (combine? ? relation : (relation >> mapper)).call(*args)
       end
 
+      def wrap(options)
+        wraps = options.map { |(name, (relation, keys))|
+          relation.wrapped(name, keys)
+        }
+
+        relation = wraps.reduce(self) { |a, e|
+          a.for_wrap(e.base_name, e.meta.fetch(:keys))
+        }
+
+        __new__(relation, meta: { wraps: wraps })
+      end
+
+      def wrapped(name, keys)
+        with(name: name, meta: { keys: keys, wrap: true })
+      end
+
       def combine(options)
         nodes = options.flat_map do |type, relations|
           relations.map { |key, (relation, keys)|
@@ -34,10 +50,18 @@ module ROM
 
       def to_ast
         attr_ast = columns.map { |name| [:attribute, name] }
-        node_ast = nodes.map(&:to_ast)
-        meta = options[:meta].merge(base_name: relation.base_name)
 
-        [:relation, name, [:header, attr_ast + node_ast], meta]
+        node_ast = nodes.map(&:to_ast)
+        wrap_ast = wraps.map(&:to_ast)
+
+        wrap_attrs = wraps.flat_map { |wrap|
+          wrap.columns.map { |c| [:attribute, :"#{wrap.base_name}_#{c}"] }
+        }
+
+        meta = options[:meta].merge(base_name: relation.base_name)
+        meta.delete(:wraps)
+
+        [:relation, name, [:header, (attr_ast - wrap_attrs) + node_ast + wrap_ast], meta]
       end
 
       def mapper
@@ -61,7 +85,11 @@ module ROM
       end
 
       def combine?
-        options[:meta][:combine_type]
+        meta[:combine_type]
+      end
+
+      def meta
+        options[:meta]
       end
 
       private
@@ -72,6 +100,10 @@ module ROM
 
       def nodes
         relation.is_a?(Relation::Graph) ? relation.nodes : []
+      end
+
+      def wraps
+        meta.fetch(:wraps, [])
       end
 
       def method_missing(meth, *args)
