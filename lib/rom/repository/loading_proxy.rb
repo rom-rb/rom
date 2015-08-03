@@ -28,7 +28,7 @@ module ROM
         }
 
         relation = wraps.reduce(self) { |a, e|
-          a.for_wrap(e.base_name, e.meta.fetch(:keys))
+          a.relation.for_wrap(e.base_name, e.meta.fetch(:keys))
         }
 
         __new__(relation, meta: { wraps: wraps })
@@ -40,12 +40,16 @@ module ROM
 
       def combine(options)
         nodes = options.flat_map do |type, relations|
-          relations.map { |key, (relation, keys)|
-            relation.with(name: key, meta: { keys: keys, combine_type: type })
+          relations.map { |name, (relation, keys)|
+            relation.combined(name, keys, type)
           }
         end
 
         __new__(relation.combine(*nodes))
+      end
+
+      def combined(name, keys, type)
+        with(name: name, meta: { keys: keys, combine_type: type })
       end
 
       def to_ast
