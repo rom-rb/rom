@@ -24,6 +24,10 @@ Learn more:
 * [Guides](http://rom-rb.org/guides/)
 * [Tutorials](http://rom-rb.org/tutorials/)
 
+## Support Campaign
+
+You can support ROM's development via our [campaign on Bountysource](https://salt.bountysource.com/teams/rom-rb). Cheers!
+
 ## Adapters
 
   * [rom-sql](https://github.com/rom-rb/rom-sql)
