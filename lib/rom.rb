@@ -61,6 +61,4 @@ module ROM
     register :auto_registration, ROM::EnvironmentPlugins::AutoRegistration, type: :environment
     register :registry_reader, ROM::Plugins::Relation::RegistryReader, type: :relation
   end
-
-  use :auto_registration
 end
