@@ -1,28 +1,20 @@
-# rom-repository
+[gem]: https://rubygems.org/gems/rom-repository
+[travis]: https://travis-ci.org/rom-rb/rom-repository
+[gemnasium]: https://gemnasium.com/rom-rb/rom-repository
+[codeclimate]: https://codeclimate.com/github/rom-rb/rom-repository
+[inchpages]: http://inch-ci.org/github/rom-rb/rom-repository
 
-This is my playground for some higher-level repository abstraction on top of ROM
-pieces which is supposed to do the following:
+# ROM::Repository
 
-* a repository loads data from its relation(s) into simple struct objects
-* a repository generates dedicated mappers on-the-fly by reflecting on a relation structure
-* a repository generates dedicated classes for representing data (simple structs)
+[![Gem Version](https://badge.fury.io/rb/rom-repository.svg)][gem]
+[![Build Status](https://travis-ci.org/rom-rb/rom-repository.svg?branch=master)][travis]
+[![Dependency Status](https://gemnasium.com/rom-rb/rom-repository.png)][gemnasium]
+[![Code Climate](https://codeclimate.com/github/rom-rb/rom-repository/badges/gpa.svg)][codeclimate]
+[![Test Coverage](https://codeclimate.com/github/rom-rb/rom-repository/badges/coverage.svg)][codeclimate]
+[![Inline docs](http://inch-ci.org/github/rom-rb/rom-repository.svg?branch=master)][inchpages]
 
-This is based on a couple of assumptions. First of all **relation data are represented
-as structs** so you don't define your "entities" because a repository will always
-give you structs back. You can, however, decorate structs using your own entity
-classes when needed.
-
-Secondly it will only work with adapters that provide an interface to inspect its
-relation headers. Typically most adapters will be able to do that so we should be
-fine.
-
-Few ideas about structs:
-
-* structs will be immutable
-* structs will have standard attr readers
-* structs will have hash-like `[]` readers too
-* structs will raise an error when you try to access a non-existant attribute
-* structs will be extremely simple wrt their interface
+Repository for [ROM](https://github.com/rom-rb/rom) with auto-mapping and relation
+extensions.
 
 ## Synopsis
 
