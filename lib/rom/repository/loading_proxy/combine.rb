@@ -31,9 +31,19 @@ module ROM
 
         def combine_children(options)
           combine(options.each_with_object({}) { |(type, children), h|
-            h[type] = children.each_with_object({}) { |(key, child), r|
-              r[key] = [child, combine_keys(relation, :children)]
-            }
+            h[type] =
+              if children.is_a?(Hash)
+                children.each_with_object({}) { |(key, child), r|
+                  r[key] = [child, combine_keys(relation, :children)]
+                }
+              else
+                (children.is_a?(Array) ? children : [children])
+                  .each_with_object({}) { |child, r|
+                  r[child.combine_tuple_key(type)] = [
+                    child, combine_keys(relation, :children)
+                  ]
+                }
+              end
           })
         end
 
@@ -55,10 +65,17 @@ module ROM
           end
         end
 
+        def combine_tuple_key(arity)
+          if arity == :one
+            Inflector.singularize(base_name).to_sym
+          else
+            base_name
+          end
+        end
+
         def combined(name, keys, type)
           with(name: name, meta: { keys: keys, combine_type: type })
         end
-
       end
     end
   end

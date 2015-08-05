@@ -26,15 +26,15 @@ RSpec.shared_context('repo') do
       end
 
       def tasks_with_tags(tasks = self.tasks)
-        tasks.combine_children(many: { tags: tags })
+        tasks.combine_children(many: tags)
       end
 
       def users_with_task
-        users.combine_children(one: { task: tasks })
+        users.combine_children(one: tasks)
       end
 
       def users_with_task_by_title(title)
-        users.combine_children(one: { task: tasks.find(title: title) })
+        users.combine_children(one: tasks.find(title: title))
       end
 
       def tag_with_wrapped_task
