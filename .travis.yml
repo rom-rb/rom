@@ -21,6 +21,7 @@ matrix:
   allow_failures:
     - rvm: ruby-head
     - rvm: jruby-head
+    - rvm: rbx-2
 notifications:
   webhooks:
     urls:
