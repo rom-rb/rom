@@ -1,0 +1,30 @@
+language: ruby
+sudo: false
+cache: bundler
+bundler_args: --without yard guard benchmarks tools
+before_script:
+  - psql -c 'create database rom;' -U postgres
+script: "bundle exec rake ci"
+rvm:
+  - 2.0
+  - 2.1
+  - 2.2
+  - rbx-2
+  - jruby
+  - jruby-head
+  - ruby-head
+env:
+  global:
+    - CODECLIMATE_REPO_TOKEN=TODO
+    - JRUBY_OPTS='--dev -J-Xmx1024M'
+matrix:
+  allow_failures:
+    - rvm: ruby-head
+    - rvm: jruby-head
+notifications:
+  webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/39e1225f489f38b0bd09
+    on_success: change
+    on_failure: always
+    on_start: false
