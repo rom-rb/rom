@@ -29,6 +29,14 @@ RSpec.shared_context 'structs' do
     mapper_for(repo.tasks_with_tags).model
   end
 
+  let(:task_with_user_struct) do
+    mapper_for(repo.task_with_user).model
+  end
+
+  let(:task_with_owner_struct) do
+    mapper_for(repo.task_with_owner).model
+  end
+
   let(:jane) do
     user_struct.new(id: 1, name: 'Jane')
   end
@@ -50,7 +58,11 @@ RSpec.shared_context 'structs' do
   end
 
   let(:task_with_user) do
-    task_with_user_struct.new(id: 2, user_id: 1, title: 'Jane Task', owner: jane)
+    task_with_user_struct.new(id: 2, user_id: 1, title: 'Jane Task', user: jane)
+  end
+
+  let(:task_with_owner) do
+    task_with_owner_struct.new(id: 2, user_id: 1, title: 'Jane Task', owner: jane)
   end
 
   let(:tag) do

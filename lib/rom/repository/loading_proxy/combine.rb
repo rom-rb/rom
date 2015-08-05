@@ -21,12 +21,21 @@ module ROM
         end
 
         def combine_parents(options)
-          combine_opts = options.each_with_object({}) { |(type, parents), h|
-            h[type] = parents.each_with_object({}) { |(key, parent), r|
-              r[key] = [parent, combine_keys(parent, :parent)]
-            }
-          }
-          combine(combine_opts)
+          combine(options.each_with_object({}) { |(type, parents), h|
+            h[type] =
+              if parents.is_a?(Hash)
+                parents.each_with_object({}) { |(key, parent), r|
+                  r[key] = [parent, combine_keys(parent, :parent)]
+                }
+              else
+                (parents.is_a?(Array) ? parents : [parents])
+                  .each_with_object({}) { |parent, r|
+                  r[parent.combine_tuple_key(type)] = [
+                    parent, combine_keys(parent, :parent)
+                  ]
+                }
+              end
+          })
         end
 
         def combine_children(options)

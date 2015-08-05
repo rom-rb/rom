@@ -8,6 +8,14 @@ RSpec.describe 'ROM repository' do
     expect(repo.all_users.to_a).to eql([jane, joe])
   end
 
+  it 'loads a combine relation with one parent' do
+    expect(repo.task_with_user.first).to eql(task_with_user)
+  end
+
+  it 'loads a combine relation with one parent with custom tuple key' do
+    expect(repo.task_with_owner.first).to eql(task_with_owner)
+  end
+
   it 'loads a combined relation with many children' do
     expect(repo.users_with_tasks.to_a).to eql([jane_with_tasks, joe_with_tasks])
   end
@@ -20,10 +28,6 @@ RSpec.describe 'ROM repository' do
     expect(repo.users_with_task_by_title('Joe Task').to_a).to eql([
       jane_without_task, joe_with_task
     ])
-  end
-
-  it 'loads a combined relation with one parent' do
-    expect(repo.users_with_task.first).to eql(jane_with_task)
   end
 
   it 'loads nested combined relations' do
