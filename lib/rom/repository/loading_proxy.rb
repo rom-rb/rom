@@ -37,8 +37,17 @@ module ROM
       #
       # @api public
       def call(*args)
-        (combine? ? relation : (relation >> mapper)).call(*args)
+        ((combine? || composite?) ? relation : (relation >> mapper)).call(*args)
       end
+
+      # Map this relation with other mappers too
+      #
+      # @api public
+      def map_with(*names)
+        mappers = [mapper]+names.map { |name| relation.mappers[name] }
+        mappers.reduce(self) { |a, e| a >> e }
+      end
+      alias_method :as, :map_with
 
       # Return AST for this relation
       #
@@ -93,6 +102,15 @@ module ROM
         meta[:combine_type]
       end
 
+      # Return if this relation is a composite
+      #
+      # @return [Boolean]
+      #
+      # @api private
+      def composite?
+        relation.is_a?(Relation::Composite)
+      end
+
       # Return meta info for this relation
       #
       # @return [Hash]
@@ -141,7 +159,7 @@ module ROM
         if relation.respond_to?(meth)
           result = relation.__send__(meth, *args)
 
-          if result.is_a?(Relation::Lazy) || result.is_a?(Relation::Graph)
+          if result.is_a?(Relation::Lazy) || result.is_a?(Relation::Graph) || result.is_a?(Relation::Composite)
             __new__(result)
           else
             result

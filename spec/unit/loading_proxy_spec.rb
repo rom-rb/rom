@@ -31,6 +31,22 @@ RSpec.describe 'loading proxy' do
     end
   end
 
+  describe '#map_with' do
+    before do
+      setup.mappers do
+        register :users, name_list: -> users { users.map(&:name) }
+      end
+    end
+
+    it 'sends the relation through multiple mappers' do
+      expect(users.map_with(:name_list).to_a).to eql(%w(Jane Joe))
+    end
+
+    it 'returns an enumerator when block is not given' do
+      expect(users.each.to_a).to eql([jane, joe])
+    end
+  end
+
   describe 'retrieving a single struct' do
     describe '#first' do
       it 'returns exactly one struct' do
