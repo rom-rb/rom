@@ -4,6 +4,7 @@ require 'rom/struct'
 
 module ROM
   class Repository < Gateway
+    # @api private
     class StructBuilder
       attr_reader :registry
 

@@ -1,7 +1,25 @@
 module ROM
   class Repository < Gateway
     class LoadingProxy
+      # Provides convenient methods for producing combined relations
+      #
+      # @api public
       module Combine
+        # Combine with other relations
+        #
+        # @example
+        #   # combining many
+        #   users.combine(many: { tasks: [tasks, id: :task_id] })
+        #   users.combine(many: { tasks: [tasks.for_users, id: :task_id] })
+        #
+        #   # combining one
+        #   users.combine(one: { task: [tasks, id: :task_id] })
+        #
+        # @param [Hash] options
+        #
+        # @return [LoadingProxy]
+        #
+        # @api public
         def combine(options)
           combine_opts = options.each_with_object({}) do |(type, relations), result|
             result[type] = relations.each_with_object({}) do |(name, (other, keys)), h|
@@ -20,6 +38,16 @@ module ROM
           __new__(relation.combine(*nodes))
         end
 
+        # Shortcut for combining with parents which infers the join keys
+        #
+        # @example
+        #   tasks.combine_parents(one: users)
+        #
+        # @param [Hash] options
+        #
+        # @return [LoadingProxy]
+        #
+        # @api public
         def combine_parents(options)
           combine(options.each_with_object({}) { |(type, parents), h|
             h[type] =
@@ -38,6 +66,16 @@ module ROM
           })
         end
 
+        # Shortcut for combining with children which infers the join keys
+        #
+        # @example
+        #   users.combine_parents(many: tasks)
+        #
+        # @param [Hash] options
+        #
+        # @return [LoadingProxy]
+        #
+        # @api public
         def combine_children(options)
           combine(options.each_with_object({}) { |(type, children), h|
             h[type] =
@@ -56,6 +94,14 @@ module ROM
           })
         end
 
+        # Infer join keys for a given relation and association type
+        #
+        # @param [LoadingProxy] relation
+        # @param [Symbol] type The type can be either :parent or :children
+        #
+        # @return [Hash<Symbol=>Symbol>]
+        #
+        # @api private
         def combine_keys(relation, type)
           if type == :parent
             { relation.foreign_key => relation.primary_key }
@@ -64,6 +110,14 @@ module ROM
           end
         end
 
+        # Infer relation for combine operation
+        #
+        # By default it uses `for_combine` which is implemented as SQL::Relation
+        # extension
+        #
+        # @return [LoadingProxy]
+        #
+        # @api private
         def combine_method(other, keys)
           custom_name = :"for_#{other.base_name}"
 
@@ -74,6 +128,11 @@ module ROM
           end
         end
 
+        # Infer key under which a combine relation will be loaded
+        #
+        # @return [Symbol]
+        #
+        # @api private
         def combine_tuple_key(arity)
           if arity == :one
             Inflector.singularize(base_name).to_sym
@@ -82,6 +141,14 @@ module ROM
           end
         end
 
+        # Return combine representation of a loading-proxy relation
+        #
+        # This will carry meta info used to produce a correct AST from a relation
+        # so that correct mapper can be generated
+        #
+        # @return [LoadingProxy]
+        #
+        # @api private
         def combined(name, keys, type)
           with(name: name, meta: { keys: keys, combine_type: type })
         end
