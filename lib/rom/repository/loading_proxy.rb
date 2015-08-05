@@ -34,18 +34,57 @@ module ROM
         __new__(relation, meta: { wraps: wraps })
       end
 
+      def wrap_parent(options)
+        wrap(
+          options.each_with_object({}) { |(name, parent), h|
+            h[name] = [parent, combine_keys(parent, :children)]
+          }
+        )
+      end
+
       def wrapped(name, keys)
         with(name: name, meta: { keys: keys, wrap: true })
       end
 
       def combine(options)
-        nodes = options.flat_map do |type, relations|
+        combine_opts = options.each_with_object({}) do |(type, relations), result|
+          result[type] = relations.each_with_object({}) do |(name, (relation, keys)), h|
+            h[name] = [relation.curried? ? relation : relation.for_combine(keys), keys]
+          end
+        end
+
+        nodes = combine_opts.flat_map do |type, relations|
           relations.map { |name, (relation, keys)|
             relation.combined(name, keys, type)
           }
         end
 
         __new__(relation.combine(*nodes))
+      end
+
+      def combine_parents(options)
+        combine_opts = options.each_with_object({}) { |(type, parents), h|
+          h[type] = parents.each_with_object({}) { |(key, parent), r|
+            r[key] = [parent, combine_keys(parent, :parent)]
+          }
+        }
+        combine(combine_opts)
+      end
+
+      def combine_children(options)
+        combine(options.each_with_object({}) { |(type, children), h|
+          h[type] = children.each_with_object({}) { |(key, child), r|
+            r[key] = [child, combine_keys(relation, :children)]
+          }
+        })
+      end
+
+      def combine_keys(relation, type)
+        if type == :parent
+          { relation.foreign_key => relation.primary_key }
+        else
+          { relation.primary_key => relation.foreign_key }
+        end
       end
 
       def combined(name, keys, type)
@@ -70,14 +109,6 @@ module ROM
 
       def mapper
         mapper_builder[to_ast]
-      end
-
-      def primary_key
-        relation.primary_key
-      end
-
-      def foreign_key
-        :"#{Inflector.singularize(base_name)}_id"
       end
 
       def respond_to_missing?(name, include_private = false)

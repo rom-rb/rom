@@ -39,6 +39,10 @@ module ROM
           .select(*qualified.header.columns)
           .select_append(*other.prefix(other.name).qualified.header)
       end
+
+      def foreign_key
+        :"#{Inflector.singularize(name)}_id"
+      end
     end
   end
 
@@ -50,6 +54,10 @@ module ROM
 
       def primary_key
         relation.primary_key
+      end
+
+      def foreign_key
+        relation.foreign_key
       end
     end
 

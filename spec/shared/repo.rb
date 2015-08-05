@@ -14,34 +14,31 @@ RSpec.shared_context('repo') do
       end
 
       def task_with_user
-        combine_parents(tasks.find(id: 2), one: { owner: users })
+        tasks.find(id: 2).combine_parents(one: { owner: users })
       end
 
       def users_with_tasks
-        combine_children(users, many: { all_tasks: tasks.for_users })
+        users.combine_children(many: { all_tasks: tasks.for_users })
       end
 
       def users_with_tasks_and_tags
-        combine_children(
-          users,
-          many: { all_tasks: tasks_with_tags(tasks.for_users) }
-        )
+        users.combine_children(many: { all_tasks: tasks_with_tags(tasks.for_users) })
       end
 
       def tasks_with_tags(tasks = self.tasks)
-        combine_children(tasks, many: { tags: tags })
+        tasks.combine_children(many: { tags: tags })
       end
 
       def users_with_task
-        combine_children(users, one: { task: tasks })
+        users.combine_children(one: { task: tasks })
       end
 
       def users_with_task_by_title(title)
-        combine_children(users, one: { task: tasks.find(title: title) })
+        users.combine_children(one: { task: tasks.find(title: title) })
       end
 
       def tag_with_wrapped_task
-        wrap_parent(tags, task: tasks)
+        tags.wrap_parent(task: tasks)
       end
     end
   end
