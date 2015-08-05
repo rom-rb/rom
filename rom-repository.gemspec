@@ -4,7 +4,7 @@ require File.expand_path('../lib/rom/repository/version', __FILE__)
 
 Gem::Specification.new do |gem|
   gem.name          = 'rom-repository'
-  gem.summary       = 'Repository for ROM with automatic mapping'
+  gem.summary       = 'Repository for ROM with auto-mapping and relation extensions'
   gem.description   = gem.summary
   gem.author        = 'Piotr Solnica'
   gem.email         = 'piotr.solnica@gmail.com'

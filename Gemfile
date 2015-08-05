@@ -11,4 +11,5 @@ group :test do
   gem 'byebug'
   gem 'sqlite3'
   gem 'pg'
+  gem "codeclimate-test-reporter", require: nil
 end
