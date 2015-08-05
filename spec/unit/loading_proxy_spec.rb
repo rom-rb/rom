@@ -13,6 +13,10 @@ RSpec.describe 'loading proxy' do
     ROM::Repository::LoadingProxy.new(rom.relation(:tasks), name: :tasks)
   end
 
+  let(:tags) do
+    ROM::Repository::LoadingProxy.new(rom.relation(:tags), name: :tags)
+  end
+
   describe '#each' do
     it 'yields loaded structs' do
       result = []
@@ -88,6 +92,33 @@ RSpec.describe 'loading proxy' do
             ]
           ],
           base_name: :users
+        ]
+      )
+    end
+
+    it 'returns valid ast for a wrapped relation' do
+      relation = tags.wrap_parent(task: tasks)
+
+      expect(relation.to_ast).to eql(
+        [
+          :relation, :tags, [
+            :header, [
+              [:attribute, :id],
+              [:attribute, :task_id],
+              [:attribute, :name],
+              [
+                :relation, :task, [
+                  :header, [
+                    [:attribute, :id],
+                    [:attribute, :user_id],
+                    [:attribute, :title]
+                  ]
+                ],
+                { base_name: :tasks, keys: { id: :task_id }, wrap: true }
+              ]
+            ]
+          ],
+          base_name: :tags
         ]
       )
     end
