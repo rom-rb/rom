@@ -8,7 +8,7 @@ gem 'inflecto'
 
 group :test do
   gem 'rspec'
-  gem 'byebug'
+  gem 'byebug', platforms: :mri
   gem 'sqlite3'
   gem 'pg'
   gem "codeclimate-test-reporter", require: nil
