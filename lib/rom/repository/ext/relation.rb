@@ -22,14 +22,8 @@ module ROM
       end
 
       def for_combine(keys, relation)
-        custom_meth = :"for_#{relation.source.name}"
-
-        if respond_to?(custom_meth)
-          __send__(custom_meth, relation)
-        else
-          pk, fk = keys.to_a.flatten
-          where(fk => relation.map { |tuple| tuple[pk] })
-        end
+        pk, fk = keys.to_a.flatten
+        where(fk => relation.map { |tuple| tuple[pk] })
       end
 
       def for_wrap(name, keys)

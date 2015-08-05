@@ -48,8 +48,10 @@ module ROM
 
       def combine(options)
         combine_opts = options.each_with_object({}) do |(type, relations), result|
-          result[type] = relations.each_with_object({}) do |(name, (relation, keys)), h|
-            h[name] = [relation.curried? ? relation : relation.for_combine(keys), keys]
+          result[type] = relations.each_with_object({}) do |(name, (other, keys)), h|
+            h[name] = [
+              other.curried? ? other : other.combine_method(relation, keys), keys
+            ]
           end
         end
 
@@ -84,6 +86,16 @@ module ROM
           { relation.foreign_key => relation.primary_key }
         else
           { relation.primary_key => relation.foreign_key }
+        end
+      end
+
+      def combine_method(other, keys)
+        custom_name = :"for_#{other.base_name}"
+
+        if relation.respond_to?(custom_name)
+          __send__(custom_name)
+        else
+          for_combine(keys)
         end
       end
 
