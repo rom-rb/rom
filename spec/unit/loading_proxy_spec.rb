@@ -41,10 +41,6 @@ RSpec.describe 'loading proxy' do
     it 'sends the relation through multiple mappers' do
       expect(users.map_with(:name_list).to_a).to eql(%w(Jane Joe))
     end
-
-    it 'returns an enumerator when block is not given' do
-      expect(users.each.to_a).to eql([jane, joe])
-    end
   end
 
   describe 'retrieving a single struct' do
