@@ -1,8 +1,8 @@
 RSpec.describe 'loading proxy' do
   include_context 'database'
+  include_context 'relations'
   include_context 'repo'
   include_context 'structs'
-  include_context 'relations'
   include_context 'seeds'
 
   let(:users) do

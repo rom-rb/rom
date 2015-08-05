@@ -23,5 +23,7 @@ RSpec.shared_context 'relations' do
         where(user_id: users.map { |u| u[:id] })
       end
     end
+
+    setup.relation(:tags)
   end
 end
