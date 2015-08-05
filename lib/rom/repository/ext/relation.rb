@@ -1,6 +1,31 @@
 module ROM
   module SQL
     class Relation < ROM::Relation
+      class ViewDSL
+        attr_reader :name
+
+        attr_reader :attributes
+
+        attr_reader :relation_block
+
+        def initialize(name, &block)
+          @name = name
+          instance_eval(&block)
+        end
+
+        def header(attributes)
+          @attributes = attributes
+        end
+
+        def relation(&block)
+          @relation_block = lambda(&block)
+        end
+
+        def call
+          [name, attributes, relation_block]
+        end
+      end
+
       def self.inherited(klass)
         super
         klass.class_eval do
@@ -12,9 +37,17 @@ module ROM
         end
       end
 
-      def self.view(name, names, &block)
+      def self.view(*args, &block)
+        name, names, relation_block =
+          if block.arity == 0
+            ViewDSL.new(*args, &block).call
+          else
+            [*args, block]
+          end
+
         attributes[name] = names
-        define_method(name, &block)
+
+        define_method(name, &relation_block)
       end
 
       def columns
