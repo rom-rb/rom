@@ -1,3 +1,7 @@
+## v0.9.0 to-be-released
+
+[Compare v0.8.1...HEAD](https://github.com/rom-rb/rom/compare/v0.8.1...HEAD)
+
 ## v0.8.1 2015-07-12
 
 ### Fixed
