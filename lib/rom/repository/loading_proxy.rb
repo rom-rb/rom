@@ -120,6 +120,15 @@ module ROM
         options[:meta]
       end
 
+      # Return all nodes that this relation combines
+      #
+      # @return [Array<LoadingProxy>]
+      #
+      # @api private
+      def nodes
+        relation.respond_to?(:nodes) ? relation.nodes : []
+      end
+
       private
 
       # Return a new instance with another relation and options
@@ -129,15 +138,6 @@ module ROM
       # @api private
       def __new__(relation, new_options = {})
         self.class.new(relation, options.merge(new_options))
-      end
-
-      # Return all nodes that this relation combines
-      #
-      # @return [Array<LoadingProxy>]
-      #
-      # @api private
-      def nodes
-        relation.respond_to?(:nodes) ? relation.nodes : []
       end
 
       # Return all nodes that this relation wraps
