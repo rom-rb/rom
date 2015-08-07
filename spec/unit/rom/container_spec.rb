@@ -64,9 +64,9 @@ describe ROM::Container do
       expect(by_name['Jane']).to match_array([{ name: 'Jane' }])
     end
 
-    it 'returns lazy relation without mappers when mappers are not defined' do
-      expect(rom.relation(:tasks)).to be_instance_of(ROM::Relation::Lazy)
-      expect(rom.relation(:tasks).relation).to be(rom.relations.tasks)
+    it 'returns relation without mappers when mappers are not defined' do
+      expect(rom.relation(:tasks)).to be_kind_of(ROM::Relation)
+      expect(rom.relation(:tasks).mappers.elements).to be_empty
     end
   end
 

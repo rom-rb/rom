@@ -25,7 +25,7 @@ describe ROM::Relation::Composite do
       relation = users >> name_list >> upcaser
       loaded = relation.call
 
-      expect(loaded.source).to eql(users.relation)
+      expect(loaded.source).to eql(users)
       expect(loaded).to match_array(%w(JANE JOE))
     end
 
@@ -33,7 +33,7 @@ describe ROM::Relation::Composite do
       relation = users >> users.sorted
       loaded = relation.call
 
-      expect(loaded.source).to eql(users.relation)
+      expect(loaded.source).to eql(users)
       expect(loaded).to match_array([
         { name: 'Jane', email: 'jane@doe.org' },
         { name: 'Joe', email: 'joe@doe.org' }

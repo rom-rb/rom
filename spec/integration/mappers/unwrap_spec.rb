@@ -13,7 +13,7 @@ describe 'Mapper definition DSL' do
             tuple.merge(user: users.restrict(name: tuple[:name]).first)
           }
 
-          self.class.new(tuples)
+          __new__(tuples)
         end
       end
 

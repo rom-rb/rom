@@ -72,9 +72,9 @@ module ROM
         end
 
       if mappers.key?(name)
-        relation.to_lazy(mappers: mappers[name])
+        relation.with(mappers: mappers[name])
       else
-        relation.to_lazy
+        relation
       end
     end
     deprecate :read, :relation, "For mapping append `.map_with(:your_mapper_name)`"

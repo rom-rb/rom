@@ -1,5 +1,8 @@
 require 'set'
 
+require 'rom/support/auto_curry'
+require 'rom/relation/curried'
+
 module ROM
   class Relation
     module ClassInterface
@@ -21,7 +24,7 @@ module ROM
         klass.class_eval do
           use :registry_reader
 
-          defines :gateway, :dataset, :register_as, :exposed_relations
+          defines :gateway, :dataset, :register_as
 
           deprecate_class_method :repository, :gateway
           deprecate :repository, :gateway
@@ -29,7 +32,6 @@ module ROM
           gateway :default
 
           dataset(default_name)
-          exposed_relations Set.new
 
           # Relation's dataset name
           #
@@ -39,16 +41,6 @@ module ROM
           #
           # @api public
           attr_reader :name
-
-          # A set with public method names that return "virtual" relations
-          #
-          # Only those methods are exposed directly on relations return by
-          # Container#relation interface
-          #
-          # @return [Set]
-          #
-          # @api private
-          attr_reader :exposed_relations
 
           # Set or get name under which a relation will be registered
           #
@@ -65,18 +57,14 @@ module ROM
             end
           end
 
-          # Hook used to collect public method names
-          #
-          # @api private
-          def self.method_added(name)
-            super
-            exposed_relations << name if public_instance_methods.include?(name)
+          def self.exposed_relations(*args)
+            Deprecations.announce("#{self}.exposed_relations", 'this method has no effect anymore')
+            Set.new
           end
 
           # @api private
           def initialize(dataset, options = {})
             @name = self.class.dataset
-            @exposed_relations = self.class.exposed_relations
             super
           end
 
@@ -89,6 +77,8 @@ module ROM
             self.class.gateway
           end
         end
+
+        klass.extend(AutoCurry)
       end
 
       # Return adapter-specific relation subclass
@@ -183,6 +173,11 @@ module ROM
         end
 
         registry
+      end
+
+      # @api private
+      def curried
+        Curried
       end
 
       # Hook to finalize a relation after its instance was created

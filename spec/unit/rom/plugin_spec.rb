@@ -9,10 +9,6 @@ describe "ROM::PluginRegistry" do
     Test::CommandPlugin   = Module.new
     Test::MapperPlugin    = Module.new
     Test::RelationPlugin  = Module.new do
-      def self.included(mod)
-        mod.exposed_relations << :plugged_in
-      end
-
       def plugged_in
         "a relation"
       end
@@ -73,10 +69,6 @@ describe "ROM::PluginRegistry" do
 
   it "allows definition of adapter restricted plugins" do
     Test::LazyPlugin = Module.new do
-      def self.included(mod)
-        mod.exposed_relations << :lazy?
-      end
-
       def lazy?
         true
       end
