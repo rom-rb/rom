@@ -106,6 +106,12 @@ module ROM
     end
     deprecate :to_lazy, :with, "to_lazy is no longer needed"
 
+    # @api public
+    def relation
+      Deprecations.announce("#relation", 'all relations are now lazy')
+      self
+    end
+
     private
 
     # @api private
