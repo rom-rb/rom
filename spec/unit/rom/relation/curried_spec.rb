@@ -1,3 +1,5 @@
+require 'rom/relation'
+
 RSpec.describe ROM::Relation::Curried do
   include_context 'users and tasks'
 
@@ -22,6 +24,12 @@ RSpec.describe ROM::Relation::Curried do
 
     it 'returns a loaded relation' do
       expect(relation.source).to eql(users.by_name('Jane'))
+    end
+  end
+
+  describe '#respond_to?' do
+    it 'returns true if wrapped relation responds to a method' do
+      expect(users.by_name).to respond_to(:dataset)
     end
   end
 end

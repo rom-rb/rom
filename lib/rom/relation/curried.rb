@@ -59,6 +59,11 @@ module ROM
         true
       end
 
+      # @api private
+      def respond_to_missing?(name, include_private = false)
+        super || relation.respond_to?(name)
+      end
+
       private
 
       # @api private
