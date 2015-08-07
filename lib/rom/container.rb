@@ -6,7 +6,7 @@ module ROM
   # Exposes defined gateways, relations and mappers
   #
   # @api public
-  class Env
+  class Container
     extend Deprecations
     include Equalizer.new(:gateways, :relations, :mappers, :commands)
 

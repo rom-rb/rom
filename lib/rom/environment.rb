@@ -13,7 +13,7 @@ module ROM
     # @api private
     attr_reader :gateways
 
-    # Setup object created during env setup phase
+    # Setup object created during setup phase
     #
     # This gets set to nil after setup is finalized
     #
@@ -22,12 +22,13 @@ module ROM
     # @api private
     attr_reader :boot
 
-    # Return global default ROM environment configured by the setup
+    # Return ROM container configured by the setup
     #
-    # @return [Env]
+    # @return [Container]
     #
     # @api public
-    attr_reader :env
+    attr_reader :container
+    alias_method :env, :container
 
     # @api private
     def initialize
@@ -104,8 +105,8 @@ module ROM
     #     end
     #   end
     #
-    #   rom.finalize # builds the env
-    #   rom.env # returns the env registry
+    #   rom.finalize # builds the container
+    #   rom.container # returns the container registry
     #
     # @api public
     def setup(*args, &block)
@@ -171,20 +172,21 @@ module ROM
       boot.mappers(*args, &block)
     end
 
-    # Finalize the setup and store default global env under ROM.env
+    # Finalize the setup and store default global container under 
+    # ROM::Environmrnt#container
     #
     # @example
     #   rom = ROM::Environment.new
     #   rom.setup(:memory)
     #   rom.finalize # => rom
     #   rom.boot # => nil
-    #   rom.env # => the env
+    #   rom.container # => the container
     #
     # @return [ROM]
     #
     # @api public
     def finalize
-      @env = boot.finalize
+      @container = boot.finalize
       self
     ensure
       @boot = nil
