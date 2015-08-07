@@ -6,6 +6,7 @@ module ROM
   # @private
   class Command < Commands::Abstract
     extend ClassMacros
+    extend ROM::Support::GuardedInheritanceHook
 
     include Equalizer.new(:relation, :options)
 
@@ -14,15 +15,6 @@ module ROM
     input Hash
     validator proc {}
     result :many
-
-    # Registers Create/Update/Delete descendant classes during the setup phase
-    #
-    # @api private
-    def self.inherited(klass)
-      super
-      return if klass.superclass == ROM::Command
-      ROM.register_command(klass)
-    end
 
     # Return adapter specific sub-class based on the adapter identifier
     #

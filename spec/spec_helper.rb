@@ -46,3 +46,5 @@ RSpec.configure do |config|
     ConstantLeakFinder.find(example)
   end
 end
+
+ROM.use :auto_registration

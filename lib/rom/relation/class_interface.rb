@@ -43,7 +43,7 @@ module ROM
           # A set with public method names that return "virtual" relations
           #
           # Only those methods are exposed directly on relations return by
-          # Env#relation interface
+          # Container#relation interface
           #
           # @return [Set]
           #
@@ -89,8 +89,6 @@ module ROM
             self.class.gateway
           end
         end
-
-        ROM.register_relation(klass)
       end
 
       # Return adapter-specific relation subclass
@@ -190,7 +188,7 @@ module ROM
       # Hook to finalize a relation after its instance was created
       #
       # @api private
-      def finalize(_env, _relation)
+      def finalize(_container, _relation)
         # noop
       end
     end

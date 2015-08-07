@@ -82,7 +82,7 @@ describe ROM::Setup do
       it 'resets boot to nil' do
         setup = ROM.setup(:memory)
 
-        allow(setup).to receive(:env).and_raise(StandardError)
+        allow(setup).to receive(:container).and_raise(StandardError)
 
         expect { ROM.finalize }.to raise_error(StandardError)
         expect(ROM.boot).to be(nil)

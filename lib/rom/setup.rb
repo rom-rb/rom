@@ -7,7 +7,7 @@ module ROM
   # @api public
   class Setup
     extend Deprecations
-    include Equalizer.new(:gateways, :env)
+    include Equalizer.new(:gateways, :container)
 
     # @return [Hash] configured gateways
     #
@@ -39,10 +39,11 @@ module ROM
     # @api private
     attr_reader :command_classes
 
-    # @return [Env] finalized env after setup phase is over
+    # @return [Conainer] finalized container after setup phase is over
     #
     # @api private
-    attr_reader :env
+    attr_reader :container
+    alias_method :env, :container
 
     # @api private
     def initialize(gateways, default_adapter = nil)
@@ -51,21 +52,21 @@ module ROM
       @relation_classes = []
       @mapper_classes = []
       @command_classes = []
-      @env = nil
+      @container = nil
     end
 
     # Finalize the setup
     #
-    # @return [Env] frozen env with access to gateways, relations,
-    #                mappers and commands
+    # @return [Container] frozen container with access to gateways, 
+    #                relations, mappers and commands
     #
     # @api public
     def finalize
-      raise EnvAlreadyFinalizedError if env
+      raise EnvAlreadyFinalizedError if container
       finalize = Finalize.new(
         gateways, relation_classes, mapper_classes, command_classes
       )
-      @env = finalize.run!
+      @container = finalize.run!
     end
 
     # Return gateway identified by name

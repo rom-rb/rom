@@ -9,8 +9,11 @@ require 'rom/support/registry'
 require 'rom/support/options'
 require 'rom/support/class_macros'
 require 'rom/support/class_builder'
+require 'rom/support/guarded_inheritance_hook'
+require 'rom/support/inheritance_hook'
 
 # core parts
+require 'rom/environment_plugin'
 require 'rom/plugin'
 require 'rom/relation'
 require 'rom/mapper'
@@ -19,25 +22,43 @@ require 'rom/commands'
 # default mapper processor using Transproc gem
 require 'rom/processor/transproc'
 
-# support for global-style setup
+# rom Global
 require 'rom/global'
-require 'rom/setup'
+
+# rom environments
+require 'rom/environment'
 
 # TODO: consider to make this part optional and don't require it here
 require 'rom/setup_dsl/setup'
 
-# env with registries
-require 'rom/env'
+# container with registries
+require 'rom/container'
+
+# register core plugins
+require 'rom/environment_plugins/auto_registration'
+require 'rom/plugins/relation/registry_reader'
 
 module ROM
   extend Global
 
-  RelationRegistry = Class.new(Registry)
-end
+  @environment = ROM::Environment.new
 
-# register core plugins
-require 'rom/plugins/relation/registry_reader'
+  class << self
+    def method_missing(method, *args, &block)
+      if @environment.respond_to?(method)
+        @environment.__send__(method, *args, &block)
+      else
+        super
+      end
+    end
 
-ROM.plugins do
-  register :registry_reader, ROM::Plugins::Relation::RegistryReader, type: :relation
+    def respond_to_missing?(method, _include_private = false)
+      @environment.respond_to?(method) || super
+    end
+  end
+
+  plugins do
+    register :auto_registration, ROM::EnvironmentPlugins::AutoRegistration, type: :environment
+    register :registry_reader, ROM::Plugins::Relation::RegistryReader, type: :relation
+  end
 end

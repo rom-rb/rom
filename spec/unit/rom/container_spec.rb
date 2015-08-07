@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ROM::Env do
+describe ROM::Container do
   include_context 'users and tasks'
 
   before do
@@ -75,7 +75,7 @@ describe ROM::Env do
       expect {
         result = rom.read(:users) { |r| r.by_name('Jane') }.as(:name_list)
         expect(result.call).to match_array([{ name: 'Jane' }])
-      }.to output(/^ROM::Env#read is deprecated/).to_stderr
+      }.to output(/^ROM::Container#read is deprecated/).to_stderr
     end
   end
 
