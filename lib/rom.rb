@@ -31,8 +31,8 @@ require 'rom/environment'
 # TODO: consider to make this part optional and don't require it here
 require 'rom/setup_dsl/setup'
 
-# env with registries
-require 'rom/env'
+# container with registries
+require 'rom/container'
 
 # register core plugins
 require 'rom/environment_plugins/auto_registration'

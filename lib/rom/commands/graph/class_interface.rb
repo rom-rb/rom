@@ -7,9 +7,9 @@ module ROM
       module ClassInterface
         # Build a command graph recursively
         #
-        # This is used by `Env#command` when array with options is passed in
+        # This is used by `Container#command` when array with options is passed in
         #
-        # @param [Registry] registry The command registry from env
+        # @param [Registry] registry The command registry from container
         # @param [Array] options The options array
         # @param [Array] path The path for input evaluator proc
         #

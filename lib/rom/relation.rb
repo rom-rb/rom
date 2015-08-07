@@ -12,10 +12,10 @@ module ROM
   # however, is considered private and should not be used outside of the
   # relation instance.
   #
-  # ROM builds sub-classes of this class for every relation defined in the env
-  # for easy inspection and extensibility - every gateway can provide extensions
-  # for those sub-classes but there is always a vanilla relation instance stored
-  # in the schema registry.
+  # ROM builds sub-classes of this class for every relation defined in the 
+  # environment for easy inspection and extensibility - every gateway can
+  # provide extensions for those sub-classes but there is always a vanilla
+  # relation instance stored in the schema registry.
   #
   # @api public
   class Relation

@@ -7,11 +7,11 @@ require 'rom/relation_registry'
 require 'rom/command_registry'
 require 'rom/mapper_registry'
 
-require 'rom/env'
+require 'rom/container'
 
 module ROM
   class Setup
-    # This giant builds an environment using defined classes for core parts of ROM
+    # This giant builds an container using defined classes for core parts of ROM
     #
     # It is used by the setup object after it's done gathering class definitions
     #
@@ -44,7 +44,7 @@ module ROM
       #
       # This creates relations, mappers and commands
       #
-      # @return [Env]
+      # @return [Container]
       #
       # @api private
       def run!
@@ -54,7 +54,7 @@ module ROM
         mappers = load_mappers
         commands = load_commands(relations)
 
-        Env.new(gateways, relations, mappers, commands)
+        Container.new(gateways, relations, mappers, commands)
       end
 
       private
