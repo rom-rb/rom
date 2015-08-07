@@ -30,7 +30,7 @@ module ROM
           all_args = curry_args + args
 
           if arity == all_args.size
-            relation.__send__(name, *all_args)
+            Loaded.new(relation.__send__(name, *all_args))
           else
             __new__(relation, curry_args: all_args)
           end
@@ -71,7 +71,7 @@ module ROM
         if relation.respond_to?(meth)
           response = relation.__send__(meth, *args, &block)
 
-          if response.is_a?(Relation) || response.is_a?(Graph) || response.is_a?(Composite)
+          if response.is_a?(Relation) || response.is_a?(Graph)
             __new__(response)
           else
             response
