@@ -73,20 +73,6 @@ module ROM
       Graph.build(self, others)
     end
 
-    # Build a relation pipeline using registered mappers
-    #
-    # @example
-    #   rom.relation(:users).map_with(:json_serializer)
-    #
-    # @return [Relation::Composite]
-    #
-    # @api public
-    def map_with(*names)
-      [self, *names.map { |name| mappers[name] }]
-        .reduce { |a, e| Composite.new(a, e) }
-    end
-    alias_method :as, :map_with
-
     # Load relation
     #
     # @return [Relation::Loaded]
