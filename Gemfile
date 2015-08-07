@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gemspec
 
-gem 'rom', github: 'rom-rb/rom', branch: 'master'
+gem 'rom', github: 'rom-rb/rom', branch: 'merge-lazy-into-relation'
 gem 'rom-sql', github: 'rom-rb/rom-sql', branch: 'master'
 gem 'inflecto'
 
@@ -13,3 +13,5 @@ group :test do
   gem 'pg_jruby', platforms: :jruby
   gem "codeclimate-test-reporter", require: nil
 end
+
+gem 'benchmark-ips'

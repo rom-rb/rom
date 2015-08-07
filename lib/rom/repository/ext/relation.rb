@@ -1,3 +1,4 @@
+require 'rom/relation'
 require 'rom/repository/ext/relation/view_dsl'
 
 module ROM
@@ -10,12 +11,13 @@ module ROM
       def self.inherited(klass)
         super
         klass.class_eval do
-          exposed_relations.merge(Set[:columns, :for_combine, :for_wrap])
-
           defines :attributes
           attributes({})
 
           option :attributes, reader: true, default: -> relation { relation.class.attributes }
+
+          auto_curry :for_combine
+          auto_curry :for_wrap
         end
       end
 
@@ -97,28 +99,17 @@ module ROM
       def foreign_key
         :"#{Inflector.singularize(name)}_id"
       end
+
+      def base_name
+        name
+      end
     end
   end
 
-  # TODO: remove this once Relation::Lazy is gone
   class Relation
-    class Lazy
-      def base_name
-        relation.name
-      end
-
-      def primary_key
-        relation.primary_key
-      end
-
-      def foreign_key
-        relation.foreign_key
-      end
-    end
-
-    class Curried < Lazy
+    class Curried
       def columns
-        relation.attributes.fetch(options[:name], relation.columns)
+        relation.attributes.fetch(name, relation.columns)
       end
     end
   end

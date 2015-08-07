@@ -10,10 +10,6 @@ RSpec.describe 'SQL Relation extensions' do
       expect(users.by_id.columns).to eql([:name])
       expect(users.by_id(1).columns).to eql([:name])
     end
-
-    it 'defines a valid method with correct arity' do
-      expect(users.relation.method(:by_id).arity).to be(1)
-    end
   end
 
   describe '.view' do

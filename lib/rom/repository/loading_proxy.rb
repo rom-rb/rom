@@ -11,8 +11,8 @@ module ROM
     #
     # @api public
     class LoadingProxy
-      include Relation::Materializable
       include Options
+      include Relation::Materializable
 
       include LoadingProxy::Combine
       include LoadingProxy::Wrap
@@ -137,7 +137,7 @@ module ROM
       #
       # @api private
       def nodes
-        relation.is_a?(Relation::Graph) ? relation.nodes : []
+        relation.respond_to?(:nodes) ? relation.nodes : []
       end
 
       # Return all nodes that this relation wraps
@@ -159,7 +159,7 @@ module ROM
         if relation.respond_to?(meth)
           result = relation.__send__(meth, *args)
 
-          if result.is_a?(Relation::Lazy) || result.is_a?(Relation::Graph) || result.is_a?(Relation::Composite)
+          if result.kind_of?(Relation::Materializable) && !result.is_a?(Relation::Loaded)
             __new__(result)
           else
             result
