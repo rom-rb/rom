@@ -1,3 +1,5 @@
+require 'rom/constants'
+
 module ROM
   # Helper module for classes with a constructor accepting option hash
   #

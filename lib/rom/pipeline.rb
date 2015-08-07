@@ -1,3 +1,5 @@
+require 'equalizer'
+
 module ROM
   # Data pipeline common interface
   #

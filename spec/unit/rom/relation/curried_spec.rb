@@ -1,4 +1,4 @@
-require 'rom/relation'
+require 'spec_helper'
 
 RSpec.describe ROM::Relation::Curried do
   include_context 'users and tasks'
