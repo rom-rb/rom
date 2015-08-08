@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ROM::Relation::Lazy, '#combine' do
+describe ROM::Relation, '#combine' do
   include_context 'users and tasks'
 
   before do
@@ -100,8 +100,8 @@ describe ROM::Relation::Lazy, '#combine' do
           { name: 'Jane', title: 'be cool', priority: 2 }
         ],
         tags: [
-          { task: 'be cool', name: 'red', user: 'Jane' },
-          { task: 'be cool', name: 'green', user: 'Jane' }
+          { task: 'be cool', name: 'red' },
+          { task: 'be cool', name: 'green' }
         ]
       }
     ]
@@ -111,7 +111,7 @@ describe ROM::Relation::Lazy, '#combine' do
 
     result = user_with_tasks_and_tags >> map_user_with_tasks_and_tags
 
-    expect(result).to match_array(expected)
+    expect(result.to_a).to eql(expected)
   end
 
   it 'supports more than one eagerly-loaded relation via chaining' do
@@ -123,8 +123,8 @@ describe ROM::Relation::Lazy, '#combine' do
           { name: 'Jane', title: 'be cool', priority: 2 }
         ],
         tags: [
-          { task: 'be cool', name: 'red', user: 'Jane' },
-          { task: 'be cool', name: 'green', user: 'Jane' }
+          { task: 'be cool', name: 'red' },
+          { task: 'be cool', name: 'green' }
         ]
       }
     ]

@@ -1,3 +1,5 @@
+require 'rom/support/registry'
+
 module ROM
   # @private
   class MapperRegistry < Registry

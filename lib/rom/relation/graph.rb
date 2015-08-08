@@ -93,6 +93,13 @@ module ROM
 
         Loaded.new(self, [left, right])
       end
+
+      private
+
+      # @api private
+      def decorate?(other)
+        super || other.is_a?(Curried)
+      end
     end
   end
 end

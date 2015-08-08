@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-describe ROM::Relation::Lazy do
+describe ROM::Relation do
   include_context 'users and tasks'
 
-  let(:users) { rom.relations.users.to_lazy }
-  let(:tasks) { rom.relations.tasks.to_lazy }
+  let(:users) { rom.relations.users }
+  let(:tasks) { rom.relations.tasks }
 
   before do
     setup.relation(:users) do
@@ -108,12 +108,8 @@ describe ROM::Relation::Lazy do
       expect(users.call.to_a).to eql(rom.relations.users.to_a)
     end
 
-    it 'does not allow currying on already curried relation' do
-      expect { users.by_name.by_email }.to raise_error(NoMethodError, /by_email/)
-    end
-
     describe 'using mappers' do
-      subject(:users) { rom.relations.users.to_lazy(mappers: mappers) }
+      subject(:users) { rom.relations.users.with(mappers: mappers) }
 
       let(:name_list) { proc { |r| r.map { |t| t[:name] } } }
       let(:upcaser) { proc { |r| r.map(&:upcase) } }

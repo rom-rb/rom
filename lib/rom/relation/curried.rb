@@ -1,11 +1,23 @@
-require 'rom/relation/lazy'
+require 'rom/support/options'
+require 'rom/relation/materializable'
 
 module ROM
   class Relation
-    class Curried < Lazy
+    class Curried
+      include Options
+      include Materializable
+
       option :name, type: Symbol, reader: true
       option :arity, type: Integer, reader: true, default: -1
       option :curry_args, type: Array, reader: true, default: EMPTY_ARRAY
+
+      attr_reader :relation
+
+      # @api private
+      def initialize(relation, options = {})
+        @relation = relation
+        super
+      end
 
       # Load relation if args match the arity
       #
@@ -47,11 +59,33 @@ module ROM
         true
       end
 
+      # @api private
+      def respond_to_missing?(name, include_private = false)
+        super || relation.respond_to?(name)
+      end
+
       private
 
       # @api private
       def __new__(relation, new_opts = {})
         Curried.new(relation, options.merge(new_opts))
+      end
+
+      # @api private
+      def method_missing(meth, *args, &block)
+        if relation.respond_to?(meth)
+          response = relation.__send__(meth, *args, &block)
+
+          super if response.is_a?(self.class)
+
+          if response.is_a?(Relation) || response.is_a?(Graph)
+            __new__(response)
+          else
+            response
+          end
+        else
+          super
+        end
       end
     end
   end

@@ -29,20 +29,6 @@ describe ROM::Relation do
     end
   end
 
-  describe '#exposed_relations' do
-    it 'returns exposed relation name' do
-      relation_class = Class.new(ROM::Relation[:memory]) {
-        def foo
-        end
-
-        def bar
-        end
-      }
-
-      expect(relation_class.exposed_relations).to include(:foo, :bar)
-    end
-  end
-
   describe '#name' do
     before { ROM.setup(:memory) }
 

@@ -1,7 +1,14 @@
+require 'rom/support/deprecations'
 require 'rom/relation/class_interface'
 
-require 'rom/relation/lazy'
+require 'rom/pipeline'
+require 'rom/mapper_registry'
+
+require 'rom/relation/loaded'
 require 'rom/relation/curried'
+require 'rom/relation/composite'
+require 'rom/relation/graph'
+require 'rom/relation/materializable'
 
 module ROM
   # Base relation class
@@ -19,11 +26,16 @@ module ROM
   #
   # @api public
   class Relation
+    extend Deprecations
     extend ClassInterface
     extend ROM::Support::GuardedInheritanceHook
 
     include Options
     include Equalizer.new(:dataset)
+    include Materializable
+    include Pipeline
+
+    option :mappers, reader: true, default: proc { MapperRegistry.new }
 
     # Dataset used by the relation
     #
@@ -50,6 +62,26 @@ module ROM
       dataset.each { |tuple| yield(tuple) }
     end
 
+    # Eager load other relation(s) for this relation
+    #
+    # @param [Array<Relation>] others The other relation(s) to eager load
+    #
+    # @return [Relation::Graph]
+    #
+    # @api public
+    def combine(*others)
+      Graph.build(self, others)
+    end
+
+    # Load relation
+    #
+    # @return [Relation::Loaded]
+    #
+    # @api public
+    def call
+      Loaded.new(self)
+    end
+
     # Materialize a relation into an array
     #
     # @return [Array<Hash>]
@@ -59,15 +91,25 @@ module ROM
       to_enum.to_a
     end
 
-    # Turn relation into a lazy-loadable and composable relation
+    # Return if this relation is curried
     #
-    # @see Lazy
+    # @return [false]
     #
-    # @return [Lazy]
-    #
+    # @api private
+    def curried?
+      false
+    end
+
+    # @api private
+    def with(options)
+      __new__(dataset, options)
+    end
+    deprecate :to_lazy, :with, "to_lazy is no longer needed"
+
     # @api public
-    def to_lazy(*args)
-      Lazy.new(self, *args)
+    def relation
+      Deprecations.announce("#relation", 'all relations are now lazy')
+      self
     end
 
     private

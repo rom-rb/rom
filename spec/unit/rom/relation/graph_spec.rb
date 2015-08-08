@@ -41,6 +41,10 @@ describe ROM::Relation::Graph do
       expect(graph.by_name('Jane')).to be_instance_of(ROM::Relation::Graph)
     end
 
+    it 'forwards methods to the root and decorates curried response' do
+      expect((users.combine(tasks.for_users)).by_name).to be_instance_of(ROM::Relation::Graph)
+    end
+
     it 'returns original response from the root' do
       expect(graph.mappers).to eql(users.mappers)
     end
