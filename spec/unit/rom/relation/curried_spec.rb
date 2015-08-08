@@ -10,6 +10,10 @@ RSpec.describe ROM::Relation::Curried do
       def by_name(name)
         restrict(name: name)
       end
+
+      def find(criteria)
+        restrict(criteria)
+      end
     end
   end
 
@@ -30,6 +34,20 @@ RSpec.describe ROM::Relation::Curried do
   describe '#respond_to?' do
     it 'returns true if wrapped relation responds to a method' do
       expect(users.by_name).to respond_to(:dataset)
+    end
+
+    it 'returns false if wrapped relation does not respond to a method' do
+      expect(users.by_name).not_to respond_to(:not_here)
+    end
+  end
+
+  describe '#method_missing' do
+    it 'forwards to the relation' do
+      expect(users.by_name.dataset).to eql(users.dataset)
+    end
+
+    it 'does not forward to the relation when method is auto-curried' do
+      expect { users.by_name.find }.to raise_error(NoMethodError, /find/)
     end
   end
 end

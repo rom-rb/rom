@@ -76,6 +76,8 @@ module ROM
         if relation.respond_to?(meth)
           response = relation.__send__(meth, *args, &block)
 
+          super if response.is_a?(self.class)
+
           if response.is_a?(Relation) || response.is_a?(Graph)
             __new__(response)
           else
