@@ -2,6 +2,7 @@ log
 *.rbx
 *.rbc
 Gemfile.lock
+vendor/
 tmp/
 doc/
 coverage/
