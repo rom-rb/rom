@@ -1,48 +1,47 @@
 # encoding: utf-8
 
-if ENV['COVERAGE'] == 'true'
-  require 'simplecov'
-  require 'coveralls'
+# this is needed for guard to work, not sure why :(
+require "bundler"
+Bundler.setup
 
-  SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
-    SimpleCov::Formatter::HTMLFormatter,
-    Coveralls::SimpleCov::Formatter
-  ]
-
-  SimpleCov.start do
-    command_name 'spec:unit'
-
-    add_filter 'config'
-    add_filter 'lib/rom/support'
-    add_filter 'spec'
-  end
+if RUBY_ENGINE == "rbx"
+  require "codeclimate-test-reporter"
+  CodeClimate::TestReporter.start
 end
 
 require 'rom-mapper'
-require 'axiom'
 
-require 'devtools/spec_helper'
-require 'bogus/rspec'
+begin
+  require 'byebug'
+rescue LoadError
+end
 
-Bogus.configure do |config|
-  config.search_modules << ROM
+root = Pathname(__FILE__).dirname
+
+Dir[root.join('support/*.rb').to_s].each do |f|
+  require f
+end
+Dir[root.join('shared/*.rb').to_s].each do |f|
+  require f
+end
+
+# Namespace holding all objects created during specs
+module Test
+  def self.remove_constants
+    constants.each(&method(:remove_const))
+  end
+end
+
+def T(*args)
+  ROM::Processor::Transproc::Functions[*args]
 end
 
 RSpec.configure do |config|
-  config.mock_with Bogus::RSpecAdapter
-end
+  config.after do
+    Test.remove_constants
+  end
 
-include ROM
-
-def mock_model(*attributes)
-  Class.new {
-    include Equalizer.new(*attributes)
-
-    attributes.each { |attribute| attr_accessor attribute }
-
-    def initialize(attrs, &block)
-      attrs.each { |name, value| send("#{name}=", value) }
-      instance_eval(&block) if block
-    end
-  }
+  config.around do |example|
+    ConstantLeakFinder.find(example)
+  end
 end

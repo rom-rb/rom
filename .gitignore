@@ -15,3 +15,4 @@ Vagrantfile
 
 # spiking area
 scratchpad.rb
+.ruby-version

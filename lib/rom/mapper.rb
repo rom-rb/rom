@@ -1,135 +1,98 @@
-# encoding: utf-8
+require 'rom/mapper/dsl'
+
+require 'rom/support/inheritance_hook'
 
 module ROM
-
-  # Mappers load tuples into objects and dump objects back into tuples
+  # Mapper is a simple object that uses transformers to load relations
   #
+  # @private
   class Mapper
-    include Concord::Public.new(:header, :loader, :dumper)
+    extend ROM::Support::InheritanceHook
+    include DSL
+    include Equalizer.new(:transformers, :header)
 
-    LOADERS = {
-      allocator:        Loader::Allocator,
-      object_builder:   Loader::ObjectBuilder,
-      attribute_writer: Loader::AttributeWriter
-    }
+    defines :relation, :register_as, :symbolize_keys,
+      :prefix, :prefix_separator, :inherit_header, :reject_keys
 
-    DUMPERS = {
-      default: Dumper
-    }
+    inherit_header true
+    reject_keys false
+    prefix_separator '_'.freeze
 
-    DEFAULT_LOADER = :allocator
-    DEFAULT_DUMPER = :default
+    # @return [Object] transformers object built by a processor
+    #
+    # @api private
+    attr_reader :transformers
 
-    # Build a mapper
+    # @return [Header] header that was used to build the transformers
     #
-    # @example
+    # @api private
+    attr_reader :header
+
+    # @return [Hash] registered processors
     #
-    #   header = Mapper::Header.build([[:user_name, String]], map: { user_name: :name })
+    # @api private
+    def self.processors
+      @_processors ||= {}
+    end
+
+    # Register a processor class
     #
-    #   mapper = Mapper.build(header, User)
-    #   mapper = Mapper.build(header, User, loader_class: Loader::ObjectBuilder)
+    # @return [Hash]
     #
-    # @param [Header]
-    # @param [Class]
-    # @param [Hash]
+    # @api private
+    def self.register_processor(processor)
+      name = processor.name.split('::').last.downcase.to_sym
+      processors.update(name => processor)
+    end
+
+    # Prepares an array of headers for a potentially multistep mapper
+    #
+    # @return [Array<Header>]
+    #
+    # @api private
+    def self.headers(header)
+      return [header] if steps.empty?
+      return steps.map(&:header) if attributes.empty?
+      raise(MapperMisconfiguredError, "cannot mix outer attributes and steps")
+    end
+
+    # Build a mapper using provided processor type
     #
     # @return [Mapper]
     #
-    # @api public
-    def self.build(header, model, options = {})
-      loader_class = LOADERS[options.fetch(:loader, DEFAULT_LOADER)]
-      dumper_class = DUMPERS[options.fetch(:dumper, DEFAULT_DUMPER)]
-
-      header = Header.build(header, options)
-      loader = loader_class.new(header, model)
-      dumper = dumper_class.new(header)
-
-      new(header, loader, dumper)
+    # @api private
+    def self.build(header = self.header, processor = :transproc)
+      processor = Mapper.processors.fetch(processor)
+      transformers = headers(header).map(&processor.method(:build))
+      new(transformers, header)
     end
 
-    # Project and rename given relation
-    #
-    # @example
-    #
-    #   mapper.call(relation)
-    #
-    # @param [Axiom::Relation]
-    #
-    # @return [Axiom::Relation]
-    #
-    # @api public
-    def call(relation)
-      mapping    = header.mapping
-      attributes = mapping.keys
-
-      relation.project(attributes).rename(mapping)
+    # @api private
+    def self.registry(descendants)
+      descendants.each_with_object({}) do |klass, h|
+        name = klass.register_as || klass.relation
+        (h[klass.base_relation] ||= {})[name] = klass.build
+      end
     end
 
-    # Retrieve identity from the given object
-    #
-    # @example
-    #
-    #   mapper.identity(user) # => [1]
-    #
-    # @param [Object]
-    #
-    # @return [Array]
-    #
-    # @api public
-    def identity(object)
-      dumper.identity(object)
+    # @api private
+    def initialize(transformers, header)
+      @transformers = Array(transformers)
+      @header = header
     end
 
-    # Return identity from the given tuple
+    # @return [Class] optional model that is instantiated by a mapper
     #
-    # @example
-    #
-    #   mapper.identity_from_tuple({id: 1}) # => [1]
-    #
-    # @param [Axiom::Tuple,Hash]
-    #
-    # @return [Array]
-    #
-    # @api public
-    def identity_from_tuple(tuple)
-      loader.identity(tuple)
-    end
-
-    # Build a new model instance
-    #
-    # @example
-    #
-    #   mapper = Mapper.build(header, User)
-    #   mapper.new_object(id: 1, name: 'Jane') # => #<User @id=1 @name="Jane">
-    #
-    # @api public
-    def new_object(*args, &block)
-      model.new(*args, &block)
-    end
-
-    # Return model used by this mapper
-    #
-    # @return [Class]
-    #
-    # @api public
+    # @api private
     def model
-      loader.model
+      header.model
     end
 
-    # Load an object instance from the tuple
+    # Process a relation using the transformers
     #
     # @api private
-    def load(tuple)
-      loader.call(tuple)
+    def call(relation)
+      transformers.reduce(relation.to_a) { |a, e| e.call(a) }
     end
-
-    # Dump an object into a tuple
-    #
-    # @api private
-    def dump(object)
-      dumper.call(object)
-    end
-
-  end # Mapper
-
-end # ROM
+  end
+end

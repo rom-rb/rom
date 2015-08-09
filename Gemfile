@@ -1,17 +1,32 @@
-# encoding: utf-8
-
 source 'https://rubygems.org'
 
 gemspec
 
 group :test do
-  gem 'bogus', '~> 0.1'
-  gem 'rubysl-bigdecimal', :platforms => :rbx
+  gem 'anima'
+  gem 'virtus'
+  gem 'inflecto', '~> 0.0', '>= 0.0.2'
+
+  platforms :rbx do
+    gem 'codeclimate-test-reporter', require: false
+  end
 end
 
-group :development do
-  gem 'devtools', git: 'https://github.com/rom-rb/devtools.git', branch: 'master'
+group :benchmarks do
+  gem 'benchmark-ips', '~> 2.2.0'
 end
 
-# Added by devtools
-eval_gemfile 'Gemfile.devtools'
+group :tools do
+  gem 'rubocop', '~> 0.31'
+
+  gem 'guard'
+  gem 'guard-rspec'
+  gem 'guard-rubocop'
+
+  gem 'byebug'
+
+  platform :mri do
+    gem 'mutant', '>= 0.8.0', github: 'mbj/mutant', branch: 'master'
+    gem 'mutant-rspec'
+  end
+end
