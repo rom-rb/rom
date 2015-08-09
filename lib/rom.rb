@@ -16,11 +16,7 @@ require 'rom/support/inheritance_hook'
 require 'rom/environment_plugin'
 require 'rom/plugin'
 require 'rom/relation'
-require 'rom/mapper'
 require 'rom/commands'
-
-# default mapper processor using Transproc gem
-require 'rom/processor/transproc'
 
 # rom Global
 require 'rom/global'

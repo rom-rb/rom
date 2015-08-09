@@ -1,5 +1,4 @@
 require 'rom/relation'
-require 'rom/mapper'
 require 'rom/command'
 
 require 'rom/support/registry'
