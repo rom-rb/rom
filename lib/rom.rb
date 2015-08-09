@@ -1,5 +1,6 @@
 require 'equalizer'
 
+require 'rom-support'
 require 'rom/version'
 require 'rom/constants'
 
@@ -16,6 +17,7 @@ require 'rom/support/inheritance_hook'
 require 'rom/environment_plugin'
 require 'rom/plugin'
 require 'rom/relation'
+require 'rom-mapper'
 require 'rom/commands'
 
 # rom Global

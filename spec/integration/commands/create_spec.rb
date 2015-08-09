@@ -115,7 +115,7 @@ describe 'Commands / Create' do
           end
         end
         setup.finalize
-      }.to raise_error(ROM::InvalidOptionValueError)
+      }.to raise_error(ROM::Options::InvalidOptionValueError)
     end
   end
 
