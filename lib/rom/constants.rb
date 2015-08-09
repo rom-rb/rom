@@ -1,7 +1,5 @@
 # Constants and errors common in the whole library
 module ROM
-  Undefined = Object.new.freeze
-
   AdapterLoadError = Class.new(StandardError)
 
   class AdapterNotPresentError < StandardError
@@ -19,7 +17,6 @@ module ROM
   CommandError = Class.new(StandardError)
   TupleCountMismatchError = Class.new(CommandError)
   MapperMissingError = Class.new(StandardError)
-  MapperMisconfiguredError = Class.new(StandardError)
   UnknownPluginError = Class.new(StandardError)
   UnsupportedRelationError = Class.new(StandardError)
 
@@ -37,7 +34,4 @@ module ROM
       set_backtrace(err.backtrace)
     end
   end
-
-  EMPTY_ARRAY = [].freeze
-  EMPTY_HASH = {}.freeze
 end

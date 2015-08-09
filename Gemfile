@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 gemspec
 
+gem 'rom-support', github: 'rom-rb/rom-support'
 gem 'rom-mapper', github: 'rom-rb/rom-mapper'
 
 group :console do
