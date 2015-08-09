@@ -18,4 +18,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'transproc', '~> 0.3'
   gem.add_dependency 'equalizer', '~> 0.0', '>= 0.0.10'
   gem.add_dependency 'wisper'
+
+  gem.add_development_dependency 'rake', '~> 10.3'
+  gem.add_development_dependency 'rspec', '~> 3.3'
 end
