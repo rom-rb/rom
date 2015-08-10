@@ -9,8 +9,8 @@ if RUBY_ENGINE == "rbx"
   CodeClimate::TestReporter.start
 end
 
-require 'rom-repository'
 require 'rom-sql'
+require 'rom-repository'
 
 begin
   require 'byebug'
