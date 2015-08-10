@@ -6,6 +6,7 @@ module ROM
     #
     # @api public
     class Relation < ROM::Relation
+      use :key_inference
       use :view
 
       # @api private
@@ -42,21 +43,6 @@ module ROM
         inner_join(name, keys)
           .select(*qualified.header.columns)
           .select_append(*other.prefix(other.name).qualified.header)
-      end
-
-      # Infer foreign_key name for this relation
-      #
-      # TODO: this should be configurable and handled by an injected policy
-      #
-      # @return [Symbol]
-      #
-      # @api private
-      def foreign_key
-        :"#{Inflector.singularize(name)}_id"
-      end
-
-      def base_name
-        name
       end
     end
   end
