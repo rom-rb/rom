@@ -2,8 +2,6 @@ source 'https://rubygems.org'
 
 gemspec
 
-gem 'rom-mapper', github: 'rom-rb/rom-mapper', branch: 'master'
-
 group :console do
   gem 'pry'
   gem 'pg', platforms: [:mri]
