@@ -36,7 +36,7 @@ module ROM
       # @return [SQL::Relation]
       #
       # @api private
-      def for_wrap(name, keys)
+      def for_wrap(keys, name)
         other = __registry__[name]
 
         inner_join(name, keys)
