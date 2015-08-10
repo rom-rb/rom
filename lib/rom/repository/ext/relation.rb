@@ -4,7 +4,7 @@ module ROM
   class Relation
     class Curried
       def columns
-        relation.attributes.fetch(name, relation.columns)
+        relation.attributes(name)
       end
     end
   end

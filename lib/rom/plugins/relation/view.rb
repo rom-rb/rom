@@ -10,8 +10,6 @@ module ROM
 
             defines :attributes
             attributes({})
-
-            option :attributes, reader: true, default: -> relation { relation.class.attributes }
           end
           super
         end
@@ -24,8 +22,8 @@ module ROM
         # @return [Array<Symbol>]
         #
         # @api private
-        def columns
-          attributes.fetch(name, dataset.columns)
+        def attributes(view_name = name)
+          self.class.attributes.fetch(view_name, dataset.columns)
         end
 
         module ClassInterface
