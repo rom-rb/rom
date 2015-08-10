@@ -17,7 +17,8 @@ Gem::Specification.new do |gem|
 
   gem.add_runtime_dependency 'anima', '~> 0.2', '>= 0.2'
   gem.add_runtime_dependency 'rom', '~> 0.8', '>= 0.8.1'
-  gem.add_runtime_dependency 'rom-sql', '~> 0.5', '>= 0.5.3'
+  gem.add_runtime_dependency 'rom-support', '~> 0.1', '>= 0.1.0'
+  gem.add_runtime_dependency 'rom-mapper', '~> 0.2', '>= 0.2.0'
 
   gem.add_development_dependency 'rake', '~> 10.3'
   gem.add_development_dependency 'rspec', '~> 3.3'
