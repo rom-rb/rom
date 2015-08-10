@@ -23,7 +23,14 @@ module ROM
         #
         # @api private
         def attributes(view_name = name)
-          self.class.attributes.fetch(view_name, dataset.columns)
+          header = self.class.attributes
+            .fetch(view_name, self.class.attributes.fetch(:base))
+
+          if header.is_a?(Proc)
+            instance_exec(&header)
+          else
+            header
+          end
         end
 
         module ClassInterface

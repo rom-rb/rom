@@ -14,8 +14,8 @@ module ROM
             instance_eval(&block)
           end
 
-          def header(attributes)
-            @attributes = attributes
+          def header(*args, &block)
+            @attributes = args.size > 0 ? args.first : block
           end
 
           def relation(&block)
