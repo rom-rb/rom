@@ -4,7 +4,7 @@ require File.expand_path('../lib/rom/mapper/version', __FILE__)
 
 Gem::Specification.new do |gem|
   gem.name          = "rom-mapper"
-  gem.description   = "rom-mapper"
+  gem.description   = "ROM mapper component"
   gem.summary       = gem.description
   gem.authors       = 'Piotr Solnica'
   gem.email         = 'piotr.solnica@gmail.com'

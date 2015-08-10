@@ -1,3 +1,7 @@
+# v0.2.0 2015-08-10
+
+Import code from rom 0.8.1
+
 # v0.1.1 2013-09-02
 
 * [internal] Moved version file to rom/mapper/version (solnic)
