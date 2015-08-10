@@ -17,7 +17,7 @@ Gem::Specification.new do |gem|
 
   gem.add_runtime_dependency 'transproc', '~> 0.3', '>= 0.3.0'
   gem.add_runtime_dependency 'equalizer', '~> 0.0', '>= 0.0.9'
-  gem.add_runtime_dependency 'wisper', '~> 1.6', '>= 1.6.0'
+  gem.add_runtime_dependency 'rom-support', '~> 0.1', '>= 0.1.0'
 
   gem.add_development_dependency 'rake', '~> 10.3'
   gem.add_development_dependency 'rspec', '~> 3.3'
