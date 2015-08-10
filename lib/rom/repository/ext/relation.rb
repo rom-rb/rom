@@ -1,5 +1,4 @@
 require 'rom/relation'
-require 'rom/repository/ext/relation/view_dsl'
 
 module ROM
   module SQL
@@ -7,59 +6,15 @@ module ROM
     #
     # @api public
     class Relation < ROM::Relation
+      use :view
+
       # @api private
       def self.inherited(klass)
         super
         klass.class_eval do
-          defines :attributes
-          attributes({})
-
-          option :attributes, reader: true, default: -> relation { relation.class.attributes }
-
           auto_curry :for_combine
           auto_curry :for_wrap
         end
-      end
-
-      # Define a relation view with a specific header
-      #
-      # With headers defined all the mappers will be inferred automatically
-      #
-      # @example
-      #   class Users < ROM::Relation[:sql]
-      #     view(:by_name, [:id, :name]) do |name|
-      #       where(name: name)
-      #     end
-      #
-      #     view(:listing, [:id, :name, :email]) do
-      #       select(:id, :name, :email).order(:name)
-      #     end
-      #   end
-      #
-      # @api public
-      def self.view(*args, &block)
-        name, names, relation_block =
-          if block.arity == 0
-            ViewDSL.new(*args, &block).call
-          else
-            [*args, block]
-          end
-
-        attributes[name] = names
-
-        define_method(name, &relation_block)
-      end
-
-      # Return column names that will be selected for this relation
-      #
-      # By default we use dataset columns but first we look at configured
-      # attributes by `view` DSL
-      #
-      # @return [Array<Symbol>]
-      #
-      # @api private
-      def columns
-        self.class.attributes.fetch(name, dataset.columns)
       end
 
       # Default methods for fetching combined relation
