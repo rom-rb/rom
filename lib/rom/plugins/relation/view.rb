@@ -5,13 +5,15 @@ module ROM
     module Relation
       module View
         def self.included(klass)
-          klass.class_eval do
-            extend(ClassInterface)
-
-            defines :attributes
-            attributes({})
-          end
           super
+
+          klass.class_eval do
+            extend ClassInterface
+
+            def self.attributes
+              @__attributes__ ||= {}
+            end
+          end
         end
 
         # Return column names that will be selected for this relation

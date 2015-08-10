@@ -7,9 +7,12 @@ module ROM
           def self.included(klass)
             super
             klass.class_eval do
-              view(:base) do
-                header { dataset.columns }
-                relation { select(*attributes(:base)).order(primary_key) }
+              def self.inherited(other)
+                super
+                other.view(:base) do
+                  header { dataset.columns }
+                  relation { select(*attributes(:base)).order(primary_key) }
+                end
               end
             end
           end
