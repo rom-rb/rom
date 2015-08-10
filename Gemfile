@@ -2,8 +2,6 @@ source 'https://rubygems.org'
 
 gemspec
 
-gem 'rom-support', github: 'rom-rb/rom-support', branch: 'master'
-
 group :test do
   gem 'anima'
   gem 'virtus'
