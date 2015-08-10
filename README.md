@@ -16,6 +16,11 @@
 ROM mapper component is a DSL for defining object mappers with pluggable mapping
 backends. It is the default mapper in ROM.
 
+Resources:
+
+- [Guides](http://rom-rb.org/guides/basics/mappers/)
+- [Importing Data with ROM and Transproc](http://solnic.eu/2015/07/15/importing-data-with-rom-and-transproc.html)
+
 ## License
 
 See `LICENSE` file.
