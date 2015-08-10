@@ -1,4 +1,4 @@
-require 'rom/relation'
+require 'rom/sql/relation'
 
 module ROM
   module SQL
@@ -8,26 +8,14 @@ module ROM
     class Relation < ROM::Relation
       use :key_inference
       use :view
+      use :auto_combine, adapter: :sql
 
       # @api private
       def self.inherited(klass)
         super
         klass.class_eval do
-          auto_curry :for_combine
           auto_curry :for_wrap
         end
-      end
-
-      # Default methods for fetching combined relation
-      #
-      # This method is used by default by `combine`
-      #
-      # @return [SQL::Relation]
-      #
-      # @api private
-      def for_combine(keys, relation)
-        pk, fk = keys.to_a.flatten
-        where(fk => relation.map { |tuple| tuple[pk] })
       end
 
       # Default methods for fetching wrapped relation
