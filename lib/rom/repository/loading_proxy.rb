@@ -55,13 +55,13 @@ module ROM
       #
       # @api private
       def to_ast
-        attr_ast = columns.map { |name| [:attribute, name] }
+        attr_ast = attributes.map { |name| [:attribute, name] }
 
         node_ast = nodes.map(&:to_ast)
         wrap_ast = wraps.map(&:to_ast)
 
         wrap_attrs = wraps.flat_map { |wrap|
-          wrap.columns.map { |c| [:attribute, :"#{wrap.base_name}_#{c}"] }
+          wrap.attributes.map { |c| [:attribute, :"#{wrap.base_name}_#{c}"] }
         }
 
         meta = options[:meta].merge(base_name: relation.base_name)

@@ -5,10 +5,10 @@ RSpec.describe 'SQL Relation extensions' do
     let(:users) { rom.relation(:users) }
 
     it 'has valid column names' do
-      expect(users.columns).to eql([:id, :name])
+      expect(users.attributes).to eql([:id, :name])
 
-      expect(users.by_id.columns).to eql([:name])
-      expect(users.by_id(1).columns).to eql([:name])
+      expect(users.by_id.attributes).to eql([:name])
+      expect(users.by_id(1).attributes).to eql([:name])
     end
   end
 
