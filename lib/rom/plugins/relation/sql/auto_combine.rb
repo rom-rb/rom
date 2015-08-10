@@ -6,8 +6,10 @@ module ROM
           # @api private
           def self.included(klass)
             super
-            klass.include(InstanceInterface)
-            klass.extend(ClassInterface)
+            klass.class_eval do
+              include(InstanceInterface)
+              extend(ClassInterface)
+            end
           end
 
           module ClassInterface
