@@ -1,5 +1,20 @@
 ## v0.9.0 to-be-released
 
+### Changed
+
+* Global setup with auto-registration ported to the `:auto_registration` environment plugin (AMHOL)
+* Multi-environment setup possible now via `ROM::Environment` object (AMHOL)
+* All relations are now lazy with auto-currying enabled (solnic)
+* Low-level query DSL provided by adapters is now public but using it directly in
+  application layer is discouraged (solnic)
+* `ROM::Mapper` component extracted into standalone `rom-mapper` gem (solnic)
+* Support libraries extracted to `rom-support` gem (solnic)
+
+## Fixed
+
+* Combined commands (aka command graph) properly rejects keys from nested input
+  prior sending the input to individual commands (solnic)
+
 [Compare v0.8.1...HEAD](https://github.com/rom-rb/rom/compare/v0.8.1...HEAD)
 
 ## v0.8.1 2015-07-12
