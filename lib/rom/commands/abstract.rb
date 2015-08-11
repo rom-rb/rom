@@ -77,7 +77,7 @@ module ROM
       #
       # @api public
       def curry(*args)
-        if curry_args.empty? && args.first.is_a?(Proc)
+        if curry_args.empty? && args.first.is_a?(Graph::InputEvaluator)
           Lazy.new(self, args.first)
         else
           self.class.build(relation, options.merge(curry_args: args))

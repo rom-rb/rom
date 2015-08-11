@@ -31,13 +31,15 @@ module ROM
 
         if size > 1 && last.is_a?(Array)
           last.map.with_index do |item, index|
-            input = evaluator[first, index]
+            input = evaluator.call(first, index)
             command.call(input, item)
           end.reduce(:concat)
         else
-          input = evaluator[first]
+          input = evaluator.call(first)
           command.call(input, *args[1..size-1])
         end
+      rescue => err
+        raise CommandFailure.new(command, err)
       end
 
       # Compose a lazy command with another one

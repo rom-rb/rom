@@ -1,3 +1,5 @@
+require 'rom/commands/graph/input_evaluator'
+
 module ROM
   module Commands
     class Graph
@@ -31,44 +33,10 @@ module ROM
               [spec, spec]
             end
 
-          excluded_keys =
-            if nodes
-              nodes
-                .map { |item| item.is_a?(Array) && item.size > 1 ? item.first : item }
-                .compact
-                .map { |item| item.is_a?(Hash) ? item.keys.first : item }
-            end
-
-          exclude_keys = -> input {
-            input.reject { |k, _| excluded_keys.include?(k) }
-          }
 
           command = registry[relation][name]
-
           tuple_path = Array[*path] << key
-
-          input_proc = -> *args do
-            input, index = args
-
-            begin
-              value =
-                if index
-                  tuple_path[0..tuple_path.size-2]
-                    .reduce(input) { |a,e| a.fetch(e) }
-                    .at(index)[tuple_path.last]
-                else
-                  tuple_path.reduce(input) { |a,e| a.fetch(e) }
-                end
-
-              if excluded_keys
-                value.is_a?(Array) ? value.map(&exclude_keys) : exclude_keys[value]
-              else
-                value
-              end
-            rescue KeyError => err
-              raise CommandFailure.new(command, err)
-            end
-          end
+          input_proc = InputEvaluator.build(tuple_path, nodes)
 
           command = command.with(input_proc)
 
