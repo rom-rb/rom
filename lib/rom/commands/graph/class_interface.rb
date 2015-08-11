@@ -31,6 +31,18 @@ module ROM
               [spec, spec]
             end
 
+          excluded_keys =
+            if nodes
+              nodes
+                .map { |item| item.is_a?(Array) && item.size > 1 ? item.first : item }
+                .compact
+                .map { |item| item.is_a?(Hash) ? item.keys.first : item }
+            end
+
+          exclude_keys = -> input {
+            input.reject { |k, _| excluded_keys.include?(k) }
+          }
+
           command = registry[relation][name]
 
           tuple_path = Array[*path] << key
@@ -39,12 +51,19 @@ module ROM
             input, index = args
 
             begin
-              if index
-                tuple_path[0..tuple_path.size-2]
-                  .reduce(input) { |a,e| a.fetch(e) }
-                  .at(index)[tuple_path.last]
+              value =
+                if index
+                  tuple_path[0..tuple_path.size-2]
+                    .reduce(input) { |a,e| a.fetch(e) }
+                    .at(index)[tuple_path.last]
+                else
+                  tuple_path.reduce(input) { |a,e| a.fetch(e) }
+                end
+
+              if excluded_keys
+                value.is_a?(Array) ? value.map(&exclude_keys) : exclude_keys[value]
               else
-                tuple_path.reduce(input) { |a,e| a.fetch(e) }
+                value
               end
             rescue KeyError => err
               raise CommandFailure.new(command, err)
