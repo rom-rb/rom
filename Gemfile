@@ -40,7 +40,7 @@ group :tools do
   gem 'guard-rspec'
   gem 'guard-rubocop'
 
-  gem 'byebug'
+  gem 'byebug', platform: :mri
 
   platform :mri do
     gem 'mutant', '>= 0.8.0', github: 'mbj/mutant', branch: 'master'
