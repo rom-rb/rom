@@ -12,6 +12,8 @@
 
 ## Fixed
 
+* `register_as` is now properly inferred for relations and their descendants (solnic)
+* Adapter-specific interface is properly included in relation descendants (solnic)
 * Combined commands (aka command graph) properly rejects keys from nested input
   prior sending the input to individual commands (solnic)
 
