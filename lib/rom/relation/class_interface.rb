@@ -19,7 +19,9 @@ module ROM
         klass.extend Deprecations
         klass.defines :adapter
 
-        return if klass.superclass == ROM::Relation
+        # Extend with functionality required by adapters *only* if this is a direct
+        # descendant of an adapter-specific relation subclass
+        return unless respond_to?(:adapter) && klass.superclass == ROM::Relation[adapter]
 
         klass.class_eval do
           use :registry_reader
@@ -31,7 +33,7 @@ module ROM
 
           gateway :default
 
-          dataset(default_name)
+          dataset default_name
 
           # Relation's dataset name
           #
@@ -44,19 +46,26 @@ module ROM
 
           # Set or get name under which a relation will be registered
           #
-          # This defaults to `dataset` name
+          # This defaults to `dataset` or `default_name` for descendant relations
           #
           # @return [Symbol]
           #
           # @api public
           def self.register_as(value = Undefined)
             if value == Undefined
-              super() || dataset
+              super_val = super()
+
+              if superclass == ROM::Relation[adapter]
+                super_val || dataset
+              else
+                super_val == dataset ? default_name : super_val
+              end
             else
               super
             end
           end
 
+          # @api public
           def self.exposed_relations(*args)
             Deprecations.announce("#{self}.exposed_relations", 'this method has no effect anymore')
             Set.new

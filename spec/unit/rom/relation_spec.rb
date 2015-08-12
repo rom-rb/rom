@@ -29,9 +29,51 @@ describe ROM::Relation do
     end
   end
 
-  describe '#name' do
-    before { ROM.setup(:memory) }
+  describe ".register_as" do
+    it "defaults to dataset with a generated class" do
+      rel = Class.new(ROM::Relation[:memory]) { dataset :users }
+      expect(rel.register_as).to eq(:users)
+      rel.register_as(:guests)
+      expect(rel.register_as).to eq(:guests)
+    end
 
+    it "defaults to dataset with a defined class that has dataset inferred" do
+      class Test::Users < ROM::Relation[:memory]; end
+      expect(Test::Users.register_as).to eq(:test_users)
+    end
+
+    it "defaults to dataset with a defined class that has dataset set manually" do
+      class Test::Users < ROM::Relation[:memory]
+        dataset :guests
+      end
+      expect(Test::Users.register_as).to eq(:guests)
+    end
+
+    it "defaults to :name for descendant classes" do
+      class Test::SuperUsers < ROM::Relation[:memory]
+        dataset :users
+      end
+
+      class Test::DescendantUsers < Test::SuperUsers;end
+
+      expect(Test::DescendantUsers.register_as).to eq(:test_descendant_users)
+    end
+
+    it "sets custom value for super and descendant classes" do
+      class Test::SuperUsers < ROM::Relation[:memory]
+        register_as :users
+      end
+
+      class Test::DescendantUsers < Test::SuperUsers
+        register_as :descendant_users
+      end
+
+      expect(Test::SuperUsers.register_as).to eq(:users)
+      expect(Test::DescendantUsers.register_as).to eq(:descendant_users)
+    end
+  end
+
+  describe '#name' do
     context 'missing dataset' do
       context 'with Relation inside module' do
         before do
@@ -56,6 +98,19 @@ describe ROM::Relation do
           relation = Test::SuperRelation.new([])
 
           expect(relation.name).to eq(:test_super_relation)
+        end
+      end
+
+      context 'with a descendant relation' do
+        before do
+          class Test::SuperRelation < ROM::Relation[:memory]; end
+          class Test::DescendantRelation < Test::SuperRelation; end
+        end
+
+        it 'inherits :name from the super relation' do
+          relation = Test::DescendantRelation.new([])
+
+          expect(relation.name).to eql(:test_super_relation)
         end
       end
     end
@@ -90,29 +145,6 @@ describe ROM::Relation do
 
     it "returns an enumerator if block is not provided" do
       expect(relation.each).to be_instance_of(Enumerator)
-    end
-  end
-
-  describe ".register_as" do
-    before { ROM.setup(:memory) }
-
-    it "defaults to dataset with a generated class" do
-      rel = Class.new(ROM::Relation[:memory]) { dataset :users }
-      expect(rel.register_as).to eq(:users)
-      rel.register_as(:guests)
-      expect(rel.register_as).to eq(:guests)
-    end
-
-    it "defaults to dataset with a defined class that has dataset inferred" do
-      class Test::Users < ROM::Relation[:memory]; end
-      expect(Test::Users.register_as).to eq(:test_users)
-    end
-
-    it "defaults to dataset with a defined class that has dataset set manually" do
-      class Test::Users < ROM::Relation[:memory]
-        dataset :guests
-      end
-      expect(Test::Users.register_as).to eq(:guests)
     end
   end
 
