@@ -113,7 +113,8 @@ module ROM
       config = setup_config(*args)
       @boot = Setup.new(setup_gateways(config), adapters.keys.first)
 
-      config.each do |name, (_, options)|
+      config.each do |name, config_args|
+        options = config_args.is_a?(Array) && config_args.last
         load_config(@boot.config.gateways[name], options) if options.is_a?(Hash)
       end
 

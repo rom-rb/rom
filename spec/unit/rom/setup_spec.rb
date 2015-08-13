@@ -22,7 +22,19 @@ describe ROM::Setup do
   end
 
   it 'is configurable via settings hash' do
+    setup = ROM.setup(:memory, 'something', infer_schema: false)
+
+    setup.finalize
+
+    expect(setup.config.gateways.default.infer_schema).to be(false)
+
     setup = ROM.setup(:memory, infer_schema: false)
+
+    setup.finalize
+
+    expect(setup.config.gateways.default.infer_schema).to be(false)
+
+    setup = ROM.setup(default: [:memory, infer_schema: false])
 
     setup.finalize
 
