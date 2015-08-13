@@ -72,7 +72,7 @@ module ROM
       gateways.each_key do |key|
         gateway_config = config.gateways[key]
 
-        gateway_config.infer_schema = true unless gateway_config.key?(:infer_schema)
+        gateway_config.infer_relations = true unless gateway_config.key?(:infer_relations)
       end
 
       finalize = Finalize.new(

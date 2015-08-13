@@ -48,7 +48,7 @@ module ROM
       #
       # @api private
       def run!
-        infer_schema_relations
+        infer_relations_relations
 
         relations = load_relations
         mappers = load_mappers
@@ -68,7 +68,7 @@ module ROM
       # @api private
       def initialize_datasets
         @datasets = gateways.each_with_object({}) do |(key, gateway), h|
-          h[key] = gateway.schema if config.gateways[key][:infer_schema]
+          h[key] = gateway.schema if config.gateways[key][:infer_relations]
         end
       end
 
@@ -121,7 +121,7 @@ module ROM
       # Relations explicitly defined are being skipped
       #
       # @api private
-      def infer_schema_relations
+      def infer_relations_relations
         datasets.each do |gateway, schema|
           schema.each do |name|
             if infer_relation?(gateway, name)
@@ -145,10 +145,10 @@ module ROM
         gateway_config = config.gateways[gateway]
         schema = gateways[gateway].schema
 
-        whitelist = gateway_config[:inferrable_relations] || schema
-        blacklist = gateway_config[:not_inferrable_relations] || []
+        allowed = gateway_config[:inferrable_relations] || schema
+        skipped = gateway_config[:not_inferrable_relations] || []
 
-        schema & whitelist - blacklist
+        schema & allowed - skipped
       end
     end
   end

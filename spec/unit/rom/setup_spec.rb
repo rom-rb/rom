@@ -5,11 +5,11 @@ describe ROM::Setup do
     setup = ROM::Setup.new({})
 
     setup.configure do |config|
-      config.sql.infer_schema = false
+      config.sql.infer_relations = false
     end
 
-    expect(setup.config.sql.infer_schema).to be(false)
-    expect(setup.config[:sql][:infer_schema]).to be(false)
+    expect(setup.config.sql.infer_relations).to be(false)
+    expect(setup.config[:sql][:infer_relations]).to be(false)
 
     expect(setup.config).to respond_to(:sql)
     expect(setup.config).to respond_to(:other=)
@@ -56,7 +56,7 @@ describe ROM::Setup do
       it 'skips inferring when it is turned off for the adapter' do
         setup = ROM.setup(:memory)
 
-        setup.configure { |config| config.gateways.default.infer_schema = false }
+        setup.configure { |config| config.gateways.default.infer_relations = false }
 
         repo = setup.default
 
