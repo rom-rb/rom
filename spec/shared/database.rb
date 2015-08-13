@@ -1,7 +1,8 @@
 RSpec.shared_context 'database' do
-  let(:setup) { ROM.setup(:sql, 'postgres://localhost/rom_repository') }
+  let(:setup) { ROM.setup(:sql, uri) }
   let(:conn) { setup.gateways[:default].connection }
   let(:rom) { setup.finalize }
+  let(:uri) { 'postgres://localhost/rom_repository' }
 
   before do
     [:tags, :tasks, :users].each { |table| conn.drop_table?(table) }

@@ -2,7 +2,7 @@ RSpec.describe 'Repository with multi-adapters setup' do
   include_context 'database'
 
   let(:setup) {
-    ROM.setup(default: [:sql, 'postgres://localhost/rom'], memory: [:memory])
+    ROM.setup(default: [:sql, uri], memory: [:memory])
   }
 
   let(:users) { rom.relation(:sql_users) }
