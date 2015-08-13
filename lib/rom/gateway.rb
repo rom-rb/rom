@@ -50,7 +50,13 @@ module ROM
           See https://github.com/rom-rb/rom/blob/master/CHANGELOG.md
         STRING
       when Symbol
-        class_from_symbol(gateway_or_scheme).new(*args)
+        klass = class_from_symbol(gateway_or_scheme)
+
+        if klass.instance_method(:initialize).arity == 0
+          klass.new
+        else
+          klass.new(*args)
+        end
       else
         if args.empty?
           gateway_or_scheme

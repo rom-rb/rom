@@ -113,6 +113,10 @@ module ROM
       config = setup_config(*args)
       @boot = Setup.new(setup_gateways(config), adapters.keys.first)
 
+      config.each do |name, (_, options)|
+        load_config(@boot.config.gateways[name], options) if options.is_a?(Hash)
+      end
+
       if block
         @boot.instance_exec(&block)
         @boot.finalize
@@ -213,6 +217,15 @@ module ROM
       boot.register_command(klass) if boot
     end
 
+    # Return gateway config that was used to setup this environment's container
+    #
+    # @return [Configurable::Config]
+    #
+    # @api public
+    def config
+      boot.config
+    end
+
     private
 
     # Helper method to handle single- or multi-repo setup options
@@ -228,10 +241,22 @@ module ROM
     def setup_gateways(config)
       config.each_with_object({}) do |(name, spec), hash|
         identifier, *args = Array(spec)
+
         gateway = Gateway.setup(identifier, *(args.flatten))
         hash[name] = gateway
 
         gateways[gateway] = identifier unless identifier.is_a?(Gateway)
+      end
+    end
+
+    # @api private
+    def load_config(config, hash)
+      hash.each do |key, value|
+        if value.is_a?(Hash)
+          load_config(config[key], value)
+        else
+          config.send("#{key}=", value)
+        end
       end
     end
   end

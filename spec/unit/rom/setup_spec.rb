@@ -21,6 +21,14 @@ describe ROM::Setup do
     expect(setup.config.key?(:sql)).to be(true)
   end
 
+  it 'is configurable via settings hash' do
+    setup = ROM.setup(:memory, infer_schema: false)
+
+    setup.finalize
+
+    expect(setup.config.gateways.default.infer_schema).to be(false)
+  end
+
   describe '#finalize' do
     context 'with gateway that supports schema inferring' do
       it 'builds relation from inferred schema' do
