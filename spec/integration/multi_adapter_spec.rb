@@ -1,45 +1,55 @@
 RSpec.describe 'Repository with multi-adapters setup' do
   include_context 'database'
 
-  let(:rom) { ROM.env }
+  let(:setup) {
+    ROM.setup(default: [:sql, 'postgres://localhost/rom'], memory: [:memory])
+  }
 
-  let(:users) { rom.relation(:users) }
-  let(:tasks) { rom.relation(:tasks) }
+  let(:users) { rom.relation(:sql_users) }
+  let(:tasks) { rom.relation(:memory_tasks) }
 
   let(:repo) { Test::Repository.new(rom) }
 
   before do
-    ROM.setup( default: [:sql, 'postgres://localhost/rom'], memory: [:memory])
-
     module Test
       class Users < ROM::Relation[:sql]
+        dataset :users
+        register_as :sql_users
+        gateway :default
       end
 
       class Tasks < ROM::Relation[:memory]
-        use :view
+        dataset :tasks
+        register_as :memory_tasks
+        gateway :memory
 
-        view(:for_users, [:user_id, :title]) do |users|
+        use :view
+        use :key_inference
+
+        view(:base, [:user_id, :title]) do
+          project(:user_id, :title)
+        end
+
+        def for_users(users)
           restrict(user_id: users.map { |u| u[:id] })
         end
       end
 
       class Repository < ROM::Repository::Base
-        relations :users, :tasks
+        relations :sql_users, :memory_tasks
 
-        def users_with_tasks
-          users.combine_children(many: tasks)
+        def users_with_tasks(id)
+          sql_users.where(id: id).combine_children(many: { tasks: memory_tasks })
         end
       end
     end
 
-    ROM.finalize
-
-    user_id = users.insert(name: 'Jane')
-    tasks.insert(user_id: user_id, title: 'Jane Task')
+    user_id = setup.gateways[:default].dataset(:users).insert(name: 'Jane')
+    setup.gateways[:memory].dataset(:tasks).insert(user_id: user_id, title: 'Jane Task')
   end
 
   specify 'ᕕ⁞ ᵒ̌ 〜 ᵒ̌ ⁞ᕗ' do
-    user = repo.users_with_tasks.one
+    user = repo.users_with_tasks(users.last[:id]).first
 
     expect(user.name).to eql('Jane')
 
