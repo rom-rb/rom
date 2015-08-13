@@ -11,6 +11,22 @@ module ROM
         @settings = {}
       end
 
+      # @api public
+      def [](name)
+        __send__(name)
+      end
+
+      # @api private
+      def key?(name)
+        settings.key?(name)
+      end
+
+      # @api private
+      def freeze
+        settings.each_value { |value| value.freeze }
+        super
+      end
+
       # @api private
       def respond_to_missing?(name, include_private = false)
         true
@@ -20,13 +36,15 @@ module ROM
 
       # @api private
       def method_missing(meth, *args, &block)
+        return settings.fetch(meth, nil) if frozen?
+
         name = meth.to_s
-        key = name.gsub(WRITER_REGEXP, '')
+        key = name.gsub(WRITER_REGEXP, '').to_sym
 
         if writer?(name)
           settings[key] = args.first
         else
-          settings.fetch(name) { settings[name] = self.class.new }
+          settings.fetch(key) { settings[key] = self.class.new }
         end
       end
 

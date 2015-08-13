@@ -1,6 +1,26 @@
 require 'spec_helper'
 
 describe ROM::Setup do
+  it 'is configurable' do
+    setup = ROM::Setup.new({})
+
+    setup.configure do |config|
+      config.sql.infer_schema = false
+    end
+
+    expect(setup.config.sql.infer_schema).to be(false)
+    expect(setup.config[:sql][:infer_schema]).to be(false)
+
+    expect(setup.config).to respond_to(:sql)
+    expect(setup.config).to respond_to(:other=)
+
+    setup.config.freeze
+
+    expect(setup.config.other).to be(nil)
+    expect(setup.config.key?(:other)).to be(false)
+    expect(setup.config.key?(:sql)).to be(true)
+  end
+
   describe '#finalize' do
     context 'with gateway that supports schema inferring' do
       it 'builds relation from inferred schema' do
@@ -31,6 +51,62 @@ describe ROM::Setup do
         rom = setup.env
 
         expect(rom.relations.test_users).to be_instance_of(Test::Users)
+      end
+
+      it 'skips inferring when it is turned off for the adapter' do
+        setup = ROM.setup(:memory)
+
+        setup.configure { |config| config.gateways.default.infer_schema = false }
+
+        repo = setup.default
+
+        expect(repo).not_to receive(:schema)
+
+        setup.finalize
+      end
+
+      it 'infers configured relations' do
+        setup = ROM.setup(:memory)
+
+        setup.configure do |config|
+          config.gateways.default.inferrable_relations = [:test_tasks]
+        end
+
+        repo = setup.default
+        dataset = double('dataset')
+
+        allow(repo).to receive(:schema).and_return([:test_tasks, :test_users])
+
+        expect(repo).to receive(:dataset).with(:test_tasks).and_return(dataset)
+        expect(repo).to_not receive(:dataset).with(:test_users)
+
+        rom = setup.finalize
+
+        expect(rom.relations.elements.key?(:test_users)).to be(false)
+        expect(rom.relations[:test_tasks]).to be_kind_of(ROM::Memory::Relation)
+        expect(rom.relations[:test_tasks].dataset).to be(dataset)
+      end
+
+      it 'skip inferring blacklisted relations' do
+        setup = ROM.setup(:memory)
+
+        setup.configure do |config|
+          config.gateways.default.not_inferrable_relations = [:test_users]
+        end
+
+        repo = setup.default
+        dataset = double('dataset')
+
+        allow(repo).to receive(:schema).and_return([:test_tasks, :test_users])
+
+        expect(repo).to receive(:dataset).with(:test_tasks).and_return(dataset)
+        expect(repo).to_not receive(:dataset).with(:test_users)
+
+        rom = setup.finalize
+
+        expect(rom.relations.elements.key?(:test_users)).to be(false)
+        expect(rom.relations[:test_tasks]).to be_kind_of(ROM::Memory::Relation)
+        expect(rom.relations[:test_tasks].dataset).to be(dataset)
       end
 
       it 'can register multiple relations with same dataset' do

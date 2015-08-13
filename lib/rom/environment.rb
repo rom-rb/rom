@@ -1,4 +1,3 @@
-require 'rom/support/configurable'
 require 'rom/setup'
 require 'rom/repository'
 
@@ -7,8 +6,6 @@ module ROM
   #
   # @api public
   class Environment
-    include Configurable
-
     # An internal gateway => identifier map used by the setup
     #
     # @return [Hash]
