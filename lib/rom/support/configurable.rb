@@ -13,7 +13,7 @@ module ROM
 
       # @api public
       def [](name)
-        __send__(name)
+        public_send(name)
       end
 
       # @api private
