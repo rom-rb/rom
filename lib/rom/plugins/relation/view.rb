@@ -53,8 +53,12 @@ module ROM
           #
           # @api public
           def view(*args, &block)
+            if args.size == 1 && block.arity > 0
+              raise ArgumentError, "header must be set as second argument"
+            end
+
             name, names, relation_block =
-              if block.arity == 0
+              if args.size == 1
                 DSL.new(*args, &block).call
               else
                 [*args, block]

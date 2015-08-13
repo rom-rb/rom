@@ -40,5 +40,15 @@ RSpec.describe 'SQL Relation extensions' do
 
       include_context 'valid view'
     end
+
+    context 'with multi-block when first block has args' do
+      it 'raises error' do
+        expect {
+          setup.relation(:users) do
+            view(:by_id) { |args| }
+          end
+        }.to raise_error(ArgumentError)
+      end
+    end
   end
 end
