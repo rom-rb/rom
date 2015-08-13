@@ -1,3 +1,4 @@
+require 'rom/support/configurable'
 require 'rom/setup'
 require 'rom/repository'
 
@@ -6,6 +7,8 @@ module ROM
   #
   # @api public
   class Environment
+    include Configurable
+
     # An internal gateway => identifier map used by the setup
     #
     # @return [Hash]
@@ -172,7 +175,7 @@ module ROM
       boot.mappers(*args, &block)
     end
 
-    # Finalize the setup and store default global container under 
+    # Finalize the setup and store default global container under
     # ROM::Environmrnt#container
     #
     # @example
