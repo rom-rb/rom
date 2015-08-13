@@ -1,5 +1,13 @@
 ## v0.9.0 to-be-released
 
+### Added
+
+* Configuration API for gateways supporting following options:
+  - `infer_relations` either `true` or `false` - if disabled schema inference
+    won't be used to automatically set up relations for you
+  - `inferrable_relations` a list of allowed relations that should be inferred
+  - `not_inferrable_relations` a list of relations that should not be inferred
+
 ### Changed
 
 * Global setup with auto-registration ported to the `:auto_registration` environment plugin (AMHOL)
