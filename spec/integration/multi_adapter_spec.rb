@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 RSpec.describe 'Repository with multi-adapters setup' do
   include_context 'database'
 
