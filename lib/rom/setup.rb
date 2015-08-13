@@ -1,3 +1,5 @@
+require 'rom/support/configurable'
+
 require 'rom/setup/finalize'
 require 'rom/support/deprecations'
 
@@ -6,6 +8,8 @@ module ROM
   #
   # @api public
   class Setup
+    include Configurable
+
     extend Deprecations
     include Equalizer.new(:gateways, :container)
 
@@ -57,15 +61,24 @@ module ROM
 
     # Finalize the setup
     #
-    # @return [Container] frozen container with access to gateways, 
+    # @return [Container] frozen container with access to gateways,
     #                relations, mappers and commands
     #
     # @api public
     def finalize
       raise EnvAlreadyFinalizedError if container
+
+      # initialize default configs for all gateways
+      gateways.each_key do |key|
+        gateway_config = config.gateways[key]
+
+        gateway_config.infer_relations = true unless gateway_config.key?(:infer_relations)
+      end
+
       finalize = Finalize.new(
-        gateways, relation_classes, mapper_classes, command_classes
+        gateways, relation_classes, mapper_classes, command_classes, config.freeze
       )
+
       @container = finalize.run!
     end
 

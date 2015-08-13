@@ -17,16 +17,17 @@ module ROM
     # @private
     class Finalize
       attr_reader :gateways, :repo_adapter, :datasets,
-        :relation_classes, :mapper_classes, :mappers, :command_classes
+        :relation_classes, :mapper_classes, :mappers, :command_classes, :config
 
       # @api private
-      def initialize(gateways, relation_classes, mappers, command_classes)
+      def initialize(gateways, relation_classes, mappers, command_classes, config)
         @gateways = gateways
         @repo_adapter_map = ROM.gateways
         @relation_classes = relation_classes
         @mapper_classes = mappers.select { |mapper| mapper.is_a?(Class) }
         @mappers = (mappers - @mapper_classes).reduce(:merge) || {}
         @command_classes = command_classes
+        @config = config
         initialize_datasets
       end
 
@@ -47,7 +48,7 @@ module ROM
       #
       # @api private
       def run!
-        infer_schema_relations
+        infer_relations_relations
 
         relations = load_relations
         mappers = load_mappers
@@ -67,7 +68,7 @@ module ROM
       # @api private
       def initialize_datasets
         @datasets = gateways.each_with_object({}) do |(key, gateway), h|
-          h[key] = gateway.schema
+          h[key] = gateway.schema if config.gateways[key][:infer_relations]
         end
       end
 
@@ -120,15 +121,34 @@ module ROM
       # Relations explicitly defined are being skipped
       #
       # @api private
-      def infer_schema_relations
+      def infer_relations_relations
         datasets.each do |gateway, schema|
           schema.each do |name|
-            next if relation_classes.any? { |klass| klass.dataset == name }
-            klass = Relation.build_class(name, adapter: adapter_for(gateway))
-            klass.gateway(gateway)
-            klass.dataset(name)
+            if infer_relation?(gateway, name)
+              klass = Relation.build_class(name, adapter: adapter_for(gateway))
+              klass.gateway(gateway)
+              klass.dataset(name)
+            else
+              next
+            end
           end
         end
+      end
+
+      def infer_relation?(gateway, name)
+        inferrable_relations(gateway).include?(name) && relation_classes.none? { |klass|
+          klass.dataset == name
+        }
+      end
+
+      def inferrable_relations(gateway)
+        gateway_config = config.gateways[gateway]
+        schema = gateways[gateway].schema
+
+        allowed = gateway_config[:inferrable_relations] || schema
+        skipped = gateway_config[:not_inferrable_relations] || []
+
+        schema & allowed - skipped
       end
     end
   end
