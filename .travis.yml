@@ -3,7 +3,7 @@ sudo: false
 cache: bundler
 bundler_args: --without yard guard benchmarks tools
 before_script:
-  - psql -c 'create database rom;' -U postgres
+  - psql -c 'create database rom_repository' -U postgres
 script: "bundle exec rake ci"
 rvm:
   - 2.0
