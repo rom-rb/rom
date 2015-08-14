@@ -24,8 +24,8 @@ module ROM
       end
     end
   end
+end
 
-  plugins do
-    register :key_inference, Plugins::Relation::KeyInference, type: :relation
-  end
+ROM.plugins do
+  register :key_inference, ROM::Plugins::Relation::KeyInference, type: :relation
 end

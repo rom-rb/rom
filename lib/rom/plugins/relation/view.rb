@@ -72,8 +72,8 @@ module ROM
       end
     end
   end
+end
 
-  plugins do
-    register :view, Plugins::Relation::View, type: :relation
-  end
+ROM.plugins do
+  register :view, ROM::Plugins::Relation::View, type: :relation
 end
