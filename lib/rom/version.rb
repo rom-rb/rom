@@ -1,3 +1,3 @@
 module ROM
-  VERSION = '0.9.0.beta2'.freeze
+  VERSION = '0.9.0.rc1'.freeze
 end
