@@ -20,10 +20,10 @@ module ROM
       end
     end
   end
+end
 
-  plugins do
-    adapter :sql do
-      register :base_view, Plugins::Relation::SQL::BaseView, type: :relation
-    end
+ROM.plugins do
+  adapter :sql do
+    register :base_view, ROM::Plugins::Relation::SQL::BaseView, type: :relation
   end
 end

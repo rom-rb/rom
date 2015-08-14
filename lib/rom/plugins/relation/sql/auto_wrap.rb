@@ -39,10 +39,10 @@ module ROM
       end
     end
   end
+end
 
-  plugins do
-    adapter :sql do
-      register :auto_wrap, Plugins::Relation::SQL::AutoWrap, type: :relation
-    end
+ROM.plugins do
+  adapter :sql do
+    register :auto_wrap, ROM::Plugins::Relation::SQL::AutoWrap, type: :relation
   end
 end

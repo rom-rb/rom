@@ -36,10 +36,10 @@ module ROM
       end
     end
   end
+end
 
-  plugins do
-    adapter :sql do
-      register :auto_combine, Plugins::Relation::SQL::AutoCombine, type: :relation
-    end
+ROM.plugins do
+  adapter :sql do
+    register :auto_combine, ROM::Plugins::Relation::SQL::AutoCombine, type: :relation
   end
 end
