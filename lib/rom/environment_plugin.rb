@@ -10,8 +10,8 @@ module ROM
     # @param [ROM::Environment] environment
     #
     # @api private
-    def apply_to(environment)
-      mod.apply(environment)
+    def apply_to(environment, options = {})
+      mod.apply(environment, options)
     end
   end
 end
