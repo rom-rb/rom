@@ -6,18 +6,20 @@ describe "ROM::PluginRegistry" do
   let(:setup) { ROM.setup(:memory) }
 
   before do
-    Test::CommandPlugin   = Module.new
-    Test::MapperPlugin    = Module.new
-    Test::RelationPlugin  = Module.new do
+    Test::EnvironmentPlugin = Module.new
+    Test::CommandPlugin     = Module.new
+    Test::MapperPlugin      = Module.new
+    Test::RelationPlugin    = Module.new do
       def plugged_in
         "a relation"
       end
     end
 
     ROM.plugins do
-      register :publisher,  Test::CommandPlugin,  type: :command
-      register :pager,      Test::RelationPlugin, type: :relation
-      register :translater, Test::MapperPlugin,   type: :mapper
+      register :registration, Test::EnvironmentPlugin, type: :environment
+      register :publisher,    Test::CommandPlugin,     type: :command
+      register :pager,        Test::RelationPlugin,    type: :relation
+      register :translater,   Test::MapperPlugin,      type: :mapper
     end
   end
 
@@ -25,6 +27,10 @@ describe "ROM::PluginRegistry" do
     orig_plugins = ROM.plugin_registry
     example.run
     ROM.instance_variable_set('@plugin_registry', orig_plugins)
+  end
+
+  it "makes environment plugins available" do
+    expect(ROM.plugin_registry.environment[:registration].mod).to eq Test::EnvironmentPlugin
   end
 
   it "includes relation plugins" do

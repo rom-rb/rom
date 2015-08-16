@@ -45,11 +45,14 @@ module ROM
       ROM.plugin_registry
     end
 
-    # Apply
+    # Apply a plugin to the environment
+    #
+    # @param [Mixed] The plugin identifier, usually a Symbol
+    # @param [Hash] Plugin options
     #
     # @api public
-    def use(plugin)
-      plugin_registry.environment.fetch(plugin).apply_to(self)
+    def use(plugin, options = {})
+      plugin_registry.environment.fetch(plugin).apply_to(self, options)
     end
 
     # Starts the setup process for relations, mappers and commands.
