@@ -28,7 +28,7 @@
   side became materialized (ie piping relation through a composite relation will
   work correctly) (solnic)
 
-[Compare v0.8.1...HEAD](https://github.com/rom-rb/rom/compare/v0.8.1...HEAD)
+[Compare v0.8.1...v0.9.0](https://github.com/rom-rb/rom/compare/v0.8.1...v0.9.0)
 
 ## v0.8.1 2015-07-12
 
