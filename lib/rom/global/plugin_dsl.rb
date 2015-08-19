@@ -19,7 +19,7 @@ module ROM
       attr_reader :registry
 
       # @api private
-      def initialize(registry, defaults = {}, &block)
+      def initialize(registry, defaults = EMPTY_HASH, &block)
         @registry = registry
         @defaults = defaults
         instance_exec(&block)
@@ -32,7 +32,7 @@ module ROM
       # @param [Hash] options
       #
       # @api public
-      def register(name, mod, options = {})
+      def register(name, mod, options = EMPTY_HASH)
         registry.register(name, mod, defaults.merge(options))
       end
 

@@ -60,7 +60,7 @@ module ROM
     # @return [Command]
     #
     # @api public
-    def self.build(relation, options = {})
+    def self.build(relation, options = EMPTY_HASH)
       new(relation, self.options.merge(options))
     end
 
@@ -78,7 +78,7 @@ module ROM
     # @option options [Symbol] :adapter (:default) first adapter to check for plugin
     #
     # @api public
-    def self.use(plugin, _options = {})
+    def self.use(plugin, _options = EMPTY_HASH)
       ROM.plugin_registry.commands.fetch(plugin, adapter).apply_to(self)
     end
 

@@ -35,7 +35,7 @@ module ROM
         'Source relation is now available as `Command#source`'
 
       # @api private
-      def initialize(relation, options = {})
+      def initialize(relation, options = EMPTY_HASH)
         super
         @relation = relation
         @source = options[:source] || relation

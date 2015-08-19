@@ -19,7 +19,7 @@ module ROM
     option :mapper, reader: true
 
     # @api private
-    def initialize(elements, options = {})
+    def initialize(elements, options = EMPTY_HASH)
       super
       @registry =
         if elements.is_a?(Registry)

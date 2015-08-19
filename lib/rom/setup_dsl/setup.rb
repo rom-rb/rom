@@ -19,7 +19,7 @@ module ROM
     #   end
     #
     # @api public
-    def relation(name, options = {}, &block)
+    def relation(name, options = EMPTY_HASH, &block)
       klass_opts = { adapter: default_adapter }.merge(options)
       klass = Relation.build_class(name, klass_opts)
       klass.class_eval(&block) if block

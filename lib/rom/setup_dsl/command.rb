@@ -8,7 +8,7 @@ module ROM
     # This is used by Setup#commands DSL and its `define` block
     #
     # @api private
-    def self.build_class(name, relation, options = {}, &block)
+    def self.build_class(name, relation, options = EMPTY_HASH, &block)
       type = options.fetch(:type) { name }
       command_type = Inflector.classify(type)
       adapter = options.fetch(:adapter)

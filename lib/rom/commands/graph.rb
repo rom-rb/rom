@@ -26,7 +26,7 @@ module ROM
       option :mappers, reader: true, default: proc { MapperRegistry.new }
 
       # @api private
-      def initialize(root, nodes, options = {})
+      def initialize(root, nodes, options = EMPTY_HASH)
         super
         @root = root
         @nodes = nodes

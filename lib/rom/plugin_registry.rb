@@ -49,7 +49,7 @@ module ROM
     # relation or mapper)
     # @option options [Symbol] :adapter (:default) which adapter this plugin
     # applies to. Leave blank for all adapters
-    def register(name, mod, options = {})
+    def register(name, mod, options = EMPTY_HASH)
       type    = options.fetch(:type)
       adapter = options.fetch(:adapter, :default)
 

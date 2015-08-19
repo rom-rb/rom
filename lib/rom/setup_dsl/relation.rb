@@ -8,7 +8,7 @@ module ROM
     # This is used by Setup#relation DSL
     #
     # @api private
-    def self.build_class(name, options = {})
+    def self.build_class(name, options = EMPTY_HASH)
       class_name = "ROM::Relation[#{Inflector.camelize(name)}]"
       adapter = options.fetch(:adapter)
 

@@ -72,7 +72,7 @@ module ROM
           end
 
           # @api private
-          def initialize(dataset, options = {})
+          def initialize(dataset, options = EMPTY_HASH)
             @name = self.class.dataset
             super
           end
@@ -131,7 +131,7 @@ module ROM
       # @option options [Symbol] :adapter (:default) first adapter to check for plugin
       #
       # @api public
-      def use(plugin, _options = {})
+      def use(plugin, _options = EMPTY_HASH)
         ROM.plugin_registry.relations.fetch(plugin, adapter).apply_to(self)
       end
 

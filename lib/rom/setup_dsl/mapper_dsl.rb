@@ -22,7 +22,7 @@ module ROM
       # @return [Class]
       #
       # @api public
-      def define(name, options = {}, &block)
+      def define(name, options = EMPTY_HASH, &block)
         Mapper.build_class(name, options, &block)
         self
       end

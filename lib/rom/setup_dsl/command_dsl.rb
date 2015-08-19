@@ -24,7 +24,7 @@ module ROM
       # @return [Class] generated class
       #
       # @api public
-      def define(name, options = {}, &block)
+      def define(name, options = EMPTY_HASH, &block)
         Command.build_class(
           name, relation, { adapter: adapter }.merge(options), &block
         )

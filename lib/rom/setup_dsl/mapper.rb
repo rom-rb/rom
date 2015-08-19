@@ -8,7 +8,7 @@ module ROM
     # This is used by Setup#mappers DSL
     #
     # @api private
-    def self.build_class(name, options = {}, &block)
+    def self.build_class(name, options = EMPTY_HASH, &block)
       class_name = "ROM::Mapper[#{name}]"
 
       parent = options[:parent]

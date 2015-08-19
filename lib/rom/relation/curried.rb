@@ -14,7 +14,7 @@ module ROM
       attr_reader :relation
 
       # @api private
-      def initialize(relation, options = {})
+      def initialize(relation, options = EMPTY_HASH)
         @relation = relation
         super
       end
@@ -67,7 +67,7 @@ module ROM
       private
 
       # @api private
-      def __new__(relation, new_opts = {})
+      def __new__(relation, new_opts = EMPTY_HASH)
         Curried.new(relation, options.merge(new_opts))
       end
 

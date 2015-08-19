@@ -19,7 +19,7 @@ module ROM
   # however, is considered private and should not be used outside of the
   # relation instance.
   #
-  # ROM builds sub-classes of this class for every relation defined in the 
+  # ROM builds sub-classes of this class for every relation defined in the
   # environment for easy inspection and extensibility - every gateway can
   # provide extensions for those sub-classes but there is always a vanilla
   # relation instance stored in the schema registry.
@@ -47,7 +47,7 @@ module ROM
     attr_reader :dataset
 
     # @api private
-    def initialize(dataset, options = {})
+    def initialize(dataset, options = EMPTY_HASH)
       @dataset = dataset
       super
     end
@@ -115,7 +115,7 @@ module ROM
     private
 
     # @api private
-    def __new__(dataset, new_opts = {})
+    def __new__(dataset, new_opts = EMPTY_HASH)
       self.class.new(dataset, options.merge(new_opts))
     end
   end
