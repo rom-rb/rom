@@ -1,4 +1,6 @@
 require 'rom/support/options'
+
+require 'rom/pipeline'
 require 'rom/relation/materializable'
 
 module ROM
@@ -6,6 +8,7 @@ module ROM
     class Curried
       include Options
       include Materializable
+      include Pipeline
 
       option :name, type: Symbol, reader: true
       option :arity, type: Integer, reader: true, default: -1

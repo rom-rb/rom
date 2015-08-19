@@ -23,6 +23,8 @@ module ROM
 
         if relation.is_a?(Loaded)
           relation.new(response)
+        elsif response.is_a?(Loaded)
+          response
         else
           Loaded.new(relation, response)
         end

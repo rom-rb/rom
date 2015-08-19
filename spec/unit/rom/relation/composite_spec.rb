@@ -4,6 +4,7 @@ describe ROM::Relation::Composite do
   include_context 'users and tasks'
 
   let(:users) { rom.relation(:users) }
+  let(:tasks) { rom.relation(:tasks) }
 
   let(:name_list) { proc { |r| r.map { |t| t[:name] } } }
   let(:upcaser) { proc { |r| r.map(&:upcase) } }
@@ -15,7 +16,13 @@ describe ROM::Relation::Composite do
       end
 
       def sorted(other)
-        other.sort_by { |t| t[:name] }
+        other.source.order(:name)
+      end
+    end
+
+    setup.relation(:tasks) do
+      def for_users(users)
+        restrict(name: users.map { |u| u[:name] })
       end
     end
   end
@@ -26,6 +33,7 @@ describe ROM::Relation::Composite do
       loaded = relation.call
 
       expect(loaded.source).to eql(users)
+
       expect(loaded).to match_array(%w(JANE JOE))
     end
 
@@ -33,10 +41,24 @@ describe ROM::Relation::Composite do
       relation = users >> users.sorted
       loaded = relation.call
 
-      expect(loaded.source).to eql(users)
+      expect(loaded.source).to eql(users.sorted(users.call))
+
       expect(loaded).to match_array([
         { name: 'Jane', email: 'jane@doe.org' },
         { name: 'Joe', email: 'joe@doe.org' }
+      ])
+    end
+
+    it 'sends a relation through another composite relation' do
+      task_mapper = -> tasks { tasks }
+      relation = users.by_name('Jane') >> (tasks.for_users >> task_mapper)
+
+      loaded = relation.call
+
+      expect(loaded.source).to eql(tasks.for_users(users.by_name('Jane')))
+
+      expect(loaded).to match_array([
+        { name: 'Jane', title: 'be cool', priority: 2 }
       ])
     end
   end
