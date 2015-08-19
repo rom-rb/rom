@@ -24,6 +24,9 @@
 * Adapter-specific interface is properly included in relation descendants (solnic)
 * Combined commands (aka command graph) properly rejects keys from nested input
   prior sending the input to individual commands (solnic)
+* Composite relation materializes correctly when another composite on the right
+  side became materialized (ie piping relation through a composite relation will
+  work correctly) (solnic)
 
 [Compare v0.8.1...HEAD](https://github.com/rom-rb/rom/compare/v0.8.1...HEAD)
 
