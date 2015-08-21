@@ -131,11 +131,19 @@ module ROM
       end
 
       if block
+        use :auto_registration unless auto_registration?
         @boot.instance_exec(&block)
-        @boot.finalize
+        finalize.container
       else
         @boot
       end
+    end
+
+    # Check if auto-registration is enabled for this environment
+    #
+    # @api private
+    def auto_registration?
+      false
     end
 
     # Global relation setup DSL

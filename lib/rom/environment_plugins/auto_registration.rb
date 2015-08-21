@@ -6,8 +6,19 @@ module ROM
     #
     # @api public
     module AutoRegistration
+      # Say "yes" for envs that have this plugin enabled
+      #
+      # By default it says "no" in Environment#auto_registration?
+      #
+      # @api private
+      def auto_registration?
+        true
+      end
+
       # @api private
       def self.apply(environment, options = {})
+        environment.extend(AutoRegistration)
+
         if_proc = options.fetch(:if, ->(*args) { true })
 
         ROM::Relation.on(:inherited) do |relation|

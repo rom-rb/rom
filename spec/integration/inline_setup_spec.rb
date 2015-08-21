@@ -36,8 +36,6 @@ RSpec.describe 'Inline setup' do
     it 'auto-registers components' do
       env = ROM::Environment.new
 
-      env.use :auto_registration
-
       rom = env.setup(:dummy) do
         relation(:users)
       end
