@@ -1,3 +1,23 @@
+## v0.9.1 2015-08-21
+
+This is a small bug-fix release which addresses a couple of issues for inline
+setup DSL and multi-environments.
+
+### Fixed
+
+- Multi-env setup for adapters with schema-inferration support won't crash (solnic)
+- Default adapter is set correctly when many adapters are configured and one is
+  registered under `:default` name (solnic)
+- When defining a relation using inline DSL with custom dataset name the relation
+  name will be correctly set as `register_as` setting (solnic)
+
+### Changed
+
+- When using inline-setup for env the auto_registration mechanism will be turned
+  on by default (solnic)
+
+[Compare v0.9.0...v0.9.1](https://github.com/rom-rb/rom/compare/v0.9.0...v0.9.1)
+
 ## v0.9.0 2015-08-19
 
 ### Added
