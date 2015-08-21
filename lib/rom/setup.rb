@@ -18,6 +18,11 @@ module ROM
     # @api private
     attr_reader :gateways
 
+    # @attr_reader [Hash<Gateway=>Symbol>] gateway_map Environment gateway map
+    #
+    # @api private
+    attr_reader :gateway_map
+
     # Deprecated accessor for gateways.
     #
     # @see gateways
@@ -50,12 +55,15 @@ module ROM
     alias_method :env, :container
 
     # @api private
-    def initialize(gateways, default_adapter = nil)
+    def initialize(gateways, options = {})
       @gateways = gateways
-      @default_adapter = default_adapter
+
+      @gateway_map = options.fetch(:gateway_map, {})
+      @default_adapter = options.fetch(:default_adapter, nil)
+
       @relation_classes = []
-      @mapper_classes = []
       @command_classes = []
+      @mapper_classes = []
       @container = nil
     end
 
@@ -76,7 +84,12 @@ module ROM
       end
 
       finalize = Finalize.new(
-        gateways, relation_classes, mapper_classes, command_classes, config.freeze
+        gateways: gateways,
+        gateway_map: gateway_map,
+        relation_classes: relation_classes,
+        command_classes: command_classes,
+        mappers: mapper_classes,
+        config: config.freeze
       )
 
       @container = finalize.run!

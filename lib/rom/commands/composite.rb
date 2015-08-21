@@ -1,3 +1,5 @@
+require 'rom/pipeline'
+
 module ROM
   module Commands
     # Composite command that consists of left and right commands

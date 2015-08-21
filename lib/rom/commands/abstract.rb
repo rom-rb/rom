@@ -1,3 +1,4 @@
+require 'rom/support/options'
 require 'rom/support/deprecations'
 
 require 'rom/commands/composite'

@@ -1,3 +1,4 @@
+require 'rom/support/options' # FIXME: this shouldn't be required, fix needed in rom-support
 require 'rom/support/array_dataset'
 
 module ROM

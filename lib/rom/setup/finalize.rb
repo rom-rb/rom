@@ -16,18 +16,23 @@ module ROM
     #
     # @private
     class Finalize
-      attr_reader :gateways, :repo_adapter, :datasets,
-        :relation_classes, :mapper_classes, :mappers, :command_classes, :config
+      attr_reader :gateways, :repo_adapter, :datasets, :gateway_map,
+        :relation_classes, :mapper_classes, :mapper_objects, :command_classes, :config
 
       # @api private
-      def initialize(gateways, relation_classes, mappers, command_classes, config)
-        @gateways = gateways
-        @repo_adapter_map = ROM.gateways
-        @relation_classes = relation_classes
+      def initialize(options)
+        @gateways = options.fetch(:gateways)
+        @gateway_map = options.fetch(:gateway_map)
+
+        @relation_classes = options.fetch(:relation_classes)
+        @command_classes = options.fetch(:command_classes)
+
+        mappers = options.fetch(:mappers, [])
         @mapper_classes = mappers.select { |mapper| mapper.is_a?(Class) }
-        @mappers = (mappers - @mapper_classes).reduce(:merge) || {}
-        @command_classes = command_classes
-        @config = config
+        @mapper_objects = (mappers - @mapper_classes).reduce(:merge) || {}
+
+        @config = options.fetch(:config)
+
         initialize_datasets
       end
 
@@ -37,7 +42,7 @@ module ROM
       #
       # @api private
       def adapter_for(gateway)
-        @repo_adapter_map.fetch(gateways[gateway])
+        @gateway_map.fetch(gateways[gateway])
       end
 
       # Run the finalization process
@@ -90,7 +95,7 @@ module ROM
           h[relation] = MapperRegistry.new(mappers)
         }
 
-        mappers.each do |relation, mappers|
+        mapper_objects.each do |relation, mappers|
           if registry_hash.key?(relation)
             mappers.each { |name, mapper| registry[name] = mapper }
           else

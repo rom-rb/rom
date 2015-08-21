@@ -114,7 +114,16 @@ module ROM
     # @api public
     def setup(*args, &block)
       config = setup_config(*args)
-      @boot = Setup.new(setup_gateways(config), adapters.keys.first)
+      configured_gateways = setup_gateways(config)
+
+      default_adapter = gateways.fetch(
+        configured_gateways[:default], adapters.keys.first
+      )
+
+      @boot = Setup.new(configured_gateways,
+        gateway_map: gateways,
+        default_adapter: default_adapter
+      )
 
       config.each do |name, config_args|
         options = config_args.is_a?(Array) && config_args.last
