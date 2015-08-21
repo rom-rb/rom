@@ -45,4 +45,21 @@ RSpec.describe 'Inline setup' do
       expect(users).to be_kind_of(Test::Dummy::Relation)
     end
   end
+
+  context 'defining a relation with custom dataset name' do
+    it 'registers under provided name and uses custom dataset' do
+      env = ROM::Environment.new
+
+      rom = env.setup(:dummy) do
+        relation(:super_users) do
+          dataset :users
+        end
+      end
+
+      users = rom.relation(:super_users)
+
+      expect(users).to be_kind_of(Test::Dummy::Relation)
+      expect(users.dataset).to be(rom.gateways[:default].dataset(:users))
+    end
+  end
 end
