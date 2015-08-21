@@ -123,14 +123,6 @@ end
 user_repo.by_id(1).as(:ui_presenter)
 ```
 
-## Limitations
-
-This is an early alpha and works only with rom-sql for now. There are a couple
-improvements waiting to be done in the rom core and then rom-repository will receive
-more love and features.
-
-Stay tuned.
-
 ## License
 
 See `LICENSE` file.
