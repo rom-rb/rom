@@ -37,16 +37,17 @@ There are other gems within the rom ecosystem that you will find useful:
 
 ## Adapters
 
-  * [rom-sql](https://github.com/rom-rb/rom-sql)
-  * [rom-yesql](https://github.com/rom-rb/rom-yesql)
-  * [rom-couchdb](https://github.com/rom-rb/rom-couchdb)
-  * [rom-mongo](https://github.com/rom-rb/rom-mongo)
-  * [rom-neo4j](https://github.com/rom-rb/rom-neo4j)
-  * [rom-event_store](https://github.com/rom-rb/rom-event_store)
-  * [rom-influxdb](https://github.com/rom-rb/rom-influxdb)
-  * [rom-rethinkdb](https://github.com/rom-rb/rom-rethinkdb)
-  * [rom-yaml](https://github.com/rom-rb/rom-yaml)
-  * [rom-csv](https://github.com/rom-rb/rom-csv)
+* [rom-sql](https://github.com/rom-rb/rom-sql)
+* [rom-yesql](https://github.com/rom-rb/rom-yesql)
+* [rom-couchdb](https://github.com/rom-rb/rom-couchdb)
+* [rom-mongo](https://github.com/rom-rb/rom-mongo)
+* [rom-neo4j](https://github.com/rom-rb/rom-neo4j)
+* [rom-event_store](https://github.com/rom-rb/rom-event_store)
+* [rom-influxdb](https://github.com/rom-rb/rom-influxdb)
+* [rom-rethinkdb](https://github.com/rom-rb/rom-rethinkdb)
+* [rom-yaml](https://github.com/rom-rb/rom-yaml)
+* [rom-csv](https://github.com/rom-rb/rom-csv)
+* [rom-git](https://github.com/rom-rb/rom-git)
 
 See [issues](https://github.com/rom-rb/rom/issues?q=is%3Aopen+is%3Aissue+label%3Aadapter+label%3Afeature)
 for a list of adapters that are planned to be added soon.
