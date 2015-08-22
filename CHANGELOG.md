@@ -1,3 +1,10 @@
+## v0.9.2 to-be-released
+
+### Changed
+
+- [fixed #306] Inheriting from a misconfigured adapter relation will raise a
+  meaningful error (solnic)
+
 ## v0.9.1 2015-08-21
 
 This is a small bug-fix release which addresses a couple of issues for inline
