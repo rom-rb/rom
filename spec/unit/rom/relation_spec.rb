@@ -13,6 +13,16 @@ describe ROM::Relation do
     before do
       module Test::TestAdapter
         class Relation < ROM::Relation
+          adapter :test
+
+          def test_relation?
+            true
+          end
+        end
+      end
+
+      module Test::BrokenAdapter
+        class Relation < ROM::Relation
           def test_relation?
             true
           end
@@ -20,12 +30,21 @@ describe ROM::Relation do
       end
 
       ROM.register_adapter(:test, Test::TestAdapter)
+      ROM.register_adapter(:broken, Test::BrokenAdapter)
     end
 
     it 'returns relation subclass from the registered adapter' do
-      relation = ROM::Relation[:test].new([])
+      subclass = Class.new(ROM::Relation[:test])
+
+      relation = subclass.new([])
 
       expect(relation).to be_test_relation
+    end
+
+    it 'raises error when adapter relation has no identifier' do
+      expect {
+        Class.new(ROM::Relation[:broken])
+      }.to raise_error(ROM::MissingAdapterIdentifierError, /Test::BrokenAdapter::Relation/)
     end
   end
 

@@ -19,6 +19,7 @@ module ROM
   MapperMissingError = Class.new(StandardError)
   UnknownPluginError = Class.new(StandardError)
   UnsupportedRelationError = Class.new(StandardError)
+  MissingAdapterIdentifierError = Class.new(StandardError)
 
   InvalidOptionValueError = Class.new(StandardError)
   InvalidOptionKeyError = Class.new(StandardError)

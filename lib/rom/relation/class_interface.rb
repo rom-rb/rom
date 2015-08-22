@@ -19,6 +19,11 @@ module ROM
         klass.extend Deprecations
         klass.defines :adapter
 
+        if respond_to?(:adapter) && adapter.nil?
+          raise MissingAdapterIdentifierError,
+            "relation class +#{self}+ is missing the adapter identifier"
+        end
+
         # Extend with functionality required by adapters *only* if this is a direct
         # descendant of an adapter-specific relation subclass
         return unless respond_to?(:adapter) && klass.superclass == ROM::Relation[adapter]
