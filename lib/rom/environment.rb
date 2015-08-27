@@ -197,8 +197,23 @@ module ROM
       boot.mappers(*args, &block)
     end
 
+    # Null boot object installed upon finalization.
+    class FinalizedBoot
+      def register_relation(klass)
+        raise ROM::EnvAlreadyFinalizedError
+      end
+
+      def register_mapper(klass)
+        raise ROM::EnvAlreadyFinalizedError
+      end
+
+      def register_command(klass)
+        raise ROM::EnvAlreadyFinalizedError
+      end
+    end
+
     # Finalize the setup and store default global container under
-    # ROM::Environmrnt#container
+    # ROM::Environment#container
     #
     # @example
     #   rom = ROM::Environment.new
@@ -214,7 +229,7 @@ module ROM
       @container = boot.finalize
       self
     ensure
-      @boot = nil
+      @boot = FinalizedBoot.new
     end
 
     # Relation subclass registration during setup phase
