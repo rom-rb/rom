@@ -65,7 +65,8 @@ ROM is on its way towards 1.0.0. You can see an overview of tasks scheduled for 
 ## Community
 
 * [Official Blog](http://rom-rb.org/blog/)
-* [Ruby Object Mapper](https://groups.google.com/forum/#!forum/rom-rb) mailing list
+* [Discussion Forum](http://discourse.rom-rb.org)
+* [Gitter Channel](https://gitter.im/rom-rb/chat)
 
 ## Credits
 
