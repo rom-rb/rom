@@ -24,10 +24,16 @@ module ROM
       end
       alias_method :to_a, :to_ary
 
+      # Return true if command successful
+      #
+      # @api public
       def success?
         !value.nil? && error.nil?
       end
 
+      # Return true if command failed
+      #
+      # @api public
       def failure?
         value.nil? && !error.nil?
       end
