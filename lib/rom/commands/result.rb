@@ -24,6 +24,14 @@ module ROM
       end
       alias_method :to_a, :to_ary
 
+      def success?
+        !value.nil? && error.nil?
+      end
+
+      def failure?
+        value.nil? && !error.nil?
+      end
+
       # Success result has a value and no error
       #
       # @api public
