@@ -70,6 +70,15 @@ module ROM
       end
       alias_method :[], :call
 
+      # Allow a command to be used where procs are accepted
+      #
+      # @return [Proc]
+      #
+      # @api public
+      def to_proc
+        lambda { |*args| call(*args) }
+      end
+
       # Curry this command with provided args
       #
       # Curried command can be called without args

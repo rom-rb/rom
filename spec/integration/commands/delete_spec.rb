@@ -20,7 +20,7 @@ describe 'Commands / Delete' do
 
     result = users.try { users.delete.call }
 
-    expect(result).to match_array([
+    expect(result.value).to match_array([
       { name: 'Jane', email: 'jane@doe.org' },
       { name: 'Joe', email: 'joe@doe.org' }
     ])
@@ -35,7 +35,7 @@ describe 'Commands / Delete' do
 
     result = users.try { users.delete.by_name('Joe').call }
 
-    expect(result).to match_array([{ name: 'Joe', email: 'joe@doe.org' }])
+    expect(result.value).to match_array([{ name: 'Joe', email: 'joe@doe.org' }])
 
     expect(rom.relation(:users)).to match_array([
       { name: 'Jane', email: 'jane@doe.org' },
@@ -49,7 +49,7 @@ describe 'Commands / Delete' do
 
     result = users.try { users.delete.by_name('Not here').call }
 
-    expect(result).to match_array([])
+    expect(result.value).to match_array([])
   end
 
   it 'returns deleted tuple when result is set to :one' do
@@ -73,7 +73,7 @@ describe 'Commands / Delete' do
 
     result = users.try { users.delete.call }
 
-    expect(result.error).to be_instance_of(ROM::TupleCountMismatchError)
+    expect(result.value).to be_instance_of(ROM::TupleCountMismatchError)
 
     expect(rom.relations.users.to_a).to match_array([
       { name: 'Jane', email: 'jane@doe.org' },
