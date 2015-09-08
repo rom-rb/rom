@@ -28,14 +28,14 @@ module ROM
       #
       # @api public
       def success?
-        !value.nil? && error.nil?
+        is_a?(Success)
       end
 
       # Return true if command failed
       #
       # @api public
       def failure?
-        value.nil? && !error.nil?
+        is_a?(Failure)
       end
 
       # Success result has a value and no error
