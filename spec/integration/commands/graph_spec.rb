@@ -146,6 +146,94 @@ describe 'Building up a command graph for nested input' do
     ])
   end
 
+
+  it 'updates graph elements cleanly' do
+    setup.commands(:tasks) do
+      define(:create) do
+        def execute(tuples, user)
+          super(tuples.map { |t| t.merge(user: user.fetch(:name)) })
+        end
+      end
+
+      define(:create) do
+        def execute(tuples, user)
+          super(tuples.map { |t| t.merge(user: user.fetch(:name)) })
+        end
+      end
+
+      define(:delete) do
+        register_as :complete
+
+        #  NOTE:  Delete normaly expects 0 args, in a graph, it gets 2
+        def execute(tuples, user)
+          super()
+        end
+      end
+
+      define(:update) do
+        def execute(tuples, user)
+          super(tuples.map { |t| t.merge(user: user.fetch(:name)) })
+        end
+      end
+    end
+
+    setup.commands(:users) do
+      define(:update) do
+        result :one
+      end
+    end
+
+    initial = {
+      user: {
+        name: 'Johnny',
+        tasks: [
+          { title: 'Change Name' },
+          { title: 'Finish that novel' }
+        ]
+      }
+    }
+
+    updated = {
+      user: {
+        name: 'Johnathan',
+        completed: [{ title: 'Change Name' }],
+        tasks: [{ title: 'Finish that novel' }]
+      }
+    }
+
+    create = rom.command([{ user: :users }, [:create, [:tasks, [:create]]]])
+
+    update = rom.command([{ user: :users }, [ :update, [
+      [{completed: :tasks}, [:complete]],
+      [:tasks, [:update]]
+    ]]])
+
+    create.call(initial)
+
+    rom.command(:tasks).create.call(
+      [{ title: 'Task One'}], { name: 'Jane' }
+    )
+
+    expect(rom.relation(:tasks)).to match_array([
+      { title: 'Change Name', user: 'Johnny' },
+      { title: 'Finish that novel', user: 'Johnny' },
+      { title: 'Task One', user: 'Jane' }
+    ])
+
+    update.call(updated)
+
+    expect(rom.relation(:users)).to match_array([
+      { name: 'Johnathan' }
+    ])
+
+    expect(rom.relation(:tasks)).to match_array([
+      { title: 'Task One', user: 'Jane' },
+      { title: 'Finish that novel', user: 'Johnathan' }
+    ])
+
+  end
+
+
   it 'works with auto-mapping' do
     setup.mappers do
       define(:users) do
