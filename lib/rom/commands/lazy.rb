@@ -13,10 +13,13 @@ module ROM
       # @attr_reader [Proc] evaluator The proc that will evaluate the input
       attr_reader :evaluator
 
+      attr_reader :options
+
       # @api private
-      def initialize(command, evaluator)
+      def initialize(command, evaluator, options = {})
         @command = command
         @evaluator = evaluator
+        @options = options
       end
 
       # Evaluate command's input using the input proc and pass to command
@@ -30,16 +33,60 @@ module ROM
         size = args.size
 
         if size > 1 && last.is_a?(Array)
-          last.map.with_index { |item, index|
+          last.map.with_index do |item, index|
             input = evaluator.call(first, index)
-            command.call(input, item)
-          }.reduce(:concat)
+
+            if command.is_a?(Create)
+              command.call(input, item)
+            else
+              raise NotImplementedError
+            end
+          end.reduce(:concat)
         else
           input = evaluator.call(first)
-          command.call(input, *args[1..size-1])
+
+          if command.is_a?(Create)
+            command.call(input, *args[1..size-1])
+          elsif command.is_a?(Update)
+            if view
+              if input.is_a?(Array)
+                input.map.with_index do |item, index|
+                  restricted_command = command.public_send(view, *view_args(first, index))
+                  restricted_command.call(item, *args[1..size-1])
+                end
+              else
+                restricted_command = command.public_send(view, *view_args(first))
+                restricted_command.call(input, *args[1..size-1])
+              end
+            else
+              command.call(input, *args[1..size-1])
+            end
+          elsif command.is_a?(Delete)
+            if input.is_a?(Array)
+              input.map.with_index do |item, index|
+                command.public_send(view, *view_args(first, index)).call
+              end
+            else
+              raise NotImplementedError
+            end
+          end
         end
-      rescue => err
-        raise CommandFailure.new(command, err)
+      end
+
+      def view
+        options[0]
+      end
+
+      def view_args(input, index = nil)
+        options[1].map do |path|
+          path.split('.').map(&:to_sym).reduce(input) do |a,e|
+            if a.is_a?(Array)
+              a[index][e]
+            else
+              a.fetch(e)
+            end
+          end
+        end
       end
 
       # Compose a lazy command with another one

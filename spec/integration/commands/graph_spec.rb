@@ -5,8 +5,26 @@ describe 'Building up a command graph for nested input' do
   let(:setup) { ROM.setup(:memory) }
 
   before do
-    setup.relation :users
-    setup.relation :tasks
+    setup.relation :users do
+      def by_name(name)
+        restrict(name: name)
+      end
+    end
+
+    setup.relation :tasks do
+      def by_user_and_title(user, title)
+        by_user(user).by_title(title)
+      end
+
+      def by_user(user)
+        restrict(user: user)
+      end
+
+      def by_title(title)
+        restrict(title: title)
+      end
+    end
+
     setup.relation :books
     setup.relation :tags
 
@@ -155,25 +173,17 @@ describe 'Building up a command graph for nested input' do
         end
       end
 
-      define(:create) do
-        def execute(tuples, user)
-          super(tuples.map { |t| t.merge(user: user.fetch(:name)) })
+      define(:update) do
+        result :one
+
+        def execute(tuple, user)
+          super(tuple.merge(user: user.fetch(:name)))
         end
       end
 
       define(:delete) do
         register_as :complete
-
-        #  NOTE:  Delete normaly expects 0 args, in a graph, it gets 2
-        def execute(tuples, user)
-          super()
-        end
-      end
-
-      define(:update) do
-        def execute(tuples, user)
-          super(tuples.map { |t| t.merge(user: user.fetch(:name)) })
-        end
+        result :one
       end
     end
 
@@ -186,6 +196,7 @@ describe 'Building up a command graph for nested input' do
     initial = {
       user: {
         name: 'Johnny',
+        email: 'johnny@doe.org',
         tasks: [
           { title: 'Change Name' },
           { title: 'Finish that novel' }
@@ -195,18 +206,31 @@ describe 'Building up a command graph for nested input' do
 
     updated = {
       user: {
-        name: 'Johnathan',
+        name: 'Johnny',
+        email: 'johnathan@doe.org',
         completed: [{ title: 'Change Name' }],
-        tasks: [{ title: 'Finish that novel' }]
+        tasks: [{ title: 'Finish that novel', priority: 1 }]
       }
     }
 
     create = rom.command([{ user: :users }, [:create, [:tasks, [:create]]]])
 
-    update = rom.command([{ user: :users }, [ :update, [
-      [{completed: :tasks}, [:complete]],
-      [:tasks, [:update]]
-    ]]])
+    update = rom.command([
+      { user: :users },
+      [
+        { update: [:by_name, ['user.name']] },
+        [
+          [
+            { completed: :tasks },
+            [{ complete: [:by_user_and_title, ['user.name', 'user.tasks.title']] }]
+          ],
+          [
+            :tasks,
+            [{ update: [:by_user, ['user.name']] }]
+          ]
+        ]
+      ]
+    ])
 
     create.call(initial)
 
@@ -223,14 +247,13 @@ describe 'Building up a command graph for nested input' do
     update.call(updated)
 
     expect(rom.relation(:users)).to match_array([
-      { name: 'Johnathan' }
+      { name: 'Johnny', email: 'johnathan@doe.org' }
     ])
 
     expect(rom.relation(:tasks)).to match_array([
       { title: 'Task One', user: 'Jane' },
-      { title: 'Finish that novel', user: 'Johnathan' }
+      { title: 'Finish that novel', priority: 1, user: 'Johnny' }
     ])
-
   end
 
 
