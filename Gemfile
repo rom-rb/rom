@@ -9,7 +9,7 @@ end
 
 group :test do
   gem 'virtus'
-  gem 'anima'
+  gem 'anima', '~> 0.2.0'
   gem 'minitest'
   gem 'thread_safe'
   gem 'activesupport'
