@@ -45,6 +45,7 @@ There are other gems within the rom ecosystem that you will find useful:
 * [rom-http](https://github.com/rom-rb/rom-http)
 * [rom-influxdb](https://github.com/rom-rb/rom-influxdb)
 * [rom-json](https://github.com/rom-rb/rom-json)
+* [rom-kafka](https://github.com/rom-rb/rom-kafka)
 * [rom-mongo](https://github.com/rom-rb/rom-mongo)
 * [rom-neo4j](https://github.com/rom-rb/rom-neo4j)
 * [rom-rethinkdb](https://github.com/rom-rb/rom-rethinkdb)
