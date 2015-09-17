@@ -67,7 +67,8 @@ module ROM
                 command.public_send(view, *view_args(first, index)).call
               end
             else
-              raise NotImplementedError
+              restricted_command = command.public_send(view, *view_args(first))
+              restricted_command.call
             end
           end
         end

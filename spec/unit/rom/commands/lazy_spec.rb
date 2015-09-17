@@ -6,13 +6,25 @@ describe ROM::Commands::Lazy do
 
   let(:create_user) { rom.command(:users).create }
   let(:update_user) { rom.command(:users).update }
-  let(:create_task) { rom.command(:tasks).create }
+  let(:delete_user) { rom.command(:users).delete }
 
-  let(:user) { { user: { name: 'Jane' } } }
+  let(:create_task) { rom.command(:tasks).create }
+  let(:update_task) { rom.command(:tasks).update }
+
+  let(:input) { { user: { name: 'Jane', email: 'jane@doe.org' } } }
+  let(:jane) { input[:user] }
   let(:evaluator) { -> input { input[:user] } }
 
   before do
     setup.relation(:tasks) do
+      def by_user_and_title(user, title)
+        by_user(user).by_title(title)
+      end
+
+      def by_user(user)
+        restrict(user: user)
+      end
+
       def by_title(title)
         restrict(title: title)
       end
@@ -29,11 +41,27 @@ describe ROM::Commands::Lazy do
         result :one
       end
 
-      define(:update)
+      define(:update) do
+        result :one
+      end
+
+      define(:delete) do
+        result :one
+      end
     end
 
     setup.commands(:tasks) do
-      define(:create)
+      define(:create) do
+        result :one
+      end
+
+      define(:update) do
+        result :one
+
+        def execute(tuple, user)
+          super(tuple.merge(user: user[:name]))
+        end
+      end
     end
   end
 
@@ -42,11 +70,111 @@ describe ROM::Commands::Lazy do
       subject(:command) { ROM::Commands::Lazy.new(create_user, evaluator) }
 
       it 'evaluates the input and calls command' do
-        command.call(user)
+        command.call(input)
 
-        expect(rom.relation(:users)).to match_array([
-          { name: 'Jane' }
-        ])
+        expect(rom.relation(:users)).to match_array([jane])
+      end
+    end
+
+    context 'with an update command' do
+      subject(:command) do
+        ROM::Commands::Lazy.new(update_user, evaluator, [:by_name, ['user.name']])
+      end
+
+      before do
+        create_user[jane]
+      end
+
+      it 'evaluates the input, restricts the relation and calls its command' do
+        input = { user: { name: 'Jane', email: 'jane.doe@rom-rb.org' } }
+        command.call(input)
+
+        expect(rom.relation(:users)).to match_array([input[:user]])
+      end
+    end
+
+    context 'with an update command for a child tuple' do
+      subject(:command) do
+        ROM::Commands::Lazy.new(
+          update_task,
+          evaluator,
+          [:by_user_and_title, ['user.name', 'user.task.title']]
+        )
+      end
+
+      let(:evaluator) { -> input { input[:user][:task] } }
+
+      let(:jane) { { name: 'Jane' } }
+      let(:jane_task) { { user: 'Jane', title: 'Jane Task', priority: 1 } }
+
+      let(:input) { { user: jane.merge(task: jane_task) } }
+
+      before do
+        create_user[jane]
+        create_task[user: 'Jane', title: 'Jane Task', priority: 2]
+      end
+
+      it 'evaluates the input, restricts the relation and calls its command' do
+        command.call(input, input[:user])
+
+        expect(rom.relation(:users)).to match_array([jane])
+
+        expect(rom.relation(:tasks)).to match_array([jane_task])
+      end
+    end
+
+    context 'with an update command for child tuples' do
+      subject(:command) do
+        ROM::Commands::Lazy.new(
+          update_task,
+          evaluator,
+          [:by_user_and_title, ['user.name', 'user.tasks.title']]
+        )
+      end
+
+      let(:evaluator) { -> input { input[:user][:tasks] } }
+
+      let(:jane) { { name: 'Jane' } }
+      let(:jane_tasks) {
+        [
+          { user: 'Jane', title: 'Jane Task One', priority: 2 },
+          { user: 'Jane', title: 'Jane Task Two', priority: 3 }
+        ]
+      }
+
+      let(:input) { { user: jane.merge(tasks: jane_tasks) } }
+
+      before do
+        create_user[jane]
+        create_task[user: 'Jane', title: 'Jane Task One', priority: 3]
+        create_task[user: 'Jane', title: 'Jane Task Two', priority: 4]
+      end
+
+      it 'evaluates the input, restricts the relation and calls its command' do
+        command.call(input, input[:user])
+
+        expect(rom.relation(:users)).to match_array([jane])
+
+        expect(rom.relation(:tasks)).to match_array(jane_tasks)
+      end
+    end
+
+    context 'with a delete command' do
+      subject(:command) do
+        ROM::Commands::Lazy.new(delete_user, evaluator, [:by_name, ['user.name']])
+      end
+
+      let(:joe) { { name: 'Joe' } }
+
+      before do
+        create_user[jane]
+        create_user[joe]
+      end
+
+      it 'restricts the relation and calls its command' do
+        command.call(input)
+
+        expect(rom.relation(:users)).to match_array([joe])
       end
     end
   end
@@ -84,7 +212,7 @@ describe ROM::Commands::Lazy do
 
     it 'returns original response if it was not a command' do
       response = command.result
-      expect(response).to be(:many)
+      expect(response).to be(:one)
     end
 
     it 'raises error when message is unknown' do
