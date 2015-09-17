@@ -15,11 +15,28 @@ module ROM
 
       attr_reader :options
 
+      attr_reader :restricted_command
+
       # @api private
       def initialize(command, evaluator, options = {})
         @command = command
         @evaluator = evaluator
         @options = options
+
+        @restricted_command =
+          if options.is_a?(Proc)
+            options
+          else
+            proc { |input, index|
+              args =
+                if index
+                  view_args(input, index)
+                else
+                  view_args(input)
+                end
+              command.public_send(view, *args)
+            }
+          end
       end
 
       # Evaluate command's input using the input proc and pass to command
@@ -38,7 +55,7 @@ module ROM
 
             if command.is_a?(Create)
               command.call(input, item)
-            else
+            elsif command.is_a?(Update)
               raise NotImplementedError
             end
           end.reduce(:concat)
@@ -51,12 +68,10 @@ module ROM
             if view
               if input.is_a?(Array)
                 input.map.with_index do |item, index|
-                  restricted_command = command.public_send(view, *view_args(first, index))
-                  restricted_command.call(item, *args[1..size-1])
+                  restricted_command[first, index].call(item, *args[1..size-1])
                 end
               else
-                restricted_command = command.public_send(view, *view_args(first))
-                restricted_command.call(input, *args[1..size-1])
+                restricted_command[first].call(input, *args[1..size-1])
               end
             else
               command.call(input, *args[1..size-1])
@@ -64,11 +79,10 @@ module ROM
           elsif command.is_a?(Delete)
             if input.is_a?(Array)
               input.map.with_index do |item, index|
-                command.public_send(view, *view_args(first, index)).call
+                restricted_command[first, index].call
               end
             else
-              restricted_command = command.public_send(view, *view_args(first))
-              restricted_command.call
+              restricted_command[first].call
             end
           end
         end

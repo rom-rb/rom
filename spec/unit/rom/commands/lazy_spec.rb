@@ -197,6 +197,55 @@ describe ROM::Commands::Lazy do
       end
     end
 
+    context 'with an update command for many parents and their children' do
+      subject(:command) do
+        ROM::Commands::Lazy.new(
+          update_task,
+          evaluator,
+          [:by_user_and_title, ['users.name', 'users.tasks.title']]
+        )
+      end
+
+      let(:evaluator) { -> input, index { input[:users][index][:tasks] } }
+
+      let(:input) do
+        { users: [
+          {
+            name: 'Jane',
+            tasks: [
+              { title: 'Jane Task One', priority: 1 },
+              { title: 'Jane Task Two', priority: 2 }
+            ]
+          },
+          {
+            name: 'Joe',
+            tasks: [{ title: 'Joe Task One', priority: 1 }]
+          }
+        ]}
+      end
+
+      before do
+        create_user[name: 'Jane']
+        create_user[name: 'Joe']
+
+        create_task[user: 'Jane', title: 'Jane Task One']
+        create_task[user: 'Jane', title: 'Jane Task Two']
+        create_task[user: 'Joe', title: 'Joe Task One']
+
+        pending 'not implemented yet'
+      end
+
+      it 'evaluates the input and calls its command' do
+        command.call(input, input[:users])
+
+        expect(rom.relation(:tasks)).to match_array([
+          { user: 'Jane', title: 'Jane Task One', priority: 1 },
+          { user: 'Jane', title: 'Jane Task Two', priority: 2 },
+          { user: 'Joe', title: 'Joe Task One', priority: 1 }
+        ])
+      end
+    end
+
     context 'with a delete command' do
       subject(:command) do
         ROM::Commands::Lazy.new(delete_user, evaluator, [:by_name, ['user.name']])
