@@ -37,7 +37,7 @@ module ROM
             if cmd_opts.is_a?(Hash)
               cmd_opts.to_a.first
             else
-              [cmd_opts, {}]
+              [cmd_opts]
             end
 
           command = registry[relation][name]

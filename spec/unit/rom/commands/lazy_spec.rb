@@ -116,7 +116,8 @@ describe ROM::Commands::Lazy do
 
     context 'with an update command' do
       subject(:command) do
-        ROM::Commands::Lazy.new(update_user, evaluator, [:by_name, ['user.name']])
+        ROM::Commands::Lazy.new(
+          update_user, evaluator, -> cmd, user { cmd.by_name(user[:name]) })
       end
 
       before do
@@ -136,7 +137,7 @@ describe ROM::Commands::Lazy do
         ROM::Commands::Lazy.new(
           update_task,
           evaluator,
-          [:by_user_and_title, ['user.name', 'user.task.title']]
+          -> cmd, user, task { cmd.by_user(user[:name]).by_title(task[:title]) }
         )
       end
 
@@ -166,7 +167,7 @@ describe ROM::Commands::Lazy do
         ROM::Commands::Lazy.new(
           update_task,
           evaluator,
-          [:by_user_and_title, ['user.name', 'user.tasks.title']]
+          -> cmd, user, task { cmd.by_user(user[:name]).by_title(task[:title]) }
         )
       end
 
@@ -202,7 +203,7 @@ describe ROM::Commands::Lazy do
         ROM::Commands::Lazy.new(
           update_task,
           evaluator,
-          -> command, user, task { command.by_user_and_title(user[:name], task[:title]) }
+          -> cmd, user, task { cmd.by_user(user[:name]).by_title(task[:title]) }
         )
       end
 
@@ -246,7 +247,11 @@ describe ROM::Commands::Lazy do
 
     context 'with a delete command' do
       subject(:command) do
-        ROM::Commands::Lazy.new(delete_user, evaluator, [:by_name, ['user.name']])
+        ROM::Commands::Lazy.new(
+          delete_user,
+          evaluator,
+          -> cmd, user { cmd.by_name(user[:name]) }
+        )
       end
 
       let(:joe) { { name: 'Joe' } }
@@ -282,18 +287,6 @@ describe ROM::Commands::Lazy do
 
   describe '#method_missing' do
     subject(:command) { ROM::Commands::Lazy.new(update_user, evaluator) }
-
-    it 'forwards to command' do
-      rom.relations[:users] << { name: 'Jane' } << { name: 'Joe' }
-
-      new_command = command.by_name('Jane')
-      new_command.call(user: { name: 'Jane Doe' })
-
-      expect(rom.relation(:users)).to match_array([
-        { name: 'Jane Doe' },
-        { name: 'Joe' }
-      ])
-    end
 
     it 'returns original response if it was not a command' do
       response = command.result

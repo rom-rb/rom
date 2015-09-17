@@ -218,15 +218,15 @@ describe 'Building up a command graph for nested input' do
     update = rom.command([
       { user: :users },
       [
-        { update: [:by_name, ['user.name']] },
+        { update: -> cmd, user { cmd.by_name(user[:name]) } },
         [
           [
             { completed: :tasks },
-            [{ complete: [:by_user_and_title, ['user.name', 'user.tasks.title']] }]
+            [{ complete: -> cmd, user, task { cmd.by_user_and_title(user[:name], task[:title]) } }]
           ],
           [
             :tasks,
-            [{ update: [:by_user, ['user.name']] }]
+            [{ update: -> cmd, user, task { cmd.by_user_and_title(user[:name], task[:title]) } }]
           ]
         ]
       ]
