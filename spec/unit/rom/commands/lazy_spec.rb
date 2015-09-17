@@ -202,7 +202,7 @@ describe ROM::Commands::Lazy do
         ROM::Commands::Lazy.new(
           update_task,
           evaluator,
-          [:by_user_and_title, ['users.name', 'users.tasks.title']]
+          -> command, user, task { command.by_user_and_title(user[:name], task[:title]) }
         )
       end
 
@@ -231,8 +231,6 @@ describe ROM::Commands::Lazy do
         create_task[user: 'Jane', title: 'Jane Task One']
         create_task[user: 'Jane', title: 'Jane Task Two']
         create_task[user: 'Joe', title: 'Joe Task One']
-
-        pending 'not implemented yet'
       end
 
       it 'evaluates the input and calls its command' do

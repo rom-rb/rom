@@ -50,13 +50,15 @@ module ROM
         size = args.size
 
         if size > 1 && last.is_a?(Array)
-          last.map.with_index do |item, index|
-            input = evaluator.call(first, index)
+          last.map.with_index do |parent, index|
+            children = evaluator.call(first, index)
 
             if command.is_a?(Create)
-              command.call(input, item)
+              command.call(children, parent)
             elsif command.is_a?(Update)
-              raise NotImplementedError
+              children.map do |child|
+                restricted_command[command, parent, child].call(child, parent)
+              end
             end
           end.reduce(:concat)
         else
