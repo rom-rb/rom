@@ -12,7 +12,11 @@ describe ROM::Commands::Lazy do
   let(:evaluator) { -> input { input[:user] } }
 
   before do
-    setup.relation(:tasks)
+    setup.relation(:tasks) do
+      def by_title(title)
+        restrict(title: title)
+      end
+    end
 
     setup.relation(:users) do
       def by_name(name)
@@ -34,14 +38,16 @@ describe ROM::Commands::Lazy do
   end
 
   describe '#call' do
-    subject(:command) { ROM::Commands::Lazy.new(create_user, evaluator) }
+    context 'with a create command' do
+      subject(:command) { ROM::Commands::Lazy.new(create_user, evaluator) }
 
-    it 'evaluates the input and calls command' do
-      command.call(user)
+      it 'evaluates the input and calls command' do
+        command.call(user)
 
-      expect(rom.relation(:users)).to match_array([
-        { name: 'Jane' }
-      ])
+        expect(rom.relation(:users)).to match_array([
+          { name: 'Jane' }
+        ])
+      end
     end
   end
 
@@ -76,7 +82,7 @@ describe ROM::Commands::Lazy do
       ])
     end
 
-    it 'return original response if it was not a command' do
+    it 'returns original response if it was not a command' do
       response = command.result
       expect(response).to be(:many)
     end
