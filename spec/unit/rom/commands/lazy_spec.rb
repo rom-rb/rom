@@ -9,6 +9,7 @@ describe ROM::Commands::Lazy do
   let(:delete_user) { rom.command(:users).delete }
 
   let(:create_task) { rom.command(:tasks).create }
+  let(:create_tasks) { rom.command(:tasks).create_many }
   let(:update_task) { rom.command(:tasks).update }
 
   let(:input) { { user: { name: 'Jane', email: 'jane@doe.org' } } }
@@ -55,6 +56,12 @@ describe ROM::Commands::Lazy do
         result :one
       end
 
+      define(:create_many, type: :create) do
+        def execute(tuples, user)
+          super(tuples.map { |tuple| tuple.merge(user: user[:name]) })
+        end
+      end
+
       define(:update) do
         result :one
 
@@ -73,6 +80,37 @@ describe ROM::Commands::Lazy do
         command.call(input)
 
         expect(rom.relation(:users)).to match_array([jane])
+      end
+    end
+
+    context 'with a create command for many child tuples' do
+      subject(:command) do
+        ROM::Commands::Lazy.new(create_tasks, evaluator)
+      end
+
+      let(:evaluator) { -> input, index { input[:users][index][:tasks] } }
+
+      let(:input) do
+        { users: [
+          {
+            name: 'Jane',
+            tasks: [{ title: 'Jane Task One' }, { title: 'Jane Task Two' }]
+          },
+          {
+            name: 'Joe',
+            tasks: [{ title: 'Joe Task One' }]
+          }
+        ]}
+      end
+
+      it 'evaluates the input and calls command' do
+        command.call(input, input[:users])
+
+        expect(rom.relation(:tasks)).to match_array([
+          { user: 'Jane', title: 'Jane Task One' },
+          { user: 'Jane', title: 'Jane Task Two' },
+          { user: 'Joe', title: 'Joe Task One' }
+        ])
       end
     end
 
