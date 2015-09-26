@@ -87,4 +87,13 @@ describe ROM::Gateway do
       expect(gateway.disconnect).to be(nil)
     end
   end
+
+  describe '#logger' do
+    it 'does nothing' do
+      gateway_class = Class.new(ROM::Gateway)
+      gateway = gateway_class.new
+      expect(gateway.logger).to be(nil)
+    end
+  end
+
 end
