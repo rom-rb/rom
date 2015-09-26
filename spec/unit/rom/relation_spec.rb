@@ -172,4 +172,10 @@ describe ROM::Relation do
       expect(relation.to_a).to eql([jane, joe])
     end
   end
+
+  describe "#curried?" do
+    it "returns false" do
+      expect(relation.curried?).to be(false)
+    end
+  end
 end
