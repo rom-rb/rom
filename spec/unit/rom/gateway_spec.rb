@@ -109,7 +109,7 @@ describe ROM::Gateway do
 
   describe '#extend_command_class' do
     it 'returns the class sent as 1st parameter' do
-      klass = ROM::Relation
+      klass = Class.new.freeze
 
       expect(gateway.extend_command_class(klass, "foo")).to eq(klass)
     end
