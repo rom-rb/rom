@@ -1,6 +1,9 @@
 require 'spec_helper'
 
 describe ROM::Gateway do
+
+  subject(:gateway) { Class.new(ROM::Gateway).new }
+
   describe '.setup' do
     it 'sets up a gateway based on a type' do
       gateway_class = Class.new(ROM::Gateway) do
@@ -82,16 +85,12 @@ describe ROM::Gateway do
 
   describe '#disconnect' do
     it 'does nothing' do
-      gateway_class = Class.new(ROM::Gateway)
-      gateway = gateway_class.new
       expect(gateway.disconnect).to be(nil)
     end
   end
 
   describe '#logger' do
     it 'does nothing' do
-      gateway_class = Class.new(ROM::Gateway)
-      gateway = gateway_class.new
       expect(gateway.logger).to be(nil)
     end
   end
