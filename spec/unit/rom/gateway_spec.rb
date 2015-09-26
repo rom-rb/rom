@@ -95,4 +95,16 @@ describe ROM::Gateway do
     end
   end
 
+  describe '#use_logger' do
+    it 'does nothing' do
+      expect(gateway.use_logger).to be(nil)
+    end
+
+    it 'accepts parameters' do
+      params = [5, "mutations", "are", "nice"]
+
+      expect { gateway.use_logger(params) }.to_not raise_error
+    end
+  end
+
 end
