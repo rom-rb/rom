@@ -147,7 +147,7 @@ module ROM
       # @api private
       def default_name
         return unless name
-        Inflector.underscore(name).gsub('/', '_').to_sym
+        Inflector.underscore(name).tr('/', '_').to_sym
       end
 
       # Build relation registry of specified descendant classes
