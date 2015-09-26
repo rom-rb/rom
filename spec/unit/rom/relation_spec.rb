@@ -178,4 +178,13 @@ describe ROM::Relation do
       expect(relation.curried?).to be(false)
     end
   end
+
+  describe "#with" do
+    it "delegates to __new__, sending its dataset along the given options" do
+      opts = { :key => "value" }
+      allow(relation).to receive(:__new__).with(dataset, opts)
+
+      relation.with(opts)
+    end
+  end
 end
