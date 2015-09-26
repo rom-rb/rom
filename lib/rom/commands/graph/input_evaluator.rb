@@ -39,10 +39,10 @@ module ROM
             value =
               if index
                 tuple_path[0..tuple_path.size-2]
-                  .reduce(input) { |a,e| a.fetch(e) }
+                  .reduce(input) { |a, e| a.fetch(e) }
                   .at(index)[tuple_path.last]
               else
-                tuple_path.reduce(input) { |a,e| a.fetch(e) }
+                tuple_path.reduce(input) { |a, e| a.fetch(e) }
               end
 
             if excluded_keys

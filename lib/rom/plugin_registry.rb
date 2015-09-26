@@ -99,6 +99,7 @@ module ROM
     def register(name, mod, options)
       elements[name] = EnvironmentPlugin.new(mod, options)
     end
+
     # Return an environment plugin
     #
     # @param [Symbol] name The name of the environment plugin

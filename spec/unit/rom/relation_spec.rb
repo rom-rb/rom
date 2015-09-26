@@ -73,7 +73,7 @@ describe ROM::Relation do
         dataset :users
       end
 
-      class Test::DescendantUsers < Test::SuperUsers;end
+      class Test::DescendantUsers < Test::SuperUsers; end
 
       expect(Test::DescendantUsers.register_as).to eq(:test_descendant_users)
     end

@@ -14,7 +14,7 @@ describe 'Mapper definition DSL' do
       { address: 'joe@job.com',  type: 'job'  },
       { address: 'joe@doe.com',  type: 'job'  },
       { address: 'joe@thor.org'               },
-      {                          type: 'home' },
+      { type: 'home' },
       {}
     ])
     users.insert(name: 'Jane')

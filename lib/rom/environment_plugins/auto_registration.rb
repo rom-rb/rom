@@ -19,7 +19,7 @@ module ROM
       def self.apply(environment, options = {})
         environment.extend(AutoRegistration)
 
-        if_proc = options.fetch(:if, ->(*args) { true })
+        if_proc = options.fetch(:if, ->(*_args) { true })
 
         ROM::Relation.on(:inherited) do |relation|
           environment.register_relation(relation) if if_proc.call(relation)

@@ -70,7 +70,6 @@ describe 'Mapper definition DSL' do
     it 'applies settings from root' do
       setup.mappers do
         define(:lists) do
-
           prefix 'list'
 
           step do

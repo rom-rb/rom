@@ -11,5 +11,4 @@ describe ROM do
       expect(setup.gateways[:test]).to be(repo)
     end
   end
-
 end

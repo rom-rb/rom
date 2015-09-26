@@ -76,7 +76,7 @@ describe ROM::Setup do
       it 'skips inferring when it is turned off for the adapter' do
         setup = ROM.setup(:memory)
 
-        setup.configure { |config| config.gateways.default.infer_relations = false }
+        setup.configure do |config| config.gateways.default.infer_relations = false end
 
         repo = setup.default
 

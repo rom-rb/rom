@@ -33,7 +33,6 @@ module ROM
               [spec, spec]
             end
 
-
           command = registry[relation][name]
           tuple_path = Array[*path] << key
           input_proc = InputEvaluator.build(tuple_path, nodes)
