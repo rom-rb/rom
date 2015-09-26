@@ -172,4 +172,10 @@ describe ROM::Relation do
       expect(relation.to_a).to eql([jane, joe])
     end
   end
+
+  describe "#relation" do
+    it "returns a reference to itself" do
+      expect(relation.relation).to eql(relation)
+    end
+  end
 end
