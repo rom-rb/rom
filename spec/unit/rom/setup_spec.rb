@@ -183,6 +183,19 @@ describe ROM::Setup do
         expect { ROM.finalize }.to raise_error(StandardError)
         expect(ROM.boot).to be(nil)
       end
+
+      it 'raises an error when registering relations afterward' do
+        ROM.setup(:memory).finalize
+
+        # I am not sure what this message should say
+        error_message_pattern = /.*/
+
+        expect {
+          Class.new(ROM::Relation[:memory]) do
+            register_as :registered_after_finalize
+          end
+        }.to raise_error(ROM::EnvAlreadyFinalizedError, error_message_pattern)
+      end
     end
 
     context 'empty setup' do
