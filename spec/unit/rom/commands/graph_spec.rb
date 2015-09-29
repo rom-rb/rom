@@ -6,7 +6,7 @@ describe ROM::Commands::Graph do
       expect(command.call).to match_array([
         # parent users
         [
-          { name: 'Jane' },
+          { name: 'Jane' }
         ],
         [
           [
@@ -196,7 +196,7 @@ describe ROM::Commands::Graph do
             tags: [
               Test::Tag.new(name: 'red'),
               Test::Tag.new(name: 'green'),
-              Test::Tag.new(name: 'blue'),
+              Test::Tag.new(name: 'blue')
             ]
           )
         )

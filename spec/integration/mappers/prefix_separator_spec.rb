@@ -24,7 +24,6 @@ describe 'Mapper definition DSL' do
     it 'applies new separator to the attributes following it' do
       setup.mappers do
         define(:users) do
-
           prefix :user
           attribute :id
           attribute :name

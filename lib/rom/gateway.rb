@@ -74,7 +74,7 @@ module ROM
     #
     # @api private
     def self.class_from_symbol(type)
-      adapter = ROM.adapters.fetch(type) do
+      adapter = ROM.adapters.fetch(type) {
         begin
           require "rom/#{type}"
         rescue LoadError
@@ -82,7 +82,7 @@ module ROM
         end
 
         ROM.adapters.fetch(type)
-      end
+      }
 
       if adapter.const_defined?(:Gateway)
         adapter.const_get(:Gateway)

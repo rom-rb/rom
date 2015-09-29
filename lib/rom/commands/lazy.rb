@@ -30,10 +30,10 @@ module ROM
         size = args.size
 
         if size > 1 && last.is_a?(Array)
-          last.map.with_index do |item, index|
+          last.map.with_index { |item, index|
             input = evaluator.call(first, index)
             command.call(input, item)
-          end.reduce(:concat)
+          }.reduce(:concat)
         else
           input = evaluator.call(first)
           command.call(input, *args[1..size-1])

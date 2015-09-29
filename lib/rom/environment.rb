@@ -123,7 +123,7 @@ module ROM
       @boot = Setup.new(configured_gateways,
         gateway_map: gateways,
         default_adapter: default_adapter
-      )
+                       )
 
       config.each do |name, config_args|
         options = config_args.is_a?(Array) && config_args.last

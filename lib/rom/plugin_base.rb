@@ -24,7 +24,7 @@ module ROM
     # @param [Mixed] base
     #
     # @api private
-    def apply_to(base)
+    def apply_to(_base)
       raise NotImplementedError, "#{self.class}#apply_to not implemented"
     end
   end

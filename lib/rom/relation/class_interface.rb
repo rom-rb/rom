@@ -71,7 +71,7 @@ module ROM
           end
 
           # @api public
-          def self.exposed_relations(*args)
+          def self.exposed_relations(*_args)
             Deprecations.announce("#{self}.exposed_relations", 'this method has no effect anymore')
             Set.new
           end

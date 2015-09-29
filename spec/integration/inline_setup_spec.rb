@@ -22,9 +22,9 @@ RSpec.describe 'Inline setup' do
 
   context 'using global env' do
     it 'auto-registers components' do
-      rom = ROM.setup(:dummy) do
+      rom = ROM.setup(:dummy) {
         relation(:users)
-      end
+      }
 
       users = rom.relation(:users)
 
@@ -36,9 +36,9 @@ RSpec.describe 'Inline setup' do
     it 'auto-registers components' do
       env = ROM::Environment.new
 
-      rom = env.setup(:dummy) do
+      rom = env.setup(:dummy) {
         relation(:users)
-      end
+      }
 
       users = rom.relation(:users)
 
@@ -50,11 +50,11 @@ RSpec.describe 'Inline setup' do
     it 'registers under provided name and uses custom dataset' do
       env = ROM::Environment.new
 
-      rom = env.setup(:dummy) do
+      rom = env.setup(:dummy) {
         relation(:super_users) do
           dataset :users
         end
-      end
+      }
 
       users = rom.relation(:super_users)
 

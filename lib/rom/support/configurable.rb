@@ -23,19 +23,19 @@ module ROM
 
       # @api private
       def freeze
-        settings.each_value { |value| value.freeze }
+        settings.each_value(&:freeze)
         super
       end
 
       # @api private
-      def respond_to_missing?(name, include_private = false)
+      def respond_to_missing?(_name, _include_private = false)
         true
       end
 
       private
 
       # @api private
-      def method_missing(meth, *args, &block)
+      def method_missing(meth, *args, &_block)
         return settings.fetch(meth, nil) if frozen?
 
         name = meth.to_s
@@ -50,7 +50,7 @@ module ROM
 
       # @api private
       def writer?(name)
-        ! WRITER_REGEXP.match(name).nil?
+        !WRITER_REGEXP.match(name).nil?
       end
     end
 

@@ -18,7 +18,7 @@ RSpec.describe ROM::Relation::Curried do
   end
 
   describe '#call' do
-    let(:relation) { users.by_name.('Jane') }
+    let(:relation) { users.by_name.call('Jane') }
 
     it 'materializes a relation' do
       expect(relation).to match_array([

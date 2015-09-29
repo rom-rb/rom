@@ -121,7 +121,7 @@ describe 'Building up a command graph for nested input' do
     options = [
       { user: :users }, [
         :create, [
-          [:tasks, [:create, [:tags, [:create]]]],
+          [:tasks, [:create, [:tags, [:create]]]]
         ]
       ]
     ]
@@ -195,7 +195,7 @@ describe 'Building up a command graph for nested input' do
     options = [
       { user: :users }, [
         :create, [
-          [:tasks, [:create, [:tags, [:create]]]],
+          [:tasks, [:create, [:tags, [:create]]]]
         ]
       ]
     ]

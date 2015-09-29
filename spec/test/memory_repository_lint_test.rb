@@ -21,7 +21,7 @@ class MemoryDatasetLintTest < Minitest::Test
   include ROM::Lint::TestEnumerableDataset
 
   def setup
-    @data  = [{ name: 'Jane', age: 24 }, { name: 'Joe', age: 25 }]
+    @data = [{ name: 'Jane', age: 24 }, { name: 'Joe', age: 25 }]
     @dataset = ROM::Memory::Dataset.new(@data)
   end
 end

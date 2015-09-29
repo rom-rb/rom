@@ -38,7 +38,7 @@ describe 'Commands / Delete' do
     expect(result).to match_array([{ name: 'Joe', email: 'joe@doe.org' }])
 
     expect(rom.relation(:users)).to match_array([
-      { name: 'Jane', email: 'jane@doe.org' },
+      { name: 'Jane', email: 'jane@doe.org' }
     ])
   end
 
