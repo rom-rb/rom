@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 gemspec
 
 group :test do
-  gem 'anima'
+  gem 'anima', '~> 0.2.0'
   gem 'virtus'
   gem 'inflecto', '~> 0.0', '>= 0.0.2'
 
@@ -13,7 +13,7 @@ group :test do
 end
 
 group :benchmarks do
-  gem 'benchmark-ips', '~> 2.2.0'
+  gem 'benchmark-ips', '~> 2.2'
 end
 
 group :tools do
@@ -26,7 +26,7 @@ group :tools do
   gem 'byebug'
 
   platform :mri do
-    gem 'mutant', '>= 0.8.0', github: 'mbj/mutant', branch: 'master'
+    gem 'mutant', '~> 0.8.0'
     gem 'mutant-rspec'
   end
 end
