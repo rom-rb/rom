@@ -87,4 +87,32 @@ describe ROM::Gateway do
       expect(gateway.disconnect).to be(nil)
     end
   end
+
+  describe '.adapter' do
+    let(:gateway_class) { Class.new(ROM::Gateway) }
+
+    it 'gets/sets the adapter' do
+      expect { gateway_class.adapter :custom }
+        .to change { gateway_class.adapter }
+        .from(nil)
+        .to(:custom)
+    end
+  end
+
+  describe "#adapter" do
+    before { Test::CustomGateway = Class.new(ROM::Gateway) }
+
+    let(:gateway) { Test::CustomGateway.new }
+
+    it 'returns class adapter' do
+      Test::CustomGateway.adapter :custom
+      expect(gateway.adapter).to eql :custom
+    end
+
+    it 'requires the adapter to be defined' do
+      expect { gateway.adapter }.to raise_error(
+        ROM::MissingAdapterIdentifierError, /Test::CustomGateway/
+      )
+    end
+  end # describe #adapter
 end
