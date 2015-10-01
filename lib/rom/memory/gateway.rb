@@ -13,6 +13,8 @@ module ROM
     #
     # @api public
     class Gateway < ROM::Gateway
+      adapter :memory
+
       # @return [Object] default logger
       #
       # @api public
