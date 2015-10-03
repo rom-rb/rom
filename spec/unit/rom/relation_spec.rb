@@ -173,18 +173,13 @@ describe ROM::Relation do
     end
   end
 
-  describe "#curried?" do
-    it "returns false" do
-      expect(relation.curried?).to be(false)
-    end
-  end
-
   describe "#with" do
-    it "delegates to __new__, sending its dataset along the given options" do
-      opts = { :key => "value" }
-      allow(relation).to receive(:__new__).with(dataset, opts)
+    it "returns a new instance with the original dataset and given custom options" do
+      custom_opts = { mappers: "Custom Mapper Registry" }
+      new_relation = relation.with(custom_opts)
 
-      relation.with(opts)
+      expect(new_relation.dataset).to be(relation.dataset)
+      expect(new_relation.options).to include(custom_opts)
     end
   end
 end
