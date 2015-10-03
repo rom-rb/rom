@@ -1,6 +1,9 @@
 require 'spec_helper'
 
 describe ROM::Gateway do
+
+  subject(:gateway) { Class.new(ROM::Gateway).new }
+
   describe '.setup' do
     it 'sets up a gateway based on a type' do
       gateway_class = Class.new(ROM::Gateway) do
@@ -82,9 +85,33 @@ describe ROM::Gateway do
 
   describe '#disconnect' do
     it 'does nothing' do
-      gateway_class = Class.new(ROM::Gateway)
-      gateway = gateway_class.new
       expect(gateway.disconnect).to be(nil)
+    end
+  end
+
+  describe '#logger' do
+    it 'does nothing' do
+      expect(gateway.logger).to be(nil)
+    end
+  end
+
+  describe '#use_logger' do
+    it 'does nothing' do
+      expect(gateway.use_logger).to be(nil)
+    end
+
+    it 'accepts parameters' do
+      params = [5, "mutations", "are", "nice"]
+
+      expect { gateway.use_logger(params) }.to_not raise_error
+    end
+  end
+
+  describe '#extend_command_class' do
+    it 'returns the class sent as 1st parameter' do
+      klass = Class.new.freeze
+
+      expect(gateway.extend_command_class(klass, "foo")).to eq(klass)
     end
   end
 
@@ -115,4 +142,5 @@ describe ROM::Gateway do
       )
     end
   end # describe #adapter
+
 end

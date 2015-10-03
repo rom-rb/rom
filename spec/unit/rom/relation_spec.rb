@@ -190,4 +190,14 @@ describe ROM::Relation do
       }.to output(/#{warning_message}/).to_stderr
     end
   end
+
+  describe "#with" do
+    it "returns a new instance with the original dataset and given custom options" do
+      custom_opts = { mappers: "Custom Mapper Registry" }
+      new_relation = relation.with(custom_opts)
+
+      expect(new_relation.dataset).to be(relation.dataset)
+      expect(new_relation.options).to include(custom_opts)
+    end
+  end
 end
