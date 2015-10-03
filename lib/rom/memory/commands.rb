@@ -14,12 +14,12 @@ module ROM
 
         # @see ROM::Commands::Create#execute
         def execute(tuples)
-          Array([tuples]).flatten.map do |tuple|
+          Array([tuples]).flatten.map { |tuple|
             attributes = input[tuple]
             validator.call(attributes)
             relation.insert(attributes.to_h)
             attributes
-          end.to_a
+          }.to_a
         end
       end
 

@@ -50,36 +50,34 @@ module ROM
       #
       # @api public
       def call(*args)
-        begin
-          left = root.call(*args)
+        left = root.call(*args)
 
-          right = nodes.map do |node|
-            begin
-              response =
-                if node.lazy?
-                  node.call(args.first, left)
-                else
-                  node.call(left)
-                end
-            rescue => err
-              raise CommandFailure.new(node, err)
-            end
-
-            if node.one? && !node.graph?
-              [response]
-            else
-              response
-            end
+        right = nodes.map { |node|
+          begin
+            response =
+              if node.lazy?
+                node.call(args.first, left)
+              else
+                node.call(left)
+              end
+          rescue => err
+            raise CommandFailure.new(node, err)
           end
 
-          if one?
-            [[left], right]
+          if node.one? && !node.graph?
+            [response]
           else
-            [left, right]
+            response
           end
-        rescue => err
-          raise CommandFailure.new(root, err)
+        }
+
+        if one?
+          [[left], right]
+        else
+          [left, right]
         end
+      rescue => err
+        raise CommandFailure.new(root, err)
       end
 
       # Return a new graph with updated options

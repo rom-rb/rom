@@ -186,7 +186,7 @@ describe 'Reading relations' do
     rom = setup.finalize
 
     expect {
-      rom.relation(:users) { |users| users.not_here }
+      rom.relation(:users, &:not_here)
     }.to raise_error(NoMethodError, /not_here/)
 
     expect {

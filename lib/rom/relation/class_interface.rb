@@ -71,7 +71,7 @@ module ROM
           end
 
           # @api public
-          def self.exposed_relations(*args)
+          def self.exposed_relations(*_args)
             Deprecations.announce("#{self}.exposed_relations", 'this method has no effect anymore')
             Set.new
           end
@@ -147,7 +147,7 @@ module ROM
       # @api private
       def default_name
         return unless name
-        Inflector.underscore(name).gsub('/', '_').to_sym
+        Inflector.underscore(name).tr('/', '_').to_sym
       end
 
       # Build relation registry of specified descendant classes

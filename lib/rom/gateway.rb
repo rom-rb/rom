@@ -3,6 +3,10 @@ module ROM
   #
   # @api public
   class Gateway
+    extend ClassMacros
+
+    defines :adapter
+
     # Return connection object
     #
     # @return [Object] type varies depending on the gateway
@@ -74,7 +78,7 @@ module ROM
     #
     # @api private
     def self.class_from_symbol(type)
-      adapter = ROM.adapters.fetch(type) do
+      adapter = ROM.adapters.fetch(type) {
         begin
           require "rom/#{type}"
         rescue LoadError
@@ -82,13 +86,25 @@ module ROM
         end
 
         ROM.adapters.fetch(type)
-      end
+      }
 
       if adapter.const_defined?(:Gateway)
         adapter.const_get(:Gateway)
       else
         adapter.const_get(:Repository)
       end
+    end
+
+    # Returns the adapter, defined for the class
+    #
+    # @return [Symbol]
+    #
+    # @api public
+    def adapter
+      self.class.adapter || raise(
+        MissingAdapterIdentifierError,
+        "gateway class +#{self}+ is missing the adapter identifier"
+      )
     end
 
     # A generic interface for setting up a logger

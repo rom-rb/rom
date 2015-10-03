@@ -15,7 +15,7 @@ module ROM
       ClassBuilder.new(name: class_name, parent: self[adapter]).call do |klass|
         klass.gateway(options.fetch(:gateway) {
           if options.key?(:repository)
-          ROM::Deprecations.announce "The :repository key is", <<-MSG
+            ROM::Deprecations.announce "The :repository key is", <<-MSG
             Please use `gateway: :#{options.fetch(:repository)}` instead.
           MSG
             options.fetch(:repository)

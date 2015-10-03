@@ -47,7 +47,7 @@ describe ROM::Container do
     end
 
     it 'raises ArgumentError when unsupported arg was passed' do
-      expect { rom.command({ oops: 'sorry' }) }.to raise_error(ArgumentError)
+      expect { rom.command(oops: 'sorry') }.to raise_error(ArgumentError)
     end
   end
 

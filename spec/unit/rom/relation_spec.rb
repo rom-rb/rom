@@ -73,7 +73,7 @@ describe ROM::Relation do
         dataset :users
       end
 
-      class Test::DescendantUsers < Test::SuperUsers;end
+      class Test::DescendantUsers < Test::SuperUsers; end
 
       expect(Test::DescendantUsers.register_as).to eq(:test_descendant_users)
     end
@@ -170,6 +170,24 @@ describe ROM::Relation do
   describe "#to_a" do
     it "materializes relation to an array" do
       expect(relation.to_a).to eql([jane, joe])
+    end
+  end
+
+  describe "#relation" do
+    it "returns a reference to itself" do
+      expect(relation.relation).to eql(relation)
+    end
+
+    it "displays a deprecation warning" do
+      warnings = [
+        "#relation deprecated and will be removed in 1.0.0.",
+        "all relations are now lazy"
+      ]
+      warning_message = warnings.join("\n")
+
+      expect {
+        relation.relation
+      }.to output(/#{warning_message}/).to_stderr
     end
   end
 
