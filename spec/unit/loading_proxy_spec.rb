@@ -31,7 +31,7 @@ RSpec.describe 'loading proxy' do
     end
   end
 
-  describe '#map_with' do
+  describe '#map_with/#as' do
     before do
       setup.mappers do
         register :users, name_list: -> users { users.map(&:name) }
@@ -40,6 +40,15 @@ RSpec.describe 'loading proxy' do
 
     it 'sends the relation through multiple mappers' do
       expect(users.map_with(:name_list).to_a).to eql(%w(Jane Joe))
+    end
+
+    context 'setting custom model type' do
+      let(:user_type) { Class.new { include Anima.new(:id, :name) } }
+      let(:custom_users) { users.as(user_type) }
+
+      it 'instantiates custom model' do
+        expect(custom_users.where(name: 'Jane').one).to be_instance_of(user_type)
+      end
     end
   end
 

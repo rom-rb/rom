@@ -30,10 +30,11 @@ module ROM
       def visit_relation(*args)
         name, header, meta = args
 
-        options = [
-          visit_header(header[1], meta),
-          model: struct_builder[meta.fetch(:base_name), header[1].map { |a| a[1] }]
-        ]
+        model = meta.fetch(:model) do
+          struct_builder[meta.fetch(:base_name), header[1].map { |a| a[1] }]
+        end
+
+        options = [visit_header(header[1], meta), model: model]
 
         if meta[:combine_type]
           type = meta[:combine_type] == :many ? :array : :hash

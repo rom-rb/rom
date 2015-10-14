@@ -44,8 +44,12 @@ module ROM
       #
       # @api public
       def map_with(*names)
-        mappers = [mapper]+names.map { |name| relation.mappers[name] }
-        mappers.reduce(self) { |a, e| a >> e }
+        if names.size == 1 && names[0].is_a?(Class)
+          with(meta: meta.merge(model: names[0]))
+        else
+          mappers = [mapper]+names.map { |name| relation.mappers[name] }
+          mappers.reduce(self) { |a, e| a >> e }
+        end
       end
       alias_method :as, :map_with
 
