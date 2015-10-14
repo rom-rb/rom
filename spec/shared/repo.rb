@@ -13,6 +13,10 @@ RSpec.shared_context('repo') do
         users.all
       end
 
+      def tasks_for_users(users)
+        tasks.for_users(users)
+      end
+
       def task_with_user
         tasks.find(id: 2).combine_parents(one: users)
       end

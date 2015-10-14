@@ -159,9 +159,9 @@ module ROM
       #       and ROM::Lazy is gone
       #
       # @api private
-      def method_missing(meth, *args)
+      def method_missing(meth, *args, &block)
         if relation.respond_to?(meth)
-          result = relation.__send__(meth, *args)
+          result = relation.__send__(meth, *args, &block)
 
           if result.kind_of?(Relation::Materializable) && !result.is_a?(Relation::Loaded)
             __new__(result)
@@ -171,6 +171,11 @@ module ROM
         else
           super
         end
+      end
+
+      # @api private
+      def respond_to_missing?(meth, _include_private = false)
+        relation.respond_to?(meth) || super
       end
     end
   end
