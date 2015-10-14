@@ -10,7 +10,7 @@ module ROM
           klass.class_eval do
             extend ClassInterface
 
-            option :view
+            option :view, reader: true
 
             def self.attributes
               @__attributes__ ||= {}
@@ -26,7 +26,7 @@ module ROM
         # @return [Array<Symbol>]
         #
         # @api private
-        def attributes(view_name = options[:view])
+        def attributes(view_name = view)
           header = self.class.attributes
             .fetch(view_name, self.class.attributes.fetch(:base))
 
@@ -68,8 +68,15 @@ module ROM
 
             attributes[name] = names
 
-            define_method(name) do
-              instance_eval(&relation_block).with(view: name)
+            if relation_block.arity > 0
+              auto_curry_guard do
+                define_method(name, &relation_block)
+                auto_curry(name) { with(view: name) }
+              end
+            else
+              define_method(name) do
+                instance_exec(&relation_block).with(view: name)
+              end
             end
           end
         end
