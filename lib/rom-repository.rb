@@ -1,20 +1,12 @@
 require 'rom'
 
-require 'rom/plugins/relation/view'
-require 'rom/plugins/relation/key_inference'
-
-require 'rom/plugins/relation/sql/base_view'
-require 'rom/plugins/relation/sql/auto_combine'
-require 'rom/plugins/relation/sql/auto_wrap'
-
 require 'rom/repository/base'
 
-if defined?(ROM::SQL)
-  class ROM::SQL::Relation < ROM::Relation
-    use :key_inference
-    use :view
-    use :base_view
-    use :auto_combine
-    use :auto_wrap
+require 'rom/plugins/relation/key_inference'
+
+class ROM::Relation
+  def self.inherited(klass)
+    super
+    klass.use :key_inference if klass.respond_to?(:adapter)
   end
 end
