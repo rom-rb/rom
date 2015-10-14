@@ -8,6 +8,7 @@ gem 'rom-sql', github: 'rom-rb/rom-sql', branch: 'master'
 gem 'inflecto'
 
 group :test do
+  gem 'anima', '~> 0.2.0'
   gem 'rspec'
   gem 'byebug', platforms: :mri
   gem 'pg', platforms: [:mri, :rbx]
