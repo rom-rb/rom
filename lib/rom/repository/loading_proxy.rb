@@ -172,6 +172,11 @@ module ROM
           super
         end
       end
+
+      # @api private
+      def respond_to_missing?(meth, _include_private = false)
+        relation.respond_to?(meth) || super
+      end
     end
   end
 end
