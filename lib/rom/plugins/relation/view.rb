@@ -10,6 +10,8 @@ module ROM
           klass.class_eval do
             extend ClassInterface
 
+            option :view
+
             def self.attributes
               @__attributes__ ||= {}
             end
@@ -24,7 +26,7 @@ module ROM
         # @return [Array<Symbol>]
         #
         # @api private
-        def attributes(view_name = name)
+        def attributes(view_name = options[:view])
           header = self.class.attributes
             .fetch(view_name, self.class.attributes.fetch(:base))
 
@@ -66,7 +68,9 @@ module ROM
 
             attributes[name] = names
 
-            define_method(name, &relation_block)
+            define_method(name) do
+              instance_eval(&relation_block).with(view: name)
+            end
           end
         end
       end
