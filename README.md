@@ -109,18 +109,19 @@ puts user_repo.with_tasks.to_a.inspect
 # [#<ROM::Struct[User] id=1 name="Jane" tasks=[#<ROM::Struct[Task] id=2 user_id=1 title="Jane Task">]>, #<ROM::Struct[User] id=2 name="Joe" tasks=[#<ROM::Struct[Task] id=1 user_id=2 title="Joe Task">]>]
 ```
 
-### Decorating Structs
+### Using Custom Model Types
 
-Nothing is stopping you from decorating your structs using registered mappers and
-custom decorator models:
+To use a custom model type you simply use the standard `Relation#as` inteface
+but you can pass a constant:
 
 ``` ruby
-class UserStructMapper < ROM::Mapper
-  register_as :ui_presenter
-  model UI::UserPresenter
-end
+class UserRepository < ROM::Repository::Base
+  relations :users, :tasks
 
-user_repo.by_id(1).as(:ui_presenter)
+  def by_id(id)
+    users.by_id(id).as(User)
+  end
+end
 ```
 
 ## License
