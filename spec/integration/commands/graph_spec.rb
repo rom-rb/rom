@@ -5,8 +5,26 @@ describe 'Building up a command graph for nested input' do
   let(:setup) { ROM.setup(:memory) }
 
   before do
-    setup.relation :users
-    setup.relation :tasks
+    setup.relation :users do
+      def by_name(name)
+        restrict(name: name)
+      end
+    end
+
+    setup.relation :tasks do
+      def by_user_and_title(user, title)
+        by_user(user).by_title(title)
+      end
+
+      def by_user(user)
+        restrict(user: user)
+      end
+
+      def by_title(title)
+        restrict(title: title)
+      end
+    end
+
     setup.relation :books
     setup.relation :tags
 
@@ -145,6 +163,99 @@ describe 'Building up a command graph for nested input' do
       { name: 'blue', task: 'Task Two' }
     ])
   end
+
+
+  it 'updates graph elements cleanly' do
+    setup.commands(:tasks) do
+      define(:create) do
+        def execute(tuples, user)
+          super(tuples.map { |t| t.merge(user: user.fetch(:name)) })
+        end
+      end
+
+      define(:update) do
+        result :one
+
+        def execute(tuple, user)
+          super(tuple.merge(user: user.fetch(:name)))
+        end
+      end
+
+      define(:delete) do
+        register_as :complete
+        result :one
+      end
+    end
+
+    setup.commands(:users) do
+      define(:update) do
+        result :one
+      end
+    end
+
+    initial = {
+      user: {
+        name: 'Johnny',
+        email: 'johnny@doe.org',
+        tasks: [
+          { title: 'Change Name' },
+          { title: 'Finish that novel' }
+        ]
+      }
+    }
+
+    updated = {
+      user: {
+        name: 'Johnny',
+        email: 'johnathan@doe.org',
+        completed: [{ title: 'Change Name' }],
+        tasks: [{ title: 'Finish that novel', priority: 1 }]
+      }
+    }
+
+    create = rom.command([{ user: :users }, [:create, [:tasks, [:create]]]])
+
+    update = rom.command([
+      { user: :users },
+      [
+        { update: -> cmd, user { cmd.by_name(user[:name]) } },
+        [
+          [
+            { completed: :tasks },
+            [{ complete: -> cmd, user, task { cmd.by_user_and_title(user[:name], task[:title]) } }]
+          ],
+          [
+            :tasks,
+            [{ update: -> cmd, user, task { cmd.by_user_and_title(user[:name], task[:title]) } }]
+          ]
+        ]
+      ]
+    ])
+
+    create.call(initial)
+
+    rom.command(:tasks).create.call(
+      [{ title: 'Task One'}], { name: 'Jane' }
+    )
+
+    expect(rom.relation(:tasks)).to match_array([
+      { title: 'Change Name', user: 'Johnny' },
+      { title: 'Finish that novel', user: 'Johnny' },
+      { title: 'Task One', user: 'Jane' }
+    ])
+
+    update.call(updated)
+
+    expect(rom.relation(:users)).to match_array([
+      { name: 'Johnny', email: 'johnathan@doe.org' }
+    ])
+
+    expect(rom.relation(:tasks)).to match_array([
+      { title: 'Task One', user: 'Jane' },
+      { title: 'Finish that novel', priority: 1, user: 'Johnny' }
+    ])
+  end
+
 
   it 'works with auto-mapping' do
     setup.mappers do

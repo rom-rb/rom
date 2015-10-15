@@ -13,10 +13,24 @@ module ROM
       # @attr_reader [Proc] evaluator The proc that will evaluate the input
       attr_reader :evaluator
 
+      attr_reader :command_proc
+
       # @api private
-      def initialize(command, evaluator)
+      def self.[](command)
+        case command
+        when Commands::Create then Lazy::Create
+        when Commands::Update then Lazy::Update
+        when Commands::Delete then Lazy::Delete
+        else
+          self
+        end
+      end
+
+      # @api private
+      def initialize(command, evaluator, command_proc = nil)
         @command = command
         @evaluator = evaluator
+        @command_proc = command_proc || proc { |*| command }
       end
 
       # Evaluate command's input using the input proc and pass to command
@@ -25,21 +39,7 @@ module ROM
       #
       # @api public
       def call(*args)
-        first = args.first
-        last = args.last
-        size = args.size
-
-        if size > 1 && last.is_a?(Array)
-          last.map.with_index { |item, index|
-            input = evaluator.call(first, index)
-            command.call(input, item)
-          }.reduce(:concat)
-        else
-          input = evaluator.call(first)
-          command.call(input, *args[1..size-1])
-        end
-      rescue => err
-        raise CommandFailure.new(command, err)
+        raise NotImplementedError
       end
 
       # Compose a lazy command with another one
@@ -78,7 +78,7 @@ module ROM
           response = command.public_send(name, *args, &block)
 
           if response.instance_of?(command.class)
-            self.class.new(response, evaluator)
+            self.class.new(response, evaluator, command_proc)
           else
             response
           end
@@ -89,3 +89,7 @@ module ROM
     end
   end
 end
+
+require 'rom/commands/lazy/create'
+require 'rom/commands/lazy/update'
+require 'rom/commands/lazy/delete'

@@ -24,7 +24,7 @@ module ROM
 
         # @api private
         def build_command(registry, spec, other, path)
-          name, nodes = other
+          cmd_opts, nodes = other
 
           key, relation =
             if spec.is_a?(Hash)
@@ -33,11 +33,18 @@ module ROM
               [spec, spec]
             end
 
+          name, opts =
+            if cmd_opts.is_a?(Hash)
+              cmd_opts.to_a.first
+            else
+              [cmd_opts]
+            end
+
           command = registry[relation][name]
           tuple_path = Array[*path] << key
           input_proc = InputEvaluator.build(tuple_path, nodes)
 
-          command = command.with(input_proc)
+          command = command.with(input_proc, opts)
 
           if nodes
             if nodes.all? { |node| node.is_a?(Array) }
