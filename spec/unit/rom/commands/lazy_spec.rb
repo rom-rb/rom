@@ -74,7 +74,7 @@ describe ROM::Commands::Lazy do
 
   describe '#call' do
     context 'with a create command' do
-      subject(:command) { ROM::Commands::Lazy.new(create_user, evaluator) }
+      subject(:command) { ROM::Commands::Lazy[create_user].new(create_user, evaluator) }
 
       it 'evaluates the input and calls command' do
         command.call(input)
@@ -85,7 +85,7 @@ describe ROM::Commands::Lazy do
 
     context 'with a create command for many child tuples' do
       subject(:command) do
-        ROM::Commands::Lazy.new(create_tasks, evaluator)
+        ROM::Commands::Lazy[create_tasks].new(create_tasks, evaluator)
       end
 
       let(:evaluator) { -> input, index { input[:users][index][:tasks] } }
@@ -116,7 +116,7 @@ describe ROM::Commands::Lazy do
 
     context 'with an update command' do
       subject(:command) do
-        ROM::Commands::Lazy.new(
+        ROM::Commands::Lazy[update_user].new(
           update_user, evaluator, -> cmd, user { cmd.by_name(user[:name]) })
       end
 
@@ -134,7 +134,7 @@ describe ROM::Commands::Lazy do
 
     context 'with an update command for a child tuple' do
       subject(:command) do
-        ROM::Commands::Lazy.new(
+        ROM::Commands::Lazy[update_task].new(
           update_task,
           evaluator,
           -> cmd, user, task { cmd.by_user(user[:name]).by_title(task[:title]) }
@@ -164,7 +164,7 @@ describe ROM::Commands::Lazy do
 
     context 'with an update command for child tuples' do
       subject(:command) do
-        ROM::Commands::Lazy.new(
+        ROM::Commands::Lazy[update_task].new(
           update_task,
           evaluator,
           -> cmd, user, task { cmd.by_user(user[:name]).by_title(task[:title]) }
@@ -200,7 +200,7 @@ describe ROM::Commands::Lazy do
 
     context 'with an update command for many parents and their children' do
       subject(:command) do
-        ROM::Commands::Lazy.new(
+        ROM::Commands::Lazy[update_task].new(
           update_task,
           evaluator,
           -> cmd, user, task { cmd.by_user(user[:name]).by_title(task[:title]) }
@@ -247,7 +247,7 @@ describe ROM::Commands::Lazy do
 
     context 'with a delete command' do
       subject(:command) do
-        ROM::Commands::Lazy.new(
+        ROM::Commands::Lazy[delete_user].new(
           delete_user,
           evaluator,
           -> cmd, user { cmd.by_name(user[:name]) }
@@ -270,7 +270,7 @@ describe ROM::Commands::Lazy do
   end
 
   describe '#>>' do
-    subject(:command) { ROM::Commands::Lazy.new(create_user, evaluator) }
+    subject(:command) { ROM::Commands::Lazy[create_user].new(create_user, evaluator) }
 
     it 'composes with another command' do
       expect(command >> create_task).to be_instance_of(ROM::Commands::Composite)
@@ -278,7 +278,7 @@ describe ROM::Commands::Lazy do
   end
 
   describe '#combine' do
-    subject(:command) { ROM::Commands::Lazy.new(create_user, evaluator) }
+    subject(:command) { ROM::Commands::Lazy[create_user].new(create_user, evaluator) }
 
     it 'combines with another command' do
       expect(command.combine(create_task)).to be_instance_of(ROM::Commands::Graph)
@@ -286,7 +286,7 @@ describe ROM::Commands::Lazy do
   end
 
   describe '#method_missing' do
-    subject(:command) { ROM::Commands::Lazy.new(update_user, evaluator) }
+    subject(:command) { ROM::Commands::Lazy[update_user].new(update_user, evaluator) }
 
     it 'returns original response if it was not a command' do
       response = command.result

@@ -16,6 +16,17 @@ module ROM
       attr_reader :command_proc
 
       # @api private
+      def self.[](command)
+        case command
+        when Commands::Create then Lazy::Create
+        when Commands::Update then Lazy::Update
+        when Commands::Delete then Lazy::Delete
+        else
+          self
+        end
+      end
+
+      # @api private
       def initialize(command, evaluator, command_proc = nil)
         @command = command
         @evaluator = evaluator
@@ -28,46 +39,7 @@ module ROM
       #
       # @api public
       def call(*args)
-        first = args.first
-        last = args.last
-        size = args.size
-
-        if size > 1 && last.is_a?(Array)
-          last.map.with_index do |parent, index|
-            children = evaluator.call(first, index)
-
-            if command.is_a?(Create)
-              command_proc[command, parent, children].call(children, parent)
-            elsif command.is_a?(Update)
-              children.map do |child|
-                command_proc[command, parent, child].call(child, parent)
-              end
-            end
-          end.reduce(:concat)
-        else
-          input = evaluator.call(first)
-
-          if command.is_a?(Create)
-            command.call(input, *args[1..size-1])
-          elsif command.is_a?(Update)
-            if input.is_a?(Array)
-              input.map.with_index do |item, index|
-                command_proc[command, last, item].call(item, *args[1..size-1])
-              end
-            else
-              command_proc[command, *(size > 1 ? [last, input] : [input])]
-                .call(input, *args[1..size-1])
-            end
-          elsif command.is_a?(Delete)
-            if input.is_a?(Array)
-              input.map do |item|
-                command_proc[command, *(size > 1 ? [last, item] : [input])].call
-              end
-            else
-              command_proc[command, input].call
-            end
-          end
-        end
+        raise NotImplementedError
       end
 
       # Compose a lazy command with another one
@@ -117,3 +89,7 @@ module ROM
     end
   end
 end
+
+require 'rom/commands/lazy/create'
+require 'rom/commands/lazy/update'
+require 'rom/commands/lazy/delete'
