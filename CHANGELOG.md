@@ -5,6 +5,7 @@
 - Command graph now supports update and delete commands (cflipse + solnic)
 - `Gateway.adapter` setting and a corresponding `Gateway#adapter` reader. Both are
   necessary to access a migrator (nepalez)
+- `ROM::Commands::Result#{success?,failure?}` interface (Snuff)
 
 ### Changed
 
