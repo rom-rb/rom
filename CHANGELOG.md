@@ -6,6 +6,9 @@
 - `Gateway.adapter` setting and a corresponding `Gateway#adapter` reader. Both are
   necessary to access a migrator (nepalez)
 - `ROM::Commands::Result#{success?,failure?}` interface (Snuff)
+- Imported relation plugins from `rom-repository`:
+  - `view` for explicit relation view definitions
+  - `key_inference` for inferring `foreign_key` of a relation
 
 ### Changed
 
