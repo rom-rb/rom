@@ -2,6 +2,7 @@
 
 ### Added
 
+- Command graph now supports update and delete commands (cflipse + solnic)
 - `Gateway.adapter` setting and a corresponding `Gateway#adapter` reader. Both are
   necessary to access a migrator (nepalez)
 
@@ -9,6 +10,8 @@
 
 - [fixed #306] Inheriting from a misconfigured adapter relation will raise a
   meaningful error (solnic)
+
+[Compare v0.9.1...HEAD](https://github.com/rom-rb/rom/compare/v0.9.1...HEAD)
 
 ## v0.9.1 2015-08-21
 
