@@ -1,5 +1,6 @@
 require 'rom/relation/loaded'
 require 'rom/commands/graph'
+require 'rom/commands/graph/dsl'
 require 'rom/support/deprecations'
 
 module ROM
@@ -99,26 +100,31 @@ module ROM
     # @return [Command, Command::Graph]
     #
     # @api public
-    def command(options)
-      case options
-      when Symbol
-        name = options
-        if mappers.key?(name)
-          commands[name].with(mappers: mappers[name])
-        else
-          commands[name]
-        end
-      when Array
-        graph = Commands::Graph.build(commands, options)
-        name = graph.name
-
-        if mappers.key?(name)
-          graph.with(mappers: mappers[graph.name])
-        else
-          graph
-        end
+    def command(options = nil, &block)
+      if block
+        dsl = Commands::Graph::DSL.new(commands)
+        command(dsl.call(&block))
       else
-        raise ArgumentError, "#{self.class}#command accepts a symbol or an array"
+        case options
+        when Symbol
+          name = options
+          if mappers.key?(name)
+            commands[name].with(mappers: mappers[name])
+          else
+            commands[name]
+          end
+        when Array
+          graph = Commands::Graph.build(commands, options)
+          name = graph.name
+
+          if mappers.key?(name)
+            graph.with(mappers: mappers[graph.name])
+          else
+            graph
+          end
+        else
+          raise ArgumentError, "#{self.class}#command accepts a symbol or an array"
+        end
       end
     end
   end

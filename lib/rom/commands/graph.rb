@@ -8,6 +8,8 @@ module ROM
     #
     # @api private
     class Graph
+      include Equalizer.new(:root, :nodes)
+
       extend ClassInterface
 
       include Options
