@@ -60,4 +60,10 @@ RSpec.describe 'Command graph DSL' do
 
     expect(command).to eql(other)
   end
+
+  it 'raises when unknown command is accessed' do
+    expect {
+      rom.command { not_here(:users) }
+    }.to raise_error(ROM::Registry::ElementNotFoundError, /not_here/)
+  end
 end
