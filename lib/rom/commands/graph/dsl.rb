@@ -1,9 +1,10 @@
 module ROM
   module Commands
     class Graph
+      # Command graph builder DSL
+      #
+      # @api public
       class DSL
-        attr_reader :container
-
         class Node
           class Composite < Pipeline::Composite
             def to_ast
@@ -14,8 +15,19 @@ module ROM
             end
           end
 
-          attr_reader :name, :relation, :options, :cmd_block
+          # @attr_reader [Symbol] name of the key in the command input
+          attr_reader :name
 
+          # @attr_reader [Symbol] relation name that will handle input under specific key
+          attr_reader :relation
+
+          # @attr_reader [Hash] options passed to DSL method
+          attr_reader :options
+
+          # @attr_reader [Proc] command proc that will be set for a lazy command
+          attr_reader :cmd_block
+
+          # @api private
           def initialize(name, relation, options = {}, &cmd_block)
             @name = name
             @relation = relation
@@ -23,18 +35,38 @@ module ROM
             @cmd_block = cmd_block
           end
 
+          # Compose a pipeline for lazy commands
+          #
+          # @param [Node] other
+          #
+          # @return [Composite]
+          #
+          # @api public
           def >>(other)
             Node::Composite.new(self, other)
           end
 
+          # Return command graph ast node
+          #
+          # @return [Array]
+          #
+          # @api private
           def to_ast
             [from, identifier]
           end
 
+          private
+
+          # Create input name => relation name mapping for ast node
+          #
+          # @api private
           def from
             { options.fetch(:from, relation) => relation }
           end
 
+          # Create command identifier for ast node
+          #
+          # @api private
           def identifier
             if cmd_block
               [{ name => cmd_block }]
@@ -44,15 +76,19 @@ module ROM
           end
         end
 
-        def initialize(container)
-          @container = container
-        end
-
+        # Get command graph ast by evaluating provided block
+        #
+        # @return [Array]
+        #
+        # @api public
         def call(&block)
           node = instance_exec(&block)
           node.to_ast
         end
 
+        private
+
+        # @api private
         def method_missing(name, *args, &block)
           Node.new(name, *args, &block)
         end

@@ -102,7 +102,7 @@ module ROM
     # @api public
     def command(options = nil, &block)
       if block
-        dsl = Commands::Graph::DSL.new(commands)
+        dsl = Commands::Graph::DSL.new
         command(dsl.call(&block))
       else
         case options
