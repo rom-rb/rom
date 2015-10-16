@@ -14,12 +14,13 @@ module ROM
             end
           end
 
-          attr_reader :name, :relation, :options
+          attr_reader :name, :relation, :options, :cmd_block
 
-          def initialize(name, relation, options = {})
+          def initialize(name, relation, options = {}, &cmd_block)
             @name = name
             @relation = relation
             @options = options
+            @cmd_block = cmd_block
           end
 
           def >>(other)
@@ -27,11 +28,19 @@ module ROM
           end
 
           def to_ast
-            [from, [name]]
+            [from, identifier]
           end
 
           def from
             { options.fetch(:from, relation) => relation }
+          end
+
+          def identifier
+            if cmd_block
+              [{ name => cmd_block }]
+            else
+              [name]
+            end
           end
         end
 
@@ -45,7 +54,7 @@ module ROM
         end
 
         def method_missing(name, *args, &block)
-          Node.new(name, *args)
+          Node.new(name, *args, &block)
         end
       end
     end
