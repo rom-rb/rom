@@ -6,7 +6,7 @@ RSpec.describe 'Command graph builder' do
   it 'allows defining a simple create command graph' do
     command = rom.command.create(users: :user)
 
-    other = rom.command([{user: :users}, [:create]])
+    other = rom.command([{ user: :users }, [:create]])
 
     expect(command).to eql(other)
   end
@@ -16,22 +16,22 @@ RSpec.describe 'Command graph builder' do
       define(:create) { result :many }
     end
 
-    command = rom.command.create({users: :user}) do |user|
+    command = rom.command.create(users: :user) do |user|
       user.create(:books)
     end
 
-    other = rom.command([{user: :users}, [:create,
-        [[{books: :books}, [:create]]
-      ]]])
+    other = rom.command([{ user: :users }, [:create, [
+      [{ books: :books }, [:create]]
+    ]]])
 
     expect(command).to eql(other)
   end
-  
+
   it 'allows defining a create command graph with multiple levels of nesting' do
     setup.commands(:books) do
       define(:create) { result :many }
     end
-    
+
     setup.commands(:tags) do
       define(:create) { result :many }
     end
@@ -42,20 +42,20 @@ RSpec.describe 'Command graph builder' do
       end
     end
 
-    other = rom.command([{user: :users}, [:create, [
-        [{novels: :books}, [:create,
-          [[{tags: :tags}, [:create]]]
-        ]]
-      ]]])
+    other = rom.command([{ user: :users }, [:create, [
+      [{ novels: :books }, [:create, [
+        [{ tags: :tags }, [:create]]
+      ]]]
+    ]]])
 
     expect(command).to eql(other)
   end
-  
+
   it 'allows defining a create command graph with multiple nested commands' do
     setup.commands(:books) do
       define(:create) { result :many }
     end
-    
+
     setup.commands(:tags) do
       define(:create) { result :many }
     end
@@ -65,10 +65,10 @@ RSpec.describe 'Command graph builder' do
       user.create(tags: :tag)
     end
 
-    other = rom.command([{user: :users}, [:create, [
-        [{books: :books}, [:create]],
-        [{tag: :tags}, [:create]]
-      ]]])
+    other = rom.command([{ user: :users }, [:create, [
+      [{ books: :books }, [:create]],
+      [{ tag: :tags }, [:create]]
+    ]]])
 
     expect(command).to eql(other)
   end
@@ -81,7 +81,7 @@ RSpec.describe 'Command graph builder' do
     setup.commands(:books) do
       define(:create) { result :many }
     end
-    
+
     setup.commands(:tags) do
       define(:create) { result :many }
     end
@@ -96,34 +96,35 @@ RSpec.describe 'Command graph builder' do
       end
     end
 
-    other = rom.command([{user: :users}, [:create, [
-        [{tasks: :tasks}, [:create,
-          [[{tags: :tags}, [:create]]]
-        ]],
-        [{books: :books}, [:create,
-          [[{tags: :tags}, [:create]], [{tasks: :tasks}, [:create]]]
-        ]]
-      ]]])
+    other = rom.command([{ user: :users }, [:create, [
+      [{ tasks: :tasks }, [:create, [
+        [{ tags: :tags }, [:create]]
+      ]]],
+      [{ books: :books }, [:create, [
+        [{ tags: :tags }, [:create]],
+        [{ tasks: :tasks }, [:create]]
+      ]]]
+    ]]])
 
     expect(command).to eql(other)
   end
-  
+
   it 'allows defining a create command graph using the each sugar' do
     setup.commands(:books) do
       define(:create) { result :many }
     end
-    
+
     command = rom.command.create(users: :user) do |user|
       user.create(books: :novels).each do |novel|
         novel.create(:tags)
       end
     end
 
-    other = rom.command([{user: :users}, [:create, [
-        [{novels: :books}, [:create, [
-          [{tags: :tags}, [:create]]
-        ]]]
-      ]]])
+    other = rom.command([{ user: :users }, [:create, [
+      [{ novels: :books }, [:create, [
+        [{ tags: :tags }, [:create]]
+      ]]]
+    ]]])
 
     expect(command).to eql(other)
   end

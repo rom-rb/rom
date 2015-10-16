@@ -11,7 +11,7 @@ module ROM
           Command = Struct.new(:name, :relation, :key)
 
           # @api private
-          def initialize command
+          def initialize(command)
             @command = command
             @nodes = []
           end
@@ -23,26 +23,24 @@ module ROM
           # @api private
           def to_ast
             command = [@command.name]
-            key_relation_map = {@command.key => @command.relation}
+            key_relation_map = { @command.key => @command.relation }
 
-            unless @nodes.empty?
-              command << @nodes.map(&:to_ast)
-            end
-    
+            command << @nodes.map(&:to_ast) unless @nodes.empty?
+
             [key_relation_map, command]
           end
-          
+
           # Tiny bit of syncactic sugar
           #
           # @api public
-          def each &block
+          def each(&block)
             block.call(self)
           end
-          
+
           # Any missing method called on this is treated as a ROM command
           #
           # @api private
-          def method_missing name, relation, &block
+          def method_missing(name, relation, &block)
             if relation.is_a? Hash
               relation, key = relation.to_a.first
             else
@@ -52,34 +50,38 @@ module ROM
             node = Node.new(Command.new(name, relation, key))
             block.call(node) if block
             @nodes << node
-    
+
             node
           end
         end
-        
+
         # @api private
         class RootNode < Node
           def initialize
             @nodes = []
           end
-  
+
           def to_ast
-            @nodes.first.to_ast rescue []
+            if @nodes.size > 0
+              @nodes.first.to_ast
+            else
+              []
+            end
           end
         end
-        
+
         # @api public
-        def initialize &block
+        def initialize(&block)
           @callback = block
         end
-        
+
         # @api public
         def to_ast
           @node ? @node.to_ast : []
         end
-        
+
         # @api private
-        def method_missing name, *attrs, &block
+        def method_missing(name, *attrs, &block)
           @node = RootNode.new
           @node.send(name, *attrs, &block)
 

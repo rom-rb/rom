@@ -100,7 +100,7 @@ module ROM
     # @return [Command, Command::Graph]
     #
     # @api public
-    def command(options = nil, &block)
+    def command(options = nil)
       case options
       when Symbol
         name = options
