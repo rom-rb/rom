@@ -6,12 +6,48 @@ module ROM
       # @api public
       class DSL
         class Node
+          # Two-command pipe
+          #
+          # @api private
           class Composite < Pipeline::Composite
             def to_ast
               l_ast = left.to_ast
               r_ast = right.to_ast
               l_ast[1] << r_ast
               l_ast
+            end
+
+            # Create a union of this and other node
+            #
+            # @return [Union]
+            #
+            # @api public
+            def +(other)
+              Union.new(self, other)
+            end
+          end
+
+          # A union of two command nodes
+          class Union
+            # @attr_reader [Node,Composite]
+            attr_reader :left
+
+            # @attr_reader [Node,Composite]
+            attr_reader :right
+
+            # @api private
+            def initialize(left, right)
+              @left = left
+              @right = right
+            end
+
+            # Return command ast from this union node
+            #
+            # @return [Array]
+            #
+            # @api private
+            def to_ast
+              [left.to_ast, right.to_ast]
             end
           end
 
@@ -43,7 +79,12 @@ module ROM
           #
           # @api public
           def >>(other)
-            Node::Composite.new(self, other)
+            Composite.new(self, other)
+          end
+
+          # @api public
+          def +(other)
+            Union.new(self, other)
           end
 
           # Return command graph ast node

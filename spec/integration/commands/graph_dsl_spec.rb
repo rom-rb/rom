@@ -3,9 +3,23 @@ require 'spec_helper'
 RSpec.describe 'Command graph DSL' do
   include_context 'command graph'
 
-  it 'allows defining a create command graph' do
+  it 'allows defining a simple create command graph' do
+    command = rom.command do
+      create(:users, from: :user)
+    end
+
+    other = rom.command([{ user: :users }, [:create]])
+
+    expect(command).to eql(other)
+  end
+
+  it 'allows defining a create command graph with piping' do
     setup.commands(:tasks) do
       define(:create) { result :one }
+    end
+
+    setup.commands(:books) do
+      define(:create) { result :many }
     end
 
     command = rom.command do
@@ -14,8 +28,60 @@ RSpec.describe 'Command graph DSL' do
 
     other = rom.command([
       { user: :users }, [
+        :create, [{ task: :tasks }, [:create, [:tags, [:create]]]],
+      ]
+    ])
+
+    expect(command).to eql(other)
+  end
+
+  it 'allows defining a create command graph with piping and union' do
+    setup.commands(:tasks) do
+      define(:create) { result :one }
+    end
+
+    setup.commands(:books) do
+      define(:create) { result :many }
+    end
+
+    command = rom.command do
+      create(:users, from: :user) >> (create(:tasks) + create(:books))
+    end
+
+    other = rom.command([
+      { user: :users }, [
         :create, [
-          { task: :tasks }, [:create, [:tags, [:create]]]
+          [:tasks, [:create]],
+          [:books, [:create]]
+        ]
+      ]
+    ])
+
+    expect(command).to eql(other)
+  end
+
+  it 'allows defining a create command graph with piping and multi-children union' do
+    setup.commands(:tasks) do
+      define(:create) { result :one }
+    end
+
+    setup.commands(:books) do
+      define(:create) { result :many }
+    end
+
+    setup.commands(:tags) do
+      define(:create) { result :many }
+    end
+
+    command = rom.command do
+      create(:users, from: :user) >> ((create(:tasks) >> create(:tags)) + create(:books))
+    end
+
+    other = rom.command([
+      { user: :users }, [
+        :create, [
+          [:tasks, [:create, [:tags, [:create]]]],
+          [:books, [:create]]
         ]
       ]
     ])
