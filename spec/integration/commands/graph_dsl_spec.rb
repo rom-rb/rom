@@ -89,6 +89,36 @@ RSpec.describe 'Command graph DSL' do
     expect(command).to eql(other)
   end
 
+  it 'allows defining a create command graph with piping and multi-union' do
+    setup.commands(:tasks) do
+      define(:create) { result :one }
+    end
+
+    setup.commands(:books) do
+      define(:create) { result :many }
+    end
+
+    setup.commands(:tags) do
+      define(:create) { result :many }
+    end
+
+    command = rom.command do
+      create(:users, from: :user) >> (create(:tasks) + create(:tags) + create(:books))
+    end
+
+    other = rom.command([
+      { user: :users }, [
+        :create, [
+          [:tasks, [:create]],
+          [:tags, [:create]],
+          [:books, [:create]]
+        ]
+      ]
+    ])
+
+    expect(command).to eql(other)
+  end
+
   it 'allows defining a create command graph with command procs' do
     setup.commands(:users) do
       define(:update) { result :one }

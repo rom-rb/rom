@@ -47,7 +47,16 @@ module ROM
             #
             # @api private
             def to_ast
-              [left.to_ast, right.to_ast]
+              if left.is_a?(self.class)
+                left.to_ast.concat([right.to_ast])
+              else
+                [left.to_ast, right.to_ast]
+              end
+            end
+
+            # @api public
+            def +(other)
+              self.class.new(self, other)
             end
           end
 
