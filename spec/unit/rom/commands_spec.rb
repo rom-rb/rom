@@ -179,13 +179,19 @@ describe 'Commands' do
     end
   end
 
-  describe 'access to exposed relations' do
-    it 'exposes relation' do
-      command = ROM::Commands::Update[:memory].build(users)
+  describe '#method_missing' do
+    let(:command) { rom.command(:users)[:update] }
 
-      users.insert(id: 1, name: 'Jane')
+    before do
+      setup.commands(:users) { define(:update) { result :one } }
+    end
 
+    it 'forwards known relation view methods' do
       expect(command.by_id(1).relation).to eql(users.by_id(1))
+    end
+
+    it 'raises no-method error when a non-view relation method was sent' do
+      expect { command.as(:foo) }.to raise_error(NoMethodError, /as/)
     end
   end
 end

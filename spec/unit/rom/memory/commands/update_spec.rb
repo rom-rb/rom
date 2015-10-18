@@ -5,7 +5,7 @@ require 'rom/memory'
 describe ROM::Memory::Commands::Update do
   include_context 'users and tasks'
 
-  subject(:command) { ROM::Memory::Commands::Update.build(users) }
+  subject(:command) { rom.command(:users)[:update] }
 
   let(:users) { rom.relations[:users] }
 
@@ -15,6 +15,8 @@ describe ROM::Memory::Commands::Update do
         restrict(id: id)
       end
     end
+
+    setup.commands(:users) { define(:update) }
   end
 
   it_behaves_like 'a command'

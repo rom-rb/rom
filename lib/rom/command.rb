@@ -103,8 +103,31 @@ module ROM
         gateway = gateways[relation.class.gateway]
         gateway.extend_command_class(klass, relation.dataset)
 
+        klass.send(:include, relation_methods_mod(relation.class))
+
         (h[rel_name] ||= {})[name] = klass.build(relation)
       end
+    end
+
+    # @api private
+    def self.relation_methods_mod(relation_class)
+      mod = Module.new
+
+      relation_class.view_methods.each do |meth|
+        mod.module_eval <<-RUBY
+          def #{meth}(*args)
+            response = relation.public_send(:#{meth}, *args)
+
+            if response.is_a?(relation.class)
+              new(response)
+            else
+              response
+            end
+          end
+        RUBY
+      end
+
+      mod
     end
 
     # Return default name of the command class based on its name

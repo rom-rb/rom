@@ -5,7 +5,7 @@ require 'rom/memory'
 describe ROM::Memory::Commands::Delete do
   include_context 'users and tasks'
 
-  subject(:command) { ROM::Memory::Commands::Delete.build(users) }
+  subject(:command) { rom.command(:users)[:delete] }
 
   let(:users) { rom.relations[:users] }
 
@@ -15,6 +15,8 @@ describe ROM::Memory::Commands::Delete do
         restrict(id: id)
       end
     end
+
+    setup.commands(:users) { define(:delete) }
   end
 
   it_behaves_like 'a command'

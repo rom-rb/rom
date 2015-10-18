@@ -218,6 +218,14 @@ module ROM
         Curried
       end
 
+      # @api private
+      def view_methods
+        ancestor_methods = ancestors.reject { |klass| klass == self }
+          .map(&:instance_methods).flatten
+
+        instance_methods - ancestor_methods
+      end
+
       # Hook to finalize a relation after its instance was created
       #
       # @api private

@@ -154,30 +154,8 @@ module ROM
       end
 
       # @api private
-      def respond_to_missing?(name, _include_private = false)
-        relation.respond_to?(name) || super
-      end
-
-      # @api private
       def new(new_relation)
         self.class.build(new_relation, options.merge(source: relation))
-      end
-
-      private
-
-      # @api private
-      def method_missing(name, *args, &block)
-        if relation.respond_to?(name)
-          response = relation.public_send(name, *args, &block)
-
-          if response.instance_of?(relation.class)
-            new(response)
-          else
-            response
-          end
-        else
-          super
-        end
       end
     end
   end

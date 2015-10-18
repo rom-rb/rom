@@ -5,7 +5,7 @@ require 'rom/memory'
 describe ROM::Memory::Commands::Create do
   include_context 'users and tasks'
 
-  subject(:command) { ROM::Memory::Commands::Create.build(users) }
+  subject(:command) { rom.command(:users)[:create] }
 
   let(:users) { rom.relations[:users] }
 
@@ -14,6 +14,10 @@ describe ROM::Memory::Commands::Create do
       def by_id(id)
         restrict(id: id)
       end
+    end
+
+    setup.commands(:users) do
+      define(:create)
     end
   end
 
