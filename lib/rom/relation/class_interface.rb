@@ -31,7 +31,7 @@ module ROM
         klass.class_eval do
           use :registry_reader
 
-          defines :gateway, :dataset, :register_as
+          defines :gateway, :dataset, :dataset_proc, :register_as
 
           deprecate_class_method :repository, :gateway
           deprecate :repository, :gateway
@@ -48,6 +48,29 @@ module ROM
           #
           # @api public
           attr_reader :name
+
+          # Set dataset name
+          #
+          # If a block is passed it will be evaluated in the context of the dataset
+          # to define the default dataset which will be injected into a relation
+          # when setting up relation registry
+          #
+          # @example
+          #   class Relations::Users < ROM::Relation[:memory]
+          #     dataset :users
+          #   end
+          #
+          #   class Users < ROM::Relation[:memory]
+          #     dataset { sort_by(:id) }
+          #   end
+          #
+          # @param [Symbol] value The name of the dataset
+          #
+          # @api public
+          def self.dataset(value = Undefined, &block)
+            dataset_proc(block) if block
+            super
+          end
 
           # Set or get name under which a relation will be registered
           #
@@ -167,7 +190,8 @@ module ROM
           # TODO: raise a meaningful error here and add spec covering the case
           #       where klass' gateway points to non-existant repo
           gateway = gateways.fetch(klass.gateway)
-          dataset = gateway.dataset(klass.dataset)
+          ds_proc = klass.dataset_proc || -> { self }
+          dataset = gateway.dataset(klass.dataset).instance_exec(&ds_proc)
 
           relation = klass.new(dataset, __registry__: registry)
 

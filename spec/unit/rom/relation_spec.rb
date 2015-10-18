@@ -48,6 +48,14 @@ describe ROM::Relation do
     end
   end
 
+  describe ".dataset" do
+    it 'allows setting dataset name' do
+      rel_class = Class.new(ROM::Relation[:memory]) { dataset :users }
+
+      expect(rel_class.dataset).to be(:users)
+    end
+  end
+
   describe ".register_as" do
     it "defaults to dataset with a generated class" do
       rel = Class.new(ROM::Relation[:memory]) { dataset :users }
