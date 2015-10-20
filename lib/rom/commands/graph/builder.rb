@@ -51,8 +51,8 @@ module ROM
           # Any missing method called on this is treated as a ROM command
           #
           # @api private
-          def method_missing(name, relation, restriction = nil, &block)
-            command(name, relation, restriction, &block)
+          def method_missing(*args, &block)
+            command(*args, &block)
           end
 
           # @api private          
@@ -107,7 +107,7 @@ module ROM
           
           def method_missing(*args, &block)
             args << self
-            @parent_node.method_missing(*args, &block)
+            @parent_node.command(*args, &block)
           end
         end
 
@@ -126,7 +126,7 @@ module ROM
             end
           end
           
-          def method_missing *args, &block
+          def command *args, &block
             super
             @container.command(to_ast)
           end
