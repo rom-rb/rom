@@ -8,7 +8,10 @@ module ROM
         # @api private
         class Node
           # @api private
-          Command = Struct.new(:name, :relation, :key)
+          Restriction = Struct.new(:relation, :proc)
+          
+          # @api private
+          Command = Struct.new(:name, :relation, :key, :proc)
 
           # @api private
           def initialize(command)
@@ -22,7 +25,12 @@ module ROM
           #
           # @api private
           def to_ast
-            command = [@command.name]
+            if proc = @command.proc
+              command = [@command.name => proc]
+            else
+              command = [@command.name]
+            end
+            
             key_relation_map = { @command.key => @command.relation }
 
             command << @nodes.map(&:to_ast) unless @nodes.empty?
@@ -41,17 +49,30 @@ module ROM
           #
           # @api private
           def method_missing(name, relation, &block)
-            if relation.is_a? Hash
-              relation, key = relation.to_a.first
-            else
-              relation, key = relation, relation
+            proc = nil
+            
+            if relation.is_a?(Hash)
+              key, relation = relation.to_a.first
             end
-
-            node = Node.new(Command.new(name, relation, key))
+            
+            if relation.respond_to?(:relation)
+              proc = relation.proc
+              relation = relation.relation
+            end
+            
+            if key.nil?
+              key = relation
+            end
+            
+            node = Node.new(Command.new(name, relation, key, proc))
             block.call(node) if block
             @nodes << node
 
             node
+          end
+          
+          def restrict(name, &block)
+            Restriction.new(name, block)
           end
         end
 
@@ -90,6 +111,10 @@ module ROM
           else
             self
           end
+        end
+        
+        def restrict(name, &block)
+          Node::Restriction.new(name, block)
         end
       end
     end
