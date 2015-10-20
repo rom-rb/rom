@@ -119,9 +119,7 @@ module ROM
           graph
         end
       when nil
-        Commands::Graph::Builder.new do |builder|
-          command(builder.to_ast)
-        end
+        Commands::Graph::Builder.new(self)
       else
         raise ArgumentError, "#{self.class}#command accepts a symbol or an array"
       end

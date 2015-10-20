@@ -167,6 +167,43 @@ RSpec.describe 'Command graph builder' do
 
     expect(command).to eql(other)
   end
+  
+  it 'allows chaining a command to a restriction' do
+    setup.commands(:users) do
+      define(:update) { result :one }
+    end
+
+    setup.commands(:tasks) do
+      define(:update) { result :many }
+    end
+
+    users_proc = -> users, user do
+      users.by_name(user[:name])
+    end
+
+    tasks_proc = -> tasks, user, task do
+      tasks.by_user_and_title(user[:name], task[:title])
+    end
+
+    command = rom.command.restrict(:users, &users_proc).update(from: :user) do |user|
+      user.restrict(:tasks, &tasks_proc).update
+    end
+    
+    other = rom.command([
+      { user: :users },
+      [
+        { update: users_proc },
+        [
+          [
+            :tasks,
+            [{ update: tasks_proc }]
+          ]
+        ]
+      ]
+    ])
+
+    expect(command).to eql(other)
+  end
 
   it 'raises when unknown command is accessed' do
     expect {

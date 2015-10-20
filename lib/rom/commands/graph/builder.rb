@@ -6,9 +6,12 @@ module ROM
       # @api public
       class Builder
         # @api private
+        DoubleRestrictionError = Class.new(StandardError) { def message; 'Attempting to call `#restrict` on the result of a previous `#restrict` call'; end }
+
+        # @api private
         class Node
           # @api private
-          Restriction = Struct.new(:relation, :proc)
+          Restriction = Struct.new(:parent_node, :relation, :proc)
           
           # @api private
           Command = Struct.new(:name, :relation, :key, :proc)
@@ -48,16 +51,27 @@ module ROM
           # Any missing method called on this is treated as a ROM command
           #
           # @api private
-          def method_missing(name, relation, &block)
+          def method_missing(name, relation, restriction = nil, &block)
+            command(name, relation, restriction, &block)
+          end
+
+          # @api private          
+          def command(name, relation, restriction = nil, &block)
             proc = nil
+
+            if restriction
+              key = relation.is_a?(Hash) ? relation[:from] : nil
+              relation = restriction.relation
+              proc = restriction.proc
+            else            
+              if relation.is_a?(Hash)
+                key, relation = relation.to_a.first
+              end
             
-            if relation.is_a?(Hash)
-              key, relation = relation.to_a.first
-            end
-            
-            if relation.respond_to?(:relation)
-              proc = relation.proc
-              relation = relation.relation
+              if relation.respond_to?(:relation)
+                proc = relation.proc
+                relation = relation.relation
+              end
             end
             
             if key.nil?
@@ -71,14 +85,36 @@ module ROM
             node
           end
           
+          # @api public
           def restrict(name, &block)
-            Restriction.new(name, block)
+            RestrictionNode.new(self, name, block)
+          end
+        end
+        
+        # @api private
+        class RestrictionNode
+          attr_reader :relation, :proc
+
+          def initialize(parent_node, relation, proc)
+            @parent_node = parent_node
+            @relation = relation
+            @proc = proc
+          end
+          
+          def restrict(name, &block)
+            raise DoubleRestrictionError
+          end
+          
+          def method_missing(*args, &block)
+            args << self
+            @parent_node.method_missing(*args, &block)
           end
         end
 
         # @api private
         class RootNode < Node
-          def initialize
+          def initialize(container)
+            @container = container
             @nodes = []
           end
 
@@ -89,32 +125,25 @@ module ROM
               []
             end
           end
+          
+          def method_missing *args, &block
+            super
+            @container.command(to_ast)
+          end
         end
 
         # @api public
-        def initialize(&block)
-          @callback = block
-        end
-
-        # @api public
-        def to_ast
-          @node ? @node.to_ast : []
+        def initialize(container)
+          @container = container
         end
 
         # @api private
-        def method_missing(name, *attrs, &block)
-          @node = RootNode.new
-          @node.send(name, *attrs, &block)
-
-          if @callback
-            @callback.call(self)
-          else
-            self
-          end
+        def method_missing(*args, &block)
+          RootNode.new(@container).send(*args, &block)
         end
         
         def restrict(name, &block)
-          Node::Restriction.new(name, block)
+          RestrictionNode.new(RootNode.new(@container), name, block)
         end
       end
     end
