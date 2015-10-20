@@ -7,21 +7,25 @@ module ROM
       class Builder
         # @api private
         DoubleRestrictionError = Class.new(StandardError) { def message; 'Attempting to call `#restrict` on the result of a previous `#restrict` call'; end }
+        UnspecifiedRelationError = Class.new(StandardError) { def message; 'Command methods require a relation to be specified, either as part of `#restrict` call or as an argument'; end }
 
         # @api private
         class Node
           # @api private
-          Restriction = Struct.new(:parent_node, :relation, :proc)
+          Restriction = Struct.new(:relation, :proc)
           
           # @api private
           Command = Struct.new(:name, :relation, :key, :proc)
 
+          attr_reader :command
+
           # @api private
-          def initialize(command)
+          def initialize(parent_node = nil, command = nil)
+            @parent_node = parent_node
             @command = command
             @nodes = []
           end
-
+          
           # Return command ast from this union node
           #
           # @return [Array]
@@ -56,58 +60,54 @@ module ROM
           end
 
           # @api private          
-          def command(name, relation, restriction = nil, &block)
-            proc = nil
-
-            if restriction
-              key = relation.is_a?(Hash) ? relation[:from] : nil
-              relation = restriction.relation
-              proc = restriction.proc
-            else            
-              if relation.is_a?(Hash)
-                key, relation = relation.to_a.first
+          def command(name, relation = nil, key = nil, proc = nil, &block)
+            if relation.is_a?(Hash)
+              key, relation = relation.to_a.first
+            end
+          
+            if relation.is_a?(RestrictionNode)
+              RestrictionNode.new(self, relation.restriction).command(name, from: key, &block)
+            else
+              if key.nil?
+                key = relation
               end
+
+              raise UnspecifiedRelationError if relation.nil?
             
-              if relation.respond_to?(:relation)
-                proc = relation.proc
-                relation = relation.relation
+              command = Command.new(name, relation, key, proc)
+              Node.new(self, command).tap do |node|
+                block.call(node) if block
+                @nodes << node
               end
             end
-            
-            if key.nil?
-              key = relation
-            end
-            
-            node = Node.new(Command.new(name, relation, key, proc))
-            block.call(node) if block
-            @nodes << node
-
-            node
           end
           
           # @api public
           def restrict(name, &block)
-            RestrictionNode.new(self, name, block)
+            RestrictionNode.new(self, Restriction.new(name, block))
           end
         end
-        
-        # @api private
-        class RestrictionNode
-          attr_reader :relation, :proc
 
-          def initialize(parent_node, relation, proc)
+        # @api private
+        class RestrictionNode < Node
+          attr_reader :restriction
+          
+          def initialize parent_node, restriction
             @parent_node = parent_node
-            @relation = relation
-            @proc = proc
+            @restriction = restriction
+            @nodes = []
           end
           
+          def command(name, relation = nil, &block)
+            key = relation.is_a?(Hash) ? relation[:from] : nil
+            relation = @restriction.relation
+            proc = @restriction.proc
+
+            @parent_node.command(name, relation, key || relation, proc, &block)
+          end
+
           def restrict(name, &block)
             raise DoubleRestrictionError
-          end
-          
-          def method_missing(*args, &block)
-            args << self
-            @parent_node.command(*args, &block)
           end
         end
 
@@ -125,7 +125,10 @@ module ROM
               []
             end
           end
-          
+        end
+        
+        # @api private
+        class BuilderNode < RootNode
           def command *args, &block
             super
             @container.command(to_ast)
@@ -139,11 +142,7 @@ module ROM
 
         # @api private
         def method_missing(*args, &block)
-          RootNode.new(@container).send(*args, &block)
-        end
-        
-        def restrict(name, &block)
-          RestrictionNode.new(RootNode.new(@container), name, block)
+          BuilderNode.new(@container).send(*args, &block)
         end
       end
     end
