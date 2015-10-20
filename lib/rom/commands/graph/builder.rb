@@ -6,50 +6,24 @@ module ROM
       # @api public
       class Builder
         # @api private
-        DoubleRestrictionError = Class.new(StandardError) { def message; 'Attempting to call `#restrict` on the result of a previous `#restrict` call'; end }
-        UnspecifiedRelationError = Class.new(StandardError) { def message; 'Command methods require a relation to be specified, either as part of `#restrict` call or as an argument'; end }
+        UnspecifiedRelationError = Class.new(StandardError)
 
         # @api private
         class Node
           # @api private
           Restriction = Struct.new(:relation, :proc)
-          
+
           # @api private
           Command = Struct.new(:name, :relation, :key, :proc)
 
-          attr_reader :command
-
           # @api private
-          def initialize(parent_node = nil, command = nil)
-            @parent_node = parent_node
-            @command = command
+          def initialize
             @nodes = []
           end
-          
-          # Return command ast from this union node
-          #
-          # @return [Array]
-          #
-          # @api private
-          def to_ast
-            if proc = @command.proc
-              command = [@command.name => proc]
-            else
-              command = [@command.name]
-            end
-            
-            key_relation_map = { @command.key => @command.relation }
 
-            command << @nodes.map(&:to_ast) unless @nodes.empty?
-
-            [key_relation_map, command]
-          end
-
-          # Tiny bit of syncactic sugar
-          #
           # @api public
-          def each(&block)
-            block.call(self)
+          def to_ast
+            []
           end
 
           # Any missing method called on this is treated as a ROM command
@@ -59,29 +33,27 @@ module ROM
             command(*args, &block)
           end
 
-          # @api private          
+          # @api public
           def command(name, relation = nil, key = nil, proc = nil, &block)
             if relation.is_a?(Hash)
               key, relation = relation.to_a.first
             end
-          
+
+            raise UnspecifiedRelationError if relation.nil?
+
             if relation.is_a?(RestrictionNode)
               RestrictionNode.new(self, relation.restriction).command(name, from: key, &block)
             else
-              if key.nil?
-                key = relation
-              end
+              key ||= relation
 
-              raise UnspecifiedRelationError if relation.nil?
-            
               command = Command.new(name, relation, key, proc)
-              Node.new(self, command).tap do |node|
+              CommandNode.new(command).tap do |node|
                 block.call(node) if block
                 @nodes << node
               end
             end
           end
-          
+
           # @api public
           def restrict(name, &block)
             RestrictionNode.new(self, Restriction.new(name, block))
@@ -89,35 +61,66 @@ module ROM
         end
 
         # @api private
-        class RestrictionNode < Node
-          attr_reader :restriction
-          
-          def initialize parent_node, restriction
-            @parent_node = parent_node
-            @restriction = restriction
+        class CommandNode < Node
+          # @api private
+          def initialize(command = nil)
+            @command = command
             @nodes = []
           end
-          
-          def command(name, relation = nil, &block)
-            key = relation.is_a?(Hash) ? relation[:from] : nil
-            relation = @restriction.relation
-            proc = @restriction.proc
 
-            @parent_node.command(name, relation, key || relation, proc, &block)
+          # Tiny bit of synctactic sugar
+          #
+          # @api public
+          def each(&block)
+            block.call(self)
+          end
+          
+          # Return command ast from this union node
+          #
+          # @return [Array]
+          #
+          # @api private
+          def to_ast
+            if @command.proc
+              command = [@command.name => @command.proc]
+            else
+              command = [@command.name]
+            end
+
+            key_relation_map = { @command.key => @command.relation }
+
+            command << @nodes.map(&:to_ast) unless @nodes.empty?
+
+            [key_relation_map, command]
+          end          
+        end
+
+        # @api private
+        class RestrictionNode
+          attr_reader :restriction
+
+          def initialize(parent_node, restriction)
+            @parent_node = parent_node
+            @restriction = restriction
           end
 
-          def restrict(name, &block)
-            raise DoubleRestrictionError
+          # @api public
+          def command(name, options = {}, &block)
+            relation = @restriction.relation
+            key = options[:from] || relation
+            proc = @restriction.proc
+
+            @parent_node.command(name, relation, key, proc, &block)
+          end
+
+          # @api private
+          def method_missing(*args, &block)
+            command(*args, &block)
           end
         end
 
         # @api private
         class RootNode < Node
-          def initialize(container)
-            @container = container
-            @nodes = []
-          end
-
           def to_ast
             if @nodes.size > 0
               @nodes.first.to_ast
@@ -126,10 +129,15 @@ module ROM
             end
           end
         end
-        
+
         # @api private
         class BuilderNode < RootNode
-          def command *args, &block
+          def initialize(container)
+            super()
+            @container = container
+          end
+          
+          def command(*args, &block)
             super
             @container.command(to_ast)
           end

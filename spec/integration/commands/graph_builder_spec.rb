@@ -167,7 +167,7 @@ RSpec.describe 'Command graph builder' do
 
     expect(command).to eql(other)
   end
-  
+
   it 'allows chaining a command to a restriction' do
     setup.commands(:users) do
       define(:update) { result :one }
@@ -188,7 +188,7 @@ RSpec.describe 'Command graph builder' do
     command = rom.command.restrict(:users, &users_proc).update(from: :user) do |user|
       user.restrict(:tasks, &tasks_proc).update
     end
-    
+
     other = rom.command([
       { user: :users },
       [
