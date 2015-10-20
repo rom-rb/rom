@@ -7,7 +7,8 @@ module ROM
       class Builder
         # @api private
         UnspecifiedRelationError = Class.new(StandardError)
-
+        DoubleRestrictionError = Class.new(StandardError)
+        
         # @api private
         class Node
           # @api private
@@ -42,21 +43,20 @@ module ROM
             raise UnspecifiedRelationError if relation.nil?
 
             if relation.is_a?(RestrictionNode)
-              RestrictionNode.new(self, relation.restriction).command(name, from: key, &block)
+              RestrictionNode.new(relation.restriction).command(name, from: key, &block)
             else
               key ||= relation
 
               command = Command.new(name, relation, key, proc)
-              CommandNode.new(command).tap do |node|
-                block.call(node) if block
-                @nodes << node
-              end
+              node = CommandNode.new(command)
+              block.call(node) if block
+              node
             end
           end
 
           # @api public
           def restrict(name, &block)
-            RestrictionNode.new(self, Restriction.new(name, block))
+            RestrictionNode.new(Restriction.new(name, block), self)
           end
         end
 
@@ -93,15 +93,23 @@ module ROM
 
             [key_relation_map, command]
           end          
+          
+          # @api public
+          def command(*args, &block)
+            node = super
+            @nodes << node
+            node
+          end
         end
 
         # @api private
-        class RestrictionNode
+        class RestrictionNode < Node
           attr_reader :restriction
 
-          def initialize(parent_node, restriction)
-            @parent_node = parent_node
+          def initialize(restriction, parent_node = nil)
+            super()
             @restriction = restriction
+            @parent_node = parent_node
           end
 
           # @api public
@@ -110,12 +118,16 @@ module ROM
             key = options[:from] || relation
             proc = @restriction.proc
 
-            @parent_node.command(name, relation, key, proc, &block)
+            if @parent_node
+              @parent_node.command(name, relation, key, proc, &block)
+            else
+              super(name, relation, key, proc, &block)
+            end
           end
 
           # @api private
-          def method_missing(*args, &block)
-            command(*args, &block)
+          def restrict(*args, &block)
+            raise DoubleRestrictionError
           end
         end
 
@@ -127,6 +139,12 @@ module ROM
             else
               []
             end
+          end
+          
+          def command(*args, &block)
+            node = super
+            @nodes << node
+            node
           end
         end
 
