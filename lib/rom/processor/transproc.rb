@@ -21,6 +21,7 @@ module ROM
         import ::Transproc::ArrayTransformations
         import ::Transproc::HashTransformations
         import ::Transproc::ClassTransformations
+        import ::Transproc::ProcTransformations
 
         def self.identity(tuple)
           tuple
@@ -30,6 +31,11 @@ module ROM
           arr.reject { |row| row.values.all?(&:nil?) }
         end
       end
+
+      # @return [Mapper] mapper that this processor belongs to
+      #
+      # @api private
+      attr_reader :mapper
 
       # @return [Header] header from a mapper
       #
@@ -58,12 +64,13 @@ module ROM
       # @return [Transproc::Function]
       #
       # @api private
-      def self.build(header)
-        new(header).to_transproc
+      def self.build(mapper, header)
+        new(mapper, header).to_transproc
       end
 
       # @api private
-      def initialize(header)
+      def initialize(mapper, header)
+        @mapper = mapper
         @header = header
         @model = header.model
         @mapping = header.mapping
@@ -112,7 +119,7 @@ module ROM
       def visit_attribute(attribute)
         coercer = attribute.meta[:coercer]
         if coercer
-          t(:map_value, attribute.name, coercer)
+          t(:map_value, attribute.name, t(:bind, mapper, coercer))
         elsif attribute.typed?
           t(:map_value, attribute.name, t(:"to_#{attribute.type}"))
         end
@@ -369,7 +376,7 @@ module ROM
       #
       # @api private
       def row_proc_from(attribute)
-        new(attribute.header).row_proc
+        new(mapper, attribute.header).row_proc
       end
 
       # Return a new instance of the processor
