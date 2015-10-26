@@ -2,8 +2,9 @@ require 'spec_helper'
 require 'virtus'
 
 describe ROM::Processor::Transproc do
-  subject(:transproc) { ROM::Processor::Transproc.build(header) }
+  subject(:transproc) { ROM::Processor::Transproc.build(binding, header) }
 
+  let(:binding) { nil }
   let(:header) { ROM::Header.coerce(attributes, options) }
   let(:options) { {} }
 

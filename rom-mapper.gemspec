@@ -15,7 +15,6 @@ Gem::Specification.new do |gem|
   gem.test_files    = `git ls-files -- {spec}/*`.split("\n")
   gem.license       = 'MIT'
 
-  gem.add_dependency 'transproc', '~> 0.3'
   gem.add_dependency 'equalizer', '~> 0.0', '>= 0.0.10'
   gem.add_dependency 'rom-support', '~> 0.1', '>= 0.1.0'
 
