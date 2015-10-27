@@ -208,4 +208,12 @@ describe ROM::Relation do
       expect(new_relation.options).to include(custom_opts)
     end
   end
+
+  describe "#from" do
+    it "accept's a new gateway to fetch data from" do
+      gateway = double(dataset: ROM::Memory::Dataset.new([jane]) )
+
+      expect(relation.from(gateway).to_a).to eql([jane])
+    end
+  end
 end

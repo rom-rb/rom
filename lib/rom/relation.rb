@@ -91,6 +91,15 @@ module ROM
       to_enum.to_a
     end
 
+    # Point a relation to a custom gateway
+    #
+    # @return A new relation targeting the new gateway
+    #
+    # @api public
+    def from(gateway)
+      __new__(gateway.dataset(self.class.name))
+    end
+
     # Return if this relation is curried
     #
     # @return [false]
