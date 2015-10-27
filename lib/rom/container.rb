@@ -1,5 +1,6 @@
 require 'rom/relation/loaded'
 require 'rom/commands/graph'
+require 'rom/commands/graph/builder'
 require 'rom/support/deprecations'
 
 module ROM
@@ -99,7 +100,7 @@ module ROM
     # @return [Command, Command::Graph]
     #
     # @api public
-    def command(options)
+    def command(options = nil)
       case options
       when Symbol
         name = options
@@ -117,6 +118,8 @@ module ROM
         else
           graph
         end
+      when nil
+        Commands::Graph::Builder.new(self)
       else
         raise ArgumentError, "#{self.class}#command accepts a symbol or an array"
       end
