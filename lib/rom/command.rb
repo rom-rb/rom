@@ -1,153 +1,174 @@
-require 'rom/commands/abstract'
+require 'rom/support/options'
+require 'rom/support/deprecations'
+
+require 'rom/commands/class_interface'
+require 'rom/commands/composite'
+require 'rom/commands/graph'
+require 'rom/commands/lazy'
 
 module ROM
-  # Base command class with factory class-level interface and setup-related logic
+  # Abstract command class
+  #
+  # Provides a constructor accepting relation with options and basic behavior
+  # for calling, currying and composing commands.
+  #
+  # Typically command subclasses should inherit from specialized
+  # Create/Update/Delete, not this one.
+  #
+  # @abstract
   #
   # @private
-  class Command < Commands::Abstract
-    extend ClassMacros
-    extend ROM::Support::GuardedInheritanceHook
+  class Command
+    include Commands
 
+    extend Deprecations
+    extend ClassMacros
+    extend Support::GuardedInheritanceHook
+    extend ClassInterface
+
+    include Options
     include Equalizer.new(:relation, :options)
 
     defines :adapter, :relation, :result, :input, :validator, :register_as
+
+    option :type, allow: [:create, :update, :delete]
+    option :source, reader: true
+    option :result, reader: true, allow: [:one, :many]
+    option :validator, reader: true
+    option :input, reader: true
+    option :curry_args, type: Array, reader: true, default: EMPTY_ARRAY
 
     input Hash
     validator proc {}
     result :many
 
-    # Return adapter specific sub-class based on the adapter identifier
-    #
-    # This is a syntax sugar to make things consistent
-    #
-    # @example
-    #   ROM::Commands::Create[:memory]
-    #   # => ROM::Memory::Commands::Create
-    #
-    # @param [Symbol] adapter identifier
-    #
-    # @return [Class]
-    #
-    # @api public
-    def self.[](adapter)
-      adapter_namespace(adapter).const_get(Inflector.demodulize(name))
+    # @attr_reader [Relation] relation The command's relation
+    attr_reader :relation
+
+    deprecate :target, :relation,
+      'Source relation is now available as `Command#source`'
+
+    # @api private
+    def initialize(relation, options = EMPTY_HASH)
+      super
+      @relation = relation
+      @source = options[:source] || relation
     end
 
-    # Return namespaces that contains command subclasses of a specific adapter
+    # Execute the command
     #
-    # @param [Symbol] adapter identifier
+    # @abstract
     #
-    # @return [Module]
+    # @return [Array] an array with inserted tuples
     #
     # @api private
-    def self.adapter_namespace(adapter)
-      ROM.adapters.fetch(adapter).const_get(:Commands)
-    rescue KeyError
-      raise AdapterNotPresentError.new(adapter, :relation)
+    def execute(*)
+      raise(
+        NotImplementedError,
+        "#{self.class}##{__method__} must be implemented"
+      )
     end
 
-    # Build a command class for a specific relation with options
+    # Call the command and return one or many tuples
     #
-    # @example
-    #   class CreateUser < ROM::Commands::Create[:memory]
-    #   end
+    # @api public
+    def call(*args)
+      tuples = execute(*(curry_args + args))
+
+      if one?
+        tuples.first
+      else
+        tuples
+      end
+    end
+    alias_method :[], :call
+
+    # Curry this command with provided args
     #
-    #   command = CreateUser.build(rom.relations[:users])
-    #
-    # @param [Relation] relation
-    # @param [Hash] options
+    # Curried command can be called without args
     #
     # @return [Command]
     #
     # @api public
-    def self.build(relation, options = EMPTY_HASH)
-      new(relation, self.options.merge(options))
+    def curry(*args)
+      if curry_args.empty? && args.first.is_a?(Graph::InputEvaluator)
+        Lazy[self].new(self, *args)
+      else
+        self.class.build(relation, options.merge(curry_args: args))
+      end
     end
+    alias_method :with, :curry
 
-    # Use a configured plugin in this relation
+    # Compose a command with another one
+    #
+    # The other one will be called with the result from the first one
     #
     # @example
-    #   class CreateUser < ROM::Commands::Create[:memory]
-    #     use :pagintion
     #
-    #     per_page 30
-    #   end
+    #   command = users.create.curry(name: 'Jane')
+    #   command >>= tasks.create.curry(title: 'Task One')
     #
-    # @param [Symbol] plugin
-    # @param [Hash] options
-    # @option options [Symbol] :adapter (:default) first adapter to check for plugin
+    #   command.call # creates user, passes it to tasks and creates task
+    #
+    # @return [Composite]
     #
     # @api public
-    def self.use(plugin, _options = EMPTY_HASH)
-      ROM.plugin_registry.commands.fetch(plugin, adapter).apply_to(self)
+    def >>(other)
+      Composite.new(self, other)
     end
 
-    # Build command registry hash for provided relations
+    # @api public
+    def combine(*others)
+      Graph.new(self, others)
+    end
+
+    # @api private
+    def lazy?
+      false
+    end
+
+    # @api private
+    def graph?
+      false
+    end
+
+    # @api private
+    def one?
+      result.equal?(:one)
+    end
+
+    # @api private
+    def many?
+      result.equal?(:many)
+    end
+
+    # Assert that tuple count in the relation corresponds to :result
+    # setting
     #
-    # @param [RelationRegistry] relations registry
-    # @param [Hash] gateways
-    # @param [Array] descendants a list of command subclasses
-    #
-    # @return [Hash]
+    # @raise TupleCountMismatchError
     #
     # @api private
-    def self.registry(relations, gateways, descendants)
-      descendants.each_with_object({}) do |klass, h|
-        rel_name = klass.relation
-
-        next unless rel_name
-
-        relation = relations[rel_name]
-        name = klass.register_as || klass.default_name
-
-        gateway = gateways[relation.class.gateway]
-        gateway.extend_command_class(klass, relation.dataset)
-
-        klass.send(:include, relation_methods_mod(relation.class))
-
-        (h[rel_name] ||= {})[name] = klass.build(relation)
+    def assert_tuple_count
+      if one? && tuple_count > 1
+        raise TupleCountMismatchError, "#{inspect} expects one tuple"
       end
     end
 
+    # Return number of tuples in the relation relation
+    #
+    # This should be overridden by gateways when `#count` is not available
+    # in the relation objects
+    #
+    # @return [Fixnum]
+    #
     # @api private
-    def self.relation_methods_mod(relation_class)
-      mod = Module.new
-
-      relation_class.view_methods.each do |meth|
-        mod.module_eval <<-RUBY
-          def #{meth}(*args)
-            response = relation.public_send(:#{meth}, *args)
-
-            if response.is_a?(relation.class)
-              new(response)
-            else
-              response
-            end
-          end
-        RUBY
-      end
-
-      mod
+    def tuple_count
+      relation.count
     end
 
-    # Return default name of the command class based on its name
-    #
-    # During setup phase this is used by defalut as `register_as` option
-    #
-    # @return [Symbol]
-    #
     # @api private
-    def self.default_name
-      Inflector.underscore(Inflector.demodulize(name)).to_sym
-    end
-
-    # Return default options based on class macros
-    #
-    # @return [Hash]
-    #
-    # @api private
-    def self.options
-      { input: input, validator: validator, result: result }
+    def new(new_relation)
+      self.class.build(new_relation, options.merge(source: relation))
     end
   end
 end
