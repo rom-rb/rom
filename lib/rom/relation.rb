@@ -1,4 +1,3 @@
-require 'rom/support/deprecations'
 require 'rom/relation/class_interface'
 
 require 'rom/pipeline'
@@ -26,7 +25,6 @@ module ROM
   #
   # @api public
   class Relation
-    extend Deprecations
     extend ClassInterface
     extend ROM::Support::GuardedInheritanceHook
 
@@ -103,13 +101,6 @@ module ROM
     # @api private
     def with(options)
       __new__(dataset, options)
-    end
-    deprecate :to_lazy, :with, "to_lazy is no longer needed"
-
-    # @api public
-    def relation
-      Deprecations.announce("#relation", 'all relations are now lazy')
-      self
     end
 
     private

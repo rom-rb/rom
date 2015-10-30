@@ -1,5 +1,4 @@
 require 'rom/support/options'
-require 'rom/support/deprecations'
 
 require 'rom/commands/class_interface'
 require 'rom/commands/composite'
@@ -21,7 +20,6 @@ module ROM
   class Command
     include Commands
 
-    extend Deprecations
     extend ClassMacros
     extend Support::GuardedInheritanceHook
     extend ClassInterface
@@ -44,9 +42,6 @@ module ROM
 
     # @attr_reader [Relation] relation The command's relation
     attr_reader :relation
-
-    deprecate :target, :relation,
-      'Source relation is now available as `Command#source`'
 
     # @api private
     def initialize(relation, options = EMPTY_HASH)

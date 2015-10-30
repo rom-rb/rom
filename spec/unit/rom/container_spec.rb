@@ -70,15 +70,6 @@ describe ROM::Container do
     end
   end
 
-  describe '#read' do
-    it 'returns loaded relation and display a deprecation warning' do
-      expect {
-        result = rom.read(:users) { |r| r.by_name('Jane') }.as(:name_list)
-        expect(result.call).to match_array([{ name: 'Jane' }])
-      }.to output(/^ROM::Container#read is deprecated/).to_stderr
-    end
-  end
-
   describe '#mappers' do
     it 'returns mappers for all relations' do
       expect(rom.mappers.users[:name_list]).to_not be(nil)

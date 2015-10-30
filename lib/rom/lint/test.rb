@@ -61,37 +61,6 @@ module ROM
       end
     end
 
-    # This is a transitional lint-test loader for repository class
-    # to ensure that the basic interfaces are in place
-    #
-    #   class MyRepositoryTest < Minitest::Test
-    #     include ROM::Lint::TestRepository
-    #
-    #     def setup
-    #       @repository = MyRepository
-    #       @uri = "super_db://something"
-    #     end
-    #   end
-    #
-    # @see [ROM::Lint::TestGateway]
-    #
-    # @api public
-    module TestRepository
-      extend TestGateway
-
-      # Returns the reposiotry class
-      #
-      # @api public
-      attr_reader :repository
-
-      def setup
-        ROM::Deprecations.announce "[Adapter]::Repository is", <<-MSG
-          Please use [Adapter]::Gateway instead.
-        MSG
-        @gateway = repository
-      end
-    end
-
     # This is a simple lint-test for a gateway dataset class to ensure the
     # basic behavior is correct
     #

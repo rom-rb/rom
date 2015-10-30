@@ -1,22 +1,18 @@
 require 'rom/relation/loaded'
 require 'rom/commands/graph'
 require 'rom/commands/graph/builder'
-require 'rom/support/deprecations'
 
 module ROM
   # Exposes defined gateways, relations and mappers
   #
   # @api public
   class Container
-    extend Deprecations
     include Equalizer.new(:gateways, :relations, :mappers, :commands)
 
     # @return [Hash] configured gateways
     #
     # @api public
     attr_reader :gateways
-
-    deprecate :repositories, :gateways
 
     # @return [RelationRegistry] relation registry
     #
@@ -78,7 +74,6 @@ module ROM
         relation
       end
     end
-    deprecate :read, :relation, "For mapping append `.map_with(:your_mapper_name)`"
 
     # Returns commands registry for the given relation
     #

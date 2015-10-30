@@ -16,7 +16,6 @@ module ROM
         super
 
         klass.extend ClassMacros
-        klass.extend Deprecations
         klass.defines :adapter
 
         if respond_to?(:adapter) && adapter.nil?
@@ -32,9 +31,6 @@ module ROM
           use :registry_reader
 
           defines :gateway, :dataset, :dataset_proc, :register_as
-
-          deprecate_class_method :repository, :gateway
-          deprecate :repository, :gateway
 
           gateway :default
 
@@ -91,12 +87,6 @@ module ROM
             else
               super
             end
-          end
-
-          # @api public
-          def self.exposed_relations(*_args)
-            Deprecations.announce("#{self}.exposed_relations", 'this method has no effect anymore')
-            Set.new
           end
 
           # @api private
