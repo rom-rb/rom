@@ -1,7 +1,8 @@
-## v0.9.2 to-be-released
+## v1.0.0 to-be-released
 
 ### Added
 
+- Command graph DSL (endash + solnic)
 - Command graph now supports update and delete commands (cflipse + solnic)
 - `Gateway.adapter` setting and a corresponding `Gateway#adapter` reader. Both are
   necessary to access a migrator (nepalez)
@@ -12,8 +13,12 @@
 
 ### Changed
 
+- **REMOVED** all deprecated APIs (solnic)
 - [fixed #306] Inheriting from a misconfigured adapter relation will raise a
   meaningful error (solnic)
+- Command graph will raise `ROM::KeyMissing` command error when a key is missing
+  in the input (solnic)
+- Command graph no longer rescues from any exception (solnic)
 
 [Compare v0.9.1...HEAD](https://github.com/rom-rb/rom/compare/v0.9.1...HEAD)
 
