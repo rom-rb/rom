@@ -15,6 +15,7 @@ module ROM
   RelationAlreadyDefinedError = Class.new(StandardError)
   NoRelationError = Class.new(StandardError)
   CommandError = Class.new(StandardError)
+  KeyMissing = Class.new(ROM::CommandError)
   TupleCountMismatchError = Class.new(CommandError)
   MapperMissingError = Class.new(StandardError)
   UnknownPluginError = Class.new(StandardError)
@@ -23,16 +24,4 @@ module ROM
 
   InvalidOptionValueError = Class.new(StandardError)
   InvalidOptionKeyError = Class.new(StandardError)
-
-  class CommandFailure < StandardError
-    attr_reader :command
-    attr_reader :original_error
-
-    def initialize(command, err)
-      super("command: #{command.inspect}; original message: #{err.message}")
-      @command = command
-      @original_error = err
-      set_backtrace(err.backtrace)
-    end
-  end
 end

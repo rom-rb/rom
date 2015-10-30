@@ -283,6 +283,6 @@ describe 'Building up a command graph for nested input' do
 
     expect {
       command.call(input)
-    }.to raise_error(ROM::CommandFailure, /book/)
+    }.to raise_error(ROM::KeyMissing, /book/)
   end
 end

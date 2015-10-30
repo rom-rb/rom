@@ -37,8 +37,8 @@ module ROM
         def call(*args)
           input, index = args
 
-          begin
-            value =
+          value =
+            begin
               if index
                 tuple_path[0..tuple_path.size-2]
                   .reduce(input) { |a, e| a.fetch(e) }
@@ -46,12 +46,14 @@ module ROM
               else
                 tuple_path.reduce(input) { |a, e| a.fetch(e) }
               end
-
-            if excluded_keys
-              value.is_a?(Array) ? value.map(&exclude_proc) : exclude_proc[value]
-            else
-              value
+            rescue KeyError => e
+              raise KeyMissing, e.message
             end
+
+          if excluded_keys
+            value.is_a?(Array) ? value.map(&exclude_proc) : exclude_proc[value]
+          else
+            value
           end
         end
       end
