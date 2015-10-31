@@ -1,3 +1,4 @@
+require 'rom/gateway'
 require 'rom/setup'
 
 module ROM
