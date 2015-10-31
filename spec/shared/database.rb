@@ -5,6 +5,8 @@ RSpec.shared_context 'database' do
   let(:uri) { 'postgres://localhost/rom_repository' }
 
   before do
+    conn.loggers << LOGGER
+
     [:tags, :tasks, :users].each { |table| conn.drop_table?(table) }
 
     conn.create_table :users do

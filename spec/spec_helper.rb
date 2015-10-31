@@ -18,6 +18,7 @@ rescue LoadError
 end
 
 root = Pathname(__FILE__).dirname
+LOGGER = Logger.new(File.open('./log/test.log', 'a'))
 
 Dir[root.join('support/*.rb').to_s].each do |f|
   require f
