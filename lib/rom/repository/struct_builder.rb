@@ -3,7 +3,7 @@ require 'anima'
 require 'rom/struct'
 
 module ROM
-  class Repository < Gateway
+  class Repository
     # @api private
     class StructBuilder
       attr_reader :registry

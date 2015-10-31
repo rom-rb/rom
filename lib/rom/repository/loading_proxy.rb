@@ -5,7 +5,7 @@ require 'rom/repository/loading_proxy/combine'
 require 'rom/repository/loading_proxy/wrap'
 
 module ROM
-  class Repository < Gateway
+  class Repository
     # LoadingProxy decorates a relation and automatically generate mappers that
     # will map raw tuples into structs
     #

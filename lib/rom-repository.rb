@@ -1,3 +1,3 @@
 require 'rom'
 
-require 'rom/repository/base'
+require 'rom/repository'

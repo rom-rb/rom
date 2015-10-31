@@ -1,5 +1,5 @@
 module ROM
-  class Repository < Gateway
+  class Repository
     class LoadingProxy
       # Provides convenient methods for producing wrapped relations
       #

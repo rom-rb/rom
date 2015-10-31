@@ -3,7 +3,7 @@ require 'rom/header'
 require 'rom/repository/struct_builder'
 
 module ROM
-  class Repository < Gateway
+  class Repository
     # @api private
     class HeaderBuilder
       attr_reader :struct_builder
