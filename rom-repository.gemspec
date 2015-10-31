@@ -16,9 +16,9 @@ Gem::Specification.new do |gem|
   gem.license       = 'MIT'
 
   gem.add_runtime_dependency 'anima', '~> 0.2', '>= 0.2'
-  gem.add_runtime_dependency 'rom', '~> 0.9', '>= 0.9.0'
-  gem.add_runtime_dependency 'rom-support', '~> 0.1', '>= 0.1.0'
-  gem.add_runtime_dependency 'rom-mapper', '~> 0.2', '>= 0.2.0'
+  gem.add_runtime_dependency 'rom', '~> 1.0.0.beta1'
+  gem.add_runtime_dependency 'rom-support', '~> 1.0.0.beta1'
+  gem.add_runtime_dependency 'rom-mapper', '~> 0.3.beta1'
 
   gem.add_development_dependency 'rake', '~> 10.3'
   gem.add_development_dependency 'rspec', '~> 3.3'
