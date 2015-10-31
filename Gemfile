@@ -2,7 +2,8 @@ source 'https://rubygems.org'
 
 gemspec
 
-gem 'transproc', git: 'https://github.com/solnic/transproc.git', branch: 'master'
+gem 'transproc', github: 'solnic/transproc', branch: 'master'
+gem 'rom-support', github: 'rom-rb/rom-support', branch: 'master'
 
 group :test do
   gem 'anima', '~> 0.2.0'
