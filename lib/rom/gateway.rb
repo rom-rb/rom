@@ -107,6 +107,21 @@ module ROM
       )
     end
 
+    # An adapter-specific migrator for the gateway
+    #
+    # @param [Object] args
+    #   Arguments required by a migrator's constructor along with a gateway
+    #
+    # @return [ROM::Migrator]
+    #
+    def migrator(*args)
+      adapter_klass  = ROM.adapters.fetch(adapter)
+      migrator_klass = adapter_klass.const_get(:Migrator)
+      migrator_klass.new(self, *args)
+    rescue NameError
+      raise MigratorNotPresentError.new(adapter) unless migrator_klass
+    end
+
     # A generic interface for setting up a logger
     #
     # @api public

@@ -26,7 +26,7 @@ describe ROM::Gateway do
 
     it 'raises an exception if the type is not supported' do
       expect {
-        ROM::Gateway.setup(:bogus, "memory://test")
+        ROM::Gateway.setup(:bogus, 'memory://test')
       }.to raise_error(ROM::AdapterLoadError, /bogus/)
     end
 
@@ -126,7 +126,7 @@ describe ROM::Gateway do
     end
   end
 
-  describe "#adapter" do
+  describe '#adapter' do
     before { Test::CustomGateway = Class.new(ROM::Gateway) }
 
     let(:gateway) { Test::CustomGateway.new }
@@ -141,6 +141,54 @@ describe ROM::Gateway do
         ROM::MissingAdapterIdentifierError, /Test::CustomGateway/
       )
     end
-  end # describe #adapter
+  end
 
+  describe '#migrator' do
+    before do
+      ROM::Test           = Module.new
+      ROM::Test::Gateway  = Class.new(described_class) { adapter :test }
+      ROM::Test::Migrator = Class.new
+      ROM.register_adapter :test, ROM::Test
+      allow(ROM::Test::Migrator).to receive(:new) { migrator }
+    end
+
+    let(:gateway)  { ROM::Test::Gateway.new }
+    let(:migrator) { double(:migrator) }
+    let(:params)   { [double, double] }
+
+    context 'when a migrator is implemented by adapter' do
+      it 'instantiates a migrator' do
+        expect(ROM::Test::Migrator).to receive(:new).with(gateway, *params)
+        expect(gateway.migrator(*params)).to eql migrator
+      end
+    end
+
+    context 'when migrator is not impelemented by adapter' do
+      before { ROM::Test.send :remove_const, :Migrator }
+
+      it 'fails' do
+        expect { gateway.migrator(*params) }.to raise_error \
+          ROM::MigratorNotPresentError, /test/
+      end
+    end
+
+    context 'when adapter is not implemented' do
+      before { ROM::Test::Gateway.send :adapter, :custom }
+
+      it 'fails' do
+        expect { gateway.migrator(*params) }.to raise_error StandardError
+      end
+    end
+
+    context 'when adapter is not defined' do
+      before { ROM::Test::Gateway.send :adapter, nil }
+
+      it 'fails' do
+        expect { gateway.migrator(*params) }.to raise_error \
+          ROM::MissingAdapterIdentifierError
+      end
+    end
+
+    after { ROM.send :remove_const, :Test }
+  end
 end
