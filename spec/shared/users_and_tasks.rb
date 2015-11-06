@@ -1,12 +1,10 @@
 RSpec.shared_context 'users and tasks' do
   require 'rom/memory'
-
-  subject(:rom) { setup.finalize }
-
-  let(:setup) { ROM.setup(:memory) }
+  
+  include_context 'common setup'
 
   before do
-    gateway = setup.default
+    gateway = configuration.gateways[:default]
 
     users = gateway.dataset(:users)
     tasks = gateway.dataset(:tasks)

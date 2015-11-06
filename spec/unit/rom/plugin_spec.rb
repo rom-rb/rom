@@ -1,12 +1,10 @@
 require 'spec_helper'
 
 describe "ROM::PluginRegistry" do
-  subject(:env) { setup.finalize }
-
-  let(:setup) { ROM.setup(:memory) }
+  include_context 'common setup'
 
   before do
-    Test::EnvironmentPlugin = Module.new
+    Test::ConfigurationPlugin = Module.new
     Test::CommandPlugin     = Module.new
     Test::MapperPlugin      = Module.new
     Test::RelationPlugin    = Module.new do
@@ -16,11 +14,13 @@ describe "ROM::PluginRegistry" do
     end
 
     ROM.plugins do
-      register :registration, Test::EnvironmentPlugin, type: :environment
+      register :registration, Test::ConfigurationPlugin, type: :configuration
       register :publisher,    Test::CommandPlugin,     type: :command
       register :pager,        Test::RelationPlugin,    type: :relation
       register :translater,   Test::MapperPlugin,      type: :mapper
     end
+
+    configuration
   end
 
   around do |example|
@@ -29,45 +29,56 @@ describe "ROM::PluginRegistry" do
     ROM.instance_variable_set('@plugin_registry', orig_plugins)
   end
 
-  it "makes environment plugins available" do
-    expect(ROM.plugin_registry.environment[:registration].mod).to eq Test::EnvironmentPlugin
+  it "makes configuration plugins available" do
+    expect(ROM.plugin_registry.configuration[:registration].mod).to eq Test::ConfigurationPlugin
   end
 
   it "includes relation plugins" do
-    setup.relation(:users) do
+    users = Class.new(ROM::Relation[:memory]) do
+      register_as :users
       use :pager
     end
+    configuration.register_relation(users)
 
-    expect(env.relation(:users).plugged_in).to eq "a relation"
+    expect(container.relation(:users).plugged_in).to eq "a relation"
   end
 
   it "makes command plugins available" do
-    setup.relation(:users)
+    users = Class.new(ROM::Relation[:memory]) do
+      register_as :users
+    end
 
-    Class.new(ROM::Commands::Create[:memory]) do
+    create_user = Class.new(ROM::Commands::Create[:memory]) do
       relation :users
       register_as :create
       use :publisher
     end
 
-    expect(env.command(:users).create).to be_kind_of Test::CommandPlugin
+    configuration.register_relation(users)
+    configuration.register_command(create_user)
+
+    expect(container.command(:users).create).to be_kind_of Test::CommandPlugin
   end
 
   it "inclues plugins in mappers" do
-    setup.relation(:users)
-
-    Class.new(ROM::Mapper) do
+    users = Class.new(ROM::Relation[:memory]) do
+      register_as :users
+    end
+    translator = Class.new(ROM::Mapper) do
       relation :users
       register_as :translator
       use :translater
     end
 
-    expect(env.mappers[:users][:translator]).to be_kind_of Test::MapperPlugin
+    configuration.register_relation(users)
+    configuration.register_mapper(translator)
+
+    expect(container.mappers[:users][:translator]).to be_kind_of Test::MapperPlugin
   end
 
   it "restricts plugins to defined type" do
     expect {
-      setup.relation(:users) do
+      configuration.relation(:users) do
         use :publisher
       end
     }.to raise_error ROM::UnknownPluginError
@@ -86,11 +97,13 @@ describe "ROM::PluginRegistry" do
       end
     end
 
-    setup.relation(:users) do
+    users = Class.new(ROM::Relation[:memory]) do
+      register_as :users
       use :lazy
     end
+    configuration.register_relation(users)
 
-    expect(env.relation(:users)).to be_lazy
+    expect(container.relation(:users)).to be_lazy
   end
 
   it "respects adapter restrictions" do
@@ -110,22 +123,28 @@ describe "ROM::PluginRegistry" do
       end
     end
 
-    setup.relation(:users)
+    users = Class.new(ROM::Relation[:memory]) do
+      register_as :users
+    end
 
-    Class.new(ROM::Commands::Create[:memory]) do
+    create_user = Class.new(ROM::Commands::Create[:memory]) do
       relation :users
       register_as :create
       use :lazy
     end
 
-    Class.new(ROM::Commands::Update[:memory]) do
+    update_user = Class.new(ROM::Commands::Update[:memory]) do
       relation :users
       register_as :update
       use :lazy_command
     end
 
-    expect(env.command(:users).create).not_to be_kind_of Test::LazySQLPlugin
-    expect(env.command(:users).create).to be_kind_of Test::LazyPlugin
-    expect(env.command(:users).update).to be_kind_of Test::LazyMemoryPlugin
+    configuration.register_relation(users)
+    configuration.register_command(create_user)
+    configuration.register_command(update_user)
+
+    expect(container.command(:users).create).not_to be_kind_of Test::LazySQLPlugin
+    expect(container.command(:users).create).to be_kind_of Test::LazyPlugin
+    expect(container.command(:users).update).to be_kind_of Test::LazyMemoryPlugin
   end
 end

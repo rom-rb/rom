@@ -2,12 +2,11 @@ require 'spec_helper'
 require 'rom/memory'
 
 describe 'Mappers / Symbolizing atributes' do
-  let(:setup) { ROM.setup(:memory) }
-  let(:rom) { setup.finalize }
+  include_context 'common setup'
 
   before do
-    setup.relation(:users)
-    setup.relation(:tasks)
+    configuration.relation(:users)
+    configuration.relation(:tasks)
   end
 
   it 'automatically maps all attributes using top-level settings' do
@@ -30,13 +29,15 @@ describe 'Mappers / Symbolizing atributes' do
       end
     end
 
-    rom.relations.users << {
+    configuration.register_mapper(Test::UserMapper)
+
+    container.relations.users << {
       'user_id' => 123,
       'first_name' => 'Jane',
       'email' => 'jane@doe.org'
     }
 
-    jane = rom.relation(:users).as(:users).first
+    jane = container.relation(:users).as(:users).first
 
     expect(jane).to eql(
       id: 123, details: { name: 'Jane' }, contact: { email: 'jane@doe.org' }
@@ -58,13 +59,15 @@ describe 'Mappers / Symbolizing atributes' do
       end
     end
 
-    rom.relations.tasks << {
+    configuration.register_mapper(Test::TaskMapper)
+
+    container.relations.tasks << {
       'title' => 'Task One',
       'task_priority' => 1,
       'task_description' => 'It is a task'
     }
 
-    task = rom.relation(:tasks).as(:tasks).first
+    task = container.relation(:tasks).as(:tasks).first
 
     expect(task).to eql(
       title: 'Task One',

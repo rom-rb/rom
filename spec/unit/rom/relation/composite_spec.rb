@@ -3,14 +3,14 @@ require 'spec_helper'
 describe ROM::Relation::Composite do
   include_context 'users and tasks'
 
-  let(:users) { rom.relation(:users) }
-  let(:tasks) { rom.relation(:tasks) }
+  let(:users) { container.relation(:users) }
+  let(:tasks) { container.relation(:tasks) }
 
   let(:name_list) { proc { |r| r.map { |t| t[:name] } } }
   let(:upcaser) { proc { |r| r.map(&:upcase) } }
 
   before do
-    setup.relation(:users) do
+    configuration.relation(:users) do
       def by_name(name)
         restrict(name: name)
       end
@@ -20,7 +20,7 @@ describe ROM::Relation::Composite do
       end
     end
 
-    setup.relation(:tasks) do
+    configuration.relation(:tasks) do
       def for_users(users)
         restrict(name: users.map { |u| u[:name] })
       end

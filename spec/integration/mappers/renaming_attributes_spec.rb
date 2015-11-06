@@ -2,12 +2,12 @@ require 'spec_helper'
 require 'rom/memory'
 
 describe 'Mappers / Renaming attributes' do
-  let(:setup) { ROM.setup(:memory) }
+  include_context 'common setup'
 
   before do
-    setup.relation(:addresses)
+    configuration.relation(:addresses)
 
-    setup.relation(:users) do
+    configuration.relation(:users) do
       def with_address
         join(addresses)
       end
@@ -19,7 +19,7 @@ describe 'Mappers / Renaming attributes' do
   end
 
   it 'maps renamed attributes for a base relation' do
-    setup.mappers do
+    configuration.mappers do
       define(:users) do
         model name: 'Test::User'
 
@@ -28,19 +28,19 @@ describe 'Mappers / Renaming attributes' do
       end
     end
 
-    rom = setup.finalize
+    container
 
     Test::User.send(:include, Equalizer.new(:id, :name))
 
-    rom.relations.users << { _id: 123, user_name: 'Jane' }
+    container.relations.users << { _id: 123, user_name: 'Jane' }
 
-    jane = rom.relation(:users).as(:users).first
+    jane = container.relation(:users).as(:users).first
 
     expect(jane).to eql(Test::User.new(id: 123, name: 'Jane'))
   end
 
   it 'maps renamed attributes for a wrapped relation' do
-    setup.mappers do
+    configuration.mappers do
       define(:users) do
         model name: 'Test::User'
 
@@ -61,16 +61,16 @@ describe 'Mappers / Renaming attributes' do
       end
     end
 
-    rom = setup.finalize
+    container
 
     Test::UserWithAddress.send(:include, Equalizer.new(:id, :name, :address))
 
-    rom.relations.users << { _id: 123, user_name: 'Jane' }
+    container.relations.users << { _id: 123, user_name: 'Jane' }
 
-    rom.relations.addresses <<
+    container.relations.addresses <<
       { _id: 123, address_id: 321, address_street: 'Street 1' }
 
-    jane = rom.relation(:users).with_address.as(:with_address).first
+    jane = container.relation(:users).with_address.as(:with_address).first
 
     expect(jane).to eql(
       Test::UserWithAddress.new(id: 123, name: 'Jane',
@@ -79,7 +79,7 @@ describe 'Mappers / Renaming attributes' do
   end
 
   it 'maps renamed attributes for a grouped relation' do
-    setup.mappers do
+    configuration.mappers do
       define(:users) do
         model name: 'Test::User'
 
@@ -100,18 +100,18 @@ describe 'Mappers / Renaming attributes' do
       end
     end
 
-    rom = setup.finalize
+    container
 
     Test::UserWithAddresses.send(:include, Equalizer.new(:id, :name, :addresses))
 
-    rom.relations.users << { _id: 123, user_name: 'Jane' }
+    container.relations.users << { _id: 123, user_name: 'Jane' }
 
-    rom.relations.addresses <<
+    container.relations.addresses <<
       { _id: 123, address_id: 321, address_street: 'Street 1' }
-    rom.relations.addresses <<
+    container.relations.addresses <<
       { _id: 123, address_id: 654, address_street: 'Street 2' }
 
-    jane = rom.relation(:users).with_addresses.as(:with_addresses).first
+    jane = container.relation(:users).with_addresses.as(:with_addresses).first
 
     expect(jane).to eql(
       Test::UserWithAddresses.new(

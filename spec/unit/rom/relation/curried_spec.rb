@@ -3,10 +3,10 @@ require 'spec_helper'
 RSpec.describe ROM::Relation::Curried do
   include_context 'users and tasks'
 
-  let(:users) { rom.relations.users }
+  let(:users) { container.relations.users }
 
   before do
-    setup.relation(:users) do
+    configuration.relation(:users) do
       def by_name(name)
         restrict(name: name)
       end

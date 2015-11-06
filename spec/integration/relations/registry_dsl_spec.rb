@@ -4,7 +4,7 @@ describe 'Relation registration DSL' do
   include_context 'users and tasks'
 
   it 'allows to expose chainable relations' do
-    setup.relation(:tasks) do
+    configuration.relation(:tasks) do
       def high_priority
         restrict { |tuple| tuple[:priority] < 2 }
       end
@@ -14,13 +14,13 @@ describe 'Relation registration DSL' do
       end
     end
 
-    setup.relation(:users) do
+    configuration.relation(:users) do
       def with_tasks
         join(tasks)
       end
     end
 
-    tasks = rom.relations.tasks
+    tasks = container.relations.tasks
 
     expect(tasks.class.name).to eql("ROM::Relation[Tasks]")
     expect(tasks.high_priority.inspect).to include("#<ROM::Relation[Tasks]")
@@ -33,7 +33,7 @@ describe 'Relation registration DSL' do
       [name: "Jane", title: "be cool", priority: 2]
     )
 
-    users = rom.relations.users
+    users = container.relations.users
 
     expect(users.with_tasks).to match_array(
       [{ name: "Joe", email: "joe@doe.org", title: "be nice", priority: 1 },

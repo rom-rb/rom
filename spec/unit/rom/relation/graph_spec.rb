@@ -16,21 +16,21 @@ describe ROM::Relation::Graph do
   end
 
   before do
-    setup.relation(:users) do
+    configuration.relation(:users) do
       def by_name(name)
         restrict(name: name)
       end
     end
 
-    setup.relation(:tasks) do
+    configuration.relation(:tasks) do
       def for_users(_users)
         self
       end
     end
   end
 
-  let(:users) { rom.relation(:users) }
-  let(:tasks) { rom.relation(:tasks) }
+  let(:users) { container.relation(:users) }
+  let(:tasks) { container.relation(:tasks) }
 
   describe '#method_missing' do
     it 'responds to the root methods' do
@@ -57,8 +57,8 @@ describe ROM::Relation::Graph do
   describe '#call' do
     it 'materializes relations' do
       expect(graph.call).to match_array([
-        rom.relations.users,
-        [rom.relations.tasks]
+        container.relations.users,
+        [container.relations.tasks]
       ])
     end
   end

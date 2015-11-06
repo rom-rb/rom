@@ -2,13 +2,14 @@ require 'spec_helper'
 require 'rom/memory'
 
 describe 'Mappers / embedded' do
-  let(:setup) { ROM.setup(:memory) }
-  let(:rom) { setup.finalize }
+  include_context 'common setup'
+
+  before do
+    configuration.relation(:users)
+  end
 
   it 'allows mapping embedded tuples' do
-    setup.relation(:users)
-
-    setup.mappers do
+    configuration.mappers do
       define(:users) do
         model name: 'Test::User'
 
@@ -20,21 +21,19 @@ describe 'Mappers / embedded' do
       end
     end
 
-    rom.relations.users << {
+    container.relations.users << {
       'name' => 'Jane',
       'tasks' => [{ 'title' => 'Task One' }, { 'title' => 'Task Two' }]
     }
 
-    jane = rom.relation(:users).map_with(:users).first
+    jane = container.relation(:users).map_with(:users).first
 
     expect(jane.name).to eql('Jane')
     expect(jane.tasks).to eql([{ title: 'Task One' }, { title: 'Task Two' }])
   end
 
   it 'allows mapping embedded tuple' do
-    setup.relation(:users)
-
-    setup.mappers do
+    configuration.mappers do
       define(:users) do
         model name: 'Test::User'
 
@@ -48,12 +47,12 @@ describe 'Mappers / embedded' do
       end
     end
 
-    rom.relations.users << {
+    container.relations.users << {
       'name' => 'Jane',
       'address' => { 'street' => 'Somewhere 1', 'city' => 'NYC' }
     }
 
-    jane = rom.relation(:users).as(:users).first
+    jane = container.relation(:users).as(:users).first
 
     Test::Address.send(:include, Equalizer.new(:street, :city))
 

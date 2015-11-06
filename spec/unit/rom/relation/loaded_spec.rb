@@ -3,9 +3,9 @@ require 'spec_helper'
 describe ROM::Relation::Loaded do
   include_context 'users and tasks'
 
-  subject(:users) { ROM::Relation::Loaded.new(rom.relations.users) }
+  subject(:users) { ROM::Relation::Loaded.new(container.relations.users) }
 
-  before { setup.relation(:users) }
+  before { configuration.relation(:users) }
 
   describe '#each' do
     it 'yields tuples from relation' do

@@ -3,11 +3,11 @@ require 'spec_helper'
 describe ROM::Relation do
   include_context 'users and tasks'
 
-  let(:users) { rom.relations.users }
-  let(:tasks) { rom.relations.tasks }
+  let(:users) { container.relations.users }
+  let(:tasks) { container.relations.tasks }
 
   before do
-    setup.relation(:users) do
+    configuration.relation(:users) do
       def by_name(name)
         restrict(name: name)
       end
@@ -37,7 +37,7 @@ describe ROM::Relation do
       end
     end
 
-    setup.relation(:tasks) do
+    configuration.relation(:tasks) do
       def for_users(users)
         names = users.map { |u| u[:name] }
         restrict { |t| names.include?(t[:name]) }
@@ -70,7 +70,7 @@ describe ROM::Relation do
       expect(relation.curry_args).to eql(['Jane', 'jane@doe.org'])
 
       expect(relation[:email]).to match_array(
-        rom.relations.users.by_name_and_email_sorted('Jane', 'jane@doe.org', :email)
+        container.relations.users.by_name_and_email_sorted('Jane', 'jane@doe.org', :email)
       )
     end
 
@@ -78,13 +78,13 @@ describe ROM::Relation do
       relation = users.by_name('Jane')
 
       expect(relation).to_not be_curried
-      expect(relation).to match_array(rom.relations.users.by_name('Jane'))
+      expect(relation).to match_array(container.relations.users.by_name('Jane'))
     end
 
     it 'forwards to relation and return lazy when arity is unknown' do
       relation = users.all(name: 'Jane')
       expect(relation).to_not be_curried
-      expect(relation).to match_array(rom.relations.users.by_name('Jane').to_a)
+      expect(relation).to match_array(container.relations.users.by_name('Jane').to_a)
     end
 
     it 'returns original response if it is not a relation' do
@@ -101,15 +101,15 @@ describe ROM::Relation do
       relation = users.by_name
 
       expect(relation.name).to eql(:by_name)
-      expect(relation['Jane'].to_a).to eql(rom.relations.users.by_name('Jane').to_a)
+      expect(relation['Jane'].to_a).to eql(container.relations.users.by_name('Jane').to_a)
     end
 
     it 'returns relation' do
-      expect(users.call.to_a).to eql(rom.relations.users.to_a)
+      expect(users.call.to_a).to eql(container.relations.users.to_a)
     end
 
     describe 'using mappers' do
-      subject(:users) { rom.relations.users.with(mappers: mappers) }
+      subject(:users) { container.relations.users.with(mappers: mappers) }
 
       let(:name_list) { proc { |r| r.map { |t| t[:name] } } }
       let(:upcaser) { proc { |r| r.map(&:upcase) } }
@@ -198,7 +198,7 @@ describe ROM::Relation do
     end
 
     it_behaves_like 'a relation that returns one tuple' do
-      let(:relation) { rom.relation(:users) >> proc { |r| r } }
+      let(:relation) { container.relation(:users) >> proc { |r| r } }
 
       describe 'using a mapper' do
         it 'returns one mapped tuple' do

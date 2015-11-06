@@ -4,20 +4,20 @@ describe ROM::Relation, '#combine' do
   include_context 'users and tasks'
 
   before do
-    setup.relation(:users) do
+    configuration.relation(:users) do
       def by_name(name)
         restrict(name: name)
       end
     end
 
-    setup.relation(:tasks) do
+    configuration.relation(:tasks) do
       def for_users(users)
         names = users.map { |user| user[:name] }
         restrict { |task| names.include?(task[:name]) }
       end
     end
 
-    setup.relation(:tags) do
+    configuration.relation(:tags) do
       forward :map
 
       def for_tasks(tasks)
@@ -36,13 +36,13 @@ describe ROM::Relation, '#combine' do
       end
     end
 
-    setup.gateways[:default].dataset(:tags).insert(task: 'be cool', name: 'red')
-    setup.gateways[:default].dataset(:tags).insert(task: 'be cool', name: 'green')
+    configuration.gateways[:default].dataset(:tags).insert(task: 'be cool', name: 'red')
+    configuration.gateways[:default].dataset(:tags).insert(task: 'be cool', name: 'green')
   end
 
-  let(:users) { rom.relation(:users) }
-  let(:tasks) { rom.relation(:tasks) }
-  let(:tags) { rom.relation(:tags) }
+  let(:users) { container.relation(:users) }
+  let(:tasks) { container.relation(:tasks) }
+  let(:tags) { container.relation(:tags) }
 
   let(:map_users) {
     proc { |users, tasks|

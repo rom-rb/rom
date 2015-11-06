@@ -1,12 +1,14 @@
 require 'rom/relation/loaded'
 require 'rom/commands/graph'
 require 'rom/commands/graph/builder'
+require 'rom/support/publisher'
 
 module ROM
   # Exposes defined gateways, relations and mappers
   #
   # @api public
   class Container
+    include ROM::Support::Publisher
     include Equalizer.new(:gateways, :relations, :mappers, :commands)
 
     # @return [Hash] configured gateways
@@ -35,7 +37,6 @@ module ROM
       @relations = relations
       @mappers = mappers
       @commands = commands
-      freeze
     end
 
     # Get lazy relation identified by its name
@@ -118,6 +119,10 @@ module ROM
       else
         raise ArgumentError, "#{self.class}#command accepts a symbol or an array"
       end
+    end
+    
+    def disconnect
+      gateways.each_key(&:disconnect)
     end
   end
 end

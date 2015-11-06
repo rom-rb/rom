@@ -5,7 +5,7 @@ require 'ostruct'
 describe 'Commands / Update' do
   include_context 'users and tasks'
 
-  subject(:users) { rom.commands.users }
+  subject(:users) { container.commands.users }
 
   before do
     module Test
@@ -18,7 +18,9 @@ describe 'Commands / Update' do
       end
     end
 
-    setup.relation(:users) do
+    configuration.relation(:users) do
+      register_as :users
+      
       def all(criteria)
         restrict(criteria)
       end
@@ -28,7 +30,7 @@ describe 'Commands / Update' do
       end
     end
 
-    setup.commands(:users) do
+    configuration.commands(:users) do
       define(:update) do
         validator Test::UserValidator
       end
@@ -50,14 +52,14 @@ describe 'Commands / Update' do
     expect(result.error).to be_instance_of(Test::ValidationError)
     expect(result.error.message).to eql(':email is required')
 
-    expect(rom.relations.users.restrict(name: 'Jane')).to match_array([
+    expect(container.relations.users.restrict(name: 'Jane')).to match_array([
       { name: 'Jane', email: 'jane@doe.org' }
     ])
   end
 
   describe '"result" option' do
     it 'returns a single tuple when set to :one' do
-      setup.commands(:users) do
+      configuration.commands(:users) do
         define(:update_one, type: :update) do
           result :one
         end
@@ -71,7 +73,7 @@ describe 'Commands / Update' do
     end
 
     it 'raises when there is more than one tuple and result is set to :one' do
-      setup.commands(:users) do
+      configuration.commands(:users) do
         define(:update_one, type: :update) do
           result :one
         end
@@ -83,7 +85,7 @@ describe 'Commands / Update' do
 
       expect(result.error).to be_instance_of(ROM::TupleCountMismatchError)
 
-      expect(rom.relations.users).to match_array([
+      expect(container.relations.users).to match_array([
         { name: 'Jane', email: 'jane@doe.org' },
         { name: 'Joe', email: 'joe@doe.org' }
       ])
@@ -91,12 +93,12 @@ describe 'Commands / Update' do
 
     it 'allows only valid result types' do
       expect {
-        setup.commands(:users) do
+        configuration.commands(:users) do
           define(:create_one, type: :create) do
             result :invalid_type
           end
         end
-        setup.finalize
+        container
       }.to raise_error(ROM::Options::InvalidOptionValueError)
     end
   end
@@ -105,14 +107,14 @@ describe 'Commands / Update' do
     it 'allows scoping to a virtual relation' do
       user_model = Class.new { include Anima.new(:name, :email) }
 
-      setup.mappers do
+      configuration.mappers do
         define(:users) do
           model user_model
           register_as :entity
         end
       end
 
-      command = rom.command(:users).as(:entity).update.by_name('Jane')
+      command = container.command(:users).as(:entity).update.by_name('Jane')
 
       attributes = { name: 'Jane Doe', email: 'jane@doe.org' }
       result = command[attributes]

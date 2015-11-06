@@ -1,26 +1,20 @@
 require 'spec_helper'
+require 'rom/memory'
 
 describe 'Setting up ROM with multiple environments' do
-  let(:environment) do
+  let(:configuration) do
     {
-      one: ROM::Environment.new,
-      two: ROM::Environment.new
-    }
-  end
-  let(:setup) do
-    {
-      one: environment[:one].setup(:memory),
-      two: environment[:two].setup(:memory)
-    }
-  end
-  let(:container) do
-    {
-      one: setup[:one].finalize,
-      two: setup[:two].finalize
+      one: ROM::Configuration.new(:memory),
+      two: ROM::Configuration.new(:memory)
     }
   end
 
-  before { setup }
+  let(:container) do
+    {
+      one: ROM.create_container(configuration[:one]),
+      two: ROM.create_container(configuration[:two]),
+    }
+  end
 
   context 'without :auto_registration plugin' do
     before do
@@ -43,9 +37,9 @@ describe 'Setting up ROM with multiple environments' do
     end
 
     it 'registers items independently of other environments' do
-      environment[:one].register_relation(Test::Users)
-      environment[:one].register_command(Test::CreateUser)
-      environment[:one].register_mapper(Test::UserMapper)
+      configuration[:one].register_relation(Test::Users)
+      configuration[:one].register_command(Test::CreateUser)
+      configuration[:one].register_mapper(Test::UserMapper)
 
       expect(container[:one].relations[:users]).to be_kind_of Test::Users
       expect(container[:one].commands[:users].create).to be_kind_of Test::CreateUser
@@ -63,20 +57,20 @@ describe 'Setting up ROM with multiple environments' do
     end
 
     it 'allows use of the same identifiers in different environments' do
-      environment[:one].register_relation(Test::Users)
-      environment[:one].register_command(Test::CreateUser)
-      environment[:one].register_mapper(Test::UserMapper)
+      configuration[:one].register_relation(Test::Users)
+      configuration[:one].register_command(Test::CreateUser)
+      configuration[:one].register_mapper(Test::UserMapper)
 
-      expect { environment[:two].register_relation(Test::Users) }.to_not raise_error
-      expect { environment[:two].register_command(Test::CreateUser) }.to_not raise_error
-      expect { environment[:two].register_mapper(Test::UserMapper) }.to_not raise_error
+      expect { configuration[:two].register_relation(Test::Users) }.to_not raise_error
+      expect { configuration[:two].register_command(Test::CreateUser) }.to_not raise_error
+      expect { configuration[:two].register_mapper(Test::UserMapper) }.to_not raise_error
     end
   end
 
   context 'with :auto_registration plugin' do
     context 'without if option' do
       before do
-        environment[:one].use :auto_registration
+        configuration[:one].use :auto_registration
 
         module Test
           class Users < ROM::Relation[:memory]
@@ -117,11 +111,11 @@ describe 'Setting up ROM with multiple environments' do
 
     context 'with if option' do
       before do
-        environment[:one].use :auto_registration, if: ->(item) do
+        configuration[:one].use :auto_registration, if: ->(item) do
           item.to_s[/(.*)(?=::)/] == 'Test'
         end
 
-        environment[:two].use :auto_registration, if: ->(item) do
+        configuration[:two].use :auto_registration, if: ->(item) do
           item.to_s[/(.*)(?=::)/] == 'Test::API'
         end
 

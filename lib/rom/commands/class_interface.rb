@@ -70,33 +70,6 @@ module ROM
         ROM.plugin_registry.commands.fetch(plugin, adapter).apply_to(self)
       end
 
-      # Build command registry hash for provided relations
-      #
-      # @param [RelationRegistry] relations registry
-      # @param [Hash] gateways
-      # @param [Array] descendants a list of command subclasses
-      #
-      # @return [Hash]
-      #
-      # @api private
-      def registry(relations, gateways, descendants)
-        descendants.each_with_object({}) do |klass, h|
-          rel_name = klass.relation
-
-          next unless rel_name
-
-          relation = relations[rel_name]
-          name = klass.register_as || klass.default_name
-
-          gateway = gateways[relation.class.gateway]
-          gateway.extend_command_class(klass, relation.dataset)
-
-          klass.send(:include, relation_methods_mod(relation.class))
-
-          (h[rel_name] ||= {})[name] = klass.build(relation)
-        end
-      end
-
       # @api private
       def relation_methods_mod(relation_class)
         mod = Module.new

@@ -3,19 +3,23 @@ require 'spec_helper'
 describe 'Commands' do
   include_context 'users and tasks'
 
-  let(:users) { rom.relations.users }
+  let(:users) { container.relations.users }
 
   before do
-    setup.relation(:users) do
+    configuration
+    configuration.register_relation(Class.new(ROM::Relation[:memory]) do
+      register_as :users
+      dataset :users
+
       def by_id(id)
         restrict(id: id)
       end
-    end
+    end)
   end
 
   describe '.build_class' do
     it 'creates a command class constant' do
-      klass = ROM::Command.build_class(:create, :users, adapter: :memory) {
+      klass = ROM::ConfigurationDSL::Command.build_class(:create, :users, adapter: :memory) {
         def super?
           true
         end
@@ -24,7 +28,7 @@ describe 'Commands' do
       expect(klass.name).to eql('ROM::Memory::Commands::Create[Users]')
       expect(klass.register_as).to eql(:create)
 
-      command = klass.build(rom.relations.users)
+      command = klass.build(container.relations.users)
 
       expect(command).to be_a(ROM::Memory::Commands::Create)
       expect(command).to be_super
@@ -64,7 +68,7 @@ describe 'Commands' do
 
     describe 'extending command with a db-specific behavior' do
       before do
-        setup.gateways[:default].instance_exec do
+        configuration.gateways[:default].instance_exec do
           def extend_command_class(klass, _)
             klass.class_eval do
               def super_command?
@@ -78,41 +82,19 @@ describe 'Commands' do
 
       it 'applies to defined classes' do
         klass = Class.new(ROM::Commands::Create[:memory]) { relation :users }
+        configuration.register_command(klass)
+        container
         command = klass.build(users)
         expect(command).to be_super_command
       end
 
       it 'applies to generated classes' do
-        klass = ROM::Command.build_class(:create, :users, adapter: :memory)
+        klass = ROM::ConfigurationDSL::Command.build_class(:create, :users, adapter: :memory)
+        configuration.register_command(klass)
+        container
         command = klass.build(users)
         expect(command).to be_super_command
       end
-    end
-  end
-
-  describe '.registry' do
-    it 'builds a hash with commands grouped by relations' do
-      commands = {}
-
-      [:Create, :Update, :Delete].each do |command_type|
-        klass = Class.new(ROM::Commands.const_get(command_type)) do
-          relation :users
-        end
-        klass.class_eval "def self.name; 'Test::#{command_type}'; end"
-        commands[command_type] = klass
-      end
-
-      registry = ROM::Command.registry(
-        rom.relations, setup.gateways, commands.values
-      )
-
-      expect(registry).to eql(
-        users: {
-          create: commands[:Create].build(users),
-          update: commands[:Update].build(users),
-          delete: commands[:Delete].build(users)
-        }
-      )
     end
   end
 
@@ -180,10 +162,14 @@ describe 'Commands' do
   end
 
   describe '#method_missing' do
-    let(:command) { rom.command(:users)[:update] }
+    let(:command) { container.command(:users)[:update] }
 
     before do
-      setup.commands(:users) { define(:update) { result :one } }
+      configuration.register_command(Class.new(ROM::Command::Update[:memory]) do
+        relation :users
+        register_as :update
+        result :one
+      end)
     end
 
     it 'forwards known relation view methods' do

@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 RSpec.describe 'Inheritance relation hierarchy' do
-  before do
-    ROM.setup(:memory)
+  include_context 'common setup'
 
+  before do
     module Test
       class Users < ROM::Relation[:memory]
         dataset :users
@@ -18,14 +18,12 @@ RSpec.describe 'Inheritance relation hierarchy' do
       end
     end
 
-    ROM.finalize
+    configuration.register_relation(Test::Users, Test::OtherUsers)
   end
 
   it 'registers parent and descendant relations' do
-    rom = ROM.env
-
-    users = rom.relations.users
-    other_users = rom.relations.other_users
+    users = container.relation(:users)
+    other_users = container.relation(:other_users)
 
     expect(users).to be_instance_of(Test::Users)
     expect(other_users).to be_instance_of(Test::OtherUsers)

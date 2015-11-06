@@ -7,26 +7,26 @@ describe 'Mapper definition DSL' do
 
   describe 'folded relation mapper' do
     before do
-      setup.relation(:tasks) do
+      configuration.relation(:tasks) do
         def with_users
           join(users)
         end
       end
 
-      setup.relation(:users) do
+      configuration.relation(:users) do
         def with_tasks
           join(tasks)
         end
       end
     end
 
-    let(:rom) { setup.finalize }
+    let(:container) { ROM.create_container(configuration) }
     let(:actual) do
-      rom.relation(:users).with_tasks.map_with(:users).to_a
+      container.relation(:users).with_tasks.map_with(:users).to_a
     end
 
     it 'groups all attributes and folds the first key' do
-      setup.mappers do
+      configuration.mappers do
         define(:users) do
           fold tasks: [:title, :priority]
         end
@@ -39,7 +39,7 @@ describe 'Mapper definition DSL' do
     end
 
     it 'is sensitive to the order of keys' do
-      setup.mappers do
+      configuration.mappers do
         define(:users) do
           fold priorities: [:priority, :title]
         end
@@ -52,7 +52,7 @@ describe 'Mapper definition DSL' do
     end
 
     it 'accepts the block syntax' do
-      setup.mappers do
+      configuration.mappers do
         define(:users) do
           fold :priorities do
             attribute :priority

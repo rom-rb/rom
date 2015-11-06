@@ -2,13 +2,12 @@ require 'spec_helper'
 require 'rom/memory'
 
 describe 'Mapper definition DSL' do
-  let(:setup) { ROM.setup(:memory) }
-  let(:rom)   { ROM.finalize.env   }
+  include_context 'common setup'
 
   before do
-    setup.relation(:users)
+    configuration.relation(:users)
 
-    users = setup.default.dataset(:users)
+    users = configuration.default.dataset(:users)
     users.insert(
       user_id: 1,
       user_name: 'Joe',
@@ -19,10 +18,10 @@ describe 'Mapper definition DSL' do
   end
 
   describe 'prefix' do
-    subject(:mapped_users) { rom.relation(:users).as(:users).to_a }
+    subject(:mapped_users) { container.relation(:users).as(:users).to_a }
 
     it 'applies new separator to the attributes following it' do
-      setup.mappers do
+      configuration.mappers do
         define(:users) do
           prefix :user
           attribute :id

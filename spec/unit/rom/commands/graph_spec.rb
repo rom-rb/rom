@@ -31,15 +31,15 @@ describe ROM::Commands::Graph do
       before { command.call }
 
       it 'inserts root' do
-        expect(rom.relation(:users)).to match_array([{ name: 'Jane' }])
+        expect(container.relation(:users)).to match_array([{ name: 'Jane' }])
       end
 
       it 'inserts root nodes' do
-        expect(rom.relation(:tasks)).to match_array([{ user: 'Jane', title: 'One' }])
+        expect(container.relation(:tasks)).to match_array([{ user: 'Jane', title: 'One' }])
       end
 
       it 'inserts nested graph nodes' do
-        expect(rom.relation(:tags)).to match_array([
+        expect(container.relation(:tags)).to match_array([
           { name: 'red', task: 'One' },
           { name: 'green', task: 'One' },
           { name: 'blue', task: 'One' }
@@ -48,31 +48,30 @@ describe ROM::Commands::Graph do
     end
   end
 
-  let(:rom) { setup.finalize }
-  let(:setup) { ROM.setup(:memory) }
+  include_context 'common setup'
 
-  let(:create_user) { rom.command(:users).create }
-  let(:create_task) { rom.command(:tasks).create }
+  let(:create_user) { container.command(:users).create }
+  let(:create_task) { container.command(:tasks).create }
 
-  let(:create_many_tasks) { rom.command(:tasks).create_many }
-  let(:create_many_tags) { rom.command(:tags).create_many }
+  let(:create_many_tasks) { container.command(:tasks).create_many }
+  let(:create_many_tags) { container.command(:tags).create_many }
 
   let(:user) { { name: 'Jane' } }
   let(:task) { { title: 'One' } }
   let(:tags) { [{ name: 'red' }, { name: 'green' }, { name: 'blue' }] }
 
   before do
-    setup.relation(:users)
-    setup.relation(:tasks)
-    setup.relation(:tags)
+    configuration.relation(:users)
+    configuration.relation(:tasks)
+    configuration.relation(:tags)
 
-    setup.commands(:users) do
+    configuration.commands(:users) do
       define(:create) do
         result :one
       end
     end
 
-    setup.commands(:tasks) do
+    configuration.commands(:tasks) do
       define(:create) do
         result :one
 
@@ -90,7 +89,7 @@ describe ROM::Commands::Graph do
       end
     end
 
-    setup.commands(:tags) do
+    configuration.commands(:tags) do
       define(:create) do
         register_as :create_many
 
@@ -129,7 +128,7 @@ describe ROM::Commands::Graph do
 
   describe 'pipeline' do
     subject(:command) do
-      rom.command(:users).as(:entity).create.with(user)
+      container.command(:users).as(:entity).create.with(user)
         .combine(create_task.with(task)
         .combine(create_many_tags.with(tags)))
     end
@@ -159,6 +158,7 @@ describe ROM::Commands::Graph do
           end
         end
       end
+      configuration.register_mapper(Test::UserMapper)
     end
 
     it 'sends data through the pipeline' do

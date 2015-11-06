@@ -1,13 +1,12 @@
-require 'rom/setup_dsl/relation'
-
-require 'rom/setup_dsl/mapper_dsl'
-require 'rom/setup_dsl/command_dsl'
+require 'rom/configuration_dsl/relation'
+require 'rom/configuration_dsl/mapper_dsl'
+require 'rom/configuration_dsl/command_dsl'
 
 module ROM
-  # This extends Setup class with the DSL methods
+  # This extends Configuration class with the DSL methods
   #
   # @api public
-  class Setup
+  module ConfigurationDSL
     # Relation definition DSL
     #
     # @example
@@ -24,6 +23,7 @@ module ROM
       klass = Relation.build_class(name, klass_opts)
       klass.register_as(name)
       klass.class_eval(&block) if block
+      register_relation(klass)
       klass
     end
 
@@ -43,7 +43,7 @@ module ROM
     #
     # @api public
     def mappers(&block)
-      MapperDSL.new(self, &block)
+      register_mapper(*MapperDSL.new(self, mapper_classes, block).mapper_classes)
     end
 
     # Command definition DSL
@@ -70,7 +70,7 @@ module ROM
     #
     # @api public
     def commands(name, &block)
-      CommandDSL.new(name, default_adapter, &block)
+      register_command(*CommandDSL.new(name, default_adapter, &block).command_classes)
     end
   end
 end

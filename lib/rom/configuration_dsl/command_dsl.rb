@@ -1,17 +1,19 @@
-require 'rom/setup_dsl/command'
+require 'rom/configuration_dsl/command'
 
 module ROM
-  class Setup
+  module ConfigurationDSL
+
     # Command `define` DSL used by Setup#commands
     #
     # @private
     class CommandDSL
-      attr_reader :relation, :adapter
+      attr_reader :relation, :adapter, :command_classes
 
       # @api private
       def initialize(relation, adapter = nil, &block)
         @relation = relation
         @adapter = adapter
+        @command_classes = []
         instance_exec(&block)
       end
 
@@ -25,7 +27,7 @@ module ROM
       #
       # @api public
       def define(name, options = EMPTY_HASH, &block)
-        Command.build_class(
+        @command_classes << Command.build_class(
           name, relation, { adapter: adapter }.merge(options), &block
         )
       end

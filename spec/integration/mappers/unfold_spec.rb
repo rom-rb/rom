@@ -2,13 +2,12 @@ require 'spec_helper'
 require 'rom/memory'
 
 describe 'Mapper definition DSL' do
-  let(:setup) { ROM.setup(:memory) }
-  let(:rom)   { ROM.finalize.env   }
+  include_context 'common setup'
 
   before do
-    setup.relation(:users)
+    configuration.relation(:users)
 
-    users = setup.default.dataset(:users)
+    users = configuration.default.dataset(:users)
 
     users.insert(name: 'Joe',  roles: ['admin', 'user', 'user', nil])
     users.insert(name: 'Jane', roles: 'user')
@@ -16,10 +15,10 @@ describe 'Mapper definition DSL' do
   end
 
   describe 'unfold' do
-    let(:mapped_users) { rom.relation(:users).as(:users).to_a }
+    let(:mapped_users) { container.relation(:users).as(:users).to_a }
 
     it 'splits the attribute' do
-      setup.mappers do
+      configuration.mappers do
         define(:users) { unfold :roles }
       end
 
@@ -34,7 +33,7 @@ describe 'Mapper definition DSL' do
     end
 
     it 'renames unfolded attribute when necessary' do
-      setup.mappers do
+      configuration.mappers do
         define(:users) { unfold :role, from: :roles }
       end
 
@@ -49,7 +48,7 @@ describe 'Mapper definition DSL' do
     end
 
     it 'rewrites the existing attribute' do
-      setup.mappers do
+      configuration.mappers do
         define(:users) { unfold :name, from: :roles }
       end
 
@@ -64,7 +63,7 @@ describe 'Mapper definition DSL' do
     end
 
     it 'ignores the absent attribute' do
-      setup.mappers do
+      configuration.mappers do
         define(:users) { unfold :foo, from: :absent }
       end
 
@@ -76,7 +75,7 @@ describe 'Mapper definition DSL' do
     end
 
     it 'accepts block' do
-      setup.mappers do
+      configuration.mappers do
         define(:users) { unfold(:role, from: :roles) {} }
       end
 

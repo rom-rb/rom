@@ -3,8 +3,8 @@ require 'spec_helper'
 describe 'Commands / Create' do
   include_context 'users and tasks'
 
-  let(:users) { rom.commands.users }
-  let(:tasks) { rom.commands.tasks }
+  let(:users) { container.commands.users }
+  let(:tasks) { container.commands.tasks }
 
   before do
     module Test
@@ -19,8 +19,8 @@ describe 'Commands / Create' do
       end
     end
 
-    setup.relation(:users)
-    setup.relation(:tasks)
+    configuration.relation(:users)
+    configuration.relation(:tasks)
 
     class Test::CreateUser < ROM::Commands::Create[:memory]
       relation :users
@@ -62,6 +62,9 @@ describe 'Commands / Create' do
       attribute :name
       attribute :title
     end
+
+    configuration.register_command(Test::CreateUser, Test::CreateTask)
+    configuration.register_mapper(Test::UserMapper, Test::TaskMapper)
   end
 
   it 'inserts user on successful validation' do
@@ -87,12 +90,12 @@ describe 'Commands / Create' do
 
     expect(result.error).to be_instance_of(Test::ValidationError)
     expect(result.error.message).to eql(":name and :email are required")
-    expect(rom.relations.users.count).to be(2)
+    expect(container.relations.users.count).to be(2)
   end
 
   describe '"result" option' do
     it 'returns a single tuple when set to :one' do
-      setup.commands(:users) do
+      configuration.commands(:users) do
         define(:create_one, type: :create) do
           result :one
         end
@@ -109,12 +112,12 @@ describe 'Commands / Create' do
 
     it 'allows only valid result types' do
       expect {
-        setup.commands(:users) do
+        configuration.commands(:users) do
           define(:create_one, type: :create) do
             result :invalid_type
           end
         end
-        setup.finalize
+        container
       }.to raise_error(ROM::Options::InvalidOptionValueError)
     end
   end
@@ -125,7 +128,7 @@ describe 'Commands / Create' do
     end
 
     it 'uses registered mapper to process the result for :one result' do
-      command = rom.command(:users).as(:entity).create
+      command = container.command(:users).as(:entity).create
       result = command[attributes]
 
       expect(result).to eql(Test::User.new(attributes))
@@ -138,11 +141,11 @@ describe 'Commands / Create' do
         mapper_input = tuples
       end
 
-      left = rom.command(:users).as(:entity).create.with(
+      left = container.command(:users).as(:entity).create.with(
         name: 'Jane', email: 'jane@doe.org'
       )
 
-      right = rom.command(:tasks).as(:entity).create.with(
+      right = container.command(:tasks).as(:entity).create.with(
         title: 'Jane task'
       )
 
@@ -157,11 +160,11 @@ describe 'Commands / Create' do
     end
 
     it 'uses registered mapper to process the result for :many results' do
-      setup.commands(:users) do
+      configuration.commands(:users) do
         define(:create_many, type: :create)
       end
 
-      command = rom.command(:users).as(:entity).create_many
+      command = container.command(:users).as(:entity).create_many
       result = command[attributes]
 
       expect(result).to eql([Test::User.new(attributes)])

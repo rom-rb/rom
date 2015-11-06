@@ -4,7 +4,7 @@ describe 'Building up a command graph for nested input' do
   include_context 'command graph'
 
   it 'creates a command graph for nested input :one result as root' do
-    setup.commands(:tasks) do
+    configuration.commands(:tasks) do
       define(:create) do
         result :one
 
@@ -39,24 +39,24 @@ describe 'Building up a command graph for nested input' do
       ]
     ]
 
-    command = rom.command(options)
+    command = container.command(options)
 
     command.call(input)
 
-    expect(rom.relation(:users)).to match_array([
+    expect(container.relation(:users)).to match_array([
       { name: 'Jane' }
     ])
 
-    expect(rom.relation(:tasks)).to match_array([
+    expect(container.relation(:tasks)).to match_array([
       { title: 'Task One', user: 'Jane' }
     ])
 
-    expect(rom.relation(:books)).to match_array([
+    expect(container.relation(:books)).to match_array([
       { title: 'Book One', user: 'Jane' },
       { title: 'Book Two', user: 'Jane' }
     ])
 
-    expect(rom.relation(:tags)).to match_array([
+    expect(container.relation(:tags)).to match_array([
       { name: 'red', task: 'Task One' },
       { name: 'green', task: 'Task One' },
       { name: 'blue', task: 'Task One' }
@@ -64,7 +64,7 @@ describe 'Building up a command graph for nested input' do
   end
 
   it 'creates a command graph for nested input with :many results as root' do
-    setup.commands(:tasks) do
+    configuration.commands(:tasks) do
       define(:create) do
         def execute(tuples, user)
           super(tuples.map { |t| t.merge(user: user.fetch(:name)) })
@@ -96,20 +96,20 @@ describe 'Building up a command graph for nested input' do
       ]
     ]
 
-    command = rom.command(options)
+    command = container.command(options)
 
     command.call(input)
 
-    expect(rom.relation(:users)).to match_array([
+    expect(container.relation(:users)).to match_array([
       { name: 'Jane' }
     ])
 
-    expect(rom.relation(:tasks)).to match_array([
+    expect(container.relation(:tasks)).to match_array([
       { title: 'Task One', user: 'Jane' },
       { title: 'Task Two', user: 'Jane' }
     ])
 
-    expect(rom.relation(:tags)).to match_array([
+    expect(container.relation(:tags)).to match_array([
       { name: 'red', task: 'Task One' },
       { name: 'green', task: 'Task One' },
       { name: 'blue', task: 'Task Two' }
@@ -118,7 +118,7 @@ describe 'Building up a command graph for nested input' do
 
 
   it 'updates graph elements cleanly' do
-    setup.commands(:tasks) do
+    configuration.commands(:tasks) do
       define(:create) do
         def execute(tuples, user)
           super(tuples.map { |t| t.merge(user: user.fetch(:name)) })
@@ -139,7 +139,7 @@ describe 'Building up a command graph for nested input' do
       end
     end
 
-    setup.commands(:users) do
+    configuration.commands(:users) do
       define(:update) do
         result :one
       end
@@ -165,9 +165,9 @@ describe 'Building up a command graph for nested input' do
       }
     }
 
-    create = rom.command([{ user: :users }, [:create, [:tasks, [:create]]]])
+    create = container.command([{ user: :users }, [:create, [:tasks, [:create]]]])
 
-    update = rom.command([
+    update = container.command([
       { user: :users },
       [
         { update: -> cmd, user { cmd.by_name(user[:name]) } },
@@ -186,11 +186,11 @@ describe 'Building up a command graph for nested input' do
 
     create.call(initial)
 
-    rom.command(:tasks).create.call(
+    container.command(:tasks).create.call(
       [{ title: 'Task One'}], { name: 'Jane' }
     )
 
-    expect(rom.relation(:tasks)).to match_array([
+    expect(container.relation(:tasks)).to match_array([
       { title: 'Change Name', user: 'Johnny' },
       { title: 'Finish that novel', user: 'Johnny' },
       { title: 'Task One', user: 'Jane' }
@@ -198,11 +198,11 @@ describe 'Building up a command graph for nested input' do
 
     update.call(updated)
 
-    expect(rom.relation(:users)).to match_array([
+    expect(container.relation(:users)).to match_array([
       { name: 'Johnny', email: 'johnathan@doe.org' }
     ])
 
-    expect(rom.relation(:tasks)).to match_array([
+    expect(container.relation(:tasks)).to match_array([
       { title: 'Task One', user: 'Jane' },
       { title: 'Finish that novel', priority: 1, user: 'Johnny' }
     ])
@@ -210,7 +210,7 @@ describe 'Building up a command graph for nested input' do
 
 
   it 'works with auto-mapping' do
-    setup.mappers do
+    configuration.mappers do
       define(:users) do
         register_as :entity
         reject_keys true
@@ -231,7 +231,7 @@ describe 'Building up a command graph for nested input' do
       end
     end
 
-    setup.commands(:tasks) do
+    configuration.commands(:tasks) do
       define(:create) do
         def execute(tuples, user)
           super(tuples.map { |t| t.merge(user: user.fetch(:name)) })
@@ -263,7 +263,7 @@ describe 'Building up a command graph for nested input' do
       ]
     ]
 
-    command = rom.command(options).as(:entity)
+    command = container.command(options).as(:entity)
 
     result = command.call(input).one
 
@@ -279,7 +279,7 @@ describe 'Building up a command graph for nested input' do
       { user: :users }, [:create, [{ book: :books }, [:create]]]
     ]
 
-    command = rom.command(options)
+    command = container.command(options)
 
     expect {
       command.call(input)

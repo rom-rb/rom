@@ -7,15 +7,15 @@ describe 'Mapper definition DSL' do
 
   describe 'wrapped relation mapper' do
     before do
-      setup.relation(:tasks) do
+      configuration.relation(:tasks) do
         def with_user
           join(users)
         end
       end
 
-      setup.relation(:users)
+      configuration.relation(:users)
 
-      setup.mappers do
+      configuration.mappers do
         define(:tasks) do
           model name: 'Test::Task'
 
@@ -26,7 +26,7 @@ describe 'Mapper definition DSL' do
     end
 
     it 'allows defining wrapped attributes via options hash' do
-      setup.mappers do
+      configuration.mappers do
         define(:with_user, parent: :tasks) do
           model name: 'Test::TaskWithUser'
 
@@ -37,11 +37,11 @@ describe 'Mapper definition DSL' do
         end
       end
 
-      rom = setup.finalize
+      container
 
       Test::TaskWithUser.send(:include, Equalizer.new(:title, :priority, :user))
 
-      jane = rom.relation(:tasks).with_user.as(:with_user).to_a.last
+      jane = container.relation(:tasks).with_user.as(:with_user).to_a.last
 
       expect(jane).to eql(
         Test::TaskWithUser.new(
@@ -53,7 +53,7 @@ describe 'Mapper definition DSL' do
     end
 
     it 'allows defining wrapped attributes via options block' do
-      setup.mappers do
+      configuration.mappers do
         define(:with_user, parent: :tasks) do
           model name: 'Test::TaskWithUser'
 
@@ -66,11 +66,11 @@ describe 'Mapper definition DSL' do
         end
       end
 
-      rom = setup.finalize
+      container
 
       Test::TaskWithUser.send(:include, Equalizer.new(:title, :priority, :user))
 
-      jane = rom.relation(:tasks).with_user.as(:with_user).to_a.last
+      jane = container.relation(:tasks).with_user.as(:with_user).to_a.last
 
       expect(jane).to eql(
         Test::TaskWithUser.new(
@@ -82,7 +82,7 @@ describe 'Mapper definition DSL' do
     end
 
     it 'allows defining nested wrapped attributes via a block' do
-      setup.mappers do
+      configuration.mappers do
         define(:with_user, parent: :tasks, inherit_header: false) do
           model name: 'Test::TaskWithUser'
 
@@ -101,13 +101,13 @@ describe 'Mapper definition DSL' do
         end
       end
 
-      rom = setup.finalize
+      container
 
       Test::TaskWithUser.send(:include, Equalizer.new(:title, :priority, :user))
       Test::TaskUser.send(:include, Equalizer.new(:name, :contact))
       Test::Contact.send(:include, Equalizer.new(:email))
 
-      jane = rom.relation(:tasks).with_user.as(:with_user).to_a.last
+      jane = container.relation(:tasks).with_user.as(:with_user).to_a.last
 
       expect(jane).to eql(
         Test::TaskWithUser.new(
@@ -121,7 +121,7 @@ describe 'Mapper definition DSL' do
     end
 
     it 'allows defining wrapped attributes mapped to a model' do
-      setup.mappers do
+      configuration.mappers do
         define(:with_user, parent: :tasks) do
           model name: 'Test::TaskWithUser'
 
@@ -135,12 +135,12 @@ describe 'Mapper definition DSL' do
         end
       end
 
-      rom = setup.finalize
+      container
 
       Test::TaskWithUser.send(:include, Equalizer.new(:title, :priority, :user))
       Test::User.send(:include, Equalizer.new(:email))
 
-      jane = rom.relation(:tasks).with_user.as(:with_user).to_a.last
+      jane = container.relation(:tasks).with_user.as(:with_user).to_a.last
 
       expect(jane).to eql(
         Test::TaskWithUser.new(

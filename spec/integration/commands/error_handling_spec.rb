@@ -4,11 +4,11 @@ describe 'Commands / Error handling' do
   include_context 'users and tasks'
 
   before do
-    setup.relation(:users)
-    setup.commands(:users) { define(:create) }
+    configuration.relation(:users)
+    configuration.commands(:users) { define(:create) }
   end
 
-  subject(:users) { rom.commands.users }
+  subject(:users) { container.commands.users }
 
   it 'rescues from ROM::CommandError' do
     result = false
