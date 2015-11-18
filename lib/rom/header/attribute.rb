@@ -93,6 +93,10 @@ module ROM
       def mapping
         { key => name }
       end
+
+      def union?
+        key.is_a? ::Array
+      end
     end
 
     # Embedded attribute is a special attribute type that has a header
