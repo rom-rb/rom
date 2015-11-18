@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe 'Mapper definition DSL' do
+  include_context 'container'
   include_context 'users and tasks'
 
   let(:header) { mapper.header }
@@ -72,7 +73,7 @@ describe 'Mapper definition DSL' do
       end
 
       container
-      
+
       Test::UserWithTasks.send(:include, Equalizer.new(:name, :email, :tasks))
 
       jane = container.relation(:users).with_tasks.map_with(:with_tasks).to_a.last

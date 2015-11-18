@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe 'Commands / Delete' do
+  include_context 'container'
   include_context 'users and tasks'
 
   subject(:users) { container.commands.users }

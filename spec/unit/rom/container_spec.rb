@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe ROM::Container do
+  include_context 'container'
   include_context 'users and tasks'
 
   before do
@@ -9,7 +10,6 @@ describe ROM::Container do
     users = Class.new(ROM::Relation[:memory]) do
       register_as :users
       dataset :users
-
       def by_name(name)
         restrict(name: name).project(:name)
       end

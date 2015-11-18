@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe 'Mapper definition DSL' do
+  include_context 'container'
   include_context 'users and tasks'
 
   describe 'combine' do

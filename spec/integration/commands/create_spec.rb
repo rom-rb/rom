@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe 'Commands / Create' do
+  include_context 'container'
   include_context 'users and tasks'
 
   let(:users) { container.commands.users }

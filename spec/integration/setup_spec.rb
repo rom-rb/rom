@@ -3,6 +3,7 @@ require 'virtus'
 
 describe 'Configuring ROM' do
   context 'with existing schema' do
+    include_context 'container'
     include_context 'users and tasks'
 
     let(:jane) { { name: 'Jane', email: 'jane@doe.org' } }

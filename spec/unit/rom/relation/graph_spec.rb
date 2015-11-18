@@ -1,9 +1,26 @@
 require 'spec_helper'
 
 describe ROM::Relation::Graph do
-  subject(:graph) { ROM::Relation::Graph.new(users, [tasks.for_users]) }
-
+  include_context 'gateway only'
   include_context 'users and tasks'
+
+  let(:users_relation) do
+    Class.new(ROM::Memory::Relation) do
+      def by_name(name)
+        restrict(name: name)
+      end
+    end.new(users_dataset)
+  end
+
+  let(:tasks_relation) do
+    Class.new(ROM::Memory::Relation) do
+      def for_users(_users)
+        self
+      end
+    end.new(tasks_dataset)
+  end
+
+  subject(:graph) { ROM::Relation::Graph.new(users_relation, [tasks_relation.for_users]) }
 
   it_behaves_like 'materializable relation' do
     let(:mapper) do
@@ -11,26 +28,9 @@ describe ROM::Relation::Graph do
     end
 
     let(:relation) do
-      ROM::Relation::Graph.new(users.by_name('Jane'), [tasks.for_users]) >> mapper
+      ROM::Relation::Graph.new(users_relation.by_name('Jane'), [tasks_relation.for_users]) >> mapper
     end
   end
-
-  before do
-    configuration.relation(:users) do
-      def by_name(name)
-        restrict(name: name)
-      end
-    end
-
-    configuration.relation(:tasks) do
-      def for_users(_users)
-        self
-      end
-    end
-  end
-
-  let(:users) { container.relation(:users) }
-  let(:tasks) { container.relation(:tasks) }
 
   describe '#method_missing' do
     it 'responds to the root methods' do
@@ -42,11 +42,11 @@ describe ROM::Relation::Graph do
     end
 
     it 'forwards methods to the root and decorates curried response' do
-      expect((users.combine(tasks.for_users)).by_name).to be_instance_of(ROM::Relation::Graph)
+      expect((users_relation.combine(tasks_relation.for_users)).by_name).to be_instance_of(ROM::Relation::Graph)
     end
 
     it 'returns original response from the root' do
-      expect(graph.mappers).to eql(users.mappers)
+      expect(graph.mappers).to eql(users_relation.mappers)
     end
 
     it 'raises method error' do
@@ -57,8 +57,8 @@ describe ROM::Relation::Graph do
   describe '#call' do
     it 'materializes relations' do
       expect(graph.call).to match_array([
-        container.relations.users,
-        [container.relations.tasks]
+        users_relation,
+        [tasks_relation]
       ])
     end
   end
@@ -66,16 +66,16 @@ describe ROM::Relation::Graph do
   describe '#to_a' do
     it 'coerces to an array' do
       expect(graph).to match_array([
-        users.to_a,
-        [tasks.for_users(users).to_a]
+        users_relation.to_a,
+        [tasks_relation.for_users(users_relation).to_a]
       ])
     end
 
     it 'returns empty arrays when left was empty' do
-      graph = ROM::Relation::Graph.new(users.by_name('Not here'), [tasks.for_users])
+      graph = ROM::Relation::Graph.new(users_relation.by_name('Not here'), [tasks_relation.for_users])
 
       expect(graph).to match_array([
-        [], [ROM::Relation::Loaded.new(tasks.for_users, [])]
+        [], [ROM::Relation::Loaded.new(tasks_relation.for_users, [])]
       ])
     end
   end

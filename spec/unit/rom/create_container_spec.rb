@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe ROM::CreateContainer do
   describe '#finalize' do
-    include_context 'common setup'
+    include_context 'container'
 
     context 'with gateway that supports schema inferring' do
       it 'builds relation from inferred schema' do

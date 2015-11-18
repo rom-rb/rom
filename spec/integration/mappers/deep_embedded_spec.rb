@@ -2,8 +2,8 @@ require 'spec_helper'
 require 'rom/memory'
 
 describe 'Mappers / deeply embedded tuples' do
-  include_context 'common setup'
-  
+  include_context 'container'
+
   it 'allows mapping embedded tuples' do
     configuration.relation(:users)
 

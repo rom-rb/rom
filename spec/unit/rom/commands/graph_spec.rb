@@ -48,7 +48,7 @@ describe ROM::Commands::Graph do
     end
   end
 
-  include_context 'common setup'
+  include_context 'container'
 
   let(:create_user) { container.command(:users).create }
   let(:create_task) { container.command(:tasks).create }

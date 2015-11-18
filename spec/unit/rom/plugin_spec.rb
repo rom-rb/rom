@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe "ROM::PluginRegistry" do
-  include_context 'common setup'
+  include_context 'container'
 
   before do
     Test::ConfigurationPlugin = Module.new

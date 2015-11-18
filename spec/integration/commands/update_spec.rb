@@ -3,6 +3,7 @@ require 'spec_helper'
 require 'ostruct'
 
 describe 'Commands / Update' do
+  include_context 'container'
   include_context 'users and tasks'
 
   subject(:users) { container.commands.users }
@@ -20,7 +21,7 @@ describe 'Commands / Update' do
 
     configuration.relation(:users) do
       register_as :users
-      
+
       def all(criteria)
         restrict(criteria)
       end

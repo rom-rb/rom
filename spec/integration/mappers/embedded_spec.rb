@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'rom/memory'
 
 describe 'Mappers / embedded' do
-  include_context 'common setup'
+  include_context 'container'
 
   before do
     configuration.relation(:users)

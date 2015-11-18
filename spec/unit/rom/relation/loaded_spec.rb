@@ -1,11 +1,10 @@
 require 'spec_helper'
 
 describe ROM::Relation::Loaded do
+  include_context 'no container'
   include_context 'users and tasks'
 
-  subject(:users) { ROM::Relation::Loaded.new(container.relations.users) }
-
-  before { configuration.relation(:users) }
+  subject(:users) { ROM::Relation::Loaded.new(users_relation) }
 
   describe '#each' do
     it 'yields tuples from relation' do

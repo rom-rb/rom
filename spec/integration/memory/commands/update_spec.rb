@@ -2,12 +2,9 @@ require 'spec_helper'
 
 require 'rom/memory'
 
-describe ROM::Memory::Commands::Create do
+describe ROM::Memory::Commands::Update do
+  include_context 'container'
   include_context 'users and tasks'
-
-  subject(:command) { container.command(:users)[:create] }
-
-  let(:users) { container.relations[:users] }
 
   before do
     configuration.relation(:users) do
@@ -15,11 +12,12 @@ describe ROM::Memory::Commands::Create do
         restrict(id: id)
       end
     end
-
     configuration.commands(:users) do
-      define(:create)
+      define(:update)
     end
   end
+
+  subject(:command) { container.command(:users).update }
 
   it_behaves_like 'a command'
 end

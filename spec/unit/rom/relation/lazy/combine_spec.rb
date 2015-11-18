@@ -1,23 +1,31 @@
 require 'spec_helper'
 
 describe ROM::Relation, '#combine' do
+  include_context 'gateway only'
   include_context 'users and tasks'
 
-  before do
-    configuration.relation(:users) do
+  let(:tags_dataset) { gateway.dataset(:tags) }
+
+  let(:users_relation) do
+    Class.new(ROM::Memory::Relation) do
       def by_name(name)
         restrict(name: name)
       end
-    end
+    end.new(users_dataset)
+  end
 
-    configuration.relation(:tasks) do
+  let(:tasks_relation) do
+    Class.new(ROM::Memory::Relation) do
       def for_users(users)
         names = users.map { |user| user[:name] }
         restrict { |task| names.include?(task[:name]) }
       end
-    end
+    end.new(tasks_dataset)
+  end
 
-    configuration.relation(:tags) do
+  let(:tags_relation) do
+    Class.new(ROM::Memory::Relation) do
+      attr_accessor :tasks
       forward :map
 
       def for_tasks(tasks)
@@ -34,15 +42,13 @@ describe ROM::Relation, '#combine' do
           } [:name])
         }
       end
-    end
-
-    configuration.gateways[:default].dataset(:tags).insert(task: 'be cool', name: 'red')
-    configuration.gateways[:default].dataset(:tags).insert(task: 'be cool', name: 'green')
+    end.new(tags_dataset).tap { |r| r.tasks = tasks_relation }
   end
 
-  let(:users) { container.relation(:users) }
-  let(:tasks) { container.relation(:tasks) }
-  let(:tags) { container.relation(:tags) }
+  before do
+    tags_dataset.insert(task: 'be cool', name: 'red')
+    tags_dataset.insert(task: 'be cool', name: 'green')
+  end
 
   let(:map_users) {
     proc { |users, tasks|
@@ -87,7 +93,7 @@ describe ROM::Relation, '#combine' do
 
   it 'raises error when composite relation is passed as a node' do
     expect {
-      users.combine(tasks >> proc {})
+      users_relation.combine(tasks_relation >> proc {})
     }.to raise_error(ROM::UnsupportedRelationError)
   end
 
@@ -106,8 +112,8 @@ describe ROM::Relation, '#combine' do
       }
     ]
 
-    user_with_tasks_and_tags = users.by_name('Jane')
-      .combine(tasks.for_users, tags.for_users)
+    user_with_tasks_and_tags = users_relation.by_name('Jane')
+      .combine(tasks_relation.for_users, tags_relation.for_users)
 
     result = user_with_tasks_and_tags >> map_user_with_tasks_and_tags
 
@@ -129,8 +135,8 @@ describe ROM::Relation, '#combine' do
       }
     ]
 
-    user_with_tasks_and_tags = users.by_name('Jane')
-      .combine(tasks.for_users).combine(tags.for_users)
+    user_with_tasks_and_tags = users_relation.by_name('Jane')
+      .combine(tasks_relation.for_users).combine(tags_relation.for_users)
 
     result = user_with_tasks_and_tags >> map_user_with_tasks_and_tags
 
@@ -149,8 +155,8 @@ describe ROM::Relation, '#combine' do
       }
     ]
 
-    user_with_tasks = users.by_name('Jane')
-      .combine(tasks.for_users.combine(tags.for_tasks))
+    user_with_tasks = users_relation.by_name('Jane')
+      .combine(tasks_relation.for_users.combine(tags_relation.for_tasks))
 
     result = user_with_tasks >> map_user_with_tasks
 

@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe 'Reading relations' do
+  include_context 'container'
   include_context 'users and tasks'
 
   before do
@@ -18,13 +19,13 @@ describe 'Reading relations' do
       def with_tasks
         join(tasks)
       end
-      
+
       def sorted
         order(:name, :email)
       end
     end
   end
-  
+
 
   it 'exposes a relation reader' do
     configuration.mappers do
@@ -35,8 +36,8 @@ describe 'Reading relations' do
         attribute :email
       end
     end
-    
-    users = container.relation(:users).sorted.by_name('Jane').as(:users)
+
+    users = users_relation.sorted.by_name('Jane').as(:users)
     user = users.first
 
     expect(user).to be_an_instance_of(Test::User)
@@ -61,7 +62,7 @@ describe 'Reading relations' do
     end
 
     container
-    
+
     Test::User.send(:include, Equalizer.new(:name, :email))
     Test::UserWithTasks.send(:include, Equalizer.new(:name, :email, :tasks))
 
@@ -96,7 +97,7 @@ describe 'Reading relations' do
         wrap task: [:title, :priority]
       end
     end
-    
+
     container
 
     Test::User.send(:include, Equalizer.new(:name, :email))

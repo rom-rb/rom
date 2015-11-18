@@ -82,10 +82,5 @@ module ROM
     def default_adapter
       @default_adapter ||= adapter_for_gateway(default_gateway) || ROM.adapters.keys.first
     end
-
-    # We really shouldn't have methods on here for specific plugins...
-    def auto_registration?
-      false
-    end
   end
 end

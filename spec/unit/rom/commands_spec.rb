@@ -1,20 +1,15 @@
 require 'spec_helper'
 
 describe 'Commands' do
+  include_context 'gateway only'
   include_context 'users and tasks'
 
-  let(:users) { container.relations.users }
-
-  before do
-    configuration
-    configuration.register_relation(Class.new(ROM::Relation[:memory]) do
-      register_as :users
-      dataset :users
-
+  let(:users_relation) do
+    Class.new(ROM::Memory::Relation) do
       def by_id(id)
         restrict(id: id)
       end
-    end)
+    end.new(users_dataset)
   end
 
   describe '.build_class' do
@@ -28,7 +23,7 @@ describe 'Commands' do
       expect(klass.name).to eql('ROM::Memory::Commands::Create[Users]')
       expect(klass.register_as).to eql(:create)
 
-      command = klass.build(container.relations.users)
+      command = klass.build(users_relation)
 
       expect(command).to be_a(ROM::Memory::Commands::Create)
       expect(command).to be_super
@@ -41,7 +36,7 @@ describe 'Commands' do
         relation :users
       end
 
-      command = klass.build(users)
+      command = klass.build(users_relation)
 
       expect(command).to be_kind_of(ROM::Memory::Commands::Create)
     end
@@ -51,7 +46,7 @@ describe 'Commands' do
         relation :users
       end
 
-      command = klass.build(users)
+      command = klass.build(users_relation)
 
       expect(command).to be_kind_of(ROM::Memory::Commands::Update)
     end
@@ -61,40 +56,9 @@ describe 'Commands' do
         relation :users
       end
 
-      command = klass.build(users)
+      command = klass.build(users_relation)
 
       expect(command).to be_kind_of(ROM::Memory::Commands::Delete)
-    end
-
-    describe 'extending command with a db-specific behavior' do
-      before do
-        configuration.gateways[:default].instance_exec do
-          def extend_command_class(klass, _)
-            klass.class_eval do
-              def super_command?
-                true
-              end
-            end
-            klass
-          end
-        end
-      end
-
-      it 'applies to defined classes' do
-        klass = Class.new(ROM::Commands::Create[:memory]) { relation :users }
-        configuration.register_command(klass)
-        container
-        command = klass.build(users)
-        expect(command).to be_super_command
-      end
-
-      it 'applies to generated classes' do
-        klass = ROM::ConfigurationDSL::Command.build_class(:create, :users, adapter: :memory)
-        configuration.register_command(klass)
-        container
-        command = klass.build(users)
-        expect(command).to be_super_command
-      end
     end
   end
 
@@ -158,26 +122,6 @@ describe 'Commands' do
       expect(users).to receive(:insert).with(user_input).and_return(user_tuple)
 
       command.with(user_input).call
-    end
-  end
-
-  describe '#method_missing' do
-    let(:command) { container.command(:users)[:update] }
-
-    before do
-      configuration.register_command(Class.new(ROM::Command::Update[:memory]) do
-        relation :users
-        register_as :update
-        result :one
-      end)
-    end
-
-    it 'forwards known relation view methods' do
-      expect(command.by_id(1).relation).to eql(users.by_id(1))
-    end
-
-    it 'raises no-method error when a non-view relation method was sent' do
-      expect { command.as(:foo) }.to raise_error(NoMethodError, /as/)
     end
   end
 end

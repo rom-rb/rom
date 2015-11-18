@@ -1,12 +1,12 @@
 require 'spec_helper'
 
 describe 'ROM::CommandRegistry' do
-  include_context 'common setup'
+  include_context 'container'
 
   let(:users) { container.command(:users) }
 
   before do
-    users_relation
+    configuration.relation(:users)
 
     configuration.register_command(Class.new(ROM::Commands::Create[:memory]) do
       register_as :create

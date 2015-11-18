@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'rom/memory'
 
 describe 'Mappers / Renaming attributes' do
-  include_context 'common setup'
+  include_context 'container'
 
   before do
     configuration.relation(:addresses)

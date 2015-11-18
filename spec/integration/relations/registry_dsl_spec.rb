@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe 'Relation registration DSL' do
+  include_context 'container'
   include_context 'users and tasks'
 
   it 'allows to expose chainable relations' do

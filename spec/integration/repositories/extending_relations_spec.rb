@@ -2,7 +2,8 @@ require 'spec_helper'
 require 'rom/memory'
 
 describe 'Repository' do
-  include_context 'common setup'
+  include_context 'container'
+  include_context 'users and tasks'
 
   before do
     module ROM

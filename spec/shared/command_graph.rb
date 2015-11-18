@@ -1,5 +1,5 @@
 shared_context 'command graph' do
-  include_context 'common setup'
+  include_context 'container'
 
   before do
     configuration.relation :users do

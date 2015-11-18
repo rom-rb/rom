@@ -42,6 +42,10 @@ module ROM
           registry[name] = relation
         end
 
+        registry.each_value do |relation|
+          relation.class.finalize(registry, relation)
+        end
+
         RelationRegistry.new(registry)
       end
     end

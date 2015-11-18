@@ -33,15 +33,13 @@ require 'rom/container'
 require 'rom/create_container'
 
 # register core plugins
-require 'rom/plugins/configuration/auto_registration'
 require 'rom/plugins/configuration/configuration_dsl'
 require 'rom/plugins/relation/registry_reader'
 
 module ROM
   extend Global
-  
+
   plugins do
-    register :auto_registration, ROM::ConfigurationPlugins::AutoRegistration, type: :configuration
     register :macros, ROM::ConfigurationPlugins::ConfigurationDSL, type: :configuration
     register :registry_reader, ROM::Plugins::Relation::RegistryReader, type: :relation
   end

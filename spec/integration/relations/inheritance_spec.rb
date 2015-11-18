@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe 'Inheritance relation hierarchy' do
-  include_context 'common setup'
+  include_context 'container'
 
   before do
     module Test
