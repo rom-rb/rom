@@ -30,6 +30,13 @@ module ROM
         def self.filter_empty(arr)
           arr.reject { |row| row.values.all?(&:nil?) }
         end
+
+        def self.inject_union_value(tuple, name, keys, coercer)
+          values = tuple.values_at(*keys)
+          result = coercer.call(*values)
+
+          tuple.merge(name => result)
+        end
       end
 
       # @return [Mapper] mapper that this processor belongs to
@@ -118,7 +125,12 @@ module ROM
       # @api private
       def visit_attribute(attribute)
         coercer = attribute.meta[:coercer]
-        if coercer
+        if attribute.union?
+          compose do |ops|
+            ops << t(:inject_union_value, attribute.name, attribute.key, coercer)
+            ops << t(:reject_keys, attribute.key)
+          end
+        elsif coercer
           t(:map_value, attribute.name, t(:bind, mapper, coercer))
         elsif attribute.typed?
           t(:map_value, attribute.name, t(:"to_#{attribute.type}"))

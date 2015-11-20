@@ -182,7 +182,7 @@ module ROM
     #
     # @api private
     def initialize_tuple_keys
-      @tuple_keys = mapping.keys + non_primitives.flat_map(&:tuple_keys)
+      @tuple_keys = mapping.keys.flatten + non_primitives.flat_map(&:tuple_keys)
     end
 
     # Set all tuple keys from all attributes popping from Unwrap and Ungroup

@@ -68,6 +68,29 @@ describe ROM::Processor::Transproc do
     end
   end
 
+  describe 'key from exsisting keys' do
+    let(:attributes) do
+      coercer = ->(a,b) { b + a }
+      [[:c, {from: [:a, :b], coercer: coercer} ]]
+    end
+
+    let(:relation) do
+      [
+        {a: 'works', b: 'this'}
+      ]
+    end
+
+    let (:expected_result) do
+      [
+        {c: 'thisworks'}
+      ]
+    end
+
+    it 'returns tuples a new key added based on exsiting keys' do
+      expect(transproc[relation]).to eql(expected_result)
+    end
+  end
+
   describe 'rejecting keys' do
     let(:options) { { reject_keys: true } }
 
