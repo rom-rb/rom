@@ -38,6 +38,10 @@ def T(*args)
 end
 
 RSpec.configure do |config|
+  config.before do
+    ROM.env = nil
+  end
+
   config.after do
     Test.remove_constants
   end
