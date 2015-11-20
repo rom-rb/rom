@@ -25,7 +25,7 @@ module ROM
     extend ClassInterface
 
     include Options
-    include Equalizer.new(:relation, :options)
+    include Dry::Equalizer(:relation, :options)
 
     defines :adapter, :relation, :result, :input, :validator, :register_as
 

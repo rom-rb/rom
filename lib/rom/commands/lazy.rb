@@ -7,7 +7,7 @@ module ROM
     #
     # @api private
     class Lazy
-      include Equalizer.new(:command, :evaluator)
+      include Dry::Equalizer(:command, :evaluator)
 
       # @attr_reader [Command] command The wrapped command
       attr_reader :command

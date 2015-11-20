@@ -29,7 +29,7 @@ module ROM
     extend ROM::Support::GuardedInheritanceHook
 
     include Options
-    include Equalizer.new(:dataset)
+    include Dry::Equalizer(:dataset)
     include Materializable
     include Pipeline
 

@@ -68,7 +68,7 @@ module ROM
     #
     # @api private
     class Composite
-      include Equalizer.new(:left, :right)
+      include Dry::Equalizer(:left, :right)
       include Proxy
 
       # @api private

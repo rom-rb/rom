@@ -9,7 +9,7 @@ module ROM
   # @api public
   class Container
     include ROM::Support::Publisher
-    include Equalizer.new(:gateways, :relations, :mappers, :commands)
+    include Dry::Equalizer(:gateways, :relations, :mappers, :commands)
 
     # @return [Hash] configured gateways
     #

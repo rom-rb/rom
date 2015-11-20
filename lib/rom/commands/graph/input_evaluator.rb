@@ -2,7 +2,7 @@ module ROM
   module Commands
     class Graph
       class InputEvaluator
-        include Equalizer.new(:tuple_path, :excluded_keys)
+        include Dry::Equalizer(:tuple_path, :excluded_keys)
 
         attr_reader :tuple_path
 
