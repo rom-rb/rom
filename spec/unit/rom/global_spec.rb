@@ -1,14 +1,18 @@
 require 'spec_helper'
 
-xdescribe ROM do
-  describe '.setup' do
-    it 'allows passing in gateway instances' do
-      klass = Class.new(ROM::Gateway)
-      repo = klass.new
+describe ROM do
+  include_context 'container'
 
-      setup = ROM.setup(test: repo).use(:macros)
+  describe '.env' do
+    it 'is nil by default' do
+      container
 
-      expect(setup.gateways[:test]).to be(repo)
+      expect(ROM.env).to be(nil)
+    end
+
+    it 'is assignable' do
+      ROM.env = container
+      expect(ROM.env).to be(container)
     end
   end
 end
