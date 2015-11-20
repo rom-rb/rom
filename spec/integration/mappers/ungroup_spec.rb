@@ -2,13 +2,12 @@ require 'spec_helper'
 require 'rom/memory'
 
 describe 'Mapper definition DSL' do
-  let(:setup) { ROM.setup(:memory) }
-  let(:rom)   { ROM.finalize.env   }
+  include_context 'container'
 
   before do
-    setup.relation(:users)
+    configuration.relation(:users)
 
-    users = setup.default.dataset(:users)
+    users = configuration.default.dataset(:users)
     users.insert(name: 'Joe', emails: [
       { address: 'joe@home.org', type: 'home' },
       { address: 'joe@job.com',  type: 'job'  },
@@ -21,10 +20,10 @@ describe 'Mapper definition DSL' do
   end
 
   describe 'ungroup' do
-    subject(:mapped_users) { rom.relation(:users).as(:users).to_a }
+    subject(:mapped_users) { container.relation(:users).as(:users).to_a }
 
     it 'partially ungroups attributes' do
-      setup.mappers do
+      configuration.mappers do
         define(:users) { ungroup emails: [:type] }
       end
 
@@ -46,7 +45,7 @@ describe 'Mapper definition DSL' do
     end
 
     it 'removes group when all attributes extracted' do
-      setup.mappers do
+      configuration.mappers do
         define(:users) { ungroup emails: [:address, :type, :foo] }
       end
 
@@ -62,7 +61,7 @@ describe 'Mapper definition DSL' do
     end
 
     it 'accepts block syntax' do
-      setup.mappers do
+      configuration.mappers do
         define(:users) do
           ungroup :emails do
             attribute :address
@@ -83,7 +82,7 @@ describe 'Mapper definition DSL' do
     end
 
     it 'renames ungrouped attributes' do
-      setup.mappers do
+      configuration.mappers do
         define(:users) do
           ungroup :emails do
             attribute :email, from: :address
@@ -104,7 +103,7 @@ describe 'Mapper definition DSL' do
     end
 
     it 'skips existing attributes' do
-      setup.mappers do
+      configuration.mappers do
         define(:users) do
           ungroup :emails do
             attribute :name, from: :address

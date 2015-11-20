@@ -5,12 +5,13 @@ module ROM
   #
   # @api private
   class PluginRegistry
-    # Internal registry for environment plugins
+    # Internal registry for configuration plugins
     #
-    # @return [EnvironmentPluginRegistry]
+    # @return [ConfigurationPluginRegistry]
     #
     # @api private
-    attr_reader :environment
+    attr_reader :configuration
+    
     # Internal registry for command plugins
     #
     # @return [InternalPluginRegistry]
@@ -34,7 +35,7 @@ module ROM
 
     # @api private
     def initialize
-      @environment = EnvironmentPluginRegistry.new
+      @configuration = ConfigurationPluginRegistry.new
       @mappers = InternalPluginRegistry.new
       @commands = InternalPluginRegistry.new
       @relations = InternalPluginRegistry.new
@@ -63,10 +64,10 @@ module ROM
     # @api private
     def plugins_for(type, adapter)
       case type
-      when :environment then environment
-      when :command     then commands.adapter(adapter)
-      when :mapper      then mappers.adapter(adapter)
-      when :relation    then relations.adapter(adapter)
+      when :configuration then configuration
+      when :command       then commands.adapter(adapter)
+      when :mapper        then mappers.adapter(adapter)
+      when :relation      then relations.adapter(adapter)
       end
     end
   end
@@ -88,7 +89,7 @@ module ROM
   # A registry storing environment specific plugins
   #
   # @api private
-  class EnvironmentPluginRegistry < PluginRegistryBase
+  class ConfigurationPluginRegistry < PluginRegistryBase
     # Assign a plugin to this environment registry
     #
     # @param [Symbol] name The registered plugin name
@@ -97,7 +98,7 @@ module ROM
     #
     # @api private
     def register(name, mod, options)
-      elements[name] = EnvironmentPlugin.new(mod, options)
+      elements[name] = ConfigurationPlugin.new(mod, options)
     end
 
     # Return an environment plugin

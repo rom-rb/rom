@@ -2,13 +2,12 @@ require 'spec_helper'
 require 'rom/memory'
 
 describe 'Mappers / deeply embedded tuples' do
-  let(:setup) { ROM.setup(:memory) }
-  let(:rom) { setup.finalize }
+  include_context 'container'
 
   it 'allows mapping embedded tuples' do
-    setup.relation(:users)
+    configuration.relation(:users)
 
-    setup.mappers do
+    configuration.mappers do
       define(:users) do
         model name: 'Test::User'
 
@@ -25,7 +24,7 @@ describe 'Mappers / deeply embedded tuples' do
       end
     end
 
-    rom.relations.users << {
+    container.relations.users << {
       'name' => 'Jane',
       'tasks' => [
         { 'title' => 'Task One', 'priority' => { 'value' => 1, 'desc' => 'high' } },
@@ -33,7 +32,7 @@ describe 'Mappers / deeply embedded tuples' do
       ]
     }
 
-    jane = rom.relation(:users).as(:users).first
+    jane = container.relation(:users).as(:users).first
 
     expect(jane.name).to eql('Jane')
 

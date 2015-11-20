@@ -1,31 +1,7 @@
-require 'rom/support/configurable'
-
-require 'rom/setup/finalize'
+require 'rom/setup/auto_registration'
 
 module ROM
-  # Exposes DSL for defining relations, mappers and commands
-  #
-  # @api public
   class Setup
-    include Configurable
-
-    include Equalizer.new(:gateways, :container)
-
-    # @return [Hash] configured gateways
-    #
-    # @api private
-    attr_reader :gateways
-
-    # @attr_reader [Hash<Gateway=>Symbol>] gateway_map Environment gateway map
-    #
-    # @api private
-    attr_reader :gateway_map
-
-    # @return [Symbol] default (first) adapter
-    #
-    # @api private
-    attr_reader :default_adapter
-
     # @return [Array] registered relation subclasses
     #
     # @api private
@@ -41,99 +17,39 @@ module ROM
     # @api private
     attr_reader :command_classes
 
-    # @return [Conainer] finalized container after setup phase is over
-    #
     # @api private
-    attr_reader :container
-    alias_method :env, :container
-
-    # @api private
-    def initialize(gateways, options = {})
-      @gateways = gateways
-
-      @gateway_map = options.fetch(:gateway_map, {})
-      @default_adapter = options.fetch(:default_adapter, nil)
-
+    def initialize
       @relation_classes = []
       @command_classes = []
       @mapper_classes = []
-      @container = nil
-    end
-
-    # Finalize the setup
-    #
-    # @return [Container] frozen container with access to gateways,
-    #                relations, mappers and commands
-    #
-    # @api public
-    def finalize
-      raise EnvAlreadyFinalizedError if container
-
-      # initialize default configs for all gateways
-      gateways.each_key do |key|
-        gateway_config = config.gateways[key]
-
-        gateway_config.infer_relations = true unless gateway_config.key?(:infer_relations)
-      end
-
-      finalize = Finalize.new(
-        gateways: gateways,
-        gateway_map: gateway_map,
-        relation_classes: relation_classes,
-        command_classes: command_classes,
-        mappers: mapper_classes,
-        config: config.freeze
-      )
-
-      @container = finalize.run!
-    end
-
-    # Return gateway identified by name
-    #
-    # @return [Gateway]
-    #
-    # @api private
-    def [](name)
-      gateways.fetch(name)
     end
 
     # Relation sub-classes are being registered with this method during setup
     #
     # @api private
-    def register_relation(klass)
-      @relation_classes << klass
+    def register_relation(*klasses)
+      klasses.reduce(@relation_classes, :<<)
     end
 
     # Mapper sub-classes are being registered with this method during setup
     #
     # @api private
-    def register_mapper(klass)
-      @mapper_classes << klass
+    def register_mapper(*klasses)
+      klasses.reduce(@mapper_classes, :<<)
     end
 
     # Command sub-classes are being registered with this method during setup
     #
     # @api private
-    def register_command(klass)
-      @command_classes << klass
+    def register_command(*klasses)
+      klasses.reduce(@command_classes, :<<)
     end
 
-    # Hook for respond_to? used internally
-    #
-    # @api private
-    def respond_to_missing?(name, _include_context = false)
-      gateways.key?(name)
-    end
-
-    private
-
-    # Returns gateway if method is a name of a registered gateway
-    #
-    # @return [Gateway]
-    #
-    # @api private
-    def method_missing(name, *)
-      gateways.fetch(name) { super }
+    def auto_registration(directory, options = {})
+      auto_registration = AutoRegistration.new(directory, options)
+      auto_registration.relations.map { |r| register_relation(r) }
+      auto_registration.commands.map { |r| register_command(r) }
+      auto_registration.mappers.map { |r| register_mapper(r) }
     end
   end
 end

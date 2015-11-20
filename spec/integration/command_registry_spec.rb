@@ -1,19 +1,18 @@
 require 'spec_helper'
 
 describe 'ROM::CommandRegistry' do
-  subject(:env) { setup.finalize }
+  include_context 'container'
 
-  let(:setup) { ROM.setup(:memory) }
-  let(:users) { env.command(:users) }
+  let(:users) { container.command(:users) }
 
   before do
-    setup.relation(:users)
+    configuration.relation(:users)
 
-    setup.commands(:users) do
-      define(:create) do
-        validator proc { |input| raise(ROM::CommandError) unless input[:name] }
-      end
-    end
+    configuration.register_command(Class.new(ROM::Commands::Create[:memory]) do
+      register_as :create
+      relation :users
+      validator proc { |input| raise(ROM::CommandError) unless input[:name] }
+    end)
   end
 
   describe '#try' do

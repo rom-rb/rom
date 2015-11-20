@@ -2,29 +2,29 @@ require 'spec_helper'
 require 'rom/memory'
 
 describe 'Using in-memory gateways for cross-repo access' do
-  let(:setup) do
-    ROM.setup(left: :memory, right: :memory, main: :memory)
+  let(:configuration) do
+    ROM::Configuration.new(left: :memory, right: :memory, main: :memory).use(:macros)
   end
 
-  let(:gateways) { rom.gateways }
-  let(:rom) { setup.finalize }
+  let(:container) { ROM.create_container(configuration) }
+  let(:gateways) { container.gateways }
 
   it 'works' do
-    setup.relation(:users, gateway: :left) do
+    configuration.relation(:users, gateway: :left) do
       def by_name(name)
         restrict(name: name)
       end
     end
 
-    setup.relation(:tasks, gateway: :right)
+    configuration.relation(:tasks, gateway: :right)
 
-    setup.relation(:users_and_tasks, gateway: :main) do
+    configuration.relation(:users_and_tasks, gateway: :main) do
       def by_user(name)
         join(users.by_name(name), tasks)
       end
     end
 
-    setup.mappers do
+    configuration.mappers do
       define(:users_and_tasks) do
         group tasks: [:title]
       end
@@ -35,7 +35,7 @@ describe 'Using in-memory gateways for cross-repo access' do
     gateways[:right][:tasks] << { user_id: 1, title: 'Have fun' }
     gateways[:right][:tasks] << { user_id: 2, title: 'Have fun' }
 
-    user_and_tasks = rom.relation(:users_and_tasks)
+    user_and_tasks = container.relation(:users_and_tasks)
       .by_user('Jane')
       .as(:users_and_tasks)
 

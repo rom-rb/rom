@@ -2,10 +2,10 @@ require 'spec_helper'
 require 'rom/memory'
 
 describe 'Mappers / Prefixing attributes' do
-  let(:setup) { ROM.setup(:memory) }
+  include_context 'container'
 
   before do
-    setup.relation(:users)
+    configuration.relation(:users)
   end
 
   it 'automatically maps all attributes using the provided prefix' do
@@ -20,17 +20,17 @@ describe 'Mappers / Prefixing attributes' do
       attribute :email
     end
 
-    rom = setup.finalize
+    configuration.register_mapper(Test::UserMapper)
 
-    Test::User.send(:include, Equalizer.new(:id, :name, :email))
-
-    rom.relations.users << {
+    container.relations.users << {
       user_id: 123,
       user_name: 'Jane',
       user_email: 'jane@doe.org'
     }
 
-    jane = rom.relation(:users).as(:users).first
+    Test::User.send(:include, Equalizer.new(:id, :name, :email))
+
+    jane = container.relation(:users).as(:users).first
 
     expect(jane).to eql(Test::User.new(id: 123, name: 'Jane', email: 'jane@doe.org'))
   end

@@ -1,24 +1,25 @@
 require 'spec_helper'
 require 'virtus'
 
-describe 'Setting up ROM' do
+describe 'Configuring ROM' do
   context 'with existing schema' do
+    include_context 'container'
     include_context 'users and tasks'
 
     let(:jane) { { name: 'Jane', email: 'jane@doe.org' } }
     let(:joe) { { name: 'Joe', email: 'joe@doe.org' } }
 
     before do
-      setup.relation(:users)
-      setup.relation(:tasks)
+      configuration.relation(:users)
+      configuration.relation(:tasks)
     end
 
     it 'configures schema relations' do
-      expect(rom.gateways[:default][:users]).to match_array([joe, jane])
+      expect(container.gateways[:default][:users]).to match_array([joe, jane])
     end
 
     it 'configures rom relations' do
-      users = rom.relations.users
+      users = container.relations.users
 
       expect(users).to be_kind_of(ROM::Relation)
       expect(users).to respond_to(:tasks)
@@ -29,60 +30,55 @@ describe 'Setting up ROM' do
       expect(tasks).to respond_to(:users)
       expect(tasks.users).to be(users)
     end
-
-    it 'raises on double-finalize' do
-      expect {
-        2.times { setup.finalize }
-      }.to raise_error(ROM::EnvAlreadyFinalizedError)
-    end
   end
 
   context 'without schema' do
     it 'builds empty registries if there is no schema' do
-      setup = ROM.setup(:memory)
-
-      rom = setup.finalize
-
-      expect(rom.relations).to eql(ROM::RelationRegistry.new)
-      expect(rom.mappers).to eql(ROM::Registry.new)
+      container = ROM.create_container(:memory)
+      expect(container.relations).to eql(ROM::RelationRegistry.new)
+      expect(container.mappers).to eql(ROM::Registry.new)
     end
   end
 
   describe 'defining classes' do
     it 'sets up registries based on class definitions' do
-      ROM.setup(:memory)
+      container = ROM.create_container(:memory) do |config|
+        config.use(:macros)
 
-      class Test::UserRelation < ROM::Relation[:memory]
-        dataset :users
+        class Test::UserRelation < ROM::Relation[:memory]
+          dataset :users
 
-        def by_name(name)
-          restrict(name: name)
+          def by_name(name)
+            restrict(name: name)
+          end
         end
+
+        class Test::TaskRelation < ROM::Relation[:memory]
+          dataset :tasks
+        end
+
+        class Test::CreateUser < ROM::Commands::Update[:memory]
+          relation :users
+          register_as :create
+        end
+
+        config.register_relation(Test::UserRelation, Test::TaskRelation)
+        config.register_command(Test::CreateUser)
       end
 
-      class Test::TaskRelation < ROM::Relation[:memory]
-        dataset :tasks
-      end
+      expect(container.relations.users).to be_kind_of(Test::UserRelation)
+      expect(container.relations.users.tasks).to be(container.relations.tasks)
 
-      class Test::CreateUser < ROM::Commands::Update[:memory]
-        relation :users
-        register_as :create
-      end
+      expect(container.commands.users[:create]).to be_kind_of(Test::CreateUser)
 
-      rom = ROM.finalize.env
-
-      expect(rom.relations.users).to be_kind_of(Test::UserRelation)
-      expect(rom.relations.users.tasks).to be(rom.relations.tasks)
-
-      expect(rom.commands.users[:create]).to be_kind_of(Test::CreateUser)
-
-      expect(rom.relations.tasks).to be_kind_of(Test::TaskRelation)
-      expect(rom.relations.tasks.users).to be(rom.relations.users)
+      expect(container.relations.tasks).to be_kind_of(Test::TaskRelation)
+      expect(container.relations.tasks.users).to be(container.relations.users)
     end
   end
 
   describe 'quick setup' do
-    it 'exposes boot DSL inside the setup block' do
+    # NOTE: move to DSL tests
+    it 'exposes boot DSL inside the setup block via `macros` plugin' do
       module Test
         User = Class.new do
           include Virtus.value_object
@@ -90,27 +86,29 @@ describe 'Setting up ROM' do
         end
       end
 
-      rom = ROM.setup(:memory) {
-        relation(:users) do
+      container = ROM.create_container(:memory) do |rom|
+        rom.use(:macros)
+
+        rom.relation(:users) do
           def by_name(name)
             restrict(name: name)
           end
         end
 
-        commands(:users) do
+        rom.commands(:users) do
           define(:create)
         end
 
-        mappers do
+        rom.mappers do
           define(:users) do
             model Test::User
           end
         end
-      }
+      end
 
-      rom.commands.users.create.call(name: 'Jane')
+      container.commands.users.create.call(name: 'Jane')
 
-      expect(rom.relation(:users).by_name('Jane').as(:users).to_a)
+      expect(container.relation(:users).by_name('Jane').as(:users).to_a)
         .to eql([Test::User.new(name: 'Jane')])
     end
   end
@@ -124,29 +122,29 @@ describe 'Setting up ROM' do
         end
       end
 
-      ROM.setup(:memory)
+      configuration = ROM::Configuration.new(:memory).use(:macros)
 
-      ROM.relation(:users) do
+      configuration.relation(:users) do
         def by_name(name)
           restrict(name: name)
         end
       end
 
-      ROM.commands(:users) do
+      configuration.commands(:users) do
         define(:create)
       end
 
-      ROM.mappers do
+      configuration.mappers do
         define(:users) do
           model Test::User
         end
       end
 
-      rom = ROM.finalize.env
+      container = ROM.create_container(configuration)
 
-      rom.command(:users).create.call(name: 'Jane')
+      container.command(:users).create.call(name: 'Jane')
 
-      expect(rom.relation(:users).by_name('Jane').as(:users).to_a)
+      expect(container.relation(:users).by_name('Jane').as(:users).to_a)
         .to eql([Test::User.new(name: 'Jane')])
     end
   end

@@ -1,15 +1,14 @@
 shared_context 'command graph' do
-  let(:rom) { setup.finalize }
-  let(:setup) { ROM.setup(:memory) }
+  include_context 'container'
 
   before do
-    setup.relation :users do
+    configuration.relation :users do
       def by_name(name)
         restrict(name: name)
       end
     end
 
-    setup.relation :tasks do
+    configuration.relation :tasks do
       def by_user_and_title(user, title)
         by_user(user).by_title(title)
       end
@@ -23,16 +22,16 @@ shared_context 'command graph' do
       end
     end
 
-    setup.relation :books
-    setup.relation :tags
+    configuration.relation :books
+    configuration.relation :tags
 
-    setup.commands(:users) do
+    configuration.commands(:users) do
       define(:create) do
         result :one
       end
     end
 
-    setup.commands(:books) do
+    configuration.commands(:books) do
       define(:create) do
         def execute(tuples, user)
           super(tuples.map { |t| t.merge(user: user.fetch(:name)) })
@@ -40,7 +39,7 @@ shared_context 'command graph' do
       end
     end
 
-    setup.commands(:tags) do
+    configuration.commands(:tags) do
       define(:create) do
         def execute(tuples, task)
           super(tuples.map { |t| t.merge(task: task.fetch(:title)) })

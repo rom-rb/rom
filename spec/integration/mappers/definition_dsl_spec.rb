@@ -1,12 +1,13 @@
 require 'spec_helper'
 
 describe 'Mapper definition DSL' do
+  include_context 'container'
   include_context 'users and tasks'
 
   let(:header) { mapper.header }
 
   before do
-    setup.relation(:users) do
+    configuration.relation(:users) do
       def email_index
         project(:email)
       end
@@ -14,10 +15,10 @@ describe 'Mapper definition DSL' do
   end
 
   describe 'default PORO mapper' do
-    subject(:mapper) { rom.mappers.users.entity }
+    subject(:mapper) { container.mappers.users.entity }
 
     before do
-      setup.mappers do
+      configuration.mappers do
         define(:users) do
           model name: 'Test::User'
 
@@ -40,10 +41,10 @@ describe 'Mapper definition DSL' do
 
   describe 'excluding attributes' do
     context 'by setting :inherit_header to false' do
-      subject(:mapper) { rom.mappers.users.email_index }
+      subject(:mapper) { container.mappers.users.email_index }
 
       before do
-        setup.mappers do
+        configuration.mappers do
           define(:users) do
             model name: 'Test::User'
 
@@ -65,10 +66,10 @@ describe 'Mapper definition DSL' do
   end
 
   describe 'virtual relation mapper' do
-    subject(:mapper) { rom.mappers.users.email_index }
+    subject(:mapper) { container.mappers.users.email_index }
 
     before do
-      setup.mappers do
+      configuration.mappers do
         define(:users) do
           model name: 'Test::User'
 
@@ -99,13 +100,13 @@ describe 'Mapper definition DSL' do
 
   describe 'wrapped relation mapper' do
     before do
-      setup.relation(:tasks) do
+      configuration.relation(:tasks) do
         def with_user
           join(users)
         end
       end
 
-      setup.mappers do
+      configuration.mappers do
         define(:tasks) do
           model name: 'Test::Task'
 
@@ -116,7 +117,7 @@ describe 'Mapper definition DSL' do
     end
 
     it 'allows defining wrapped attributes via options hash' do
-      setup.mappers do
+      configuration.mappers do
         define(:with_user, parent: :tasks) do
           model name: 'Test::TaskWithUser'
 
@@ -127,11 +128,11 @@ describe 'Mapper definition DSL' do
         end
       end
 
-      rom = setup.finalize
+      container
 
       Test::TaskWithUser.send(:include, Equalizer.new(:title, :priority, :user))
 
-      jane = rom.relation(:tasks).with_user.as(:with_user).to_a.last
+      jane = container.relation(:tasks).with_user.as(:with_user).to_a.last
 
       expect(jane).to eql(
         Test::TaskWithUser.new(
@@ -143,7 +144,7 @@ describe 'Mapper definition DSL' do
     end
 
     it 'allows defining wrapped attributes via options block' do
-      setup.mappers do
+      configuration.mappers do
         define(:with_user, parent: :tasks) do
           model name: 'Test::TaskWithUser'
 
@@ -156,11 +157,11 @@ describe 'Mapper definition DSL' do
         end
       end
 
-      rom = setup.finalize
+      container
 
       Test::TaskWithUser.send(:include, Equalizer.new(:title, :priority, :user))
 
-      jane = rom.relation(:tasks).with_user.as(:with_user).to_a.last
+      jane = container.relation(:tasks).with_user.as(:with_user).to_a.last
 
       expect(jane).to eql(
         Test::TaskWithUser.new(
@@ -172,7 +173,7 @@ describe 'Mapper definition DSL' do
     end
 
     it 'allows defining wrapped attributes mapped to a model' do
-      setup.mappers do
+      configuration.mappers do
         define(:with_user, parent: :tasks) do
           model name: 'Test::TaskWithUser'
 
@@ -186,12 +187,12 @@ describe 'Mapper definition DSL' do
         end
       end
 
-      rom = setup.finalize
+      container
 
       Test::TaskWithUser.send(:include, Equalizer.new(:title, :priority, :user))
       Test::User.send(:include, Equalizer.new(:email))
 
-      jane = rom.relation(:tasks).with_user.as(:with_user).to_a.last
+      jane = container.relation(:tasks).with_user.as(:with_user).to_a.last
 
       expect(jane).to eql(
         Test::TaskWithUser.new(

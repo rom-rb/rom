@@ -2,10 +2,10 @@ require 'spec_helper'
 require 'rom/memory'
 
 describe 'Mappers / Attributes value' do
-  let(:setup) { ROM.setup(:memory) }
+  include_context 'container'
 
   before do
-    setup.relation(:users)
+    configuration.relation(:users)
   end
 
   it 'allows to manipulate attribute value' do
@@ -24,15 +24,15 @@ describe 'Mappers / Attributes value' do
       end
     end
 
-    rom = setup.finalize
+    configuration.register_mapper(Test::UserMapper)
 
-    rom.relations.users << {
+    container.relations.users << {
       id: 123,
       first_name: 'Jane',
       weight: 75
     }
 
-    jane = rom.relation(:users).as(:users).first
+    jane = container.relation(:users).as(:users).first
 
     expect(jane).to eql(id: 123, name: 'John', weight: 90, age: 18)
   end

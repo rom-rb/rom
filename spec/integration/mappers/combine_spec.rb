@@ -1,11 +1,12 @@
 require 'spec_helper'
 
 describe 'Mapper definition DSL' do
+  include_context 'container'
   include_context 'users and tasks'
 
   describe 'combine' do
     before do
-      setup.relation(:tasks) do
+      configuration.relation(:tasks) do
         def for_users(users)
           names = users.map { |user| user[:name] }
           restrict { |task| names.include?(task[:name]) }
@@ -16,7 +17,7 @@ describe 'Mapper definition DSL' do
         end
       end
 
-      setup.relation(:users) do
+      configuration.relation(:users) do
         def addresses(_users)
           [{ city: 'NYC', user: 'Jane' }, { city: 'Boston', user: 'Joe' }]
         end
@@ -26,7 +27,7 @@ describe 'Mapper definition DSL' do
         end
       end
 
-      setup.mappers do
+      configuration.mappers do
         define(:users) do
           register_as :entity
 
@@ -63,8 +64,8 @@ describe 'Mapper definition DSL' do
       end
     end
 
-    let(:users) { rom.relation(:users) }
-    let(:tasks) { rom.relation(:tasks) }
+    let(:users) { container.relation(:users) }
+    let(:tasks) { container.relation(:tasks) }
 
     let(:joe) {
       Test::User.new(
@@ -98,7 +99,7 @@ describe 'Mapper definition DSL' do
     }
 
     it 'works' do
-      rom
+      container
 
       Test::User.send(:include, Equalizer.new(:name, :email, :tasks, :address, :book))
       Test::Task.send(:include, Equalizer.new(:title, :meta))

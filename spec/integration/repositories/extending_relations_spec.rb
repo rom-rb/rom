@@ -2,9 +2,8 @@ require 'spec_helper'
 require 'rom/memory'
 
 describe 'Repository' do
-  let!(:setup) { ROM.setup(:memory) }
-
-  let(:rom) { setup.finalize }
+  include_context 'container'
+  include_context 'users and tasks'
 
   before do
     module ROM
@@ -33,18 +32,18 @@ describe 'Repository' do
 
   shared_examples_for 'extended relation' do
     it 'can extend relation class' do
-      expect(rom.relations.users.class).to be_freaking_awesome
+      expect(container.relations.users.class).to be_freaking_awesome
     end
 
     it 'can extend relation instance' do
-      expect(rom.relations.users).to be_freaking_cool
+      expect(container.relations.users).to be_freaking_cool
     end
   end
 
   context 'using DSL' do
     it_behaves_like 'extended relation' do
       before do
-        setup.relation(:users)
+        configuration.relation(:users)
       end
     end
   end
@@ -52,7 +51,7 @@ describe 'Repository' do
   context 'using class definition' do
     it_behaves_like 'extended relation' do
       before do
-        Class.new(ROM::Relation[:memory]) { dataset :users }
+        configuration.register_relation(Class.new(ROM::Relation[:memory]) { dataset :users })
       end
     end
   end

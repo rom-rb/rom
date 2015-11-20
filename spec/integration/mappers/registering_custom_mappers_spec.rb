@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe 'Registering Custom Mappers' do
+  include_context 'container'
   include_context 'users and tasks'
 
   it 'allows registering arbitrary objects as mappers' do
@@ -10,19 +11,17 @@ describe 'Registering Custom Mappers' do
       users.map { |tuple| model.new(*tuple.values_at(:name, :email)) }
     }
 
-    setup.relation(:users) do
+    configuration.relation(:users) do
       def by_name(name)
         restrict(name: name)
       end
     end
 
-    setup.mappers do
+    configuration.mappers do
       register(:users, entity: mapper)
     end
 
-    rom = setup.finalize
-
-    users = rom.relation(:users).by_name('Jane').as(:entity)
+    users = container.relation(:users).by_name('Jane').as(:entity)
 
     expect(users).to match_array([model.new('Jane', 'jane@doe.org')])
   end

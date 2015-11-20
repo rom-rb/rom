@@ -23,13 +23,11 @@ describe 'Repositories / Setting logger' do
   end
 
   it 'sets up a logger for a given gateway' do
-    setup = ROM.setup(:memory)
-
-    setup.default.use_logger(logger)
-
-    rom = setup.finalize
-
-    rom.gateways[:default].logger.info("test")
+    container = ROM.create_container(:memory) do |config|
+      config.gateways[:default].use_logger(logger)
+    end
+      
+    container.gateways[:default].logger.info("test")
 
     expect(logger.messages).to eql(["test"])
   end

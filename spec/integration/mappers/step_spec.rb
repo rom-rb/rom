@@ -1,13 +1,13 @@
 require 'spec_helper'
 
 describe 'Mapper definition DSL' do
-  let(:setup) { ROM.setup(:memory) }
-  let(:rom)   { ROM.finalize.env   }
+  include_context 'container'
+  include_context 'users and tasks'
 
   before do
-    setup.relation(:lists)
+    configuration.relation(:lists)
 
-    setup.default.dataset(:lists).insert(
+    configuration.default.dataset(:lists).insert(
       list_id: 1,
       list_tasks: [
         { user: 'Jacob', task_id: 1, task_title: 'be nice'    },
@@ -17,10 +17,10 @@ describe 'Mapper definition DSL' do
   end
 
   describe 'step' do
-    let(:mapped) { rom.relation(:lists).as(:lists).to_a }
+    let(:mapped) { container.relation(:lists).as(:lists).to_a }
 
     it 'applies transformations one by one' do
-      setup.mappers do
+      configuration.mappers do
         define(:lists) do
           step do
             prefix 'list'
@@ -68,7 +68,7 @@ describe 'Mapper definition DSL' do
     end
 
     it 'applies settings from root' do
-      setup.mappers do
+      configuration.mappers do
         define(:lists) do
           prefix 'list'
 
@@ -91,7 +91,7 @@ describe 'Mapper definition DSL' do
     end
 
     it 'cannot precede attributes' do
-      setup.mappers do
+      configuration.mappers do
         define(:lists) do
           step do
             unfold :tasks, from: :list_tasks
@@ -100,11 +100,11 @@ describe 'Mapper definition DSL' do
         end
       end
 
-      expect { rom }.to raise_error ROM::MapperMisconfiguredError
+      expect { container }.to raise_error ROM::MapperMisconfiguredError
     end
 
     it 'cannot succeed attributes' do
-      setup.mappers do
+      configuration.mappers do
         define(:lists) do
           attribute :id, from: :list_id
           step do
@@ -113,7 +113,7 @@ describe 'Mapper definition DSL' do
         end
       end
 
-      expect { rom }.to raise_error ROM::MapperMisconfiguredError
+      expect { container }.to raise_error ROM::MapperMisconfiguredError
     end
   end
 end

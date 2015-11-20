@@ -7,8 +7,8 @@ module ROM
       attr_reader :settings
 
       # @api private
-      def initialize
-        @settings = {}
+      def initialize(settings = {})
+        @settings = settings
       end
 
       # @api public
@@ -31,8 +31,22 @@ module ROM
       def respond_to_missing?(_name, _include_private = false)
         true
       end
-
+      
+      def dup
+        self.class.new(dup_settings(settings))
+      end
+        
       private
+      
+      def dup_settings(settings)
+        settings.each_with_object({}) do |(key, value), new_settings|
+          if value.is_a?(self.class)
+            new_settings[key] = value.dup
+          else
+            new_settings[key] = value
+          end
+        end
+      end
 
       # @api private
       def method_missing(meth, *args, &_block)

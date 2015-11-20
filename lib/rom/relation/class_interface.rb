@@ -163,46 +163,6 @@ module ROM
         Inflector.underscore(name).tr('/', '_').to_sym
       end
 
-      # Build relation registry of specified descendant classes
-      #
-      # This is used by the setup
-      #
-      # @param [Hash] gateways
-      # @param [Array] descendants a list of relation descendants
-      #
-      # @return [Hash]
-      #
-      # @api private
-      def registry(gateways, descendants)
-        registry = {}
-
-        descendants.each do |klass|
-          # TODO: raise a meaningful error here and add spec covering the case
-          #       where klass' gateway points to non-existant repo
-          gateway = gateways.fetch(klass.gateway)
-          ds_proc = klass.dataset_proc || -> { self }
-          dataset = gateway.dataset(klass.dataset).instance_exec(&ds_proc)
-
-          relation = klass.new(dataset, __registry__: registry)
-
-          name = klass.register_as
-
-          if registry.key?(name)
-            raise RelationAlreadyDefinedError,
-              "Relation with `register_as #{name.inspect}` registered more " \
-              "than once"
-          end
-
-          registry[name] = relation
-        end
-
-        registry.each_value do |relation|
-          relation.class.finalize(registry, relation)
-        end
-
-        registry
-      end
-
       # @api private
       def curried
         Curried

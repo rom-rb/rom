@@ -2,159 +2,145 @@ require 'rom/relation'
 require 'rom/command'
 
 require 'rom/support/registry'
-require 'rom/relation_registry'
 require 'rom/command_registry'
 require 'rom/mapper_registry'
 
 require 'rom/container'
+require 'rom/setup/finalize/commands'
+require 'rom/setup/finalize/relations'
+require 'rom/setup/finalize/mappers'
+
+# temporary
+require 'rom/configuration_dsl/relation'
 
 module ROM
-  class Setup
-    # This giant builds an container using defined classes for core parts of ROM
+  # This giant builds an container using defined classes for core parts of ROM
+  #
+  # It is used by the setup object after it's done gathering class definitions
+  #
+  # @private
+  class Finalize
+    attr_reader :gateways, :repo_adapter, :datasets, :gateway_map,
+      :relation_classes, :mapper_classes, :mapper_objects, :command_classes, :config
+
+    # @api private
+    def initialize(options)
+      @gateways = options.fetch(:gateways)
+      @gateway_map = options.fetch(:gateway_map)
+
+      @relation_classes = options.fetch(:relation_classes)
+      @command_classes = options.fetch(:command_classes)
+
+      mappers = options.fetch(:mappers, [])
+      @mapper_classes = mappers.select { |mapper| mapper.is_a?(Class) }
+      @mapper_objects = (mappers - @mapper_classes).reduce(:merge) || {}
+
+      @config = options.fetch(:config)
+
+      initialize_datasets
+    end
+
+    # Return adapter identifier for a given gateway object
     #
-    # It is used by the setup object after it's done gathering class definitions
+    # @return [Symbol]
     #
-    # @private
-    class Finalize
-      attr_reader :gateways, :repo_adapter, :datasets, :gateway_map,
-        :relation_classes, :mapper_classes, :mapper_objects, :command_classes, :config
+    # @api private
+    def adapter_for(gateway)
+      @gateway_map.fetch(gateways[gateway])
+    end
 
-      # @api private
-      def initialize(options)
-        @gateways = options.fetch(:gateways)
-        @gateway_map = options.fetch(:gateway_map)
+    # Run the finalization process
+    #
+    # This creates relations, mappers and commands
+    #
+    # @return [Container]
+    #
+    # @api private
+    def run!
+      infer_relations_relations
 
-        @relation_classes = options.fetch(:relation_classes)
-        @command_classes = options.fetch(:command_classes)
+      relations = load_relations
+      mappers = load_mappers
+      commands = load_commands(relations)
 
-        mappers = options.fetch(:mappers, [])
-        @mapper_classes = mappers.select { |mapper| mapper.is_a?(Class) }
-        @mapper_objects = (mappers - @mapper_classes).reduce(:merge) || {}
+      container = Container.new(gateways, relations, mappers, commands)
+      container.freeze
+      container
+    end
 
-        @config = options.fetch(:config)
+    private
 
-        initialize_datasets
+    # Infer all datasets using configured gateways
+    #
+    # Not all gateways can do that, by default an empty array is returned
+    #
+    # @return [Hash] gateway name => array with datasets map
+    #
+    # @api private
+    def initialize_datasets
+      @datasets = gateways.each_with_object({}) do |(key, gateway), h|
+        infer_relations = config.gateways && config.gateways[key] && config.gateways[key][:infer_relations]
+        h[key] = gateway.schema if infer_relations
       end
+    end
 
-      # Return adapter identifier for a given gateway object
-      #
-      # @return [Symbol]
-      #
-      # @api private
-      def adapter_for(gateway)
-        @gateway_map.fetch(gateways[gateway])
-      end
+    # Build entire relation registry from all known relation subclasses
+    #
+    # This includes both classes created via DSL and explicit definitions
+    #
+    # @api private
+    def load_relations
+      FinalizeRelations.new(gateways, relation_classes).run!
+    end
 
-      # Run the finalization process
-      #
-      # This creates relations, mappers and commands
-      #
-      # @return [Container]
-      #
-      # @api private
-      def run!
-        infer_relations_relations
+    # @api private
+    def load_mappers
+      FinalizeMappers.new(mapper_classes, mapper_objects).run!
+    end
 
-        relations = load_relations
-        mappers = load_mappers
-        commands = load_commands(relations)
+    # Build entire command registries
+    #
+    # This includes both classes created via DSL and explicit definitions
+    #
+    # @api private
+    def load_commands(relations)
+      FinalizeCommands.new(relations, gateways, command_classes).run!
+    end
 
-        Container.new(gateways, relations, mappers, commands)
-      end
-
-      private
-
-      # Infer all datasets using configured gateways
-      #
-      # Not all gateways can do that, by default an empty array is returned
-      #
-      # @return [Hash] gateway name => array with datasets map
-      #
-      # @api private
-      def initialize_datasets
-        @datasets = gateways.each_with_object({}) do |(key, gateway), h|
-          h[key] = gateway.schema if config.gateways[key][:infer_relations]
-        end
-      end
-
-      # Build entire relation registry from all known relation subclasses
-      #
-      # This includes both classes created via DSL and explicit definitions
-      #
-      # @api private
-      def load_relations
-        relations = Relation.registry(gateways, relation_classes)
-        RelationRegistry.new(relations)
-      end
-
-      # @api private
-      def load_mappers
-        mapper_registry = Mapper.registry(mapper_classes).each_with_object({})
-
-        registry_hash = mapper_registry.each { |(relation, mappers), h|
-          h[relation] = MapperRegistry.new(mappers)
-        }
-
-        mapper_objects.each do |relation, mappers|
-          if registry_hash.key?(relation)
-            mappers.each { |name, mapper| registry[name] = mapper }
+    # For every dataset infered from gateways we infer a relation
+    #
+    # Relations explicitly defined are being skipped
+    #
+    # @api private
+    def infer_relations_relations
+      datasets.each do |gateway, schema|
+        schema.each do |name|
+          if infer_relation?(gateway, name)
+            klass = ROM::ConfigurationDSL::Relation.build_class(name, adapter: adapter_for(gateway))
+            klass.gateway(gateway)
+            klass.dataset(name)
+            @relation_classes << klass
           else
-            registry_hash[relation] = MapperRegistry.new(mappers)
-          end
-        end
-
-        Registry.new(registry_hash)
-      end
-
-      # Build entire command registries
-      #
-      # This includes both classes created via DSL and explicit definitions
-      #
-      # @api private
-      def load_commands(relations)
-        registry = Command.registry(relations, gateways, command_classes)
-
-        commands = registry.each_with_object({}) do |(name, rel_commands), h|
-          h[name] = CommandRegistry.new(rel_commands)
-        end
-
-        Registry.new(commands)
-      end
-
-      # For every dataset infered from gateways we infer a relation
-      #
-      # Relations explicitly defined are being skipped
-      #
-      # @api private
-      def infer_relations_relations
-        datasets.each do |gateway, schema|
-          schema.each do |name|
-            if infer_relation?(gateway, name)
-              klass = Relation.build_class(name, adapter: adapter_for(gateway))
-              klass.gateway(gateway)
-              klass.dataset(name)
-            else
-              next
-            end
+            next
           end
         end
       end
+    end
 
-      def infer_relation?(gateway, name)
-        inferrable_relations(gateway).include?(name) && relation_classes.none? { |klass|
-          klass.dataset == name
-        }
-      end
+    def infer_relation?(gateway, name)
+      inferrable_relations(gateway).include?(name) && relation_classes.none? { |klass|
+        klass.dataset == name
+      }
+    end
 
-      def inferrable_relations(gateway)
-        gateway_config = config.gateways[gateway]
-        schema = gateways[gateway].schema
+    def inferrable_relations(gateway)
+      gateway_config = config.gateways[gateway]
+      schema = gateways[gateway].schema
 
-        allowed = gateway_config[:inferrable_relations] || schema
-        skipped = gateway_config[:not_inferrable_relations] || []
+      allowed = gateway_config[:inferrable_relations] || schema
+      skipped = gateway_config[:not_inferrable_relations] || []
 
-        schema & allowed - skipped
-      end
+      schema & allowed - skipped
     end
   end
 end

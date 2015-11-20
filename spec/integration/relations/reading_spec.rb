@@ -1,22 +1,34 @@
 require 'spec_helper'
 
 describe 'Reading relations' do
+  include_context 'container'
   include_context 'users and tasks'
 
-  it 'exposes a relation reader' do
-    setup.relation(:tasks)
+  before do
+    configuration.relation(:tasks)
 
-    setup.relation(:users) do
+    configuration.relation(:users) do
       def by_name(name)
         restrict(name: name)
+      end
+
+      def with_task
+        join(tasks)
+      end
+
+      def with_tasks
+        join(tasks)
       end
 
       def sorted
         order(:name, :email)
       end
     end
+  end
 
-    setup.mappers do
+
+  it 'exposes a relation reader' do
+    configuration.mappers do
       define(:users) do
         model name: 'Test::User'
 
@@ -25,9 +37,7 @@ describe 'Reading relations' do
       end
     end
 
-    rom = setup.finalize
-
-    users = rom.relation(:users).sorted.by_name('Jane').as(:users)
+    users = users_relation.sorted.by_name('Jane').as(:users)
     user = users.first
 
     expect(user).to be_an_instance_of(Test::User)
@@ -36,19 +46,7 @@ describe 'Reading relations' do
   end
 
   it 'maps grouped relations' do
-    setup.relation(:tasks)
-
-    setup.relation(:users) do
-      def with_tasks
-        join(tasks)
-      end
-
-      def sorted
-        order(:name)
-      end
-    end
-
-    setup.mappers do
+    configuration.mappers do
       define(:users) do
         model name: 'Test::User'
 
@@ -63,18 +61,18 @@ describe 'Reading relations' do
       end
     end
 
-    rom = setup.finalize
+    container
 
     Test::User.send(:include, Equalizer.new(:name, :email))
     Test::UserWithTasks.send(:include, Equalizer.new(:name, :email, :tasks))
 
-    user = rom.relation(:users).sorted.as(:users).first
+    user = container.relation(:users).sorted.as(:users).first
 
     expect(user).to eql(
       Test::User.new(name: "Jane", email: "jane@doe.org")
     )
 
-    user = rom.relation(:users).with_tasks.sorted.as(:with_tasks).first
+    user = container.relation(:users).with_tasks.sorted.as(:with_tasks).first
 
     expect(user).to eql(
       Test::UserWithTasks.new(
@@ -85,19 +83,7 @@ describe 'Reading relations' do
   end
 
   it 'maps wrapped relations' do
-    setup.relation(:tasks)
-
-    setup.relation(:users) do
-      def with_task
-        join(tasks)
-      end
-
-      def sorted
-        order(:name)
-      end
-    end
-
-    setup.mappers do
+    configuration.mappers do
       define(:users) do
         model name: 'Test::User'
 
@@ -112,12 +98,12 @@ describe 'Reading relations' do
       end
     end
 
-    rom = setup.finalize
+    container
 
     Test::User.send(:include, Equalizer.new(:name, :email))
     Test::UserWithTask.send(:include, Equalizer.new(:name, :email, :task))
 
-    user = rom.relation(:users).sorted.with_task.as(:with_task).first
+    user = container.relation(:users).sorted.with_task.as(:with_task).first
 
     expect(user).to eql(
       Test::UserWithTask.new(name: "Jane", email: "jane@doe.org",
@@ -126,27 +112,17 @@ describe 'Reading relations' do
   end
 
   it 'maps hashes' do
-    setup.relation(:users) do
-      def by_name(name)
-        restrict(name: name)
-      end
-    end
-
-    setup.mappers do
+    configuration.mappers do
       define(:users)
     end
 
-    rom = setup.finalize
-
-    user = rom.relation(:users).by_name("Jane").as(:users).first
+    user = container.relation(:users).by_name("Jane").as(:users).first
 
     expect(user).to eql(name: "Jane", email: "jane@doe.org")
   end
 
   it 'allows cherry-picking of a mapper' do
-    setup.relation(:users)
-
-    setup.mappers do
+    configuration.mappers do
       define(:users) do
         attribute :name
         attribute :email
@@ -158,20 +134,13 @@ describe 'Reading relations' do
       end
     end
 
-    rom = setup.finalize
-    user = rom.relation(:users).map_with(:prefixer).first
+    user = container.relation(:users).map_with(:prefixer).first
 
     expect(user).to eql(user_name: 'Joe', user_email: "joe@doe.org")
   end
 
   it 'allows passing a block to retrieve relations for mapping' do
-    setup.relation(:users) do
-      def by_name(name)
-        restrict(name: name)
-      end
-    end
-
-    setup.mappers do
+    configuration.mappers do
       define(:users) do
         attribute :name
         attribute :email
@@ -183,17 +152,15 @@ describe 'Reading relations' do
       end
     end
 
-    rom = setup.finalize
-
     expect {
-      rom.relation(:users, &:not_here)
+      container.relation(:users, &:not_here)
     }.to raise_error(NoMethodError, /not_here/)
 
     expect {
-      rom.relation(:users) { |users| users.by_name('Joe') }.as(:not_here)
+      container.relation(:users) { |users| users.by_name('Joe') }.as(:not_here)
     }.to raise_error(ROM::MapperMissingError, /not_here/)
 
-    user = rom.relation(:users) { |users|
+    user = container.relation(:users) { |users|
       users.by_name('Joe')
     }.map_with(:prefixer).call.first
 

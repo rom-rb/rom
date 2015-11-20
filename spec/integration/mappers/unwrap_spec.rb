@@ -1,13 +1,14 @@
 require 'spec_helper'
 
 describe 'Mapper definition DSL' do
+  include_context 'container'
   include_context 'users and tasks'
 
   let(:header) { mapper.header }
 
   describe 'unwrapping relation mapper' do
     before do
-      setup.relation(:tasks) do
+      configuration.relation(:tasks) do
         def with_user
           tuples = map { |tuple|
             tuple.merge(user: users.restrict(name: tuple[:name]).first)
@@ -17,9 +18,9 @@ describe 'Mapper definition DSL' do
         end
       end
 
-      setup.relation(:users)
+      configuration.relation(:users)
 
-      setup.mappers do
+      configuration.mappers do
         define(:tasks) do
           model name: 'Test::Task'
 
@@ -30,7 +31,7 @@ describe 'Mapper definition DSL' do
     end
 
     it 'unwraps nested attributes via options hash' do
-      setup.mappers do
+      configuration.mappers do
         define(:with_user, parent: :tasks) do
           attribute :title
           attribute :priority
@@ -39,9 +40,7 @@ describe 'Mapper definition DSL' do
         end
       end
 
-      rom = setup.finalize
-
-      result = rom.relation(:tasks).with_user.as(:with_user).to_a.last
+      result = container.relation(:tasks).with_user.as(:with_user).to_a.last
 
       expect(result).to eql(title: 'be cool',
                             priority: 2,
@@ -50,7 +49,7 @@ describe 'Mapper definition DSL' do
     end
 
     it 'unwraps nested attributes via options block' do
-      setup.mappers do
+      configuration.mappers do
         define(:with_user, parent: :tasks) do
           attribute :title
           attribute :priority
@@ -62,9 +61,7 @@ describe 'Mapper definition DSL' do
         end
       end
 
-      rom = setup.finalize
-
-      result = rom.relation(:tasks).with_user.as(:with_user).to_a.last
+      result = container.relation(:tasks).with_user.as(:with_user).to_a.last
 
       expect(result).to eql(title: 'be cool',
                             priority: 2,
@@ -73,7 +70,7 @@ describe 'Mapper definition DSL' do
     end
 
     it 'unwraps specified attributes via options block' do
-      setup.mappers do
+      configuration.mappers do
         define(:with_user, parent: :tasks) do
           attribute :title
           attribute :priority
@@ -84,9 +81,7 @@ describe 'Mapper definition DSL' do
         end
       end
 
-      rom = setup.finalize
-
-      result = rom.relation(:tasks).with_user.as(:with_user).to_a.last
+      result = container.relation(:tasks).with_user.as(:with_user).to_a.last
 
       expect(result).to eql(title: 'be cool',
                             priority: 2,

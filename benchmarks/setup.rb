@@ -11,8 +11,6 @@ begin
 rescue LoadError
 end
 
-ROM.use :auto_registration
-
 require_relative 'gc_suite'
 
 def rom

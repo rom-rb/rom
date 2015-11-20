@@ -1,16 +1,11 @@
 require 'spec_helper'
 
 describe ROM::Relation::Composite do
+  include_context 'gateway only'
   include_context 'users and tasks'
 
-  let(:users) { rom.relation(:users) }
-  let(:tasks) { rom.relation(:tasks) }
-
-  let(:name_list) { proc { |r| r.map { |t| t[:name] } } }
-  let(:upcaser) { proc { |r| r.map(&:upcase) } }
-
-  before do
-    setup.relation(:users) do
+  let(:users_relation) do
+    Class.new(ROM::Memory::Relation) do
       def by_name(name)
         restrict(name: name)
       end
@@ -18,30 +13,35 @@ describe ROM::Relation::Composite do
       def sorted(other)
         other.source.order(:name)
       end
-    end
+    end.new(users_dataset)
+  end
 
-    setup.relation(:tasks) do
+  let(:tasks_relation) do
+    Class.new(ROM::Memory::Relation) do
       def for_users(users)
         restrict(name: users.map { |u| u[:name] })
       end
-    end
+    end.new(tasks_dataset)
   end
+
+  let(:name_list) { proc { |r| r.map { |t| t[:name] } } }
+  let(:upcaser) { proc { |r| r.map(&:upcase) } }
 
   describe '#call' do
     it 'sends a relation through mappers' do
-      relation = users >> name_list >> upcaser
+      relation = users_relation >> name_list >> upcaser
       loaded = relation.call
 
-      expect(loaded.source).to eql(users)
+      expect(loaded.source).to eql(users_relation)
 
       expect(loaded).to match_array(%w(JANE JOE))
     end
 
     it 'sends a relation through another relation' do
-      relation = users >> users.sorted
+      relation = users_relation >> users_relation.sorted
       loaded = relation.call
 
-      expect(loaded.source).to eql(users.sorted(users.call))
+      expect(loaded.source).to eql(users_relation.sorted(users_relation.call))
 
       expect(loaded).to match_array([
         { name: 'Jane', email: 'jane@doe.org' },
@@ -50,12 +50,12 @@ describe ROM::Relation::Composite do
     end
 
     it 'sends a relation through another composite relation' do
-      task_mapper = -> tasks { tasks }
-      relation = users.by_name('Jane') >> (tasks.for_users >> task_mapper)
+      task_mapper = -> tasks_relation { tasks_relation }
+      relation = users_relation.by_name('Jane') >> (tasks_relation.for_users >> task_mapper)
 
       loaded = relation.call
 
-      expect(loaded.source).to eql(tasks.for_users(users.by_name('Jane')))
+      expect(loaded.source).to eql(tasks_relation.for_users(users_relation.by_name('Jane')))
 
       expect(loaded).to match_array([
         { name: 'Jane', title: 'be cool', priority: 2 }
@@ -64,7 +64,7 @@ describe ROM::Relation::Composite do
   end
 
   describe '#each' do
-    let(:relation) { users >> name_list >> upcaser }
+    let(:relation) { users_relation >> name_list >> upcaser }
 
     it 'calls and iterates' do
       result = []
@@ -80,7 +80,7 @@ describe ROM::Relation::Composite do
   end
 
   describe '#first' do
-    let(:relation) { users >> name_list >> upcaser }
+    let(:relation) { users_relation >> name_list >> upcaser }
 
     it 'calls and returns the first object' do
       expect(relation.first).to eql('JOE')
