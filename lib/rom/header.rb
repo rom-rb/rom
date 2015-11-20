@@ -11,7 +11,7 @@ module ROM
   # @private
   class Header
     include Enumerable
-    include Equalizer.new(:attributes, :model)
+    include Dry::Equalizer(:attributes, :model)
 
     # @return [Class] optional model associated with a header
     #

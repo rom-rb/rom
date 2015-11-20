@@ -1,3 +1,4 @@
+require 'dry-equalizer'
 require 'rom-support'
 
 require 'rom/mapper'

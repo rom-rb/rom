@@ -9,7 +9,7 @@ module ROM
     #
     # @private
     class Attribute
-      include Equalizer.new(:name, :key, :type)
+      include Dry::Equalizer(:name, :key, :type)
 
       # @return [Symbol] name of an attribute
       #
@@ -105,7 +105,7 @@ module ROM
     #
     # @private
     class Embedded < Attribute
-      include Equalizer.new(:name, :key, :type, :header)
+      include Dry::Equalizer(:name, :key, :type, :header)
 
       # return [Header] header of an attribute
       #

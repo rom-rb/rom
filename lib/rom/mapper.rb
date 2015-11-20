@@ -9,7 +9,7 @@ module ROM
   class Mapper
     extend ROM::Support::InheritanceHook
     include DSL
-    include Equalizer.new(:transformers, :header)
+    include Dry::Equalizer(:transformers, :header)
 
     defines :relation, :register_as, :symbolize_keys,
       :prefix, :prefix_separator, :inherit_header, :reject_keys
