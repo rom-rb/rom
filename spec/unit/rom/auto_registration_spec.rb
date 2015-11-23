@@ -4,7 +4,7 @@ require 'rom/setup/auto_registration'
 RSpec.describe ROM::Setup, '#auto_registration' do
   let(:setup) { ROM::Setup.new }
 
-  context 'with namespace is turned on' do
+  context 'with namespace turned on' do
     before do
       setup.auto_registration(SPEC_ROOT.join('fixtures/lib/persistence'))
     end
@@ -28,7 +28,7 @@ RSpec.describe ROM::Setup, '#auto_registration' do
     end
   end
 
-  context 'with namespace is turned off' do
+  context 'with namespace turned off' do
     before do
       setup.auto_registration(SPEC_ROOT.join('fixtures/app'), namespace: false)
     end
