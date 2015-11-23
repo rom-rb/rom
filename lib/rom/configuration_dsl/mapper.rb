@@ -1,3 +1,4 @@
+require 'rom/support/constants'
 require 'rom/support/class_builder'
 
 module ROM

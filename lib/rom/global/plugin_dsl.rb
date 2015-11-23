@@ -1,3 +1,5 @@
+require 'rom/support/constants'
+
 module ROM
   module Global
     # plugin registration DSL

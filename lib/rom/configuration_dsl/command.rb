@@ -1,3 +1,5 @@
+require 'rom/support/constants'
+
 require 'rom/support/inflector'
 require 'rom/support/class_builder'
 
