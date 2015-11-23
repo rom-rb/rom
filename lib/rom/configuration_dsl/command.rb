@@ -1,6 +1,8 @@
+require 'rom/support/inflector'
+require 'rom/support/class_builder'
+
 module ROM
   module ConfigurationDSL
-
     # Setup DSL-specific command extensions
     #
     # @private

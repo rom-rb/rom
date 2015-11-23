@@ -2,7 +2,6 @@ require 'rom/configuration_dsl/command'
 
 module ROM
   module ConfigurationDSL
-
     # Command `define` DSL used by Setup#commands
     #
     # @private

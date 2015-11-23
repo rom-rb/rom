@@ -8,7 +8,7 @@ module ROM
         # @api private
         UnspecifiedRelationError = Class.new(StandardError)
         DoubleRestrictionError = Class.new(StandardError)
-        
+
         # @api private
         class Node
           # @api private
@@ -74,7 +74,7 @@ module ROM
           def each(&block)
             block.call(self)
           end
-          
+
           # Return command ast from this union node
           #
           # @return [Array]
@@ -92,8 +92,8 @@ module ROM
             command << @nodes.map(&:to_ast) unless @nodes.empty?
 
             [key_relation_map, command]
-          end          
-          
+          end
+
           # @api public
           def command(*args, &block)
             node = super
@@ -140,7 +140,7 @@ module ROM
               []
             end
           end
-          
+
           def command(*args, &block)
             node = super
             @nodes << node
@@ -154,7 +154,7 @@ module ROM
             super()
             @container = container
           end
-          
+
           def command(*args, &block)
             super
             @container.command(to_ast)

@@ -2,7 +2,6 @@ require 'rom/configuration_dsl/mapper'
 
 module ROM
   module ConfigurationDSL
-
     # Mapper definition DSL used by Setup DSL
     #
     # @private
