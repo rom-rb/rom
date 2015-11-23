@@ -10,7 +10,6 @@ require 'rom/support/registry'
 require 'rom/support/options'
 require 'rom/support/class_macros'
 require 'rom/support/class_builder'
-require 'rom/support/guarded_inheritance_hook'
 require 'rom/support/inheritance_hook'
 
 # core parts

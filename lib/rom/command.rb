@@ -21,7 +21,6 @@ module ROM
     include Commands
 
     extend ClassMacros
-    extend Support::GuardedInheritanceHook
     extend ClassInterface
 
     include Options

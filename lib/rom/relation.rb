@@ -26,7 +26,6 @@ module ROM
   # @api public
   class Relation
     extend ClassInterface
-    extend ROM::Support::GuardedInheritanceHook
 
     include Options
     include Dry::Equalizer(:dataset)
