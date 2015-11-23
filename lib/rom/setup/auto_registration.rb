@@ -1,15 +1,22 @@
+require 'pathname'
+
+require 'rom/support/constants'
+require 'rom/support/inflector'
+require 'rom/support/options'
+
 module ROM
   class AutoRegistration
-    def initialize(directory, options = {})
-      @directory = directory
-      @namespace = options.fetch(:namespace, Object)
-      @entities = Hash[[:relations, :commands, :mappers].map { |e|
-        opts = {
-          directory: File.join(@directory, "#{e}"),
-          namespace: @namespace
-        }.merge(options.fetch(e, {}))
+    include Options
 
-        [e, opts]
+    option :namespace, reader: true, type: [TrueClass, FalseClass], default: true
+
+    attr_reader :globs, :directory
+
+    def initialize(directory, options = EMPTY_HASH)
+      super
+      @directory = directory
+      @globs = Hash[[:relations, :commands, :mappers].map { |name|
+        [name, Pathname(directory).join("#{name}/**/*.rb")]
       }]
     end
 
@@ -28,32 +35,21 @@ module ROM
     private
 
     def load_entities(entity)
-      files = Dir[files_for(entity)]
-      files.map do |f|
-        require f
-
-        Object.const_get(constant_name_for(entity, f))
+      Dir[globs[entity]].map do |file|
+        require file
+        Inflector.constantize(const_name(entity, file))
       end
     end
 
-    def constant_name_for(entity, filename)
-      [@entities[entity][:namespace], constant_name(filename).to_sym].join("::")
-    end
+    def const_name(entity, file)
+      name =
+        if namespace
+          file.gsub("#{directory.dirname}/", '')
+        else
+          file.gsub("#{directory}/#{entity}/", '')
+        end.gsub('.rb', '')
 
-    def constant_name(filename)
-      File.basename(filename, ".rb").split(/_/).map(&:capitalize).join()
-    end
-
-    def namespace_for(entity)
-      Object.const_get()
-    end
-
-    def files_for(entity)
-      File.join(directory_for(entity), "*.rb")
-    end
-
-    def directory_for(entity)
-      @entities[entity][:directory]
+      Inflector.camelize(name)
     end
   end
 end

@@ -17,7 +17,7 @@ begin
 rescue LoadError
 end
 
-root = Pathname(__FILE__).dirname
+SPEC_ROOT = root = Pathname(__FILE__).dirname
 
 Dir[root.join('support/*.rb').to_s].each do |f|
   require f

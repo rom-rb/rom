@@ -7,37 +7,37 @@ module ROM
   # @api public
   class Environment
     include Configurable
-    
+
     attr_reader :gateways, :gateways_map
-    
+
     # @api public
     def initialize(*args)
       @gateways = {}
       @gateways_map = {}
-      
+
       configure_gateways(*args) unless args.empty?
     end
 
     private
-    
+
     def configure_gateways(*args)
       normalized_gateway_args = normalize_gateway_args(*args)
       normalized_gateways = normalize_gateways(normalized_gateway_args)
 
       @gateways, @gateways_map = normalized_gateways.values_at(:gateways, :map)
-      
+
       normalized_gateway_args.each_with_object(config) do |(name, gateway_config), config|
         options = gateway_config.is_a?(Array) && gateway_config.last
         load_config(config.gateways[name], options) if options.is_a?(Hash)
       end
     end
-    
-    
+
+
     # @api private
     def normalize_gateway_args(*args)
       args.first.is_a?(Hash) ? args.first : {default: args}
     end
-    
+
     # Build gateways using the setup interface
     #
     # @api private
