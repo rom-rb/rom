@@ -15,7 +15,7 @@ RSpec.describe 'SQL Relation extensions' do
   describe '.view' do
     context 'using short syntax' do
       before do
-        setup.relation(:users) do
+        configuration.relation(:users) do
           view(:by_id, [:name]) do |name|
             where(name: name).select(:name)
           end
@@ -27,7 +27,7 @@ RSpec.describe 'SQL Relation extensions' do
 
     context 'with multi-block syntax' do
       before do
-        setup.relation(:users) do
+        configuration.relation(:users) do
           view(:by_id) do
             header [:name]
 
@@ -44,7 +44,7 @@ RSpec.describe 'SQL Relation extensions' do
     context 'with multi-block when first block has args' do
       it 'raises error' do
         expect {
-          setup.relation(:users) do
+          configuration.relation(:users) do
             view(:by_id) { |args| }
           end
         }.to raise_error(ArgumentError)

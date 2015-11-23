@@ -4,7 +4,7 @@ RSpec.shared_context 'relations' do
   let(:tags) { rom.relation(:tags) }
 
   before do
-    setup.relation(:users) do
+    configuration.relation(:users) do
       def all
         select(:id, :name).order(:name, :id)
       end
@@ -14,7 +14,7 @@ RSpec.shared_context 'relations' do
       end
     end
 
-    setup.relation(:tasks) do
+    configuration.relation(:tasks) do
       def find(criteria)
         where(criteria)
       end
@@ -24,6 +24,6 @@ RSpec.shared_context 'relations' do
       end
     end
 
-    setup.relation(:tags)
+    configuration.relation(:tags)
   end
 end

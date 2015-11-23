@@ -42,5 +42,3 @@ RSpec.configure do |config|
 
   config.include(MapperRegistry)
 end
-
-ROM.use :auto_registration

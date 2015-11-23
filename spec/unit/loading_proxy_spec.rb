@@ -33,7 +33,7 @@ RSpec.describe 'loading proxy' do
 
   describe '#map_with/#as' do
     before do
-      setup.mappers do
+      configuration.mappers do
         register :users, name_list: -> users { users.map(&:name) }
       end
     end

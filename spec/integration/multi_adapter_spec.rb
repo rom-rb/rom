@@ -1,10 +1,10 @@
 # encoding: utf-8
 
-RSpec.describe 'Repository with multi-adapters setup' do
+RSpec.describe 'Repository with multi-adapters configuration' do
   include_context 'database'
 
-  let(:setup) {
-    ROM.setup(default: [:sql, uri], memory: [:memory])
+  let(:configuration) {
+    ROM::Configuration.new(default: [:sql, uri], memory: [:memory])
   }
 
   let(:users) { rom.relation(:sql_users) }
@@ -37,7 +37,7 @@ RSpec.describe 'Repository with multi-adapters setup' do
         end
       end
 
-      class Repository < ROM::Repository::Base
+      class Repository < ROM::Repository
         relations :sql_users, :memory_tasks
 
         def users_with_tasks(id)
@@ -46,8 +46,11 @@ RSpec.describe 'Repository with multi-adapters setup' do
       end
     end
 
-    user_id = setup.gateways[:default].dataset(:users).insert(name: 'Jane')
-    setup.gateways[:memory].dataset(:tasks).insert(user_id: user_id, title: 'Jane Task')
+    configuration.register_relation(Test::Users)
+    configuration.register_relation(Test::Tasks)
+
+    user_id = configuration.gateways[:default].dataset(:users).insert(name: 'Jane')
+    configuration.gateways[:memory].dataset(:tasks).insert(user_id: user_id, title: 'Jane Task')
   end
 
   specify 'ᕕ⁞ ᵒ̌ 〜 ᵒ̌ ⁞ᕗ' do
