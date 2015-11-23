@@ -38,10 +38,11 @@ module ROM
 
   class InlineCreateContainer < CreateContainer
     def initialize(*args, &block)
-      if args.first.is_a? Configuration
+      case args.first
+      when Configuration
         environment = args.first.environment
         setup = args.first.setup
-      elsif args.first.is_a? Environment
+      when Environment
         environment = args.first
         setup = args[1]
       else
