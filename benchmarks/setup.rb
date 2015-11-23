@@ -93,7 +93,7 @@ end
 
 DATABASE_URL = ENV.fetch('DATABASE_URL', 'postgres://localhost/rom')
 
-setup = ROM.setup(:sql, DATABASE_URL)
+setup = ROM::Configuration.new(:sql, DATABASE_URL)
 
 conn = setup.default.connection
 
@@ -275,7 +275,18 @@ module Mappers
   end
 end
 
-ROM_ENV = setup.finalize
+setup.register_relation(Relations::Users)
+setup.register_relation(Relations::Tasks)
+
+setup.register_mapper(Mappers::Users::Base)
+setup.register_mapper(Mappers::Users::WithCombinedTasks)
+setup.register_mapper(Mappers::Users::WithTasks)
+
+setup.register_mapper(Mappers::Tasks::Base)
+setup.register_mapper(Mappers::Tasks::WithUser)
+setup.register_mapper(Mappers::Tasks::WithUserAndTags)
+
+ROM_ENV = ROM.create_container(setup)
 
 VERIFY = ENV.fetch('VERIFY') { false }
 COUNT = ENV.fetch('COUNT', 1000).to_i
