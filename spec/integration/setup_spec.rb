@@ -34,7 +34,7 @@ describe 'Configuring ROM' do
 
   context 'without schema' do
     it 'builds empty registries if there is no schema' do
-      container = ROM.create_container(:memory)
+      container = ROM.container(:memory)
       expect(container.relations).to eql(ROM::RelationRegistry.new)
       expect(container.mappers).to eql(ROM::Registry.new)
     end
@@ -42,7 +42,7 @@ describe 'Configuring ROM' do
 
   describe 'defining classes' do
     it 'sets up registries based on class definitions' do
-      container = ROM.create_container(:memory) do |config|
+      container = ROM.container(:memory) do |config|
         config.use(:macros)
 
         class Test::UserRelation < ROM::Relation[:memory]
@@ -86,7 +86,7 @@ describe 'Configuring ROM' do
         end
       end
 
-      container = ROM.create_container(:memory) do |rom|
+      container = ROM.container(:memory) do |rom|
         rom.use(:macros)
 
         rom.relation(:users) do
@@ -140,7 +140,7 @@ describe 'Configuring ROM' do
         end
       end
 
-      container = ROM.create_container(configuration)
+      container = ROM.container(configuration)
 
       container.command(:users).create.call(name: 'Jane')
 

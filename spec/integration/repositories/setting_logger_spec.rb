@@ -23,7 +23,7 @@ describe 'Repositories / Setting logger' do
   end
 
   it 'sets up a logger for a given gateway' do
-    container = ROM.create_container(:memory) do |config|
+    container = ROM.container(:memory) do |config|
       config.gateways[:default].use_logger(logger)
     end
       

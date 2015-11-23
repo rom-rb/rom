@@ -129,7 +129,7 @@ describe ROM::CreateContainer do
 
     context 'empty setup' do
       let(:configuration) { ROM::Configuration.new({}) }
-      let(:container) { ROM.create_container(configuration) }
+      let(:container) { ROM.container(configuration) }
 
       it 'builds empty gateways' do
         expect(container.gateways).to eql({})

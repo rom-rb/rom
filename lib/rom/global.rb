@@ -69,7 +69,7 @@ If possible, refactor your code to remove the dependency on global ROM state. If
 possible—or as a temporary solution—you can assign your container to `ROM.env` upon
 creation:
 
-  ROM.env = ROM.create_container(:memory) do |rom|
+  ROM.env = ROM.container(:memory) do |rom|
     ...
   end
         })

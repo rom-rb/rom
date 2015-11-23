@@ -11,8 +11,8 @@ describe 'Setting up ROM with multiple environments' do
 
   let(:container) do
     {
-      one: ROM.create_container(configuration[:one]),
-      two: ROM.create_container(configuration[:two]),
+      one: ROM.container(configuration[:one]),
+      two: ROM.container(configuration[:two]),
     }
   end
 

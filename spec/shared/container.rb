@@ -1,5 +1,5 @@
 RSpec.shared_context 'container' do
-  let(:container) { ROM.create_container(configuration) }
+  let(:container) { ROM.container(configuration) }
   let!(:configuration) { ROM::Configuration.new(:memory).use(:macros) }
   let(:gateway) { configuration.gateways[:default] }
   let(:users_relation) { container.relation(:users) }

@@ -286,7 +286,7 @@ setup.register_mapper(Mappers::Tasks::Base)
 setup.register_mapper(Mappers::Tasks::WithUser)
 setup.register_mapper(Mappers::Tasks::WithUserAndTags)
 
-ROM_ENV = ROM.create_container(setup)
+ROM_ENV = ROM.container(setup)
 
 VERIFY = ENV.fetch('VERIFY') { false }
 COUNT = ENV.fetch('COUNT', 1000).to_i

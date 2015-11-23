@@ -6,7 +6,7 @@ describe 'Using in-memory gateways for cross-repo access' do
     ROM::Configuration.new(left: :memory, right: :memory, main: :memory).use(:macros)
   end
 
-  let(:container) { ROM.create_container(configuration) }
+  let(:container) { ROM.container(configuration) }
   let(:gateways) { container.gateways }
 
   it 'works' do

@@ -55,7 +55,7 @@ module ROM
     end
   end
 
-  def self.create_container(*args, &block)
+  def self.container(*args, &block)
     InlineCreateContainer.new(*args, &block).container
   end
 end
