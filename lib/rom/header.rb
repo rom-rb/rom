@@ -1,5 +1,3 @@
-require 'equalizer'
-
 require 'rom/header/attribute'
 
 module ROM
