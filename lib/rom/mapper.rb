@@ -1,13 +1,10 @@
 require 'rom/mapper/dsl'
 
-require 'rom/support/inheritance_hook'
-
 module ROM
   # Mapper is a simple object that uses transformers to load relations
   #
   # @private
   class Mapper
-    extend ROM::Support::InheritanceHook
     include DSL
     include Dry::Equalizer(:transformers, :header)
 
