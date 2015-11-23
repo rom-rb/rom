@@ -20,6 +20,12 @@ module ROM
       }]
     end
 
+    def register_on(configuration)
+      configuration.register_relation(*relations)
+      configuration.register_command(*commands)
+      configuration.register_mapper(*mappers)
+    end
+
     def relations
       load_entities(:relations)
     end
