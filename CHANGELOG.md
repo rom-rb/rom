@@ -1,3 +1,21 @@
+# v0.2.0 to-be-released
+
+### Added
+
+* You can now pass a custom class that will be used for mapping using `.as(MyClass)` interface (solnic)
+
+### Changed
+
+* Relation plugins have been moved to `rom` and `rom-sql`. Other adapters can
+  enable them too which means repository can now be used *with any adapter* (solnic)
+* `Repository::Base` is deprecated, just inherit from `ROM::Repository` (solnic)
+
+## Fixed
+
+* Added `respond_to_missing?` to `LoadingProxy` (AMHOL)
+
+[Compare v0.1.0...HEAD](https://github.com/rom-rb/rom-repository/compare/v0.1.0...HEAD)
+
 # v0.1.0 2015-08-19
 
 This release ensures that relations from different adapters can be composed
