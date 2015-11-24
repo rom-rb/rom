@@ -20,6 +20,9 @@ module ROM
     attr_reader :reject_keys
 
     # @api private
+    attr_reader :copy_keys
+
+    # @api private
     attr_reader :attributes
 
     # @return [Hash] attribute key/name mapping for all primitive attributes
@@ -62,6 +65,7 @@ module ROM
     def initialize(attributes, options = {})
       @options = options
       @model = options[:model]
+      @copy_keys = options.fetch(:copy_keys, false)
       @reject_keys = options.fetch(:reject_keys, false)
 
       @attributes = attributes

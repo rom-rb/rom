@@ -17,7 +17,7 @@ describe ROM::Mapper do
       let(:mapper_body) do
         proc do
           attribute(:key) { |key| [prefix, key].join('_') }
-        
+
           def prefix
             'foo'
           end
@@ -39,7 +39,7 @@ describe ROM::Mapper do
           embedded :items, type: :hash do
             attribute(:key) { |key| [prefix, key].join('_') }
           end
-        
+
           def prefix
             'foo'
           end
@@ -61,7 +61,7 @@ describe ROM::Mapper do
           wrap :items do
             attribute(:key) { |key| [prefix, key].join('_') }
           end
-        
+
           def prefix
             'foo'
           end
@@ -83,7 +83,7 @@ describe ROM::Mapper do
           unwrap :items do
             attribute(:key) { |key| [prefix, key].join('_') }
           end
-        
+
           def prefix
             'foo'
           end

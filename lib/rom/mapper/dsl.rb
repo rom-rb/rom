@@ -78,7 +78,8 @@ module ROM
         #
         # @api private
         def options
-          { prefix: prefix,
+          { copy_keys: copy_keys,
+            prefix: prefix,
             prefix_separator: prefix_separator,
             symbolize_keys: symbolize_keys,
             reject_keys: reject_keys }
