@@ -353,9 +353,10 @@ module ROM
       # @api private
       def initialize_row_proc
         @row_proc = compose { |ops|
+          alias_handler = header.copy_keys ? :copy_keys : :rename_keys
           process_header_keys(ops)
 
-          ops << t(:rename_keys, mapping) if header.aliased?
+          ops << t(alias_handler, mapping) if header.aliased?
           ops << header.map { |attr| visit(attr) }
           ops << t(:constructor_inject, model) if model
         }

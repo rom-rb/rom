@@ -68,21 +68,39 @@ describe ROM::Processor::Transproc do
     end
   end
 
+  context 'copying keys' do
+    let(:options) do
+      { copy_keys: true }
+    end
+
+    let(:attributes) do
+      [['b', from: 'a'], ['c', from: 'b']]
+    end
+
+    let(:relation) do
+      [{ 'a' => 'copy' }]
+    end
+
+    it 'copies without removing the original' do
+      expect(transproc[relation]).to eql([{ 'a' => 'copy', 'b' => 'copy', 'c' => 'copy' }])
+    end
+  end
+
   describe 'key from exsisting keys' do
     let(:attributes) do
-      coercer = ->(a,b) { b + a }
-      [[:c, {from: [:a, :b], coercer: coercer} ]]
+      coercer = ->(a, b) { b + a }
+      [[:c, { from: [:a, :b], coercer: coercer }]]
     end
 
     let(:relation) do
       [
-        {a: 'works', b: 'this'}
+        { a: 'works', b: 'this' }
       ]
     end
 
-    let (:expected_result) do
+    let(:expected_result) do
       [
-        {c: 'thisworks'}
+        { c: 'thisworks' }
       ]
     end
 

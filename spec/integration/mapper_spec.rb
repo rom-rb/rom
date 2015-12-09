@@ -17,7 +17,7 @@ describe ROM::Mapper do
       let(:mapper_body) do
         proc do
           attribute(:key) { |key| [prefix, key].join('_') }
-        
+
           def prefix
             'foo'
           end
@@ -25,6 +25,21 @@ describe ROM::Mapper do
       end
 
       it 'creates the attribute from the proc with the mapper as the binding' do
+        is_expected.to match_array(results)
+      end
+    end
+
+    context 'when copying aliased keys to multiple attributes' do
+      let(:tuples) { [{ key: 'bar' }] }
+      let(:results) { [{ key: 'bar', key2: 'bar', key3: 'bar' }] }
+      let(:mapper_body) do
+        proc do
+          copy_keys true
+          attribute([:key2, :key3], from: :key)
+        end
+      end
+
+      it 'creates attributes by copying keys rather than renaming' do
         is_expected.to match_array(results)
       end
     end
@@ -39,7 +54,7 @@ describe ROM::Mapper do
           embedded :items, type: :hash do
             attribute(:key) { |key| [prefix, key].join('_') }
           end
-        
+
           def prefix
             'foo'
           end
@@ -61,7 +76,7 @@ describe ROM::Mapper do
           wrap :items do
             attribute(:key) { |key| [prefix, key].join('_') }
           end
-        
+
           def prefix
             'foo'
           end
@@ -83,7 +98,7 @@ describe ROM::Mapper do
           unwrap :items do
             attribute(:key) { |key| [prefix, key].join('_') }
           end
-        
+
           def prefix
             'foo'
           end

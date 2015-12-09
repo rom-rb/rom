@@ -71,11 +71,23 @@ describe ROM::Mapper do
     end
   end
 
+  describe 'copy_keys' do
+    let(:attributes) { [[:name, type: :string]] }
+    let(:options) { { copy_keys: true } }
+
+    it 'sets copy_keys for the header' do
+      mapper.copy_keys true
+      mapper.attribute :name, type: :string
+
+      expect(header).to eql(expected_header)
+    end
+  end
+
   describe 'reject_keys' do
     let(:attributes) { [[:name, type: :string]] }
     let(:options) { { reject_keys: true } }
 
-    it 'sets rejected_keys for the header' do
+    it 'sets reject_keys for the header' do
       mapper.reject_keys true
       mapper.attribute :name, type: :string
 
