@@ -16,7 +16,7 @@ Gem::Specification.new do |gem|
   gem.license       = 'MIT'
 
   gem.add_dependency 'dry-equalizer', '~> 0.2'
-  gem.add_dependency 'rom-support', '~> 1.0.0.beta1'
+  gem.add_dependency 'rom-support', '~> 1.0.0.rc1'
 
   gem.add_development_dependency 'rake', '~> 10.3'
   gem.add_development_dependency 'rspec', '~> 3.3'
