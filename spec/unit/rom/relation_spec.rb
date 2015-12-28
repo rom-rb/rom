@@ -98,6 +98,20 @@ describe ROM::Relation do
       expect(Test::SuperUsers.register_as).to eq(:users)
       expect(Test::DescendantUsers.register_as).to eq(:descendant_users)
     end
+
+    it "sets provided value overriding inherited value" do
+      module Test
+        class BaseRelation < ROM::Relation[:memory]
+        end
+
+        class UsersRelation < BaseRelation
+          register_as :users
+          dataset :users
+        end
+      end
+
+      expect(Test::UsersRelation.register_as).to be(:users)
+    end
   end
 
   describe '#name' do

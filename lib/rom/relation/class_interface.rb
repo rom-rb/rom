@@ -77,6 +77,8 @@ module ROM
           # @api public
           def self.register_as(value = Undefined)
             if value == Undefined
+              return @register_as if defined?(@register_as)
+
               super_val = super()
 
               if superclass == ROM::Relation[adapter]
