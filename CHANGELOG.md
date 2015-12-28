@@ -20,6 +20,10 @@
   in the input (solnic)
 - Command graph no longer rescues from any exception (solnic)
 
+### Fixed
+
+- `Relation.register_as` properly overrides inherited value (solnic)
+
 [Compare v0.9.1...HEAD](https://github.com/rom-rb/rom/compare/v0.9.1...HEAD)
 
 ## v0.9.1 2015-08-21
