@@ -76,14 +76,14 @@ describe ROM::Relation do
       expect(Test::Users.register_as).to eq(:guests)
     end
 
-    it "defaults to :name for descendant classes" do
+    it "defaults to :dataset of parent class" do
       class Test::SuperUsers < ROM::Relation[:memory]
         dataset :users
       end
 
       class Test::DescendantUsers < Test::SuperUsers; end
 
-      expect(Test::DescendantUsers.register_as).to eq(:test_descendant_users)
+      expect(Test::DescendantUsers.register_as).to be(:users)
     end
 
     it "sets custom value for super and descendant classes" do
