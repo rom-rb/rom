@@ -11,7 +11,7 @@ module ROM
     #
     # @api private
     attr_reader :configuration
-    
+
     # Internal registry for command plugins
     #
     # @return [InternalPluginRegistry]
@@ -158,7 +158,7 @@ module ROM
     # Return the plugin for a given adapter
     #
     # @param [Symbol] name The name of the plugin
-    # @param [Symbol] adapter (:default) The name of the adapter used
+    # @param [Symbol] adapter_name (:default) The name of the adapter used
     #
     # @raises [UnknownPluginError] if no plugin is found with the given name
     #
