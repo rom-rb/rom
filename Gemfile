@@ -6,7 +6,7 @@ gem 'inflecto'
 
 group :test do
   gem 'anima', '~> 0.2.0'
-  gem 'rom-sql'
+  gem 'rom-sql', '~> 0.7.0'
   gem 'rspec'
   gem 'byebug', platforms: :mri
   gem 'pg', platforms: [:mri, :rbx]
