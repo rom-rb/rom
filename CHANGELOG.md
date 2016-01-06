@@ -1,4 +1,4 @@
-# v0.2.0 to-be-released
+# v0.2.0 2016-01-06
 
 ### Added
 
@@ -14,7 +14,7 @@
 
 * Added `respond_to_missing?` to `LoadingProxy` (AMHOL)
 
-[Compare v0.1.0...HEAD](https://github.com/rom-rb/rom-repository/compare/v0.1.0...HEAD)
+[Compare v0.1.0...v0.2.0](https://github.com/rom-rb/rom-repository/compare/v0.1.0...v0.2.0)
 
 # v0.1.0 2015-08-19
 
