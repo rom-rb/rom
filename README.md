@@ -62,10 +62,6 @@ for a list of adapters that are planned to be added soon.
 * [rom-rails](https://github.com/rom-rb/rom-rails)
 * [rom-roda](https://github.com/rom-rb/rom-roda)
 
-## ROADMAP
-
-ROM is on its way towards 1.0.0. You can see an overview of tasks scheduled for 1.0.0 on our [waffle board](https://waffle.io/rom-rb/rom?label=1.0.0). Please notice that most of the 1.0.0 features/changes will become part of minor (0.x) upgrades before 1.0.0 final gets released.
-
 ## Community
 
 * [Official Blog](http://rom-rb.org/blog/)
