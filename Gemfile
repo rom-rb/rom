@@ -2,9 +2,6 @@ source 'https://rubygems.org'
 
 gemspec
 
-gem 'transproc', github: 'solnic/transproc', branch: 'master'
-gem 'rom-support', github: 'rom-rb/rom-support', branch: 'master'
-
 group :test do
   gem 'anima', '~> 0.2.0'
   gem 'virtus'
