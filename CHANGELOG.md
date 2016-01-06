@@ -1,4 +1,4 @@
-# v0.3.0 to-be-released
+# v0.3.0 2016-01-06
 
 ### Added
 
@@ -12,7 +12,7 @@
 
 * `model` will skip excluded attributes (chastell)
 
-[Compare v0.2.0..HEAD](https://github.com/rom-rb/rom-mapper/compare/v0.2.0...HEAD)
+[Compare v0.2.0..v0.3.0](https://github.com/rom-rb/rom-mapper/compare/v0.2.0...v0.3.0)
 
 # v0.2.0 2015-08-10
 
