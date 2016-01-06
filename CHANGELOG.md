@@ -1,4 +1,4 @@
-## v1.0.0 to-be-released
+## v1.0.0 2016-01-06
 
 ### Added
 
@@ -24,7 +24,7 @@
 
 - `Relation.register_as` properly overrides inherited value (solnic)
 
-[Compare v0.9.1...HEAD](https://github.com/rom-rb/rom/compare/v0.9.1...HEAD)
+[Compare v0.9.1...v1.0.0](https://github.com/rom-rb/rom/compare/v0.9.1...v1.0.0)
 
 ## v0.9.1 2015-08-21
 
