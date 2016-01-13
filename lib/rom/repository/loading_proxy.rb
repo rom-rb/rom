@@ -133,6 +133,11 @@ module ROM
         relation.respond_to?(:nodes) ? relation.nodes : []
       end
 
+      # @api private
+      def adapter
+        relation.class.adapter
+      end
+
       private
 
       # Return a new instance with another relation and options
