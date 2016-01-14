@@ -11,8 +11,7 @@ module ROM
       attr_reader :type, :adapter, :container, :registry
 
       def initialize(type, adapter, container, registry)
-        @type = type
-        @adapter = adapter
+        @type = Commands.const_get(Inflector.classify(type))[adapter]
         @registry = registry
         @container = container
       end
@@ -53,8 +52,7 @@ module ROM
       end
 
       def register_command(name, type, opts)
-        base = ROM::Commands::Create[adapter]
-        klass = ClassBuilder.new(name: "Create[#{name}]", parent: base).call
+        klass = ClassBuilder.new(name: "Create[#{name}]", parent: type).call
 
         if opts[:combine_type]
           klass.use(:associates)
