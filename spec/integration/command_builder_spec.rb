@@ -12,5 +12,36 @@ RSpec.describe 'Building commands' do
       expect(user.id).to_not be(nil)
       expect(user.name).to eql('Jane Doe')
     end
+
+    it 'builds Create command for a relation graph with one-to-one' do
+      create_user = repo.command(
+        :create,
+        repo.users.combine_children(one: repo.tasks)
+      )
+
+      user = create_user.call(
+        user: { name: 'Jane Doe', task: { title: 'Task one' } }
+      ).one
+
+      expect(user.id).to_not be(nil)
+      expect(user.name).to eql('Jane Doe')
+      expect(user.task.title).to eql('Task one')
+    end
+
+    it 'builds Create command for a relation graph with one-to-many' do
+      create_user = repo.command(
+        :create,
+        repo.users.combine_children(many: repo.tasks)
+      )
+
+      user = create_user.call(
+        user: { name: 'Jane Doe', tasks: [{ title: 'Task one' }] }
+      ).one
+
+      expect(user.id).to_not be(nil)
+      expect(user.name).to eql('Jane Doe')
+      expect(user.tasks).to be_instance_of(Array)
+      expect(user.tasks.first.title).to eql('Task one')
+    end
   end
 end

@@ -16,8 +16,6 @@ module ROM
 
     attr_reader :container
 
-    attr_reader :commands
-
     option :mapper_builder, reader: true, default: proc { MapperBuilder.new }
 
     # Define which relations your repository is going to use
@@ -49,7 +47,6 @@ module ROM
       super
 
       @container = container
-      @commands = Hash.new { |h, k| h[k] = {} }
 
       self.class.relations.each do |name|
         relation = container.relations[name]
@@ -59,10 +56,6 @@ module ROM
         )
 
         instance_variable_set("@#{name}", proxy)
-
-        commands[name][:create] = ROM::Commands::Create[proxy.adapter].build(
-          relation, result: :one
-        )
       end
     end
 
@@ -72,7 +65,7 @@ module ROM
       mapper = mapper_builder[ast]
       adapter = __send__(relation.name).adapter
 
-      CommandCompiler[commands, type, adapter, ast] >> mapper
+      CommandCompiler[container, type, adapter, ast] >> mapper
     end
 
     class Base < Repository
