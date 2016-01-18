@@ -14,9 +14,9 @@ module ROM
 
     def initialize(directory, options = EMPTY_HASH)
       super
-      @directory = directory
+      @directory = Pathname(directory)
       @globs = Hash[[:relations, :commands, :mappers].map { |name|
-        [name, Pathname(directory).join("#{name}/**/*.rb")]
+        [name, directory.join("#{name}/**/*.rb")]
       }]
     end
 
