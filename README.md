@@ -18,7 +18,7 @@ backends. It is the default mapper in ROM.
 
 Resources:
 
-- [Guides](http://rom-rb.org/guides/basics/mappers/)
+- [Guides](http://www.rubydoc.info/gems/rom-mapper/0.3.0/ROM/Mapper/AttributeDSL)
 - [Importing Data with ROM and Transproc](http://solnic.eu/2015/07/15/importing-data-with-rom-and-transproc.html)
 
 ## License
