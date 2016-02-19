@@ -34,16 +34,5 @@ group :benchmarks do
 end
 
 group :tools do
-  gem 'rubocop', '~> 0.31'
-
-  gem 'guard'
-  gem 'guard-rspec'
-  gem 'guard-rubocop'
-
   gem 'byebug', platform: :mri
-
-  platform :mri do
-    gem 'mutant'
-    gem 'mutant-rspec'
-  end
 end
