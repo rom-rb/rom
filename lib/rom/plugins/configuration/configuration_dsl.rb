@@ -1,4 +1,5 @@
 require 'rom/configuration_dsl'
+require 'rom/support/deprecations'
 
 module ROM
   module ConfigurationPlugins
@@ -9,7 +10,7 @@ module ROM
 
       # @api private
       def self.apply(configuration, options = {})
-        configuration.extend(ROM::ConfigurationDSL)
+        ROM::Deprecations.announce(:macros, "Calling `use(:macros)` is no longer necessary. Macros are enabled by default.")
       end
     end
   end

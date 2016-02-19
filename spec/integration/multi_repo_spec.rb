@@ -3,7 +3,7 @@ require 'rom/memory'
 
 describe 'Using in-memory gateways for cross-repo access' do
   let(:configuration) do
-    ROM::Configuration.new(left: :memory, right: :memory, main: :memory).use(:macros)
+    ROM::Configuration.new(left: :memory, right: :memory, main: :memory)
   end
 
   let(:container) { ROM.container(configuration) }
