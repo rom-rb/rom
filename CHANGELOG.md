@@ -1,3 +1,11 @@
+## v1.0.1 to-be-released
+
+### Changed
+
+- `auto_registration` coerces its directory to a pathname now (adz)
+
+[Compare v1.0.0...v1.0.1](https://github.com/rom-rb/rom/compare/v1.0.0...v1.0.1)
+
 ## v1.0.0 2016-01-06
 
 ### Added
