@@ -43,7 +43,6 @@ describe 'Configuring ROM' do
   describe 'defining classes' do
     it 'sets up registries based on class definitions' do
       container = ROM.container(:memory) do |config|
-        config.use(:macros)
 
         class Test::UserRelation < ROM::Relation[:memory]
           dataset :users
@@ -87,8 +86,6 @@ describe 'Configuring ROM' do
       end
 
       container = ROM.container(:memory) do |rom|
-        rom.use(:macros)
-
         rom.relation(:users) do
           def by_name(name)
             restrict(name: name)
@@ -122,7 +119,7 @@ describe 'Configuring ROM' do
         end
       end
 
-      configuration = ROM::Configuration.new(:memory).use(:macros)
+      configuration = ROM::Configuration.new(:memory)
 
       configuration.relation(:users) do
         def by_name(name)

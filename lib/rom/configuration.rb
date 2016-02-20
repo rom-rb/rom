@@ -1,9 +1,11 @@
 require 'rom/environment'
 require 'rom/setup'
+require 'rom/configuration_dsl'
 
 module ROM
   class Configuration
     extend Forwardable
+    include ROM::ConfigurationDSL
 
     NoDefaultAdapterError = Class.new(StandardError)
 
