@@ -16,7 +16,7 @@ module ROM
       super
       @directory = Pathname(directory)
       @globs = Hash[[:relations, :commands, :mappers].map { |name|
-        [name, directory.join("#{name}/**/*.rb")]
+        [name, @directory.join("#{name}/**/*.rb")]
       }]
     end
 

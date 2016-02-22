@@ -6,7 +6,7 @@ RSpec.describe ROM::Setup, '#auto_registration' do
 
   context 'with namespace turned on' do
     before do
-      setup.auto_registration(SPEC_ROOT.join('fixtures/lib/persistence'))
+      setup.auto_registration(SPEC_ROOT.join('fixtures/lib/persistence').to_s)
     end
 
     describe '#relations' do
