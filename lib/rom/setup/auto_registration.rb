@@ -8,7 +8,7 @@ module ROM
   class AutoRegistration
     include Options
 
-    option :namespace, reader: true, type: [TrueClass, FalseClass], default: true
+    option :namespace, reader: true, type: [String, FalseClass], default: false
 
     attr_reader :globs, :directory
 
@@ -44,7 +44,7 @@ module ROM
     def const_name(entity, file)
       name =
         if namespace
-          file.gsub("#{directory.dirname}/", '')
+          "#{namespace}/#{entity}/#{File.basename(file, '.rb')}"
         else
           file.gsub("#{directory}/#{entity}/", '')
         end.gsub('.rb', '')
