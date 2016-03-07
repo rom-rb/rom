@@ -120,9 +120,9 @@ module ROM
         raise ArgumentError, "#{self.class}#command accepts a symbol or an array"
       end
     end
-    
+
     def disconnect
-      gateways.each_key(&:disconnect)
+      gateways.each_value(&:disconnect)
     end
   end
 end
