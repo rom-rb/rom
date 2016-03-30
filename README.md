@@ -48,7 +48,27 @@ There are other gems within the rom ecosystem that you will find useful:
 * [rom-mongo](https://github.com/rom-rb/rom-mongo)
 * [rom-neo4j](https://github.com/rom-rb/rom-neo4j)
 * [rom-rethinkdb](https://github.com/rom-rb/rom-rethinkdb)
-* [rom-sql](https://github.com/rom-rb/rom-sql)
+* [rom-sql](https://github.com/rom-rb/rom-sql) ( supported URI schemes: ado
+amalgalite
+cubrid
+db2
+dbi
+do
+fdbsql
+firebird
+ibmdb
+informix
+jdbc
+mysql
+mysql2
+odbc
+openbase
+oracle
+postgres
+sqlanywhere
+sqlite
+swift
+tinytds )
 * [rom-yaml](https://github.com/rom-rb/rom-yaml)
 * [rom-yesql](https://github.com/rom-rb/rom-yesql)
 
