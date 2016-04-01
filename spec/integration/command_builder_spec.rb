@@ -13,6 +13,12 @@ RSpec.describe 'Building commands' do
       expect(user.name).to eql('Jane Doe')
     end
 
+    it 'caches commands' do
+      create_user = -> { repo.command(:create, repo.users) }
+
+      expect(create_user.()).to be(create_user.())
+    end
+
     it 'builds Create command for a relation graph with one-to-one' do
       create_user = repo.command(
         :create,

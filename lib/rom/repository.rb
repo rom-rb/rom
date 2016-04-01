@@ -10,6 +10,14 @@ module ROM
   #
   # @api public
   class Repository
+    # @deprecated
+    class Base < Repository
+      def self.inherited(klass)
+        super
+        Deprecations.announce(self, 'inherit from Repository instead')
+      end
+    end
+
     attr_reader :container
 
     attr_reader :mappers
@@ -53,19 +61,21 @@ module ROM
     end
 
     # @api public
-    def command(type, relation)
-      ast = relation.to_ast
-      mapper = mappers[ast]
-      adapter = __send__(relation.name).adapter
+    def command(*args)
+      type, relation = args
 
-      CommandCompiler[container, type, adapter, ast] >> mapper
+      commands.fetch_or_store(args.hash) do
+        ast = relation.to_ast
+        adapter = __send__(relation.name).adapter
+
+        CommandCompiler[container, type, adapter, ast] >> mappers[ast]
+      end
     end
 
-    class Base < Repository
-      def self.inherited(klass)
-        super
-        Deprecations.announce(self, 'inherit from Repository instead')
-      end
+    private
+
+    def commands
+      @__commands__ ||= Concurrent::Map.new
     end
   end
 end

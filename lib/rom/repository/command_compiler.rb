@@ -1,11 +1,23 @@
+require 'concurrent/map'
+
 module ROM
   class Repository
     class CommandCompiler
-      def self.[](container, type, adapter, ast)
-        registry = Hash.new { |h, k| h[k] = {} }
-        command_opts = new(type, adapter, container, registry).visit(ast)
+      def self.[](*args)
+        cache.fetch_or_store(args.hash) do
+          container, type, adapter, ast = args
+          command_opts = new(type, adapter, container, registry).visit(ast)
 
-        ROM::Commands::Graph.build(registry, command_opts)
+          ROM::Commands::Graph.build(registry, command_opts)
+        end
+      end
+
+      def self.cache
+        @__cache__ ||= Concurrent::Map.new
+      end
+
+      def self.registry
+        @__registry__ ||= Hash.new { |h, k| h[k] = {} }
       end
 
       attr_reader :type, :adapter, :container, :registry

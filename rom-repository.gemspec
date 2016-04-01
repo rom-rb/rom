@@ -19,6 +19,7 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency 'rom', '~> 1.0.0'
   gem.add_runtime_dependency 'rom-support', '~> 1.0.0'
   gem.add_runtime_dependency 'rom-mapper', '~> 0.3.0'
+  gem.add_runtime_dependency 'concurrent-ruby', '~> 1.0'
 
   gem.add_development_dependency 'rake', '~> 10.3'
   gem.add_development_dependency 'rspec', '~> 3.3'
