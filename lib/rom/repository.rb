@@ -60,6 +60,18 @@ module ROM
       end
     end
 
+    # Create a command for a relation
+    #
+    # @example
+    #   create_user = repo.command(:create, repo.users)
+    #
+    #   create_user_with_task = repo.command(:create, repo.users.combine_children(one: repo.tasks))
+    #
+    # @param [Symbol] type Type of the command
+    # @param [Repository::LoadingProxy] relation
+    #
+    # @return [ROM::Command]
+    #
     # @api public
     def command(*args)
       type, relation = args
