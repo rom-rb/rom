@@ -17,28 +17,23 @@ module ROM
       end
 
       def visit(ast)
-        type, node, *other = ast
-
-        if other.any?
-          __send__(:"visit_#{type}", node, other)
-        else
-          __send__(:"visit_#{type}", node)
-        end
+        name, node = ast
+        __send__(:"visit_#{name}", node)
       end
 
-      def visit_relation(name, node)
-        header, opts = node
-        base_name = opts[:base_name]
+      def visit_relation(node)
+        name, meta, header = node
+        base_name = meta[:base_name]
         other = visit(header)
 
         mapping =
-          if opts[:combine_type] == :many
+          if meta[:combine_type] == :many
             base_name
           else
             { Inflector.singularize(name).to_sym => base_name }
           end
 
-        register_command(base_name, type, opts)
+        register_command(base_name, type, meta)
 
         [mapping, [type].concat(other)]
       end
@@ -51,13 +46,13 @@ module ROM
         nil
       end
 
-      def register_command(name, type, opts)
+      def register_command(name, type, meta)
         klass = ClassBuilder.new(name: "Create[#{name}]", parent: type).call
 
-        if opts[:combine_type]
+        if meta[:combine_type]
           klass.use(:associates)
-          klass.associates(:parent, key: opts[:keys].invert.to_a.flatten)
-          klass.result opts[:combine_type]
+          klass.associates(:parent, key: meta[:keys].invert.to_a.flatten)
+          klass.result meta[:combine_type]
         end
 
         registry[name][type] = klass.build(container.relations[name], result: :one)

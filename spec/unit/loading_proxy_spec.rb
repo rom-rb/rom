@@ -82,11 +82,10 @@ RSpec.describe 'loading proxy' do
   describe '#to_ast' do
     it 'returns valid ast for a single relation' do
       expect(users.to_ast).to eql(
-        [
-          :relation, :users, [
-            :header, [[:attribute, :id], [:attribute, :name]]
-          ],
-          base_name: :users
+        [:relation, [
+          :users,
+          { base_name: :users },
+          [:header, [[:attribute, :id], [:attribute, :name]]]]
         ]
       )
     end
@@ -95,25 +94,19 @@ RSpec.describe 'loading proxy' do
       relation = users.combine(many: { user_tasks: [tasks, id: :user_id] })
 
       expect(relation.to_ast).to eql(
-        [
-          :relation, :users, [
-            :header, [
-              [:attribute, :id],
-              [:attribute, :name],
-              [
-                :relation, :user_tasks, [
-                  :header, [
-                    [:attribute, :id],
-                    [:attribute, :user_id],
-                    [:attribute, :title]
-                  ]
-                ],
-                { base_name: :tasks, keys: { id: :user_id }, combine_type: :many }
-              ]
-            ]
-          ],
-          base_name: :users
-        ]
+        [:relation, [
+          :users,
+          { base_name: :users },
+          [:header, [
+            [:attribute, :id],
+            [:attribute, :name],
+            [:relation, [
+              :user_tasks,
+              { base_name: :tasks, keys: { id: :user_id }, combine_type: :many },
+              [:header, [[:attribute, :id], [:attribute, :user_id], [:attribute, :title]]]
+            ]]
+          ]
+        ]]]
       )
     end
 
@@ -121,26 +114,20 @@ RSpec.describe 'loading proxy' do
       relation = tags.wrap_parent(task: tasks)
 
       expect(relation.to_ast).to eql(
-        [
-          :relation, :tags, [
-            :header, [
-              [:attribute, :id],
-              [:attribute, :task_id],
-              [:attribute, :name],
-              [
-                :relation, :task, [
-                  :header, [
-                    [:attribute, :id],
-                    [:attribute, :user_id],
-                    [:attribute, :title]
-                  ]
-                ],
-                { base_name: :tasks, keys: { id: :task_id }, wrap: true }
-              ]
-            ]
-          ],
-          base_name: :tags
-        ]
+        [:relation, [
+          :tags,
+          { base_name: :tags },
+          [:header, [
+            [:attribute, :id],
+            [:attribute, :task_id],
+            [:attribute, :name],
+            [:relation, [
+              :task,
+              { base_name: :tasks, keys: { id: :task_id }, wrap: true },
+              [:header, [ [:attribute, :id], [:attribute, :user_id], [:attribute, :title]]]
+            ]]
+          ]]
+        ]]
       )
     end
   end

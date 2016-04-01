@@ -71,7 +71,9 @@ module ROM
         meta = options[:meta].merge(base_name: relation.base_name)
         meta.delete(:wraps)
 
-        [:relation, name, [:header, (attr_ast - wrap_attrs) + node_ast + wrap_ast], meta]
+        header = (attr_ast - wrap_attrs) + node_ast + wrap_ast
+
+        [:relation, [name, meta, [:header, header]]]
       end
 
       # Infer a mapper for the relation

@@ -1,18 +1,25 @@
 RSpec.describe 'header builder', '#call' do
   subject(:builder) { ROM::Repository::HeaderBuilder.new }
 
-  let(:user_struct) { builder.struct_builder[:users, [:id, :name]] }
-  let(:task_struct) { builder.struct_builder[:tasks, [:user_id, :title]] }
-  let(:tag_struct) { builder.struct_builder[:tags, [:user_id, :tag]] }
+  let(:user_struct) do
+    builder.struct_builder[:users, [:header, [[:attribute, :id], [:attribute, :name]]]]
+  end
+
+  let(:task_struct) do
+    builder.struct_builder[:tasks, [:header, [[:attribute, :user_id], [:attribute, :title]]]]
+  end
+
+  let(:tag_struct) do
+    builder.struct_builder[:tags, [:header, [[:attribute, :user_id], [:attribute, :tag]]]]
+  end
 
   describe 'with a relation' do
     let(:ast) do
-      [
-        :relation, :users, [
-          :header, [[:attribute, :id], [:attribute, :name]]
-        ],
-        base_name: :users
-      ]
+      [:relation, [
+        :users,
+        { base_name: :users },
+        [:header, [[:attribute, :id], [:attribute, :name]]]
+      ]]
     end
 
     it 'produces a valid header' do
@@ -24,32 +31,25 @@ RSpec.describe 'header builder', '#call' do
 
   describe 'with a graph' do
     let(:ast) do
-      [
-        :relation, :users, [
+      [:relation, [
+        :users,
+        { base_name: :users },
+        [
           :header, [
             [:attribute, :id],
             [:attribute, :name],
-            [
-              :relation, :tasks, [
-                :header, [
-                  [:attribute, :user_id],
-                  [:attribute, :title]
-                ]
-              ],
-              { base_name: :tasks, keys: { id: :user_id }, combine_type: :many }
-            ],
-            [
-              :relation, :tags, [
-                :header, [
-                  [:attribute, :user_id],
-                  [:attribute, :tag]
-                ]
-              ],
-              { base_name: :tags, keys: { id: :user_id }, combine_type: :many }
-            ]
-          ]
-        ],
-        base_name: :users
+            [:relation, [
+              :tasks,
+              { base_name: :tasks, keys: { id: :user_id }, combine_type: :many },
+              [:header, [[:attribute, :user_id], [:attribute, :title]]]
+            ]],
+            [:relation, [
+              :tags,
+              { base_name: :tags, keys: { id: :user_id }, combine_type: :many },
+              [:header, [[:attribute, :user_id], [:attribute, :tag]]]
+            ]]
+          ]]
+        ]
       ]
     end
 
@@ -63,9 +63,8 @@ RSpec.describe 'header builder', '#call' do
          header: ROM::Header.coerce([[:user_id], [:tag]], model: tag_struct)]
       ]
 
-      header = ROM::Header.coerce(
-        attributes,
-        model: builder.struct_builder[:users, [:id, :name, :tasks, :tags]]
+      header = ROM::Header.coerce(attributes,
+        model: builder.struct_builder[:users, ast[1][2]]
       )
 
       expect(builder[ast]).to eql(header)
