@@ -1,4 +1,5 @@
 require 'concurrent/map'
+require 'rom/setup/finalize/commands'
 
 module ROM
   class Repository
@@ -67,7 +68,17 @@ module ROM
           klass.result meta[:combine_type]
         end
 
+        relation = container.relations[name]
+        klass.send(:include, finalizer.relation_methods_mod(relation.class))
+
         registry[name][type] = klass.build(container.relations[name], result: :one)
+      end
+
+      # @api private
+      def finalizer
+        # TODO: we only need `relation_methods_mod` so would be nice to expose it
+        #       as a class method instead
+        @finalizer ||= Finalize::FinalizeCommands.new(container.relations, nil, nil)
       end
     end
   end
