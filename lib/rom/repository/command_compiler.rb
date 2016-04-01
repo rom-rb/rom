@@ -7,9 +7,17 @@ module ROM
       def self.[](*args)
         cache.fetch_or_store(args.hash) do
           container, type, adapter, ast = args
-          command_opts = new(type, adapter, container, registry).visit(ast)
+          graph_opts = new(type, adapter, container, registry).visit(ast)
 
-          ROM::Commands::Graph.build(registry, command_opts)
+          command = ROM::Commands::Graph.build(registry, graph_opts)
+
+          # TODO: figure out how to return plain commands immediately when
+          #       it is not a not a nested cmd graph
+          if command.is_a?(Commands::Lazy::Delete) || command.is_a?(Commands::Lazy::Update)
+            command.command # ugh
+          else
+            command
+          end
         end
       end
 
@@ -60,7 +68,10 @@ module ROM
       end
 
       def register_command(name, type, meta)
-        klass = ClassBuilder.new(name: "Create[#{name}]", parent: type).call
+        klass = ClassBuilder.new(
+          name: "#{Inflector.classify(type)}[:#{name}]",
+          parent: type
+        ).call
 
         if meta[:combine_type]
           klass.use(:associates)
@@ -69,9 +80,13 @@ module ROM
         end
 
         relation = container.relations[name]
-        klass.send(:include, finalizer.relation_methods_mod(relation.class))
 
-        registry[name][type] = klass.build(container.relations[name], result: :one)
+        # TODO: would be nice to be able to ask command if it's restrictible
+        if type < Commands::Update || type < Commands::Delete
+          klass.send(:include, finalizer.relation_methods_mod(relation.class))
+        end
+
+        registry[name][type] = klass.build(relation, result: :one)
       end
 
       # @api private

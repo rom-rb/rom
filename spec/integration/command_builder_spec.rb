@@ -75,10 +75,22 @@ RSpec.describe 'Building commands' do
 
         update_user = repo.command(:update, repo.users)
 
-        user = update_user.by_id(3).call(user: { name: 'Jane Doe' })
+        user = update_user.by_id(3).call(name: 'Jane Doe')
 
         expect(user.id).to be(3)
         expect(user.name).to eql('Jane Doe')
+      end
+    end
+
+    context ':delete' do
+      it 'builds Delete command for a relation' do
+        repo.users.insert(id: 3, name: 'Jane')
+
+        delete_user = repo.command(:delete, repo.users)
+
+        delete_user.by_id(3).call
+
+        expect(repo.users.by_id(3).one).to be(nil)
       end
     end
   end
