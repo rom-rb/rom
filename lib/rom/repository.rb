@@ -6,17 +6,13 @@ require 'rom/repository/loading_proxy'
 require 'rom/repository/command_compiler'
 
 module ROM
+  # Abstract repository class to inherit from
+  #
+  # @api public
   class Repository
-    # Abstract repository class to inherit from
-    #
-    # TODO: rename this to Repository once deprecated Repository from rom core is gone
-    #
-    # @api public
-    include Options
-
     attr_reader :container
 
-    option :mapper_builder, reader: true, default: proc { MapperBuilder.new }
+    attr_reader :mappers
 
     # Define which relations your repository is going to use
     #
@@ -43,17 +39,14 @@ module ROM
     end
 
     # @api private
-    def initialize(container, options = {})
-      super
-
+    def initialize(container)
       @container = container
+      @mappers = MapperBuilder.new
 
       self.class.relations.each do |name|
         relation = container.relations[name]
 
-        proxy = LoadingProxy.new(
-          relation, name: name, mapper_builder: mapper_builder
-        )
+        proxy = LoadingProxy.new(relation, name: name, mappers: mappers)
 
         instance_variable_set("@#{name}", proxy)
       end
@@ -62,7 +55,7 @@ module ROM
     # @api public
     def command(type, relation)
       ast = relation.to_ast
-      mapper = mapper_builder[ast]
+      mapper = mappers[ast]
       adapter = __send__(relation.name).adapter
 
       CommandCompiler[container, type, adapter, ast] >> mapper

@@ -18,7 +18,7 @@ module ROM
       include LoadingProxy::Wrap
 
       option :name, reader: true, type: Symbol
-      option :mapper_builder, reader: true, default: proc { MapperBuilder.new }
+      option :mappers, reader: true, default: proc { MapperBuilder.new }
       option :meta, reader: true, type: Hash, default: EMPTY_HASH
 
       # @attr_reader [ROM::Relation::Lazy] relation Decorated relation
@@ -82,7 +82,7 @@ module ROM
       #
       # @api private
       def mapper
-        mapper_builder[to_ast]
+        mappers[to_ast]
       end
 
       # @api private
