@@ -5,9 +5,16 @@ require 'rom/commands'
 module ROM
   class Repository
     class CommandCompiler
+      SUPPORTED_TYPES = %i[create update delete].freeze
+
       def self.[](*args)
         cache.fetch_or_store(args.hash) do
           container, type, adapter, ast = args
+
+          unless SUPPORTED_TYPES.include?(type)
+            raise ArgumentError, "#{type.inspect} is not a supported command type"
+          end
+
           graph_opts = new(type, adapter, container, registry).visit(ast)
 
           command = ROM::Commands::Graph.build(registry, graph_opts)
