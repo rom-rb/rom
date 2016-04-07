@@ -1,5 +1,6 @@
 require 'concurrent/map'
 require 'rom/setup/finalize/commands'
+require 'rom/commands'
 
 module ROM
   class Repository
@@ -81,8 +82,7 @@ module ROM
 
         relation = container.relations[name]
 
-        # TODO: would be nice to be able to ask command if it's restrictible
-        if type < Commands::Update || type < Commands::Delete
+        if type.restrictable
           klass.send(:include, finalizer.relation_methods_mod(relation.class))
         end
 
