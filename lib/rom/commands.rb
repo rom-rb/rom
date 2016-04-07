@@ -16,6 +16,12 @@ module ROM
   end
 
   module Commands
+    class Lazy
+      def unwrap
+        command
+      end
+    end
+
     class Update < Command
       restrictable true
     end

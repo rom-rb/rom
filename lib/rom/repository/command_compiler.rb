@@ -1,6 +1,8 @@
 require 'concurrent/map'
+
 require 'rom/setup/finalize/commands'
 require 'rom/commands'
+require 'rom/repository/command_proxy'
 
 module ROM
   class Repository
@@ -19,12 +21,10 @@ module ROM
 
           command = ROM::Commands::Graph.build(registry, graph_opts)
 
-          # TODO: figure out how to return plain commands immediately when
-          #       it is not a not a nested cmd graph
-          if command.is_a?(Commands::Lazy::Delete) || command.is_a?(Commands::Lazy::Update)
-            command.command # ugh
+          if command.graph?
+            CommandProxy.new(command)
           else
-            command
+            command.unwrap
           end
         end
       end
