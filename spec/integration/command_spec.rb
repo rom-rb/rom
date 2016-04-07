@@ -5,7 +5,7 @@ RSpec.describe ROM::Repository, '#command' do
 
   context ':create' do
     it 'builds Create command for a relation' do
-      create_user = repo.command(:create, repo.users)
+      create_user = repo.command(create: :users)
 
       user = create_user.call(name: 'Jane Doe')
 
@@ -14,7 +14,7 @@ RSpec.describe ROM::Repository, '#command' do
     end
 
     it 'caches commands' do
-      create_user = -> { repo.command(:create, repo.users) }
+      create_user = -> { repo.command(create: :users) }
 
       expect(create_user.()).to be(create_user.())
     end

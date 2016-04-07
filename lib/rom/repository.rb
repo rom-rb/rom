@@ -73,8 +73,9 @@ module ROM
     # @return [ROM::Command]
     #
     # @api public
-    def command(*args)
-      type, relation = args
+    def command(*args, **opts)
+      type, name = args + opts.to_a.flatten
+      relation = name.is_a?(Symbol) ? __send__(name) : name
 
       commands.fetch_or_store(args.hash) do
         ast = relation.to_ast
