@@ -69,10 +69,7 @@ module ROM
       end
 
       def register_command(name, type, meta)
-        klass = ClassBuilder.new(
-          name: "#{Inflector.classify(type)}[:#{name}]",
-          parent: type
-        ).call
+        klass = type.create_class(name, type)
 
         if meta[:combine_type]
           klass.use(:associates)

@@ -6,6 +6,13 @@ require 'rom/commands/update'
 module ROM
   class Command
     defines :restrictable
+
+    # @api private
+    def self.create_class(name, type)
+      ClassBuilder
+        .new(name: "#{Inflector.classify(type)}[:#{name}]", parent: type)
+        .call
+    end
   end
 
   module Commands
