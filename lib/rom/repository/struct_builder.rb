@@ -17,14 +17,33 @@ module ROM
       end
 
       def call(*args)
-        name, columns = args
+        name, header = args
+
         registry[args.hash] ||= build_class(name) { |klass|
-          klass.send(:include, Anima.new(*columns))
+          klass.send(:include, Anima.new(*visit(header)))
         }
       end
       alias_method :[], :call
 
       private
+
+      def visit(ast)
+        name, node = ast
+        __send__("visit_#{name}", node)
+      end
+
+      def visit_header(node)
+        node.map(&method(:visit))
+      end
+
+      def visit_relation(node)
+        name, * = node
+        name
+      end
+
+      def visit_attribute(node)
+        node
+      end
 
       def build_class(name, &block)
         ROM::ClassBuilder.new(name: class_name(name), parent: Struct).call(&block)

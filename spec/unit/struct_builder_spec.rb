@@ -1,7 +1,7 @@
 RSpec.describe 'struct builder', '#call' do
   subject(:builder) { ROM::Repository::StructBuilder.new }
 
-  let(:input) { [:users, [:id, :name]] }
+  let(:input) { [:users, [:header, [[:attribute, :id], [:attribute, :name]]]] }
 
   before { builder[*input] }
 

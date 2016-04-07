@@ -1,0 +1,39 @@
+#!/usr/bin/env ruby
+
+require "bundler/setup"
+require "rom-repository"
+
+config = ROM::Configuration.new(:sql, 'postgres://localhost/rom_repository').use(:macros)
+
+config.relation(:users) do
+  def by_id(id)
+    where(id: id)
+  end
+
+  def all
+    select(:id, :name).order(:name, :id)
+  end
+
+  def find(criteria)
+    where(criteria)
+  end
+end
+
+config.relation(:tasks) do
+  def find(criteria)
+    where(criteria)
+  end
+
+  def for_users(users)
+    where(user_id: users.map { |u| u[:id] })
+  end
+end
+
+config.relation(:tags)
+
+rom = ROM.container(config)
+
+repo = Class.new(ROM::Repository) { relations :users, :tasks, :tags }.new(rom)
+
+require "pry"
+binding.pry

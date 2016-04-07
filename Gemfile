@@ -14,4 +14,10 @@ group :test do
   gem "codeclimate-test-reporter", require: nil
 end
 
-gem 'benchmark-ips'
+group :benchmarks do
+  gem 'benchmark-ips'
+end
+
+group :tools do
+  gem 'pry'
+end

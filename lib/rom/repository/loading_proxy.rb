@@ -18,7 +18,7 @@ module ROM
       include LoadingProxy::Wrap
 
       option :name, reader: true, type: Symbol
-      option :mapper_builder, reader: true, default: proc { MapperBuilder.new }
+      option :mappers, reader: true, default: proc { MapperBuilder.new }
       option :meta, reader: true, type: Hash, default: EMPTY_HASH
 
       # @attr_reader [ROM::Relation::Lazy] relation Decorated relation
@@ -71,7 +71,9 @@ module ROM
         meta = options[:meta].merge(base_name: relation.base_name)
         meta.delete(:wraps)
 
-        [:relation, name, [:header, (attr_ast - wrap_attrs) + node_ast + wrap_ast], meta]
+        header = (attr_ast - wrap_attrs) + node_ast + wrap_ast
+
+        [:relation, [name, meta, [:header, header]]]
       end
 
       # Infer a mapper for the relation
@@ -80,7 +82,7 @@ module ROM
       #
       # @api private
       def mapper
-        mapper_builder[to_ast]
+        mappers[to_ast]
       end
 
       # @api private
@@ -131,6 +133,11 @@ module ROM
       # @api private
       def nodes
         relation.respond_to?(:nodes) ? relation.nodes : []
+      end
+
+      # @api private
+      def adapter
+        relation.class.adapter
       end
 
       private

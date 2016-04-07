@@ -3,17 +3,47 @@ require 'rom/support/options'
 
 require 'rom/repository/mapper_builder'
 require 'rom/repository/loading_proxy'
+require 'rom/repository/command_compiler'
 
 module ROM
+  # Abstract repository class to inherit from
+  #
+  # @api public
   class Repository
-    # Abstract repository class to inherit from
-    #
-    # TODO: rename this to Repository once deprecated Repository from rom core is gone
-    #
-    # @api public
-    include Options
+    # @deprecated
+    class Base < Repository
+      def self.inherited(klass)
+        super
+        Deprecations.announce(self, 'inherit from Repository instead')
+      end
+    end
 
-    option :mapper_builder, reader: true, default: proc { MapperBuilder.new }
+    extend ClassMacros
+
+    defines :root
+
+    attr_reader :container
+
+    attr_reader :mappers
+
+    # @api public
+    def self.[](name)
+      klass = Class.new(self)
+      klass.relations(name)
+      klass.root(name)
+      klass
+    end
+
+    # @api private
+    def self.inherited(klass)
+      super
+
+      return if self === Repository
+
+      klass.root(root)
+      klass.relations(*relations)
+      klass.commands(*commands)
+    end
 
     # Define which relations your repository is going to use
     #
@@ -39,22 +69,78 @@ module ROM
       end
     end
 
+    # @api public
+    def self.commands(*names, **opts)
+      if names.any?
+        @commands = names + opts.to_a
+
+        @commands.each do |spec|
+          type, view = Array(spec).flatten
+
+          if view
+            define_method(type) do |*args|
+              view_args, *input = args
+
+              command(type => self.class.root)
+                .public_send(view, *view_args)
+                .call(*input)
+            end
+          else
+            define_method(type) do |*args|
+              command(type => self.class.root).call(*args)
+            end
+          end
+        end
+      else
+        @commands || []
+      end
+    end
+
     # @api private
-    def initialize(env, options = {})
-      super
+    def initialize(container)
+      @container = container
+      @mappers = MapperBuilder.new
+
       self.class.relations.each do |name|
-        proxy = LoadingProxy.new(
-          env.relation(name), name: name, mapper_builder: mapper_builder
-        )
+        relation = container.relations[name]
+
+        proxy = LoadingProxy.new(relation, name: name, mappers: mappers)
+
         instance_variable_set("@#{name}", proxy)
       end
     end
 
-    class Base < Repository
-      def self.inherited(klass)
-        super
-        Deprecations.announce(self, 'inherit from Repository instead')
+    # Create a command for a relation
+    #
+    # @example
+    #   create_user = repo.command(:create, repo.users)
+    #
+    #   create_user_with_task = repo.command(:create, repo.users.combine_children(one: repo.tasks))
+    #
+    # @param [Symbol] type Type of the command
+    # @param [Repository::LoadingProxy] relation
+    #
+    # @return [ROM::Command]
+    #
+    # @api public
+    def command(*args, **opts)
+      all_args = args + opts.to_a.flatten
+      type, name = all_args
+
+      relation = name.is_a?(Symbol) ? __send__(name) : name
+
+      commands.fetch_or_store(all_args.hash) do
+        ast = relation.to_ast
+        adapter = __send__(relation.name).adapter
+
+        CommandCompiler[container, type, adapter, ast] >> mappers[ast]
       end
+    end
+
+    private
+
+    def commands
+      @__commands__ ||= Concurrent::Map.new
     end
   end
 end

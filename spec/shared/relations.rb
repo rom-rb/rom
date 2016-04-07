@@ -5,6 +5,10 @@ RSpec.shared_context 'relations' do
 
   before do
     configuration.relation(:users) do
+      def by_id(id)
+        where(id: id)
+      end
+
       def all
         select(:id, :name).order(:name, :id)
       end
