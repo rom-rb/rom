@@ -70,13 +70,25 @@ module ROM
     end
 
     # @api public
-    def self.commands(*names)
+    def self.commands(*names, **opts)
       if names.any?
-        @commands = names
+        @commands = names + opts.to_a
 
-        @commands.each do |type|
-          define_method(type) do |*args|
-            command(type => self.class.root).call(*args)
+        @commands.each do |spec|
+          type, view = Array(spec).flatten
+
+          if view
+            define_method(type) do |*args|
+              view_args, *input = args
+
+              command(type => self.class.root)
+                .public_send(view, *view_args)
+                .call(*input)
+            end
+          else
+            define_method(type) do |*args|
+              command(type => self.class.root).call(*args)
+            end
           end
         end
       else
@@ -112,10 +124,12 @@ module ROM
     #
     # @api public
     def command(*args, **opts)
-      type, name = args + opts.to_a.flatten
+      all_args = args + opts.to_a.flatten
+      type, name = all_args
+
       relation = name.is_a?(Symbol) ? __send__(name) : name
 
-      commands.fetch_or_store(args.hash) do
+      commands.fetch_or_store(all_args.hash) do
         ast = relation.to_ast
         adapter = __send__(relation.name).adapter
 
