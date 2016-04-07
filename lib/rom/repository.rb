@@ -18,9 +18,32 @@ module ROM
       end
     end
 
+    extend ClassMacros
+
+    defines :root
+
     attr_reader :container
 
     attr_reader :mappers
+
+    # @api public
+    def self.[](name)
+      klass = Class.new(self)
+      klass.relations(name)
+      klass.root(name)
+      klass
+    end
+
+    # @api private
+    def self.inherited(klass)
+      super
+
+      return if self === Repository
+
+      klass.root(root)
+      klass.relations(*relations)
+      klass.commands(*commands)
+    end
 
     # Define which relations your repository is going to use
     #
@@ -43,6 +66,21 @@ module ROM
         @relations = names
       else
         @relations
+      end
+    end
+
+    # @api public
+    def self.commands(*names)
+      if names.any?
+        @commands = names
+
+        @commands.each do |type|
+          define_method(type) do |*args|
+            command(type => self.class.root).call(*args)
+          end
+        end
+      else
+        @commands || []
       end
     end
 
