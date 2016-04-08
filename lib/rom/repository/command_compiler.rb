@@ -85,6 +85,8 @@ module ROM
 
         relation = container.relations[name]
 
+        # TODO: this is a copy-paste from rom's FinalizeCommands, we are missing
+        #       an interface!
         gateway = container.gateways[relation.class.gateway]
         gateway.extend_command_class(klass, relation.dataset)
 
