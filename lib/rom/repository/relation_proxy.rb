@@ -47,8 +47,7 @@ module ROM
         if names.size == 1 && names[0].is_a?(Class)
           with(meta: meta.merge(model: names[0]))
         else
-          mappers = names.map { |name| relation.mappers[name] }
-          mappers.reduce(self) { |a, e| a >> e }
+          names.reduce(self) { |a, e| a >> relation.mappers[e] }
         end
       end
       alias_method :as, :map_with
