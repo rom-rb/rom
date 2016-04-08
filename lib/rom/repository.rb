@@ -63,7 +63,12 @@ module ROM
     def self.relations(*names)
       if names.any?
         attr_reader(*names)
-        @relations = names
+
+        if defined?(@relations)
+          @relations.concat(names)
+        else
+          @relations = names
+        end
       else
         @relations
       end
