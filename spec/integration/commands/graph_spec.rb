@@ -265,7 +265,7 @@ describe 'Building up a command graph for nested input' do
 
     command = container.command(options).as(:entity)
 
-    result = command.call(input).one
+    result = command.call(input)
 
     expect(result).to be_instance_of(Test::User)
     expect(result.tasks.first).to be_instance_of(Test::Task)

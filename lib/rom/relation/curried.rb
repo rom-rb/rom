@@ -75,6 +75,11 @@ module ROM
       end
 
       # @api private
+      def composite_class
+        Relation::Composite
+      end
+
+      # @api private
       def method_missing(meth, *args, &block)
         if relation.respond_to?(meth)
           response = relation.__send__(meth, *args, &block)

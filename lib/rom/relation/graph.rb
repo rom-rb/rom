@@ -100,6 +100,11 @@ module ROM
       def decorate?(other)
         super || other.is_a?(Curried)
       end
+
+      # @api private
+      def composite_class
+        Relation::Composite
+      end
     end
   end
 end

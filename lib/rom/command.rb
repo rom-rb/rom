@@ -1,4 +1,5 @@
 require 'rom/support/options'
+require 'rom/pipeline'
 
 require 'rom/commands/class_interface'
 require 'rom/commands/composite'
@@ -18,13 +19,14 @@ module ROM
   #
   # @private
   class Command
+    include Dry::Equalizer(:relation, :options)
     include Commands
+    include Pipeline::Operator
 
     extend ClassMacros
     extend ClassInterface
 
     include Options
-    include Dry::Equalizer(:relation, :options)
 
     defines :adapter, :relation, :result, :input, :validator, :register_as
 
@@ -93,24 +95,6 @@ module ROM
     end
     alias_method :with, :curry
 
-    # Compose a command with another one
-    #
-    # The other one will be called with the result from the first one
-    #
-    # @example
-    #
-    #   command = users.create.curry(name: 'Jane')
-    #   command >>= tasks.create.curry(title: 'Task One')
-    #
-    #   command.call # creates user, passes it to tasks and creates task
-    #
-    # @return [Composite]
-    #
-    # @api public
-    def >>(other)
-      Composite.new(self, other)
-    end
-
     # @api public
     def combine(*others)
       Graph.new(self, others)
@@ -163,6 +147,13 @@ module ROM
     # @api private
     def new(new_relation)
       self.class.build(new_relation, options.merge(source: relation))
+    end
+
+    private
+
+    # @api private
+    def composite_class
+      Command::Composite
     end
   end
 end

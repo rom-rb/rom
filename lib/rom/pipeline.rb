@@ -3,19 +3,33 @@ module ROM
   #
   # @api private
   module Pipeline
-    # Compose two relation with a left-to-right composition
+    # Common `>>` operator extension
     #
-    # @example
-    #   users.by_name('Jane') >> tasks.for_users
-    #
-    # @param [Relation] other The right relation
-    #
-    # @return [Relation::Composite]
-    #
-    # @api public
-    def >>(other)
-      Relation::Composite.new(self, other)
+    # @api private
+    module Operator
+      # Compose two relation with a left-to-right composition
+      #
+      # @example
+      #   users.by_name('Jane') >> tasks.for_users
+      #
+      # @param [Relation] other The right relation
+      #
+      # @return [Relation::Composite]
+      #
+      # @api public
+      def >>(other)
+        composite_class.new(self, other)
+      end
+
+      private
+
+      # @api private
+      def composite_class
+        raise NotImplementedError
+      end
     end
+
+    include Operator
 
     # Send data through specified mappers
     #
@@ -24,7 +38,7 @@ module ROM
     # @api public
     def map_with(*names)
       [self, *names.map { |name| mappers[name] }]
-        .reduce { |a, e| Relation::Composite.new(a, e) }
+        .reduce { |a, e| composite_class.new(a, e) }
     end
     alias_method :as, :map_with
 

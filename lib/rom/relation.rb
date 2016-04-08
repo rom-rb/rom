@@ -108,5 +108,10 @@ module ROM
     def __new__(dataset, new_opts = EMPTY_HASH)
       self.class.new(dataset, options.merge(new_opts))
     end
+
+    # @api private
+    def composite_class
+      Relation::Composite
+    end
   end
 end

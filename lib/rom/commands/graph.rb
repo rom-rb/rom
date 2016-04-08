@@ -87,6 +87,13 @@ module ROM
       def graph?
         true
       end
+
+      private
+
+      # @api public
+      def composite_class
+        Command::Composite
+      end
     end
   end
 end
