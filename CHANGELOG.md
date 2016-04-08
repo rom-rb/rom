@@ -3,10 +3,12 @@
 ### Fixed
 
 - [BREAKING] command graphs return materialized results (a hash or an array) (solnic)
+- `Container#disconnect` properly delegates to gateways (endash)
 
 ### Changed
 
 - `auto_registration` coerces its directory to a pathname now (adz)
+- `macros` are now enabled by default in in-line setup block (endash)
 
 [Compare v1.0.0...HEAD](https://github.com/rom-rb/rom/compare/v1.0.0...HEAD)
 
