@@ -1,21 +1,21 @@
 require 'rom/support/options'
 require 'rom/relation/materializable'
 
-require 'rom/repository/loading_proxy/combine'
-require 'rom/repository/loading_proxy/wrap'
+require 'rom/repository/relation_proxy/combine'
+require 'rom/repository/relation_proxy/wrap'
 
 module ROM
   class Repository
-    # LoadingProxy decorates a relation and automatically generate mappers that
+    # RelationProxy decorates a relation and automatically generate mappers that
     # will map raw tuples into structs
     #
     # @api public
-    class LoadingProxy
+    class RelationProxy
       include Options
       include Relation::Materializable
 
-      include LoadingProxy::Combine
-      include LoadingProxy::Wrap
+      include RelationProxy::Combine
+      include RelationProxy::Wrap
 
       option :name, reader: true, type: Symbol
       option :mappers, reader: true, default: proc { MapperBuilder.new }
@@ -92,7 +92,7 @@ module ROM
 
       # Return new instance with new options
       #
-      # @return [LoadingProxy]
+      # @return [RelationProxy]
       #
       # @api private
       def with(new_options)
@@ -128,7 +128,7 @@ module ROM
 
       # Return all nodes that this relation combines
       #
-      # @return [Array<LoadingProxy>]
+      # @return [Array<RelationProxy>]
       #
       # @api private
       def nodes
@@ -144,7 +144,7 @@ module ROM
 
       # Return a new instance with another relation and options
       #
-      # @return [LoadingProxy]
+      # @return [RelationProxy]
       #
       # @api private
       def __new__(relation, new_options = {})
@@ -153,7 +153,7 @@ module ROM
 
       # Return all nodes that this relation wraps
       #
-      # @return [Array<LoadingProxy>]
+      # @return [Array<RelationProxy>]
       #
       # @api private
       def wraps

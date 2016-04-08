@@ -2,7 +2,7 @@ require 'rom/support/deprecations'
 require 'rom/support/options'
 
 require 'rom/repository/mapper_builder'
-require 'rom/repository/loading_proxy'
+require 'rom/repository/relation_proxy'
 require 'rom/repository/command_compiler'
 
 module ROM
@@ -111,7 +111,7 @@ module ROM
       self.class.relations.each do |name|
         relation = container.relation(name)
 
-        proxy = LoadingProxy.new(relation, name: name, mappers: mappers)
+        proxy = RelationProxy.new(relation, name: name, mappers: mappers)
 
         instance_variable_set("@#{name}", proxy)
       end
@@ -133,7 +133,7 @@ module ROM
     #   create_user_with_task = repo.command(:create, repo.users.combine_children(one: repo.tasks))
     #
     # @param [Symbol] type Type of the command
-    # @param [Repository::LoadingProxy] relation
+    # @param [Repository::RelationProxy] relation
     #
     # @return [ROM::Command]
     #

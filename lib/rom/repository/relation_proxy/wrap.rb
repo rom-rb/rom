@@ -1,6 +1,6 @@
 module ROM
   class Repository
-    class LoadingProxy
+    class RelationProxy
       # Provides convenient methods for producing wrapped relations
       #
       # @api public
@@ -12,7 +12,7 @@ module ROM
         #
         # @param [Hash] options
         #
-        # @return [LoadingProxy]
+        # @return [RelationProxy]
         #
         # @api public
         def wrap(options)
@@ -32,7 +32,7 @@ module ROM
         # @example
         #   tasks.wrap_parent(owner: users)
         #
-        # @return [LoadingProxy]
+        # @return [RelationProxy]
         #
         # @api public
         def wrap_parent(options)
@@ -48,7 +48,7 @@ module ROM
         # This will carry meta info used to produce a correct AST from a relation
         # so that correct mapper can be generated
         #
-        # @return [LoadingProxy]
+        # @return [RelationProxy]
         #
         # @api private
         def wrapped(name, keys)

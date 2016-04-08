@@ -1,6 +1,6 @@
 module ROM
   class Repository
-    class LoadingProxy
+    class RelationProxy
       # Provides convenient methods for producing combined relations
       #
       # @api public
@@ -17,7 +17,7 @@ module ROM
         #
         # @param [Hash] options
         #
-        # @return [LoadingProxy]
+        # @return [RelationProxy]
         #
         # @api public
         def combine(options)
@@ -45,7 +45,7 @@ module ROM
         #
         # @param [Hash] options
         #
-        # @return [LoadingProxy]
+        # @return [RelationProxy]
         #
         # @api public
         def combine_parents(options)
@@ -73,7 +73,7 @@ module ROM
         #
         # @param [Hash] options
         #
-        # @return [LoadingProxy]
+        # @return [RelationProxy]
         #
         # @api public
         def combine_children(options)
@@ -96,7 +96,7 @@ module ROM
 
         # Infer join keys for a given relation and association type
         #
-        # @param [LoadingProxy] relation
+        # @param [RelationProxy] relation
         # @param [Symbol] type The type can be either :parent or :children
         #
         # @return [Hash<Symbol=>Symbol>]
@@ -115,7 +115,7 @@ module ROM
         # By default it uses `for_combine` which is implemented as SQL::Relation
         # extension
         #
-        # @return [LoadingProxy]
+        # @return [RelationProxy]
         #
         # @api private
         def combine_method(other, keys)
@@ -146,7 +146,7 @@ module ROM
         # This will carry meta info used to produce a correct AST from a relation
         # so that correct mapper can be generated
         #
-        # @return [LoadingProxy]
+        # @return [RelationProxy]
         #
         # @api private
         def combined(name, keys, type)
