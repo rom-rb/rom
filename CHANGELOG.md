@@ -1,3 +1,24 @@
+# v0.3.0 to-be-released
+
+### Added
+
+* `Repository#command` for inferring commands automatically from relations (solnic)
+* `Repository.commands` macro which generates command methods (solnic)
+* `Repository[rel_name]` for setting up a repository with a root relation (solnic)
+* `Repository#aggregate` as a shortcut for composing relation graphs from root (solnic)
+
+### Fixed
+
+* Auto-mapping includes default custom mapper for a given relation (AMHOL)
+* When custom mapper is set, default struct mapper won't be used (AMHOL)
+
+### Changed
+
+* `Repository` constructor simply expects a rom container, which makes it work with DI libs like `dry-auto_inject` (solnic)
+* Depends on `rom 2.0.0` now (solnic)
+
+[Compare v0.2.0...HEAD](https://github.com/rom-rb/rom-repository/compare/v0.2.0...HEAD)
+
 # v0.2.0 2016-01-06
 
 ### Added
