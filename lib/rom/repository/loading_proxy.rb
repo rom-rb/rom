@@ -47,7 +47,7 @@ module ROM
         if names.size == 1 && names[0].is_a?(Class)
           with(meta: meta.merge(model: names[0]))
         else
-          mappers = [mapper]+names.map { |name| relation.mappers[name] }
+          mappers = names.map { |name| relation.mappers[name] }
           mappers.reduce(self) { |a, e| a >> e }
         end
       end
