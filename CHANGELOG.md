@@ -1,10 +1,14 @@
-## v1.0.1 to-be-released
+## v2.0.0 to-be-released
+
+### Fixed
+
+- [BREAKING] command graphs return materialized results (a hash or an array) (solnic)
 
 ### Changed
 
 - `auto_registration` coerces its directory to a pathname now (adz)
 
-[Compare v1.0.0...v1.0.1](https://github.com/rom-rb/rom/compare/v1.0.0...v1.0.1)
+[Compare v1.0.0...HEAD](https://github.com/rom-rb/rom/compare/v1.0.0...HEAD)
 
 ## v1.0.0 2016-01-06
 
