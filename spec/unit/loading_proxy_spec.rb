@@ -32,14 +32,26 @@ RSpec.describe 'loading proxy' do
   end
 
   describe '#map_with/#as' do
-    before do
-      configuration.mappers do
-        register :users, name_list: -> users { users.map(&:name) }
+    context 'with custom mappers' do
+      before do
+        configuration.mappers do
+          register :users, {
+            name_list: -> users { users.map { |u| u[:name] } },
+            upcase_names: -> names { names.map(&:upcase) },
+            identity: -> users { users }
+          }
+        end
       end
-    end
 
-    it 'sends the relation through multiple mappers' do
-      expect(users.map_with(:name_list).to_a).to eql(%w(Jane Joe))
+      it 'sends the relation through custom mappers' do
+        expect(users.map_with(:name_list, :upcase_names).to_a).to match_array(%w(JANE JOE))
+      end
+
+      it 'does not use the default(ROM::Struct) mapper' do
+        expect(users.map_with(:identity).to_a).to match_array(
+          [{ id: 1, name: 'Jane' }, {id: 2, name: 'Joe' }]
+        )
+      end
     end
 
     context 'setting custom model type' do
