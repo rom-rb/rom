@@ -26,6 +26,8 @@ module ROM
 
     attr_reader :mappers
 
+    attr_reader :root
+
     # @api public
     def self.[](name)
       klass = Class.new(self)
@@ -113,6 +115,14 @@ module ROM
 
         instance_variable_set("@#{name}", proxy)
       end
+
+      # TODO: we should have a special subclass for repos with a root set
+      @root = __send__(self.class.root) if self.class.root
+    end
+
+    # @api public
+    def aggregate(options)
+      root.combine_children(options)
     end
 
     # Create a command for a relation
