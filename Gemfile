@@ -4,6 +4,8 @@ gemspec
 
 gem 'inflecto'
 
+gem 'rom', github: 'rom-rb/rom', branch: 'master'
+
 group :development, :test do
   gem 'rom-sql', '~> 0.7.0'
 end

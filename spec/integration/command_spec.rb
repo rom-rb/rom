@@ -25,7 +25,7 @@ RSpec.describe ROM::Repository, '#command' do
         repo.users.combine_children(one: repo.tasks)
       )
 
-      user = create_user.call(name: 'Jane Doe', task: { title: 'Task one' }).one
+      user = create_user.call(name: 'Jane Doe', task: { title: 'Task one' })
 
       expect(user.id).to_not be(nil)
       expect(user.name).to eql('Jane Doe')
@@ -40,7 +40,7 @@ RSpec.describe ROM::Repository, '#command' do
 
       user = create_user.call(
         name: 'Jane Doe', task: { title: 'Task one', tags: [{ name: 'red' }] }
-      ).one
+      )
 
       expect(user.id).to_not be(nil)
       expect(user.name).to eql('Jane Doe')
@@ -55,7 +55,7 @@ RSpec.describe ROM::Repository, '#command' do
         repo.users.combine_children(many: repo.tasks)
       )
 
-      user = create_user.call(name: 'Jane Doe', tasks: [{ title: 'Task one' }]).one
+      user = create_user.call(name: 'Jane Doe', tasks: [{ title: 'Task one' }])
 
       expect(user.id).to_not be(nil)
       expect(user.name).to eql('Jane Doe')
@@ -72,7 +72,7 @@ RSpec.describe ROM::Repository, '#command' do
       user = create_user.call(
         name: 'Jane',
         tasks: [{ title: 'Task', tags: [{ name: 'red' }]}]
-      ).one
+      )
 
       expect(user.id).to_not be(nil)
       expect(user.name).to eql('Jane')

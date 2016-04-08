@@ -1,5 +1,5 @@
 RSpec.shared_context 'database' do
-  let(:configuration) { ROM::Configuration.new(:sql, uri).use(:macros) }
+  let(:configuration) { ROM::Configuration.new(:sql, uri) }
   let(:conn) { configuration.gateways[:default].connection }
   let(:rom) { ROM.container(configuration) }
   let(:uri) { 'postgres://localhost/rom_repository' }
