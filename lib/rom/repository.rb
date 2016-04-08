@@ -102,7 +102,7 @@ module ROM
       @mappers = MapperBuilder.new
 
       self.class.relations.each do |name|
-        relation = container.relations[name]
+        relation = container.relation(name)
 
         proxy = LoadingProxy.new(relation, name: name, mappers: mappers)
 
