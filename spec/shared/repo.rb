@@ -1,4 +1,7 @@
 RSpec.shared_context('repo') do
+  include_context 'models'
+  include_context 'mappers'
+
   let(:repo) { repo_class.new(rom) }
 
   let(:repo_class) do
@@ -11,6 +14,10 @@ RSpec.shared_context('repo') do
 
       def all_users
         users.all
+      end
+
+      def all_users_as_users
+        users.as(:user).all
       end
 
       def tasks_for_users(users)

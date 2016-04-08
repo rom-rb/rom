@@ -8,6 +8,13 @@ RSpec.describe 'ROM repository' do
     expect(repo.all_users.to_a).to match_array([jane, joe])
   end
 
+  it 'can be used with a custom mapper' do
+    expect(repo.all_users_as_users.to_a).to match_array([
+      Test::Models::User.new(jane),
+      Test::Models::User.new(joe)
+    ])
+  end
+
   it 'loads a relation by an association' do
     expect(repo.tasks_for_users(repo.all_users)).to match_array([jane_task, joe_task])
   end
