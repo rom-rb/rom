@@ -81,16 +81,20 @@ module ROM
         if meta[:combine_type]
           klass.use(:associates)
           klass.associates(:parent, key: meta[:keys].invert.to_a.flatten)
-          klass.result meta[:combine_type]
         end
 
         relation = container.relations[name]
+
+        gateway = container.gateways[relation.class.gateway]
+        gateway.extend_command_class(klass, relation.dataset)
 
         if type.restrictable
           klass.send(:include, finalizer.relation_methods_mod(relation.class))
         end
 
-        registry[name][type] = klass.build(relation, result: :one)
+        result = meta.fetch(:combine_type, :one)
+
+        registry[name][type] = klass.build(relation, result: result)
       end
 
       # @api private
