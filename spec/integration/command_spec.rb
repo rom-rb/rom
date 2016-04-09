@@ -89,14 +89,34 @@ RSpec.describe ROM::Repository, '#command' do
       )
 
       user = create_user.call(
-        name: 'Jane', task: { title: 'Task', tags: [{ name: 'red' }] }
+        name: 'Jane', task: { title: 'Task', tags: [{ name: 'red' }, { name: 'blue' }] }
       )
 
       expect(user.id).to_not be(nil)
       expect(user.name).to eql('Jane')
       expect(user.task.title).to eql('Task')
       expect(user.task.tags).to be_instance_of(Array)
-      expect(user.task.tags.first.name).to eql('red')
+      expect(user.task.tags.size).to be(2)
+      expect(user.task.tags[0].name).to eql('red')
+      expect(user.task.tags[1].name).to eql('blue')
+    end
+
+    it 'builds Create command for a deeply nested graph with many-to-one' do
+      create_user = repo.command(
+        :create,
+        repo.aggregate(one: repo.tasks.combine_children(one: repo.tags))
+      )
+
+      user = create_user.call(
+        name: 'Jane', task: { title: 'Task', tag: { name: 'red' } }
+      )
+
+      expect(user.id).to_not be(nil)
+      expect(user.name).to eql('Jane')
+      expect(user.task.id).to_not be(nil)
+      expect(user.task.title).to eql('Task')
+      expect(user.task.tag.id).to_not be(nil)
+      expect(user.task.tag.name).to eql('red')
     end
   end
 
