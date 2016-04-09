@@ -64,7 +64,11 @@ module ROM
 
         register_command(base_name, type, meta)
 
-        [mapping, [type].concat(other)]
+        if other.size > 0
+          [mapping, [type, other]]
+        else
+          [mapping, type]
+        end
       end
 
       def visit_header(node)
