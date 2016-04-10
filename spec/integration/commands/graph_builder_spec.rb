@@ -208,6 +208,6 @@ RSpec.describe 'Command graph builder' do
   it 'raises when unknown command is accessed' do
     expect {
       container.command.not_here(:users)
-    }.to raise_error(ROM::Registry::ElementNotFoundError, /not_here/)
+    }.to raise_error(ROM::CommandRegistry::CommandNotFoundError, /not_here/)
   end
 end
