@@ -7,7 +7,7 @@ gem 'inflecto'
 gem 'rom', github: 'rom-rb/rom', branch: 'master'
 
 group :development, :test do
-  gem 'rom-sql', '~> 0.7.0'
+  gem 'rom-sql', github: 'rom-rb/rom-sql', branch: 'master'
 end
 
 group :development do
