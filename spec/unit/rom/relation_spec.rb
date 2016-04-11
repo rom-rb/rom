@@ -126,9 +126,9 @@ describe ROM::Relation do
 
       schema = ROM::Schema.new(
         :test_users,
-        id: ROM::Memory::Types::Int.meta(primary_key: true),
-        name: ROM::Memory::Types::String,
-        admin: ROM::Memory::Types::Bool
+        id: ROM::Memory::Types::Int.meta(primary_key: true, name: :id),
+        name: ROM::Memory::Types::String.meta(name: :name),
+        admin: ROM::Memory::Types::Bool.meta(name: :admin)
       )
 
       expect(Test::Users.schema.primary_key).to eql([Test::Users.schema[:id]])

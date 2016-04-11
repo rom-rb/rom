@@ -2,6 +2,8 @@ source 'https://rubygems.org'
 
 gemspec
 
+gem 'dry-types', github: 'dry-rb/dry-types', branch: 'master'
+
 group :console do
   gem 'pry'
   gem 'pg', platforms: [:mri]

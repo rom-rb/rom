@@ -28,7 +28,7 @@ module ROM
       #
       # @api public
       def attribute(name, type)
-        @attributes[name] = type
+        @attributes[name] = type.meta(name: name)
       end
 
       # Specify which key(s) should be the primary key

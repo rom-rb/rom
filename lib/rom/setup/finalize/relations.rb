@@ -26,8 +26,8 @@ module ROM
           # TODO: raise a meaningful error here and add spec covering the case
           #       where klass' gateway points to non-existant repo
           gateway = @gateways.fetch(klass.gateway)
-          ds_proc = klass.dataset_proc || -> { self }
-          dataset = gateway.dataset(klass.dataset).instance_exec(&ds_proc)
+          ds_proc = klass.dataset_proc || -> _ { self }
+          dataset = gateway.dataset(klass.dataset).instance_exec(klass, &ds_proc)
 
           relation = klass.new(dataset, __registry__: registry)
 
