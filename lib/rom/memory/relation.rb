@@ -1,3 +1,5 @@
+require 'rom/memory/types'
+
 module ROM
   module Memory
     # Relation subclass for memory adapter
@@ -9,6 +11,7 @@ module ROM
     # @api public
     class Relation < ROM::Relation
       include Enumerable
+      include Memory
 
       adapter :memory
 

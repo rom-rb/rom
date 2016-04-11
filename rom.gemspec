@@ -16,6 +16,7 @@ Gem::Specification.new do |gem|
   gem.license       = 'MIT'
 
   gem.add_runtime_dependency 'dry-equalizer', '~> 0.2'
+  gem.add_runtime_dependency 'dry-types', '~> 0.7'
   gem.add_runtime_dependency 'rom-support', '~> 1.0.0'
   gem.add_runtime_dependency 'rom-mapper', '~> 0.3.0'
 

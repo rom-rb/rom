@@ -2,6 +2,7 @@ require 'set'
 
 require 'rom/support/auto_curry'
 require 'rom/relation/curried'
+require 'rom/schema'
 
 module ROM
   class Relation
@@ -123,6 +124,40 @@ module ROM
         ROM.adapters.fetch(adapter).const_get(:Relation)
       rescue KeyError
         raise AdapterNotPresentError.new(adapter, :relation)
+      end
+
+      # Specify canonical schema for a relation
+      #
+      # With a schema defined commands will set up a type-safe input handler
+      # automatically
+      #
+      # @example
+      #   class Users < ROM::Relation[:sql]
+      #     schema do
+      #       attribute :id, Types::Serial
+      #       attribute :name, Types::String
+      #     end
+      #   end
+      #
+      #   # access schema
+      #   Users.schema
+      #
+      # @return [Schema]
+      #
+      # @param [Symbol] dataset An optional dataset name
+      #
+      # @api public
+      def schema(dataset = nil, &block)
+        if defined?(@schema)
+          @schema
+        elsif block
+          @schema = Schema::DSL.new(dataset || self.dataset, &block).call
+
+          if dataset
+            self.dataset(dataset)
+            self.register_as(dataset) unless register_as
+          end
+        end
       end
 
       # Dynamically define a method that will forward to the dataset and wrap
