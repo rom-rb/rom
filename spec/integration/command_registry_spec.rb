@@ -15,6 +15,19 @@ describe 'ROM::CommandRegistry' do
     end)
   end
 
+  describe '#[]' do
+    it 'fetches a command from the registry' do
+      expect(users[:create]).to be_a(ROM::Commands::Create[:memory])
+    end
+
+    it 'throws an error when the command is not found' do
+      expect { users[:not_found] }.to raise_error(
+        ROM::CommandRegistry::CommandNotFoundError,
+        'There is no :not_found command for :users relation'
+      )
+    end
+  end
+
   describe '#try' do
     it 'returns a success result object on successful execution' do
       result = users.try { users.create.call(name: 'Jane') }

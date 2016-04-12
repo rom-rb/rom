@@ -8,6 +8,15 @@ module ROM
     include Commands
     include Options
 
+    CommandNotFoundError = Class.new(KeyError)
+
+    # Name of the relation from which commands are under
+    #
+    # @return [String]
+    #
+    # @api private
+    attr_reader :relation_name
+
     # Internal command registry
     #
     # @return [Registry]
@@ -19,8 +28,10 @@ module ROM
     option :mapper, reader: true
 
     # @api private
-    def initialize(elements, options = EMPTY_HASH)
+    def initialize(relation_name, elements, options = EMPTY_HASH)
       super
+
+      @relation_name = relation_name
       @registry =
         if elements.is_a?(Registry)
           elements
@@ -73,7 +84,7 @@ module ROM
     #
     # @api public
     def [](name)
-      command = registry[name]
+      command = fetch_command(name)
       mapper = options[:mapper]
 
       if mapper
@@ -104,10 +115,22 @@ module ROM
     #
     # @api private
     def with(new_options)
-      self.class.new(registry, options.merge(new_options))
+      self.class.new(relation_name, registry, options.merge(new_options))
     end
 
     private
+
+    # Fetch a command from the registry and raise a specialized error
+    # in case the command is not found
+    #
+    # @api private
+    def fetch_command(name)
+      registry.fetch(name) do
+        raise CommandNotFoundError.new(
+          "There is no :#{name} command for :#{relation_name} relation"
+        )
+      end
+    end
 
     # Allow checking if a certain command is available using dot-notation
     #
