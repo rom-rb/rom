@@ -3,6 +3,30 @@ RSpec.describe ROM::Repository, '#command' do
   include_context 'relations'
   include_context 'repo'
 
+  context 'accessing custom command from the registry' do
+    before do
+      configuration.commands(:users) do
+        define(:upsert, type: ROM::SQL::Commands::Create)
+        define(:create)
+      end
+
+      configuration.commands(:tasks) do
+        define(:create)
+      end
+    end
+
+    it 'returns registered command' do
+      expect(repo.command(:users).upsert).to be(rom.command(:users).upsert)
+      expect(repo.command(:users)[:upsert]).to be(rom.command(:users).upsert)
+    end
+
+    it 'exposes command builder DSL' do
+      command = repo.command.create(user: :users) { |user| user.create(:tasks) }
+
+      expect(command).to be_instance_of(ROM::Command::Graph)
+    end
+  end
+
   context ':create' do
     it 'builds Create command for a relation' do
       create_user = repo.command(create: :users)

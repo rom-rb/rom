@@ -138,17 +138,21 @@ module ROM
     # @return [ROM::Command]
     #
     # @api public
-    def command(*args, **opts)
+    def command(*args, **opts, &block)
       all_args = args + opts.to_a.flatten
-      type, name = all_args
 
-      relation = name.is_a?(Symbol) ? __send__(name) : name
+      if all_args.size > 1
+        type, name = all_args
+        relation = name.is_a?(Symbol) ? __send__(name) : name
 
-      commands.fetch_or_store(all_args.hash) do
-        ast = relation.to_ast
-        adapter = __send__(relation.name).adapter
+        commands.fetch_or_store(all_args.hash) do
+          ast = relation.to_ast
+          adapter = __send__(relation.name).adapter
 
-        CommandCompiler[container, type, adapter, ast] >> mappers[ast]
+          CommandCompiler[container, type, adapter, ast] >> mappers[ast]
+        end
+      else
+        container.command(*args, &block)
       end
     end
 
