@@ -30,6 +30,13 @@ RSpec.describe ROM::Repository::Root do
       expect(klass.relations).to eql([:users, :tasks])
       expect(klass.root).to be(:users)
     end
+
+    it 'creates base root class' do
+      klass = Class.new(ROM::Repository)[:users]
+
+      expect(klass.relations).to eql([:users])
+      expect(klass.root).to be(:users)
+    end
   end
 
   describe '#root' do

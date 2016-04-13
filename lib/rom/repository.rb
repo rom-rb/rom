@@ -42,7 +42,6 @@ module ROM
 
       return if self === Repository
 
-      klass.root(root)
       klass.relations(*relations)
       klass.commands(*commands)
     end

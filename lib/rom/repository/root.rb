@@ -8,6 +8,12 @@ module ROM
       attr_reader :root
 
       # @api private
+      def self.inherited(klass)
+        super
+        klass.root(root)
+      end
+
+      # @api private
       def initialize(container)
         super
         @root = __send__(self.class.root)
