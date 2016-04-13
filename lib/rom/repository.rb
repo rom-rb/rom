@@ -84,9 +84,9 @@ module ROM
         @commands = names + opts.to_a
 
         @commands.each do |spec|
-          type, view = Array(spec).flatten
+          type, *view = Array(spec).flatten
 
-          if view
+          if view.size > 0
             define_restricted_command_method(type, view)
           else
             define_command_method(type)
@@ -103,13 +103,17 @@ module ROM
       end
     end
 
-    def self.define_restricted_command_method(type, view)
-      define_method(type) do |*args|
-        view_args, *input = args
+    def self.define_restricted_command_method(type, views)
+      views.each do |view_name|
+        meth_name = views.size > 1 ? :"#{type}_#{view_name}" : type
 
-        command(type => self.class.root)
-          .public_send(view, *view_args)
-          .call(*input)
+        define_method(meth_name) do |*args|
+          view_args, *input = args
+
+          command(type => self.class.root)
+            .public_send(view_name, *view_args)
+            .call(*input)
+        end
       end
     end
 

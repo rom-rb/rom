@@ -9,6 +9,10 @@ RSpec.shared_context 'relations' do
         where(id: id)
       end
 
+      def by_name(name)
+        where(name: name)
+      end
+
       def all
         select(:id, :name).order(:name, :id)
       end
