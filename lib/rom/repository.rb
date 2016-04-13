@@ -22,6 +22,8 @@ module ROM
 
     attr_reader :container
 
+    attr_reader :relations
+
     attr_reader :mappers
 
     # Create a root-repository class and set its root relation
@@ -108,16 +110,15 @@ module ROM
       @container = container
       @mappers = MapperBuilder.new
 
-      self.class.relations.each do |name|
+      @relations = self.class.relations.each_with_object({}) do |name, hash|
         relation = container.relation(name)
 
         proxy = RelationProxy.new(relation, name: name, mappers: mappers)
 
         instance_variable_set("@#{name}", proxy)
-      end
 
-      # TODO: we should have a special subclass for repos with a root set
-      @root = __send__(self.class.root) if self.class.root
+        hash[name] = proxy
+      end
     end
 
     # Create a command for a relation
@@ -138,11 +139,11 @@ module ROM
 
       if all_args.size > 1
         type, name = all_args
-        relation = name.is_a?(Symbol) ? __send__(name) : name
+        relation = name.is_a?(Symbol) ? relations[name] : name
 
         commands.fetch_or_store(all_args.hash) do
           ast = relation.to_ast
-          adapter = __send__(relation.name).adapter
+          adapter = relations[relation.name].adapter
 
           CommandCompiler[container, type, adapter, ast] >> mappers[ast]
         end
