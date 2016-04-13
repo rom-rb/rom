@@ -5,6 +5,8 @@ require 'rom/repository/mapper_builder'
 require 'rom/repository/relation_proxy'
 require 'rom/repository/command_compiler'
 
+require 'rom/repository/root'
+
 module ROM
   # Abstract repository class to inherit from
   #
@@ -18,19 +20,15 @@ module ROM
       end
     end
 
-    extend ClassMacros
-
-    defines :root
-
     attr_reader :container
 
     attr_reader :mappers
 
-    attr_reader :root
-
+    # Create a root-repository class and set its root relation
+    #
     # @api public
     def self.[](name)
-      klass = Class.new(self)
+      klass = Class.new(self < Repository::Root ? self : Repository::Root)
       klass.relations(name)
       klass.root(name)
       klass
@@ -67,10 +65,12 @@ module ROM
         attr_reader(*names)
 
         if defined?(@relations)
-          @relations.concat(names)
+          @relations.concat(names).uniq!
         else
           @relations = names
         end
+
+        @relations
       else
         @relations
       end
@@ -118,11 +118,6 @@ module ROM
 
       # TODO: we should have a special subclass for repos with a root set
       @root = __send__(self.class.root) if self.class.root
-    end
-
-    # @api public
-    def aggregate(options)
-      root.combine_children(options)
     end
 
     # Create a command for a relation
