@@ -87,21 +87,29 @@ module ROM
           type, view = Array(spec).flatten
 
           if view
-            define_method(type) do |*args|
-              view_args, *input = args
-
-              command(type => self.class.root)
-                .public_send(view, *view_args)
-                .call(*input)
-            end
+            define_restricted_command_method(type, view)
           else
-            define_method(type) do |*args|
-              command(type => self.class.root).call(*args)
-            end
+            define_command_method(type)
           end
         end
       else
         @commands || []
+      end
+    end
+
+    def self.define_command_method(type)
+      define_method(type) do |*args|
+        command(type => self.class.root).call(*args)
+      end
+    end
+
+    def self.define_restricted_command_method(type, view)
+      define_method(type) do |*args|
+        view_args, *input = args
+
+        command(type => self.class.root)
+          .public_send(view, *view_args)
+          .call(*input)
       end
     end
 
