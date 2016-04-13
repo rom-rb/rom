@@ -5,6 +5,7 @@ gemspec
 gem 'inflecto'
 
 gem 'rom', github: 'rom-rb/rom', branch: 'master'
+gem 'rom-support', github: 'rom-rb/rom-support', branch: 'master'
 
 group :development, :test do
   gem 'rom-sql', github: 'rom-rb/rom-sql', branch: 'master'
