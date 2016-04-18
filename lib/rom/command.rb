@@ -68,8 +68,8 @@ module ROM
     # Call the command and return one or many tuples
     #
     # @api public
-    def call(*args)
-      tuples = execute(*(curry_args + args))
+    def call(*args, &block)
+      tuples = execute(*(curry_args + args), &block)
 
       if one?
         tuples.first
