@@ -149,14 +149,22 @@ module ROM
       all_args = args + opts.to_a.flatten
 
       if all_args.size > 1
-        type, name = all_args
-        relation = name.is_a?(Symbol) ? relations[name] : name
-
         commands.fetch_or_store(all_args.hash) do
+          custom_mapper = opts.delete(:mapper)
+          type, name = args + opts.to_a.flatten
+
+          relation = name.is_a?(Symbol) ? relations[name] : name
+
           ast = relation.to_ast
           adapter = relations[relation.name].adapter
 
-          CommandCompiler[container, type, adapter, ast] >> mappers[ast]
+          if custom_mapper.nil?
+            mapper = mappers[ast]
+          else
+            mapper = relation.relation.mappers[custom_mapper]
+          end
+
+          CommandCompiler[container, type, adapter, ast] >> mapper
         end
       else
         container.command(*args, &block)
