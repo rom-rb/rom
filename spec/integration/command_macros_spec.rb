@@ -46,4 +46,33 @@ RSpec.describe ROM::Repository, '.command' do
     user = repo.users.by_id(user.id).one
     expect(user.name).to eql('Jane')
   end
+
+  it 'uses a mapper built from AST by default' do
+    repo = Class.new(ROM::Repository[:users]) do
+      commands :create
+    end.new(rom)
+
+    user = repo.create(name: 'Jane')
+
+    expect(user).to be_kind_of ROM::Struct
+
+    struct_definition = [:users, [:header, [[:attribute, :id], [:attribute, :name]]]]
+    expect(user).to be_an_instance_of ROM::Repository::StructBuilder.registry[struct_definition.hash]
+  end
+
+  describe 'using custom mappers' do
+    before do
+      configuration.mappers do
+        register :users, name_list: -> users { users.map { |u| u[:name] } }
+      end
+    end
+
+    it 'allows to use named mapper in commands' do
+      repo = Class.new(ROM::Repository[:users]).new(rom)
+
+      name = repo.command(create: :users, mapper: :name_list).call(name: 'Jane')
+
+      expect(name).to eql('Jane')
+    end
+  end
 end
