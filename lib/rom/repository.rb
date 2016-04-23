@@ -158,10 +158,10 @@ module ROM
           ast = relation.to_ast
           adapter = relations[relation.name].adapter
 
-          if custom_mapper.nil?
-            mapper = mappers[ast]
+          if custom_mapper
+            mapper = container.mappers[relation.name][custom_mapper]
           else
-            mapper = relation.relation.mappers[custom_mapper]
+            mapper = mappers[ast]
           end
 
           CommandCompiler[container, type, adapter, ast] >> mapper
