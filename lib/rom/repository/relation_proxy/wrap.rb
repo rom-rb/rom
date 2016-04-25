@@ -38,7 +38,7 @@ module ROM
         def wrap_parent(options)
           wrap(
             options.each_with_object({}) { |(name, parent), h|
-              h[name] = [parent, combine_keys(parent, :children)]
+              h[name] = [parent, combine_keys(parent, relation, :children)]
             }
           )
         end

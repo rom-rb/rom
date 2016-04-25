@@ -53,13 +53,13 @@ module ROM
             h[type] =
               if parents.is_a?(Hash)
                 parents.each_with_object({}) { |(key, parent), r|
-                  r[key] = [parent, combine_keys(parent, :parent)]
+                  r[key] = [parent, combine_keys(parent, relation, :parent)]
                 }
               else
                 (parents.is_a?(Array) ? parents : [parents])
                   .each_with_object({}) { |parent, r|
                   r[parent.combine_tuple_key(type)] = [
-                    parent, combine_keys(parent, :parent)
+                    parent, combine_keys(parent, relation, :parent)
                   ]
                 }
               end
@@ -81,13 +81,13 @@ module ROM
             h[type] =
               if children.is_a?(Hash)
                 children.each_with_object({}) { |(key, child), r|
-                  r[key] = [child, combine_keys(relation, :children)]
+                  r[key] = [child, combine_keys(relation, child, :children)]
                 }
               else
                 (children.is_a?(Array) ? children : [children])
                   .each_with_object({}) { |child, r|
                   r[child.combine_tuple_key(type)] = [
-                    child, combine_keys(relation, :children)
+                    child, combine_keys(relation, child, :children)
                   ]
                 }
               end
@@ -102,11 +102,16 @@ module ROM
         # @return [Hash<Symbol=>Symbol>]
         #
         # @api private
-        def combine_keys(relation, type)
+        def combine_keys(source, target, type)
+          primary_key = source.primary_key
+
+          foreign_key = target.schema ?
+            target.schema.foreign_key(source.base_name).meta[:name] : source.foreign_key
+
           if type == :parent
-            { relation.foreign_key => relation.primary_key }
+            { foreign_key => primary_key }
           else
-            { relation.primary_key => relation.foreign_key }
+            { primary_key => foreign_key }
           end
         end
 

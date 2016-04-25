@@ -48,4 +48,21 @@ RSpec.describe 'ROM repository' do
   it 'loads a wrapped relation' do
     expect(repo.tag_with_wrapped_task.first).to eql(tag_with_task)
   end
+
+  it 'loads an aggregate via custom fks' do
+    jane = repo.aggregate(many: repo.posts).where(name: 'Jane').one
+
+    expect(jane.posts.size).to be(1)
+    expect(jane.posts.first.title).to eql('Hello From Jane')
+  end
+
+  it 'loads an parents via custom fks' do
+    post = repo.posts
+      .combine_parents(one: { author: repo.users })
+      .where(title: 'Hello From Jane')
+      .one
+
+    expect(post.title).to eql('Hello From Jane')
+    expect(post.author.name).to eql('Jane')
+  end
 end
