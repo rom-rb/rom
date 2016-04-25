@@ -78,4 +78,20 @@ describe ROM::Relation, '.schema' do
     expect(Test::Users.dataset).to be(:users)
     expect(Test::Users.register_as).to be(:test_users)
   end
+
+  describe '#schema' do
+    it 'returns defined schema' do
+      class Test::Users < ROM::Relation[:memory]
+        schema do
+          attribute :id, Types::Int.meta(primary_key: true)
+          attribute :name, Types::String
+          attribute :admin, Types::Bool
+        end
+      end
+
+      users = Test::Users.new([])
+
+      expect(users.schema).to be(Test::Users.schema)
+    end
+  end
 end

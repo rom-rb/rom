@@ -43,9 +43,17 @@ module ROM
     # @api private
     attr_reader :dataset
 
+    # Return relation schema object (if defined)
+    #
+    # @return [Schema]
+    #
+    # @api public
+    attr_reader :schema
+
     # @api private
     def initialize(dataset, options = EMPTY_HASH)
       @dataset = dataset
+      @schema = self.class.schema
       super
     end
 
