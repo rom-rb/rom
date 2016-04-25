@@ -31,6 +31,20 @@ RSpec.describe ROM::Repository, '.command' do
     expect(repo.users.by_id(user.id).one).to be(nil)
   end
 
+  it 'allows to configure update command without create one' do
+    repo = Class.new(ROM::Repository[:users]) do
+      commands update: :by_id
+    end.new(rom)
+
+    user = repo.command(create: :users)[name: 'Jane']
+
+    repo.update(user.id, name: 'Jane Doe')
+
+    updated_user = repo.users.by_id(user.id).one
+
+    expect(updated_user.name).to eql('Jane Doe')
+  end
+
   it 'allows defining a single command with multiple views' do
     repo = Class.new(ROM::Repository[:users]) do
       commands :create, update: [:by_id, :by_name]

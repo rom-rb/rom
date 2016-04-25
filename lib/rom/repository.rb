@@ -79,7 +79,7 @@ module ROM
 
     # @api public
     def self.commands(*names, **opts)
-      if names.any?
+      if names.any? || opts.any?
         @commands = names + opts.to_a
 
         @commands.each do |spec|
