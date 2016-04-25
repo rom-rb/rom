@@ -54,6 +54,15 @@ module ROM
       freeze
     end
 
+    # Iterate over schema's attributes
+    #
+    # @yield [Dry::Data::Type]
+    #
+    # @api public
+    def each(&block)
+      attributes.each_value(&block)
+    end
+
     # Return attribute
     #
     # @api public
@@ -63,18 +72,12 @@ module ROM
 
     # @api public
     def primary_key
-      attributes.values.select do |attr|
-        attr.meta[:primary_key] == true
-      end
+      select { |attr| attr.meta[:primary_key] == true }
     end
 
-    # Iterate over schema's attributes
-    #
-    # @yield [Dry::Data::Type]
-    #
     # @api public
-    def each(&block)
-      attributes.each(&block)
+    def foreign_key(relation)
+      detect { |attr| attr.meta[:foreign_key] && attr.meta[:relation] == relation }
     end
   end
 end

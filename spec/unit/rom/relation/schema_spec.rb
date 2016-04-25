@@ -38,6 +38,21 @@ describe ROM::Relation, '.schema' do
     expect(schema.primary_key).to eql([schema[:name], schema[:email]])
   end
 
+  it 'allows setting foreign keys' do
+    class Test::Posts < ROM::Relation[:memory]
+      schema do
+        attribute :author_id, Types::ForeignKey(:users)
+        attribute :title, Types::String
+      end
+    end
+
+    schema = Test::Posts.schema
+
+    expect(schema[:author_id].primitive).to be(Integer)
+
+    expect(schema.foreign_key(:users)).to be(schema[:author_id])
+  end
+
   it 'sets register_as and dataset' do
     class Test::Users < ROM::Relation[:memory]
       schema(:users) do
