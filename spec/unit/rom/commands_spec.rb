@@ -63,9 +63,9 @@ describe 'Commands' do
   end
 
   describe '#>>' do
-    let(:users) { double('users') }
-    let(:tasks) { double('tasks') }
-    let(:logs) { [] }
+    let(:users) { double('users', schema: nil) }
+    let(:tasks) { double('tasks', schema: nil) }
+    let(:logs) { double('logs', schema: nil) }
 
     it 'composes two commands' do
       user_input = { name: 'Jane' }
@@ -100,11 +100,9 @@ describe 'Commands' do
 
       expect(users).to receive(:insert).with(user_input).and_return(user_tuple)
       expect(tasks).to receive(:insert).with(task_tuple).and_return(task_tuple)
+      expect(logs).to receive(:<<).with(task_tuple).and_return([task_tuple])
 
-      result = command.call
-
-      expect(result).to eql(task_tuple)
-      expect(logs).to include(task_tuple)
+      expect(command.call).to eql(task_tuple)
     end
 
     it 'forwards methods to the left' do

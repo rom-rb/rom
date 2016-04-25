@@ -34,6 +34,7 @@ require 'rom/create_container'
 # register core plugins
 require 'rom/plugins/configuration/configuration_dsl'
 require 'rom/plugins/relation/registry_reader'
+require 'rom/plugins/command/schema'
 
 module ROM
   extend Global
@@ -41,5 +42,6 @@ module ROM
   plugins do
     register :macros, ROM::ConfigurationPlugins::ConfigurationDSL, type: :configuration
     register :registry_reader, ROM::Plugins::Relation::RegistryReader, type: :relation
+    register :schema, ROM::Plugins::Command::Schema, type: :command
   end
 end

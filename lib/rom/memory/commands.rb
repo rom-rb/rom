@@ -11,6 +11,7 @@ module ROM
       # @api public
       class Create < ROM::Commands::Create
         adapter :memory
+        use :schema
 
         # @see ROM::Commands::Create#execute
         def execute(tuples)
@@ -28,6 +29,7 @@ module ROM
       # @api public
       class Update < ROM::Commands::Update
         adapter :memory
+        use :schema
 
         # @see ROM::Commands::Update#execute
         def execute(params)
