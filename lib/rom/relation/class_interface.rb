@@ -31,9 +31,10 @@ module ROM
         klass.class_eval do
           use :registry_reader
 
-          defines :gateway, :dataset, :dataset_proc, :register_as
+          defines :gateway, :dataset, :dataset_proc, :register_as, :schema_dsl
 
           gateway :default
+          schema_dsl Schema::DSL
 
           dataset default_name
 
@@ -151,7 +152,7 @@ module ROM
         if defined?(@schema)
           @schema
         elsif block
-          @schema = Schema::DSL.new(dataset || self.dataset, &block).call
+          @schema = schema_dsl.new(dataset || self.dataset, &block).call
 
           if dataset
             self.dataset(dataset)
