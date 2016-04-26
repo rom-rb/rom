@@ -93,5 +93,23 @@ describe ROM::Relation, '.schema' do
 
       expect(users.schema).to be(Test::Users.schema)
     end
+
+    it 'uses custom schema dsl' do
+      class Test::SchemaDSL < ROM::Schema::DSL
+        def bool(name)
+          attribute(name, ::ROM::Types::Bool)
+        end
+      end
+
+      class Test::Users < ROM::Relation[:memory]
+        schema_dsl Test::SchemaDSL
+
+        schema do
+          bool :admin
+        end
+      end
+
+      expect(Test::Users.schema[:admin]).to eql(ROM::Types::Bool.meta(name: :admin))
+    end
   end
 end
