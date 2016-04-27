@@ -11,6 +11,7 @@ module ROM
             extend ClassInterface
 
             option :view, reader: true
+            option :attributes
 
             def self.attributes
               @__attributes__ ||= {}
@@ -27,13 +28,17 @@ module ROM
         #
         # @api private
         def attributes(view_name = view)
-          header = self.class.attributes
-            .fetch(view_name, self.class.attributes.fetch(:base))
-
-          if header.is_a?(Proc)
-            instance_exec(&header)
+          if options.key?(:attributes)
+            options[:attributes]
           else
-            header
+            header = self.class.attributes
+              .fetch(view_name, self.class.attributes.fetch(:base))
+
+            if header.is_a?(Proc)
+              instance_exec(&header)
+            else
+              header
+            end
           end
         end
 

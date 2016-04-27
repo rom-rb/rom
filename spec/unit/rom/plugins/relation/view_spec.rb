@@ -43,5 +43,9 @@ RSpec.describe ROM::Plugins::Relation::View do
     it 'returns correct arity for a curried view' do
       expect(relation.names.arity).to be(1)
     end
+
+    it 'returns explicitly set attributes' do
+      expect(relation.with(attributes: [:foo, :bar]).attributes).to eql([:foo, :bar])
+    end
   end
 end
