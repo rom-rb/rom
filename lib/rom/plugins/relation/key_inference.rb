@@ -9,8 +9,18 @@ module ROM
         # @return [Symbol]
         #
         # @api private
-        def foreign_key
-          :"#{Inflector.singularize(name)}_id"
+        def foreign_key(other = nil)
+          if other
+            if schema
+              base_name = other.is_a?(Symbol) ? other : other.base_name
+              schema.foreign_key(base_name).meta[:name]
+            else
+              relation = other.is_a?(Symbol) ? __registry__[other] : other
+              relation.foreign_key
+            end
+          else
+            :"#{Inflector.singularize(name)}_id"
+          end
         end
 
         # Return base name which defaults to name attribute
