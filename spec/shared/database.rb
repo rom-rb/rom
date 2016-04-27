@@ -7,7 +7,7 @@ RSpec.shared_context 'database' do
   before do
     conn.loggers << LOGGER
 
-    [:tags, :tasks, :posts, :users].each { |table| conn.drop_table?(table) }
+    [:tags, :tasks, :posts, :users, :posts_labels, :labels].each { |table| conn.drop_table?(table) }
 
     conn.create_table :users do
       primary_key :id
@@ -26,11 +26,22 @@ RSpec.shared_context 'database' do
       column :name, String
     end
 
+    conn.create_table :labels do
+      primary_key :id
+      column :name, String
+    end
+
     conn.create_table :posts do
       primary_key :id
       foreign_key :author_id, :users, null: false, on_delete: :cascade
       column :title, String
       column :body, String
+    end
+
+    conn.create_table :posts_labels do
+      foreign_key :post_id, :labels, null: false, on_delete: :cascade
+      foreign_key :label_id, :labels, null: false, on_delete: :cascade
+      primary_key [:post_id, :label_id]
     end
   end
 end

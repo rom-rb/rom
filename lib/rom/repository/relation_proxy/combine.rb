@@ -103,15 +103,19 @@ module ROM
         #
         # @api private
         def combine_keys(source, target, type)
-          primary_key = source.primary_key
+          assoc = source.schema && source.schema.associations[target.base_name]
 
-          foreign_key = target.schema ?
-            target.schema.foreign_key(source.base_name).meta[:name] : source.foreign_key
-
-          if type == :parent
-            { foreign_key => primary_key }
+          if assoc
+            assoc.combine_keys(__registry__)
           else
-            { primary_key => foreign_key }
+            primary_key = source.primary_key
+            foreign_key = target.foreign_key(source)
+
+            if type == :parent
+              { foreign_key => primary_key }
+            else
+              { primary_key => foreign_key }
+            end
           end
         end
 
@@ -129,7 +133,9 @@ module ROM
           if relation.respond_to?(custom_name)
             __send__(custom_name)
           else
-            for_combine(keys)
+            for_combine(
+              (other.schema && other.schema.associations[base_name]) || keys
+            )
           end
         end
 

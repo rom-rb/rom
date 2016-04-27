@@ -34,13 +34,26 @@ RSpec.shared_context 'relations' do
     end
 
     configuration.relation(:tags)
+    configuration.relation(:labels)
 
     configuration.relation(:posts) do
-      schema do
+      schema(:posts) do
         attribute :id, ROM::SQL::Types::Serial
         attribute :author_id, ROM::SQL::Types::ForeignKey(:users)
         attribute :title, ROM::SQL::Types::String
         attribute :body, ROM::SQL::Types::String
+
+        associate do
+          many :labels, through: :posts_labels
+        end
+      end
+    end
+
+    configuration.relation(:posts_labels) do
+      schema do
+        attribute :post_id, ROM::SQL::Types::ForeignKey(:posts)
+        attribute :label_id, ROM::SQL::Types::ForeignKey(:labels)
+        primary_key :post_id, :label_id
       end
     end
   end
