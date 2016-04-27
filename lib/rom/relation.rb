@@ -106,8 +106,8 @@ module ROM
     end
 
     # @api private
-    def with(options)
-      __new__(dataset, options)
+    def with(new_options)
+      __new__(dataset, options.merge(new_options))
     end
 
     private

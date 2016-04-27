@@ -197,11 +197,13 @@ describe ROM::Relation do
 
   describe "#with" do
     it "returns a new instance with the original dataset and given custom options" do
+      relation = Class.new(ROM::Relation) { option :custom }.new([])
+
       custom_opts = { mappers: "Custom Mapper Registry" }
-      new_relation = relation.with(custom_opts)
+      new_relation = relation.with(custom_opts).with(custom: true)
 
       expect(new_relation.dataset).to be(relation.dataset)
-      expect(new_relation.options).to include(custom_opts)
+      expect(new_relation.options).to include(custom_opts.merge(custom: true))
     end
   end
 end
