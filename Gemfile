@@ -25,7 +25,7 @@ group :test do
 end
 
 group :sql do
-  gem 'rom-sql', github: 'rom-rb/rom-sql', branch: 'schema-associations'
+  gem 'rom-sql', github: 'rom-rb/rom-sql', branch: 'master'
   gem 'sequel'
   gem 'jdbc-sqlite3', platforms: :jruby
   gem 'sqlite3', platforms: [:mri, :rbx]
