@@ -79,25 +79,25 @@ module ROM
       end
 
       def register_command(name, type, meta)
-        klass = type.create_class(name, type)
+        type.create_class(name, type) do |klass| 
+          if meta[:combine_type]
+            klass.use(:associates)
+            klass.associates(:parent, key: meta[:keys].invert.to_a.flatten)
+          end
 
-        if meta[:combine_type]
-          klass.use(:associates)
-          klass.associates(:parent, key: meta[:keys].invert.to_a.flatten)
+          relation = container.relations[name]
+
+          # TODO: this is a copy-paste from rom's FinalizeCommands, we are missing
+          #       an interface!
+          gateway = container.gateways[relation.class.gateway]
+          gateway.extend_command_class(klass, relation.dataset)
+
+          klass.extend_for_relation(relation) if type.restrictable
+
+          result = meta.fetch(:combine_type, :one)
+
+          registry[name][type] = klass.build(relation, result: result)
         end
-
-        relation = container.relations[name]
-
-        # TODO: this is a copy-paste from rom's FinalizeCommands, we are missing
-        #       an interface!
-        gateway = container.gateways[relation.class.gateway]
-        gateway.extend_command_class(klass, relation.dataset)
-
-        klass.extend_for_relation(relation) if type.restrictable
-
-        result = meta.fetch(:combine_type, :one)
-
-        registry[name][type] = klass.build(relation, result: result)
       end
     end
   end
