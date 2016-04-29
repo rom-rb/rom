@@ -57,10 +57,7 @@ RSpec.describe 'ROM repository' do
   end
 
   it 'loads an parent via custom fks' do
-    post = repo.posts
-      .combine_parents(one: { author: repo.users })
-      .where(title: 'Hello From Jane')
-      .one
+    post = repo.posts.combine(:author).where(title: 'Hello From Jane').one
 
     expect(post.title).to eql('Hello From Jane')
     expect(post.author.name).to eql('Jane')

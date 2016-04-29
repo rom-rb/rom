@@ -45,6 +45,7 @@ RSpec.shared_context 'relations' do
 
         associate do
           many :labels, through: :posts_labels
+          belongs :author, relation: :users
         end
       end
     end

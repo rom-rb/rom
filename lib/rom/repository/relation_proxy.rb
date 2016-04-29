@@ -20,6 +20,7 @@ module ROM
       option :name, reader: true, type: Symbol
       option :mappers, reader: true, default: proc { MapperBuilder.new }
       option :meta, reader: true, type: Hash, default: EMPTY_HASH
+      option :registry, type: Hash, default: EMPTY_HASH, reader: true
 
       # @attr_reader [ROM::Relation::Lazy] relation Decorated relation
       attr_reader :relation

@@ -120,15 +120,18 @@ module ROM
     def initialize(container)
       @container = container
       @mappers = MapperBuilder.new
+      @relations = {}
 
-      @relations = self.class.relations.each_with_object({}) do |name, hash|
+      self.class.relations.each do |name|
         relation = container.relation(name)
 
-        proxy = RelationProxy.new(relation, name: name, mappers: mappers)
+        proxy = RelationProxy.new(
+          relation, name: name, mappers: mappers, registry: relations
+        )
 
         instance_variable_set("@#{name}", proxy)
 
-        hash[name] = proxy
+        relations[name] = proxy
       end
     end
 

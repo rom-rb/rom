@@ -20,12 +20,20 @@ module ROM
         # @return [RelationProxy]
         #
         # @api public
-        def combine(options)
+        def combine(*args)
+          options = args[0].is_a?(Hash) ? args[0] : args
+
           combine_opts = options.each_with_object({}) do |(type, relations), result|
-            result[type] = relations.each_with_object({}) do |(name, (other, keys)), h|
-              h[name] = [
-                other.curried? ? other : other.combine_method(relation, keys), keys
-              ]
+            if relations
+              result[type] = relations.each_with_object({}) do |(name, (other, keys)), h|
+                curried = other.curried? ? other : other.combine_method(relation, keys)
+                h[name] = [curried, keys]
+              end
+            else
+              assoc = relation.schema.associations[type]
+              curried = registry[assoc.target].for_combine(assoc)
+              keys = assoc.combine_keys(__registry__)
+              (result[assoc.result] ||= {})[assoc.name] = [curried, keys]
             end
           end
 
