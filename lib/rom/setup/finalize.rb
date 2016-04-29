@@ -6,7 +6,7 @@ require 'rom/command_registry'
 require 'rom/mapper_registry'
 
 require 'rom/container'
-require 'rom/setup/finalize/commands'
+require 'rom/setup/finalize/finalize_commands'
 require 'rom/setup/finalize/relations'
 require 'rom/setup/finalize/mappers'
 

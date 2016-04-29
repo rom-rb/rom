@@ -70,25 +70,15 @@ module ROM
         ROM.plugin_registry.commands.fetch(plugin, adapter).apply_to(self)
       end
 
-      # @api private
-      def relation_methods_mod(relation_class)
-        mod = Module.new
-
-        relation_class.view_methods.each do |meth|
-          mod.module_eval <<-RUBY
-          def #{meth}(*args)
-            response = relation.public_send(:#{meth}, *args)
-
-            if response.is_a?(relation.class)
-              new(response)
-            else
-              response
-            end
-          end
-          RUBY
-        end
-
-        mod
+      # Extend a command class with relation view methods
+      #
+      # @param [Relation]
+      #
+      # @return [Class]
+      #
+      # @api public
+      def extend_for_relation(relation)
+        include(relation_methods_mod(relation.class))
       end
 
       # Return default name of the command class based on its name
@@ -109,6 +99,25 @@ module ROM
       # @api private
       def options
         { input: input, validator: validator, result: result }
+      end
+
+      # @api private
+      def relation_methods_mod(relation_class)
+        Module.new.tap do |mod| 
+          relation_class.view_methods.each do |meth|
+            mod.module_eval <<-RUBY
+              def #{meth}(*args)
+                response = relation.public_send(:#{meth}, *args)
+
+                if response.is_a?(relation.class)
+                  new(response)
+                else
+                  response
+                end
+              end
+            RUBY
+          end
+        end
       end
     end
   end
