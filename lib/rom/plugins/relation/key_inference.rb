@@ -13,7 +13,8 @@ module ROM
           if other
             if schema
               base_name = other.is_a?(Symbol) ? other : other.base_name
-              schema.foreign_key(base_name).meta[:name]
+              key = schema.foreign_key(base_name)
+              key ? key.meta[:name] : __registry__[base_name].foreign_key
             else
               relation = other.is_a?(Symbol) ? __registry__[other] : other
               relation.foreign_key
