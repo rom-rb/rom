@@ -1,6 +1,5 @@
 require 'concurrent/map'
 
-require 'rom/setup/finalize/commands'
 require 'rom/commands'
 require 'rom/repository/command_proxy'
 
@@ -94,20 +93,11 @@ module ROM
         gateway = container.gateways[relation.class.gateway]
         gateway.extend_command_class(klass, relation.dataset)
 
-        if type.restrictable
-          klass.send(:include, finalizer.relation_methods_mod(relation.class))
-        end
+        klass.extend_for_relation(relation) if type.restrictable
 
         result = meta.fetch(:combine_type, :one)
 
         registry[name][type] = klass.build(relation, result: result)
-      end
-
-      # @api private
-      def finalizer
-        # TODO: we only need `relation_methods_mod` so would be nice to expose it
-        #       as a class method instead
-        @finalizer ||= Finalize::FinalizeCommands.new(container.relations, nil, nil)
       end
     end
   end
