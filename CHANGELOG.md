@@ -1,12 +1,28 @@
 ## v2.0.0 to-be-released
 
+### Added
+
+- Extendible `schema` DSL for relations with attribute and type definitions (solnic)
+- New command plugin `:schema` which will set up an input handler from schema definition (solnic)
+- New command option `restrictible` for commands that can use a restricted relation (solnic)
+- More meaningful exception is raised when trying to access a non-existant command (thiagoa)
+
+#### New low-level APIs
+
+- `Command.create_class` for building a command class dynamically (solnic)
+- `Command.extend_for_relation` for extending a command with relation view interface (solnic)
+
 ### Fixed
 
 - [BREAKING] command graphs return materialized results (a hash or an array) (solnic)
 - `Container#disconnect` properly delegates to gateways (endash)
+- `Relation#with` properly carries original options (solnic)
 
 ### Changed
 
+- `Relation.dataset` yields a relation class when block was passed (solnic)
+- `Relation#attributes` can return attributes explicitly passed via options (solnic)
+- Relation `:key_inference` plugin supports schema information from other relations (solnic)
 - `auto_registration` coerces its directory to a pathname now (adz)
 - `macros` are now enabled by default in in-line setup block (endash)
 
