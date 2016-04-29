@@ -63,6 +63,17 @@ RSpec.describe 'ROM repository' do
     expect(jane.posts.first.title).to eql('Hello From Jane')
   end
 
+  it 'loads an aggregate with multiple associations' do
+    jane = repo.aggregate(:posts, :labels).where(name: 'Jane').one
+
+    expect(jane.posts.size).to be(1)
+    expect(jane.posts.first.title).to eql('Hello From Jane')
+
+    expect(jane.labels.size).to be(2)
+    expect(jane.labels[0].name).to eql('red')
+    expect(jane.labels[1].name).to eql('blue')
+  end
+
   it 'loads an parent via custom fks' do
     post = repo.posts.combine(:author).where(title: 'Hello From Jane').one
 

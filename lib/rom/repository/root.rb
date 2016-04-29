@@ -20,11 +20,11 @@ module ROM
       end
 
       # @api public
-      def aggregate(options)
-        if options.is_a?(Hash)
-          root.combine_children(options)
+      def aggregate(*args)
+        if args[0].is_a?(Hash) && args.size == 1
+          root.combine_children(args[0])
         else
-          root.combine(*options)
+          root.combine(*args)
         end
       end
     end

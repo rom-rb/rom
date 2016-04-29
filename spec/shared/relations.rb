@@ -12,6 +12,7 @@ RSpec.shared_context 'relations' do
 
         associate do
           many :posts
+          many :labels, through: :posts
         end
       end
 
@@ -64,6 +65,11 @@ RSpec.shared_context 'relations' do
         attribute :post_id, ROM::SQL::Types::ForeignKey(:posts)
         attribute :label_id, ROM::SQL::Types::ForeignKey(:labels)
         primary_key :post_id, :label_id
+
+        associate do
+          belongs :posts
+          belongs :labels
+        end
       end
     end
   end
