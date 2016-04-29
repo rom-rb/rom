@@ -11,7 +11,7 @@ run("Loading ONE user object") do |x|
     ARUser.by_name('User 1').first
   end
   x.report("ROM") do
-    users.by_name('User 1').first
+    user_repo.users.by_name('User 1').first
   end
 end
 
@@ -23,7 +23,7 @@ run("Loading ALL user objects") do |x|
     ARUser.all.to_a
   end
   x.report("ROM") do
-    users.all.to_a
+    user_repo.users.to_a
   end
 end
 
@@ -35,19 +35,7 @@ run("Loading ALL users with their tasks") do |x|
     ARUser.includes(:tasks).all.to_a
   end
   x.report("ROM") do
-    users_with_tasks.all.to_a
-  end
-end
-
-run("Loading ALL users with their tasks using `combine` in ROM") do |x|
-  x.verify do |users|
-    users.to_a.size == COUNT
-  end
-  x.report("AR") do
-    ARUser.includes(:tasks).all.to_a
-  end
-  x.report("ROM") do
-    users_with_combined_tasks.to_a
+    user_repo.aggregate(:tasks).to_a
   end
 end
 
@@ -56,16 +44,10 @@ run("Loading ONE task with its user and tags") do |x|
     task.title == 'Task 1'
   end
   x.report("AR") do
-    ARTask.all
-      .includes(:user)
-      .includes(:tags)
-      .where(users: { name: 'User 1' }, tasks: { title: 'Task 1' })
-      .first
+    ARTask.all.includes(:user, :tags).where(title: 'Task 1').first
   end
   x.report("ROM") do
-    tasks_with_user_and_tags { |relation|
-      relation.where(users__name: 'User 1', tasks__title: 'Task 1')
-    }.first
+    user_repo.tasks.combine(:user, :tags).where(title: 'Task 1').limit(1).first
   end
 end
 
@@ -77,7 +59,7 @@ run("Loading ALL tasks with their users") do |x|
     ARTask.all.includes(:user).to_a
   end
   x.report("ROM") do
-    tasks.with_user.as(:task_with_user).to_a
+    user_repo.tasks.combine(:user).to_a
   end
 end
 
@@ -86,10 +68,10 @@ run("Loading ALL tasks with their users and tags") do |x|
     tasks.size == COUNT * 3
   end
   x.report("AR") do
-    ARTask.all.includes(:user).includes(:tags).to_a
+    ARTask.all.includes(:user, :tags).to_a
   end
   x.report("ROM") do
-    tasks.all.with_user.with_tags.as(:task_with_user_and_tags).to_a
+    user_repo.tasks.combine(:user, :tags).to_a
   end
 end
 
@@ -102,6 +84,6 @@ run("to_json on ALL user objects") do |x|
     ARUser.all.to_a.to_json
   end
   x.report("ROM") do
-    users.all.to_a.to_json
+    user_repo.users.to_a.to_json
   end
 end

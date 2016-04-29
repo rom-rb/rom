@@ -4,7 +4,9 @@ Bundler.require
 
 require 'benchmark/ips'
 require 'rom-sql'
+require 'rom-repository'
 require 'active_record'
+require 'logger'
 
 begin
   require 'byebug'
@@ -17,29 +19,8 @@ def rom
   ROM_ENV
 end
 
-def users
-  @users ||= rom.relation(:users).as(:users)
-end
-
-def users_with_tasks
-  @user_with_tasks ||= rom.relation(:users).with_tasks.as(:user_with_tasks)
-end
-
-def tasks
-  rom.relation(:tasks)
-end
-
-def tasks_with_user_and_tags(&block)
-  rom.relation(:tasks, &block).with_user.with_tags.as(:task_with_user_and_tags)
-end
-
-def tags
-  rom.relation(:tags)
-end
-
-def users_with_combined_tasks
-  @users_with_combined_tasks ||= rom.relation(:users).as(:user_with_combined_tasks)
-    .combine(rom.relation(:tasks).for_users)
+def user_repo
+  @user_repo ||= UserRepo.new(rom)
 end
 
 def hr
@@ -148,128 +129,47 @@ end
 
 module Relations
   class Users < ROM::Relation[:sql]
-    dataset :users
+    schema(:users) do
+      attribute :id, Types::Serial
+      attribute :name, Types::String
+      attribute :email, Types::String
+      attribute :age, Types::Int
 
-    one_to_many :tasks, key: :user_id
-
-    def all
-      select(:users__id, :users__name, :users__email, :users__age)
-        .order(:users__id)
+      associate do
+        many :tasks
+      end
     end
 
     def by_name(name)
-      all.where(name: name).limit(1)
-    end
-
-    def with_tasks
-      association_left_join(:tasks, select: [:id, :title])
+      where(name: name).limit(1)
     end
   end
 
   class Tasks < ROM::Relation[:sql]
-    dataset :tasks
+    schema(:tasks) do
+      attribute :id, Types::Serial
+      attribute :title, Types::String
+      attribute :user_id, Types::ForeignKey(:users)
 
-    many_to_one :users, key: :user_id
-    one_to_many :tags, key: :task_id
+      associate do
+        belongs :user, relation: :users
+        many :tags
+      end
+    end
 
     def by_title(title)
       where(title: title)
     end
-
-    def all
-      select(:id, :user_id, :title).order(:tasks__id)
-    end
-
-    def with_user
-      association_left_join(:users, select: [:id, :name, :email, :age])
-    end
-
-    def with_tags
-      association_left_join(:tags, select: [:id, :task_id, :name])
-    end
-
-    def for_users(users)
-      all.where(user_id: users.map { |u| u[:id] })
-    end
-  end
-end
-
-module Mappers
-  module Users
-    class Base < ROM::Mapper
-      relation :users
-
-      model name: 'User'
-
-      attribute :id
-      attribute :name
-      attribute :email
-      attribute :age
-    end
-
-    class WithCombinedTasks < Base
-      model name: 'UserWithCombinedTasks'
-
-      register_as :user_with_combined_tasks
-
-      combine :tasks, on: { id: :user_id } do
-        model name: 'CombinedTask'
-
-        attribute :id
-        attribute :user_id
-        attribute :title
-      end
-    end
-
-    class WithTasks < Base
-      model name: 'UserWithTasks'
-
-      register_as :user_with_tasks
-
-      group :tasks do
-        model name: 'UserTask'
-        attribute :id, from: :tasks_id
-        attribute :title
-      end
-    end
   end
 
-  module Tasks
-    class Base < ROM::Mapper
-      relation :tasks
+  class Tags < ROM::Relation[:sql]
+    schema(:tags) do
+      attribute :id, Types::Serial
+      attribute :name, Types::String
+      attribute :task_id, Types::ForeignKey(:tasks)
 
-      model name: 'Task'
-
-      attribute :id
-      attribute :title
-    end
-
-    class WithUser < Base
-      register_as :task_with_user
-
-      model name: 'TaskWithUser'
-
-      wrap :user do
-        model name: 'TaskUser'
-
-        attribute :id, from: :users_id
-        attribute :name
-        attribute :email
-        attribute :age
-      end
-    end
-
-    class WithUserAndTags < WithUser
-      register_as :task_with_user_and_tags
-
-      model name: 'TaskWithUserAndTags'
-
-      group :tags do
-        model name: 'Tag'
-
-        attribute :id, from: :tags_id
-        attribute :task_id
-        attribute :name, from: :tags_name
+      associate do
+        belongs :tasks
       end
     end
   end
@@ -277,14 +177,11 @@ end
 
 setup.register_relation(Relations::Users)
 setup.register_relation(Relations::Tasks)
+setup.register_relation(Relations::Tags)
 
-setup.register_mapper(Mappers::Users::Base)
-setup.register_mapper(Mappers::Users::WithCombinedTasks)
-setup.register_mapper(Mappers::Users::WithTasks)
-
-setup.register_mapper(Mappers::Tasks::Base)
-setup.register_mapper(Mappers::Tasks::WithUser)
-setup.register_mapper(Mappers::Tasks::WithUserAndTags)
+class UserRepo < ROM::Repository[:users]
+  relations :tasks, :tags
+end
 
 ROM_ENV = ROM.container(setup)
 
