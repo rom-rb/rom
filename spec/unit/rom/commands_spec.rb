@@ -30,6 +30,24 @@ describe 'Commands' do
     end
   end
 
+  describe '.create_class' do
+    it 'builds a class' do
+      klass = ROM::Command.create_class(:create, ROM::Memory::Commands::Create)
+
+      expect(klass.name).to eql('ROM::Memory::Commands::Create[:create]')
+    end
+
+    it 'builds a class and yields it' do
+      klass = ROM::Command.create_class(:create, ROM::Memory::Commands::Create) do |k| 
+        k.result :one
+        k
+      end
+
+      expect(klass.name).to eql('ROM::Memory::Commands::Create[:create]')
+      expect(klass.result).to be(:one)
+    end
+  end
+
   describe '.build' do
     it 'returns create command when type is set to :create' do
       klass = Class.new(ROM::Commands::Create[:memory]) do

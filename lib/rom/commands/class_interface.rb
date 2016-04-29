@@ -1,3 +1,5 @@
+require 'rom/support/class_builder'
+
 module ROM
   # Base command class with factory class-level interface and setup-related logic
   #
@@ -50,6 +52,28 @@ module ROM
       # @api public
       def build(relation, options = EMPTY_HASH)
         new(relation, self.options.merge(options))
+      end
+
+      # Create a command class with a specific type
+      #
+      # @param [Symbol] command name
+      # @param [Class] parent class
+      #
+      # @yield [Class] create class
+      #
+      # @return [Class, Object] return result of the block if it was provided
+      #
+      # @api public
+      def create_class(name, type, &block)
+        klass = ClassBuilder
+          .new(name: "#{Inflector.classify(type)}[:#{name}]", parent: type)
+          .call
+
+        if block
+          yield(klass)
+        else
+          klass
+        end
       end
 
       # Use a configured plugin in this relation
