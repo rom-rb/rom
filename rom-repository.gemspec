@@ -16,7 +16,7 @@ Gem::Specification.new do |gem|
   gem.license       = 'MIT'
 
   gem.add_runtime_dependency 'anima', '~> 0.2', '>= 0.2'
-  gem.add_runtime_dependency 'rom', '~> 1.0.0'
+  gem.add_runtime_dependency 'rom', '~> 2.0'
   gem.add_runtime_dependency 'rom-support', '~> 1.0.0'
   gem.add_runtime_dependency 'rom-mapper', '~> 0.3.0'
   gem.add_runtime_dependency 'concurrent-ruby', '~> 1.0'
