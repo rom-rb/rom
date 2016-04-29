@@ -7,8 +7,8 @@ require 'rom/mapper_registry'
 
 require 'rom/container'
 require 'rom/setup/finalize/finalize_commands'
-require 'rom/setup/finalize/relations'
-require 'rom/setup/finalize/mappers'
+require 'rom/setup/finalize/finalize_relations'
+require 'rom/setup/finalize/finalize_mappers'
 
 # temporary
 require 'rom/configuration_dsl/relation'
