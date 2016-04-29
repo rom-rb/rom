@@ -6,6 +6,15 @@ RSpec.shared_context 'relations' do
 
   before do
     configuration.relation(:users) do
+      schema(:users) do
+        attribute :id, ROM::SQL::Types::Serial
+        attribute :name, ROM::SQL::Types::String
+
+        associate do
+          many :posts
+        end
+      end
+
       def by_id(id)
         where(id: id)
       end
