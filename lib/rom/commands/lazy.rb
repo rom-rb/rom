@@ -12,6 +12,8 @@ module ROM
       # @attr_reader [Command] command The wrapped command
       attr_reader :command
 
+      alias_method :unwrap, :command
+
       # @attr_reader [Proc] evaluator The proc that will evaluate the input
       attr_reader :evaluator
 

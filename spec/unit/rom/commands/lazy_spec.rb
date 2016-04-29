@@ -284,6 +284,14 @@ describe ROM::Commands::Lazy do
     end
   end
 
+  describe '#unwrap' do
+    subject(:command) { ROM::Commands::Lazy[create_user].new(create_user, evaluator) }
+
+    it 'returns wrapped command' do
+      expect(command.unwrap).to be(create_user)
+    end
+  end
+
   describe '#method_missing' do
     subject(:command) { ROM::Commands::Lazy[update_user].new(update_user, evaluator) }
 
