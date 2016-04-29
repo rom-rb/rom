@@ -28,7 +28,7 @@ module ROM
 
     include Options
 
-    defines :adapter, :relation, :result, :input, :validator, :register_as
+    defines :adapter, :relation, :result, :input, :validator, :register_as, :restrictable
 
     option :type, allow: [:create, :update, :delete]
     option :source, reader: true
@@ -49,6 +49,24 @@ module ROM
       super
       @relation = relation
       @source = options[:source] || relation
+    end
+
+    # Return name of this command's relation
+    #
+    # @return [Symbol]
+    #
+    # @api public
+    def name
+      relation.name
+    end
+
+    # Return gateway of this command's relation
+    #
+    # @return [Symbol]
+    #
+    # @api public
+    def gateway
+      relation.gateway
     end
 
     # Execute the command

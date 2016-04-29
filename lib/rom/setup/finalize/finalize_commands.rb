@@ -31,7 +31,7 @@ module ROM
           gateway = @gateways[relation.class.gateway]
           gateway.extend_command_class(klass, relation.dataset)
 
-          klass.extend_for_relation(relation)
+          klass.extend_for_relation(relation) if klass.restrictable
 
           (h[rel_name] ||= {})[name] = klass.build(relation)
         end

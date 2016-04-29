@@ -22,6 +22,9 @@ module ROM
       # @attr_reader [Array<Command>] nodes The child commands
       attr_reader :nodes
 
+      # @attr_reader [Symbol] root's relation name
+      attr_reader :name
+
       alias_method :left, :root
       alias_method :right, :nodes
 
@@ -32,6 +35,7 @@ module ROM
         super
         @root = root
         @nodes = nodes
+        @name = root.name
       end
 
       # Calls root and all nodes with the result from root

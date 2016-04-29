@@ -8,6 +8,8 @@ module ROM
     #
     # @abstract
     class Update < Command
+      restrictable true
+
       # @see AbstractCommand#call
       def call(*args)
         assert_tuple_count
