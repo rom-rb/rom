@@ -22,7 +22,7 @@ module ROM
         import ::Transproc::HashTransformations
         import ::Transproc::ClassTransformations
         import ::Transproc::ProcTransformations
-        INVALID_INJECT_UNION_VALUE = "%s attribute: block is required for :from with union value."
+        INVALID_INJECT_UNION_VALUE = "%s attribute: block is required for :from with union value.".freeze
 
         def self.identity(tuple)
           tuple
