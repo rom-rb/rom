@@ -86,7 +86,7 @@ describe ROM::Processor::Transproc do
     end
   end
 
-  describe 'key from exsisting keys' do
+  describe 'key from existing keys' do
     let(:attributes) do
       coercer = ->(a, b) { b + a }
       [[:c, { from: [:a, :b], coercer: coercer }]]
