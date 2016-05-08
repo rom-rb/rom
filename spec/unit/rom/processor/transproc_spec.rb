@@ -107,6 +107,11 @@ describe ROM::Processor::Transproc do
     it 'returns tuples a new key added based on exsiting keys' do
       expect(transproc[relation]).to eql(expected_result)
     end
+
+    it 'raises a configuration exception if coercer block does not exist' do
+      attributes[0][1][:coercer] = nil
+      expect { transproc[relation] }.to raise_error(ROM::MapperMisconfiguredError)
+    end
   end
 
   describe 'rejecting keys' do

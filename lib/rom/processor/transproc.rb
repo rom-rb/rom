@@ -22,6 +22,7 @@ module ROM
         import ::Transproc::HashTransformations
         import ::Transproc::ClassTransformations
         import ::Transproc::ProcTransformations
+        INVALID_INJECT_UNION_VALUE = "%s attribute: block is required for :from with union value."
 
         def self.identity(tuple)
           tuple
@@ -32,6 +33,8 @@ module ROM
         end
 
         def self.inject_union_value(tuple, name, keys, coercer)
+          raise ROM::MapperMisconfiguredError, INVALID_INJECT_UNION_VALUE % [name] if !coercer
+
           values = tuple.values_at(*keys)
           result = coercer.call(*values)
 
