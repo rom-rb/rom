@@ -77,7 +77,9 @@ RSpec.describe ROM::Repository, '.command' do
   describe 'using custom mappers' do
     before do
       configuration.mappers do
-        register :users, name_list: -> users { users.map { |u| u[:name] } }
+        register :users,
+                 name_list: -> users { users.map { |u| u[:name] } },
+                 id_list: -> users { users.map { |u| u[:id] } }
       end
     end
 
@@ -87,6 +89,23 @@ RSpec.describe ROM::Repository, '.command' do
       name = repo.command(create: :users, mapper: :name_list).call(name: 'Jane')
 
       expect(name).to eql('Jane')
+    end
+
+    it 'caches command pipeline using mapper option' do
+      repo = Class.new(ROM::Repository[:users]).new(rom)
+
+      c1 = repo.command(create: :users, mapper: :name_list)
+      c2 = repo.command(create: :users, mapper: :name_list)
+      c3 = repo.command(create: :users, mapper: :id_list)
+
+      name = c1.call(name: 'Jane')
+      id = c3.call(name: 'John')
+
+      expect(c1).to be c2
+      expect(c3).not_to be c1
+
+      expect(name).to eql('Jane')
+      expect(id).to eql(2)
     end
   end
 end
