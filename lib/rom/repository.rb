@@ -153,21 +153,7 @@ module ROM
 
       if all_args.size > 1
         commands.fetch_or_store(all_args.hash) do
-          custom_mapper = opts.delete(:mapper)
-          type, name = args + opts.to_a.flatten
-
-          relation = name.is_a?(Symbol) ? relations[name] : name
-
-          ast = relation.to_ast
-          adapter = relations[relation.name].adapter
-
-          if custom_mapper
-            mapper = container.mappers[relation.name][custom_mapper]
-          else
-            mapper = mappers[ast]
-          end
-
-          CommandCompiler[container, type, adapter, ast] >> mapper
+          compile_command(*args, **opts)
         end
       else
         container.command(*args, &block)
@@ -178,6 +164,23 @@ module ROM
 
     def commands
       @__commands__ ||= Concurrent::Map.new
+    end
+
+    def compile_command(*args, mapper: nil, **opts)
+      type, name = args + opts.to_a.flatten(1)
+
+      relation = name.is_a?(Symbol) ? relations[name] : name
+
+      ast = relation.to_ast
+      adapter = relations[relation.name].adapter
+
+      if mapper
+        mapper_instance = container.mappers[relation.name][mapper]
+      else
+        mapper_instance = mappers[ast]
+      end
+
+      CommandCompiler[container, type, adapter, ast] >> mapper_instance
     end
   end
 end
