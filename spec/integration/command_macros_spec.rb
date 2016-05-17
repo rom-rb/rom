@@ -107,5 +107,20 @@ RSpec.describe ROM::Repository, '.command' do
       expect(name).to eql('Jane')
       expect(id).to eql(2)
     end
+
+    it 'allows to set a mapper with a class-level macro' do
+      repo = Class.new(ROM::Repository[:users]) do
+        commands :create, update: :by_id, delete: :by_id, mapper: :name_list
+      end.new(rom)
+
+      name = repo.create(name: 'Jane')
+      expect(name).to eql('Jane')
+
+      updated_name = repo.update(1, name: 'Jane Doe')
+      expect(updated_name).to eql('Jane Doe')
+
+      deleted_name = repo.delete(1)
+      expect(deleted_name).to eql('Jane Doe')
+    end
   end
 end

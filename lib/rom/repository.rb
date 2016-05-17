@@ -78,7 +78,7 @@ module ROM
     end
 
     # @api public
-    def self.commands(*names, **opts)
+    def self.commands(*names, mapper: nil, **opts)
       if names.any? || opts.any?
         @commands = names + opts.to_a
 
@@ -86,9 +86,9 @@ module ROM
           type, *view = Array(spec).flatten
 
           if view.size > 0
-            define_restricted_command_method(type, view)
+            define_restricted_command_method(type, view, mapper)
           else
-            define_command_method(type)
+            define_command_method(type, mapper)
           end
         end
       else
@@ -96,20 +96,20 @@ module ROM
       end
     end
 
-    def self.define_command_method(type)
+    def self.define_command_method(type, mapper = nil)
       define_method(type) do |*args|
-        command(type => self.class.root).call(*args)
+        command(type => self.class.root, mapper: mapper).call(*args)
       end
     end
 
-    def self.define_restricted_command_method(type, views)
+    def self.define_restricted_command_method(type, views, mapper = nil)
       views.each do |view_name|
         meth_name = views.size > 1 ? :"#{type}_#{view_name}" : type
 
         define_method(meth_name) do |*args|
           view_args, *input = args
 
-          command(type => self.class.root)
+          command(type => self.class.root, mapper: mapper)
             .public_send(view_name, *view_args)
             .call(*input)
         end
