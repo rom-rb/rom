@@ -27,6 +27,10 @@ module ROM
           #       where klass' gateway points to non-existant repo
           gateway = @gateways.fetch(klass.gateway)
           ds_proc = klass.dataset_proc || -> _ { self }
+
+          if klass.schema && !klass.schema.defined?
+            klass.schema.infer!(gateway)
+          end
           dataset = gateway.dataset(klass.dataset).instance_exec(klass, &ds_proc)
 
           relation = klass.new(dataset, __registry__: registry)
