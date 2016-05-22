@@ -86,7 +86,7 @@ describe ROM::Processor::Transproc do
     end
   end
 
-  describe 'key from exsisting keys' do
+  describe 'key from existing keys' do
     let(:attributes) do
       coercer = ->(a, b) { b + a }
       [[:c, { from: [:a, :b], coercer: coercer }]]
@@ -106,6 +106,11 @@ describe ROM::Processor::Transproc do
 
     it 'returns tuples a new key added based on exsiting keys' do
       expect(transproc[relation]).to eql(expected_result)
+    end
+
+    it 'raises a configuration exception if coercer block does not exist' do
+      attributes[0][1][:coercer] = nil
+      expect { transproc[relation] }.to raise_error(ROM::MapperMisconfiguredError)
     end
   end
 
