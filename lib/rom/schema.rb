@@ -6,20 +6,27 @@ module ROM
   #
   # @api public
   class Schema
-    include Dry::Equalizer(:dataset, :attributes, :meta)
+    include Dry::Equalizer(:dataset, :attributes, :inferrer)
     include Enumerable
 
-    attr_reader :dataset, :attributes, :meta
+    attr_reader :dataset, :attributes, :inferrer
 
     # @api public
     class DSL < BasicObject
-      attr_reader :dataset, :attributes
+      attr_reader :dataset, :attributes, :inferrer
 
       # @api private
-      def initialize(dataset = nil, &block)
-        @attributes = {}
+      def initialize(dataset = nil, inferrer: nil, &block)
+        @attributes = nil
         @dataset = dataset
-        instance_exec(&block)
+        @inferrer = inferrer
+
+        if block
+          instance_exec(&block)
+        elsif inferrer.nil?
+          raise ArgumentError,
+                'You must pass a block to define a schema or set an inferrer for automatic inferring'
+        end
       end
 
       # Defines a relation attribute with its type
@@ -28,6 +35,7 @@ module ROM
       #
       # @api public
       def attribute(name, type)
+        @attributes ||= {}
         @attributes[name] = type.meta(name: name)
       end
 
@@ -43,15 +51,17 @@ module ROM
 
       # @api private
       def call
-        Schema.new(dataset, attributes)
+        Schema.new(dataset, attributes, inferrer: inferrer && inferrer.new(self))
       end
     end
 
     # @api private
-    def initialize(dataset, attributes)
+    def initialize(dataset, attributes, inferrer: nil)
       @dataset = dataset
       @attributes = attributes
-      freeze
+      @inferrer = inferrer
+
+      freeze if self.defined?
     end
 
     # Iterate over schema's attributes
@@ -78,6 +88,17 @@ module ROM
     # @api public
     def foreign_key(relation)
       detect { |attr| attr.meta[:foreign_key] && attr.meta[:relation] == relation }
+    end
+
+    # @api public
+    def defined?
+      !@attributes.nil?
+    end
+
+    # @api private
+    def infer!(gateway)
+      @attributes = inferrer.call(dataset, gateway)
+      freeze
     end
   end
 end

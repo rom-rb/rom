@@ -31,10 +31,11 @@ module ROM
         klass.class_eval do
           use :registry_reader
 
-          defines :gateway, :dataset, :dataset_proc, :register_as, :schema_dsl
+          defines :gateway, :dataset, :dataset_proc, :register_as, :schema_dsl, :schema_inferrer
 
           gateway :default
           schema_dsl Schema::DSL
+          schema_inferrer nil
 
           dataset default_name
 
@@ -146,13 +147,16 @@ module ROM
       # @return [Schema]
       #
       # @param [Symbol] dataset An optional dataset name
+      # @param [Boolean] infer Whether to do an automatic schema inferring
       #
       # @api public
-      def schema(dataset = nil, &block)
+      def schema(dataset = nil, infer: false, &block)
         if defined?(@schema)
           @schema
-        elsif block
-          @schema = schema_dsl.new(dataset || self.dataset, &block).call
+        elsif block || infer
+          @schema = schema_dsl.new(dataset || self.dataset,
+                                   inferrer: infer ? schema_inferrer : nil,
+                                   &block).call
 
           if dataset
             self.dataset(dataset)
