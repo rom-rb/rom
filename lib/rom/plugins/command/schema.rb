@@ -13,14 +13,13 @@ module ROM
           # @see Command.build
           # @api public
           def build(relation, options = {})
-            input_processor =
-              if relation.schema
-                Types::Hash.schema(relation.schema.attributes)
-              else
-                input
-              end
+            if options.key?(:input) || !relation.schema
+              super
+            else
+              input_processor = Types::Hash.schema(relation.schema.attributes)
 
-            super(relation, options.merge(input: input_processor))
+              super(relation, options.merge(input: input_processor))
+            end
           end
         end
       end
