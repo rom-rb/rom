@@ -74,6 +74,42 @@ RSpec.describe ROM::Repository, '.command' do
     expect(user).to be_an_instance_of ROM::Repository::StructBuilder.registry[struct_definition.hash]
   end
 
+  describe 'using plugins' do
+    include_context 'plugins'
+
+    before do
+      conn.alter_table :users do
+        add_column :created_at, :timestamp, null: false
+        add_column :updated_at, :timestamp, null: false
+      end
+    end
+
+    it 'allows to use plugins in generated commands' do
+      repo = Class.new(ROM::Repository[:users]) do
+        commands :create, update: :by_id, use: :timestamps
+      end.new(rom)
+
+      user = repo.create(name: 'Jane')
+      expect(user.created_at).to be_within(1).of Time.now
+      expect(user.created_at).to eql(user.updated_at)
+
+      repo.update(user.id, **user, name: 'Jane Doe')
+      updated_user = repo.users.by_id(user.id).one
+      expect(updated_user.created_at).to eql(user.created_at)
+      expect(updated_user.updated_at).to be > updated_user.created_at
+    end
+
+    it 'allows to use several plugins' do
+      repo = Class.new(ROM::Repository[:users]) do
+        commands :create, use: %i(upcase_name timestamps)
+      end.new(rom)
+
+      user = repo.create(name: 'Jane')
+      expect(user.created_at).to be_within(1).of Time.now
+      expect(user.name).to eql('JANE')
+    end
+  end
+
   describe 'using custom mappers' do
     before do
       configuration.mappers do

@@ -1,6 +1,7 @@
 require 'rom/support/deprecations'
 require 'rom/support/options'
 
+require 'rom/repository/class_interface'
 require 'rom/repository/mapper_builder'
 require 'rom/repository/relation_proxy'
 require 'rom/repository/command_compiler'
@@ -20,101 +21,13 @@ module ROM
       end
     end
 
+    extend ClassInterface
+
     attr_reader :container
 
     attr_reader :relations
 
     attr_reader :mappers
-
-    # Create a root-repository class and set its root relation
-    #
-    # @api public
-    def self.[](name)
-      klass = Class.new(self < Repository::Root ? self : Repository::Root)
-      klass.relations(name)
-      klass.root(name)
-      klass
-    end
-
-    # @api private
-    def self.inherited(klass)
-      super
-
-      return if self === Repository
-
-      klass.relations(*relations)
-      klass.commands(*commands)
-    end
-
-    # Define which relations your repository is going to use
-    #
-    # @example
-    #   class MyRepo < ROM::Repository::Base
-    #     relations :users, :tasks
-    #   end
-    #
-    #   my_repo = MyRepo.new(rom_env)
-    #
-    #   my_repo.users
-    #   my_repo.tasks
-    #
-    # @return [Array<Symbol>]
-    #
-    # @api public
-    def self.relations(*names)
-      if names.any?
-        attr_reader(*names)
-
-        if defined?(@relations)
-          @relations.concat(names).uniq!
-        else
-          @relations = names
-        end
-
-        @relations
-      else
-        @relations
-      end
-    end
-
-    # @api public
-    def self.commands(*names, mapper: nil, **opts)
-      if names.any? || opts.any?
-        @commands = names + opts.to_a
-
-        @commands.each do |spec|
-          type, *view = Array(spec).flatten
-
-          if view.size > 0
-            define_restricted_command_method(type, view, mapper)
-          else
-            define_command_method(type, mapper)
-          end
-        end
-      else
-        @commands || []
-      end
-    end
-
-    def self.define_command_method(type, mapper = nil)
-      define_method(type) do |*args|
-        command(type => self.class.root, mapper: mapper).call(*args)
-      end
-    end
-
-    def self.define_restricted_command_method(type, views, mapper = nil)
-      views.each do |view_name|
-        meth_name = views.size > 1 ? :"#{type}_#{view_name}" : type
-
-        define_method(meth_name) do |*args|
-          view_args, *input = args
-
-          command(type => self.class.root, mapper: mapper)
-            .public_send(view_name, *view_args)
-            .call(*input)
-        end
-      end
-    end
 
     # @api private
     def initialize(container)
@@ -166,7 +79,7 @@ module ROM
       @__commands__ ||= Concurrent::Map.new
     end
 
-    def compile_command(*args, mapper: nil, **opts)
+    def compile_command(*args, mapper: nil, use: nil, **opts)
       type, name = args + opts.to_a.flatten(1)
 
       relation = name.is_a?(Symbol) ? relations[name] : name
@@ -180,7 +93,7 @@ module ROM
         mapper_instance = mappers[ast]
       end
 
-      CommandCompiler[container, type, adapter, ast] >> mapper_instance
+      CommandCompiler[container, type, adapter, ast, use] >> mapper_instance
     end
   end
 end
