@@ -42,7 +42,7 @@ module ROM
         @type = Commands.const_get(Inflector.classify(type))[adapter]
         @registry = registry
         @container = container
-        @plugins = plugins
+        @plugins = Array(plugins) || []
       end
 
       def visit(ast)
@@ -97,7 +97,7 @@ module ROM
 
           result = meta.fetch(:combine_type, :one)
 
-          [*plugins].each { |plugin| klass.use(plugin) }
+          plugins.each { |plugin| klass.use(plugin) }
 
           registry[name][type] = klass.build(relation, result: result)
         end

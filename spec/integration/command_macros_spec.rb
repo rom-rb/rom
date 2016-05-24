@@ -98,6 +98,16 @@ RSpec.describe ROM::Repository, '.command' do
       expect(updated_user.created_at).to eql(user.created_at)
       expect(updated_user.updated_at).to be > updated_user.created_at
     end
+
+    it 'allows to use several plugins' do
+      repo = Class.new(ROM::Repository[:users]) do
+        commands :create, use: %i(upcase_name timestamps)
+      end.new(rom)
+
+      user = repo.create(name: 'Jane')
+      expect(user.created_at).to be_within(1).of Time.now
+      expect(user.name).to eql('JANE')
+    end
   end
 
   describe 'using custom mappers' do
