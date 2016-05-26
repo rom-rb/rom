@@ -131,7 +131,7 @@ module ROM
         if attribute.union?
           compose do |ops|
             ops << t(:inject_union_value, attribute.name, attribute.key, coercer)
-            ops << t(:reject_keys, attribute.key)
+            ops << t(:reject_keys, attribute.key) unless header.copy_keys
           end
         elsif coercer
           t(:map_value, attribute.name, t(:bind, mapper, coercer))
