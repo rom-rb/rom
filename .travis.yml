@@ -12,7 +12,6 @@ rvm:
   - 2.3.0
   - rbx-2
   - jruby-9000
-  - jruby-head
   - ruby-head
 env:
   global:
@@ -23,6 +22,9 @@ matrix:
     - rvm: ruby-head
     - rvm: jruby-head
     - rvm: rbx-2
+  include:
+    - rvm: jruby-head
+      before_install: gem install bundler --no-ri --no-rdoc
 notifications:
   webhooks:
     urls:
