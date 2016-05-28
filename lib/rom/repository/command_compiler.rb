@@ -42,7 +42,7 @@ module ROM
         @type = Commands.const_get(Inflector.classify(type))[adapter]
         @registry = registry
         @container = container
-        @plugins = Array(plugins) || []
+        @plugins = Array(plugins)
       end
 
       def visit(ast)
