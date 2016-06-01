@@ -177,7 +177,7 @@ module ROM
           klass.associates(assoc.name)
         end or (
           keys = meta[:keys].invert.to_a.flatten
-          klass.associates(parent_relation, key: keys)
+          klass.associates(parent_relation, key: keys, input: Hash)
         )
       end
 

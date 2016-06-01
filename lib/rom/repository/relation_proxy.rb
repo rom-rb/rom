@@ -4,6 +4,8 @@ require 'rom/relation/materializable'
 require 'rom/repository/relation_proxy/combine'
 require 'rom/repository/relation_proxy/wrap'
 
+require 'rom/repository/changeset'
+
 module ROM
   class Repository
     # RelationProxy decorates a relation and automatically generate mappers that
@@ -42,6 +44,11 @@ module ROM
       # @api public
       def call(*args)
         ((combine? || composite?) ? relation : (relation >> mapper)).call(*args)
+      end
+
+      # @api private
+      def changeset(input)
+        Changeset.new(relation, input)
       end
 
       # Map this relation with other mappers too
