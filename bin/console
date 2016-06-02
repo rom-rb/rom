@@ -5,6 +5,15 @@ require "rom-repository"
 
 config = ROM::Configuration.new(:sql, 'postgres://localhost/rom_repository').use(:macros)
 
+config.relation(:books) do
+  schema(:books) do
+    attribute :id, ROM::SQL::Types::Serial
+    attribute :title, ROM::SQL::Types::String
+    attribute :created_at, ROM::SQL::Types::Time
+    attribute :updated_at, ROM::SQL::Types::Time
+  end
+end
+
 config.relation(:users) do
   def by_id(id)
     where(id: id)
@@ -33,7 +42,7 @@ config.relation(:tags)
 
 rom = ROM.container(config)
 
-repo = Class.new(ROM::Repository) { relations :users, :tasks, :tags }.new(rom)
+repo = Class.new(ROM::Repository) { relations :users, :tasks, :tags, :books }.new(rom)
 
 require "pry"
 binding.pry
