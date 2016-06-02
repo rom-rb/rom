@@ -3,8 +3,18 @@ RSpec.shared_context 'relations' do
   let(:tasks) { rom.relation(:tasks) }
   let(:tags) { rom.relation(:tags) }
   let(:posts) { rom.relation(:posts) }
+  let(:books) { rom.relation(:books) }
 
   before do
+    configuration.relation(:books) do
+      schema(:books) do
+        attribute :id, ROM::SQL::Types::Serial
+        attribute :title, ROM::SQL::Types::String
+        attribute :created_at, ROM::SQL::Types::Time
+        attribute :updated_at, ROM::SQL::Types::Time
+      end
+    end
+
     configuration.relation(:users) do
       schema(:users) do
         attribute :id, ROM::SQL::Types::Serial
