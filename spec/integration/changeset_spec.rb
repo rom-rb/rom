@@ -27,7 +27,7 @@ RSpec.describe 'Using changesets' do
   it 'can be passed to a command graph' do
     changeset = repo
       .aggregate(:posts)
-      .changeset(name: "Jane Doe", posts: [{ title: "Just Do It" }])
+      .changeset(name: "Jane Doe", posts: [{ title: "Just Do It", alien: "or sutin" }])
 
     command = repo.command(:create, repo.aggregate(:posts))
     result = command.(changeset)

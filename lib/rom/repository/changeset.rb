@@ -35,7 +35,7 @@ module ROM
       end
 
       def self.default_pipe(relation)
-        Pipe.new(Pipe[:coerce, ROM::Types::Hash.schema(relation.schema.attributes)])
+        Pipe.new(Pipe[:coerce, -> data { data }])
       end
 
       def initialize(relation, data, pipe = Changeset.default_pipe(relation))
