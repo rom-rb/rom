@@ -57,6 +57,17 @@ module ROM
     end
     alias_method :to_ary, :to_a
 
+    def diff?
+      ! diff.empty?
+    end
+
+    def diff
+      data_ary = data.to_a
+      original = relation.fetch(*data.values_at(relation.primary_key)).to_a
+
+      Hash[data_ary - (data_ary & original)]
+    end
+
     private
 
     def respond_to_missing?(meth, include_private = false)
