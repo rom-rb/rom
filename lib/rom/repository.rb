@@ -8,6 +8,8 @@ require 'rom/repository/command_compiler'
 
 require 'rom/repository/root'
 
+require 'rom/repository/relation'
+
 module ROM
   # Abstract repository class to inherit from
   #

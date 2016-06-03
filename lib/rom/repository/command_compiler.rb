@@ -153,15 +153,9 @@ module ROM
 
           finalize_command_class(klass, relation)
 
-          # TODO: this should be baked into rom core probably
-          input =
-            if relation.schema?
-              -> data { Types::Hash.schema(relation.schema.attributes)[Hash[data]] }
-            else
-              Hash
-            end
-
-          registry[rel_name][type] = klass.build(relation, input: input)
+          registry[name][type] = klass.build(
+            relation, input: relation.schema_processor
+          )
         end
       end
 
