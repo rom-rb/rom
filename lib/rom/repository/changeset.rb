@@ -1,10 +1,54 @@
 module ROM
+  def self.Changeset(relation, data)
+    persisted = data.values_at(*relation.primary_key).none?(&:nil?)
+
+    type =
+      if persisted
+        Changeset::Update
+      else
+        Changeset::Create
+      end
+
+    type.new(relation, data)
+  end
+
   class Changeset
     attr_reader :relation
 
     attr_reader :data
 
     attr_reader :pipe
+
+    class Create < Changeset
+      def update?
+        false
+      end
+
+      def create?
+        true
+      end
+    end
+
+    class Update < Changeset
+      def update?
+        true
+      end
+
+      def create?
+        false
+      end
+
+      def diff?
+        ! diff.empty?
+      end
+
+      def diff
+        data_ary = data.to_a
+        original = relation.fetch(*data.values_at(relation.primary_key)).to_a
+
+        Hash[data_ary - (data_ary & original)]
+      end
+    end
 
     class Pipe
       extend Transproc::Registry
@@ -56,17 +100,6 @@ module ROM
       [to_h]
     end
     alias_method :to_ary, :to_a
-
-    def diff?
-      ! diff.empty?
-    end
-
-    def diff
-      data_ary = data.to_a
-      original = relation.fetch(*data.values_at(relation.primary_key)).to_a
-
-      Hash[data_ary - (data_ary & original)]
-    end
 
     private
 
