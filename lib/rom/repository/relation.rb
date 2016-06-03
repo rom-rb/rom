@@ -6,7 +6,7 @@ module ROM
   class Relation
     # @api private
     def changeset(input)
-      Repository::Changeset.new(self, input)
+      Changeset.new(self, input)
     end
 
     # @api private

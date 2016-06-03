@@ -4,8 +4,6 @@ require 'rom/relation/materializable'
 require 'rom/repository/relation_proxy/combine'
 require 'rom/repository/relation_proxy/wrap'
 
-require 'rom/repository/changeset'
-
 module ROM
   class Repository
     # RelationProxy decorates a relation and automatically generate mappers that
