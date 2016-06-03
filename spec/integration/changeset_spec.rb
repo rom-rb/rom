@@ -1,6 +1,9 @@
 RSpec.describe 'Using changesets' do
   subject(:repo) do
-    Class.new(ROM::Repository[:users]) { relations :books; commands :create }.new(rom)
+    Class.new(ROM::Repository[:users]) {
+      relations :books, :posts
+      commands :create
+    }.new(rom)
   end
 
   include_context 'database'
@@ -12,13 +15,27 @@ RSpec.describe 'Using changesets' do
     end
   end
 
-  it 'returns a changeset for a given relation' do
+  it 'can be passed to a command' do
     changeset = repo.users.changeset(name: "Jane Doe")
     command = repo.command(:create, repo.users)
     result = command.(changeset)
 
     expect(result.id).to_not be(nil)
     expect(result.name).to eql("Jane Doe")
+  end
+
+  it 'can be passed to a command graph' do
+    changeset = repo
+      .aggregate(:posts)
+      .changeset(name: "Jane Doe", posts: [{ title: "Just Do It" }])
+
+    command = repo.command(:create, repo.aggregate(:posts))
+    result = command.(changeset)
+
+    expect(result.id).to_not be(nil)
+    expect(result.name).to eql("Jane Doe")
+    expect(result.posts.size).to be(1)
+    expect(result.posts[0].title).to eql("Just Do It")
   end
 
   it 'data pipe' do

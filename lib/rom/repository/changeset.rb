@@ -52,6 +52,31 @@ module ROM
         pipe.call(data)
       end
       alias_method :to_hash, :to_h
+
+      def to_a
+        [to_h]
+      end
+      alias_method :to_ary, :to_a
+
+      private
+
+      def respond_to_missing?(meth, include_private = false)
+        super || data.respond_to?(meth)
+      end
+
+      def method_missing(meth, *args, &block)
+        if data.respond_to?(meth)
+          response = data.__send__(meth, *args, &block)
+
+          if response.is_a?(Hash)
+            self.class.new(relation, response, pipe)
+          else
+            response
+          end
+        else
+          super
+        end
+      end
     end
   end
 end
