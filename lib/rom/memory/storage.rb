@@ -1,8 +1,5 @@
-begin
-  require 'thread_safe'
-rescue LoadError
-  raise LoadError, 'Please install the `thread_safe` gem.'
-end
+require 'concurrent/hash'
+require 'concurrent/array'
 
 require 'rom/memory/dataset'
 
@@ -21,7 +18,7 @@ module ROM
 
       # @api private
       def initialize
-        @data = ThreadSafe::Hash.new
+        @data = Concurrent::Hash.new
       end
 
       # @return [Dataset]
@@ -37,7 +34,7 @@ module ROM
       #
       # @api private
       def create_dataset(name)
-        data[name] = Dataset.new(ThreadSafe::Array.new)
+        data[name] = Dataset.new(Concurrent::Array.new)
       end
 
       # Check if there's dataset under specified key
