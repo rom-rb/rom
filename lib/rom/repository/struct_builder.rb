@@ -22,7 +22,19 @@ module ROM
       end
 
       def define_constructor(attributes)
-        kwargs = attributes.map { |a| "#{a}: " }.join(', ')
+        if support_required_keywords?
+          kwargs = attributes.map { |a| "#{a}: " }.join(', ')
+        else
+          module_eval do
+            def __missing_keyword(keyword)
+              raise ArgumentError.new("missing keyword: #{keyword}")
+            end
+            private :__missing_keyword
+          end
+
+          kwargs = attributes.map { |a| "#{a}: __missing_keyword(:#{a})" }.join(', ')
+        end
+
         ivs = attributes.map { |a| "@#{a}" }.join(', ')
         values = attributes.join(', ')
 
@@ -31,6 +43,10 @@ module ROM
             #{ivs} = #{values}
           end
         RUBY
+      end
+
+      def support_required_keywords?
+        RUBY_VERSION > '2.0.0'
       end
     end
 
