@@ -19,7 +19,6 @@ group :development do
 end
 
 group :test do
-  gem 'thread_safe'
   gem 'rspec'
   gem 'byebug', platforms: :mri
   gem 'pg', platforms: [:mri, :rbx]
