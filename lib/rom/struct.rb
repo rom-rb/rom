@@ -1,5 +1,3 @@
-require 'anima'
-
 require 'rom/support/class_builder'
 
 module ROM

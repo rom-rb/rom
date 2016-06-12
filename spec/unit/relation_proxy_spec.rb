@@ -55,7 +55,13 @@ RSpec.describe 'loading proxy' do
     end
 
     context 'setting custom model type' do
-      let(:user_type) { Class.new { include Anima.new(:id, :name) } }
+      let(:user_type) do
+        Class.new(Dry::Types::Struct) do
+          attribute :id, Dry::Types['strict.int']
+          attribute :name, Dry::Types['strict.string']
+        end
+      end
+
       let(:custom_users) { users.as(user_type) }
 
       it 'instantiates custom model' do
