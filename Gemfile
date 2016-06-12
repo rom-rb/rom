@@ -14,7 +14,6 @@ group :test do
   gem 'virtus'
   gem 'anima', '~> 0.2.0'
   gem 'minitest'
-  gem 'thread_safe'
   gem 'inflecto', '~> 0.0', '>= 0.0.2'
 
   platforms :rbx do
