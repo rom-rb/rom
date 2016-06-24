@@ -99,4 +99,15 @@ RSpec.describe 'ROM repository' do
     expect(post.labels.size).to be(2)
     expect(post.labels.map(&:name)).to eql(%w(red blue))
   end
+
+  context 'with a table without columns' do
+    before { conn.create_table(:dummy) unless conn.table_exists?(:dummy) }
+
+    it 'does not fail with a weird error when a relation does not have attributes' do
+      relation = configuration.relation(:dummy)
+
+      repo = Class.new(ROM::Repository[:dummy]).new(rom)
+      expect(repo.dummy.to_a).to eql([])
+    end
+  end
 end

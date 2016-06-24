@@ -38,9 +38,15 @@ module ROM
         ivs = attributes.map { |a| "@#{a}" }.join(', ')
         values = attributes.join(', ')
 
+        if attributes.any?
+          assignment = "#{ivs} = #{values}"
+        else
+          assignment = ''
+        end
+
         module_eval(<<-RUBY, __FILE__, __LINE__ + 1)
           def initialize(#{kwargs})
-            #{ivs} = #{values}
+            #{assignment}
           end
         RUBY
       end
