@@ -27,7 +27,9 @@ group :test do
 end
 
 group :benchmarks do
+  gem 'hotch', platforms: :mri
   gem 'benchmark-ips'
+  gem 'activerecord', '~> 5.0.0.rc'
 end
 
 group :tools do
