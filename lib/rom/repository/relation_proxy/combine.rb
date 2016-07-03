@@ -31,7 +31,7 @@ module ROM
               end
             else
               assoc = relation.schema.associations[type]
-              curried = registry[assoc.target].for_combine(assoc)
+              curried = registry[assoc.target.relation].for_combine(assoc)
               keys = assoc.combine_keys(__registry__)
               (result[assoc.result] ||= {})[assoc.name] = [curried, keys]
             end
@@ -111,7 +111,7 @@ module ROM
         #
         # @api private
         def combine_keys(source, target, type)
-          assoc = source.schema && source.schema.associations[target.base_name]
+          assoc = source.schema && source.schema.associations[target.name.dataset]
 
           if assoc
             assoc.combine_keys(__registry__)
@@ -136,13 +136,13 @@ module ROM
         #
         # @api private
         def combine_method(other, keys)
-          custom_name = :"for_#{other.base_name}"
+          custom_name = :"for_#{other.name.dataset}"
 
           if relation.respond_to?(custom_name)
             __send__(custom_name)
           else
             for_combine(
-              (other.schema && other.schema.associations[base_name]) || keys
+              (other.schema && other.schema.associations[name.dataset]) || keys
             )
           end
         end
@@ -154,9 +154,9 @@ module ROM
         # @api private
         def combine_tuple_key(arity)
           if arity == :one
-            Inflector.singularize(base_name).to_sym
+            Inflector.singularize(base_name.relation).to_sym
           else
-            base_name
+            base_name.relation
           end
         end
 
@@ -169,7 +169,8 @@ module ROM
         #
         # @api private
         def combined(name, keys, type)
-          with(name: name, meta: { keys: keys, combine_type: type })
+          meta = { keys: keys, combine_type: type, combine_name: name }
+          with(name: name, meta: meta)
         end
       end
     end

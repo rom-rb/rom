@@ -72,5 +72,15 @@ RSpec.shared_context 'relations' do
         end
       end
     end
+
+    configuration.relation(:comments) do
+      register_as :comments
+
+      schema(:messages) do
+        attribute :id, ROM::SQL::Types::Serial
+        attribute :author, ROM::SQL::Types::String
+        attribute :body, ROM::SQL::Types::String
+      end
+    end
   end
 end

@@ -5,11 +5,11 @@ gemspec
 gem 'inflecto'
 gem 'dry-types', github: 'dry-rb/dry-types', branch: 'master'
 
-gem 'rom', github: 'rom-rb/rom', branch: 'master'
+gem 'rom', github: 'rom-rb/rom', branch: 'add-explicit-relation-name'
 gem 'rom-support', github: 'rom-rb/rom-support', branch: 'master'
 
 group :development, :test do
-  gem 'rom-sql', github: 'rom-rb/rom-sql', branch: 'master'
+  gem 'rom-sql', github: 'rom-rb/rom-sql', branch: 'use-qualified-combination-keys'
 end
 
 group :development do

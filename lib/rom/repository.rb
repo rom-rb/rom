@@ -85,10 +85,10 @@ module ROM
       relation = name.is_a?(Symbol) ? relations[name] : name
 
       ast = relation.to_ast
-      adapter = relations[relation.name].adapter
+      adapter = relations[relation.name.relation].adapter
 
       if mapper
-        mapper_instance = container.mappers[relation.name][mapper]
+        mapper_instance = container.mappers[relation.name.relation][mapper]
       else
         mapper_instance = mappers[ast]
       end

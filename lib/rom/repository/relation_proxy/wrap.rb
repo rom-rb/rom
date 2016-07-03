@@ -21,7 +21,7 @@ module ROM
           }
 
           relation = wraps.reduce(self) { |a, e|
-            a.relation.for_wrap(e.meta.fetch(:keys), e.base_name)
+            a.relation.for_wrap(e.meta.fetch(:keys), e.base_name.relation)
           }
 
           __new__(relation, meta: { wraps: wraps })
@@ -52,7 +52,7 @@ module ROM
         #
         # @api private
         def wrapped(name, keys)
-          with(name: name, meta: { keys: keys, wrap: true })
+          with(name: name, meta: { keys: keys, wrap: true, combine_name: name })
         end
       end
     end

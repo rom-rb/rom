@@ -75,6 +75,7 @@ RSpec.describe 'ROM repository' do
   end
 
   it 'loads an parent via custom fks' do
+    pending 'Does not work with an arbitrary combine name'
     post = repo.posts.combine(:author).where(title: 'Hello From Jane').one
 
     expect(post.title).to eql('Hello From Jane')

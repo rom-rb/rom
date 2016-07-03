@@ -89,8 +89,8 @@ module ROM
       end
 
       def visit_relation(node)
-        name, * = node
-        name
+        relation_name, meta, * = node
+        meta[:combine_name] || relation_name.relation
       end
 
       def visit_attribute(node)

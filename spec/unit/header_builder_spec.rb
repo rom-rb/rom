@@ -17,7 +17,7 @@ RSpec.describe 'header builder', '#call' do
     let(:ast) do
       [:relation, [
         :users,
-        { base_name: :users },
+        { dataset: :users, combine_name: :users },
         [:header, [[:attribute, :id], [:attribute, :name]]]
       ]]
     end
@@ -33,19 +33,19 @@ RSpec.describe 'header builder', '#call' do
     let(:ast) do
       [:relation, [
         :users,
-        { base_name: :users },
+        { dataset: :users, combine_name: :users },
         [
           :header, [
             [:attribute, :id],
             [:attribute, :name],
             [:relation, [
               :tasks,
-              { base_name: :tasks, keys: { id: :user_id }, combine_type: :many },
+              { dataset: :tasks, keys: { id: :user_id }, combine_type: :many, combine_name: :tasks },
               [:header, [[:attribute, :user_id], [:attribute, :title]]]
             ]],
             [:relation, [
               :tags,
-              { base_name: :tags, keys: { id: :user_id }, combine_type: :many },
+              { dataset: :tags, keys: { id: :user_id }, combine_type: :many, combine_name: :tags },
               [:header, [[:attribute, :user_id], [:attribute, :tag]]]
             ]]
           ]]
