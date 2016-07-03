@@ -35,7 +35,7 @@ module ROM
 
           relation = klass.new(dataset, __registry__: registry)
 
-          name = klass.register_as
+          name = relation.name.relation
 
           if registry.key?(name)
             raise RelationAlreadyDefinedError,

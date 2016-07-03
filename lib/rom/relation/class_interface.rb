@@ -2,6 +2,7 @@ require 'set'
 
 require 'rom/support/auto_curry'
 require 'rom/relation/curried'
+require 'rom/relation/name'
 require 'rom/schema'
 
 module ROM
@@ -96,7 +97,7 @@ module ROM
 
           # @api private
           def initialize(dataset, options = EMPTY_HASH)
-            @name = self.class.dataset
+            @name = Name.new(self.class.register_as, self.class.dataset)
             super
           end
 
@@ -154,14 +155,13 @@ module ROM
         if defined?(@schema)
           @schema
         elsif block || infer
-          @schema = schema_dsl.new(dataset || self.dataset,
-                                   inferrer: infer ? schema_inferrer : nil,
-                                   &block).call
+          self.dataset(dataset) if dataset
+          self.register_as(self.dataset) unless register_as
 
-          if dataset
-            self.dataset(dataset)
-            self.register_as(dataset) unless register_as
-          end
+          name = Name.new(register_as, self.dataset)
+          inferrer = infer ? schema_inferrer : nil
+
+          @schema = schema_dsl.new(name, inferrer, &block).call
         end
       end
 

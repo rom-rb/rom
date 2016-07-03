@@ -57,7 +57,7 @@ module ROM
     #
     # @api public
     def name
-      relation.name
+      relation.name.relation
     end
 
     # Return gateway of this command's relation

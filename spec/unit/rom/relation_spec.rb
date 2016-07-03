@@ -126,7 +126,7 @@ describe ROM::Relation do
         it 'returns name based on module and class' do
           relation = Test::Test::SuperRelation.new([])
 
-          expect(relation.name).to eq(:test_test_super_relation)
+          expect(relation.name).to eql(ROM::Relation::Name.new(:test_test_super_relation))
         end
       end
 
@@ -138,7 +138,7 @@ describe ROM::Relation do
         it 'returns name based only on class' do
           relation = Test::SuperRelation.new([])
 
-          expect(relation.name).to eq(:test_super_relation)
+          expect(relation.name).to eql(ROM::Relation::Name.new(:test_super_relation))
         end
       end
 
@@ -151,7 +151,7 @@ describe ROM::Relation do
         it 'inherits :name from the super relation' do
           relation = Test::DescendantRelation.new([])
 
-          expect(relation.name).to eql(:test_super_relation)
+          expect(relation.name).to eql(ROM::Relation::Name.new(:test_super_relation))
         end
       end
     end
@@ -168,7 +168,7 @@ describe ROM::Relation do
       it 'returns name based on dataset' do
         relation = Test::TestAdapter::Relation.new([])
 
-        expect(relation.name).to eq(:foo_bar)
+        expect(relation.name).to eql(ROM::Relation::Name.new(:foo_bar))
       end
     end
   end

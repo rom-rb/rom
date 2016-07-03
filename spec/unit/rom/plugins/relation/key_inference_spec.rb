@@ -9,7 +9,7 @@ RSpec.describe ROM::Plugins::Relation::KeyInference do
 
   let(:posts) { double(foreign_key: :post_id) }
   let(:tags) { double(foreign_key: :tag_id) }
-  let(:users) { double(base_name: :users) }
+  let(:users) { double(base_name: ROM::Relation::Name[:users]) }
 
   describe 'without a schema' do
     let(:relation_class) do
@@ -22,7 +22,7 @@ RSpec.describe ROM::Plugins::Relation::KeyInference do
 
     describe '#base_name' do
       it 'returns dataset name by default' do
-        expect(relation.base_name).to be(:users)
+        expect(relation.base_name).to eql(ROM::Relation::Name[:users])
       end
     end
 

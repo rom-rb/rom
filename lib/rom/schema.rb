@@ -6,20 +6,20 @@ module ROM
   #
   # @api public
   class Schema
-    include Dry::Equalizer(:dataset, :attributes, :inferrer)
+    include Dry::Equalizer(:name, :attributes)
     include Enumerable
 
-    attr_reader :dataset, :attributes, :inferrer
+    attr_reader :name, :attributes, :inferrer
 
     # @api public
     class DSL < BasicObject
-      attr_reader :dataset, :attributes, :inferrer
+      attr_reader :name, :attributes, :inferrer
 
       # @api private
-      def initialize(dataset = nil, inferrer: nil, &block)
-        @attributes = nil
-        @dataset = dataset
+      def initialize(name, inferrer, &block)
+        @name = name
         @inferrer = inferrer
+        @attributes = nil
 
         if block
           instance_exec(&block)
@@ -51,13 +51,13 @@ module ROM
 
       # @api private
       def call
-        Schema.new(dataset, attributes, inferrer: inferrer && inferrer.new(self))
+        Schema.new(name, attributes, inferrer: inferrer && inferrer.new(self))
       end
     end
 
     # @api private
-    def initialize(dataset, attributes, inferrer: nil)
-      @dataset = dataset
+    def initialize(name, attributes, inferrer: nil)
+      @name = name
       @attributes = attributes
       @inferrer = inferrer
 
@@ -97,7 +97,7 @@ module ROM
 
     # @api private
     def infer!(gateway)
-      @attributes = inferrer.call(dataset, gateway)
+      @attributes = inferrer.call(name.dataset, gateway)
       freeze
     end
   end

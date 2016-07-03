@@ -1,7 +1,7 @@
 shared_examples_for 'a command' do
   describe '#name' do
     it 'returns relation name' do
-      expect(command.name).to eql(command.relation.name)
+      expect(command.name).to eql(command.relation.name.relation)
     end
   end
 

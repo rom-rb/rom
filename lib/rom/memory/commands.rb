@@ -37,6 +37,10 @@ module ROM
           validator.call(attributes)
           relation.map { |tuple| tuple.update(attributes.to_h) }
         end
+
+        def name
+          relation.name.relation
+        end
       end
 
       # In-memory delete command
