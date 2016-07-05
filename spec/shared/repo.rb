@@ -57,4 +57,14 @@ RSpec.shared_context('repo') do
       end
     end
   end
+
+  let(:comments_repo) do
+    Class.new(ROM::Repository[:comments]) do
+      relations :likes
+
+      def comments_with_likes
+        aggregate(many: { likes: likes })
+      end
+    end.new(rom)
+  end
 end

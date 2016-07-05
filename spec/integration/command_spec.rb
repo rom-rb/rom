@@ -151,7 +151,7 @@ RSpec.describe ROM::Repository, '#command' do
 
         comment = create_comment.(author: 'gerybabooma', body: 'DIS GUY MUST BE A ALIEN OR SUTIN')
 
-        expect(comment.id).to eql(1)
+        expect(comment.message_id).to eql(1)
         expect(comment.author).to eql('gerybabooma')
         expect(comment.body).to eql('DIS GUY MUST BE A ALIEN OR SUTIN')
       end
