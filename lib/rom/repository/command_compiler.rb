@@ -82,7 +82,7 @@ module ROM
         type.create_class(name, type) do |klass|
           if meta[:combine_type]
             klass.use(:associates)
-            keys = meta[:keys].invert.to_a.flatten.map { |k| k.respond_to?(:attribute) ? k.attribute : k }
+            keys = meta[:keys].invert.to_a.flatten
             klass.associates(:parent, key: keys)
           end
 
