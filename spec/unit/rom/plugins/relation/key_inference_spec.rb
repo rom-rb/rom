@@ -8,8 +8,10 @@ RSpec.describe ROM::Plugins::Relation::KeyInference do
   end
 
   let(:posts) { double(foreign_key: :post_id) }
+  let(:tags_name) { ROM::Relation::Name[:tags] }
   let(:tags) { double(foreign_key: :tag_id) }
-  let(:users) { double(base_name: ROM::Relation::Name[:users]) }
+  let(:users_name) { ROM::Relation::Name[:users] }
+  let(:users) { double(base_name: users_name) }
 
   describe 'without a schema' do
     let(:relation_class) do
@@ -53,10 +55,12 @@ RSpec.describe ROM::Plugins::Relation::KeyInference do
       it 'returns configured value' do
         expect(relation.foreign_key(:users)).to be(:author_id)
         expect(relation.foreign_key(users)).to be(:author_id)
+        expect(relation.foreign_key(users_name)).to be(:author_id)
       end
 
       it 'falls back to default when schema has no fk specified' do
         expect(relation.foreign_key(:tags)).to be(:tag_id)
+        expect(relation.foreign_key(tags_name)).to be(:tag_id)
       end
     end
   end
