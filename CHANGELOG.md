@@ -6,6 +6,7 @@
 - New command plugin `:schema` which will set up an input handler from schema definition (solnic)
 - New command option `restrictible` for commands that can use a restricted relation (solnic)
 - More meaningful exception is raised when trying to access a non-existant command (thiagoa)
+- `Relation::Name` class that contains both relation and dataset names (flash-gordon)
 
 #### New low-level APIs
 
@@ -25,6 +26,7 @@
 - Relation `:key_inference` plugin supports schema information from other relations (solnic)
 - `auto_registration` coerces its directory to a pathname now (adz)
 - `macros` are now enabled by default in in-line setup block (endash)
+- [BREAKING] `Relation#name` and `Command#name` now returns `Relation::Name` instance (flash-gordon)
 
 [Compare v1.0.0...HEAD](https://github.com/rom-rb/rom/compare/v1.0.0...HEAD)
 
