@@ -31,7 +31,7 @@ module ROM
               end
             else
               assoc = relation.schema.associations[type]
-              curried = registry[assoc.target.relation].for_combine(assoc)
+              curried = registry[assoc.target].for_combine(assoc)
               keys = assoc.combine_keys(__registry__)
               (result[assoc.result] ||= {})[assoc.name] = [curried, keys]
             end

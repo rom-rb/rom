@@ -7,7 +7,7 @@ module ROM
 
       def initialize(command)
         @command = command
-        @root = Inflector.singularize(command.name).to_sym
+        @root = Inflector.singularize(command.name.relation).to_sym
       end
 
       def call(input)
