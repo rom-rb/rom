@@ -20,37 +20,35 @@ module ROM
       #
       # @api private
       def run!
-        registry = {}
+        RelationRegistry.new do |registry, relations|
+          @relation_classes.each do |klass|
+            # TODO: raise a meaningful error here and add spec covering the case
+            #       where klass' gateway points to non-existant repo
+            gateway = @gateways.fetch(klass.gateway)
+            ds_proc = klass.dataset_proc || -> _ { self }
 
-        @relation_classes.each do |klass|
-          # TODO: raise a meaningful error here and add spec covering the case
-          #       where klass' gateway points to non-existant repo
-          gateway = @gateways.fetch(klass.gateway)
-          ds_proc = klass.dataset_proc || -> _ { self }
+            if klass.schema && !klass.schema.defined?
+              klass.schema.infer!(gateway)
+            end
+            dataset = gateway.dataset(klass.dataset).instance_exec(klass, &ds_proc)
 
-          if klass.schema && !klass.schema.defined?
-            klass.schema.infer!(gateway)
+            relation = klass.new(dataset, __registry__: registry)
+
+            name = relation.name.to_sym
+
+            if registry.key?(name)
+              raise RelationAlreadyDefinedError,
+                    "Relation with `register_as #{name.inspect}` registered more " \
+                    "than once"
+            end
+
+            relations[name] = relation
           end
-          dataset = gateway.dataset(klass.dataset).instance_exec(klass, &ds_proc)
 
-          relation = klass.new(dataset, __registry__: registry)
-
-          name = relation.name.relation
-
-          if registry.key?(name)
-            raise RelationAlreadyDefinedError,
-              "Relation with `register_as #{name.inspect}` registered more " \
-              "than once"
+          relations.each_value do |relation|
+            relation.class.finalize(registry, relation)
           end
-
-          registry[name] = relation
         end
-
-        registry.each_value do |relation|
-          relation.class.finalize(registry, relation)
-        end
-
-        RelationRegistry.new(registry)
       end
     end
   end

@@ -110,7 +110,7 @@ module ROM
         name = graph.name
 
         if mappers.key?(name)
-          graph.with(mappers: mappers[graph.name])
+          graph.with(mappers: mappers[name])
         else
           graph
         end

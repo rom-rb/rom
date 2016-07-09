@@ -128,13 +128,7 @@ module ROM
       # @api private
       def relation_methods_mod(relation_class)
         Module.new do
-          def name
-            relation.name.relation
-          end
-
           relation_class.view_methods.each do |meth|
-            next if meth == :name
-
             module_eval <<-RUBY, __FILE__, __LINE__ + 1
               def #{meth}(*args)
                 response = relation.public_send(:#{meth}, *args)

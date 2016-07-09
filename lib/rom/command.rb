@@ -53,11 +53,11 @@ module ROM
 
     # Return name of this command's relation
     #
-    # @return [Symbol]
+    # @return [ROM::Relation::Name]
     #
     # @api public
     def name
-      relation.name.relation
+      relation.name
     end
 
     # Return gateway of this command's relation

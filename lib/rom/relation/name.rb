@@ -28,6 +28,10 @@ module ROM
         end
       end
 
+      def to_sym
+        relation
+      end
+
       def inspect
         "ROM::Relation::Name(#{to_s})"
       end

@@ -4,7 +4,7 @@ require 'rom/plugins/relation/key_inference'
 
 RSpec.describe ROM::Plugins::Relation::KeyInference do
   subject(:relation) do
-    relation_class.new([], __registry__: { posts: posts, users: users, tags: tags })
+    relation_class.new([], __registry__: ROM::RelationRegistry.new(posts: posts, users: users, tags: tags))
   end
 
   let(:posts) { double(foreign_key: :post_id) }
