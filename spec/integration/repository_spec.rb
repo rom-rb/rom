@@ -110,4 +110,17 @@ RSpec.describe 'ROM repository' do
       expect(repo.dummy.to_a).to eql([])
     end
   end
+
+  context 'not common naming conventions' do
+    it 'fetches comments with likes' do
+      comments = comments_repo.comments_with_likes.to_a
+
+      expect(comments.size).to be(2)
+      expect(comments[0].author).to eql('Jane')
+      expect(comments[0].likes[0].author).to eql('Joe')
+      expect(comments[0].likes[1].author).to eql('Anonymous')
+      expect(comments[1].author).to eql('Joe')
+      expect(comments[1].likes[0].author).to eql('Jane')
+    end
+  end
 end

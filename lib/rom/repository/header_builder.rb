@@ -29,10 +29,11 @@ module ROM
       end
 
       def visit_relation(node, meta = {})
-        name, meta, header = node
+        relation_name, meta, header = node
+        name = meta[:combine_name] || relation_name
 
         model = meta.fetch(:model) do
-          struct_builder[meta.fetch(:base_name), header]
+          struct_builder[meta.fetch(:dataset), header]
         end
 
         options = [visit(header, meta), model: model]
@@ -55,7 +56,7 @@ module ROM
 
       def visit_attribute(name, meta = {})
         if meta[:wrap]
-          [name, from: :"#{meta[:base_name]}_#{name}"]
+          [name, from: :"#{meta[:dataset]}_#{name}"]
         else
           [name]
         end

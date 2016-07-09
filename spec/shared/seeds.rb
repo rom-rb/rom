@@ -19,5 +19,12 @@ RSpec.shared_context 'seeds' do
     conn[:posts_labels].insert post_id: jane_post_id, label_id: blue_id
 
     conn[:posts_labels].insert post_id: joe_post_id, label_id: green_id
+
+    conn[:messages].insert author: 'Jane', body: 'Hello folks'
+    conn[:messages].insert author: 'Joe', body: 'Hello Jane'
+
+    conn[:reactions].insert message_id: 1, author: 'Joe'
+    conn[:reactions].insert message_id: 1, author: 'Anonymous'
+    conn[:reactions].insert message_id: 2, author: 'Jane'
   end
 end

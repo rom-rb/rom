@@ -52,17 +52,16 @@ module ROM
 
       def visit_relation(node)
         name, meta, header = node
-        base_name = meta[:base_name]
         other = visit(header)
 
         mapping =
           if meta[:combine_type] == :many
-            base_name
+            name
           else
-            { Inflector.singularize(name).to_sym => base_name }
+            { Inflector.singularize(name).to_sym => name }
           end
 
-        register_command(base_name, type, meta)
+        register_command(name, type, meta)
 
         if other.size > 0
           [mapping, [type, other]]
@@ -83,7 +82,8 @@ module ROM
         type.create_class(name, type) do |klass|
           if meta[:combine_type]
             klass.use(:associates)
-            klass.associates(:parent, key: meta[:keys].invert.to_a.flatten)
+            keys = meta[:keys].invert.to_a.flatten
+            klass.associates(:parent, key: keys)
           end
 
           relation = container.relations[name]

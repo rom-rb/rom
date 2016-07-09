@@ -33,18 +33,18 @@ module ROM
     def initialize(container)
       @container = container
       @mappers = MapperBuilder.new
-      @relations = {}
+      @relations = RelationRegistry.new do |registry, relations|
+        self.class.relations.each do |name|
+          relation = container.relation(name)
 
-      self.class.relations.each do |name|
-        relation = container.relation(name)
+          proxy = RelationProxy.new(
+            relation, name: name, mappers: mappers, registry: registry
+          )
 
-        proxy = RelationProxy.new(
-          relation, name: name, mappers: mappers, registry: relations
-        )
+          instance_variable_set("@#{name}", proxy)
 
-        instance_variable_set("@#{name}", proxy)
-
-        relations[name] = proxy
+          relations[name] = proxy
+        end
       end
     end
 
@@ -88,7 +88,7 @@ module ROM
       adapter = relations[relation.name].adapter
 
       if mapper
-        mapper_instance = container.mappers[relation.name][mapper]
+        mapper_instance = container.mappers[relation.name.relation][mapper]
       else
         mapper_instance = mappers[ast]
       end

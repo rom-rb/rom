@@ -55,7 +55,7 @@ RSpec.shared_context 'relations' do
 
         associate do
           many :labels, through: :posts_labels
-          belongs :author, relation: :users
+          belongs :users, as: :author
         end
       end
     end
@@ -69,6 +69,34 @@ RSpec.shared_context 'relations' do
         associate do
           belongs :posts
           belongs :labels
+        end
+      end
+    end
+
+    configuration.relation(:comments) do
+      register_as :comments
+
+      schema(:messages) do
+        attribute :message_id, ROM::SQL::Types::Serial
+        attribute :author, ROM::SQL::Types::String
+        attribute :body, ROM::SQL::Types::String
+
+        associate do
+          many :reactions, relation: :likes
+        end
+      end
+    end
+
+    configuration.relation(:likes) do
+      register_as :likes
+
+      schema(:reactions) do
+        attribute :reaction_id, ROM::SQL::Types::Serial
+        attribute :message_id, ROM::SQL::Types::ForeignKey(:messages)
+        attribute :author, ROM::SQL::Types::String
+
+        associate do
+          belongs :messages, relation: :comments
         end
       end
     end

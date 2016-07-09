@@ -102,7 +102,7 @@ RSpec.describe 'loading proxy' do
       expect(users.to_ast).to eql(
         [:relation, [
           :users,
-          { base_name: :users },
+          { dataset: :users },
           [:header, [[:attribute, :id], [:attribute, :name]]]]
         ]
       )
@@ -114,13 +114,13 @@ RSpec.describe 'loading proxy' do
       expect(relation.to_ast).to eql(
         [:relation, [
           :users,
-          { base_name: :users },
+          { dataset: :users },
           [:header, [
             [:attribute, :id],
             [:attribute, :name],
             [:relation, [
-              :user_tasks,
-              { base_name: :tasks, keys: { id: :user_id }, combine_type: :many },
+              :tasks,
+              { dataset: :tasks, keys: { id: :user_id }, combine_type: :many, combine_name: :user_tasks },
               [:header, [[:attribute, :id], [:attribute, :user_id], [:attribute, :title]]]
             ]]
           ]
@@ -134,14 +134,14 @@ RSpec.describe 'loading proxy' do
       expect(relation.to_ast).to eql(
         [:relation, [
           :tags,
-          { base_name: :tags },
+          { dataset: :tags },
           [:header, [
             [:attribute, :id],
             [:attribute, :task_id],
             [:attribute, :name],
             [:relation, [
-              :task,
-              { base_name: :tasks, keys: { id: :task_id }, wrap: true },
+              :tasks,
+              { dataset: :tasks, keys: { id: :task_id }, wrap: true, combine_name: :task },
               [:header, [ [:attribute, :id], [:attribute, :user_id], [:attribute, :title]]]
             ]]
           ]]

@@ -142,6 +142,20 @@ RSpec.describe ROM::Repository, '#command' do
       expect(user.task.tag.id).to_not be(nil)
       expect(user.task.tag.name).to eql('red')
     end
+
+    context 'relation with a custom dataset name' do
+      let(:repo) { Class.new(ROM::Repository[:comments]).new(rom) }
+
+      it 'allows configuring a create command' do
+        create_comment = repo.command(create: :comments)
+
+        comment = create_comment.(author: 'gerybabooma', body: 'DIS GUY MUST BE A ALIEN OR SUTIN')
+
+        expect(comment.message_id).to eql(1)
+        expect(comment.author).to eql('gerybabooma')
+        expect(comment.body).to eql('DIS GUY MUST BE A ALIEN OR SUTIN')
+      end
+    end
   end
 
   context ':update' do

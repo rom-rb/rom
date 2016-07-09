@@ -17,18 +17,21 @@ module ROM
       include RelationProxy::Combine
       include RelationProxy::Wrap
 
-      option :name, reader: true, type: Symbol
+      option :name, type: Symbol
       option :mappers, reader: true, default: proc { MapperBuilder.new }
       option :meta, reader: true, type: Hash, default: EMPTY_HASH
-      option :registry, type: Hash, default: EMPTY_HASH, reader: true
+      option :registry, type: RelationRegistry, default: proc { RelationRegistry.new }, reader: true
 
       # @attr_reader [ROM::Relation::Lazy] relation Decorated relation
       attr_reader :relation
+
+      attr_reader :name
 
       # @api private
       def initialize(relation, options = {})
         super
         @relation = relation
+        @name = relation.name.with(options[:name])
       end
 
       # Materialize wrapped relation and send it through a mapper
@@ -65,15 +68,15 @@ module ROM
         wrap_ast = wraps.map(&:to_ast)
 
         wrap_attrs = wraps.flat_map { |wrap|
-          wrap.attributes.map { |c| [:attribute, :"#{wrap.base_name}_#{c}"] }
+          wrap.attributes.map { |c| [:attribute, :"#{wrap.base_name.dataset}_#{c}"] }
         }
 
-        meta = options[:meta].merge(base_name: relation.base_name)
+        meta = options[:meta].merge(dataset: relation.base_name.dataset)
         meta.delete(:wraps)
 
         header = (attr_ast - wrap_attrs) + node_ast + wrap_ast
 
-        [:relation, [name, meta, [:header, header]]]
+        [:relation, [relation.base_name.relation, meta, [:header, header]]]
       end
 
       # Infer a mapper for the relation
