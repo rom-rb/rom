@@ -13,7 +13,6 @@ rvm:
   - rbx-2
   - jruby-9000
   - ruby-head
-  - jruby-head
 env:
   global:
     - JRUBY_OPTS='--dev -J-Xmx1024M'
@@ -21,6 +20,9 @@ matrix:
   allow_failures:
     - rvm: ruby-head
     - rvm: jruby-head
+  include:
+    - rvm: jruby-head
+      before_install: gem install bundler --no-ri --no-rdoc
 notifications:
   webhooks:
     urls:

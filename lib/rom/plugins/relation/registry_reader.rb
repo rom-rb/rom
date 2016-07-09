@@ -1,6 +1,8 @@
 module ROM
   module Plugins
     module Relation
+      EMPTY_REGISTRY = RelationRegistry.new.freeze
+
       # Allows relations to access all other relations through registry
       #
       # For now this plugin is always enabled
@@ -10,7 +12,7 @@ module ROM
         # @api private
         def self.included(klass)
           super
-          klass.option :__registry__, type: Hash, default: EMPTY_HASH, reader: true
+          klass.option :__registry__, type: RelationRegistry, default: EMPTY_REGISTRY, reader: true
         end
 
         # @api private

@@ -1,6 +1,7 @@
 require 'rom/support/options'
 
 require 'rom/pipeline'
+require 'rom/relation/name'
 require 'rom/relation/materializable'
 
 module ROM
@@ -10,15 +11,18 @@ module ROM
       include Materializable
       include Pipeline
 
-      option :name, type: Symbol, reader: true
+      option :name, type: Symbol
       option :arity, type: Integer, reader: true, default: -1
       option :curry_args, type: Array, reader: true, default: EMPTY_ARRAY
 
       attr_reader :relation
 
+      attr_reader :name
+
       # @api private
       def initialize(relation, options = EMPTY_HASH)
         @relation = relation
+        @name = relation.name.with(options[:name])
         super
       end
 
@@ -33,7 +37,7 @@ module ROM
           all_args = curry_args + args
 
           if arity == all_args.size
-            Loaded.new(relation.__send__(name, *all_args))
+            Loaded.new(relation.__send__(name.relation, *all_args))
           else
             __new__(relation, curry_args: all_args)
           end
@@ -47,7 +51,7 @@ module ROM
       def to_a
         raise(
           ArgumentError,
-          "#{relation.class}##{name} arity is #{arity} " \
+          "#{relation.class}##{name.relation} arity is #{arity} " \
           "(#{curry_args.size} args given)"
         )
       end

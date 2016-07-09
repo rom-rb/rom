@@ -12,7 +12,7 @@ describe ROM::Relation, '.schema' do
     end
 
     schema = ROM::Schema.new(
-      :test_users,
+      ROM::Relation::Name.new(:test_users),
       id: ROM::Memory::Types::Int.meta(primary_key: true, name: :id),
       name: ROM::Memory::Types::String.meta(name: :name),
       admin: ROM::Memory::Types::Bool.meta(name: :admin)

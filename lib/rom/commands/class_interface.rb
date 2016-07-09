@@ -127,9 +127,9 @@ module ROM
 
       # @api private
       def relation_methods_mod(relation_class)
-        Module.new.tap do |mod| 
+        Module.new do
           relation_class.view_methods.each do |meth|
-            mod.module_eval <<-RUBY
+            module_eval <<-RUBY, __FILE__, __LINE__ + 1
               def #{meth}(*args)
                 response = relation.public_send(:#{meth}, *args)
 

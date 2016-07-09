@@ -12,21 +12,22 @@ module ROM
         def foreign_key(other = nil)
           if other
             if schema
-              base_name = other.is_a?(Symbol) ? other : other.base_name
-              key = schema.foreign_key(base_name)
-              key ? key.meta[:name] : __registry__[base_name].foreign_key
+              rel_name = other.respond_to?(:to_sym) ? ROM::Relation::Name[other] : other.base_name
+              key = schema.foreign_key(rel_name.dataset)
+              key ? key.meta[:name] : __registry__[rel_name].foreign_key
             else
-              relation = other.is_a?(Symbol) ? __registry__[other] : other
+              relation = other.respond_to?(:to_sym) ? __registry__[other] : other
+
               relation.foreign_key
             end
           else
-            :"#{Inflector.singularize(name)}_id"
+            :"#{Inflector.singularize(name.dataset)}_id"
           end
         end
 
         # Return base name which defaults to name attribute
         #
-        # @return [Symbol]
+        # @return [ROM::Relation::Name]
         #
         # @api private
         def base_name
