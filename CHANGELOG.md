@@ -17,6 +17,7 @@
 * `Relation#combine` supports passing name of configured associations for automatic relation composition (solnic)
 * `Repository` constructor simply expects a rom container, which makes it work with DI libs like `dry-auto_inject` (solnic)
 * Depends on `rom 2.0.0` now (solnic)
+* Replace anima with `ROM::Repository::StructAttributes` (flash-gordon)
 
 [Compare v0.2.0...HEAD](https://github.com/rom-rb/rom-repository/compare/v0.2.0...HEAD)
 
