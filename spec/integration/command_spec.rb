@@ -144,16 +144,28 @@ RSpec.describe ROM::Repository, '#command' do
     end
 
     context 'relation with a custom dataset name' do
-      let(:repo) { Class.new(ROM::Repository[:comments]).new(rom) }
-
       it 'allows configuring a create command' do
-        create_comment = repo.command(create: :comments)
+        create_comment = comments_repo.command(create: :comments)
 
         comment = create_comment.(author: 'gerybabooma', body: 'DIS GUY MUST BE A ALIEN OR SUTIN')
 
         expect(comment.message_id).to eql(1)
         expect(comment.author).to eql('gerybabooma')
         expect(comment.body).to eql('DIS GUY MUST BE A ALIEN OR SUTIN')
+      end
+
+      it 'allows configuring a create command with aliased one-to-many' do
+        create_comment = comments_repo.command(:create, comments_repo.comments.combine(:emotions))
+
+        comment = create_comment.(author: 'Jane',
+                                  body: 'Hello Joe',
+                                  emotions: [{ author: 'Joe' }])
+
+        expect(comment.message_id).to eql(1)
+        expect(comment.author).to eql('Jane')
+        expect(comment.body).to eql('Hello Joe')
+        expect(comment.emotions.size).to eql(1)
+        expect(comment.emotions[0].author).to eql('Joe')
       end
     end
   end

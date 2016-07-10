@@ -93,6 +93,7 @@ RSpec.shared_context 'relations' do
 
         associations do
           has_many :reactions, relation: :likes
+          has_many :reactions, relation: :likes, as: :emotions
         end
       end
     end

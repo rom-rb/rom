@@ -117,7 +117,7 @@ RSpec.describe 'ROM repository' do
   end
 
   context 'not common naming conventions' do
-    it 'fetches comments with likes' do
+    it 'still loads nested relations' do
       comments = comments_repo.comments_with_likes.to_a
 
       expect(comments.size).to be(2)
@@ -126,6 +126,14 @@ RSpec.describe 'ROM repository' do
       expect(comments[0].likes[1].author).to eql('Anonymous')
       expect(comments[1].author).to eql('Joe')
       expect(comments[1].likes[0].author).to eql('Jane')
+    end
+
+    it 'loads nested relations by association name' do
+      comments = comments_repo.comments_with_emotions.to_a
+
+      expect(comments.size).to be(2)
+      expect(comments[0].emotions[0].author).to eql('Joe')
+      expect(comments[0].emotions[1].author).to eql('Anonymous')
     end
   end
 end
