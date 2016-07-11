@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 require 'rom/plugin_registry'
 require 'rom/global/plugin_dsl'
 require 'rom/support/deprecations'
@@ -13,7 +14,6 @@ module ROM
     def self.extended(rom)
       super
 
-      rom.instance_variable_set('@env', nil)
       rom.instance_variable_set('@adapters', {})
       rom.instance_variable_set('@plugin_registry', PluginRegistry.new)
     end
@@ -55,28 +55,6 @@ module ROM
     def register_adapter(identifier, adapter)
       adapters[identifier] = adapter
       self
-    end
-
-    def env=(container)
-      @env = container
-    end
-
-    def env
-      if @env.nil?
-        ROM::Deprecations.announce(:env, %q{
-ROM.env is no longer automatically populated with your container.
-If possible, refactor your code to remove the dependency on global ROM state. If it is not
-possible—or as a temporary solution—you can assign your container to `ROM.env` upon
-creation:
-
-  ROM.env = ROM.container(:memory) do |rom|
-    ...
-  end
-        })
-        nil
-      else
-        @env
-      end
     end
   end
 end
