@@ -21,6 +21,7 @@
 
 ### Changed
 
+- `ROM.env` **is gone**
 - `Relation.dataset` yields a relation class when block was passed (solnic)
 - `Relation#attributes` can return attributes explicitly passed via options (solnic)
 - Relation `:key_inference` plugin supports schema information from other relations (solnic)
