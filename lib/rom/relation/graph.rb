@@ -5,11 +5,9 @@ require 'rom/pipeline'
 
 module ROM
   class Relation
-    # Load a relation with its associations
+    # Compose relations using join-keys
     #
     # @example
-    #   ROM.setup(:memory)
-    #
     #   class Users < ROM::Relation[:memory]
     #   end
     #
@@ -18,8 +16,6 @@ module ROM
     #       restrict(user: users.map { |user| user[:name] })
     #     end
     #   end
-    #
-    #   rom = ROM.finalize.env
     #
     #   rom.relations[:users] << { name: 'Jane' }
     #   rom.relations[:tasks] << { user: 'Jane', title: 'Do something' }
