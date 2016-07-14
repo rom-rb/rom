@@ -67,9 +67,8 @@ RSpec.shared_context 'relations' do
         primary_key :post_id, :label_id
 
         associations do
-          # TODO: make this work with `belongs_to`
-          many_to_one :posts
-          many_to_one :labels
+          belongs_to :post
+          belongs_to :label
         end
       end
     end

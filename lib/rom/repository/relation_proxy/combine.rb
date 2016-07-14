@@ -30,10 +30,10 @@ module ROM
                 h[name] = [curried, keys]
               end
             else
-              assoc = relation.schema.associations[type]
-              curried = registry[assoc.target].for_combine(assoc)
+              assoc = relation.associations[type]
+              curried = registry[assoc.target.relation].for_combine(assoc)
               keys = assoc.combine_keys(__registry__)
-              (result[assoc.result] ||= {})[assoc.name] = [curried, keys]
+              (result[assoc.result] ||= {})[assoc.name.to_sym] = [curried, keys]
             end
           end
 
@@ -111,20 +111,10 @@ module ROM
         #
         # @api private
         def combine_keys(source, target, type)
-          assoc = source.schema && source.schema.associations[target.name.dataset]
-
-          if assoc
-            assoc.combine_keys(__registry__)
-          else
-            primary_key = source.primary_key
-            foreign_key = target.foreign_key(source)
-
-            if type == :parent
-              { foreign_key => primary_key }
-            else
-              { primary_key => foreign_key }
-            end
+          assoc = source.associations.fetch(target.name) do
+            return infer_combine_keys(source, target, type)
           end
+          assoc.combine_keys(__registry__)
         end
 
         # Infer relation for combine operation
@@ -141,9 +131,7 @@ module ROM
           if relation.respond_to?(custom_name)
             __send__(custom_name)
           else
-            for_combine(
-              (other.schema && other.schema.associations[name.dataset]) || keys
-            )
+            for_combine(other.associations.fetch(name.dataset) { keys })
           end
         end
 
@@ -159,6 +147,19 @@ module ROM
             base_name.relation
           end
         end
+
+        # @api private
+        def infer_combine_keys(source, target, type)
+          primary_key = source.primary_key
+          foreign_key = target.foreign_key(source)
+
+          if type == :parent
+            { foreign_key => primary_key }
+          else
+            { primary_key => foreign_key }
+          end
+        end
+
 
         # Return combine representation of a loading-proxy relation
         #
