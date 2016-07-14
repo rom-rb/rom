@@ -4,7 +4,10 @@ require 'rom/plugins/relation/key_inference'
 
 RSpec.describe ROM::Plugins::Relation::KeyInference do
   subject(:relation) do
-    relation_class.new([], __registry__: ROM::RelationRegistry.new(posts: posts, users: users, tags: tags))
+    relation_class.new(
+      [],
+      __registry__: ROM::RelationRegistry.new(posts: posts, users: users, tags: tags)
+    )
   end
 
   let(:posts) { double(foreign_key: :post_id) }
@@ -37,6 +40,15 @@ RSpec.describe ROM::Plugins::Relation::KeyInference do
         expect(relation.foreign_key(:posts)).to be(:post_id)
         expect(relation.foreign_key(posts)).to be(:post_id)
       end
+
+      it 'returns default value for Relation::Name' do
+        expect(relation.foreign_key(ROM::Relation::Name[:posts])).to be(:post_id)
+      end
+
+      it 'supports objects responding to to_sym' do
+        external_name = double(to_sym: :tags)
+        expect(relation.foreign_key(external_name)).to be(:tag_id)
+      end
     end
   end
 
@@ -53,6 +65,7 @@ RSpec.describe ROM::Plugins::Relation::KeyInference do
 
     describe '#foreign_key' do
       it 'returns configured value' do
+        expect(relation.foreign_key(ROM::Relation::Name[:users])).to be(:author_id)
         expect(relation.foreign_key(:users)).to be(:author_id)
         expect(relation.foreign_key(users)).to be(:author_id)
         expect(relation.foreign_key(users_name)).to be(:author_id)
@@ -61,6 +74,11 @@ RSpec.describe ROM::Plugins::Relation::KeyInference do
       it 'falls back to default when schema has no fk specified' do
         expect(relation.foreign_key(:tags)).to be(:tag_id)
         expect(relation.foreign_key(tags_name)).to be(:tag_id)
+      end
+
+      it 'supports objects responding to to_sym' do
+        external_name = double(to_sym: :tags)
+        expect(relation.foreign_key(external_name)).to be(:tag_id)
       end
     end
   end

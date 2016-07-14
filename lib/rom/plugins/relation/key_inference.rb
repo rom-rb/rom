@@ -12,11 +12,14 @@ module ROM
         def foreign_key(other = nil)
           if other
             if schema
-              rel_name = other.respond_to?(:to_sym) ? ROM::Relation::Name[other] : other.base_name
+              rel_name = other.respond_to?(:to_sym) ?
+                ROM::Relation::Name[other.to_sym] : other.base_name
+
               key = schema.foreign_key(rel_name.dataset)
               key ? key.meta[:name] : __registry__[rel_name].foreign_key
             else
-              relation = other.respond_to?(:to_sym) ? __registry__[other] : other
+              relation = other.respond_to?(:to_sym) ?
+                __registry__[other] : other
 
               relation.foreign_key
             end
