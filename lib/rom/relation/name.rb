@@ -1,3 +1,5 @@
+require 'dry/equalizer'
+
 module ROM
   class Relation
     # Relation name container
@@ -74,7 +76,7 @@ module ROM
       #
       # @api private
       def inspect
-        "#{self.class.name}(#{self})"
+        "#{self.class.name}(#{to_s})"
       end
 
       # Build a new name. Useful for Curried and other relation proxies
