@@ -10,9 +10,9 @@ RSpec.shared_context 'relations' do
         attribute :id, ROM::SQL::Types::Serial
         attribute :name, ROM::SQL::Types::String
 
-        associate do
-          many :posts
-          many :labels, through: :posts
+        associations do
+          has_many :posts
+          has_many :labels, through: :posts
         end
       end
 
@@ -53,9 +53,9 @@ RSpec.shared_context 'relations' do
         attribute :title, ROM::SQL::Types::String
         attribute :body, ROM::SQL::Types::String
 
-        associate do
-          many :labels, through: :posts_labels
-          belongs :users, as: :author
+        associations do
+          has_many :labels, through: :posts_labels
+          belongs_to :user, as: :author
         end
       end
     end
@@ -66,9 +66,10 @@ RSpec.shared_context 'relations' do
         attribute :label_id, ROM::SQL::Types::ForeignKey(:labels)
         primary_key :post_id, :label_id
 
-        associate do
-          belongs :posts
-          belongs :labels
+        associations do
+          # TODO: make this work with `belongs_to`
+          many_to_one :posts
+          many_to_one :labels
         end
       end
     end
@@ -81,8 +82,8 @@ RSpec.shared_context 'relations' do
         attribute :author, ROM::SQL::Types::String
         attribute :body, ROM::SQL::Types::String
 
-        associate do
-          many :reactions, relation: :likes
+        associations do
+          has_many :reactions, relation: :likes
         end
       end
     end
@@ -95,8 +96,8 @@ RSpec.shared_context 'relations' do
         attribute :message_id, ROM::SQL::Types::ForeignKey(:messages)
         attribute :author, ROM::SQL::Types::String
 
-        associate do
-          belongs :messages, relation: :comments
+        associations do
+          belongs_to :message, relation: :comments
         end
       end
     end
