@@ -4,11 +4,11 @@
 [codeclimate]: https://codeclimate.com/github/rom-rb/rom-repository
 [inchpages]: http://inch-ci.org/github/rom-rb/rom-repository
 
-# ROM::Repository
+# rom-repository
 
 [![Gem Version](https://badge.fury.io/rb/rom-repository.svg)][gem]
 [![Build Status](https://travis-ci.org/rom-rb/rom-repository.svg?branch=master)][travis]
-[![Dependency Status](https://gemnasium.com/rom-rb/rom-repository.png)][gemnasium]
+[![Dependency Status](https://gemnasium.com/rom-rb/rom-repository.svg)][gemnasium]
 [![Code Climate](https://codeclimate.com/github/rom-rb/rom-repository/badges/gpa.svg)][codeclimate]
 [![Test Coverage](https://codeclimate.com/github/rom-rb/rom-repository/badges/coverage.svg)][codeclimate]
 [![Inline docs](http://inch-ci.org/github/rom-rb/rom-repository.svg?branch=master)][inchpages]
