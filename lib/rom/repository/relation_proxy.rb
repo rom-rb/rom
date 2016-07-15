@@ -56,29 +56,6 @@ module ROM
       end
       alias_method :as, :map_with
 
-      # Return AST for this relation
-      #
-      # @return [Array]
-      #
-      # @api private
-      def to_ast
-        attr_ast = attributes.map { |name| [:attribute, name] }
-
-        node_ast = nodes.map(&:to_ast)
-        wrap_ast = wraps.map(&:to_ast)
-
-        wrap_attrs = wraps.flat_map { |wrap|
-          wrap.attributes.map { |c| [:attribute, :"#{wrap.base_name.dataset}_#{c}"] }
-        }
-
-        meta = options[:meta].merge(dataset: relation.base_name.dataset)
-        meta.delete(:wraps)
-
-        header = (attr_ast - wrap_attrs) + node_ast + wrap_ast
-
-        [:relation, [relation.base_name.relation, meta, [:header, header]]]
-      end
-
       # Infer a mapper for the relation
       #
       # @return [ROM::Mapper]
@@ -129,18 +106,30 @@ module ROM
         options[:meta]
       end
 
-      # Return all nodes that this relation combines
-      #
-      # @return [Array<RelationProxy>]
-      #
-      # @api private
-      def nodes
-        relation.graph? ? relation.nodes : EMPTY_ARRAY
-      end
-
       # @api private
       def adapter
         relation.class.adapter
+      end
+
+      # Return AST for this relation
+      #
+      # @return [Array]
+      #
+      # @api private
+      def to_ast
+        @to_ast ||=
+          begin
+            attr_ast = (attributes - wraps_attributes).map { |name|
+              [:attribute, name]
+            }
+
+            meta = options[:meta].merge(dataset: base_name.dataset)
+            meta.delete(:wraps)
+
+            header = attr_ast + nodes_ast + wraps_ast
+
+            [:relation, [base_name.relation, meta, [:header, header]]]
+          end
       end
 
       # @api private
@@ -150,6 +139,29 @@ module ROM
 
       private
 
+      # @api private
+      def base_name
+        relation.base_name
+      end
+
+      # @api private
+      def wraps_attributes
+        @wrap_attributes ||= wraps.flat_map { |wrap|
+          prefix = wrap.base_name.dataset
+          wrap.attributes.map { |name| :"#{prefix}_#{name}" }
+        }
+      end
+
+      # @api private
+      def nodes_ast
+        @nodes_ast ||= nodes.map(&:to_ast)
+      end
+
+      # @api private
+      def wraps_ast
+        @wraps_ast ||= wraps.map(&:to_ast)
+      end
+
       # Return a new instance with another relation and options
       #
       # @return [RelationProxy]
@@ -157,6 +169,15 @@ module ROM
       # @api private
       def __new__(relation, new_options = {})
         self.class.new(relation, options.merge(new_options))
+      end
+
+      # Return all nodes that this relation combines
+      #
+      # @return [Array<RelationProxy>]
+      #
+      # @api private
+      def nodes
+        relation.graph? ? relation.nodes : EMPTY_ARRAY
       end
 
       # Return all nodes that this relation wraps
