@@ -135,12 +135,17 @@ module ROM
       #
       # @api private
       def nodes
-        relation.respond_to?(:nodes) ? relation.nodes : []
+        relation.graph? ? relation.nodes : EMPTY_ARRAY
       end
 
       # @api private
       def adapter
         relation.class.adapter
+      end
+
+      # @api private
+      def respond_to_missing?(meth, _include_private = false)
+        relation.respond_to?(meth) || super
       end
 
       private
@@ -181,11 +186,6 @@ module ROM
         else
           super
         end
-      end
-
-      # @api private
-      def respond_to_missing?(meth, _include_private = false)
-        relation.respond_to?(meth) || super
       end
     end
   end

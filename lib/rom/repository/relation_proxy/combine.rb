@@ -67,8 +67,10 @@ module ROM
         #
         # @api public
         def combine_parents(options)
-          combine_opts = options.each_with_object({}) { |(type, parents), h|
-            h[type] =
+          combine_opts = {}
+
+          options.each do |type, parents|
+            combine_opts[type] =
               case parents
               when Hash
                 parents.each_with_object({}) { |(name, parent), r|
@@ -86,7 +88,7 @@ module ROM
                 keys = combine_keys(parents, relation, :parent)
                 { tuple_key => [parents, keys] }
               end
-          }
+          end
 
           combine(combine_opts)
         end
@@ -102,8 +104,10 @@ module ROM
         #
         # @api public
         def combine_children(options)
-          combine_opts = options.each_with_object({}) { |(type, children), h|
-            h[type] =
+          combine_opts = {}
+
+          options.each do |type, children|
+            combine_opts[type] =
               case children
               when Hash
                 children.each_with_object({}) { |(name, child), r|
@@ -121,7 +125,7 @@ module ROM
                 keys = combine_keys(relation, children, :children)
                 { tuple_key => [children, keys] }
               end
-          }
+          end
 
           combine(combine_opts)
         end
