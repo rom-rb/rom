@@ -20,7 +20,12 @@ RSpec.describe 'ROM repository' do
   end
 
   it 'loads a combine relation with one parent' do
-    expect(repo.task_with_user.first).to eql(task_with_user)
+    task = repo.task_with_user.first
+
+    expect(task.id).to eql(task_with_user.id)
+    expect(task.title).to eql(task_with_user.title)
+    expect(task.user.id).to eql(task_with_user.user.id)
+    expect(task.user.name).to eql(task_with_user.user.name)
   end
 
   it 'loads a combine relation with one parent with custom tuple key' do

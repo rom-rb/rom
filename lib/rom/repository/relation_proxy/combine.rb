@@ -26,8 +26,15 @@ module ROM
           combine_opts = options.each_with_object({}) do |(type, relations), result|
             if relations
               result[type] = relations.each_with_object({}) do |(name, (other, keys)), h|
-                curried = other.curried? ? other : other.combine_method(relation, keys)
-                h[name] = [curried, keys]
+                assoc = associations.fetch(name) do
+                  curried = other.curried? ? other : other.combine_method(relation, keys)
+                  h[name] = [curried, keys]
+                  false
+                end
+
+                if assoc
+                  h[name] = [other.for_combine(assoc), assoc.combine_keys(__registry__)]
+                end
               end
             else
               assoc = relation.associations[type]
