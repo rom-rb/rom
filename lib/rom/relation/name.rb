@@ -95,7 +95,7 @@ module ROM
       #
       # @api private
       def with(relation)
-        self.class.new(relation, dataset)
+        self.class[relation, dataset]
       end
     end
   end

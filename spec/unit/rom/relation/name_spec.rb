@@ -35,6 +35,13 @@ RSpec.describe ROM::Relation::Name do
     end
   end
 
+  describe '#with' do
+    it 'returns a new name with the same dataset but for a different relation name' do
+      name = ROM::Relation::Name[:users]
+      expect(name.with(:people)).to be(ROM::Relation::Name[:people, :users])
+    end
+  end
+
   describe '#to_sym' do
     it 'returns relation name' do
       expect(ROM::Relation::Name.new(:users).to_sym).to be(:users)
