@@ -45,14 +45,14 @@ module ROM
         @plugins = Array(plugins)
       end
 
-      def visit(ast)
+      def visit(ast, *args)
         name, node = ast
-        __send__(:"visit_#{name}", node)
+        __send__(:"visit_#{name}", node, *args)
       end
 
-      def visit_relation(node)
+      def visit_relation(node, parent_relation = nil)
         name, meta, header = node
-        other = visit(header)
+        other = visit(header, name)
 
         mapping =
           if meta[:combine_type] == :many
@@ -61,7 +61,7 @@ module ROM
             { Inflector.singularize(name).to_sym => name }
           end
 
-        register_command(name, type, meta)
+        register_command(name, type, meta, parent_relation)
 
         if other.size > 0
           [mapping, [type, other]]
@@ -70,20 +70,35 @@ module ROM
         end
       end
 
-      def visit_header(node)
-        node.map { |n| visit(n) }.compact
+      def visit_header(node, *args)
+        node.map { |n| visit(n, *args) }.compact
       end
 
-      def visit_attribute(node)
+      def visit_attribute(*args)
         nil
       end
 
-      def register_command(name, type, meta)
+      def register_command(name, type, meta, parent_relation = nil)
         type.create_class(name, type) do |klass|
           if meta[:combine_type]
             klass.use(:associates)
-            keys = meta[:keys].invert.to_a.flatten
-            klass.associates(:parent, key: keys)
+
+            assoc_name =
+              if meta[:combine_type] == :many
+                Inflector.singularize(parent_relation).to_sym
+              else
+                parent_relation
+              end
+
+            assoc = container.relations[name].associations.fetch(assoc_name) do
+              keys = meta[:keys].invert.to_a.flatten
+              klass.associates(parent_relation, key: keys)
+              false
+            end
+
+            if assoc
+              klass.associates(assoc.name)
+            end
           end
 
           relation = container.relations[name]

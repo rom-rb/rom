@@ -34,6 +34,16 @@ RSpec.shared_context 'relations' do
     end
 
     configuration.relation(:tasks) do
+      schema do
+        attribute :id, ROM::SQL::Types::Serial
+        attribute :user_id, ROM::SQL::Types::ForeignKey(:users)
+        attribute :title, ROM::SQL::Types::String
+
+        associations do
+          belongs_to :user
+        end
+      end
+
       def find(criteria)
         where(criteria)
       end
