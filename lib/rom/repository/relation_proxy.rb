@@ -167,8 +167,10 @@ module ROM
       # @return [RelationProxy]
       #
       # @api private
-      def __new__(relation, new_options = {})
-        self.class.new(relation, options.merge(new_options))
+      def __new__(relation, new_options = EMPTY_HASH)
+        self.class.new(
+          relation, new_options.size > 0 ? options.merge(new_options) : options
+        )
       end
 
       # Return all nodes that this relation combines
