@@ -22,6 +22,16 @@ describe ROM::Relation::Graph do
 
   subject(:graph) { ROM::Relation::Graph.new(users_relation, [tasks_relation.for_users]) }
 
+  describe '#graph?' do
+    it 'returns true' do
+      expect(graph.graph?).to be(true)
+    end
+
+    it 'returns true when curried' do
+      expect(graph.by_name.graph?).to be(true)
+    end
+  end
+
   it_behaves_like 'materializable relation' do
     let(:mapper) do
       T(:combine, [[:tasks, name: :name]])

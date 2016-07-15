@@ -206,4 +206,15 @@ describe ROM::Relation do
       expect(new_relation.options).to include(custom_opts.merge(custom: true))
     end
   end
+
+  describe '#graph?' do
+    it 'returns false' do
+      expect(relation.graph?).to be(false)
+    end
+
+    it 'returns false when curried' do
+      relation = Class.new(ROM::Relation[:memory]) { def by_name(_); self; end }.new([])
+      expect(relation.by_name.graph?).to be(false)
+    end
+  end
 end

@@ -61,6 +61,15 @@ module ROM
         @nodes = nodes
       end
 
+      # Return if this is a graph relation
+      #
+      # @return [true]
+      #
+      # @api private
+      def graph?
+        true
+      end
+
       # Combine this graph with more nodes
       #
       # @param [Array<Relation::Lazy>]

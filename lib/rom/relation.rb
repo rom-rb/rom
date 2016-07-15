@@ -105,6 +105,15 @@ module ROM
       false
     end
 
+    # Return if this relation is a graph
+    #
+    # @return [false]
+    #
+    # @api private
+    def graph?
+      false
+    end
+
     # @api private
     def with(new_options)
       __new__(dataset, options.merge(new_options))
