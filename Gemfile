@@ -3,7 +3,6 @@ source 'https://rubygems.org'
 gemspec
 
 gem 'inflecto'
-gem 'dry-types', github: 'dry-rb/dry-types', branch: 'master'
 
 gem 'rom', github: 'rom-rb/rom', branch: 'master'
 gem 'rom-support', github: 'rom-rb/rom-support', branch: 'master'
