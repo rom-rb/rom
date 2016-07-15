@@ -1,4 +1,5 @@
 require 'dry/equalizer'
+require 'concurrent/map'
 
 module ROM
   class Relation
@@ -20,12 +21,21 @@ module ROM
       # @return [ROM::Relation::Name]
       #
       # @api private
-      def self.[](relation, dataset = nil)
-        if relation.is_a?(Name)
-          relation
-        else
-          new(relation, dataset)
+      def self.[](*args)
+        cache.fetch_or_store(args.hash) do
+          relation, dataset = args
+
+          if relation.is_a?(Name)
+            relation
+          else
+            new(relation, dataset)
+          end
         end
+      end
+
+      # @api private
+      def self.cache
+        @cache ||= Concurrent::Map.new
       end
 
       # Relation registration name

@@ -16,6 +16,11 @@ RSpec.describe ROM::Relation::Name do
       name = ROM::Relation::Name[:users]
       expect(ROM::Relation::Name[name]).to be(name)
     end
+
+    it 'caches name instances' do
+      name = ROM::Relation::Name[:users]
+      expect(ROM::Relation::Name[:users]).to be(name)
+    end
   end
 
   describe '#inspect' do
