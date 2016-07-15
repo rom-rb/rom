@@ -153,7 +153,7 @@ module ROM
 
           finalize_command_class(klass, relation)
 
-          registry[name][type] = klass.build(
+          registry[rel_name][type] = klass.build(
             relation, input: relation.schema_processor
           )
         end
@@ -179,7 +179,7 @@ module ROM
           klass.associates(assoc.name)
         end or (
           keys = meta[:keys].invert.to_a.flatten
-          klass.associates(parent_relation, key: keys, input: Hash)
+          klass.associates(parent_relation, key: keys)
         )
       end
 
