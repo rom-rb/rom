@@ -149,4 +149,22 @@ RSpec.describe 'loading proxy' do
       )
     end
   end
+
+  describe '#method_missing' do
+    it 'proxies to the underlying relation' do
+      expect(users.gateway).to be(:default)
+    end
+
+    it 'returns proxy when response was not materialized' do
+      expect(users.by_id(1)).to be_instance_of(ROM::Repository::RelationProxy)
+    end
+
+    it 'returns curried proxy when response was curried' do
+      expect(users.by_id).to be_instance_of(ROM::Repository::RelationProxy)
+    end
+
+    it 'raises when method is missing' do
+      expect { users.not_here }.to raise_error(NoMethodError, /not_here/)
+    end
+  end
 end
