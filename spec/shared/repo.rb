@@ -65,6 +65,10 @@ RSpec.shared_context('repo') do
       def comments_with_likes
         aggregate(many: { likes: likes })
       end
+
+      def comments_with_emotions
+        root.combine(:emotions)
+      end
     end.new(rom)
   end
 end
