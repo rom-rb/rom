@@ -11,7 +11,7 @@ run("Loading ONE user object") do |x|
     ARUser.by_name('User 1').first
   end
   x.report("ROM") do
-    user_repo.users.by_name('User 1').first
+    user_repo.users.by_name('User 1').limit(1).first
   end
 end
 

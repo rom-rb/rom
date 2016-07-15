@@ -135,8 +135,8 @@ module Relations
       attribute :email, Types::String
       attribute :age, Types::Int
 
-      associate do
-        many :tasks
+      associations do
+        has_many :tasks
       end
     end
 
@@ -151,9 +151,9 @@ module Relations
       attribute :title, Types::String
       attribute :user_id, Types::ForeignKey(:users)
 
-      associate do
-        belongs :user, relation: :users
-        many :tags
+      associations do
+        belongs_to :user
+        has_many :tags
       end
     end
 
@@ -168,8 +168,8 @@ module Relations
       attribute :name, Types::String
       attribute :task_id, Types::ForeignKey(:tasks)
 
-      associate do
-        belongs :tasks
+      associations do
+        belongs_to :task
       end
     end
   end
