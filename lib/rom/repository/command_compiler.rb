@@ -148,27 +148,37 @@ module ROM
           klass.result(meta.fetch(:combine_type, :one))
 
           if meta[:combine_type]
-            klass.use(:associates)
-
-            assoc_name =
-              if klass.result == :many
-                Inflector.singularize(parent_relation).to_sym
-              else
-                parent_relation
-              end
-
-            relation.associations.try(assoc_name) do |assoc|
-              klass.associates(assoc.name)
-            end or (
-              keys = meta[:keys].invert.to_a.flatten
-              klass.associates(parent_relation, key: keys)
-            )
+            setup_associates(klass, relation, meta, parent_relation)
           end
 
           finalize_command_class(klass, relation)
 
           registry[rel_name][type] = klass.build(relation)
         end
+      end
+
+      # Sets up `associates` plugin for a given command class and relation
+      #
+      # @param [Class] klass The command class
+      # @param [Relation] relation The relation for the command
+      #
+      # @api private
+      def setup_associates(klass, relation, meta, parent_relation)
+        klass.use(:associates)
+
+        assoc_name =
+          if klass.result == :many
+            Inflector.singularize(parent_relation).to_sym
+          else
+            parent_relation
+          end
+
+        relation.associations.try(assoc_name) do |assoc|
+          klass.associates(assoc.name)
+        end or (
+          keys = meta[:keys].invert.to_a.flatten
+          klass.associates(parent_relation, key: keys)
+        )
       end
 
       # Setup a command class for a specific relation
