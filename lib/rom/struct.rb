@@ -26,5 +26,14 @@ module ROM
     def [](name)
       instance_variable_get("@#{name}")
     end
+
+    # Return short string representaiton
+    #
+    # @return [String]
+    #
+    # @api public
+    def to_s
+      "#<#{self.class}:0x#{(object_id << 1).to_s(16)}>"
+    end
   end
 end
