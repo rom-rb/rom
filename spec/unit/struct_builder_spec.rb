@@ -17,6 +17,9 @@ RSpec.describe 'struct builder', '#call' do
     expect(user[:name]).to eql('Jane')
 
     expect(Hash[user]).to eql(id: 1, name: 'Jane')
+
+    expect(user.inspect).to eql('#<ROM::Struct[User] id=1 name="Jane">')
+    expect(user.to_s).to match(/\A#<ROM::Struct\[User\]:0x[0-9a-f]+>\z/)
   end
 
   it 'stores struct in the registry' do
