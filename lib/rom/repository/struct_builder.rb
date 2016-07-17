@@ -1,4 +1,5 @@
 require 'rom/struct'
+require 'rom/support/constants'
 
 module ROM
   class Repository
@@ -11,11 +12,12 @@ module ROM
 
         module_eval do
           include Dry::Equalizer.new(*attributes)
-          attr_reader *attributes
+
+          attr_reader(*attributes)
 
           define_method(:to_h) do
             attributes.each_with_object({}) do |attribute, h|
-              h[attribute] = public_send(attribute)
+              h[attribute] = __send__(attribute)
             end
           end
         end
@@ -26,23 +28,19 @@ module ROM
           kwargs = attributes.map { |a| "#{a}: " }.join(', ')
         else
           module_eval do
-            def __missing_keyword(keyword)
+            def __missing_keyword__(keyword)
               raise ArgumentError.new("missing keyword: #{keyword}")
             end
             private :__missing_keyword
           end
 
-          kwargs = attributes.map { |a| "#{a}: __missing_keyword(:#{a})" }.join(', ')
+          kwargs = attributes.map { |a| "#{a}: __missing_keyword__(:#{a})" }.join(', ')
         end
 
         ivs = attributes.map { |a| "@#{a}" }.join(', ')
         values = attributes.join(', ')
 
-        if attributes.any?
-          assignment = "#{ivs} = #{values}"
-        else
-          assignment = ''
-        end
+        assignment = attributes.size > 0 ? "#{ivs} = #{values}" : EMPTY_STRING
 
         module_eval(<<-RUBY, __FILE__, __LINE__ + 1)
           def initialize(#{kwargs})
