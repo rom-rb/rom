@@ -158,10 +158,11 @@ module ROM
           self.dataset(dataset) if dataset
           self.register_as(self.dataset) unless register_as
 
-          name = Name.new(register_as, self.dataset)
+          name = Name[register_as, self.dataset]
           inferrer = infer ? schema_inferrer : nil
+          dsl = schema_dsl.new(name, inferrer, &block)
 
-          @schema = schema_dsl.new(name, inferrer, &block).call
+          @schema = dsl.call
         end
       end
 

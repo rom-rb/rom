@@ -1,5 +1,5 @@
 require 'dry-equalizer'
-require 'rom/types'
+require 'rom/schema/dsl'
 
 module ROM
   # Relation schema
@@ -9,59 +9,27 @@ module ROM
     include Dry::Equalizer(:name, :attributes)
     include Enumerable
 
-    attr_reader :name, :attributes, :inferrer
+    # @!attribute [r] name
+    #   @return [Symbol] The name of this schema
+    attr_reader :name
 
-    # @api public
-    class DSL < BasicObject
-      attr_reader :name, :attributes, :inferrer
+    # @!attribute [r] attributes
+    #   @return [Hash] The hash with schema attribute types
+    attr_reader :attributes
 
-      # @api private
-      def initialize(name, inferrer, &block)
-        @name = name
-        @inferrer = inferrer
-        @attributes = nil
+    # @!attribute [r] inferrer
+    #   @return [#call] An optional inferrer object used in `finalize!`
+    attr_reader :inferrer
 
-        if block
-          instance_exec(&block)
-        elsif inferrer.nil?
-          raise ArgumentError,
-                'You must pass a block to define a schema or set an inferrer for automatic inferring'
-        end
-      end
-
-      # Defines a relation attribute with its type
-      #
-      # @see Relation.schema
-      #
-      # @api public
-      def attribute(name, type)
-        @attributes ||= {}
-        @attributes[name] = type.meta(name: name)
-      end
-
-      # Specify which key(s) should be the primary key
-      #
-      # @api public
-      def primary_key(*names)
-        names.each do |name|
-          attributes[name] = attributes[name].meta(primary_key: true)
-        end
-        self
-      end
-
-      # @api private
-      def call
-        Schema.new(name, attributes, inferrer: inferrer && inferrer.new(self))
-      end
-    end
+    # @!attribute [r] primary_key
+    #   @return [Array<Dry::Types::Definition] Primary key array
+    attr_reader :primary_key
 
     # @api private
     def initialize(name, attributes, inferrer: nil)
       @name = name
       @attributes = attributes
       @inferrer = inferrer
-
-      freeze if self.defined?
     end
 
     # Iterate over schema's attributes
@@ -80,24 +48,27 @@ module ROM
       attributes.fetch(name)
     end
 
-    # @api public
-    def primary_key
-      select { |attr| attr.meta[:primary_key] == true }
-    end
-
+    # Return FK attribute for a given relation name
+    #
+    # @return [Dry::Types::Definition]
+    #
     # @api public
     def foreign_key(relation)
       detect { |attr| attr.meta[:foreign_key] && attr.meta[:relation] == relation }
     end
 
-    # @api public
-    def defined?
-      !@attributes.nil?
-    end
-
+    # This hook is called when relation is being build during container finalization
+    #
+    # When block is provided it'll be called just before freezing the instance
+    # so that additional ivars can be set
+    #
+    # @return [self]
+    #
     # @api private
-    def infer!(gateway)
-      @attributes = inferrer.call(name.dataset, gateway)
+    def finalize!(gateway = nil, &block)
+      @attributes = inferrer.call(name.dataset, gateway) if inferrer
+      @primary_key = select { |attr| attr.meta[:primary_key] == true }
+      block.call if block
       freeze
     end
   end
