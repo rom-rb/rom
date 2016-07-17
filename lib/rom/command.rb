@@ -1,3 +1,4 @@
+require 'rom/support/deprecations'
 require 'rom/support/options'
 require 'rom/pipeline'
 
@@ -40,6 +41,21 @@ module ROM
     input Hash
     validator proc {}
     result :many
+
+    # @deprecated
+    #
+    # @api public
+    def self.validator(vp = nil)
+      if defined?(@validator) && vp.nil?
+        @validator
+      else
+        Deprecations.announce(
+          "#{name}.validator",
+          'Please handle validation before calling commands'
+        )
+        super
+      end
+    end
 
     # @attr_reader [Relation] relation The command's relation
     attr_reader :relation
