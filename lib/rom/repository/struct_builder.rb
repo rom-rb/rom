@@ -1,3 +1,5 @@
+require 'concurrent/map'
+
 require 'rom/struct'
 require 'rom/support/constants'
 require 'rom/repository/struct_attributes'
@@ -8,8 +10,9 @@ module ROM
     class StructBuilder
       attr_reader :registry
 
+      # @api private
       def self.registry
-        @__registry__ ||= {}
+        @registry ||= Concurrent::Map.new
       end
 
       def initialize
