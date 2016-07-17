@@ -9,12 +9,6 @@ module ROM
     # @abstract
     class Delete < Command
       restrictable true
-
-      # @see AbstractCommand#call
-      def call(*args)
-        assert_tuple_count
-        super
-      end
     end
   end
 end

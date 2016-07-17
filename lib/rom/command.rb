@@ -138,30 +138,6 @@ module ROM
       result.equal?(:many)
     end
 
-    # Assert that tuple count in the relation corresponds to :result
-    # setting
-    #
-    # @raise TupleCountMismatchError
-    #
-    # @api private
-    def assert_tuple_count
-      if one? && tuple_count > 1
-        raise TupleCountMismatchError, "#{inspect} expects one tuple"
-      end
-    end
-
-    # Return number of tuples in the relation relation
-    #
-    # This should be overridden by gateways when `#count` is not available
-    # in the relation objects
-    #
-    # @return [Fixnum]
-    #
-    # @api private
-    def tuple_count
-      relation.count
-    end
-
     # @api private
     def new(new_relation)
       self.class.build(new_relation, options.merge(source: relation))
