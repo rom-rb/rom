@@ -9,6 +9,11 @@ if RUBY_ENGINE == "rbx"
   CodeClimate::TestReporter.start
 end
 
+SPEC_ROOT = root = Pathname(__FILE__).dirname
+
+require 'rom/support/deprecations'
+ROM::Deprecations.set_logger!(SPEC_ROOT.join('../log/deprecations.log'))
+
 require 'rom'
 require 'anima'
 
@@ -16,8 +21,6 @@ begin
   require 'byebug'
 rescue LoadError
 end
-
-SPEC_ROOT = root = Pathname(__FILE__).dirname
 
 Dir[root.join('support/*.rb').to_s].each do |f|
   require f
