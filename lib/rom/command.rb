@@ -20,6 +20,8 @@ module ROM
   #
   # @private
   class Command
+    DEFAULT_VALIDATOR = proc {}
+
     include Dry::Equalizer(:relation, :options)
     include Commands
     include Pipeline::Operator
@@ -39,7 +41,7 @@ module ROM
     option :curry_args, type: Array, reader: true, default: EMPTY_ARRAY
 
     input Hash
-    validator proc {}
+    validator DEFAULT_VALIDATOR
     result :many
 
     # @deprecated
@@ -49,10 +51,12 @@ module ROM
       if defined?(@validator) && vp.nil?
         @validator
       else
-        Deprecations.announce(
-          "#{name}.validator",
-          'Please handle validation before calling commands'
-        )
+        unless vp.equal?(DEFAULT_VALIDATOR)
+          Deprecations.announce(
+            "#{name}.validator",
+            'Please handle validation before calling commands'
+          )
+        end
         super
       end
     end
