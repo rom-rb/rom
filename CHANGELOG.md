@@ -21,13 +21,15 @@
 
 ### Changed
 
-- `ROM.env` **is gone**
+- [BREAKING] `ROM.env` **is gone** (solnic)
+- [BREAKING] `Update` and `Delete` no longer calls `assert_tuple_count` [more info](https://github.com/rom-rb/rom/commit/bec2c4c1dce370670c90f529feb1b4db0e6e4bd9) (solnic)
+- [BREAKING] `Relation#name` and `Command#name` now returns `Relation::Name` instance (flash-gordon)
+- `Command.validator` is now deprecated [more info](https://github.com/rom-rb/rom/commit/80bb8411bd411f05d9c51106ae026ad412a2f25f) (solnic)
 - `Relation.dataset` yields a relation class when block was passed (solnic)
 - `Relation#attributes` can return attributes explicitly passed via options (solnic)
 - Relation `:key_inference` plugin supports schema information from other relations (solnic)
 - `auto_registration` coerces its directory to a pathname now (adz)
 - `macros` are now enabled by default in in-line setup block (endash)
-- [BREAKING] `Relation#name` and `Command#name` now returns `Relation::Name` instance (flash-gordon)
 
 [Compare v1.0.0...HEAD](https://github.com/rom-rb/rom/compare/v1.0.0...HEAD)
 
