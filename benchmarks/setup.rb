@@ -44,6 +44,12 @@ conn.create_table :users do
   Integer :age
 end
 
+conn.create_table :tasks do
+  primary_key :id
+  Integer :user_id
+  String :title
+end
+
 ActiveRecord::Base.establish_connection(DATABASE_URL)
 
 module AR
@@ -77,12 +83,25 @@ module Relations
       where(name: name).limit(1)
     end
   end
+
+  class Tasks < ROM::Relation[:sql]
+    schema(:tasks) do
+      attribute :id, Types::Serial
+      attribute :user_id, Types::ForeignKey(:users)
+      attribute :title, Types::String
+    end
+  end
 end
 
 setup.register_relation(Relations::Users)
+setup.register_relation(Relations::Tasks)
 
 class UserRepo < ROM::Repository[:users]
   commands :create
+
+  def [](id)
+    users.where(id: id).one!
+  end
 end
 
 ROM_ENV = ROM.container(setup)
