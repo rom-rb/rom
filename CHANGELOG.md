@@ -7,6 +7,8 @@
 - New command option `restrictible` for commands that can use a restricted relation (solnic)
 - More meaningful exception is raised when trying to access a non-existant command (thiagoa)
 - `Relation::Name` class that contains both relation and dataset names (flash-gordon)
+- `Relation::Loaded#pluck` returning values under specified key (solnic)
+- `Relation::Loaded#primary_keys` returning a list of primary keys from a materialized relation (solnic)
 
 #### New low-level APIs
 
