@@ -40,12 +40,7 @@ module ROM
       # @api public
       def each(&block)
         return to_enum unless block
-        collection.each { |object| yield(object) }
-      end
-
-      # @api public
-      def new(collection)
-        self.class.new(source, collection)
+        collection.each { |tuple| yield(tuple) }
       end
 
       # Returns a single tuple from the relation if there is one.
@@ -76,6 +71,47 @@ module ROM
           TupleCountMismatchError,
           'The relation does not contain any tuples'
         )
+      end
+
+      # Return a list of values under provided key
+      #
+      # @example
+      #   all_users = rom.relations[:users].call
+      #   all_users.pluck(:name)
+      #   # ["Jane", "Joe"]
+      #
+      # @param [Symbol] key The key name
+      #
+      # @return [Array]
+      # @raises KeyError when provided key doesn't exist in any of the tuples
+      #
+      # @api public
+      def pluck(key)
+        map { |tuple| tuple.fetch(key) }
+      end
+
+      # Pluck primary key values
+      #
+      # This method *may not work* with adapters that don't provide relations
+      # that have primary key configured
+      #
+      # @example
+      #   users = rom.relations[:users].call
+      #   users.primary_keys
+      #   # [1, 2, 3]
+      #
+      # @return [Array]
+      #
+      # @api public
+      def primary_keys
+        pluck(source.primary_key)
+      end
+
+      # Return a loaded relation with a new collection
+      #
+      # @api public
+      def new(collection)
+        self.class.new(source, collection)
       end
     end
   end

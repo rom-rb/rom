@@ -9,9 +9,11 @@ describe ROM::Relation::Loaded do
   describe '#each' do
     it 'yields tuples from relation' do
       result = []
+
       users.each do |tuple|
         result << tuple
       end
+
       expect(result).to match_array([
         { name: 'Jane', email: 'jane@doe.org' },
         { name: 'Joe', email: 'joe@doe.org' }
@@ -29,6 +31,19 @@ describe ROM::Relation::Loaded do
         { name: 'Jane', email: 'jane@doe.org' },
         { name: 'Joe', email: 'joe@doe.org' }
       ])
+    end
+  end
+
+  describe '#pluck' do
+    it 'returns a list of values under provided key' do
+      expect(users.pluck(:email)).to eql(%w(joe@doe.org jane@doe.org))
+    end
+  end
+
+  describe '#primary_keys' do
+    it 'returns a list of primary key values' do
+      expect(users.source).to receive(:primary_key).and_return(:name)
+      expect(users.primary_keys).to eql(%w(Joe Jane))
     end
   end
 
