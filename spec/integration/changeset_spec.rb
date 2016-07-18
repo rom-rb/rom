@@ -16,7 +16,7 @@ RSpec.describe 'Using changesets' do
   end
 
   it 'can be passed to a command' do
-    changeset = repo.users.changeset(name: "Jane Doe")
+    changeset = repo.changeset(name: "Jane Doe")
     command = repo.command(:create, repo.users)
     result = command.(changeset)
 
@@ -25,9 +25,9 @@ RSpec.describe 'Using changesets' do
   end
 
   it 'can be passed to a command graph' do
-    changeset = repo
-      .aggregate(:posts)
-      .changeset(name: "Jane Doe", posts: [{ title: "Just Do It", alien: "or sutin" }])
+    changeset = repo.changeset(
+      name: "Jane Doe", posts: [{ title: "Just Do It", alien: "or sutin" }]
+    )
 
     command = repo.command(:create, repo.aggregate(:posts))
     result = command.(changeset)
@@ -39,7 +39,7 @@ RSpec.describe 'Using changesets' do
   end
 
   it 'data pipe' do
-    changeset = repo.books.changeset(title: "rom-rb is awesome").map(:add_timestamps)
+    changeset = repo.changeset(:books, title: "rom-rb is awesome").map(:add_timestamps)
     command = repo.command(:create, repo.books)
     result = command.(changeset)
 

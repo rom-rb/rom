@@ -27,6 +27,15 @@ module ROM
           root.combine(*args)
         end
       end
+
+      # @api public
+      def changeset(*args)
+        if args.size == 2
+          super
+        else
+          super(self.class.root, args.first)
+        end
+      end
     end
   end
 end
