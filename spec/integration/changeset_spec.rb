@@ -67,5 +67,20 @@ RSpec.describe 'Using changesets' do
       expect(result.title).to eql('rom-rb is awesome for real')
       expect(result.updated_at).to be_instance_of(Time)
     end
+
+    it 'skips update execution with no diff' do
+      book = repo.create(title: 'rom-rb is awesome')
+
+      changeset = repo
+        .changeset(book.id, title: 'rom-rb is awesome')
+
+      expect(changeset).to_not be_diff
+
+      result = repo.update(book.id, changeset)
+
+      expect(result.id).to be(book.id)
+      expect(result.title).to eql('rom-rb is awesome')
+      expect(result.updated_at).to be(nil)
+    end
   end
 end

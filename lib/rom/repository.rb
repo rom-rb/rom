@@ -102,5 +102,10 @@ module ROM
 
       CommandCompiler[container, type, adapter, ast, use] >> mapper_instance
     end
+
+    # @api private
+    def map_tuple(relation, tuple)
+      relations[relation.name].mapper.([tuple]).first
+    end
   end
 end

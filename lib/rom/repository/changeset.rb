@@ -58,6 +58,10 @@ module ROM
         false
       end
 
+      def original
+        @original ||= relation.fetch(primary_key)
+      end
+
       def to_h
         pipe.call(diff)
       end
@@ -67,11 +71,18 @@ module ROM
         ! diff.empty?
       end
 
-      def diff
-        data_ary = data.to_a
-        original = relation.fetch(primary_key).to_a
+      def clean?
+        diff.empty?
+      end
 
-        Hash[data_ary - (data_ary & original)]
+      def diff
+        @diff ||=
+          begin
+            new_tuple = data.to_a
+            ori_tuple = original.to_a
+
+            Hash[new_tuple - (new_tuple & ori_tuple)]
+          end
       end
     end
 
