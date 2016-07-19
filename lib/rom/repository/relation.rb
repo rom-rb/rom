@@ -10,8 +10,8 @@ module ROM
     end
 
     # @api public
-    def changeset(input)
-      ROM.Changeset(self, input)
+    def changeset(*args)
+      ROM.Changeset(self, *args)
     end
 
     # @api private

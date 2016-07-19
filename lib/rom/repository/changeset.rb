@@ -1,23 +1,41 @@
+require 'rom/support/constants'
+require 'rom/support/options'
+
+require 'rom/repository/changeset/pipe'
+
 module ROM
-  def self.Changeset(relation, data)
-    persisted = data.values_at(*relation.primary_key).none?(&:nil?)
+  def self.Changeset(*args)
+    if args.size == 2
+      relation, data = args
+    elsif args.size == 3
+      relation, pk, data = args
+    else
+      raise ArgumentError, 'ROM.Changeset accepts 2 or 3 arguments'
+    end
 
-    type =
-      if persisted
-        Changeset::Update
-      else
-        Changeset::Create
-      end
-
-    type.new(relation, data)
+    if pk
+      Changeset::Update.new(relation, data, primary_key: pk)
+    else
+      Changeset::Create.new(relation, data)
+    end
   end
 
   class Changeset
+    include Options
+
+    option :pipe, reader: true, accept: [Proc, Pipe], default: -> changeset {
+      changeset.class.default_pipe
+    }
+
     attr_reader :relation
 
     attr_reader :data
 
     attr_reader :pipe
+
+    def self.default_pipe
+      Pipe.new
+    end
 
     class Create < Changeset
       def update?
@@ -30,6 +48,8 @@ module ROM
     end
 
     class Update < Changeset
+      option :primary_key, reader: true
+
       def update?
         true
       end
@@ -49,55 +69,20 @@ module ROM
 
       def diff
         data_ary = data.to_a
-        original = relation.fetch(*data.values_at(relation.primary_key)).to_a
+        original = relation.fetch(primary_key).to_a
 
         Hash[data_ary - (data_ary & original)]
       end
     end
 
-    class Pipe
-      extend Transproc::Registry
-
-      attr_reader :processor
-
-      def self.add_timestamps(data)
-        now = Time.now
-        data.merge(created_at: now, updated_at: now)
-      end
-
-      def self.touch(data)
-        data.merge(updated_at: Time.now)
-      end
-
-      def self.coerce(data, schema)
-        schema[data]
-      end
-
-      def initialize(processor)
-        @processor = processor
-      end
-
-      def >>(other)
-        self.class.new(processor >> other)
-      end
-
-      def call(data)
-        processor.call(data)
-      end
-    end
-
-    def self.default_pipe(relation)
-      Pipe.new(Pipe[:coerce, -> data { data }])
-    end
-
-    def initialize(relation, data, pipe = Changeset.default_pipe(relation))
+    def initialize(relation, data, options = EMPTY_HASH)
       @relation = relation
       @data = data
-      @pipe = pipe
+      super
     end
 
     def map(*steps)
-      self.class.new(relation, data, steps.reduce(pipe) { |a, e| a >> pipe.class[e] })
+      with(pipe: steps.reduce(pipe) { |a, e| a >> pipe.class[e] })
     end
 
     def to_h
@@ -110,6 +95,10 @@ module ROM
     end
     alias_method :to_ary, :to_a
 
+    def with(new_options)
+      self.class.new(relation, data, options.merge(new_options))
+    end
+
     private
 
     def respond_to_missing?(meth, include_private = false)
@@ -121,7 +110,7 @@ module ROM
         response = data.__send__(meth, *args, &block)
 
         if response.is_a?(Hash)
-          self.class.new(relation, response, pipe)
+          self.class.new(relation, response, options)
         else
           response
         end

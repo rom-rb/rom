@@ -76,8 +76,8 @@ module ROM
     end
 
     # @api public
-    def changeset(rel_name, data)
-      relations[rel_name].changeset(data)
+    def changeset(rel_name, *args)
+      relations[rel_name].changeset(*args)
     end
 
     private

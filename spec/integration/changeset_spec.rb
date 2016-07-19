@@ -56,7 +56,7 @@ RSpec.describe 'Using changesets' do
       book = repo.create(title: 'rom-rb is awesome')
 
       changeset = repo
-        .changeset(id: book.id, title: 'rom-rb is awesome for real')
+        .changeset(book.id, title: 'rom-rb is awesome for real')
         .map(:touch)
 
       expect(changeset.diff).to eql(title: 'rom-rb is awesome for real')

@@ -30,10 +30,10 @@ module ROM
 
       # @api public
       def changeset(*args)
-        if args.size == 2
+        if args.first.is_a?(Symbol) && relations.key?(args.first)
           super
         else
-          super(self.class.root, args.first)
+          super(self.class.root, *args)
         end
       end
     end
