@@ -1,19 +1,13 @@
 RSpec.describe 'Using changesets' do
-  subject(:repo) do
-    Class.new(ROM::Repository[:users]) {
-      relations :books, :posts
-      commands :create
-    }.new(rom)
-  end
-
   include_context 'database'
   include_context 'relations'
 
   describe 'Create' do
-    before do
-      configuration.commands(:users) do
-        define(:create)
-      end
+    subject(:repo) do
+      Class.new(ROM::Repository[:users]) {
+        relations :books, :posts
+        commands :create, update: :by_id
+      }.new(rom)
     end
 
     it 'can be passed to a command' do
@@ -47,6 +41,30 @@ RSpec.describe 'Using changesets' do
       expect(result.id).to_not be(nil)
       expect(result.title).to eql("rom-rb is awesome")
       expect(result.created_at).to be_instance_of(Time)
+      expect(result.updated_at).to be_instance_of(Time)
+    end
+  end
+
+  describe 'Update' do
+    subject(:repo) do
+      Class.new(ROM::Repository[:books]) {
+        commands :create, update: :by_id
+      }.new(rom)
+    end
+
+    it 'can be passed to a command' do
+      book = repo.create(title: 'rom-rb is awesome')
+
+      changeset = repo
+        .changeset(id: book.id, title: 'rom-rb is awesome for real')
+        .map(:touch)
+
+      expect(changeset.diff).to eql(title: 'rom-rb is awesome for real')
+
+      result = repo.update(book.id, changeset)
+
+      expect(result.id).to be(book.id)
+      expect(result.title).to eql('rom-rb is awesome for real')
       expect(result.updated_at).to be_instance_of(Time)
     end
   end

@@ -5,6 +5,11 @@ module ROM
   # TODO: these APIs are candidates for inclusion into rom core
   class Relation
     # @api public
+    def fetch(pk)
+      where(primary_key => pk).one!
+    end
+
+    # @api public
     def changeset(input)
       ROM.Changeset(self, input)
     end

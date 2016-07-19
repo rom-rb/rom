@@ -38,6 +38,11 @@ module ROM
         false
       end
 
+      def to_h
+        pipe.call(diff)
+      end
+      alias_method :to_hash, :to_h
+
       def diff?
         ! diff.empty?
       end
@@ -58,6 +63,10 @@ module ROM
       def self.add_timestamps(data)
         now = Time.now
         data.merge(created_at: now, updated_at: now)
+      end
+
+      def self.touch(data)
+        data.merge(updated_at: Time.now)
       end
 
       def self.coerce(data, schema)
