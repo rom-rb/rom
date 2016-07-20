@@ -39,4 +39,30 @@ RSpec.describe ROM::Changeset do
       expect(changeset).to_not be_diff
     end
   end
+
+  describe 'quacks like a hash' do
+    subject(:changeset) { ROM::Changeset.new(relation, data) }
+
+    let(:data) { instance_double(Hash) }
+
+    it 'delegates to its data hash' do
+      expect(data).to receive(:[]).with(:name).and_return('Jane')
+
+      expect(changeset[:name]).to eql('Jane')
+    end
+
+    it 'maintains its own type' do
+      expect(data).to receive(:merge).with(foo: 'bar').and_return(foo: 'bar')
+
+      new_changeset = changeset.merge(foo: 'bar')
+
+      expect(new_changeset).to be_instance_of(ROM::Changeset)
+      expect(new_changeset.options).to eql(changeset.options)
+      expect(new_changeset.to_h).to eql(foo: 'bar')
+    end
+
+    it 'raises NoMethodError when an unknown message was sent' do
+      expect { changeset.not_here }.to raise_error(NoMethodError, /not_here/)
+    end
+  end
 end
