@@ -86,9 +86,15 @@ module ROM
           define_method(meth_name) do |*args|
             view_args, *input = args
 
-            command(type => self.class.root, **opts)
-              .public_send(view_name, *view_args)
-              .call(*input)
+            changeset = input.first
+
+            if changeset.is_a?(Changeset) && changeset.clean?
+              map_tuple(changeset.relation, changeset.original)
+            else
+              command(type => self.class.root, **opts)
+                .public_send(view_name, *view_args)
+                .call(*input)
+            end
           end
         end
       end

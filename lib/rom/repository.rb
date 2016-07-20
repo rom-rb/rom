@@ -8,6 +8,8 @@ require 'rom/repository/command_compiler'
 
 require 'rom/repository/root'
 
+require 'rom/repository/relation'
+
 module ROM
   # Abstract repository class to inherit from
   #
@@ -73,6 +75,11 @@ module ROM
       end
     end
 
+    # @api public
+    def changeset(rel_name, *args)
+      relations[rel_name].changeset(*args)
+    end
+
     private
 
     def commands
@@ -94,6 +101,11 @@ module ROM
       end
 
       CommandCompiler[container, type, adapter, ast, use] >> mapper_instance
+    end
+
+    # @api private
+    def map_tuple(relation, tuple)
+      relations[relation.name].mapper.([tuple]).first
     end
   end
 end

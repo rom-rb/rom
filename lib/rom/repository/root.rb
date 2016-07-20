@@ -27,6 +27,15 @@ module ROM
           root.combine(*args)
         end
       end
+
+      # @api public
+      def changeset(*args)
+        if args.first.is_a?(Symbol) && relations.key?(args.first)
+          super
+        else
+          super(self.class.root, *args)
+        end
+      end
     end
   end
 end
