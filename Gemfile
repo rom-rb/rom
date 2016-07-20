@@ -2,7 +2,6 @@ source 'https://rubygems.org'
 
 gemspec
 
-gem 'dry-types', github: 'dry-rb/dry-types', branch: 'master'
 gem 'rom-support', github: 'rom-rb/rom-support', branch: 'master'
 
 group :console do
