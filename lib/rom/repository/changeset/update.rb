@@ -1,33 +1,73 @@
 module ROM
   class Changeset
+    # Changeset specialization for update commands
+    #
+    # @api public
     class Update < Changeset
+      # @!attribute [r] primary_key
+      #   @return [Symbol] The name of the relation's primary key attribute
       option :primary_key, reader: true
 
+      # Return true
+      #
+      # @return [TrueClass]
+      #
+      # @api public
       def update?
         true
       end
 
+      # Return false
+      #
+      # @return [FalseClass]
+      #
+      # @api public
       def create?
         false
       end
 
+      # Return original tuple that this changeset may update
+      #
+      # @return [Hash]
+      #
+      # @api public
       def original
         @original ||= relation.fetch(primary_key)
       end
 
+      # Return diff hash sent through the pipe
+      #
+      # @return [Hash]
+      #
+      # @api public
       def to_h
         pipe.call(diff)
       end
       alias_method :to_hash, :to_h
 
+      # Return true if there's a diff between original and changeset data
+      #
+      # @return [TrueClass, FalseClass]
+      #
+      # @api public
       def diff?
         ! diff.empty?
       end
 
+      # Return if there's no diff between the original and changeset data
+      #
+      # @return [TrueClass, FalseClass]
+      #
+      # @api public
       def clean?
         diff.empty?
       end
 
+      # Calculate the diff between the original and changeset data
+      #
+      # @return [Hash[
+      #
+      # @api public
       def diff
         @diff ||=
           begin
@@ -36,50 +76,6 @@ module ROM
 
             Hash[new_tuple - (new_tuple & ori_tuple)]
           end
-      end
-    end
-
-    def initialize(relation, data, options = EMPTY_HASH)
-      @relation = relation
-      @data = data
-      super
-    end
-
-    def map(*steps)
-      with(pipe: steps.reduce(pipe) { |a, e| a >> pipe.class[e] })
-    end
-
-    def to_h
-      pipe.call(data)
-    end
-    alias_method :to_hash, :to_h
-
-    def to_a
-      [to_h]
-    end
-    alias_method :to_ary, :to_a
-
-    def with(new_options)
-      self.class.new(relation, data, options.merge(new_options))
-    end
-
-    private
-
-    def respond_to_missing?(meth, include_private = false)
-      super || data.respond_to?(meth)
-    end
-
-    def method_missing(meth, *args, &block)
-      if data.respond_to?(meth)
-        response = data.__send__(meth, *args, &block)
-
-        if response.is_a?(Hash)
-          self.class.new(relation, response, options)
-        else
-          response
-        end
-      else
-        super
       end
     end
   end
