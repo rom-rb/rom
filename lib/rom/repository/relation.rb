@@ -11,11 +11,14 @@ module ROM
 
     # @api private
     def schema_hash
-      if schema?
-        Types::Coercible::Hash.schema(schema.attributes)
-      else
-        Hash
-      end
+      @schema_hash ||=
+        begin
+          if schema?
+            Types::Coercible::Hash.schema(schema.attributes)
+          else
+            Hash
+          end
+        end
     end
   end
 end
