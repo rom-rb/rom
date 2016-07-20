@@ -6,6 +6,7 @@
 * `Repository.commands` macro which generates command methods (solnic)
 * `Repository[rel_name]` for setting up a repository with a root relation (solnic)
 * `Repository#aggregate` as a shortcut for composing relation graphs from root (solnic)
+* `Repository#changeset` API for building specialized objects for handling changes in relations (solnic)
 
 ### Fixed
 
