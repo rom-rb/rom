@@ -1,40 +1,42 @@
-require 'rom/support/constants'
-require 'rom/support/options'
-
-require 'rom/repository/changeset/pipe'
-
 module ROM
-  def self.Changeset(*args)
-    if args.size == 2
-      relation, data = args
-    elsif args.size == 3
-      relation, pk, data = args
-    else
-      raise ArgumentError, 'ROM.Changeset accepts 2 or 3 arguments'
-    end
-
-    if pk
-      Changeset::Update.new(relation, data, primary_key: pk)
-    else
-      Changeset::Create.new(relation, data)
-    end
-  end
-
   class Changeset
-    include Options
+    class Update < Changeset
+      option :primary_key, reader: true
 
-    option :pipe, reader: true, accept: [Proc, Pipe], default: -> changeset {
-      changeset.class.default_pipe
-    }
+      def update?
+        true
+      end
 
-    attr_reader :relation
+      def create?
+        false
+      end
 
-    attr_reader :data
+      def original
+        @original ||= relation.fetch(primary_key)
+      end
 
-    attr_reader :pipe
+      def to_h
+        pipe.call(diff)
+      end
+      alias_method :to_hash, :to_h
 
-    def self.default_pipe
-      Pipe.new
+      def diff?
+        ! diff.empty?
+      end
+
+      def clean?
+        diff.empty?
+      end
+
+      def diff
+        @diff ||=
+          begin
+            new_tuple = data.to_a
+            ori_tuple = original.to_a
+
+            Hash[new_tuple - (new_tuple & ori_tuple)]
+          end
+      end
     end
 
     def initialize(relation, data, options = EMPTY_HASH)
@@ -82,6 +84,3 @@ module ROM
     end
   end
 end
-
-require 'rom/repository/changeset/create'
-require 'rom/repository/changeset/update'
