@@ -10,6 +10,12 @@ RSpec.describe ROM::Changeset do
     it 'returns an update changeset for persisted data' do
       expect(ROM.Changeset(relation, 2, jane)).to be_update
     end
+
+    it 'raises ArgumentError when invalid args are passed' do
+      expect { ROM.Changeset(1, 2, 3, 4) }.to raise_error(
+        ArgumentError, 'ROM.Changeset accepts 2 or 3 arguments'
+      )
+    end
   end
 
   describe '#diff' do
