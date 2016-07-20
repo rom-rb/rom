@@ -79,6 +79,10 @@ module Relations
       attribute :age, Types::Int
     end
 
+    def by_id(id)
+      where(id: id).limit(1)
+    end
+
     def by_name(name)
       where(name: name).limit(1)
     end
@@ -97,7 +101,7 @@ setup.register_relation(Relations::Users)
 setup.register_relation(Relations::Tasks)
 
 class UserRepo < ROM::Repository[:users]
-  commands :create
+  commands :create, update: :by_id
 
   def [](id)
     users.where(id: id).one!
