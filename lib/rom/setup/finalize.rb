@@ -57,7 +57,7 @@ module ROM
     #
     # @api private
     def run!
-      infer_relations_relations
+      infer_relations
 
       relations = load_relations
       mappers = load_mappers
@@ -112,7 +112,7 @@ module ROM
     # Relations explicitly defined are being skipped
     #
     # @api private
-    def infer_relations_relations
+    def infer_relations
       datasets.each do |gateway, schema|
         schema.each do |name|
           if infer_relation?(gateway, name)
