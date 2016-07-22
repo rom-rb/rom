@@ -68,7 +68,15 @@ RSpec.shared_context 'relations' do
     end
 
     configuration.relation(:tags)
-    configuration.relation(:labels)
+
+    configuration.relation(:labels) do
+      schema(infer: true) do
+        associations do
+          has_many :posts_labels
+          has_many :posts, through: :posts_labels
+        end
+      end
+    end
 
     configuration.relation(:posts) do
       schema(:posts) do

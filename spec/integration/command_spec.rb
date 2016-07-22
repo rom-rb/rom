@@ -148,6 +148,20 @@ RSpec.describe ROM::Repository, '#command' do
       expect(user.task.tag.name).to eql('red')
     end
 
+    it 'builds Create command for a nested graph with many-to-many' do
+      user = repo.command(:create, repo.users).(name: 'Jane')
+
+      create_post = repo.command(
+        :create, repo.posts.combine_children(many: { labels: repo.labels })
+      )
+
+      post = create_post.call(
+        author_id: user.id, title: 'Jane post', labels: [{ name: 'red' }]
+      )
+
+      expect(post.labels.size).to be(1)
+    end
+
     context 'relation with a custom dataset name' do
       it 'allows configuring a create command' do
         create_comment = comments_repo.command(create: :comments)

@@ -167,18 +167,19 @@ module ROM
         klass.use(:associates)
 
         assoc_name =
-          if klass.result == :many
-            Inflector.singularize(parent_relation).to_sym
-          else
+          if relation.associations.key?(parent_relation)
             parent_relation
+          else
+            singular_name = Inflector.singularize(parent_relation).to_sym
+            singular_name if relation.associations.key?(singular_name)
           end
 
-        relation.associations.try(assoc_name) do |assoc|
-          klass.associates(assoc.name)
-        end or (
+        if assoc_name
+          klass.associates(assoc_name)
+        else
           keys = meta[:keys].invert.to_a.flatten
           klass.associates(parent_relation, key: keys)
-        )
+        end
       end
 
       # Setup a command class for a specific relation
