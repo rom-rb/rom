@@ -76,6 +76,13 @@ RSpec.describe ROM::Repository::Root do
         expect(result.posts[0].author_id).to be(result.id)
         expect(result.posts[0].title).to eql('Jade post')
       end
+
+      it 'builds same relation as manual combine' do
+        left = repo.aggregate(:posts)
+        right = repo.users.combine_children(many: repo.posts)
+
+        expect(left.to_ast).to eql(right.to_ast)
+      end
     end
   end
 end
