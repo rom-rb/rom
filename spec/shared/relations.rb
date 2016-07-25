@@ -16,10 +16,7 @@ RSpec.shared_context 'relations' do
     end
 
     configuration.relation(:users) do
-      schema(:users) do
-        attribute :id, ROM::SQL::Types::Serial
-        attribute :name, ROM::SQL::Types::String
-
+      schema(infer: true) do
         associations do
           has_many :posts
           has_many :labels, through: :posts
@@ -40,11 +37,7 @@ RSpec.shared_context 'relations' do
     end
 
     configuration.relation(:tasks) do
-      schema do
-        attribute :id, ROM::SQL::Types::Serial
-        attribute :user_id, ROM::SQL::Types::ForeignKey(:users)
-        attribute :title, ROM::SQL::Types::String
-
+      schema(infer: true) do
         associations do
           belongs_to :user
         end
@@ -71,12 +64,7 @@ RSpec.shared_context 'relations' do
     end
 
     configuration.relation(:posts) do
-      schema(:posts) do
-        attribute :id, ROM::SQL::Types::Serial
-        attribute :author_id, ROM::SQL::Types::ForeignKey(:users)
-        attribute :title, ROM::SQL::Types::String
-        attribute :body, ROM::SQL::Types::String
-
+      schema(:posts, infer: true) do
         associations do
           has_many :labels, through: :posts_labels
           belongs_to :user, as: :author
@@ -85,11 +73,7 @@ RSpec.shared_context 'relations' do
     end
 
     configuration.relation(:posts_labels) do
-      schema do
-        attribute :post_id, ROM::SQL::Types::ForeignKey(:posts)
-        attribute :label_id, ROM::SQL::Types::ForeignKey(:labels)
-        primary_key :post_id, :label_id
-
+      schema(infer: true) do
         associations do
           belongs_to :post
           belongs_to :label
@@ -100,11 +84,7 @@ RSpec.shared_context 'relations' do
     configuration.relation(:comments) do
       register_as :comments
 
-      schema(:messages) do
-        attribute :message_id, ROM::SQL::Types::Serial
-        attribute :author, ROM::SQL::Types::String
-        attribute :body, ROM::SQL::Types::String
-
+      schema(:messages, infer: true) do
         associations do
           has_many :reactions, relation: :likes
           has_many :reactions, relation: :likes, as: :emotions
@@ -115,11 +95,7 @@ RSpec.shared_context 'relations' do
     configuration.relation(:likes) do
       register_as :likes
 
-      schema(:reactions) do
-        attribute :reaction_id, ROM::SQL::Types::Serial
-        attribute :message_id, ROM::SQL::Types::ForeignKey(:messages)
-        attribute :author, ROM::SQL::Types::String
-
+      schema(:reactions, infer: true) do
         associations do
           belongs_to :message, relation: :comments
         end
