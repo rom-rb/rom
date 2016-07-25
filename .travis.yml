@@ -6,7 +6,6 @@ before_script:
   - psql -c 'create database rom_repository' -U postgres
 script: "bundle exec rake ci"
 rvm:
-  - 2.0
   - 2.1
   - 2.2
   - 2.3.1
