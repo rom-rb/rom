@@ -46,7 +46,7 @@ module ROM
       # @see Repository#initialize
       def initialize(container)
         super
-        @root = __send__(self.class.root)
+        @root = relations[self.class.root]
       end
 
       # Compose a relation aggregate from the root relation
@@ -102,7 +102,7 @@ module ROM
         if args.first.is_a?(Symbol) && relations.key?(args.first)
           super
         else
-          super(self.class.root, *args)
+          super(root.name, *args)
         end
       end
     end
