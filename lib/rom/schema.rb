@@ -25,6 +25,8 @@ module ROM
     #   @return [Array<Dry::Types::Definition] Primary key array
     attr_reader :primary_key
 
+    alias_method :to_h, :attributes
+
     # @api private
     def initialize(name, attributes, inferrer: nil)
       @name = name
