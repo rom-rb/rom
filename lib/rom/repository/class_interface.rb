@@ -28,7 +28,7 @@ module ROM
       #     relations :users, :tasks
       #   end
       #
-      #   my_repo = MyRepo.new(rom_env)
+      #   my_repo = MyRepo.new(rom)
       #
       #   my_repo.users
       #   my_repo.tasks
@@ -52,6 +52,29 @@ module ROM
         end
       end
 
+      # Defines command methods on a root repository
+      #
+      # @example
+      #   class UserRepo < ROM::Repository[:users]
+      #     commands :create, update: :by_pk, delete: :by_pk
+      #   end
+      #
+      #   # with custom command plugin
+      #   class UserRepo < ROM::Repository[:users]
+      #     commands :create, plugin: :my_command_plugin
+      #   end
+      #
+      #   # with custom mapper
+      #   class UserRepo < ROM::Repository[:users]
+      #     commands :create, mapper: :my_custom_mapper
+      #   end
+      #
+      # @param *names [Array<Symbol>] A list of command names
+      # @option :mapper [Symbol] An optional mapper identifier
+      # @option :use [Symbol] An optional command plugin identifier
+      #
+      # @return [Array<Symbol>] A list of defined command names
+      #
       # @api public
       def commands(*names, mapper: nil, use: nil, **opts)
         if names.any? || opts.any?
@@ -70,6 +93,8 @@ module ROM
           @commands || []
         end
       end
+
+      private
 
       # @api private
       def define_command_method(type, **opts)

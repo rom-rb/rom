@@ -1,11 +1,11 @@
 module ROM
   class Repository
     class RelationProxy
-      # Provides convenient methods for producing combined relations
+      # Provides convenient methods for composing relations
       #
       # @api public
       module Combine
-        # Return combine representation of a loading-proxy relation
+        # Returns a combine representation of a loading-proxy relation
         #
         # This will carry meta info used to produce a correct AST from a relation
         # so that correct mapper can be generated
@@ -20,13 +20,31 @@ module ROM
 
         # Combine with other relations
         #
-        # @example
-        #   # combining many
-        #   users.combine(many: { tasks: [tasks, id: :task_id] })
-        #   users.combine(many: { tasks: [tasks.for_users, id: :task_id] })
+        # @overload combine(*associations)
+        #   Composes relations using configured associations
+        #   @example
+        #     users.combine(:tasks, :posts)
+        #   @param *associations [Array<Symbol>] A list of association names
         #
-        #   # combining one
-        #   users.combine(one: { task: [tasks, id: :task_id] })
+        # @overload combine(options)
+        #   Composes relations based on options
+        #
+        #   @example
+        #     # users have-many tasks (name and join-keys inferred, which needs associations in schema)
+        #     users.combine(many: tasks)
+        #
+        #     # users have-many tasks with custom name (join-keys inferred, which needs associations in schema)
+        #     users.combine(many: { priority_tasks: tasks.priority })
+        #
+        #     # users have-many tasks with custom view and join keys
+        #     users.combine(many: { tasks: [tasks.for_users, id: :task_id] })
+        #
+        #     # users has-one task
+        #     users.combine(one: { task: tasks })
+        #
+        #   @param options [Hash] Options for combine
+        #     @option :many [Hash] Sets options for "has-many" type of association
+        #     @option :one [Hash] Sets options for "has-one/belongs-to" type of association
         #
         # @param [Hash] options
         #
@@ -59,9 +77,13 @@ module ROM
         # Shortcut for combining with parents which infers the join keys
         #
         # @example
+        #   # tasks belong-to users
         #   tasks.combine_parents(one: users)
         #
-        # @param [Hash] options
+        #   # tasks belong-to users with custom user view
+        #   tasks.combine_parents(one: users.task_owners)
+        #
+        # @param options [Hash] Combine options hash
         #
         # @return [RelationProxy]
         #
@@ -96,7 +118,11 @@ module ROM
         # Shortcut for combining with children which infers the join keys
         #
         # @example
-        #   users.combine_parents(many: tasks)
+        #   # users have-many tasks
+        #   users.combine_children(many: tasks)
+        #
+        #   # users have-many tasks with custom mapping (requires associations)
+        #   users.combine_children(many: { priority_tasks: tasks.priority })
         #
         # @param [Hash] options
         #

@@ -25,11 +25,11 @@ module ROM
       # in repositories. It might be worth looking into removing this requirement
       # from rom core Command::Graph API.
       #
-      # @param [ROM::Container] container where relations are stored
-      # @param [Symbol] type of command
-      # @param [Symbol] adapter identifier
-      # @param [Array] AST representation of a relation
-      # @param [Array<Symbol>] a list of optional command plugins that should be used
+      # @param container [ROM::Container] container where relations are stored
+      # @param type [Symbol] The type of command
+      # @param adapter [Symbol] The adapter identifier
+      # @param ast [Array] The AST representation of a relation
+      # @param plugins [Array<Symbol>] A list of optional command plugins that should be used
       #
       # @return [Command, CommandProxy]
       #
@@ -64,20 +64,24 @@ module ROM
         @__registry__ ||= Hash.new { |h, k| h[k] = {} }
       end
 
-      # @attr [Symbol] type of relation
+      # @!attribute [r] type
+      #   @return [Symbol] The command type
       attr_reader :type
 
-      # @attr [Symbol] adapter identifier ie :sql or :http
+      # @!attribute [r] adapter
+      #   @return [Symbol] The adapter identifier ie :sql or :http
       attr_reader :adapter
 
-      # @attr [ROM::Container] rom container with relations and gateways
+      # @!attribute [r] container
+      #   @return [ROM::Container] rom container with relations and gateways
       attr_reader :container
 
-      # @attr [Hash] local registry where commands will be stored during compilation
+      # @!attribute [r] registry
+      #   @return [Hash] local registry where commands will be stored during compilation
       attr_reader :registry
 
-      # @attr [Array<Symbol>] a list of optional plugins that will be enabled for
-      #                       commands
+      # @!attribute [r] plugins
+      #   @return [Array<Symbol>] a list of optional plugins that will be enabled for commands
       attr_reader :plugins
 
       # @api private

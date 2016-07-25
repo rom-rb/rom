@@ -12,6 +12,41 @@ require 'rom/repository/changeset'
 module ROM
   # Abstract repository class to inherit from
   #
+  # A repository provides access to composable relations and commands. Its job is
+  # to provide application-specific data that is already materialized, so that
+  # relations don't leak into your application layer.
+  #
+  # Typically, you're going to work with Repository::Root that are configured to
+  # use a single relation as its root, and compose aggregates and use commands
+  # against the root relation.
+  #
+  # @example
+  #   class MyRepo < ROM::Repository[:users]
+  #     relations :users, :tasks
+  #
+  #     def users_with_tasks
+  #       users.combine_children(tasks: tasks).to_a
+  #     end
+  #   end
+  #
+  #   rom = ROM.container(:sql, 'sqlite::memory') do |conf|
+  #     conf.default.create_table(:users) do
+  #       primary_key :id
+  #       column :name, String
+  #     end
+  #
+  #     conf.default.create_table(:tasks) do
+  #       primary_key :id
+  #       column :user_id, Integer
+  #       column :title, String
+  #     end
+  #   end
+  #
+  #   my_repo = MyRepo.new(rom)
+  #   my_repo.users_with_tasks
+  #
+  # @see Repository::Root
+  #
   # @api public
   class Repository
     # @deprecated
@@ -24,13 +59,24 @@ module ROM
 
     extend ClassInterface
 
+    # @!attribute [r] container
+    #   @return [ROM::Container] The container used to set up a repo
     attr_reader :container
 
+    # @!attribute [r] relations
+    #   @return [RelationRegistry] The relation proxy registry used by a repo
     attr_reader :relations
 
+    # @!attribute [r] mappers
+    #   @return [MapperBuilder] The auto-generated mappers for repo relations
     attr_reader :mappers
 
-    # @api private
+    # Initializes a new repo by establishing configured relation proxies from
+    # the passed container
+    #
+    # @param container [ROM::Container] The rom container with relations and optional commands
+    #
+    # @api public
     def initialize(container)
       @container = container
       @mappers = MapperBuilder.new
@@ -49,15 +95,37 @@ module ROM
       end
     end
 
-    # Create a command for a relation
+    # @overload command(type, relation)
+    #   Returns a command for a relation
     #
-    # @example
-    #   create_user = repo.command(:create, repo.users)
+    #   @example
+    #     repo.command(:create, repo.users)
     #
-    #   create_user_with_task = repo.command(:create, repo.users.combine_children(one: repo.tasks))
+    #   @param type [Symbol] The command type (:create, :update or :delete)
+    #   @param relation [RelationProxy] The relation for which command should be built for
     #
-    # @param [Symbol] type Type of the command
-    # @param [Repository::RelationProxy] relation
+    # @overload command(options)
+    #   Builds a command for a given relation identifier
+    #
+    #   @example
+    #     repo.command(create: :users)
+    #
+    #   @param options [Hash<Symbol=>Symbol>] A type => rel_name map
+    #
+    # @overload command(rel_name)
+    #   Returns command registry for a given relation identifier
+    #
+    #   @example
+    #     repo.command(:users)[:my_custom_command]
+    #
+    #   @param rel_name [Symbol] The relation identifier from the container
+    #
+    #   @return [CommandRegistry]
+    #
+    # @overload command(rel_name, &block)
+    #   Yields a command graph composer for a given relation identifier
+    #
+    #   @param rel_name [Symbol] The relation identifier from the container
     #
     # @return [ROM::Command]
     #
@@ -74,17 +142,45 @@ module ROM
       end
     end
 
+    # @overload changeset(name, attributes)
+    #   Returns a create changeset for a given relation identifier
+    #
+    #   @example
+    #     repo.changeset(:users, name: "Jane")
+    #
+    #   @param name [Symbol] The relation container identifier
+    #   @param attributes [Hash]
+    #
+    #   @return [Changeset::Create]
+    #
+    # @overload changeset(name, restriction_arg, attributes)
+    #   Returns an update changeset for a given relation identifier
+    #
+    #   @example
+    #     repo.changeset(:users, 1, name: "Jane Doe")
+    #
+    #   @param name [Symbol] The relation container identifier
+    #   @param restriction_arg [Object] The argument passed to restricted view
+    #
+    #   @return [Changeset::Update]
+    #
     # @api public
-    def changeset(rel_name, *args)
-      ROM.Changeset(relations[rel_name], *args)
+    def changeset(name, *args)
+      ROM.Changeset(relations[name], *args)
     end
 
     private
 
+    # Local command cache
+    #
+    # @api private
     def commands
       @__commands__ ||= Concurrent::Map.new
     end
 
+    # Build a new command or return existing one
+    #
+    # @api private
     def compile_command(*args, mapper: nil, use: nil, **opts)
       type, name = args + opts.to_a.flatten(1)
 

@@ -55,8 +55,7 @@ module ROM
 
     # Pipe changeset's data using custom steps define on the pipe
     #
-    # This accepts a splatted list of step names that correspond to pipe's
-    # singleton mapping functions
+    # @param *steps [Array<Symbol>] A list of mapping steps
     #
     # @return [Changeset]
     #
