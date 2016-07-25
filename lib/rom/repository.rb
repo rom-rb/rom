@@ -7,8 +7,7 @@ require 'rom/repository/relation_proxy'
 require 'rom/repository/command_compiler'
 
 require 'rom/repository/root'
-
-require 'rom/repository/relation'
+require 'rom/repository/changeset'
 
 module ROM
   # Abstract repository class to inherit from
@@ -77,7 +76,7 @@ module ROM
 
     # @api public
     def changeset(rel_name, *args)
-      relations[rel_name].changeset(*args)
+      ROM.Changeset(relations[rel_name], *args)
     end
 
     private
