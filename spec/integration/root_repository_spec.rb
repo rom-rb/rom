@@ -1,7 +1,7 @@
 RSpec.describe ROM::Repository::Root do
   subject(:repo) do
     Class.new(ROM::Repository[:users]) do
-      relations :tasks
+      relations :tasks, :posts, :labels
     end.new(rom)
   end
 
@@ -27,7 +27,7 @@ RSpec.describe ROM::Repository::Root do
     it 'inherits root and relations' do
       klass = Class.new(repo.class)
 
-      expect(klass.relations).to eql([:users, :tasks])
+      expect(klass.relations).to eql([:users, :tasks, :posts, :labels])
       expect(klass.root).to be(:users)
     end
 
@@ -54,6 +54,28 @@ RSpec.describe ROM::Repository::Root do
       expect(user.name).to eql('Jane')
       expect(user.tasks.size).to be(1)
       expect(user.tasks[0].title).to eql('Jane Task')
+    end
+
+    context 'with associations' do
+      it 'builds an aggregate from a canonical association' do
+        user = repo.aggregate(:labels).where(name: 'Joe').one
+
+        expect(user.name).to eql('Joe')
+        expect(user.labels.size).to be(1)
+        expect(user.labels[0].author_id).to be(user.id)
+        expect(user.labels[0].name).to eql('green')
+      end
+
+      it 'builds a command from an aggregate' do
+        command = repo.command(:create, repo.aggregate(:posts))
+
+        result = command.call(name: 'Jade', posts: [{ title: 'Jade post' }])
+
+        expect(result.name).to eql('Jade')
+        expect(result.posts.size).to be(1)
+        expect(result.posts[0].author_id).to be(result.id)
+        expect(result.posts[0].title).to eql('Jade post')
+      end
     end
   end
 end
