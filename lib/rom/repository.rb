@@ -165,8 +165,22 @@ module ROM
     #   @return [Changeset::Update]
     #
     # @api public
-    def changeset(name, *args)
-      ROM.Changeset(relations[name], *args)
+    def changeset(*args)
+      if args.size == 2
+        name, data = args
+      elsif args.size == 3
+        name, pk, data = args
+      else
+        raise ArgumentError, 'Repository#changeset accepts 2 or 3 arguments'
+      end
+
+      relation = relations[name]
+
+      if pk
+        Changeset::Update.new(relation, data, primary_key: pk)
+      else
+        Changeset::Create.new(relation, data)
+      end
     end
 
     private

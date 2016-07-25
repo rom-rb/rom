@@ -4,22 +4,6 @@ require 'rom/support/options'
 require 'rom/repository/changeset/pipe'
 
 module ROM
-  def self.Changeset(*args)
-    if args.size == 2
-      relation, data = args
-    elsif args.size == 3
-      relation, pk, data = args
-    else
-      raise ArgumentError, 'ROM.Changeset accepts 2 or 3 arguments'
-    end
-
-    if pk
-      Changeset::Update.new(relation, data, primary_key: pk)
-    else
-      Changeset::Create.new(relation, data)
-    end
-  end
-
   class Changeset
     include Options
 

@@ -2,27 +2,11 @@ RSpec.describe ROM::Changeset do
   let(:jane) { { id: 2, name: "Jane" } }
   let(:relation) { double(ROM::Relation, primary_key: :id) }
 
-  describe 'builder function' do
-    it 'returns a create changeset for new data' do
-      expect(ROM.Changeset(relation, name: "Jane")).to be_create
-    end
-
-    it 'returns an update changeset for persisted data' do
-      expect(ROM.Changeset(relation, 2, jane)).to be_update
-    end
-
-    it 'raises ArgumentError when invalid args are passed' do
-      expect { ROM.Changeset(1, 2, 3, 4) }.to raise_error(
-        ArgumentError, 'ROM.Changeset accepts 2 or 3 arguments'
-      )
-    end
-  end
-
   describe '#diff' do
     it 'returns a hash with changes' do
       expect(relation).to receive(:fetch).with(2).and_return(jane)
 
-      changeset = ROM::Changeset(relation, 2, name: "Jane Doe")
+      changeset = ROM::Changeset::Update.new(relation, { name: "Jane Doe" }, primary_key: 2)
 
       expect(changeset.diff).to eql(name: "Jane Doe")
     end
@@ -32,7 +16,7 @@ RSpec.describe ROM::Changeset do
     it 'returns true when data differs from the original tuple' do
       expect(relation).to receive(:fetch).with(2).and_return(jane)
 
-      changeset = ROM::Changeset(relation, 2, name: "Jane Doe")
+      changeset = ROM::Changeset::Update.new(relation, { name: "Jane Doe" }, primary_key: 2)
 
       expect(changeset).to be_diff
     end
@@ -40,14 +24,14 @@ RSpec.describe ROM::Changeset do
     it 'returns false when data are equal to the original tuple' do
       expect(relation).to receive(:fetch).with(2).and_return(jane)
 
-      changeset = ROM::Changeset(relation, 2, name: "Jane")
+      changeset = ROM::Changeset::Update.new(relation, { name: "Jane" }, primary_key: 2)
 
       expect(changeset).to_not be_diff
     end
   end
 
   describe 'quacks like a hash' do
-    subject(:changeset) { ROM::Changeset.new(relation, data) }
+    subject(:changeset) { ROM::Changeset::Create.new(relation, data) }
 
     let(:data) { instance_double(Hash) }
 
@@ -62,7 +46,7 @@ RSpec.describe ROM::Changeset do
 
       new_changeset = changeset.merge(foo: 'bar')
 
-      expect(new_changeset).to be_instance_of(ROM::Changeset)
+      expect(new_changeset).to be_instance_of(ROM::Changeset::Create)
       expect(new_changeset.options).to eql(changeset.options)
       expect(new_changeset.to_h).to eql(foo: 'bar')
     end
