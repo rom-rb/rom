@@ -9,6 +9,8 @@ require 'rom/relation/composite'
 require 'rom/relation/graph'
 require 'rom/relation/materializable'
 
+require 'rom/types'
+
 module ROM
   # Base relation class
   #
@@ -33,6 +35,13 @@ module ROM
     include Pipeline
 
     option :mappers, reader: true, default: proc { MapperRegistry.new }
+
+    # @!attribute [r] schema_hash
+    #   @return Tuple processing function, uses schema or defaults to Hash[]
+    #   @api private
+    option :schema_hash, reader: true, default: -> relation {
+      relation.schema? ? Types::Coercible::Hash.schema(relation.schema.to_h) : Hash
+    }
 
     # Dataset used by the relation
     #
@@ -112,6 +121,15 @@ module ROM
     # @api private
     def graph?
       false
+    end
+
+    # Return true if a relation has schema defined
+    #
+    # @return [TrueClass, FalseClass]
+    #
+    # @api private
+    def schema?
+      ! schema.nil?
     end
 
     # @api private

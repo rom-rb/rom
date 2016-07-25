@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'rom/memory'
 
 describe ROM::Relation do
@@ -215,6 +214,24 @@ describe ROM::Relation do
     it 'returns false when curried' do
       relation = Class.new(ROM::Relation[:memory]) { def by_name(_); self; end }.new([])
       expect(relation.by_name.graph?).to be(false)
+    end
+  end
+
+  describe '#schema_hash' do
+    it 'returns a schema hash type' do
+      relation = Class.new(ROM::Relation[:memory]) do
+        schema { attribute :id, ROM::Types::Coercible::Int }
+      end.new([])
+
+      expect(relation.schema_hash[id: '1']).to eql(id: 1)
+    end
+
+    it 'returns a plain Hash coercer when there is no schema' do
+      relation = Class.new(ROM::Relation[:memory]).new([])
+
+      tuple = [[:id, '1']]
+
+      expect(relation.schema_hash[tuple]).to eql(id: '1')
     end
   end
 end
