@@ -197,7 +197,7 @@ RSpec.describe ROM::Repository, '#command' do
 
       update_user = repo.command(:update, repo.users)
 
-      user = update_user.by_id(3).call(name: 'Jane Doe')
+      user = update_user.by_pk(3).call(name: 'Jane Doe')
 
       expect(user.id).to be(3)
       expect(user.name).to eql('Jane Doe')
@@ -210,9 +210,9 @@ RSpec.describe ROM::Repository, '#command' do
 
       delete_user = repo.command(:delete, repo.users)
 
-      delete_user.by_id(3).call
+      delete_user.by_pk(3).call
 
-      expect(repo.users.by_id(3).one).to be(nil)
+      expect(repo.users.by_pk(3).one).to be(nil)
     end
   end
 

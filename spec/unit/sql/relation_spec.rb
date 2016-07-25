@@ -7,8 +7,8 @@ RSpec.describe 'SQL Relation extensions' do
     it 'has valid column names' do
       expect(users.attributes).to eql([:id, :name])
 
-      expect(users.by_id.attributes).to eql([:name])
-      expect(users.by_id(1).attributes).to eql([:name])
+      expect(users.by_pk.attributes).to eql([:name])
+      expect(users.by_pk(1).attributes).to eql([:name])
     end
   end
 
@@ -16,7 +16,7 @@ RSpec.describe 'SQL Relation extensions' do
     context 'using short syntax' do
       before do
         configuration.relation(:users) do
-          view(:by_id, [:name]) do |name|
+          view(:by_pk, [:name]) do |name|
             where(name: name).select(:name)
           end
         end
@@ -28,7 +28,7 @@ RSpec.describe 'SQL Relation extensions' do
     context 'with multi-block syntax' do
       before do
         configuration.relation(:users) do
-          view(:by_id) do
+          view(:by_pk) do
             header [:name]
 
             relation do |name|
@@ -45,7 +45,7 @@ RSpec.describe 'SQL Relation extensions' do
       it 'raises error' do
         expect {
           configuration.relation(:users) do
-            view(:by_id) { |args| }
+            view(:by_pk) { |args| }
           end
         }.to raise_error(ArgumentError)
       end

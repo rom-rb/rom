@@ -15,49 +15,49 @@ RSpec.describe ROM::Repository, '.command' do
 
   it 'allows configuring an update and delete commands' do
     repo = Class.new(ROM::Repository[:users]) do
-      commands :create, update: :by_id, delete: :by_id
+      commands :create, update: :by_pk, delete: :by_pk
     end.new(rom)
 
     user = repo.create(name: 'Jane')
 
     repo.update(user.id, name: 'Jane Doe')
 
-    user = repo.users.by_id(user.id).one
+    user = repo.users.by_pk(user.id).one
 
     expect(user.name).to eql('Jane Doe')
 
     repo.delete(user.id)
 
-    expect(repo.users.by_id(user.id).one).to be(nil)
+    expect(repo.users.by_pk(user.id).one).to be(nil)
   end
 
   it 'allows to configure update command without create one' do
     repo = Class.new(ROM::Repository[:users]) do
-      commands update: :by_id
+      commands update: :by_pk
     end.new(rom)
 
     user = repo.command(create: :users)[name: 'Jane']
 
     repo.update(user.id, name: 'Jane Doe')
 
-    updated_user = repo.users.by_id(user.id).one
+    updated_user = repo.users.by_pk(user.id).one
 
     expect(updated_user.name).to eql('Jane Doe')
   end
 
   it 'allows defining a single command with multiple views' do
     repo = Class.new(ROM::Repository[:users]) do
-      commands :create, update: [:by_id, :by_name]
+      commands :create, update: [:by_pk, :by_name]
     end.new(rom)
 
     user = repo.create(name: 'Jane')
 
-    repo.update_by_id(user.id, name: 'Jane Doe')
-    user = repo.users.by_id(user.id).one
+    repo.update_by_pk(user.id, name: 'Jane Doe')
+    user = repo.users.by_pk(user.id).one
     expect(user.name).to eql('Jane Doe')
 
     repo.update_by_name(user.name, name: 'Jane')
-    user = repo.users.by_id(user.id).one
+    user = repo.users.by_pk(user.id).one
     expect(user.name).to eql('Jane')
   end
 
@@ -86,7 +86,7 @@ RSpec.describe ROM::Repository, '.command' do
 
     it 'allows to use plugins in generated commands' do
       repo = Class.new(ROM::Repository[:users]) do
-        commands :create, update: :by_id, use: :timestamps
+        commands :create, update: :by_pk, use: :timestamps
       end.new(rom)
 
       user = repo.create(name: 'Jane')
@@ -94,7 +94,7 @@ RSpec.describe ROM::Repository, '.command' do
       expect(user.created_at).to eql(user.updated_at)
 
       repo.update(user.id, **user, name: 'Jane Doe')
-      updated_user = repo.users.by_id(user.id).one
+      updated_user = repo.users.by_pk(user.id).one
       expect(updated_user.created_at).to eql(user.created_at)
       expect(updated_user.updated_at).to be > updated_user.created_at
     end
@@ -146,7 +146,7 @@ RSpec.describe ROM::Repository, '.command' do
 
     it 'allows to set a mapper with a class-level macro' do
       repo = Class.new(ROM::Repository[:users]) do
-        commands :create, update: :by_id, delete: :by_id, mapper: :name_list
+        commands :create, update: :by_pk, delete: :by_pk, mapper: :name_list
       end.new(rom)
 
       name = repo.create(name: 'Jane')

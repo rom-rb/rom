@@ -13,10 +13,6 @@ RSpec.shared_context 'relations' do
         attribute :created_at, ROM::SQL::Types::Time
         attribute :updated_at, ROM::SQL::Types::Time
       end
-
-      def by_id(id)
-        where(id: id)
-      end
     end
 
     configuration.relation(:users) do
@@ -28,10 +24,6 @@ RSpec.shared_context 'relations' do
           has_many :posts
           has_many :labels, through: :posts
         end
-      end
-
-      def by_id(id)
-        where(id: id)
       end
 
       def by_name(name)

@@ -6,7 +6,7 @@ RSpec.describe 'Using changesets' do
     subject(:repo) do
       Class.new(ROM::Repository[:users]) {
         relations :books, :posts
-        commands :create, update: :by_id
+        commands :create, update: :by_pk
       }.new(rom)
     end
 
@@ -48,7 +48,7 @@ RSpec.describe 'Using changesets' do
   describe 'Update' do
     subject(:repo) do
       Class.new(ROM::Repository[:books]) {
-        commands :create, update: :by_id
+        commands :create, update: :by_pk
       }.new(rom)
     end
 

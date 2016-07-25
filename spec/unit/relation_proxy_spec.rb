@@ -156,11 +156,11 @@ RSpec.describe 'loading proxy' do
     end
 
     it 'returns proxy when response was not materialized' do
-      expect(users.by_id(1)).to be_instance_of(ROM::Repository::RelationProxy)
+      expect(users.by_pk(1)).to be_instance_of(ROM::Repository::RelationProxy)
     end
 
     it 'returns curried proxy when response was curried' do
-      expect(users.by_id).to be_instance_of(ROM::Repository::RelationProxy)
+      expect(users.by_pk).to be_instance_of(ROM::Repository::RelationProxy)
     end
 
     it 'raises when method is missing' do
