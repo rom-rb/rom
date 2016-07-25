@@ -79,7 +79,7 @@ RSpec.describe 'ROM repository' do
     expect(jane.labels[1].name).to eql('blue')
   end
 
-  it 'loads an parent via custom fks' do
+  it 'loads a parent via custom fks' do
     post = repo.posts.combine(:author).where(title: 'Hello From Jane').one
 
     expect(post.title).to eql('Hello From Jane')
@@ -105,17 +105,6 @@ RSpec.describe 'ROM repository' do
     expect(post.labels.map(&:name)).to eql(%w(red blue))
   end
 
-  context 'with a table without columns' do
-    before { conn.create_table(:dummy) unless conn.table_exists?(:dummy) }
-
-    it 'does not fail with a weird error when a relation does not have attributes' do
-      configuration.relation(:dummy)
-
-      repo = Class.new(ROM::Repository[:dummy]).new(rom)
-      expect(repo.dummy.to_a).to eql([])
-    end
-  end
-
   context 'not common naming conventions' do
     it 'still loads nested relations' do
       comments = comments_repo.comments_with_likes.to_a
@@ -134,6 +123,17 @@ RSpec.describe 'ROM repository' do
       expect(comments.size).to be(2)
       expect(comments[0].emotions[0].author).to eql('Joe')
       expect(comments[0].emotions[1].author).to eql('Anonymous')
+    end
+  end
+
+  context 'with a table without columns' do
+    before { conn.create_table(:dummy) unless conn.table_exists?(:dummy) }
+
+    it 'does not fail with a weird error when a relation does not have attributes' do
+      configuration.relation(:dummy)
+
+      repo = Class.new(ROM::Repository[:dummy]).new(rom)
+      expect(repo.dummy.to_a).to eql([])
     end
   end
 end
