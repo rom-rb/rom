@@ -37,11 +37,11 @@ module ROM
     include Pipeline
 
     # @!attribute [r] mappers
-    #   @return [MapperRegistry] An optional mapper registry (empty by default)
+    #   @return [MapperRegistry] an optional mapper registry (empty by default)
     option :mappers, reader: true, default: proc { MapperRegistry.new }
 
     # @!attribute [r] schema_hash
-    #   @return Tuple processing function, uses schema or defaults to Hash[]
+    #   @return [Object#[]] tuple processing function, uses schema or defaults to Hash[]
     #   @api private
     option :schema_hash, reader: true, default: -> relation {
       relation.schema? ? Types::Coercible::Hash.schema(relation.schema.to_h) : Hash
@@ -53,42 +53,46 @@ module ROM
       rel.schema? ? rel.schema.associations : Schema::EMPTY_ASSOCIATION_SET
     }
 
-    # Dataset used by the relation
-    #
-    # This object is provided by the gateway during the setup
-    #
-    # @return [Object]
-    #
-    # @api private
+    # @!attribute [r] dataset
+    #   @return [Object] dataset used by the relation provided by relation's gateway
+    #   @api public
     attr_reader :dataset
 
-    # Return relation schema object (if defined)
-    #
-    # @return [Schema]
-    #
-    # @api public
+    # @!attribute [r] schema
+    #   @return [Schema] returns relation schema object (if defined)
+    #   @api public
     attr_reader :schema
 
-    # @api private
+    # Initializes a relation object
+    #
+    # @param dataset [Object]
+    #
+    # @param options [Hash]
+    #   @option :mappers [MapperRegistry]
+    #   @option :schema_hash [#[]]
+    #   @option :associations [AssociationSet]
+    #
+    # @api public
     def initialize(dataset, options = EMPTY_HASH)
       @dataset = dataset
       @schema = self.class.schema
       super
     end
 
-    # Yield dataset tuples
+    # Yields relation tuples
     #
     # @yield [Hash]
+    # @return [Enumerator] if block is not provided
     #
-    # @api private
+    # @api public
     def each(&block)
       return to_enum unless block
       dataset.each { |tuple| yield(tuple) }
     end
 
-    # Eager load other relation(s) for this relation
+    # Composes with other relations
     #
-    # @param [Array<Relation>] others The other relation(s) to eager load
+    # @param *others [Array<Relation>] The other relation(s) to compose with
     #
     # @return [Relation::Graph]
     #
@@ -97,7 +101,7 @@ module ROM
       Graph.build(self, others)
     end
 
-    # Load relation
+    # Loads relation
     #
     # @return [Relation::Loaded]
     #
@@ -106,7 +110,7 @@ module ROM
       Loaded.new(self)
     end
 
-    # Materialize a relation into an array
+    # Materializes a relation into an array
     #
     # @return [Array<Hash>]
     #
@@ -115,7 +119,7 @@ module ROM
       to_enum.to_a
     end
 
-    # Return if this relation is curried
+    # Returns if this relation is curried
     #
     # @return [false]
     #
@@ -124,7 +128,7 @@ module ROM
       false
     end
 
-    # Return if this relation is a graph
+    # Returns if this relation is a graph
     #
     # @return [false]
     #
@@ -133,7 +137,7 @@ module ROM
       false
     end
 
-    # Return true if a relation has schema defined
+    # Returns true if a relation has schema defined
     #
     # @return [TrueClass, FalseClass]
     #
@@ -142,6 +146,12 @@ module ROM
       ! schema.nil?
     end
 
+    # Returns a new instance with the same dataset but new options
+    #
+    # @param new_options [Hash]
+    #
+    # @return [Relation]
+    #
     # @api private
     def with(new_options)
       __new__(dataset, options.merge(new_options))
