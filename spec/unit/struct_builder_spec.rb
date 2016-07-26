@@ -6,7 +6,7 @@ RSpec.describe 'struct builder', '#call' do
   before { builder[*input] }
 
   it 'generates a struct for a given relation name and columns' do
-    struct = builder.registry[input.hash]
+    struct = builder.class.cache[input.hash]
 
     user = struct.new(id: 1, name: 'Jane')
 
@@ -22,7 +22,7 @@ RSpec.describe 'struct builder', '#call' do
     expect(user.to_s).to match(/\A#<ROM::Struct\[User\]:0x[0-9a-f]+>\z/)
   end
 
-  it 'stores struct in the registry' do
-    expect(builder.registry[input.hash]).to be(builder[*input])
+  it 'stores struct in the cache' do
+    expect(builder.class.cache[input.hash]).to be(builder[*input])
   end
 end

@@ -1,5 +1,4 @@
 require 'rom/header'
-
 require 'rom/repository/struct_builder'
 
 module ROM
@@ -8,12 +7,8 @@ module ROM
     class HeaderBuilder
       attr_reader :struct_builder
 
-      def self.new(struct_builder = StructBuilder.new)
-        super
-      end
-
-      def initialize(struct_builder)
-        @struct_builder = struct_builder
+      def initialize
+        @struct_builder = StructBuilder.new
       end
 
       def call(ast)

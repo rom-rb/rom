@@ -1,7 +1,6 @@
-require 'concurrent/map'
-
 require 'rom/struct'
 
+require 'rom/support/cache'
 require 'rom/support/constants'
 require 'rom/support/class_builder'
 
@@ -11,23 +10,16 @@ module ROM
   class Repository
     # @api private
     class StructBuilder
-      attr_reader :registry
-
-      # @api private
-      def self.registry
-        @registry ||= Concurrent::Map.new
-      end
-
-      def initialize
-        @registry = self.class.registry
-      end
+      extend Cache
 
       def call(*args)
-        name, header = args
+        fetch_or_store(*args) do
+          name, header = args
 
-        registry[args.hash] ||= build_class(name) { |klass|
-          klass.send(:include, StructAttributes.new(visit(header)))
-        }
+          build_class(name) { |klass|
+            klass.send(:include, StructAttributes.new(visit(header)))
+          }
+        end
       end
       alias_method :[], :call
 

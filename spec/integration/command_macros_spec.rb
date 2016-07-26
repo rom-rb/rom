@@ -71,7 +71,7 @@ RSpec.describe ROM::Repository, '.command' do
     expect(user).to be_kind_of ROM::Struct
 
     struct_definition = [:users, [:header, [[:attribute, :id], [:attribute, :name]]]]
-    expect(user).to be_an_instance_of ROM::Repository::StructBuilder.registry[struct_definition.hash]
+    expect(user).to be_an_instance_of ROM::Repository::StructBuilder.cache[struct_definition.hash]
   end
 
   describe 'using plugins' do
