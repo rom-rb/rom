@@ -20,6 +20,7 @@
 - [BREAKING] command graphs return materialized results (a hash or an array) (solnic)
 - `Container#disconnect` properly delegates to gateways (endash)
 - `Relation#with` properly carries original options (solnic)
+- Command pipeline will stop processing if result was `nil` or an empty array (solnic)
 
 ### Changed
 
