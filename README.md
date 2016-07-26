@@ -5,7 +5,7 @@
 [coveralls]: https://coveralls.io/r/rom-rb/rom
 [inchpages]: http://inch-ci.org/github/rom-rb/rom/
 
-# Ruby Object Mapper [![Gitter chat](https://badges.gitter.im/rom-rb/chat.svg)](https://gitter.im/rom-rb/chat) [![Stories in Ready](https://badge.waffle.io/rom-rb/rom.png?label=ready&title=Ready)](https://waffle.io/rom-rb/rom)
+# rom [![Gitter chat](https://badges.gitter.im/rom-rb/chat.svg)](https://gitter.im/rom-rb/chat)
 
 [![Gem Version](https://badge.fury.io/rb/rom.svg)][gem]
 [![Build Status](https://travis-ci.org/rom-rb/rom.svg?branch=master)][travis]
@@ -15,13 +15,13 @@
 [![Inline docs](http://inch-ci.org/github/rom-rb/rom.svg?branch=master&style=flat)][inchpages]
 
 Ruby Object Mapper (ROM) is a data mapping and persistence toolkit for Ruby
-with the goal to provide powerful object mapping capabilities without limiting the
-full power of your datastore.
+with the goal to provide powerful object mapping capabilities without limiting
+the full power of your datastore.
 
 Learn more:
 
-* [Introduction](http://rom-rb.org/learn)
-* [Setup](http://rom-rb.org/learn/setup)
+* [Introduction](http://rom-rb.org/learn/introduction)
+* [Quick Start](http://rom-rb.org/learn/repositories/quick-start)
 
 ## Support Campaign
 
@@ -48,27 +48,7 @@ There are other gems within the rom ecosystem that you will find useful:
 * [rom-mongo](https://github.com/rom-rb/rom-mongo)
 * [rom-neo4j](https://github.com/rom-rb/rom-neo4j)
 * [rom-rethinkdb](https://github.com/rom-rb/rom-rethinkdb)
-* [rom-sql](https://github.com/rom-rb/rom-sql) ( supported URI schemes: ado
-amalgalite
-cubrid
-db2
-dbi
-do
-fdbsql
-firebird
-ibmdb
-informix
-jdbc
-mysql
-mysql2
-odbc
-openbase
-oracle
-postgres
-sqlanywhere
-sqlite
-swift
-tinytds )
+* [rom-sql](https://github.com/rom-rb/rom-sql) (supported URI schemes: ado amalgalite cubrid db2 dbi do fdbsql firebird ibmdb informix jdbc mysql mysql2 odbc openbase oracle postgres sqlanywhere sqlite swift tinytds)
 * [rom-yaml](https://github.com/rom-rb/rom-yaml)
 * [rom-yesql](https://github.com/rom-rb/rom-yesql)
 
@@ -77,14 +57,13 @@ for a list of adapters that are planned to be added soon.
 
 ## Framework integrations
 
-* [rom-lotus](https://github.com/rom-rb/rom-lotus)
 * [rom-rails](https://github.com/rom-rb/rom-rails)
 * [rom-roda](https://github.com/rom-rb/rom-roda)
 
 ## Community
 
 * [Official Blog](http://rom-rb.org/blog/)
-* [Discussion Forum](http://discourse.rom-rb.org)
+* [Discussion Forum](http://discuss.rom-rb.org)
 * [Gitter Channel](https://gitter.im/rom-rb/chat)
 
 ## Credits
