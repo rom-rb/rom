@@ -1,5 +1,3 @@
-require 'rom/support/class_builder'
-
 module ROM
   # Simple data-struct
   #

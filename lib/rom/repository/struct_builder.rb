@@ -1,7 +1,10 @@
 require 'concurrent/map'
 
 require 'rom/struct'
+
 require 'rom/support/constants'
+require 'rom/support/class_builder'
+
 require 'rom/repository/struct_attributes'
 
 module ROM
