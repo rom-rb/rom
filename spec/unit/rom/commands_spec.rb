@@ -38,7 +38,7 @@ describe 'Commands' do
     end
 
     it 'builds a class and yields it' do
-      klass = ROM::Command.create_class(:create, ROM::Memory::Commands::Create) do |k| 
+      klass = ROM::Command.create_class(:create, ROM::Memory::Commands::Create) do |k|
         k.result :one
         k
       end
@@ -138,6 +138,28 @@ describe 'Commands' do
       expect(users).to receive(:insert).with(user_input).and_return(user_tuple)
 
       command.with(user_input).call
+    end
+
+    it 'short-circuits pipeline when left-side result is empty' do
+      command = Class.new(ROM::Commands::Update) do
+        result :one
+
+        def execute(*)
+          []
+        end
+      end.build(users) >> -> result { result.map(&:to_a) }
+
+      expect(command.call('foo')).to be(nil)
+
+      command = Class.new(ROM::Commands::Update) do
+        result :many
+
+        def execute(*)
+          []
+        end
+      end.build(users) >> -> result { result.map(&:to_a) }
+
+      expect(command.call('foo')).to be(ROM::EMPTY_ARRAY)
     end
   end
 end

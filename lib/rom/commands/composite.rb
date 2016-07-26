@@ -1,4 +1,5 @@
 require 'rom/pipeline'
+require 'rom/support/constants'
 
 module ROM
   module Commands
@@ -15,6 +16,10 @@ module ROM
       # @api public
       def call(*args)
         response = left.call(*args)
+
+        if response.nil? || (many? && response.size == 0)
+          return one? ? nil : EMPTY_ARRAY
+        end
 
         if one? && !graph?
           if right.is_a?(Command) || right.is_a?(Commands::Composite)
