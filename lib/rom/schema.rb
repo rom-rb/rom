@@ -1,12 +1,17 @@
 require 'dry-equalizer'
+
+require 'rom/support/constants'
 require 'rom/schema/dsl'
+require 'rom/association_set'
 
 module ROM
   # Relation schema
   #
   # @api public
   class Schema
-    include Dry::Equalizer(:name, :attributes)
+    EMPTY_ASSOCIATION_SET = AssociationSet.new(EMPTY_HASH).freeze
+
+    include Dry::Equalizer(:name, :attributes, :associations)
     include Enumerable
 
     # @!attribute [r] name
@@ -16,6 +21,10 @@ module ROM
     # @!attribute [r] attributes
     #   @return [Hash] The hash with schema attribute types
     attr_reader :attributes
+
+    # @!attribute [r] associations
+    #   @return [AssociationSet] Optional association set (this is adapter-specific)
+    attr_reader :associations
 
     # @!attribute [r] inferrer
     #   @return [#call] An optional inferrer object used in `finalize!`
@@ -28,9 +37,10 @@ module ROM
     alias_method :to_h, :attributes
 
     # @api private
-    def initialize(name, attributes, inferrer: nil)
+    def initialize(name, attributes, inferrer: nil, associations: EMPTY_ASSOCIATION_SET)
       @name = name
       @attributes = attributes
+      @associations = associations
       @inferrer = inferrer
     end
 

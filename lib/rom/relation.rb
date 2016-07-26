@@ -8,8 +8,10 @@ require 'rom/relation/curried'
 require 'rom/relation/composite'
 require 'rom/relation/graph'
 require 'rom/relation/materializable'
+require 'rom/association_set'
 
 require 'rom/types'
+require 'rom/schema'
 
 module ROM
   # Base relation class
@@ -34,6 +36,8 @@ module ROM
     include Materializable
     include Pipeline
 
+    # @!attribute [r] mappers
+    #   @return [MapperRegistry] An optional mapper registry (empty by default)
     option :mappers, reader: true, default: proc { MapperRegistry.new }
 
     # @!attribute [r] schema_hash
@@ -41,6 +45,12 @@ module ROM
     #   @api private
     option :schema_hash, reader: true, default: -> relation {
       relation.schema? ? Types::Coercible::Hash.schema(relation.schema.to_h) : Hash
+    }
+
+    # @!attribute [r] associations
+    #   @return [AssociationSet] Schema's association set (empty by default)
+    option :associations, reader: true, default: -> rel {
+      rel.schema? ? rel.schema.associations : Schema::EMPTY_ASSOCIATION_SET
     }
 
     # Dataset used by the relation
