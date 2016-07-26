@@ -209,7 +209,8 @@ module ROM
         mapper_instance = mappers[ast]
       end
 
-      CommandCompiler[container, type, adapter, ast, use] >> mapper_instance
+      command = CommandCompiler[container, type, adapter, ast, use]
+      command >> mapper_instance
     end
 
     # @api private

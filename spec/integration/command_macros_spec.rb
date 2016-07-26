@@ -31,6 +31,19 @@ RSpec.describe ROM::Repository, '.command' do
     expect(repo.users.by_pk(user.id).one).to be(nil)
   end
 
+  it 'configures an update command with custom restriction' do
+    repo = Class.new(ROM::Repository[:users]) do
+      commands update: :by_name
+    end.new(rom)
+
+    repo.relations.users.insert(name: 'Jade')
+
+    user = repo.update('Jade', name: 'Jade Doe')
+    expect(user.name).to eql('Jade Doe')
+
+    expect(repo.update('Oops', name: 'Jade')).to be(nil)
+  end
+
   it 'allows to configure update command without create one' do
     repo = Class.new(ROM::Repository[:users]) do
       commands update: :by_pk
