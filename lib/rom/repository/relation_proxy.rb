@@ -6,8 +6,11 @@ require 'rom/repository/relation_proxy/wrap'
 
 module ROM
   class Repository
-    # RelationProxy decorates a relation and automatically generate mappers that
-    # will map raw tuples into structs
+    # RelationProxy decorates a relation and automatically generates mappers that
+    # will map raw tuples into rom structs
+    #
+    # Relation proxies are being registered within repositories so typically there's
+    # no need to instantiate them manually.
     #
     # @api public
     class RelationProxy
@@ -22,9 +25,12 @@ module ROM
       option :meta, reader: true, type: Hash, default: EMPTY_HASH
       option :registry, type: RelationRegistry, default: proc { RelationRegistry.new }, reader: true
 
-      # @attr_reader [ROM::Relation::Lazy] relation Decorated relation
+      # @!attribute [r] relation
+      #   @return [Relation, Relation::Composite, Relation::Graph, Relation::Curried] The decorated relation object
       attr_reader :relation
 
+      # @!attribute [r] name
+      #   @return [ROM::Relation::Name] The relation name object
       attr_reader :name
 
       # @api private
@@ -34,7 +40,7 @@ module ROM
         @name = relation.name.with(options[:name])
       end
 
-      # Materialize wrapped relation and send it through a mapper
+      # Materializes wrapped relation and sends it through a mapper
       #
       # For performance reasons a combined relation will skip mapping since
       # we only care about extracting key values for combining
@@ -44,7 +50,12 @@ module ROM
         ((combine? || composite?) ? relation : (relation >> mapper)).call(*args)
       end
 
-      # Map this relation with other mappers too
+      # Maps the wrapped relation with other mappers available in the registry
+      #
+      # @param *names [Array<Symbol, Class>] Either a list of mapper identifiers
+      #                                      or a custom model class
+      #
+      # @return [RelationProxy] A new relation proxy with pipelined relation
       #
       # @api public
       def map_with(*names)
@@ -56,7 +67,7 @@ module ROM
       end
       alias_method :as, :map_with
 
-      # Infer a mapper for the relation
+      # Infers a mapper for the wrapped relation
       #
       # @return [ROM::Mapper]
       #
@@ -65,12 +76,9 @@ module ROM
         mappers[to_ast]
       end
 
-      # @api private
-      def respond_to_missing?(name, include_private = false)
-        relation.respond_to?(name) || super
-      end
-
-      # Return new instance with new options
+      # Returns a new instance with new options
+      #
+      # @param new_options [Hash]
       #
       # @return [RelationProxy]
       #
@@ -79,7 +87,7 @@ module ROM
         __new__(relation, new_options)
       end
 
-      # Return if this relation is combined
+      # Returns if this relation is combined aka a relation graph
       #
       # @return [Boolean]
       #
@@ -97,7 +105,7 @@ module ROM
         relation.is_a?(Relation::Composite)
       end
 
-      # Return meta info for this relation
+      # Returns meta info for the wrapped relation
       #
       # @return [Hash]
       #
@@ -106,12 +114,14 @@ module ROM
         options[:meta]
       end
 
+      # @return [Symbol] The wrapped relation's adapter identifier ie :sql or :http
+      #
       # @api private
       def adapter
         relation.class.adapter
       end
 
-      # Return AST for this relation
+      # Returns AST for the wrapped relation
       #
       # @return [Array]
       #

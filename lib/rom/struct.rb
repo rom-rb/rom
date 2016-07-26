@@ -7,7 +7,7 @@ module ROM
   #
   # @api public
   class Struct
-    # Coerce to hash
+    # Coerces a struct to a hash
     #
     # @return [Hash]
     #
@@ -16,9 +16,9 @@ module ROM
       to_h
     end
 
-    # Access attribute value
+    # Reads an attribute value
     #
-    # @param [Symbol] name The name of the attribute
+    # @param name [Symbol] The name of the attribute
     #
     # @return [Object]
     #
@@ -27,7 +27,7 @@ module ROM
       instance_variable_get("@#{name}")
     end
 
-    # Return short string representaiton
+    # Returns a short string representation
     #
     # @return [String]
     #

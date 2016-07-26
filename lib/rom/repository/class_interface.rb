@@ -1,7 +1,19 @@
 module ROM
   class Repository
+    # Class-level APIs for repositories
+    #
+    # @api public
     module ClassInterface
       # Create a root-repository class and set its root relation
+      #
+      # @example
+      #   # where :users is the relation name in your rom container
+      #   class UserRepo < ROM::Repository[:users]
+      #   end
+      #
+      # @param name [Symbol] The relation `register_as` value
+      #
+      # @return [Class] descendant of ROM::Repository::Root
       #
       # @api public
       def [](name)
@@ -11,6 +23,8 @@ module ROM
         klass
       end
 
+      # Inherits configured relations and commands
+      #
       # @api private
       def inherited(klass)
         super
