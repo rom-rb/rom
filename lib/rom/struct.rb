@@ -22,7 +22,7 @@ module ROM
     #
     # @api public
     def [](name)
-      instance_variable_get("@#{name}")
+      __send__(name)
     end
 
     # Returns a short string representation
