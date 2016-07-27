@@ -32,7 +32,7 @@ You can support ROM's development via our [campaign on Bountysource](https://sal
 There are other gems within the rom ecosystem that you will find useful:
 
 * [rom-repository](https://github.com/rom-rb/rom-repository) a higher-level, convenient abstraction with auto-mapping
-* [rom-model](https://github.com/rom-rb/rom-model) extensions for coercion and validation
+* (WIP) [rom-migrator](https://github.com/rom-rb/rom-migrator) common APIs for database migrations
 
 ## Adapters
 
