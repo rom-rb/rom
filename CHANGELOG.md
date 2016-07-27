@@ -1,3 +1,12 @@
+# v0.4.0 2016-07-27
+
+### Changed
+
+* Raise a meaningful exception if no coercer exists (astupka)
+* Don’t reject keys if copy_keys option is true (astupka)
+
+[Compare v0.3.0..v0.4.0](https://github.com/rom-rb/rom-mapper/compare/v0.3.0...v0.4.0)
+
 # v0.3.0 2016-01-06
 
 ### Added
