@@ -1,3 +1,9 @@
+# v0.3.1 2016-07-27
+
+Fixed gemspec so that we don't exclude all files with 'bin' in their name, geez (solnic)
+
+[Compare v0.3.0...v0.3.1](https://github.com/rom-rb/rom-repository/compare/v0.3.0...v0.3.1)
+
 # v0.3.0 2016-07-27
 
 ### Added
