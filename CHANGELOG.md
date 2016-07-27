@@ -1,4 +1,4 @@
-# v0.3.0 to-be-released
+# v0.3.0 2016-07-27
 
 ### Added
 
@@ -20,7 +20,7 @@
 * Depends on `rom 2.0.0` now (solnic)
 * Replace anima with `ROM::Repository::StructAttributes` (flash-gordon)
 
-[Compare v0.2.0...HEAD](https://github.com/rom-rb/rom-repository/compare/v0.2.0...HEAD)
+[Compare v0.2.0...v0.3.0](https://github.com/rom-rb/rom-repository/compare/v0.2.0...v0.3.0)
 
 # v0.2.0 2016-01-06
 
