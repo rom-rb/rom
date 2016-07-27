@@ -1,4 +1,4 @@
-## v2.0.0 to-be-released
+## v2.0.0 2016-07-27
 
 ### Added
 
@@ -34,7 +34,7 @@
 - `auto_registration` coerces its directory to a pathname now (adz)
 - `macros` are now enabled by default in in-line setup block (endash)
 
-[Compare v1.0.0...HEAD](https://github.com/rom-rb/rom/compare/v1.0.0...HEAD)
+[Compare v1.0.0...v2.0.0](https://github.com/rom-rb/rom/compare/v1.0.0...v2.0.0)
 
 ## v1.0.0 2016-01-06
 
