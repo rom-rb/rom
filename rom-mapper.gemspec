@@ -17,7 +17,7 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency 'dry-equalizer', '~> 0.2'
   gem.add_dependency 'transproc', '~> 0.4.0'
-  gem.add_dependency 'rom-support', '~> 1.0.0'
+  gem.add_dependency 'rom-support', '~> 2.0.0'
 
   gem.add_development_dependency 'rake', '~> 10.3'
   gem.add_development_dependency 'rspec', '~> 3.3'
