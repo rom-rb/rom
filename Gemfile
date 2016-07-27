@@ -2,9 +2,6 @@ source 'https://rubygems.org'
 
 gemspec
 
-gem 'rom-support', github: 'rom-rb/rom-support', branch: 'master'
-gem 'rom-mapper', github: 'rom-rb/rom-mapper', branch: 'master'
-
 group :console do
   gem 'pry'
   gem 'pg', platforms: [:mri]
