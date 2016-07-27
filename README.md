@@ -36,21 +36,21 @@ There are other gems within the rom ecosystem that you will find useful:
 
 ## Adapters
 
+* [rom-sql](https://github.com/rom-rb/rom-sql) (supported URI schemes: ado amalgalite cubrid db2 dbi do fdbsql firebird ibmdb informix jdbc mysql mysql2 odbc openbase oracle postgres sqlanywhere sqlite swift tinytds)
+* [rom-yesql](https://github.com/rom-rb/rom-yesql)
+* [rom-http](https://github.com/rom-rb/rom-http)
 * [rom-couchdb](https://github.com/rom-rb/rom-couchdb)
 * [rom-csv](https://github.com/rom-rb/rom-csv)
+* [rom-yaml](https://github.com/rom-rb/rom-yaml)
 * [rom-cassandra](https://github.com/rom-rb/rom-cassandra)
 * [rom-event_store](https://github.com/rom-rb/rom-event_store)
 * [rom-git](https://github.com/rom-rb/rom-git)
-* [rom-http](https://github.com/rom-rb/rom-http)
 * [rom-influxdb](https://github.com/rom-rb/rom-influxdb)
 * [rom-json](https://github.com/rom-rb/rom-json)
 * [rom-kafka](https://github.com/rom-rb/rom-kafka)
 * [rom-mongo](https://github.com/rom-rb/rom-mongo)
 * [rom-neo4j](https://github.com/rom-rb/rom-neo4j)
 * [rom-rethinkdb](https://github.com/rom-rb/rom-rethinkdb)
-* [rom-sql](https://github.com/rom-rb/rom-sql) (supported URI schemes: ado amalgalite cubrid db2 dbi do fdbsql firebird ibmdb informix jdbc mysql mysql2 odbc openbase oracle postgres sqlanywhere sqlite swift tinytds)
-* [rom-yaml](https://github.com/rom-rb/rom-yaml)
-* [rom-yesql](https://github.com/rom-rb/rom-yesql)
 
 See [issues](https://github.com/rom-rb/rom/issues?q=is%3Aopen+is%3Aissue+label%3Aadapter+label%3Afeature)
 for a list of adapters that are planned to be added soon.
