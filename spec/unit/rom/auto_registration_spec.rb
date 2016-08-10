@@ -4,50 +4,117 @@ require 'rom/setup/auto_registration'
 RSpec.describe ROM::Setup, '#auto_registration' do
   let(:setup) { ROM::Setup.new }
 
-  context 'with namespace turned on' do
-    before do
-      setup.auto_registration(SPEC_ROOT.join('fixtures/lib/persistence').to_s)
-    end
+  context 'with default component_dirs' do
+    context 'with namespace turned on' do
+      before do
+        setup.auto_registration(SPEC_ROOT.join('fixtures/lib/persistence').to_s)
+      end
 
-    describe '#relations' do
-      it 'loads files and returns constants' do
-        expect(setup.relation_classes).to eql([Persistence::Relations::Users])
+      describe '#relations' do
+        it 'loads files and returns constants' do
+          expect(setup.relation_classes).to eql([Persistence::Relations::Users])
+        end
+      end
+
+      describe '#commands' do
+        it 'loads files and returns constants' do
+          expect(setup.command_classes).to eql([Persistence::Commands::CreateUser])
+        end
+      end
+
+      describe '#mappers' do
+        it 'loads files and returns constants' do
+          expect(setup.mapper_classes).to eql([Persistence::Mappers::UserList])
+        end
       end
     end
 
-    describe '#commands' do
-      it 'loads files and returns constants' do
-        expect(setup.command_classes).to eql([Persistence::Commands::CreateUser])
+    context 'with namespace turned off' do
+      before do
+        setup.auto_registration(SPEC_ROOT.join('fixtures/app'), namespace: false)
       end
-    end
 
-    describe '#mappers' do
-      it 'loads files and returns constants' do
-        expect(setup.mapper_classes).to eql([Persistence::Mappers::UserList])
+      describe '#relations' do
+        it 'loads files and returns constants' do
+          expect(setup.relation_classes).to eql([Users])
+        end
+      end
+
+      describe '#commands' do
+        it 'loads files and returns constants' do
+          expect(setup.command_classes).to eql([CreateUser])
+        end
+      end
+
+      describe '#mappers' do
+        it 'loads files and returns constants' do
+          expect(setup.mapper_classes).to eql([UserList])
+        end
       end
     end
   end
 
-  context 'with namespace turned off' do
-    before do
-      setup.auto_registration(SPEC_ROOT.join('fixtures/app'), namespace: false)
-    end
+  context 'with custom component_dirs' do
+    context 'with namespace turned on' do
+      before do
+        setup.auto_registration(
+          SPEC_ROOT.join('fixtures/lib/persistence').to_s,
+          component_dirs: {
+            relations: :my_relations,
+            mappers: :my_mappers,
+            commands: :my_commands
+          }
+        )
+      end
 
-    describe '#relations' do
-      it 'loads files and returns constants' do
-        expect(setup.relation_classes).to eql([Users])
+      describe '#relations' do
+        it 'loads files and returns constants' do
+          expect(setup.relation_classes).to eql([Persistence::MyRelations::Users])
+        end
+      end
+
+      describe '#commands' do
+        it 'loads files and returns constants' do
+          expect(setup.command_classes).to eql([Persistence::MyCommands::CreateUser])
+        end
+      end
+
+      describe '#mappers' do
+        it 'loads files and returns constants' do
+          expect(setup.mapper_classes).to eql([Persistence::MyMappers::UserList])
+        end
       end
     end
 
-    describe '#commands' do
-      it 'loads files and returns constants' do
-        expect(setup.command_classes).to eql([CreateUser])
+    context 'with namespace turned off' do
+      before do
+        setup.auto_registration(
+          SPEC_ROOT.join('fixtures/app'),
+          component_dirs: {
+            relations: :my_relations,
+            mappers: :my_mappers,
+            commands: :my_commands
+          },
+          namespace: false
+        )
       end
-    end
 
-    describe '#mappers' do
-      it 'loads files and returns constants' do
-        expect(setup.mapper_classes).to eql([UserList])
+      describe '#relations' do
+        it 'loads files and returns constants' do
+          expect(setup.relation_classes).to eql([Users])
+        end
+      end
+
+      describe '#commands' do
+        it 'loads files and returns constants' do
+          expect(setup.command_classes).to eql([CreateUser])
+        end
+      end
+
+      describe '#mappers' do
+        it 'loads files and returns constants' do
+          expect(setup.mapper_classes).to eql([UserList])
+        end
       end
     end
   end
