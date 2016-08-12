@@ -22,7 +22,7 @@ module ROM
             actual = values.keys
             unknown, missing = actual - attributes, attributes - actual
 
-            if unknown.any? || missing.any?
+            if unknown.size > 0 || missing.size > 0
               raise ROM::Struct::InvalidAttributes.new(self.class, missing, unknown)
             end
           end
