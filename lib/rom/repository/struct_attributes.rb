@@ -31,14 +31,16 @@ module ROM
 
       def define_constructor(attributes)
         ivs = attributes.map { |a| "@#{a}" }.join(', ')
-        values = attributes.map { |a| "values[:#{a}]" }.join(', ')
+        values = attributes.map { |a| "values.fetch(:#{a})" }.join(', ')
 
         assignment = attributes.size > 0 ? "#{ivs} = #{values}" : EMPTY_STRING
 
         module_eval(<<-RUBY, __FILE__, __LINE__ + 1)
           def initialize(values)
-            assert_known_attributes(values)
+            assert_known_attributes(values) if values.size > #{attributes.size}
             #{assignment}
+          rescue KeyError
+            assert_known_attributes(values)
           end
         RUBY
       end
