@@ -17,26 +17,27 @@ module ROM
               h[attribute] = __send__(attribute)
             end
           end
+
+          define_method(:assert_known_attributes) do |values|
+            actual = values.keys
+            unknown, missing = actual - attributes, attributes - actual
+
+            if unknown.any? || missing.any?
+              raise ROM::Struct::InvalidAttributes.new(self.class, missing, unknown)
+            end
+          end
         end
       end
 
       def define_constructor(attributes)
-        module_eval do
-          def __missing_keyword__(keyword)
-            raise ArgumentError.new("missing keyword: #{keyword}")
-          end
-          private :__missing_keyword__
-        end
-
-        kwargs = attributes.map { |a| "#{a}: __missing_keyword__(:#{a})" }.join(', ')
-
         ivs = attributes.map { |a| "@#{a}" }.join(', ')
-        values = attributes.join(', ')
+        values = attributes.map { |a| "values[:#{a}]" }.join(', ')
 
         assignment = attributes.size > 0 ? "#{ivs} = #{values}" : EMPTY_STRING
 
         module_eval(<<-RUBY, __FILE__, __LINE__ + 1)
-          def initialize(#{kwargs})
+          def initialize(values)
+            assert_known_attributes(values)
             #{assignment}
           end
         RUBY
