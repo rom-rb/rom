@@ -1,0 +1,2 @@
+class UserList
+end
