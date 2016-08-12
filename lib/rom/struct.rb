@@ -5,6 +5,17 @@ module ROM
   #
   # @api public
   class Struct
+    # Error on building a struct instance
+    #
+    # @api private
+    class InvalidAttributes < ArgumentError
+      # @api private
+      def initialize(klass, missing, unknown)
+        super("#{klass} attributes " \
+              "missing: #{missing.map(&:inspect).join(', ')}, " \
+              "unknown: #{unknown.map(&:inspect).join(', ')}")
+      end
+    end
     # Coerces a struct to a hash
     #
     # @return [Hash]
