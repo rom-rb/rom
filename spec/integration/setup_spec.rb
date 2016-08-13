@@ -145,4 +145,18 @@ describe 'Configuring ROM' do
         .to eql([Test::User.new(name: 'Jane')])
     end
   end
+
+  it 'allows to use a relation with a schema in multiple containers' do
+    class Test::UserRelation < ROM::Relation[:memory]
+      dataset :users
+
+      schema do
+        attribute :id, Types::Int.meta(primary_key: true)
+      end
+    end
+
+    2.times do
+      ROM.container(:memory) { |c| c.register_relation(Test::UserRelation) }
+    end
+  end
 end

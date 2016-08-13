@@ -78,6 +78,8 @@ module ROM
     #
     # @api private
     def finalize!(gateway = nil, &block)
+      return self if frozen?
+
       @attributes = inferrer.call(name.dataset, gateway) if inferrer
       @primary_key = select { |attr| attr.meta[:primary_key] == true }
       block.call if block
