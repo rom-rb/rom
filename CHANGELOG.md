@@ -1,3 +1,9 @@
+# v0.3.2 to-be-released
+
+Fixed syntax errors when using reserved Ruby keywords as ROM::Struct attributes (flash-gordon)
+
+[Compare v0.3.1...v0.3.2](https://github.com/rom-rb/rom-repository/compare/v0.3.1...v0.3.2)
+
 # v0.3.1 2016-07-27
 
 Fixed gemspec so that we don't exclude all files with 'bin' in their name, geez (solnic)
