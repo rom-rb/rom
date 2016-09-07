@@ -10,7 +10,7 @@ module ROM
 
     include Options
 
-    option :namespace, reader: true, type: [TrueClass, FalseClass], default: true
+    option :namespace, reader: true, type: [TrueClass, FalseClass, String], default: true
     option :component_dirs, reader: true, type: ::Hash, default: {
       relations: :relations,
       mappers: :mappers,
@@ -44,21 +44,66 @@ module ROM
     def load_entities(entity)
       Dir[globs[entity]].map do |file|
         require file
-        Inflector.constantize(
-          const_name(component_dirs.fetch(entity), file)
-        )
+        klass_name = case
+        when namespace.class == String
+          CustomNamespaceStrategy.new(namespace: namespace, file: file).call
+        when namespace == true
+          WithNamespaceStrategy.new(file: file, directory: directory).call
+        when namespace == false
+          NoNamespaceStrategy.new(file: file, directory: directory, entity: component_dirs.fetch(entity)).call
+        end
+        Inflector.constantize(klass_name)
       end
     end
 
-    def const_name(entity, file)
-      name =
-        if namespace
-          file.sub(/^#{directory.dirname}\//, '')
-        else
-          file.sub(/^#{directory}\/#{entity}\//, '')
-        end.sub(EXTENSION_REGEX, '')
+    class CustomNamespaceStrategy
+      def initialize(namespace:, file:)
+        @namespace, @file = namespace, file
+      end
 
-      Inflector.camelize(name)
+      def call
+        "#{namespace}::#{Inflector.camelize(filename).sub(EXTENSION_REGEX, '')}"
+      end
+
+      private
+
+      attr_reader :namespace, :file
+
+      def filename
+        Pathname.new(file).basename.to_s
+      end
+    end
+
+    class WithNamespaceStrategy
+      def initialize(directory:, file:)
+        @directory, @file = directory, file
+      end
+
+      def call
+        Inflector.camelize(
+          file.sub(/^#{directory.dirname}\//, '').sub(EXTENSION_REGEX, '')
+        )
+      end
+
+      private
+
+      attr_reader :directory, :file
+    end
+
+    class NoNamespaceStrategy
+      def initialize(directory:, file:, entity:)
+        @directory, @file, @entity = directory, file, entity
+      end
+
+      def call
+        Inflector.camelize(
+          file.sub(/^#{directory}\/#{entity}\//, '').sub(EXTENSION_REGEX, '')
+        )
+      end
+
+      private
+
+      attr_reader :directory, :file, :entity
     end
   end
 end

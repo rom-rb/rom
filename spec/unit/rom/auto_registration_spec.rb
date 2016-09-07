@@ -117,5 +117,37 @@ RSpec.describe ROM::Setup, '#auto_registration' do
         end
       end
     end
+
+    context 'with custom namespace' do
+      before do
+        setup.auto_registration(
+          SPEC_ROOT.join('fixtures/custom'),
+          component_dirs: {
+            relations: :relations,
+            mappers: :mappers,
+            commands: :commands
+          },
+          namespace: 'My::Namespace'
+        )
+      end
+
+      describe '#relations' do
+        it 'loads files and returns constants' do
+          expect(setup.relation_classes).to eql([My::Namespace::Users])
+        end
+      end
+
+      describe '#commands' do
+        it 'loads files and returns constants' do
+          expect(setup.command_classes).to eql([My::Namespace::CreateUser])
+        end
+      end
+
+      describe '#mappers' do
+        it 'loads files and returns constants' do
+          expect(setup.mapper_classes).to eql([My::Namespace::UserList])
+        end
+      end
+    end
   end
 end
