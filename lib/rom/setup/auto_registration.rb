@@ -57,9 +57,9 @@ module ROM
     end
 
     class CustomNamespaceStrategy
-      def initialize(namespace:, file:)
-        @namespace, @file = namespace, file
-      end
+      include Options
+      option :file, reader: true, type: String
+      option :namespace, reader: true, type: String
 
       def call
         "#{namespace}::#{Inflector.camelize(filename).sub(EXTENSION_REGEX, '')}"
@@ -75,9 +75,9 @@ module ROM
     end
 
     class WithNamespaceStrategy
-      def initialize(directory:, file:)
-        @directory, @file = directory, file
-      end
+      include Options
+      option :directory, reader: true, type: Pathname
+      option :file, reader: true, type: String
 
       def call
         Inflector.camelize(
@@ -91,9 +91,10 @@ module ROM
     end
 
     class NoNamespaceStrategy
-      def initialize(directory:, file:, entity:)
-        @directory, @file, @entity = directory, file, entity
-      end
+      include Options
+      option :directory, reader: true, type: Pathname
+      option :file, reader: true, type: String
+      option :entity, reader: true, type: Symbol
 
       def call
         Inflector.camelize(
