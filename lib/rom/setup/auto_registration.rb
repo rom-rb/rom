@@ -6,7 +6,6 @@ require 'rom/support/options'
 
 module ROM
   class AutoRegistration
-    EXTENSION_REGEX = /\.rb$/.freeze
 
     include Options
 
@@ -44,67 +43,19 @@ module ROM
     def load_entities(entity)
       Dir[globs[entity]].map do |file|
         require file
-        klass_name = case
-        when namespace.class == String
-          CustomNamespaceStrategy.new(namespace: namespace, file: file).call
-        when namespace == true
-          WithNamespaceStrategy.new(file: file, directory: directory).call
-        when namespace == false
-          NoNamespaceStrategy.new(file: file, directory: directory, entity: component_dirs.fetch(entity)).call
+        klass_name = case namespace
+        when String
+          AutoRegistrationStrategies::CustomNamespace.new(namespace: namespace, file: file).call
+        when TrueClass
+          AutoRegistrationStrategies::WithNamespace.new(file: file, directory: directory).call
+        when FalseClass
+          AutoRegistrationStrategies::NoNamespace.new(file: file, directory: directory, entity: component_dirs.fetch(entity)).call
         end
         Inflector.constantize(klass_name)
       end
     end
 
-    class CustomNamespaceStrategy
-      include Options
-      option :file, reader: true, type: String
-      option :namespace, reader: true, type: String
 
-      def call
-        "#{namespace}::#{Inflector.camelize(filename).sub(EXTENSION_REGEX, '')}"
-      end
 
-      private
-
-      attr_reader :namespace, :file
-
-      def filename
-        Pathname.new(file).basename.to_s
-      end
-    end
-
-    class WithNamespaceStrategy
-      include Options
-      option :directory, reader: true, type: Pathname
-      option :file, reader: true, type: String
-
-      def call
-        Inflector.camelize(
-          file.sub(/^#{directory.dirname}\//, '').sub(EXTENSION_REGEX, '')
-        )
-      end
-
-      private
-
-      attr_reader :directory, :file
-    end
-
-    class NoNamespaceStrategy
-      include Options
-      option :directory, reader: true, type: Pathname
-      option :file, reader: true, type: String
-      option :entity, reader: true, type: Symbol
-
-      def call
-        Inflector.camelize(
-          file.sub(/^#{directory}\/#{entity}\//, '').sub(EXTENSION_REGEX, '')
-        )
-      end
-
-      private
-
-      attr_reader :directory, :file, :entity
-    end
   end
 end
