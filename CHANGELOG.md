@@ -1,3 +1,15 @@
+## v2.0.1 to-be-released
+
+### Added
+
+- Support for different auto-registration strategies (janjiss)
+
+### Fixed
+
+- Finalizing schema that is already finalized no longer crashes (flash-gordon)
+
+[Compare v2.0.0...HEAD](https://github.com/rom-rb/rom/compare/v2.0.0...HEAD)
+
 ## v2.0.0 2016-07-27
 
 ### Added
