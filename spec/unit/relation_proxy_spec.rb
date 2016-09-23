@@ -1,3 +1,5 @@
+require 'dry-struct'
+
 RSpec.describe 'loading proxy' do
   include_context 'database'
   include_context 'relations'
@@ -56,7 +58,7 @@ RSpec.describe 'loading proxy' do
 
     context 'setting custom model type' do
       let(:user_type) do
-        Class.new(Dry::Types::Struct) do
+        Class.new(Dry::Struct) do
           attribute :id, Dry::Types['strict.int']
           attribute :name, Dry::Types['strict.string']
         end

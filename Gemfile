@@ -16,6 +16,7 @@ end
 
 group :test do
   gem 'rspec'
+  gem 'dry-struct'
   gem 'byebug', platforms: :mri
   gem 'pg', platforms: [:mri, :rbx]
   gem 'jdbc-postgres', platforms: :jruby
