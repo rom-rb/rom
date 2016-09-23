@@ -6,11 +6,10 @@ require 'rom/support/options'
 
 module ROM
   class AutoRegistration
-    EXTENSION_REGEX = /\.rb$/.freeze
 
     include Options
 
-    option :namespace, reader: true, type: [TrueClass, FalseClass], default: true
+    option :namespace, reader: true, type: [TrueClass, FalseClass, String], default: true
     option :component_dirs, reader: true, type: ::Hash, default: {
       relations: :relations,
       mappers: :mappers,
@@ -44,21 +43,19 @@ module ROM
     def load_entities(entity)
       Dir[globs[entity]].map do |file|
         require file
-        Inflector.constantize(
-          const_name(component_dirs.fetch(entity), file)
-        )
+        klass_name = case namespace
+        when String
+          AutoRegistrationStrategies::CustomNamespace.new(namespace: namespace, file: file).call
+        when TrueClass
+          AutoRegistrationStrategies::WithNamespace.new(file: file, directory: directory).call
+        when FalseClass
+          AutoRegistrationStrategies::NoNamespace.new(file: file, directory: directory, entity: component_dirs.fetch(entity)).call
+        end
+        Inflector.constantize(klass_name)
       end
     end
 
-    def const_name(entity, file)
-      name =
-        if namespace
-          file.sub(/^#{directory.dirname}\//, '')
-        else
-          file.sub(/^#{directory}\/#{entity}\//, '')
-        end.sub(EXTENSION_REGEX, '')
 
-      Inflector.camelize(name)
-    end
+
   end
 end

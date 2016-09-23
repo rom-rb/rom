@@ -1,3 +1,8 @@
+
+require 'rom/setup/auto_registration_strategies/base'
+require 'rom/setup/auto_registration_strategies/no_namespace'
+require 'rom/setup/auto_registration_strategies/with_namespace'
+require 'rom/setup/auto_registration_strategies/custom_namespace'
 require 'rom/setup/auto_registration'
 
 module ROM
