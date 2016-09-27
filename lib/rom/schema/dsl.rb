@@ -51,7 +51,7 @@ module ROM
 
       # @api private
       def call
-        Schema.new(name, attributes, inferrer: inferrer && inferrer.new(self))
+        Schema.new(name, attributes, inferrer: inferrer)
       end
     end
   end
