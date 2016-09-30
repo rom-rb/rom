@@ -1,8 +1,7 @@
-require 'spec_helper'
-require 'rom/setup/auto_registration'
+require 'rom/setup'
 
 RSpec.describe ROM::Setup, '#auto_registration' do
-  let(:setup) { ROM::Setup.new }
+  subject(:setup) { ROM::Setup.new }
 
   context 'with default component_dirs' do
     context 'with namespace turned on' do
