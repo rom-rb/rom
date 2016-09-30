@@ -1,3 +1,8 @@
+require 'pathname'
+
+require 'rom/support/inflector'
+require 'rom/setup/auto_registration_strategies/base'
+
 module ROM
   module AutoRegistrationStrategies
     class NoNamespace < Base

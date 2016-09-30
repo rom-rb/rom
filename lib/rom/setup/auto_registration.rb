@@ -4,6 +4,10 @@ require 'rom/support/constants'
 require 'rom/support/inflector'
 require 'rom/support/options'
 
+require 'rom/setup/auto_registration_strategies/no_namespace'
+require 'rom/setup/auto_registration_strategies/with_namespace'
+require 'rom/setup/auto_registration_strategies/custom_namespace'
+
 module ROM
   class AutoRegistration
     include Options
