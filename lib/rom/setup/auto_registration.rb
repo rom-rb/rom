@@ -6,10 +6,10 @@ require 'rom/support/options'
 
 module ROM
   class AutoRegistration
-
     include Options
 
     option :namespace, reader: true, type: [TrueClass, FalseClass, String], default: true
+
     option :component_dirs, reader: true, type: ::Hash, default: {
       relations: :relations,
       mappers: :mappers,
@@ -43,19 +43,23 @@ module ROM
     def load_entities(entity)
       Dir[globs[entity]].map do |file|
         require file
-        klass_name = case namespace
-        when String
-          AutoRegistrationStrategies::CustomNamespace.new(namespace: namespace, file: file).call
-        when TrueClass
-          AutoRegistrationStrategies::WithNamespace.new(file: file, directory: directory).call
-        when FalseClass
-          AutoRegistrationStrategies::NoNamespace.new(file: file, directory: directory, entity: component_dirs.fetch(entity)).call
-        end
+        klass_name =
+          case namespace
+          when String
+            AutoRegistrationStrategies::CustomNamespace.new(
+              namespace: namespace, file: file
+            ).call
+          when TrueClass
+            AutoRegistrationStrategies::WithNamespace.new(
+              file: file, directory: directory
+            ).call
+          when FalseClass
+            AutoRegistrationStrategies::NoNamespace.new(
+              file: file, directory: directory, entity: component_dirs.fetch(entity)
+            ).call
+          end
         Inflector.constantize(klass_name)
       end
     end
-
-
-
   end
 end
