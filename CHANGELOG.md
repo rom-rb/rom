@@ -1,14 +1,15 @@
-## v2.0.1 to-be-released
+## v2.0.1 2016-09-30
 
 ### Added
 
 - Support for different auto-registration strategies (janjiss)
+- Support for custom component dir names in auto-registration (AMHOL)
 
 ### Fixed
 
 - Finalizing schema that is already finalized no longer crashes (flash-gordon)
 
-[Compare v2.0.0...HEAD](https://github.com/rom-rb/rom/compare/v2.0.0...HEAD)
+[Compare v2.0.0...v2.0.1](https://github.com/rom-rb/rom/compare/v2.0.0...v2.0.1)
 
 ## v2.0.0 2016-07-27
 
