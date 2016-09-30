@@ -9,13 +9,13 @@ module ROM
       option :namespace, reader: true, type: String
 
       def call
-        "#{namespace}::#{Inflector.camelize(filename).sub(EXTENSION_REGEX, '')}"
+        "#{namespace}::#{Inflector.camelize(filename)}"
       end
 
       private
 
       def filename
-        Pathname.new(file).basename.to_s
+        Pathname(file).basename('.rb')
       end
     end
   end
