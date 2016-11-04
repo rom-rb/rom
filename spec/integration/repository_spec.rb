@@ -50,6 +50,14 @@ RSpec.describe 'ROM repository' do
     expect(repo.users_with_tasks_and_tags.first.to_h).to eql(user_with_task_and_tags.to_h)
   end
 
+  it 'loads nested combined relations using configured associations' do
+    jane = repo.users_with_posts_and_their_labels.first
+
+    expect(jane.posts.size).to be(1)
+    expect(jane.posts.map(&:title)).to eql(['Hello From Jane'])
+    expect(jane.posts.flat_map(&:labels).flat_map(&:name)).to eql(%w(red blue))
+  end
+
   it 'loads a wrapped relation' do
     expect(repo.tag_with_wrapped_task.first).to eql(tag_with_task)
   end

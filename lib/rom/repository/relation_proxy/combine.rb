@@ -56,12 +56,12 @@ module ROM
 
           combine_opts = Hash.new { |h, k| h[k] = {} }
 
-          options.each do |(type, relations)|
-            if relations
-              combine_opts[type] = combine_opts_from_relations(relations)
+          options.each do |key, value|
+            if key == :one || key == :many
+              combine_opts[key].merge!(combine_opts_from_relations(value))
             else
-              result, curried, keys = combine_opts_for_assoc(type)
-              combine_opts[result][type] = [curried, keys]
+              result, curried, keys = combine_opts_for_assoc(key, value)
+              combine_opts[result][key] = [curried, keys]
             end
           end
 
@@ -214,9 +214,10 @@ module ROM
         # This is used when a flat list of association names was passed to `combine`
         #
         # @api private
-        def combine_opts_for_assoc(name)
+        def combine_opts_for_assoc(name, opts)
           assoc = relation.associations[name]
           curried = registry[assoc.target.relation].for_combine(assoc)
+          curried = curried.combine(opts) unless opts.nil?
           keys = assoc.combine_keys(__registry__)
           [assoc.result, curried, keys]
         end

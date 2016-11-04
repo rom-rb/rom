@@ -13,6 +13,22 @@ RSpec.shared_context 'structs' do
     repo.tags.mapper.model
   end
 
+  let(:post_struct) do
+    repo.posts.mapper.model
+  end
+
+  let(:label_struct) do
+    repo.labels.mapper.model
+  end
+
+  let(:post_with_labels_struct) do
+    mapper_for(repo.posts_with_labels).model
+  end
+
+  let(:label_with_posts_struct) do
+    mapper_for(repo.label_with_posts).model
+  end
+
   let(:tag_with_task_struct) do
     mapper_for(repo.tag_with_wrapped_task).model
   end
@@ -23,6 +39,10 @@ RSpec.shared_context 'structs' do
 
   let(:user_with_task_struct) do
     mapper_for(repo.users_with_task).model
+  end
+
+  let(:user_with_posts_struct) do
+    mapper_for(repo.users_with_posts_and_their_labels).model
   end
 
   let(:task_with_tags_struct) do
@@ -99,5 +119,24 @@ RSpec.shared_context 'structs' do
 
   let(:joe_task) do
     task_struct.new(id: 1, user_id: 2, title: 'Joe Task')
+  end
+
+  let(:jane_with_posts) do
+    user_with_posts_struct.new(id: 1, name: 'Jane', posts: [post_with_label])
+  end
+
+  let(:label_red) do
+    label_with_posts_struct.new(id: 1, name: 'red', post: 1)
+  end
+
+  let(:label_blue) do
+    label_with_posts_struct.new(id: 3, name: 'blue', post: 1)
+  end
+
+  let(:post_with_label) do
+    post_with_labels_struct.new(id: 2, title: 'Hello From Jane',
+                                body: 'Jane Post',
+                                author_id: 1,
+                                labels: [label_red, label_blue])
   end
 end
