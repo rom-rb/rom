@@ -1,24 +1,23 @@
 language: ruby
-sudo: false
+dist: trusty
+sudo: required
 cache: bundler
-env:
-  - CODECLIMATE_REPO_TOKEN=f7c652b65a700fcf1032174afc5ea243b991e48bf73077cc34c148e1c800a2f7
 bundler_args: --without sql benchmarks console tools
 script: "bundle exec rake ci"
+after_success:
+  - '[ "$TRAVIS_RUBY_VERSION" = "2.3.1" ] && [ "$TRAVIS_BRANCH" = "master" ] && bundle exec codeclimate-test-reporter'
 rvm:
   - 2.1
   - 2.2
   - 2.3.1
-  - rbx-2
+  - rbx-3
   - jruby-9.1.5.0
-  - ruby-head
 env:
   global:
     - JRUBY_OPTS='--dev -J-Xmx1024M'
 matrix:
-  allow_failures:
-    - rvm: ruby-head
-    - rvm: rbx-2
+  allowed_failures:
+    - rvm: rbx-3
 notifications:
   webhooks:
     urls:

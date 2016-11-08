@@ -13,9 +13,13 @@ group :test do
   gem 'minitest'
   gem 'inflecto', '~> 0.0', '>= 0.0.2'
 
-  platforms :rbx do
-    gem 'rubysl-bigdecimal', platforms: :rbx
+  platforms :mri do
     gem 'codeclimate-test-reporter', require: false
+    gem 'simplecov', require: false
+  end
+
+  platforms :rbx do
+    gem 'rubysl-bigdecimal'
   end
 end
 
