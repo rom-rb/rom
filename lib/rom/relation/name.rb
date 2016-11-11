@@ -65,7 +65,7 @@ module ROM
       # @api private
       def to_s
         if relation == dataset
-          relation
+          relation.to_s
         else
           "#{relation} on #{dataset}"
         end
