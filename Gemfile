@@ -31,7 +31,7 @@ group :sql do
 end
 
 group :benchmarks do
-  gem 'activerecord', '5.0.0.beta4'
+  gem 'activerecord', '~> 5.0'
   gem 'benchmark-ips', '~> 2.2.0'
   gem 'rom-repository', github: 'rom-rb/rom-repository', branch: 'master'
 end
