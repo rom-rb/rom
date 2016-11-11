@@ -1,3 +1,16 @@
+## v2.0.2 2016-11-11
+
+## Added
+
+* API docs for `ROM::Container` (solnic)
+
+## Fixed
+
+* Custom command input function is no longer overridden by schema hash (solnic)
+* `Relation::Name#to_s` returns a string properly when there is no alias (solnic)
+
+[Compare v2.0.1...v2.0.2](https://github.com/rom-rb/rom/compare/v2.0.0...v2.0.2)
+
 ## v2.0.1 2016-09-30
 
 ### Added
