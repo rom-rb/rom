@@ -16,7 +16,18 @@ module ROM
             if options.key?(:input) || !relation.schema?
               super
             else
-              super(relation, options.merge(input: relation.schema_hash))
+              default_input = options.fetch(:input, input)
+
+              input_handler =
+                if default_input != Hash && relation.schema?
+                  -> tuple { relation.schema_hash[input[tuple]] }
+                elsif relation.schema?
+                  relation.schema_hash
+                else
+                  default_input
+                end
+
+              super(relation, options.merge(input: input_handler))
             end
           end
         end
