@@ -7,7 +7,7 @@ task default: [:ci]
 desc 'Run specs in isolation'
 task :"spec:isolation" do
   FileList["spec/**/*_spec.rb"].each do |spec|
-    sh "rspec", spec
+    sh "COVERAGE=false bundle exec rspec #{spec}"
   end
 end
 

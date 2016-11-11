@@ -15,6 +15,7 @@ rvm:
 env:
   global:
     - JRUBY_OPTS='--dev -J-Xmx1024M'
+    - COVERAGE='true'
 matrix:
   allow_failures:
     - rvm: rbx-3
