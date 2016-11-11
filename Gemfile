@@ -20,7 +20,11 @@ group :test do
   gem 'byebug', platforms: :mri
   gem 'pg', platforms: [:mri, :rbx]
   gem 'jdbc-postgres', platforms: :jruby
-  gem 'codeclimate-test-reporter', require: nil
+
+  platform :mri do
+    gem 'codeclimate-test-reporter', require: false
+    gem 'simplecov'
+  end
 end
 
 group :benchmarks do

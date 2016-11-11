@@ -1,20 +1,22 @@
 language: ruby
-sudo: false
+dist: trusty
+sudo: required
 cache: bundler
 bundler_args: --without yard guard benchmarks tools
 before_script:
   - psql -c 'create database rom_repository' -U postgres
 script: "bundle exec rake ci"
+after_success:
+  - '[ "$TRAVIS_RUBY_VERSION" = "2.3.1" ] && [ "$TRAVIS_BRANCH" = "master" ] && bundle exec codeclimate-test-reporter'
 rvm:
   - 2.1
   - 2.2
   - 2.3.1
-  - rbx-2
-  - jruby-9.0.5.0
+  - rbx-3
+  - jruby-9.1.5.0
   - ruby-head
 env:
   global:
-    - CODECLIMATE_REPO_TOKEN=173b95dae5c6ac281bc36a4b212291a89fed9b520b39a86bafdf603692250e60
     - JRUBY_OPTS='--dev -J-Xmx1024M'
 matrix:
   allow_failures:
