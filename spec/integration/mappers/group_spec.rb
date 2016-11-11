@@ -44,7 +44,7 @@ describe 'Mapper definition DSL' do
 
       container
 
-      Test::UserWithTasks.send(:include, Equalizer.new(:name, :email, :tasks))
+      Test::UserWithTasks.send(:include, Dry::Equalizer(:name, :email, :tasks))
 
       jane = container.relation(:users).with_tasks.map_with(:with_tasks).to_a.last
 
@@ -74,7 +74,7 @@ describe 'Mapper definition DSL' do
 
       container
 
-      Test::UserWithTasks.send(:include, Equalizer.new(:name, :email, :tasks))
+      Test::UserWithTasks.send(:include, Dry::Equalizer(:name, :email, :tasks))
 
       jane = container.relation(:users).with_tasks.map_with(:with_tasks).to_a.last
 
@@ -106,8 +106,8 @@ describe 'Mapper definition DSL' do
 
       container
 
-      Test::UserWithTasks.send(:include, Equalizer.new(:name, :email, :tasks))
-      Test::Task.send(:include, Equalizer.new(:title, :priority))
+      Test::UserWithTasks.send(:include, Dry::Equalizer(:name, :email, :tasks))
+      Test::Task.send(:include, Dry::Equalizer(:title, :priority))
 
       jane = container.relation(:users).with_tasks.map_with(:with_tasks).to_a.last
 
@@ -145,9 +145,9 @@ describe 'Mapper definition DSL' do
 
       container
 
-      Test::TaskWithUsers.send(:include, Equalizer.new(:title, :priority, :users))
-      Test::TaskUser.send(:include, Equalizer.new(:name, :contacts))
-      Test::Contact.send(:include, Equalizer.new(:email))
+      Test::TaskWithUsers.send(:include, Dry::Equalizer(:title, :priority, :users))
+      Test::TaskUser.send(:include, Dry::Equalizer(:name, :contacts))
+      Test::Contact.send(:include, Dry::Equalizer(:email))
 
       task = container.relation(:tasks).with_users.map_with(:with_users).first
 

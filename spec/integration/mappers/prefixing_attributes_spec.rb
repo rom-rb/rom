@@ -28,7 +28,7 @@ describe 'Mappers / Prefixing attributes' do
       user_email: 'jane@doe.org'
     }
 
-    Test::User.send(:include, Equalizer.new(:id, :name, :email))
+    Test::User.send(:include, Dry::Equalizer(:id, :name, :email))
 
     jane = container.relation(:users).as(:users).first
 

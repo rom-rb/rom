@@ -8,8 +8,8 @@ group :console do
 end
 
 group :test do
-  gem 'virtus'
-  gem 'anima', '~> 0.2.0'
+  gem 'dry-equalizer'
+  gem 'dry-struct'
   gem 'minitest'
   gem 'inflecto', '~> 0.0', '>= 0.0.2'
 

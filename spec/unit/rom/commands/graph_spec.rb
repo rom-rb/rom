@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'dry-struct'
 
 describe ROM::Commands::Graph do
   shared_examples_for 'a persisted graph' do
@@ -134,9 +135,19 @@ describe ROM::Commands::Graph do
     end
 
     before do
-      Test::Tag = Class.new { include Anima.new(:name) }
-      Test::Task = Class.new { include Anima.new(:title, :tags) }
-      Test::User = Class.new { include Anima.new(:name, :task) }
+      Test::Tag = Class.new(Dry::Struct) {
+        attribute :name, Types::String
+      }
+
+      Test::Task = Class.new(Dry::Struct) {
+        attribute :title, Types::String
+        attribute :tags, Types::Array.member(Test::Tag)
+      }
+
+      Test::User = Class.new(Dry::Struct) {
+        attribute :name, Types::String
+        attribute :task, Test::Task
+      }
 
       class Test::UserMapper < ROM::Mapper
         relation :users

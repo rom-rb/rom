@@ -63,8 +63,8 @@ describe 'Reading relations' do
 
     container
 
-    Test::User.send(:include, Equalizer.new(:name, :email))
-    Test::UserWithTasks.send(:include, Equalizer.new(:name, :email, :tasks))
+    Test::User.send(:include, Dry::Equalizer(:name, :email))
+    Test::UserWithTasks.send(:include, Dry::Equalizer(:name, :email, :tasks))
 
     user = container.relation(:users).sorted.as(:users).first
 
@@ -100,8 +100,8 @@ describe 'Reading relations' do
 
     container
 
-    Test::User.send(:include, Equalizer.new(:name, :email))
-    Test::UserWithTask.send(:include, Equalizer.new(:name, :email, :task))
+    Test::User.send(:include, Dry::Equalizer(:name, :email))
+    Test::UserWithTask.send(:include, Dry::Equalizer(:name, :email, :task))
 
     user = container.relation(:users).sorted.with_task.as(:with_task).first
 

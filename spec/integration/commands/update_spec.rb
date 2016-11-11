@@ -1,6 +1,5 @@
 require 'spec_helper'
-
-require 'ostruct'
+require 'dry-struct'
 
 describe 'Commands / Update' do
   include_context 'container'
@@ -87,7 +86,10 @@ describe 'Commands / Update' do
 
   describe 'piping results through mappers' do
     it 'allows scoping to a virtual relation' do
-      user_model = Class.new { include Anima.new(:name, :email) }
+      user_model = Class.new(Dry::Struct) {
+        attribute :name, Types::String
+        attribute :email, Types::String
+      }
 
       configuration.mappers do
         define(:users) do

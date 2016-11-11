@@ -101,9 +101,9 @@ describe 'Mapper definition DSL' do
     it 'works' do
       container
 
-      Test::User.send(:include, Equalizer.new(:name, :email, :tasks, :address, :book))
-      Test::Task.send(:include, Equalizer.new(:title, :meta))
-      Test::Address.send(:include, Equalizer.new(:city))
+      Test::User.send(:include, Dry::Equalizer(:name, :email, :tasks, :address, :book))
+      Test::Task.send(:include, Dry::Equalizer(:title, :meta))
+      Test::Address.send(:include, Dry::Equalizer(:city))
 
       result = users.combine(
         tasks.for_users.combine(tasks.tags),

@@ -54,7 +54,7 @@ describe 'Mappers / embedded' do
 
     jane = container.relation(:users).as(:users).first
 
-    Test::Address.send(:include, Equalizer.new(:street, :city))
+    Test::Address.send(:include, Dry::Equalizer(:street, :city))
 
     expect(jane.name).to eql('Jane')
     expect(jane.address).to eql(Test::Address.new(street: 'Somewhere 1', city: 'NYC'))

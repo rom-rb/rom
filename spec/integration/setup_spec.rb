@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'virtus'
+require 'dry-struct'
 
 describe 'Configuring ROM' do
   context 'with existing schema' do
@@ -79,9 +79,8 @@ describe 'Configuring ROM' do
     # NOTE: move to DSL tests
     it 'exposes boot DSL inside the setup block via `macros` plugin' do
       module Test
-        User = Class.new do
-          include Virtus.value_object
-          values { attribute :name, String }
+        User = Class.new(Dry::Struct) do
+          attribute :name, Types::String
         end
       end
 
@@ -113,9 +112,8 @@ describe 'Configuring ROM' do
   describe 'multi-step setup' do
     it 'exposes boot DSL that can be invoked multiple times' do
       module Test
-        User = Class.new do
-          include Virtus.value_object
-          values { attribute :name, String }
+        User = Class.new(Dry::Struct) do
+          attribute :name, Types::String
         end
       end
 

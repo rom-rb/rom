@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'dry-struct'
 
 describe 'Commands / Create' do
   include_context 'container'
@@ -40,12 +41,14 @@ describe 'Commands / Create' do
       end
     end
 
-    Test::User = Class.new do
-      include Anima.new(:name, :email)
+    Test::User = Class.new(Dry::Struct) do
+      attribute :name, Types::String
+      attribute :email, Types::String
     end
 
-    Test::Task = Class.new do
-      include Anima.new(:name, :title)
+    Test::Task = Class.new(Dry::Struct) do
+      attribute :name, Types::String
+      attribute :title, Types::String
     end
 
     class Test::UserMapper < ROM::Mapper

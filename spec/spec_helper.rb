@@ -17,7 +17,6 @@ require 'rom/support/deprecations'
 ROM::Deprecations.set_logger!(SPEC_ROOT.join('../log/deprecations.log'))
 
 require 'rom'
-require 'anima'
 
 begin
   require 'byebug'

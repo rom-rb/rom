@@ -30,7 +30,7 @@ describe 'Mappers / Renaming attributes' do
 
     container
 
-    Test::User.send(:include, Equalizer.new(:id, :name))
+    Test::User.send(:include, Dry::Equalizer(:id, :name))
 
     container.relations.users << { _id: 123, user_name: 'Jane' }
 
@@ -63,7 +63,7 @@ describe 'Mappers / Renaming attributes' do
 
     container
 
-    Test::UserWithAddress.send(:include, Equalizer.new(:id, :name, :address))
+    Test::UserWithAddress.send(:include, Dry::Equalizer(:id, :name, :address))
 
     container.relations.users << { _id: 123, user_name: 'Jane' }
 
@@ -102,7 +102,7 @@ describe 'Mappers / Renaming attributes' do
 
     container
 
-    Test::UserWithAddresses.send(:include, Equalizer.new(:id, :name, :addresses))
+    Test::UserWithAddresses.send(:include, Dry::Equalizer(:id, :name, :addresses))
 
     container.relations.users << { _id: 123, user_name: 'Jane' }
 
