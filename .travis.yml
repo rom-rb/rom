@@ -16,7 +16,7 @@ env:
   global:
     - JRUBY_OPTS='--dev -J-Xmx1024M'
 matrix:
-  allowed_failures:
+  allow_failures:
     - rvm: rbx-3
 notifications:
   webhooks:
