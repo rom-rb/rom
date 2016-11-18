@@ -9,9 +9,8 @@ group :test do
   gem 'virtus'
   gem 'inflecto', '~> 0.0', '>= 0.0.2'
 
-  platforms :rbx do
-    gem 'codeclimate-test-reporter', require: false
-  end
+  gem 'codeclimate-test-reporter', require: false
+  gem 'simplecov', require: false
 end
 
 group :benchmarks do

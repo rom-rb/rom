@@ -1,13 +1,13 @@
-# encoding: utf-8
+if RUBY_ENGINE == 'ruby' && ENV['CI'] == 'true'
+  require 'simplecov'
+  SimpleCov.start do
+    add_filter '/spec/'
+  end
+end
 
 # this is needed for guard to work, not sure why :(
 require "bundler"
 Bundler.setup
-
-if RUBY_ENGINE == "rbx"
-  require "codeclimate-test-reporter"
-  CodeClimate::TestReporter.start
-end
 
 require 'rom-mapper'
 
