@@ -1,5 +1,5 @@
 require 'rom/support/registry'
-require 'rom/support/inflector'
+require 'dry/core/inflector'
 
 module ROM
   class AssociationSet < ROM::Registry
@@ -19,7 +19,7 @@ module ROM
       if key?(key)
         super
       else
-        super(Inflector.singularize(key))
+        super(Dry::Core::Inflector.singularize(key))
       end
     end
   end

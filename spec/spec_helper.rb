@@ -13,8 +13,8 @@ end
 
 SPEC_ROOT = root = Pathname(__FILE__).dirname
 
-require 'rom/support/deprecations'
-ROM::Deprecations.set_logger!(SPEC_ROOT.join('../log/deprecations.log'))
+require 'dry/core/deprecations'
+Dry::Core::Deprecations.set_logger!(SPEC_ROOT.join('../log/deprecations.log'))
 
 require 'rom'
 

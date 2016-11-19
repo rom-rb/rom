@@ -1,7 +1,5 @@
-require 'rom/support/constants'
-
-require 'rom/support/inflector'
-require 'rom/support/class_builder'
+require 'dry/core/inflector'
+require 'dry/core/class_builder'
 
 module ROM
   module ConfigurationDSL
@@ -16,12 +14,12 @@ module ROM
       # @api private
       def self.build_class(name, relation, options = EMPTY_HASH, &block)
         type = options.fetch(:type) { name }
-        command_type = Inflector.classify(type)
+        command_type = Dry::Core::Inflector.classify(type)
         adapter = options.fetch(:adapter)
         parent = ROM::Command.adapter_namespace(adapter).const_get(command_type)
         class_name = generate_class_name(adapter, command_type, relation)
 
-        ClassBuilder.new(name: class_name, parent: parent).call do |klass|
+        Dry::Core::ClassBuilder.new(name: class_name, parent: parent).call do |klass|
           klass.register_as(name)
           klass.relation(relation)
           klass.class_eval(&block) if block
@@ -33,9 +31,9 @@ module ROM
       # @api private
       def self.generate_class_name(adapter, command_type, relation)
         pieces = ['ROM']
-        pieces << Inflector.classify(adapter)
+        pieces << Dry::Core::Inflector.classify(adapter)
         pieces << 'Commands'
-        pieces << "#{command_type}[#{Inflector.classify(relation)}s]"
+        pieces << "#{command_type}[#{Dry::Core::Inflector.classify(relation)}s]"
         pieces.join('::')
       end
     end

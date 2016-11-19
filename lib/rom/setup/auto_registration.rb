@@ -1,7 +1,6 @@
 require 'pathname'
 
-require 'rom/support/constants'
-require 'rom/support/inflector'
+require 'dry/core/inflector'
 require 'rom/support/options'
 
 require 'rom/setup/auto_registration_strategies/no_namespace'
@@ -62,7 +61,7 @@ module ROM
               file: file, directory: directory, entity: component_dirs.fetch(entity)
             ).call
           end
-        Inflector.constantize(klass_name)
+        Dry::Core::Inflector.constantize(klass_name)
       end
     end
   end

@@ -1,5 +1,4 @@
 require 'rom/pipeline'
-require 'rom/support/constants'
 
 module ROM
   module Commands

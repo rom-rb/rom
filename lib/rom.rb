@@ -1,15 +1,18 @@
 require 'dry-equalizer'
+require 'dry/core/constants'
 
 require 'rom-support'
 require 'rom/version'
 require 'rom/constants'
 
+module ROM
+  include Dry::Core::Constants
+end
+
 # internal ROM support lib
-require 'rom/support/inflector'
 require 'rom/support/registry'
 require 'rom/support/options'
 require 'rom/support/class_macros'
-require 'rom/support/class_builder'
 require 'rom/support/inheritance_hook'
 
 # core parts

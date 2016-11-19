@@ -1,5 +1,4 @@
-require 'rom/support/constants'
-require 'rom/support/class_builder'
+require 'dry/core/class_builder'
 
 module ROM
   module ConfigurationDSL
@@ -25,7 +24,7 @@ module ROM
             ROM::Mapper
           end
 
-        ClassBuilder.new(name: class_name, parent: parent_class).call do |klass|
+        Dry::Core::ClassBuilder.new(name: class_name, parent: parent_class).call do |klass|
           klass.relation(name)
           klass.inherit_header(inherit_header)
 
