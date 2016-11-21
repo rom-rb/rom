@@ -1,7 +1,5 @@
-# -*- coding: utf-8 -*-
 require 'rom/plugin_registry'
 require 'rom/global/plugin_dsl'
-require 'rom/support/deprecations'
 
 module ROM
   # Globally accessible public interface exposed via ROM module
