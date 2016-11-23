@@ -1,4 +1,4 @@
-require 'rom/support/deprecations'
+require 'dry/core/deprecations'
 require 'rom/support/options'
 
 require 'rom/repository/class_interface'
@@ -53,7 +53,7 @@ module ROM
     class Base < Repository
       def self.inherited(klass)
         super
-        Deprecations.announce(self, 'inherit from Repository instead')
+        Dry::Core::Deprecations.announce(self, 'inherit from Repository instead', tag: :rom)
       end
     end
 

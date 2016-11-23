@@ -1,4 +1,4 @@
-require 'rom/support/cache'
+require 'dry/core/cache'
 require 'rom/mapper'
 require 'rom/repository/header_builder'
 
@@ -6,7 +6,7 @@ module ROM
   class Repository
     # @api private
     class MapperBuilder
-      extend Cache
+      extend Dry::Core::Cache
 
       attr_reader :header_builder
 

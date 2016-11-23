@@ -1,3 +1,5 @@
+require 'dry/core/inflector'
+
 module ROM
   class Repository
     class RelationProxy
@@ -259,7 +261,7 @@ module ROM
         # @api private
         def combine_tuple_key(result)
           if result == :one
-            Inflector.singularize(base_name.relation).to_sym
+            Dry::Core::Inflector.singularize(base_name.relation).to_sym
           else
             base_name.relation
           end

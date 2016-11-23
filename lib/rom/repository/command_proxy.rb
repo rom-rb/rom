@@ -1,3 +1,5 @@
+require 'dry/core/inflector'
+
 module ROM
   class Repository
     # TODO: look into making command graphs work without the root key in the input
@@ -7,7 +9,7 @@ module ROM
 
       def initialize(command)
         @command = command
-        @root = Inflector.singularize(command.name.relation).to_sym
+        @root = Dry::Core::Inflector.singularize(command.name.relation).to_sym
       end
 
       def call(input)

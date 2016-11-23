@@ -1,4 +1,3 @@
-require 'rom/support/constants'
 require 'rom/support/options'
 
 require 'rom/repository/changeset/pipe'

@@ -1,4 +1,5 @@
 require 'concurrent/map'
+require 'dry/core/inflector'
 
 require 'rom/commands'
 require 'rom/repository/command_proxy'
@@ -86,7 +87,7 @@ module ROM
 
       # @api private
       def initialize(type, adapter, container, registry, plugins)
-        @type = Commands.const_get(Inflector.classify(type))[adapter]
+        @type = Commands.const_get(Dry::Core::Inflector.classify(type))[adapter]
         @registry = registry
         @container = container
         @plugins = Array(plugins)
@@ -109,7 +110,7 @@ module ROM
           if meta[:combine_type] == :many
             name
           else
-            { Inflector.singularize(name).to_sym => name }
+            { Dry::Core::Inflector.singularize(name).to_sym => name }
           end
 
         register_command(name, type, meta, parent_relation)
@@ -174,7 +175,7 @@ module ROM
           if relation.associations.key?(parent_relation)
             parent_relation
           else
-            singular_name = Inflector.singularize(parent_relation).to_sym
+            singular_name = Dry::Core::Inflector.singularize(parent_relation).to_sym
             singular_name if relation.associations.key?(singular_name)
           end
 

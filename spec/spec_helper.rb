@@ -30,8 +30,8 @@ Dir[root.join('shared/*.rb').to_s].each do |f|
   require f
 end
 
-require 'rom/support/deprecations'
-ROM::Deprecations.set_logger!(root.join('../log/deprecations.log'))
+require 'dry/core/deprecations'
+Dry::Core::Deprecations.set_logger!(root.join('../log/deprecations.log'))
 
 # Namespace holding all objects created during specs
 module Test
