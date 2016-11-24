@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gemspec
 
-gem 'rom-support', git: 'https://github.com/rom-rb/rom-support.git', branch: 'do-not-load-constants'
+gem 'rom-support', git: 'https://github.com/rom-rb/rom-support.git'
 
 group :test do
   gem 'anima', '~> 0.2.0'
