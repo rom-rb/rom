@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ROM::Mapper::ModelDSL do
+RSpec.describe ROM::Mapper::ModelDSL do
   describe '#model' do
     it 'calls the builder with non-excluded attributes only' do
       definition_class = Class.new do

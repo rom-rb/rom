@@ -2,7 +2,7 @@ require 'spec_helper'
 
 require 'ostruct'
 
-describe ROM::Mapper do
+RSpec.describe ROM::Mapper do
   subject(:mapper) { mapper_class.build }
 
   let(:mapper_class) do

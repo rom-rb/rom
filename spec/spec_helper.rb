@@ -44,4 +44,8 @@ RSpec.configure do |config|
   config.around do |example|
     ConstantLeakFinder.find(example)
   end
+
+  config.disable_monkey_patching!
+
+  config.warnings = true
 end

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ROM::Mapper do
+RSpec.describe ROM::Mapper do
   let(:mapper_klass) do
     Class.new(ROM::Mapper).tap do |mapper_klass|
       mapper_klass.class_eval(&mapper_body)

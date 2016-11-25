@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'virtus'
 
-describe ROM::Processor::Transproc do
+RSpec.describe ROM::Processor::Transproc do
   subject(:transproc) { ROM::Processor::Transproc.build(binding, header) }
 
   let(:binding) { nil }

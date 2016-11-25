@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ROM::Mapper do
+RSpec.describe ROM::Mapper do
   subject(:mapper) do
     klass = Class.new(parent)
     options.each do |k, v|

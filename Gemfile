@@ -5,7 +5,7 @@ gemspec
 gem 'rom-support', git: 'https://github.com/rom-rb/rom-support.git'
 
 group :test do
-  gem 'anima', '~> 0.2.0'
+  gem 'anima', '~> 0.3.0'
   gem 'virtus'
   gem 'inflecto', '~> 0.0', '>= 0.0.2'
 
