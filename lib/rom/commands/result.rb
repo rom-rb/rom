@@ -4,6 +4,20 @@ module ROM
     #
     # @api public
     class Result
+      # Wrap the value in a ROM::Commands::Success
+      #
+      # @api public
+      def self.success(value)
+        Success.new(value)
+      end
+
+      # Wrap the error in a ROM::Commands::Failure
+      #
+      # @api public
+      def self.failure(error)
+        Failure.new(error)
+      end
+
       # Return command execution result
       #
       # @api public
@@ -42,6 +56,8 @@ module ROM
       #
       # @api public
       class Success < Result
+        include Equalizer.new(:class, :value)
+
         # @api private
         def initialize(value)
           @value = value.is_a?(self.class) ? value.value : value
@@ -51,7 +67,23 @@ module ROM
         #
         # @api public
         def >(other)
-          other.call(value)
+          other.call(value, Result)
+        end
+
+        # Yield to block with value of result
+        #
+        # @api public
+        def and_then(&blk)
+          self > blk
+        end
+
+        # Ignore block and return self
+        #
+        # @return [self]
+        #
+        # @api public
+        def or_else(&_)
+          self
         end
 
         # Return the value
@@ -68,6 +100,8 @@ module ROM
       #
       # @api public
       class Failure < Result
+        include Equalizer.new(:class, :error)
+
         # @api private
         def initialize(error)
           @error = error
@@ -80,6 +114,22 @@ module ROM
         # @api public
         def >(_other)
           self
+        end
+
+        # Do not yield to block, return self
+        #
+        # @return [self]
+        #
+        # @api public
+        def and_then(&blk)
+          self > blk
+        end
+
+        # Yield to block with error of result
+        #
+        # @api public
+        def or_else(&blk)
+          blk.call(error, Result)
         end
 
         # Return the error
