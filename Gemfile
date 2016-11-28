@@ -2,8 +2,8 @@ source 'https://rubygems.org'
 
 gemspec
 
-gem 'rom-support', git: 'https://github.com/rom-rb/rom-support.git', branch: 'do-not-load-constants'
-gem 'rom-mapper', git: 'https://github.com/rom-rb/rom-mapper.git', branch: 'dry-core'
+gem 'rom-support', git: 'https://github.com/rom-rb/rom-support.git'
+gem 'rom-mapper', git: 'https://github.com/rom-rb/rom-mapper.git'
 
 group :console do
   gem 'pry'
