@@ -1,5 +1,7 @@
 require 'set'
 
+require 'dry/core/inflector'
+require 'rom/support/class_macros'
 require 'rom/support/auto_curry'
 require 'rom/relation/curried'
 require 'rom/relation/name'
@@ -17,13 +19,13 @@ module ROM
       def inherited(klass)
         super
 
-        klass.extend ClassMacros
-        klass.defines :adapter
-
         if respond_to?(:adapter) && adapter.nil?
           raise MissingAdapterIdentifierError,
-            "relation class +#{self}+ is missing the adapter identifier"
+                "relation class +#{self}+ is missing the adapter identifier"
         end
+
+        klass.extend ClassMacros
+        klass.defines :adapter
 
         # Extend with functionality required by adapters *only* if this is a direct
         # descendant of an adapter-specific relation subclass
@@ -67,7 +69,7 @@ module ROM
           # @param [Symbol] value The name of the dataset
           #
           # @api public
-          def self.dataset(value = Undefined, &block)
+          def self.dataset(value = ClassMacros::UndefinedValue, &block)
             dataset_proc(block) if block
             super
           end
@@ -79,8 +81,8 @@ module ROM
           # @return [Symbol]
           #
           # @api public
-          def self.register_as(value = Undefined)
-            if value == Undefined
+          def self.register_as(value = ClassMacros::UndefinedValue)
+            if value == ClassMacros::UndefinedValue
               return @register_as if defined?(@register_as)
 
               super_val = super()
@@ -203,7 +205,7 @@ module ROM
       # @api private
       def default_name
         return unless name
-        Inflector.underscore(name).tr('/', '_').to_sym
+        Dry::Core::Inflector.underscore(name).tr('/', '_').to_sym
       end
 
       # @api private

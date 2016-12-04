@@ -1,4 +1,3 @@
-require 'rom/support/constants'
 require 'rom/configuration_dsl/mapper'
 
 module ROM

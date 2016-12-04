@@ -23,7 +23,7 @@ module ROM
   MissingAdapterIdentifierError = Class.new(StandardError)
 
   DuplicateConfigurationError = Class.new(StandardError)
-  DuplicateContainerError = Class.new(StandardError)  
+  DuplicateContainerError = Class.new(StandardError)
 
   InvalidOptionValueError = Class.new(StandardError)
   InvalidOptionKeyError = Class.new(StandardError)

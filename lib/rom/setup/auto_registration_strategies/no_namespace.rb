@@ -1,6 +1,6 @@
 require 'pathname'
 
-require 'rom/support/inflector'
+require 'dry/core/inflector'
 require 'rom/setup/auto_registration_strategies/base'
 
 module ROM
@@ -10,7 +10,7 @@ module ROM
       option :entity, reader: true, type: Symbol
 
       def call
-        Inflector.camelize(
+        Dry::Core::Inflector.camelize(
           file.sub(/^#{directory}\/#{entity}\//, '').sub(EXTENSION_REGEX, '')
         )
       end

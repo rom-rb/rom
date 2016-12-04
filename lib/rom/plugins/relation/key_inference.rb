@@ -1,3 +1,5 @@
+require 'dry/core/inflector'
+
 module ROM
   module Plugins
     module Relation
@@ -24,7 +26,7 @@ module ROM
               relation.foreign_key
             end
           else
-            :"#{Inflector.singularize(name.dataset)}_id"
+            :"#{Dry::Core::Inflector.singularize(name.dataset)}_id"
           end
         end
 

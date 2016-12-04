@@ -1,4 +1,4 @@
-require 'rom/support/deprecations'
+require 'dry/core/deprecations'
 require 'rom/support/options'
 require 'rom/pipeline'
 
@@ -52,9 +52,10 @@ module ROM
         @validator
       else
         unless vp.equal?(DEFAULT_VALIDATOR)
-          Deprecations.announce(
+          Dry::Core::Deprecations.announce(
             "#{name}.validator",
-            'Please handle validation before calling commands'
+            'Please handle validation before calling commands',
+            tag: :rom
           )
         end
         super

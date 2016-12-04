@@ -1,6 +1,5 @@
 require 'dry-equalizer'
 
-require 'rom/support/constants'
 require 'rom/schema/dsl'
 require 'rom/association_set'
 

@@ -1,5 +1,3 @@
-require 'rom/support/constants'
-
 require 'rom/configuration_dsl/relation'
 require 'rom/configuration_dsl/mapper_dsl'
 require 'rom/configuration_dsl/command_dsl'

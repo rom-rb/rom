@@ -1,6 +1,6 @@
 require 'pathname'
 
-require 'rom/support/inflector'
+require 'dry/core/inflector'
 require 'rom/setup/auto_registration_strategies/base'
 
 module ROM
@@ -9,7 +9,7 @@ module ROM
       option :namespace, reader: true, type: String
 
       def call
-        "#{namespace}::#{Inflector.camelize(filename)}"
+        "#{namespace}::#{Dry::Core::Inflector.camelize(filename)}"
       end
 
       private
