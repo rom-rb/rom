@@ -5,7 +5,7 @@ cache: bundler
 bundler_args: --without sql benchmarks console tools
 script: "bundle exec rake ci"
 after_success:
-  - '[ "$TRAVIS_RUBY_VERSION" = "2.3.1" ] && [ "$TRAVIS_BRANCH" = "master" ] && bundle exec codeclimate-test-reporter'
+  - '[ -d coverage ] && bundle exec codeclimate-test-reporter'
 rvm:
   - 2.1
   - 2.2
