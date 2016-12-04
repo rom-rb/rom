@@ -1,3 +1,12 @@
+## v2.1.0 to-be-released
+
+## Changed
+
+* [internal] Use deprecations API from dry-core (flash-gordon)
+* [internal] Use common constants from dry-core (EMPTY_HASH, EMPTY_ARRAY etc.) (flash-gordon)
+
+[Compare v2.0.2...v2.1.0](https://github.com/rom-rb/rom/compare/v2.0.2...v2.1.0)
+
 ## v2.0.2 2016-11-11
 
 ## Added
