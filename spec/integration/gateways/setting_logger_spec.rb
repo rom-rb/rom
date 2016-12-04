@@ -3,7 +3,7 @@ require 'rom/memory'
 
 require 'logger'
 
-describe 'Repositories / Setting logger' do
+describe 'Gateways / Setting logger' do
   let(:logger_class) do
     Class.new do
       attr_reader :messages

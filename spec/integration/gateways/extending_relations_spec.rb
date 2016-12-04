@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'rom/memory'
 
-describe 'Repository' do
+describe 'Gateways / Extending Relations' do
   include_context 'container'
   include_context 'users and tasks'
 
