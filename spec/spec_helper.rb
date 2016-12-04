@@ -1,8 +1,4 @@
-# this is needed for guard to work, not sure why :(
-require "bundler"
-Bundler.setup
-
-if ENV['COVERAGE'] == 'true' && RUBY_ENGINE == 'ruby' && RUBY_VERSION='2.3.1'
+if ENV['COVERAGE'] == 'true' && RUBY_ENGINE == 'ruby' && RUBY_VERSION == '2.3.1'
   require "simplecov"
   SimpleCov.start do
     add_filter '/spec/'
