@@ -42,7 +42,10 @@ config.relation(:tags)
 
 rom = ROM.container(config)
 
-repo = Class.new(ROM::Repository) { relations :users, :tasks, :tags, :books }.new(rom)
+repo = Class.new(ROM::Repository[:users]) {
+  commands :create, update: :by_pk, delete: :by_pk
+  relations :tasks, :tags, :books
+}.new(rom)
 
 require "pry"
 binding.pry
