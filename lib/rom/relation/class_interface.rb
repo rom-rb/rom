@@ -2,7 +2,7 @@ require 'set'
 
 require 'dry/core/inflector'
 require 'rom/support/class_macros'
-require 'rom/support/auto_curry'
+require 'rom/auto_curry'
 require 'rom/relation/curried'
 require 'rom/relation/name'
 require 'rom/schema'

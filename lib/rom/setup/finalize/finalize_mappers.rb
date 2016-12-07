@@ -1,4 +1,4 @@
-require 'rom/support/registry'
+require 'rom/registry'
 
 module ROM
   class Finalize

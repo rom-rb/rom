@@ -1,5 +1,5 @@
-require 'rom/support/registry'
 require 'dry/core/inflector'
+require 'rom/registry'
 
 module ROM
   class AssociationSet < ROM::Registry
