@@ -5,8 +5,6 @@ require 'rom/setup/finalize'
 
 module ROM
   class CreateContainer
-    include ROM::Support::Publisher
-
     attr_reader :container
 
     def initialize(environment, setup)

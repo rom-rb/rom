@@ -1,7 +1,6 @@
 require 'rom/relation/loaded'
 require 'rom/commands/graph'
 require 'rom/commands/graph/builder'
-require 'rom/support/publisher'
 
 module ROM
   # ROM container is an isolated environment with no global state where all
@@ -98,7 +97,6 @@ module ROM
   #
   # @api public
   class Container
-    include ROM::Support::Publisher
     include Dry::Equalizer(:gateways, :relations, :mappers, :commands)
 
     # @return [Hash] configured gateways
