@@ -8,7 +8,7 @@ gem 'rom-support', git: 'https://github.com/rom-rb/rom-support.git'
 gem 'rom', git: 'https://github.com/rom-rb/rom.git'
 
 group :development, :test do
-  gem 'rom-sql', '~> 0.8', git: 'https://github.com/rom-rb/rom-sql.git', branch: 'dry-core'
+  gem 'rom-sql', '~> 0.8', git: 'https://github.com/rom-rb/rom-sql.git'
 end
 
 group :development do
