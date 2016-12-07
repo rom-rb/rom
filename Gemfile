@@ -4,8 +4,8 @@ gemspec
 
 gem 'inflecto'
 
-gem 'rom-support', git: 'https://github.com/rom-rb/rom-support.git', branch: 'do-not-load-constants'
-gem 'rom', git: 'https://github.com/rom-rb/rom.git', branch: 'dry-core'
+gem 'rom-support', git: 'https://github.com/rom-rb/rom-support.git'
+gem 'rom', git: 'https://github.com/rom-rb/rom.git'
 
 group :development, :test do
   gem 'rom-sql', '~> 0.8', git: 'https://github.com/rom-rb/rom-sql.git', branch: 'dry-core'
