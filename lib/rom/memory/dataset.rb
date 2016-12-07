@@ -1,5 +1,5 @@
-require 'rom/support/options' # FIXME: this shouldn't be required, fix needed in rom-support
-require 'rom/support/array_dataset'
+require 'rom/support/options'
+require 'rom/array_dataset'
 
 module ROM
   module Memory

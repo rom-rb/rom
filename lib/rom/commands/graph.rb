@@ -1,5 +1,6 @@
-require 'rom/pipeline'
 require 'rom/support/options'
+
+require 'rom/pipeline'
 require 'rom/commands/graph/class_interface'
 
 module ROM

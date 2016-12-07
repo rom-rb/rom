@@ -27,7 +27,7 @@ group :test do
 end
 
 group :sql do
-  gem 'rom-sql', github: 'rom-rb/rom-sql', branch: 'master'
+  gem 'rom-sql', git: 'https://github.com/rom-rb/rom-sql.git'
   gem 'sequel'
   gem 'jdbc-sqlite3', platforms: :jruby
   gem 'sqlite3', platforms: [:mri, :rbx]
@@ -36,7 +36,7 @@ end
 group :benchmarks do
   gem 'activerecord', '~> 5.0'
   gem 'benchmark-ips', '~> 2.2.0'
-  gem 'rom-repository', github: 'rom-rb/rom-repository', branch: 'master'
+  gem 'rom-repository', git: 'https://github.com/rom-rb/rom-repository.git'
 end
 
 group :tools do

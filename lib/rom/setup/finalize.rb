@@ -1,7 +1,7 @@
 require 'rom/relation'
 require 'rom/command'
 
-require 'rom/support/registry'
+require 'rom/registry'
 require 'rom/command_registry'
 require 'rom/mapper_registry'
 

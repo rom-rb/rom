@@ -1,4 +1,4 @@
-require 'rom/support/registry'
+require 'rom/registry'
 require 'rom/command_registry'
 
 module ROM
