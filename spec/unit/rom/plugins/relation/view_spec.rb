@@ -52,24 +52,48 @@ RSpec.describe ROM::Plugins::Relation::View do
   end
 
   context 'with a schema' do
-    let(:relation_class) do
-      Class.new(ROM::Memory::Relation) do
-        use :view
-
-        schema do
-          attribute :id, ROM::Types::Int
-          attribute :name, ROM::Types::String
-        end
-      end
-    end
-
     before do
       # this is normally called automatically during setup
       relation_class.schema_defined!
     end
 
-    it 'infers base view from the schema' do
-      expect(relation.attributes).to eql(%i[id name])
+    describe 'base view attributes' do
+      let(:relation_class) do
+        Class.new(ROM::Memory::Relation) do
+          use :view
+
+          schema do
+            attribute :id, ROM::Types::Int
+            attribute :name, ROM::Types::String
+          end
+        end
+      end
+
+      it 'infers base view from the schema' do
+        expect(relation.attributes).to eql(%i[id name])
+      end
+    end
+
+    describe 're-using schema in a view definition' do
+      let(:relation_class) do
+        Class.new(ROM::Memory::Relation) do
+          use :view
+
+          schema do
+            attribute :id, ROM::Types::Int
+            attribute :name, ROM::Types::String
+          end
+
+          view(:names) do
+            header { schema.project(:name) }
+            relation { project(:name) }
+          end
+        end
+      end
+
+      it 'uses projected schema for view attributes' do
+        expect(relation.attributes(:names)).to eql(%i[name])
+      end
     end
   end
 end

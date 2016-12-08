@@ -42,7 +42,7 @@ module ROM
               .fetch(view_name, self.class.attributes.fetch(:base))
 
             if header.is_a?(Proc)
-              instance_exec(&header)
+              Array(instance_exec(&header))
             else
               header
             end
