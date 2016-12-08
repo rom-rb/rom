@@ -72,7 +72,7 @@ class Verifier
   end
 end
 
-DATABASE_URL = ENV.fetch('DATABASE_URL', 'postgres://localhost/rom')
+DATABASE_URL = ENV.fetch('DATABASE_URL', RUBY_ENGINE == 'jruby' ? 'jdbc:postgresql://localhost/rom' : 'postgres://localhost/rom')
 
 setup = ROM::Configuration.new(:sql, DATABASE_URL)
 
@@ -101,7 +101,11 @@ conn.create_table :tags do
   String :name
 end
 
-ActiveRecord::Base.establish_connection(DATABASE_URL)
+if RUBY_ENGINE == 'jruby'
+  ActiveRecord::Base.establish_connection(url: DATABASE_URL, adapter: 'postgresql')
+else
+  ActiveRecord::Base.establish_connection(DATABASE_URL)
+end
 
 class ARUser < ActiveRecord::Base
   self.table_name = :users
