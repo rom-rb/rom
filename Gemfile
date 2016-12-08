@@ -30,7 +30,17 @@ group :sql do
   gem 'rom-sql', git: 'https://github.com/rom-rb/rom-sql.git', branch: 'master'
   gem 'sequel'
   gem 'jdbc-sqlite3', platforms: :jruby
+  gem 'jdbc-postgres', platforms: :jruby
   gem 'sqlite3', platforms: [:mri, :rbx]
+
+  git_source(:github) { |repo_name| "https://github.com/#{repo_name}.git" }
+
+  platform :jruby do
+    github 'jruby/activerecord-jdbc-adapter', branch: 'rails-5' do
+      gem 'activerecord-jdbc-adapter'
+      gem 'activerecord-jdbcpostgresql-adapter'
+    end
+  end
 end
 
 group :benchmarks do
