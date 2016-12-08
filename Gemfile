@@ -2,8 +2,8 @@ source 'https://rubygems.org'
 
 gemspec
 
-gem 'rom-support', git: 'https://github.com/rom-rb/rom-support.git'
-gem 'rom-mapper', git: 'https://github.com/rom-rb/rom-mapper.git'
+gem 'rom-support', git: 'https://github.com/rom-rb/rom-support.git', branch: 'master'
+gem 'rom-mapper', git: 'https://github.com/rom-rb/rom-mapper.git', branch: 'master'
 
 group :console do
   gem 'pry'
@@ -27,7 +27,7 @@ group :test do
 end
 
 group :sql do
-  gem 'rom-sql', git: 'https://github.com/rom-rb/rom-sql.git'
+  gem 'rom-sql', git: 'https://github.com/rom-rb/rom-sql.git', branch: 'master'
   gem 'sequel'
   gem 'jdbc-sqlite3', platforms: :jruby
   gem 'sqlite3', platforms: [:mri, :rbx]
@@ -36,7 +36,7 @@ end
 group :benchmarks do
   gem 'activerecord', '~> 5.0'
   gem 'benchmark-ips', '~> 2.2.0'
-  gem 'rom-repository', git: 'https://github.com/rom-rb/rom-repository.git'
+  gem 'rom-repository', git: 'https://github.com/rom-rb/rom-repository.git', branch: 'master'
 end
 
 group :tools do
