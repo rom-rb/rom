@@ -16,6 +16,13 @@ module ROM
             def self.attributes
               @__attributes__ ||= {}
             end
+
+            def self.schema_defined!
+              super
+              view(:base, schema.map { |t| t.meta[:name] }) do
+                self
+              end
+            end
           end
         end
 

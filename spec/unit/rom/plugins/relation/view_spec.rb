@@ -50,4 +50,26 @@ RSpec.describe ROM::Plugins::Relation::View do
       end
     end
   end
+
+  context 'with a schema' do
+    let(:relation_class) do
+      Class.new(ROM::Memory::Relation) do
+        use :view
+
+        schema do
+          attribute :id, ROM::Types::Int
+          attribute :name, ROM::Types::String
+        end
+      end
+    end
+
+    before do
+      # this is normally called automatically during setup
+      relation_class.schema_defined!
+    end
+
+    it 'infers base view from the schema' do
+      expect(relation.attributes).to eql(%i[id name])
+    end
+  end
 end
