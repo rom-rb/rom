@@ -4,11 +4,11 @@ gemspec
 
 gem 'inflecto'
 
-gem 'rom-support', git: 'https://github.com/rom-rb/rom-support.git'
-gem 'rom', git: 'https://github.com/rom-rb/rom.git'
+gem 'rom-support', git: 'https://github.com/rom-rb/rom-support.git', branch: 'master'
+gem 'rom', git: 'https://github.com/rom-rb/rom.git', branch: 'master'
 
 group :development, :test do
-  gem 'rom-sql', '~> 0.8', git: 'https://github.com/rom-rb/rom-sql.git'
+  gem 'rom-sql', '~> 0.8', git: 'https://github.com/rom-rb/rom-sql.git', branch: 'master'
 end
 
 group :development do
