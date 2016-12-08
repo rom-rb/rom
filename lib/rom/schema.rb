@@ -77,7 +77,7 @@ module ROM
     #
     # @api public
     def project(*names)
-      self.class.new(name, attributes.select { |key, _| names.include?(key) })
+      self.class.new(name, attributes: attributes.select { |key, _| names.include?(key) })
     end
 
     # Return FK attribute for a given relation name

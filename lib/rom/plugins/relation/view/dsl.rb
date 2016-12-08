@@ -9,9 +9,19 @@ module ROM
 
           attr_reader :relation_block
 
-          def initialize(name, &block)
+          attr_reader :new_schema
+
+          def initialize(name, schema = nil, &block)
             @name = name
+            @schema = schema
+            @new_schema = nil
+            @attributes = nil
+            @relation_block = nil
             instance_eval(&block)
+          end
+
+          def schema(&block)
+            @new_schema = @schema.instance_exec(&block)
           end
 
           def header(*args, &block)
@@ -23,7 +33,7 @@ module ROM
           end
 
           def call
-            [name, attributes, relation_block]
+            [name, attributes, relation_block, new_schema]
           end
         end
       end

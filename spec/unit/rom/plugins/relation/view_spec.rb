@@ -3,7 +3,7 @@ require 'rom/memory'
 require 'rom/plugins/relation/view'
 
 RSpec.describe ROM::Plugins::Relation::View do
-  subject(:relation) { relation_class.new([]) }
+  subject(:relation) { relation_class.new(ROM::Memory::Dataset.new([])) }
 
   context 'without a schema' do
     let(:relation_class) do
@@ -85,14 +85,33 @@ RSpec.describe ROM::Plugins::Relation::View do
           end
 
           view(:names) do
-            header { schema.project(:name) }
-            relation { project(:name) }
+            schema do
+              project(:name) 
+            end
+
+            relation do
+              self 
+            end
           end
         end
       end
 
+      before do
+        relation << { id: 1, name: 'Joe' }
+        relation << { id: 2, name: 'Jane' }
+      end
+
       it 'uses projected schema for view attributes' do
         expect(relation.attributes(:names)).to eql(%i[name])
+      end
+
+      it 'auto-projects the relation via schema' do
+        new_rel = relation_class.new([{ name: 'Jane' }, { name: 'Joe' }])
+
+        expect(relation_class.attributes[:names])
+          .to receive(:project_relation).with(relation).and_return(new_rel)
+
+        expect(relation.names).to eql(new_rel)
       end
     end
   end

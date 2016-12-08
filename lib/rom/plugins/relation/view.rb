@@ -16,13 +16,6 @@ module ROM
             def self.attributes
               @__attributes__ ||= {}
             end
-
-            def self.schema_defined!
-              super
-              view(:base, schema.map { |t| t.meta[:name] }) do
-                self
-              end
-            end
           end
         end
 
@@ -44,12 +37,24 @@ module ROM
             if header.is_a?(Proc)
               Array(instance_exec(&header))
             else
-              header
+              Array(header)
             end
           end
         end
 
         module ClassInterface
+          # @api private
+          def schema_defined!
+            super
+            # @!method base
+            #   Return the base relation with default attributes
+            #   @return [Relation]
+            #   @api public
+            view(:base, schema.attributes.keys) do
+              self
+            end
+          end
+
           # Define a relation view with a specific header
           #
           # With headers defined all the mappers will be inferred automatically
@@ -71,14 +76,14 @@ module ROM
               raise ArgumentError, "header must be set as second argument"
             end
 
-            name, names, relation_block =
+            name, header, relation_block, new_schema =
               if args.size == 1
-                DSL.new(*args, &block).call
+                DSL.new(*args, schema, &block).call
               else
                 [*args, block]
               end
 
-            attributes[name] = names
+            attributes[name] = header || new_schema
 
             if relation_block.arity > 0
               auto_curry_guard do
@@ -87,7 +92,13 @@ module ROM
               end
             else
               define_method(name) do
-                instance_exec(&relation_block).with(view: name)
+                relation = instance_exec(&relation_block)
+
+                if new_schema
+                  new_schema.project_relation(relation)
+                else
+                  relation
+                end.with(schema: new_schema, view: name)
               end
             end
           end
