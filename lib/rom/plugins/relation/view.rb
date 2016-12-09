@@ -35,7 +35,9 @@ module ROM
               .fetch(view_name, self.class.attributes.fetch(:base))
 
             if header.is_a?(Proc)
-              Array(instance_exec(&header))
+              evaled_header = instance_exec(&header)
+              self.class.attributes[view_name] = evaled_header
+              Array(evaled_header)
             else
               Array(header)
             end
@@ -43,6 +45,17 @@ module ROM
         end
 
         module ClassInterface
+          # @api private
+          def finalize(registry, relation)
+            super
+
+            attributes = relation.class.attributes.reduce({}) do |h, (a, e)|
+              h.update(a => e.is_a?(Proc) ? instance_exec(&e) : e)
+            end
+            relation.class.attributes.update(attributes).freeze
+            relation
+          end
+
           # @api private
           def schema_defined!
             super
@@ -76,14 +89,14 @@ module ROM
               raise ArgumentError, "header must be set as second argument"
             end
 
-            name, header, relation_block, new_schema =
+            name, header, relation_block, new_schema_fn =
               if args.size == 1
                 DSL.new(*args, schema, &block).call
               else
                 [*args, block]
               end
 
-            attributes[name] = header || new_schema
+            attributes[name] = header || new_schema_fn
 
             if relation_block.arity > 0
               auto_curry_guard do
@@ -94,11 +107,11 @@ module ROM
               define_method(name) do
                 relation = instance_exec(&relation_block)
 
-                if new_schema
-                  new_schema.project_relation(relation)
+                if new_schema_fn
+                  self.class.attributes[name].project_relation(relation)
                 else
                   relation
-                end.with(schema: new_schema, view: name)
+                end.with(view: name)
               end
             end
           end

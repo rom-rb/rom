@@ -51,30 +51,36 @@ RSpec.describe ROM::Plugins::Relation::View do
     end
   end
 
+  shared_context 'relation with views' do
+    before do
+      relation << { id: 1, name: 'Joe' }
+      relation << { id: 2, name: 'Jane' }
+    end
+
+    it 'infers base view from the schema' do
+      expect(relation.attributes).to eql(%i[id name])
+    end
+
+    it 'uses projected schema for view attributes' do
+      expect(relation.attributes(:names)).to eql(%i[name])
+    end
+
+    it 'auto-projects the relation via schema' do
+      new_rel = relation_class.new([{ name: 'Jane' }, { name: 'Joe' }])
+      names_schema = relation_class.attributes[:names]
+
+      expect(names_schema).to receive(:project_relation).with(relation).and_return(new_rel)
+      expect(relation.names).to eql(new_rel)
+    end
+  end
+
   context 'with an explicit schema' do
     before do
       # this is normally called automatically during setup
       relation_class.schema_defined!
     end
 
-    describe 'base view attributes' do
-      let(:relation_class) do
-        Class.new(ROM::Memory::Relation) do
-          use :view
-
-          schema do
-            attribute :id, ROM::Types::Int
-            attribute :name, ROM::Types::String
-          end
-        end
-      end
-
-      it 'infers base view from the schema' do
-        expect(relation.attributes).to eql(%i[id name])
-      end
-    end
-
-    describe 're-using schema in a view definition' do
+    include_context 'relation with views' do
       let(:relation_class) do
         Class.new(ROM::Memory::Relation) do
           use :view
@@ -95,47 +101,39 @@ RSpec.describe ROM::Plugins::Relation::View do
           end
         end
       end
+    end
+  end
 
-      before do
-        relation << { id: 1, name: 'Joe' }
-        relation << { id: 2, name: 'Jane' }
-      end
-
-      it 'uses projected schema for view attributes' do
-        expect(relation.attributes(:names)).to eql(%i[name])
-      end
-
-      it 'auto-projects the relation via schema' do
-        new_rel = relation_class.new([{ name: 'Jane' }, { name: 'Joe' }])
-
-        expect(relation_class.attributes[:names])
-          .to receive(:project_relation).with(relation).and_return(new_rel)
-
-        expect(relation.names).to eql(new_rel)
-      end
+  context 'with an inferred schema' do
+    before do
+      # this is normally called automatically during setup
+      relation_class.schema.finalize!
+      relation_class.schema_defined!
+      relation_class.finalize({}, relation)
     end
 
-    context 'with an inferred schema' do
-      before do
-        # this is normally called automatically during setup
-        relation_class.schema.finalize!
-        relation_class.schema_defined!
-      end
-
+    include_context 'relation with views' do
       let(:relation_class) do
         Class.new(ROM::Memory::Relation) do
           use :view
 
           schema_inferrer -> dataset, gateway {
-            { id: ROM::Types::Int, name: ROM::Types::String }
+            { id: ROM::Types::Int.meta(name: :id),
+              name: ROM::Types::String.meta(name: :name) }
           }
 
           schema(infer: true)
-        end
-      end
 
-      it 'infers base view from the schema' do
-        expect(relation.attributes).to eql(%i[id name])
+          view(:names) do
+            schema do
+              project(:name)
+            end
+
+            relation do
+              self
+            end
+          end
+        end
       end
     end
   end
