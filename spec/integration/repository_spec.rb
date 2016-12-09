@@ -138,7 +138,7 @@ RSpec.describe 'ROM repository' do
     before { conn.create_table(:dummy) unless conn.table_exists?(:dummy) }
 
     it 'does not fail with a weird error when a relation does not have attributes' do
-      configuration.relation(:dummy)
+      configuration.relation(:dummy) { schema(infer: true) }
 
       repo = Class.new(ROM::Repository[:dummy]).new(rom)
       expect(repo.dummy.to_a).to eql([])

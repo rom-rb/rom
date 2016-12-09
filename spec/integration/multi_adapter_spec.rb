@@ -15,9 +15,9 @@ RSpec.describe 'Repository with multi-adapters configuration' do
   before do
     module Test
       class Users < ROM::Relation[:sql]
-        dataset :users
-        register_as :sql_users
         gateway :default
+        schema(:users, infer: true)
+        register_as :sql_users
       end
 
       class Tasks < ROM::Relation[:memory]

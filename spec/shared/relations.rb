@@ -52,7 +52,9 @@ RSpec.shared_context 'relations' do
       end
     end
 
-    configuration.relation(:tags)
+    configuration.relation(:tags) do
+      schema(infer: true)
+    end
 
     configuration.relation(:labels) do
       schema(infer: true) do
