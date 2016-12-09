@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'rom/memory/storage'
 
-describe ROM::Memory::Storage do
+RSpec.describe ROM::Memory::Storage do
   describe 'thread safe' do
     let(:threads) { 4 }
     let(:operations) { 5000 }

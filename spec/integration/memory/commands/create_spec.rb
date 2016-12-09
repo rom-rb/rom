@@ -2,7 +2,7 @@ require 'spec_helper'
 
 require 'rom/memory'
 
-describe ROM::Memory::Commands::Create do
+RSpec.describe ROM::Memory::Commands::Create do
   include_context 'container'
   include_context 'users and tasks'
 

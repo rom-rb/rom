@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ROM::Gateway do
+RSpec.describe ROM::Gateway do
 
   subject(:gateway) { Class.new(ROM::Gateway).new }
 

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'Building up a command graph for nested input' do
+RSpec.describe 'Building up a command graph for nested input' do
   include_context 'command graph'
 
   it 'creates a command graph for nested input :one result as root' do

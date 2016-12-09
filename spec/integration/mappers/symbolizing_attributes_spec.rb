@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'rom/memory'
 
-describe 'Mappers / Symbolizing atributes' do
+RSpec.describe 'Mappers / Symbolizing atributes' do
   include_context 'container'
 
   before do

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'Commands' do
+RSpec.describe 'Commands' do
   include_context 'container'
   include_context 'users and tasks'
 

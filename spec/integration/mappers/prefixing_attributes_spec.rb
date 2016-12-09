@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'rom/memory'
 
-describe 'Mappers / Prefixing attributes' do
+RSpec.describe 'Mappers / Prefixing attributes' do
   include_context 'container'
 
   before do

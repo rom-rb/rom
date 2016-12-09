@@ -3,7 +3,7 @@ require 'rom/lint/spec'
 
 require 'rom/memory/dataset'
 
-describe ROM::Memory::Dataset do
+RSpec.describe ROM::Memory::Dataset do
   subject(:dataset) { ROM::Memory::Dataset.new(data) }
 
   let(:data) do

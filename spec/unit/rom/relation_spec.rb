@@ -1,6 +1,6 @@
 require 'rom/memory'
 
-describe ROM::Relation do
+RSpec.describe ROM::Relation do
   subject(:relation) { Class.new(ROM::Relation).new(dataset) }
 
   let(:dataset) { ROM::Memory::Dataset.new([jane, joe]) }

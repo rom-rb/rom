@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "ROM::PluginRegistry" do
+RSpec.describe "ROM::PluginRegistry" do
   include_context 'container'
 
   before do

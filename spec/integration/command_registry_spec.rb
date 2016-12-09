@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'ROM::CommandRegistry' do
+RSpec.describe 'ROM::CommandRegistry' do
   include_context 'container'
 
   let(:users) { container.command(:users) }

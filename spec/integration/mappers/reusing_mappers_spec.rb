@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'Reusing mappers' do
+RSpec.describe 'Reusing mappers' do
   it 'allows using another mapper in mapping definitions' do
     class Test::TaskMapper < ROM::Mapper
       attribute :title

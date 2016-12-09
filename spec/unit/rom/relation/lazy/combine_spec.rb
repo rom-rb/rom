@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ROM::Relation, '#combine' do
+RSpec.describe ROM::Relation, '#combine' do
   include_context 'gateway only'
   include_context 'users and tasks'
 

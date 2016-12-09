@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ROM::Commands::Result do
+RSpec.describe ROM::Commands::Result do
   describe '#value' do
     subject(:result) { ROM::Commands::Result::Success }
 

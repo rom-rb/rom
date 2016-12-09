@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ROM::Commands::Lazy do
+RSpec.describe ROM::Commands::Lazy do
   include_context 'container'
 
   let(:create_user) { container.command(:users).create }

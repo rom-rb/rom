@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ROM::Configuration do
+RSpec.describe ROM::Configuration do
   it 'is configurable via settings hash' do
     configuration = ROM::Configuration.new(:memory, 'something', infer_schema: false)
 

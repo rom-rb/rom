@@ -23,5 +23,5 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency 'rom-mapper', '~> 0.4.0'
 
   gem.add_development_dependency 'rake', '~> 10.3'
-  gem.add_development_dependency 'rspec', '~> 3.3'
+  gem.add_development_dependency 'rspec', '~> 3.5'
 end

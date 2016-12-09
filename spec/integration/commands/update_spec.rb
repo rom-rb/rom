@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'dry-struct'
 
-describe 'Commands / Update' do
+RSpec.describe 'Commands / Update' do
   include_context 'container'
   include_context 'users and tasks'
 

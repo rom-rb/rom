@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'Registering Custom Mappers' do
+RSpec.describe 'Registering Custom Mappers' do
   include_context 'container'
   include_context 'users and tasks'
 

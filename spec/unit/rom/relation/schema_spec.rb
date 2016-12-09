@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'rom/memory'
 
-describe ROM::Relation, '.schema' do
+RSpec.describe ROM::Relation, '.schema' do
   it 'defines a canonical schema for a relation' do
     class Test::Users < ROM::Relation[:memory]
       schema do

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ROM::Relation::Loaded do
+RSpec.describe ROM::Relation::Loaded do
   include_context 'no container'
   include_context 'users and tasks'
 

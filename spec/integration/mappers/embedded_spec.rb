@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'rom/memory'
 
-describe 'Mappers / embedded' do
+RSpec.describe 'Mappers / embedded' do
   include_context 'container'
 
   before do

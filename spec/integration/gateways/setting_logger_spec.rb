@@ -3,7 +3,7 @@ require 'rom/memory'
 
 require 'logger'
 
-describe 'Gateways / Setting logger' do
+RSpec.describe 'Gateways / Setting logger' do
   let(:logger_class) do
     Class.new do
       attr_reader :messages
@@ -26,7 +26,7 @@ describe 'Gateways / Setting logger' do
     container = ROM.container(:memory) do |config|
       config.gateways[:default].use_logger(logger)
     end
-      
+
     container.gateways[:default].logger.info("test")
 
     expect(logger.messages).to eql(["test"])

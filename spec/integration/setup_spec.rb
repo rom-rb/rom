@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'dry-struct'
 
-describe 'Configuring ROM' do
+RSpec.describe 'Configuring ROM' do
   context 'with existing schema' do
     include_context 'container'
     include_context 'users and tasks'

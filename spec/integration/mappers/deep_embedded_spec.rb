@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'rom/memory'
 
-describe 'Mappers / deeply embedded tuples' do
+RSpec.describe 'Mappers / deeply embedded tuples' do
   include_context 'container'
 
   it 'allows mapping embedded tuples' do

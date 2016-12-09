@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'rom/memory'
 
-describe ROM::Memory::Commands do
+RSpec.describe ROM::Memory::Commands do
   let(:relation) do
     Class.new(ROM::Relation[:memory]) do
       schema do

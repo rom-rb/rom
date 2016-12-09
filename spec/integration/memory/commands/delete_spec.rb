@@ -2,7 +2,7 @@ require 'spec_helper'
 
 require 'rom/memory'
 
-describe ROM::Memory::Commands::Delete do
+RSpec.describe ROM::Memory::Commands::Delete do
   include_context 'container'
   include_context 'users and tasks'
 

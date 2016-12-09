@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ROM::MapperRegistry do
+RSpec.describe ROM::MapperRegistry do
   subject(:registry) { ROM::MapperRegistry.new }
 
   let(:user_mapper) { double('user_mapper') }

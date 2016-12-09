@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ROM::Relation, '.dataset' do
+RSpec.describe ROM::Relation, '.dataset' do
   include_context 'container'
 
   it 'injects configured dataset when block was provided' do

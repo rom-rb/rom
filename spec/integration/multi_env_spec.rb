@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'rom/memory'
 
-describe 'Setting up ROM with multiple environments' do
+RSpec.describe 'Setting up ROM with multiple environments' do
   let(:configuration) do
     {
       one: ROM::Configuration.new(:memory),

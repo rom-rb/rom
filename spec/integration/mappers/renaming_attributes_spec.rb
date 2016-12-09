@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'rom/memory'
 
-describe 'Mappers / Renaming attributes' do
+RSpec.describe 'Mappers / Renaming attributes' do
   include_context 'container'
 
   before do

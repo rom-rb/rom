@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ROM::Container do
+RSpec.describe ROM::Container do
   include_context 'container'
   include_context 'users and tasks'
 

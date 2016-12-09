@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'Reading relations' do
+RSpec.describe 'Reading relations' do
   include_context 'container'
   include_context 'users and tasks'
 

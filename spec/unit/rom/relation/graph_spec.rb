@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ROM::Relation::Graph do
+RSpec.describe ROM::Relation::Graph do
   include_context 'gateway only'
   include_context 'users and tasks'
 

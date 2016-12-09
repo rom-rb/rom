@@ -4,7 +4,7 @@ require 'rom/lint/spec'
 require 'rom/memory/dataset'
 require 'rom/memory/relation'
 
-describe ROM::Memory::Relation do
+RSpec.describe ROM::Memory::Relation do
   subject(:relation) { ROM::Memory::Relation.new(dataset) }
 
   let(:dataset) do

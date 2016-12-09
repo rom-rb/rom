@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'rom/memory'
 
-describe 'Mapper definition DSL' do
+RSpec.describe 'Mapper definition DSL' do
   include_context 'container'
 
   before do

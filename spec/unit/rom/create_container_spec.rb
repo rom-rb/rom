@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ROM::CreateContainer do
+RSpec.describe ROM::CreateContainer do
   describe '#finalize' do
     include_context 'container'
 

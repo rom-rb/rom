@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'dry-struct'
 
-describe ROM::Commands::Graph do
+RSpec.describe ROM::Commands::Graph do
   shared_examples_for 'a persisted graph' do
     it 'returns nested results' do
       expect(command.call).to match_array([
