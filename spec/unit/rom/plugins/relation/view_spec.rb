@@ -51,7 +51,7 @@ RSpec.describe ROM::Plugins::Relation::View do
     end
   end
 
-  context 'with a schema' do
+  context 'with an explicit schema' do
     before do
       # this is normally called automatically during setup
       relation_class.schema_defined!
@@ -86,11 +86,11 @@ RSpec.describe ROM::Plugins::Relation::View do
 
           view(:names) do
             schema do
-              project(:name) 
+              project(:name)
             end
 
             relation do
-              self 
+              self
             end
           end
         end
@@ -112,6 +112,30 @@ RSpec.describe ROM::Plugins::Relation::View do
           .to receive(:project_relation).with(relation).and_return(new_rel)
 
         expect(relation.names).to eql(new_rel)
+      end
+    end
+
+    context 'with an inferred schema' do
+      before do
+        # this is normally called automatically during setup
+        relation_class.schema.finalize!
+        relation_class.schema_defined!
+      end
+
+      let(:relation_class) do
+        Class.new(ROM::Memory::Relation) do
+          use :view
+
+          schema_inferrer -> dataset, gateway {
+            { id: ROM::Types::Int, name: ROM::Types::String }
+          }
+
+          schema(infer: true)
+        end
+      end
+
+      it 'infers base view from the schema' do
+        expect(relation.attributes).to eql(%i[id name])
       end
     end
   end
