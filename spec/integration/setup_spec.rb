@@ -41,9 +41,8 @@ RSpec.describe 'Configuring ROM' do
   end
 
   describe 'defining classes' do
-    it 'sets up registries based on class definitions' do
-      container = ROM.container(:memory) do |config|
-
+    let(:container) do
+      ROM.container(:memory) do |config|
         class Test::UserRelation < ROM::Relation[:memory]
           dataset :users
 
@@ -64,7 +63,9 @@ RSpec.describe 'Configuring ROM' do
         config.register_relation(Test::UserRelation, Test::TaskRelation)
         config.register_command(Test::CreateUser)
       end
+    end
 
+    it 'sets up registries based on class definitions' do
       expect(container.relations.users).to be_kind_of(Test::UserRelation)
       expect(container.relations.users.tasks).to be(container.relations.tasks)
 
@@ -72,6 +73,11 @@ RSpec.describe 'Configuring ROM' do
 
       expect(container.relations.tasks).to be_kind_of(Test::TaskRelation)
       expect(container.relations.tasks.users).to be(container.relations.users)
+    end
+
+    it 'sets empty schemas by default' do
+      expect(container.relations[:users].schema).to be_empty
+      expect(container.relations[:tasks].schema).to be_empty
     end
   end
 

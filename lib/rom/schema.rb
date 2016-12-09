@@ -36,7 +36,7 @@ module ROM
     alias_method :to_h, :attributes
 
     # @api private
-    def initialize(name, attributes, inferrer: nil, associations: EMPTY_ASSOCIATION_SET)
+    def initialize(name, attributes: EMPTY_HASH, associations: EMPTY_ASSOCIATION_SET, inferrer: nil)
       @name = name
       @attributes = attributes
       @associations = associations
@@ -50,6 +50,11 @@ module ROM
     # @api public
     def each(&block)
       attributes.each_value(&block)
+    end
+
+    # @api public
+    def empty?
+      attributes.size == 0
     end
 
     # Return attribute

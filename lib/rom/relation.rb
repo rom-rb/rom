@@ -40,6 +40,15 @@ module ROM
     #   @return [MapperRegistry] an optional mapper registry (empty by default)
     option :mappers, reader: true, default: proc { MapperRegistry.new }
 
+    # @!attribute [r] schema
+    #   @return [Schema] relation schema, defaults to class-level canonical
+    #                    schema (if it was defined) and sets an empty one as
+    #                    the fallback
+    #   @api public
+    option :schema, reader: true, default: -> relation {
+      relation.class.schema || Schema.new(Dry::Core::Inflector.underscore(relation.class.name || EMPTY_STRING).to_sym)
+    }
+
     # @!attribute [r] schema_hash
     #   @return [Object#[]] tuple processing function, uses schema or defaults to Hash[]
     #   @api private
@@ -47,21 +56,10 @@ module ROM
       relation.schema? ? Types::Coercible::Hash.schema(relation.schema.to_h) : Hash
     }
 
-    # @!attribute [r] associations
-    #   @return [AssociationSet] Schema's association set (empty by default)
-    option :associations, reader: true, default: -> rel {
-      rel.schema? ? rel.schema.associations : Schema::EMPTY_ASSOCIATION_SET
-    }
-
     # @!attribute [r] dataset
     #   @return [Object] dataset used by the relation provided by relation's gateway
     #   @api public
     attr_reader :dataset
-
-    # @!attribute [r] schema
-    #   @return [Schema] returns relation schema object (if defined)
-    #   @api public
-    attr_reader :schema
 
     # Initializes a relation object
     #
@@ -75,7 +73,6 @@ module ROM
     # @api public
     def initialize(dataset, options = EMPTY_HASH)
       @dataset = dataset
-      @schema = self.class.schema
       super
     end
 
@@ -143,7 +140,7 @@ module ROM
     #
     # @api private
     def schema?
-      ! schema.nil?
+      ! schema.empty?
     end
 
     # Returns a new instance with the same dataset but new options
@@ -155,6 +152,15 @@ module ROM
     # @api private
     def with(new_options)
       __new__(dataset, options.merge(new_options))
+    end
+
+    # Return schema's association set (empty by default)
+    #
+    # @return [AssociationSet] Schema's association set (empty by default)
+    #
+    # @api public
+    def associations
+      @associations ||= schema.associations
     end
 
     private

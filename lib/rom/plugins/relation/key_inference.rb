@@ -13,7 +13,7 @@ module ROM
         # @api private
         def foreign_key(other = nil)
           if other
-            if schema
+            if schema?
               rel_name = other.respond_to?(:to_sym) ?
                 ROM::Relation::Name[other.to_sym] : other.base_name
 

@@ -19,13 +19,10 @@ module ROM
       def initialize(name, inferrer, &block)
         @name = name
         @inferrer = inferrer
-        @attributes = nil
+        @attributes = {}
 
         if block
           instance_exec(&block)
-        elsif inferrer.nil?
-          raise ArgumentError,
-            'You must pass a block to define a schema or set an inferrer for automatic inferring'
         end
       end
 
@@ -51,7 +48,7 @@ module ROM
 
       # @api private
       def call
-        Schema.new(name, attributes, inferrer: inferrer)
+        Schema.new(name, attributes: attributes, inferrer: inferrer)
       end
     end
   end

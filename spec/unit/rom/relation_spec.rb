@@ -217,6 +217,20 @@ RSpec.describe ROM::Relation do
     end
   end
 
+  describe '#schema' do
+    it 'returns an empty schema by default' do
+      relation = Class.new(ROM::Relation[:memory]) {
+        def self.name
+          'SomeRelation'
+        end
+      }.new([])
+
+      expect(relation.schema).to be_empty
+      expect(relation.schema.name).to be(:some_relation)
+      expect(relation.schema?).to be(false)
+    end
+  end
+
   describe '#schema_hash' do
     it 'returns a schema hash type' do
       relation = Class.new(ROM::Relation[:memory]) do
