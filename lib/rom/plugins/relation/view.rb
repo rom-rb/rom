@@ -104,14 +104,16 @@ module ROM
                 auto_curry(name) { with(view: name) }
               end
             else
-              define_method(name) do
-                relation = instance_exec(&relation_block)
-
-                if new_schema_fn
-                  self.class.attributes[name].project_relation(relation)
-                else
-                  relation
-                end.with(view: name)
+              if new_schema_fn
+                define_method(name) do
+                  relation = instance_exec(&relation_block)
+                  self.class.attributes[name].project_relation(relation).with(view: name)
+                end
+              else
+                define_method(name) do
+                  relation = instance_exec(&relation_block)
+                  relation.with(view: name)
+                end
               end
             end
           end
