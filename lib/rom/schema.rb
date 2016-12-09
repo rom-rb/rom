@@ -57,11 +57,27 @@ module ROM
       attributes.size == 0
     end
 
+    # @api public
+    def to_ary
+      map { |attribute| attribute.meta[:name] }
+    end
+
     # Return attribute
     #
     # @api public
     def [](name)
       attributes.fetch(name)
+    end
+
+    # Project a schema to include only specified attributes
+    #
+    # @param [*Array] names The name of the attributes
+    #
+    # @return [Schema]
+    #
+    # @api public
+    def project(*names)
+      self.class.new(name, attributes: attributes.select { |key, _| names.include?(key) })
     end
 
     # Return FK attribute for a given relation name

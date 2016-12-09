@@ -5,17 +5,27 @@ module ROM
         class DSL
           attr_reader :name
 
-          attr_reader :attributes
+          attr_reader :header
 
           attr_reader :relation_block
 
-          def initialize(name, &block)
+          attr_reader :new_schema
+
+          def initialize(name, schema = nil, &block)
             @name = name
+            @schema = schema
+            @new_schema = nil
+            @header = nil
+            @relation_block = nil
             instance_eval(&block)
           end
 
+          def schema(&block)
+            @new_schema = -> { @schema.instance_exec(&block) }
+          end
+
           def header(*args, &block)
-            @attributes = args.size > 0 ? args.first : block
+            @header = args.size > 0 ? args.first : block
           end
 
           def relation(&block)
@@ -23,7 +33,7 @@ module ROM
           end
 
           def call
-            [name, attributes, relation_block]
+            [name, header, relation_block, new_schema]
           end
         end
       end

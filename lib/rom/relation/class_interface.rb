@@ -168,6 +168,13 @@ module ROM
         end
       end
 
+      # A hook which is called when a schema was defined for a relation
+      #
+      # @api private
+      def schema_defined!
+        # no-op
+      end
+
       # Dynamically define a method that will forward to the dataset and wrap
       # response in the relation itself
       #

@@ -50,7 +50,11 @@ module ROM
         gateway = @gateways.fetch(klass.gateway)
         ds_proc = klass.dataset_proc || -> _ { self }
 
-        klass.schema.finalize!(gateway) if klass.schema
+        if klass.schema
+          klass.schema.finalize!(gateway)
+          klass.schema_defined!
+        end
+
         dataset = gateway.dataset(klass.dataset).instance_exec(klass, &ds_proc)
 
         klass.new(dataset, __registry__: registry)

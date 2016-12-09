@@ -35,14 +35,37 @@ module ROM
               .fetch(view_name, self.class.attributes.fetch(:base))
 
             if header.is_a?(Proc)
-              instance_exec(&header)
+              Array(instance_exec(&header))
             else
-              header
+              Array(header)
             end
           end
         end
 
         module ClassInterface
+          # @api private
+          def finalize(registry, relation)
+            super
+
+            attributes = relation.class.attributes.reduce({}) do |h, (a, e)|
+              h.update(a => e.is_a?(Proc) ? instance_exec(&e) : e)
+            end
+            relation.class.attributes.update(attributes).freeze
+            relation
+          end
+
+          # @api private
+          def schema_defined!
+            super
+            # @!method base
+            #   Return the base relation with default attributes
+            #   @return [Relation]
+            #   @api public
+            view(:base, schema.attributes.keys) do
+              self
+            end
+          end
+
           # Define a relation view with a specific header
           #
           # With headers defined all the mappers will be inferred automatically
@@ -64,23 +87,40 @@ module ROM
               raise ArgumentError, "header must be set as second argument"
             end
 
-            name, names, relation_block =
+            name, header, relation_block, new_schema_fn =
               if args.size == 1
-                DSL.new(*args, &block).call
+                DSL.new(*args, schema, &block).call
               else
                 [*args, block]
               end
 
-            attributes[name] = names
+            attributes[name] = header || new_schema_fn
 
             if relation_block.arity > 0
               auto_curry_guard do
                 define_method(name, &relation_block)
-                auto_curry(name) { with(view: name) }
+
+                if new_schema_fn
+                  auto_curry(name) do
+                    self.class.attributes[name].project_relation(self).with(view: name) 
+                  end
+                else
+                  auto_curry(name) do
+                    with(view: name) 
+                  end
+                end
               end
             else
-              define_method(name) do
-                instance_exec(&relation_block).with(view: name)
+              if new_schema_fn
+                define_method(name) do
+                  relation = instance_exec(&relation_block)
+                  self.class.attributes[name].project_relation(relation).with(view: name)
+                end
+              else
+                define_method(name) do
+                  relation = instance_exec(&relation_block)
+                  relation.with(view: name)
+                end
               end
             end
           end
