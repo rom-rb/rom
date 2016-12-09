@@ -35,9 +35,7 @@ module ROM
               .fetch(view_name, self.class.attributes.fetch(:base))
 
             if header.is_a?(Proc)
-              evaled_header = instance_exec(&header)
-              self.class.attributes[view_name] = evaled_header
-              Array(evaled_header)
+              Array(instance_exec(&header))
             else
               Array(header)
             end
@@ -101,7 +99,16 @@ module ROM
             if relation_block.arity > 0
               auto_curry_guard do
                 define_method(name, &relation_block)
-                auto_curry(name) { with(view: name) }
+
+                if new_schema_fn
+                  auto_curry(name) do
+                    self.class.attributes[name].project_relation(self).with(view: name) 
+                  end
+                else
+                  auto_curry(name) do
+                    with(view: name) 
+                  end
+                end
               end
             else
               if new_schema_fn

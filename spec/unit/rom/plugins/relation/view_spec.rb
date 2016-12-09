@@ -72,6 +72,14 @@ RSpec.describe ROM::Plugins::Relation::View do
       expect(names_schema).to receive(:project_relation).with(relation).and_return(new_rel)
       expect(relation.names).to eql(new_rel)
     end
+
+    it 'auto-projects a restricted relation via schema' do
+      new_rel = relation_class.new([{ id: 2 }])
+      ids_schema = relation_class.attributes[:ids_for_names]
+
+      expect(ids_schema).to receive(:project_relation).with(relation.restrict(name: ['Jane'])).and_return(new_rel)
+      expect(relation.ids_for_names(['Jane'])).to eql(new_rel)
+    end
   end
 
   context 'with an explicit schema' do
@@ -97,6 +105,16 @@ RSpec.describe ROM::Plugins::Relation::View do
 
             relation do
               self
+            end
+          end
+
+          view(:ids_for_names) do
+            schema do
+              project(:id)
+            end
+
+            relation do |names|
+              restrict(name: names)
             end
           end
         end
@@ -131,6 +149,16 @@ RSpec.describe ROM::Plugins::Relation::View do
 
             relation do
               self
+            end
+          end
+
+          view(:ids_for_names) do
+            schema do
+              project(:id)
+            end
+
+            relation do |names|
+              restrict(name: names)
             end
           end
         end
