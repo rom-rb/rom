@@ -11,8 +11,13 @@ task :"spec:isolation" do
   end
 end
 
-desc "Run CI tasks"
-task ci: [:spec, :lint, :"spec:isolation"]
+if RUBY_ENGINE == 'jruby'
+  desc "Run CI tasks"
+  task ci: [:spec, :lint]
+else
+  desc "Run CI tasks"
+  task ci: [:spec, :lint, :"spec:isolation"]
+end
 
 Rake::TestTask.new(:lint) do |test|
   test.description = "Run adapter lint tests against memory adapter"
