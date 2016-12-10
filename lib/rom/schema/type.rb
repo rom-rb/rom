@@ -24,6 +24,11 @@ module ROM
       end
 
       # @api public
+      def name
+        meta[:name]
+      end
+
+      # @api public
       def eql?(other)
         other.is_a?(self.class) ? super : type.eql?(other)
       end

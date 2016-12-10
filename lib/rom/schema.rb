@@ -80,7 +80,7 @@ module ROM
 
     # @api public
     def to_ary
-      map { |attribute| attribute.meta[:name] }
+      map(&:name)
     end
 
     # Return attribute
