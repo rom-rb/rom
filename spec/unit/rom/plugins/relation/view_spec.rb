@@ -69,7 +69,7 @@ RSpec.describe ROM::Plugins::Relation::View do
       new_rel = relation_class.new([{ name: 'Jane' }, { name: 'Joe' }])
       names_schema = relation_class.attributes[:names]
 
-      expect(names_schema).to receive(:project_relation).with(relation).and_return(new_rel)
+      expect(names_schema).to receive(:call).with(relation).and_return(new_rel)
       expect(relation.names).to eql(new_rel)
     end
 
@@ -77,7 +77,7 @@ RSpec.describe ROM::Plugins::Relation::View do
       new_rel = relation_class.new([{ id: 2 }])
       ids_schema = relation_class.attributes[:ids_for_names]
 
-      expect(ids_schema).to receive(:project_relation).with(relation.restrict(name: ['Jane'])).and_return(new_rel)
+      expect(ids_schema).to receive(:call).with(relation.restrict(name: ['Jane'])).and_return(new_rel)
       expect(relation.ids_for_names(['Jane'])).to eql(new_rel)
     end
   end

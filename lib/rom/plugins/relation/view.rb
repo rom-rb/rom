@@ -102,7 +102,7 @@ module ROM
 
                 if new_schema_fn
                   auto_curry(name) do
-                    self.class.attributes[name].project_relation(self).with(view: name) 
+                    self.class.attributes[name].(self).with(view: name) 
                   end
                 else
                   auto_curry(name) do
@@ -114,7 +114,7 @@ module ROM
               if new_schema_fn
                 define_method(name) do
                   relation = instance_exec(&relation_block)
-                  self.class.attributes[name].project_relation(relation).with(view: name)
+                  self.class.attributes[name].(relation).with(view: name)
                 end
               else
                 define_method(name) do

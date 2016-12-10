@@ -64,6 +64,23 @@ module ROM
       @inferrer = options[:inferrer]
     end
 
+    # Abstract method for creating a new relation based on schema definition
+    #
+    # This can be used by views to generate a new relation automatically.
+    # In example a schema can project a relation, join any additional relations
+    # if it uncludes attributes from other relations etc.
+    #
+    # Default implementation is a no-op and it simply returns back untouched relation
+    #
+    # @param [Relation]
+    #
+    # @return [Relation]
+    #
+    # @api public
+    def call(relation)
+      relation
+    end
+
     # Iterate over schema's attributes
     #
     # @yield [Dry::Data::Type]
