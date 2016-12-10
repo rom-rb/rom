@@ -58,7 +58,7 @@ RSpec.describe ROM::Plugins::Relation::KeyInference do
         use :key_inference
 
         schema :posts do
-          attribute :author_id, ROM::Types::Int.meta(foreign_key: true, relation: :users)
+          attribute :author_id, ROM::Types::Int.meta(foreign_key: true, target: :users)
         end
       end
     end

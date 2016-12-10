@@ -107,7 +107,7 @@ module ROM
     #
     # @api public
     def foreign_key(relation)
-      detect { |attr| attr.foreign_key? && attr.relation == relation }
+      detect { |attr| attr.foreign_key? && attr.target == relation }
     end
 
     # This hook is called when relation is being build during container finalization
@@ -121,7 +121,7 @@ module ROM
     def finalize!(gateway = nil, &block)
       return self if frozen?
 
-      @attributes = self.class.attributes(inferrer.call(name.dataset, gateway), type_class) if inferrer
+      @attributes = self.class.attributes(inferrer.call(name, gateway), type_class) if inferrer
       @primary_key = select(&:primary_key?)
       block.call if block
       freeze

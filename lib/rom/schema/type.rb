@@ -19,8 +19,13 @@ module ROM
       end
 
       # @api public
-      def relation
-        meta[:relation]
+      def source
+        meta[:source]
+      end
+
+      # @api public
+      def target
+        meta[:target]
       end
 
       # @api public

@@ -13,11 +13,11 @@ module ROM
 
     # @api public
     class DSL < BasicObject
-      attr_reader :name, :attributes, :inferrer
+      attr_reader :relation, :attributes, :inferrer
 
       # @api private
-      def initialize(name, inferrer, &block)
-        @name = name
+      def initialize(relation, inferrer, &block)
+        @relation = relation
         @inferrer = inferrer
         @attributes = {}
 
@@ -33,7 +33,7 @@ module ROM
       # @api public
       def attribute(name, type)
         @attributes ||= {}
-        @attributes[name] = type.meta(name: name)
+        @attributes[name] = type.meta(name: name, source: relation)
       end
 
       # Specify which key(s) should be the primary key
@@ -48,7 +48,7 @@ module ROM
 
       # @api private
       def call
-        Schema.define(name, attributes: attributes, inferrer: inferrer)
+        Schema.define(relation, attributes: attributes, inferrer: inferrer)
       end
     end
   end
