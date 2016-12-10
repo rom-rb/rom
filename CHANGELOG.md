@@ -3,13 +3,17 @@
 ## Added
 
 * Support for schemas in view definitions (solnic)
-* Automatic relation project via schemas when using with views (solnic)
+* Schemas have their own types with adapter-specific APIs (solnic)
+* Schema types include meta properties `source` and `target` (for FKs) (solnic)
+* Schemas are coercible to arrays that include all attribute types (solnic)
+* Automatic relation projection via schemas when using with views (solnic)
 * New finalization hook: `Relation.schema_defined!` (solnic)
 
 ## Changed
 
 * All relations have schemas now, empty by default (solnic)
 * :view plugin sets up a base relation view by default based on a schema (solnic)
+* [internal] Renamed `relation` => `target` meta property in FK types (solnic)
 * [internal] Use deprecations API from dry-core (flash-gordon)
 * [internal] Use common constants from dry-core (EMPTY_HASH, EMPTY_ARRAY etc.) (flash-gordon)
 * [internal] Internal ROM modules (array_dataset, enumerable_dataset, auto_curry, and data_proxy) were moved from rom-support to ROM itself (flash-gordon)
