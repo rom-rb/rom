@@ -13,7 +13,7 @@ RSpec.describe ROM::Relation, '.schema' do
 
     Test::Users.schema.finalize!
 
-    schema = ROM::Schema.new(
+    schema = ROM::Schema.define(
       ROM::Relation::Name.new(:test_users),
       attributes: {
         id: ROM::Memory::Types::Int.meta(primary_key: true, name: :id),
@@ -113,7 +113,7 @@ RSpec.describe ROM::Relation, '.schema' do
         end
       end
 
-      expect(Test::Users.schema[:admin]).to eql(ROM::Types::Bool.meta(name: :admin))
+      expect(Test::Users.schema[:admin].type).to eql(ROM::Types::Bool.meta(name: :admin))
     end
   end
 end

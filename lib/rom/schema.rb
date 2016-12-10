@@ -1,5 +1,6 @@
 require 'dry-equalizer'
 
+require 'rom/schema/type'
 require 'rom/schema/dsl'
 require 'rom/association_set'
 
@@ -33,14 +34,34 @@ module ROM
     #   @return [Array<Dry::Types::Definition] Primary key array
     attr_reader :primary_key
 
+    # @api private
+    attr_reader :options
+
     alias_method :to_h, :attributes
 
+    # @api public
+    def self.define(name, type_class: Type, attributes: EMPTY_HASH, associations: EMPTY_ASSOCIATION_SET, inferrer: nil)
+      new(
+        name,
+        attributes: attributes(attributes, type_class),
+        associations: associations,
+        inferrer: inferrer,
+        type_class: type_class
+      )
+    end
+
     # @api private
-    def initialize(name, attributes: EMPTY_HASH, associations: EMPTY_ASSOCIATION_SET, inferrer: nil)
+    def self.attributes(attributes, type_class)
+      attributes.each_with_object({}) { |(a, e), h| h[a] = type_class.new(e) }
+    end
+
+    # @api private
+    def initialize(name, options)
       @name = name
-      @attributes = attributes
-      @associations = associations
-      @inferrer = inferrer
+      @options = options
+      @attributes = options[:attributes]
+      @associations = options[:associations]
+      @inferrer = options[:inferrer]
     end
 
     # Iterate over schema's attributes
@@ -77,7 +98,7 @@ module ROM
     #
     # @api public
     def project(*names)
-      self.class.new(name, attributes: attributes.select { |key, _| names.include?(key) })
+      self.class.new(name, options.merge(attributes: attributes.select { |key, _| names.include?(key) }))
     end
 
     # Return FK attribute for a given relation name
@@ -100,10 +121,16 @@ module ROM
     def finalize!(gateway = nil, &block)
       return self if frozen?
 
-      @attributes = inferrer.call(name.dataset, gateway) if inferrer
+      @attributes = self.class.attributes(inferrer.call(name.dataset, gateway), type_class) if inferrer
       @primary_key = select { |attr| attr.meta[:primary_key] == true }
       block.call if block
       freeze
+    end
+
+    private
+
+    def type_class
+      options.fetch(:type_class)
     end
   end
 end
