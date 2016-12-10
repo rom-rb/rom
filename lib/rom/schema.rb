@@ -107,7 +107,7 @@ module ROM
     #
     # @api public
     def foreign_key(relation)
-      detect { |attr| attr.meta[:foreign_key] && attr.meta[:relation] == relation }
+      detect { |attr| attr.foreign_key? && attr.relation == relation }
     end
 
     # This hook is called when relation is being build during container finalization
@@ -122,7 +122,7 @@ module ROM
       return self if frozen?
 
       @attributes = self.class.attributes(inferrer.call(name.dataset, gateway), type_class) if inferrer
-      @primary_key = select { |attr| attr.meta[:primary_key] == true }
+      @primary_key = select(&:primary_key?)
       block.call if block
       freeze
     end
