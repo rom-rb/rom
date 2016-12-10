@@ -22,6 +22,11 @@ module ROM
       def relation
         meta[:relation]
       end
+
+      # @api public
+      def eql?(other)
+        other.is_a?(self.class) ? super : type.eql?(other)
+      end
     end
   end
 end

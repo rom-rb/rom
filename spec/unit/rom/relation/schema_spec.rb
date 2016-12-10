@@ -113,7 +113,7 @@ RSpec.describe ROM::Relation, '.schema' do
         end
       end
 
-      expect(Test::Users.schema[:admin].type).to eql(ROM::Types::Bool.meta(name: :admin))
+      expect(Test::Users.schema[:admin]).to eql(ROM::Types::Bool.meta(name: :admin))
     end
   end
 end
