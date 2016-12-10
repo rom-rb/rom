@@ -80,7 +80,7 @@ module ROM
 
     # @api public
     def to_ary
-      map(&:name)
+      attributes.values
     end
 
     # Return attribute

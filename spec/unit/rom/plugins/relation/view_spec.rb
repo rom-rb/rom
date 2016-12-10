@@ -62,7 +62,7 @@ RSpec.describe ROM::Plugins::Relation::View do
     end
 
     it 'uses projected schema for view attributes' do
-      expect(relation.attributes(:names)).to eql(%i[name])
+      expect(relation.attributes(:names).map(&:name)).to eql(%i[name])
     end
 
     it 'auto-projects the relation via schema' do
