@@ -1,9 +1,11 @@
 require 'dry/core/inflector'
 require 'dry/core/cache'
 require 'dry/core/class_builder'
+require 'dry/struct'
 
 require 'rom/struct'
 require 'rom/repository/struct_attributes'
+require 'rom/schema/type'
 
 module ROM
   class Repository
@@ -14,10 +16,17 @@ module ROM
       def call(*args)
         fetch_or_store(*args) do
           name, header = args
+          attributes = visit(header)
 
-          build_class(name) { |klass|
-            klass.send(:include, StructAttributes.new(visit(header)))
-          }
+          if attributes.all? { |attr| attr.is_a?(Symbol) }
+            build_class(name, ROM::Struct) { |klass|
+              klass.send(:include, StructAttributes.new(attributes))
+            }
+          else
+            build_class(name, Dry::Struct) { |klass|
+              attributes.each { |attribute| klass.attribute(attribute.name, attribute.type) }
+            }
+          end
         end
       end
       alias_method :[], :call
@@ -42,8 +51,8 @@ module ROM
         node
       end
 
-      def build_class(name, &block)
-        Dry::Core::ClassBuilder.new(name: class_name(name), parent: Struct).call(&block)
+      def build_class(name, parent, &block)
+        Dry::Core::ClassBuilder.new(name: class_name(name), parent: parent).call(&block)
       end
 
       def class_name(name)
