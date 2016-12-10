@@ -46,7 +46,7 @@ module ROM
     #                    the fallback
     #   @api public
     option :schema, reader: true, default: -> relation {
-      relation.class.schema || Schema.new(Dry::Core::Inflector.underscore(relation.class.name || EMPTY_STRING).to_sym)
+      relation.class.schema || Schema.define(Dry::Core::Inflector.underscore(relation.class.name || EMPTY_STRING).to_sym)
     }
 
     # @!attribute [r] schema_hash

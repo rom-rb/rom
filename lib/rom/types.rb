@@ -11,7 +11,7 @@ module ROM
 
     module Methods
       def ForeignKey(relation, type = Types::Int)
-        type.meta(foreign_key: true, relation: relation)
+        type.meta(foreign_key: true, target: relation)
       end
     end
   end
