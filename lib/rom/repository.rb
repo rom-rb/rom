@@ -7,6 +7,7 @@ require 'rom/repository/command_compiler'
 
 require 'rom/repository/root'
 require 'rom/repository/changeset'
+require 'rom/repository/transaction'
 
 module ROM
   # Abstract repository class to inherit from
@@ -180,6 +181,13 @@ module ROM
       else
         Changeset::Create.new(relation, data)
       end
+    end
+
+    # TODO: document me, please
+    #
+    # @api public
+    def transaction(&block)
+      yield(Transaction.new(self)).commit!
     end
 
     private
