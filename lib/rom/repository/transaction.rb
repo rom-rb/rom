@@ -11,20 +11,22 @@ module ROM
       end
 
       def create(changeset)
-        ops << [:create, changeset]
-        self
+        new(ops.dup << [:create, changeset])
       end
 
-      def associate(changeset, assoc = source.name)
-        ops << [:create, changeset, assoc]
-        self
+      def associate(changeset, assoc)
+        new(ops.dup << [:create, changeset, assoc])
+      end
+
+      def new(new_ops = [])
+        self.class.new(repo, new_ops)
       end
 
       def commit!
         commands = ops.reduce([]) do |acc, (type, changeset, assoc)|
           command =
             if assoc
-              repo.command(type, changeset.relation, use: {
+              repo.command(type, changeset.relation, mapper: false, use: {
                              associates: proc { associates(assoc) }
                            })
             else
@@ -33,12 +35,6 @@ module ROM
           acc << command
         end
         commands.reduce(:>>).call
-      end
-
-      private
-
-      def source
-        ops[0][1].relation
       end
     end
   end

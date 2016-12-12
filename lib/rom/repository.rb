@@ -212,12 +212,17 @@ module ROM
 
       if mapper
         mapper_instance = container.mappers[relation.name.relation][mapper]
-      else
+      elsif mapper.nil?
         mapper_instance = mappers[ast]
       end
 
       command = CommandCompiler[container, type, adapter, ast, use]
-      command >> mapper_instance
+
+      if mapper_instance
+        command >> mapper_instance
+      else
+        command
+      end
     end
 
     # @api private
