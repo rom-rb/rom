@@ -15,11 +15,30 @@ module ROM
         self
       end
 
+      def associate(changeset, assoc = source.name)
+        ops << [:create, changeset, assoc]
+        self
+      end
+
       def commit!
-        commands = ops.reduce([]) do |acc, (type, changeset)|
-          acc << repo.command(type, changeset.relation).curry(changeset)
+        commands = ops.reduce([]) do |acc, (type, changeset, assoc)|
+          command =
+            if assoc
+              repo.command(type, changeset.relation, use: {
+                             associates: proc { associates(assoc) }
+                           })
+            else
+              repo.command(type, changeset.relation)
+            end.curry(changeset)
+          acc << command
         end
-        commands.map(&:call)
+        commands.reduce(:>>).call
+      end
+
+      private
+
+      def source
+        ops[0][1].relation
       end
     end
   end
