@@ -19,4 +19,11 @@ RSpec.describe ROM::Struct do
       expect(struct.name).to eql("Jane")
     end
   end
+
+  describe '#fetch' do
+    it 'reads an attribute value' do
+      expect(struct.fetch(:id)).to be(1)
+      expect(struct.fetch(:name)).to eql("Jane")
+    end
+  end
 end

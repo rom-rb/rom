@@ -36,6 +36,11 @@ module ROM
       __send__(name)
     end
 
+    # @api public
+    def fetch(name)
+      self[name]
+    end
+
     # Returns a short string representation
     #
     # @return [String]
