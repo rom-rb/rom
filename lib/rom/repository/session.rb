@@ -37,11 +37,9 @@ module ROM
         update_commands = reduce_commands(:update)
         create_commands = reduce_commands(:create)
 
-        repo.container.gateways[:default].connection.transaction do
-          delete_commands.each(&:call)
-          update_commands.call if update_commands
-          create_commands.call if create_commands
-        end
+        delete_commands.each(&:call)
+        update_commands.call if update_commands
+        create_commands.call if create_commands
       end
 
       private
