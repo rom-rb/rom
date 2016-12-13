@@ -38,4 +38,6 @@ end
 
 group :tools do
   gem 'pry'
+  gem 'mutant'
+  gem 'mutant-rspec'
 end
