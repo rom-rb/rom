@@ -187,7 +187,9 @@ module ROM
     #
     # @api public
     def transaction(&block)
-      yield(Transaction.new(self)).commit!
+      trans = Transaction.new(self)
+      yield(trans)
+      trans.commit!
     end
 
     private

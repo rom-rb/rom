@@ -13,15 +13,13 @@ module ROM
       end
 
       def create(changeset)
-        new(ops.dup << [:create, changeset])
+        ops << [:create, changeset]
+        self
       end
 
       def associate(changeset, assoc)
-        new(ops.dup << [:create, changeset, assoc])
-      end
-
-      def new(new_ops = [])
-        self.class.new(repo, new_ops)
+        ops << [:create, changeset, assoc]
+        self
       end
 
       def commit!
