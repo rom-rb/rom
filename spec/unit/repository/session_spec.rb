@@ -1,4 +1,4 @@
-RSpec.describe ROM::Repository, '#transaction' do
+RSpec.describe ROM::Repository, '#session' do
   subject(:repo) do
     Class.new(ROM::Repository) { relations :users, :posts, :labels }.new(rom)
   end
@@ -12,7 +12,7 @@ RSpec.describe ROM::Repository, '#transaction' do
     end
 
     it 'saves data in a transaction' do
-      result = repo.transaction do |t|
+      result = repo.session do |t|
         t.create(user_changeset)
       end
 
@@ -35,7 +35,7 @@ RSpec.describe ROM::Repository, '#transaction' do
     end
 
     it 'saves data in a transaction' do
-      result = repo.transaction do |t|
+      result = repo.session do |t|
         t.update(user_changeset)
       end
 
@@ -56,7 +56,7 @@ RSpec.describe ROM::Repository, '#transaction' do
     end
 
     it 'saves data in a transaction' do
-      result = repo.transaction do |t|
+      result = repo.session do |t|
         t.delete(repo.users.by_pk(user.id))
       end
 
@@ -75,7 +75,7 @@ RSpec.describe ROM::Repository, '#transaction' do
     end
 
     it 'saves data in a transaction' do
-      repo.transaction do |t|
+      repo.session do |t|
         t.create(user_changeset).associate(posts_changeset, :author)
       end
 
@@ -102,7 +102,7 @@ RSpec.describe ROM::Repository, '#transaction' do
     end
 
     it 'saves data in a transaction' do
-      repo.transaction do |t|
+      repo.session do |t|
         t.create(user_changeset)
           .associate(posts_changeset, :author)
           .associate(labels_changeset, :posts)
@@ -125,7 +125,7 @@ RSpec.describe ROM::Repository, '#transaction' do
 
       it 'rolls back the transaction' do
         expect {
-          repo.transaction do |t|
+          repo.session do |t|
             t.create(user_changeset)
               .associate(posts_changeset, :author)
               .associate(labels_changeset, :posts)

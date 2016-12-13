@@ -7,7 +7,7 @@ require 'rom/repository/command_compiler'
 
 require 'rom/repository/root'
 require 'rom/repository/changeset'
-require 'rom/repository/transaction'
+require 'rom/repository/session'
 
 module ROM
   # Abstract repository class to inherit from
@@ -186,10 +186,10 @@ module ROM
     # TODO: document me, please
     #
     # @api public
-    def transaction(&block)
-      trans = Transaction.new(self)
-      yield(trans)
-      trans.commit!
+    def session(&block)
+      session = Session.new(self)
+      yield(session)
+      session.commit!
     end
 
     private

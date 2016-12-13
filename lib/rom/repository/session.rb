@@ -2,7 +2,7 @@ require 'dry/core/constants'
 
 module ROM
   class Repository
-    class Transaction
+    class Session
       attr_reader :repo
 
       attr_reader :ops
