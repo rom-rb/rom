@@ -1,6 +1,6 @@
-RSpec.describe ROM::Repository::Session do
+RSpec.describe ROM::Session do
   subject(:session) do
-    ROM::Repository::Session.new(repo)
+    ROM::Session.new(repo)
   end
 
   let(:repo) { instance_double(ROM::Repository) }
