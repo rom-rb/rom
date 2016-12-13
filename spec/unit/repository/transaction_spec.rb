@@ -6,7 +6,7 @@ RSpec.describe ROM::Repository, '#transaction' do
   include_context 'database'
   include_context 'relations'
 
-  describe 'creating a user' do
+  describe 'with :create command' do
     let(:user_changeset) do
       repo.changeset(:users, name: 'Jane')
     end
@@ -17,6 +17,51 @@ RSpec.describe ROM::Repository, '#transaction' do
       end
 
       expect(result.to_h).to eql(id: 1, name: 'Jane')
+    end
+  end
+
+  describe 'with :update command' do
+    let(:user_changeset) do
+      repo.changeset(:users, user.id, user.to_h.merge(name: 'Jane Doe'))
+    end
+
+    let(:user) do
+      repo.users.where(name: 'Jane').one
+    end
+
+    before do
+      repo.command(:create, repo.users).call(name: 'John')
+      repo.command(:create, repo.users).call(name: 'Jane')
+    end
+
+    it 'saves data in a transaction' do
+      result = repo.transaction do |t|
+        t.update(user_changeset)
+      end
+
+      updated_user = repo.users.fetch(user.id)
+
+      expect(updated_user).to eql(id: 2, name: 'Jane Doe')
+    end
+  end
+
+  describe 'with :delete command' do
+    let(:user) do
+      repo.users.where(name: 'Jane').one
+    end
+
+    before do
+      repo.command(:create, repo.users).call(name: 'John')
+      repo.command(:create, repo.users).call(name: 'Jane')
+    end
+
+    it 'saves data in a transaction' do
+      result = repo.transaction do |t|
+        t.delete(repo.users.by_pk(user.id))
+      end
+
+      expect(repo.users.by_pk(user.id).one).to be(nil)
+      expect(repo.users.count).to be(1)
     end
   end
 
