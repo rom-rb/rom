@@ -1,8 +1,10 @@
-require 'dry/core/constants'
+require 'dry/equalizer'
 
 module ROM
   class Repository
     class Session
+      include Dry::Equalizer(:ops)
+
       attr_reader :repo
 
       attr_reader :ops
