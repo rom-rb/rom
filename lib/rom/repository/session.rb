@@ -3,34 +3,34 @@ require 'dry/equalizer'
 module ROM
   class Repository
     class Session
-      include Dry::Equalizer(:ops)
+      include Dry::Equalizer(:queue)
 
       attr_reader :repo
 
-      attr_reader :ops
+      attr_reader :queue
 
       def initialize(repo)
         @repo = repo
-        initialize_ops!
+        initialize_queue!
       end
 
       def create(changeset)
-        ops[:create] << changeset
+        queue[:create] << changeset
         self
       end
 
       def update(changeset)
-        ops[:update] << changeset
+        queue[:update] << changeset
         self
       end
 
       def delete(relation)
-        ops[:delete] << relation
+        queue[:delete] << relation
         self
       end
 
       def associate(changeset, assoc)
-        ops[:create] << [changeset, assoc]
+        queue[:create] << [changeset, assoc]
         self
       end
 
@@ -45,7 +45,7 @@ module ROM
 
         self
       ensure
-        initialize_ops!
+        initialize_queue!
       end
 
       private
@@ -59,11 +59,11 @@ module ROM
       end
 
       def map_commands(type)
-        ops[type].map { |relation| create_command(type, relation).new(relation) }
+        queue[type].map { |relation| create_command(type, relation).new(relation) }
       end
 
       def reduce_commands(type)
-        ops[type].map do |(changeset, assoc)|
+        queue[type].map do |(changeset, assoc)|
           if assoc
             create_assoc_command(type, changeset.relation, assoc)
           else
@@ -72,8 +72,8 @@ module ROM
         end.reduce(:>>)
       end
 
-      def initialize_ops!
-        @ops = Hash.new { |h, k| h[k] = [] }
+      def initialize_queue!
+        @queue = Hash.new { |h, k| h[k] = [] }
       end
     end
   end
