@@ -2,14 +2,17 @@ require 'dry/equalizer'
 
 module ROM
   class Session
-    include Dry::Equalizer(:queue)
+    include Dry::Equalizer(:queue, :status)
 
     attr_reader :repo
 
     attr_reader :queue
 
+    attr_reader :status
+
     def initialize(repo)
       @repo = repo
+      @status = :pending
       initialize_queue!
     end
 
@@ -42,9 +45,27 @@ module ROM
       update_commands.call if update_commands
       create_commands.call if create_commands
 
+      @status = :success
+
       self
+
+    rescue => e
+      @status = :failure
+      raise e
     ensure
       initialize_queue!
+    end
+
+    def pending?
+      status.equal?(:pending)
+    end
+
+    def success?
+      status.equal?(:success)
+    end
+
+    def failure?
+      status.equal?(:failure)
     end
 
     private

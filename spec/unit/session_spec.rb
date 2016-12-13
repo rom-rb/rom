@@ -9,12 +9,24 @@ RSpec.describe ROM::Session do
   let(:create_command) { spy(:create_command) }
   let(:delete_command) { spy(:delete_command) }
 
+  describe '#pending?' do
+    it 'returns true before commit' do
+      expect(session).to be_pending
+    end
+
+    it 'returns false after commit' do
+      expect(session.commit!).to_not be_pending
+    end
+  end
+
   describe '#commit!' do
     it 'executes ops and restores pristine state' do
       expect(repo).to receive(:command).with(:create, relation, mapper: false).and_return(create_command)
 
       session.create(changeset).commit!
       session.commit!
+
+      expect(session).to be_success
 
       expect(create_command).to have_received(:call)
     end
@@ -26,6 +38,8 @@ RSpec.describe ROM::Session do
       expect(delete_command).to receive(:call).and_raise(StandardError, 'oops')
 
       expect { session.delete(relation).create(changeset).commit! }.to raise_error(StandardError, 'oops')
+
+      expect(session).to be_failure
 
       session.commit!
 
