@@ -7,9 +7,9 @@ module ROM
 
       attr_reader :ops
 
-      def initialize(repo, ops = Hash.new { |h, k| h[k] = [] })
+      def initialize(repo)
         @repo = repo
-        @ops = ops
+        initialize_ops!
       end
 
       def create(changeset)
@@ -40,6 +40,10 @@ module ROM
         delete_commands.each(&:call)
         update_commands.call if update_commands
         create_commands.call if create_commands
+
+        self
+      ensure
+        initialize_ops!
       end
 
       private
@@ -64,6 +68,10 @@ module ROM
             create_command(type, changeset.relation)
           end.curry(changeset)
         end.reduce(:>>)
+      end
+
+      def initialize_ops!
+        @ops = Hash.new { |h, k| h[k] = [] }
       end
     end
   end

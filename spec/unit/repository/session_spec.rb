@@ -12,11 +12,12 @@ RSpec.describe ROM::Repository, '#session' do
     end
 
     it 'saves data in a transaction' do
-      result = repo.session do |t|
+      repo.session do |t|
         t.create(user_changeset)
       end
 
-      expect(result.to_h).to eql(id: 1, name: 'Jane')
+      user = repo.users.where(name: 'Jane').one
+      expect(user.to_h).to eql(id: 1, name: 'Jane')
     end
   end
 
@@ -35,7 +36,7 @@ RSpec.describe ROM::Repository, '#session' do
     end
 
     it 'saves data in a transaction' do
-      result = repo.session do |t|
+      repo.session do |t|
         t.update(user_changeset)
       end
 
@@ -56,7 +57,7 @@ RSpec.describe ROM::Repository, '#session' do
     end
 
     it 'saves data in a transaction' do
-      result = repo.session do |t|
+      repo.session do |t|
         t.delete(repo.users.by_pk(user.id))
       end
 
