@@ -1,3 +1,5 @@
+require 'dry/core/constants'
+
 module ROM
   class Repository
     class Transaction
@@ -23,18 +25,25 @@ module ROM
       end
 
       def commit!
-        commands = ops.reduce([]) do |acc, (type, changeset, assoc)|
-          command =
-            if assoc
-              repo.command(type, changeset.relation, mapper: false, use: {
-                             associates: proc { associates(assoc) }
-                           })
-            else
-              repo.command(type, changeset.relation)
-            end.curry(changeset)
-          acc << command
-        end
-        commands.reduce(:>>).call
+        command = ops.map do |(type, changeset, assoc)|
+          if assoc
+            create_assoc_command(type, changeset, assoc)
+          else
+            create_command(type, changeset)
+          end.curry(changeset)
+        end.reduce(:>>)
+
+        command.call
+      end
+
+      private
+
+      def create_command(type, changeset, opts = EMPTY_HASH)
+        repo.command(type, changeset.relation, opts.merge(mapper: false))
+      end
+
+      def create_assoc_command(type, changeset, name)
+        create_command(type, changeset, use: { associates: proc { associates(name) }})
       end
     end
   end
