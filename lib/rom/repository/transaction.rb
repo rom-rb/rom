@@ -33,7 +33,7 @@ module ROM
           end.curry(changeset)
         end.reduce(:>>)
 
-        command.call
+        command.transaction { command.call }.value
       end
 
       private

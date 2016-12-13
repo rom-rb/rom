@@ -72,5 +72,25 @@ RSpec.describe ROM::Repository, '#transaction' do
       expect(user.posts[0].labels[0].name).to eql('red')
       expect(user.posts[0].labels[1].name).to eql('green')
     end
+
+    context 'with invalid data' do
+      let(:posts_changeset) do
+        repo.changeset(:posts, [{ title: nil }])
+      end
+
+      it 'rolls back the transaction' do
+        expect {
+          repo.transaction do |t|
+            t.create(user_changeset)
+              .associate(posts_changeset, :author)
+              .associate(labels_changeset, :posts)
+          end
+        }.to raise_error(ROM::SQL::ConstraintError)
+
+        expect(repo.users.count).to be(0)
+        expect(repo.posts.count).to be(0)
+        expect(repo.labels.count).to be(0)
+      end
+    end
   end
 end
