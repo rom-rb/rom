@@ -18,9 +18,8 @@ env:
   global:
     - JRUBY_OPTS='--dev -J-Xmx1024M'
 matrix:
-  include:
-    - rvm: jruby-head
-      before_install: gem install bundler --no-ri --no-rdoc
+  allow_failures:
+    - rvm: rbx-3
 notifications:
   webhooks:
     urls:
