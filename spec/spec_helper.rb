@@ -36,6 +36,8 @@ def T(*args)
 end
 
 RSpec.configure do |config|
+  config.include(SchemaHelpers)
+
   config.after do
     Test.remove_constants
   end
