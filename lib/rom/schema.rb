@@ -115,7 +115,7 @@ module ROM
     #
     # @api public
     def project(*names)
-      self.class.new(name, options.merge(attributes: attributes.select { |key, _| names.include?(key) }))
+      self.class.new(name, options.merge(attributes: names.map { |name| [name, self[name]] }.to_h))
     end
 
     # Return FK attribute for a given relation name
