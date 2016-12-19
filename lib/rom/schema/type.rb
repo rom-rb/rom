@@ -30,7 +30,12 @@ module ROM
 
       # @api public
       def name
-        meta[:name]
+        meta[:alias] || meta[:name]
+      end
+
+      # @api public
+      def aliased(name)
+        self.class.new(type.meta(alias: name))
       end
 
       # @api public

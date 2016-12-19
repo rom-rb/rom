@@ -118,6 +118,17 @@ module ROM
       self.class.new(name, options.merge(attributes: names.map { |name| [name, self[name]] }.to_h))
     end
 
+    # Project a schema with renamed attributes
+    #
+    # @param [Hash] mapping The attribute mappings
+    #
+    # @return [Schema]
+    #
+    # @api public
+    def rename(mapping)
+      self.class.new(name, options.merge(attributes: mapping.map { |key, value| [value, self[key].aliased(value)] }.to_h))
+    end
+
     # Return FK attribute for a given relation name
     #
     # @return [Dry::Types::Definition]
