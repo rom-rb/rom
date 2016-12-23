@@ -48,7 +48,7 @@ module ROM
 
       # @api private
       def call
-        Schema.define(relation, attributes: attributes, inferrer: inferrer)
+        Schema.define(relation, attributes: attributes.values, inferrer: inferrer)
       end
     end
   end

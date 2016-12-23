@@ -4,7 +4,7 @@ module SchemaHelpers
   def define_schema(name, attrs)
     ROM::Schema.define(
       name,
-      attributes: attrs.each_with_object({}) { |(k, v), h| h[k] = v.meta(name: k) }
+      attributes: attrs.map { |key, value| value.meta(name: key) }
     )
   end
 end

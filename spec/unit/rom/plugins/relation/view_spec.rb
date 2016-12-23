@@ -136,8 +136,7 @@ RSpec.describe ROM::Plugins::Relation::View do
           use :view
 
           schema_inferrer -> dataset, gateway {
-            { id: ROM::Types::Int.meta(name: :id),
-              name: ROM::Types::String.meta(name: :name) }
+            [ROM::Types::Int.meta(name: :id), ROM::Types::String.meta(name: :name)]
           }
 
           schema(infer: true)

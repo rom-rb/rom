@@ -19,7 +19,7 @@ module ROM
     attr_reader :name
 
     # @!attribute [r] attributes
-    #   @return [Hash] The hash with schema attribute types
+    #   @return [Array] Array with schema attributes
     attr_reader :attributes
 
     # @!attribute [r] associations
@@ -37,10 +37,10 @@ module ROM
     # @api private
     attr_reader :options
 
-    alias_method :to_h, :attributes
+    alias_method :to_ary, :attributes
 
     # @api public
-    def self.define(name, type_class: Type, attributes: EMPTY_HASH, associations: EMPTY_ASSOCIATION_SET, inferrer: nil)
+    def self.define(name, type_class: Type, attributes: EMPTY_ARRAY, associations: EMPTY_ASSOCIATION_SET, inferrer: nil)
       new(
         name,
         attributes: attributes(attributes, type_class),
@@ -52,7 +52,7 @@ module ROM
 
     # @api private
     def self.attributes(attributes, type_class)
-      attributes.each_with_object({}) { |(a, e), h| h[a] = type_class.new(e) }
+      attributes.map { |type| type_class.new(type) }
     end
 
     # @api private
@@ -83,11 +83,11 @@ module ROM
 
     # Iterate over schema's attributes
     #
-    # @yield [Dry::Data::Type]
+    # @yield [Schema::Type]
     #
     # @api public
     def each(&block)
-      attributes.each_value(&block)
+      attributes.each(&block)
     end
 
     # @api public
@@ -96,15 +96,16 @@ module ROM
     end
 
     # @api public
-    def to_ary
-      attributes.values
+    def to_h
+      each_with_object({}) { |attr, h| h[attr.name] = attr }
     end
 
     # Return attribute
     #
     # @api public
-    def [](name)
-      attributes.fetch(name)
+    def [](key)
+      attributes.detect { |attr| attr.name == key } ||
+        raise(KeyError, "#{key.inspect} attribute doesn't exist in #{name.inspect} schema")
     end
 
     # Project a schema to include only specified attributes
@@ -115,7 +116,7 @@ module ROM
     #
     # @api public
     def project(*names)
-      new(names.map { |name| [name, self[name]] }.to_h)
+      new(names.map { |name| self[name] })
     end
 
     # Exclude provided attributes from a schema
@@ -126,7 +127,7 @@ module ROM
     #
     # @api public
     def exclude(*names)
-      project(*(attributes.keys - names))
+      project(*(map(&:name) - names))
     end
 
     # Project a schema with renamed attributes
@@ -137,14 +138,9 @@ module ROM
     #
     # @api public
     def rename(mapping)
-      new_attributes = each_with_object({}) do |attr, h|
+      new_attributes = map do |attr|
         alias_name = mapping[attr.name]
-
-        if alias_name
-          h[alias_name] = attr.aliased(alias_name)
-        else
-          h[attr.name] = attr
-        end
+        alias_name ? attr.aliased(alias_name) : attr
       end
 
       new(new_attributes)
@@ -183,6 +179,7 @@ module ROM
 
       @attributes = self.class.attributes(inferrer.call(name, gateway), type_class) if inferrer
       @primary_key = select(&:primary_key?)
+
       block.call if block
       freeze
     end

@@ -17,11 +17,11 @@ RSpec.describe ROM::Relation, '.schema' do
 
     schema = ROM::Schema.define(
       ROM::Relation::Name.new(:test_users),
-      attributes: {
-        id: ROM::Memory::Types::Int.meta(primary_key: true, name: :id, source: relation_name),
-        name: ROM::Memory::Types::String.meta(name: :name, source: relation_name),
-        admin: ROM::Memory::Types::Bool.meta(name: :admin, source: relation_name)
-      }
+      attributes: [
+        ROM::Memory::Types::Int.meta(primary_key: true, name: :id, source: relation_name),
+        ROM::Memory::Types::String.meta(name: :name, source: relation_name),
+        ROM::Memory::Types::Bool.meta(name: :admin, source: relation_name)
+      ]
     ).finalize!
 
     expect(Test::Users.schema.primary_key).to eql([Test::Users.schema[:id]])

@@ -61,7 +61,7 @@ module ROM
             #   Return the base relation with default attributes
             #   @return [Relation]
             #   @api public
-            view(:base, schema.attributes.keys) do
+            view(:base, schema.map(&:name)) do
               self
             end
           end
