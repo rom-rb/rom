@@ -126,7 +126,17 @@ module ROM
     #
     # @api public
     def rename(mapping)
-      self.class.new(name, options.merge(attributes: mapping.map { |key, value| [value, self[key].aliased(value)] }.to_h))
+      new_attributes = each_with_object({}) do |attr, h|
+        alias_name = mapping[attr.name]
+
+        if alias_name
+          h[alias_name] = attr.aliased(alias_name)
+        else
+          h[attr.name] = attr
+        end
+      end
+
+      self.class.new(name, options.merge(attributes: new_attributes))
     end
 
     # Project a schema with renamed attributes using provided prefix

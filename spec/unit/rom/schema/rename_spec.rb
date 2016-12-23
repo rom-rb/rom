@@ -2,7 +2,7 @@ require 'rom/schema'
 
 RSpec.describe ROM::Schema, '#rename' do
   subject(:schema) do
-    define_schema(:users, user_id: ROM::Types::Int, user_name: ROM::Types::String)
+    define_schema(:users, user_id: ROM::Types::Int, user_name: ROM::Types::String, user_email: ROM::Types::String)
   end
 
   let(:renamed) do
@@ -10,7 +10,7 @@ RSpec.describe ROM::Schema, '#rename' do
   end
 
   it 'returns projected schema with renamed attributes' do
-    expect(renamed.map(&:name)).to eql(%i[id name])
-    expect(renamed.map { |attr| attr.meta[:name] }).to eql(%i[user_id user_name])
+    expect(renamed.map(&:name)).to eql(%i[id name user_email])
+    expect(renamed.map { |attr| attr.meta[:name] }).to eql(%i[user_id user_name user_email])
   end
 end
