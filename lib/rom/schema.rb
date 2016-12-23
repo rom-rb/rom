@@ -109,13 +109,24 @@ module ROM
 
     # Project a schema to include only specified attributes
     #
-    # @param [*Array] names The name of the attributes
+    # @param [*Array] names Attribute names
     #
     # @return [Schema]
     #
     # @api public
     def project(*names)
       new(names.map { |name| [name, self[name]] }.to_h)
+    end
+
+    # Exclude provided attributes from a schema
+    #
+    # @param [*Array] names Attribute names
+    #
+    # @return [Schema]
+    #
+    # @api public
+    def exclude(*names)
+      project(*(attributes.keys - names))
     end
 
     # Project a schema with renamed attributes
