@@ -14,7 +14,7 @@ RSpec.describe 'Mapper definition DSL' do
             tuple.merge(user: users.restrict(name: tuple[:name]).first)
           }
 
-          __new__(tuples)
+          new(tuples)
         end
       end
 

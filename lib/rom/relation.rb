@@ -143,6 +143,16 @@ module ROM
       ! schema.empty?
     end
 
+    # Return a new relation with provided dataset and additional options
+    #
+    # @param [Object] dataset
+    # @param [Hash] new_opts Additional options
+    #
+    # @api public
+    def new(dataset, new_opts = EMPTY_HASH)
+      self.class.new(dataset, new_opts.empty? ? options : options.merge(new_opts))
+    end
+
     # Returns a new instance with the same dataset but new options
     #
     # @param new_options [Hash]
@@ -151,7 +161,7 @@ module ROM
     #
     # @api private
     def with(new_options)
-      __new__(dataset, options.merge(new_options))
+      new(dataset, options.merge(new_options))
     end
 
     # Return schema's association set (empty by default)
@@ -164,11 +174,6 @@ module ROM
     end
 
     private
-
-    # @api private
-    def __new__(dataset, new_opts = EMPTY_HASH)
-      self.class.new(dataset, options.merge(new_opts))
-    end
 
     # @api private
     def composite_class

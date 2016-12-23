@@ -188,7 +188,7 @@ module ROM
         methods.each do |method|
           class_eval <<-RUBY, __FILE__, __LINE__ + 1
             def #{method}(*args, &block)
-              __new__(dataset.__send__(:#{method}, *args, &block))
+              new(dataset.__send__(:#{method}, *args, &block))
             end
           RUBY
         end

@@ -39,13 +39,18 @@ module ROM
           if arity == all_args.size
             Loaded.new(relation.__send__(name.relation, *all_args))
           else
-            __new__(relation, curry_args: all_args)
+            new(relation, curry_args: all_args)
           end
         else
           super
         end
       end
       alias_method :[], :call
+
+      # @api public
+      def new(relation, new_opts = EMPTY_HASH)
+        Curried.new(relation, new_opts.empty? ? options : options.merge(new_opts))
+      end
 
       # @api public
       def to_a
@@ -74,11 +79,6 @@ module ROM
       private
 
       # @api private
-      def __new__(relation, new_opts = EMPTY_HASH)
-        Curried.new(relation, options.merge(new_opts))
-      end
-
-      # @api private
       def composite_class
         Relation::Composite
       end
@@ -91,7 +91,7 @@ module ROM
           super if response.is_a?(self.class)
 
           if response.is_a?(Relation) || response.is_a?(Graph)
-            __new__(response)
+            new(response)
           else
             response
           end
