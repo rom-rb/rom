@@ -9,6 +9,7 @@
 * New schema APIs: `#project`, `#rename` and `#prefix` (solnic)
 * Automatic relation projection via schemas when using with views (solnic)
 * New finalization hook: `Relation.schema_defined!` (solnic)
+* `Relation#new(dataset, new_opts)` interface (solnic)
 
 ## Changed
 
