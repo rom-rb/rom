@@ -115,7 +115,7 @@ module ROM
     #
     # @api public
     def project(*names)
-      self.class.new(name, options.merge(attributes: names.map { |name| [name, self[name]] }.to_h))
+      new(names.map { |name| [name, self[name]] }.to_h)
     end
 
     # Project a schema with renamed attributes
@@ -136,7 +136,7 @@ module ROM
         end
       end
 
-      self.class.new(name, options.merge(attributes: new_attributes))
+      new(new_attributes)
     end
 
     # Project a schema with renamed attributes using provided prefix
@@ -178,8 +178,14 @@ module ROM
 
     private
 
+    # @api private
     def type_class
       options.fetch(:type_class)
+    end
+
+    # @api private
+    def new(attributes)
+      self.class.new(name, options.merge(attributes: attributes))
     end
   end
 end
