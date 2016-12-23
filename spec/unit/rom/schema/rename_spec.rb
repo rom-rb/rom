@@ -12,5 +12,8 @@ RSpec.describe ROM::Schema, '#rename' do
   it 'returns projected schema with renamed attributes' do
     expect(renamed.map(&:name)).to eql(%i[id name user_email])
     expect(renamed.map { |attr| attr.meta[:name] }).to eql(%i[user_id user_name user_email])
+    expect(renamed.all?(&:aliased?)).to be(false)
+    expect(renamed[:id]).to be_aliased
+    expect(renamed[:name]).to be_aliased
   end
 end

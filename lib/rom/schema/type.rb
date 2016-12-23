@@ -19,6 +19,11 @@ module ROM
       end
 
       # @api public
+      def aliased?
+        !meta[:alias].nil?
+      end
+
+      # @api public
       def source
         meta[:source]
       end
