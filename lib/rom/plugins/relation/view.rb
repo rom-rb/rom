@@ -102,11 +102,11 @@ module ROM
 
                 if new_schema_fn
                   auto_curry(name) do
-                    self.class.attributes[name].(self).with(view: name) 
+                    self.class.attributes[name].(self).with(view: name)
                   end
                 else
                   auto_curry(name) do
-                    with(view: name) 
+                    with(view: name)
                   end
                 end
               end
