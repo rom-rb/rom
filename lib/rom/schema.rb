@@ -129,6 +129,17 @@ module ROM
       self.class.new(name, options.merge(attributes: mapping.map { |key, value| [value, self[key].aliased(value)] }.to_h))
     end
 
+    # Project a schema with renamed attributes using provided prefix
+    #
+    # @param [Symbol] prefix The name of the prefix
+    #
+    # @return [Schema]
+    #
+    # @api public
+    def prefix(prefix)
+      rename(map { |attr| [attr.name, :"#{prefix}_#{attr.name}"] }.to_h)
+    end
+
     # Return FK attribute for a given relation name
     #
     # @return [Dry::Types::Definition]
