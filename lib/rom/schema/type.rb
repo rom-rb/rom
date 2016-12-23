@@ -35,7 +35,12 @@ module ROM
 
       # @api public
       def name
-        meta[:alias] || meta[:name]
+        meta[:name]
+      end
+
+      # @api public
+      def alias
+        meta[:alias]
       end
 
       # @api public

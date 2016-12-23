@@ -10,7 +10,7 @@ RSpec.describe ROM::Schema, '#prefix' do
   end
 
   it 'returns projected schema with renamed attributes using provided prefix' do
-    expect(prefixed.map(&:name)).to eql(%i[user_id user_name])
+    expect(prefixed.map(&:alias)).to eql(%i[user_id user_name])
     expect(prefixed.map { |attr| attr.meta[:name] }).to eql(%i[id name])
   end
 end
