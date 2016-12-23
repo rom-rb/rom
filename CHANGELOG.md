@@ -6,6 +6,7 @@
 * Schemas have their own types with adapter-specific APIs (solnic)
 * Schema types include meta properties `source` and `target` (for FKs) (solnic)
 * Schemas are coercible to arrays that include all attribute types (solnic)
+* New schema APIs: `#project`, `#rename` and `#prefix` (solnic)
 * Automatic relation projection via schemas when using with views (solnic)
 * New finalization hook: `Relation.schema_defined!` (solnic)
 
