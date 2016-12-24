@@ -166,6 +166,18 @@ module ROM
       detect { |attr| attr.foreign_key? && attr.target == relation }
     end
 
+    # Merge with another schema
+    #
+    # @param [Schema] other Other schema
+    #
+    # @return [Schema]
+    #
+    # @api public
+    def merge(other)
+      new(attributes + other.attributes)
+    end
+    alias_method :+, :merge
+
     # This hook is called when relation is being build during container finalization
     #
     # When block is provided it'll be called just before freezing the instance
