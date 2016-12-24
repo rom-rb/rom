@@ -17,7 +17,6 @@ module ROM
         def execute(tuples)
           Array([tuples]).flatten.map { |tuple|
             attributes = input[tuple]
-            validator.call(attributes)
             relation.insert(attributes.to_h)
             attributes
           }.to_a
@@ -34,7 +33,6 @@ module ROM
         # @see ROM::Commands::Update#execute
         def execute(params)
           attributes = input[params]
-          validator.call(attributes)
           relation.map { |tuple| tuple.update(attributes.to_h) }
         end
       end

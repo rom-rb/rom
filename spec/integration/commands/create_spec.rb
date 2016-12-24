@@ -9,18 +9,6 @@ RSpec.describe 'Commands / Create' do
   let(:tasks) { container.commands.tasks }
 
   before do
-    module Test
-      UserValidator = Class.new do
-        ValidationError = Class.new(ROM::CommandError)
-
-        def self.call(params)
-          unless params[:name] && params[:email]
-            raise ValidationError, ":name and :email are required"
-          end
-        end
-      end
-    end
-
     configuration.relation(:users)
     configuration.relation(:tasks)
 
@@ -28,7 +16,6 @@ RSpec.describe 'Commands / Create' do
       relation :users
       register_as :create
       result :one
-      validator Test::UserValidator
     end
 
     class Test::CreateTask < ROM::Commands::Create[:memory]
@@ -87,14 +74,6 @@ RSpec.describe 'Commands / Create' do
     }
 
     expect(result.value).to eql(name: 'Piotr', title: 'Finish command-api')
-  end
-
-  it 'returns validation object with errors on failed validation' do
-    result = users.try { users.create.call(name: 'Piotr') }
-
-    expect(result.error).to be_instance_of(Test::ValidationError)
-    expect(result.error.message).to eql(":name and :email are required")
-    expect(container.relations.users.count).to be(2)
   end
 
   describe '"result" option' do

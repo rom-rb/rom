@@ -8,16 +8,6 @@ RSpec.describe 'Commands / Update' do
   subject(:users) { container.commands.users }
 
   before do
-    module Test
-      UserValidator = Class.new do
-        ValidationError = Class.new(ROM::CommandError)
-
-        def self.call(params)
-          raise ValidationError, ":email is required" unless params[:email]
-        end
-      end
-    end
-
     configuration.relation(:users) do
       register_as :users
 
@@ -31,30 +21,17 @@ RSpec.describe 'Commands / Update' do
     end
 
     configuration.commands(:users) do
-      define(:update) do
-        validator Test::UserValidator
-      end
+      define(:update)
     end
   end
 
-  it 'update tuples on successful validation' do
+  it 'update tuples' do
     result = users.try {
       users.update.all(name: 'Jane').call(email: 'jane.doe@test.com')
     }
 
     expect(result)
       .to match_array([{ name: 'Jane', email: 'jane.doe@test.com' }])
-  end
-
-  it 'returns validation object with errors on failed validation' do
-    result = users.try { users.update.all(name: 'Jane').call(email: nil) }
-
-    expect(result.error).to be_instance_of(Test::ValidationError)
-    expect(result.error.message).to eql(':email is required')
-
-    expect(container.relations.users.restrict(name: 'Jane')).to match_array([
-      { name: 'Jane', email: 'jane@doe.org' }
-    ])
   end
 
   describe '"result" option' do

@@ -20,8 +20,6 @@ module ROM
   #
   # @private
   class Command
-    DEFAULT_VALIDATOR = proc {}
-
     include Dry::Equalizer(:relation, :options)
     include Commands
     include Pipeline::Operator
@@ -31,36 +29,16 @@ module ROM
 
     include Options
 
-    defines :adapter, :relation, :result, :input, :validator, :register_as, :restrictable
+    defines :adapter, :relation, :result, :input, :register_as, :restrictable
 
     option :type, allow: [:create, :update, :delete]
     option :source, reader: true
     option :result, reader: true, allow: [:one, :many]
-    option :validator, reader: true
     option :input, reader: true
     option :curry_args, type: Array, reader: true, default: EMPTY_ARRAY
 
     input Hash
-    validator DEFAULT_VALIDATOR
     result :many
-
-    # @deprecated
-    #
-    # @api public
-    def self.validator(vp = nil)
-      if defined?(@validator) && vp.nil?
-        @validator
-      else
-        unless vp.equal?(DEFAULT_VALIDATOR)
-          Dry::Core::Deprecations.announce(
-            "#{name}.validator",
-            'Please handle validation before calling commands',
-            tag: :rom
-          )
-        end
-        super
-      end
-    end
 
     # @attr_reader [Relation] relation The command's relation
     attr_reader :relation

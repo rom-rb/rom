@@ -53,13 +53,11 @@ module ROM
     #   setup.commands(:users) do
     #     define(:create) do
     #       input NewUserParams
-    #       validator NewUserValidator
     #       result :one
     #     end
     #
     #     define(:update) do
     #       input UserParams
-    #       validator UserValidator
     #       result :many
     #     end
     #

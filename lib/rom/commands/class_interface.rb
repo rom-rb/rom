@@ -123,7 +123,7 @@ module ROM
       #
       # @api private
       def options
-        { input: input, validator: validator, result: result }
+        { input: input, result: result }
       end
 
       # @api private
