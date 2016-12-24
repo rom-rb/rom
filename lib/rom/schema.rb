@@ -10,6 +10,7 @@ module ROM
   # @api public
   class Schema
     EMPTY_ASSOCIATION_SET = AssociationSet.new(EMPTY_HASH).freeze
+    DEFAULT_INFERRER = proc { EMPTY_ARRAY }
 
     include Dry::Equalizer(:name, :attributes, :associations)
     include Enumerable
@@ -36,7 +37,7 @@ module ROM
     alias_method :to_ary, :attributes
 
     # @api public
-    def self.define(name, type_class: Type, attributes: EMPTY_ARRAY, associations: EMPTY_ASSOCIATION_SET, inferrer: nil)
+    def self.define(name, type_class: Type, attributes: EMPTY_ARRAY, associations: EMPTY_ASSOCIATION_SET, inferrer: DEFAULT_INFERRER)
       new(
         name,
         attributes: attributes(attributes, type_class),
@@ -57,7 +58,7 @@ module ROM
       @options = options
       @attributes = options[:attributes]
       @associations = options[:associations]
-      @inferrer = options[:inferrer]
+      @inferrer = options[:inferrer] || DEFAULT_INFERRER
     end
 
     # Abstract method for creating a new relation based on schema definition
@@ -194,7 +195,9 @@ module ROM
     def finalize!(gateway = nil, &block)
       return self if frozen?
 
-      @attributes = self.class.attributes(inferrer.call(name, gateway), type_class) if inferrer
+      if empty?
+        @attributes = self.class.attributes(inferrer.call(name, gateway), type_class)
+      end
 
       block.call if block
       freeze
