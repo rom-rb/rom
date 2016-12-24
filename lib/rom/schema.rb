@@ -30,10 +30,6 @@ module ROM
     #   @return [#call] An optional inferrer object used in `finalize!`
     attr_reader :inferrer
 
-    # @!attribute [r] primary_key
-    #   @return [Array<Dry::Types::Definition] Primary key array
-    attr_reader :primary_key
-
     # @api private
     attr_reader :options
 
@@ -166,6 +162,15 @@ module ROM
       detect { |attr| attr.foreign_key? && attr.target == relation }
     end
 
+    # Return primary key attributes
+    #
+    # @return [Array<Schema::Type>]
+    #
+    # @api public
+    def primary_key
+      select(&:primary_key?)
+    end
+
     # Merge with another schema
     #
     # @param [Schema] other Other schema
@@ -190,7 +195,6 @@ module ROM
       return self if frozen?
 
       @attributes = self.class.attributes(inferrer.call(name, gateway), type_class) if inferrer
-      @primary_key = select(&:primary_key?)
 
       block.call if block
       freeze
