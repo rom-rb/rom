@@ -11,7 +11,7 @@ RSpec.describe ROM::Relation do
     end
 
     it 'infers base view from the schema' do
-      expect(relation.attributes).to eql(%i[id name])
+      expect(relation.attributes.map(&:name)).to eql(%i[id name])
     end
 
     it 'uses projected schema for view attributes' do

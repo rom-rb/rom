@@ -191,40 +191,32 @@ module ROM
           raise ArgumentError, "header must be set as second argument"
         end
 
-        name, header, relation_block, new_schema_fn =
-                                      if args.size == 1
-                                        ViewDSL.new(*args, schema, &block).call
-                                      else
-                                        [*args, block]
-                                      end
+        name, new_schema_fn, relation_block =
+          if args.size == 1
+            ViewDSL.new(*args, schema, &block).call
+          else
+            [*args, block]
+          end
 
-        attributes[name] = header || new_schema_fn
+        attributes[name] =
+          if args.size == 2
+            schema.project(*args[1])
+          else
+            new_schema_fn
+          end
 
         if relation_block.arity > 0
           auto_curry_guard do
             define_method(name, &relation_block)
 
-            if new_schema_fn
-              auto_curry(name) do
-                self.class.attributes[name].(self).with(view: name)
-              end
-            else
-              auto_curry(name) do
-                with(view: name)
-              end
+            auto_curry(name) do
+              self.class.attributes[name].(self).with(view: name)
             end
           end
         else
-          if new_schema_fn
-            define_method(name) do
-              relation = instance_exec(&relation_block)
-              self.class.attributes[name].(relation).with(view: name)
-            end
-          else
-            define_method(name) do
-              relation = instance_exec(&relation_block)
-              relation.with(view: name)
-            end
+          define_method(name) do
+            relation = instance_exec(&relation_block)
+            self.class.attributes[name].(relation).with(view: name)
           end
         end
       end
