@@ -5,6 +5,7 @@ require 'rom/support/class_macros'
 require 'rom/auto_curry'
 require 'rom/relation/curried'
 require 'rom/relation/name'
+require 'rom/relation/view_dsl'
 require 'rom/schema'
 
 module ROM
@@ -34,7 +35,8 @@ module ROM
         klass.class_eval do
           use :registry_reader
 
-          defines :gateway, :dataset, :dataset_proc, :register_as, :schema_dsl, :schema_inferrer
+          defines :gateway, :dataset, :dataset_proc, :register_as,
+                  :schema_dsl, :schema_inferrer
 
           gateway :default
           schema_dsl Schema::DSL
@@ -168,11 +170,63 @@ module ROM
         end
       end
 
-      # A hook which is called when a schema was defined for a relation
+      # Define a relation view with a specific header
       #
-      # @api private
-      def schema_defined!
-        # no-op
+      # With headers defined all the mappers will be inferred automatically
+      #
+      # @example
+      #   class Users < ROM::Relation[:sql]
+      #     view(:by_name, [:id, :name]) do |name|
+      #       where(name: name)
+      #     end
+      #
+      #     view(:listing, [:id, :name, :email]) do
+      #       select(:id, :name, :email).order(:name)
+      #     end
+      #   end
+      #
+      # @api public
+      def view(*args, &block)
+        if args.size == 1 && block.arity > 0
+          raise ArgumentError, "header must be set as second argument"
+        end
+
+        name, header, relation_block, new_schema_fn =
+                                      if args.size == 1
+                                        ViewDSL.new(*args, schema, &block).call
+                                      else
+                                        [*args, block]
+                                      end
+
+        attributes[name] = header || new_schema_fn
+
+        if relation_block.arity > 0
+          auto_curry_guard do
+            define_method(name, &relation_block)
+
+            if new_schema_fn
+              auto_curry(name) do
+                self.class.attributes[name].(self).with(view: name)
+              end
+            else
+              auto_curry(name) do
+                with(view: name)
+              end
+            end
+          end
+        else
+          if new_schema_fn
+            define_method(name) do
+              relation = instance_exec(&relation_block)
+              self.class.attributes[name].(relation).with(view: name)
+            end
+          else
+            define_method(name) do
+              relation = instance_exec(&relation_block)
+              relation.with(view: name)
+            end
+          end
+        end
       end
 
       # Dynamically define a method that will forward to the dataset and wrap
@@ -228,11 +282,31 @@ module ROM
         instance_methods - ancestor_methods + auto_curried_methods
       end
 
+      # @api private
+      def attributes
+        @attributes ||= {}
+      end
+
       # Hook to finalize a relation after its instance was created
       #
       # @api private
-      def finalize(_container, _relation)
-        # noop
+      def finalize(_container, relation)
+        attributes = relation.class.attributes.reduce({}) do |h, (a, e)|
+          h.update(a => e.is_a?(Proc) ? instance_exec(&e) : e)
+        end
+        relation.class.attributes.update(attributes)
+        relation
+      end
+
+      # @api private
+      def schema_defined!
+        # @!method base
+        #   Return the base relation with default attributes
+        #   @return [Relation]
+        #   @api public
+        view(:base, schema.map(&:name)) do
+          self
+        end
       end
     end
   end
