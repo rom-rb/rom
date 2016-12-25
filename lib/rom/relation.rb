@@ -179,14 +179,8 @@ module ROM
       if options.key?(:attributes)
         options[:attributes]
       else
-        header = self.class.attributes
-                   .fetch(view_name, self.class.attributes.fetch(:base))
-
-        if header.is_a?(Proc)
-          Array(instance_exec(&header))
-        else
-          Array(header)
-        end
+        self.class.attributes
+          .fetch(view_name, self.class.attributes.fetch(:base))
       end
     end
 

@@ -39,6 +39,7 @@ RSpec.describe ROM::Relation do
     before do
       # this is normally called automatically during setup
       relation_class.schema_defined!
+      relation_class.finalize({}, relation)
     end
 
     include_context 'relation with views' do
