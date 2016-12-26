@@ -56,7 +56,6 @@ module ROM
       relation.schema? ? Types::Coercible::Hash.schema(relation.schema.to_h) : Hash
     }
 
-    option :view, reader: true
     option :attributes
 
     # @!attribute [r] dataset
@@ -175,12 +174,11 @@ module ROM
     # @return [Array<Symbol>]
     #
     # @api public
-    def attributes(view_name = view)
+    def attributes(view_name = :base)
       if options.key?(:attributes)
         options[:attributes]
       else
-        self.class.attributes
-          .fetch(view_name, self.class.attributes.fetch(:base))
+        self.class.attributes.fetch(view_name)
       end
     end
 

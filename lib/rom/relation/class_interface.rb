@@ -210,13 +210,12 @@ module ROM
             define_method(name, &relation_block)
 
             auto_curry(name) do
-              self.class.attributes[name].(self).with(view: name)
+              attributes(name).(self)
             end
           end
         else
           define_method(name) do
-            relation = instance_exec(&relation_block)
-            self.class.attributes[name].(relation).with(view: name)
+            attributes(name).(instance_exec(&relation_block))
           end
         end
       end
