@@ -184,6 +184,17 @@ module ROM
     end
     alias_method :+, :merge
 
+    # Return if a schema includes an attribute with the given name
+    #
+    # @param [Symbol] name The name of the attribute
+    #
+    # @return [Boolean]
+    #
+    # @api public
+    def key?(name)
+      ! attributes.detect { |attr| attr.name == name }.nil?
+    end
+
     # This hook is called when relation is being build during container finalization
     #
     # When block is provided it'll be called just before freezing the instance
