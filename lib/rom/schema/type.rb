@@ -54,6 +54,16 @@ module ROM
       end
 
       # @api public
+      def wrapped?
+        meta[:wrapped].equal?(true)
+      end
+
+      # @api public
+      def wrapped(name = source.dataset)
+        self.class.new(prefixed(name).meta(wrapped: true))
+      end
+
+      # @api public
       def eql?(other)
         other.is_a?(self.class) ? super : type.eql?(other)
       end

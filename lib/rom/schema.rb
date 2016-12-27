@@ -154,6 +154,11 @@ module ROM
       new(map { |attr| attr.prefixed(prefix) })
     end
 
+    # @api public
+    def wrap(prefix = name.dataset)
+      new(map { |attr| attr.wrapped(prefix) })
+    end
+
     # Return FK attribute for a given relation name
     #
     # @return [Dry::Types::Definition]
