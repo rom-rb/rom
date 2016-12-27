@@ -1,5 +1,5 @@
 module ROM
   class Repository
-    VERSION = '0.3.1'.freeze
+    VERSION = '1.0.0.beta1'.freeze
   end
 end
