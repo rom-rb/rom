@@ -1,4 +1,4 @@
-## v2.1.0 to-be-released
+## v3.0.0 to-be-released
 
 ## Added
 
@@ -6,21 +6,21 @@
 * Schemas have their own types with adapter-specific APIs (solnic)
 * Schema types include meta properties `source` and `target` (for FKs) (solnic)
 * Schemas are coercible to arrays that include all attribute types (solnic)
-* New schema APIs: `#project`, `#rename` and `#prefix` (solnic)
-* Automatic relation projection via schemas when using with views (solnic)
-* New finalization hook: `Relation.schema_defined!` (solnic)
+* New schema APIs: `#project`, `#rename`, `#exclude` and `#prefix` (solnic)
+* Automatic relation view projection via schemas (solnic)
 * `Relation#new(dataset, new_opts)` interface (solnic)
 
 ## Changed
 
-* All relations have schemas now, empty by default (solnic)
-* :view plugin sets up a base relation view by default based on a schema (solnic)
+* [BREAKING] All relations have schemas now, empty by default (solnic)
+* [BREAKING] `view` DSL is now part of the core relation API (solnic)
+* [BREAKING] `view` DSL is based on schemas now, `header` was replaced with `schema` (solnic)
 * [internal] Renamed `relation` => `target` meta property in FK types (solnic)
 * [internal] Use deprecations API from dry-core (flash-gordon)
 * [internal] Use common constants from dry-core (EMPTY_HASH, EMPTY_ARRAY etc.) (flash-gordon)
 * [internal] Internal ROM modules (array_dataset, enumerable_dataset, auto_curry, and data_proxy) were moved from rom-support to ROM itself (flash-gordon)
 
-[Compare v2.0.2...v2.1.0](https://github.com/rom-rb/rom/compare/v2.0.2...v2.1.0)
+[Compare v2.0.2...v3.0.0](https://github.com/rom-rb/rom/compare/v2.0.2...v3.0.0)
 
 ## v2.0.2 2016-11-11
 
