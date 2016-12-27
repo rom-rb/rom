@@ -105,7 +105,7 @@ RSpec.describe 'loading proxy' do
         [:relation, [
           :users,
           { dataset: :users },
-          [:header, [[:attribute, :id], [:attribute, :name]]]]
+          [:header, [[:attribute, users.schema[:id]], [:attribute, users.schema[:name]]]]]
         ]
       )
     end
@@ -118,12 +118,15 @@ RSpec.describe 'loading proxy' do
           :users,
           { dataset: :users },
           [:header, [
-            [:attribute, :id],
-            [:attribute, :name],
+            [:attribute, users.schema[:id]],
+            [:attribute, users.schema[:name]],
             [:relation, [
               :tasks,
               { dataset: :tasks, keys: { id: :user_id }, combine_type: :many, combine_name: :user_tasks },
-              [:header, [[:attribute, :id], [:attribute, :user_id], [:attribute, :title]]]
+              [:header, [
+                 [:attribute, tasks.schema[:id]],
+                 [:attribute, tasks.schema[:user_id]],
+                 [:attribute, tasks.schema[:title]]]]
             ]]
           ]
         ]]]
@@ -138,13 +141,16 @@ RSpec.describe 'loading proxy' do
           :tags,
           { dataset: :tags },
           [:header, [
-            [:attribute, :id],
-            [:attribute, :task_id],
-            [:attribute, :name],
+            [:attribute, tags.schema[:id]],
+            [:attribute, tags.schema[:task_id]],
+            [:attribute, tags.schema[:name]],
             [:relation, [
               :tasks,
               { dataset: :tasks, keys: { id: :task_id }, wrap: true, combine_name: :task },
-              [:header, [ [:attribute, :id], [:attribute, :user_id], [:attribute, :title]]]
+              [:header, [
+                 [:attribute, tasks.schema[:id].prefixed],
+                 [:attribute, tasks.schema[:user_id].prefixed],
+                 [:attribute, tasks.schema[:title].prefixed]]]
             ]]
           ]]
         ]]

@@ -1,7 +1,11 @@
 RSpec.describe 'struct builder', '#call' do
   subject(:builder) { ROM::Repository::StructBuilder.new }
 
-  let(:input) { [:users, [:header, [[:attribute, :id], [:attribute, :name]]]] }
+  let(:input) do
+    [:users, [:header, [
+                [:attribute, double(name: :id, type: ROM::Types::Int, foreign_key?: false)],
+                [:attribute, double(name: :name, type: ROM::Types::String, foreign_key?: false)]]]]
+  end
 
   before { builder[*input] }
 
@@ -27,8 +31,13 @@ RSpec.describe 'struct builder', '#call' do
   end
 
   context 'with reserved keywords as attribute names' do
-    let(:input) { [:users, [:header, [[:attribute, :id], [:attribute, :name],
-                                      [:attribute, :alias], [:attribute, :until]]]] }
+    let(:input) do
+      [:users, [:header, [
+                  [:attribute, double(name: :id, type: ROM::Types::Int, foreign_key?: false)],
+                  [:attribute, double(name: :name, type: ROM::Types::String, foreign_key?: false)],
+                  [:attribute, double(name: :alias, type: ROM::Types::String, foreign_key?: false)],
+                  [:attribute, double(name: :until, type: ROM::Types::Time, foreign_key?: false)]]]]
+    end
 
     it 'allows to build a struct class without complaining' do
       struct = builder.class.cache[input.hash]
@@ -46,19 +55,7 @@ RSpec.describe 'struct builder', '#call' do
     struct = builder.class.cache[input.hash]
 
     expect { struct.new(id: 1) }.to raise_error(
-      ROM::Struct::InvalidAttributes,
-      /missing: :name/
-    )
-  end
-
-  it 'raise a friendly error on superflous keys' do
-    struct = builder.class.cache[input.hash]
-
-    expect {
-      struct.new(id: 1, name: 'Jane', foo: 'bar', baz: 'quux')
-    }.to raise_error(
-      ROM::Struct::InvalidAttributes,
-      /unknown: :foo, :baz/
+      Dry::Struct::Error, /:name is missing/
     )
   end
 end

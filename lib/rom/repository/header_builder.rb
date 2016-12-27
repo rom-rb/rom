@@ -49,11 +49,11 @@ module ROM
         node.map { |attribute| visit(attribute, meta) }
       end
 
-      def visit_attribute(name, meta = {})
+      def visit_attribute(attr, meta = {})
         if meta[:wrap]
-          [name, from: :"#{meta[:dataset]}_#{name}"]
+          [attr.name, from: attr.alias]
         else
-          [name]
+          [attr]
         end
       end
     end

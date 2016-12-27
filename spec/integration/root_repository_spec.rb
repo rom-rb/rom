@@ -62,7 +62,6 @@ RSpec.describe ROM::Repository::Root do
 
         expect(user.name).to eql('Joe')
         expect(user.labels.size).to be(1)
-        expect(user.labels[0].author_id).to be(user.id)
         expect(user.labels[0].name).to eql('green')
       end
 
@@ -73,7 +72,6 @@ RSpec.describe ROM::Repository::Root do
 
         expect(result.name).to eql('Jade')
         expect(result.posts.size).to be(1)
-        expect(result.posts[0].author_id).to be(result.id)
         expect(result.posts[0].title).to eql('Jade post')
       end
 

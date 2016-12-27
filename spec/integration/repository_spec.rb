@@ -47,7 +47,15 @@ RSpec.describe 'ROM repository' do
   end
 
   it 'loads nested combined relations' do
-    expect(repo.users_with_tasks_and_tags.first.to_h).to eql(user_with_task_and_tags.to_h)
+    user = repo.users_with_tasks_and_tags.first
+
+    expect(user.id).to be(1)
+    expect(user.name).to eql('Jane')
+    expect(user.all_tasks.size).to be(1)
+    expect(user.all_tasks[0].id).to be(2)
+    expect(user.all_tasks[0].title).to eql('Jane Task')
+    expect(user.all_tasks[0].tags.size).to be(1)
+    expect(user.all_tasks[0].tags[0].name).to eql('red')
   end
 
   it 'loads nested combined relations using configured associations' do

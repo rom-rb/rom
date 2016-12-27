@@ -21,15 +21,18 @@ RSpec.describe 'Repository with multi-adapters configuration' do
       end
 
       class Tasks < ROM::Relation[:memory]
-        dataset :tasks
+        schema(:tasks) do
+          attribute :user_id, ROM::Types::Int
+          attribute :title, ROM::Types::String
+        end
+
         register_as :memory_tasks
         gateway :memory
 
-        use :view
         use :key_inference
 
         view(:base, [:user_id, :title]) do
-          project(:user_id, :title)
+          self
         end
 
         def for_users(users)

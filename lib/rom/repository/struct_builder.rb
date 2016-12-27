@@ -1,7 +1,6 @@
 require 'dry/core/inflector'
 require 'dry/core/cache'
 require 'dry/core/class_builder'
-require 'dry/struct'
 
 require 'rom/struct'
 require 'rom/repository/struct_attributes'
@@ -16,16 +15,12 @@ module ROM
       def call(*args)
         fetch_or_store(*args) do
           name, header = args
-          attributes = visit(header)
+          attributes = visit(header).compact
 
-          if attributes.all? { |attr| attr.is_a?(Symbol) }
-            build_class(name, ROM::Struct) { |klass|
-              klass.send(:include, StructAttributes.new(attributes))
-            }
-          else
-            build_class(name, Dry::Struct) { |klass|
-              attributes.each { |attribute| klass.attribute(attribute.name, attribute.type) }
-            }
+          build_class(name, ROM::Struct) do |klass|
+            attributes.each do |(name, type)|
+              klass.attribute(name, type)
+            end
           end
         end
       end
@@ -43,12 +38,20 @@ module ROM
       end
 
       def visit_relation(node)
-        relation_name, meta, * = node
-        meta[:combine_name] || relation_name.relation
+        relation_name, meta, header = node
+        name = meta[:combine_name] || relation_name.relation
+
+        model = call(name, header)
+
+        if meta[:combine_type] == :many
+          [name, Types::Array.member(model)]
+        else
+          [name, model.optional]
+        end
       end
 
-      def visit_attribute(node)
-        node
+      def visit_attribute(attr)
+        [attr.name, attr.type] unless attr.foreign_key?
       end
 
       def build_class(name, parent, &block)

@@ -129,9 +129,8 @@ module ROM
       def to_ast
         @to_ast ||=
           begin
-            attr_ast = (attributes - wraps_attributes).map { |name|
-              [:attribute, name]
-            }
+            wrap = meta[:wrap]
+            attr_ast = schema.map { |attr| [:attribute, wrap ? attr.prefixed : attr] }
 
             meta = options[:meta].merge(dataset: base_name.dataset)
             meta.delete(:wraps)
@@ -152,14 +151,6 @@ module ROM
       # @api private
       def base_name
         relation.base_name
-      end
-
-      # @api private
-      def wraps_attributes
-        @wrap_attributes ||= wraps.flat_map { |wrap|
-          prefix = wrap.base_name.dataset
-          wrap.attributes.map { |name| :"#{prefix}_#{name}" }
-        }
       end
 
       # @api private
