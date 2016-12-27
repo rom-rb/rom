@@ -49,6 +49,11 @@ module ROM
       end
 
       # @api public
+      def prefixed(prefix = source.dataset)
+        aliased(:"#{prefix}_#{name}")
+      end
+
+      # @api public
       def eql?(other)
         other.is_a?(self.class) ? super : type.eql?(other)
       end

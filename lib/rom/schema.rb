@@ -151,7 +151,7 @@ module ROM
     #
     # @api public
     def prefix(prefix)
-      rename(map { |attr| [attr.name, :"#{prefix}_#{attr.name}"] }.to_h)
+      new(map { |attr| attr.prefixed(prefix) })
     end
 
     # Return FK attribute for a given relation name
