@@ -198,7 +198,7 @@ module ROM
             [*args, block]
           end
 
-        attributes[name] =
+        schemas[name] =
           if args.size == 2
             schema.project(*args[1])
           else
@@ -210,12 +210,12 @@ module ROM
             define_method(name, &relation_block)
 
             auto_curry(name) do
-              attributes(name).(self)
+              schemas[name].(self)
             end
           end
         else
           define_method(name) do
-            attributes(name).(instance_exec(&relation_block))
+            schemas[name].(instance_exec(&relation_block))
           end
         end
       end
@@ -274,30 +274,19 @@ module ROM
       end
 
       # @api private
-      def attributes
-        @attributes ||= {}
+      def schemas
+        @schemas ||= {}
       end
 
       # Hook to finalize a relation after its instance was created
       #
       # @api private
       def finalize(_container, relation)
-        attributes = relation.class.attributes.reduce({}) do |h, (a, e)|
+        schemas = relation.schemas.reduce({}) do |h, (a, e)|
           h.update(a => e.is_a?(Proc) ? instance_exec(&e) : e)
         end
-        relation.class.attributes.update(attributes)
+        relation.schemas.update(schemas)
         relation
-      end
-
-      # @api private
-      def schema_defined!
-        # @!method base
-        #   Return the base relation with default attributes
-        #   @return [Relation]
-        #   @api public
-        view(:base, schema.map(&:name)) do
-          self
-        end
       end
     end
   end

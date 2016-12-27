@@ -10,17 +10,13 @@ RSpec.describe ROM::Relation do
       relation << { id: 2, name: 'Jane' }
     end
 
-    it 'infers base view from the schema' do
-      expect(relation.attributes.map(&:name)).to eql(%i[id name])
-    end
-
-    it 'uses projected schema for view attributes' do
-      expect(relation.attributes(:names).map(&:name)).to eql(%i[name])
+    it 'uses projected schema for view schema' do
+      expect(relation.schemas[:names].map(&:name)).to eql(%i[name])
     end
 
     it 'auto-projects the relation via schema' do
       new_rel = relation_class.new([{ name: 'Jane' }, { name: 'Joe' }])
-      names_schema = relation_class.attributes[:names]
+      names_schema = relation_class.schemas[:names]
 
       expect(names_schema).to receive(:call).with(relation).and_return(new_rel)
       expect(relation.names).to eql(new_rel)
@@ -28,7 +24,7 @@ RSpec.describe ROM::Relation do
 
     it 'auto-projects a restricted relation via schema' do
       new_rel = relation_class.new([{ id: 2 }])
-      ids_schema = relation_class.attributes[:ids_for_names]
+      ids_schema = relation_class.schemas[:ids_for_names]
 
       expect(ids_schema).to receive(:call).with(relation.restrict(name: ['Jane'])).and_return(new_rel)
       expect(relation.ids_for_names(['Jane'])).to eql(new_rel)
@@ -38,7 +34,6 @@ RSpec.describe ROM::Relation do
   context 'with an explicit schema' do
     before do
       # this is normally called automatically during setup
-      relation_class.schema_defined!
       relation_class.finalize({}, relation)
     end
 
@@ -78,7 +73,6 @@ RSpec.describe ROM::Relation do
     before do
       # this is normally called automatically during setup
       relation_class.schema.finalize!
-      relation_class.schema_defined!
       relation_class.finalize({}, relation)
     end
 

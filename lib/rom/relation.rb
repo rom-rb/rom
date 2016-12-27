@@ -56,8 +56,6 @@ module ROM
       relation.schema? ? Types::Coercible::Hash.schema(relation.schema.to_h) : Hash
     }
 
-    option :attributes
-
     # @!attribute [r] dataset
     #   @return [Object] dataset used by the relation provided by relation's gateway
     #   @api public
@@ -166,20 +164,13 @@ module ROM
       new(dataset, options.merge(new_options))
     end
 
-    # Return column names that will be selected for this relation
+    # Return all registered relation schemas
     #
-    # By default we use dataset columns but first we look at configured
-    # attributes by `view` DSL
-    #
-    # @return [Array<Symbol>]
+    # @return [Hash<Symbol=>Schema>]
     #
     # @api public
-    def attributes(view_name = :base)
-      if options.key?(:attributes)
-        options[:attributes]
-      else
-        self.class.attributes.fetch(view_name)
-      end
+    def schemas
+      @schemas ||= self.class.schemas
     end
 
     # Return schema's association set (empty by default)

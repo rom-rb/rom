@@ -52,7 +52,6 @@ module ROM
 
         klass.schema(infer: true) unless klass.schema
         klass.schema.finalize!(gateway)
-        klass.schema_defined!
 
         dataset = gateway.dataset(klass.dataset).instance_exec(klass, &ds_proc)
 
