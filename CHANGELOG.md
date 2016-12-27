@@ -1,8 +1,19 @@
-# v0.3.2 to-be-released
+# v1.0.0 to-be-released
 
-Fixed syntax errors when using reserved Ruby keywords as ROM::Struct attributes (flash-gordon)
+### Added
 
-[Compare v0.3.1...v0.3.2](https://github.com/rom-rb/rom-repository/compare/v0.3.1...v0.3.2)
+* Support for inferring typed structs based on relation schemas (solnic)
+* `aggregate` and `combine` support nested association specs, ie `combine(users: [tasks: :tags])` (beauby)
+
+### Changed
+
+* `ROM::Struct` is now based on `Dry::Struct` (solnic)
+
+### Fixed
+
+* Auto-mapping to structs ignores FK attributes consistently (solnic)
+
+[Compare v0.3.1...v1.0.0](https://github.com/rom-rb/rom-repository/compare/v0.3.1...v1.0.0)
 
 # v0.3.1 2016-07-27
 
