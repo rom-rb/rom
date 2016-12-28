@@ -113,7 +113,7 @@ module ROM
     #
     # @api public
     def project(*names)
-      new(names.map { |name| self[name] })
+      new(names.map { |name| name.is_a?(Symbol) ? self[name] : name })
     end
 
     # Exclude provided attributes from a schema
