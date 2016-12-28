@@ -34,6 +34,9 @@ module ROM
     # @api private
     attr_reader :options
 
+    # @api private
+    attr_reader :relations
+
     alias_method :to_ary, :attributes
 
     # @api public
@@ -59,6 +62,7 @@ module ROM
       @attributes = options[:attributes]
       @associations = options[:associations]
       @inferrer = options[:inferrer] || DEFAULT_INFERRER
+      @relations = options[:relations] || EMPTY_HASH
     end
 
     # Abstract method for creating a new relation based on schema definition
@@ -208,12 +212,14 @@ module ROM
     # @return [self]
     #
     # @api private
-    def finalize!(gateway = nil, &block)
+    def finalize!(gateway: nil, relations: nil, &block)
       return self if frozen?
 
       if empty?
         @attributes = self.class.attributes(inferrer.call(name, gateway), type_class)
       end
+
+      options[:relations] = @relations = relations
 
       block.call if block
       freeze
