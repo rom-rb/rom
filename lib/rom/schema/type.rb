@@ -45,7 +45,7 @@ module ROM
 
       # @api public
       def aliased(name)
-        self.class.new(type.meta(alias: name))
+        meta(alias: name)
       end
 
       # @api public
@@ -61,6 +61,15 @@ module ROM
       # @api public
       def wrapped(name = source.dataset)
         self.class.new(prefixed(name).meta(wrapped: true))
+      end
+
+      # @api public
+      def meta(opts = nil)
+        if opts
+          self.class.new(type.meta(opts))
+        else
+          type.meta
+        end
       end
 
       # @api public
