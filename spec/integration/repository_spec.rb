@@ -142,6 +142,21 @@ RSpec.describe 'ROM repository' do
     end
   end
 
+  describe 'projecting virtual attributes' do
+    it 'loads auto-mapped structs' do
+      user = repo.users.
+               inner_join(:posts, author_id: :id).
+               select_group { [id.qualified, name.qualified] }.
+               select_append { int::count(:posts).as(:post_count) }.
+               having { count(id.qualified) >= 1 }.
+               first
+
+      expect(user.id).to be(1)
+      expect(user.name).to eql('Jane')
+      expect(user.post_count).to be(1)
+    end
+  end
+
   context 'with a table without columns' do
     before { conn.create_table(:dummy) unless conn.table_exists?(:dummy) }
 
