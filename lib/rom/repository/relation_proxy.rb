@@ -129,8 +129,7 @@ module ROM
       def to_ast
         @to_ast ||=
           begin
-            wrap = meta[:wrap]
-            attr_ast = schema.map { |attr| [:attribute, wrap ? attr.prefixed : attr] }
+            attr_ast = schema.map { |attr| [:attribute, attr] }
 
             meta = options[:meta].merge(dataset: base_name.dataset)
             meta.delete(:wraps)
@@ -147,6 +146,11 @@ module ROM
       end
 
       private
+
+      # @api private
+      def schema
+        meta[:wrap] ? relation.schema.wrap.qualified : relation.schema.reject(&:wrapped?)
+      end
 
       # @api private
       def base_name

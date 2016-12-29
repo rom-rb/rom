@@ -1,10 +1,21 @@
 RSpec.describe 'struct builder', '#call' do
   subject(:builder) { ROM::Repository::StructBuilder.new }
 
+  def attr_double(name, type, **opts)
+    double(
+      name: name,
+      aliased?: false,
+      wrapped?: false,
+      foreign_key?: false,
+      type: ROM::Types.const_get(type),
+      **opts
+    )
+  end
+
   let(:input) do
     [:users, [:header, [
-                [:attribute, double(name: :id, type: ROM::Types::Int, foreign_key?: false)],
-                [:attribute, double(name: :name, type: ROM::Types::String, foreign_key?: false)]]]]
+                [:attribute, attr_double(:id, :Int)],
+                [:attribute, attr_double(:name, :String)]]]]
   end
 
   before { builder[*input] }
@@ -33,10 +44,10 @@ RSpec.describe 'struct builder', '#call' do
   context 'with reserved keywords as attribute names' do
     let(:input) do
       [:users, [:header, [
-                  [:attribute, double(name: :id, type: ROM::Types::Int, foreign_key?: false)],
-                  [:attribute, double(name: :name, type: ROM::Types::String, foreign_key?: false)],
-                  [:attribute, double(name: :alias, type: ROM::Types::String, foreign_key?: false)],
-                  [:attribute, double(name: :until, type: ROM::Types::Time, foreign_key?: false)]]]]
+                  [:attribute, attr_double(:id, :Int)],
+                  [:attribute, attr_double(:name, :String)],
+                  [:attribute, attr_double(:alias, :String)],
+                  [:attribute, attr_double(:until, :Time)]]]]
     end
 
     it 'allows to build a struct class without complaining' do

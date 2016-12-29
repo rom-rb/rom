@@ -136,21 +136,24 @@ RSpec.describe 'loading proxy' do
     it 'returns valid ast for a wrapped relation' do
       relation = tags.wrap_parent(task: tasks)
 
+      tags_schema = tags.schema.qualified
+      tasks_schema = tasks.schema.wrap.qualified
+
       expect(relation.to_ast).to eql(
         [:relation, [
           :tags,
           { dataset: :tags },
           [:header, [
-            [:attribute, tags.schema[:id]],
-            [:attribute, tags.schema[:task_id]],
-            [:attribute, tags.schema[:name]],
+            [:attribute, tags_schema[:id]],
+            [:attribute, tags_schema[:task_id]],
+            [:attribute, tags_schema[:name]],
             [:relation, [
               :tasks,
               { dataset: :tasks, keys: { id: :task_id }, wrap: true, combine_name: :task },
               [:header, [
-                 [:attribute, tasks.schema[:id].prefixed],
-                 [:attribute, tasks.schema[:user_id].prefixed],
-                 [:attribute, tasks.schema[:title].prefixed]]]
+                 [:attribute, tasks_schema[:id]],
+                 [:attribute, tasks_schema[:user_id]],
+                 [:attribute, tasks_schema[:title]]]]
             ]]
           ]]
         ]]
