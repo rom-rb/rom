@@ -157,6 +157,15 @@ RSpec.describe 'ROM repository' do
     end
   end
 
+  describe 'projecting aliased attributes' do
+    it 'loads auto-mapped structs' do
+      user = repo.users.select { [id.aliased(:userId), name.aliased(:userName)] }.first
+
+      expect(user.userId).to be(1)
+      expect(user.userName).to eql('Jane')
+    end
+  end
+
   context 'with a table without columns' do
     before { conn.create_table(:dummy) unless conn.table_exists?(:dummy) }
 
