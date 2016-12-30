@@ -1,4 +1,4 @@
-require 'rom/support/class_macros'
+require 'dry/core/class_attributes'
 require 'rom/mapper/attribute_dsl'
 
 module ROM
@@ -9,7 +9,7 @@ module ROM
       #
       # @api private
       def self.included(klass)
-        klass.extend(ClassMacros)
+        klass.extend(Dry::Core::ClassAttributes)
         klass.extend(ClassMethods)
       end
 

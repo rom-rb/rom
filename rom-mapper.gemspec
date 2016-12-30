@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 require File.expand_path('../lib/rom/mapper/version', __FILE__)
 
 Gem::Specification.new do |gem|
@@ -16,9 +14,8 @@ Gem::Specification.new do |gem|
   gem.license       = 'MIT'
 
   gem.add_dependency 'dry-equalizer', '~> 0.2'
-  gem.add_dependency 'dry-core', '~> 0.2'
+  gem.add_dependency 'dry-core', '~> 0.2.3'
   gem.add_dependency 'transproc', '~> 0.4.0'
-  gem.add_dependency 'rom-support', '~> 2.0.0'
 
   gem.add_development_dependency 'rake', '~> 11.3'
   gem.add_development_dependency 'rspec', '~> 3.5'

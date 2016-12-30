@@ -1,3 +1,9 @@
+# to-be-released
+
+### Changed
+
+* Drop rom-support dependency in favor of dry-core (flash-gordon)
+
 # v0.4.0 2016-07-27
 
 ### Changed
