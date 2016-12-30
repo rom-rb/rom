@@ -1,4 +1,5 @@
-require 'rom/support/options'
+require 'dry-initializer'
+require 'dry-types'
 
 require 'rom/pipeline'
 require 'rom/relation/name'
@@ -7,23 +8,23 @@ require 'rom/relation/materializable'
 module ROM
   class Relation
     class Curried
-      include Options
+      extend Dry::Initializer::Mixin
       include Materializable
       include Pipeline
 
-      option :name, type: Symbol
-      option :arity, type: Integer, reader: true, default: -1
-      option :curry_args, type: Array, reader: true, default: EMPTY_ARRAY
+      param :relation
 
-      attr_reader :relation
+      option :name, optional: true, type: Dry::Types['strict.symbol']
+      option :arity, type: Dry::Types['strict.int'], reader: true, default: proc { -1 }
+      option :curry_args, reader: true, default: proc { EMPTY_ARRAY }
 
-      attr_reader :name
-
-      # @api private
-      def initialize(relation, options = EMPTY_HASH)
-        @relation = relation
-        @name = relation.name.with(options[:name])
-        super
+      # Relation name
+      #
+      # @return [ROM::Relation::Name]
+      #
+      # @api public
+      def name
+        @name == Dry::Initializer::UNDEFINED ? relation.name : relation.name.with(@name)
       end
 
       # Load relation if args match the arity
@@ -69,6 +70,15 @@ module ROM
       # @api private
       def respond_to_missing?(name, include_private = false)
         super || relation.respond_to?(name, include_private)
+      end
+
+      # Instance options
+      #
+      # @return [Hash]
+      #
+      # @api public
+      def options
+        @__options__
       end
 
       private

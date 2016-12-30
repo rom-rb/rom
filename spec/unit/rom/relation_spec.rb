@@ -196,7 +196,7 @@ RSpec.describe ROM::Relation do
 
   describe "#with" do
     it "returns a new instance with the original dataset and given custom options" do
-      relation = Class.new(ROM::Relation) { option :custom }.new([])
+      relation = Class.new(ROM::Relation) { option :custom }.new([], custom: true)
 
       custom_opts = { mappers: "Custom Mapper Registry" }
       new_relation = relation.with(custom_opts).with(custom: true)

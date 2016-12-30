@@ -54,3 +54,5 @@ group :tools do
   gem 'mutant'
   gem 'mutant-rspec'
 end
+
+gem 'dry-initializer', git: 'https://github.com/dry-rb/dry-initializer.git', branch: 'rom'

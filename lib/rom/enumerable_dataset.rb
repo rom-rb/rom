@@ -1,3 +1,4 @@
+require 'dry-initializer'
 require 'rom/data_proxy'
 
 module ROM
@@ -43,9 +44,20 @@ module ROM
       return unless klass.is_a?(Class)
 
       klass.class_eval do
-        include Options
+        extend Dry::Initializer::Mixin
         include DataProxy
+
+        param :data
       end
+    end
+
+    # Instance options
+    #
+    # @return [Hash]
+    #
+    # @api public
+    def options
+      @__options__
     end
 
     forward :take

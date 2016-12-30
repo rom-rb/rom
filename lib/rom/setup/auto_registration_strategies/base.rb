@@ -1,11 +1,17 @@
+require 'dry-initializer'
+
 module ROM
   module AutoRegistrationStrategies
     class Base
-      include Options
+      extend Dry::Initializer::Mixin
 
-      option :file, reader: true, type: String
+      PathnameType = Dry::Types::Definition
+                     .new(Pathname)
+                     .constrained(type: Pathname)
 
-      EXTENSION_REGEX = /\.rb$/.freeze
+      option :file, reader: true, type: Dry::Types['strict.string']
+
+      EXTENSION_REGEX = /\.rb\z/.freeze
     end
   end
 end

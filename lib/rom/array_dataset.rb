@@ -1,3 +1,4 @@
+require 'dry-initializer'
 require 'rom/enumerable_dataset'
 
 module ROM
@@ -15,8 +16,10 @@ module ROM
     # @api private
     def self.included(klass)
       klass.class_eval do
-        include Options
+        extend Dry::Initializer::Mixin
         include DataProxy
+
+        param :data
       end
     end
 

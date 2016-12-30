@@ -1,4 +1,3 @@
-require 'rom/support/options'
 require 'rom/array_dataset'
 
 module ROM

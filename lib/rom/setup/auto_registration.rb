@@ -1,7 +1,7 @@
 require 'pathname'
 
+require 'dry-initializer'
 require 'dry/core/inflector'
-require 'rom/support/options'
 
 require 'rom/setup/auto_registration_strategies/no_namespace'
 require 'rom/setup/auto_registration_strategies/with_namespace'
@@ -9,25 +9,31 @@ require 'rom/setup/auto_registration_strategies/custom_namespace'
 
 module ROM
   class AutoRegistration
-    include Options
+    extend Dry::Initializer::Mixin
 
-    option :namespace, reader: true, type: [TrueClass, FalseClass, String], default: true
+    NamespaceType = Dry::Types['strict.bool'] | Dry::Types['strict.string']
+    PathnameType = Dry::Types::Definition
+                   .new(Pathname)
+                   .constrained(type: Pathname)
+                   .constructor(Kernel.method(:Pathname))
 
-    option :component_dirs, reader: true, type: ::Hash, default: {
+    param :directory, type: PathnameType
+
+    option :namespace, reader: true, type: NamespaceType, default: proc { true }
+
+    option :component_dirs, reader: true, type: Dry::Types['hash'], default: proc { {
       relations: :relations,
       mappers: :mappers,
       commands: :commands
+    } }
+
+    option :globs, reader: true, default: -> r {
+      Hash[
+        component_dirs.map { |component, directory|
+          [component, r.directory.join("#{directory}/**/*.rb")]
+        }
+      ]
     }
-
-    attr_reader :globs, :directory
-
-    def initialize(directory, options = EMPTY_HASH)
-      super
-      @directory = Pathname(directory)
-      @globs = Hash[component_dirs.map { |component, directory|
-        [component, @directory.join("#{directory}/**/*.rb")]
-      }]
-    end
 
     def relations
       load_entities(:relations)
