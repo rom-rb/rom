@@ -12,8 +12,8 @@ RSpec.describe ROM::Repository, '#session' do
     end
 
     it 'saves data in a transaction' do
-      repo.session do |t|
-        t.create(user_changeset)
+      repo.session do |s|
+        s.add(user_changeset)
       end
 
       user = repo.users.where(name: 'Jane').one
@@ -36,8 +36,8 @@ RSpec.describe ROM::Repository, '#session' do
     end
 
     it 'saves data in a transaction' do
-      repo.session do |t|
-        t.update(user_changeset)
+      repo.session do |s|
+        s.add(user_changeset)
       end
 
       updated_user = repo.users.fetch(user.id)
@@ -56,9 +56,13 @@ RSpec.describe ROM::Repository, '#session' do
       repo.command(:create, repo.users).call(name: 'Jane')
     end
 
+    let(:user_changeset) do
+      repo.changeset(delete: repo.users.by_pk(user.id))
+    end
+
     it 'saves data in a transaction' do
       repo.session do |t|
-        t.delete(repo.users.by_pk(user.id))
+        t.add(user_changeset)
       end
 
       expect(repo.users.by_pk(user.id).one).to be(nil)
@@ -76,8 +80,8 @@ RSpec.describe ROM::Repository, '#session' do
     end
 
     it 'saves data in a transaction' do
-      repo.session do |t|
-        t.create(user_changeset).associate(posts_changeset, :author)
+      repo.session do |s|
+        s.add(user_changeset.associate(posts_changeset, :author))
       end
 
       user = repo.users.combine(:posts).one
@@ -90,8 +94,14 @@ RSpec.describe ROM::Repository, '#session' do
   end
 
   describe 'creating a user with its posts and their labels' do
+    let(:posts_data) do
+      [{ title: 'Post 1' }]
+    end
+
     let(:posts_changeset) do
-      repo.changeset(:posts, [{ title: 'Post 1' }])
+      repo.
+        changeset(:posts, posts_data).
+        associate(labels_changeset, :posts)
     end
 
     let(:labels_changeset) do
@@ -99,14 +109,14 @@ RSpec.describe ROM::Repository, '#session' do
     end
 
     let(:user_changeset) do
-      repo.changeset(:users, name: 'Jane')
+      repo.
+        changeset(:users, name: 'Jane').
+        associate(posts_changeset, :author)
     end
 
     it 'saves data in a transaction' do
       repo.session do |t|
-        t.create(user_changeset)
-          .associate(posts_changeset, :author)
-          .associate(labels_changeset, :posts)
+        t.add(user_changeset)
       end
 
       user = repo.users.combine(posts: [:labels]).one
@@ -120,16 +130,14 @@ RSpec.describe ROM::Repository, '#session' do
     end
 
     context 'with invalid data' do
-      let(:posts_changeset) do
-        repo.changeset(:posts, [{ title: nil }])
+      let(:posts_data) do
+        [{ title: 'Post 1', title: nil }]
       end
 
       it 'rolls back the transaction' do
         expect {
           repo.session do |t|
-            t.create(user_changeset)
-              .associate(posts_changeset, :author)
-              .associate(labels_changeset, :posts)
+            t.add(user_changeset)
           end
         }.to raise_error(ROM::SQL::ConstraintError)
 

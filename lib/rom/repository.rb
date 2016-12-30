@@ -170,16 +170,24 @@ module ROM
         name, data = args
       elsif args.size == 3
         name, pk, data = args
+      elsif args.size == 1
+        type, relation = args[0].to_a[0]
       else
-        raise ArgumentError, 'Repository#changeset accepts 2 or 3 arguments'
+        raise ArgumentError, 'Repository#changeset accepts 1-3 arguments'
       end
 
-      relation = relations[name]
-
-      if pk
-        Changeset::Update.new(relation, data, primary_key: pk)
+      if type
+        if type.equal?(:delete)
+          Changeset::Delete.new(relation)
+        end
       else
-        Changeset::Create.new(relation, data)
+        relation = relations[name]
+
+        if pk
+          Changeset::Update.new(relation, data: data, primary_key: pk)
+        else
+          Changeset::Create.new(relation, data: data)
+        end
       end
     end
 
@@ -231,7 +239,7 @@ module ROM
       if mapper_instance
         command >> mapper_instance
       else
-        command
+        command.new(relation)
       end
     end
 
