@@ -106,10 +106,10 @@ module ROM
     # @api public
     def [](key, src = name.to_sym)
       attr =
-        if count { |attr| attr.name == key }.equal?(1)
-          attributes.detect { |attr| attr.name == key }
+        if count_index[key].equal?(1)
+          name_index[key]
         else
-          attributes.detect { |attr| attr.name == key && attr.source.to_sym == src }
+          source_index[src][key]
         end
 
       unless attr
@@ -232,10 +232,33 @@ module ROM
       options[:relations] = @relations = relations
 
       block.call if block
+
+      count_index
+      name_index
+      source_index
+
       freeze
     end
 
     private
+
+    # @api private
+    def count_index
+      @count_index ||= map(&:name).map { |name| [name, count { |attr| attr.name == name }] }.to_h
+    end
+
+    # @api private
+    def name_index
+      @name_index ||= map { |attr| [attr.name, attr] }.to_h
+    end
+
+    # @api private
+    def source_index
+      @source_index ||= select(&:source).
+                          group_by(&:source).
+                          map { |src, grp| [src.to_sym, grp.map { |attr| [attr.name, attr] }.to_h] }.
+                          to_h
+    end
 
     # @api private
     def type_class
