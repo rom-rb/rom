@@ -2,7 +2,7 @@ require 'rom/schema'
 
 RSpec.describe ROM::Schema, '#exclude' do
   subject(:schema) do
-    define_schema(:users, id: ROM::Types::Int, name: ROM::Types::String, email: ROM::Types::String)
+    define_schema(:users, id: :Int, name: :String, email: :String)
   end
 
   let(:excluded) do

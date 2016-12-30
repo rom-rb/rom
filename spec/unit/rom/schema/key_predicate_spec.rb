@@ -2,7 +2,7 @@ require 'rom/schema'
 
 RSpec.describe ROM::Schema, '#key?' do
   subject(:schema) do
-    define_schema(:users, name: ROM::Types::String)
+    define_schema(:users, name: :String)
   end
 
   it 'returns true when an attribute exists' do

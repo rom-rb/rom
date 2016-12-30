@@ -4,11 +4,11 @@ RSpec.describe ROM::Schema, '#merge' do
   subject(:schema) { left.merge(right) }
 
   let(:left) do
-    define_schema(:users, id: ROM::Types::Int, name: ROM::Types::String)
+    define_schema(:users, id: :Int, name: :String)
   end
 
   let(:right) do
-    define_schema(:tasks, user_id: ROM::Types::Int)
+    define_schema(:tasks, user_id: :Int)
   end
 
   it 'returns a new schema with attributes from two schemas' do

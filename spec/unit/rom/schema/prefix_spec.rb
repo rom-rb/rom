@@ -2,7 +2,7 @@ require 'rom/schema'
 
 RSpec.describe ROM::Schema, '#prefix' do
   subject(:schema) do
-    define_schema(:users, id: ROM::Types::Int, name: ROM::Types::String)
+    define_schema(:users, id: :Int, name: :String)
   end
 
   let(:prefixed) do
