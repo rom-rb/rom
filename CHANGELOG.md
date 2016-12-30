@@ -17,6 +17,7 @@
 * [BREAKING] All relations have schemas now, empty by default (solnic)
 * [BREAKING] `view` DSL is now part of the core relation API (solnic)
 * [BREAKING] `view` DSL is based on schemas now, `header` was replaced with `schema` (solnic)
+* [BREAKING] Deprecated `Command.validator` was removed (solnic)
 * [internal] Renamed `relation` => `target` meta property in FK types (solnic)
 * [internal] Use deprecations API from dry-core (flash-gordon)
 * [internal] Use common constants from dry-core (EMPTY_HASH, EMPTY_ARRAY etc.) (flash-gordon)
