@@ -36,6 +36,10 @@ RSpec.describe ROM::Schema, '#[]' do
       expect(schema[:id]).to eql(define_type(:id, :Int, source: :users))
     end
 
+    it 'returns an attribute identified by its canonical name when its unique' do
+      expect(schema[:title]).to eql(define_type(:title, :String, source: :tasks))
+    end
+
     it 'returns an attribute identified by its canonical name and its source' do
       expect(schema[:id, :tasks]).to eql(define_type(:id, :Int, source: :tasks))
     end

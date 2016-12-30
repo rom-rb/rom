@@ -104,9 +104,19 @@ module ROM
     # Return attribute
     #
     # @api public
-    def [](key, source = name.to_sym)
-      attr = attributes.detect { |attr| attr.name == key && attr.source.to_sym == source }
-      attr || raise(KeyError, "#{key.inspect} attribute doesn't exist in #{name.inspect} schema")
+    def [](key, src = name.to_sym)
+      attr =
+        if count { |attr| attr.name == key }.equal?(1)
+          attributes.detect { |attr| attr.name == key }
+        else
+          attributes.detect { |attr| attr.name == key && attr.source.to_sym == src }
+        end
+
+      unless attr
+        raise(KeyError, "#{key.inspect} attribute doesn't exist in #{src} schema")
+      end
+
+      attr
     end
 
     # Project a schema to include only specified attributes
