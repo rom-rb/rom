@@ -40,7 +40,7 @@ RSpec.describe ROM::Relation do
     include_context 'relation with views' do
       let(:relation_class) do
         Class.new(ROM::Memory::Relation) do
-          schema do
+          schema(:users) do
             attribute :id, ROM::Types::Int
             attribute :name, ROM::Types::String
           end
@@ -80,10 +80,11 @@ RSpec.describe ROM::Relation do
       let(:relation_class) do
         Class.new(ROM::Memory::Relation) do
           schema_inferrer -> dataset, gateway {
-            [ROM::Types::Int.meta(name: :id), ROM::Types::String.meta(name: :name)]
+            [ROM::Types::Int.meta(name: :id, source: :users),
+             ROM::Types::String.meta(name: :name, source: :users)]
           }
 
-          schema(infer: true)
+          schema(:users, infer: true)
 
           view(:names) do
             schema do

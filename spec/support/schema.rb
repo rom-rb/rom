@@ -1,10 +1,10 @@
 require 'dry-types'
 
 module SchemaHelpers
-  def define_schema(name, attrs)
+  def define_schema(source, attrs)
     ROM::Schema.define(
-      name,
-      attributes: attrs.map { |name, type| define_type(name, type) }
+      source,
+      attributes: attrs.map { |name, type| define_type(name, type, source: source) }
     )
   end
 

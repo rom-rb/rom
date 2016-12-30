@@ -7,11 +7,11 @@ RSpec.describe ROM::Schema, '#[]' do
     end
 
     it 'returns an attribute identified by its canonical name' do
-      expect(schema[:email]).to eql(define_type(:email, :String))
+      expect(schema[:email]).to eql(define_type(:email, :String, source: :users))
     end
 
     it 'returns an aliased attribute identified by its canonical name' do
-      expect(schema.rename(id: :user_id)[:id]).to eql(define_type(:id, :Int, alias: :user_id))
+      expect(schema.rename(id: :user_id)[:id]).to eql(define_type(:id, :Int, source: :users, alias: :user_id))
     end
 
     it 'raises KeyError when attribute is not found' do
@@ -33,11 +33,11 @@ RSpec.describe ROM::Schema, '#[]' do
     end
 
     it 'returns an attribute identified by its canonical name' do
-      expect(schema[:id]).to eql(define_type(:id, :Int))
+      expect(schema[:id]).to eql(define_type(:id, :Int, source: :users))
     end
 
     it 'returns an attribute identified by its canonical name and its source' do
-      expect(schema[:id, :tasks]).to eql(define_type(:id, :Int).meta(source: :tasks))
+      expect(schema[:id, :tasks]).to eql(define_type(:id, :Int, source: :tasks))
     end
 
     it 'raises KeyError when attribute is not found' do
