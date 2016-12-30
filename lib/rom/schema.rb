@@ -10,7 +10,13 @@ module ROM
   # @api public
   class Schema
     EMPTY_ASSOCIATION_SET = AssociationSet.new(EMPTY_HASH).freeze
-    DEFAULT_INFERRER = proc { EMPTY_ARRAY }
+    DEFAULT_INFERRER = proc { [EMPTY_ARRAY, EMPTY_ARRAY].freeze }
+
+    MissingAttributesError = Class.new(StandardError) do
+      def initialize(name, attributes)
+        super("missing attributes in #{name.inspect} schema: #{attributes.map(&:inspect).join(', ')}")
+      end
+    end
 
     include Dry::Equalizer(:name, :attributes, :associations)
     include Enumerable
@@ -59,7 +65,7 @@ module ROM
     def initialize(name, options)
       @name = name
       @options = options
-      @attributes = options[:attributes]
+      @attributes = options[:attributes] || EMPTY_ARRAY
       @associations = options[:associations]
       @inferrer = options[:inferrer] || DEFAULT_INFERRER
       @relations = options[:relations] || EMPTY_HASH
@@ -225,8 +231,13 @@ module ROM
     def finalize!(gateway: nil, relations: nil, &block)
       return self if frozen?
 
-      if empty?
-        @attributes = self.class.attributes(inferrer.call(name, gateway), type_class)
+      inferred, missing = inferrer.call(name, gateway)
+      attributes.concat(self.class.attributes(inferred, type_class))
+
+      missing_attributes = missing - map(&:name)
+
+      if missing_attributes.size > 0
+        raise MissingAttributesError.new(name, missing_attributes)
       end
 
       options[:relations] = @relations = relations

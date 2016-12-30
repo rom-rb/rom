@@ -80,8 +80,8 @@ RSpec.describe ROM::Relation do
       let(:relation_class) do
         Class.new(ROM::Memory::Relation) do
           schema_inferrer -> dataset, gateway {
-            [ROM::Types::Int.meta(name: :id, source: :users),
-             ROM::Types::String.meta(name: :name, source: :users)]
+            [[ROM::Types::Int.meta(name: :id, source: :users),
+             ROM::Types::String.meta(name: :name, source: :users)], []]
           }
 
           schema(:users, infer: true)
