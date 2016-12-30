@@ -1,7 +1,9 @@
 require 'set'
 
 require 'dry/core/inflector'
-require 'rom/support/class_macros'
+require 'dry/core/constants'
+require 'dry/core/class_attributes'
+
 require 'rom/auto_curry'
 require 'rom/relation/curried'
 require 'rom/relation/name'
@@ -11,6 +13,8 @@ require 'rom/schema'
 module ROM
   class Relation
     module ClassInterface
+      include Dry::Core::Constants
+
       # Register adapter relation subclasses during setup phase
       #
       # In adition those subclasses are extended with an interface for accessing
@@ -25,7 +29,7 @@ module ROM
                 "relation class +#{self}+ is missing the adapter identifier"
         end
 
-        klass.extend ClassMacros
+        klass.extend Dry::Core::ClassAttributes
         klass.defines :adapter
 
         # Extend with functionality required by adapters *only* if this is a direct
@@ -71,7 +75,7 @@ module ROM
           # @param [Symbol] value The name of the dataset
           #
           # @api public
-          def self.dataset(value = ClassMacros::UndefinedValue, &block)
+          def self.dataset(value = Undefined, &block)
             dataset_proc(block) if block
             super
           end
@@ -83,8 +87,8 @@ module ROM
           # @return [Symbol]
           #
           # @api public
-          def self.register_as(value = ClassMacros::UndefinedValue)
-            if value == ClassMacros::UndefinedValue
+          def self.register_as(value = Undefined)
+            if value == Undefined
               return @register_as if defined?(@register_as)
 
               super_val = super()

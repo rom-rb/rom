@@ -1,9 +1,11 @@
+require 'dry/core/class_attributes'
+
 module ROM
   # Abstract gateway class
   #
   # @api public
   class Gateway
-    extend ClassMacros
+    extend Dry::Core::ClassAttributes
 
     defines :adapter
 

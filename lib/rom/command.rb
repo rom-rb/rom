@@ -1,5 +1,6 @@
 require 'dry/core/deprecations'
-require 'rom/support/options'
+require 'dry/core/class_attributes'
+
 require 'rom/pipeline'
 
 require 'rom/commands/class_interface'
@@ -24,7 +25,7 @@ module ROM
     include Commands
     include Pipeline::Operator
 
-    extend ClassMacros
+    extend Dry::Core::ClassAttributes
     extend ClassInterface
 
     include Options
