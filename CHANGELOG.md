@@ -22,6 +22,7 @@
 * [internal] Use deprecations API from dry-core (flash-gordon)
 * [internal] Use common constants from dry-core (EMPTY_HASH, EMPTY_ARRAY etc.) (flash-gordon)
 * [internal] Internal ROM modules (array_dataset, enumerable_dataset, auto_curry, and data_proxy) were moved from rom-support to ROM itself (flash-gordon)
+* [internal] rom-support dependency was removed (flash-gordon)
 
 [Compare v2.0.2...v3.0.0](https://github.com/rom-rb/rom/compare/v2.0.2...v3.0.0)
 
