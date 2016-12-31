@@ -1,5 +1,4 @@
 require 'dry-equalizer'
-require 'rom-support'
 
 require 'rom/mapper'
 require 'rom/processor/transproc'
