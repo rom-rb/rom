@@ -1,9 +1,9 @@
-require 'dry-initializer'
+require 'rom/initializer'
 
 module ROM
   module AutoRegistrationStrategies
     class Base
-      extend Dry::Initializer::Mixin
+      extend Initializer
 
       PathnameType = Dry::Types::Definition
                      .new(Pathname)

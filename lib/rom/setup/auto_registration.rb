@@ -1,15 +1,15 @@
 require 'pathname'
 
-require 'dry-initializer'
 require 'dry/core/inflector'
 
+require 'rom/initializer'
 require 'rom/setup/auto_registration_strategies/no_namespace'
 require 'rom/setup/auto_registration_strategies/with_namespace'
 require 'rom/setup/auto_registration_strategies/custom_namespace'
 
 module ROM
   class AutoRegistration
-    extend Dry::Initializer::Mixin
+    extend Initializer
 
     NamespaceType = Dry::Types['strict.bool'] | Dry::Types['strict.string']
     PathnameType = Dry::Types::Definition

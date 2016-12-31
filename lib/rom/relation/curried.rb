@@ -1,6 +1,6 @@
-require 'dry-initializer'
 require 'dry-types'
 
+require 'rom/initializer'
 require 'rom/pipeline'
 require 'rom/relation/name'
 require 'rom/relation/materializable'
@@ -8,7 +8,7 @@ require 'rom/relation/materializable'
 module ROM
   class Relation
     class Curried
-      extend Dry::Initializer::Mixin
+      extend Initializer
       include Materializable
       include Pipeline
 
@@ -70,15 +70,6 @@ module ROM
       # @api private
       def respond_to_missing?(name, include_private = false)
         super || relation.respond_to?(name, include_private)
-      end
-
-      # Instance options
-      #
-      # @return [Hash]
-      #
-      # @api public
-      def options
-        @__options__
       end
 
       private

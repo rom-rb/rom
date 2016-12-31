@@ -5,7 +5,7 @@ module ROM
   #
   # @api public
   class CommandRegistry
-    extend Dry::Initializer::Mixin
+    extend Initializer
     include Commands
 
     CommandNotFoundError = Class.new(KeyError)
@@ -107,15 +107,6 @@ module ROM
     # @api private
     def with(new_options)
       self.class.new(relation_name, registry, options.merge(new_options))
-    end
-
-    # Instance options
-    #
-    # @return [Hash]
-    #
-    # @api public
-    def options
-      @__options__
     end
 
     private

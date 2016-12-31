@@ -1,7 +1,7 @@
-require 'dry-initializer'
 require 'dry/core/deprecations'
 require 'dry/core/class_attributes'
 
+require 'rom/initializer'
 require 'rom/pipeline'
 
 require 'rom/commands/class_interface'
@@ -22,7 +22,7 @@ module ROM
   #
   # @private
   class Command
-    extend Dry::Initializer::Mixin
+    extend Initializer
     include Dry::Equalizer(:relation, :options)
     include Commands
     include Pipeline::Operator
@@ -137,15 +137,6 @@ module ROM
     # @api private
     def new(new_relation)
       self.class.build(new_relation, options.merge(source: relation))
-    end
-
-    # Instance options
-    #
-    # @return [Hash]
-    #
-    # @api public
-    def options
-      @__options__
     end
 
     private

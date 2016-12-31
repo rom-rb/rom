@@ -1,5 +1,4 @@
-require 'dry-initializer'
-
+require 'rom/initializer'
 require 'rom/pipeline'
 require 'rom/commands/graph/class_interface'
 
@@ -9,7 +8,7 @@ module ROM
     #
     # @api private
     class Graph
-      extend Dry::Initializer::Mixin
+      extend Initializer
       include Dry::Equalizer(:root, :nodes)
 
       extend ClassInterface

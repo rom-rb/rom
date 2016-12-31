@@ -1,4 +1,4 @@
-require 'dry-initializer'
+require 'rom/initializer'
 require 'rom/relation/class_interface'
 
 require 'rom/pipeline'
@@ -30,7 +30,7 @@ module ROM
   #
   # @api public
   class Relation
-    extend Dry::Initializer::Mixin
+    extend Initializer
     extend ClassInterface
 
     include Dry::Equalizer(:dataset)
@@ -166,15 +166,6 @@ module ROM
     # @api public
     def associations
       @associations ||= schema.associations
-    end
-
-    # Instance options
-    #
-    # @return [Hash]
-    #
-    # @api public
-    def options
-      @__options__
     end
 
     private
