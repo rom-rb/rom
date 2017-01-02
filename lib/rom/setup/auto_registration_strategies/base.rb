@@ -1,3 +1,4 @@
+require 'rom/types'
 require 'rom/initializer'
 
 module ROM
@@ -5,11 +6,9 @@ module ROM
     class Base
       extend Initializer
 
-      PathnameType = Dry::Types::Definition
-                     .new(Pathname)
-                     .constrained(type: Pathname)
+      PathnameType = Types.Definition(Pathname).constrained(type: Pathname)
 
-      option :file, reader: true, type: Dry::Types['strict.string']
+      option :file, reader: true, type: Types::Strict::String
 
       EXTENSION_REGEX = /\.rb\z/.freeze
     end

@@ -1,3 +1,4 @@
+require 'rom/types'
 require 'rom/commands/result'
 
 module ROM
@@ -9,10 +10,7 @@ module ROM
     include Commands
 
     CommandNotFoundError = Class.new(KeyError)
-    RegistryType = Dry::Types::Definition
-                   .new(Registry)
-                   .constrained(type: Registry)
-                   .constructor { |r| r.is_a?(Registry) ? r : Registry.new(r, self.class.name) }
+    RegistryType = Types.Definition(Registry) | Types.Constructor(Registry) { |r| Registry.new(r, self.class.name) }
 
     # Name of the relation from which commands are under
     #

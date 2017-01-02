@@ -1,5 +1,4 @@
-require 'dry-types'
-
+require 'rom/types'
 require 'rom/initializer'
 require 'rom/pipeline'
 require 'rom/relation/name'
@@ -14,8 +13,8 @@ module ROM
 
       param :relation
 
-      option :name, optional: true, type: Dry::Types['strict.symbol']
-      option :arity, type: Dry::Types['strict.int'], reader: true, default: proc { -1 }
+      option :name, optional: true, type: Types::Strict::Symbol
+      option :arity, type: Types::Strict::Int, reader: true, default: proc { -1 }
       option :curry_args, reader: true, default: proc { EMPTY_ARRAY }
 
       # Relation name

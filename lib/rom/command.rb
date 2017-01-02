@@ -1,6 +1,7 @@
 require 'dry/core/deprecations'
 require 'dry/core/class_attributes'
 
+require 'rom/types'
 require 'rom/initializer'
 require 'rom/pipeline'
 
@@ -35,8 +36,8 @@ module ROM
     # @attr_reader [Relation] relation The command's relation
     param :relation
 
-    CommandType = Dry::Types['strict.symbol'].enum(:create, :update, :delete)
-    Result = Dry::Types['strict.symbol'].enum(:one, :many)
+    CommandType = Types::Strict::Symbol.enum(:create, :update, :delete)
+    Result = Types::Strict::Symbol.enum(:one, :many)
 
     option :type, type: CommandType, optional: true
     option :source, reader: true, optional: true, default: -> c { c.relation }

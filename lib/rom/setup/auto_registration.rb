@@ -2,6 +2,7 @@ require 'pathname'
 
 require 'dry/core/inflector'
 
+require 'rom/types'
 require 'rom/initializer'
 require 'rom/setup/auto_registration_strategies/no_namespace'
 require 'rom/setup/auto_registration_strategies/with_namespace'
@@ -11,17 +12,14 @@ module ROM
   class AutoRegistration
     extend Initializer
 
-    NamespaceType = Dry::Types['strict.bool'] | Dry::Types['strict.string']
-    PathnameType = Dry::Types::Definition
-                   .new(Pathname)
-                   .constrained(type: Pathname)
-                   .constructor(Kernel.method(:Pathname))
+    NamespaceType = Types::Strict::Bool | Types::Strict::String
+    PathnameType = Types.Constructor(Pathname, &Kernel.method(:Pathname))
 
     param :directory, type: PathnameType
 
     option :namespace, reader: true, type: NamespaceType, default: proc { true }
 
-    option :component_dirs, reader: true, type: Dry::Types['hash'], default: proc { {
+    option :component_dirs, reader: true, type: Types::Strict::Hash, default: proc { {
       relations: :relations,
       mappers: :mappers,
       commands: :commands
