@@ -101,7 +101,7 @@ RSpec.describe 'Commands / Create' do
           end
         end
         container
-      }.to raise_error(ROM::Options::InvalidOptionValueError)
+      }.to raise_error(Dry::Types::ConstraintError)
     end
   end
 

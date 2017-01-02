@@ -1,3 +1,4 @@
+require 'rom/initializer'
 require 'rom/relation/class_interface'
 
 require 'rom/pipeline'
@@ -29,12 +30,17 @@ module ROM
   #
   # @api public
   class Relation
+    extend Initializer
     extend ClassInterface
 
-    include Options
     include Dry::Equalizer(:dataset)
     include Materializable
     include Pipeline
+
+    # @!attribute [r] dataset
+    #   @return [Object] dataset used by the relation provided by relation's gateway
+    #   @api public
+    param :dataset
 
     # @!attribute [r] mappers
     #   @return [MapperRegistry] an optional mapper registry (empty by default)
@@ -45,7 +51,7 @@ module ROM
     #                    schema (if it was defined) and sets an empty one as
     #                    the fallback
     #   @api public
-    option :schema, reader: true, default: -> relation {
+    option :schema, reader: true, optional: true, default: -> relation {
       relation.class.schema || Schema.define(Dry::Core::Inflector.underscore(relation.class.name || EMPTY_STRING).to_sym)
     }
 
@@ -55,26 +61,6 @@ module ROM
     option :schema_hash, reader: true, default: -> relation {
       relation.schema? ? Types::Coercible::Hash.schema(relation.schema.to_h) : Hash
     }
-
-    # @!attribute [r] dataset
-    #   @return [Object] dataset used by the relation provided by relation's gateway
-    #   @api public
-    attr_reader :dataset
-
-    # Initializes a relation object
-    #
-    # @param dataset [Object]
-    #
-    # @param options [Hash]
-    #   @option :mappers [MapperRegistry]
-    #   @option :schema_hash [#[]]
-    #   @option :associations [AssociationSet]
-    #
-    # @api public
-    def initialize(dataset, options = EMPTY_HASH)
-      @dataset = dataset
-      super
-    end
 
     # Yields relation tuples
     #

@@ -37,12 +37,6 @@ module ROM
       end
     end
 
-    # @api private
-    def initialize(data, options = {})
-      @data = data
-      super(data, options)
-    end
-
     # Iterate over data using row_proc
     #
     # @return [Enumerator] if block is not given

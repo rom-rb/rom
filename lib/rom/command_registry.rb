@@ -1,3 +1,4 @@
+require 'rom/types'
 require 'rom/commands/result'
 
 module ROM
@@ -5,40 +6,28 @@ module ROM
   #
   # @api public
   class CommandRegistry
+    extend Initializer
     include Commands
-    include Options
 
     CommandNotFoundError = Class.new(KeyError)
+    RegistryType = Types.Definition(Registry) | Types.Constructor(Registry) { |r| Registry.new(r, self.class.name) }
 
     # Name of the relation from which commands are under
     #
     # @return [String]
     #
     # @api private
-    attr_reader :relation_name
+    param :relation_name
 
     # Internal command registry
     #
     # @return [Registry]
     #
     # @api private
-    attr_reader :registry
+    param :registry, type: RegistryType
 
-    option :mappers, reader: true
-    option :mapper, reader: true
-
-    # @api private
-    def initialize(relation_name, elements, options = EMPTY_HASH)
-      super
-
-      @relation_name = relation_name
-      @registry =
-        if elements.is_a?(Registry)
-          elements
-        else
-          Registry.new(elements, self.class.name)
-        end
-    end
+    option :mappers, reader: true, optional: true
+    option :mapper, reader: true, optional: true
 
     # Try to execute a command in a block
     #

@@ -1,6 +1,8 @@
 require 'dry/core/deprecations'
 require 'dry/core/class_attributes'
 
+require 'rom/types'
+require 'rom/initializer'
 require 'rom/pipeline'
 
 require 'rom/commands/class_interface'
@@ -21,6 +23,7 @@ module ROM
   #
   # @private
   class Command
+    extend Initializer
     include Dry::Equalizer(:relation, :options)
     include Commands
     include Pipeline::Operator
@@ -28,28 +31,22 @@ module ROM
     extend Dry::Core::ClassAttributes
     extend ClassInterface
 
-    include Options
-
     defines :adapter, :relation, :result, :input, :register_as, :restrictable
 
-    option :type, allow: [:create, :update, :delete]
-    option :source, reader: true
-    option :result, reader: true, allow: [:one, :many]
+    # @attr_reader [Relation] relation The command's relation
+    param :relation
+
+    CommandType = Types::Strict::Symbol.enum(:create, :update, :delete)
+    Result = Types::Strict::Symbol.enum(:one, :many)
+
+    option :type, type: CommandType, optional: true
+    option :source, reader: true, optional: true, default: -> c { c.relation }
+    option :result, reader: true, type: Result
     option :input, reader: true
-    option :curry_args, type: Array, reader: true, default: EMPTY_ARRAY
+    option :curry_args, reader: true, default: -> _ { EMPTY_ARRAY }
 
     input Hash
     result :many
-
-    # @attr_reader [Relation] relation The command's relation
-    attr_reader :relation
-
-    # @api private
-    def initialize(relation, options = EMPTY_HASH)
-      super
-      @relation = relation
-      @source = options[:source] || relation
-    end
 
     # Return name of this command's relation
     #

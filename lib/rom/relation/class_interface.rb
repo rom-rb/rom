@@ -55,7 +55,8 @@ module ROM
           # @return [Symbol]
           #
           # @api public
-          attr_reader :name
+          option :name, reader: true, optional: true,
+                 default: -> r { Name.new(r.class.register_as, r.class.dataset) }
 
           # Set dataset name
           #
@@ -101,12 +102,6 @@ module ROM
             else
               super
             end
-          end
-
-          # @api private
-          def initialize(dataset, options = EMPTY_HASH)
-            @name = Name.new(self.class.register_as, self.class.dataset)
-            super
           end
 
           # Return name of the source gateway of this relation

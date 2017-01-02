@@ -1,3 +1,4 @@
+require 'rom/initializer'
 require 'rom/data_proxy'
 
 module ROM
@@ -43,8 +44,10 @@ module ROM
       return unless klass.is_a?(Class)
 
       klass.class_eval do
-        include Options
+        extend Initializer
         include DataProxy
+
+        param :data
       end
     end
 

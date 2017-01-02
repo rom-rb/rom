@@ -1,5 +1,4 @@
-require 'rom/support/options'
-
+require 'rom/initializer'
 require 'rom/pipeline'
 require 'rom/commands/graph/class_interface'
 
@@ -9,35 +8,27 @@ module ROM
     #
     # @api private
     class Graph
+      extend Initializer
       include Dry::Equalizer(:root, :nodes)
 
       extend ClassInterface
 
-      include Options
       include Pipeline
       include Pipeline::Proxy
 
       # @attr_reader [Command] root The root command
-      attr_reader :root
+      param :root
 
       # @attr_reader [Array<Command>] nodes The child commands
-      attr_reader :nodes
-
-      # @attr_reader [Symbol] root's relation name
-      attr_reader :name
+      param :nodes
 
       alias_method :left, :root
       alias_method :right, :nodes
 
-      option :mappers, reader: true, default: proc { MapperRegistry.new }
+      # @attr_reader [Symbol] root's relation name
+      option :name, reader: true, default: -> g { g.root.name }
 
-      # @api private
-      def initialize(root, nodes, options = EMPTY_HASH)
-        super
-        @root = root
-        @nodes = nodes
-        @name = root.name
-      end
+      option :mappers, reader: true, default: proc { MapperRegistry.new }
 
       # Calls root and all nodes with the result from root
       #

@@ -1,3 +1,4 @@
+require 'rom/initializer'
 require 'rom/enumerable_dataset'
 
 module ROM
@@ -15,8 +16,10 @@ module ROM
     # @api private
     def self.included(klass)
       klass.class_eval do
-        include Options
+        extend Initializer
         include DataProxy
+
+        param :data
       end
     end
 

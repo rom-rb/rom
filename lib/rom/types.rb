@@ -9,6 +9,14 @@ module ROM
       super
     end
 
+    def self.Definition(primitive)
+      Dry::Types::Definition.new(primitive)
+    end
+
+    def self.Constructor(primitive, &block)
+      Types.Definition(primitive).constructor(&block)
+    end
+
     module Methods
       def ForeignKey(relation, type = Types::Int)
         type.meta(foreign_key: true, target: relation)

@@ -12,7 +12,10 @@ module ROM
         # @api private
         def self.included(klass)
           super
-          klass.option :__registry__, type: RelationRegistry, default: EMPTY_REGISTRY, reader: true
+          klass.option :__registry__,
+                       default: proc { EMPTY_REGISTRY },
+                       reader: true,
+                       optional: true
         end
 
         # @api private
