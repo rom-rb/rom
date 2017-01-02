@@ -1,24 +1,23 @@
-require 'rom/support/options'
-
+require 'rom/initializer'
 require 'rom/repository/changeset/pipe'
 
 module ROM
   class Changeset
-    include Options
+    extend Initializer
+
+    # @!attribute [r] relation
+    #   @return [Relation] The changeset relation
+    param :relation
+
+    # @!attribute [r] data
+    #   @return [Hash] The relation data
+    param :data
 
     # @!attribute [r] pipe
     #   @return [Changeset::Pipe] data transformation pipe
     option :pipe, reader: true, accept: [Proc, Pipe], default: -> changeset {
       changeset.class.default_pipe
     }
-
-    # @!attribute [r] relation
-    #   @return [Relation] The changeset relation
-    attr_reader :relation
-
-    # @!attribute [r] data
-    #   @return [Hash] The relation data
-    attr_reader :data
 
     # Build default pipe object
     #
@@ -27,13 +26,6 @@ module ROM
     # @return [Pipe]
     def self.default_pipe
       Pipe.new
-    end
-
-    # @api private
-    def initialize(relation, data, options = EMPTY_HASH)
-      @relation = relation
-      @data = data
-      super
     end
 
     # Pipe changeset's data using custom steps define on the pipe

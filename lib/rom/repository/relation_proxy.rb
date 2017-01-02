@@ -1,4 +1,4 @@
-require 'rom/support/options'
+require 'rom/initializer'
 require 'rom/relation/materializable'
 
 require 'rom/repository/relation_proxy/combine'
@@ -14,30 +14,30 @@ module ROM
     #
     # @api public
     class RelationProxy
-      include Options
+      extend Initializer
       include Relation::Materializable
 
       include RelationProxy::Combine
       include RelationProxy::Wrap
 
-      option :name, type: Symbol
-      option :mappers, reader: true, default: proc { MapperBuilder.new }
-      option :meta, reader: true, type: Hash, default: EMPTY_HASH
-      option :registry, type: RelationRegistry, default: proc { RelationRegistry.new }, reader: true
+      RelationRegistryType = Types.Definition(RelationRegistry).constrained(type: RelationRegistry)
 
       # @!attribute [r] relation
       #   @return [Relation, Relation::Composite, Relation::Graph, Relation::Curried] The decorated relation object
-      attr_reader :relation
+      param :relation
 
-      # @!attribute [r] name
-      #   @return [ROM::Relation::Name] The relation name object
-      attr_reader :name
+      option :name, type:  Types::Strict::Symbol
+      option :mappers, reader: true, default: proc { MapperBuilder.new }
+      option :meta, reader: true, default: proc { EMPTY_HASH }
+      option :registry, type: RelationRegistryType, default: proc { RelationRegistry.new }, reader: true
 
-      # @api private
-      def initialize(relation, options = {})
-        super
-        @relation = relation
-        @name = relation.name.with(options[:name])
+      # Relation name
+      #
+      # @return [ROM::Relation::Name]
+      #
+      # @api public
+      def name
+        @name == Dry::Initializer::UNDEFINED ? relation.name : relation.name.with(@name)
       end
 
       # Materializes wrapped relation and sends it through a mapper
@@ -105,15 +105,6 @@ module ROM
         relation.is_a?(Relation::Composite)
       end
 
-      # Returns meta info for the wrapped relation
-      #
-      # @return [Hash]
-      #
-      # @api private
-      def meta
-        options[:meta]
-      end
-
       # @return [Symbol] The wrapped relation's adapter identifier ie :sql or :http
       #
       # @api private
@@ -131,7 +122,7 @@ module ROM
           begin
             attr_ast = schema.map { |attr| [:attribute, attr] }
 
-            meta = options[:meta].merge(dataset: base_name.dataset)
+            meta = self.meta.merge(dataset: base_name.dataset)
             meta.delete(:wraps)
 
             header = attr_ast + nodes_ast + wraps_ast
