@@ -7,12 +7,11 @@ before_script:
   - psql -c 'create database rom_repository' -U postgres
 script: "bundle exec rake ci"
 after_success:
-  - '[ "$TRAVIS_RUBY_VERSION" = "2.3.1" ] && [ "$TRAVIS_BRANCH" = "master" ] && bundle exec codeclimate-test-reporter'
+  - '[ "${TRAVIS_JOB_NUMBER#*.}" = "1" ] && [ "$TRAVIS_BRANCH" = "master" ] && bundle exec codeclimate-test-reporter'
 rvm:
-  - 2.1
-  - 2.2
-  - 2.3
   - 2.4.0
+  - 2.3.3
+  - 2.2.6
   - rbx-3
   - jruby-9.1.6.0
 env:
