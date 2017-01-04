@@ -147,4 +147,28 @@ RSpec.describe ROM::Repository, '#session' do
       end
     end
   end
+
+  describe 'creating new posts for existing user' do
+    let(:posts_changeset) do
+      repo.
+        changeset(:posts, [{ title: 'Post 1' }, { title: 'Post 2' }]).
+        associate(user, :author)
+    end
+
+    let(:user) do
+      repo.command(:create, repo.users).call(name: 'Jane')
+    end
+
+    it 'saves data in a transaction' do
+      repo.session do |s|
+        s.add(posts_changeset)
+      end
+
+      user = repo.users.combine(:posts).one
+
+      expect(user.posts.size).to be(2)
+      expect(user.posts[0].title).to eql('Post 1')
+      expect(user.posts[1].title).to eql('Post 2')
+    end
+  end
 end

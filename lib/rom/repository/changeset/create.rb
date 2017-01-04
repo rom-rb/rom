@@ -33,13 +33,18 @@ module ROM
 
       # @api private
       def command(repo, opts = {})
-        command = repo.command(:create, relation, opts.merge(mapper: false))
-
         if options[:association]
           other, assoc = options[:association]
-          command.curry(to_h) >> other.command(repo, use: { associates: proc { associates(assoc) }})
+
+          if other.is_a?(Changeset)
+            repo.command(:create, relation, opts.merge(mapper: false)).
+              curry(to_h) >> other.command(repo, use: { associates: proc { associates(assoc) }})
+          else
+            repo.command(:create, relation, use: { associates: proc { associates(assoc) }}).
+              curry(to_h, other.to_h)
+          end
         else
-          command.curry(to_h)
+          repo.command(:create, relation, opts.merge(mapper: false)).curry(to_h)
         end
       end
     end
