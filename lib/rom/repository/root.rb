@@ -1,3 +1,5 @@
+require 'dry/core/class_attributes'
+
 module ROM
   class Repository
     # A specialized repository type dedicated to work with a root relation
@@ -27,7 +29,7 @@ module ROM
     #
     # @api public
     class Root < Repository
-      extend ClassMacros
+      extend Dry::Core::ClassAttributes
 
       defines :root
 

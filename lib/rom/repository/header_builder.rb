@@ -53,7 +53,7 @@ module ROM
         if meta[:wrap]
           [attr.name, from: attr.alias]
         else
-          [attr]
+          [attr.name]
         end
       end
     end

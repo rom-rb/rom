@@ -8,6 +8,7 @@
 ### Changed
 
 * `ROM::Struct` is now based on `Dry::Struct` (solnic)
+* rom-support dependency was removed (flash-gordon)
 
 ### Fixed
 

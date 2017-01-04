@@ -1,5 +1,4 @@
 require 'dry/core/deprecations'
-require 'rom/support/options'
 
 require 'rom/repository/class_interface'
 require 'rom/repository/mapper_builder'
