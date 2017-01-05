@@ -1,6 +1,12 @@
 require 'rom/registry'
 
 RSpec.shared_examples_for 'registry fetch' do
+  it 'raises an ArgumentError when nil is used as a key' do
+    expect {
+      registry.public_send(fetch_method, nil)
+    }.to raise_error(ArgumentError, "key cannot be nil")
+  end
+
   it 'returns registered element identified by name' do
     expect(registry.public_send(fetch_method, :mars)).to be(mars)
   end
@@ -55,6 +61,27 @@ RSpec.describe ROM::Registry do
 
     it 'raises no-method error when element is not there' do
       expect { registry.twix }.to raise_error(NoMethodError)
+    end
+  end
+
+  describe '#key?' do
+    let(:mars) { double(to_sym: :mars) }
+
+    it 'calls #to_sym on a key before checking if it exists' do
+      allow(mars).to receive(:to_sym)
+      registry.key?(:mars)
+    end
+
+    it 'returns true for an existing key' do
+      expect(registry.key?(:mars)).to eq(true)
+    end
+
+    it 'returns false for a non-existing key' do
+      expect(registry.key?(:twix)).to eq(false)
+    end
+
+    it 'returns false for a nil key' do
+      expect(registry.key?(nil)).to eq(false)
     end
   end
 end

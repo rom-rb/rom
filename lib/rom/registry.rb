@@ -23,10 +23,12 @@ module ROM
     end
 
     def key?(name)
-      elements.key?(name.to_sym)
+      !name.nil? && elements.key?(name.to_sym)
     end
 
     def fetch(key)
+      raise ArgumentError.new('key cannot be nil') if key.nil?
+
       elements.fetch(key.to_sym) do
         return yield if block_given?
 
