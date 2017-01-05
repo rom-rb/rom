@@ -75,17 +75,19 @@ RSpec.describe ROM::Commands::Graph do
     configuration.commands(:tasks) do
       define(:create) do
         result :one
+        before :associate
 
-        def execute(task, user)
-          super(task.merge(user: user[:name]))
+        def associate(task, user)
+          task.merge(user: user[:name])
         end
       end
 
       define(:create) do
         register_as :create_many
+        before :associate
 
-        def execute(tasks, user)
-          super(tasks.map { |t| t.merge(user: user[:name]) })
+        def associate(tasks, user)
+          tasks.map { |t| t.merge(user: user[:name]) }
         end
       end
     end
@@ -93,13 +95,12 @@ RSpec.describe ROM::Commands::Graph do
     configuration.commands(:tags) do
       define(:create) do
         register_as :create_many
+        before :associate
 
-        def execute(tags, tasks)
-          super(
-            Array([tasks]).flatten.map { |task|
-              tags.map { |tag| tag.merge(task: task[:title]) }
-            }.flatten
-          )
+        def associate(tags, tasks)
+          Array([tasks]).flatten.map { |task|
+            tags.map { |tag| tag.merge(task: task[:title]) }
+          }.flatten
         end
       end
     end

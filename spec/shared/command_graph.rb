@@ -33,16 +33,20 @@ shared_context 'command graph' do
 
     configuration.commands(:books) do
       define(:create) do
-        def execute(tuples, user)
-          super(tuples.map { |t| t.merge(user: user.fetch(:name)) })
+        before :associate
+
+        def associate(tuples, user)
+          tuples.map { |t| t.merge(user: user.fetch(:name)) }
         end
       end
     end
 
     configuration.commands(:tags) do
       define(:create) do
-        def execute(tuples, task)
-          super(tuples.map { |t| t.merge(task: task.fetch(:title)) })
+        before :associate
+
+        def associate(tuples, task)
+          tuples.map { |t| t.merge(task: task.fetch(:title)) }
         end
       end
     end

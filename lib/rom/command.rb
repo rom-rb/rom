@@ -31,7 +31,7 @@ module ROM
     extend Dry::Core::ClassAttributes
     extend ClassInterface
 
-    defines :adapter, :relation, :result, :input, :register_as, :restrictable
+    defines :adapter, :relation, :result, :input, :register_as, :restrictable, :before, :after
 
     # @attr_reader [Relation] relation The command's relation
     param :relation
@@ -44,6 +44,8 @@ module ROM
     option :result, reader: true, type: Result
     option :input, reader: true
     option :curry_args, reader: true, default: -> _ { EMPTY_ARRAY }
+    option :before, Types::Coercible::Array, reader: true, as: :before_hooks, default: proc { EMPTY_ARRAY }
+    option :after, Types::Coercible::Array, reader: true, as: :after_hooks, default: proc { EMPTY_ARRAY }
 
     input Hash
     result :many
@@ -84,12 +86,20 @@ module ROM
     #
     # @api public
     def call(*args, &block)
-      tuples = execute(*(curry_args + args), &block)
+      prepared =
+        if curried?
+          before_hooks.reduce(*curry_args) { |a, e| __send__(e, a, *args) }
+        else
+          before_hooks.reduce(*args) { |a, e| __send__(e, a) }
+        end
+
+      result = prepared ? execute(prepared, &block) : execute(&block)
+      finalized = after_hooks.reduce(result) { |a, e| __send__(e, a) }
 
       if one?
-        tuples.first
+        finalized.first
       else
-        tuples
+        finalized
       end
     end
     alias_method :[], :call
@@ -109,6 +119,11 @@ module ROM
       end
     end
     alias_method :with, :curry
+
+    # @api public
+    def curried?
+      curry_args.size > 0
+    end
 
     # @api public
     def combine(*others)
