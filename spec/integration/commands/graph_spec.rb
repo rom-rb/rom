@@ -7,9 +7,10 @@ RSpec.describe 'Building up a command graph for nested input' do
     configuration.commands(:tasks) do
       define(:create) do
         result :one
+        before :associate
 
-        def execute(tuple, user)
-          super(tuple.merge(user: user.fetch(:name)))
+        def associate(tuple, user)
+          tuple.merge(user: user.fetch(:name))
         end
       end
     end
@@ -66,8 +67,10 @@ RSpec.describe 'Building up a command graph for nested input' do
   it 'creates a command graph for nested input with :many results as root' do
     configuration.commands(:tasks) do
       define(:create) do
-        def execute(tuples, user)
-          super(tuples.map { |t| t.merge(user: user.fetch(:name)) })
+        before :associate
+
+        def associate(tuples, user)
+          tuples.map { |t| t.merge(user: user.fetch(:name)) }
         end
       end
     end
@@ -120,16 +123,19 @@ RSpec.describe 'Building up a command graph for nested input' do
   it 'updates graph elements cleanly' do
     configuration.commands(:tasks) do
       define(:create) do
-        def execute(tuples, user)
-          super(tuples.map { |t| t.merge(user: user.fetch(:name)) })
+        before :associate
+
+        def associate(tuples, user)
+          tuples.map { |t| t.merge(user: user.fetch(:name)) }
         end
       end
 
       define(:update) do
         result :one
+        before :associate
 
-        def execute(tuple, user)
-          super(tuple.merge(user: user.fetch(:name)))
+        def associate(tuple, user)
+          tuple.merge(user: user.fetch(:name))
         end
       end
 
@@ -186,9 +192,7 @@ RSpec.describe 'Building up a command graph for nested input' do
 
     create.call(initial)
 
-    container.command(:tasks).create.call(
-      [{ title: 'Task One'}], { name: 'Jane' }
-    )
+    container.command(:tasks).create.with([{ title: 'Task One'}]).(name: 'Jane')
 
     expect(container.relation(:tasks)).to match_array([
       { title: 'Change Name', user: 'Johnny' },
@@ -233,8 +237,10 @@ RSpec.describe 'Building up a command graph for nested input' do
 
     configuration.commands(:tasks) do
       define(:create) do
-        def execute(tuples, user)
-          super(tuples.map { |t| t.merge(user: user.fetch(:name)) })
+        before :associate
+
+        def associate(tuples, user)
+          tuples.map { |t| t.merge(user: user.fetch(:name)) }
         end
       end
     end

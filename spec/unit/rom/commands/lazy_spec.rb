@@ -56,16 +56,19 @@ RSpec.describe ROM::Commands::Lazy do
       end
 
       define(:create_many, type: :create) do
-        def execute(tuples, user)
-          super(tuples.map { |tuple| tuple.merge(user: user[:name]) })
+        before :associate
+
+        def associate(tuples, user)
+          tuples.map { |tuple| tuple.merge(user: user[:name]) }
         end
       end
 
       define(:update) do
         result :one
+        before :associate
 
-        def execute(tuple, user)
-          super(tuple.merge(user: user[:name]))
+        def associate(tuple, user)
+          tuple.merge(user: user[:name])
         end
       end
     end

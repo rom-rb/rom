@@ -99,8 +99,14 @@ RSpec.describe 'Commands' do
       }.build(users)
 
       create_task = Class.new(ROM::Commands::Create) {
-        def execute(task_input, user_tuple)
-          relation.insert(task_input.merge(user_id: user_tuple[:user_id]))
+        before :associate
+
+        def associate(task_input, user_tuple)
+          task_input.merge(user_id: user_tuple[:user_id])
+        end
+
+        def execute(task_input)
+          relation.insert(task_input)
         end
       }.build(tasks)
 

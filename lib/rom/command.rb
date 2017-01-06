@@ -31,7 +31,7 @@ module ROM
     extend Dry::Core::ClassAttributes
     extend ClassInterface
 
-    defines :adapter, :relation, :result, :input, :register_as, :restrictable
+    defines :adapter, :relation, :result, :input, :register_as, :restrictable, :before, :after
 
     # @attr_reader [Relation] relation The command's relation
     param :relation
@@ -44,6 +44,8 @@ module ROM
     option :result, reader: true, type: Result
     option :input, reader: true
     option :curry_args, reader: true, default: -> _ { EMPTY_ARRAY }
+    option :before, Types::Coercible::Array, reader: true, as: :before_hooks, default: proc { EMPTY_ARRAY }
+    option :after, Types::Coercible::Array, reader: true, as: :after_hooks, default: proc { EMPTY_ARRAY }
 
     input Hash
     result :many
@@ -84,7 +86,25 @@ module ROM
     #
     # @api public
     def call(*args, &block)
-      tuples = execute(*(curry_args + args), &block)
+      tuples =
+        if hooks?
+          prepared =
+            if curried?
+              apply_hooks(before_hooks, *curry_args, *args)
+            else
+              apply_hooks(before_hooks, *args)
+            end
+
+          result = prepared ? execute(prepared, &block) : execute(&block)
+
+          if curried?
+            apply_hooks(after_hooks, result, *args)
+          else
+            apply_hooks(after_hooks, result)
+          end
+        else
+          execute(*(curry_args + args), &block)
+        end
 
       if one?
         tuples.first
@@ -109,6 +129,16 @@ module ROM
       end
     end
     alias_method :with, :curry
+
+    # @api public
+    def curried?
+      curry_args.size > 0
+    end
+
+    # @api private
+    def hooks?
+      before_hooks.size > 0 || after_hooks.size > 0
+    end
 
     # @api public
     def combine(*others)
@@ -140,11 +170,33 @@ module ROM
       self.class.build(new_relation, options.merge(source: relation))
     end
 
+    # @api public
+    def before(*hooks)
+      self.class.new(relation, options.merge(before: hooks))
+    end
+
+    # @api public
+    def after(*hooks)
+      self.class.new(relation, options.merge(after: hooks))
+    end
+
     private
 
     # @api private
     def composite_class
       Command::Composite
+    end
+
+    # @api private
+    def apply_hooks(hooks, tuples, *args)
+      hooks.reduce(tuples) do |a, e|
+        if e.is_a?(Hash)
+          hook_meth, hook_args = e.to_a.flatten
+          __send__(hook_meth, a, *args, **hook_args)
+        else
+          __send__(e, a, *args)
+        end
+      end
     end
   end
 end

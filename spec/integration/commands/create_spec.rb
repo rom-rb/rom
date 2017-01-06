@@ -22,9 +22,10 @@ RSpec.describe 'Commands / Create' do
       relation :tasks
       register_as :create
       result :one
+      before :associate
 
-      def execute(task, user)
-        super(task.merge(name: user.to_h[:name]))
+      def associate(task, user)
+        task.merge(name: user.to_h[:name])
       end
     end
 
