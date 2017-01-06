@@ -218,4 +218,52 @@ RSpec.describe ROM::Command, 'before/after hooks' do
       expect(relation).to have_received(:insert).with(insert_tuples)
     end
   end
+
+  context 'calling with multiple args' do
+    subject(:command) do
+      Class.new(ROM::Command) do
+        result :many
+        before [prepare: { prepared: true }]
+        after [finalize: { finalized: true }]
+
+        def execute(tuples)
+          input = tuples.map.with_index { |tuple, idx| tuple.merge(id: idx + 1) }
+          relation.insert(input)
+          input
+        end
+
+        def prepare(tuples, parent, opts)
+          tuples.map { |tuple| tuple.merge(opts).merge(parent_size: parent.size) }
+        end
+
+        def finalize(tuples, parent, opts)
+          tuples.map { |tuple| tuple.merge(opts).merge(user_id: parent[:id]) }
+        end
+      end.build(relation)
+    end
+
+    let(:tuples) do
+      [{ name: 'Jane' }, { name: 'Joe' }]
+    end
+
+    let(:relation) do
+      spy(:relation)
+    end
+
+    it 'applies before/after hooks' do
+      insert_tuples = [
+        { id: 1, name: 'Jane', parent_size: 1, prepared: true },
+        { id: 2, name: 'Joe', parent_size: 1, prepared: true }
+      ]
+
+      result = [
+        { id: 1, name: 'Jane', parent_size: 1, user_id: 1, prepared: true, finalized: true },
+        { id: 2, name: 'Joe', parent_size: 1, user_id: 1, prepared: true, finalized: true }
+      ]
+
+      expect(command.call(tuples, id: 1)).to eql(result)
+
+      expect(relation).to have_received(:insert).with(insert_tuples)
+    end
+  end
 end

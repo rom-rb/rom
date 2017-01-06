@@ -100,7 +100,7 @@ module ROM
           if curried?
             apply_hooks(after_hooks, result, *args)
           else
-            apply_hooks(after_hooks, result)
+            apply_hooks(after_hooks, result, *args[1..args.size-1])
           end
         else
           execute(*(curry_args + args), &block)
