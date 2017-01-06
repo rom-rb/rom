@@ -86,54 +86,30 @@ module ROM
     #
     # @api public
     def call(*args, &block)
-      prepared =
-        if curried?
-          before_hooks.reduce(*curry_args) do |a, e|
-            if e.is_a?(Hash)
-              hook_meth, hook_args = e.to_a.flatten
-              __send__(hook_meth, a, *args, **hook_args)
+      tuples =
+        if hooks?
+          prepared =
+            if curried?
+              apply_hooks(before_hooks, *curry_args, *args)
             else
-              __send__(e, a, *args)
+              apply_hooks(before_hooks, *args)
             end
+
+          result = prepared ? execute(prepared, &block) : execute(&block)
+
+          if curried?
+            apply_hooks(after_hooks, result, *args)
+          else
+            apply_hooks(after_hooks, result)
           end
         else
-          before_hooks.reduce(*args) do |a, e|
-            if e.is_a?(Hash)
-              hook_meth, hook_args = e.to_a.flatten
-              __send__(hook_meth, a, **hook_args)
-            else
-              __send__(e, a)
-            end
-          end
-        end
-
-      result = prepared ? execute(prepared, &block) : execute(&block)
-
-      finalized =
-        if curried?
-          after_hooks.reduce(result) do |a, e|
-            if e.is_a?(Hash)
-              hook_meth, hook_args = e.to_a.flatten
-              __send__(hook_meth, a, *args, **hook_args)
-            else
-              __send__(e, a, *args)
-            end
-          end
-        else
-          after_hooks.reduce(result) do |a, e|
-            if e.is_a?(Hash)
-              hook_meth, hook_args = e.to_a.flatten
-              __send__(hook_meth, a, **hook_args)
-            else
-              __send__(e, a)
-            end
-          end
+          execute(*(curry_args + args), &block)
         end
 
       if one?
-        finalized.first
+        tuples.first
       else
-        finalized
+        tuples
       end
     end
     alias_method :[], :call
@@ -157,6 +133,11 @@ module ROM
     # @api public
     def curried?
       curry_args.size > 0
+    end
+
+    # @api private
+    def hooks?
+      before_hooks.size > 0 || after_hooks.size > 0
     end
 
     # @api public
@@ -204,6 +185,18 @@ module ROM
     # @api private
     def composite_class
       Command::Composite
+    end
+
+    # @api private
+    def apply_hooks(hooks, tuples, *args)
+      hooks.reduce(tuples) do |a, e|
+        if e.is_a?(Hash)
+          hook_meth, hook_args = e.to_a.flatten
+          __send__(hook_meth, a, *args, **hook_args)
+        else
+          __send__(e, a, *args)
+        end
+      end
     end
   end
 end
