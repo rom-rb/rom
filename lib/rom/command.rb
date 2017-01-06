@@ -90,7 +90,7 @@ module ROM
         if hooks?
           prepared =
             if curried?
-              apply_hooks(before_hooks, *curry_args, *args)
+              apply_hooks(before_hooks, *(curry_args + args))
             else
               apply_hooks(before_hooks, *args)
             end
@@ -191,7 +191,7 @@ module ROM
     def apply_hooks(hooks, tuples, *args)
       hooks.reduce(tuples) do |a, e|
         if e.is_a?(Hash)
-          hook_meth, hook_args = e.to_a.flatten
+          hook_meth, hook_args = e.to_a.flatten(1)
           __send__(hook_meth, a, *args, **hook_args)
         else
           __send__(e, a, *args)
