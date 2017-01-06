@@ -11,6 +11,9 @@
 * Schemas are coercible to arrays that include all attribute types (solnic)
 * Automatic relation view projection via `Schema#call` (abstract method for adapters) (solnic)
 * `Relation#new(dataset, new_opts)` interface (solnic)
+* `Command` has now support for `before` and `after` hooks (solnic)
+* New `Command#before` method for creating a command with before hook(s) at run-time (solnic)
+* New `Command#after` method for creating a command with after hook(s) at run-time (solnic)
 
 ## Changed
 
