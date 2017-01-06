@@ -155,6 +155,16 @@ module ROM
       self.class.build(new_relation, options.merge(source: relation))
     end
 
+    # @api public
+    def before(*hooks)
+      self.class.new(relation, options.merge(before: hooks))
+    end
+
+    # @api public
+    def after(*hooks)
+      self.class.new(relation, options.merge(after: hooks))
+    end
+
     private
 
     # @api private

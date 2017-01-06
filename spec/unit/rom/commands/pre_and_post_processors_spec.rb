@@ -1,7 +1,37 @@
 require 'rom/command'
 
 RSpec.describe ROM::Command, 'before/after hooks' do
-  context 'without extra args' do
+  let(:relation) do
+    spy(:relation)
+  end
+
+  describe '#before' do
+    subject(:command) do
+      Class.new(ROM::Command) do
+        def prepare(*)
+        end
+      end.build(relation)
+    end
+
+    it 'returns a new command with configured before hooks' do
+      expect(command.before(:prepare).before_hooks).to include(:prepare)
+    end
+  end
+
+  describe '#after' do
+    subject(:command) do
+      Class.new(ROM::Command) do
+        def prepare(*)
+        end
+      end.build(relation)
+    end
+
+    it 'returns a new command with configured after hooks' do
+      expect(command.after(:prepare).after_hooks).to include(:prepare)
+    end
+  end
+
+  context 'without curried args' do
     subject(:command) do
       Class.new(ROM::Command) do
         result :many
@@ -26,10 +56,6 @@ RSpec.describe ROM::Command, 'before/after hooks' do
 
     let(:tuples) do
       [{ name: 'Jane' }, { name: 'Joe' }]
-    end
-
-    let(:relation) do
-      spy(:relation)
     end
 
     it 'applies before/after hooks' do
