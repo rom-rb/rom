@@ -88,13 +88,47 @@ module ROM
     def call(*args, &block)
       prepared =
         if curried?
-          before_hooks.reduce(*curry_args) { |a, e| __send__(e, a, *args) }
+          before_hooks.reduce(*curry_args) do |a, e|
+            if e.is_a?(Hash)
+              hook_meth, hook_args = e.to_a.flatten
+              __send__(hook_meth, a, *args, **hook_args)
+            else
+              __send__(e, a, *args)
+            end
+          end
         else
-          before_hooks.reduce(*args) { |a, e| __send__(e, a) }
+          before_hooks.reduce(*args) do |a, e|
+            if e.is_a?(Hash)
+              hook_meth, hook_args = e.to_a.flatten
+              __send__(hook_meth, a, **hook_args)
+            else
+              __send__(e, a)
+            end
+          end
         end
 
       result = prepared ? execute(prepared, &block) : execute(&block)
-      finalized = after_hooks.reduce(result) { |a, e| __send__(e, a) }
+
+      finalized =
+        if curried?
+          after_hooks.reduce(result) do |a, e|
+            if e.is_a?(Hash)
+              hook_meth, hook_args = e.to_a.flatten
+              __send__(hook_meth, a, *args, **hook_args)
+            else
+              __send__(e, a, *args)
+            end
+          end
+        else
+          after_hooks.reduce(result) do |a, e|
+            if e.is_a?(Hash)
+              hook_meth, hook_args = e.to_a.flatten
+              __send__(hook_meth, a, **hook_args)
+            else
+              __send__(e, a)
+            end
+          end
+        end
 
       if one?
         finalized.first
