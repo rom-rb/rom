@@ -70,4 +70,8 @@ RSpec.shared_context 'database' do
       column :author, String
     end
   end
+
+  after do
+    rom.disconnect
+  end
 end
