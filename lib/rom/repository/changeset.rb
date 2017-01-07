@@ -19,6 +19,10 @@ module ROM
       changeset.class.default_pipe
     }
 
+    # @!attribute [r] command_compiler
+    #   @return [Proc] a proc that can compile a command (typically provided by a repo)
+    option :command_compiler, reader: true, optional: true
+
     # Build default pipe object
     #
     # This can be overridden in a custom changeset subclass

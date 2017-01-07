@@ -79,8 +79,8 @@ module ROM
       end
 
       # @api private
-      def command(repo)
-        repo.command(:update, relation, mapper: false).curry(to_h) if diff?
+      def command
+        command_compiler.(:update, relation, mapper: false).curry(to_h) if diff?
       end
     end
   end

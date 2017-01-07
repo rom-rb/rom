@@ -22,10 +22,7 @@ module ROM
     end
 
     def commit!
-      commands = queue.
-                   map { |changeset| changeset.command(repo) }.
-                   compact.
-                   each(&:call)
+      queue.map(&:command).compact.each(&:call)
 
       @status = :success
 

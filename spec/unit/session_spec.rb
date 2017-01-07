@@ -22,7 +22,7 @@ RSpec.describe ROM::Session do
 
   describe '#commit!' do
     it 'executes ops and restores pristine state' do
-      expect(create_changeset).to receive(:command).with(repo).and_return(create_command)
+      expect(create_changeset).to receive(:command).and_return(create_command)
 
       session.add(create_changeset).commit!
       session.commit!
@@ -33,8 +33,8 @@ RSpec.describe ROM::Session do
     end
 
     it 'executes ops and restores pristine state when exception was raised' do
-      expect(create_changeset).to receive(:command).with(repo).and_return(create_command)
-      expect(delete_changeset).to receive(:command).with(repo).and_return(delete_command)
+      expect(create_changeset).to receive(:command).and_return(create_command)
+      expect(delete_changeset).to receive(:command).and_return(delete_command)
 
       expect(delete_command).to receive(:call).and_raise(StandardError, 'oops')
 

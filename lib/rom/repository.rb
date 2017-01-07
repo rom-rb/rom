@@ -71,6 +71,9 @@ module ROM
     #   @return [MapperBuilder] The auto-generated mappers for repo relations
     attr_reader :mappers
 
+    # @api private
+    attr_reader :command_compiler
+
     # Initializes a new repo by establishing configured relation proxies from
     # the passed container
     #
@@ -93,6 +96,7 @@ module ROM
           relations[name] = proxy
         end
       end
+      @command_compiler = method(:command)
     end
 
     # @overload command(type, relation)
@@ -176,17 +180,19 @@ module ROM
         raise ArgumentError, 'Repository#changeset accepts 1-3 arguments'
       end
 
+      opts = { command_compiler: command_compiler }
+
       if type
         if type.equal?(:delete)
-          Changeset::Delete.new(relation)
+          Changeset::Delete.new(relation, opts)
         end
       else
         relation = relations[name]
 
         if pk
-          Changeset::Update.new(relation, data: data, primary_key: pk)
+          Changeset::Update.new(relation, opts.merge(data: data, primary_key: pk))
         else
-          Changeset::Create.new(relation, data: data)
+          Changeset::Create.new(relation, opts.merge(data: data))
         end
       end
     end
