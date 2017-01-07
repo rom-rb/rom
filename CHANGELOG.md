@@ -2,6 +2,7 @@
 
 ### Added
 
+* New `Repository#session` API for building transactions using changesets (solnic)
 * Support for inferring typed structs based on relation schemas (solnic)
 * `aggregate` and `combine` support nested association specs, ie `combine(users: [tasks: :tags])` (beauby)
 
