@@ -38,10 +38,9 @@ module ROM
 
           if other.is_a?(Changeset)
             repo.command(:create, relation, opts.merge(mapper: false)).
-              curry(to_h) >> other.command(repo, use: { associates: proc { associates(assoc) }})
+              curry(to_h) >> other.command(repo).with_association(assoc)
           else
-            repo.command(:create, relation, use: { associates: proc { associates(assoc) }}).
-              curry(to_h, other.to_h)
+            repo.command(:create, relation).with_association(assoc).curry(to_h, other.to_h)
           end
         else
           repo.command(:create, relation, opts.merge(mapper: false)).curry(to_h)

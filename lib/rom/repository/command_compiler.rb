@@ -206,9 +206,8 @@ module ROM
 
         klass.extend_for_relation(relation) if klass.restrictable
 
-        plugins.each do |(plugin, block)|
-          klass.use(plugin) 
-          klass.instance_eval(&block) if block
+        plugins.each do |plugin|
+          klass.use(plugin)
         end
       end
     end
