@@ -14,6 +14,7 @@
 * `Command` has now support for `before` and `after` hooks (solnic)
 * New `Command#before` method for creating a command with before hook(s) at run-time (solnic)
 * New `Command#after` method for creating a command with after hook(s) at run-time (solnic)
+* New `Gateway#transaction` method runs code inside a transaction (flash-gordon)
 
 ## Changed
 
