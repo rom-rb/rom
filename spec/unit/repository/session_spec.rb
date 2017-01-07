@@ -171,4 +171,55 @@ RSpec.describe ROM::Repository, '#session' do
       expect(user.posts[1].title).to eql('Post 2')
     end
   end
+
+  describe 'nesting sessions' do
+    let(:user_changeset) do
+      repo.changeset(:users, name: 'Jane')
+    end
+
+    let(:posts_changeset) do
+      repo.changeset(:posts, post_data)
+    end
+
+    let(:user) do
+      repo.users.where(name: 'Jane').one
+    end
+
+    context 'when data is valid' do
+      let(:post_data) do
+        [{ title: 'Post 1' }, { title: 'Post 2' }]
+      end
+
+      it 'saves data in transactions' do
+        repo.send(:transaction) do |t|
+          repo.session { |s| s.add(user_changeset) }
+          repo.session { |s| s.add(posts_changeset.associate(user, :author)) }
+        end
+
+        user = repo.users.combine(:posts).one
+
+        expect(user.posts.size).to be(2)
+        expect(user.posts[0].title).to eql('Post 1')
+        expect(user.posts[1].title).to eql('Post 2')
+      end
+    end
+
+    context 'when data is not valid' do
+      let(:post_data) do
+        [{ title: 'Post 1' }, { title: nil }]
+      end
+
+      it 'rolls back transaction' do
+        expect {
+          repo.send(:transaction) do |t|
+            repo.session { |s| s.add(user_changeset) }
+            repo.session { |s| s.add(posts_changeset.associate(user, :author)) }
+          end
+        }.to raise_error(ROM::SQL::ConstraintError, /title/)
+
+        expect(repo.users.count).to be(0)
+        expect(repo.posts.count).to be(0)
+      end
+    end
+  end
 end
