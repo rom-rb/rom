@@ -169,8 +169,6 @@ module ROM
       #
       # @api private
       def setup_associates(klass, relation, meta, parent_relation)
-        klass.use(:associates)
-
         assoc_name =
           if relation.associations.key?(parent_relation)
             parent_relation
