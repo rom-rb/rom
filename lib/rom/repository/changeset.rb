@@ -1,9 +1,16 @@
+require 'dry/core/class_attributes'
+require 'dry/core/cache'
+
 require 'rom/initializer'
 require 'rom/repository/changeset/pipe'
 
 module ROM
   class Changeset
     extend Initializer
+    extend Dry::Core::Cache
+    extend Dry::Core::ClassAttributes
+
+    defines :relation
 
     # @!attribute [r] relation
     #   @return [Relation] The changeset relation
@@ -22,6 +29,21 @@ module ROM
     # @!attribute [r] command_compiler
     #   @return [Proc] a proc that can compile a command (typically provided by a repo)
     option :command_compiler, reader: true, optional: true
+
+    # Create a changeset class preconfigured for a specific relation
+    #
+    # @example
+    #   class NewUserChangeset < ROM::Changeset::Create[:users]
+    #   end
+    #
+    #   user_repo.changeset(NewUserChangeset).data(name: 'Jane')
+    #
+    # @api public
+    def self.[](relation_name)
+      fetch_or_store(relation_name) {
+        Class.new(self) { relation(relation_name) }
+      }
+    end
 
     # Build default pipe object
     #

@@ -162,17 +162,23 @@ module ROM
     #
     # @api public
     def changeset(*args)
+      opts = { command_compiler: command_compiler }
+
       if args.size == 2
         name, data = args
       elsif args.size == 3
         name, pk, data = args
       elsif args.size == 1
-        type, relation = args[0].to_a[0]
+        type = args[0]
+
+        if type.is_a?(Class) && type < Changeset
+          return type.new(relations[type.relation], opts)
+        else
+          type, relation = args[0].to_a[0]
+        end
       else
         raise ArgumentError, 'Repository#changeset accepts 1-3 arguments'
       end
-
-      opts = { command_compiler: command_compiler }
 
       if type
         if type.equal?(:delete)

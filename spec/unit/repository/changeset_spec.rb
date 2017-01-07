@@ -72,4 +72,30 @@ RSpec.describe ROM::Repository, '#changeset' do
       expect(relation.one).to be(nil)
     end
   end
+
+  describe 'custom changeset class' do
+    let(:changeset) do
+      repo.changeset(changeset_class[:users]).with(data: {})
+    end
+
+    let(:changeset_class) do
+      Class.new(ROM::Changeset::Create) do
+        def to_h
+          data.merge(name: 'Jane')
+        end
+      end
+    end
+
+    it 'has data' do
+      expect(changeset.to_h).to eql(name: 'Jane')
+    end
+
+    it 'has relation' do
+      expect(changeset.relation).to be(repo.users)
+    end
+
+    it 'can return a dedicated command' do
+      expect(changeset.command.call).to eql(id: 1, name: 'Jane')
+    end
+  end
 end
