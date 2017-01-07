@@ -90,11 +90,7 @@ module ROM
         ROM.adapters.fetch(type)
       }
 
-      if adapter.const_defined?(:Gateway)
-        adapter.const_get(:Gateway)
-      else
-        adapter.const_get(:Repository)
-      end
+      adapter.const_get(:Gateway)
     end
 
     # Returns the adapter, defined for the class
