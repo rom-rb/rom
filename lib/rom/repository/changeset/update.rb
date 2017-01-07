@@ -77,6 +77,11 @@ module ROM
             Hash[new_tuple - (new_tuple & ori_tuple)]
           end
       end
+
+      # @api private
+      def command
+        command_compiler.(:update, relation, mapper: false).curry(to_h) if diff?
+      end
     end
   end
 end

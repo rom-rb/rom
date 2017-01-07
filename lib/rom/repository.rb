@@ -7,6 +7,7 @@ require 'rom/repository/command_compiler'
 
 require 'rom/repository/root'
 require 'rom/repository/changeset'
+require 'rom/repository/session'
 
 module ROM
   # Abstract repository class to inherit from
@@ -70,6 +71,9 @@ module ROM
     #   @return [MapperBuilder] The auto-generated mappers for repo relations
     attr_reader :mappers
 
+    # @api private
+    attr_reader :command_compiler
+
     # Initializes a new repo by establishing configured relation proxies from
     # the passed container
     #
@@ -92,6 +96,7 @@ module ROM
           relations[name] = proxy
         end
       end
+      @command_compiler = method(:command)
     end
 
     # @overload command(type, relation)
@@ -169,20 +174,47 @@ module ROM
         name, data = args
       elsif args.size == 3
         name, pk, data = args
+      elsif args.size == 1
+        type, relation = args[0].to_a[0]
       else
-        raise ArgumentError, 'Repository#changeset accepts 2 or 3 arguments'
+        raise ArgumentError, 'Repository#changeset accepts 1-3 arguments'
       end
 
-      relation = relations[name]
+      opts = { command_compiler: command_compiler }
 
-      if pk
-        Changeset::Update.new(relation, data, primary_key: pk)
+      if type
+        if type.equal?(:delete)
+          Changeset::Delete.new(relation, opts)
+        end
       else
-        Changeset::Create.new(relation, data)
+        relation = relations[name]
+
+        if pk
+          Changeset::Update.new(relation, opts.merge(data: data, primary_key: pk))
+        else
+          Changeset::Create.new(relation, opts.merge(data: data))
+        end
       end
     end
 
+    # TODO: document me, please
+    #
+    # @api public
+    def session(&block)
+      session = Session.new(self)
+      yield(session)
+      transaction { session.commit! }
+    end
+
     private
+
+    # TODO: document me, please
+    #
+    # @api public
+    def transaction(&block)
+      # TODO: add a Gateway#transaction to rom core, could be a no-op with a warning by default
+      container.gateways[:default].connection.transaction(&block)
+    end
 
     # Local command cache
     #
@@ -204,12 +236,17 @@ module ROM
 
       if mapper
         mapper_instance = container.mappers[relation.name.relation][mapper]
-      else
+      elsif mapper.nil?
         mapper_instance = mappers[ast]
       end
 
       command = CommandCompiler[container, type, adapter, ast, use]
-      command >> mapper_instance
+
+      if mapper_instance
+        command >> mapper_instance
+      else
+        command.new(relation)
+      end
     end
 
     # @api private

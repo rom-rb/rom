@@ -11,13 +11,17 @@ module ROM
 
     # @!attribute [r] data
     #   @return [Hash] The relation data
-    param :data
+    option :data, reader: true, optional: true
 
     # @!attribute [r] pipe
     #   @return [Changeset::Pipe] data transformation pipe
     option :pipe, reader: true, accept: [Proc, Pipe], default: -> changeset {
       changeset.class.default_pipe
     }
+
+    # @!attribute [r] command_compiler
+    #   @return [Proc] a proc that can compile a command (typically provided by a repo)
+    option :command_compiler, reader: true, optional: true
 
     # Build default pipe object
     #
@@ -59,7 +63,7 @@ module ROM
     #
     # @api private
     def with(new_options)
-      self.class.new(relation, data, options.merge(new_options))
+      self.class.new(relation, options.merge(new_options))
     end
 
     private
@@ -75,7 +79,7 @@ module ROM
         response = data.__send__(meth, *args, &block)
 
         if response.is_a?(Hash)
-          self.class.new(relation, response, options)
+          self.class.new(relation, options.merge(data: response))
         else
           response
         end
@@ -88,3 +92,4 @@ end
 
 require 'rom/repository/changeset/create'
 require 'rom/repository/changeset/update'
+require 'rom/repository/changeset/delete'
