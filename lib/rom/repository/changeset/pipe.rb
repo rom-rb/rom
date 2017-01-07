@@ -1,9 +1,12 @@
 require 'transproc/registry'
+require 'transproc/transformer'
 
 module ROM
   class Changeset
-    class Pipe
+    class Pipe < Transproc::Transformer
       extend Transproc::Registry
+
+      import Transproc::HashTransformations
 
       attr_reader :processor
 
@@ -16,15 +19,19 @@ module ROM
         data.merge(updated_at: Time.now)
       end
 
-      def initialize(processor = nil)
+      def initialize(processor = self.class.transproc)
         @processor = processor
+      end
+
+      def [](name)
+        self.class[name]
       end
 
       def >>(other)
         if processor
-          self.class.new(processor >> other)
+          Pipe.new(processor >> other)
         else
-          self.class.new(other)
+          Pipe.new(other)
         end
       end
 

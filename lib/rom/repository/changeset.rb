@@ -45,13 +45,18 @@ module ROM
       }
     end
 
+    # @api public
+    def self.map(&block)
+      @pipe = Class.new(Pipe, &block).new
+    end
+
     # Build default pipe object
     #
     # This can be overridden in a custom changeset subclass
     #
     # @return [Pipe]
     def self.default_pipe
-      Pipe.new
+      @pipe || Pipe.new
     end
 
     # Pipe changeset's data using custom steps define on the pipe
@@ -62,7 +67,7 @@ module ROM
     #
     # @api public
     def map(*steps)
-      with(pipe: steps.reduce(pipe) { |a, e| a >> pipe.class[e] })
+      with(pipe: steps.reduce(pipe) { |a, e| a >> pipe[e] })
     end
 
     # Coerce changeset to a hash
