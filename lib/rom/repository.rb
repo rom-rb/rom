@@ -198,15 +198,14 @@ module ROM
       transaction { session.commit! }
     end
 
-    private
-
     # TODO: document me, please
     #
     # @api public
     def transaction(&block)
-      # TODO: add a Gateway#transaction to rom core, could be a no-op with a warning by default
-      container.gateways[:default].connection.transaction(&block)
+      container.gateways[:default].transaction(&block)
     end
+
+    private
 
     # Local command cache
     #

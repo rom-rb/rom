@@ -131,7 +131,7 @@ RSpec.describe ROM::Repository, '#session' do
 
     context 'with invalid data' do
       let(:posts_data) do
-        [{ title: 'Post 1', title: nil }]
+        [{ title: nil }]
       end
 
       it 'rolls back the transaction' do
