@@ -49,15 +49,20 @@ module ROM
 
           dataset default_name
 
-          # Relation's dataset name
-          #
-          # In example a table name in an SQL database
-          #
-          # @return [Symbol]
-          #
-          # @api public
-          option :name, reader: true, optional: true,
-                 default: -> r { Name.new(r.class.register_as, r.class.dataset) }
+          # skip defining :name option if it's a class that already has this method
+          # which can happen when an adapter's relation class inherits from another
+          # adapter's relation class (ie YAML::Relation < Memory::Relation)
+          unless instance_methods.include?(:name)
+            # Relation's dataset name
+            #
+            # In example a table name in an SQL database
+            #
+            # @return [Symbol]
+            #
+            # @api public
+            option :name, reader: true, optional: true,
+                   default: -> r { Name.new(r.class.register_as, r.class.dataset) }
+          end
 
           # Set dataset name
           #
