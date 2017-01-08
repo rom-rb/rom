@@ -1,5 +1,7 @@
 require 'dry/core/class_attributes'
 
+require 'rom/transaction'
+
 module ROM
   # Abstract gateway class
   #
@@ -90,11 +92,7 @@ module ROM
         ROM.adapters.fetch(type)
       }
 
-      if adapter.const_defined?(:Gateway)
-        adapter.const_get(:Gateway)
-      else
-        adapter.const_get(:Repository)
-      end
+      adapter.const_get(:Gateway)
     end
 
     # Returns the adapter, defined for the class
@@ -151,6 +149,23 @@ module ROM
     # @api public
     def disconnect
       # noop
+    end
+
+    # Runs a block inside a transaction. The underlying transaction engine
+    # is adapter-specific
+    #
+    # @param [Hash] Transaction options
+    # @return The result of yielding the block or +nil+ if
+    #         the transaction was rolled back
+    #
+    # @api public
+    def transaction(opts = EMPTY_HASH, &block)
+      transaction_runner(opts).run(opts, &block)
+    end
+
+    # @api private
+    def transaction_runner(_)
+      Transaction::NoOp
     end
   end
 end

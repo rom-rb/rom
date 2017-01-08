@@ -69,6 +69,23 @@ module ROM
         complain "#{gateway_instance} must respond to dataset?"
       end
 
+      # Lint: Ensure +gateway_instance+ supports +transaction+ interface
+      #
+      # @api public
+      def lint_transaction_support
+        result = gateway_instance.transaction { 1 }
+
+        if result != 1
+          complain "#{gateway_instance} must return the result of a transaction block"
+        end
+
+        gateway_instance.transaction do |t|
+          t.rollback!
+
+          complain "#{gateway_instance} must interrupt a transaction on rollback"
+        end
+      end
+
       private
 
       # Setup gateway instance
