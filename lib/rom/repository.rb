@@ -49,14 +49,6 @@ module ROM
   #
   # @api public
   class Repository
-    # @deprecated
-    class Base < Repository
-      def self.inherited(klass)
-        super
-        Dry::Core::Deprecations.announce(self, 'inherit from Repository instead', tag: :rom)
-      end
-    end
-
     extend ClassInterface
 
     # @!attribute [r] container
