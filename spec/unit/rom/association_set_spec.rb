@@ -7,6 +7,10 @@ RSpec.describe ROM::AssociationSet do
       assoc_set.try(:users, &:done)
 
       expect(assoc).to have_received(:done)
+
+      assoc_set.try(:user, &:done)
+
+      expect(assoc).to have_received(:done)
     end
 
     it 'returns false when assoc is not found' do

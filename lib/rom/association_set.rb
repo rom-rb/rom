@@ -5,8 +5,10 @@ module ROM
   class AssociationSet < ROM::Registry
     # @api private
     def try(name, &block)
-      if key?(name)
-        yield(self[name])
+      key = name.to_sym
+
+      if key?(key) || key?(singularize(key))
+        yield(self[key])
       else
         false
       end
@@ -19,8 +21,12 @@ module ROM
       if key?(key)
         super
       else
-        super(Dry::Core::Inflector.singularize(key))
+        super(singularize(key))
       end
+    end
+
+    def singularize(key)
+      Dry::Core::Inflector.singularize(key).to_sym
     end
   end
 end
