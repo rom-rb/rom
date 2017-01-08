@@ -121,6 +121,16 @@ RSpec.describe 'ROM repository' do
     expect(post.labels.map(&:name)).to eql(%w(red blue))
   end
 
+  it 'loads multiple child relations' do
+    user = repo.users.combine_children(many: [repo.posts, repo.tasks]).where(name: 'Jane').one
+
+    expect(user.name).to eql('Jane')
+    expect(user.posts.size).to be(1)
+    expect(user.posts[0].title).to eql('Hello From Jane')
+    expect(user.tasks.size).to be(1)
+    expect(user.tasks[0].title).to eql('Jane Task')
+  end
+
   context 'not common naming conventions' do
     it 'still loads nested relations' do
       comments = comments_repo.comments_with_likes.to_a

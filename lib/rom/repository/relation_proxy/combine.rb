@@ -167,7 +167,7 @@ module ROM
               when Array
                 children.each_with_object({}) { |child, r|
                   keys = combine_keys(relation, child, :children)
-                  tuple_key = parent.combine_tuple_key(type)
+                  tuple_key = child.combine_tuple_key(type)
                   curried = combine_from_assoc_with_fallback(child.name, child, keys)
                   r[tuple_key] = [curried, keys]
                 }
