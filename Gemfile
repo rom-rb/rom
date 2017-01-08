@@ -8,7 +8,7 @@ gem 'rom', git: 'https://github.com/rom-rb/rom.git', branch: 'master'
 gem 'rom-mapper', git: 'https://github.com/rom-rb/rom-mapper.git', branch: 'master'
 
 group :development, :test do
-  gem 'rom-sql', git: 'https://github.com/rom-rb/rom-sql.git', branch: 'master'
+  gem 'rom-sql', git: 'https://github.com/rom-rb/rom-sql.git', branch: 'feature/transactions'
 end
 
 group :development do
