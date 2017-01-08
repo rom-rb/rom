@@ -8,16 +8,22 @@ RSpec.describe ROM::Container do
     configuration
 
     users = Class.new(ROM::Relation[:memory]) do
-      register_as :users
-      dataset :users
+      schema(:users) do
+        attribute :name, ROM::Types::String
+        attribute :email, ROM::Types::String
+      end
+
       def by_name(name)
         restrict(name: name).project(:name)
       end
     end
 
     tasks = Class.new(ROM::Relation[:memory]) do
-      register_as :tasks
-      dataset :tasks
+      schema(:tasks) do
+        attribute :name, ROM::Types::String
+        attribute :title, ROM::Types::String
+        attribute :priority, ROM::Types::Int
+      end
     end
 
     create_user = Class.new(ROM::Commands::Create[:memory]) do

@@ -13,12 +13,13 @@ module ROM
 
     # @api public
     class DSL < BasicObject
-      attr_reader :relation, :attributes, :inferrer
+      attr_reader :relation, :attributes, :inferrer, :schema_class
 
       # @api private
-      def initialize(relation, inferrer, &block)
+      def initialize(relation, schema_class: Schema, inferrer: Schema::DEFAULT_INFERRER, &block)
         @relation = relation
         @inferrer = inferrer
+        @schema_class = schema_class
         @attributes = {}
 
         if block
@@ -48,7 +49,7 @@ module ROM
 
       # @api private
       def call
-        Schema.define(relation, attributes: attributes.values, inferrer: inferrer)
+        schema_class.define(relation, attributes: attributes.values, inferrer: inferrer)
       end
     end
   end

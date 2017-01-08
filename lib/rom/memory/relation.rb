@@ -1,4 +1,5 @@
 require 'rom/memory/types'
+require 'rom/memory/schema'
 
 module ROM
   module Memory
@@ -14,8 +15,20 @@ module ROM
       include Memory
 
       adapter :memory
+      schema_class Memory::Schema
 
-      forward :take, :join, :project, :restrict, :order
+      forward :take, :join, :restrict, :order
+
+      # Project a relation with provided attribute names
+      #
+      # @param [*Array] names A list with attribute names
+      #
+      # @return [Memory::Relation]
+      #
+      # @api public
+      def project(*names)
+        schema.project(*names).(self)
+      end
 
       # Insert tuples into the relation
       #

@@ -15,7 +15,7 @@ RSpec.describe ROM::Relation, '.schema' do
 
     relation_name = ROM::Relation::Name[:test_users]
 
-    schema = ROM::Schema.define(
+    schema = ROM::Memory::Schema.define(
       ROM::Relation::Name.new(:test_users),
       attributes: [
         ROM::Memory::Types::Int.meta(primary_key: true, name: :id, source: relation_name),

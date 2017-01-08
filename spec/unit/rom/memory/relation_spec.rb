@@ -5,7 +5,15 @@ require 'rom/memory/dataset'
 require 'rom/memory/relation'
 
 RSpec.describe ROM::Memory::Relation do
-  subject(:relation) { ROM::Memory::Relation.new(dataset) }
+  subject(:relation) do
+    Class.new(ROM::Memory::Relation) do
+      schema do
+        attribute :name, ROM::Types::String
+        attribute :email, ROM::Types::String
+        attribute :age, ROM::Types::Int
+      end
+    end.new(dataset) 
+  end
 
   let(:dataset) do
     ROM::Memory::Dataset.new([
@@ -30,7 +38,11 @@ RSpec.describe ROM::Memory::Relation do
 
   describe '#project' do
     it 'projects tuples with the provided keys' do
-      expect(relation.project(:name, :age)).to match_array([
+      projected = relation.project(:name, :age)
+
+      expect(projected.schema).to eql(relation.schema.project(:name, :age))
+
+      expect(projected).to match_array([
         { name: 'Jane', age: 10 },
         { name: 'Jade', age: 11 },
         { name: 'Joe',  age: 12 },

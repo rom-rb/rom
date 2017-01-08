@@ -30,7 +30,7 @@ module ROM
         end
 
         klass.extend Dry::Core::ClassAttributes
-        klass.defines :adapter
+        klass.defines :adapter, :schema_class
 
         # Extend with functionality required by adapters *only* if this is a direct
         # descendant of an adapter-specific relation subclass
@@ -44,6 +44,7 @@ module ROM
 
           gateway :default
           schema_dsl Schema::DSL
+          schema_class Schema
           schema_inferrer nil
 
           dataset default_name
@@ -163,7 +164,7 @@ module ROM
 
           name = Name[register_as, self.dataset]
           inferrer = infer ? schema_inferrer : nil
-          dsl = schema_dsl.new(name, inferrer, &block)
+          dsl = schema_dsl.new(name, schema_class: schema_class, inferrer: inferrer, &block)
 
           @schema = dsl.call
         end
