@@ -65,6 +65,15 @@ RSpec.describe ROM::Repository::Root do
         expect(user.labels[0].name).to eql('green')
       end
 
+      it 'builds an aggregate with nesting level = 2' do
+        user = repo.aggregate(posts: [:labels, :author]).where(name: 'Joe').one
+
+        expect(user.name).to eql('Joe')
+        expect(user.posts.size).to be(1)
+        expect(user.posts[0].title).to eql('Hello From Joe')
+        expect(user.posts[0].labels.size).to be(1)
+      end
+
       it 'builds a command from an aggregate' do
         command = repo.command(:create, repo.aggregate(:posts))
 

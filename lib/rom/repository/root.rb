@@ -72,11 +72,7 @@ module ROM
       #
       # @api public
       def aggregate(*args)
-        if args[0].is_a?(Hash) && args.size == 1
-          root.combine_children(args[0])
-        else
-          root.combine(*args)
-        end
+        root.combine(*args)
       end
 
       # @overload changeset(name, *args)
