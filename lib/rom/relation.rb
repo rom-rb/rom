@@ -62,6 +62,15 @@ module ROM
       relation.schema? ? Types::Coercible::Hash.schema(relation.schema.to_h) : Hash
     }
 
+    # Return schema attribute
+    #
+    # @return [Schema::Type]
+    #
+    # @api public
+    def [](name)
+      schema[name]
+    end
+
     # Yields relation tuples
     #
     # @yield [Hash]
