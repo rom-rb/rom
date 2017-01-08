@@ -60,10 +60,28 @@ module ROM
 
           options.each do |key, value|
             if key == :one || key == :many
-              combine_opts[key].merge!(combine_opts_from_relations(value))
+              if value.is_a?(Hash)
+                value.each do |name, spec|
+                  if spec.is_a?(Array)
+                    combine_opts[key][name] = spec
+                  else
+                    _, (curried, keys) = combine_opts_from_relations(spec).to_a[0]
+                    combine_opts[key][name] = [curried, keys]
+                  end
+                end
+              else
+                _, (curried, keys) = combine_opts_from_relations(value).to_a[0]
+                combine_opts[key][curried.combine_tuple_key(key)] = [curried, keys]
+              end
             else
-              result, curried, keys = combine_opts_for_assoc(key, value)
-              combine_opts[result][key] = [curried, keys]
+              if value.is_a?(Array)
+                curried = combine_from_assoc(key, registry[key]).combine(*value)
+                result, _, keys = combine_opts_for_assoc(key)
+                combine_opts[result][key] = [curried, keys]
+              else
+                result, curried, keys = combine_opts_for_assoc(key, value)
+                combine_opts[result][key] = [curried, keys]
+              end
             end
           end
 
@@ -99,18 +117,21 @@ module ROM
               when Hash
                 parents.each_with_object({}) { |(name, parent), r|
                   keys = combine_keys(parent, relation, :parent)
-                  r[name] = [parent, keys]
+                  curried = combine_from_assoc_with_fallback(name, parent, keys)
+                  r[name] = [curried, keys]
                 }
               when Array
                 parents.each_with_object({}) { |parent, r|
-                  tuple_key = parent.combine_tuple_key(type)
                   keys = combine_keys(parent, relation, :parent)
-                  r[tuple_key] = [parent, keys]
+                  tuple_key = parent.combine_tuple_key(type)
+                  curried = combine_from_assoc_with_fallback(parent.name, parent, keys)
+                  r[tuple_key] = [curried, keys]
                 }
               else
-                tuple_key = parents.combine_tuple_key(type)
                 keys = combine_keys(parents, relation, :parent)
-                { tuple_key => [parents, keys] }
+                tuple_key = parents.combine_tuple_key(type)
+                curried = combine_from_assoc_with_fallback(parents.name, parents, keys)
+                { tuple_key => [curried, keys] }
               end
           end
 
@@ -140,18 +161,21 @@ module ROM
               when Hash
                 children.each_with_object({}) { |(name, child), r|
                   keys = combine_keys(relation, child, :children)
-                  r[name] = [child, keys]
+                  curried = combine_from_assoc_with_fallback(name, child, keys)
+                  r[name] = [curried, keys]
                 }
               when Array
-                parents.each_with_object({}) { |child, r|
-                  tuple_key = parent.combine_tuple_key(type)
+                children.each_with_object({}) { |child, r|
                   keys = combine_keys(relation, child, :children)
-                  r[tuple_key] = [parent, keys]
+                  tuple_key = parent.combine_tuple_key(type)
+                  curried = combine_from_assoc_with_fallback(child.name, child, keys)
+                  r[tuple_key] = [curried, keys]
                 }
               else
-                tuple_key = children.combine_tuple_key(type)
                 keys = combine_keys(relation, children, :children)
-                { tuple_key => [children, keys] }
+                curried = combine_from_assoc_with_fallback(children.name, children, keys)
+                tuple_key = children.combine_tuple_key(type)
+                { tuple_key => [curried, keys] }
               end
           end
 
@@ -187,15 +211,30 @@ module ROM
         # and this mapping is used by `combine` to build a full relation graph
         #
         # @api private
-        def combine_opts_from_relations(relations)
-          relations.each_with_object({}) do |(name, (other, keys)), h|
-            h[name] =
-              if other.curried?
-                [other, keys]
-              else
-                rel = combine_from_assoc(name, other) { other.combine_method(relation, keys) }
-                [rel, keys]
-              end
+        def combine_opts_from_relations(*relations)
+          relations.each_with_object({}) do |spec, h|
+            if spec.is_a?(Array)
+              name, (other, keys) = spec
+
+              h[name] =
+                if other.curried?
+                  [other, keys]
+                else
+                  [combine_from_assoc_with_fallback(name, other, keys), keys]
+                end
+            else
+              # We assume it's a child relation
+              keys = combine_keys(relation, spec, :children)
+              rel = combine_from_assoc_with_fallback(spec.name, spec, keys)
+              h[spec.name.relation] = [rel, keys]
+            end
+          end
+        end
+
+        # @api private
+        def combine_from_assoc_with_fallback(name, other, keys)
+          combine_from_assoc(name, other) do
+            other.combine_method(relation, keys)
           end
         end
 
@@ -207,6 +246,7 @@ module ROM
         #
         # @api private
         def combine_from_assoc(name, other, &fallback)
+          return other if other.curried?
           associations.try(name) { |assoc| other.for_combine(assoc) } or fallback.call
         end
 
@@ -216,7 +256,7 @@ module ROM
         # This is used when a flat list of association names was passed to `combine`
         #
         # @api private
-        def combine_opts_for_assoc(name, opts)
+        def combine_opts_for_assoc(name, opts = nil)
           assoc = relation.associations[name]
           curried = registry[assoc.target.relation].for_combine(assoc)
           curried = curried.combine(opts) unless opts.nil?
