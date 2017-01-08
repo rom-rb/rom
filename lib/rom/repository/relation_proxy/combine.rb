@@ -213,21 +213,10 @@ module ROM
         # @api private
         def combine_opts_from_relations(*relations)
           relations.each_with_object({}) do |spec, h|
-            if spec.is_a?(Array)
-              name, (other, keys) = spec
-
-              h[name] =
-                if other.curried?
-                  [other, keys]
-                else
-                  [combine_from_assoc_with_fallback(name, other, keys), keys]
-                end
-            else
-              # We assume it's a child relation
-              keys = combine_keys(relation, spec, :children)
-              rel = combine_from_assoc_with_fallback(spec.name, spec, keys)
-              h[spec.name.relation] = [rel, keys]
-            end
+            # We assume it's a child relation
+            keys = combine_keys(relation, spec, :children)
+            rel = combine_from_assoc_with_fallback(spec.name, spec, keys)
+            h[spec.name.relation] = [rel, keys]
           end
         end
 
