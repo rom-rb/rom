@@ -10,12 +10,29 @@ RSpec.describe ROM::Changeset, '.map' do
 
   let(:relation) { double(:relation) }
 
-  let(:user_data) do
-    { name: 'Jane', address: { street: 'Street 1', city: 'NYC', country: 'US' } }
+  context 'with a hash' do
+    let(:user_data) do
+      { name: 'Jane', address: { street: 'Street 1', city: 'NYC', country: 'US' } }
+    end
+
+    it 'sets up custom data pipe' do
+      expect(changeset.to_h)
+        .to eql(name: 'Jane', address_street: 'Street 1', address_city: 'NYC', address_country: 'US' )
+    end
   end
 
-  it 'sets up custom data pipe' do
-    expect(changeset.to_h)
-      .to eql(name: 'Jane', address_street: 'Street 1', address_city: 'NYC', address_country: 'US' )
+  context 'with an array' do
+    let(:user_data) do
+      [{ name: 'Jane', address: { street: 'Street 1', city: 'NYC', country: 'US' } },
+       { name: 'Joe', address: { street: 'Street 2', city: 'KRK', country: 'PL' } }]
+    end
+
+    it 'sets up custom data pipe' do
+      expect(changeset.to_a)
+        .to eql([
+                  { name: 'Jane', address_street: 'Street 1', address_city: 'NYC', address_country: 'US' },
+                  { name: 'Joe', address_street: 'Street 2', address_city: 'KRK', address_country: 'PL' }
+                ])
+    end
   end
 end
