@@ -1,5 +1,5 @@
-require 'concurrent/map'
 require 'dry/core/inflector'
+require 'dry/core/cache'
 
 require 'rom/commands'
 require 'rom/repository/command_proxy'
@@ -14,6 +14,8 @@ module ROM
     #
     # @api private
     class CommandCompiler
+      extend Dry::Core::Cache
+
       # Return a specific command type for a given adapter and relation AST
       #
       # This class holds its own registry where all generated commands are being
@@ -34,7 +36,7 @@ module ROM
       #
       # @api private
       def self.[](*args)
-        cache.fetch_or_store(args.hash) do
+        fetch_or_store(args.hash) do
           container, type, adapter, ast, plugins, options = args
 
           graph_opts = new(type, adapter, container, registry, plugins, options).visit(ast)
@@ -49,11 +51,6 @@ module ROM
             command
           end
         end
-      end
-
-      # @api private
-      def self.cache
-        @__cache__ ||= Concurrent::Map.new
       end
 
       # @api private
