@@ -106,7 +106,7 @@ module ROM
         response = data.__send__(meth, *args, &block)
 
         if response.is_a?(Hash)
-          self.class.new(relation, options.merge(data: response))
+          with(options.merge(data: response))
         else
           response
         end
