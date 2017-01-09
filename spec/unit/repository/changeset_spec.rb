@@ -75,13 +75,13 @@ RSpec.describe ROM::Repository, '#changeset' do
 
   describe 'custom changeset class' do
     let(:changeset) do
-      repo.changeset(changeset_class[:users]).with(data: {})
+      repo.changeset(changeset_class[:users]).data({})
     end
 
     let(:changeset_class) do
       Class.new(ROM::Changeset::Create) do
         def to_h
-          data.merge(name: 'Jane')
+          __data__.merge(name: 'Jane')
         end
       end
     end

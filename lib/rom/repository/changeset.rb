@@ -16,9 +16,9 @@ module ROM
     #   @return [Relation] The changeset relation
     param :relation
 
-    # @!attribute [r] data
+    # @!attribute [r] __data__
     #   @return [Hash] The relation data
-    option :data, reader: true, optional: true
+    option :__data__, reader: true, optional: true, default: proc { nil }
 
     # @!attribute [r] pipe
     #   @return [Changeset::Pipe] data transformation pipe
@@ -78,7 +78,7 @@ module ROM
     #
     # @api public
     def to_h
-      pipe.call(data)
+      pipe.call(__data__)
     end
     alias_method :to_hash, :to_h
 
@@ -93,20 +93,31 @@ module ROM
       self.class.new(relation, options.merge(new_options))
     end
 
+    # Return changeset with data
+    #
+    # @param [Hash] data
+    #
+    # @return [Changeset]
+    #
+    # @api public
+    def data(data)
+      with(__data__: data)
+    end
+
     private
 
     # @api private
     def respond_to_missing?(meth, include_private = false)
-      super || data.respond_to?(meth)
+      super || __data__.respond_to?(meth)
     end
 
     # @api private
     def method_missing(meth, *args, &block)
-      if data.respond_to?(meth)
-        response = data.__send__(meth, *args, &block)
+      if __data__.respond_to?(meth)
+        response = __data__.__send__(meth, *args, &block)
 
         if response.is_a?(Hash)
-          with(options.merge(data: response))
+          with(options.merge(__data__: response))
         else
           response
         end

@@ -5,7 +5,7 @@ RSpec.describe ROM::Changeset, '.map' do
         unwrap :address
         rename_keys street: :address_street, city: :address_city, country: :address_country
       end
-    end.new(relation, data: user_data)
+    end.new(relation, __data__: user_data)
   end
 
   let(:relation) { double(:relation) }

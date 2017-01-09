@@ -188,9 +188,9 @@ module ROM
         relation = relations[name]
 
         if pk
-          Changeset::Update.new(relation, opts.merge(data: data, primary_key: pk))
+          Changeset::Update.new(relation, opts.merge(__data__: data, primary_key: pk))
         else
-          Changeset::Create.new(relation, opts.merge(data: data))
+          Changeset::Create.new(relation, opts.merge(__data__: data))
         end
       end
     end
