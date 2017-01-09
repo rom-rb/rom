@@ -6,6 +6,7 @@ module ROM
   class Schema
     class Type < SimpleDelegator
       include Dry::Equalizer(:type)
+
       alias_method :type, :__getobj__
 
       # @api public
@@ -71,6 +72,12 @@ module ROM
           type.meta
         end
       end
+
+      # @api public
+      def inspect
+        %(#<#{self.class}[#{primitive}] #{meta.map { |k, v| "#{k}=#{v.inspect}" }.join(' ')}>)
+      end
+      alias_method :pretty_inspect, :inspect
 
       # @api public
       def eql?(other)
