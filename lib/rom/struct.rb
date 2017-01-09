@@ -15,5 +15,14 @@ module ROM
     def to_s
       "#<#{self.class}:0x#{(object_id << 1).to_s(16)}>"
     end
+
+    # Return attribute value
+    #
+    # @param [Symbol] name The attribute name
+    #
+    # @api public
+    def fetch(name)
+      __send__(name)
+    end
   end
 end

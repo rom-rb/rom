@@ -32,19 +32,23 @@ module ROM
       end
 
       # @api private
-      def command(opts = {})
+      def command
         if options[:association]
           other, assoc = options[:association]
 
           if other.is_a?(Changeset)
-            command_compiler.(:create, relation, opts.merge(mapper: false)).
-              curry(to_h) >> other.command.with_association(assoc)
+            create_command.curry(self) >> other.command.with_association(assoc)
           else
-            command_compiler.(:create, relation).with_association(assoc).curry(to_h, other.to_h)
+            create_command.with_association(assoc).curry(self, other)
           end
         else
-          command_compiler.(:create, relation, opts.merge(mapper: false)).curry(to_h)
+          create_command.curry(self)
         end
+      end
+
+      # @api private
+      def create_command
+        command_compiler.(:create, relation, mapper: false, result: result)
       end
     end
   end
