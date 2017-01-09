@@ -6,7 +6,7 @@ RSpec.describe ROM::Changeset do
     it 'returns a hash with changes' do
       expect(relation).to receive(:fetch).with(2).and_return(jane)
 
-      changeset = ROM::Changeset::Update.new(relation, data: { name: "Jane Doe" }, primary_key: 2)
+      changeset = ROM::Changeset::Update.new(relation, __data__: { name: "Jane Doe" }, primary_key: 2)
 
       expect(changeset.diff).to eql(name: "Jane Doe")
     end
@@ -16,7 +16,7 @@ RSpec.describe ROM::Changeset do
     it 'returns true when data differs from the original tuple' do
       expect(relation).to receive(:fetch).with(2).and_return(jane)
 
-      changeset = ROM::Changeset::Update.new(relation, data: { name: "Jane Doe" }, primary_key: 2)
+      changeset = ROM::Changeset::Update.new(relation, __data__: { name: "Jane Doe" }, primary_key: 2)
 
       expect(changeset).to be_diff
     end
@@ -24,14 +24,14 @@ RSpec.describe ROM::Changeset do
     it 'returns false when data are equal to the original tuple' do
       expect(relation).to receive(:fetch).with(2).and_return(jane)
 
-      changeset = ROM::Changeset::Update.new(relation, data: { name: "Jane" }, primary_key: 2)
+      changeset = ROM::Changeset::Update.new(relation, __data__: { name: "Jane" }, primary_key: 2)
 
       expect(changeset).to_not be_diff
     end
   end
 
   describe 'quacks like a hash' do
-    subject(:changeset) { ROM::Changeset::Create.new(relation, data: data) }
+    subject(:changeset) { ROM::Changeset::Create.new(relation, __data__: data) }
 
     let(:data) { instance_double(Hash) }
 
@@ -47,7 +47,7 @@ RSpec.describe ROM::Changeset do
       new_changeset = changeset.merge(foo: 'bar')
 
       expect(new_changeset).to be_instance_of(ROM::Changeset::Create)
-      expect(new_changeset.options).to eql(changeset.options.merge(data: { foo: 'bar' }))
+      expect(new_changeset.options).to eql(changeset.options.merge(__data__: { foo: 'bar' }))
       expect(new_changeset.to_h).to eql(foo: 'bar')
     end
 

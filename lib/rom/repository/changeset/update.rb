@@ -71,7 +71,7 @@ module ROM
       def diff
         @diff ||=
           begin
-            new_tuple = data.to_a
+            new_tuple = __data__.to_a
             ori_tuple = original.to_a
 
             Hash[new_tuple - (new_tuple & ori_tuple)]
