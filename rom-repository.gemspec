@@ -16,7 +16,7 @@ Gem::Specification.new do |gem|
   gem.license       = 'MIT'
 
   gem.add_runtime_dependency 'rom', '~> 3.0.0.beta'
-  gem.add_runtime_dependency 'rom-mapper', '~> 0.4'
+  gem.add_runtime_dependency 'rom-mapper', '~> 0.5.0.beta'
   gem.add_runtime_dependency 'dry-core', '~> 0.2', '>= 0.2.1'
   gem.add_runtime_dependency 'dry-struct', '~> 0.1'
 
