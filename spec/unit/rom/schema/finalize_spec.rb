@@ -32,6 +32,19 @@ RSpec.describe ROM::Schema, '#finalize!' do
       end
     end
 
+    context 'when inferred attributes are overridden' do
+      let(:attributes) do
+        [define_type(:id, :Int),
+         define_type(:age, :Int),
+         define_type(:name, :String).meta(custom: true)]
+      end
+
+      it 'respects overridden attributes' do
+        expect(schema.finalize!.map(&:name)).to eql(%i[id age name])
+        expect(schema[:name].meta[:custom]).to be(true)
+      end
+    end
+
     context 'when some attributes are missing' do
       let(:attributes) do
         []

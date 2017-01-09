@@ -232,7 +232,12 @@ module ROM
       return self if frozen?
 
       inferred, missing = inferrer.call(name, gateway)
-      attributes.concat(self.class.attributes(inferred, type_class))
+
+      attr_names = map(&:name)
+      inferred_attrs = self.class.attributes(inferred, type_class).
+                         reject { |attr| attr_names.include?(attr.name) }
+
+      attributes.concat(inferred_attrs)
 
       missing_attributes = missing - map(&:name)
 
