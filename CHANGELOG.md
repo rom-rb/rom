@@ -5,6 +5,12 @@
 * New `Repository#session` API for building transactions using changesets (solnic)
 * Support for inferring typed structs based on relation schemas (solnic)
 * `aggregate` and `combine` support nested association specs, ie `combine(users: [tasks: :tags])` (beauby)
+* Changesets support data as arrays too (solnic)
+* Changesets support custom command types via `Changeset#with(command_type: :my_command)` (solnic)
+* `Changeset::Delete` was added and is accessible via `repo.changeset(delete: some_relation.by_pk(1))` (solnic)
+* Ability to define custom changeset classes that can be instantiated via `repo.changeset(MyChangesetClass[:rel_name]).data(some_data)` where `MyChangesetClass` inherits from a core changeset class (solnic)
+* `Changeset.map` which accepts a block and exposes a DSL for data transformations (all [transproc hash methods](https://github.com/solnic/transproc)) are available (solnic)
+* `Changeset#associate` method that accepts another changeset or parent data and an association identifier, ie `post_changeset.associate(user, :author)` (solnic)
 
 ### Changed
 
