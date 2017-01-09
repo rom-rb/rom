@@ -19,8 +19,8 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency 'dry-equalizer', '~> 0.2'
   gem.add_runtime_dependency 'dry-types', '~> 0.8'
   gem.add_runtime_dependency 'dry-core', '~> 0.2', '>= 0.2.3'
-  gem.add_runtime_dependency 'rom-mapper', '~> 0.4.0'
   gem.add_runtime_dependency 'dry-initializer', '~> 0.10', '>= 0.10.2'
+  gem.add_runtime_dependency 'rom-mapper', '~> 0.5.0.beta'
 
   gem.add_development_dependency 'rake', '~> 10.3'
   gem.add_development_dependency 'rspec', '~> 3.5'
