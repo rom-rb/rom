@@ -205,6 +205,11 @@ module ROM
       container.gateways[:default].transaction(&block)
     end
 
+    # @api public
+    def inspect
+      %(#<#{self.class} relations=[#{self.class.relations.map(&:inspect).join(' ')}]>)
+    end
+
     private
 
     # Local command cache
