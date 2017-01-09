@@ -19,6 +19,13 @@ RSpec.describe 'loading proxy' do
     ROM::Repository::RelationProxy.new(rom.relation(:tags), name: :tags)
   end
 
+  describe '#inspect' do
+    specify do
+      expect(users.inspect).
+        to eql("#<ROM::Relation[Users] name=users dataset=#{users.dataset.inspect}>")
+    end
+  end
+
   describe '#each' do
     it 'yields loaded structs' do
       result = []

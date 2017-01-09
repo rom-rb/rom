@@ -136,6 +136,11 @@ module ROM
         relation.respond_to?(meth) || super
       end
 
+      # @api public
+      def inspect
+        %(#<#{relation.class} name=#{name} dataset=#{dataset.inspect}>)
+      end
+
       private
 
       # @api private
