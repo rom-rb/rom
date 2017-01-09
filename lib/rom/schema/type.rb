@@ -52,6 +52,7 @@ module ROM
       def aliased(name)
         meta(alias: name)
       end
+      alias_method :as, :aliased
 
       # @api public
       def prefixed(prefix = source.dataset)

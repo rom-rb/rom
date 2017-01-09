@@ -23,6 +23,16 @@ RSpec.describe ROM::Schema::Type do
     end
   end
 
+  describe '#aliased' do
+    subject(:type) do
+      ROM::Schema::Type.new(ROM::Types::String).meta(name: :user_name)
+    end
+
+    specify do
+      expect(type.as(:name).meta[:alias]).to eql(:name)
+    end
+  end
+
   describe '#method_missing' do
     subject(:type) do
       ROM::Schema::Type.new(ROM::Types::Int).meta(name: :id, primary_key: true)
