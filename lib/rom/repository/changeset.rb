@@ -30,6 +30,10 @@ module ROM
     #   @return [Proc] a proc that can compile a command (typically provided by a repo)
     option :command_compiler, reader: true, optional: true
 
+    # @!attribute [r] command_type
+    #   @return [Symbol] a custom command identifier
+    option :command_type, reader: true, optional: true, default: -> changeset { changeset.default_command_type }
+
     # Create a changeset class preconfigured for a specific relation
     #
     # @example

@@ -5,6 +5,10 @@ RSpec.describe ROM::Changeset, '.map' do
         unwrap :address
         rename_keys street: :address_street, city: :address_city, country: :address_country
       end
+
+      def default_command_type
+        :test
+      end
     end.new(relation, __data__: user_data)
   end
 

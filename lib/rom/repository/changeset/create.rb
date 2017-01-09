@@ -48,7 +48,12 @@ module ROM
 
       # @api private
       def create_command
-        command_compiler.(:create, relation, mapper: false, result: result)
+        command_compiler.(command_type, relation, mapper: false, result: result)
+      end
+
+      # @api private
+      def default_command_type
+        :create
       end
     end
   end

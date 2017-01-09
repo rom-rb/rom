@@ -70,6 +70,32 @@ RSpec.describe ROM::Repository, '#session' do
     end
   end
 
+  describe 'with :custom command', :postgres do
+    before do
+      configuration.commands(:users) do
+        define(:create) do
+          register_as :custom
+        end
+      end
+    end
+
+    let(:user_changeset) do
+      repo.changeset(:users, name: 'John').with(command_type: :custom)
+    end
+
+    it 'saves data in a transaction' do
+      repo.session do |t|
+        t.add(user_changeset)
+      end
+
+      user = repo.users.first
+
+      expect(user.id).to_not be(nil)
+      expect(user.name).to eql('John')
+      expect(repo.users.count).to be(1)
+    end
+  end
+
   describe 'creating a user with its posts' do
     let(:posts_changeset) do
       repo.changeset(:posts, [{ title: 'Post 1' }, { title: 'Post 2' }])

@@ -80,7 +80,12 @@ module ROM
 
       # @api private
       def command
-        command_compiler.(:update, relation, mapper: false).curry(to_h) if diff?
+        command_compiler.(command_type, relation, mapper: false).curry(to_h) if diff?
+      end
+
+      # @api private
+      def default_command_type
+        :update
       end
     end
   end

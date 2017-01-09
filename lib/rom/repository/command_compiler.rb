@@ -14,8 +14,6 @@ module ROM
     #
     # @api private
     class CommandCompiler
-      SUPPORTED_TYPES = %i[create update delete].freeze
-
       # Return a specific command type for a given adapter and relation AST
       #
       # This class holds its own registry where all generated commands are being
@@ -39,18 +37,16 @@ module ROM
         cache.fetch_or_store(args.hash) do
           container, type, adapter, ast, plugins, options = args
 
-          unless SUPPORTED_TYPES.include?(type)
-            raise ArgumentError, "#{type.inspect} is not a supported command type"
-          end
-
           graph_opts = new(type, adapter, container, registry, plugins, options).visit(ast)
 
           command = ROM::Commands::Graph.build(registry, graph_opts)
 
           if command.graph?
             CommandProxy.new(command)
-          else
+          elsif command.lazy?
             command.unwrap
+          else
+            command
           end
         end
       end
@@ -65,9 +61,9 @@ module ROM
         @__registry__ ||= Hash.new { |h, k| h[k] = {} }
       end
 
-      # @!attribute [r] type
-      #   @return [Symbol] The command type
-      attr_reader :type
+      # @!attribute [r] id
+      #   @return [Symbol] The command type registry identifier
+      attr_reader :id
 
       # @!attribute [r] adapter
       #   @return [Symbol] The adapter identifier ie :sql or :http
@@ -90,12 +86,20 @@ module ROM
       attr_reader :options
 
       # @api private
-      def initialize(type, adapter, container, registry, plugins, options)
-        @type = Commands.const_get(Dry::Core::Inflector.classify(type))[adapter]
+      def initialize(id, adapter, container, registry, plugins, options)
+        @id = id
+        @adapter = adapter
         @registry = registry
         @container = container
         @plugins = Array(plugins)
         @options = options
+      end
+
+      # @api private
+      def type
+        @_type ||= Commands.const_get(Dry::Core::Inflector.classify(id))[adapter]
+      rescue NameError
+        nil
       end
 
       # @api private
@@ -118,12 +122,17 @@ module ROM
             { Dry::Core::Inflector.singularize(name).to_sym => name }
           end
 
-        register_command(name, type, meta, parent_relation)
+        if type
+          register_command(name, type, meta, parent_relation)
 
-        if other.size > 0
-          [mapping, [type, other]]
+          if other.size > 0
+            [mapping, [type, other]]
+          else
+            [mapping, type]
+          end
         else
-          [mapping, type]
+          registry[name][id] = container.commands[name][id].with(options)
+          [mapping, id]
         end
       end
 

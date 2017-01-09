@@ -215,10 +215,4 @@ RSpec.describe ROM::Repository, '#command' do
       expect(repo.users.by_pk(3).one).to be(nil)
     end
   end
-
-  it 'raises error when unsupported type is used' do
-    expect { repo.command(:oops, repo.users) }.to raise_error(
-      ArgumentError, /oops/
-    )
-  end
 end
