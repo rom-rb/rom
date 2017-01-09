@@ -4,10 +4,14 @@ require 'dry/types/decorator'
 
 module ROM
   class Schema
-    class Type < SimpleDelegator
+    class Type
       include Dry::Equalizer(:type)
 
-      alias_method :type, :__getobj__
+      attr_reader :type
+
+      def initialize(type)
+        @type = type
+      end
 
       # @api public
       def primary_key?
@@ -75,13 +79,35 @@ module ROM
 
       # @api public
       def inspect
-        %(#<#{self.class}[#{primitive}] #{meta.map { |k, v| "#{k}=#{v.inspect}" }.join(' ')}>)
+        %(#<#{self.class}[#{type.name}] #{meta.map { |k, v| "#{k}=#{v.inspect}" }.join(' ')}>)
       end
       alias_method :pretty_inspect, :inspect
 
       # @api public
       def eql?(other)
         other.is_a?(self.class) ? super : type.eql?(other)
+      end
+
+      # @api private
+      def respond_to_missing?(name, include_private = false)
+        type.respond_to?(name) || super
+      end
+
+      private
+
+      # @api private
+      def method_missing(meth, *args, &block)
+        if type.respond_to?(meth)
+          response = type.__send__(meth, *args, &block)
+
+          if response.is_a?(type.class)
+            self.class.new(type)
+          else
+            response
+          end
+        else
+          super
+        end
       end
     end
   end
