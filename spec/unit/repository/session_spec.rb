@@ -95,7 +95,7 @@ RSpec.describe ROM::Repository, '#session' do
 
   describe 'creating a user with its posts and their labels' do
     let(:posts_data) do
-      [{ title: 'Post 1' }]
+      { title: 'Post 1' }
     end
 
     let(:posts_changeset) do

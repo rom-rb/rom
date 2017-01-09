@@ -33,7 +33,7 @@ RSpec.describe ROM::Changeset do
   describe 'quacks like a hash' do
     subject(:changeset) { ROM::Changeset::Create.new(relation, __data__: data) }
 
-    let(:data) { instance_double(Hash) }
+    let(:data) { instance_double(Hash, class: Hash) }
 
     it 'delegates to its data hash' do
       expect(data).to receive(:[]).with(:name).and_return('Jane')
@@ -49,6 +49,32 @@ RSpec.describe ROM::Changeset do
       expect(new_changeset).to be_instance_of(ROM::Changeset::Create)
       expect(new_changeset.options).to eql(changeset.options.merge(__data__: { foo: 'bar' }))
       expect(new_changeset.to_h).to eql(foo: 'bar')
+    end
+
+    it 'raises NoMethodError when an unknown message was sent' do
+      expect { changeset.not_here }.to raise_error(NoMethodError, /not_here/)
+    end
+  end
+
+  describe 'quacks like an array' do
+    subject(:changeset) { ROM::Changeset::Create.new(relation, __data__: data) }
+
+    let(:data) { instance_double(Array, class: Array) }
+
+    it 'delegates to its data hash' do
+      expect(data).to receive(:[]).with(1).and_return('Jane')
+
+      expect(changeset[1]).to eql('Jane')
+    end
+
+    it 'maintains its own type' do
+      expect(data).to receive(:+).with([1, 2]).and_return([1, 2])
+
+      new_changeset = changeset + [1, 2]
+
+      expect(new_changeset).to be_instance_of(ROM::Changeset::Create)
+      expect(new_changeset.options).to eql(changeset.options.merge(__data__: [1, 2]))
+      expect(new_changeset.to_a).to eql([1, 2])
     end
 
     it 'raises NoMethodError when an unknown message was sent' do

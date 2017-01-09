@@ -37,13 +37,13 @@ module ROM
       # @api private
       def self.[](*args)
         cache.fetch_or_store(args.hash) do
-          container, type, adapter, ast, plugins = args
+          container, type, adapter, ast, plugins, options = args
 
           unless SUPPORTED_TYPES.include?(type)
             raise ArgumentError, "#{type.inspect} is not a supported command type"
           end
 
-          graph_opts = new(type, adapter, container, registry, plugins).visit(ast)
+          graph_opts = new(type, adapter, container, registry, plugins, options).visit(ast)
 
           command = ROM::Commands::Graph.build(registry, graph_opts)
 
@@ -85,12 +85,17 @@ module ROM
       #   @return [Array<Symbol>] a list of optional plugins that will be enabled for commands
       attr_reader :plugins
 
+      # @!attribute [r] options
+      #   @return [Hash] Additional command options
+      attr_reader :options
+
       # @api private
-      def initialize(type, adapter, container, registry, plugins)
+      def initialize(type, adapter, container, registry, plugins, options)
         @type = Commands.const_get(Dry::Core::Inflector.classify(type))[adapter]
         @registry = registry
         @container = container
         @plugins = Array(plugins)
+        @options = options
       end
 
       # @api private
@@ -150,7 +155,7 @@ module ROM
         relation = container.relations[rel_name]
 
         type.create_class(rel_name, type) do |klass|
-          klass.result(meta.fetch(:combine_type, :one))
+          klass.result(meta.fetch(:combine_type, result))
 
           if meta[:combine_type]
             setup_associates(klass, relation, meta, parent_relation)
@@ -160,6 +165,15 @@ module ROM
 
           registry[rel_name][type] = klass.build(relation, input: relation.schema_hash)
         end
+      end
+
+      # Return default result type
+      #
+      # @return [Symbol]
+      #
+      # @api private
+      def result
+        options.fetch(:result, :one)
       end
 
       # Sets up `associates` plugin for a given command class and relation

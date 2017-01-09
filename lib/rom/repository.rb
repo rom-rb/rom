@@ -242,7 +242,7 @@ module ROM
         mapper_instance = mappers[ast]
       end
 
-      command = CommandCompiler[container, type, adapter, ast, use]
+      command = CommandCompiler[container, type, adapter, ast, use, opts]
 
       if mapper_instance
         command >> mapper_instance

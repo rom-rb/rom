@@ -66,8 +66,12 @@ module ROM
     # @return [Changeset]
     #
     # @api public
-    def map(*steps)
-      with(pipe: steps.reduce(pipe) { |a, e| a >> pipe[e] })
+    def map(*steps, &block)
+      if block
+        __data__.map { |*args| yield(*args) }
+      else
+        with(pipe: steps.reduce(pipe) { |a, e| a >> pipe[e] })
+      end
     end
 
     # Coerce changeset to a hash
@@ -81,6 +85,18 @@ module ROM
       pipe.call(__data__)
     end
     alias_method :to_hash, :to_h
+
+    # Coerce changeset to an array
+    #
+    # This will send the data through the pipe
+    #
+    # @return [Array]
+    #
+    # @api public
+    def to_a
+      result == :one ? [to_h] : __data__.map { |element| pipe.call(element) }
+    end
+    alias_method :to_ary, :to_a
 
     # Return a new changeset with updated options
     #
@@ -104,6 +120,15 @@ module ROM
       with(__data__: data)
     end
 
+    # Return command result type
+    #
+    # @return [Symbol]
+    #
+    # @api private
+    def result
+      __data__.is_a?(Hash) ? :one : :many
+    end
+
     private
 
     # @api private
@@ -116,8 +141,8 @@ module ROM
       if __data__.respond_to?(meth)
         response = __data__.__send__(meth, *args, &block)
 
-        if response.is_a?(Hash)
-          with(options.merge(__data__: response))
+        if response.is_a?(__data__.class)
+          with(__data__: response)
         else
           response
         end
