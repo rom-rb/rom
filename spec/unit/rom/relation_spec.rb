@@ -219,14 +219,15 @@ RSpec.describe ROM::Relation do
 
   describe '#schema' do
     it 'returns an empty schema by default' do
-      relation = Class.new(ROM::Relation[:memory]) {
+      relation = Class.new(ROM::Relation) {
         def self.name
-          'SomeRelation'
+          'Test::SomeRelation'
         end
       }.new([])
 
       expect(relation.schema).to be_empty
-      expect(relation.schema.name).to be(:some_relation)
+      expect(relation.schema.inferrer).to be(ROM::Schema::DEFAULT_INFERRER)
+      expect(relation.schema.name).to be(:test_some_relation)
       expect(relation.schema?).to be(false)
     end
   end

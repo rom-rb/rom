@@ -30,7 +30,11 @@ module ROM
         end
 
         klass.extend Dry::Core::ClassAttributes
-        klass.defines :adapter, :schema_class
+        klass.defines :adapter, :schema_class, :schema_inferrer, :schema_dsl
+
+        klass.schema_dsl Schema::DSL
+        klass.schema_class Schema
+        klass.schema_inferrer Schema::DEFAULT_INFERRER
 
         # Extend with functionality required by adapters *only* if this is a direct
         # descendant of an adapter-specific relation subclass
@@ -39,13 +43,9 @@ module ROM
         klass.class_eval do
           use :registry_reader
 
-          defines :gateway, :dataset, :dataset_proc, :register_as,
-                  :schema_dsl, :schema_inferrer
+          defines :gateway, :dataset, :dataset_proc, :register_as
 
           gateway :default
-          schema_dsl Schema::DSL
-          schema_class Schema
-          schema_inferrer nil
 
           dataset default_name
 
@@ -281,6 +281,11 @@ module ROM
       # @api private
       def schemas
         @schemas ||= {}
+      end
+
+      # @api private
+      def default_schema
+        schema_class.define(default_name)
       end
 
       # Hook to finalize a relation after its instance was created
