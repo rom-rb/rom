@@ -284,8 +284,9 @@ module ROM
       end
 
       # @api private
-      def default_schema
-        schema_class.define(default_name)
+      def default_schema(relation)
+        relation_class = relation.class
+        relation_class.schema || relation_class.schema_class.define(relation_class.default_name)
       end
 
       # Hook to finalize a relation after its instance was created

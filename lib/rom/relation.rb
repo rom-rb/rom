@@ -51,9 +51,7 @@ module ROM
     #                    schema (if it was defined) and sets an empty one as
     #                    the fallback
     #   @api public
-    option :schema, reader: true, optional: true, default: -> relation {
-      relation.class.schema || relation.class.default_schema 
-    }
+    option :schema, reader: true, default: method(:default_schema).to_proc
 
     # @!attribute [r] schema_hash
     #   @return [Object#[]] tuple processing function, uses schema or defaults to Hash[]
