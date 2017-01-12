@@ -16,7 +16,7 @@ RSpec.describe 'Mapper definition DSL' do
       { type: 'home' },
       {}
     ])
-    users.insert(name: 'Jane')
+    users.insert(name: 'Jane', emails: [])
   end
 
   describe 'ungroup' do
