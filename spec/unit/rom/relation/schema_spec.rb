@@ -85,6 +85,15 @@ RSpec.describe ROM::Relation, '.schema' do
     expect(Test::Users.register_as).to be(:test_users)
   end
 
+  it 'raises error when schema_class is missing' do
+    class Test::Users < ROM::Relation[:memory]
+      schema_class nil
+    end
+
+    expect { Test::Users.schema(:test) { } }.
+      to raise_error(ROM::MissingSchemaClassError, "Test::Users relation is missing schema_class")
+  end
+
   describe '#schema' do
     it 'returns defined schema' do
       class Test::Users < ROM::Relation[:memory]

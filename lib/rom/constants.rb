@@ -22,6 +22,12 @@ module ROM
   UnsupportedRelationError = Class.new(StandardError)
   MissingAdapterIdentifierError = Class.new(StandardError)
 
+  MissingSchemaClassError = Class.new(StandardError) do
+    def initialize(klass)
+      super("#{klass.inspect} relation is missing schema_class")
+    end
+  end
+
   DuplicateConfigurationError = Class.new(StandardError)
   DuplicateContainerError = Class.new(StandardError)
 

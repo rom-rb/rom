@@ -169,6 +169,11 @@ module ROM
 
           name = Name[register_as, self.dataset]
           inferrer = infer ? schema_inferrer : nil
+
+          unless schema_class
+            raise MissingSchemaClassError.new(self)
+          end
+
           dsl = schema_dsl.new(name, schema_class: schema_class, inferrer: inferrer, &block)
 
           @schema = dsl.call
