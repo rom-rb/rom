@@ -160,12 +160,17 @@ module ROM
       # @param [Boolean] infer Whether to do an automatic schema inferring
       #
       # @api public
-      def schema(dataset = nil, infer: false, &block)
+      def schema(dataset = nil, as: nil, infer: false, &block)
         if defined?(@schema)
           @schema
         elsif block || infer
           self.dataset(dataset) if dataset
-          self.register_as(self.dataset) unless register_as
+
+          if as
+            self.register_as(as)
+          else
+            self.register_as(self.dataset) unless register_as
+          end
 
           name = Name[register_as, self.dataset]
           inferrer = infer ? schema_inferrer : nil

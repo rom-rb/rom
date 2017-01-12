@@ -85,6 +85,15 @@ RSpec.describe ROM::Relation, '.schema' do
     expect(Test::Users.register_as).to be(:test_users)
   end
 
+  it 'allows setting both dataset and relation alias' do
+    class Test::Users < ROM::Relation[:memory]
+      schema(:test_users, as: :users) { }
+    end
+
+    expect(Test::Users.register_as).to be(:users)
+    expect(Test::Users.dataset).to be(:test_users)
+  end
+
   it 'raises error when schema_class is missing' do
     class Test::Users < ROM::Relation[:memory]
       schema_class nil
