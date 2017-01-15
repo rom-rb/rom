@@ -171,13 +171,18 @@ module ROM
     end
 
     # @api public
+    def with_opts(new_opts)
+      self.class.new(relation, options.merge(new_opts))
+    end
+
+    # @api public
     def before(*hooks)
-      self.class.new(relation, options.merge(before: hooks))
+      self.class.new(relation, options.merge(before: before_hooks + hooks))
     end
 
     # @api public
     def after(*hooks)
-      self.class.new(relation, options.merge(after: hooks))
+      self.class.new(relation, options.merge(after: after_hooks + hooks))
     end
 
     private

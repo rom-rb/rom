@@ -8,26 +8,36 @@ RSpec.describe ROM::Command, 'before/after hooks' do
   describe '#before' do
     subject(:command) do
       Class.new(ROM::Command) do
+        before :init
+
+        def init(*)
+        end
+
         def prepare(*)
         end
       end.build(relation)
     end
 
     it 'returns a new command with configured before hooks' do
-      expect(command.before(:prepare).before_hooks).to include(:prepare)
+      expect(command.before(:prepare).before_hooks).to eql(%i[init prepare])
     end
   end
 
   describe '#after' do
     subject(:command) do
       Class.new(ROM::Command) do
+        after :finalize
+
+        def finalize(*)
+        end
+
         def prepare(*)
         end
       end.build(relation)
     end
 
     it 'returns a new command with configured after hooks' do
-      expect(command.after(:prepare).after_hooks).to include(:prepare)
+      expect(command.after(:prepare).after_hooks).to eql(%i[finalize prepare])
     end
   end
 

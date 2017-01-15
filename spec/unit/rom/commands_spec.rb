@@ -168,4 +168,21 @@ RSpec.describe 'Commands' do
       expect(command.call('foo')).to be(ROM::EMPTY_ARRAY)
     end
   end
+
+  describe '#with_opts' do
+    subject(:command) do
+      Class.new(ROM::Command::Create).build(relation, options)
+    end
+
+    let(:relation) { double(:relation) }
+    let(:options) { { result: :one } }
+
+    it 'returns a new command with updated options' do
+      new_command = command.with_opts(before: :test)
+
+      expect(new_command.relation).to be(relation)
+      expect(new_command.result).to be(:one)
+      expect(new_command.before_hooks).to eql([:test])
+    end
+  end
 end
