@@ -256,6 +256,20 @@ module ROM
       freeze
     end
 
+    # @api private
+    def to_output_hash
+      Types::Coercible::Hash.schema(
+        map { |attr| [attr.name, attr.to_read_type] }.to_h
+      )
+    end
+
+    # @api private
+    def to_input_hash
+      Types::Coercible::Hash.schema(
+        map { |attr| [attr.name, attr] }.to_h
+      )
+    end
+
     private
 
     # @api private

@@ -20,9 +20,9 @@ module ROM
 
               input_handler =
                 if default_input != Hash && relation.schema?
-                  -> tuple { relation.schema_hash[input[tuple]] }
+                  -> tuple { relation.input_schema[input[tuple]] }
                 elsif relation.schema?
-                  relation.schema_hash
+                  relation.input_schema
                 else
                   default_input
                 end

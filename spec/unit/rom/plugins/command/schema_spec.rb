@@ -38,17 +38,17 @@ RSpec.describe ROM::Plugins::Command::Schema do
 
     context 'when relation has a schema' do
       let(:relation) do
-        instance_double(ROM::Relation, schema?: true, schema_hash: schema_hash)
+        instance_double(ROM::Relation, schema?: true, input_schema: input_schema)
       end
 
-      let(:schema_hash) do
-        double(:schema_hash)
+      let(:input_schema) do
+        double(:input_schema)
       end
 
       it 'sets schema hash as input handler' do
         command = Class.new(command_class).build(relation)
 
-        expect(command.input).to be(schema_hash)
+        expect(command.input).to be(input_schema)
       end
 
       it 'sets a composed input handler with schema hash and a custom one' do
@@ -57,7 +57,7 @@ RSpec.describe ROM::Plugins::Command::Schema do
         command = Class.new(command_class) { input my_handler }.build(relation)
 
         expect(my_handler).to receive(:[]).with('some value').and_return('my handler')
-        expect(schema_hash).to receive(:[]).with('my handler').and_return('a tuple')
+        expect(input_schema).to receive(:[]).with('my handler').and_return('a tuple')
 
         expect(command.input['some value']).to eql('a tuple')
       end

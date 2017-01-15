@@ -13,6 +13,20 @@ module ROM
         @type = type
       end
 
+      # @api private
+      def [](input)
+        type[input]
+      end
+
+      # @api private
+      def read?
+        ! meta[:read].nil?
+      end
+
+      def to_read_type
+        read? ? meta[:read] : type
+      end
+
       # @api public
       def primary_key?
         meta[:primary_key].equal?(true)

@@ -30,6 +30,8 @@ module ROM
   #
   # @api public
   class Relation
+    NOOP_OUTPUT_SCHEMA = -> tuple { tuple }.freeze
+
     extend Initializer
     extend ClassInterface
 
@@ -51,13 +53,20 @@ module ROM
     #                    schema (if it was defined) and sets an empty one as
     #                    the fallback
     #   @api public
-    option :schema, reader: true, default: method(:default_schema).to_proc
+    option :schema, reader: true, optional: true, default: method(:default_schema).to_proc
 
-    # @!attribute [r] schema_hash
+    # @!attribute [r] input_schema
     #   @return [Object#[]] tuple processing function, uses schema or defaults to Hash[]
     #   @api private
-    option :schema_hash, reader: true, default: -> relation {
-      relation.schema? ? Types::Coercible::Hash.schema(relation.schema.to_h) : Hash
+    option :input_schema, reader: true, default: -> relation {
+      relation.schema? ? schema.to_input_hash : Hash
+    }
+
+    # @!attribute [r] output_schema
+    #   @return [Object#[]] tuple processing function, uses schema or defaults to NOOP_OUTPUT_SCHEMA
+    #   @api private
+    option :output_schema, reader: true, optional: true, default: -> relation {
+      relation.schema.any?(&:read?) ? schema.to_output_hash : NOOP_OUTPUT_SCHEMA
     }
 
     # Return schema attribute
@@ -77,7 +86,7 @@ module ROM
     # @api public
     def each(&block)
       return to_enum unless block
-      dataset.each { |tuple| yield(tuple) }
+      dataset.each { |tuple| yield(output_schema[tuple]) }
     end
 
     # Composes with other relations
