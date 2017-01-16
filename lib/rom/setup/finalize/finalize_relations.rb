@@ -53,7 +53,7 @@ module ROM
         klass.schema(infer: true) unless klass.schema
         klass.schema.finalize!(gateway: gateway, relations: registry)
 
-        dataset = gateway.dataset(klass.dataset).instance_exec(klass, &ds_proc)
+        dataset = gateway.dataset(klass.dataset, klass.dataset_options).instance_exec(klass, &ds_proc)
 
         klass.new(dataset, __registry__: registry)
       end

@@ -299,6 +299,15 @@ module ROM
         relation_class.schema || relation_class.schema_class.define(relation_class.default_name)
       end
 
+      # Returns options that will override dataset config
+      #
+      # @return [Hash]
+      #
+      # @api public
+      def dataset_options
+        EMPTY_HASH
+      end
+
       # Hook to finalize a relation after its instance was created
       #
       # @api private
