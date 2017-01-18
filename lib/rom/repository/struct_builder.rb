@@ -50,9 +50,7 @@ module ROM
       end
 
       def visit_attribute(attr)
-        unless attr.foreign_key?
-          [attr.aliased? && !attr.wrapped? ? attr.alias : attr.name, attr.type]
-        end
+        [attr.aliased? && !attr.wrapped? ? attr.alias : attr.name, attr.type]
       end
 
       def build_class(name, parent, &block)

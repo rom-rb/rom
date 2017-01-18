@@ -53,7 +53,7 @@ RSpec.shared_context('repo') do
       end
 
       def task_with_user
-        tasks.find(id: 2).combine_parents(one: users)
+        tasks.find(tasks[:id].qualified => 2).wrap_parent(user: users)
       end
 
       def task_with_owner
