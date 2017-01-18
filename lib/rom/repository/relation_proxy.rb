@@ -189,7 +189,7 @@ module ROM
       #
       # @api private
       def wraps
-        meta.fetch(:wraps, [])
+        meta.fetch(:wraps, EMPTY_ARRAY)
       end
 
       # Forward to relation and wrap it with proxy if response was a relation too
