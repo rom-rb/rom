@@ -37,9 +37,9 @@ RSpec.describe ROM::Repository, '#command' do
       expect(user.name).to eql('Jane Doe')
     end
 
-    it 'uses schema_hash for command input' do
+    it 'uses input_schema for command input' do
       create_user = repo.command(create: :users)
-      expect(create_user.input).to eql(repo.users.schema_hash)
+      expect(create_user.input).to eql(repo.users.input_schema)
     end
 
     it 'caches commands' do

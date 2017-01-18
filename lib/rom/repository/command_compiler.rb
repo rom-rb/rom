@@ -169,7 +169,7 @@ module ROM
 
           finalize_command_class(klass, relation)
 
-          registry[rel_name][type] = klass.build(relation, input: relation.schema_hash)
+          registry[rel_name][type] = klass.build(relation, input: relation.input_schema)
         end
       end
 
