@@ -17,7 +17,7 @@ module ROM
         # @api private
         def combined(name, keys, type)
           meta = { keys: keys, combine_type: type, combine_name: name }
-          with(name: name, meta: meta)
+          with(name: name, meta: self.meta.merge(meta))
         end
 
         # Combine with other relations

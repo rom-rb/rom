@@ -84,7 +84,7 @@ module ROM
       #
       # @api private
       def with(new_options)
-        __new__(relation, new_options)
+        __new__(relation, options.merge(new_options))
       end
 
       # Returns if this relation is combined aka a relation graph
