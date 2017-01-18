@@ -11,6 +11,7 @@
 * Ability to define custom changeset classes that can be instantiated via `repo.changeset(MyChangesetClass[:rel_name]).data(some_data)` where `MyChangesetClass` inherits from a core changeset class (solnic)
 * `Changeset.map` which accepts a block and exposes a DSL for data transformations (all [transproc hash methods](https://github.com/solnic/transproc)) are available (solnic)
 * `Changeset#associate` method that accepts another changeset or parent data and an association identifier, ie `post_changeset.associate(user, :author)` (solnic)
+* You can now use `wrap_parent` in combined relations too (which is gazillion times faster than `combine_parents`) (solnic)
 
 ### Changed
 
