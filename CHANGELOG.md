@@ -13,6 +13,7 @@
 * `Relation#new(dataset, new_opts)` interface (solnic)
 * `Relation#[]` interface for convenient access to schema attributes (solnic)
 * `Command` has now support for `before` and `after` hooks (solnic)
+* Support for `read` types in schemas, these are used when relation loads its tuples (solnic)
 * New `Command#before` method for creating a command with before hook(s) at run-time (solnic)
 * New `Command#after` method for creating a command with after hook(s) at run-time (solnic)
 * New `Gateway#transaction` method runs code inside a transaction (flash-gordon)
