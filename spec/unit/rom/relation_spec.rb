@@ -232,13 +232,13 @@ RSpec.describe ROM::Relation do
     end
   end
 
-  describe '#schema_hash' do
+  describe '#input_schema' do
     it 'returns a schema hash type' do
       relation = Class.new(ROM::Relation[:memory]) do
         schema { attribute :id, ROM::Types::Coercible::Int }
       end.new([])
 
-      expect(relation.schema_hash[id: '1']).to eql(id: 1)
+      expect(relation.input_schema[id: '1']).to eql(id: 1)
     end
 
     it 'returns a plain Hash coercer when there is no schema' do
@@ -246,7 +246,7 @@ RSpec.describe ROM::Relation do
 
       tuple = [[:id, '1']]
 
-      expect(relation.schema_hash[tuple]).to eql(id: '1')
+      expect(relation.input_schema[tuple]).to eql(id: '1')
     end
   end
 end

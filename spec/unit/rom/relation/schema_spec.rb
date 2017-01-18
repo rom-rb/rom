@@ -29,6 +29,26 @@ RSpec.describe ROM::Relation, '.schema' do
     expect(Test::Users.schema).to eql(schema)
   end
 
+  it 'allows defining types for reading tuples' do
+    module Test
+      module Types
+        CoercibleDate = ROM::Types::Date.constructor(Date.method(:parse))
+      end
+    end
+
+    class Test::Users < ROM::Relation[:memory]
+      schema do
+        attribute :id, Types::Int
+        attribute :date, Types::Coercible::String, read: Test::Types::CoercibleDate
+      end
+    end
+
+    schema = Test::Users.schema
+
+    expect(schema.to_output_hash).
+      to eql(ROM::Types::Coercible::Hash.schema(id: schema[:id].type, date: schema[:date].meta[:read]))
+  end
+
   it 'allows setting composite primary key' do
     class Test::Users < ROM::Relation[:memory]
       schema do

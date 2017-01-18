@@ -32,9 +32,15 @@ module ROM
       # @see Relation.schema
       #
       # @api public
-      def attribute(name, type)
+      def attribute(name, type, options = EMPTY_HASH)
         @attributes ||= {}
-        @attributes[name] = type.meta(name: name, source: relation)
+
+        @attributes[name] =
+          if options[:read]
+            type.meta(name: name, source: relation, read: options[:read])
+          else
+            type.meta(name: name, source: relation)
+          end
       end
 
       # Specify which key(s) should be the primary key
