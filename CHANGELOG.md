@@ -6,7 +6,7 @@
 * Schemas have their own types with adapter-specific APIs (solnic)
 * Schema attributes include meta properties `source` and `target` (for FKs) (solnic)
 * Inferred schemas can have explicit attribute definitions for cases where inference didn't work (solnic)
-* New schema APIs: `#project`, `#rename`, `#exclude`, `#prefix`, `#wrap` and `#merge` (solnic)
+* New schema APIs: `#project`, `#rename`, `#exclude`, `#prefix`, `#wrap`, `#merge`, `#append` and `#uniq` (solnic)
 * New schema attribute APIs: `#name`, `#aliased`, `#aliased?`, `#prefixed`, `#prefixed?`, `#wrapped`, `#wrapped?`, `#source`, `#target`, `#primary_key?`, `#foreign_key?` (solnic)
 * Schemas are coercible to arrays that include all attribute types (solnic)
 * Automatic relation view projection via `Schema#call` (abstract method for adapters) (solnic)
