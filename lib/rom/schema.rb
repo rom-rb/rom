@@ -220,6 +220,21 @@ module ROM
       new(attributes + new_attributes)
     end
 
+    # Return a new schema with uniq attributes
+    #
+    # @param [*Array<Schema::Type>]
+    #
+    # @return [Schema]
+    #
+    # @api public
+    def uniq(&block)
+      if block
+        new(attributes.uniq(&block))
+      else
+        new(attributes.uniq(&:name))
+      end
+    end
+
     # Return if a schema includes an attribute with the given name
     #
     # @param [Symbol] name The name of the attribute
