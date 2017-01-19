@@ -205,9 +205,20 @@ module ROM
     #
     # @api public
     def merge(other)
-      new(attributes + other.attributes)
+      append(*other)
     end
     alias_method :+, :merge
+
+    # Append more attributes to the schema
+    #
+    # @param [*Array<Schema::Type>]
+    #
+    # @return [Schema]
+    #
+    # @api public
+    def append(*new_attributes)
+      new(attributes + new_attributes)
+    end
 
     # Return if a schema includes an attribute with the given name
     #
