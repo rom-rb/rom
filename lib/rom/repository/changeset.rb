@@ -44,7 +44,7 @@ module ROM
     #
     # @api public
     def self.[](relation_name)
-      fetch_or_store(relation_name) {
+      fetch_or_store([relation_name, self]) {
         Class.new(self) { relation(relation_name) }
       }
     end

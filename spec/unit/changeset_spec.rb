@@ -2,6 +2,26 @@ RSpec.describe ROM::Changeset do
   let(:jane) { { id: 2, name: "Jane" } }
   let(:relation) { double(ROM::Relation, primary_key: :id) }
 
+  describe '.[]' do
+    it 'returns a changeset preconfigured for a specific relation' do
+      klass = ROM::Changeset::Create[:users]
+
+      expect(klass.relation).to be(:users)
+      expect(klass < ROM::Changeset::Create).to be(true)
+    end
+
+    it 'caches results' do
+      create = ROM::Changeset::Create[:users]
+      update = ROM::Changeset::Update[:users]
+
+      expect(create).to be(ROM::Changeset::Create[:users])
+      expect(create < ROM::Changeset::Create).to be(true)
+
+      expect(update).to be(ROM::Changeset::Update[:users])
+      expect(update < ROM::Changeset::Update).to be(true)
+    end
+  end
+
   describe '#diff' do
     it 'returns a hash with changes' do
       expect(relation).to receive(:fetch).with(2).and_return(jane)
