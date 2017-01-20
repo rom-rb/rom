@@ -1,8 +1,18 @@
 require 'rom'
 require 'rom/memory'
 
-RSpec.describe ROM::Relation do
+RSpec.describe ROM::Relation, '.view' do
   subject(:relation) { relation_class.new(ROM::Memory::Dataset.new([])) }
+
+  it 'returns view method name' do
+    klass = Class.new(ROM::Relation[:memory]) {
+      schema { attribute :id, ROM::Types::Int }
+    }
+
+    name = klass.view(:by_id, klass.schema) { self }
+
+    expect(name).to be(:by_id)
+  end
 
   shared_context 'relation with views' do
     before do

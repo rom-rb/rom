@@ -12,6 +12,7 @@ require 'rom/schema'
 
 module ROM
   class Relation
+    # @api public
     module ClassInterface
       include Dry::Core::Constants
 
@@ -185,20 +186,45 @@ module ROM
         end
       end
 
-      # Define a relation view with a specific header
+      # Define a relation view with a specific schema
       #
-      # With headers defined all the mappers will be inferred automatically
+      # Explicit relation views allow relation composition with auto-mapping
+      # in repositories. It's useful for cases like defining custom views
+      # for associations where relations (even from different databases) can
+      # be composed together and automatically mapped in memory to structs.
       #
-      # @example
-      #   class Users < ROM::Relation[:sql]
-      #     view(:by_name, [:id, :name]) do |name|
-      #       where(name: name)
+      # @overload view(name, schema, &block)
+      #   @example View with the canonical schema
+      #     class Users < ROM::Relation[:sql]
+      #       view(:listing, schema) do
+      #         order(:name)
+      #       end
       #     end
       #
-      #     view(:listing, [:id, :name, :email]) do
-      #       select(:id, :name, :email).order(:name)
+      #   @example View with a projected schema
+      #     class Users < ROM::Relation[:sql]
+      #       view(:listing, schema.project(:id, :name)) do
+      #         order(:name)
+      #       end
       #     end
-      #   end
+      #
+      # @overload view(name, &block)
+      #   @example View with the canonical schema and arguments
+      #     class Users < ROM::Relation[:sql]
+      #       view(:by_name) do |name|
+      #         where(name: name)
+      #       end
+      #     end
+      #
+      #   @example View with projected schema and arguments
+      #     class Users < ROM::Relation[:sql]
+      #       view(:by_name) do
+      #         schema { project(:id, :name) }
+      #         relation { |name| where(name: name) }
+      #       end
+      #     end
+      #
+      # @return [Symbol] view method name
       #
       # @api public
       def view(*args, &block)
@@ -233,6 +259,8 @@ module ROM
             schemas[name].(instance_exec(&relation_block))
           end
         end
+
+        name
       end
 
       # Dynamically define a method that will forward to the dataset and wrap
