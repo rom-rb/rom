@@ -223,6 +223,8 @@ module ROM
     #
     # @param [Symbol] prefix The prefix used for aliasing wrapped attributes
     #
+    # @return [Schema]
+    #
     # @api public
     def wrap(prefix = name.dataset)
       new(map { |attr| attr.wrapped(prefix) })
