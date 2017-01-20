@@ -45,6 +45,17 @@ RSpec.describe ROM::Repository::Root do
     end
   end
 
+  describe '#changeset' do
+    it 'returns a changeset automatically set for root relation' do
+      klass = Class.new(ROM::Changeset::Create)
+
+      changeset = repo.changeset(klass)
+
+      expect(changeset.relation).to be(repo.users)
+      expect(changeset).to be_kind_of(klass)
+    end
+  end
+
   describe '#aggregate' do
     include_context 'seeds'
 

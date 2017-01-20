@@ -99,6 +99,9 @@ module ROM
       def changeset(*args)
         if args.first.is_a?(Symbol) && relations.key?(args.first)
           super
+        elsif args.first.is_a?(Class)
+          klass, *rest = args
+          super(klass[self.class.root], *rest)
         else
           super(root.name, *args)
         end
