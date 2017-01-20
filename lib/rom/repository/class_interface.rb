@@ -112,8 +112,12 @@ module ROM
 
       # @api private
       def define_command_method(type, **opts)
-        define_method(type) do |*args|
-          command(type => self.class.root, **opts).call(*args)
+        define_method(type) do |input|
+          if input.is_a?(Changeset)
+            map_tuple(input.relation, input.commit)
+          else
+            command(type => self.class.root, **opts).call(input)
+          end
         end
       end
 
