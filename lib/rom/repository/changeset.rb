@@ -49,9 +49,34 @@ module ROM
       }
     end
 
+    # Define a changeset mapping
+    #
+    # Subsequent mapping definitions will be composed together
+    # and applied in the order they way defined
+    #
+    # @example Transformation DSL
+    #   class NewUser < ROM::Changeset::Create
+    #     map do
+    #       unwrap :address, prefix: true
+    #     end
+    #   end
+    #
+    # @example Using custom block
+    #   class NewUser < ROM::Changeset::Create
+    #     map do |tuple|
+    #       tuple.merge(created_at: Time.now)
+    #     end
+    #   end
+    #
+    # @return [Array<Pipe, Transproc::Function>]
+    #
     # @api public
     def self.map(&block)
-      @pipe = Class.new(Pipe, &block).new
+      if block.arity.zero?
+        pipes << Class.new(Pipe, &block).new
+      else
+        pipes << Pipe[block]
+      end
     end
 
     # Build default pipe object
@@ -60,7 +85,12 @@ module ROM
     #
     # @return [Pipe]
     def self.default_pipe
-      @pipe || Pipe.new
+      pipes.size > 0 ? pipes.reduce(:>>) : Pipe.new
+    end
+
+    # @api private
+    def self.pipes
+      @__pipes__ ||= []
     end
 
     # Pipe changeset's data using custom steps define on the pipe
