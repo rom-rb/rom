@@ -161,6 +161,20 @@ module ROM
       with(__data__: data)
     end
 
+    # Persist changeset
+    #
+    # @example
+    #   changeset = user_repo.changeset(name: 'Jane')
+    #   changeset.commit
+    #   # => { id: 1, name: 'Jane' }
+    #
+    # @return [Hash, Array]
+    #
+    # @api public
+    def commit
+      command.call
+    end
+
     # Return command result type
     #
     # @return [Symbol]

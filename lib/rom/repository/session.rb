@@ -22,7 +22,7 @@ module ROM
     end
 
     def commit!
-      queue.map(&:command).compact.each(&:call)
+      queue.each(&:commit)
 
       @status = :success
 

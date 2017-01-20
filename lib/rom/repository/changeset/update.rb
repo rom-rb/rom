@@ -8,6 +8,19 @@ module ROM
       #   @return [Symbol] The name of the relation's primary key attribute
       option :primary_key, reader: true
 
+      # Commit update changeset if there's a diff
+      #
+      # This returns original tuple if there's no diff
+      #
+      # @return [Hash]
+      #
+      # @see Changeset#commit
+      #
+      # @api public
+      def commit
+        diff? ? super : original
+      end
+
       # Return true
       #
       # @return [TrueClass]

@@ -127,8 +127,8 @@ module ROM
 
             changeset = input.first
 
-            if changeset.is_a?(Changeset) && changeset.clean?
-              map_tuple(changeset.relation, changeset.original)
+            if changeset.is_a?(Changeset)
+              map_tuple(changeset.relation, changeset.commit)
             else
               command(type => self.class.root, **opts)
                 .public_send(view_name, *view_args)
