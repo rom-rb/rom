@@ -7,9 +7,29 @@ require 'rom/association_set'
 module ROM
   # Relation schema
   #
+  # Schemas hold detailed information about relation tuples, including their
+  # primitive types (String, Integer, Hash, etc. or custom classes), as well as
+  # various meta information like primary/foreign key and literally any other
+  # information that a given database adapter may need.
+  #
+  # Adapters can extend this class and it can be used in adapter-specific relations.
+  # In example rom-sql extends schema with Association DSL and many additional
+  # SQL-specific APIs in schema types.
+  #
+  # Schemas are used for projecting canonical relations into other relations and
+  # every relation object maintains its schema. This means that we always have
+  # all information about relation tuples, even when a relation was projected and
+  # diverged from its canonical form.
+  #
+  # Furthermore schema attributes know their source relations, which makes it
+  # possible to merge schemas from multiple relations and maintain information
+  # about the source relations. In example when two relations are joined, their
+  # schemas are merged, and we know which attributes belong to which relation.
+  #
   # @api public
   class Schema
     EMPTY_ASSOCIATION_SET = AssociationSet.new(EMPTY_HASH).freeze
+
     DEFAULT_INFERRER = proc { [EMPTY_ARRAY, EMPTY_ARRAY].freeze }
 
     MissingAttributesError = Class.new(StandardError) do
@@ -45,6 +65,15 @@ module ROM
 
     alias_method :to_ary, :attributes
 
+    # Define a relation schema from plain rom types
+    #
+    # Resulting schema will decorate plain rom types with adapter-specific types
+    # By default `Schema::Type` will be used
+    #
+    # @param [Relation::Name, Symbol] name The schema name, typically ROM::Relation::Name
+    #
+    # @return [Schema]
+    #
     # @api public
     def self.define(name, type_class: Type, attributes: EMPTY_ARRAY, associations: EMPTY_ASSOCIATION_SET, inferrer: DEFAULT_INFERRER)
       new(
@@ -97,17 +126,30 @@ module ROM
       attributes.each(&block)
     end
 
+    # Check if schema has any attributes
+    #
+    # @return [TrueClass, FalseClass]
+    #
     # @api public
     def empty?
       attributes.size == 0
     end
 
+    # Coerce schema into a <AttributeName=>Attribute> Hash
+    #
+    # @return [Hash]
+    #
     # @api public
     def to_h
       each_with_object({}) { |attr, h| h[attr.name] = attr }
     end
 
     # Return attribute
+    #
+    # @param [Symbol] key The attribute name
+    # @param [Symbol, Relation::Name] src The source relation (for merged schemas)
+    #
+    # @raise KeyError
     #
     # @api public
     def [](key, src = name.to_sym)
@@ -127,7 +169,7 @@ module ROM
 
     # Project a schema to include only specified attributes
     #
-    # @param [*Array] names Attribute names
+    # @param [*Array<Symbol, Schema::Type>] names Attribute names
     #
     # @return [Schema]
     #
@@ -174,6 +216,13 @@ module ROM
       new(map { |attr| attr.prefixed(prefix) })
     end
 
+    # Return new schema with all attributes marked as prefixed and wrapped
+    #
+    # This is useful when relations are joined and the right side should be marked
+    # as wrapped
+    #
+    # @param [Symbol] prefix The prefix used for aliasing wrapped attributes
+    #
     # @api public
     def wrap(prefix = name.dataset)
       new(map { |attr| attr.wrapped(prefix) })
@@ -181,7 +230,7 @@ module ROM
 
     # Return FK attribute for a given relation name
     #
-    # @return [Dry::Types::Definition]
+    # @return [Schema::Type]
     #
     # @api public
     def foreign_key(relation)
@@ -210,6 +259,8 @@ module ROM
     alias_method :+, :merge
 
     # Append more attributes to the schema
+    #
+    # This returns a new schema instance
     #
     # @param [*Array<Schema::Type>]
     #
@@ -282,6 +333,12 @@ module ROM
       freeze
     end
 
+    # Return coercion function using attribute read types
+    #
+    # This is used for `output_schema` in relations
+    #
+    # @return [Dry::Types::Hash]
+    #
     # @api private
     def to_output_hash
       Types::Coercible::Hash.schema(
@@ -289,6 +346,13 @@ module ROM
       )
     end
 
+    # Return coercion function using attribute types
+    #
+    # This is used for `input_schema` in relations, typically commands use it
+    # for processing input
+    #
+    # @return [Dry::Types::Hash]
+    #
     # @api private
     def to_input_hash
       Types::Coercible::Hash.schema(
