@@ -1,7 +1,7 @@
 RSpec.describe ROM::Changeset, '.map' do
   context 'single mapping with transaction DSL' do
     subject(:changeset) do
-      Class.new(ROM::Changeset) do
+      Class.new(ROM::Changeset::Create[:users]) do
         map do
           unwrap :address
           rename_keys street: :address_street, city: :address_city, country: :address_country
@@ -44,7 +44,7 @@ RSpec.describe ROM::Changeset, '.map' do
 
   context 'multi mapping with custom blocks' do
     subject(:changeset) do
-      Class.new(ROM::Changeset) do
+      Class.new(ROM::Changeset::Create[:users]) do
         map do |tuple|
           tuple.merge(one: next_value)
         end
@@ -73,6 +73,12 @@ RSpec.describe ROM::Changeset, '.map' do
 
     it 'applies mappings in order of definition' do
       expect(changeset.to_h).to eql(name: 'Jane', one: 1, two: 2)
+    end
+
+    it 'inherits pipes' do
+      klass = Class.new(changeset.class)
+
+      expect(klass.pipes).to eql(changeset.class.pipes)
     end
   end
 end

@@ -89,8 +89,15 @@ module ROM
     end
 
     # @api private
+    def self.inherited(klass)
+      return if klass == ROM::Changeset
+      super
+      klass.instance_variable_set(:@__pipes__, pipes ? pipes.dup : [])
+    end
+
+    # @api private
     def self.pipes
-      @__pipes__ ||= []
+      @__pipes__
     end
 
     # Pipe changeset's data using custom steps define on the pipe
