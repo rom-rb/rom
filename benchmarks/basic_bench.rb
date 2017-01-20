@@ -59,7 +59,7 @@ run("Loading ALL tasks with their users") do |x|
     ARTask.all.includes(:user).to_a
   end
   x.report("ROM") do
-    user_repo.tasks.combine(:user).to_a
+    user_repo.tasks.wrap_parent(user: user_repo.users).to_a
   end
 end
 
