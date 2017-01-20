@@ -1,2 +1,2 @@
---protected
---no-private
+--query '@api.text != "private"'
+--embed-mixins
