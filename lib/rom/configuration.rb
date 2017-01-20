@@ -1,3 +1,5 @@
+require 'forwardable'
+
 require 'rom/environment'
 require 'rom/setup'
 require 'rom/configuration_dsl'
