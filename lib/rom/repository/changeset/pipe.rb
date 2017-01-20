@@ -27,6 +27,14 @@ module ROM
         self.class[name]
       end
 
+      def bind(context)
+        if processor.is_a?(Proc)
+          self.class.new(Pipe[-> *args { context.instance_exec(*args, &processor) }])
+        else
+          self
+        end
+      end
+
       def >>(other)
         if processor
           Pipe.new(processor >> other)

@@ -46,15 +46,24 @@ RSpec.describe ROM::Changeset, '.map' do
     subject(:changeset) do
       Class.new(ROM::Changeset) do
         map do |tuple|
-          tuple.merge(one: 1)
+          tuple.merge(one: next_value)
         end
 
         map do |tuple|
-          tuple.merge(two: 2)
+          tuple.merge(two: next_value)
+        end
+
+        def initialize(*args)
+          super
+          @counter = 0
         end
 
         def default_command_type
           :test
+        end
+
+        def next_value
+          @counter += 1
         end
       end.new(relation).data(user_data)
     end

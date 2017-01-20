@@ -23,7 +23,7 @@ module ROM
     # @!attribute [r] pipe
     #   @return [Changeset::Pipe] data transformation pipe
     option :pipe, reader: true, accept: [Proc, Pipe], default: -> changeset {
-      changeset.class.default_pipe
+      changeset.class.default_pipe(changeset)
     }
 
     # @!attribute [r] command_compiler
@@ -75,7 +75,7 @@ module ROM
       if block.arity.zero?
         pipes << Class.new(Pipe, &block).new
       else
-        pipes << Pipe[block]
+        pipes << Pipe.new(block)
       end
     end
 
@@ -84,8 +84,8 @@ module ROM
     # This can be overridden in a custom changeset subclass
     #
     # @return [Pipe]
-    def self.default_pipe
-      pipes.size > 0 ? pipes.reduce(:>>) : Pipe.new
+    def self.default_pipe(context)
+      pipes.size > 0 ? pipes.map { |p| p.bind(context) }.reduce(:>>) : Pipe.new
     end
 
     # @api private
