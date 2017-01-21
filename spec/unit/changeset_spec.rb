@@ -1,6 +1,6 @@
 RSpec.describe ROM::Changeset do
   let(:jane) { { id: 2, name: "Jane" } }
-  let(:relation) { double(ROM::Relation, primary_key: :id) }
+  let(:relation) { double(ROM::Relation, primary_key: :id, name: :users) }
 
   describe '.[]' do
     it 'returns a changeset preconfigured for a specific relation' do
@@ -99,6 +99,15 @@ RSpec.describe ROM::Changeset do
 
     it 'raises NoMethodError when an unknown message was sent' do
       expect { changeset.not_here }.to raise_error(NoMethodError, /not_here/)
+    end
+  end
+
+  describe '#inspect' do
+    subject(:changeset) { ROM::Changeset::Create.new(relation).data(name: 'Jane') }
+
+    specify do
+      expect(changeset.inspect).
+        to eql('#<ROM::Changeset::Create relation=:users data={:name=>"Jane"}>')
     end
   end
 end

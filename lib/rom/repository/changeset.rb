@@ -195,6 +195,15 @@ module ROM
       __data__.is_a?(Hash) ? :one : :many
     end
 
+    # Return string representation of the changeset
+    #
+    # @return [String]
+    #
+    # @api public
+    def inspect
+      %(#<#{self.class} relation=#{relation.name.inspect} data=#{__data__}>)
+    end
+
     private
 
     # @api private
