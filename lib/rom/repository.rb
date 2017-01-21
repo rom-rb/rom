@@ -205,15 +205,6 @@ module ROM
       end
     end
 
-    # TODO: document me, please
-    #
-    # @api public
-    def session(&block)
-      session = Session.new(self)
-      yield(session)
-      transaction { session.commit! }
-    end
-
     # Open a database transaction
     #
     # @example commited transaction
@@ -241,6 +232,15 @@ module ROM
     # @api public
     def inspect
       %(#<#{self.class} relations=[#{self.class.relations.map(&:inspect).join(' ')}]>)
+    end
+
+    # TODO: document me, please
+    #
+    # @api public
+    def session(&block)
+      session = Session.new(self)
+      yield(session)
+      transaction { session.commit! }
     end
 
     private
