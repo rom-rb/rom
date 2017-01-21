@@ -61,8 +61,22 @@ module ROM
       #
       #   @param *associations [Array<Symbol>] A list of association names
       #
+      # @overload aggregate(*associations, *assoc_opts)
+      #   Composes an aggregate from configured associations and assoc opts
+      #   on the root relation
+      #
+      #   @example
+      #     user_repo.aggregate(:tasks, posts: :tags)
+      #
+      #   @param *associations [Array<Symbol>] A list of association names
+      #   @param [Hash] Association options for nested aggregates
+      #
       # @overload aggregate(options)
       #   Composes an aggregate by delegating to combine_children method.
+      #
+      #   @example
+      #     user_repo.aggregate(tasks: :labels)
+      #     user_repo.aggregate(posts: [:tags, :comments])
       #
       #   @param options [Hash] An option hash
       #
@@ -72,7 +86,11 @@ module ROM
       #
       # @api public
       def aggregate(*args)
-        root.combine(*args)
+        if args.all? { |arg| arg.is_a?(Symbol) }
+          root.combine(*args)
+        else
+          args.reduce(root) { |a, e| a.combine(e) }
+        end
       end
 
       # @overload changeset(name, *args)

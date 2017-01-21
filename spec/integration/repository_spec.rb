@@ -84,6 +84,46 @@ RSpec.describe 'ROM repository' do
     expect(jane.posts.first.title).to eql('Hello From Jane')
   end
 
+  it 'loads an aggregate via assoc options' do
+    jane = repo.aggregate(posts: :labels).where(name: 'Jane').one
+
+    expect(jane.name).to eql('Jane')
+    expect(jane.posts.size).to be(1)
+    expect(jane.posts.first.title).to eql('Hello From Jane')
+    expect(jane.posts[0].labels.size).to be(2)
+    expect(jane.posts[0].labels[0].name).to eql('red')
+    expect(jane.posts[0].labels[1].name).to eql('blue')
+  end
+
+  it 'loads an aggregate with multiple assoc options' do
+    jane = repo.aggregate(:labels, posts: :labels).where(name: 'Jane').one
+
+    expect(jane.name).to eql('Jane')
+
+    expect(jane.labels.size).to be(2)
+    expect(jane.labels[0].name).to eql('red')
+    expect(jane.labels[1].name).to eql('blue')
+
+    expect(jane.posts.size).to be(1)
+    expect(jane.posts[0].title).to eql('Hello From Jane')
+
+    expect(jane.posts[0].labels.size).to be(2)
+    expect(jane.posts[0].labels[0].name).to eql('red')
+    expect(jane.posts[0].labels[1].name).to eql('blue')
+  end
+
+  it 'loads an aggregate with deeply nested assoc options' do
+    jane = repo.aggregate(posts: [{ author: :labels }]).where(name: 'Jane').one
+
+    expect(jane.posts.size).to be(1)
+    expect(jane.posts[0].title).to eql('Hello From Jane')
+
+    expect(jane.posts[0].author.id).to eql(jane.id)
+    expect(jane.posts[0].author.labels.size).to be(2)
+    expect(jane.posts[0].author.labels[0].name).to eql('red')
+    expect(jane.posts[0].author.labels[1].name).to eql('blue')
+  end
+
   it 'loads an aggregate with multiple associations' do
     jane = repo.aggregate(:posts, :labels).where(name: 'Jane').one
 
