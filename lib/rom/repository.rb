@@ -139,7 +139,7 @@ module ROM
     end
 
     # @overload changeset(name, attributes)
-    #   Returns a create changeset for a given relation identifier
+    #   Return a create changeset for a given relation identifier
     #
     #   @example
     #     repo.changeset(:users, name: "Jane")
@@ -149,8 +149,8 @@ module ROM
     #
     #   @return [Changeset::Create]
     #
-    # @overload changeset(name, restriction_arg, attributes)
-    #   Returns an update changeset for a given relation identifier
+    # @overload changeset(name, primary_key, attributes)
+    #   Return an update changeset for a given relation identifier
     #
     #   @example
     #     repo.changeset(:users, 1, name: "Jane Doe")
@@ -159,6 +159,16 @@ module ROM
     #   @param restriction_arg [Object] The argument passed to restricted view
     #
     #   @return [Changeset::Update]
+    #
+    # @overload changeset(changeset_class)
+    #   Return a changeset object using provided class
+    #
+    #   @example
+    #     repo.changeset(NewUserChangeset).data(attributes)
+    #
+    #   @param [Class] changeset_class Custom changeset class
+    #
+    #   @return [Changeset]
     #
     # @api public
     def changeset(*args)

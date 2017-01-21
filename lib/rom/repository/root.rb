@@ -77,21 +77,41 @@ module ROM
 
       # @overload changeset(name, *args)
       #   Delegate to Repository#changeset
+      #
       #   @see Repository#changeset
       #
       # @overload changeset(data)
       #   Builds a create changeset for the root relation
+      #
       #   @example
       #     user_repo.changeset(name: "Jane")
+      #
       #   @param data [Hash] New data
+      #
       #   @return [Changeset::Create]
       #
-      # @overload changeset(restriction_arg, data)
+      # @overload changeset(primary_key, data)
       #   Builds an update changeset for the root relation
+      #
       #   @example
       #     user_repo.changeset(1, name: "Jane Doe")
-      #   @param restriction_arg [Object] An argument for the restriction view
+      #
+      #   @param primary_key [Object] Primary key for restricting relation
+      #
       #   @return [Changeset::Update]
+      #
+      # @overload changeset(changeset_class)
+      #   Return a changeset prepared for repo's root relation
+      #
+      #   @example
+      #     changeset = user_repo.changeset(MyChangeset)
+      #
+      #     changeset.relation == user_repo.root
+      #     # true
+      #
+      #   @param [Class] changeset_class Your custom changeset class
+      #
+      #   @return [Changeset]
       #
       # @override Repository#changeset
       #

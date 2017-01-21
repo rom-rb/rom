@@ -68,6 +68,17 @@ module ROM
     #     end
     #   end
     #
+    # @example Multiple mappings (executed in the order of definition)
+    #   class NewUser < ROM::Changeset::Create
+    #     map do
+    #       unwrap :address, prefix: true
+    #     end
+    #
+    #     map do |tuple|
+    #       tuple.merge(created_at: Time.now)
+    #     end
+    #   end
+    #
     # @return [Array<Pipe, Transproc::Function>]
     #
     # @api public
