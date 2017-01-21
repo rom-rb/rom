@@ -2,15 +2,17 @@
 
 ### Added
 
-* New `Repository#session` API for building transactions using changesets (solnic)
-* Support for inferring typed structs based on relation schemas (solnic)
+* New `Repository#transaction` API for executing operations inside a database transaction (flash-gordon+solnic)
 * `aggregate` and `combine` support nested association specs, ie `combine(users: [tasks: :tags])` (beauby)
 * Changesets support data as arrays too (solnic)
 * Changesets support custom command types via `Changeset#with(command_type: :my_command)` (solnic)
 * `Changeset::Delete` was added and is accessible via `repo.changeset(delete: some_relation.by_pk(1))` (solnic)
-* Ability to define custom changeset classes that can be instantiated via `repo.changeset(MyChangesetClass[:rel_name]).data(some_data)` where `MyChangesetClass` inherits from a core changeset class (solnic)
+* Ability to define custom changeset classes that can be instantiated via `repo.changeset(MyChangesetClass[:rel_name]).data(some_data)` or `root_repo.changeset(MyChangesetClass)` where `MyChangesetClass` inherits from a core changeset class (solnic)
 * `Changeset.map` which accepts a block and exposes a DSL for data transformations (all [transproc hash methods](https://github.com/solnic/transproc)) are available (solnic)
+* `Changeset.map` which accepts a custom block that can transform data (executed in the context of a changeset object) (solnic)
+* Support for composing multiple mappings via `Changeset.map` (solnic)
 * `Changeset#associate` method that accepts another changeset or parent data and an association identifier, ie `post_changeset.associate(user, :author)` (solnic)
+* Support for inferring typed structs based on relation schemas (solnic)
 * You can now use `wrap_parent` in combined relations too (which is gazillion times faster than `combine_parents`) (solnic)
 
 ### Changed
@@ -20,7 +22,7 @@
 
 ### Fixed
 
-* Auto-mapping to structs ignores FK attributes consistently (solnic)
+* FKs are always included in auto-generated structs used in aggregates (solnic)
 
 [Compare v0.3.1...v1.0.0](https://github.com/rom-rb/rom-repository/compare/v0.3.1...v1.0.0)
 
