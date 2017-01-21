@@ -6,7 +6,7 @@ module ROM
     class Create < Changeset
       # @!attribute [r] association
       #   @return [Array] Associated changesets with its association name
-      option :association, reader: true, optional: true
+      option :association, reader: true, optional: true, default: proc { nil }
 
       # @api public
       def associate(other, assoc)
@@ -33,8 +33,8 @@ module ROM
 
       # @api private
       def command
-        if options[:association]
-          other, assoc = options[:association]
+        if association
+          other, assoc = association
 
           if other.is_a?(Changeset)
             create_command.curry(self) >> other.command.with_association(assoc)
