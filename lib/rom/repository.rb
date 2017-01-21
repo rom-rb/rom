@@ -214,7 +214,24 @@ module ROM
       transaction { session.commit! }
     end
 
-    # TODO: document me, please
+    # Open a database transaction
+    #
+    # @example commited transaction
+    #   user = transaction do |t|
+    #     create(changeset(name: 'Jane'))
+    #   end
+    #
+    #   user
+    #   # => #<ROM::Struct[User] id=1 name="Jane">
+    #
+    # @example with a rollback
+    #   user = transaction do |t|
+    #     changeset(name: 'Jane').commit
+    #     t.rollback!
+    #   end
+    #
+    #   user
+    #   # nil
     #
     # @api public
     def transaction(&block)
