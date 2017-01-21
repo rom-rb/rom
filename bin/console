@@ -15,7 +15,11 @@ config.relation(:books) do
 end
 
 config.relation(:users) do
-  schema(infer: true)
+  schema(infer: true) do
+    associations do
+      has_many :tasks
+    end
+  end
 
   def by_id(id)
     where(id: id)
@@ -31,7 +35,11 @@ config.relation(:users) do
 end
 
 config.relation(:tasks) do
-  schema(infer: true)
+  schema(infer: true) do
+    associations do
+      belongs_to :user
+    end
+  end
 
   def find(criteria)
     where(criteria)
