@@ -50,6 +50,24 @@ RSpec.describe ROM::Changeset do
     end
   end
 
+  describe '#clean?' do
+    it 'returns true when data are equal to the original tuple' do
+      expect(relation).to receive(:fetch).with(2).and_return(jane)
+
+      changeset = ROM::Changeset::Update.new(relation, __data__: { name: "Jane" }, primary_key: 2)
+
+      expect(changeset).to be_clean
+    end
+
+    it 'returns false when data differs from the original tuple' do
+      expect(relation).to receive(:fetch).with(2).and_return(jane)
+
+      changeset = ROM::Changeset::Update.new(relation, __data__: { name: "Jane Doe" }, primary_key: 2)
+
+      expect(changeset).to_not be_clean
+    end
+  end
+
   describe 'quacks like a hash' do
     subject(:changeset) { ROM::Changeset::Create.new(relation, __data__: data) }
 
