@@ -19,6 +19,8 @@ module ROM
   #
   # @abstract
   class Changeset
+    EMPTY_PIPE = Pipe.new.freeze
+
     extend Initializer
     extend Dry::Core::Cache
     extend Dry::Core::ClassAttributes
@@ -122,14 +124,14 @@ module ROM
     #
     # @return [Pipe]
     def self.default_pipe(context)
-      pipes.size > 0 ? pipes.map { |p| p.bind(context) }.reduce(:>>) : Pipe.new
+      pipes.size > 0 ? pipes.map { |p| p.bind(context) }.reduce(:>>) : EMPTY_PIPE
     end
 
     # @api private
     def self.inherited(klass)
       return if klass == ROM::Changeset
       super
-      klass.instance_variable_set(:@__pipes__, pipes ? pipes.dup : [])
+      klass.instance_variable_set(:@__pipes__, pipes ? pipes.dup : EMPTY_ARRAY)
     end
 
     # @api private
