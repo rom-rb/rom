@@ -21,24 +21,6 @@ module ROM
         diff? ? super : original
       end
 
-      # Return true
-      #
-      # @return [TrueClass]
-      #
-      # @api public
-      def update?
-        true
-      end
-
-      # Return false
-      #
-      # @return [FalseClass]
-      #
-      # @api public
-      def create?
-        false
-      end
-
       # Return original tuple that this changeset may update
       #
       # @return [Hash]

@@ -30,24 +30,6 @@ module ROM
         with(association: [other, assoc])
       end
 
-      # Return false
-      #
-      # @return [FalseClass]
-      #
-      # @api public
-      def update?
-        false
-      end
-
-      # Return true
-      #
-      # @return [TrueClass]
-      #
-      # @api public
-      def create?
-        true
-      end
-
       # Prepare a command for this changeset
       #
       # @return [Command]
