@@ -4,6 +4,8 @@ module ROM
   class Repository
     # TODO: look into making command graphs work without the root key in the input
     #       so that we can get rid of this wrapper
+    #
+    # @api private
     class CommandProxy
       attr_reader :command, :root
 
