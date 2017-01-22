@@ -10,6 +10,17 @@ module ROM
     extend Dry::Core::Cache
     extend Dry::Core::ClassAttributes
 
+    # @!method self.relation
+    #   Get or set changeset relation identifier
+    #
+    #   @overload relation
+    #     Return configured relation identifier for this changeset
+    #     @return [Symbol]
+    #
+    #   @overload relation(identifier)
+    #     Set relation identifier for this changeset
+    #     @param [Symbol] identifier The relation identifier from the ROM container
+    #     @return [Symbol]
     defines :relation
 
     # @!attribute [r] relation
@@ -18,10 +29,12 @@ module ROM
 
     # @!attribute [r] __data__
     #   @return [Hash] The relation data
+    #   @api private
     option :__data__, reader: true, optional: true, default: proc { nil }
 
     # @!attribute [r] pipe
     #   @return [Changeset::Pipe] data transformation pipe
+    #   @api private
     option :pipe, reader: true, accept: [Proc, Pipe], default: -> changeset {
       changeset.class.default_pipe(changeset)
     }

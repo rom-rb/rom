@@ -3,6 +3,9 @@ require 'transproc/transformer'
 
 module ROM
   class Changeset
+    # Composable data transformation pipe used by default in changesets
+    #
+    # @api private
     class Pipe < Transproc::Transformer
       extend Transproc::Registry
 

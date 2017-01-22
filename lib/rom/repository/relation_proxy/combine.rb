@@ -188,8 +188,9 @@ module ROM
         # used to get the keys. Otherwise we fall back to using default keys based
         # on naming conventions.
         #
-        # @param [RelationProxy] relation
-        # @param [Symbol] type The type can be either :parent or :children
+        # @param [Relation::Name] source The source relation name
+        # @param [Relation::Name] target The target relation name
+        # @param [Symbol] type The association type, can be either :parent or :children
         #
         # @return [Hash<Symbol=>Symbol>]
         #
