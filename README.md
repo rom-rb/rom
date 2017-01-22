@@ -13,7 +13,7 @@
 [![Test Coverage](https://codeclimate.com/github/rom-rb/rom-repository/badges/coverage.svg)][codeclimate]
 [![Inline docs](http://inch-ci.org/github/rom-rb/rom-repository.svg?branch=master)][inchpages]
 
-Repository for [rom-rb](https://github.com/rom-rb/rom) with auto-mapping and commands.
+Repositories for [rom-rb](https://github.com/rom-rb/rom) with auto-mapping, changesets and commands.
 
 Resources:
 

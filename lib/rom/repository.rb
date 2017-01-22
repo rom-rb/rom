@@ -176,6 +176,16 @@ module ROM
     #
     #   @return [Changeset]
     #
+    # @overload changeset(opts)
+    #   Return a changeset object using provided changeset type and relation
+    #
+    #   @example
+    #     repo.changeset(delete: repo.users.where { id > 10 })
+    #
+    #   @param [Hash<Symbol=>Relation] opts Command type => Relation config
+    #
+    #   @return [Changeset]
+    #
     # @api public
     def changeset(*args)
       opts = { command_compiler: command_compiler }
@@ -235,12 +245,21 @@ module ROM
       container.gateways[:default].transaction(&block)
     end
 
+    # Return a string representation of a repository object
+    #
+    # @return [String]
+    #
     # @api public
     def inspect
       %(#<#{self.class} relations=[#{self.class.relations.map(&:inspect).join(' ')}]>)
     end
 
-    # TODO: document me, please
+    # Start a session for multiple changesets
+    #
+    # TODO: this is partly done, needs tweaks in changesets so that we can gather
+    #       command results and return them in a nice way
+    #
+    # @!visibility private
     #
     # @api public
     def session(&block)
