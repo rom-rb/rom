@@ -2,6 +2,13 @@ module ROM
   class Changeset
     # Changeset specialization for update commands
     #
+    # Update changesets will only execute their commands when
+    # the data is different from the original tuple. Original tuple
+    # is fetched from changeset's relation using `by_pk` relation view.
+    # This means the underlying adapter must provide this view, or you
+    # you need to implement it yourself in your relations if you want to
+    # use Update changesets.
+    #
     # @api public
     class Update < Changeset
       # @!attribute [r] primary_key
