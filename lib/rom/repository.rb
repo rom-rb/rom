@@ -200,10 +200,14 @@ module ROM
       elsif args.size == 3
         name, pk, data = args
       elsif args.size == 1
-        type = args[0]
+        if args[0].is_a?(Class)
+          klass = args[0]
 
-        if type.is_a?(Class) && type < Changeset
-          return type.new(relations[type.relation], opts)
+          if klass < Changeset
+            return klass.new(relations[klass.relation], opts)
+          else
+            raise ArgumentError, "+#{klass.name}+ is not a Changeset subclass"
+          end
         else
           type, relation = args[0].to_a[0]
         end
@@ -216,6 +220,8 @@ module ROM
           Changeset::Update.new(relation, opts)
         elsif type.equal?(:delete)
           Changeset::Delete.new(relation, opts)
+        else
+          raise ArgumentError, "+#{type.inspect}+ is not a valid changeset type"
         end
       else
         relation = relations[name]

@@ -140,4 +140,20 @@ RSpec.describe ROM::Repository, '#changeset' do
       expect(changeset.command.call).to eql(id: 1, name: 'Jane')
     end
   end
+
+  it 'raises ArgumentError when unknown type was used' do
+    expect { repo.changeset(not_here: repo.users) }.
+      to raise_error(ArgumentError, /not_here/)
+  end
+
+  it 'raises ArgumentError when unknown class was used' do
+    klass = Class.new {
+      def self.name
+        'SomeClass'
+      end
+    }
+
+    expect { repo.changeset(klass) }.
+      to raise_error(ArgumentError, /SomeClass/)
+  end
 end
