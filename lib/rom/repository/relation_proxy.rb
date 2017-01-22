@@ -52,8 +52,21 @@ module ROM
 
       # Maps the wrapped relation with other mappers available in the registry
       #
-      # @param [Array<Symbol, Class>] names Either a list of mapper identifiers
-      #                                      or a custom model class
+      # @overload map_with(model)
+      #   Map tuples to the provided custom model class
+      #
+      #   @example
+      #     users.as(MyUserModel)
+      #
+      #   @param [Class>] model Your custom model class
+      #
+      # @overload map_with(*mappers)
+      #   Map tuples using registered mappers
+      #
+      #   @example
+      #     users.as(MyUserModel)
+      #
+      #   @param [Array<Symbol>] mappers A list of mapper identifiers
       #
       # @return [RelationProxy] A new relation proxy with pipelined relation
       #
@@ -66,6 +79,15 @@ module ROM
         end
       end
       alias_method :as, :map_with
+
+      # Return a string representation of this relation proxy
+      #
+      # @return [String]
+      #
+      # @api public
+      def inspect
+        %(#<#{relation.class} name=#{name} dataset=#{dataset.inspect}>)
+      end
 
       # Infers a mapper for the wrapped relation
       #
@@ -134,11 +156,6 @@ module ROM
       # @api private
       def respond_to_missing?(meth, _include_private = false)
         relation.respond_to?(meth) || super
-      end
-
-      # @api public
-      def inspect
-        %(#<#{relation.class} name=#{name} dataset=#{dataset.inspect}>)
       end
 
       private

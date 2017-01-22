@@ -131,7 +131,7 @@ module ROM
       #
       #   @return [Changeset]
       #
-      # @override Repository#changeset
+      # @see Repository#changeset
       #
       # @api public
       def changeset(*args)
