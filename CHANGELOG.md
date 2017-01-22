@@ -19,6 +19,7 @@
 
 * `ROM::Struct` is now based on `Dry::Struct` (solnic)
 * rom-support dependency was removed (flash-gordon)
+* `update?` and `create?` methods were removed from `Changeset:*` subclasses (solnic)
 
 ### Fixed
 
