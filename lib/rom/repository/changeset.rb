@@ -5,6 +5,19 @@ require 'rom/initializer'
 require 'rom/repository/changeset/pipe'
 
 module ROM
+  # Abstract Changeset class
+  #
+  # If you inherit from this class you need to configure additional settings
+  #
+  # @example define a custom changeset using :upsert command
+  #
+  #   class NewTag < ROM::Changeset[:tags]
+  #     def default_command_type
+  #       :upsert
+  #     end
+  #   end
+  #
+  # @abstract
   class Changeset
     extend Initializer
     extend Dry::Core::Cache
