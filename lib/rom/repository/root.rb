@@ -31,6 +31,19 @@ module ROM
     class Root < Repository
       extend Dry::Core::ClassAttributes
 
+      # @!method self.root
+      #   Get or set repository root relation identifier
+      #
+      #   This method is automatically used when you define a class using
+      #   MyRepo[:rel_identifier] shortcut
+      #
+      #   @overload root
+      #     Return root relation identifier
+      #     @return [Symbol]
+      #
+      #   @overload root(identifier)
+      #     Set root relation identifier
+      #     @return [Symbol]
       defines :root
 
       # @!attribute [r] root
