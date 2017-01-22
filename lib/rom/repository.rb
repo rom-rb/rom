@@ -12,23 +12,15 @@ require 'rom/repository/session'
 module ROM
   # Abstract repository class to inherit from
   #
-  # A repository provides access to composable relations and commands. Its job is
-  # to provide application-specific data that is already materialized, so that
+  # A repository provides access to composable relations, commands and changesets.
+  # Its job is to provide application-specific data that is already materialized, so that
   # relations don't leak into your application layer.
   #
-  # Typically, you're going to work with Repository::Root that are configured to
-  # use a single relation as its root, and compose aggregates and use commands
+  # Typically, you're going to work with Repository::Root that is configured to
+  # use a single relation as its root, and compose aggregates and use changesets and commands
   # against the root relation.
   #
   # @example
-  #   class MyRepo < ROM::Repository[:users]
-  #     relations :users, :tasks
-  #
-  #     def users_with_tasks
-  #       users.combine_children(tasks: tasks).to_a
-  #     end
-  #   end
-  #
   #   rom = ROM.container(:sql, 'sqlite::memory') do |conf|
   #     conf.default.create_table(:users) do
   #       primary_key :id
@@ -40,10 +32,24 @@ module ROM
   #       column :user_id, Integer
   #       column :title, String
   #     end
+  #
+  #     conf.relation(:users) do
+  #       associations do
+  #         has_many :tasks
+  #       end
+  #     end
   #   end
   #
-  #   my_repo = MyRepo.new(rom)
-  #   my_repo.users_with_tasks
+  #   class UserRepo < ROM::Repository[:users]
+  #     relations :tasks
+  #
+  #     def users_with_tasks
+  #       aggregate(:tasks).to_a
+  #     end
+  #   end
+  #
+  #   user_repo = UserRepo.new(rom)
+  #   user_repo.users_with_tasks
   #
   # @see Repository::Root
   #
