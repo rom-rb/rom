@@ -146,7 +146,7 @@ module ROM
     #     changeset.map(:add_timestamps)
     #
     #   @param [Array<Symbol>] steps A list of mapping steps
-    #
+
     # @overload map(&block)
     #   Apply mapping using a custom block
     #
@@ -155,12 +155,24 @@ module ROM
     #
     #   @param [Array<Symbol>] steps A list of mapping steps
     #
+    # @overload map(*steps, &block)
+    #   Apply mapping using built-in transformations and a custom block
+    #
+    #   @example
+    #     changeset.map(:touch) { |tuple| tuple.merge(status: 'published') }
+    #
+    #   @param [Array<Symbol>] steps A list of mapping steps
+    #
     # @return [Changeset]
     #
     # @api public
     def map(*steps, &block)
       if block
-        __data__.map { |*args| yield(*args) }
+        if steps.size > 0
+          map(*steps).map(&block)
+        else
+          with(pipe: pipe >> Pipe.new(block).bind(self))
+        end
       else
         with(pipe: steps.reduce(pipe) { |a, e| a >> pipe[e] })
       end

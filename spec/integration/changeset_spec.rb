@@ -43,6 +43,33 @@ RSpec.describe 'Using changesets' do
       expect(result.created_at).to be_instance_of(Time)
       expect(result.updated_at).to be_instance_of(Time)
     end
+
+    it 'preprocesses data using custom block' do
+      changeset = repo.
+                    changeset(:books, title: "rom-rb is awesome").
+                    map { |tuple| tuple.merge(created_at: Time.now) }
+
+      command = repo.command(:create, repo.books)
+      result = command.(changeset)
+
+      expect(result.id).to_not be(nil)
+      expect(result.title).to eql("rom-rb is awesome")
+      expect(result.created_at).to be_instance_of(Time)
+    end
+
+    it 'preprocesses data using built-in steps and custom block' do
+      changeset = repo.
+                    changeset(:books, title: "rom-rb is awesome").
+                    map(:touch) { |tuple| tuple.merge(created_at: Time.now) }
+
+      command = repo.command(:create, repo.books)
+      result = command.(changeset)
+
+      expect(result.id).to_not be(nil)
+      expect(result.title).to eql("rom-rb is awesome")
+      expect(result.created_at).to be_instance_of(Time)
+      expect(result.updated_at).to be_instance_of(Time)
+    end
   end
 
   describe 'Update' do
