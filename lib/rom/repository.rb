@@ -219,7 +219,7 @@ module ROM
         relation = relations[name]
 
         if pk
-          Changeset::Update.new(relation, opts.update(__data__: data, primary_key: pk))
+          Changeset::Update.new(relation.by_pk(pk), opts.update(__data__: data))
         else
           Changeset::Create.new(relation, opts.update(__data__: data))
         end

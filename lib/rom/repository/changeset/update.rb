@@ -11,10 +11,6 @@ module ROM
     #
     # @api public
     class Update < Changeset
-      # @!attribute [r] primary_key
-      #   @return [Symbol] The name of the relation's primary key attribute
-      option :primary_key, reader: true
-
       # Commit update changeset if there's a diff
       #
       # This returns original tuple if there's no diff
@@ -34,7 +30,7 @@ module ROM
       #
       # @api public
       def original
-        @original ||= relation.fetch(primary_key)
+        @original ||= Hash(relation.one)
       end
 
       # Return diff hash sent through the pipe

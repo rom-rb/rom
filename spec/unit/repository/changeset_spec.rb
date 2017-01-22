@@ -66,7 +66,7 @@ RSpec.describe ROM::Repository, '#changeset' do
     end
 
     it 'has relation' do
-      expect(changeset.relation).to be(repo.users)
+      expect(changeset.relation.one).to eql(repo.users.by_pk(user[:id]).one)
     end
 
     it 'can return a dedicated command' do
