@@ -212,7 +212,9 @@ module ROM
       end
 
       if type
-        if type.equal?(:delete)
+        if type.equal?(:update)
+          Changeset::Update.new(relation, opts)
+        elsif type.equal?(:delete)
           Changeset::Delete.new(relation, opts)
         end
       else
