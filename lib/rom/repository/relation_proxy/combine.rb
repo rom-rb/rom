@@ -48,8 +48,6 @@ module ROM
         #     @option :many [Hash] Sets options for "has-many" type of association
         #     @option :one [Hash] Sets options for "has-one/belongs-to" type of association
         #
-        # @param [Hash] options
-        #
         # @return [RelationProxy]
         #
         # @api public

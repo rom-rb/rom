@@ -38,7 +38,7 @@ module ROM
       # Define which relations your repository is going to use
       #
       # @example
-      #   class MyRepo < ROM::Repository::Base
+      #   class MyRepo < ROM::Repository
       #     relations :users, :tasks
       #   end
       #
@@ -83,7 +83,7 @@ module ROM
       #     commands :create, mapper: :my_custom_mapper
       #   end
       #
-      # @param *names [Array<Symbol>] A list of command names
+      # @param [Array<Symbol>] names A list of command names
       # @option :mapper [Symbol] An optional mapper identifier
       # @option :use [Symbol] An optional command plugin identifier
       #

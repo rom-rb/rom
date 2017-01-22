@@ -52,7 +52,7 @@ module ROM
 
       # Maps the wrapped relation with other mappers available in the registry
       #
-      # @param *names [Array<Symbol, Class>] Either a list of mapper identifiers
+      # @param [Array<Symbol, Class>] names Either a list of mapper identifiers
       #                                      or a custom model class
       #
       # @return [RelationProxy] A new relation proxy with pipelined relation

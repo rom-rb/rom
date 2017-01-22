@@ -26,13 +26,15 @@ module ROM
       # in repositories. It might be worth looking into removing this requirement
       # from rom core Command::Graph API.
       #
-      # @param container [ROM::Container] container where relations are stored
-      # @param type [Symbol] The type of command
-      # @param adapter [Symbol] The adapter identifier
-      # @param ast [Array] The AST representation of a relation
-      # @param plugins [Array<Symbol>] A list of optional command plugins that should be used
+      # @overload [](container, type, adapter, ast, plugins, options)
       #
-      # @return [Command, CommandProxy]
+      #   @param container [ROM::Container] container where relations are stored
+      #   @param type [Symbol] The type of command
+      #   @param adapter [Symbol] The adapter identifier
+      #   @param ast [Array] The AST representation of a relation
+      #   @param plugins [Array<Symbol>] A list of optional command plugins that should be used
+      #
+      #   @return [Command, CommandProxy]
       #
       # @api private
       def self.[](*args)

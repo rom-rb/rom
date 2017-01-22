@@ -69,7 +69,8 @@ module ROM
     #   @return [MapperBuilder] The auto-generated mappers for repo relations
     attr_reader :mappers
 
-    # @api private
+    # @!attribute [r] commmand_compiler
+    #   @return [Method] Function for compiling commands bound to a repo instance
     attr_reader :command_compiler
 
     # Initializes a new repo by establishing configured relation proxies from
@@ -97,6 +98,8 @@ module ROM
       @command_compiler = method(:command)
     end
 
+    # Return a command for a relation
+    #
     # @overload command(type, relation)
     #   Returns a command for a relation
     #
@@ -144,6 +147,8 @@ module ROM
       end
     end
 
+    # Return a changeset for a relation
+    #
     # @overload changeset(name, attributes)
     #   Return a create changeset for a given relation identifier
     #

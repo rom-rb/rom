@@ -113,7 +113,21 @@ module ROM
 
     # Pipe changeset's data using custom steps define on the pipe
     #
-    # @param *steps [Array<Symbol>] A list of mapping steps
+    # @overload map(*steps)
+    #   Apply mapping using built-in transformations
+    #
+    #   @example
+    #     changeset.map(:add_timestamps)
+    #
+    #   @param [Array<Symbol>] steps A list of mapping steps
+    #
+    # @overload map(&block)
+    #   Apply mapping using a custom block
+    #
+    #   @example
+    #     changeset.map { |tuple| tuple.merge(created_at: Time.now) }
+    #
+    #   @param [Array<Symbol>] steps A list of mapping steps
     #
     # @return [Changeset]
     #
@@ -152,11 +166,18 @@ module ROM
 
     # Return a new changeset with updated options
     #
+    # @example
+    #   class NewUser < ROM::Changeset::Create[:users]
+    #     option :token_generator, reader: true
+    #   end
+    #
+    #   changeset = user_repo.changeset(NewUser).with(token_generator: my_token_gen)
+    #
     # @param [Hash] new_options The new options
     #
     # @return [Changeset]
     #
-    # @api private
+    # @api public
     def with(new_options)
       self.class.new(relation, options.merge(new_options))
     end
