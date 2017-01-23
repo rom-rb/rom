@@ -7,6 +7,15 @@ module ROM
   # @private
   class Command
     module ClassInterface
+      # This hook sets up default class state
+      #
+      # @api private
+      def inherited(klass)
+        super
+        klass.instance_variable_set(:'@before', [])
+        klass.instance_variable_set(:'@after', [])
+      end
+
       # Return adapter specific sub-class based on the adapter identifier
       #
       # This is a syntax sugar to make things consistent
@@ -104,6 +113,110 @@ module ROM
       # @api public
       def extend_for_relation(relation)
         include(relation_methods_mod(relation.class))
+      end
+
+      # Set before-execute hooks
+      #
+      # @overload before(hook)
+      #   Set an before hook as a method name
+      #
+      #   @example
+      #     class CreateUser < ROM::Commands::Create[:sql]
+      #       relation :users
+      #       register_as :create
+      #
+      #       before :my_hook
+      #
+      #       def my_hook(tuple, *)
+      #         puts "hook called#
+      #       end
+      #     end
+      #
+      # @overload before(hook_opts)
+      #   Set an before hook as a method name with arguments
+      #
+      #   @example
+      #     class CreateUser < ROM::Commands::Create[:sql]
+      #       relation :users
+      #       register_as :create
+      #
+      #       before my_hook: { arg1: 1, arg1: 2 }
+      #
+      #       def my_hook(tuple, arg1:, arg2:)
+      #         puts "hook called with args: #{arg1} and #{arg2}"
+      #       end
+      #     end
+      #
+      #   @param [Hash<Symbol=>Hash>] hook Options with method name and pre-set args
+      #
+      # @return [Array<Hash, Symbol>] A list of all configured before hooks
+      #
+      # @api public
+      def before(*hooks)
+        if hooks.size > 0
+          set_hooks(:before, hooks)
+        else
+          @before
+        end
+      end
+
+      # Set after-execute hooks
+      #
+      # @overload after(hook)
+      #   Set an after hook as a method name
+      #
+      #   @example
+      #     class CreateUser < ROM::Commands::Create[:sql]
+      #       relation :users
+      #       register_as :create
+      #
+      #       after :my_hook
+      #
+      #       def my_hook(tuple, *)
+      #         puts "hook called#
+      #       end
+      #     end
+      #
+      # @overload after(hook_opts)
+      #   Set an after hook as a method name with arguments
+      #
+      #   @example
+      #     class CreateUser < ROM::Commands::Create[:sql]
+      #       relation :users
+      #       register_as :create
+      #
+      #       after my_hook: { arg1: 1, arg1: 2 }
+      #
+      #       def my_hook(tuple, arg1:, arg2:)
+      #         puts "hook called with args: #{arg1} and #{arg2}"
+      #       end
+      #     end
+      #
+      #   @param [Hash<Symbol=>Hash>] hook Options with method name and pre-set args
+      #
+      # @return [Array<Hash, Symbol>] A list of all configured after hooks
+      #
+      # @api public
+      def after(*hooks)
+        if hooks.size > 0
+          set_hooks(:after, hooks)
+        else
+          @after
+        end
+      end
+
+      # Set new or more hooks
+      #
+      # @api private
+      def set_hooks(type, hooks)
+        ivar = :"@#{type}"
+        value = instance_variable_get(ivar)
+
+        if value.empty?
+          instance_variable_set(ivar, hooks)
+        else
+          value.concat(hooks)
+        end
       end
 
       # Return default name of the command class based on its name

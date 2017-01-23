@@ -31,7 +31,7 @@ module ROM
     extend Dry::Core::ClassAttributes
     extend ClassInterface
 
-    defines :adapter, :relation, :result, :input, :register_as, :restrictable, :before, :after
+    defines :adapter, :relation, :result, :input, :register_as, :restrictable
 
     # @attr_reader [Relation] relation The command's relation
     param :relation
