@@ -1,13 +1,14 @@
 require 'rom/command'
+require 'rom/memory'
 
-RSpec.describe ROM::Command, 'before/after hooks' do
+RSpec.describe ROM::Commands::Create[:memory], 'before/after hooks' do
   let(:relation) do
     spy(:relation)
   end
 
   describe '#before' do
     subject(:command) do
-      Class.new(ROM::Command) do
+      Class.new(ROM::Commands::Create[:memory]) do
         before :init
         before :normalize
 
@@ -29,7 +30,7 @@ RSpec.describe ROM::Command, 'before/after hooks' do
 
   describe '#after' do
     subject(:command) do
-      Class.new(ROM::Command) do
+      Class.new(ROM::Commands::Create[:memory]) do
         after :finalize
         after :filter
 
@@ -51,7 +52,7 @@ RSpec.describe ROM::Command, 'before/after hooks' do
 
   context 'without curried args' do
     subject(:command) do
-      Class.new(ROM::Command) do
+      Class.new(ROM::Commands::Create[:memory]) do
         result :many
         before :prepare
         after :finalize
@@ -95,7 +96,7 @@ RSpec.describe ROM::Command, 'before/after hooks' do
 
   context 'with curried args' do
     subject(:command) do
-      Class.new(ROM::Command) do
+      Class.new(ROM::Commands::Create[:memory]) do
         result :many
         before :prepare
         after :finalize
@@ -143,7 +144,7 @@ RSpec.describe ROM::Command, 'before/after hooks' do
 
   context 'with pre-set opts' do
     subject(:command) do
-      Class.new(ROM::Command) do
+      Class.new(ROM::Commands::Create[:memory]) do
         result :many
         before prepare: { prepared: true }
         after finalize: { finalized: true }
@@ -191,7 +192,7 @@ RSpec.describe ROM::Command, 'before/after hooks' do
 
   context 'with pre-set opts for a curried command' do
     subject(:command) do
-      Class.new(ROM::Command) do
+      Class.new(ROM::Commands::Create[:memory]) do
         result :many
         before prepare: { prepared: true }
         after finalize: { finalized: true }
@@ -239,7 +240,7 @@ RSpec.describe ROM::Command, 'before/after hooks' do
 
   context 'calling with multiple args' do
     subject(:command) do
-      Class.new(ROM::Command) do
+      Class.new(ROM::Commands::Create[:memory]) do
         result :many
         before prepare: { prepared: true }
         after finalize: { finalized: true }
