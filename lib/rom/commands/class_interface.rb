@@ -12,8 +12,8 @@ module ROM
       # @api private
       def inherited(klass)
         super
-        klass.instance_variable_set(:'@before', before.dup || [])
-        klass.instance_variable_set(:'@after', after.dup || [])
+        klass.instance_variable_set(:'@before', before ? before.dup : [])
+        klass.instance_variable_set(:'@after', before ? after.dup : [])
       end
 
       # Return adapter specific sub-class based on the adapter identifier
