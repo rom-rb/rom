@@ -9,8 +9,12 @@ RSpec.describe ROM::Command, 'before/after hooks' do
     subject(:command) do
       Class.new(ROM::Command) do
         before :init
+        before :normalize
 
         def init(*)
+        end
+
+        def normalize(*)
         end
 
         def prepare(*)
@@ -19,7 +23,7 @@ RSpec.describe ROM::Command, 'before/after hooks' do
     end
 
     it 'returns a new command with configured before hooks' do
-      expect(command.before(:prepare).before_hooks).to eql(%i[init prepare])
+      expect(command.before(:prepare).before_hooks).to eql(%i[init normalize prepare])
     end
   end
 
@@ -27,8 +31,12 @@ RSpec.describe ROM::Command, 'before/after hooks' do
     subject(:command) do
       Class.new(ROM::Command) do
         after :finalize
+        after :filter
 
         def finalize(*)
+        end
+
+        def filter(*)
         end
 
         def prepare(*)
@@ -37,7 +45,7 @@ RSpec.describe ROM::Command, 'before/after hooks' do
     end
 
     it 'returns a new command with configured after hooks' do
-      expect(command.after(:prepare).after_hooks).to eql(%i[finalize prepare])
+      expect(command.after(:prepare).after_hooks).to eql(%i[finalize filter prepare])
     end
   end
 
