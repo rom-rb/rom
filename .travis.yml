@@ -19,6 +19,7 @@ env:
 matrix:
   allow_failures:
     - rvm: rbx-3
+    - rvm: jruby-9.1.5.0
 notifications:
   webhooks:
     urls:
