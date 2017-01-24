@@ -1,8 +1,10 @@
-# to-be-released
+# 0.5.0 to-be-released
 
 ### Changed
 
 * Drop rom-support dependency in favor of dry-core (flash-gordon)
+
+[Compare v0.4.0..v0.5.0](https://github.com/rom-rb/rom-mapper/compare/v0.4.0...v0.5.0)
 
 # v0.4.0 2016-07-27
 
