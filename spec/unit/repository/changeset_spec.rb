@@ -143,7 +143,10 @@ RSpec.describe ROM::Repository, '#changeset' do
 
   it 'raises ArgumentError when unknown type was used' do
     expect { repo.changeset(not_here: repo.users) }.
-      to raise_error(ArgumentError, /not_here/)
+      to raise_error(
+           ArgumentError,
+           '+:not_here+ is not a valid changeset type. Must be one of: [:create, :update, :delete]'
+         )
   end
 
   it 'raises ArgumentError when unknown class was used' do

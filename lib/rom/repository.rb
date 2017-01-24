@@ -55,6 +55,13 @@ module ROM
   #
   # @api public
   class Repository
+    # Mapping for supported changeset classes used in #changeset(type => relation) method
+    CHANGESET_TYPES = {
+      create: Changeset::Create,
+      update: Changeset::Update,
+      delete: Changeset::Delete
+    }.freeze
+
     extend ClassInterface
 
     # @!attribute [r] container
@@ -216,13 +223,11 @@ module ROM
       end
 
       if type
-        if type.equal?(:update)
-          Changeset::Update.new(relation, opts)
-        elsif type.equal?(:delete)
-          Changeset::Delete.new(relation, opts)
-        else
-          raise ArgumentError, "+#{type.inspect}+ is not a valid changeset type"
-        end
+        klass = CHANGESET_TYPES.fetch(type) {
+          raise ArgumentError, "+#{type.inspect}+ is not a valid changeset type. Must be one of: #{CHANGESET_TYPES.keys.inspect}"
+        }
+
+        klass.new(relation, opts)
       else
         relation = relations[name]
 
