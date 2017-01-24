@@ -1,31 +1,31 @@
-require 'rom/schema/type'
+require 'rom/schema/attribute'
 
-RSpec.describe ROM::Schema::Type do
+RSpec.describe ROM::Schema::Attribute do
   describe '#inspect' do
     context 'with a primitive definition' do
       subject(:type) do
-        ROM::Schema::Type.new(ROM::Types::Int).meta(name: :id, primary_key: true)
+        ROM::Schema::Attribute.new(ROM::Types::Int).meta(name: :id, primary_key: true)
       end
 
       specify do
-        expect(type.inspect).to eql("#<ROM::Schema::Type[Integer] name=:id primary_key=true>")
+        expect(type.inspect).to eql("#<ROM::Schema::Attribute[Integer] name=:id primary_key=true>")
       end
     end
 
     context 'with a sum' do
       subject(:type) do
-        ROM::Schema::Type.new(ROM::Types::Bool).meta(name: :admin)
+        ROM::Schema::Attribute.new(ROM::Types::Bool).meta(name: :admin)
       end
 
       specify do
-        expect(type.inspect).to eql("#<ROM::Schema::Type[TrueClass | FalseClass] name=:admin>")
+        expect(type.inspect).to eql("#<ROM::Schema::Attribute[TrueClass | FalseClass] name=:admin>")
       end
     end
   end
 
   describe '#aliased' do
     subject(:type) do
-      ROM::Schema::Type.new(ROM::Types::String).meta(name: :user_name)
+      ROM::Schema::Attribute.new(ROM::Types::String).meta(name: :user_name)
     end
 
     specify do
@@ -35,7 +35,7 @@ RSpec.describe ROM::Schema::Type do
 
   describe '#method_missing' do
     subject(:type) do
-      ROM::Schema::Type.new(ROM::Types::Int).meta(name: :id, primary_key: true)
+      ROM::Schema::Attribute.new(ROM::Types::Int).meta(name: :id, primary_key: true)
     end
 
     specify do

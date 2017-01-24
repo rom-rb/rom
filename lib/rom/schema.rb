@@ -1,6 +1,6 @@
 require 'dry-equalizer'
 
-require 'rom/schema/type'
+require 'rom/schema/attribute'
 require 'rom/schema/dsl'
 require 'rom/association_set'
 
@@ -68,26 +68,26 @@ module ROM
     # Define a relation schema from plain rom types
     #
     # Resulting schema will decorate plain rom types with adapter-specific types
-    # By default `Schema::Type` will be used
+    # By default `Schema::Attribute` will be used
     #
     # @param [Relation::Name, Symbol] name The schema name, typically ROM::Relation::Name
     #
     # @return [Schema]
     #
     # @api public
-    def self.define(name, type_class: Type, attributes: EMPTY_ARRAY, associations: EMPTY_ASSOCIATION_SET, inferrer: DEFAULT_INFERRER)
+    def self.define(name, attr_class: Attribute, attributes: EMPTY_ARRAY, associations: EMPTY_ASSOCIATION_SET, inferrer: DEFAULT_INFERRER)
       new(
         name,
-        attributes: attributes(attributes, type_class),
+        attributes: attributes(attributes, attr_class),
         associations: associations,
         inferrer: inferrer,
-        type_class: type_class
+        attr_class: attr_class
       )
     end
 
     # @api private
-    def self.attributes(attributes, type_class)
-      attributes.map { |type| type_class.new(type) }
+    def self.attributes(attributes, attr_class)
+      attributes.map { |type| attr_class.new(type) }
     end
 
     # @api private
@@ -119,7 +119,7 @@ module ROM
 
     # Iterate over schema's attributes
     #
-    # @yield [Schema::Type]
+    # @yield [Schema::Attribute]
     #
     # @api public
     def each(&block)
@@ -169,7 +169,7 @@ module ROM
 
     # Project a schema to include only specified attributes
     #
-    # @param [*Array<Symbol, Schema::Type>] names Attribute names
+    # @param [*Array<Symbol, Schema::Attribute>] names Attribute names
     #
     # @return [Schema]
     #
@@ -232,7 +232,7 @@ module ROM
 
     # Return FK attribute for a given relation name
     #
-    # @return [Schema::Type]
+    # @return [Schema::Attribute]
     #
     # @api public
     def foreign_key(relation)
@@ -241,7 +241,7 @@ module ROM
 
     # Return primary key attributes
     #
-    # @return [Array<Schema::Type>]
+    # @return [Array<Schema::Attribute>]
     #
     # @api public
     def primary_key
@@ -264,7 +264,7 @@ module ROM
     #
     # This returns a new schema instance
     #
-    # @param [*Array<Schema::Type>]
+    # @param [*Array<Schema::Attribute>]
     #
     # @return [Schema]
     #
@@ -275,7 +275,7 @@ module ROM
 
     # Return a new schema with uniq attributes
     #
-    # @param [*Array<Schema::Type>]
+    # @param [*Array<Schema::Attribute>]
     #
     # @return [Schema]
     #
@@ -313,7 +313,7 @@ module ROM
       inferred, missing = inferrer.call(name, gateway)
 
       attr_names = map(&:name)
-      inferred_attrs = self.class.attributes(inferred, type_class).
+      inferred_attrs = self.class.attributes(inferred, attr_class).
                          reject { |attr| attr_names.include?(attr.name) }
 
       attributes.concat(inferred_attrs)
@@ -383,8 +383,8 @@ module ROM
     end
 
     # @api private
-    def type_class
-      options.fetch(:type_class)
+    def attr_class
+      options.fetch(:attr_class)
     end
 
     # @api private

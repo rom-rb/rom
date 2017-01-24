@@ -4,16 +4,16 @@ require 'dry/types/decorator'
 
 module ROM
   class Schema
-    # Schema types provide meta information about schema attributes and an API
+    # Schema attributes provide meta information about types and an API
     # for additional operations. This class can be extended by adapters to provide
-    # database-specific features. In example rom-sql provides SQL::Type with more
-    # features like creating SQL expressions for queries.
+    # database-specific features. In example rom-sql provides SQL::Attribute
+    # with more features like creating SQL expressions for queries.
     #
     # Schema attributes are accessible through canonical relation schemas and
     # instance-level schemas.
     #
     # @api public
-    class Type
+    class Attribute
       include Dry::Equalizer(:type)
 
       # !@attribute [r] type
@@ -219,7 +219,7 @@ module ROM
       #
       # @param [Symbol] name The alias
       #
-      # @return [Schema::Type]
+      # @return [Schema::Attribute]
       #
       # @api public
       def aliased(name)
@@ -255,7 +255,7 @@ module ROM
       #
       # @param [Symbol] prefix The prefix (defaults to source.dataset)
       #
-      # @return [Schema::Type]
+      # @return [Schema::Attribute]
       #
       # @api public
       def prefixed(prefix = source.dataset)
@@ -277,7 +277,7 @@ module ROM
       #
       # @param [Symbol] name The name of the source relation (defaults to source.dataset)
       #
-      # @return [Schema::Type]
+      # @return [Schema::Attribute]
       #
       # @api public
       def wrapped(name = source.dataset)
@@ -290,7 +290,7 @@ module ROM
       #
       # @param [Hash] opts The meta options
       #
-      # @return [Schema::Type]
+      # @return [Schema::Attribute]
       #
       # @api public
       def meta(opts = nil)
@@ -313,7 +313,7 @@ module ROM
 
       # Check if the attribute type is equal to another
       #
-      # @param [Dry::Type, Schema::Type]
+      # @param [Dry::Type, Schema::Attribute]
       #
       # @return [TrueClass,FalseClass]
       #
@@ -334,7 +334,7 @@ module ROM
 
       # Return read type or self
       #
-      # @return [Schema::Type]
+      # @return [Schema::Attribute]
       #
       # @api private
       def to_read_type

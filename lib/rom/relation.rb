@@ -71,7 +71,7 @@ module ROM
 
     # Return schema attribute
     #
-    # @return [Schema::Type]
+    # @return [Schema::Attribute]
     #
     # @api public
     def [](name)
