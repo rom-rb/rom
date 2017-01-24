@@ -4,24 +4,20 @@ sudo: false
 cache: bundler
 bundler_args: --without sql benchmarks console tools
 script: "bundle exec rake ci"
-rvm:
-  - 2.4.0
-  - 2.3.3
-  - 2.2.6
-  - 2.1.10
-  - rbx-3
-  - jruby-9.1.5.0
-  - ruby-head
 after_success:
   # Send coverage report from the job #1 == current MRI release
   - '[ "${TRAVIS_JOB_NUMBER#*.}" = "1" ] && [ "$TRAVIS_BRANCH" = "master" ] && bundle exec codeclimate-test-reporter'
+rvm:
+  - 2.4
+  - 2.3
+  - 2.2
+  - rbx-3
+  - jruby
 env:
   global:
     - JRUBY_OPTS='--dev -J-Xmx1024M'
 matrix:
   allow_failures:
-    - rvm: ruby-head
-    # Check out https://github.com/bundler/bundler/issues/5142
     - rvm: rbx-3
 notifications:
   webhooks:
