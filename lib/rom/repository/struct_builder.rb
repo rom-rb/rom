@@ -3,7 +3,7 @@ require 'dry/core/cache'
 require 'dry/core/class_builder'
 
 require 'rom/struct'
-require 'rom/schema/type'
+require 'rom/schema/attribute'
 
 module ROM
   class Repository
