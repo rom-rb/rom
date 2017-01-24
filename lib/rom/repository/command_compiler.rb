@@ -114,15 +114,15 @@ module ROM
         name, meta, header = node
         other = visit(header, name)
 
-        mapping =
-          if meta[:combine_type] == :many
-            name
-          else
-            { Dry::Core::Inflector.singularize(name).to_sym => name }
-          end
-
         if type
           register_command(name, type, meta, parent_relation)
+
+          mapping =
+            if meta[:combine_type] == :many
+              name
+            else
+              { Dry::Core::Inflector.singularize(name).to_sym => name }
+            end
 
           if other.size > 0
             [mapping, [type, other]]
@@ -130,8 +130,8 @@ module ROM
             [mapping, type]
           end
         else
-          registry[name][id] = container.commands[name][id].with(options)
-          [mapping, id]
+          registry[name][id] = container.commands[name][id]
+          [name, id]
         end
       end
 

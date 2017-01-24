@@ -109,15 +109,6 @@ module ROM
       command.call
     end
 
-    # Return command result type
-    #
-    # @return [Symbol]
-    #
-    # @api private
-    def result
-      __data__.is_a?(Hash) ? :one : :many
-    end
-
     # Return string representation of the changeset
     #
     # @return [String]

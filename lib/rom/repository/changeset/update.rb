@@ -77,20 +77,6 @@ module ROM
             Hash[new_tuple - (new_tuple & ori_tuple)]
           end
       end
-
-      # Return a command for this changesets if there's a diff
-      #
-      # @see Changeset#command
-      #
-      # @api public
-      def command
-        super.curry(to_h) if diff?
-      end
-
-      # @api private
-      def default_command_type
-        :update
-      end
     end
   end
 end

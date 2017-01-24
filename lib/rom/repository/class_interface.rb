@@ -131,7 +131,7 @@ module ROM
 
             changeset = input.first
 
-            if changeset.is_a?(Changeset)
+            if changeset.respond_to?(:commit)
               map_tuple(changeset.relation, changeset.commit)
             else
               command(type => self.class.root, **opts)

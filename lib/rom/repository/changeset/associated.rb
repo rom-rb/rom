@@ -58,10 +58,12 @@ module ROM
       # @api public
       def command
         case right
-        when Changeset, Associated
-          left.command >> right.command.with_association(association)
+        when Changeset
+          left.command.curry(left) >> right.command.with_association(association).curry(right)
+        when Associated
+          left.command.curry(left) >> right.command.with_association(association)
         else
-          left.create_command.with_association(association).curry(left, right)
+          left.command.with_association(association).curry(left, right)
         end
       end
 

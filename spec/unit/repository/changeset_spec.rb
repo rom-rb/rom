@@ -20,8 +20,8 @@ RSpec.describe ROM::Repository, '#changeset' do
         expect(changeset.relation).to be(repo.users)
       end
 
-      it 'can return a dedicated command' do
-        expect(changeset.command.call).to eql(id: 1, name: 'Jane')
+      it 'can be commited' do
+        expect(changeset.commit).to eql(id: 1, name: 'Jane')
       end
     end
 
@@ -42,8 +42,8 @@ RSpec.describe ROM::Repository, '#changeset' do
         expect(changeset.relation).to be(repo.users)
       end
 
-      it 'can return a dedicated command' do
-        expect(changeset.command.call).to eql([{ id: 1, name: 'Jane' }, { id: 2, name: 'Joe' }])
+      it 'can be commited' do
+        expect(changeset.commit).to eql([{ id: 1, name: 'Jane' }, { id: 2, name: 'Joe' }])
       end
     end
   end
@@ -70,8 +70,8 @@ RSpec.describe ROM::Repository, '#changeset' do
         expect(changeset.relation.one).to eql(repo.users.by_pk(user[:id]).one)
       end
 
-      it 'can return a dedicated command' do
-        expect(changeset.command.call).to eql(id: 1, name: 'Jane Doe')
+      it 'can return be commited' do
+        expect(changeset.commit).to eql(id: 1, name: 'Jane Doe')
       end
     end
 
@@ -109,8 +109,8 @@ RSpec.describe ROM::Repository, '#changeset' do
       expect(changeset.relation).to eql(relation)
     end
 
-    it 'can return a dedicated command' do
-      expect(changeset.command.call.to_h).to eql(id: 1, name: 'Jane')
+    it 'can be commited' do
+      expect(changeset.commit.to_h).to eql(id: 1, name: 'Jane')
       expect(relation.one).to be(nil)
     end
   end
@@ -136,8 +136,8 @@ RSpec.describe ROM::Repository, '#changeset' do
       expect(changeset.relation).to be(repo.users)
     end
 
-    it 'can return a dedicated command' do
-      expect(changeset.command.call).to eql(id: 1, name: 'Jane')
+    it 'can be commited' do
+      expect(changeset.commit).to eql(id: 1, name: 'Jane')
     end
   end
 

@@ -4,7 +4,7 @@ RSpec.describe ROM::Repository, '#transaction' do
   end
 
   let(:task_repo) do
-    Class.new(ROM::Repository[:tasks]) { commands :create }.new(rom)
+    Class.new(ROM::Repository[:tasks]) { commands :create, :update }.new(rom)
   end
 
   include_context 'database'
@@ -24,5 +24,19 @@ RSpec.describe ROM::Repository, '#transaction' do
     expect(user.name).to eql('Jane')
     expect(task.user_id).to be(user.id)
     expect(task.title).to eql('Task One')
+  end
+
+  it 'updating tasks user' do
+    jane = user_repo.create(name: 'Jane')
+    john = user_repo.create(name: 'John')
+    task = task_repo.create(title: 'Jane Task', user_id: jane.id)
+
+    task = task_repo.transaction do
+      task_changeset = task_repo.changeset(task.id, title: 'John Task').associate(john, :user).commit
+      task_repo.update(task_changeset)
+    end
+
+    expect(task.user_id).to be(john.id)
+    expect(task.title).to eql('John Task')
   end
 end

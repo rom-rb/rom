@@ -160,6 +160,51 @@ module ROM
       end
       alias_method :to_ary, :to_a
 
+      # Commit stateful changeset
+      #
+      # @see Changeset#commit
+      #
+      # @api public
+      def commit
+        command.call(self)
+      end
+
+      # Associate a changeset with another changeset or hash-like object
+      #
+      # @example with another changeset
+      #   new_user = user_repo.changeset(name: 'Jane')
+      #   new_task = user_repo.changeset(:tasks, title: 'A task')
+      #
+      #   new_task.associate(new_user, :users)
+      #
+      # @example with a hash-like object
+      #   user = user_repo.users.by_pk(1).one
+      #   new_task = user_repo.changeset(:tasks, title: 'A task')
+      #
+      #   new_task.associate(user, :users)
+      #
+      # @param [#to_hash, Changeset] other Other changeset or hash-like object
+      # @param [Symbol] assoc The association identifier from schema
+      #
+      # @api public
+      def associate(other, name)
+        Associated.new(self, other, association: name)
+      end
+
+      # Return command result type
+      #
+      # @return [Symbol]
+      #
+      # @api private
+      def result
+        __data__.is_a?(Hash) ? :one : :many
+      end
+
+      # @api public
+      def command
+        command_compiler.(command_type, relation_identifier, DEFAULT_COMMAND_OPTS.merge(result: result))
+      end
+
       # Return string representation of the changeset
       #
       # @return [String]
