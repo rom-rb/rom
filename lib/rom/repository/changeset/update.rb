@@ -63,7 +63,7 @@ module ROM
 
       # Calculate the diff between the original and changeset data
       #
-      # @return [Hash[
+      # @return [Hash, Array]
       #
       # @api public
       def diff
