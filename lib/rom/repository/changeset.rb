@@ -133,7 +133,14 @@ module ROM
     #
     # @api private
     def command
-      command_compiler.(command_type, relation, DEFAULT_COMMAND_OPTS)
+      command_compiler.(command_type, relation_identifier, DEFAULT_COMMAND_OPTS).new(relation)
+    end
+
+    private
+
+    # @api private
+    def relation_identifier
+      relation.name.relation
     end
   end
 end
