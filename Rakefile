@@ -11,7 +11,7 @@ task :"spec:isolation" do
   end
 end
 
-if RUBY_ENGINE == 'jruby'
+if RUBY_ENGINE != 'ruby'
   desc "Run CI tasks"
   task ci: [:spec, :lint]
 else
