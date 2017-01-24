@@ -35,6 +35,10 @@ def T(*args)
   ROM::Processor::Transproc::Functions[*args]
 end
 
+def rbx?
+  RUBY_ENGINE == 'rbx'
+end
+
 RSpec.configure do |config|
   config.include(SchemaHelpers)
 
