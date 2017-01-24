@@ -18,6 +18,8 @@ module ROM
   #
   # @abstract
   class Changeset
+    DEFAULT_COMMAND_OPTS = { mapper: false }.freeze
+
     extend Initializer
     extend Dry::Core::Cache
     extend Dry::Core::ClassAttributes
@@ -131,7 +133,7 @@ module ROM
     #
     # @api private
     def command
-      command_compiler.(command_type, relation, mapper: false)
+      command_compiler.(command_type, relation, DEFAULT_COMMAND_OPTS)
     end
   end
 end

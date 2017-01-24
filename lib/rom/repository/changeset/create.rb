@@ -57,7 +57,7 @@ module ROM
       #
       # @api private
       def create_command
-        command_compiler.(command_type, relation, mapper: false, result: result)
+        command_compiler.(command_type, relation, DEFAULT_COMMAND_OPTS.merge(result: result))
       end
     end
   end
