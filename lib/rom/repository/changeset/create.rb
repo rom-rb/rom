@@ -49,6 +49,15 @@ module ROM
         end
       end
 
+      # Return string representation of the changeset
+      #
+      # @return [String]
+      #
+      # @api public
+      def inspect
+        %(#<#{self.class} relation=#{relation.name.inspect}>)
+      end
+
       # Create a base command for this changeset
       #
       # @return [Command]

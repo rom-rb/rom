@@ -121,11 +121,22 @@ RSpec.describe ROM::Changeset do
   end
 
   describe '#inspect' do
-    subject(:changeset) { ROM::Changeset::Create.new(relation).data(name: 'Jane') }
+    context 'with a stateful changeset' do
+      subject(:changeset) { ROM::Changeset::Create.new(relation).data(name: 'Jane') }
 
-    specify do
-      expect(changeset.inspect).
-        to eql('#<ROM::Changeset::Create relation=:users data={:name=>"Jane"}>')
+      specify do
+        expect(changeset.inspect).
+          to eql('#<ROM::Changeset::Create relation=:users data={:name=>"Jane"}>')
+      end
+    end
+
+    context 'with a data-less changeset' do
+      subject(:changeset) { ROM::Changeset::Delete.new(relation) }
+
+      specify do
+        expect(changeset.inspect).
+          to eql('#<ROM::Changeset::Delete relation=:users>')
+      end
     end
   end
 end
