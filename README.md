@@ -4,7 +4,7 @@
 [codeclimate]: https://codeclimate.com/github/rom-rb/rom-mapper
 [inchpages]: http://inch-ci.org/github/rom-rb/rom-mapper
 
-# ROM::Mapper
+# rom-mapper
 
 [![Gem Version](https://badge.fury.io/rb/rom-mapper.svg)][gem]
 [![Build Status](https://travis-ci.org/rom-rb/rom-mapper.svg?branch=master)][travis]
