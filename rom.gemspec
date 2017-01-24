@@ -17,7 +17,7 @@ Gem::Specification.new do |gem|
 
   gem.add_runtime_dependency 'concurrent-ruby', '~> 1.0'
   gem.add_runtime_dependency 'dry-equalizer', '~> 0.2'
-  gem.add_runtime_dependency 'dry-types', '~> 0.8'
+  gem.add_runtime_dependency 'dry-types', '~> 0.9', '>= 0.9.4'
   gem.add_runtime_dependency 'dry-core', '~> 0.2', '>= 0.2.3'
   gem.add_runtime_dependency 'dry-initializer', '~> 0.10', '>= 0.10.2'
   gem.add_runtime_dependency 'rom-mapper', '~> 0.5.0.beta'
