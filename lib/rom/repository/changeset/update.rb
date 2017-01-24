@@ -10,7 +10,7 @@ module ROM
     # use Update changesets.
     #
     # @api public
-    class Update < Changeset
+    class Update < Stateful
       # Commit update changeset if there's a diff
       #
       # This returns original tuple if there's no diff

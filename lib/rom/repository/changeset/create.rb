@@ -3,7 +3,7 @@ module ROM
     # Changeset specialization for create commands
     #
     # @api public
-    class Create < Changeset
+    class Create < Stateful
       # @!attribute [r] association
       #   @return [Array] Associated changeset or hash-like object with its association name
       option :association, reader: true, optional: true, default: proc { nil }
