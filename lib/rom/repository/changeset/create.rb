@@ -6,10 +6,6 @@ module ROM
     class Create < Stateful
       command_type :create
 
-      # @!attribute [r] association
-      #   @return [Array] Associated changeset or hash-like object with its association name
-      option :association, reader: true, optional: true, default: proc { nil }
-
       # Associate a changeset with another changeset or hash-like object
       #
       # @example with another changeset
@@ -28,8 +24,8 @@ module ROM
       # @param [Symbol] assoc The association identifier from schema
       #
       # @api public
-      def associate(other, assoc)
-        with(association: [other, assoc])
+      def associate(other, name)
+        Associated.new(self, other, association: name)
       end
 
       # Prepare a command for this changeset
@@ -38,20 +34,10 @@ module ROM
       #
       # @api private
       def command
-        if association
-          other, assoc = association
-
-          if other.is_a?(Changeset)
-            create_command.curry(self) >> other.command.with_association(assoc)
-          else
-            create_command.with_association(assoc).curry(self, other)
-          end
-        else
-          create_command.curry(self)
-        end
+        create_command.curry(self)
       end
 
-      # Create a base command for this changeset
+      # Create a base command for this changeset without curried data
       #
       # @return [Command]
       #

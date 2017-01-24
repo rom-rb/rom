@@ -146,6 +146,8 @@ module ROM
 end
 
 require 'rom/repository/changeset/stateful'
+require 'rom/repository/changeset/associated'
+
 require 'rom/repository/changeset/create'
 require 'rom/repository/changeset/update'
 require 'rom/repository/changeset/delete'
