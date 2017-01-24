@@ -5,11 +5,11 @@ cache: bundler
 bundler_args: --without sql benchmarks console tools
 script: "bundle exec rake ci"
 after_success:
-  - '[ -d coverage ] && bundle exec codeclimate-test-reporter'
+  - '[ "${TRAVIS_JOB_NUMBER#*.}" = "1" ] && [ "$TRAVIS_BRANCH" = "master" ] && bundle exec codeclimate-test-reporter'
 rvm:
-  - 2.2.6
-  - 2.3.3
-  - 2.4.0
+  - 2.4
+  - 2.3
+  - 2.2
   - rbx-3
   - jruby
 env:
