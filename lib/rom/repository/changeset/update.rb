@@ -76,9 +76,13 @@ module ROM
           end
       end
 
-      # @api private
+      # Return a command for this changesets if there's a diff
+      #
+      # @see Changeset#command
+      #
+      # @api public
       def command
-        command_compiler.(command_type, relation, mapper: false).curry(to_h) if diff?
+        super.curry(to_h) if diff?
       end
 
       # @api private

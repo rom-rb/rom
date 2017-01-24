@@ -7,15 +7,6 @@ module ROM
     #
     # @api public
     class Delete < Changeset
-      # Return command for this changesets
-      #
-      # @return [Command]
-      #
-      # @api private
-      def command
-        command_compiler.(command_type, relation, mapper: false)
-      end
-
       # Return command type identifier for this changeset
       #
       # @return [Symbol]

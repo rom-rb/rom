@@ -111,6 +111,15 @@ module ROM
     def inspect
       %(#<#{self.class} relation=#{relation.name.inspect}>)
     end
+
+    # Return a command for this changeset
+    #
+    # @return [ROM::Command]
+    #
+    # @api private
+    def command
+      command_compiler.(command_type, relation, mapper: false)
+    end
   end
 end
 
