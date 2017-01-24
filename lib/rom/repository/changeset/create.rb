@@ -4,6 +4,8 @@ module ROM
     #
     # @api public
     class Create < Stateful
+      command_type :create
+
       # @!attribute [r] association
       #   @return [Array] Associated changeset or hash-like object with its association name
       option :association, reader: true, optional: true, default: proc { nil }
@@ -56,15 +58,6 @@ module ROM
       # @api private
       def create_command
         command_compiler.(command_type, relation, mapper: false, result: result)
-      end
-
-      # Return command type identifier for this changeset
-      #
-      # @return [Symbol]
-      #
-      # @api private
-      def default_command_type
-        :create
       end
     end
   end

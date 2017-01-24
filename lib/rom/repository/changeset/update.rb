@@ -11,6 +11,8 @@ module ROM
     #
     # @api public
     class Update < Stateful
+      command_type :update
+
       # Commit update changeset if there's a diff
       #
       # This returns original tuple if there's no diff

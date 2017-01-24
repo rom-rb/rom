@@ -22,6 +22,19 @@ module ROM
     extend Dry::Core::Cache
     extend Dry::Core::ClassAttributes
 
+    # @!method self.command_type
+    #   Get or set changeset command type
+    #
+    #   @overload command_type
+    #     Return configured command_type
+    #     @return [Symbol]
+    #
+    #   @overload command_type(identifier)
+    #     Set relation identifier for this changeset
+    #     @param [Symbol] identifier The command type identifier
+    #     @return [Symbol]
+    defines :command_type
+
     # @!method self.relation
     #   Get or set changeset relation identifier
     #
@@ -45,7 +58,7 @@ module ROM
 
     # @!attribute [r] command_type
     #   @return [Symbol] a custom command identifier
-    option :command_type, reader: true, optional: true, default: -> changeset { changeset.default_command_type }
+    option :command_type, reader: true, default: -> changeset { changeset.class.command_type }
 
     # Create a changeset class preconfigured for a specific relation
     #

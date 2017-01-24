@@ -7,14 +7,7 @@ module ROM
     #
     # @api public
     class Delete < Changeset
-      # Return command type identifier for this changeset
-      #
-      # @return [Symbol]
-      #
-      # @api private
-      def default_command_type
-        :delete
-      end
+      command_type :delete
     end
   end
 end
