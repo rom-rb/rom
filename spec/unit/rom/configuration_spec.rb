@@ -39,8 +39,6 @@ RSpec.describe ROM::Configuration do
     end
 
     it 'raises error if repo is not defined' do
-      pending 'this fails in a weird way on rubinius' if rbx?
-
       configuration = ROM::Configuration.new({})
 
       expect { configuration[:not_here] }.to raise_error(KeyError, /not_here/)

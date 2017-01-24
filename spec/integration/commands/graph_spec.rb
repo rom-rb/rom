@@ -279,8 +279,6 @@ RSpec.describe 'Building up a command graph for nested input' do
   end
 
   it 'raises a proper error when the input has invalid structure' do
-    pending 'this fails in a weird way on rubinius' if rbx?
-
     input = { user: { name: 'Jane' } }
 
     options = [
