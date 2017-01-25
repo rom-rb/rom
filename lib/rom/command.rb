@@ -98,7 +98,13 @@ module ROM
           result = prepared ? execute(prepared, &block) : execute(&block)
 
           if curried?
-            apply_hooks(after_hooks, result, *args)
+            if args.size > 0
+              apply_hooks(after_hooks, result, *args)
+            elsif curry_args.size > 1
+              apply_hooks(after_hooks, result, curry_args[1])
+            else
+              apply_hooks(after_hooks, result)
+            end
           else
             apply_hooks(after_hooks, result, *args[1..args.size-1])
           end
