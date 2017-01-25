@@ -9,6 +9,8 @@ module ROM
     # you need to implement it yourself in your relations if you want to
     # use Update changesets.
     #
+    # @see Changaeset::Stateful
+    #
     # @api public
     class Update < Stateful
       command_type :update
@@ -65,7 +67,7 @@ module ROM
 
       # Calculate the diff between the original and changeset data
       #
-      # @return [Hash, Array]
+      # @return [Hash]
       #
       # @api public
       def diff

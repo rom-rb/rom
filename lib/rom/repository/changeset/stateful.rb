@@ -52,7 +52,9 @@ module ROM
       #     end
       #   end
       #
-      # @return [Array<Pipe, Transproc::Function>]
+      # @return [Array<Pipe>, Transproc::Function>]
+      #
+      # @see https://github.com/solnic/transproc Transproc
       #
       # @api public
       def self.map(&block)
@@ -99,8 +101,6 @@ module ROM
       #
       #   @example
       #     changeset.map { |tuple| tuple.merge(created_at: Time.now) }
-      #
-      #   @param [Array<Symbol>] steps A list of mapping steps
       #
       # @overload map(*steps, &block)
       #   Apply mapping using built-in transformations and a custom block
