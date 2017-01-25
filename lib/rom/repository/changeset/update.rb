@@ -9,7 +9,7 @@ module ROM
     # you need to implement it yourself in your relations if you want to
     # use Update changesets.
     #
-    # @see Changaeset::Stateful
+    # @see Changeset::Stateful
     #
     # @api public
     class Update < Stateful

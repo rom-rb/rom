@@ -2,7 +2,7 @@ module ROM
   class Changeset
     # Changeset specialization for create commands
     #
-    # @see Changaeset::Stateful
+    # @see Changeset::Stateful
     #
     # @api public
     class Create < Stateful
