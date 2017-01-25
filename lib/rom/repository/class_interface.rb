@@ -112,11 +112,12 @@ module ROM
 
       # @api private
       def define_command_method(type, **opts)
-        define_method(type) do |input|
-          if input.respond_to?(:commit)
-            map_tuple(input.relation, input.commit)
+        define_method(type) do |*input|
+          if input.size == 1 && input[0].respond_to?(:commit)
+            changeset = input[0]
+            map_tuple(changeset.relation, changeset.commit)
           else
-            command(type => self.class.root, **opts).call(input)
+            command(type => self.class.root, **opts).call(*input)
           end
         end
       end

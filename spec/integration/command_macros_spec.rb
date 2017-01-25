@@ -58,6 +58,19 @@ RSpec.describe ROM::Repository, '.command' do
     expect(updated_user.name).to eql('Jane Doe')
   end
 
+  it 'allows to configure :delete command without args' do
+    repo = Class.new(ROM::Repository[:users]) do
+      commands :delete
+    end.new(rom)
+
+    repo.users.insert(name: 'Jane')
+    repo.users.insert(name: 'John')
+
+    repo.delete
+
+    expect(repo.users.count).to be_zero
+  end
+
   it 'allows defining a single command with multiple views' do
     repo = Class.new(ROM::Repository[:users]) do
       commands :create, update: [:by_pk, :by_name]
