@@ -117,11 +117,31 @@ module ROM
         if type
           register_command(name, type, meta, parent_relation)
 
-          mapping =
+          default_mapping =
             if meta[:combine_type] == :many
               name
-            else
+            else meta[:combine_type] == :one
               { Dry::Core::Inflector.singularize(name).to_sym => name }
+            end
+
+          mapping =
+            if parent_relation
+              associations = container.relations[parent_relation].associations
+
+              assoc =
+                if associations.key?(meta[:combine_name])
+                  associations[meta[:combine_name]]
+                elsif associations.key?(name)
+                  associations[name]
+                end
+
+              if assoc
+                { assoc.target.key => assoc.target.dataset }
+              else
+                default_mapping
+              end
+            else
+              default_mapping
             end
 
           if other.size > 0
