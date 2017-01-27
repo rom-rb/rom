@@ -61,6 +61,11 @@ RSpec.describe 'loading proxy' do
           [{ id: 1, name: 'Jane' }, {id: 2, name: 'Joe' }]
         )
       end
+
+      it 'raises error when custom mapper is used with a model class' do
+        expect { users.map_with(:name_list, Class.new) }.
+          to raise_error(ArgumentError, 'using custom mappers and a model is not supported')
+      end
     end
 
     context 'setting custom model type' do

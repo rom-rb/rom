@@ -74,6 +74,8 @@ module ROM
       def map_with(*names)
         if names.size == 1 && names[0].is_a?(Class)
           with(meta: meta.merge(model: names[0]))
+        elsif names.size > 1 && names.any? { |name| name.is_a?(Class) }
+          raise ArgumentError, 'using custom mappers and a model is not supported'
         else
           names.reduce(self) { |a, e| a >> relation.mappers[e] }
         end
