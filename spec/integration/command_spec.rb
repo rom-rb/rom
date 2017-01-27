@@ -92,6 +92,16 @@ RSpec.describe ROM::Repository, '#command' do
       expect(user.tasks.first.title).to eql('Task one')
     end
 
+    it 'builds Create command for a relation graph with one-to-many with aliased association' do
+      create_user = repo.command(:create, repo.users.combine(:aliased_posts))
+
+      user = create_user.call(name: 'Jane Doe', aliased_posts: [{ title: 'Post one' }, { title: 'Post two' }])
+
+      expect(user.id).to_not be(nil)
+      expect(user.name).to eql('Jane Doe')
+      expect(user.aliased_posts.size).to be(2)
+    end
+
     it 'builds Create command for a deeply nested graph with one-to-many' do
       create_user = repo.command(
         :create,

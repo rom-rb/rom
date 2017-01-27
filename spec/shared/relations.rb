@@ -19,6 +19,7 @@ RSpec.shared_context 'relations' do
       schema(infer: true) do
         associations do
           has_many :posts
+          has_many :posts, as: :aliased_posts
           has_many :labels, through: :posts
         end
       end

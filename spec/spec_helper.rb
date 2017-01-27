@@ -33,6 +33,13 @@ end
 require 'dry/core/deprecations'
 Dry::Core::Deprecations.set_logger!(root.join('../log/deprecations.log'))
 
+# Make inference errors quiet
+class ROM::SQL::Schema::Inferrer
+  def self.on_error(*args)
+    # shush
+  end
+end
+
 # Namespace holding all objects created during specs
 module Test
   def self.remove_constants
