@@ -23,6 +23,8 @@
 
 ### Fixed
 
+* `Create` commands generated for aliased associations work correctly (solnic)
+* `Create` commands generated for `belongs_to` associations work correctly (solnic)
 * FKs are always included in auto-generated structs used in aggregates (solnic)
 * Calling undefined methods on repo relations raises a nicer error (solnic)
 
