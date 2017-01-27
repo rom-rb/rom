@@ -21,7 +21,7 @@ module ROM
   #
   # @abstract
   #
-  # @private
+  # @api public
   class Command
     extend Initializer
     include Dry::Equalizer(:relation, :options)
@@ -31,20 +31,199 @@ module ROM
     extend Dry::Core::ClassAttributes
     extend ClassInterface
 
-    defines :adapter, :relation, :result, :input, :register_as, :restrictable
+    # @!method self.adapter
+    #   Get or set adapter identifier
+    #
+    #   @overload adapter
+    #     Get adapter identifier
+    #
+    #     @example
+    #       ROM::Memory::Commands::Create.adapter
+    #       # => :memory
+    #
+    #     @return [Symbol]
+    #
+    #   @overload adapter(identifier)
+    #     Set adapter identifier. This must always match actual adapter identifier
+    #     that was used to register an adapter.
+    #
+    #     @example
+    #       module MyAdapter
+    #         class CreateCommand < ROM::Commands::Memory::Create
+    #           adapter :my_adapter
+    #         end
+    #       end
+    #
+    # @api public
+    defines :adapter
 
-    # @attr_reader [Relation] relation The command's relation
+    # @!method self.relation
+    #   Get or set relation identifier
+    #
+    #   @overload relation
+    #     Get relation identifier
+    #
+    #     @example
+    #       module CreateUser < ROM::Commands::Create[:memory]
+    #         relation :users
+    #       end
+    #
+    #       CreateUser.relation
+    #       # => :users
+    #
+    #     @return [Symbol]
+    #
+    #   @overload relation(identifier)
+    #     Set relation identifier.
+    #
+    #     @example
+    #       module CreateUser < ROM::Commands::Create[:memory]
+    #         relation :users
+    #       end
+    #
+    # @api public
+    defines :relation
+
+    # @!method self.relation
+    #   Get or set result type
+    #
+    #   @overload result
+    #     Get result type
+    #
+    #     @example
+    #       module CreateUser < ROM::Commands::Create[:memory]
+    #         result :one
+    #       end
+    #
+    #       CreateUser.result
+    #       # => :one
+    #
+    #     @return [Symbol]
+    #
+    #   @overload relation(identifier)
+    #     Set result type
+    #
+    #     @example
+    #       module CreateUser < ROM::Commands::Create[:memory]
+    #         result :one
+    #       end
+    #
+    # @api public
+    defines :result
+
+    # @!method self.relation
+    #   Get or set input processing function. This is typically set during setup
+    #   to relation's input_schema
+    #
+    #   @overload input
+    #     Get input processing function
+    #
+    #     @example
+    #       module CreateUser < ROM::Commands::Create[:memory]
+    #         input -> tuple { .. }
+    #       end
+    #
+    #       CreateUser.input
+    #       # Your custom function
+    #
+    #     @return [Proc,#call]
+    #
+    #   @overload input(identifier)
+    #     Set input processing function
+    #
+    #     @example
+    #       module CreateUser < ROM::Commands::Create[:memory]
+    #         input -> tuple { .. }
+    #       end
+    #
+    # @api public
+    defines :input
+
+    # @!method self.register_as
+    #   Get or set identifier that should be used to register a command in a container
+    #
+    #   @overload register_as
+    #     Get registration identifier
+    #
+    #     @example
+    #       module CreateUser < ROM::Commands::Create[:memory]
+    #         register_as :create_user
+    #       end
+    #
+    #       CreateUser.register_as
+    #       # => :create_user
+    #
+    #     @return [Symbol]
+    #
+    #   @overload register_as(identifier)
+    #     Set registration identifier
+    #
+    #     @example
+    #       module CreateUser < ROM::Commands::Create[:memory]
+    #         register_as :create_user
+    #       end
+    #
+    # @api public
+    defines :register_as
+
+    # @!method self.restrictable
+    #   @overload restrictable
+    #     Check if a command class is restrictable
+    #
+    #     @example
+    #       module UpdateUser < ROM::Commands::Update[:memory]
+    #         restrictable true
+    #       end
+    #
+    #       CreateUser.restrictable
+    #       # => true
+    #
+    #     @return [FalseClass, TrueClass]
+    #
+    #   @overload restrictable(value)
+    #     Set if a command is restrictable
+    #
+    #     @example
+    #       module UpdateUser < ROM::Commands::Update[:memory]
+    #         restrictable true
+    #       end
+    #
+    # @api public
+    defines :restrictable
+
+    # @!attribute [r] relation
+    #   @return [Relation] Command's relation
     param :relation
 
     CommandType = Types::Strict::Symbol.enum(:create, :update, :delete)
     Result = Types::Strict::Symbol.enum(:one, :many)
 
+    # @!attribute [r] type
+    #   @return [Symbol] The command type, one of :create, :update or :delete
     option :type, type: CommandType, optional: true
+
+    # @!attribute [r] source
+    #   @return [Relation] The source relation
     option :source, reader: true, optional: true, default: -> c { c.relation }
+
+    # @!attribute [r] type
+    #   @return [Symbol] Result type, either :one or :many
     option :result, reader: true, type: Result
+
+    # @!attribute [r] input
+    #   @return [Proc, #call] Tuple processing function, typically uses Relation#input_schema
     option :input, reader: true
+
+    # @!attribute [r] curry_args
+    #   @return [Array] Curried args
     option :curry_args, reader: true, default: -> _ { EMPTY_ARRAY }
+
+    # @!attribute [r] before
+    #   @return [Array<Hash>] An array with before hooks configuration
     option :before, Types::Coercible::Array, reader: true, as: :before_hooks, default: proc { EMPTY_ARRAY }
+
+    # @!attribute [r] before
+    #   @return [Array<Hash>] An array with after hooks configuration
     option :after, Types::Coercible::Array, reader: true, as: :after_hooks, default: proc { EMPTY_ARRAY }
 
     input Hash
@@ -84,6 +263,8 @@ module ROM
 
     # Call the command and return one or many tuples
     #
+    # This method will apply before/after hooks automatically
+    #
     # @api public
     def call(*args, &block)
       tuples =
@@ -122,9 +303,10 @@ module ROM
 
     # Curry this command with provided args
     #
-    # Curried command can be called without args
+    # Curried command can be called without args. If argument is a graph input processor,
+    # lazy command will be returned, which is used for handling nested input hashes.
     #
-    # @return [Command]
+    # @return [Command, Lazy]
     #
     # @api public
     def curry(*args)
@@ -136,68 +318,130 @@ module ROM
     end
     alias_method :with, :curry
 
-    # @api public
-    def curried?
-      curry_args.size > 0
-    end
-
-    # @api private
-    def hooks?
-      before_hooks.size > 0 || after_hooks.size > 0
-    end
-
+    # Compose this command with other commands
+    #
+    # Composed commands can handle nested input
+    #
+    # @return [Command::Graph]
+    #
     # @api public
     def combine(*others)
       Graph.new(self, others)
     end
 
-    # @api private
-    def lazy?
-      false
+    # Check if this command is curried
+    #
+    # @return [TrueClass, FalseClass]
+    #
+    # @api public
+    def curried?
+      curry_args.size > 0
     end
 
-    # @api private
-    def graph?
-      false
-    end
-
-    # @api private
-    def one?
-      result.equal?(:one)
-    end
-
-    # @api private
-    def many?
-      result.equal?(:many)
-    end
-
-    # @api private
-    def new(new_relation)
-      self.class.build(new_relation, options.merge(source: relation))
-    end
-
+    # Return a new command with new options
+    #
+    # @param [Hash] new_opts A hash with new options
+    #
+    # @return [Command]
+    #
     # @api public
     def with_opts(new_opts)
       self.class.new(relation, options.merge(new_opts))
     end
 
+    # Return a new command with appended before hooks
+    #
+    # @param [Array<Hash>] hooks A list of before hooks configurations
+    #
+    # @return [Command]
+    #
     # @api public
     def before(*hooks)
       self.class.new(relation, options.merge(before: before_hooks + hooks))
     end
 
+    # Return a new command with appended after hooks
+    #
+    # @param [Array<Hash>] hooks A list of after hooks configurations
+    #
+    # @return [Command]
+    #
     # @api public
     def after(*hooks)
       self.class.new(relation, options.merge(after: after_hooks + hooks))
     end
 
+    # Return a new command with other source relation
+    #
+    # This can be used to restrict command with a specific relation
+    #
+    # @return [Command]
+    #
+    # @api public
+    def new(new_relation)
+      self.class.build(new_relation, options.merge(source: relation))
+    end
+
+    # Check if this command has any hooks
+    #
+    # @api private
+    def hooks?
+      before_hooks.size > 0 || after_hooks.size > 0
+    end
+
+    # Check if this command is lazy
+    #
+    # @return [false]
+    #
+    # @api private
+    def lazy?
+      false
+    end
+
+    # Check if this command is a graph
+    #
+    # @return [false]
+    #
+    # @api private
+    def graph?
+      false
+    end
+
+    # Check if this command returns a single tuple
+    #
+    # @return [TrueClass,FalseClass]
+    #
+    # @api private
+    def one?
+      result.equal?(:one)
+    end
+
+    # Check if this command returns many tuples
+    #
+    # @return [TrueClass,FalseClass]
+    #
+    # @api private
+    def many?
+      result.equal?(:many)
+    end
+
     private
 
+    # Hook called by Pipeline to get composite class for commands
+    #
+    # @return [Class]
+    #
     # @api private
     def composite_class
       Command::Composite
     end
 
+    # Apply provided hooks
+    #
+    # Used by #call
+    #
+    # @return [Array<Hash>]
+    #
     # @api private
     def apply_hooks(hooks, tuples, *args)
       hooks.reduce(tuples) do |a, e|

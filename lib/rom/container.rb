@@ -11,14 +11,14 @@ module ROM
   #
   # There are 3 types of container setup:
   #
-  # * in-line setup - a simple block-based configuration which allows configuring
+  # * Setup DSL - a simple block-based configuration which allows configuring
   #   all components and gives you back a container instance. This type is suitable
   #   for small scripts, or in some cases rake tasks
-  # * multi-step setup - this type requires creating a configuration object,
+  # * Explicit setup - this type requires creating a configuration object,
   #   registering component classes (ie relation classes) and passing the config
   #   to container builder function. This type is suitable when your environment
   #   is not typical and you need full control over component registration
-  # * multi-step setup with auto-registration - same as multi-step but allows
+  # * Explicit setup with auto-registration - same as explicit setup but allows
   #   you to configure auto-registration mechanism which will register component
   #   classes for you, based on dir/file naming conventions. This is the most
   #   common type of setup that's used by framework integrations
@@ -99,24 +99,20 @@ module ROM
   class Container
     include Dry::Equalizer(:gateways, :relations, :mappers, :commands)
 
-    # @return [Hash] configured gateways
-    #
-    # @api public
+    # @!attribute [r] gateways
+    #   @return [Hash] A hash with configured gateways
     attr_reader :gateways
 
-    # @return [RelationRegistry] relation registry
-    #
-    # @api public
+    # @!attribute [r] relations
+    #   @return [RelationRegistry] The relation registry
     attr_reader :relations
 
-    # @return [Registry] command registry
-    #
-    # @api public
+    # @!attribute [r] gateways
+    #   @return [CommandRegistry] The command registry
     attr_reader :commands
 
-    # @return [Registry] mapper registry
-    #
-    # @api public
+    # @!attribute [r] mappers
+    #   @return [Hash] A hash with configured custom mappers
     attr_reader :mappers
 
     # @api private

@@ -18,18 +18,23 @@ module ROM
   # Base relation class
   #
   # Relation is a proxy for the dataset object provided by the gateway. It
-  # forwards every method to the dataset, which is why the "native" interface of
+  # can forward methods to the dataset, which is why the "native" interface of
   # the underlying gateway is available in the relation. This interface,
   # however, is considered private and should not be used outside of the
   # relation instance.
   #
-  # ROM builds sub-classes of this class for every relation defined in the
-  # environment for easy inspection and extensibility - every gateway can
-  # provide extensions for those sub-classes but there is always a vanilla
-  # relation instance stored in the schema registry.
+  # Individual adapters sets up their relation classes and provide different APIs
+  # depending on their persistence backend.
+  #
+  # Vanilla Relation class doesn't have APIs that are specific to ROM container setup.
+  # When adapter Relation class inherits from this class, these APIs are added automatically,
+  # so that they can be registered within a container.
+  #
+  # @see ROM::Relation::ClassInterface
   #
   # @api public
   class Relation
+    # Default no-op output schema which is called in `Relation#each`
     NOOP_OUTPUT_SCHEMA = -> tuple { tuple }.freeze
 
     extend Initializer
@@ -71,6 +76,15 @@ module ROM
 
     # Return schema attribute
     #
+    # @example accessing canonical attribute
+    #   users[:id]
+    #   # => #<ROM::SQL::Attribute[Integer] primary_key=true name=:id source=ROM::Relation::Name(users)>
+    #
+    # @example accessing joined attribute
+    #   tasks_with_users = tasks.join(users).select_append(tasks[:title])
+    #   tasks_with_users[:title, :tasks]
+    #   # => #<ROM::SQL::Attribute[String] primary_key=false name=:title source=ROM::Relation::Name(tasks)>
+    #
     # @return [Schema::Attribute]
     #
     # @api public
@@ -80,7 +94,10 @@ module ROM
 
     # Yields relation tuples
     #
+    # Every tuple is processed through Relation#output_schema, it's a no-op by default
+    #
     # @yield [Hash]
+    #
     # @return [Enumerator] if block is not provided
     #
     # @api public
@@ -91,7 +108,7 @@ module ROM
 
     # Composes with other relations
     #
-    # @param *others [Array<Relation>] The other relation(s) to compose with
+    # @param [Array<Relation>] others The other relation(s) to compose with
     #
     # @return [Relation::Graph]
     #
@@ -147,6 +164,18 @@ module ROM
 
     # Return a new relation with provided dataset and additional options
     #
+    # Use this method whenever you need to use dataset API to get a new dataset
+    # and you want to return a relation back. Typically relation API should be
+    # enough though. If you find yourself using this method, it might be worth
+    # to consider reporting an issue that some dataset functionality is not available
+    # through relation API.
+    #
+    # @example with a new dataset
+    #   users.new(users.dataset.some_method)
+    #
+    # @example with a new dataset and options
+    #   users.new(users.dataset.some_method, other: 'options')
+    #
     # @param [Object] dataset
     # @param [Hash] new_opts Additional options
     #
@@ -156,6 +185,9 @@ module ROM
     end
 
     # Returns a new instance with the same dataset but new options
+    #
+    # @example
+    #   users.with(output_schema: -> tuple { .. })
     #
     # @param new_options [Hash]
     #
@@ -167,6 +199,8 @@ module ROM
     end
 
     # Return all registered relation schemas
+    #
+    # This holds all schemas defined via `view` DSL
     #
     # @return [Hash<Symbol=>Schema>]
     #
@@ -186,6 +220,10 @@ module ROM
 
     private
 
+    # Hook used by `Pipeline` to get the class that should be used for composition
+    #
+    # @return [Class]
+    #
     # @api private
     def composite_class
       Relation::Composite
