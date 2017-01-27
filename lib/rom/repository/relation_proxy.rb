@@ -225,7 +225,7 @@ module ROM
             result
           end
         else
-          super
+          raise NoMethodError, "undefined method `#{meth}' for #{relation.class.name}"
         end
       end
     end

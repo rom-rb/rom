@@ -182,7 +182,7 @@ RSpec.describe 'loading proxy' do
     end
 
     it 'raises when method is missing' do
-      expect { users.not_here }.to raise_error(NoMethodError, /not_here/)
+      expect { users.not_here }.to raise_error(NoMethodError, "undefined method `not_here' for ROM::Relation[Users]")
     end
   end
 end
