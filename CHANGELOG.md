@@ -24,6 +24,7 @@
 ### Fixed
 
 * FKs are always included in auto-generated structs used in aggregates (solnic)
+* Calling undefined methods on repo relations raises a nicer error (solnic)
 
 [Compare v0.3.1...v1.0.0](https://github.com/rom-rb/rom-repository/compare/v0.3.1...v1.0.0)
 
