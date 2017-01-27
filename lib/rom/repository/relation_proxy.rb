@@ -64,7 +64,7 @@ module ROM
       #   Map tuples using registered mappers
       #
       #   @example
-      #     users.as(MyUserModel)
+      #     users.map_with(:my_mapper, :my_other_mapper)
       #
       #   @param [Array<Symbol>] mappers A list of mapper identifiers
       #
