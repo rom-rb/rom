@@ -95,7 +95,7 @@ module ROM
       #     changeset.map(:add_timestamps)
       #
       #   @param [Array<Symbol>] steps A list of mapping steps
-
+      #
       # @overload map(&block)
       #   Apply mapping using a custom block
       #
