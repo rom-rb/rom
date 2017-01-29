@@ -3,15 +3,13 @@ require 'transproc/transformer'
 
 module ROM
   class Changeset
-    # Composable data transformation pipe used by default in changesets
+    # Transproc Registry useful for pipe
     #
     # @api private
-    class Pipe < Transproc::Transformer
+    module PipeRegistry
       extend Transproc::Registry
 
       import Transproc::HashTransformations
-
-      attr_reader :processor
 
       def self.add_timestamps(data)
         now = Time.now
@@ -21,9 +19,20 @@ module ROM
       def self.touch(data)
         data.merge(updated_at: Time.now)
       end
+    end
+
+    # Composable data transformation pipe used by default in changesets
+    #
+    # @api private
+    class Pipe < Transproc::Transformer[PipeRegistry]
+      attr_reader :processor
 
       def initialize(processor = self.class.transproc)
         @processor = processor
+      end
+
+      def self.[](name)
+        container[name]
       end
 
       def [](name)

@@ -6,6 +6,7 @@ gem 'inflecto'
 
 gem 'rom', git: 'https://github.com/rom-rb/rom.git', branch: 'master'
 gem 'rom-mapper', git: 'https://github.com/rom-rb/rom-mapper.git', branch: 'master'
+gem 'transproc', git: 'https://github.com/solnic/transproc.git', branch: 'master'
 
 group :development, :test do
   gem 'rom-sql', git: 'https://github.com/rom-rb/rom-sql.git', branch: 'master'
