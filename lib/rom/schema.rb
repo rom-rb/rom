@@ -324,8 +324,6 @@ module ROM
         raise MissingAttributesError.new(name, missing_attributes)
       end
 
-      options[:relations] = @relations = relations
-
       block.call if block
 
       count_index
@@ -360,6 +358,20 @@ module ROM
       Types::Coercible::Hash.schema(
         map { |attr| [attr.name, attr] }.to_h
       )
+    end
+
+    # Return a new schema with new options
+    #
+    # @example
+    #   schema.with(inferrer: my_inferrer)
+    #
+    # @param [Hash] new_options
+    #
+    # @return [Schema]
+    #
+    # @api public
+    def with(new_options)
+      self.class.new(name, options.merge(new_options))
     end
 
     private

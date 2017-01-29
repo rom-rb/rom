@@ -51,11 +51,11 @@ module ROM
         ds_proc = klass.dataset_proc || -> _ { self }
 
         klass.schema(infer: true) unless klass.schema
-        klass.schema.finalize!(gateway: gateway, relations: registry)
+        schema = klass.schema.finalize!(gateway: gateway, relations: registry)
 
         dataset = gateway.dataset(klass.dataset).instance_exec(klass, &ds_proc)
 
-        klass.new(dataset, __registry__: registry)
+        klass.new(dataset, __registry__: registry, schema: schema.with(relations: registry))
       end
     end
   end

@@ -89,6 +89,10 @@ RSpec.describe ROM::Container do
       expect(container.relation(:tasks)).to be_kind_of(ROM::Relation)
       expect(container.relation(:tasks).mappers.elements).to be_empty
     end
+
+    it 'returns a relation with finalized schema' do
+      expect(container.relation(:tasks).schema.relations[:users]).to be(container.relations[:users])
+    end
   end
 
   describe '#mappers' do

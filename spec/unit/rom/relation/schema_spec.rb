@@ -27,6 +27,8 @@ RSpec.describe ROM::Relation, '.schema' do
     expect(Test::Users.schema.primary_key).to eql([Test::Users.schema[:id]])
 
     expect(Test::Users.schema).to eql(schema)
+
+    expect(Test::Users.schema.relations).to be_empty
   end
 
   it 'allows defining types for reading tuples' do
