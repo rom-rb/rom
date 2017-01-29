@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 gemspec
 
 gem 'rom-mapper', git: 'https://github.com/rom-rb/rom-mapper.git', branch: 'master'
+gem 'transproc', git: 'https://github.com/solnic/transproc.git', branch: 'master'
 
 group :console do
   gem 'pry'
