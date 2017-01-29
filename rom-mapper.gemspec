@@ -15,7 +15,7 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency 'dry-equalizer', '~> 0.2'
   gem.add_dependency 'dry-core', '~> 0.2.3'
-  gem.add_dependency 'transproc', '~> 0.4.0'
+  gem.add_dependency 'transproc', '~> 1.0'
 
   gem.add_development_dependency 'rake', '~> 11.3'
   gem.add_development_dependency 'rspec', '~> 3.5'
