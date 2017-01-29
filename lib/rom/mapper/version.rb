@@ -1,5 +1,5 @@
 module ROM
   class Mapper
-    VERSION = '0.5.0.rc1'.freeze
+    VERSION = '0.5.0'.freeze
   end
 end
