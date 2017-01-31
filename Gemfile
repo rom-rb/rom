@@ -11,6 +11,7 @@ group :development do
 end
 
 group :test do
+  gem 'rom-sql'
   gem 'rspec'
   gem 'dry-struct'
   gem 'byebug', platforms: :mri
