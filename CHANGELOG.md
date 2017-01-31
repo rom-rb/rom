@@ -5,7 +5,7 @@
 * `Changeset::Update` creates a command with restricted relation (solnic)
 * `Changeset#result` will always return `:many` for arrays and `:one` for other objects (even when a custom object is used) (solnic)
 
-[Compare v1.0.1...v1.0.1](https://github.com/rom-rb/rom-repository/compare/v1.0.0...v1.0.1)
+[Compare v1.0.0...v1.0.1](https://github.com/rom-rb/rom-repository/compare/v1.0.0...v1.0.1)
 
 # v1.0.0 2017-01-30
 
