@@ -197,7 +197,7 @@ module ROM
       #
       # @api private
       def result
-        __data__.is_a?(Hash) ? :one : :many
+        __data__.is_a?(Array) ? :many : :one
       end
 
       # @api public

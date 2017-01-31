@@ -1,3 +1,5 @@
+require 'ostruct'
+
 RSpec.describe ROM::Changeset do
   let(:jane) { { id: 2, name: "Jane" } }
   let(:relation) { double(ROM::Relation, name: :users) }
@@ -117,6 +119,24 @@ RSpec.describe ROM::Changeset do
 
     it 'raises NoMethodError when an unknown message was sent' do
       expect { changeset.not_here }.to raise_error(NoMethodError, /not_here/)
+    end
+  end
+
+  describe 'quacks like a custom object' do
+    subject(:changeset) { ROM::Changeset::Create.new(relation, __data__: data) }
+
+    let(:data) { OpenStruct.new(name: 'Jane') }
+
+    it 'delegates to its data hash' do
+      expect(changeset[:name]).to eql('Jane')
+    end
+
+    it 'raises NoMethodError when an unknown message was sent' do
+      expect { changeset.not_here }.to raise_error(NoMethodError, /not_here/)
+    end
+
+    it 'has correct result type' do
+      expect(changeset.result).to be(:one)
     end
   end
 
