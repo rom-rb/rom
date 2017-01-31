@@ -1,3 +1,11 @@
+# v1.0.0 2017-01-31
+
+### Fixed
+
+* `Changeset::Update` creates a command with restricted relation (solnic)
+
+[Compare v1.0.1...v1.0.1](https://github.com/rom-rb/rom-repository/compare/v1.0.0...v1.0.1)
+
 # v1.0.0 2017-01-30
 
 ### Added
