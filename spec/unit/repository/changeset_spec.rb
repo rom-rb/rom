@@ -54,8 +54,12 @@ RSpec.describe ROM::Repository, '#changeset' do
     end
 
     shared_context 'a valid update changeset' do
-      let(:user) do
+      let!(:jane) do
         repo.command(:create, repo.users).call(name: 'Jane')
+      end
+
+      let!(:joe) do
+        repo.command(:create, repo.users).call(name: 'Joe')
       end
 
       it 'has data' do
@@ -67,17 +71,18 @@ RSpec.describe ROM::Repository, '#changeset' do
       end
 
       it 'has relation' do
-        expect(changeset.relation.one).to eql(repo.users.by_pk(user[:id]).one)
+        expect(changeset.relation.one).to eql(repo.users.by_pk(jane[:id]).one)
       end
 
-      it 'can return be commited' do
+      it 'can be commited' do
         expect(changeset.commit).to eql(id: 1, name: 'Jane Doe')
+        expect(repo.users.by_pk(joe[:id]).one).to eql(joe)
       end
     end
 
     context 'using PK to restrict a relation' do
       let(:changeset) do
-        repo.changeset(:users, user[:id], data)
+        repo.changeset(:users, jane[:id], data)
       end
 
       include_context 'a valid update changeset'
@@ -85,7 +90,7 @@ RSpec.describe ROM::Repository, '#changeset' do
 
     context 'using custom relation' do
       let(:changeset) do
-        repo.changeset(update: repo.users.by_pk(user[:id])).data(data)
+        repo.changeset(update: repo.users.by_pk(jane[:id])).data(data)
       end
 
       include_context 'a valid update changeset'

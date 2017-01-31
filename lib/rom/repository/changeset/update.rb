@@ -1,3 +1,5 @@
+require 'rom/repository/changeset/restricted'
+
 module ROM
   class Changeset
     # Changeset specialization for update commands
@@ -13,6 +15,8 @@ module ROM
     #
     # @api public
     class Update < Stateful
+      include Restricted
+
       command_type :update
 
       # Commit update changeset if there's a diff

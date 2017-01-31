@@ -121,7 +121,7 @@ module ROM
     #
     # @api private
     def command
-      command_compiler.(command_type, relation_identifier, DEFAULT_COMMAND_OPTS).new(relation)
+      command_compiler.(command_type, relation_identifier, DEFAULT_COMMAND_OPTS)
     end
 
     private
