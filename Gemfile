@@ -4,13 +4,6 @@ gemspec
 
 gem 'inflecto'
 
-gem 'rom', git: 'https://github.com/rom-rb/rom.git', branch: 'master'
-gem 'rom-mapper', git: 'https://github.com/rom-rb/rom-mapper.git', branch: 'master'
-
-group :development, :test do
-  gem 'rom-sql', git: 'https://github.com/rom-rb/rom-sql.git', branch: 'master'
-end
-
 group :development do
   gem 'dry-equalizer', '~> 0.2'
   gem 'sqlite3', platforms: [:mri, :rbx]
