@@ -4,6 +4,18 @@ require 'rom/memory'
 RSpec.describe ROM::Relation, '.view' do
   subject(:relation) { relation_class.new(ROM::Memory::Dataset.new([])) }
 
+  let(:registry) do
+    { tasks: tasks }
+  end
+
+  let(:tasks) do
+    Class.new(ROM::Relation[:memory]) do
+      schema do
+        attribute :title, ROM::Types::String
+      end
+    end.new([])
+  end
+
   it 'returns view method name' do
     klass = Class.new(ROM::Relation[:memory]) {
       schema { attribute :id, ROM::Types::Int }
@@ -18,6 +30,10 @@ RSpec.describe ROM::Relation, '.view' do
     before do
       relation << { id: 1, name: 'Joe' }
       relation << { id: 2, name: 'Jane' }
+    end
+
+    it 'appends foreign attributes' do
+      expect(relation.schemas[:foreign_attributes].map(&:name)).to eql(%i[id name title])
     end
 
     it 'uses projected schema for view schema' do
@@ -44,7 +60,7 @@ RSpec.describe ROM::Relation, '.view' do
   context 'with an explicit schema' do
     before do
       # this is normally called automatically during setup
-      relation_class.finalize({}, relation)
+      relation_class.finalize(registry, relation)
     end
 
     include_context 'relation with views' do
@@ -53,6 +69,16 @@ RSpec.describe ROM::Relation, '.view' do
           schema(:users) do
             attribute :id, ROM::Types::Int
             attribute :name, ROM::Types::String
+          end
+
+          view(:foreign_attributes) do
+            schema do
+              append(relations[:tasks][:title])
+            end
+
+            relation do
+              self
+            end
           end
 
           view(:names) do
@@ -83,7 +109,7 @@ RSpec.describe ROM::Relation, '.view' do
     before do
       # this is normally called automatically during setup
       relation_class.schema.finalize!
-      relation_class.finalize({}, relation)
+      relation_class.finalize(registry, relation)
     end
 
     include_context 'relation with views' do
@@ -95,6 +121,16 @@ RSpec.describe ROM::Relation, '.view' do
           }
 
           schema(:users, infer: true)
+
+          view(:foreign_attributes) do
+            schema do
+              append(relations[:tasks][:title])
+            end
+
+            relation do
+              self
+            end
+          end
 
           view(:names) do
             schema do

@@ -16,7 +16,7 @@ module ROM
       end
 
       def schema(&block)
-        @new_schema = -> { @schema.instance_exec(&block) }
+        @new_schema = -> relations { @schema.with(relations: relations).instance_exec(&block) }
       end
 
       def relation(&block)

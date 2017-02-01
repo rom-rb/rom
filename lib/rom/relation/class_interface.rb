@@ -330,9 +330,9 @@ module ROM
       # Hook to finalize a relation after its instance was created
       #
       # @api private
-      def finalize(_container, relation)
+      def finalize(registry, relation)
         schemas = relation.schemas.reduce({}) do |h, (a, e)|
-          h.update(a => e.is_a?(Proc) ? instance_exec(&e) : e)
+          h.update(a => e.is_a?(Proc) ? instance_exec(registry, &e) : e)
         end
         relation.schemas.update(schemas)
         relation
