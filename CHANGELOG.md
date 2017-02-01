@@ -1,3 +1,11 @@
+## v3.0.1 2017-02-01
+
+## Fixed
+
+* ViewDSL exposes schemas that have access to all relations (solnic)
+
+[Compare v3.0.0...v3.0.1](https://github.com/rom-rb/rom/compare/v3.0.0...v3.0.1)
+
 ## v3.0.0 2017-01-29
 
 ## Added
