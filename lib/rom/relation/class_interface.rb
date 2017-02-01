@@ -224,6 +224,14 @@ module ROM
       #       end
       #     end
       #
+      #   @example View with a schema extended with foreign attributes
+      #     class Users < ROM::Relation[:sql]
+      #       view(:index) do
+      #         schema { append(relations[:tasks][:title]) }
+      #         relation { |name| where(name: name) }
+      #       end
+      #     end
+      #
       # @return [Symbol] view method name
       #
       # @api public
