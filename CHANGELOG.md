@@ -1,3 +1,9 @@
+## v3.0.2 to-be-released
+
+## Fixed
+
+* Fix the error message for missing association (flash-gordon)
+
 ## v3.0.1 2017-02-01
 
 ## Fixed

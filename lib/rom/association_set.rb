@@ -21,10 +21,17 @@ module ROM
       if key?(key)
         super
       else
-        super(singularize(key))
+        sk = singularize(key)
+
+        if key?(sk)
+          super(sk)
+        else
+          super
+        end
       end
     end
 
+    # @api private
     def singularize(key)
       Dry::Core::Inflector.singularize(key).to_sym
     end
