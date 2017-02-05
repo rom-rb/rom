@@ -53,4 +53,6 @@ RSpec.configure do |config|
   end
 
   config.include(MapperRegistry)
+
+  config.disable_monkey_patching!
 end
