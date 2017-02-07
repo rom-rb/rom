@@ -227,7 +227,7 @@ module ROM
     #
     # @api public
     def wrap(prefix = name.dataset)
-      new(map { |attr| attr.wrapped(prefix) })
+      new(map { |attr| attr.wrapped? ? attr : attr.wrapped(prefix) })
     end
 
     # Return FK attribute for a given relation name
