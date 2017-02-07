@@ -15,13 +15,12 @@ module ROM
         # @return [RelationProxy]
         #
         # @api public
-        def wrap(options)
-          wraps = options.map { |(name, (relation, keys))|
-            relation.wrapped(name, keys)
-          }
+        def wrap(*names, **options)
+          wraps = wraps_from_names(names) + wraps_from_options(options)
 
           relation = wraps.reduce(self) { |a, e|
-            a.relation.for_wrap(e.meta.fetch(:keys), e.base_name.relation)
+            name = e.meta[:wrap_from_assoc] ? e.meta[:combine_name] : e.base_name.relation
+            a.relation.for_wrap(e.meta.fetch(:keys), name)
           }
 
           __new__(relation, meta: { wraps: wraps })
@@ -52,8 +51,26 @@ module ROM
         # @return [RelationProxy]
         #
         # @api private
-        def wrapped(name, keys)
-          with(name: name, meta: { keys: keys, wrap: true, combine_name: name })
+        def wrapped(name, keys, wrap_from_assoc = false)
+          with(
+            name: name,
+            meta: {
+              keys: keys, wrap_from_assoc: wrap_from_assoc, wrap: true, combine_name: name
+            }
+          )
+        end
+
+        # @api private
+        def wraps_from_options(options)
+          options.map { |(name, (relation, keys))| relation.wrapped(name, keys) }
+        end
+
+        # @api private
+        def wraps_from_names(names)
+          names.map { |name|
+            assoc = associations[name]
+            registry[assoc.target].wrapped(name, assoc.combine_keys(__registry__), true)
+          }
         end
       end
     end

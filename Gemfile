@@ -11,7 +11,7 @@ group :development do
 end
 
 group :test do
-  gem 'rom-sql'
+  gem 'rom-sql', git: 'https://github.com/rom-rb/rom-sql.git', branch: 'master'
   gem 'rspec'
   gem 'dry-struct'
   gem 'byebug', platforms: :mri

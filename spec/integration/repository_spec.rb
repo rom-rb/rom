@@ -135,10 +135,19 @@ RSpec.describe 'ROM repository' do
     expect(jane.labels[1].name).to eql('blue')
   end
 
-  it 'loads children and its parents via wrap' do
+  it 'loads children and its parents via wrap_parent' do
     posts = repo.posts.wrap_parent(author: repo.users)
 
     label = repo.labels.combine(many: { posts: posts }).first
+
+    expect(label.name).to eql('red')
+    expect(label.posts.size).to be(1)
+    expect(label.posts[0].title).to eql('Hello From Jane')
+    expect(label.posts[0].author.name).to eql('Jane')
+  end
+
+  it 'loads children and its parents via wrap and association name' do
+    label = repo.labels.combine(many: { posts: repo.posts.wrap(:author) }).first
 
     expect(label.name).to eql('red')
     expect(label.posts.size).to be(1)

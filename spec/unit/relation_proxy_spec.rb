@@ -161,7 +161,7 @@ RSpec.describe 'loading proxy' do
             [:attribute, tags_schema[:name]],
             [:relation, [
               :tasks,
-              { dataset: :tasks, keys: { id: :task_id }, wrap: true, combine_name: :task },
+              { dataset: :tasks, keys: { id: :task_id }, wrap_from_assoc: false, wrap: true, combine_name: :task },
               [:header, [
                  [:attribute, tasks_schema[:id]],
                  [:attribute, tasks_schema[:user_id]],
