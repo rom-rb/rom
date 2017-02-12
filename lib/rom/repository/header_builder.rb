@@ -18,12 +18,12 @@ module ROM
 
       private
 
-      def visit(node, *args)
+      def visit(node)
         name, node = node
-        __send__("visit_#{name}", node, *args)
+        __send__("visit_#{name}", node)
       end
 
-      def visit_relation(node, meta = {})
+      def visit_relation(node)
         relation_name, meta, header = node
         name = meta[:combine_name] || relation_name
 
@@ -31,7 +31,7 @@ module ROM
           struct_builder[meta.fetch(:dataset), header]
         end
 
-        options = [visit(header, meta), model: model]
+        options = [visit(header), model: model]
 
         if meta[:combine_type]
           type = meta[:combine_type] == :many ? :array : :hash
@@ -45,12 +45,12 @@ module ROM
         end
       end
 
-      def visit_header(node, meta = {})
-        node.map { |attribute| visit(attribute, meta) }
+      def visit_header(node)
+        node.map { |attribute| visit(attribute) }
       end
 
-      def visit_attribute(attr, meta = {})
-        if meta[:wrap]
+      def visit_attribute(attr)
+        if attr.wrapped?
           [attr.name, from: attr.alias]
         else
           [attr.name]
