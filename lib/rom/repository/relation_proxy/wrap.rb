@@ -16,14 +16,14 @@ module ROM
         #
         # @api public
         def wrap(*names, **options)
-          wraps = wraps_from_names(names) + wraps_from_options(options)
+          new_wraps = wraps_from_names(names) + wraps_from_options(options)
 
-          relation = wraps.reduce(self) { |a, e|
+          relation = new_wraps.reduce(self) { |a, e|
             name = e.meta[:wrap_from_assoc] ? e.meta[:combine_name] : e.base_name.relation
             a.relation.for_wrap(e.meta.fetch(:keys), name)
           }
 
-          __new__(relation, meta: { wraps: wraps })
+          __new__(relation, meta: { wraps: wraps + new_wraps })
         end
 
         # Shortcut to wrap parents

@@ -164,7 +164,11 @@ module ROM
 
       # @api private
       def schema
-        meta[:wrap] ? relation.schema.wrap.qualified : relation.schema.reject(&:wrapped?)
+        if meta[:wrap]
+          relation.schema.wrap
+        else
+          relation.schema.reject(&:wrapped?)
+        end
       end
 
       # @api private

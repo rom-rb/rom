@@ -70,6 +70,13 @@ RSpec.describe 'ROM repository' do
     expect(repo.tag_with_wrapped_task.first).to eql(tag_with_task)
   end
 
+  it 'loads multiple wraps' do
+    post_label = repo.posts_labels.wrap(:post).wrap(:label).to_a.first
+
+    expect(post_label.label_id).to be(post_label.label.id)
+    expect(post_label.post_id).to be(post_label.post.id)
+  end
+
   it 'loads an aggregate via custom fks' do
     jane = repo.aggregate(many: repo.posts).where(name: 'Jane').one
 

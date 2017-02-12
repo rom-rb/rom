@@ -134,7 +134,8 @@ RSpec.describe 'loading proxy' do
             [:attribute, users.schema[:name]],
             [:relation, [
               :tasks,
-              { dataset: :tasks, keys: { id: :user_id }, combine_type: :many, combine_name: :user_tasks },
+              { dataset: :tasks, keys: { id: :user_id },
+                combine_type: :many, combine_name: :user_tasks },
               [:header, [
                  [:attribute, tasks.schema[:id]],
                  [:attribute, tasks.schema[:user_id]],
@@ -149,7 +150,7 @@ RSpec.describe 'loading proxy' do
       relation = tags.wrap_parent(task: tasks)
 
       tags_schema = tags.schema.qualified
-      tasks_schema = tasks.schema.wrap.qualified
+      tasks_schema = tasks.schema.wrap
 
       expect(relation.to_ast).to eql(
         [:relation, [
@@ -161,7 +162,8 @@ RSpec.describe 'loading proxy' do
             [:attribute, tags_schema[:name]],
             [:relation, [
               :tasks,
-              { dataset: :tasks, keys: { id: :task_id }, wrap_from_assoc: false, wrap: true, combine_name: :task },
+              { dataset: :tasks, keys: { id: :task_id },
+                wrap_from_assoc: false, wrap: true, combine_name: :task },
               [:header, [
                  [:attribute, tasks_schema[:id]],
                  [:attribute, tasks_schema[:user_id]],
