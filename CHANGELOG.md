@@ -1,3 +1,11 @@
+# v1.0.2 2017-02-13
+
+### Fixed
+
+* Structs uses read types for attributes so that they don't perform an unexpected serialization (flash-gordon)
+
+[Compare v1.0.1...v1.0.2](https://github.com/rom-rb/rom-repository/compare/v1.0.1...v1.0.2)
+
 # v1.0.1 2017-01-31
 
 ### Fixed
