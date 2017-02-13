@@ -7,7 +7,7 @@ RSpec.describe 'struct builder', '#call' do
       aliased?: false,
       wrapped?: false,
       foreign_key?: false,
-      type: ROM::Types.const_get(type),
+      to_read_type: ROM::Types.const_get(type),
       **opts
     )
   end
