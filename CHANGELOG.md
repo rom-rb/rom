@@ -1,3 +1,11 @@
+# v1.1.0 to-be-released
+
+### Added
+
+* `wrap` can be used along with association names ie `users.wrap(:address)` (solnic)
+
+[Compare v1.0.2...v1.1.0](https://github.com/rom-rb/rom-repository/compare/v1.0.2...v1.1.0)
+
 # v1.0.2 2017-02-13
 
 ### Fixed
