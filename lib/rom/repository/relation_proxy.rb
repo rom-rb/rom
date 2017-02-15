@@ -82,6 +82,46 @@ module ROM
       end
       alias_method :as, :map_with
 
+      # Return a new graph with adjusted node returned from a block
+      #
+      # @example with a node identifier
+      #   aggregate(:tasks).node(:tasks) { |tasks| tasks.prioritized }
+      #
+      # @example with a nested path
+      #   aggregate(tasks: :tags).node(tasks: :tags) { |tags| tags.where(name: 'red') }
+      #
+      # @param [Symbol] name The node relation name
+      #
+      # @yieldparam [RelationProxy] The relation node
+      # @yieldreturn [RelationProxy] The new relation node
+      #
+      # @return [RelationProxy]
+      #
+      # @api public
+      def node(name, &block)
+        if name.is_a?(Symbol) && !nodes.map { |n| n.name.relation }.include?(name)
+          raise ArgumentError, "#{name.inspect} is not a valid aggregate node name"
+        end
+
+        new_nodes = nodes.map { |node|
+          case name
+          when Symbol
+            name == node.name.relation ? yield(node) : node
+          when Hash
+            other, *rest = name.flatten(1)
+            if other == node.name.relation
+              nodes.detect { |n| n.name.relation == other }.node(*rest, &block)
+            else
+              node
+            end
+          else
+            node
+          end
+        }
+
+        with_nodes(new_nodes)
+      end
+
       # Return a string representation of this relation proxy
       #
       # @return [String]
@@ -153,6 +193,17 @@ module ROM
 
             [:relation, [base_name.relation, meta, [:header, header]]]
           end
+      end
+
+      # TODO: add a proper interface to `Relation::Graph` and `Relation::Curried` to rom core
+      #
+      # @api private
+      def with_nodes(nodes)
+        if relation.curried?
+          __new__(relation.send(:__new__, relation.relation.class.new(relation.root, nodes)))
+        else
+          __new__(relation.class.new(relation.root, nodes))
+        end
       end
 
       # @api private
