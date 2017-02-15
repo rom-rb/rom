@@ -3,6 +3,11 @@
 ### Added
 
 * `wrap` can be used along with association names ie `users.wrap(:address)` (solnic)
+* `#node` relation method that can be used to adjust graph nodes produced by `aggregate` or `combine` (solnic)
+
+## Fixed
+
+* Structs raise nicer `NoMethodError` (flash-gordon)
 
 [Compare v1.0.2...v1.1.0](https://github.com/rom-rb/rom-repository/compare/v1.0.2...v1.1.0)
 
