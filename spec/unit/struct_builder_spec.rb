@@ -69,4 +69,30 @@ RSpec.describe 'struct builder', '#call' do
       Dry::Struct::Error, /:name is missing/
     )
   end
+
+  context 'name errors' do
+    let(:struct) { builder.class.cache[input.hash] }
+
+    context 'missing method on instance' do
+      it 'uses inspect and class name for small structs' do
+        user = struct.new(id: 1, name: 'Jane')
+
+        expect { user.missing }.
+          to raise_error(
+               NoMethodError,
+               %r{undefined method `missing' for #<ROM::Struct\[User\] id=1 name="Jane">}
+             )
+      end
+
+      it 'uses class name in name errors' do
+        user = struct.new(id: 1, name: 'J' * 50)
+
+        expect { user.missing }.
+          to raise_error(
+               NoMethodError,
+               %r{undefined method `missing' for #<ROM::Struct\[User\]:0x\h+>}
+             )
+      end
+    end
+  end
 end

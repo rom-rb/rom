@@ -62,5 +62,18 @@ module ROM
     def fetch(name)
       __send__(name)
     end
+
+    private
+
+    def method_missing(m, *args)
+      inspected = inspect
+      trace = caller
+
+      # This is how MRI currently works
+      # see func name_err_mesg_to_str in error.c
+      name = inspected.size > 65 ? to_s : inspected
+
+      raise NoMethodError.new("undefined method `#{ m }' for #{ name }", m, args).tap { |e| e.set_backtrace(trace) }
+    end
   end
 end
