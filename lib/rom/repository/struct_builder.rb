@@ -40,12 +40,19 @@ module ROM
         relation_name, meta, header = node
         name = meta[:combine_name] || relation_name.relation
 
-        model = call(name, header)
+        model = meta.fetch(:model) { call(name, header) }
+
+        member =
+          if model < Dry::Struct
+            model
+          else
+            Dry::Types::Definition.new(model).constructor(&model.method(:new))
+          end
 
         if meta[:combine_type] == :many
-          [name, Types::Array.member(model)]
+          [name, Types::Array.member(member)]
         else
-          [name, model.optional]
+          [name, member.optional]
         end
       end
 

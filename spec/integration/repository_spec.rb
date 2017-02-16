@@ -311,4 +311,29 @@ RSpec.describe 'ROM repository' do
         to eql(id:1, name: 'Jane', mapped: true, posts: [{ id: 1, author_id: 1, title: 'Hello From Jane', body: 'Jane Post' }])
     end
   end
+
+  describe 'using a custom model for a node' do
+    before do
+      class Test::Post < OpenStruct; end
+    end
+
+    it 'uses provided model for the member type' do
+      jane = repo.users.combine(many: repo.posts.as(Test::Post)).where(name: 'Jane').one
+
+      expect(jane.name).to eql('Jane')
+      expect(jane.posts.size).to be(1)
+      expect(jane.posts[0]).to be_instance_of(Test::Post)
+      expect(jane.posts[0].title).to eql('Hello From Jane')
+      expect(jane.posts[0].body).to eql('Jane Post')
+    end
+
+    it 'uses provided model for the attribute type' do
+      jane = repo.users.combine(one: repo.posts.as(Test::Post)).where(name: 'Jane').one
+
+      expect(jane.name).to eql('Jane')
+      expect(jane.post).to be_instance_of(Test::Post)
+      expect(jane.post.title).to eql('Hello From Jane')
+      expect(jane.post.body).to eql('Jane Post')
+    end
+  end
 end
