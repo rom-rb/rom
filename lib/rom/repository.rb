@@ -1,11 +1,11 @@
 require 'dry/core/deprecations'
 
+require 'rom/initializer'
 require 'rom/repository/class_interface'
 require 'rom/repository/mapper_builder'
 require 'rom/repository/relation_proxy'
 require 'rom/repository/command_compiler'
 
-require 'rom/repository/root'
 require 'rom/repository/changeset'
 require 'rom/repository/session'
 
@@ -63,10 +63,15 @@ module ROM
     }.freeze
 
     extend ClassInterface
+    extend Initializer
 
     # @!attribute [r] container
     #   @return [ROM::Container] The container used to set up a repo
-    attr_reader :container
+    param :container, allow: ROM::Container
+
+    # @!attribute [r] container
+    #   @return [ROM::Container] The container used to set up a repo
+    option :auto_struct, optional: true, default: proc { true }
 
     # @!attribute [r] relations
     #   @return [RelationRegistry] The relation proxy registry used by a repo
@@ -86,15 +91,17 @@ module ROM
     # @param container [ROM::Container] The rom container with relations and optional commands
     #
     # @api public
-    def initialize(container)
-      @container = container
+    def initialize(container, opts = EMPTY_HASH)
+      super
+
       @mappers = MapperBuilder.new
+
       @relations = RelationRegistry.new do |registry, relations|
         self.class.relations.each do |name|
           relation = container.relation(name)
 
           proxy = RelationProxy.new(
-            relation, name: name, mappers: mappers, registry: registry
+            relation, name: name, mappers: mappers, registry: registry, auto_struct: auto_struct
           )
 
           instance_variable_set("@#{name}", proxy)
@@ -102,6 +109,7 @@ module ROM
           relations[name] = proxy
         end
       end
+
       @command_compiler = method(:command)
     end
 
@@ -327,3 +335,5 @@ module ROM
     end
   end
 end
+
+require 'rom/repository/root'

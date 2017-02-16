@@ -59,7 +59,7 @@ module ROM
       end
 
       # @see Repository#initialize
-      def initialize(container)
+      def initialize(container, opts = EMPTY_HASH)
         super
         @root = relations[self.class.root]
       end

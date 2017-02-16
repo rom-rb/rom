@@ -30,6 +30,7 @@ module ROM
       option :mappers, reader: true, default: proc { MapperBuilder.new }
       option :meta, reader: true, default: proc { EMPTY_HASH }
       option :registry, type: RelationRegistryType, default: proc { RelationRegistry.new }, reader: true
+      option :auto_struct, optional: true
 
       # Relation name
       #
@@ -187,6 +188,7 @@ module ROM
             attr_ast = schema.map { |attr| [:attribute, attr] }
 
             meta = self.meta.merge(dataset: base_name.dataset)
+            meta.update(model: false) unless meta[:model] || auto_struct
             meta.delete(:wraps)
 
             header = attr_ast + nodes_ast + wraps_ast

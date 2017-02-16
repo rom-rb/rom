@@ -259,4 +259,16 @@ RSpec.describe 'ROM repository' do
       expect(repo.dummy.to_a).to eql([])
     end
   end
+
+  describe 'mapping without structs' do
+    subject(:repo) do
+      repo_class.new(rom, auto_struct: false)
+    end
+
+    describe '#one' do
+      it 'returns a hash' do
+        expect(repo.users.limit(1).one).to eql(id: 1, name: 'Jane')
+      end
+    end
+  end
 end
