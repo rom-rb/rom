@@ -269,6 +269,11 @@ RSpec.describe 'ROM repository' do
       it 'returns a hash' do
         expect(repo.users.limit(1).one).to eql(id: 1, name: 'Jane')
       end
+
+      it 'returns a nested hash for an aggregate' do
+        expect(repo.aggregate(:posts).limit(1).one).
+          to eql(id: 1, name: 'Jane', posts: [{ id: 1, author_id: 1, title: 'Hello From Jane', body: 'Jane Post'}])
+      end
     end
   end
 end
