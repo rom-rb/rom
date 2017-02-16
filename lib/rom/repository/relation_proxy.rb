@@ -69,6 +69,19 @@ module ROM
       #
       #   @param [Array<Symbol>] mappers A list of mapper identifiers
       #
+      # @overload map_with(*mappers, auto_map: true)
+      #   Map tuples using auto-mapping and custom registered mappers
+      #
+      #   If `auto_map` is enabled, your mappers will be applied after performing
+      #   default auto-mapping. This means that you can compose complex relations
+      #   and have them auto-mapped, and use much simpler custom mappers to adjust
+      #   resulting data according to your requirements.
+      #
+      #   @example
+      #     users.map_with(:my_mapper, :my_other_mapper, auto_map: true)
+      #
+      #   @param [Array<Symbol>] mappers A list of mapper identifiers
+      #
       # @return [RelationProxy] A new relation proxy with pipelined relation
       #
       # @api public
