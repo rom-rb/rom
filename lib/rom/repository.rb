@@ -64,6 +64,23 @@ module ROM
 
     extend ClassInterface
     extend Initializer
+    extend Dry::Core::ClassAttributes
+
+    # @!method self.auto_struct
+    #   Get or set auto_struct setting
+    #
+    #   When disabled, rom structs won't be created
+    #
+    #   @overload auto_struct
+    #     Return auto_struct setting value
+    #     @return [TrueClass,FalseClass]
+    #
+    #   @overload auto_struct(value)
+    #     Set auto_struct value
+    #     @return [Class]
+    defines :auto_struct
+
+    auto_struct true
 
     # @!attribute [r] container
     #   @return [ROM::Container] The container used to set up a repo
@@ -71,7 +88,7 @@ module ROM
 
     # @!attribute [r] container
     #   @return [ROM::Container] The container used to set up a repo
-    option :auto_struct, optional: true, default: proc { true }
+    option :auto_struct, optional: true, default: -> repo { repo.class.auto_struct }
 
     # @!attribute [r] relations
     #   @return [RelationRegistry] The relation proxy registry used by a repo

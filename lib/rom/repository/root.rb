@@ -29,8 +29,6 @@ module ROM
     #
     # @api public
     class Root < Repository
-      extend Dry::Core::ClassAttributes
-
       # @!method self.root
       #   Get or set repository root relation identifier
       #

@@ -261,19 +261,33 @@ RSpec.describe 'ROM repository' do
   end
 
   describe 'mapping without structs' do
-    subject(:repo) do
-      repo_class.new(rom, auto_struct: false)
+    shared_context 'plain hash mapping' do
+      describe '#one' do
+        it 'returns a hash' do
+          expect(repo.users.limit(1).one).to eql(id: 1, name: 'Jane')
+        end
+
+        it 'returns a nested hash for an aggregate' do
+          expect(repo.aggregate(:posts).limit(1).one).
+            to eql(id: 1, name: 'Jane', posts: [{ id: 1, author_id: 1, title: 'Hello From Jane', body: 'Jane Post'}])
+        end
+      end
     end
 
-    describe '#one' do
-      it 'returns a hash' do
-        expect(repo.users.limit(1).one).to eql(id: 1, name: 'Jane')
+    context 'with auto_struct disabled upon initialization' do
+      subject(:repo) do
+        repo_class.new(rom, auto_struct: false)
       end
 
-      it 'returns a nested hash for an aggregate' do
-        expect(repo.aggregate(:posts).limit(1).one).
-          to eql(id: 1, name: 'Jane', posts: [{ id: 1, author_id: 1, title: 'Hello From Jane', body: 'Jane Post'}])
+      include_context 'plain hash mapping'
+    end
+
+    context 'with auto_struct disabled at the class level' do
+      before do
+        repo_class.auto_struct(false)
       end
+
+      include_context 'plain hash mapping'
     end
   end
 end
