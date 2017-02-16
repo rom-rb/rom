@@ -2,12 +2,15 @@
 
 ### Added
 
+* Mapping to `ROM::Struct` can be disabled via `auto_struct` option (solnic)
+* You can now use custom mappers along with auto-mapping via `map_with(:my_mapper, auto_map: true)` (solnic)
 * `wrap` can be used along with association names ie `users.wrap(:address)` (solnic)
 * `#node` relation method that can be used to adjust graph nodes produced by `aggregate` or `combine` (solnic)
 
 ## Fixed
 
 * Structs raise nicer `NoMethodError` (flash-gordon)
+* Custom model set on a node relation is respected when loading aggregates (solnic)
 
 [Compare v1.0.2...v1.1.0](https://github.com/rom-rb/rom-repository/compare/v1.0.2...v1.1.0)
 
