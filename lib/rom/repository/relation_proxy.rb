@@ -72,13 +72,18 @@ module ROM
       # @return [RelationProxy] A new relation proxy with pipelined relation
       #
       # @api public
-      def map_with(*names)
+      def map_with(*names, **opts)
         if names.size == 1 && names[0].is_a?(Class)
           with(meta: meta.merge(model: names[0]))
         elsif names.size > 1 && names.any? { |name| name.is_a?(Class) }
           raise ArgumentError, 'using custom mappers and a model is not supported'
         else
-          names.reduce(self) { |a, e| a >> relation.mappers[e] }
+          if opts[:auto_map]
+            mappers = [mapper, *names.map { |name| relation.mappers[name] }]
+            mappers.reduce(self) { |a, e| a >> e }
+          else
+            names.reduce(self) { |a, e| a >> relation.mappers[e] }
+          end
         end
       end
       alias_method :as, :map_with

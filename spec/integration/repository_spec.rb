@@ -290,4 +290,25 @@ RSpec.describe 'ROM repository' do
       include_context 'plain hash mapping'
     end
   end
+
+  describe 'using custom mappers along with auto-mapping' do
+    before do
+      configuration.mappers do
+        define(:users) do
+          register_as :embed_address
+
+          def call(rel)
+            rel.map { |tuple| Hash(tuple).merge(mapped: true) }
+          end
+        end
+      end
+    end
+
+    it 'auto-maps and applies a custom mapper' do
+      jane = repo.users.combine(:posts).map_with(:embed_address, auto_map: true).to_a.first
+
+      expect(jane).
+        to eql(id:1, name: 'Jane', mapped: true, posts: [{ id: 1, author_id: 1, title: 'Hello From Jane', body: 'Jane Post' }])
+    end
+  end
 end
