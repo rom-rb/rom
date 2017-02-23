@@ -342,7 +342,7 @@ module ROM
     # @api private
     def to_output_hash
       Types::Coercible::Hash.schema(
-        map { |attr| [attr.name, attr.to_read_type] }.to_h
+        map { |attr| [attr.key, attr.to_read_type] }.to_h
       )
     end
 

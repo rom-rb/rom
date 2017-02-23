@@ -173,6 +173,31 @@ module ROM
         meta[:name]
       end
 
+      # Return tuple key
+      #
+      # When schemas are projected with aliased attributes, we need a simple access to tuple keys
+      #
+      # @example
+      #   class Tasks < ROM::Relation[:memory]
+      #     schema do
+      #       attribute :user_id, Types::Int.meta(alias: :id)
+      #       attribute :name, Types::String
+      #     end
+      #   end
+      #
+      #   Users.schema[:id].key
+      #   # :id
+      #
+      #   Users.schema.project(Users.schema[:id].aliased(:user_id)).key
+      #   # :user_id
+      #
+      # @return [Symbol]
+      #
+      # @api public
+      def key
+        meta[:alias] || name
+      end
+
       # Return attribute's alias
       #
       # @example
