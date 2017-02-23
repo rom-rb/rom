@@ -76,6 +76,7 @@ DATABASE_URL = ENV.fetch('DATABASE_URL', RUBY_ENGINE == 'jruby' ? 'jdbc:postgres
 
 setup = ROM::Configuration.new(:sql, DATABASE_URL)
 
+setup.default.use_logger(Logger.new('./log/bench_rom.log'))
 conn = setup.default.connection
 
 conn.drop_table?(:tags)
@@ -106,6 +107,8 @@ if RUBY_ENGINE == 'jruby'
 else
   ActiveRecord::Base.establish_connection(DATABASE_URL)
 end
+
+ActiveRecord::Base.logger = Logger.new("./log/bench_ar.log")
 
 class ARUser < ActiveRecord::Base
   self.table_name = :users
