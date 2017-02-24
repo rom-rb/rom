@@ -47,6 +47,26 @@ run("Loading ALL users with their tasks") do |x|
   end
 end
 
+run("Loading ALL users with their tasks and their tags") do |x|
+  x.verify do |users|
+    users.size == COUNT
+  end
+  x.report("AR") do
+    ARUser.includes(tasks: :tags).all.to_a.each do |u|
+      u.tasks.each do |t|
+        t.tags.to_a.size
+      end
+    end
+  end
+  x.report("ROM") do
+    user_repo.aggregate(tasks: :tags).to_a.each do |u|
+      u.tasks.each do |t|
+        t.tags.to_a.size
+      end
+    end
+  end
+end
+
 run("Loading ONE task with its user and tags") do |x|
   x.verify do |task|
     task.title == 'Task 1'
