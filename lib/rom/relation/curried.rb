@@ -28,8 +28,7 @@ module ROM
 
       # Load relation if args match the arity
       #
-      # @return [Loaded,Lazy,Curried]
-      # @see Lazy#call
+      # @return [Loaded,Curried]
       #
       # @api public
       def call(*args)
