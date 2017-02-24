@@ -1,10 +1,17 @@
-## v3.0.2 to-be-released
+# v3.0.2 2017-02-24
+
+## Added
+
+* `Schema::Attribute#key` which returns tuple key name, either alias or canonical name (solnic)
 
 ## Fixed
 
 * Fix the error message for missing association (flash-gordon)
+* Curried relation called without any arguments will raise an ArgumentError (solnic)
 
-## v3.0.1 2017-02-01
+[Compare v3.0.1...v3.0.2](https://github.com/rom-rb/rom/compare/v3.0.1...v3.0.2)
+
+# v3.0.1 2017-02-01
 
 ## Fixed
 
@@ -12,7 +19,7 @@
 
 [Compare v3.0.0...v3.0.1](https://github.com/rom-rb/rom/compare/v3.0.0...v3.0.1)
 
-## v3.0.0 2017-01-29
+# v3.0.0 2017-01-29
 
 ## Added
 
@@ -46,7 +53,7 @@
 
 [Compare v2.0.2...v3.0.0](https://github.com/rom-rb/rom/compare/v2.0.2...v3.0.0)
 
-## v2.0.2 2016-11-11
+# v2.0.2 2016-11-11
 
 ## Added
 
@@ -59,7 +66,7 @@
 
 [Compare v2.0.1...v2.0.2](https://github.com/rom-rb/rom/compare/v2.0.1...v2.0.2)
 
-## v2.0.1 2016-09-30
+# v2.0.1 2016-09-30
 
 ### Added
 
@@ -72,7 +79,7 @@
 
 [Compare v2.0.0...v2.0.1](https://github.com/rom-rb/rom/compare/v2.0.0...v2.0.1)
 
-## v2.0.0 2016-07-27
+# v2.0.0 2016-07-27
 
 ### Added
 
@@ -110,7 +117,7 @@
 
 [Compare v1.0.0...v2.0.0](https://github.com/rom-rb/rom/compare/v1.0.0...v2.0.0)
 
-## v1.0.0 2016-01-06
+# v1.0.0 2016-01-06
 
 ### Added
 
@@ -138,7 +145,7 @@
 
 [Compare v0.9.1...v1.0.0](https://github.com/rom-rb/rom/compare/v0.9.1...v1.0.0)
 
-## v0.9.1 2015-08-21
+# v0.9.1 2015-08-21
 
 This is a small bug-fix release which addresses a couple of issues for inline
 setup DSL and multi-environments.
@@ -158,7 +165,7 @@ setup DSL and multi-environments.
 
 [Compare v0.9.0...v0.9.1](https://github.com/rom-rb/rom/compare/v0.9.0...v0.9.1)
 
-## v0.9.0 2015-08-19
+# v0.9.0 2015-08-19
 
 ### Added
 
@@ -190,7 +197,7 @@ setup DSL and multi-environments.
 
 [Compare v0.8.1...v0.9.0](https://github.com/rom-rb/rom/compare/v0.8.1...v0.9.0)
 
-## v0.8.1 2015-07-12
+# v0.8.1 2015-07-12
 
 ### Fixed
 
@@ -202,7 +209,7 @@ setup DSL and multi-environments.
 
 [Compare v0.8.0...v0.8.1](https://github.com/rom-rb/rom/compare/v0.8.0...v0.8.1)
 
-## v0.8.0 2015-06-22
+# v0.8.0 2015-06-22
 
 ### Added
 
@@ -230,7 +237,7 @@ setup DSL and multi-environments.
 
 [Compare v0.7.1...v0.8.0](https://github.com/rom-rb/rom/compare/v0.7.1...v0.8.0)
 
-## v0.7.1 2015-05-22
+# v0.7.1 2015-05-22
 
 ### Added
 
@@ -248,7 +255,7 @@ setup DSL and multi-environments.
 
 [Compare v0.7.0...v0.7.1](https://github.com/rom-rb/rom/compare/v0.7.0...v0.7.1)
 
-## v0.7.0 2015-05-17
+# v0.7.0 2015-05-17
 
 ### Added
 
@@ -282,7 +289,7 @@ setup DSL and multi-environments.
 
 [Compare v0.6.2...v0.7.0](https://github.com/rom-rb/rom/compare/v0.6.2...v0.7.0)
 
-## v0.6.2 2015-04-14
+# v0.6.2 2015-04-14
 
 ### Changed
 
@@ -294,7 +301,7 @@ setup DSL and multi-environments.
 
 [Compare v0.6.1...v0.6.2](https://github.com/rom-rb/rom/compare/v0.6.1...v0.6.2)
 
-## v0.6.1 2015-04-04
+# v0.6.1 2015-04-04
 
 ### Added
 
@@ -307,7 +314,7 @@ setup DSL and multi-environments.
 
 [Compare v0.6.0...v0.6.1](https://github.com/rom-rb/rom/compare/v0.6.0...v0.6.1)
 
-## v0.6.0 2015-03-22
+# v0.6.0 2015-03-22
 
 ### Added
 
@@ -348,7 +355,7 @@ setup DSL and multi-environments.
 
 [Compare v0.5.0...v0.6.0](https://github.com/rom-rb/rom/compare/v0.5.0...v0.6.0)
 
-## v0.5.0 2014-12-31
+# v0.5.0 2014-12-31
 
 ### Added
 
@@ -389,7 +396,7 @@ setup DSL and multi-environments.
 
 [Compare v0.4.2...v0.5.0](https://github.com/rom-rb/rom/compare/v0.4.2...v0.5.0)
 
-## v0.4.2 2014-12-19
+# v0.4.2 2014-12-19
 
 ### Added
 
@@ -405,7 +412,7 @@ setup DSL and multi-environments.
 
 [Compare v0.4.1...v0.4.2](https://github.com/rom-rb/rom/compare/v0.4.1...v0.4.2)
 
-## v0.4.1 2014-12-15
+# v0.4.1 2014-12-15
 
 ### Added
 
@@ -422,7 +429,7 @@ setup DSL and multi-environments.
 
 [Compare v0.4.0...v0.4.1](https://github.com/rom-rb/rom/compare/v0.4.0...v0.4.1)
 
-## v0.4.0 2014-12-06
+# v0.4.0 2014-12-06
 
 ### Added
 
@@ -442,7 +449,7 @@ setup DSL and multi-environments.
 
 [Compare v0.3.1...v0.4.0](https://github.com/rom-rb/rom/compare/v0.3.1...v0.4.0)
 
-## v0.3.1 2014-11-25
+# v0.3.1 2014-11-25
 
 ### Added
 
@@ -458,14 +465,14 @@ setup DSL and multi-environments.
 
 [Compare v0.3.0...v0.3.1](https://github.com/rom-rb/rom/compare/v0.3.0...v0.3.1)
 
-## v0.3.0 2014-11-24
+# v0.3.0 2014-11-24
 
 This version is a rewrite that introduces a new, simplified architecture based
 on a new adapter interface.
 
 [Compare v0.2.0...v0.3.0](https://github.com/rom-rb/rom/compare/v0.2.0...v0.3.0)
 
-## v0.2.0 2014-04-06
+# v0.2.0 2014-04-06
 
 ### Added
 
@@ -488,19 +495,19 @@ on a new adapter interface.
 
 [Compare v0.1.2...v0.2.0](https://github.com/rom-rb/rom/compare/v0.1.2...v0.2.0)
 
-## v0.1.2 2013-09-02
+# v0.1.2 2013-09-02
 
 * [updated] [rom-relation](https://github.com/rom-rb/rom-relation/blob/v0.1.2/Changelog.md#v012-2013-09-02)
 
 [Compare v0.1.1...v0.1.2](https://github.com/rom-rb/rom/compare/v0.1.1...v0.1.2)
 
-## v0.1.1 2013-08-30
+# v0.1.1 2013-08-30
 
 * [updated] [rom-relation](https://github.com/rom-rb/rom-relation/blob/v0.1.1/Changelog.md#v011-2013-08-30)
 * [updated] [rom-session](https://github.com/rom-rb/rom-session/blob/v0.1.1/Changelog.md#v011-2013-08-30)
 
 [Compare v0.1.0...v0.1.1](https://github.com/rom-rb/rom/compare/v0.1.0...v0.1.1)
 
-## v0.1.0 2013-08-23
+# v0.1.0 2013-08-23
 
 First public release
