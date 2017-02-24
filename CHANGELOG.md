@@ -1,3 +1,11 @@
+# v3.0.3 2017-02-24
+
+## Fixed
+
+* Curried relations when called without args while having some args filled in will return itself (solnic)
+
+[Compare v3.0.2...v3.0.3](https://github.com/rom-rb/rom/compare/v3.0.2...v3.0.3)
+
 # v3.0.2 2017-02-24
 
 ## Added
