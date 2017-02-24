@@ -6,6 +6,7 @@
 
 ## Fixed
 
+* Fix output_schema to use Attribute#key rather than canonical names (solnic)
 * Fix the error message for missing association (flash-gordon)
 * Curried relation called without any arguments will raise an ArgumentError (solnic)
 
