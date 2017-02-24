@@ -10,6 +10,10 @@ RSpec.describe ROM::Relation::Curried do
         restrict(name: name)
       end
 
+      def by_name_and_age(name, age)
+        restrict(name: name, age: age)
+      end
+
       def find(criteria)
         restrict(criteria)
       end
@@ -32,6 +36,12 @@ RSpec.describe ROM::Relation::Curried do
         to raise_error(
              ArgumentError,
              "curried #{users_relation.class}#by_name relation was called without any arguments")
+    end
+
+    it 'returns self when has curried args and no additional args were provided' do
+      curried = users_relation.by_name_and_age.('Jane')
+
+      expect(curried.().__id__).to be(curried.__id__)
     end
   end
 

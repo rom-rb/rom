@@ -36,10 +36,14 @@ module ROM
         if arity != -1
           all_args = curry_args + args
 
-          if arity == all_args.size
-            Loaded.new(relation.__send__(name.relation, *all_args))
-          elsif args.empty?
+          if all_args.empty?
             raise ArgumentError, "curried #{relation.class}##{name.to_sym} relation was called without any arguments"
+          end
+
+          if args.empty?
+            self
+          elsif arity == all_args.size
+            Loaded.new(relation.__send__(name.relation, *all_args))
           else
             __new__(relation, curry_args: all_args)
           end
