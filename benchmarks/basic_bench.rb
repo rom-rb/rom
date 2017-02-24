@@ -47,6 +47,22 @@ run("Loading ALL users with their tasks") do |x|
   end
 end
 
+run("Loading ALL users with their tasks with 20 limit") do |x|
+  x.verify do |users|
+    users.size == COUNT
+  end
+  x.report("AR") do
+    ARUser.includes(:tasks).limit(20).all.to_a.each do |u|
+      u.tasks.to_a.size
+    end
+  end
+  x.report("ROM") do
+    user_repo.aggregate(:tasks).limit(20).to_a.each do |u|
+      u.tasks.to_a.size
+    end
+  end
+end
+
 run("Loading ALL users with their tasks and their tags") do |x|
   x.verify do |users|
     users.size == COUNT
