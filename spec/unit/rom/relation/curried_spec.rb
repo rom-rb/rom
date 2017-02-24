@@ -17,16 +17,21 @@ RSpec.describe ROM::Relation::Curried do
   end
 
   describe '#call' do
-    let(:relation) { users_relation.by_name.call('Jane') }
+    let(:relation) { users_relation.by_name }
 
     it 'materializes a relation' do
-      expect(relation).to match_array([
-        name: 'Jane', email: 'jane@doe.org'
-      ])
+      expect(relation.('Jane').to_a).to eql([name: 'Jane', email: 'jane@doe.org'])
     end
 
     it 'returns a loaded relation' do
-      expect(relation.source).to eql(users_relation.by_name('Jane'))
+      expect(relation.('Jane').source).to eql(users_relation.by_name('Jane'))
+    end
+
+    it 'raises argument error if no arguments were provided' do
+      expect { relation.() }.
+        to raise_error(
+             ArgumentError,
+             "curried #{users_relation.class}#by_name relation was called without any arguments")
     end
   end
 
