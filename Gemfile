@@ -44,7 +44,7 @@ group :benchmarks do
   gem 'activerecord', '~> 5.0'
   gem 'benchmark-ips', '~> 2.2.0'
   gem 'rom-repository', git: 'https://github.com/rom-rb/rom-repository.git', branch: 'master'
-  gem 'hotch'
+  gem 'hotch', platform: :mri
 end
 
 group :tools do
