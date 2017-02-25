@@ -107,6 +107,15 @@ module ROM
         pluck(source.primary_key)
       end
 
+      # Return if loaded relation is empty
+      #
+      # @return [TrueClass,FalseClass]
+      #
+      # @api public
+      def empty?
+        collection.empty?
+      end
+
       # Return a loaded relation with a new collection
       #
       # @api public

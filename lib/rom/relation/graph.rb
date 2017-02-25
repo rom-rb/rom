@@ -90,10 +90,10 @@ module ROM
         left = root.call(*args)
 
         right =
-          if left.count > 0
-            nodes.map { |node| node.call(left) }
+          if left.empty?
+            nodes.map { |node| Loaded.new(node, EMPTY_ARRAY) }
           else
-            nodes.map { |node| Loaded.new(node, []) }
+            nodes.map { |node| node.call(left) }
           end
 
         Loaded.new(self, [left, right])
