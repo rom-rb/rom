@@ -188,7 +188,7 @@ module ROM
       #
       # @api public
       def associate(other, name)
-        Associated.new(self, other, association: name)
+        Associated.new(self, associations: { name => other })
       end
 
       # Return command result type
