@@ -3,7 +3,7 @@ require 'rom/memory'
 
 RSpec.describe ROM::Plugins::Relation::Instrumentation do
   subject(:relation) do
-    relation_class.new(dataset)
+    relation_class.new(dataset, notifications: notifications)
   end
 
   let(:dataset) do
@@ -17,19 +17,14 @@ RSpec.describe ROM::Plugins::Relation::Instrumentation do
       end
 
       use :instrumentation
-
-      notifications -> { Test::Notifications }
     end
   end
 
-  before do
-    Test.const_set(:Notifications, spy(:notifications))
-  end
+  let(:notifications) { spy(:notifications) }
 
   it 'uses notifications API when materializing a relation' do
     relation.to_a
 
-    expect(Test::Notifications).
-      to have_received(:instrument).with(:memory, name: :users)
+    expect(notifications).to have_received(:instrument).with(:memory, name: :users)
   end
 end

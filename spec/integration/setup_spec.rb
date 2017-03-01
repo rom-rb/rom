@@ -163,4 +163,22 @@ RSpec.describe 'Configuring ROM' do
       ROM.container(:memory) { |c| c.register_relation(Test::UserRelation) }
     end
   end
+
+  describe 'instrumentation setup' do
+    it 'allows setting instrumentation for relations' do
+      Test::Notifications = double(:notifications)
+
+      configuration = ROM::Configuration.new(:memory)
+
+      configuration.plugin(:memory, relations: :instrumentation) do |p|
+        p.notifications = Test::Notifications
+      end
+
+      configuration.relation(:users)
+
+      container = ROM.container(configuration)
+
+      expect(container.relations[:users].notifications).to be(Test::Notifications)
+    end
+  end
 end

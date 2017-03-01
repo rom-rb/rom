@@ -21,7 +21,7 @@ module ROM
   # @private
   class Finalize
     attr_reader :gateways, :repo_adapter, :datasets, :gateway_map,
-      :relation_classes, :mapper_classes, :mapper_objects, :command_classes, :config
+      :relation_classes, :mapper_classes, :mapper_objects, :command_classes, :plugins, :config
 
     # @api private
     def initialize(options)
@@ -36,6 +36,8 @@ module ROM
       @mapper_objects = (mappers - @mapper_classes).reduce(:merge) || {}
 
       @config = options.fetch(:config)
+
+      @plugins = options.fetch(:plugins)
 
       initialize_datasets
     end
@@ -90,7 +92,7 @@ module ROM
     #
     # @api private
     def load_relations
-      FinalizeRelations.new(gateways, relation_classes).run!
+      FinalizeRelations.new(gateways, relation_classes, plugins.select(&:relation?)).run!
     end
 
     # @api private

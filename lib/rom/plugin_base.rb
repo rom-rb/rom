@@ -14,9 +14,18 @@ module ROM
     attr_reader :options
 
     # @api private
+    attr_reader :type
+
+    # @api private
     def initialize(mod, options)
       @mod      = mod
       @options  = options
+      @type = options.fetch(:type)
+    end
+
+    # @api private
+    def relation?
+      type == :relation
     end
 
     # Apply this plugin to the provided class

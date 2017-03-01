@@ -21,6 +21,10 @@ module ROM
         settings.key?(name)
       end
 
+      def to_hash
+        settings
+      end
+
       # @api private
       def freeze
         settings.each_value(&:freeze)
@@ -31,13 +35,13 @@ module ROM
       def respond_to_missing?(_name, _include_private = false)
         true
       end
-      
+
       def dup
         self.class.new(dup_settings(settings))
       end
-        
+
       private
-      
+
       def dup_settings(settings)
         settings.each_with_object({}) do |(key, value), new_settings|
           if value.is_a?(self.class)
@@ -75,6 +79,7 @@ module ROM
     # @api public
     def configure
       yield(config)
+      self
     end
   end
 end

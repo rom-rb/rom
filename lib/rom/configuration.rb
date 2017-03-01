@@ -13,7 +13,7 @@ module ROM
 
     attr_reader :environment, :setup
 
-    def_delegators :@setup, :register_relation, :register_command, :register_mapper,
+    def_delegators :@setup, :register_relation, :register_command, :register_mapper, :register_plugin,
                             :relation_classes, :command_classes, :mapper_classes,
                             :auto_registration
 
