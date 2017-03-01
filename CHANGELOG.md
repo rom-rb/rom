@@ -1,3 +1,16 @@
+# v1.1.1 2017-03-01
+
+### Fixed
+
+* Support for `#read` in rom-sql was restored via mapping to `ROM::OpenStruct` (solnic)
+* Using `#nodes` no longer executes redundant query with deeply nested aggregates (solnic)
+
+### Changed
+
+* Depends on rom >= 3.0.4 now as it provides `Relation::Graph#with_nodes` which is needed here (solnic)
+
+[Compare v1.1.0...v1.1.1](https://github.com/rom-rb/rom-repository/compare/v1.1.0...v1.1.1)
+
 # v1.1.0 2017-02-16
 
 ### Added
