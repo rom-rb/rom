@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'rom/plugins/relation/key_inference'
 require 'dry-struct'
 
 RSpec.describe 'Configuring ROM' do
