@@ -215,17 +215,6 @@ module ROM
           end
       end
 
-      # TODO: add a proper interface to `Relation::Graph` and `Relation::Curried` to rom core
-      #
-      # @api private
-      def with_nodes(nodes)
-        if relation.curried?
-          __new__(relation.send(:__new__, relation.relation.class.new(relation.root, nodes)))
-        else
-          __new__(relation.class.new(relation.root, nodes))
-        end
-      end
-
       # @api private
       def respond_to_missing?(meth, _include_private = false)
         relation.respond_to?(meth) || super
