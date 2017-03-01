@@ -70,5 +70,17 @@ module ROM
     def commands(name, &block)
       register_command(*CommandDSL.new(name, default_adapter, &block).command_classes)
     end
+
+    # @api public
+    def plugin(adapter, spec, &block)
+      type, name = spec.flatten(1)
+      plugin = plugin_registry.send(type).adapter(adapter).fetch(name) { plugin_registry.send(type).fetch(name) }
+      register_plugin(plugin.configure(&block))
+    end
+
+    # @api private
+    def plugin_registry
+      ROM.plugin_registry
+    end
   end
 end

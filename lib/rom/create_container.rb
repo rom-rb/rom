@@ -27,6 +27,7 @@ module ROM
         relation_classes: setup.relation_classes,
         command_classes: setup.command_classes,
         mappers: setup.mapper_classes,
+        plugins: setup.plugins,
         config: environment.config.dup.freeze
       )
 

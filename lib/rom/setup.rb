@@ -17,11 +17,16 @@ module ROM
     # @api private
     attr_reader :command_classes
 
+
+    # @api private
+    attr_reader :plugins
+
     # @api private
     def initialize
       @relation_classes = []
       @command_classes = []
       @mapper_classes = []
+      @plugins = []
     end
 
     # Relation sub-classes are being registered with this method during setup
@@ -43,6 +48,11 @@ module ROM
     # @api private
     def register_command(*klasses)
       klasses.reduce(@command_classes, :<<)
+    end
+
+    # @api private
+    def register_plugin(plugin)
+      plugins << plugin
     end
 
     def auto_registration(directory, options = {})

@@ -11,9 +11,10 @@ module ROM
       # @param [Array] relation_classes a list of relation descendants
       #
       # @api private
-      def initialize(gateways, relation_classes)
+      def initialize(gateways, relation_classes, plugins = EMPTY_ARRAY)
         @gateways = gateways
         @relation_classes = relation_classes
+        @plugins = plugins
       end
 
       # @return [Hash]
@@ -50,12 +51,23 @@ module ROM
         gateway = @gateways.fetch(klass.gateway)
         ds_proc = klass.dataset_proc || -> _ { self }
 
+        @plugins.each do |plugin|
+          plugin.apply_to(klass)
+        end
+
         klass.schema(infer: true) unless klass.schema
         schema = klass.schema.finalize!(gateway: gateway, relations: registry)
 
         dataset = gateway.dataset(klass.dataset).instance_exec(klass, &ds_proc)
 
-        klass.new(dataset, __registry__: registry, schema: schema.with(relations: registry))
+        options = { __registry__: registry, schema: schema.with(relations: registry), **plugin_options }
+
+        klass.new(dataset, options)
+      end
+
+      # @api private
+      def plugin_options
+        @plugins.map(&:config).reduce(:merge) || EMPTY_HASH
       end
     end
   end
