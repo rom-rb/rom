@@ -17,6 +17,10 @@ RSpec.describe ROM::Plugins::Relation::Instrumentation do
       end
 
       use :instrumentation
+
+      instrument def all
+        self
+      end
     end
   end
 
@@ -24,6 +28,12 @@ RSpec.describe ROM::Plugins::Relation::Instrumentation do
 
   it 'uses notifications API when materializing a relation' do
     relation.to_a
+
+    expect(notifications).to have_received(:instrument).with(:memory, name: :users)
+  end
+
+  it 'instruments custom methods' do
+    relation.all
 
     expect(notifications).to have_received(:instrument).with(:memory, name: :users)
   end

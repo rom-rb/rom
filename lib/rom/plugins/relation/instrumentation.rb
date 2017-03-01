@@ -20,7 +20,7 @@ module ROM
           def instrument(*methods)
             methods.each do |meth|
               define_method(meth) do
-                instrument { super }
+                instrument { super() }
               end
             end
           end
