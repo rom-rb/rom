@@ -71,6 +71,22 @@ module ROM
       register_command(*CommandDSL.new(name, default_adapter, &block).command_classes)
     end
 
+    # Configures a plugin for a specific adapter to be enabled for all relations
+    #
+    # @example
+    #   config = ROM::Configuration.new(:sql, 'sqlite::memory')
+    #
+    #   config.plugin(:sql, relations: :instrumentation) do |p|
+    #     p.notifications = MyNotificationsBackend
+    #   end
+    #
+    #   config.plugin(:sql, relations: :pagination)
+    #
+    # @param [Symbol] adapter The adapter identifier
+    # @param [Hash<Symbol=>Symbol>] spec Component identifier => plugin identifier
+    #
+    # @return [Plugin]
+    #
     # @api public
     def plugin(adapter, spec, &block)
       type, name = spec.flatten(1)
