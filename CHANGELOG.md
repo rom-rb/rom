@@ -6,6 +6,7 @@
 * Instrumentation plugin for relations (solnic)
 * New `ROM::Relation::Loaded#empty?` method (solnic)
 * New `ROM::Relation::Graph#with_nodes` which returns a new graph with new nodes (solnic)
+* New `ROM::Schema#empty` which returns an empty schema (solnic)
 
 [Compare v3.0.3...v3.0.4](https://github.com/rom-rb/rom/compare/v3.0.3...v3.0.4)
 
