@@ -7,7 +7,7 @@
 
 ### Changed
 
-* Depends on rom >= 3.0.4 now as it provides `Relation::Graph#with_nodes` which is needed here (solnic)
+* Depends on rom >= 3.1.0 now as it provides `Relation::Graph#with_nodes` which is needed here (solnic)
 
 [Compare v1.1.0...v1.2.0](https://github.com/rom-rb/rom-repository/compare/v1.1.0...v1.2.0)
 
