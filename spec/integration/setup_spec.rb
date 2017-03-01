@@ -164,7 +164,7 @@ RSpec.describe 'Configuring ROM' do
     end
   end
 
-  describe 'instrumentation setup' do
+  describe 'configuring plugins for all relations' do
     it 'allows setting instrumentation for relations' do
       Test::Notifications = double(:notifications)
 
@@ -174,11 +174,16 @@ RSpec.describe 'Configuring ROM' do
         p.notifications = Test::Notifications
       end
 
+      configuration.plugin(:memory, relations: :key_inference)
+
       configuration.relation(:users)
 
       container = ROM.container(configuration)
 
-      expect(container.relations[:users].notifications).to be(Test::Notifications)
+      users = container.relations[:users]
+
+      expect(users.notifications).to be(Test::Notifications)
+      expect(users).to respond_to(:foreign_key)
     end
   end
 end

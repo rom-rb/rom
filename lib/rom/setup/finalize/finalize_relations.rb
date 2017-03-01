@@ -67,7 +67,7 @@ module ROM
 
       # @api private
       def plugin_options
-        @plugins.map(&:config).reduce(:merge) || EMPTY_HASH
+        @plugins.map(&:config).map(&:to_hash).reduce(:merge) || EMPTY_HASH
       end
     end
   end
