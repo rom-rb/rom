@@ -61,6 +61,11 @@ module ROM
         @nodes = nodes
       end
 
+      # @api public
+      def with_nodes(nodes)
+        self.class.new(root, nodes)
+      end
+
       # Return if this is a graph relation
       #
       # @return [true]

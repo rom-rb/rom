@@ -17,6 +17,10 @@ RSpec.describe ROM::Relation::Graph do
       def for_users(_users)
         self
       end
+
+      def by_title(title)
+        restrict(title: title)
+      end
     end.new(tasks_dataset)
   end
 
@@ -61,6 +65,15 @@ RSpec.describe ROM::Relation::Graph do
 
     it 'raises method error' do
       expect { graph.not_here }.to raise_error(NoMethodError, /not_here/)
+    end
+  end
+
+  describe '#with_nodes' do
+    it 'returns a new graph with new nodes' do
+      new_tasks = tasks_relation.by_title('foo')
+      new_graph = graph.with_nodes([new_tasks])
+
+      expect(new_graph.nodes[0]).to be(new_tasks)
     end
   end
 
