@@ -75,7 +75,12 @@ module ROM
     def plugin(adapter, spec, &block)
       type, name = spec.flatten(1)
       plugin = plugin_registry.send(type).adapter(adapter).fetch(name) { plugin_registry.send(type).fetch(name) }
-      register_plugin(plugin.configure(&block))
+
+      if block
+        register_plugin(plugin.configure(&block))
+      else
+        register_plugin(plugin)
+      end
     end
 
     # @api private

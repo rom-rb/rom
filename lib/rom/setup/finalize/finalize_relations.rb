@@ -51,12 +51,12 @@ module ROM
         gateway = @gateways.fetch(klass.gateway)
         ds_proc = klass.dataset_proc || -> _ { self }
 
+        klass.schema(infer: true) unless klass.schema
+        schema = klass.schema.finalize!(gateway: gateway, relations: registry)
+
         @plugins.each do |plugin|
           plugin.apply_to(klass)
         end
-
-        klass.schema(infer: true) unless klass.schema
-        schema = klass.schema.finalize!(gateway: gateway, relations: registry)
 
         dataset = gateway.dataset(klass.dataset).instance_exec(klass, &ds_proc)
 
