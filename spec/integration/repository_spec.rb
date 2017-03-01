@@ -336,4 +336,10 @@ RSpec.describe 'ROM repository' do
       expect(jane.post.body).to eql('Jane Post')
     end
   end
+
+  it 'loads structs using plain SQL' do
+    jane = repo.users.read("SELECT name FROM users WHERE name = 'Jane'").one
+
+    expect(jane.name).to eql('Jane')
+  end
 end

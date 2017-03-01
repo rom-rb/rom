@@ -3,6 +3,7 @@ require 'dry/core/cache'
 require 'dry/core/class_builder'
 
 require 'rom/struct'
+require 'rom/open_struct'
 require 'rom/schema/attribute'
 
 module ROM
@@ -16,9 +17,13 @@ module ROM
           name, header = args
           attributes = visit(header).compact
 
-          build_class(name, ROM::Struct) do |klass|
-            attributes.each do |(name, type)|
-              klass.attribute(name, type)
+          if attributes.empty?
+            ROM::OpenStruct
+          else
+            build_class(name, ROM::Struct) do |klass|
+              attributes.each do |(name, type)|
+                klass.attribute(name, type)
+              end
             end
           end
         end
