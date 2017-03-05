@@ -33,7 +33,7 @@ module ROM
 
         include Dry::Equalizer(:data)
 
-        option :row_proc, reader: true, default: proc { |obj| obj.class.row_proc }
+        option :row_proc, reader: true, default: -> { self.class.row_proc }
       end
     end
 

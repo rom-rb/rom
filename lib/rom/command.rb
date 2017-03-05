@@ -204,7 +204,7 @@ module ROM
 
     # @!attribute [r] source
     #   @return [Relation] The source relation
-    option :source, reader: true, optional: true, default: -> c { c.relation }
+    option :source, reader: true, optional: true, default: -> { relation }
 
     # @!attribute [r] type
     #   @return [Symbol] Result type, either :one or :many
@@ -216,15 +216,15 @@ module ROM
 
     # @!attribute [r] curry_args
     #   @return [Array] Curried args
-    option :curry_args, reader: true, default: -> _ { EMPTY_ARRAY }
+    option :curry_args, reader: true, default: -> { EMPTY_ARRAY }
 
     # @!attribute [r] before
     #   @return [Array<Hash>] An array with before hooks configuration
-    option :before, Types::Coercible::Array, reader: true, as: :before_hooks, default: proc { EMPTY_ARRAY }
+    option :before, Types::Coercible::Array, reader: true, as: :before_hooks, default: -> { EMPTY_ARRAY }
 
     # @!attribute [r] before
     #   @return [Array<Hash>] An array with after hooks configuration
-    option :after, Types::Coercible::Array, reader: true, as: :after_hooks, default: proc { EMPTY_ARRAY }
+    option :after, Types::Coercible::Array, reader: true, as: :after_hooks, default: -> { EMPTY_ARRAY }
 
     input Hash
     result :many

@@ -51,27 +51,25 @@ module ROM
 
     # @!attribute [r] mappers
     #   @return [MapperRegistry] an optional mapper registry (empty by default)
-    option :mappers, reader: true, default: proc { MapperRegistry.new }
+    option :mappers, reader: true, default: -> { MapperRegistry.new }
 
     # @!attribute [r] schema
     #   @return [Schema] relation schema, defaults to class-level canonical
     #                    schema (if it was defined) and sets an empty one as
     #                    the fallback
     #   @api public
-    option :schema, reader: true, optional: true, default: method(:default_schema).to_proc
+    option :schema, reader: true, optional: true, default: -> { self.class.default_schema(self) }
 
     # @!attribute [r] input_schema
     #   @return [Object#[]] tuple processing function, uses schema or defaults to Hash[]
     #   @api private
-    option :input_schema, reader: true, default: -> relation {
-      relation.schema? ? schema.to_input_hash : Hash
-    }
+    option :input_schema, reader: true, default: -> { schema? ? schema.to_input_hash : Hash }
 
     # @!attribute [r] output_schema
     #   @return [Object#[]] tuple processing function, uses schema or defaults to NOOP_OUTPUT_SCHEMA
     #   @api private
-    option :output_schema, reader: true, optional: true, default: -> relation {
-      relation.schema.any?(&:read?) ? schema.to_output_hash : NOOP_OUTPUT_SCHEMA
+    option :output_schema, reader: true, optional: true, default: -> {
+      schema.any?(&:read?) ? schema.to_output_hash : NOOP_OUTPUT_SCHEMA
     }
 
     # Return schema attribute

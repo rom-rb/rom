@@ -14,7 +14,7 @@ module ROM
           super
           return if klass.instance_methods.include?(:__registry__)
           klass.option :__registry__,
-                       default: proc { EMPTY_REGISTRY },
+                       default: -> { EMPTY_REGISTRY },
                        reader: true,
                        optional: true
         end

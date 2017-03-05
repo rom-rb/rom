@@ -14,21 +14,22 @@ module ROM
 
     NamespaceType = Types::Strict::Bool | Types::Strict::String
     PathnameType = Types.Constructor(Pathname, &Kernel.method(:Pathname))
-
-    param :directory, type: PathnameType
-
-    option :namespace, reader: true, type: NamespaceType, default: proc { true }
-
-    option :component_dirs, reader: true, type: Types::Strict::Hash, default: proc { {
+    DEFAULT_MAPPING = {
       relations: :relations,
       mappers: :mappers,
       commands: :commands
-    } }
+    }.freeze
 
-    option :globs, reader: true, default: -> r {
+    param :directory, type: PathnameType
+
+    option :namespace, reader: true, type: NamespaceType, default: -> { true }
+
+    option :component_dirs, reader: true, type: Types::Strict::Hash, default: -> { DEFAULT_MAPPING }
+
+    option :globs, reader: true, default: -> {
       Hash[
-        component_dirs.map { |component, directory|
-          [component, r.directory.join("#{directory}/**/*.rb")]
+        component_dirs.map { |component, path|
+          [component, directory.join("#{ path }/**/*.rb")]
         }
       ]
     }

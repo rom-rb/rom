@@ -14,8 +14,8 @@ module ROM
       param :relation
 
       option :name, optional: true, type: Types::Strict::Symbol
-      option :arity, type: Types::Strict::Int, reader: true, default: proc { -1 }
-      option :curry_args, reader: true, default: proc { EMPTY_ARRAY }
+      option :arity, type: Types::Strict::Int, reader: true, default: -> { -1 }
+      option :curry_args, reader: true, default: -> { EMPTY_ARRAY }
 
       # Relation name
       #
