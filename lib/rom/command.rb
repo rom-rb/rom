@@ -220,11 +220,11 @@ module ROM
 
     # @!attribute [r] before
     #   @return [Array<Hash>] An array with before hooks configuration
-    option :before, Types::Coercible::Array, reader: true, as: :before_hooks, default: -> { EMPTY_ARRAY }
+    option :before, Types::Coercible::Array, reader: true, as: :before_hooks, default: -> { self.class.before }
 
     # @!attribute [r] before
     #   @return [Array<Hash>] An array with after hooks configuration
-    option :after, Types::Coercible::Array, reader: true, as: :after_hooks, default: -> { EMPTY_ARRAY }
+    option :after, Types::Coercible::Array, reader: true, as: :after_hooks, default: -> { self.class.after }
 
     input Hash
     result :many
