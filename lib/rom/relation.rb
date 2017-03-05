@@ -179,7 +179,13 @@ module ROM
     #
     # @api public
     def new(dataset, new_opts = EMPTY_HASH)
-      self.class.new(dataset, new_opts.empty? ? options : options.merge(new_opts))
+      if new_opts.empty?
+        opts = options
+      elsif new_opts.key?(:schema)
+        opts = options.reject { |k, _| k == :input_schema || k == :output_schema }.merge(new_opts)
+      end
+
+      self.class.new(dataset, opts)
     end
 
     # Returns a new instance with the same dataset but new options
