@@ -79,10 +79,21 @@ RSpec.describe ROM::Changeset, '#associate' do
     it 'associates child with multiple parents' do
       changeset = task_repo.changeset(title: 'Test 1').
                     associate(jane, :user).
-                    associate(project, :project)
+                    associate(project)
 
       expect(changeset.commit).
         to include(user_id: jane.id, project_id: project.id, title: 'Test 1')
+    end
+
+    it 'raises when assoc name cannot be inferred' do
+      other = Class.new do
+        def self.schema
+          []
+        end
+      end.new
+
+      expect { task_repo.changeset(title: 'Test 1').associate(other) }.
+        to raise_error(ArgumentError, /can't infer association name for/)
     end
   end
 

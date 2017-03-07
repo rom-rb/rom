@@ -16,6 +16,27 @@ module ROM
       #   @return [Symbol] Association identifier from relation schema
       option :associations, reader: true
 
+      # Infer association name from an object with a schema
+      #
+      # This expects other to be an object with a schema that includes a primary key
+      # attribute with :source meta information. This makes it work with both structs
+      # and relations
+      #
+      # @see Stateful#associate
+      #
+      # @api private
+      def self.infer_assoc_name(other)
+        schema = other.class.schema
+        attrs = schema.is_a?(Hash) ? schema.values : schema
+        pk = attrs.detect { |attr| attr.meta[:primary_key] }
+
+        if pk
+          pk.meta[:source].relation
+        else
+          raise ArgumentError, "can't infer association name for #{other}"
+        end
+      end
+
       # Commit changeset's composite command
       #
       # @example
@@ -33,7 +54,7 @@ module ROM
       end
 
       # @api public
-      def associate(other, name)
+      def associate(other, name = Associated.infer_assoc_name(other))
         self.class.new(left, associations: associations.merge(name => other))
       end
 

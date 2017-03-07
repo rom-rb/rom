@@ -187,7 +187,7 @@ module ROM
       # @param [Symbol] assoc The association identifier from schema
       #
       # @api public
-      def associate(other, name)
+      def associate(other, name = Associated.infer_assoc_name(other))
         Associated.new(self, associations: { name => other })
       end
 
