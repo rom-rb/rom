@@ -1,7 +1,10 @@
-RSpec.shared_context 'database' do
+RSpec.shared_context 'database setup' do
   let(:configuration) { ROM::Configuration.new(:sql, uri) }
+
   let(:conn) { configuration.gateways[:default].connection }
+
   let(:rom) { ROM.container(configuration) }
+
   let(:uri) do
     if defined? JRUBY_VERSION
       'jdbc:postgresql://localhost/rom_repository'
@@ -12,7 +15,13 @@ RSpec.shared_context 'database' do
 
   before do
     conn.loggers << LOGGER
+  end
+end
 
+RSpec.shared_context 'database' do
+  include_context 'database setup'
+
+  before do
     [:tags, :tasks, :posts, :users, :posts_labels, :labels, :books,
      :reactions, :messages].each { |table| conn.drop_table?(table) }
 

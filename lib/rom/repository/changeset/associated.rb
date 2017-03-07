@@ -12,13 +12,9 @@ module ROM
       #   @return [Changeset::Create] Child changeset
       param :left
 
-      # @!attribute [r] right
-      #   @return [Changeset::Create, Hash, #to_hash] Parent changeset or data
-      param :right
-
       # @!attribute [r] association
       #   @return [Symbol] Association identifier from relation schema
-      option :association, reader: true
+      option :associations, reader: true
 
       # Commit changeset's composite command
       #
@@ -34,6 +30,11 @@ module ROM
       # @api public
       def commit
         command.call
+      end
+
+      # @api public
+      def associate(other, name)
+        self.class.new(left, associations: associations.merge(name => other))
       end
 
       # Create a composed command
@@ -57,13 +58,15 @@ module ROM
       #
       # @api public
       def command
-        case right
-        when Changeset
-          left.command.curry(left) >> right.command.with_association(association).curry(right)
-        when Associated
-          left.command.curry(left) >> right.command.with_association(association)
-        else
-          left.command.with_association(association).curry(left, right)
+        associations.reduce(left.command.curry(left)) do |a, (assoc, other)|
+          case other
+          when Changeset
+            a >> other.command.with_association(assoc).curry(other)
+          when Associated
+            a >> other.command.with_association(assoc)
+          else
+            a.with_association(assoc, parent: other)
+          end
         end
       end
 
