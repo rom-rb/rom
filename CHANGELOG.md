@@ -1,3 +1,12 @@
+# v1.3.0 to-be-released
+
+### Added
+
+* Support for chaining `Changeset#associate` (solnic)
+* Inferring association name for `Changeset#associate` (solnic)
+
+[Compare v1.2.0...v1.3.0](https://github.com/rom-rb/rom-repository/compare/v1.2.0...v1.3.0)
+
 # v1.2.0 2017-03-01
 
 ### Fixed
