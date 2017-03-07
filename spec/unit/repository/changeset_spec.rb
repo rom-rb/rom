@@ -121,28 +121,58 @@ RSpec.describe ROM::Repository, '#changeset' do
   end
 
   describe 'custom changeset class' do
-    let(:changeset) do
-      repo.changeset(changeset_class[:users]).data({})
-    end
+    context 'with a Create' do
+      let(:changeset) do
+        repo.changeset(changeset_class[:users]).data({})
+      end
 
-    let(:changeset_class) do
-      Class.new(ROM::Changeset::Create) do
-        def to_h
-          __data__.merge(name: 'Jane')
+      let(:changeset_class) do
+        Class.new(ROM::Changeset::Create) do
+          def to_h
+            __data__.merge(name: 'Jane')
+          end
         end
+      end
+
+      it 'has data' do
+        expect(changeset.to_h).to eql(name: 'Jane')
+      end
+
+      it 'has relation' do
+        expect(changeset.relation).to be(repo.users)
+      end
+
+      it 'can be commited' do
+        expect(changeset.commit).to eql(id: 1, name: 'Jane')
       end
     end
 
-    it 'has data' do
-      expect(changeset.to_h).to eql(name: 'Jane')
-    end
+    context 'with an Update' do
+      let(:changeset) do
+        repo.changeset(changeset_class).by_pk(user.id, name: 'Jade')
+      end
 
-    it 'has relation' do
-      expect(changeset.relation).to be(repo.users)
-    end
+      let(:changeset_class) do
+        Class.new(ROM::Changeset::Update[:users]) do
+          map { |t| t.merge(name: "#{t[:name]} Doe") }
+        end
+      end
 
-    it 'can be commited' do
-      expect(changeset.commit).to eql(id: 1, name: 'Jane')
+      let(:user) do
+        repo.command(:create, repo.users).call(name: 'Jane')
+      end
+
+      it 'has data' do
+        expect(changeset.to_h).to eql(name: 'Jade Doe')
+      end
+
+      it 'has relation restricted by pk' do
+        expect(changeset.relation.dataset).to eql(repo.users.by_pk(user.id).dataset)
+      end
+
+      it 'can be commited' do
+        expect(changeset.commit).to eql(id: 1, name: 'Jade Doe')
+      end
     end
   end
 

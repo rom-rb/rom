@@ -92,6 +92,20 @@ module ROM
       self.class.new(relation, options.merge(new_options))
     end
 
+    # Return a new changeset with provided relation
+    #
+    # New options can be provided too
+    #
+    # @param [Relation] relation
+    # @param [Hash] options
+    #
+    # @return [Changeset]
+    #
+    # @api public
+    def new(relation, new_options = EMPTY_HASH)
+      self.class.new(relation, new_options.empty? ? options : options.merge(new_options))
+    end
+
     # Persist changeset
     #
     # @example
