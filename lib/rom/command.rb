@@ -64,7 +64,7 @@ module ROM
     #     Get relation identifier
     #
     #     @example
-    #       module CreateUser < ROM::Commands::Create[:memory]
+    #       class CreateUser < ROM::Commands::Create[:memory]
     #         relation :users
     #       end
     #
@@ -77,7 +77,7 @@ module ROM
     #     Set relation identifier.
     #
     #     @example
-    #       module CreateUser < ROM::Commands::Create[:memory]
+    #       class CreateUser < ROM::Commands::Create[:memory]
     #         relation :users
     #       end
     #
@@ -91,7 +91,7 @@ module ROM
     #     Get result type
     #
     #     @example
-    #       module CreateUser < ROM::Commands::Create[:memory]
+    #       class CreateUser < ROM::Commands::Create[:memory]
     #         result :one
     #       end
     #
@@ -104,7 +104,7 @@ module ROM
     #     Set result type
     #
     #     @example
-    #       module CreateUser < ROM::Commands::Create[:memory]
+    #       class CreateUser < ROM::Commands::Create[:memory]
     #         result :one
     #       end
     #
@@ -132,7 +132,7 @@ module ROM
     #     Set input processing function
     #
     #     @example
-    #       module CreateUser < ROM::Commands::Create[:memory]
+    #       class CreateUser < ROM::Commands::Create[:memory]
     #         input -> tuple { .. }
     #       end
     #
@@ -146,7 +146,7 @@ module ROM
     #     Get registration identifier
     #
     #     @example
-    #       module CreateUser < ROM::Commands::Create[:memory]
+    #       class CreateUser < ROM::Commands::Create[:memory]
     #         register_as :create_user
     #       end
     #
@@ -159,7 +159,7 @@ module ROM
     #     Set registration identifier
     #
     #     @example
-    #       module CreateUser < ROM::Commands::Create[:memory]
+    #       class CreateUser < ROM::Commands::Create[:memory]
     #         register_as :create_user
     #       end
     #
@@ -171,7 +171,7 @@ module ROM
     #     Check if a command class is restrictable
     #
     #     @example
-    #       module UpdateUser < ROM::Commands::Update[:memory]
+    #       class UpdateUser < ROM::Commands::Update[:memory]
     #         restrictable true
     #       end
     #
@@ -184,7 +184,7 @@ module ROM
     #     Set if a command is restrictable
     #
     #     @example
-    #       module UpdateUser < ROM::Commands::Update[:memory]
+    #       class UpdateUser < ROM::Commands::Update[:memory]
     #         restrictable true
     #       end
     #
