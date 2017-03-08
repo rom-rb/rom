@@ -119,7 +119,7 @@ module ROM
     #     Get input processing function
     #
     #     @example
-    #       module CreateUser < ROM::Commands::Create[:memory]
+    #       class CreateUser < ROM::Commands::Create[:memory]
     #         input -> tuple { .. }
     #       end
     #
