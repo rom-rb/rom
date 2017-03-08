@@ -2,12 +2,32 @@ RSpec.describe 'Using changesets' do
   include_context 'database'
   include_context 'relations'
 
+  before do
+    module Test
+      class User < Dry::Struct
+        attribute :id, Dry::Types['strict.int']
+        attribute :name, Dry::Types['strict.string']
+      end
+    end
+
+    configuration.mappers do
+      define(:users) do
+        model Test::User
+        register_as :user
+      end
+    end
+  end
+
   describe 'Create' do
     subject(:repo) do
       Class.new(ROM::Repository[:users]) {
         relations :books, :posts
         commands :create, update: :by_pk
       }.new(rom)
+    end
+
+    let(:custom_changeset) do
+      Class.new(ROM::Changeset::Create)
     end
 
     it 'can be passed to a command' do
@@ -69,6 +89,15 @@ RSpec.describe 'Using changesets' do
       expect(result.title).to eql("rom-rb is awesome")
       expect(result.created_at).to be_instance_of(Time)
       expect(result.updated_at).to be_instance_of(Time)
+    end
+
+    it 'preserves relation mappers' do
+      changeset = repo.
+                    changeset(custom_changeset).
+                    new(repo.users.relation.as(:user)).
+                    data(name: 'Joe Dane')
+
+      expect(changeset.commit).to eql(Test::User.new(id: 1, name: 'Joe Dane'))
     end
   end
 
