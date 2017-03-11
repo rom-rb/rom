@@ -11,8 +11,8 @@ group :development do
 end
 
 group :test do
-  gem 'rom', git: 'https://github.com/rom-rb/rom.git', branch: 'master'
-  gem 'rom-sql', git: 'https://github.com/rom-rb/rom-sql.git', branch: 'master'
+  gem 'rom', git: 'https://github.com/rom-rb/rom.git', branch: 'update-dry-initializer'
+  gem 'rom-sql', git: 'https://github.com/rom-rb/rom-sql.git', branch: 'update-dry-initializer'
   gem 'rspec'
   gem 'dry-struct'
   gem 'byebug', platforms: :mri
@@ -36,3 +36,5 @@ group :tools do
   gem 'mutant'
   gem 'mutant-rspec'
 end
+
+gem 'dry-initializer', git: 'https://github.com/dry-rb/dry-initializer.git', branch: 'v1.3.0'

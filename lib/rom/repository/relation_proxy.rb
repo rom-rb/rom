@@ -27,10 +27,10 @@ module ROM
       param :relation
 
       option :name, type:  Types::Strict::Symbol
-      option :mappers, reader: true, default: proc { MapperBuilder.new }
-      option :meta, reader: true, default: proc { EMPTY_HASH }
-      option :registry, type: RelationRegistryType, default: proc { RelationRegistry.new }, reader: true
-      option :auto_struct, optional: true
+      option :mappers, default: -> { MapperBuilder.new }
+      option :meta, default: -> { EMPTY_HASH }
+      option :registry, type: RelationRegistryType, default: -> { RelationRegistry.new }
+      option :auto_struct, default: -> { true }
 
       # Relation name
       #

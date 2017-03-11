@@ -12,9 +12,9 @@ module ROM
       #   @return [Changeset::Create] Child changeset
       param :left
 
-      # @!attribute [r] association
-      #   @return [Symbol] Association identifier from relation schema
-      option :associations, reader: true
+      # @!attribute [r] associations
+      #   @return [Array] List of association identifiers from relation schema
+      option :associations
 
       # Infer association name from an object with a schema
       #
