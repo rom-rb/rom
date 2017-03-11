@@ -19,7 +19,7 @@ RSpec.describe ROM::Memory::Dataset do
   describe 'subclassing' do
     it 'supports options' do
       descendant = Class.new(ROM::Memory::Dataset) do
-        option :path, reader: true
+        option :path
       end
 
       dataset = descendant.new([1, 2, 3], path: '/data')

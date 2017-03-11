@@ -26,8 +26,8 @@ module ROM
     # @api private
     param :registry, type: RegistryType
 
-    option :mappers, reader: true, optional: true
-    option :mapper, reader: true, optional: true
+    option :mappers, optional: true
+    option :mapper, optional: true
 
     # Try to execute a command in a block
     #

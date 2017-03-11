@@ -204,19 +204,19 @@ module ROM
 
     # @!attribute [r] source
     #   @return [Relation] The source relation
-    option :source, reader: true, optional: true, default: -> { relation }
+    option :source, default: -> { relation }
 
     # @!attribute [r] result
     #   @return [Symbol] Result type, either :one or :many
-    option :result, reader: true, type: Result
+    option :result, type: Result
 
     # @!attribute [r] input
     #   @return [Proc, #call] Tuple processing function, typically uses Relation#input_schema
-    option :input, reader: true
+    option :input
 
     # @!attribute [r] curry_args
     #   @return [Array] Curried args
-    option :curry_args, reader: true, default: -> { EMPTY_ARRAY }
+    option :curry_args, default: -> { EMPTY_ARRAY }
 
     # @!attribute [r] before
     #   @return [Array<Hash>] An array with before hooks configuration

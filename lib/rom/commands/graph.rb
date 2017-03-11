@@ -26,9 +26,9 @@ module ROM
       alias_method :right, :nodes
 
       # @attr_reader [Symbol] root's relation name
-      option :name, reader: true, default: -> { root.name }
+      option :name, default: -> { root.name }
 
-      option :mappers, reader: true, default: -> { MapperRegistry.new }
+      option :mappers, default: -> { MapperRegistry.new }
 
       # Calls root and all nodes with the result from root
       #

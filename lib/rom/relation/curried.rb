@@ -14,8 +14,8 @@ module ROM
       param :relation
 
       option :name, optional: true, type: Types::Strict::Symbol
-      option :arity, type: Types::Strict::Int, reader: true, default: -> { -1 }
-      option :curry_args, reader: true, default: -> { EMPTY_ARRAY }
+      option :arity, type: Types::Strict::Int, default: -> { -1 }
+      option :curry_args, default: -> { EMPTY_ARRAY }
 
       # Relation name
       #
@@ -23,7 +23,7 @@ module ROM
       #
       # @api public
       def name
-        @name == Dry::Initializer::UNDEFINED ? relation.name : relation.name.with(@name)
+        @name ? relation.name.with(@name) : relation.name
       end
 
       # Load relation if args match the arity

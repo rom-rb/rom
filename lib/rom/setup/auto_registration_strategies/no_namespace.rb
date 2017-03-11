@@ -7,8 +7,8 @@ require 'rom/setup/auto_registration_strategies/base'
 module ROM
   module AutoRegistrationStrategies
     class NoNamespace < Base
-      option :directory, reader: true, type: PathnameType
-      option :entity, reader: true, type: Types::Strict::Symbol
+      option :directory, type: PathnameType
+      option :entity, type: Types::Strict::Symbol
 
       def call
         Dry::Core::Inflector.camelize(

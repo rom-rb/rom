@@ -61,8 +61,7 @@ module ROM
             # @return [Symbol]
             #
             # @api public
-            option :name, reader: true, optional: true,
-                   default: -> { Name.new(self.class.register_as, self.class.dataset) }
+            option :name, default: -> { Name.new(self.class.register_as, self.class.dataset) }
           end
 
           # Set dataset name

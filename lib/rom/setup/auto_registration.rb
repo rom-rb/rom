@@ -22,11 +22,11 @@ module ROM
 
     param :directory, type: PathnameType
 
-    option :namespace, reader: true, type: NamespaceType, default: -> { true }
+    option :namespace, type: NamespaceType, default: -> { true }
 
-    option :component_dirs, reader: true, type: Types::Strict::Hash, default: -> { DEFAULT_MAPPING }
+    option :component_dirs, type: Types::Strict::Hash, default: -> { DEFAULT_MAPPING }
 
-    option :globs, reader: true, default: -> {
+    option :globs, default: -> {
       Hash[
         component_dirs.map { |component, path|
           [component, directory.join("#{ path }/**/*.rb")]
