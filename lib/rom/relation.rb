@@ -183,6 +183,8 @@ module ROM
         opts = options
       elsif new_opts.key?(:schema)
         opts = options.reject { |k, _| k == :input_schema || k == :output_schema }.merge(new_opts)
+      else
+        opts = options.merge(new_opts)
       end
 
       self.class.new(dataset, opts)

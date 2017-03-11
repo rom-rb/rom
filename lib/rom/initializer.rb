@@ -7,7 +7,7 @@ module ROM
 
     # @api private
     def self.extended(base)
-      base.extend(Dry::Initializer::Mixin)
+      base.extend(Dry::Initializer[undefined: false])
       base.include(InstanceMethods)
     end
 
