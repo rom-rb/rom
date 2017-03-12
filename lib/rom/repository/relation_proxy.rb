@@ -38,7 +38,7 @@ module ROM
       #
       # @api public
       def name
-        @name == Dry::Initializer::UNDEFINED ? relation.name : relation.name.with(@name)
+        @name ? relation.name.with(@name) : relation.name
       end
 
       # Materializes wrapped relation and sends it through a mapper
