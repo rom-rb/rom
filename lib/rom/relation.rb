@@ -51,27 +51,25 @@ module ROM
 
     # @!attribute [r] mappers
     #   @return [MapperRegistry] an optional mapper registry (empty by default)
-    option :mappers, reader: true, default: proc { MapperRegistry.new }
+    option :mappers, default: -> { MapperRegistry.new }
 
     # @!attribute [r] schema
     #   @return [Schema] relation schema, defaults to class-level canonical
     #                    schema (if it was defined) and sets an empty one as
     #                    the fallback
     #   @api public
-    option :schema, reader: true, optional: true, default: method(:default_schema).to_proc
+    option :schema, default: -> { self.class.default_schema(self) }
 
     # @!attribute [r] input_schema
     #   @return [Object#[]] tuple processing function, uses schema or defaults to Hash[]
     #   @api private
-    option :input_schema, reader: true, default: -> relation {
-      relation.schema? ? schema.to_input_hash : Hash
-    }
+    option :input_schema, default: -> { schema? ? schema.to_input_hash : Hash }
 
     # @!attribute [r] output_schema
     #   @return [Object#[]] tuple processing function, uses schema or defaults to NOOP_OUTPUT_SCHEMA
     #   @api private
-    option :output_schema, reader: true, optional: true, default: -> relation {
-      relation.schema.any?(&:read?) ? schema.to_output_hash : NOOP_OUTPUT_SCHEMA
+    option :output_schema, default: -> {
+      schema.any?(&:read?) ? schema.to_output_hash : NOOP_OUTPUT_SCHEMA
     }
 
     # Return schema attribute
@@ -181,7 +179,15 @@ module ROM
     #
     # @api public
     def new(dataset, new_opts = EMPTY_HASH)
-      self.class.new(dataset, new_opts.empty? ? options : options.merge(new_opts))
+      if new_opts.empty?
+        opts = options
+      elsif new_opts.key?(:schema)
+        opts = options.reject { |k, _| k == :input_schema || k == :output_schema }.merge(new_opts)
+      else
+        opts = options.merge(new_opts)
+      end
+
+      self.class.new(dataset, opts)
     end
 
     # Returns a new instance with the same dataset but new options

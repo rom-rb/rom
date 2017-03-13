@@ -7,7 +7,7 @@ require 'rom/setup/auto_registration_strategies/base'
 module ROM
   module AutoRegistrationStrategies
     class CustomNamespace < Base
-      option :namespace, reader: true, type: Types::Strict::String
+      option :namespace, type: Types::Strict::String
 
       def call
         "#{namespace}::#{Dry::Core::Inflector.camelize(filename)}"

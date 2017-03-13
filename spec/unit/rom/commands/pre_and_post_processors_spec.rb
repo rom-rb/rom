@@ -48,6 +48,13 @@ RSpec.describe ROM::Commands::Create[:memory], 'before/after hooks' do
     it 'returns a new command with configured after hooks' do
       expect(command.after(:prepare).after_hooks).to eql(%i[finalize filter prepare])
     end
+
+    it 'worker with before' do
+      with_before_and_after = command.before(:filter).after(:finalize)
+
+      expect(with_before_and_after.before_hooks).to eql(%i[filter])
+      expect(with_before_and_after.after_hooks).to eql(%i[finalize filter finalize])
+    end
   end
 
   context 'without curried args' do

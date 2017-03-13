@@ -204,27 +204,27 @@ module ROM
 
     # @!attribute [r] source
     #   @return [Relation] The source relation
-    option :source, reader: true, optional: true, default: -> c { c.relation }
+    option :source, default: -> { relation }
 
-    # @!attribute [r] type
+    # @!attribute [r] result
     #   @return [Symbol] Result type, either :one or :many
-    option :result, reader: true, type: Result
+    option :result, type: Result
 
     # @!attribute [r] input
     #   @return [Proc, #call] Tuple processing function, typically uses Relation#input_schema
-    option :input, reader: true
+    option :input
 
     # @!attribute [r] curry_args
     #   @return [Array] Curried args
-    option :curry_args, reader: true, default: -> _ { EMPTY_ARRAY }
+    option :curry_args, default: -> { EMPTY_ARRAY }
 
     # @!attribute [r] before
     #   @return [Array<Hash>] An array with before hooks configuration
-    option :before, Types::Coercible::Array, reader: true, as: :before_hooks, default: proc { EMPTY_ARRAY }
+    option :before, Types::Coercible::Array, reader: false, default: -> { self.class.before }
 
-    # @!attribute [r] before
+    # @!attribute [r] after
     #   @return [Array<Hash>] An array with after hooks configuration
-    option :after, Types::Coercible::Array, reader: true, as: :after_hooks, default: proc { EMPTY_ARRAY }
+    option :after, Types::Coercible::Array, reader: false, default: -> { self.class.after }
 
     input Hash
     result :many
@@ -313,7 +313,7 @@ module ROM
       if curry_args.empty? && args.first.is_a?(Graph::InputEvaluator)
         Lazy[self].new(self, *args)
       else
-        self.class.build(relation, options.merge(curry_args: args))
+        self.class.build(relation, **options, curry_args: args)
       end
     end
     alias_method :with, :curry
@@ -357,7 +357,7 @@ module ROM
     #
     # @api public
     def before(*hooks)
-      self.class.new(relation, options.merge(before: before_hooks + hooks))
+      self.class.new(relation, **options, before: before_hooks + hooks)
     end
 
     # Return a new command with appended after hooks
@@ -368,7 +368,25 @@ module ROM
     #
     # @api public
     def after(*hooks)
-      self.class.new(relation, options.merge(after: after_hooks + hooks))
+      self.class.new(relation, **options, after: after_hooks + hooks)
+    end
+
+    # List of before hooks
+    #
+    # @return [Array]
+    #
+    # @api public
+    def before_hooks
+      options[:before]
+    end
+
+    # List of after hooks
+    #
+    # @return [Array]
+    #
+    # @api public
+    def after_hooks
+      options[:after]
     end
 
     # Return a new command with other source relation
@@ -379,7 +397,7 @@ module ROM
     #
     # @api public
     def new(new_relation)
-      self.class.build(new_relation, options.merge(source: relation))
+      self.class.build(new_relation, **options, source: relation)
     end
 
     # Check if this command has any hooks

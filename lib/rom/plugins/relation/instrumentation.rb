@@ -11,7 +11,7 @@ module ROM
         # @api private
         def self.included(klass)
           super
-          klass.option :notifications, reader: true
+          klass.option :notifications
           klass.extend(ClassInterface)
           klass.instrument(:to_a)
         end

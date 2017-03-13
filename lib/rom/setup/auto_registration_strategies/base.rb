@@ -8,7 +8,7 @@ module ROM
 
       PathnameType = Types.Definition(Pathname).constrained(type: Pathname)
 
-      option :file, reader: true, type: Types::Strict::String
+      option :file, type: Types::Strict::String
 
       EXTENSION_REGEX = /\.rb\z/.freeze
     end

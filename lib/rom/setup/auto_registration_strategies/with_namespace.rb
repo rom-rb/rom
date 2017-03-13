@@ -6,7 +6,7 @@ require 'rom/setup/auto_registration_strategies/base'
 module ROM
   module AutoRegistrationStrategies
     class WithNamespace < Base
-      option :directory, reader: true, type: PathnameType
+      option :directory, type: PathnameType
 
       def call
         Dry::Core::Inflector.camelize(
