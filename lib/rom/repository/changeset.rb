@@ -53,11 +53,11 @@ module ROM
 
     # @!attribute [r] command_compiler
     #   @return [Proc] a proc that can compile a command (typically provided by a repo)
-    option :command_compiler, reader: true, optional: true
+    option :command_compiler, optional: true
 
     # @!attribute [r] command_type
     #   @return [Symbol] a custom command identifier
-    option :command_type, reader: true, default: -> changeset { changeset.class.command_type }
+    option :command_type, default: -> { self.class.command_type }
 
     # Create a changeset class preconfigured for a specific relation
     #
@@ -78,7 +78,7 @@ module ROM
     #
     # @example
     #   class NewUser < ROM::Changeset::Create[:users]
-    #     option :token_generator, reader: true
+    #     option :token_generator
     #   end
     #
     #   changeset = user_repo.changeset(NewUser).with(token_generator: my_token_gen)

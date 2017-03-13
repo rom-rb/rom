@@ -86,9 +86,9 @@ module ROM
     #   @return [ROM::Container] The container used to set up a repo
     param :container, allow: ROM::Container
 
-    # @!attribute [r] container
-    #   @return [ROM::Container] The container used to set up a repo
-    option :auto_struct, optional: true, default: -> repo { repo.class.auto_struct }
+    # @!attribute [r] auto_struct
+    #   @return [Boolean] The container used to set up a repo
+    option :auto_struct, default: -> { self.class.auto_struct }
 
     # @!attribute [r] relations
     #   @return [RelationRegistry] The relation proxy registry used by a repo

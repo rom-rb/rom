@@ -13,14 +13,12 @@ module ROM
       # @!attribute [r] __data__
       #   @return [Hash] The relation data
       #   @api private
-      option :__data__, reader: true, optional: true, default: proc { nil }
+      option :__data__, optional: true
 
       # @!attribute [r] pipe
       #   @return [Changeset::Pipe] data transformation pipe
       #   @api private
-      option :pipe, reader: true, accept: [Proc, Pipe], default: -> changeset {
-        changeset.class.default_pipe(changeset)
-      }
+      option :pipe, accept: [Proc, Pipe], default: -> { self.class.default_pipe(self) }
 
       # Define a changeset mapping
       #
