@@ -12,7 +12,7 @@ RSpec.describe ROM::Memory::Relation do
         attribute :email, ROM::Types::String
         attribute :age, ROM::Types::Int
       end
-    end.new(dataset) 
+    end.new(dataset)
   end
 
   let(:dataset) do

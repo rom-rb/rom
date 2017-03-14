@@ -6,6 +6,8 @@ module ROM
   #
   # @api public
   class Schema
+    AttributeAlreadyDefinedError = Class.new(StandardError)
+
     include Dry::Equalizer(:name, :attributes)
     include Enumerable
 
@@ -33,7 +35,10 @@ module ROM
       #
       # @api public
       def attribute(name, type, options = EMPTY_HASH)
-        @attributes ||= {}
+        if @attributes.key?(name)
+          ::Kernel.raise ::ROM::Schema::AttributeAlreadyDefinedError,
+                         "Attribute #{ name.inspect } already defined"
+        end
 
         @attributes[name] =
           if options[:read]

@@ -157,5 +157,18 @@ RSpec.describe ROM::Relation, '.schema' do
 
       expect(Test::Users.schema[:admin]).to eql(ROM::Types::Bool.meta(name: :admin, source: ROM::Relation::Name[:test_users]))
     end
+
+    it 'raises an error on double definition' do
+      expect {
+        class Test::Users < ROM::Relation[:memory]
+          schema do
+            attribute :id, Types::Int.meta(primary_key: true)
+            attribute :name, Types::String
+            attribute :id, Types::Int
+          end
+        end
+      }.to raise_error(ROM::Schema::AttributeAlreadyDefinedError,
+                       /:id already defined/)
+    end
   end
 end
