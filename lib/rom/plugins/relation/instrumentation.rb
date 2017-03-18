@@ -1,3 +1,5 @@
+require 'dry/core/class_attributes'
+
 module ROM
   module Plugins
     module Relation
@@ -6,6 +8,8 @@ module ROM
       #
       # @api public
       module Instrumentation
+        extend Dry::Core::ClassAttributes
+
         # This hooks sets up a relation class with injectible notifications object
         #
         # @api private
@@ -13,13 +17,17 @@ module ROM
           super
           klass.option :notifications
           klass.extend(ClassInterface)
+          klass.prepend(mixin)
           klass.instrument(:to_a)
         end
 
+        defines :mixin
+        mixin Module.new
+
         module ClassInterface
           def instrument(*methods)
-            methods.each do |meth|
-              define_method(meth) do
+            (methods - Instrumentation.mixin.instance_methods).each do |meth|
+              Instrumentation.mixin.send(:define_method, meth) do
                 instrument { super() }
               end
             end
@@ -28,7 +36,7 @@ module ROM
 
         # @api public
         def instrument(&block)
-          notifications.instrument(self.class.adapter, { name: name.relation }.merge(notification_payload(self)), &block)
+          notifications.instrument(self.class.adapter, name: name.relation, **notification_payload(self), &block)
         end
 
         private

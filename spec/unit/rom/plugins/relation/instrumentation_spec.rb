@@ -2,6 +2,10 @@ require 'rom'
 require 'rom/memory'
 
 RSpec.describe ROM::Plugins::Relation::Instrumentation do
+  before do
+    described_class.mixin Module.new
+  end
+
   subject(:relation) do
     relation_class.new(dataset, notifications: notifications)
   end
