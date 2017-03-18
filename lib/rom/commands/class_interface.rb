@@ -12,8 +12,17 @@ module ROM
       # @api private
       def inherited(klass)
         super
-        klass.instance_variable_set(:'@before', before ? before.dup : [])
-        klass.instance_variable_set(:'@after', before ? after.dup : [])
+        klass.instance_variable_set(:'@before', before.dup)
+        klass.instance_variable_set(:'@after', after.dup)
+      end
+
+      # Sets up the base class
+      #
+      # @api private
+      def self.extended(klass)
+        super
+        klass.set_hooks(:before, [])
+        klass.set_hooks(:after, [])
       end
 
       # Return adapter specific sub-class based on the adapter identifier
@@ -210,12 +219,11 @@ module ROM
       # @api private
       def set_hooks(type, hooks)
         ivar = :"@#{type}"
-        value = instance_variable_get(ivar)
 
-        if value.empty?
-          instance_variable_set(ivar, hooks)
+        if instance_variable_defined?(ivar)
+          instance_variable_get(ivar).concat(hooks)
         else
-          value.concat(hooks)
+          instance_variable_set(ivar, hooks)
         end
       end
 
