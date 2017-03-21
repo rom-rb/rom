@@ -5,6 +5,7 @@ cache: bundler
 bundler_args: --without yard guard benchmarks tools
 before_script:
   - psql -c 'create database rom_repository' -U postgres
+  - rvm get master
 script: "bundle exec rake ci"
 after_success:
   - '[ "${TRAVIS_JOB_NUMBER#*.}" = "1" ] && [ "$TRAVIS_BRANCH" = "master" ] && bundle exec codeclimate-test-reporter'
