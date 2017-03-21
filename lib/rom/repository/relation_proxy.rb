@@ -91,7 +91,7 @@ module ROM
         elsif names.size > 1 && names.any? { |name| name.is_a?(Class) }
           raise ArgumentError, 'using custom mappers and a model is not supported'
         else
-          if opts[:auto_map]
+          if opts[:auto_map] && !meta[:combine_type]
             mappers = [mapper, *names.map { |name| relation.mappers[name] }]
             mappers.reduce(self) { |a, e| a >> e }
           else

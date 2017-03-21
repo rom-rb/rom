@@ -301,6 +301,14 @@ RSpec.describe 'ROM repository' do
             rel.map { |tuple| Hash(tuple).merge(mapped: true) }
           end
         end
+
+        define(:posts) do
+          register_as :nested_mapper
+
+          def call(rel)
+            rel.map { |tuple| Hash(tuple).tap { |h| h[:title] = h[:title].upcase } }
+          end
+        end
       end
     end
 
@@ -308,7 +316,20 @@ RSpec.describe 'ROM repository' do
       jane = repo.users.combine(:posts).map_with(:embed_address, auto_map: true).to_a.first
 
       expect(jane).
-        to eql(id:1, name: 'Jane', mapped: true, posts: [{ id: 1, author_id: 1, title: 'Hello From Jane', body: 'Jane Post' }])
+        to eql(id:1, name: 'Jane', mapped: true, posts: [
+                 { id: 1, author_id: 1, title: 'Hello From Jane', body: 'Jane Post' }
+               ])
+    end
+
+    it 'applies a custom mapper inside #node' do
+      jane = repo.aggregate(:posts).node(:posts) { |posts| posts.as(:nested_mapper, auto_map: true) }.to_a.first
+
+      expect(jane).to be_a ROM::Struct
+
+      expect(jane.to_h).
+        to eql(id:1, name: 'Jane', posts: [
+                 { id: 1, author_id: 1, title: 'HELLO FROM JANE', body: 'Jane Post' }
+               ])
     end
   end
 
