@@ -86,6 +86,15 @@ module ROM
         end
       end
 
+      # Lint: Ensure +gateway_instance+ returns adapter name
+      def lint_adapter_reader
+        if gateway_instance.adapter != identifier
+          complain "#{gateway_instance} must have the adapter identifier set to #{identifier.inspect}"
+        end
+      rescue MissingAdapterIdentifierError
+        complain "#{gateway_instance} is missing the adapter identifier"
+      end
+
       private
 
       # Setup gateway instance
