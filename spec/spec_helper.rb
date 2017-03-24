@@ -51,6 +51,12 @@ module SileneceWarnings
   end
 end
 
+DB_URI = if defined? JRUBY_VERSION
+           'jdbc:postgresql://localhost/rom_repository'
+         else
+           'postgres://localhost/rom_repository'
+         end
+
 Warning.extend(SileneceWarnings) if warning_api_available
 
 RSpec.configure do |config|

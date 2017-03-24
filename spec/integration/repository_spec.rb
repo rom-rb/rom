@@ -1,8 +1,9 @@
 RSpec.describe 'ROM repository' do
   include_context 'database'
   include_context 'relations'
-  include_context 'seeds'
+  include_context 'repo'
   include_context 'structs'
+  include_context 'seeds'
 
   it 'loads a single relation' do
     expect(repo.all_users.to_a).to match_array([jane, joe])

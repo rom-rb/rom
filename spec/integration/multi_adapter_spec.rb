@@ -1,11 +1,9 @@
-# encoding: utf-8
-
 RSpec.describe 'Repository with multi-adapters configuration' do
-  include_context 'database'
-
-  let(:configuration) {
-    ROM::Configuration.new(default: [:sql, uri], memory: [:memory])
+  let!(:configuration) {
+    ROM::Configuration.new(default: [:sql, DB_URI], memory: [:memory])
   }
+
+  let(:rom) { ROM.container(configuration) }
 
   let(:users) { rom.relation(:sql_users) }
   let(:tasks) { rom.relation(:memory_tasks) }

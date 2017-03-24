@@ -1,17 +1,9 @@
 RSpec.shared_context 'database setup' do
-  let(:configuration) { ROM::Configuration.new(:sql, uri) }
+  let(:configuration) { ROM::Configuration.new(:sql, DB_URI) }
 
   let(:conn) { configuration.gateways[:default].connection }
 
   let(:rom) { ROM.container(configuration) }
-
-  let(:uri) do
-    if defined? JRUBY_VERSION
-      'jdbc:postgresql://localhost/rom_repository'
-    else
-      'postgres://localhost/rom_repository'
-    end
-  end
 
   before do
     conn.loggers << LOGGER

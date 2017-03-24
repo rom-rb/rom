@@ -1,7 +1,7 @@
 RSpec.shared_context 'mappers' do
-  let(:users) { rom.relation(:users).mappers[:user] }
-  let(:tasks) { rom.relation(:tasks).mappers[:task] }
-  let(:tags) { rom.relation(:tags).mappers[:tag] }
+  let(:user_mappers) { users.mappers[:user] }
+  let(:task_mappers) { tasks.mappers[:task] }
+  let(:tag_mappers) { tags.mappers[:tag] }
 
   before do
     configuration.mappers do

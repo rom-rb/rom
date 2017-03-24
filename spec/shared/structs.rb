@@ -1,6 +1,4 @@
 RSpec.shared_context 'structs' do
-  include_context 'repo'
-
   let(:user_struct) do
     repo.users.mapper.model
   end
