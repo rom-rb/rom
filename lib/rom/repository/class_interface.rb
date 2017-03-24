@@ -51,18 +51,11 @@ module ROM
       #
       # @api public
       def relations(*names)
-        if names.any?
-          attr_reader(*names)
-
-          if defined?(@relations)
-            @relations.concat(names).uniq!
-          else
-            @relations = names
-          end
-
-          @relations
+        if names.empty?
+          @relations ||= []
         else
-          @relations
+          attr_reader(*(names - relations))
+          @relations = relations | names
         end
       end
 
@@ -104,7 +97,7 @@ module ROM
             end
           end
         else
-          @commands || []
+          @commands ||= []
         end
       end
 

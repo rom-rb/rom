@@ -22,14 +22,6 @@ end
 root = Pathname(__FILE__).dirname
 LOGGER = Logger.new(File.open('./log/test.log', 'a'))
 
-Dir[root.join('support/*.rb').to_s].each do |f|
-  require f
-end
-
-Dir[root.join('shared/*.rb').to_s].each do |f|
-  require f
-end
-
 require 'dry/core/deprecations'
 Dry::Core::Deprecations.set_logger!(root.join('../log/deprecations.log'))
 
@@ -47,12 +39,35 @@ module Test
   end
 end
 
+warning_api_available = RUBY_VERSION >= '2.4.0'
+
+module SileneceWarnings
+  def warn(str)
+    if str['/sequel/'] || str['/rspec-core']
+      nil
+    else
+      super
+    end
+  end
+end
+
+Warning.extend(SileneceWarnings) if warning_api_available
+
 RSpec.configure do |config|
+  config.disable_monkey_patching!
+  config.warnings = true
+
   config.after do
     Test.remove_constants
   end
 
-  config.include(MapperRegistry)
+  Dir[root.join('support/*.rb').to_s].each do |f|
+    require f
+  end
 
-  config.disable_monkey_patching!
+  Dir[root.join('shared/*.rb').to_s].each do |f|
+    require f
+  end
+
+  config.include(MapperRegistry)
 end
