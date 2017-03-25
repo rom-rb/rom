@@ -1,3 +1,9 @@
+# v3.2.0 2017-03-25
+
+## Changed
+
+* `dry-initializer` was updated to `1.3`, this is a minor change, but leads to some incompabilities with existing adapters, hence `3.2.0` shall be released (flash-gordon)
+
 # v3.1.0 2017-03-01
 
 ## Added
