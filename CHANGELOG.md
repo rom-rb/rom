@@ -1,3 +1,15 @@
+# v1.3.1 2017-03-25
+
+### Fixed
+
+* Support for using custom mappers inside `#node` (flash-gordon)
+
+### Changed
+
+* Updated `dry-initializer` (flash-gordon)
+
+[Compare v1.3.0...v1.3.1](https://github.com/rom-rb/rom-repository/compare/v1.3.0...v1.3.1)
+
 # v1.3.0 2017-03-07
 
 ### Added
