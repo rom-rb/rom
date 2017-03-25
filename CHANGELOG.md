@@ -4,6 +4,8 @@
 
 * `dry-initializer` was updated to `1.3`, this is a minor change, but leads to some incompabilities with existing adapters, hence `3.2.0` shall be released (flash-gordon)
 
+[Compare v3.1.0...v3.2.0](https://github.com/rom-rb/rom/compare/v3.1.0...v3.2.0)
+
 # v3.1.0 2017-03-01
 
 ## Added
