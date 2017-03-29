@@ -1,7 +1,9 @@
 RSpec.describe 'Repository with multi-adapters configuration' do
-  let!(:configuration) {
+  let(:configuration) {
     ROM::Configuration.new(default: [:sql, DB_URI], memory: [:memory])
   }
+
+  let(:sql_conn) { configuration.gateways[:default].connection }
 
   let(:rom) { ROM.container(configuration) }
 
@@ -11,6 +13,14 @@ RSpec.describe 'Repository with multi-adapters configuration' do
   let(:repo) { Test::Repository.new(rom) }
 
   before do
+    [:tags, :tasks, :posts, :users, :posts_labels, :labels, :books,
+     :reactions, :messages].each { |table| sql_conn.drop_table?(table) }
+
+    sql_conn.create_table :users do
+      primary_key :id
+      column :name, String
+    end
+
     module Test
       class Users < ROM::Relation[:sql]
         gateway :default
@@ -34,7 +44,7 @@ RSpec.describe 'Repository with multi-adapters configuration' do
         end
 
         def for_users(users)
-          restrict(user_id: users.map { |u| u[:id] })
+          restrict(user_id: users.pluck(:id))
         end
       end
 
