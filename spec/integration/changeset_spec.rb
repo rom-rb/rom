@@ -26,8 +26,12 @@ RSpec.describe 'Using changesets' do
       }.new(rom)
     end
 
-    let(:custom_changeset) do
+    let(:create_changeset) do
       Class.new(ROM::Changeset::Create)
+    end
+
+    let(:update_changeset) do
+      Class.new(ROM::Changeset::Update)
     end
 
     it 'can be passed to a command' do
@@ -91,10 +95,20 @@ RSpec.describe 'Using changesets' do
       expect(result.updated_at).to be_instance_of(Time)
     end
 
-    it 'preserves relation mappers' do
+    it 'preserves relation mappers with create' do
       changeset = repo.
-                    changeset(custom_changeset).
+                    changeset(create_changeset).
                     new(repo.users.relation.as(:user)).
+                    data(name: 'Joe Dane')
+
+      expect(changeset.commit).to eql(Test::User.new(id: 1, name: 'Joe Dane'))
+    end
+
+    it 'preserves relation mappers with update' do
+      repo.create(name: 'John Doe')
+      changeset = repo.
+                    changeset(update_changeset).
+                    new(repo.users.relation.as(:user).by_pk(1)).
                     data(name: 'Joe Dane')
 
       expect(changeset.commit).to eql(Test::User.new(id: 1, name: 'Joe Dane'))
