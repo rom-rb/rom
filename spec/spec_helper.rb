@@ -61,7 +61,7 @@ Warning.extend(SileneceWarnings) if warning_api_available
 
 RSpec.configure do |config|
   config.disable_monkey_patching!
-  config.warnings = true
+  config.warnings = warning_api_available
 
   config.after do
     Test.remove_constants
