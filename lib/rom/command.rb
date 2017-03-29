@@ -471,5 +471,18 @@ module ROM
         end
       end
     end
+
+    # Pipes a dataset through command's relation
+    #
+    # @return [Array]
+    #
+    # @api private
+    def wrap_dataset(dataset)
+      if relation.is_a?(Relation::Composite)
+        relation.new(dataset).to_a
+      else
+        dataset
+      end
+    end
   end
 end
