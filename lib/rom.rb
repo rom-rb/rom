@@ -11,6 +11,7 @@ end
 # core parts
 require 'rom/configuration_plugin'
 require 'rom/plugin'
+require 'rom/schema_plugin'
 require 'rom/relation'
 require 'rom-mapper'
 require 'rom/commands'

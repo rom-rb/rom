@@ -33,12 +33,20 @@ module ROM
     # @api private
     attr_reader :relations
 
+    # Internal registry for schema plugins
+    #
+    # @return [InternalPluginRegistry]
+    #
+    # @api private
+    attr_reader :schemas
+
     # @api private
     def initialize
       @configuration = ConfigurationPluginRegistry.new
       @mappers = InternalPluginRegistry.new
       @commands = InternalPluginRegistry.new
       @relations = InternalPluginRegistry.new
+      @schemas = InternalPluginRegistry.new(SchemaPlugin)
     end
 
     # Register a plugin for future use
@@ -68,13 +76,28 @@ module ROM
       when :command       then commands.adapter(adapter)
       when :mapper        then mappers.adapter(adapter)
       when :relation      then relations.adapter(adapter)
+      when :schema        then schemas.adapter(adapter)
       end
     end
   end
+
   # Abstract registry defining common behaviour
   #
   # @api private
   class PluginRegistryBase < Registry
+    include Dry::Equalizer(:plugin_type, :elements)
+
+    # !@attribute [r] plugin_type
+    #   @return [Class] Typically ROM::PluginBase or its descendant
+    attr_reader :plugin_type
+
+    # @api private
+    def initialize(plugin_type)
+      super()
+
+      @plugin_type = plugin_type
+    end
+
     # Retrieve a registered plugin
     #
     # @param [Symbol] name The plugin to retrieve
@@ -85,11 +108,7 @@ module ROM
     def [](name)
       elements[name]
     end
-  end
-  # A registry storing environment specific plugins
-  #
-  # @api private
-  class ConfigurationPluginRegistry < PluginRegistryBase
+
     # Assign a plugin to this environment registry
     #
     # @param [Symbol] name The registered plugin name
@@ -98,7 +117,17 @@ module ROM
     #
     # @api private
     def register(name, mod, options)
-      elements[name] = ConfigurationPlugin.new(mod, options)
+      elements[name] = plugin_type.new(mod, options)
+    end
+  end
+
+  # A registry storing environment specific plugins
+  #
+  # @api private
+  class ConfigurationPluginRegistry < PluginRegistryBase
+    # @api private
+    def initialize
+      super(ConfigurationPlugin)
     end
 
     # Return an environment plugin
@@ -112,19 +141,14 @@ module ROM
       self[name] || raise(UnknownPluginError, name)
     end
   end
+
   # A registry storing adapter specific plugins
   #
   # @api private
   class AdapterPluginRegistry < PluginRegistryBase
-    # Assign a plugin to this adapter registry
-    #
-    # @param [Symbol] name The registered plugin name
-    # @param [Module] mod The plugin to register
-    # @param [Hash] options optional configuration data
-    #
     # @api private
-    def register(name, mod, options)
-      elements[name] = Plugin.new(mod, options)
+    def initialize(plugin_type = Plugin)
+      super(plugin_type)
     end
   end
 
@@ -140,8 +164,8 @@ module ROM
     attr_reader :registries
 
     # @api private
-    def initialize
-      @registries = Hash.new { |h, v| h[v] = AdapterPluginRegistry.new }
+    def initialize(plugin_type = Plugin)
+      @registries = Hash.new { |h, v| h[v] = AdapterPluginRegistry.new(plugin_type) }
     end
 
     # Return the plugin registry for a specific adapter

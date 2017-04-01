@@ -82,7 +82,7 @@ module ROM
         associations: associations,
         inferrer: inferrer,
         attr_class: attr_class
-      )
+      ) { |schema| yield(schema) if block_given? }
     end
 
     # @api private
@@ -98,6 +98,8 @@ module ROM
       @associations = options[:associations]
       @inferrer = options[:inferrer] || DEFAULT_INFERRER
       @relations = options[:relations] || EMPTY_HASH
+
+      yield(self) if block_given?
     end
 
     # Abstract method for creating a new relation based on schema definition
