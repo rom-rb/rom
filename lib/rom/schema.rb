@@ -376,6 +376,11 @@ module ROM
       self.class.new(name, options.merge(new_options))
     end
 
+    # @api private
+    def attr_class
+      options.fetch(:attr_class)
+    end
+
     private
 
     # @api private
@@ -394,11 +399,6 @@ module ROM
                           group_by(&:source).
                           map { |src, grp| [src.to_sym, grp.map { |attr| [attr.name, attr] }.to_h] }.
                           to_h
-    end
-
-    # @api private
-    def attr_class
-      options.fetch(:attr_class)
     end
 
     # @api private

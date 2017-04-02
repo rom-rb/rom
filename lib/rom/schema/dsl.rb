@@ -77,7 +77,7 @@ module ROM
       def use(plugin, options = ::ROM::EMPTY_HASH)
         mod = ::ROM.plugin_registry.schemas.adapter(adapter).fetch(plugin)
         mod.extend_dsl(self)
-        @plugins[plugin] = [mod, options]
+        @plugins[plugin] = [mod, options.dup]
       end
 
       # @api private
@@ -87,6 +87,11 @@ module ROM
             plugin.apply_to(schema, options)
           }
         end
+      end
+
+      # @api private
+      def plugin_options(plugin)
+        @plugins[plugin][1]
       end
     end
   end

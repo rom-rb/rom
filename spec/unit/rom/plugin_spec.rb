@@ -166,7 +166,6 @@ RSpec.describe "ROM::PluginRegistry" do
 
   it 'applies plugins to schemas' do
     rel_name = ROM::Relation::Name[:users]
-    ts_attribute = -> name { ROM::Schema::Attribute.new(ROM::Types::Time.meta(name: name, source: rel_name)) }
 
     users = ROM::Schema::DSL.new(rel_name) {
       attribute :id, ROM::Types::Int
@@ -176,8 +175,6 @@ RSpec.describe "ROM::PluginRegistry" do
     }.call
 
     expect(users.to_h.keys).to eql %i(id name created_at updated_at)
-    expect(users[:created_at]).to eql(ts_attribute.(:created_at))
-    expect(users[:updated_at]).to eql(ts_attribute.(:updated_at))
   end
 
   it 'applies extensions to schema DSL' do
