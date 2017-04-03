@@ -15,8 +15,8 @@ RSpec.describe "ROM::PluginRegistry" do
     Test::SchemaPlugin = Module.new do
       def self.apply(schema, _)
         schema.attributes.concat(
-          [ROM::Schema::Attribute.new(ROM::Types::Time.meta(name: :created_at, source: schema.name)),
-           ROM::Schema::Attribute.new(ROM::Types::Time.meta(name: :updated_at, source: schema.name))]
+          [ROM::Schema::Attribute.new(ROM::Types::Date.meta(name: :created_at, source: schema.name)),
+           ROM::Schema::Attribute.new(ROM::Types::Date.meta(name: :updated_at, source: schema.name))]
         )
       end
     end
@@ -32,7 +32,7 @@ RSpec.describe "ROM::PluginRegistry" do
       register :publisher,      Test::CommandPlugin,       type: :command
       register :pager,          Test::RelationPlugin,      type: :relation
       register :translater,     Test::MapperPlugin,        type: :mapper
-      register :timestamps,     Test::SchemaPlugin,        type: :schema
+      register :datestamps,     Test::SchemaPlugin,        type: :schema
       register :schema_dsl_ext, Test::SchemaDSLExt,        type: :schema
     end
 
@@ -171,7 +171,7 @@ RSpec.describe "ROM::PluginRegistry" do
       attribute :id, ROM::Types::Int
       attribute :name, ROM::Types::String
 
-      use :timestamps
+      use :datestamps
     }.call
 
     expect(users.to_h.keys).to eql %i(id name created_at updated_at)
