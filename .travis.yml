@@ -8,13 +8,16 @@ before_script:
   - rvm get master
 script: "bundle exec rake ci"
 after_success:
-  - '[ "${TRAVIS_JOB_NUMBER#*.}" = "1" ] && [ "$TRAVIS_BRANCH" = "master" ] && bundle exec codeclimate-test-reporter'
+  - '[ -d coverage ] && bundle exec codeclimate-test-reporter'
 rvm:
-  - 2.4.0
-  - 2.3
-  - 2.2
+  - 2.2.7
+  - 2.3.4
+  - 2.4.1
   - rbx-3
-  - jruby-9.1.6.0
+  - jruby-9.1.8.0
+matrix:
+  allow_failures:
+    - rvm: rbx-3
 env:
   global:
     - JRUBY_OPTS='--dev -J-Xmx1024M'

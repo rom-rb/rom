@@ -1,13 +1,17 @@
-# encoding: utf-8
-
 # this is needed for guard to work, not sure why :(
 require "bundler"
 Bundler.setup
 
-if ENV['COVERAGE'] == 'true' && RUBY_ENGINE == 'ruby' && RUBY_VERSION >= '2.4.0' && ENV['CI'] == 'true'
-  require 'simplecov'
-  SimpleCov.start do
-    add_filter '/spec/'
+if RUBY_ENGINE == 'ruby' && ENV['COVERAGE'] == 'true'
+  require 'yaml'
+  rubies = YAML.load(File.read(File.join(__dir__, '..', '.travis.yml')))['rvm']
+  latest_mri = rubies.select { |v| v =~ /\A\d+\.\d+.\d+\z/ }.max
+
+  if RUBY_VERSION == latest_mri
+    require 'simplecov'
+    SimpleCov.start do
+      add_filter '/spec/'
+    end
   end
 end
 
