@@ -18,7 +18,7 @@ module ROM
       # @!attribute [r] pipe
       #   @return [Changeset::Pipe] data transformation pipe
       #   @api private
-      option :pipe, accept: [Proc, Pipe], default: -> { self.class.default_pipe(self) }
+      option :pipe, reader: false, optional: true
 
       # Define a changeset mapping
       #
@@ -210,6 +210,15 @@ module ROM
       # @api public
       def inspect
         %(#<#{self.class} relation=#{relation.name.inspect} data=#{__data__}>)
+      end
+
+      # Data transformation pipe
+      #
+      # @return [Changeset::Pipe]
+      #
+      # @api private
+      def pipe
+        @pipe ||= self.class.default_pipe(self)
       end
 
       private
