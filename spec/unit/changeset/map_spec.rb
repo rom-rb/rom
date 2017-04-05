@@ -53,6 +53,10 @@ RSpec.describe ROM::Changeset, '.map' do
           tuple.merge(two: next_value)
         end
 
+        map do |three: next_value, **other|
+          { three: three, **other }
+        end
+
         def initialize(*args)
           super
           @counter = 0
@@ -72,7 +76,7 @@ RSpec.describe ROM::Changeset, '.map' do
     let(:user_data) { { name: 'Jane' } }
 
     it 'applies mappings in order of definition' do
-      expect(changeset.to_h).to eql(name: 'Jane', one: 1, two: 2)
+      expect(changeset.to_h).to eql(name: 'Jane', one: 1, two: 2, three: 3)
     end
 
     it 'inherits pipes' do

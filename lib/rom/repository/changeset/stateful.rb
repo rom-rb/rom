@@ -56,7 +56,7 @@ module ROM
       #
       # @api public
       def self.map(&block)
-        if block.arity.zero?
+        if block.parameters.empty?
           pipes << Class.new(Pipe, &block).new
         else
           pipes << Pipe.new(block)
