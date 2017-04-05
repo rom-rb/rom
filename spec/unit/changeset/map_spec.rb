@@ -42,6 +42,29 @@ RSpec.describe ROM::Changeset, '.map' do
     end
   end
 
+  context 'accessing data in a map block' do
+    subject(:changeset) do
+      Class.new(ROM::Changeset::Create[:users]) do
+        map do |tuple|
+          extend_data(tuple)
+        end
+
+        private
+
+        def extend_data(tuple)
+          tuple.merge(email: "#{self[:name].downcase}@test.com")
+        end
+      end.new(relation).data(user_data)
+    end
+
+    let(:relation) { double(:relation) }
+    let(:user_data) { { name: 'Jane' } }
+
+    it 'extends data in a map block' do
+      expect(changeset.to_h).to eql(name: 'Jane', email: 'jane@test.com')
+    end
+  end
+
   context 'multi mapping with custom blocks' do
     subject(:changeset) do
       Class.new(ROM::Changeset::Create[:users]) do
