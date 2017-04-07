@@ -30,6 +30,10 @@ RSpec.describe 'Using changesets' do
       Class.new(ROM::Changeset::Create)
     end
 
+    let(:add_book_changeset) do
+      Class.new(ROM::Changeset::Create[:books])
+    end
+
     let(:update_changeset) do
       Class.new(ROM::Changeset::Update)
     end
@@ -104,14 +108,17 @@ RSpec.describe 'Using changesets' do
       expect(changeset.commit).to eql(Test::User.new(id: 1, name: 'Joe Dane'))
     end
 
-    it 'preserves relation mappers with update' do
+    it 'creates changesets for non-root relations' do
       repo.create(name: 'John Doe')
-      changeset = repo.
-                    changeset(update_changeset).
-                    new(repo.users.relation.as(:user).by_pk(1)).
-                    data(name: 'Joe Dane')
+      changeset = repo.changeset(add_book_changeset).data(title: 'The War of the Worlds')
 
-      expect(changeset.commit).to eql(Test::User.new(id: 1, name: 'Joe Dane'))
+      expect(changeset.commit).
+        to eql(
+             id: 1,
+             title: 'The War of the Worlds',
+             created_at: nil,
+             updated_at: nil
+           )
     end
   end
 

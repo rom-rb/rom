@@ -150,7 +150,7 @@ module ROM
           super
         elsif args.first.is_a?(Class)
           klass, *rest = args
-          super(klass[self.class.root], *rest)
+          super(klass[klass.relation || self.class.root], *rest)
         else
           super(root.name, *args)
         end
