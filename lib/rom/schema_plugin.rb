@@ -3,6 +3,8 @@ require 'rom/plugin_base'
 module ROM
   # @api private
   class SchemaPlugin < PluginBase
+    include Configurable
+
     # Apply this plugin to the provided configuration
     #
     # @param [ROM::Schema] schema A schema instance for extension

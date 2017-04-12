@@ -119,6 +119,16 @@ module ROM
     def register(name, mod, options)
       elements[name] = plugin_type.new(mod, options)
     end
+
+    # Returns plugin name by instance
+    #
+    # @return [Symbol] Plugin name
+    #
+    # @api private
+    def plugin_name(plugin)
+     tuple = elements.find { |(_, p)| p.equal?(plugin) }
+     tuple[0] if tuple
+    end
   end
 
   # A registry storing environment specific plugins

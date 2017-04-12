@@ -15,9 +15,10 @@ module ROM
 
     # @api public
     class DSL < BasicObject
-      define_method(:extend, ::Kernel.instance_method(:extend))
+      KERNEL_METHODS = %i(extend method).freeze
+      KERNEL_METHODS.each { |m| define_method(m, ::Kernel.instance_method(m)) }
 
-      attr_reader :relation, :attributes, :inferrer, :schema_class, :plugins, :adapter
+      attr_reader :relation, :attributes, :inferrer, :schema_class, :plugins, :adapter, :definition
 
       # @api private
       def initialize(relation, schema_class: Schema, inferrer: Schema::DEFAULT_INFERRER, adapter: :default, &block)
@@ -28,7 +29,7 @@ module ROM
         @plugins = {}
         @adapter = adapter
 
-        instance_exec(&block) if block
+        @definition = block
       end
 
       # Defines a relation attribute with its type
@@ -76,12 +77,21 @@ module ROM
       # @api public
       def use(plugin, options = ::ROM::EMPTY_HASH)
         mod = ::ROM.plugin_registry.schemas.adapter(adapter).fetch(plugin)
-        mod.extend_dsl(self)
-        @plugins[plugin] = [mod, options.dup]
+        app_plugin(mod, options)
       end
 
       # @api private
-      def call
+      def app_plugin(plugin, options = ::ROM::EMPTY_HASH)
+        plugin_name = ::ROM.plugin_registry.schemas.adapter(adapter).plugin_name(plugin)
+        plugin.extend_dsl(self)
+        @plugins[plugin_name] = [plugin, plugin.config.to_hash.merge(options)]
+      end
+
+      # @api private
+      def call(&block)
+        instance_exec(&block) if block
+        instance_exec(&definition) if definition
+
         schema_class.define(relation, attributes: attributes.values, inferrer: inferrer) do |schema|
           plugins.values.each { |(plugin, options)|
             plugin.apply_to(schema, options)

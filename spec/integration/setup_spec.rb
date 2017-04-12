@@ -187,4 +187,48 @@ RSpec.describe 'Configuring ROM' do
       expect(users).to respond_to(:foreign_key)
     end
   end
+
+  describe 'configuring plugins for schemas' do
+    after do
+      ROM.plugin_registry
+        .schemas.adapter(:default)
+        .fetch(:timestamps)
+        .instance_variable_set(:@config, nil)
+    end
+
+    let(:configuration) { ROM::Configuration.new(:memory) }
+    let(:container) { ROM.container(configuration) }
+
+    subject(:schema) { container.relations[:users].schema }
+
+    it 'allows setting timestamps in all schemas' do
+      configuration.plugin(:memory, schemas: :timestamps)
+
+      configuration.relation(:users)
+
+      expect(schema.to_h.keys).to eql(%i(created_at updated_at))
+    end
+
+    it 'extends schema dsl' do
+      configuration.plugin(:memory, schemas: :timestamps)
+
+      configuration.relation(:users) do
+        schema do
+          timestamps :created_on, :updated_on
+        end
+      end
+
+      expect(schema.to_h.keys).to eql(%i(created_on updated_on))
+    end
+
+    it 'accepts options' do
+      configuration.plugin(:memory, schemas: :timestamps) do |p|
+        p.attributes = %i(created_on updated_on)
+      end
+
+      configuration.relation(:users)
+
+      expect(schema.to_h.keys).to eql(%i(created_on updated_on))
+    end
+  end
 end

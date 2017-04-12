@@ -92,7 +92,8 @@ module ROM
     #
     # @api private
     def load_relations
-      FinalizeRelations.new(gateways, relation_classes, plugins.select(&:relation?)).run!
+      global_plugins = plugins.select { |p| p.relation? || p.schema? }
+      FinalizeRelations.new(gateways, relation_classes, global_plugins).run!
     end
 
     # @api private

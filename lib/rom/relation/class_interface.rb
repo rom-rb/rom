@@ -181,9 +181,14 @@ module ROM
 
           dsl = schema_dsl.new(name, schema_class: schema_class, inferrer: inferrer, &block)
 
-          @schema = dsl.call
+          @schema_proc = dsl.method(:call).to_proc
+        elsif dataset.is_a?(Schema)
+          @schema = dataset
         end
       end
+
+      # @api private
+      attr_reader :schema_proc
 
       # Define a relation view with a specific schema
       #
@@ -248,7 +253,7 @@ module ROM
 
         schemas[name] =
           if args.size == 2
-            schema.project(*args[1])
+            -> _ { schema.project(*args[1]) }
           else
             new_schema_fn
           end
@@ -331,7 +336,12 @@ module ROM
       # @api private
       def default_schema(relation)
         relation_class = relation.class
-        relation_class.schema || relation_class.schema_class.define(relation_class.default_name)
+        relation_class.schema ||
+          if relation_class.schema_proc
+            relation_class.schema(relation_class.schema_proc.call)
+          else
+            relation_class.schema_class.define(relation_class.default_name)
+          end
       end
 
       # Hook to finalize a relation after its instance was created
