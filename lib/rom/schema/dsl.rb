@@ -92,7 +92,7 @@ module ROM
         instance_exec(&block) if block
         instance_exec(&definition) if definition
 
-        schema_class.define(relation, attributes: attributes.values, inferrer: inferrer) do |schema|
+        schema_class.define(relation, opts) do |schema|
           plugins.values.each { |(plugin, options)|
             plugin.apply_to(schema, options)
           }
@@ -102,6 +102,11 @@ module ROM
       # @api private
       def plugin_options(plugin)
         @plugins[plugin][1]
+      end
+
+      # @api private
+      def opts
+        { attributes: attributes.values, attr_class: ::ROM::Schema::Attribute, inferrer: inferrer }
       end
     end
   end
