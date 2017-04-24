@@ -1,6 +1,7 @@
 require 'delegate'
 require 'dry/equalizer'
 require 'dry/types/decorator'
+require 'rom/initializer'
 
 module ROM
   class Schema
@@ -14,16 +15,13 @@ module ROM
     #
     # @api public
     class Attribute
-      include Dry::Equalizer(:type)
+      include Dry::Equalizer(:type, :options)
+
+      extend Initializer
 
       # !@attribute [r] type
       #   @return [Dry::Types::Definition, Dry::Types::Sum, Dry::Types::Constrained]
-      attr_reader :type
-
-      # @api private
-      def initialize(type)
-        @type = type
-      end
+      param :type
 
       # @api private
       def [](input)
@@ -379,7 +377,7 @@ module ROM
           response = type.__send__(meth, *args, &block)
 
           if response.is_a?(type.class)
-            self.class.new(type)
+            self.class.new(type, options)
           else
             response
           end
