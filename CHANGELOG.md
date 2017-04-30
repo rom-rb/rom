@@ -1,3 +1,11 @@
+# v3.2.1 2017-04-30
+
+## Changed
+
+* `ROM::Schema::Attribute` uses `Initializer` now (flash-gordon)
+
+[Compare v3.2.0...v3.2.1](https://github.com/rom-rb/rom/compare/v3.2.0...v3.2.1)
+
 # v3.2.0 2017-03-25
 
 ## Changed
