@@ -1,3 +1,15 @@
+# v1.3.2 2017-04-30
+
+### Fixed
+
+* Fix building changesets with relation using `Root#changeset` (flash-gordon)
+* Fix wrap when aliased relation is used (solnic)
+* Fix accessing `data` in map block in changesets (flash-gordon+solnic)
+
+### Changed
+
+* Calculate diff only with respect to keys present on the original tuple (yuszuv+solnic)
+
 # v1.3.1 2017-03-25
 
 ### Fixed
