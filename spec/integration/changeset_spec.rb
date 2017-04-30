@@ -113,7 +113,7 @@ RSpec.describe 'Using changesets' do
       changeset = repo.changeset(add_book_changeset).data(title: 'The War of the Worlds')
 
       expect(changeset.commit).
-        to eql(
+        to include(
              id: 1,
              title: 'The War of the Worlds',
              created_at: nil,

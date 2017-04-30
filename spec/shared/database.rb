@@ -14,19 +14,20 @@ RSpec.shared_context 'database' do
   include_context 'database setup'
 
   before do
-    [:tags, :tasks, :posts, :users, :posts_labels, :labels, :books,
+    [:tags, :tasks, :posts, :books, :users, :posts_labels, :labels,
      :reactions, :messages].each { |table| conn.drop_table?(table) }
-
-    conn.create_table :books do
-      primary_key :id
-      column :title, String
-      column :created_at, Time
-      column :updated_at, Time
-    end
 
     conn.create_table :users do
       primary_key :id
       column :name, String
+    end
+
+    conn.create_table :books do
+      primary_key :id
+      foreign_key :author_id, :users, on_delete: :cascade
+      column :title, String
+      column :created_at, Time
+      column :updated_at, Time
     end
 
     conn.create_table :tasks do

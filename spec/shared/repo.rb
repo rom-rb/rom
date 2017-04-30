@@ -6,7 +6,7 @@ RSpec.shared_context('repo') do
 
   let(:repo_class) do
     Class.new(ROM::Repository[:users]) do
-      relations :tasks, :tags, :posts, :labels, :posts_labels
+      relations :tasks, :tags, :posts, :labels, :posts_labels, :books, :authors
 
       def find_users(criteria)
         users.find(criteria)

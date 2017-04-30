@@ -9,9 +9,14 @@ RSpec.shared_context 'relations' do
     configuration.relation(:books) do
       schema(:books) do
         attribute :id, ROM::SQL::Types::Serial
+        attribute :author_id, ROM::SQL::Types.ForeignKey(:users)
         attribute :title, ROM::SQL::Types::String
         attribute :created_at, ROM::SQL::Types::Time
         attribute :updated_at, ROM::SQL::Types::Time
+
+        associations do
+          belongs_to :users, as: :author, relation: :authors, foreign_key: :author_id
+        end
       end
     end
 
@@ -21,6 +26,7 @@ RSpec.shared_context 'relations' do
           has_many :posts
           has_many :posts, as: :aliased_posts
           has_many :labels, through: :posts
+          has_many :books, foreign_key: :author_id
         end
       end
 
@@ -35,6 +41,10 @@ RSpec.shared_context 'relations' do
       def find(criteria)
         where(criteria)
       end
+    end
+
+    configuration.relation(:authors) do
+      schema(:users, infer: true)
     end
 
     configuration.relation(:tasks) do

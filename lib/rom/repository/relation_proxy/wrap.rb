@@ -69,7 +69,7 @@ module ROM
         def wraps_from_names(names)
           names.map { |name|
             assoc = associations[name]
-            registry[assoc.target].wrapped(name, assoc.combine_keys(__registry__), true)
+            registry[assoc.target.relation].wrapped(name, assoc.combine_keys(__registry__), true)
           }
         end
       end

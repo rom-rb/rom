@@ -1,3 +1,4 @@
+# coding: utf-8
 RSpec.describe 'Repository with multi-adapters configuration' do
   let(:configuration) {
     ROM::Configuration.new(default: [:sql, DB_URI], memory: [:memory])
@@ -13,7 +14,7 @@ RSpec.describe 'Repository with multi-adapters configuration' do
   let(:repo) { Test::Repository.new(rom) }
 
   before do
-    [:tags, :tasks, :posts, :users, :posts_labels, :labels, :books,
+    [:tags, :tasks, :posts, :books, :users, :posts_labels, :labels,
      :reactions, :messages].each { |table| sql_conn.drop_table?(table) }
 
     sql_conn.create_table :users do

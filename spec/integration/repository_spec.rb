@@ -71,6 +71,17 @@ RSpec.describe 'ROM repository' do
     expect(repo.tag_with_wrapped_task.first).to eql(tag_with_task)
   end
 
+  it 'loads wraps using aliased relation' do
+    author = repo.users.where(name: 'Jane').one
+
+    repo.command(:create, repo.books).(title: 'Hello World', author_id: author.id)
+
+    book = repo.books.wrap(:author).to_a.first
+
+    expect(book.author.id).to eql(author.id)
+    expect(book.author.name).to eql(author.name)
+  end
+
   it 'loads multiple wraps' do
     post_label = repo.posts_labels.wrap(:post).wrap(:label).to_a.first
 
