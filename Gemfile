@@ -13,6 +13,8 @@ end
 group :test do
   gem 'rom', git: 'https://github.com/rom-rb/rom.git', branch: 'master'
   gem 'rom-sql', git: 'https://github.com/rom-rb/rom-sql.git', branch: 'master'
+  gem 'rom-mapper', git: 'https://github.com/rom-rb/rom-mapper.git'
+  gem 'dry-core', git: 'https://github.com/dry-rb/dry-core.git'
   gem 'rspec'
   gem 'dry-struct'
   gem 'byebug', platforms: :mri
