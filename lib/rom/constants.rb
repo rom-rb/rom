@@ -14,6 +14,7 @@ module ROM
   EnvAlreadyFinalizedError = Class.new(StandardError)
   RelationAlreadyDefinedError = Class.new(StandardError)
   NoRelationError = Class.new(StandardError)
+  NoAssociationError = Class.new(StandardError)
   CommandError = Class.new(StandardError)
   KeyMissing = Class.new(ROM::CommandError)
   TupleCountMismatchError = Class.new(CommandError)
