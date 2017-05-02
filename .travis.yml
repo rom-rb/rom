@@ -5,21 +5,15 @@ cache: bundler
 bundler_args: --without sql benchmarks console tools
 script: "bundle exec rake ci"
 after_success:
-  # Send coverage report from the job #1 == current MRI release
-  - '[ "${TRAVIS_JOB_NUMBER#*.}" = "1" ] && [ "$TRAVIS_BRANCH" = "master" ] && bundle exec codeclimate-test-reporter'
+  - '[ -d coverage ] && bundle exec codeclimate-test-reporter'
 rvm:
-  - 2.4.0
-  - 2.3
-  - 2.2
-  - rbx-3
-  - jruby
+  - 2.2.7
+  - 2.3.4
+  - 2.4.1
+  - jruby-9.1.8.0
 env:
   global:
     - JRUBY_OPTS='--dev -J-Xmx1024M'
-matrix:
-  allow_failures:
-    - rvm: rbx-3
-    - rvm: jruby
 notifications:
   webhooks:
     urls:
