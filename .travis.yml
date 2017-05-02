@@ -13,11 +13,7 @@ rvm:
   - 2.2.7
   - 2.3.4
   - 2.4.1
-  - rbx-3
   - jruby-9.1.8.0
-matrix:
-  allow_failures:
-    - rvm: rbx-3
 env:
   global:
     - JRUBY_OPTS='--dev -J-Xmx1024M'
