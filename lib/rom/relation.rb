@@ -1,3 +1,5 @@
+require 'dry/core/class_attributes'
+
 require 'rom/initializer'
 require 'rom/relation/class_interface'
 
@@ -39,6 +41,13 @@ module ROM
 
     extend Initializer
     extend ClassInterface
+
+    extend Dry::Core::ClassAttributes
+    defines :schema_class, :schema_inferrer, :schema_dsl
+
+    schema_dsl Schema::DSL
+    schema_class Schema
+    schema_inferrer Schema::DEFAULT_INFERRER
 
     include Dry::Equalizer(:dataset)
     include Materializable

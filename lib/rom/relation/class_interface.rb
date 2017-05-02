@@ -2,7 +2,6 @@ require 'set'
 
 require 'dry/core/inflector'
 require 'dry/core/constants'
-require 'dry/core/class_attributes'
 
 require 'rom/auto_curry'
 require 'rom/relation/curried'
@@ -30,12 +29,7 @@ module ROM
                 "relation class +#{self}+ is missing the adapter identifier"
         end
 
-        klass.extend Dry::Core::ClassAttributes
-        klass.defines :adapter, :schema_class, :schema_inferrer, :schema_dsl
-
-        klass.schema_dsl Schema::DSL
-        klass.schema_class Schema
-        klass.schema_inferrer Schema::DEFAULT_INFERRER
+        klass.defines :adapter
 
         # Extend with functionality required by adapters *only* if this is a direct
         # descendant of an adapter-specific relation subclass

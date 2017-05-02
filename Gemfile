@@ -2,6 +2,9 @@ source 'https://rubygems.org'
 
 gemspec
 
+gem 'dry-core', git: 'https://github.com/dry-rb/dry-core.git'
+gem 'rom-mapper', git: 'https://github.com/rom-rb/rom-mapper.git'
+
 group :console do
   gem 'pry'
   gem 'pg', platforms: [:mri]
