@@ -10,13 +10,25 @@ module ROM
       option :namespace, type: Types::Strict::String
 
       def call
-        "#{namespace}::#{Dry::Core::Inflector.camelize(filename)}"
+        potential_child = []
+
+        path_arr.reverse.each do |dir|
+          fragment = Dry::Core::Inflector.camelize(dir)
+          const = potential_child.unshift(fragment).join("::")
+
+          break "#{namespace}::#{const}" if ns_const.const_defined?(const)
+        end
       end
 
       private
 
-      def filename
-        Pathname(file).basename('.rb')
+      def ns_const
+        @namespace_constant ||= Dry::Core::Inflector.constantize(namespace)
+      end
+
+      def path_arr
+        dir, filename = File.split(file)
+        dir.split("/")[1..-1] << File.basename(filename, ".rb")
       end
     end
   end

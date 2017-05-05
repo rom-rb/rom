@@ -1,3 +1,5 @@
+require 'pathname'
+
 if RUBY_ENGINE == 'ruby' && ENV['COVERAGE'] == 'true'
   require 'yaml'
   rubies = YAML.load(File.read(File.join(__dir__, '..', '.travis.yml')))['rvm']

@@ -29,7 +29,7 @@ module ROM
     option :globs, default: -> {
       Hash[
         component_dirs.map { |component, path|
-          [component, directory.join("#{ path }/**/*.rb")]
+          [component, directory.join("#{path}/**/*.rb")]
         }
       ]
     }
