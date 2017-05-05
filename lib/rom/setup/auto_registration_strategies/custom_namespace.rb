@@ -27,8 +27,11 @@ module ROM
       end
 
       def path_arr
-        dir, filename = File.split(file)
-        dir.split("/")[1..-1] << File.basename(filename, ".rb")
+        file_path << File.basename(file, ".rb")
+      end
+
+      def file_path
+        File.dirname(file).split("/") - File.expand_path(".").split("/")
       end
     end
   end
