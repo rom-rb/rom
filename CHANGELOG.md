@@ -1,3 +1,11 @@
+# 0.5.1 2017-05-04
+
+### Changed
+
+* The `dry-core` dependency has been relaxed (flash-gordon)
+
+[Compare v0.5.0..v0.5.1](https://github.com/rom-rb/rom-mapper/compare/v0.5.0...v0.5.1)
+
 # 0.5.0 2017-01-29
 
 ### Changed
