@@ -31,7 +31,7 @@ module ROM
       end
 
       def file_path
-        File.dirname(file).split("/") - File.expand_path(".").split("/")
+        File.dirname(file).split("/") - Dir.pwd.split("/")
       end
     end
   end
