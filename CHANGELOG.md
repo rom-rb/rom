@@ -1,8 +1,16 @@
+# v3.2.2 2017-05-05
+
+## Changed
+
+* [internal] Compatibility with `dry-core` v0.3.0 (flash-gordon)
+
+[Compare v3.2.1...v3.2.2](https://github.com/rom-rb/rom/compare/v3.2.1...v3.2.2)
+
 # v3.2.1 2017-05-02
 
 ## Changed
 
-* `ROM::Schema::Attribute` uses `Initializer` now (flash-gordon)
+* [internal] `ROM::Schema::Attribute` uses `Initializer` now (flash-gordon)
 
 [Compare v3.2.0...v3.2.1](https://github.com/rom-rb/rom/compare/v3.2.0...v3.2.1)
 
