@@ -41,16 +41,6 @@ module ROM
         @original ||= Hash(relation.one)
       end
 
-      # Return diff hash sent through the pipe
-      #
-      # @return [Hash]
-      #
-      # @api public
-      def to_h
-        pipe.call(diff)
-      end
-      alias_method :to_hash, :to_h
-
       # Return true if there's a diff between original and changeset data
       #
       # @return [TrueClass, FalseClass]
@@ -77,8 +67,9 @@ module ROM
       def diff
         @diff ||=
           begin
-            data_tuple = __data__.to_a
-            data_keys = __data__.keys & original.keys
+            data = to_h
+            data_tuple = data.to_a
+            data_keys = data.keys & original.keys
 
             new_tuple = data_tuple.to_a.select { |(k, _)| data_keys.include?(k) }
             ori_tuple = original.to_a.select { |(k, _)| data_keys.include?(k) }
