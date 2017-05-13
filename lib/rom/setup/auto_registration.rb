@@ -55,7 +55,7 @@ module ROM
           case namespace
           when String
             AutoRegistrationStrategies::CustomNamespace.new(
-              namespace: namespace, file: file
+              namespace: namespace, file: file, directory: directory
             ).call
           when TrueClass
             AutoRegistrationStrategies::WithNamespace.new(

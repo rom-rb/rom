@@ -7,6 +7,7 @@ require 'rom/setup/auto_registration_strategies/base'
 module ROM
   module AutoRegistrationStrategies
     class CustomNamespace < Base
+      option :directory, type: PathnameType
       option :namespace, type: Types::Strict::String
 
       def call
@@ -31,7 +32,7 @@ module ROM
       end
 
       def file_path
-        File.dirname(file).split("/") - Dir.pwd.split("/")
+        File.dirname(file).split("/") - directory.to_s.split("/")
       end
     end
   end
