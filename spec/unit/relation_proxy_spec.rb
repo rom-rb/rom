@@ -191,5 +191,12 @@ RSpec.describe 'loading proxy' do
     it 'raises when method is missing' do
       expect { users_proxy.not_here }.to raise_error(NoMethodError, "undefined method `not_here' for ROM::Relation[Users]")
     end
+
+    it 'proxies Kernel methods when using with SimpleDelegator' do
+      proxy = Class.new(SimpleDelegator).new(users_proxy)
+
+      expect(users_proxy.select(:name)).to be_instance_of(ROM::Repository::RelationProxy)
+      expect(proxy.select(:name)).to be_instance_of(ROM::Repository::RelationProxy)
+    end
   end
 end

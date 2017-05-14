@@ -17,6 +17,8 @@ module ROM
       extend Initializer
       include Relation::Materializable
 
+      (Kernel.private_instance_methods - %i(raise)).each(&method(:undef_method))
+
       include RelationProxy::Combine
       include RelationProxy::Wrap
 
