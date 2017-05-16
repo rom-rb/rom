@@ -66,6 +66,7 @@ module ROM
               file: file, directory: directory, entity: component_dirs.fetch(entity)
             ).call
           end
+
         Dry::Core::Inflector.constantize(klass_name)
       end
     end

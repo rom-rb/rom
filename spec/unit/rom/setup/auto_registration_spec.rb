@@ -150,6 +150,34 @@ RSpec.describe ROM::Setup, '#auto_registration' do
         end
       end
 
+      context 'when namespace has wrong subnamespace' do
+         subject do
+          -> do
+            setup.auto_registration(
+              SPEC_ROOT.join('fixtures/wrong'),
+              component_dirs: {
+                relations: :relations,
+                mappers: :mappers,
+                commands: :commands
+              },
+              namespace: 'My::NewNamespace'
+            )
+          end
+        end
+
+        describe '#relations' do
+          it { is_expected.to raise_exception NameError }
+        end
+
+        describe '#commands' do
+          it { is_expected.to raise_exception NameError }
+        end
+
+        describe '#mappers' do
+          it { is_expected.to raise_exception NameError }
+        end
+      end
+
       context 'when namespace does not implement subnamespace' do
         before do
           setup.auto_registration(
