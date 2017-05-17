@@ -11,6 +11,12 @@ module ROM
     end
   end
 
+  class MigratorNotPresentError < NotImplementedError
+    def initialize(adapter)
+      super "The #{adapter} adapter doesn't define a migrator"
+    end
+  end
+
   EnvAlreadyFinalizedError = Class.new(StandardError)
   RelationAlreadyDefinedError = Class.new(StandardError)
   NoRelationError = Class.new(StandardError)
