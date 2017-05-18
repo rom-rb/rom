@@ -29,6 +29,7 @@ module ROM
 
       param :processor, default: -> { self.class.transproc }
       option :diff_processor, optional: true
+      option :use_for_diff, optional: true, default: -> { true }
 
       def self.[](name)
         container[name]
@@ -46,7 +47,7 @@ module ROM
         end
       end
 
-      def compose(other, for_diff: false)
+      def compose(other, for_diff: other.is_a?(Pipe) ? other.use_for_diff : false)
         new_proc = processor ? processor >> other : other
 
         if for_diff

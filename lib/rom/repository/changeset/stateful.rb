@@ -65,7 +65,7 @@ module ROM
 
       def self.extend(*, &block)
         if block
-          map(for_diff: false, &block)
+          map(use_for_diff: false, &block)
         else
           super
         end
