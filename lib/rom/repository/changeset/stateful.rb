@@ -55,11 +55,19 @@ module ROM
       # @see https://github.com/solnic/transproc Transproc
       #
       # @api public
-      def self.map(&block)
+      def self.map(options = EMPTY_HASH, &block)
         if block.parameters.empty?
-          pipes << Class.new(Pipe, &block).new
+          pipes << Class.new(Pipe, &block).new(options)
         else
-          pipes << Pipe.new(block)
+          pipes << Pipe.new(block, options)
+        end
+      end
+
+      def self.extend(*, &block)
+        if block
+          map(for_diff: false, &block)
+        else
+          super
         end
       end
 
@@ -112,14 +120,18 @@ module ROM
       #
       # @api public
       def map(*steps, &block)
+        extend(*steps, for_diff: true, &block)
+      end
+
+      def extend(*steps, **options, &block)
         if block
           if steps.size > 0
-            map(*steps).map(&block)
+            extend(*steps, options).extend(options, &block)
           else
-            with(pipe: pipe >> Pipe.new(block).bind(self))
+            with(pipe: pipe.compose(Pipe.new(block).bind(self), options))
           end
         else
-          with(pipe: steps.reduce(pipe) { |a, e| a >> pipe[e] })
+          with(pipe: steps.reduce(pipe.with(options)) { |a, e| a.compose(pipe[e], options) })
         end
       end
 
