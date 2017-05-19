@@ -55,11 +55,27 @@ module ROM
       # @see https://github.com/solnic/transproc Transproc
       #
       # @api public
-      def self.map(&block)
+      def self.map(options = EMPTY_HASH, &block)
         if block.parameters.empty?
-          pipes << Class.new(Pipe, &block).new
+          pipes << Class.new(Pipe, &block).new(options)
         else
-          pipes << Pipe.new(block)
+          pipes << Pipe.new(block, options)
+        end
+      end
+
+      # Define a changeset mapping excluded from diffs
+      #
+      # @see Changeset::Stateful.map
+      # @see Changeset::Stateful#extend
+      #
+      # @return [Array<Pipe>, Transproc::Function>]
+      #
+      # @api public
+      def self.extend(*, &block)
+        if block
+          map(use_for_diff: false, &block)
+        else
+          super
         end
       end
 
@@ -104,7 +120,7 @@ module ROM
       #   Apply mapping using built-in transformations and a custom block
       #
       #   @example
-      #     changeset.map(:touch) { |tuple| tuple.merge(status: 'published') }
+      #     changeset.map(:add_timestamps) { |tuple| tuple.merge(status: 'published') }
       #
       #   @param [Array<Symbol>] steps A list of mapping steps
       #
@@ -112,14 +128,31 @@ module ROM
       #
       # @api public
       def map(*steps, &block)
+        extend(*steps, for_diff: true, &block)
+      end
+
+      # Pipe changeset's data using custom steps define on the pipe.
+      # You should use #map instead except updating timestamp fields.
+      # Calling changeset.extend builds a pipe that excludes certain
+      # steps for generating the diff. Currently the only place where
+      # it is used is update changesets with the `:touch` step, i.e.
+      # `changeset.extend(:touch).diff` will exclude `:updated_at`
+      # from the diff.
+      #
+      # @see Changeset::Stateful#map
+      #
+      # @return [Changeset]
+      #
+      # @api public
+      def extend(*steps, **options, &block)
         if block
           if steps.size > 0
-            map(*steps).map(&block)
+            extend(*steps, options).extend(options, &block)
           else
-            with(pipe: pipe >> Pipe.new(block).bind(self))
+            with(pipe: pipe.compose(Pipe.new(block).bind(self), options))
           end
         else
-          with(pipe: steps.reduce(pipe) { |a, e| a >> pipe[e] })
+          with(pipe: steps.reduce(pipe.with(options)) { |a, e| a.compose(pipe[e], options) })
         end
       end
 

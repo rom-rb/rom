@@ -88,7 +88,7 @@ RSpec.describe 'Using changesets' do
     it 'preprocesses data using built-in steps and custom block' do
       changeset = repo.
                     changeset(:books, title: "rom-rb is awesome").
-                    map(:touch) { |tuple| tuple.merge(created_at: Time.now) }
+                    extend(:touch) { |tuple| tuple.merge(created_at: Time.now) }
 
       command = repo.command(:create, repo.books)
       result = command.(changeset)
@@ -134,7 +134,7 @@ RSpec.describe 'Using changesets' do
 
       changeset = repo
         .changeset(book.id, title: 'rom-rb is awesome for real')
-        .map(:touch)
+        .extend(:touch)
 
       expect(changeset.diff).to eql(title: 'rom-rb is awesome for real')
 
@@ -150,6 +150,7 @@ RSpec.describe 'Using changesets' do
 
       changeset = repo
         .changeset(book.id, title: 'rom-rb is awesome')
+        .extend(:touch)
 
       expect(changeset).to_not be_diff
 
