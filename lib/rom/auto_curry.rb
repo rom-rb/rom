@@ -31,10 +31,10 @@ module ROM
       mod = Module.new
 
       mod.module_eval do
-        define_method(name) do |*args|
+        define_method(name) do |*args, &mblock|
           response =
             if arity < 0 || arity == args.size
-              super(*args)
+              super(*args, &mblock)
             else
               self.class.curried.new(self, name: name, curry_args: args, arity: arity)
             end

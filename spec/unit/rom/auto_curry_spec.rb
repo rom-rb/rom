@@ -30,6 +30,10 @@ RSpec.describe ROM::AutoCurry do
         args
       end
 
+      def yielding_block(arg)
+        yield(arg)
+      end
+
       protected
 
       def leave_me_alone(foo)
@@ -39,7 +43,7 @@ RSpec.describe ROM::AutoCurry do
   end
 
   it 'registers auto-curried methods' do
-    expect(object.class.auto_curried_methods).to eql(%i[arity_1 arity_2 arity_many])
+    expect(object.class.auto_curried_methods).to eql(%i[arity_1 arity_2 arity_many yielding_block])
   end
 
   it 'auto-curries method with arity == 0' do
@@ -59,5 +63,9 @@ RSpec.describe ROM::AutoCurry do
   it 'auto-curries method with arity < 0' do
     expect(object.arity_many).to eql([])
     expect(object.arity_many(1, 2)).to eql([1, 2])
+  end
+
+  it 'yields block' do
+    expect(object.yielding_block(1) { |arg| [arg, 2] }).to eql([1, 2])
   end
 end
