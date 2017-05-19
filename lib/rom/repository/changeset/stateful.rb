@@ -63,6 +63,14 @@ module ROM
         end
       end
 
+      # Define a changeset mapping excluded from diffs
+      #
+      # @see Changeset::Stateful.map
+      # @see Changeset::Stateful#extend
+      #
+      # @return [Array<Pipe>, Transproc::Function>]
+      #
+      # @api public
       def self.extend(*, &block)
         if block
           map(use_for_diff: false, &block)
@@ -112,7 +120,7 @@ module ROM
       #   Apply mapping using built-in transformations and a custom block
       #
       #   @example
-      #     changeset.map(:touch) { |tuple| tuple.merge(status: 'published') }
+      #     changeset.map(:add_timestamps) { |tuple| tuple.merge(status: 'published') }
       #
       #   @param [Array<Symbol>] steps A list of mapping steps
       #
@@ -123,6 +131,19 @@ module ROM
         extend(*steps, for_diff: true, &block)
       end
 
+      # Pipe changeset's data using custom steps define on the pipe.
+      # You should use #map instead except updating timestamp fields.
+      # Calling changeset.extend builds a pipe that excludes certain
+      # steps for generating the diff. Currently the only place where
+      # it is used is update changesets with the `:touch` step, i.e.
+      # `changeset.extend(:touch).diff` will exclude `:updated_at`
+      # from the diff.
+      #
+      # @see Changeset::Stateful#map
+      #
+      # @return [Changeset]
+      #
+      # @api public
       def extend(*steps, **options, &block)
         if block
           if steps.size > 0
