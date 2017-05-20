@@ -56,10 +56,7 @@ module ROM
     end
 
     def auto_registration(directory, options = {})
-      auto_registration = AutoRegistration.new(directory, options)
-      auto_registration.relations.map { |r| register_relation(r) }
-      auto_registration.commands.map { |r| register_command(r) }
-      auto_registration.mappers.map { |r| register_mapper(r) }
+      AutoRegistration.new(directory, options).register_on(self)
     end
   end
 end
