@@ -106,8 +106,8 @@ RSpec.describe ROM::Relation, '#combine' do
           { name: 'Jane', title: 'be cool', priority: 2 }
         ],
         tags: [
-          { task: 'be cool', name: 'red' },
-          { task: 'be cool', name: 'green' }
+          { task: 'be cool', name: 'red', user: 'Jane' },
+          { task: 'be cool', name: 'green', user: 'Jane' }
         ]
       }
     ]
@@ -129,8 +129,8 @@ RSpec.describe ROM::Relation, '#combine' do
           { name: 'Jane', title: 'be cool', priority: 2 }
         ],
         tags: [
-          { task: 'be cool', name: 'red' },
-          { task: 'be cool', name: 'green' }
+          { task: 'be cool', name: 'red', user: 'Jane' },
+          { task: 'be cool', name: 'green', user: 'Jane' }
         ]
       }
     ]
