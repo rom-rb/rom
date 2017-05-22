@@ -238,6 +238,11 @@ RSpec.describe 'ROM repository' do
   end
 
   describe 'projecting virtual attributes' do
+    before do
+      ROM::Repository::StructBuilder.cache.clear
+      ROM::Repository::MapperBuilder.cache.clear
+    end
+
     shared_context 'auto-mapping' do
       it 'loads auto-mapped structs' do
         user = repo.users.
