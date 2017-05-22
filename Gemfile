@@ -36,3 +36,5 @@ group :tools do
   gem 'mutant'
   gem 'mutant-rspec'
 end
+
+gem 'dry-core', git: 'https://github.com/dry-rb/dry-core.git', branch: 'feature/namespaced-class-builder'

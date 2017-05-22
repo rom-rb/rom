@@ -30,6 +30,12 @@ module ROM
       end
       alias_method :[], :call
 
+      attr_reader :namespace
+
+      def initialize(namespace = nil)
+        @namespace = namespace || ROM::Struct
+      end
+
       private
 
       def visit(ast)
@@ -66,11 +72,11 @@ module ROM
       end
 
       def build_class(name, parent, &block)
-        Dry::Core::ClassBuilder.new(name: class_name(name), parent: parent).call(&block)
+        Dry::Core::ClassBuilder.new(name: class_name(name), parent: parent, namespace: namespace).call(&block)
       end
 
       def class_name(name)
-        "ROM::Struct[#{Dry::Core::Inflector.classify(Dry::Core::Inflector.singularize(name))}]"
+        Dry::Core::Inflector.classify(Dry::Core::Inflector.singularize(name))
       end
     end
   end

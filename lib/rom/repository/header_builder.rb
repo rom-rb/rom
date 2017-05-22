@@ -7,8 +7,8 @@ module ROM
     class HeaderBuilder
       attr_reader :struct_builder
 
-      def initialize(options = EMPTY_HASH)
-        @struct_builder = StructBuilder.new
+      def initialize(struct_namespace: nil, **options)
+        @struct_builder = StructBuilder.new(struct_namespace)
       end
 
       def call(ast)

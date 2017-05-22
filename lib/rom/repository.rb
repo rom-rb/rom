@@ -82,9 +82,19 @@ module ROM
 
     auto_struct true
 
+    # @!method self.auto_struct
+    #   Get or set struct namespace
+    defines :struct_namespace
+
+    struct_namespace ROM::Struct
+
     # @!attribute [r] container
     #   @return [ROM::Container] The container used to set up a repo
     param :container, allow: ROM::Container
+
+    # @!attribute [r] struct_namespace
+    #   @return [Module,Class] The namespace for auto-generated structs
+    option :struct_namespace, default: -> { self.class.struct_namespace }
 
     # @!attribute [r] auto_struct
     #   @return [Boolean] The container used to set up a repo
@@ -111,7 +121,7 @@ module ROM
     def initialize(container, opts = EMPTY_HASH)
       super
 
-      @mappers = MapperBuilder.new
+      @mappers = MapperBuilder.new(struct_namespace: struct_namespace)
 
       @relations = RelationRegistry.new do |registry, relations|
         self.class.relations.each do |name|
