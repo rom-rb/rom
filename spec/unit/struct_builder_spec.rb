@@ -70,32 +70,6 @@ RSpec.describe 'struct builder', '#call' do
                                         Dry::Struct::Error, /:name is missing/
                                       )
     end
-
-    context 'name errors' do
-      let(:struct) { builder.class.cache[input.hash] }
-
-      context 'missing method on instance' do
-        it 'uses inspect and class name for small structs' do
-          user = struct.new(id: 1, name: 'Jane')
-
-          expect { user.missing }.
-            to raise_error(
-                 NoMethodError,
-                 %r{undefined method `missing' for #<ROM::Struct::User id=1 name="Jane">}
-               )
-        end
-
-        it 'uses class name in name errors' do
-          user = struct.new(id: 1, name: 'J' * 50)
-
-          expect { user.missing }.
-            to raise_error(
-                 NoMethodError,
-                 %r{undefined method `missing' for #<ROM::Struct::User:0x\h+>}
-               )
-        end
-      end
-    end
   end
 
   context 'custom entity container' do
@@ -126,6 +100,23 @@ RSpec.describe 'struct builder', '#call' do
       user = struct.new(id: 1, name: 'Jane')
 
       expect(user.upcased_name).to eql('JANE')
+    end
+
+    it 'raises a nice error on missing attributes' do
+      class Test::Custom::User < ROM::Struct
+        def upcased_middle_name
+          middle_name.upcase
+        end
+      end
+
+      user = struct.new(id: 1, name: 'Jane')
+
+      expect {
+        user.upcased_middle_name
+      }.to raise_error(
+             ROM::Struct::MissingAttribute,
+             /not loaded attribute\?/
+           )
     end
   end
 end

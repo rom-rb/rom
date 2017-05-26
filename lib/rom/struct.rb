@@ -45,6 +45,8 @@ module ROM
   #
   # @api public
   class Struct < Dry::Struct
+    MissingAttribute = Class.new(NameError)
+
     # Returns a short string representation
     #
     # @return [String]
@@ -65,15 +67,10 @@ module ROM
 
     private
 
-    def method_missing(m, *args)
-      inspected = inspect
-      trace = caller
-
-      # This is how MRI currently works
-      # see func name_err_mesg_to_str in error.c
-      name = inspected.size > 65 ? to_s : inspected
-
-      raise NoMethodError.new("undefined method `#{ m }' for #{ name }", m, args).tap { |e| e.set_backtrace(trace) }
+    def method_missing(*)
+      super
+    rescue NameError => error
+      raise MissingAttribute.new("#{ error.message } (not loaded attribute?)")
     end
   end
 end
