@@ -282,7 +282,7 @@ module ROM
     #   end
     #
     #   user
-    #   # => #<ROM::Struct[User] id=1 name="Jane">
+    #   # => #<ROM::Struct::User id=1 name="Jane">
     #
     # @example with a rollback
     #   user = transaction do |t|
