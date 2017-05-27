@@ -1,6 +1,4 @@
 language: ruby
-dist: trusty
-sudo: required
 cache: bundler
 install:
   - "cd $GEM && bundle install --without sql benchmarks console tools"
