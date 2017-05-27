@@ -29,7 +29,7 @@ module ROM
     option :globs, default: -> {
       Hash[
         component_dirs.map { |component, path|
-          [component, directory.join("#{ path }/**/*.rb")]
+          [component, directory.join("#{path}/**/*.rb")]
         }
       ]
     }
@@ -55,7 +55,7 @@ module ROM
           case namespace
           when String
             AutoRegistrationStrategies::CustomNamespace.new(
-              namespace: namespace, file: file
+              namespace: namespace, file: file, directory: directory
             ).call
           when TrueClass
             AutoRegistrationStrategies::WithNamespace.new(
@@ -66,6 +66,7 @@ module ROM
               file: file, directory: directory, entity: component_dirs.fetch(entity)
             ).call
           end
+
         Dry::Core::Inflector.constantize(klass_name)
       end
     end
