@@ -7,13 +7,20 @@ module ROM
   # They implement Hash protocol which means that they can be used
   # in places where Hash-like objects are supported.
   #
-  # Repositories define subclasses of ROM::Struct automatically, they are not
-  # defined as constants in any module, instead, generated mappers are configured
-  # to use anonymous struct classes as models.
+  # Repositories define subclasses of ROM::Struct automatically, they are
+  # defined in the ROM::Struct namespace by default, but you set it up
+  # to use your namespace/module as well.
   #
   # Structs are based on dry-struct gem, they include `schema` with detailed information
   # about attribute types returned from relations, thus can be introspected to build
   # additional functionality when desired.
+  #
+  # There is a caveat you should know about when working with structs. Struct classes
+  # have names but at the same time they're anonymous, i.e. you can't get the User struct class
+  # with ROM::Struct::User. ROM will create as many struct classes for User as needed,
+  # they all will have the same name and ROM::Struct::User will be the common parent class for
+  # them. Combined with the ability to provide your own namespace for structs this enables to
+  # pre-define the parent class.
   #
   # @example accessing relation struct model
   #   rom = ROM.container(:sql, 'sqlite::memory') do |conf|
@@ -30,7 +37,7 @@ module ROM
   #
   #   # get auto-generated User struct
   #   model = user_repo.users.mapper.model
-  #   # => ROM::Struct[User]
+  #   # => ROM::Struct::User
   #
   #   # see struct's schema attributes
   #
@@ -40,11 +47,31 @@ module ROM
   #   model.schema[:name]
   #   # => #<Dry::Types::Sum left=#<Dry::Types::Constrained type=#<Dry::Types::Definition primitive=NilClass options={}> options={:rule=>#<Dry::Logic::Rule::Predicate predicate=#<Method: Module(Dry::Logic::Predicates::Methods)#type?> options={:args=>[NilClass]}>} rule=#<Dry::Logic::Rule::Predicate predicate=#<Method: Module(Dry::Logic::Predicates::Methods)#type?> options={:args=>[NilClass]}>> right=#<Dry::Types::Definition primitive=String options={}> options={:meta=>{:name=>:name, :source=>ROM::Relation::Name(users)}}>
   #
+  # @example passing a namespace with an existing parent class
+  #   module Entities
+  #     class User < ROM::Struct
+  #       def upcased_name
+  #         name.upcase
+  #       end
+  #     end
+  #   end
+  #
+  #   class UserRepo < ROM::Repository[:users]
+  #     struct_namespace Entities
+  #   end
+  #
+  #   user_repo = UserRepo.new(rom)
+  #   user = user_repo.users.by_pk(1).one!
+  #   user.name # => "Jane"
+  #   user.upcased_name # => "JANE"
+  #
   # @see http://dry-rb.org/gems/dry-struct dry-struct
   # @see http://dry-rb.org/gems/dry-types dry-types
   #
   # @api public
   class Struct < Dry::Struct
+    MissingAttribute = Class.new(NameError)
+
     # Returns a short string representation
     #
     # @return [String]
@@ -65,15 +92,10 @@ module ROM
 
     private
 
-    def method_missing(m, *args)
-      inspected = inspect
-      trace = caller
-
-      # This is how MRI currently works
-      # see func name_err_mesg_to_str in error.c
-      name = inspected.size > 65 ? to_s : inspected
-
-      raise NoMethodError.new("undefined method `#{ m }' for #{ name }", m, args).tap { |e| e.set_backtrace(trace) }
+    def method_missing(*)
+      super
+    rescue NameError => error
+      raise MissingAttribute.new("#{ error.message } (not loaded attribute?)")
     end
   end
 end

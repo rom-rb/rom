@@ -10,8 +10,8 @@ module ROM
 
       attr_reader :header_builder
 
-      def initialize
-        @header_builder = HeaderBuilder.new
+      def initialize(options = EMPTY_HASH)
+        @header_builder = HeaderBuilder.new(options)
       end
 
       def call(ast)

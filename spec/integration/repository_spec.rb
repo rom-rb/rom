@@ -238,17 +238,45 @@ RSpec.describe 'ROM repository' do
   end
 
   describe 'projecting virtual attributes' do
-    it 'loads auto-mapped structs' do
-      user = repo.users.
-               inner_join(:posts, author_id: :id).
-               select_group { [id.qualified, name.qualified] }.
-               select_append { int::count(:posts).as(:post_count) }.
-               having { count(id.qualified) >= 1 }.
-               first
+    before do
+      ROM::Repository::StructBuilder.cache.clear
+      ROM::Repository::MapperBuilder.cache.clear
+    end
 
-      expect(user.id).to be(1)
-      expect(user.name).to eql('Jane')
-      expect(user.post_count).to be(1)
+    shared_context 'auto-mapping' do
+      it 'loads auto-mapped structs' do
+        user = repo.users.
+                 inner_join(:posts, author_id: :id).
+                 select_group { [id.qualified, name.qualified] }.
+                 select_append { int::count(:posts).as(:post_count) }.
+                 having { count(id.qualified) >= 1 }.
+                 first
+
+        expect(user.id).to be(1)
+        expect(user.name).to eql('Jane')
+        expect(user.post_count).to be(1)
+      end
+    end
+
+    context 'with default namespace' do
+      include_context 'auto-mapping'
+    end
+
+    context 'with custom struct namespace' do
+      before do
+        repo_class.struct_namespace(Test)
+      end
+
+      include_context 'auto-mapping'
+
+      it 'uses custom namespace' do
+        expect(Test.const_defined?(:User)).to be(false)
+        user = repo.users.limit(1).one!
+
+        expect(user.name).to eql('Jane')
+        expect(user.class).to be < Test::User
+        expect(user.class.name).to eql(Test::User.name)
+      end
     end
   end
 
