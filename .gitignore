@@ -13,7 +13,8 @@ test/version_tmp
 tmp
 Gemfile.lock
 vendor/
-log/
+log/*
+**/log/*
 
 .idea/
 
