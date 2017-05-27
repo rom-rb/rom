@@ -6,7 +6,7 @@ install:
   - "cd $GEM && bundle install --without sql benchmarks console tools"
 before_script:
   - "[[ $GEM != 'repository' ]] || psql -c 'create database rom_repository' -U postgres"
-script: "cd $GEM && bundle exec rake ci"
+script: "bundle exec rake ci"
 rvm:
   - 2.2.7
   - 2.3.4
