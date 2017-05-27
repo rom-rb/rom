@@ -1,0 +1,23 @@
+language: ruby
+dist: trusty
+sudo: false
+cache: bundler
+bundler_args: --without sql benchmarks console tools
+script: "bundle exec rake ci"
+after_success:
+  - '[ -d coverage ] && bundle exec codeclimate-test-reporter'
+rvm:
+  - 2.2.7
+  - 2.3.4
+  - 2.4.1
+  - jruby-9.1.8.0
+env:
+  global:
+    - JRUBY_OPTS='--dev -J-Xmx1024M'
+notifications:
+  webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/39e1225f489f38b0bd09
+    on_success: change
+    on_failure: always
+    on_start: false

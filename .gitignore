@@ -1,0 +1,19 @@
+log
+*.rbx
+*.rbc
+Gemfile.lock
+vendor/
+tmp/
+doc/
+coverage/
+measurements/
+graphviz/
+.yardoc/
+.bundle/
+*.png
+Vagrantfile
+.vagrant
+
+# spiking area
+scratchpad.rb
+.ruby-version
