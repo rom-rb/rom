@@ -11,8 +11,10 @@ group :development do
 end
 
 group :test do
-  gem 'rom', git: 'https://github.com/rom-rb/rom.git'
-  gem 'rom-sql', git: 'https://github.com/rom-rb/rom-sql.git'
+  gem 'dry-core', git: 'https://github.com/dry-rb/dry-core.git', branch: 'master'
+  gem 'rom-core', path: '../core'
+  gem 'rom-mapper', path: '../mapper'
+  gem 'rom-sql', git: 'https://github.com/rom-rb/rom-sql.git', branch: 'master'
   gem 'rspec'
   gem 'dry-struct'
   gem 'byebug', platforms: :mri
@@ -36,5 +38,3 @@ group :tools do
   gem 'mutant'
   gem 'mutant-rspec'
 end
-
-gem 'dry-core', git: 'https://github.com/dry-rb/dry-core.git'
