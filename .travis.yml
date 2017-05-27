@@ -1,0 +1,28 @@
+language: ruby
+dist: trusty
+sudo: required
+cache: bundler
+install:
+  - "cd $GEM && bundle install --without sql benchmarks console tools"
+before_script:
+  - "[[ $GEM != 'repository' ]] || psql -c 'create database rom_repository' -U postgres"
+script: "cd $GEM && bundle exec rake ci"
+rvm:
+  - 2.2.7
+  - 2.3.4
+  - 2.4.1
+  - jruby
+env:
+  global:
+    - JRUBY_OPTS='--dev -J-Xmx1024M'
+    - COVERAGE='true'
+  matrix:
+    - "GEM=core"
+    - "GEM=mapper"
+    - "GEM=repository"
+notifications:
+  webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/39e1225f489f38b0bd09
+    on_success: change
+    on_failure: always
