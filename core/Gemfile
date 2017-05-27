@@ -12,6 +12,7 @@ group :test do
   gem 'dry-struct'
   gem 'minitest'
   gem 'inflecto', '~> 0.0', '>= 0.0.2'
+  gem 'rom-mapper', path: '../mapper'
 
   platforms :mri do
     gem 'codeclimate-test-reporter', require: false
