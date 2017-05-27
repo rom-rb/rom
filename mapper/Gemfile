@@ -6,6 +6,7 @@ group :test do
   gem 'anima', '~> 0.3.0'
   gem 'virtus'
   gem 'inflecto', '~> 0.0', '>= 0.0.2'
+  gem 'rom-mapper', path: '../mapper'
 
   gem 'codeclimate-test-reporter', require: false
   gem 'simplecov', require: false

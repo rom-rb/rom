@@ -5,6 +5,7 @@ require 'rom/relation/class_interface'
 
 require 'rom/pipeline'
 require 'rom/mapper_registry'
+require 'rom/mapper_compiler'
 
 require 'rom/relation/loaded'
 require 'rom/relation/curried'
@@ -58,10 +59,6 @@ module ROM
     #   @api public
     param :dataset
 
-    # @!attribute [r] mappers
-    #   @return [MapperRegistry] an optional mapper registry (empty by default)
-    option :mappers, default: -> { MapperRegistry.new }
-
     # @!attribute [r] schema
     #   @return [Schema] relation schema, defaults to class-level canonical
     #                    schema (if it was defined) and sets an empty one as
@@ -80,6 +77,25 @@ module ROM
     option :output_schema, default: -> {
       schema.any?(&:read?) ? schema.to_output_hash : NOOP_OUTPUT_SCHEMA
     }
+
+    # @!attribute [r] mappers
+    #   @return [MapperRegistry] an optional mapper registry (empty by default)
+    option :mappers, default: -> { MapperRegistry.new }
+
+    # @!attribute [r] auto_struct
+    #   @return [TrueClass,FalseClass] Whether or not tuples should be auto-mapped to structs
+    #   @api private
+    option :auto_struct, reader: true, default: -> { false }
+
+    # @!attribute [r] mapper_compiler
+    #   @return [MapperCompiler] A mapper compiler instance for auto-struct mapping
+    #   @api private
+    option :mapper_compiler, reader: true, default: -> { ROM::MapperCompiler.new }
+
+    # @!attribute [r] meta
+    #   @return [Hash] Meta data stored in a hash
+    #   @api private
+    option :meta, reader: true, default: -> { EMPTY_HASH }
 
     # Return schema attribute
     #
@@ -130,7 +146,11 @@ module ROM
     #
     # @api public
     def call
-      Loaded.new(self)
+      if auto_struct
+        Loaded.new(self, mapper.(to_a))
+      else
+        Loaded.new(self)
+      end
     end
 
     # Materializes a relation into an array
@@ -233,7 +253,42 @@ module ROM
       @associations ||= schema.associations
     end
 
+    # Returns AST for the wrapped relation
+    #
+    # @return [Array]
+    #
+    # @api public
+    def to_ast
+      @to_ast ||=
+        begin
+          attr_ast = schema.map { |attr| [:attribute, attr] }
+
+          meta = self.meta.merge(dataset: name.dataset)
+          meta.update(model: false) unless meta[:model] || auto_struct
+          meta.delete(:wraps)
+
+          header = attr_ast + nodes_ast + wraps_ast
+
+          [:relation, [name.relation, meta, [:header, header]]]
+        end
+    end
+
     private
+
+    # @api private
+    def nodes_ast
+      EMPTY_ARRAY
+    end
+
+    # @api private
+    def wraps_ast
+      EMPTY_ARRAY
+    end
+
+    # @api private
+    def mapper
+      mapper_compiler[to_ast]
+    end
 
     # Hook used by `Pipeline` to get the class that should be used for composition
     #

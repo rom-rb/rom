@@ -1,3 +1,5 @@
+require 'dry/equalizer'
+
 module ROM
   class Header
     # An attribute provides information about a specific attribute in a tuple
