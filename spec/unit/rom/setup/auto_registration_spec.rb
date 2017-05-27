@@ -117,34 +117,96 @@ RSpec.describe ROM::Setup, '#auto_registration' do
       end
     end
 
-    context 'with custom namespace' do
-      before do
-        setup.auto_registration(
-          SPEC_ROOT.join('fixtures/custom'),
-          component_dirs: {
-            relations: :relations,
-            mappers: :mappers,
-            commands: :commands
-          },
-          namespace: 'My::Namespace'
-        )
-      end
+    describe 'custom namespace' do
+      context 'when namespace has subnamespace' do
+         before do
+          setup.auto_registration(
+            SPEC_ROOT.join('fixtures/custom_namespace'),
+            component_dirs: {
+              relations: :relations,
+              mappers: :mappers,
+              commands: :commands
+            },
+            namespace: 'My::Namespace'
+          )
+        end
 
-      describe '#relations' do
-        it 'loads files and returns constants' do
-          expect(setup.relation_classes).to eql([My::Namespace::Users])
+        describe '#relations' do
+          it 'loads files and returns constants' do
+            expect(setup.relation_classes).to eql([My::Namespace::Relations::Customers])
+          end
+        end
+
+        describe '#commands' do
+          it 'loads files and returns constants' do
+            expect(setup.command_classes).to eql([My::Namespace::Commands::CreateCustomer])
+          end
+        end
+
+        describe '#mappers' do
+          it 'loads files and returns constants' do
+            expect(setup.mapper_classes).to eql([My::Namespace::Mappers::CustomerList])
+          end
         end
       end
 
-      describe '#commands' do
-        it 'loads files and returns constants' do
-          expect(setup.command_classes).to eql([My::Namespace::CreateUser])
+      context 'when namespace has wrong subnamespace' do
+         subject do
+          -> do
+            setup.auto_registration(
+              SPEC_ROOT.join('fixtures/wrong'),
+              component_dirs: {
+                relations: :relations,
+                mappers: :mappers,
+                commands: :commands
+              },
+              namespace: 'My::NewNamespace'
+            )
+          end
+        end
+
+        describe '#relations' do
+          it { is_expected.to raise_exception NameError }
+        end
+
+        describe '#commands' do
+          it { is_expected.to raise_exception NameError }
+        end
+
+        describe '#mappers' do
+          it { is_expected.to raise_exception NameError }
         end
       end
 
-      describe '#mappers' do
-        it 'loads files and returns constants' do
-          expect(setup.mapper_classes).to eql([My::Namespace::UserList])
+      context 'when namespace does not implement subnamespace' do
+        before do
+          setup.auto_registration(
+            SPEC_ROOT.join('fixtures/custom'),
+            component_dirs: {
+              relations: :relations,
+              mappers: :mappers,
+              commands: :commands
+            },
+            namespace: 'My::Namespace'
+          )
+        end
+
+        describe '#relations' do
+          it 'loads files and returns constants' do
+            expect(setup.relation_classes).to eql([My::Namespace::Users])
+          end
+        end
+
+        describe '#commands' do
+          it 'loads files and returns constants' do
+            expect(setup.command_classes).to eql([My::Namespace::CreateUser])
+          end
+        end
+
+        describe '#mappers' do
+          it 'loads files and returns constants' do
+            expect(setup.mapper_classes).to eql([My::Namespace::UserList])
+          end
         end
       end
     end

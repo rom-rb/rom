@@ -10,7 +10,7 @@ module ROM
 
       option :file, type: Types::Strict::String
 
-      EXTENSION_REGEX = /\.rb\z/.freeze
+      EXTENSION_REGEX = /\.rb\z/
     end
   end
 end
