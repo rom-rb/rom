@@ -24,7 +24,7 @@ group :test do
 end
 
 group :sql do
-  gem 'rom-sql', git: 'https://github.com/rom-rb/rom-sql.git', branch: 'master'
+  gem 'rom-sql', git: 'https://github.com/rom-rb/rom-sql.git', branch: 'release-1.0'
   gem 'sequel'
   gem 'jdbc-sqlite3', platforms: :jruby
   gem 'jdbc-postgres', platforms: :jruby
