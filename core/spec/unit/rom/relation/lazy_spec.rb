@@ -61,12 +61,12 @@ RSpec.describe ROM::Relation do
     it 'forwards to relation and auto-curries' do
       relation = users_relation.by_name_and_email_sorted('Jane')
 
-      expect(relation.name).to eql(ROM::Relation::Name[:by_name_and_email_sorted])
+      expect(relation.view).to be(:by_name_and_email_sorted)
       expect(relation.curry_args).to eql(['Jane'])
 
       relation = relation['jane@doe.org']
 
-      expect(relation.name).to eql(ROM::Relation::Name[:by_name_and_email_sorted])
+      expect(relation.view).to be(:by_name_and_email_sorted)
       expect(relation.curry_args).to eql(['Jane', 'jane@doe.org'])
 
       expect(relation[:email]).to match_array(
@@ -100,7 +100,7 @@ RSpec.describe ROM::Relation do
     it 'auto-curries' do
       relation = users_relation.by_name
 
-      expect(relation.name).to eql(ROM::Relation::Name[:by_name])
+      expect(relation.view).to eql(:by_name)
       expect(relation['Jane'].to_a).to eql(users_relation.by_name('Jane').to_a)
     end
 

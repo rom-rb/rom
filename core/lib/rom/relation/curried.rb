@@ -13,18 +13,9 @@ module ROM
 
       param :relation
 
-      option :name, optional: true, type: Types::Strict::Symbol
+      option :view, type: Types::Strict::Symbol
       option :arity, type: Types::Strict::Int, default: -> { -1 }
       option :curry_args, default: -> { EMPTY_ARRAY }
-
-      # Relation name
-      #
-      # @return [ROM::Relation::Name]
-      #
-      # @api public
-      def name
-        @name ? relation.name.with(@name) : relation.name
-      end
 
       # Load relation if args match the arity
       #
@@ -36,13 +27,13 @@ module ROM
           all_args = curry_args + args
 
           if all_args.empty?
-            raise ArgumentError, "curried #{relation.class}##{name.to_sym} relation was called without any arguments"
+            raise ArgumentError, "curried #{relation.class}##{view} relation was called without any arguments"
           end
 
           if args.empty?
             self
           elsif arity == all_args.size
-            Loaded.new(relation.__send__(name.relation, *all_args))
+            Loaded.new(relation.__send__(view, *all_args))
           else
             __new__(relation, curry_args: all_args)
           end
@@ -56,7 +47,7 @@ module ROM
       def to_a
         raise(
           ArgumentError,
-          "#{relation.class}##{name.relation} arity is #{arity} " \
+          "#{relation.class}##{view} arity is #{arity} " \
           "(#{curry_args.size} args given)"
         )
       end

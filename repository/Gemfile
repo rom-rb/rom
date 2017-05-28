@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 gemspec
 
 gem 'inflecto'
+gem 'sequel', '4.45'
 
 group :development do
   gem 'dry-equalizer', '~> 0.2'

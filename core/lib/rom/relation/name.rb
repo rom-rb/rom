@@ -23,12 +23,12 @@ module ROM
       # @api private
       def self.[](*args)
         cache.fetch_or_store(args.hash) do
-          relation, dataset = args
+          relation, dataset, aliaz = args
 
           if relation.is_a?(Name)
             relation
           else
-            new(relation, dataset)
+            new(relation, dataset, aliaz)
           end
         end
       end
@@ -52,10 +52,21 @@ module ROM
       # @api private
       attr_reader :dataset
 
+      attr_reader :aliaz
+
+      attr_reader :key
+
       # @api private
-      def initialize(relation, dataset = nil)
+      def initialize(relation, dataset = relation, aliaz = nil)
         @relation = relation
         @dataset = dataset || relation
+        @key = aliaz || relation
+        @aliaz = aliaz
+      end
+
+      # @api private
+      def as(aliaz)
+        self.class[relation, dataset, aliaz]
       end
 
       # Return relation name
@@ -64,7 +75,9 @@ module ROM
       #
       # @api private
       def to_s
-        if relation == dataset
+        if aliaz
+          "#{relation} on #{dataset} as #{aliaz}"
+        elsif relation == dataset
           relation.to_s
         else
           "#{relation} on #{dataset}"
@@ -87,15 +100,6 @@ module ROM
       # @api private
       def inspect
         "#{self.class.name}(#{to_s})"
-      end
-
-      # Build a new name. Useful for Curried and other relation proxies
-      #
-      # @return [ROM::Relation::Name]
-      #
-      # @api private
-      def with(relation)
-        self.class[relation, dataset]
       end
     end
   end

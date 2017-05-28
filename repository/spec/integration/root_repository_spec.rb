@@ -41,7 +41,7 @@ RSpec.describe ROM::Repository::Root do
 
   describe '#root' do
     it 'returns configured root relation' do
-      expect(repo.root.relation).to be(rom.relations[:users])
+      expect(repo.root.dataset).to be(rom.relations[:users].dataset)
     end
   end
 

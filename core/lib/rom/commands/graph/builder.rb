@@ -12,10 +12,10 @@ module ROM
         # @api private
         class Node
           # @api private
-          Restriction = Struct.new(:relation, :proc)
+          Restriction = ::Struct.new(:relation, :proc)
 
           # @api private
-          Command = Struct.new(:name, :relation, :key, :proc)
+          Command = ::Struct.new(:name, :relation, :key, :proc)
 
           # @api private
           def initialize

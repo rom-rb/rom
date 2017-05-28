@@ -82,8 +82,13 @@ module ROM
       # @return [Graph]
       #
       # @api public
-      def combine(*others)
+      def graph(*others)
         self.class.new(root, nodes + others)
+      end
+
+      # @api public
+      def combine(*args)
+        self.class.new(root, nodes + root.combine(*args).nodes)
       end
 
       # Materialize this relation graph
@@ -92,7 +97,7 @@ module ROM
       #
       # @api public
       def call(*args)
-        left = root.call(*args)
+        left = root.with(auto_struct: false).call(*args)
 
         right =
           if left.empty?
@@ -101,14 +106,80 @@ module ROM
             nodes.map { |node| node.call(left) }
           end
 
-        Loaded.new(self, [left, right])
+        if auto_map?
+          Loaded.new(self, mapper.([left, right]))
+        else
+          Loaded.new(self, [left, right])
+        end
+      end
+
+      # @api public
+      def map_with(*names, **_opts)
+        # TODO: figure out a nicer way of handling this
+        graph = self.class.new(root.with(meta: root.meta.merge(model: false)), nodes)
+        [*names.map { |name| mappers[name] }].reduce(graph) { |a, e| a >> e }
+      end
+
+      # Return a new graph with adjusted node returned from a block
+      #
+      # @example with a node identifier
+      #   aggregate(:tasks).node(:tasks) { |tasks| tasks.prioritized }
+      #
+      # @example with a nested path
+      #   aggregate(tasks: :tags).node(tasks: :tags) { |tags| tags.where(name: 'red') }
+      #
+      # @param [Symbol] name The node relation name
+      #
+      # @yieldparam [RelationProxy] The relation node
+      # @yieldreturn [RelationProxy] The new relation node
+      #
+      # @return [RelationProxy]
+      #
+      # @api public
+      def node(name, &block)
+        if name.is_a?(Symbol) && !nodes.map { |n| n.name.key }.include?(name)
+          raise ArgumentError, "#{name.inspect} is not a valid aggregate node name"
+        end
+
+        new_nodes = nodes.map { |node|
+          case name
+          when Symbol
+            name == node.name.key ? yield(node) : node
+          when Hash
+            other, *rest = name.flatten(1)
+            if other == node.name.key
+              nodes.detect { |n| n.name.key == other }.node(*rest, &block)
+            else
+              node
+            end
+          else
+            node
+          end
+        }
+
+        with_nodes(new_nodes)
+      end
+
+      # @api public
+      def to_ast
+        [:relation, [name.to_sym, meta_ast, [:header, attr_ast + node_ast]]]
+      end
+
+      # @api private
+      def node_ast
+        nodes.map(&:to_ast)
+      end
+
+      # @api private
+      def mapper
+        mapper_compiler[to_ast]
       end
 
       private
 
       # @api private
       def decorate?(other)
-        super || other.is_a?(Curried)
+        super || other.is_a?(Composite) || other.is_a?(Curried)
       end
 
       # @api private

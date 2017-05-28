@@ -42,7 +42,7 @@ RSpec.describe ROM::Repository, '#session' do
 
       updated_user = repo.users.fetch(user.id)
 
-      expect(updated_user).to eql(id: 2, name: 'Jane Doe')
+      expect(updated_user.to_h).to eql(id: 2, name: 'Jane Doe')
     end
   end
 

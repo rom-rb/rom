@@ -1,4 +1,5 @@
 require 'rom/relation_registry'
+require 'rom/mapper_registry'
 
 module ROM
   class Finalize
@@ -11,9 +12,10 @@ module ROM
       # @param [Array] relation_classes a list of relation descendants
       #
       # @api private
-      def initialize(gateways, relation_classes, plugins = EMPTY_ARRAY)
+      def initialize(gateways, relation_classes, mappers: nil, plugins: EMPTY_ARRAY)
         @gateways = gateways
         @relation_classes = relation_classes
+        @mappers = mappers
         @plugins = plugins
       end
 
@@ -58,9 +60,15 @@ module ROM
           plugin.apply_to(klass)
         end
 
+        rel_key = klass.register_as
         dataset = gateway.dataset(klass.dataset).instance_exec(klass, &ds_proc)
+        mappers = @mappers.key?(rel_key) ? @mappers[rel_key] : MapperRegistry.new
 
-        options = { __registry__: registry, schema: schema.with(relations: registry), **plugin_options }
+        options = {
+          __registry__: registry,
+          mappers: mappers,
+          schema: schema.with(relations: registry),
+          **plugin_options }
 
         klass.new(dataset, options)
       end
