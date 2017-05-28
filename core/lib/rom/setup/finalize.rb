@@ -61,8 +61,8 @@ module ROM
     def run!
       infer_relations
 
-      relations = load_relations
       mappers = load_mappers
+      relations = load_relations(mappers)
       commands = load_commands(relations)
 
       container = Container.new(gateways, relations, mappers, commands)
@@ -91,8 +91,13 @@ module ROM
     # This includes both classes created via DSL and explicit definitions
     #
     # @api private
-    def load_relations
-      FinalizeRelations.new(gateways, relation_classes, plugins.select(&:relation?)).run!
+    def load_relations(mappers)
+      FinalizeRelations.new(
+        gateways,
+        relation_classes,
+        mappers: mappers,
+        plugins: plugins.select(&:relation?)
+      ).run!
     end
 
     # @api private

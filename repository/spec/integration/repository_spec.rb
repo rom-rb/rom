@@ -239,8 +239,8 @@ RSpec.describe 'ROM repository' do
 
   describe 'projecting virtual attributes' do
     before do
-      ROM::Repository::StructBuilder.cache.clear
-      ROM::Repository::MapperBuilder.cache.clear
+      ROM::StructBuilder.cache.clear
+      ROM::MapperCompiler.cache.clear
     end
 
     shared_context 'auto-mapping' do
@@ -362,7 +362,9 @@ RSpec.describe 'ROM repository' do
     end
 
     it 'applies a custom mapper inside #node' do
-      jane = repo.aggregate(:posts).node(:posts) { |posts| posts.as(:nested_mapper, auto_map: true) }.to_a.first
+      jane = repo.aggregate(:posts).node(:posts) { |posts|
+        posts.map_with(:nested_mapper)
+      }.to_a.first
 
       expect(jane).to be_a ROM::Struct
 

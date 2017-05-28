@@ -1,5 +1,5 @@
 RSpec.describe 'struct builder', '#call' do
-  subject(:builder) { ROM::Repository::StructBuilder.new }
+  subject(:builder) { ROM::StructBuilder.new }
 
   def attr_double(name, type, **opts)
     double(
@@ -81,7 +81,7 @@ RSpec.describe 'struct builder', '#call' do
     end
 
     let(:struct) { builder[*input] }
-    subject(:builder) { ROM::Repository::StructBuilder.new(Test::Custom) }
+    subject(:builder) { ROM::StructBuilder.new(Test::Custom) }
 
     it 'generates a struct class inside a given module' do
       expect(struct.name).to eql('Test::Custom::User')

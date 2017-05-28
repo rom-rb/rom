@@ -1,9 +1,9 @@
 module MapperRegistry
   def mapper_for(relation)
-    mapper_builder[relation.to_ast]
+    mapper_compiler[relation.to_ast]
   end
 
-  def mapper_builder
-    @mapper_builder ||= ROM::Repository::MapperBuilder.new
+  def mapper_compiler
+    @mapper_compiler ||= ROM::MapperCompiler.new
   end
 end

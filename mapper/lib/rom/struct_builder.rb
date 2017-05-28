@@ -50,7 +50,7 @@ module ROM
       relation_name, meta, header = node
       name = meta[:combine_name] || relation_name.relation
 
-      model = meta.fetch(:model) { call(name, header) }
+      model = meta[:model] || call(name, header)
 
       member =
         if model < Dry::Struct

@@ -1,9 +1,8 @@
 require 'dry/core/deprecations'
 
 require 'rom/initializer'
+require 'rom/mapper_compiler'
 require 'rom/repository/class_interface'
-require 'rom/repository/mapper_builder'
-require 'rom/repository/relation_proxy'
 require 'rom/repository/command_compiler'
 
 require 'rom/repository/changeset'
@@ -105,8 +104,8 @@ module ROM
     attr_reader :relations
 
     # @!attribute [r] mappers
-    #   @return [MapperBuilder] The auto-generated mappers for repo relations
-    attr_reader :mappers
+    #   @return [MapperCompiler] The auto-generated mappers for repo relations
+    attr_reader :mapper_compiler
 
     # @!attribute [r] commmand_compiler
     #   @return [Method] Function for compiling commands bound to a repo instance
@@ -121,19 +120,17 @@ module ROM
     def initialize(container, opts = EMPTY_HASH)
       super
 
-      @mappers = MapperBuilder.new(struct_namespace: struct_namespace)
+      @mapper_compiler = MapperCompiler.new(struct_namespace: struct_namespace)
 
       @relations = RelationRegistry.new do |registry, relations|
         self.class.relations.each do |name|
-          relation = container.relation(name)
+          relation = container.
+                       relation(name).
+                       with(mapper_compiler: mapper_compiler, auto_map: true, auto_struct: auto_struct)
 
-          proxy = RelationProxy.new(
-            relation, name: name, mappers: mappers, registry: registry, auto_struct: auto_struct
-          )
+          instance_variable_set("@#{name}", relation)
 
-          instance_variable_set("@#{name}", proxy)
-
-          relations[name] = proxy
+          relations[name] = relation
         end
       end
 
@@ -344,7 +341,7 @@ module ROM
       if mapper
         mapper_instance = container.mappers[relation.name.relation][mapper]
       elsif mapper.nil?
-        mapper_instance = mappers[ast]
+        mapper_instance = mapper_compiler[ast]
       end
 
       command = CommandCompiler[container, type, adapter, ast, use, opts]

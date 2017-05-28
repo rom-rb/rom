@@ -56,7 +56,7 @@ RSpec.describe ROM::Relation::Graph do
     end
 
     it 'forwards methods to the root and decorates curried response' do
-      expect((users_relation.combine(tasks_relation.for_users)).by_name).to be_instance_of(ROM::Relation::Graph)
+      expect((users_relation.graph(tasks_relation.for_users)).by_name).to be_instance_of(ROM::Relation::Graph)
     end
 
     it 'returns original response from the root' do

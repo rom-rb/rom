@@ -102,7 +102,7 @@ RSpec.describe 'Using changesets' do
     it 'preserves relation mappers with create' do
       changeset = repo.
                     changeset(create_changeset).
-                    new(repo.users.relation.as(:user)).
+                    new(repo.users.as(:user)).
                     data(name: 'Joe Dane')
 
       expect(changeset.commit).to eql(Test::User.new(id: 1, name: 'Joe Dane'))

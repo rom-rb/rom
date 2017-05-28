@@ -36,7 +36,7 @@ module ROM
             if arity < 0 || arity == args.size
               super(*args, &mblock)
             else
-              self.class.curried.new(self, name: name, curry_args: args, arity: arity)
+              self.class.curried.new(self, view: name, curry_args: args, arity: arity)
             end
 
           if block

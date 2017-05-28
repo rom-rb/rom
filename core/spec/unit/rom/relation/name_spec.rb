@@ -35,10 +35,10 @@ RSpec.describe ROM::Relation::Name do
     end
   end
 
-  describe '#with' do
-    it 'returns a new name with the same dataset but for a different relation name' do
+  describe '#as' do
+    it 'returns an aliased name' do
       name = ROM::Relation::Name[:users]
-      expect(name.with(:people)).to be(ROM::Relation::Name[:people, :users])
+      expect(name.as(:people)).to be(ROM::Relation::Name[:users, :users, :people])
     end
   end
 

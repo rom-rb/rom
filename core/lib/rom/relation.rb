@@ -17,6 +17,9 @@ require 'rom/association_set'
 require 'rom/types'
 require 'rom/schema'
 
+require 'rom/relation/combine'
+require 'rom/relation/wrap'
+
 module ROM
   # Base relation class
   #
@@ -43,6 +46,9 @@ module ROM
     extend Initializer
     extend ClassInterface
 
+    include Combine
+    include Wrap
+
     extend Dry::Core::ClassAttributes
     defines :schema_class, :schema_inferrer, :schema_dsl
 
@@ -50,7 +56,7 @@ module ROM
     schema_class Schema
     schema_inferrer Schema::DEFAULT_INFERRER
 
-    include Dry::Equalizer(:dataset)
+    include Dry::Equalizer(:name, :dataset)
     include Materializable
     include Pipeline
 
@@ -86,6 +92,11 @@ module ROM
     #   @return [TrueClass,FalseClass] Whether or not tuples should be auto-mapped to structs
     #   @api private
     option :auto_struct, reader: true, default: -> { false }
+
+    # @!attribute [r] auto_map
+    #   @return [TrueClass,FalseClass] Whether or not a relation and its compositions should be auto-mapped
+    #   @api private
+    option :auto_map, reader: true, default: -> { false }
 
     # @!attribute [r] mapper_compiler
     #   @return [MapperCompiler] A mapper compiler instance for auto-struct mapping
@@ -126,7 +137,12 @@ module ROM
     # @api public
     def each(&block)
       return to_enum unless block
-      dataset.each { |tuple| yield(output_schema[tuple]) }
+
+      if auto_struct?
+        mapper.(dataset.map { |tuple| output_schema[tuple] }).each { |struct| yield(struct) }
+      else
+        dataset.each { |tuple| yield(output_schema[tuple]) }
+      end
     end
 
     # Composes with other relations
@@ -136,7 +152,7 @@ module ROM
     # @return [Relation::Graph]
     #
     # @api public
-    def combine(*others)
+    def graph(*others)
       Graph.build(self, others)
     end
 
@@ -146,11 +162,7 @@ module ROM
     #
     # @api public
     def call
-      if auto_struct
-        Loaded.new(self, mapper.(to_a))
-      else
-        Loaded.new(self)
-      end
+      Loaded.new(self)
     end
 
     # Materializes a relation into an array
@@ -259,36 +271,104 @@ module ROM
     #
     # @api public
     def to_ast
-      @to_ast ||=
-        begin
-          attr_ast = schema.map { |attr| [:attribute, attr] }
-
-          meta = self.meta.merge(dataset: name.dataset)
-          meta.update(model: false) unless meta[:model] || auto_struct
-          meta.delete(:wraps)
-
-          header = attr_ast + nodes_ast + wraps_ast
-
-          [:relation, [name.relation, meta, [:header, header]]]
-        end
+      @__ast__ ||= [:relation, [name.relation, meta_ast, [:header, attr_ast + wraps_ast]]]
     end
 
-    private
-
     # @api private
-    def nodes_ast
-      EMPTY_ARRAY
+    def attr_ast
+      if meta[:wrap]
+        schema.wrap.map { |attr| [:attribute, attr] }
+      else
+        schema.reject(&:wrapped?).map { |attr| [:attribute, attr] }
+      end
     end
 
     # @api private
     def wraps_ast
-      EMPTY_ARRAY
+      wraps.map(&:to_ast)
+    end
+
+    # @api private
+    def meta_ast
+      meta = self.meta.merge(dataset: name.dataset)
+      meta.update(model: false) unless auto_struct? || meta[:model]
+      meta.delete(:wraps)
+      meta
+    end
+
+    # @api private
+    def auto_map?
+      (auto_map || auto_struct) && !meta[:combine_type]
+    end
+
+    # @api private
+    def auto_struct?
+      auto_struct && !meta[:combine_type]
     end
 
     # @api private
     def mapper
       mapper_compiler[to_ast]
     end
+
+    # @api private
+    def wraps
+      @__wraps__ ||= meta.fetch(:wraps, EMPTY_ARRAY)
+    end
+
+    # Maps the wrapped relation with other mappers available in the registry
+    #
+    # @overload map_with(model)
+    #   Map tuples to the provided custom model class
+    #
+    #   @example
+    #     users.as(MyUserModel)
+    #
+    #   @param [Class>] model Your custom model class
+    #
+    # @overload map_with(*mappers)
+    #   Map tuples using registered mappers
+    #
+    #   @example
+    #     users.map_with(:my_mapper, :my_other_mapper)
+    #
+    #   @param [Array<Symbol>] mappers A list of mapper identifiers
+    #
+    # @overload map_with(*mappers, auto_map: true)
+    #   Map tuples using auto-mapping and custom registered mappers
+    #
+    #   If `auto_map` is enabled, your mappers will be applied after performing
+    #   default auto-mapping. This means that you can compose complex relations
+    #   and have them auto-mapped, and use much simpler custom mappers to adjust
+    #   resulting data according to your requirements.
+    #
+    #   @example
+    #     users.map_with(:my_mapper, :my_other_mapper, auto_map: true)
+    #
+    #   @param [Array<Symbol>] mappers A list of mapper identifiers
+    #
+    # @return [RelationProxy] A new relation proxy with pipelined relation
+    #
+    # @api public
+    def map_with(*names, **_opts)
+      if names.size == 1 && names[0].is_a?(Class)
+        with(meta: meta.merge(model: names[0]))
+      elsif names.size > 1 && names.any? { |name| name.is_a?(Class) }
+        raise ArgumentError, 'using custom mappers and a model is not supported'
+      else
+        super(*names)
+      end
+    end
+    alias_method :as, :map_with
+
+    # @return [Symbol] The wrapped relation's adapter identifier ie :sql or :http
+    #
+    # @api private
+    def adapter
+      self.class.adapter
+    end
+
+    private
 
     # Hook used by `Pipeline` to get the class that should be used for composition
     #
