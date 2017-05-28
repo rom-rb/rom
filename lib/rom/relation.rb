@@ -1,4 +1,5 @@
 require 'dry/core/class_attributes'
+require 'dry/core/deprecations'
 
 require 'rom/initializer'
 require 'rom/relation/class_interface'
@@ -41,6 +42,7 @@ module ROM
 
     extend Initializer
     extend ClassInterface
+    extend Dry::Core::Deprecations[:rom]
 
     extend Dry::Core::ClassAttributes
     defines :schema_class, :schema_inferrer, :schema_dsl
@@ -120,9 +122,10 @@ module ROM
     # @return [Relation::Graph]
     #
     # @api public
-    def combine(*others)
+    def graph(*others)
       Graph.build(self, others)
     end
+    deprecate :combine, :graph
 
     # Loads relation
     #

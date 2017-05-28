@@ -1,3 +1,5 @@
+require 'dry/core/deprecations'
+
 require 'rom/relation/loaded'
 require 'rom/relation/composite'
 require 'rom/relation/materializable'
@@ -24,6 +26,8 @@ module ROM
     #
     # @api public
     class Graph
+      extend Dry::Core::Deprecations[:rom]
+
       include Materializable
       include Pipeline
       include Pipeline::Proxy
@@ -82,9 +86,10 @@ module ROM
       # @return [Graph]
       #
       # @api public
-      def combine(*others)
+      def graph(*others)
         self.class.new(root, nodes + others)
       end
+      deprecate :combine, :graph
 
       # Materialize this relation graph
       #
