@@ -1,4 +1,4 @@
-require File.expand_path('../lib/rom/version', __FILE__)
+require File.expand_path('../core/lib/rom/version', __FILE__)
 
 Gem::Specification.new do |gem|
   gem.name          = 'rom'
@@ -7,7 +7,6 @@ Gem::Specification.new do |gem|
   gem.author        = 'Piotr Solnica'
   gem.email         = 'piotr.solnica@gmail.com'
   gem.homepage      = 'http://rom-rb.org'
-  gem.require_paths = ['lib']
   gem.version       = ROM::VERSION.dup
   gem.files         = `git ls-files`.split("\n").reject { |name| name.include?('benchmarks') }
   gem.test_files    = `git ls-files -- {spec}/*`.split("\n")
