@@ -118,9 +118,16 @@ module ROM
     # @api private
     def initialize(gateways, relations, mappers, commands)
       @gateways = gateways
-      @relations = relations
       @mappers = mappers
       @commands = commands
+
+      command_compiler = CommandCompiler.new(self)
+
+      @relations = RelationRegistry.new do |registry, h|
+        relations.each do |name, relation|
+          h[name] = relation.with(command_compiler: command_compiler)
+        end
+      end
     end
 
     # Get relation instance identified by its name

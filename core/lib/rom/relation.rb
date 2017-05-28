@@ -11,6 +11,7 @@ require 'rom/relation/curried'
 require 'rom/relation/composite'
 require 'rom/relation/graph'
 require 'rom/relation/materializable'
+require 'rom/relation/commands'
 require 'rom/association_set'
 
 require 'rom/types'
@@ -47,6 +48,7 @@ module ROM
 
     include Combine
     include Wrap
+    include Relation::Commands
 
     extend Dry::Core::ClassAttributes
     defines :schema_class, :schema_inferrer, :schema_dsl
@@ -96,6 +98,11 @@ module ROM
     #   @return [TrueClass,FalseClass] Whether or not a relation and its compositions should be auto-mapped
     #   @api private
     option :auto_map, reader: true, default: -> { false }
+
+    # @!attribute [r] command_compiler
+    #   @return [CommandCompiler] A command compiler
+    #   @api private
+    option :command_compiler, optional: true
 
     # @!attribute [r] meta
     #   @return [Hash] Meta data stored in a hash

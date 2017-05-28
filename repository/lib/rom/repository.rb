@@ -2,8 +2,10 @@ require 'dry/core/deprecations'
 
 require 'rom/initializer'
 require 'rom/repository/class_interface'
-require 'rom/repository/command_compiler'
+require 'rom/mapper_compiler'
+require 'rom/command_compiler'
 
+require 'rom/repository/class_interface'
 require 'rom/repository/changeset'
 require 'rom/repository/session'
 
@@ -325,27 +327,11 @@ module ROM
     # Build a new command or return existing one
     #
     # @api private
-    def compile_command(*args, mapper: nil, use: nil, **opts)
+    def compile_command(*args, mapper: nil, use: EMPTY_ARRAY, **opts)
       type, name = args + opts.to_a.flatten(1)
-
       relation = name.is_a?(Symbol) ? relations[name] : name
 
-      ast = relation.to_ast
-      adapter = relations[relation.name].adapter
-
-      if mapper
-        mapper_instance = container.mappers[relation.name.relation][mapper]
-      elsif mapper.nil?
-        mapper_instance = relation.mapper
-      end
-
-      command = CommandCompiler[container, type, adapter, ast, use, opts]
-
-      if mapper_instance
-        command >> mapper_instance
-      else
-        command.new(relation)
-      end
+      relation.command(type, mapper: mapper, use: use, **opts)
     end
 
     # @api private
