@@ -12,7 +12,6 @@ group :development do
 end
 
 group :test do
-  gem 'dry-core', git: 'https://github.com/dry-rb/dry-core.git', branch: 'master'
   gem 'rom-core', path: '../core'
   gem 'rom-mapper', path: '../mapper'
   gem 'rom-sql', git: 'https://github.com/rom-rb/rom-sql.git', branch: 'master'
