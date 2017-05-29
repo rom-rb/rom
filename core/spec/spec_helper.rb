@@ -18,7 +18,7 @@ SPEC_ROOT = root = Pathname(__FILE__).dirname
 require 'dry/core/deprecations'
 Dry::Core::Deprecations.set_logger!(SPEC_ROOT.join('../log/deprecations.log'))
 
-require 'rom'
+require 'rom/core'
 
 begin
   require 'byebug'
