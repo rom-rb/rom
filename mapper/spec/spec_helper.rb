@@ -16,6 +16,8 @@ require "bundler"
 Bundler.setup
 
 require 'rom-mapper'
+require 'rom'
+require 'dry-struct'
 
 begin
   require 'byebug'

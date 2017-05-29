@@ -21,7 +21,6 @@ RSpec.describe 'Mapper definition DSL' do
       end
     end
 
-    let(:container) { ROM.container(configuration) }
     let(:actual) do
       container.relation(:users).with_tasks.map_with(:users).to_a
     end
