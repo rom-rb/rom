@@ -24,6 +24,8 @@ module ROM
       @environment = Environment.new(*args)
       @setup = Setup.new
 
+      use :mappers # enable mappers by default
+
       block.call(self) unless block.nil?
     end
 
