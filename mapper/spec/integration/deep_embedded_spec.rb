@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'rom/memory'
 
 RSpec.describe 'Mappers / deeply embedded tuples' do
   include_context 'container'

@@ -3,6 +3,9 @@ source 'https://rubygems.org'
 gemspec
 
 group :test do
+  gem 'rom'
+  gem 'dry-equalizer'
+  gem 'dry-struct'
   gem 'anima', '~> 0.3.0'
   gem 'virtus'
   gem 'inflecto', '~> 0.0', '>= 0.0.2'
