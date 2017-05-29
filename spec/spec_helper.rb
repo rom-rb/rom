@@ -2,7 +2,7 @@ require 'pathname'
 
 SPEC_ROOT = root = Pathname(__FILE__).dirname
 
-require 'rom'
+require 'rom/core'
 
 Dir[root.join('support/*.rb').to_s].each do |f|
   require f

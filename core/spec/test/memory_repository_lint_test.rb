@@ -1,4 +1,4 @@
-require 'rom'
+require 'rom/core'
 require 'rom/memory'
 require 'rom/lint/test'
 
