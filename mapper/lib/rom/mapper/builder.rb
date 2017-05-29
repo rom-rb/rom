@@ -1,11 +1,11 @@
 require 'dry/core/class_builder'
 
 module ROM
-  module ConfigurationDSL
+  class Mapper
     # Setup DSL-specific mapper extensions
     #
     # @private
-    class Mapper
+    class Builder
       # Generate a mapper subclass
       #
       # This is used by Setup#mappers DSL

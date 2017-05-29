@@ -13,6 +13,7 @@ require 'rom/configuration_plugin'
 require 'rom/plugin'
 require 'rom/relation'
 require 'rom-mapper'
+require 'rom/mapper/configuration_plugin'
 require 'rom/commands'
 
 # rom Global
@@ -37,6 +38,7 @@ module ROM
   extend Global
 
   plugins do
+    register :mappers, ROM::Mapper::ConfigurationPlugin, type: :configuration
     register :macros, ROM::ConfigurationPlugins::ConfigurationDSL, type: :configuration
     register :registry_reader, ROM::Plugins::Relation::RegistryReader, type: :relation
     register :instrumentation, ROM::Plugins::Relation::Instrumentation, type: :relation
