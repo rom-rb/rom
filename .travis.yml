@@ -3,8 +3,7 @@ dist: trusty
 sudo: required
 cache: bundler
 install:
-  - "[[ ! -d $GEM ]] || cd $GEM"
-  - "bundle install --without sql benchmarks console tools"
+  - "([[ ! -d $GEM ]] || cd $GEM) && bundle install --without sql benchmarks console tools"
 before_script:
   - "[[ $GEM != 'repository' ]] || psql -c 'create database rom_repository' -U postgres"
 script: "bundle exec rake ci"
