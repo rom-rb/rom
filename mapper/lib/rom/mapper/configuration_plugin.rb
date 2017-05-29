@@ -11,13 +11,16 @@ module ROM
       # @private
 
       def self.apply(configuration, options = {})
-        configuration.class.class_eval do
-          def mappers(&block)
-            register_mapper(*MapperDSL.new(self, mapper_classes, block).mapper_classes)
-          end
-        end
+        configuration.extend Methods
         configuration
       end
+
+      module Methods
+        def mappers(&block)
+          register_mapper(*MapperDSL.new(self, mapper_classes, block).mapper_classes)
+        end
+      end
+
     end
   end
 end
