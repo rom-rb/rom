@@ -1,4 +1,4 @@
-require 'rom'
+require 'rom/core'
 require 'rom/memory'
 
 RSpec.describe ROM::Plugins::Relation::Instrumentation do

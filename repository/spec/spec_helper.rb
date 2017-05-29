@@ -1,10 +1,10 @@
-# this is needed for guard to work, not sure why :(
-require "bundler"
-Bundler.setup
+require 'pathname'
+
+SPEC_ROOT = Pathname(__FILE__).dirname
 
 if RUBY_ENGINE == 'ruby' && ENV['COVERAGE'] == 'true'
   require 'yaml'
-  rubies = YAML.load(File.read(File.join(__dir__, '..', '.travis.yml')))['rvm']
+  rubies = YAML.load(File.read(SPEC_ROOT.join('../../.travis.yml')))['rvm']
   latest_mri = rubies.select { |v| v =~ /\A\d+\.\d+.\d+\z/ }.max
 
   if RUBY_VERSION == latest_mri
@@ -23,11 +23,10 @@ begin
 rescue LoadError
 end
 
-root = Pathname(__FILE__).dirname
 LOGGER = Logger.new(File.open('./log/test.log', 'a'))
 
 require 'dry/core/deprecations'
-Dry::Core::Deprecations.set_logger!(root.join('../log/deprecations.log'))
+Dry::Core::Deprecations.set_logger!(SPEC_ROOT.join('../log/deprecations.log'))
 
 # Make inference errors quiet
 class ROM::SQL::Schema::Inferrer
@@ -71,11 +70,11 @@ RSpec.configure do |config|
     Test.remove_constants
   end
 
-  Dir[root.join('support/*.rb').to_s].each do |f|
+  Dir[SPEC_ROOT.join('support/*.rb').to_s].each do |f|
     require f
   end
 
-  Dir[root.join('shared/*.rb').to_s].each do |f|
+  Dir[SPEC_ROOT.join('shared/*.rb').to_s].each do |f|
     require f
   end
 

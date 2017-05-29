@@ -1,3 +1,20 @@
+# v4.0.0 to-be-released
+
+Previous `rom` gem was renamed to `rom-core`
+
+## Added
+
+* Relations can be configured with `auto_map: true` which brings auto-mapping functionality known from rom-repository (solnic)
+* Relations can be configured with `auto_struct: true` which brings auto-struct functionality known from rom-repository (solnic)
+
+## Changed
+
+* [BREAKING] `Relation#combine` was renamed to `Relation#graph` (solnic)
+
+## Internal
+
+* [BREAKING] `Relation::Curried#name` was renamed to `Relation::Curried#view` (solnic)
+
 # v3.2.2 2017-05-05
 
 ## Changed

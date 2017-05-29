@@ -14,7 +14,7 @@ Gem::Specification.new do |gem|
   gem.license       = 'MIT'
 
   gem.add_dependency 'dry-equalizer', '~> 0.2'
-  gem.add_dependency 'dry-core', '~> 0.2', '>= 0.2.3'
+  gem.add_dependency 'dry-core', '~> 0.3', '>= 0.3.1'
   gem.add_dependency 'transproc', '~> 1.0'
 
   gem.add_development_dependency 'rake', '~> 11.3'

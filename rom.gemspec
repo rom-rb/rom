@@ -8,13 +8,13 @@ Gem::Specification.new do |gem|
   gem.email         = 'piotr.solnica@gmail.com'
   gem.homepage      = 'http://rom-rb.org'
   gem.version       = ROM::VERSION.dup
-  gem.files         = `git ls-files`.split("\n").reject { |name| name.include?('benchmarks') }
+  gem.files         = ['lib/rom.rb', 'README.md']
   gem.test_files    = `git ls-files -- {spec}/*`.split("\n")
   gem.license       = 'MIT'
 
-  gem.add_runtime_dependency 'rom-core', '~> 1.0'
-  gem.add_runtime_dependency 'rom-mapper', '~> 0.5', '>= 0.5.1'
-  gem.add_runtime_dependency 'rom-repository', '~> 1.0'
+  gem.add_runtime_dependency 'rom-core', '~> 4.0'
+  gem.add_runtime_dependency 'rom-mapper', '~> 1.0'
+  gem.add_runtime_dependency 'rom-repository', '~> 2.0'
 
   gem.add_development_dependency 'rake', '~> 10.3'
   gem.add_development_dependency 'rspec', '~> 3.5'

@@ -1,8 +1,10 @@
 require 'pathname'
 
+SPEC_ROOT = root = Pathname(__FILE__).dirname
+
 if RUBY_ENGINE == 'ruby' && ENV['COVERAGE'] == 'true'
   require 'yaml'
-  rubies = YAML.load(File.read(File.join(__dir__, '..', '.travis.yml')))['rvm']
+  rubies = YAML.load(File.read(SPEC_ROOT.join('../../.travis.yml')))['rvm']
   latest_mri = rubies.select { |v| v =~ /\A\d+\.\d+.\d+\z/ }.max
 
   if RUBY_VERSION == latest_mri
@@ -13,12 +15,10 @@ if RUBY_ENGINE == 'ruby' && ENV['COVERAGE'] == 'true'
   end
 end
 
-SPEC_ROOT = root = Pathname(__FILE__).dirname
-
 require 'dry/core/deprecations'
 Dry::Core::Deprecations.set_logger!(SPEC_ROOT.join('../log/deprecations.log'))
 
-require 'rom'
+require 'rom/core'
 
 begin
   require 'byebug'

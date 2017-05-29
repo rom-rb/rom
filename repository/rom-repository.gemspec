@@ -13,8 +13,8 @@ Gem::Specification.new do |gem|
   gem.test_files    = `git ls-files -- {spec}/*`.split("\n")
   gem.license       = 'MIT'
 
-  gem.add_runtime_dependency 'rom-mapper', '~> 0.5'
-  gem.add_runtime_dependency 'dry-struct', '~> 0.1'
+  gem.add_runtime_dependency 'rom-mapper', '~> 1.0'
+  gem.add_runtime_dependency 'dry-struct', '~> 0.3'
 
   gem.add_development_dependency 'rake', '~> 11.2'
   gem.add_development_dependency 'rspec', '~> 3.5'
