@@ -1,5 +1,4 @@
 require 'rom/configuration_dsl/relation'
-require 'rom/configuration_dsl/mapper_dsl'
 require 'rom/configuration_dsl/command_dsl'
 
 module ROM
@@ -25,25 +24,6 @@ module ROM
       klass.class_eval(&block) if block
       register_relation(klass)
       klass
-    end
-
-    # Mapper definition DSL
-    #
-    # @example
-    #
-    #   setup.mappers do
-    #     define(:users) do
-    #       model name: 'User'
-    #     end
-    #
-    #     define(:names, parent: :users) do
-    #       exclude :id
-    #     end
-    #   end
-    #
-    # @api public
-    def mappers(&block)
-      register_mapper(*MapperDSL.new(self, mapper_classes, block).mapper_classes)
     end
 
     # Command definition DSL
