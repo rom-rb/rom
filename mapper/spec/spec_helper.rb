@@ -20,7 +20,7 @@ require "bundler"
 Bundler.setup
 
 require 'rom-mapper'
-require 'rom'
+require 'rom-core'
 require 'dry-struct'
 
 begin
