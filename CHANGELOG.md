@@ -1,3 +1,15 @@
+# v3.2.3 2017-05-05
+
+## Added
+
+* auto-registration was improved with better handling of custom namespaces (Krule)
+
+## Changed
+
+* `Relation#combine` was deprecated in favor of `Relation#graph` (solnic)
+
+[Compare v3.2.2...v3.2.3](https://github.com/rom-rb/rom/compare/v3.2.2...v3.2.3)
+
 # v3.2.2 2017-05-05
 
 ## Changed
