@@ -1,4 +1,4 @@
-# v1.3.3 to-be-released
+# v1.3.3 2017-05-31
 
 ### Added
 
@@ -6,6 +6,14 @@
   to filter out timestamp changes prior to updates so that we can avoid
   hitting the database in case of timestamp-only changes. You still can call `.map(:touch)`
   if you want to have `updated_at` refreshed unconditionally (flash-gordon)
+  
+## Fixed
+
+* `aggregate` and `combine` works correctly with nested graph options where associations are aliased (solnic)
+* Auto-mapping no longer creates intermediate struct objects for combined relations (which caused massive performance degradation in some cases) (solnic)
+* Aliased associations no longer cause mapping to intermediate structs (solnic)
+
+[Compare v1.3.2...v1.3.3](https://github.com/rom-rb/rom-repository/compare/v1.3.2...v1.3.3)
 
 # v1.3.2 2017-05-02
 
