@@ -9,6 +9,15 @@ RSpec.describe ROM::Repository::Root, '#aggregate' do
   include_context 'relations'
   include_context 'seeds'
 
+  it 'loads a graph with aliased children and its parents' do
+    user = repo.aggregate(aliased_posts: :author).first
+
+    expect(user.aliased_posts.count).to be(1)
+    expect(user.aliased_posts[0].author.id).to be(user.id)
+    expect(user.aliased_posts[0].author.name).to eql(user.name)
+  end
+
+
   it 'exposes nodes via `node` method' do
     jane = repo.
              aggregate(:posts).

@@ -51,6 +51,7 @@ RSpec.shared_context 'relations' do
       schema(infer: true) do
         associations do
           belongs_to :user
+          belongs_to :users, as: :assignee
         end
       end
 
