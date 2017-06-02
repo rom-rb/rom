@@ -27,7 +27,11 @@ module ROM
       name = meta[:combine_name] || relation_name
 
       model = meta.fetch(:model) do
-        struct_builder[meta.fetch(:dataset), header]
+        if meta[:combine_name]
+          false
+        else
+          struct_builder[name, header]
+        end
       end
 
       options = [visit(header), model: model]
