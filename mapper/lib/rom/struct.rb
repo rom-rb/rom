@@ -90,9 +90,16 @@ module ROM
       __send__(name)
     end
 
-    # @api private
-    def respond_to_missing?(*)
-      super
+    if RUBY_VERSION < '2.3'
+      # @api private
+      def respond_to?(*)
+        super
+      end
+    else
+      # @api private
+      def respond_to_missing?(*)
+        super
+      end
     end
 
     private
