@@ -118,5 +118,11 @@ RSpec.describe 'struct builder', '#call' do
              /not loaded attribute\?/
            )
     end
+
+    it 'works with implicit coercions' do
+      user = struct.new(id: 1, name: 'Jane')
+
+      expect([user].flatten).to eql([user])
+    end
   end
 end
