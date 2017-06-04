@@ -109,7 +109,7 @@ RSpec.describe 'Mapper definition DSL' do
         tasks.for_users.graph(tasks.tags),
         users.addresses,
         users.books
-      ).as(:entity)
+      ) >> users.mappers[:entity]
 
       expect(result).to match_array([joe, jane])
     end
