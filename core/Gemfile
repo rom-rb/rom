@@ -9,6 +9,7 @@ end
 
 group :test do
   gem 'dry-equalizer'
+  gem 'dry-types', git: 'https://github.com/dry-rb/dry-types', branch: 'master'
   gem 'dry-struct'
   gem 'minitest'
   gem 'inflecto', '~> 0.0', '>= 0.0.2'
