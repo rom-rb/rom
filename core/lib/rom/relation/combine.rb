@@ -73,10 +73,10 @@ module ROM
           else
             if value.is_a?(Array)
               other =
-                if registry.key?(key)
-                  registry[key]
+                if __registry__.key?(key)
+                  __registry__[key]
                 else
-                  registry[associations[key].target]
+                  __registry__[associations[key].target]
                 end
               curried = combine_from_assoc(key, other).combine(*value)
               result, _, keys = combine_opts_for_assoc(key)
