@@ -111,8 +111,8 @@ module ROM
 
       # @api private
       def visit_relation(node, parent_relation = nil)
-        name, meta, header = node
-        other = visit(header, name)
+        name, header, meta = node
+        other = header.map { |attr| visit(attr, name) }.compact
 
         if type
           register_command(name, type, meta, parent_relation)
@@ -153,11 +153,6 @@ module ROM
           registry[name][id] = container.commands[name][id]
           [name, id]
         end
-      end
-
-      # @api private
-      def visit_header(node, *args)
-        node.map { |n| visit(n, *args) }.compact
       end
 
       # @api private

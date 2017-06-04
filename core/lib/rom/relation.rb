@@ -278,7 +278,7 @@ module ROM
     #
     # @api public
     def to_ast
-      @__ast__ ||= [:relation, [name.relation, meta_ast, [:header, attr_ast + wraps_ast]]]
+      @__ast__ ||= [:relation, [name.relation, attr_ast + wraps_ast, meta_ast]]
     end
 
     # @api private

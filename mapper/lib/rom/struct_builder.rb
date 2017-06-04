@@ -14,7 +14,7 @@ module ROM
     def call(*args)
       fetch_or_store(*args) do
         name, header = args
-        attributes = visit(header).compact
+        attributes = header.map(&method(:visit)).compact
 
         if attributes.empty?
           ROM::OpenStruct
@@ -42,12 +42,8 @@ module ROM
       __send__("visit_#{name}", node)
     end
 
-    def visit_header(node)
-      node.map(&method(:visit))
-    end
-
     def visit_relation(node)
-      relation_name, meta, header = node
+      relation_name, header, meta = node
       name = meta[:combine_name] || relation_name.relation
 
       model = meta[:model] || call(name, header)

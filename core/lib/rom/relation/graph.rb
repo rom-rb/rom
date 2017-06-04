@@ -160,7 +160,7 @@ module ROM
 
       # @api public
       def to_ast
-        [:relation, [name.to_sym, meta_ast, [:header, attr_ast + node_ast]]]
+        [:relation, [name.to_sym, attr_ast + node_ast, meta_ast]]
       end
 
       # @api private

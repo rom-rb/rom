@@ -23,7 +23,7 @@ module ROM
     end
 
     def visit_relation(node)
-      relation_name, meta, header = node
+      relation_name, header, meta = node
       name = meta[:combine_name] || relation_name
 
       model = meta.fetch(:model) do
@@ -34,7 +34,7 @@ module ROM
         end
       end
 
-      options = [visit(header), model: model]
+      options = [header.map(&method(:visit)), model: model]
 
       if meta[:combine_type]
         type = meta[:combine_type] == :many ? :array : :hash
@@ -46,10 +46,6 @@ module ROM
       else
         options
       end
-    end
-
-    def visit_header(node)
-      node.map { |attribute| visit(attribute) }
     end
 
     def visit_attribute(attr)

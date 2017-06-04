@@ -116,9 +116,12 @@ RSpec.describe 'loading proxy' do
       expect(users_relation.to_ast).to eql(
         [:relation, [
           :users,
-          { dataset: :users },
-          [:header, [[:attribute, users_relation.schema[:id]], [:attribute, users_relation.schema[:name]]]]]
-        ]
+          [
+            [:attribute, users_relation.schema[:id]],
+            [:attribute, users_relation.schema[:name]]
+          ],
+          { dataset: :users }
+        ]]
       )
     end
 
@@ -128,21 +131,22 @@ RSpec.describe 'loading proxy' do
       expect(relation.to_ast).to eql(
         [:relation, [
           :users,
-          { dataset: :users },
-          [:header, [
+          [
             [:attribute, users_relation.schema[:id]],
             [:attribute, users_relation.schema[:name]],
             [:relation, [
               :tasks,
-              { dataset: :tasks, model: false, keys: { id: :user_id },
-                combine_type: :many, combine_name: :user_tasks },
-              [:header, [
+              [
                  [:attribute, tasks_relation.schema[:id]],
                  [:attribute, tasks_relation.schema[:user_id]],
-                 [:attribute, tasks_relation.schema[:title]]]]
+                 [:attribute, tasks_relation.schema[:title]]
+              ],
+              { dataset: :tasks, model: false, keys: { id: :user_id },
+                combine_type: :many, combine_name: :user_tasks }
             ]]
-          ]
-        ]]]
+          ],
+          { dataset: :users }
+        ]]
       )
     end
 
@@ -155,21 +159,22 @@ RSpec.describe 'loading proxy' do
       expect(relation.to_ast).to eql(
         [:relation, [
           :tags,
-          { dataset: :tags },
-          [:header, [
+          [
             [:attribute, tags_schema[:id]],
             [:attribute, tags_schema[:task_id]],
             [:attribute, tags_schema[:name]],
             [:relation, [
               :tasks,
-              { dataset: :tasks, keys: { id: :task_id },
-                wrap_from_assoc: false, wrap: true, combine_name: :task },
-              [:header, [
+              [
                  [:attribute, tasks_schema[:id]],
                  [:attribute, tasks_schema[:user_id]],
-                 [:attribute, tasks_schema[:title]]]]
+                 [:attribute, tasks_schema[:title]]
+              ],
+              { dataset: :tasks, keys: { id: :task_id },
+                wrap_from_assoc: false, wrap: true, combine_name: :task }
             ]]
-          ]]
+          ],
+          { dataset: :tags }
         ]]
       )
     end

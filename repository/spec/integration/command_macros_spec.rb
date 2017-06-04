@@ -96,9 +96,8 @@ RSpec.describe ROM::Repository, '.command' do
 
     expect(user).to be_kind_of Dry::Struct
 
-    struct_definition = [:users, [:header, [
-                                    [:attribute, repo.users.schema[:id]],
-                                    [:attribute, repo.users.schema[:name]]]]]
+    struct_definition = [:users, [[:attribute, repo.users.schema[:id]],
+                                  [:attribute, repo.users.schema[:name]]]]
 
     expect(user).to be_an_instance_of ROM::StructBuilder.cache[struct_definition.hash]
   end

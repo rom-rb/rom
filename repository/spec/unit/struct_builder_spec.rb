@@ -13,9 +13,7 @@ RSpec.describe 'struct builder', '#call' do
   end
 
   let(:input) do
-    [:users, [:header, [
-                [:attribute, attr_double(:id, :Int)],
-                [:attribute, attr_double(:name, :String)]]]]
+    [:users, [[:attribute, attr_double(:id, :Int)], [:attribute, attr_double(:name, :String)]]]
   end
 
   context 'ROM::Struct' do
@@ -44,11 +42,10 @@ RSpec.describe 'struct builder', '#call' do
 
     context 'with reserved keywords as attribute names' do
       let(:input) do
-        [:users, [:header, [
-                    [:attribute, attr_double(:id, :Int)],
+        [:users, [[:attribute, attr_double(:id, :Int)],
                     [:attribute, attr_double(:name, :String)],
                     [:attribute, attr_double(:alias, :String)],
-                    [:attribute, attr_double(:until, :Time)]]]]
+                    [:attribute, attr_double(:until, :Time)]]]
       end
 
       it 'allows to build a struct class without complaining' do
