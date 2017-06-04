@@ -241,7 +241,14 @@ module ROM
     # @return [Relation]
     #
     # @api private
-    def with(new_options)
+    def with(opts)
+      new_options =
+        if opts.key?(:meta)
+          opts.merge(meta: meta.merge(opts[:meta]))
+        else
+          opts
+        end
+
       new(dataset, options.merge(new_options))
     end
 
@@ -352,7 +359,7 @@ module ROM
     # @api public
     def map_with(*names, **opts)
       if names.size == 1 && names[0].is_a?(Class)
-        with(meta: meta.merge(model: names[0]))
+        with(meta: { model: names[0] })
       elsif names.size > 1 && names.any? { |name| name.is_a?(Class) }
         raise ArgumentError, 'using custom mappers and a model is not supported'
       else
