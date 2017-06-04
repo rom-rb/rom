@@ -80,8 +80,8 @@ RSpec.describe ROM::Relation::Graph do
   describe '#call' do
     it 'materializes relations' do
       expect(graph.call).to match_array([
-        users_relation,
-        [tasks_relation]
+        users_relation.to_a,
+        [tasks_relation.to_a]
       ])
     end
   end
@@ -98,7 +98,7 @@ RSpec.describe ROM::Relation::Graph do
       graph = ROM::Relation::Graph.new(users_relation.by_name('Not here'), [tasks_relation.for_users])
 
       expect(graph).to match_array([
-        [], [ROM::Relation::Loaded.new(tasks_relation.for_users, [])]
+        [], [ROM::Relation::Loaded.new(tasks_relation.for_users, []).to_a]
       ])
     end
   end
