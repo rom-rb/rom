@@ -353,7 +353,7 @@ RSpec.describe 'ROM repository' do
     end
 
     it 'auto-maps and applies a custom mapper' do
-      jane = repo.users.combine(:posts).map_with(:embed_address, auto_map: true).to_a.first
+      jane = repo.users.combine(:posts).map_with(:embed_address, auto_struct: false).to_a.first
 
       expect(jane).
         to eql(id:1, name: 'Jane', mapped: true, posts: [

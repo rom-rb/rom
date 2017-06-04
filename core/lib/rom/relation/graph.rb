@@ -114,10 +114,8 @@ module ROM
       end
 
       # @api public
-      def map_with(*names, **_opts)
-        # TODO: figure out a nicer way of handling this
-        graph = self.class.new(root.with(meta: root.meta.merge(model: false)), nodes)
-        [*names.map { |name| mappers[name] }].reduce(graph) { |a, e| a >> e }
+      def map_with(*args)
+        self.class.new(root.map_with(*args), nodes)
       end
 
       # Return a new graph with adjusted node returned from a block
