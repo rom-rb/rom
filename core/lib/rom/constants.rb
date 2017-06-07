@@ -17,10 +17,17 @@ module ROM
   CommandError = Class.new(StandardError)
   KeyMissing = Class.new(ROM::CommandError)
   TupleCountMismatchError = Class.new(CommandError)
-  MapperMissingError = Class.new(StandardError)
   UnknownPluginError = Class.new(StandardError)
   UnsupportedRelationError = Class.new(StandardError)
   MissingAdapterIdentifierError = Class.new(StandardError)
+
+  class ElementNotFoundError < KeyError
+    def initialize(key, name)
+      super("#{key.inspect} doesn't exist in #{name} registry")
+    end
+  end
+
+  MapperMissingError = Class.new(ElementNotFoundError)
 
   MissingSchemaClassError = Class.new(StandardError) do
     def initialize(klass)

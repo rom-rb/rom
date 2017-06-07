@@ -1,3 +1,5 @@
+require 'rom/registry'
+
 module ROM
   class RelationRegistry < Registry
     def initialize(elements = {}, name = self.class.name)
