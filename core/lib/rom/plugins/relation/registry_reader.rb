@@ -1,7 +1,9 @@
+require 'rom/constants'
+
 module ROM
   module Plugins
     module Relation
-      EMPTY_REGISTRY = RelationRegistry.new.freeze
+      EMPTY_REGISTRY = RelationRegistry.new(EMPTY_HASH).freeze
 
       # Allows relations to access all other relations through registry
       #

@@ -1,4 +1,3 @@
-require 'rom/types'
 require 'rom/constants'
 require 'rom/registry'
 require 'rom/commands/result'
@@ -8,18 +7,14 @@ module ROM
   #
   # @api public
   class CommandRegistry < Registry
-    extend Initializer
     include Commands
-
-    RegistryType = Types.Definition(Registry) |
-                   Types.Constructor(Registry) { |r| Registry.new(r) }
 
     # Internal command registry
     #
     # @return [Registry]
     #
     # @api private
-    param :elements, type: RegistryType
+    param :elements
 
     # Name of the relation from which commands are under
     #

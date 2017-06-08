@@ -7,17 +7,15 @@ require 'rom/constants'
 module ROM
   # @api private
   class Registry
+    extend Initializer
+
     include Enumerable
     include Dry::Equalizer(:elements)
 
-    attr_reader :elements
+    param :elements, default: -> { Hash.new }
 
     def self.element_not_found_error
       ElementNotFoundError
-    end
-
-    def initialize(elements = {})
-      @elements = elements
     end
 
     def each(&block)
