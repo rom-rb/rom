@@ -6,10 +6,5 @@ module ROM
     def self.element_not_found_error
       MapperMissingError
     end
-
-    # @api private
-    def []=(name, mapper)
-      elements[name] = mapper
-    end
   end
 end
