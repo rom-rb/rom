@@ -171,7 +171,7 @@ module ROM
 
       # @api private
       def mapper
-        mapper_compiler[to_ast]
+        mappers[to_ast]
       end
 
       private

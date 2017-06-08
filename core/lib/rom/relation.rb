@@ -5,7 +5,6 @@ require 'rom/relation/class_interface'
 
 require 'rom/pipeline'
 require 'rom/mapper_registry'
-require 'rom/mapper_compiler'
 
 require 'rom/relation/loaded'
 require 'rom/relation/curried'
@@ -97,11 +96,6 @@ module ROM
     #   @return [TrueClass,FalseClass] Whether or not a relation and its compositions should be auto-mapped
     #   @api private
     option :auto_map, reader: true, default: -> { false }
-
-    # @!attribute [r] mapper_compiler
-    #   @return [MapperCompiler] A mapper compiler instance for auto-struct mapping
-    #   @api private
-    option :mapper_compiler, reader: true, default: -> { ROM::MapperCompiler.new }
 
     # @!attribute [r] meta
     #   @return [Hash] Meta data stored in a hash
@@ -315,7 +309,7 @@ module ROM
 
     # @api private
     def mapper
-      mapper_compiler[to_ast]
+      mappers[to_ast]
     end
 
     # @api private
