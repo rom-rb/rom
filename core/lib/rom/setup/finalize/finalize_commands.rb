@@ -37,7 +37,7 @@ module ROM
         end
 
         commands = registry.each_with_object({}) do |(name, rel_commands), h|
-          h[name] = CommandRegistry.new(name, rel_commands)
+          h[name] = CommandRegistry.new(rel_commands, relation_name: name)
         end
 
         Registry.new(commands)

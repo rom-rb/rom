@@ -3,33 +3,40 @@ require 'rom/registry'
 module ROM
   class Finalize
     class FinalizeMappers
+      attr_reader :mapper_classes, :mapper_objects, :registry_hash
+
       # @api private
       def initialize(mapper_classes, mapper_objects)
         @mapper_classes = mapper_classes
         @mapper_objects = mapper_objects
+
+        @registry_hash = [@mapper_classes.map(&:base_relation) + @mapper_objects.keys].
+                           flatten.
+                           uniq.
+                           each_with_object({}) { |n, h| h[n] = {} }
       end
 
       # @api private
       def run!
-        registry = @mapper_classes.each_with_object({}) do |klass, h|
-          name = klass.register_as || klass.relation
-          (h[klass.base_relation] ||= {})[name] = klass.build
-        end
+        mappers = registry_hash.each_with_object({}) do |(relation_name, relation_mappers), h|
+          relation_mappers.update(build_mappers(relation_name))
 
-        registry_hash = registry.each_with_object({}).each { |(relation, mappers), h|
-          h[relation] = MapperRegistry.new(mappers)
-        }
-
-        @mapper_objects.each do |relation, mappers|
-          if registry_hash.key?(relation)
-            mappers_registry = registry_hash[relation]
-            mappers.each { |name, mapper| mappers_registry[name] = mapper }
-          else
-            registry_hash[relation] = MapperRegistry.new(mappers)
+          if mapper_objects.key?(relation_name)
+            relation_mappers.update(mapper_objects[relation_name])
           end
+
+          h[relation_name] = MapperRegistry.new(relation_mappers)
         end
 
-        Registry.new(registry_hash)
+        Registry.new(mappers)
+      end
+
+      private
+
+      def build_mappers(relation_name)
+        mapper_classes.
+          select { |klass| klass.base_relation == relation_name }.
+          each_with_object({}) { |klass, h| h[klass.register_as || klass.relation] = klass.build  }
       end
     end
   end

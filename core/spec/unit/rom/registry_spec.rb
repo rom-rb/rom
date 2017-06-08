@@ -13,7 +13,7 @@ RSpec.shared_examples_for 'registry fetch' do
 
   it 'raises error when element is not found' do
     expect { registry.public_send(fetch_method, :twix) }.to raise_error(
-      ROM::Registry::ElementNotFoundError,
+      ROM::ElementNotFoundError,
       ":twix doesn't exist in Candy registry"
     )
   end

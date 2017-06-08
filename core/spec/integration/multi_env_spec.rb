@@ -46,13 +46,13 @@ RSpec.describe 'Setting up ROM with multiple environments' do
       expect(container[:one].mappers[:users].entity).to be_kind_of Test::UserMapper
 
       expect { container[:two].relations[:users] }.to raise_error(
-        ROM::Registry::ElementNotFoundError
+        ROM::ElementNotFoundError
       )
       expect { container[:two].commands[:users].create }.to raise_error(
-        ROM::Registry::ElementNotFoundError
+        ROM::ElementNotFoundError
       )
       expect { container[:two].commands[:users].create }.to raise_error(
-        ROM::Registry::ElementNotFoundError
+        ROM::ElementNotFoundError
       )
     end
 

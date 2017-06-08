@@ -1,20 +1,21 @@
+require 'dry/equalizer'
+require 'dry/core/cache'
+
+require 'rom/initializer'
+require 'rom/constants'
+
 module ROM
   # @api private
   class Registry
+    extend Initializer
+
     include Enumerable
     include Dry::Equalizer(:elements)
 
-    class ElementNotFoundError < KeyError
-      def initialize(key, name)
-        super("#{key.inspect} doesn't exist in #{name} registry")
-      end
-    end
+    param :elements, default: -> { Hash.new }
 
-    attr_reader :elements, :name
-
-    def initialize(elements = {}, name = self.class.name)
-      @elements = elements
-      @name = name
+    def self.element_not_found_error
+      ElementNotFoundError
     end
 
     def each(&block)
@@ -32,7 +33,7 @@ module ROM
       elements.fetch(key.to_sym) do
         return yield if block_given?
 
-        raise ElementNotFoundError.new(key, name)
+        raise self.class.element_not_found_error.new(key, self)
       end
     end
     alias_method :[], :fetch

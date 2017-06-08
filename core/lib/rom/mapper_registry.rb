@@ -1,35 +1,49 @@
+require 'concurrent/map'
+
 require 'rom/registry'
+require 'rom/mapper_compiler'
 
 module ROM
   # @private
   class MapperRegistry < Registry
-    # @api private
-    def []=(name, mapper)
-      elements[name] = mapper
+    def self.element_not_found_error
+      MapperMissingError
     end
 
-    # @api private
-    def [](name)
-      elements.fetch(name) { raise(MapperMissingError, name) }
+    attr_reader :compiler
+
+    attr_reader :__cache__
+
+    def initialize(elements = EMPTY_HASH, compiler = MapperCompiler.new)
+      super
+      @compiler = compiler
+      @__cache__ = Concurrent::Map.new
     end
 
-    # @api private
-    def key?(name)
-      elements.key?(name)
+    # @see Registry
+    # @api public
+    def [](*args)
+      if args[0].is_a?(Symbol)
+        super
+      else
+        fetch_or_store(*args) { compiler.(*args) }
+      end
     end
 
+    # Get a new mapper registry configured with a specific struct namespace
+    #
+    # @return [MapperRegistry]
+    #
     # @api private
-    def by_path(path)
-      elements.fetch(paths(path).detect { |name| elements.key?(name) }) {
-        raise(MapperMissingError, path)
-      }
+    def struct_namespace(namespace)
+      self.class.new(elements, compiler.with(struct_namespace: namespace))
     end
 
     private
 
     # @api private
-    def paths(path)
-      path.split('.').map(&:to_sym).reverse
+    def fetch_or_store(*args, &block)
+      __cache__.fetch_or_store(args.hash, &block)
     end
   end
 end

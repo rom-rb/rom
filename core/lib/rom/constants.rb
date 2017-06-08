@@ -17,10 +17,27 @@ module ROM
   CommandError = Class.new(StandardError)
   KeyMissing = Class.new(ROM::CommandError)
   TupleCountMismatchError = Class.new(CommandError)
-  MapperMissingError = Class.new(StandardError)
   UnknownPluginError = Class.new(StandardError)
   UnsupportedRelationError = Class.new(StandardError)
   MissingAdapterIdentifierError = Class.new(StandardError)
+
+  class ElementNotFoundError < KeyError
+    def initialize(key, registry)
+      super(set_message(key, registry))
+    end
+
+    def set_message(key, registry)
+      "#{key.inspect} doesn't exist in #{registry.class.name} registry"
+    end
+  end
+
+  MapperMissingError = Class.new(ElementNotFoundError)
+
+  CommandNotFoundError = Class.new(ElementNotFoundError) do
+    def set_message(key, registry)
+      "There is no :#{key} command for :#{registry.relation_name} relation"
+    end
+  end
 
   MissingSchemaClassError = Class.new(StandardError) do
     def initialize(klass)

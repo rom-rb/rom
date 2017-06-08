@@ -40,7 +40,7 @@ RSpec.describe ROM::AssociationSet do
 
     it 'throws exception on missing association' do
       expect { set[:labels] }.to raise_error(
-        ROM::Registry::ElementNotFoundError,
+        ROM::ElementNotFoundError,
         ":labels doesn't exist in ROM::AssociationSet registry"
       )
     end

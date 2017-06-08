@@ -1,33 +1,33 @@
-require 'rom/types'
+require 'rom/constants'
+require 'rom/registry'
 require 'rom/commands/result'
 
 module ROM
   # Specialized registry class for commands
   #
   # @api public
-  class CommandRegistry
-    extend Initializer
+  class CommandRegistry < Registry
     include Commands
-
-    CommandNotFoundError = Class.new(KeyError)
-    RegistryType = Types.Definition(Registry) | Types.Constructor(Registry) { |r| Registry.new(r, self.class.name) }
-
-    # Name of the relation from which commands are under
-    #
-    # @return [String]
-    #
-    # @api private
-    param :relation_name
 
     # Internal command registry
     #
     # @return [Registry]
     #
     # @api private
-    param :registry, type: RegistryType
+    param :elements
 
+    # Name of the relation from which commands are under
+    #
+    # @return [String]
+    #
+    # @api private
+    option :relation_name
     option :mappers, optional: true
     option :mapper, optional: true
+
+    def self.element_not_found_error
+      CommandNotFoundError
+    end
 
     # Try to execute a command in a block
     #
@@ -73,7 +73,7 @@ module ROM
     #
     # @api public
     def [](name)
-      command = fetch_command(name)
+      command = super
       mapper = options[:mapper]
 
       if mapper
@@ -104,35 +104,23 @@ module ROM
     #
     # @api private
     def with(new_options)
-      self.class.new(relation_name, registry, options.merge(new_options))
+      self.class.new(elements, options.merge(new_options))
     end
 
     private
-
-    # Fetch a command from the registry and raise a specialized error
-    # in case the command is not found
-    #
-    # @api private
-    def fetch_command(name)
-      registry.fetch(name) do
-        raise CommandNotFoundError.new(
-          "There is no :#{name} command for :#{relation_name} relation"
-        )
-      end
-    end
 
     # Allow checking if a certain command is available using dot-notation
     #
     # @api private
     def respond_to_missing?(name, include_private = false)
-      registry.key?(name) || super
+      key?(name) || super
     end
 
     # Allow retrieving commands using dot-notation
     #
     # @api private
     def method_missing(name, *)
-      if registry.key?(name)
+      if key?(name)
         self[name]
       else
         super
