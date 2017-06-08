@@ -10,15 +10,14 @@ module ROM
     include Enumerable
     include Dry::Equalizer(:elements)
 
-    attr_reader :elements, :name
+    attr_reader :elements
 
     def self.element_not_found_error
       ElementNotFoundError
     end
 
-    def initialize(elements = {}, name = self.class.name)
+    def initialize(elements = {})
       @elements = elements
-      @name = name
     end
 
     def each(&block)
@@ -36,7 +35,7 @@ module ROM
       elements.fetch(key.to_sym) do
         return yield if block_given?
 
-        raise self.class.element_not_found_error.new(key, name)
+        raise self.class.element_not_found_error.new(key, self)
       end
     end
     alias_method :[], :fetch

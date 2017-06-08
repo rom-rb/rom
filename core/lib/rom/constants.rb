@@ -22,12 +22,22 @@ module ROM
   MissingAdapterIdentifierError = Class.new(StandardError)
 
   class ElementNotFoundError < KeyError
-    def initialize(key, name)
-      super("#{key.inspect} doesn't exist in #{name} registry")
+    def initialize(key, registry)
+      super(set_message(key, registry))
+    end
+
+    def set_message(key, registry)
+      "#{key.inspect} doesn't exist in #{registry.class.name} registry"
     end
   end
 
   MapperMissingError = Class.new(ElementNotFoundError)
+
+  CommandNotFoundError = Class.new(ElementNotFoundError) do
+    def set_message(key, registry)
+      "There is no :#{key} command for :#{registry.relation_name} relation"
+    end
+  end
 
   MissingSchemaClassError = Class.new(StandardError) do
     def initialize(klass)
