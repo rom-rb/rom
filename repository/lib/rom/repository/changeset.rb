@@ -51,10 +51,6 @@ module ROM
     #   @return [Relation] The changeset relation
     param :relation
 
-    # @!attribute [r] command_compiler
-    #   @return [Proc] a proc that can compile a command (typically provided by a repo)
-    option :command_compiler, optional: true
-
     # @!attribute [r] command_type
     #   @return [Symbol] a custom command identifier
     option :command_type, default: -> { self.class.command_type }
@@ -135,14 +131,7 @@ module ROM
     #
     # @api private
     def command
-      command_compiler.(command_type, relation_identifier, DEFAULT_COMMAND_OPTS)
-    end
-
-    private
-
-    # @api private
-    def relation_identifier
-      relation.name.relation
+      relation.command(command_type, DEFAULT_COMMAND_OPTS)
     end
   end
 end

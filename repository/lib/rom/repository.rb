@@ -3,8 +3,6 @@ require 'dry/core/deprecations'
 require 'rom/initializer'
 require 'rom/repository/class_interface'
 require 'rom/mapper_compiler'
-require 'rom/command_compiler'
-
 require 'rom/repository/class_interface'
 require 'rom/repository/changeset'
 require 'rom/repository/session'
@@ -104,10 +102,6 @@ module ROM
     #   @return [RelationRegistry] The relation proxy registry used by a repo
     attr_reader :relations
 
-    # @!attribute [r] commmand_compiler
-    #   @return [Method] Function for compiling commands bound to a repo instance
-    attr_reader :command_compiler
-
     # Initializes a new repo by establishing configured relation proxies from
     # the passed container
     #
@@ -130,8 +124,6 @@ module ROM
           relations[name] = relation
         end
       end
-
-      @command_compiler = method(:command)
     end
 
     # Return a command for a relation
@@ -229,7 +221,7 @@ module ROM
     #
     # @api public
     def changeset(*args)
-      opts = { command_compiler: command_compiler }
+      opts = {}
 
       if args.size == 2
         name, data = args
