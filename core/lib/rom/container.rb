@@ -120,14 +120,7 @@ module ROM
       @gateways = gateways
       @mappers = mappers
       @commands = commands
-
-      command_compiler = CommandCompiler.new(self)
-
-      @relations = RelationRegistry.new do |registry, h|
-        relations.each do |name, relation|
-          h[name] = relation.with(command_compiler: command_compiler)
-        end
-      end
+      @relations = relations.map { |r| r.with(commands: commands[r.name.to_sym]) }
     end
 
     # Get relation instance identified by its name

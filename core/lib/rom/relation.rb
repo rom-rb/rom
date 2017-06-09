@@ -99,10 +99,10 @@ module ROM
     #   @api private
     option :auto_map, reader: true, default: -> { false }
 
-    # @!attribute [r] command_compiler
-    #   @return [CommandCompiler] A command compiler
+    # @!attribute [r] commands
+    #   @return [CommandRegistry] Command registry
     #   @api private
-    option :command_compiler, optional: true
+    option :commands, optional: true
 
     # @!attribute [r] meta
     #   @return [Hash] Meta data stored in a hash

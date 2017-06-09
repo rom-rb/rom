@@ -1,4 +1,5 @@
 require 'rom/registry'
+require 'rom/command_compiler'
 require 'rom/command_registry'
 
 module ROM
@@ -21,7 +22,7 @@ module ROM
       #
       # @api private
       def run!
-        registry = @command_classes.each_with_object({}) do |klass, h|
+        commands_map = @command_classes.each_with_object({}) do |klass, h|
           rel_name = klass.relation
           next unless rel_name
 
@@ -36,11 +37,22 @@ module ROM
           (h[rel_name] ||= {})[name] = klass.build(relation)
         end
 
-        commands = registry.each_with_object({}) do |(name, rel_commands), h|
-          h[name] = CommandRegistry.new(rel_commands, relation_name: name)
+        registry = Registry.new({})
+        compiler = CommandCompiler.new(@gateways, @relations, registry)
+
+        commands = commands_map.each_with_object({}) do |(name, rel_commands), h|
+          h[name] = CommandRegistry.new(rel_commands, relation_name: name, compiler: compiler)
         end
 
-        Registry.new(commands)
+        @relations.each do |(name, relation)|
+          unless commands.key?(name)
+            commands[name] = CommandRegistry.new({}, relation_name: name, compiler: compiler)
+          end
+        end
+
+        registry.elements.update(commands)
+
+        registry
       end
     end
   end

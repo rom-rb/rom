@@ -22,9 +22,17 @@ module ROM
       @__registry__ ||= Hash.new { |h, k| h[k] = {} }
     end
 
-    # @!attribute [r] container
-    #   @return [ROM::Container] rom container with relations and gateways
-    param :container
+    # @!attribute [r] gateways
+    #   @return [ROM::Registry]
+    param :gateways
+
+    # @!attribute [r] relations
+    #   @return [ROM::RelationRegistry]
+    param :relations
+
+    # @!attribute [r] relations
+    #   @return [ROM::Registry]
+    param :commands
 
     # @!attribute [r] id
     #   @return [Symbol] The command type registry identifier
@@ -92,7 +100,7 @@ module ROM
 
     # @api private
     def with(new_options)
-      self.class.new(container, options.merge(new_options))
+      self.class.new(gateways, relations, commands, options.merge(new_options))
     end
 
     # @api private
@@ -127,7 +135,7 @@ module ROM
 
         mapping =
           if parent_relation
-            associations = container.relations[parent_relation].associations
+            associations = relations[parent_relation].associations
 
             assoc =
               if associations.key?(meta[:combine_name])
@@ -151,7 +159,7 @@ module ROM
           [mapping, type]
         end
       else
-        registry[name][id] = container.commands[name][id]
+        registry[name][id] = commands[name][id]
         [name, id]
       end
     end
@@ -176,7 +184,7 @@ module ROM
     #
     # @api private
     def register_command(rel_name, type, meta, parent_relation = nil)
-      relation = container.relations[rel_name]
+      relation = relations[rel_name]
 
       type.create_class(rel_name, type) do |klass|
         klass.result(meta.fetch(:combine_type, result))
@@ -239,7 +247,7 @@ module ROM
     def finalize_command_class(klass, relation)
       # TODO: this is a copy-paste from rom's FinalizeCommands, we are missing
       #       an interface!
-      gateway = container.gateways[relation.class.gateway]
+      gateway = gateways[relation.class.gateway]
       gateway.extend_command_class(klass, relation.dataset)
 
       klass.extend_for_relation(relation) if klass.restrictable

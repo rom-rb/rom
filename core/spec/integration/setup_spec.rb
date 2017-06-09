@@ -29,7 +29,7 @@ RSpec.describe 'Configuring ROM' do
 
       expect(tasks).to be_kind_of(ROM::Relation)
       expect(tasks).to respond_to(:users)
-      expect(tasks.users).to be(users)
+      expect(tasks.users).to eql(users)
     end
   end
 
@@ -68,12 +68,12 @@ RSpec.describe 'Configuring ROM' do
 
     it 'sets up registries based on class definitions' do
       expect(container.relations.users).to be_kind_of(Test::UserRelation)
-      expect(container.relations.users.tasks).to be(container.relations.tasks)
+      expect(container.relations.users.tasks).to eql(container.relations.tasks)
 
       expect(container.commands.users[:create]).to be_kind_of(Test::CreateUser)
 
       expect(container.relations.tasks).to be_kind_of(Test::TaskRelation)
-      expect(container.relations.tasks.users).to be(container.relations.users)
+      expect(container.relations.tasks.users).to eql(container.relations.users)
     end
 
     it 'sets empty schemas by default' do

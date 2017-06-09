@@ -1,3 +1,5 @@
+require 'concurrent/map'
+
 require 'rom/constants'
 require 'rom/registry'
 require 'rom/commands/result'
@@ -22,8 +24,14 @@ module ROM
     #
     # @api private
     option :relation_name
+
     option :mappers, optional: true
+
     option :mapper, optional: true
+
+    option :compiler, optional: true
+
+    option :__cache__, reader: true, default: -> { Concurrent::Map.new }
 
     def self.element_not_found_error
       CommandNotFoundError
@@ -72,14 +80,20 @@ module ROM
     # @return [Command,Command::Composite]
     #
     # @api public
-    def [](name)
-      command = super
-      mapper = options[:mapper]
+    def [](*args)
+      if args.size.equal?(1)
+        command = super
+        mapper = options[:mapper]
 
-      if mapper
-        command.curry >> mapper
+        if mapper
+          command.curry >> mapper
+        else
+          command
+        end
       else
-        command
+        __cache__.fetch_or_store(args.hash) do
+          compiler[*args]
+        end
       end
     end
 

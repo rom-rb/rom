@@ -6,10 +6,12 @@ module ROM
     module Commands
       # @api public
       def command(type, mapper: nil, use: EMPTY_ARRAY, **opts)
-        command = command_compiler[type, adapter, to_ast, use, opts]
+        command = commands[type, adapter, to_ast, use, opts]
 
         if mapper
           command >> mappers[mapper]
+        elsif mappers.any? && !command.is_a?(CommandProxy)
+          mappers.reduce(command) { |a, (_, e)| a >> e }
         elsif auto_struct?
           command >> self.mapper
         else
