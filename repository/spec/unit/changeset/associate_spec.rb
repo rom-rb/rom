@@ -73,7 +73,7 @@ RSpec.describe ROM::Changeset, '#associate' do
     it 'associates child with parent' do
       changeset = task_repo.changeset(title: 'Test 1').associate(jane, :user)
 
-      expect(changeset.commit).to include(user_id: jane.id, title: 'Test 1')
+      expect(changeset.commit.to_h).to include(user_id: jane.id, title: 'Test 1')
     end
 
     it 'associates child with multiple parents' do
@@ -81,7 +81,7 @@ RSpec.describe ROM::Changeset, '#associate' do
                     associate(jane, :user).
                     associate(project)
 
-      expect(changeset.commit).
+      expect(changeset.commit.to_h).
         to include(user_id: jane.id, project_id: project.id, title: 'Test 1')
     end
 
@@ -113,7 +113,7 @@ RSpec.describe ROM::Changeset, '#associate' do
     it 'associates child with parent' do
       changeset = task_repo.changeset(task.id, title: 'Test 2')
 
-      expect(changeset.associate(jane, :user).commit).
+      expect(changeset.associate(jane, :user).commit.to_h).
         to include(user_id: jane.id, title: 'Test 2')
     end
   end

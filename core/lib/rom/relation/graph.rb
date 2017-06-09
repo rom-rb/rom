@@ -1,6 +1,7 @@
 require 'rom/relation/loaded'
 require 'rom/relation/composite'
 require 'rom/relation/materializable'
+require 'rom/relation/commands'
 require 'rom/pipeline'
 
 module ROM
@@ -25,6 +26,7 @@ module ROM
     # @api public
     class Graph
       include Materializable
+      include Commands
       include Pipeline
       include Pipeline::Proxy
 

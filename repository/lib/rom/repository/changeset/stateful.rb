@@ -233,7 +233,7 @@ module ROM
 
       # @api public
       def command
-        command_compiler.(command_type, relation_identifier, DEFAULT_COMMAND_OPTS.merge(result: result))
+        relation.command(command_type, DEFAULT_COMMAND_OPTS.merge(result: result))
       end
 
       # Return string representation of the changeset

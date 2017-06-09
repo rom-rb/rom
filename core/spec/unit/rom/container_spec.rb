@@ -91,7 +91,7 @@ RSpec.describe ROM::Container do
     end
 
     it 'returns a relation with finalized schema' do
-      expect(container.relation(:tasks).schema.relations[:users]).to be(container.relations[:users])
+      expect(container.relation(:tasks).schema.relations[:users]).to eql(container.relations[:users])
     end
   end
 

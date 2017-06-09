@@ -118,9 +118,9 @@ module ROM
     # @api private
     def initialize(gateways, relations, mappers, commands)
       @gateways = gateways
-      @relations = relations
       @mappers = mappers
       @commands = commands
+      @relations = relations.map { |r| r.with(commands: commands[r.name.to_sym]) }
     end
 
     # Get relation instance identified by its name

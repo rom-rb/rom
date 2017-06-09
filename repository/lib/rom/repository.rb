@@ -2,8 +2,8 @@ require 'dry/core/deprecations'
 
 require 'rom/initializer'
 require 'rom/repository/class_interface'
-require 'rom/repository/command_compiler'
-
+require 'rom/mapper_compiler'
+require 'rom/repository/class_interface'
 require 'rom/repository/changeset'
 require 'rom/repository/session'
 
@@ -102,10 +102,6 @@ module ROM
     #   @return [RelationRegistry] The relation proxy registry used by a repo
     attr_reader :relations
 
-    # @!attribute [r] commmand_compiler
-    #   @return [Method] Function for compiling commands bound to a repo instance
-    attr_reader :command_compiler
-
     # Initializes a new repo by establishing configured relation proxies from
     # the passed container
     #
@@ -128,8 +124,6 @@ module ROM
           relations[name] = relation
         end
       end
-
-      @command_compiler = method(:command)
     end
 
     # Return a command for a relation
@@ -227,7 +221,7 @@ module ROM
     #
     # @api public
     def changeset(*args)
-      opts = { command_compiler: command_compiler }
+      opts = {}
 
       if args.size == 2
         name, data = args
@@ -325,27 +319,11 @@ module ROM
     # Build a new command or return existing one
     #
     # @api private
-    def compile_command(*args, mapper: nil, use: nil, **opts)
+    def compile_command(*args, mapper: nil, use: EMPTY_ARRAY, **opts)
       type, name = args + opts.to_a.flatten(1)
-
       relation = name.is_a?(Symbol) ? relations[name] : name
 
-      ast = relation.to_ast
-      adapter = relations[relation.name].adapter
-
-      if mapper
-        mapper_instance = container.mappers[relation.name.relation][mapper]
-      elsif mapper.nil?
-        mapper_instance = relation.mapper
-      end
-
-      command = CommandCompiler[container, type, adapter, ast, use, opts]
-
-      if mapper_instance
-        command >> mapper_instance
-      else
-        command.new(relation)
-      end
+      relation.command(type, mapper: mapper, use: use, **opts)
     end
 
     # @api private
