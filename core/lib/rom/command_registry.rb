@@ -31,8 +31,6 @@ module ROM
 
     option :compiler, optional: true
 
-    option :__cache__, reader: true, default: -> { Concurrent::Map.new }
-
     def self.element_not_found_error
       CommandNotFoundError
     end
@@ -91,9 +89,7 @@ module ROM
           command
         end
       else
-        __cache__.fetch_or_store(args.hash) do
-          compiler[*args]
-        end
+        cache.fetch_or_store(args.hash) { compiler.(*args) }
       end
     end
 
@@ -110,15 +106,6 @@ module ROM
     # @api public
     def as(mapper_name)
       with(mapper: mappers[mapper_name])
-    end
-
-    # Return new instance of this registry with updated options
-    #
-    # @return [CommandRegistry]
-    #
-    # @api private
-    def with(new_options)
-      self.class.new(elements, options.merge(new_options))
     end
 
     private
