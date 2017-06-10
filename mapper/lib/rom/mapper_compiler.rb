@@ -1,20 +1,30 @@
-require 'dry/core/cache'
+require 'rom/initializer'
 require 'rom/mapper'
 require 'rom/header_builder'
+require 'rom/struct'
+require 'rom/cache'
 
 module ROM
   # @api private
   class MapperCompiler
-    extend Dry::Core::Cache
+    extend Initializer
+
+    option :cache, reader: true, default: -> { Cache.new }
+    option :struct_namespace, reader: true, default: -> { ROM::Struct }
 
     attr_reader :header_builder
 
-    def initialize(options = EMPTY_HASH)
-      @header_builder = HeaderBuilder.new(options)
+    def initialize(*args)
+      super
+      @header_builder = HeaderBuilder.new(
+        struct_namespace: struct_namespace,
+        cache: cache
+      )
+      @cache = cache.namespaced(:mappers) unless cache.namespaced?
     end
 
     def call(ast)
-      fetch_or_store(ast) { Mapper.build(header_builder[ast]) }
+      cache.fetch_or_store(ast) { Mapper.build(header_builder[ast]) }
     end
     alias_method :[], :call
 

@@ -20,7 +20,7 @@ RSpec.describe 'struct builder', '#call' do
     before { builder[*input] }
 
     it 'generates a struct for a given relation name and columns' do
-      struct = builder.class.cache[input.hash]
+      struct = builder.cache[input.hash]
 
       user = struct.new(id: 1, name: 'Jane')
 
@@ -37,7 +37,7 @@ RSpec.describe 'struct builder', '#call' do
     end
 
     it 'stores struct in the cache' do
-      expect(builder.class.cache[input.hash]).to be(builder[*input])
+      expect(builder.cache[input.hash]).to be(builder[*input])
     end
 
     context 'with reserved keywords as attribute names' do
@@ -49,7 +49,7 @@ RSpec.describe 'struct builder', '#call' do
       end
 
       it 'allows to build a struct class without complaining' do
-        struct = builder.class.cache[input.hash]
+        struct = builder.cache[input.hash]
 
         user = struct.new(id: 1, name: 'Jane', alias: 'JD', until: Time.new(2030))
 
@@ -61,7 +61,7 @@ RSpec.describe 'struct builder', '#call' do
     end
 
     it 'raise a friendly error on missing keys' do
-      struct = builder.class.cache[input.hash]
+      struct = builder.cache[input.hash]
 
       expect { struct.new(id: 1) }.to raise_error(
                                         Dry::Struct::Error, /:name is missing/
@@ -78,7 +78,7 @@ RSpec.describe 'struct builder', '#call' do
     end
 
     let(:struct) { builder[*input] }
-    subject(:builder) { ROM::StructBuilder.new(Test::Custom) }
+    subject(:builder) { ROM::StructBuilder.new(namespace: Test::Custom) }
 
     it 'generates a struct class inside a given module' do
       expect(struct.name).to eql('Test::Custom::User')

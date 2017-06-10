@@ -8,15 +8,15 @@ RSpec.describe 'loading proxy' do
   include_context 'seeds'
 
   let(:users_relation) do
-    users.with(auto_map: true, auto_struct: true)
+    repo.users.with(auto_map: true, auto_struct: true)
   end
 
   let(:tasks_relation) do
-    tasks.with(auto_map: true, auto_struct: true)
+    repo.tasks.with(auto_map: true, auto_struct: true)
   end
 
   let(:tags_relation) do
-    tags.with(auto_map: true, auto_struct: true)
+    repo.tags.with(auto_map: true, auto_struct: true)
   end
 
   describe '#inspect' do

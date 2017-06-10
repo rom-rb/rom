@@ -1,5 +1,3 @@
-require 'concurrent/map'
-
 require 'rom/registry'
 require 'rom/mapper_compiler'
 

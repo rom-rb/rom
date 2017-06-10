@@ -1,7 +1,8 @@
 require 'dry/core/inflector'
-require 'dry/core/cache'
 require 'dry/core/class_builder'
 
+require 'rom/initializer'
+require 'rom/cache'
 require 'rom/struct'
 require 'rom/open_struct'
 require 'rom/schema/attribute'
@@ -9,10 +10,18 @@ require 'rom/schema/attribute'
 module ROM
   # @api private
   class StructBuilder
-    extend Dry::Core::Cache
+    extend Initializer
+
+    option :namespace, reader: true, default: -> { ROM::Struct }
+    option :cache, reader: true, default: -> { Cache.new }
+
+    def initialize(*args)
+      super
+      @cache = cache.namespaced(:structs) unless cache.namespaced?
+    end
 
     def call(*args)
-      fetch_or_store(*args) do
+      cache.fetch_or_store(*args) do
         name, header = args
         attributes = header.map(&method(:visit)).compact
 
@@ -28,12 +37,6 @@ module ROM
       end
     end
     alias_method :[], :call
-
-    attr_reader :namespace
-
-    def initialize(namespace = nil)
-      @namespace = namespace || ROM::Struct
-    end
 
     private
 
