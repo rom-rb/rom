@@ -1,3 +1,4 @@
+require 'rom/cache'
 require 'rom/relation/loaded'
 require 'rom/commands/graph'
 require 'rom/commands/graph/builder'
@@ -115,11 +116,16 @@ module ROM
     #   @return [Hash] A hash with configured custom mappers
     attr_reader :mappers
 
+    # @!attribute [r] caches
+    #   @return [Hash] A hash with configured caches for rom components
+    attr_reader :caches
+
     # @api private
     def initialize(gateways, relations, mappers, commands)
+      @caches = { mappers: Cache.new, commands: Cache.new }.freeze
       @gateways = gateways
-      @mappers = mappers
-      @commands = commands
+      @mappers = mappers.map { |r| r.with(cache: caches[:mappers]) }
+      @commands = commands.map { |r| r.with(cache: caches[:commands]) }
       @relations = relations.map { |r| r.with(commands: commands[r.name.to_sym]) }
     end
 

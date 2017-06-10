@@ -10,15 +10,7 @@ module ROM
       MapperMissingError
     end
 
-    attr_reader :compiler
-
-    attr_reader :__cache__
-
-    def initialize(elements = EMPTY_HASH, compiler = MapperCompiler.new)
-      super
-      @compiler = compiler
-      @__cache__ = Concurrent::Map.new
-    end
+    option :compiler, reader: true, default: -> { MapperCompiler.new }
 
     # @see Registry
     # @api public
@@ -26,7 +18,7 @@ module ROM
       if args[0].is_a?(Symbol)
         super
       else
-        fetch_or_store(*args) { compiler.(*args) }
+        cache.fetch_or_store(args.hash) { compiler.(*args) }
       end
     end
 
@@ -36,14 +28,7 @@ module ROM
     #
     # @api private
     def struct_namespace(namespace)
-      self.class.new(elements, compiler.with(struct_namespace: namespace))
-    end
-
-    private
-
-    # @api private
-    def fetch_or_store(*args, &block)
-      __cache__.fetch_or_store(args.hash, &block)
+      with(compiler: compiler.with(struct_namespace: namespace))
     end
   end
 end

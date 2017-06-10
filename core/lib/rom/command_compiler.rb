@@ -74,7 +74,7 @@ module ROM
     #   @return [Command, CommandProxy]
     #
     # @api private
-    def [](*args)
+    def call(*args)
       fetch_or_store(args.hash) do
         type, adapter, ast, plugins, meta = args
 
@@ -97,6 +97,7 @@ module ROM
         end
       end
     end
+    alias_method :[], :call
 
     # @api private
     def with(new_options)

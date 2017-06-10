@@ -1,7 +1,7 @@
 require 'dry/equalizer'
-require 'dry/core/cache'
 
 require 'rom/initializer'
+require 'rom/cache'
 require 'rom/constants'
 
 module ROM
@@ -12,10 +12,37 @@ module ROM
     include Enumerable
     include Dry::Equalizer(:elements)
 
-    param :elements, default: -> { Hash.new }
+    param :elements
+
+    option :cache, reader: true, default: -> { Cache.new }
+
+    def self.new(*args)
+      case args.size
+      when 0
+        super({})
+      else
+        super(*args)
+      end
+    end
 
     def self.element_not_found_error
       ElementNotFoundError
+    end
+
+    # Return new instance of this registry with updated options
+    #
+    # @return [CommandRegistry]
+    #
+    # @api private
+    def with(new_options)
+      self.class.new(elements, options.merge(new_options))
+    end
+
+    def map(&block)
+      new_elements = elements.each_with_object({}) do |(name, element), h|
+        h[name] = yield(element)
+      end
+      self.class.new(new_elements, options)
     end
 
     def each(&block)
