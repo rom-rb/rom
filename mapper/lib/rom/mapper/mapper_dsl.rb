@@ -6,13 +6,13 @@ module ROM
     #
     # @private
     class MapperDSL
-      attr_reader :configuration, :mapper_classes, :defined_mappers
+      attr_reader :mapper_classes, :defined_mappers, :options
 
       # @api private
-      def initialize(configuration, mapper_classes, block)
-        @configuration = configuration
+      def initialize(mapper_classes, options, block)
         @mapper_classes = mapper_classes
         @defined_mappers = []
+        @options = options
 
         instance_exec(&block)
 
@@ -36,7 +36,7 @@ module ROM
       #
       # @api public
       def register(relation, mappers)
-        configuration.register_mapper(relation => mappers)
+        options[:register_mapper].call(relation, mappers)
       end
     end
   end
