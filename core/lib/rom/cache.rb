@@ -22,23 +22,16 @@ module ROM
       def fetch_or_store(*args, &block)
         cache.fetch_or_store([namespace, args.hash].hash, &block)
       end
-
-      def namespaced?
-        true
-      end
     end
 
     # @api private
     def initialize
       @objects = Concurrent::Map.new
+      @namespaced = {}
     end
 
     def [](key)
       cache[key]
-    end
-
-    def namespaced?
-      false
     end
 
     # @api private
@@ -47,7 +40,7 @@ module ROM
     end
 
     def namespaced(namespace)
-      Namespaced.new(objects, namespace)
+      @namespaced[namespace] ||= Namespaced.new(objects, namespace)
     end
   end
 end

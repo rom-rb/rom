@@ -12,6 +12,15 @@ RSpec.describe ROM::Cache do
     end
   end
 
+  describe '#namespaced' do
+    it 'returns a namespaced cache' do
+      namespaced = cache.namespaced(:foo)
+
+      expect(namespaced).to be_instance_of(ROM::Cache::Namespaced)
+      expect(namespaced).to be(cache.namespaced(:foo))
+    end
+  end
+
   context 'namespace cache' do
     describe '#fetch_or_store' do
       it 'returns existing object' do

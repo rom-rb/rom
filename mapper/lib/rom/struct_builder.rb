@@ -17,7 +17,7 @@ module ROM
 
     def initialize(*args)
       super
-      @cache = cache.namespaced(:structs) unless cache.namespaced?
+      @cache = cache.namespaced(:structs)
     end
 
     def call(*args)

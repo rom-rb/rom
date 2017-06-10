@@ -17,7 +17,7 @@ module ROM
     def initialize(*args)
       super
       @struct_builder = StructBuilder.new(namespace: struct_namespace, cache: cache)
-      @cache = cache.namespaced(:mappers) unless cache.namespaced?
+      @cache = cache.namespaced(:mappers)
     end
 
     def call(ast)
@@ -25,8 +25,8 @@ module ROM
     end
     alias_method :[], :call
 
-    def with(options)
-      self.class.new(options)
+    def with(new_options)
+      self.class.new(options.merge(new_options))
     end
 
     private
