@@ -1,75 +1,82 @@
+require 'rom/initializer'
+require 'rom/relation/loaded'
+require 'rom/relation/composite'
+require 'rom/relation/materializable'
+require 'rom/pipeline'
+
 module ROM
   class Relation
-    # Provides convenient methods for producing wrapped relations
+    # Relation wrapping other relations
     #
     # @api public
-    module Wrap
-      # Wrap other relations
-      #
-      # @example
-      #   tasks.wrap(owner: [users, user_id: :id])
-      #
-      # @param [Hash] options
-      #
-      # @return [RelationProxy]
+    class Wrap
+      extend Initializer
+
+      include Materializable
+      include Pipeline
+      include Pipeline::Proxy
+
+      param :root
+      param :nodes
+
+      alias_method :left, :root
+      alias_method :right, :nodes
+
+      # @api public
+      def wrap(*args)
+        self.class.new(root, nodes + root.wrap(*args).nodes)
+      end
+
+      # @see Relation#call
       #
       # @api public
-      def wrap(*names, **options)
-        new_wraps = wraps_from_names(names) + wraps_from_options(options)
-
-        relation = new_wraps.reduce(self) { |a, e|
-          name = e.meta[:wrap_from_assoc] ? e.meta[:combine_name] : e.name.relation
-          a.for_wrap(e.meta.fetch(:keys), name)
-        }
-
-        relation.with(meta: relation.meta.merge(wraps: wraps + new_wraps))
-      end
-
-      # Shortcut to wrap parents
-      #
-      # @example
-      #   tasks.wrap_parent(owner: users)
-      #
-      # @return [RelationProxy]
-      #
-      # @api public
-      def wrap_parent(options)
-        wrap(
-          options.each_with_object({}) { |(name, parent), h|
-            keys = combine_keys(parent, self, :children)
-            h[name] = [parent, keys]
-          }
-        )
-      end
-
-      # Return a wrapped representation of a loading-proxy relation
-      #
-      # This will carry meta info used to produce a correct AST from a relation
-      # so that correct mapper can be generated
-      #
-      # @return [RelationProxy]
-      #
-      # @api private
-      def wrapped(new_name, keys, wrap_from_assoc = false)
-        with(
-          name: name.as(new_name),
-          meta: {
-            keys: keys, wrap_from_assoc: wrap_from_assoc, wrap: true, combine_name: new_name
-          }
-        )
+      def call(*args)
+        if auto_map?
+          Loaded.new(self, mapper.(relation.with(auto_struct: false)))
+        else
+          Loaded.new(self, relation.(*args))
+        end
       end
 
       # @api private
-      def wraps_from_options(options)
-        options.map { |(name, (relation, keys))| relation.wrapped(name, keys) }
+      def relation
+        raise NotImplementedError
       end
 
       # @api private
-      def wraps_from_names(names)
-        names.map { |name|
-          assoc = associations[name]
-          __registry__[assoc.target.relation].wrapped(name, assoc.combine_keys(__registry__), true)
-        }
+      def to_ast
+        @__ast__ ||= [:relation, [name.relation, attr_ast + nodes_ast, meta_ast]]
+      end
+
+      # @api private
+      def attr_ast
+        root.attr_ast
+      end
+
+      # @api private
+      def nodes_ast
+        nodes.map(&:to_ast)
+      end
+
+      # @api private
+      def mapper
+        mappers[to_ast]
+      end
+
+      # Return if this is a wrap relation
+      #
+      # @return [true]
+      #
+      # @api private
+      def wrap?
+        true
+      end
+
+      private
+
+      # @api private
+      def decorate?(other)
+        super || other.is_a?(Composite) || other.is_a?(Curried)
       end
     end
   end
