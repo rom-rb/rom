@@ -6,7 +6,7 @@ RSpec.describe ROM::Schema, '#finalize!' do
       define_schema(:users, id: :Int, name: :String)
     end
 
-    before { schema.finalize! }
+    before { schema.finalize_attributes!.finalize! }
 
     it 'returns a frozen canonical schema' do
       expect(schema).to be_frozen
@@ -28,7 +28,7 @@ RSpec.describe ROM::Schema, '#finalize!' do
       end
 
       it 'concats defined attributes with inferred attributes' do
-        expect(schema.finalize!.map(&:name)).to eql(%i[id age name])
+        expect(schema.finalize_attributes!.finalize!.map(&:name)).to eql(%i[id age name])
       end
     end
 
@@ -40,7 +40,7 @@ RSpec.describe ROM::Schema, '#finalize!' do
       end
 
       it 'respects overridden attributes' do
-        expect(schema.finalize!.map(&:name)).to eql(%i[id age name])
+        expect(schema.finalize_attributes!.finalize!.map(&:name)).to eql(%i[id age name])
         expect(schema[:name].meta[:custom]).to be(true)
       end
     end
@@ -51,7 +51,7 @@ RSpec.describe ROM::Schema, '#finalize!' do
       end
 
       it 'raises error' do
-        expect { schema.finalize! }.
+        expect { schema.finalize_attributes!.finalize! }.
           to raise_error(ROM::Schema::MissingAttributesError, /missing attributes in :users schema: :id, :age/)
       end
     end

@@ -23,7 +23,7 @@ module ROM
       #
       # @api private
       def run!
-        RelationRegistry.new do |registry, relations|
+        relation_registry = RelationRegistry.new do |registry, relations|
           @relation_classes.each do |klass|
             relation = build_relation(klass, registry)
 
@@ -42,6 +42,13 @@ module ROM
             relation.class.finalize(registry, relation)
           end
         end
+
+        relation_registry.each do |_, relation|
+          relation.schema.finalize_associations!(relations: relation_registry)
+          relation.schema.finalize!
+        end
+
+        relation_registry
       end
 
       # @return [ROM::Relation]
@@ -54,7 +61,7 @@ module ROM
         ds_proc = klass.dataset_proc || -> _ { self }
 
         klass.schema(infer: true) unless klass.schema
-        schema = klass.schema.finalize!(gateway: gateway, relations: registry)
+        schema = klass.schema.finalize_attributes!(gateway: gateway, relations: registry)
 
         @plugins.each do |plugin|
           plugin.apply_to(klass)
@@ -64,11 +71,7 @@ module ROM
         dataset = gateway.dataset(klass.dataset).instance_exec(klass, &ds_proc)
         mappers = @mappers.key?(rel_key) ? @mappers[rel_key] : MapperRegistry.new
 
-        options = {
-          __registry__: registry,
-          mappers: mappers,
-          schema: schema.with(relations: registry),
-          **plugin_options }
+        options = { __registry__: registry, mappers: mappers, schema: schema, **plugin_options }
 
         klass.new(dataset, options)
       end

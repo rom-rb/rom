@@ -146,7 +146,7 @@ module ROM
               end
 
             if assoc
-              { assoc.target.key => assoc.target.dataset }
+              { assoc.name.to_sym => assoc.target.name.to_sym }
             else
               default_mapping
             end
