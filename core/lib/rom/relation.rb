@@ -18,7 +18,7 @@ require 'rom/types'
 require 'rom/schema'
 
 require 'rom/relation/combine'
-require 'rom/relation/wrap'
+require 'rom/relation/wrap_methods'
 
 module ROM
   # Base relation class
@@ -47,15 +47,16 @@ module ROM
     extend ClassInterface
 
     include Combine
-    include Wrap
+    include WrapMethods
     include Relation::Commands
 
     extend Dry::Core::ClassAttributes
-    defines :schema_class, :schema_inferrer, :schema_dsl
+    defines :schema_class, :schema_inferrer, :schema_dsl, :wrap_class
 
     schema_dsl Schema::DSL
     schema_class Schema
     schema_inferrer Schema::DEFAULT_INFERRER
+    wrap_class Relation::Wrap
 
     include Dry::Equalizer(:name, :dataset)
     include Materializable
@@ -193,6 +194,15 @@ module ROM
       false
     end
 
+    # Return if this is a wrap relation
+    #
+    # @return [false]
+    #
+    # @api private
+    def wrap?
+      false
+    end
+
     # Returns true if a relation has schema defined
     #
     # @return [TrueClass, FalseClass]
@@ -279,28 +289,18 @@ module ROM
     #
     # @api public
     def to_ast
-      @__ast__ ||= [:relation, [name.relation, attr_ast + wraps_ast, meta_ast]]
+      @__ast__ ||= [:relation, [name.relation, attr_ast, meta_ast]]
     end
 
     # @api private
     def attr_ast
-      if meta[:wrap]
-        schema.wrap.map { |attr| [:attribute, attr] }
-      else
-        schema.reject(&:wrapped?).map { |attr| [:attribute, attr] }
-      end
-    end
-
-    # @api private
-    def wraps_ast
-      wraps.map(&:to_ast)
+      schema.map { |attr| [:attribute, attr] }
     end
 
     # @api private
     def meta_ast
       meta = self.meta.merge(dataset: name.dataset)
       meta.update(model: false) unless auto_struct? || meta[:model]
-      meta.delete(:wraps)
       meta
     end
 
@@ -385,6 +385,11 @@ module ROM
     # @api private
     def composite_class
       Relation::Composite
+    end
+
+    # @api private
+    def wrap_class
+      self.class.wrap_class
     end
   end
 end
