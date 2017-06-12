@@ -369,6 +369,11 @@ module ROM
         type.respond_to?(name) || super
       end
 
+      # @api private
+      def to_ast
+        [:attribute, [name, type.to_ast]]
+      end
+
       private
 
       # @api private
