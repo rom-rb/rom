@@ -386,6 +386,15 @@ module ROM
       self.class.new(name, options.merge(new_options))
     end
 
+    # Return AST for the schema
+    #
+    # @return [Array]
+    #
+    # @api public
+    def to_ast
+      @__ast__ ||= [:schema, [name, attributes.map(&:to_ast)]]
+    end
+
     private
 
     # @api private

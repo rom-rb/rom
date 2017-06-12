@@ -369,9 +369,13 @@ module ROM
         type.respond_to?(name) || super
       end
 
-      # @api private
+      # Return AST for the type
+      #
+      # @return [Array]
+      #
+      # @api public
       def to_ast
-        [:attribute, [name, type.to_ast]]
+        @__ast__ ||= [:attribute, [name, type.to_ast]]
       end
 
       private
