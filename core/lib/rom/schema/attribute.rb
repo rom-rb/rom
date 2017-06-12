@@ -304,7 +304,7 @@ module ROM
       #
       # @api public
       def wrapped(name = source.dataset)
-        self.class.new(prefixed(name).meta(wrapped: true))
+        self.class.new(prefixed(name).meta(wrapped: true).type)
       end
 
       # Return attribute type with additional meta information
@@ -375,7 +375,22 @@ module ROM
       #
       # @api public
       def to_ast
-        @__ast__ ||= [:attribute, [name, type.to_ast]]
+        @__ast__ ||= [:attribute, [name, type.to_ast(meta: false), meta_ast]]
+      end
+
+      # Return AST for the read type
+      #
+      # @return [Array]
+      #
+      # @api public
+      def to_read_ast
+        @__read_ast__ ||= [:attribute, [name, to_read_type.to_ast(meta: false), meta_ast]]
+      end
+
+      # @api private
+      def meta_ast
+        meta_keys = %i(wrapped alias)
+        meta.select { |k, _| meta_keys.include?(k) }
       end
 
       private

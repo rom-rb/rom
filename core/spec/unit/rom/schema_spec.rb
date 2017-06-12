@@ -16,8 +16,8 @@ RSpec.describe ROM::Schema do
       expect(schema.to_ast).
         to eql([:schema, [
                   :name,
-                  [[:attribute, [:id, [:definition, [Integer, name: :id]]]],
-                   [:attribute, [:name, [:definition, [String, name: :name]]]]]]])
+                  [[:attribute, [:id, [:definition, [Integer, {}]], {}]],
+                   [:attribute, [:name, [:definition, [String, {}]], {}]]]]])
     end
   end
 end
