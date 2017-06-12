@@ -11,7 +11,7 @@ RSpec.describe ROM::Relation, '.schema' do
       end
     end
 
-    Test::Users.schema.finalize!
+    Test::Users.schema.finalize_attributes!
 
     relation_name = ROM::Relation::Name[:test_users]
 
@@ -22,7 +22,7 @@ RSpec.describe ROM::Relation, '.schema' do
         ROM::Memory::Types::String.meta(name: :name, source: relation_name),
         ROM::Memory::Types::Bool.meta(name: :admin, source: relation_name)
       ]
-    ).finalize!
+    ).finalize_attributes!
 
     expect(Test::Users.schema.primary_key).to eql([Test::Users.schema[:id]])
 
@@ -61,7 +61,7 @@ RSpec.describe ROM::Relation, '.schema' do
       end
     end
 
-    schema = Test::Users.schema.finalize!
+    schema = Test::Users.schema.finalize_attributes!
 
     expect(schema.primary_key).to eql([schema[:name], schema[:email]])
   end

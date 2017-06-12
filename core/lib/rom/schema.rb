@@ -299,6 +299,12 @@ module ROM
       ! attributes.detect { |attr| attr.name == name }.nil?
     end
 
+    # @api private
+    def finalize!(**opts)
+      return self if frozen?
+      freeze
+    end
+
     # This hook is called when relation is being build during container finalization
     #
     # When block is provided it'll be called just before freezing the instance
@@ -307,9 +313,7 @@ module ROM
     # @return [self]
     #
     # @api private
-    def finalize!(gateway: nil, relations: nil, &block)
-      return self if frozen?
-
+    def finalize_attributes!(gateway: nil, relations: nil, &block)
       inferred, missing = inferrer.call(name, gateway)
 
       attr_names = map(&:name)
@@ -330,7 +334,15 @@ module ROM
       name_index
       source_index
 
-      freeze
+      self
+    end
+
+    # @api private
+    def finalize_associations!(relations:, &block)
+      if associations.any?
+        options[:associations] = @associations = block.()
+      end
+      self
     end
 
     # Return coercion function using attribute read types

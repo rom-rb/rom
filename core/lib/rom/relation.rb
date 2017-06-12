@@ -280,7 +280,7 @@ module ROM
     #
     # @api public
     def associations
-      @associations ||= schema.associations
+      schema.associations
     end
 
     # Returns AST for the wrapped relation

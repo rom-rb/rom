@@ -76,7 +76,7 @@ module ROM
                 if __registry__.key?(key)
                   __registry__[key]
                 else
-                  __registry__[associations[key].target]
+                  associations[key].target
                 end
               curried = combine_from_assoc(key, other).combine(*value)
               result, _, keys = combine_opts_for_assoc(key)
@@ -200,7 +200,7 @@ module ROM
       # @api private
       def combine_keys(source, target, type)
         source.associations.try(target.name) { |assoc|
-          assoc.combine_keys(__registry__)
+          assoc.combine_keys
         } or infer_combine_keys(source, target, type)
       end
 
@@ -249,9 +249,9 @@ module ROM
       # @api private
       def combine_opts_for_assoc(name, opts = nil)
         assoc = associations[name]
-        curried = __registry__[assoc.target.relation].for_combine(assoc)
+        curried = assoc.target.for_combine(assoc)
         curried = curried.combine(opts) unless opts.nil?
-        keys = assoc.combine_keys(__registry__)
+        keys = assoc.combine_keys
         [assoc.result, curried, keys]
       end
 
