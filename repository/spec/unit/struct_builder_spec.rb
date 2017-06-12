@@ -1,19 +1,12 @@
 RSpec.describe 'struct builder', '#call' do
   subject(:builder) { ROM::StructBuilder.new }
 
-  def attr_double(name, type, **opts)
-    double(
-      name: name,
-      aliased?: false,
-      wrapped?: false,
-      foreign_key?: false,
-      to_read_type: ROM::Types.const_get(type),
-      **opts
-    )
+  def attr_ast(name, type, **opts)
+    [name, ROM::Types.const_get(type).to_ast, alias: false, wrapped: false]
   end
 
   let(:input) do
-    [:users, [[:attribute, attr_double(:id, :Int)], [:attribute, attr_double(:name, :String)]]]
+    [:users, [[:attribute, attr_ast(:id, :Int)], [:attribute, attr_ast(:name, :String)]]]
   end
 
   context 'ROM::Struct' do
@@ -42,10 +35,10 @@ RSpec.describe 'struct builder', '#call' do
 
     context 'with reserved keywords as attribute names' do
       let(:input) do
-        [:users, [[:attribute, attr_double(:id, :Int)],
-                    [:attribute, attr_double(:name, :String)],
-                    [:attribute, attr_double(:alias, :String)],
-                    [:attribute, attr_double(:until, :Time)]]]
+        [:users, [[:attribute, attr_ast(:id, :Int)],
+                    [:attribute, attr_ast(:name, :String)],
+                    [:attribute, attr_ast(:alias, :String)],
+                    [:attribute, attr_ast(:until, :Time)]]]
       end
 
       it 'allows to build a struct class without complaining' do

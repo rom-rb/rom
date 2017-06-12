@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 gemspec
 
 group :test do
-  gem 'dry-types', git: 'https://github.com/dry-rb/dry-types', branch: 'master'
+  gem 'dry-types', git: 'https://github.com/dry-rb/dry-types', branch: 'exclude-meta'
   gem 'rom-core', path: '../core'
   gem 'dry-equalizer'
   gem 'dry-struct'

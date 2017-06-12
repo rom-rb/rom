@@ -117,8 +117,8 @@ RSpec.describe 'loading proxy' do
         [:relation, [
           :users,
           [
-            [:attribute, users_relation.schema[:id]],
-            [:attribute, users_relation.schema[:name]]
+            users_relation.schema[:id].to_read_ast,
+            users_relation.schema[:name].to_read_ast
           ],
           { dataset: :users }
         ]]
@@ -132,14 +132,14 @@ RSpec.describe 'loading proxy' do
         [:relation, [
           :users,
           [
-            [:attribute, users_relation.schema[:id]],
-            [:attribute, users_relation.schema[:name]],
+            users_relation.schema[:id].to_read_ast,
+            users_relation.schema[:name].to_read_ast,
             [:relation, [
               :tasks,
               [
-                 [:attribute, tasks_relation.schema[:id]],
-                 [:attribute, tasks_relation.schema[:user_id]],
-                 [:attribute, tasks_relation.schema[:title]]
+                 tasks_relation.schema[:id].to_read_ast,
+                 tasks_relation.schema[:user_id].to_read_ast,
+                 tasks_relation.schema[:title].to_read_ast
               ],
               { dataset: :tasks, model: false, keys: { id: :user_id },
                 combine_type: :many, combine_name: :user_tasks }
@@ -160,15 +160,15 @@ RSpec.describe 'loading proxy' do
         [:relation, [
           :tags,
           [
-            [:attribute, tags_schema[:id]],
-            [:attribute, tags_schema[:task_id]],
-            [:attribute, tags_schema[:name]],
+            tags_schema[:id].to_read_ast,
+            tags_schema[:task_id].to_read_ast,
+            tags_schema[:name].to_read_ast,
             [:relation, [
               :tasks,
               [
-                 [:attribute, tasks_schema[:id]],
-                 [:attribute, tasks_schema[:user_id]],
-                 [:attribute, tasks_schema[:title]]
+                 tasks_schema[:id].to_read_ast,
+                 tasks_schema[:user_id].to_read_ast,
+                 tasks_schema[:title].to_read_ast
               ],
               { dataset: :tasks, keys: { id: :task_id },
                 wrap_from_assoc: false, wrap: true, combine_name: :task }

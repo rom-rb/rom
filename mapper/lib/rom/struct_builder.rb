@@ -65,8 +65,28 @@ module ROM
       end
     end
 
-    def visit_attribute(attr)
-      [attr.aliased? && !attr.wrapped? ? attr.alias : attr.name, attr.to_read_type]
+    def visit_attribute(node)
+      name, type, meta = node
+
+      [meta[:alias] && !meta[:wrapped] ? meta[:alias] : name, visit(type)]
+    end
+
+    def visit_definition(node)
+      type, meta = node
+
+      Dry::Types::Definition.new(type, meta: meta)
+    end
+
+    def visit_sum(node)
+      left, right, meta = node
+
+      visit(right)
+    end
+
+    def visit_constructor(node)
+      definition, fn_register_name, meta = node
+
+      visit(definition)
     end
 
     def build_class(name, parent, &block)

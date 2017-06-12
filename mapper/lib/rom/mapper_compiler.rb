@@ -62,11 +62,13 @@ module ROM
       end
     end
 
-    def visit_attribute(attr)
-      if attr.wrapped?
-        [attr.name, from: attr.alias]
+    def visit_attribute(node)
+      name, _, meta = node
+
+      if meta[:wrapped]
+        [name, from: meta[:alias]]
       else
-        [attr.name]
+        [name]
       end
     end
   end
