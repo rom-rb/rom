@@ -304,7 +304,7 @@ module ROM
       #
       # @api public
       def wrapped(name = source.dataset)
-        self.class.new(prefixed(name).meta(wrapped: true).type)
+        prefixed(name).meta(wrapped: true)
       end
 
       # Return attribute type with additional meta information
