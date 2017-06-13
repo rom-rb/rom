@@ -68,7 +68,7 @@ module ROM
     def visit_attribute(node)
       name, type, meta = node
 
-      [meta[:alias] && !meta[:wrapped] ? meta[:alias] : name, visit(type)]
+      [meta[:alias] && !meta[:wrapped] ? meta[:alias] : name, visit(type).meta(meta)]
     end
 
     def visit_definition(node)

@@ -389,8 +389,10 @@ module ROM
 
       # @api private
       def meta_ast
-        meta_keys = %i(wrapped alias)
-        meta.select { |k, _| meta_keys.include?(k) }
+        meta_keys = %i(wrapped alias primary_key)
+        ast = meta.select { |k, _| meta_keys.include?(k) }
+        ast[:source] = source.relation if source
+        ast
       end
 
       private
