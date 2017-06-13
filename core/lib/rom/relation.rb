@@ -294,13 +294,13 @@ module ROM
 
     # @api private
     def attr_ast
-      schema.map { |attr| [:attribute, attr] }
+      schema.map { |t| t.to_read_ast }
     end
 
     # @api private
     def meta_ast
       meta = self.meta.merge(dataset: name.dataset)
-      meta.update(model: false) unless auto_struct? || meta[:model]
+      meta[:model] = false unless auto_struct? || meta[:model]
       meta
     end
 

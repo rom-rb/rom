@@ -31,7 +31,7 @@ module ROM
         pk = attrs.detect { |attr| attr.meta[:primary_key] }
 
         if pk
-          pk.meta[:source].relation
+          pk.meta[:source]
         else
           raise ArgumentError, "can't infer association name for #{other}"
         end
