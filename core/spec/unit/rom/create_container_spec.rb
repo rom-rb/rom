@@ -120,6 +120,31 @@ RSpec.describe ROM::CreateContainer do
           ROM::RelationAlreadyDefinedError, /name :users/
         )
       end
+
+      it "raises an error when registering same mapper twice" do
+        configuration
+
+        users_mapper = Class.new(ROM::Mapper) do
+          register_as :users
+          relation :users
+          attribute :name
+          attribute :email
+        end
+
+        users_mapper_2 = Class.new(ROM::Mapper) do
+          register_as :users
+          relation :users
+          attribute :name
+          attribute :email
+        end
+
+        configuration.register_mapper(users_mapper)
+        configuration.register_mapper(users_mapper_2)
+
+        expect { container }.to raise_error(
+          ROM::MapperAlreadyDefinedError, /register_as :users/
+        )
+      end
     end
 
     context 'empty setup' do
