@@ -16,51 +16,50 @@ RSpec.describe 'ROM repository' do
     ])
   end
 
-  it 'loads a relation by an association' do
-    expect(repo.tasks_for_users(repo.all_users)).to match_array([jane_task, joe_task])
-  end
-
   it 'loads a combine relation with one parent' do
-    task = repo.task_with_user.first
+    task = repo.tasks.combine(:user).by_pk(2).first.to_h
 
-    expect(task.id).to eql(task_with_user.id)
-    expect(task.title).to eql(task_with_user.title)
-    expect(task.user.id).to eql(task_with_user.user.id)
-    expect(task.user.name).to eql(task_with_user.user.name)
+    expect(task).to eql(
+                      id: 2, user_id: 1, title: "Jane Task", user: {
+                        id: 1, task_id: 2, name: "Jane"
+                      }
+                    )
   end
 
-  it 'loads a combine relation with one parent with custom tuple key' do
-    expect(repo.task_with_owner.first).to eql(task_with_owner)
+  it 'loads belongs_to with an alias' do
+    task = repo.tasks.combine(:assignee).by_pk(1).first.to_h
+
+    expect(task).to eql(
+                      id: 1, user_id: 2, title: "Joe Task", assignee: {
+                        id: 2, task_id: 1, name: "Joe"
+                      }
+                    )
   end
 
   it 'loads a combined relation with many children' do
-    expect(repo.users_with_tasks.to_a).to match_array([jane_with_tasks, joe_with_tasks])
-  end
+    users = repo.users.combine(:tasks).to_a.map(&:to_h)
 
-  it 'loads a combined relation with one child' do
-    expect(repo.users_with_task.to_a).to match_array([jane_with_task, joe_with_task])
-  end
-
-  it 'loads a combined relation with one child restricted by given criteria' do
-    expect(repo.users_with_task_by_title('Joe Task').to_a).to match_array([
-      jane_without_task, joe_with_task
-    ])
+    expect(users).to eql(
+                       [
+                         {:id=>1, :name=>"Jane", :tasks=>[{:id=>2, :user_id=>1, :title=>"Jane Task"}]},
+                         {:id=>2, :name=>"Joe", :tasks=>[{:id=>1, :user_id=>2, :title=>"Joe Task"}]}]
+                     )
   end
 
   it 'loads nested combined relations' do
-    user = repo.users_with_tasks_and_tags.first
+    user = repo.users.combine(tasks: :tags).first
 
     expect(user.id).to be(1)
     expect(user.name).to eql('Jane')
-    expect(user.all_tasks.size).to be(1)
-    expect(user.all_tasks[0].id).to be(2)
-    expect(user.all_tasks[0].title).to eql('Jane Task')
-    expect(user.all_tasks[0].tags.size).to be(1)
-    expect(user.all_tasks[0].tags[0].name).to eql('red')
+    expect(user.tasks.size).to be(1)
+    expect(user.tasks[0].id).to be(2)
+    expect(user.tasks[0].title).to eql('Jane Task')
+    expect(user.tasks[0].tags.size).to be(1)
+    expect(user.tasks[0].tags[0].name).to eql('red')
   end
 
   it 'loads nested combined relations using configured associations' do
-    jane = repo.users_with_posts_and_their_labels.first
+    jane = repo.users.combine(posts: :labels).first
 
     expect(jane.posts.size).to be(1)
     expect(jane.posts.map(&:title)).to eql(['Hello From Jane'])
@@ -68,7 +67,7 @@ RSpec.describe 'ROM repository' do
   end
 
   it 'loads a wrapped relation' do
-    expect(repo.tag_with_wrapped_task.first).to eql(tag_with_task)
+    expect(repo.tags.wrap(:task).first).to eql(tag_with_task)
   end
 
   it 'loads wraps using aliased relation' do
@@ -90,7 +89,7 @@ RSpec.describe 'ROM repository' do
   end
 
   it 'loads an aggregate via custom fks' do
-    jane = repo.aggregate(many: repo.posts).where(name: 'Jane').one
+    jane = repo.aggregate(:posts).where(name: 'Jane').one
 
     expect(jane.posts.size).to be(1)
     expect(jane.posts.first.title).to eql('Hello From Jane')
@@ -154,19 +153,8 @@ RSpec.describe 'ROM repository' do
     expect(jane.labels[1].name).to eql('blue')
   end
 
-  it 'loads children and its parents via wrap_parent' do
-    posts = repo.posts.wrap_parent(author: repo.users)
-
-    label = repo.labels.combine(many: { posts: posts }).first
-
-    expect(label.name).to eql('red')
-    expect(label.posts.size).to be(1)
-    expect(label.posts[0].title).to eql('Hello From Jane')
-    expect(label.posts[0].author.name).to eql('Jane')
-  end
-
   it 'loads children and its parents via wrap and association name' do
-    label = repo.labels.combine(many: { posts: repo.posts.wrap(:author) }).first
+    label = repo.labels.combine(:posts).node(:posts) { |n| n.wrap(:author) }.first
 
     expect(label.name).to eql('red')
     expect(label.posts.size).to be(1)
@@ -182,10 +170,7 @@ RSpec.describe 'ROM repository' do
   end
 
   it 'loads aggregate through many-to-many via custom options' do
-    post = repo.posts
-      .combine_children(many: repo.labels)
-      .where(title: 'Hello From Jane')
-      .one
+    post = repo.posts.combine(:labels).where(title: 'Hello From Jane').one
 
     expect(post.title).to eql('Hello From Jane')
     expect(post.labels.size).to be(2)
@@ -201,7 +186,7 @@ RSpec.describe 'ROM repository' do
   end
 
   it 'loads multiple child relations' do
-    user = repo.users.combine_children(many: [repo.posts, repo.tasks]).where(name: 'Jane').one
+    user = repo.users.combine(:posts, :tasks).where(name: 'Jane').one
 
     expect(user.name).to eql('Jane')
     expect(user.posts.size).to be(1)
@@ -211,7 +196,7 @@ RSpec.describe 'ROM repository' do
   end
 
   it 'loads multiple parent relations' do
-    post_label = repo.posts_labels.combine_parents(one: [repo.posts]).first
+    post_label = repo.posts_labels.combine(:post).first
 
     expect(post_label.post.title).to eql('Hello From Jane')
   end
@@ -359,7 +344,7 @@ RSpec.describe 'ROM repository' do
     it 'applies a custom mapper inside #node' do
       jane = repo.aggregate(:posts).node(:posts) { |posts|
         posts.map_with(:nested_mapper)
-      }.to_a.first
+      }.first
 
       expect(jane).to be_a ROM::Struct
 
@@ -376,22 +361,17 @@ RSpec.describe 'ROM repository' do
     end
 
     it 'uses provided model for the member type' do
-      jane = repo.users.combine(many: repo.posts.as(Test::Post)).where(name: 'Jane').one
+      jane = repo.users.
+               combine(:posts).
+               node(:posts) { |posts| posts.as(Test::Post) }.
+               where(name: 'Jane').
+               one
 
       expect(jane.name).to eql('Jane')
       expect(jane.posts.size).to be(1)
       expect(jane.posts[0]).to be_instance_of(Test::Post)
       expect(jane.posts[0].title).to eql('Hello From Jane')
       expect(jane.posts[0].body).to eql('Jane Post')
-    end
-
-    it 'uses provided model for the attribute type' do
-      jane = repo.users.combine(one: repo.posts.as(Test::Post)).where(name: 'Jane').one
-
-      expect(jane.name).to eql('Jane')
-      expect(jane.post).to be_instance_of(Test::Post)
-      expect(jane.post.title).to eql('Hello From Jane')
-      expect(jane.post.body).to eql('Jane Post')
     end
   end
 

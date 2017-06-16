@@ -51,7 +51,7 @@ RSpec.describe ROM::Repository, '#command' do
     it 'builds Create command for a relation graph with one-to-one' do
       create_user = repo.command(
         :create,
-        repo.users.combine_children(one: repo.tasks)
+        repo.users.combine(:task)
       )
 
       user = create_user.call(name: 'Jane Doe', task: { title: 'Task one' })
@@ -64,7 +64,7 @@ RSpec.describe ROM::Repository, '#command' do
     it 'builds Create command for a deeply nested relation graph' do
       create_user = repo.command(
         :create,
-        repo.users.combine_children(one: repo.tasks.combine_children(many: repo.tags))
+        repo.users.combine(task: :tags)
       )
 
       user = create_user.call(
@@ -81,7 +81,7 @@ RSpec.describe ROM::Repository, '#command' do
     it 'builds Create command for a relation graph with one-to-many' do
       create_user = repo.command(
         :create,
-        repo.users.combine_children(many: repo.tasks)
+        repo.users.combine(:tasks)
       )
 
       user = create_user.call(name: 'Jane Doe', tasks: [{ title: 'Task one' }])
@@ -105,7 +105,7 @@ RSpec.describe ROM::Repository, '#command' do
     it 'builds Create command for a deeply nested graph with one-to-many' do
       create_user = repo.command(
         :create,
-        repo.aggregate(many: repo.tasks.combine_children(many: repo.tags))
+        repo.aggregate(tasks: :tags)
       )
 
       user = create_user.call(
@@ -124,7 +124,7 @@ RSpec.describe ROM::Repository, '#command' do
     it 'builds Create command for a deeply nested graph with many-to-one & one-to-many' do
       create_user = repo.command(
         :create,
-        repo.aggregate(one: repo.tasks.combine_children(many: repo.tags))
+        repo.aggregate(task: :tags)
       )
 
       user = create_user.call(
@@ -143,7 +143,7 @@ RSpec.describe ROM::Repository, '#command' do
     it 'builds Create command for a deeply nested graph with many-to-one' do
       create_user = repo.command(
         :create,
-        repo.aggregate(one: repo.tasks.combine_children(one: repo.tags))
+        repo.aggregate(task: :tag)
       )
 
       user = create_user.call(
@@ -162,7 +162,7 @@ RSpec.describe ROM::Repository, '#command' do
       user = repo.command(:create, repo.users).(name: 'Jane')
 
       create_post = repo.command(
-        :create, repo.posts.combine_children(many: { labels: repo.labels })
+        :create, repo.posts.combine(:labels)
       )
 
       post = create_post.call(

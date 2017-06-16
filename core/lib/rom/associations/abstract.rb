@@ -83,6 +83,24 @@ module ROM
       end
 
       # @api private
+      def node
+        # TODO: remove `for_combine` in favor of a generic `Relation#preload`
+        target.with(
+          name: target.name.as(name.to_sym),
+          meta: { keys: combine_keys, combine_type: result, combine_name: name.to_sym }
+        ).for_combine(self)
+      end
+
+      # @api private
+      def wrap
+        target.with(
+          name: target.name.as(name.to_sym),
+          schema: target.schema.wrap,
+          meta: { wrap: true, combine_name: name.to_sym }
+        )
+      end
+
+      # @api private
       def self_ref?
         source.name.dataset == target.name.dataset
       end

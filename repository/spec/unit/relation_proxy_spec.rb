@@ -126,7 +126,7 @@ RSpec.describe 'loading proxy' do
     end
 
     it 'returns valid ast for a combined relation' do
-      relation = users_relation.combine(many: { user_tasks: [tasks_relation, id: :user_id] })
+      relation = users_relation.combine(:tasks)
 
       expect(relation.to_ast).to eql(
         [:relation, [
@@ -142,7 +142,7 @@ RSpec.describe 'loading proxy' do
                  tasks_relation.schema[:title].to_read_ast
               ],
               { dataset: :tasks, model: false, keys: { id: :user_id },
-                combine_type: :many, combine_name: :user_tasks }
+                combine_type: :many, combine_name: :tasks }
             ]]
           ],
           { dataset: :users }
@@ -151,7 +151,7 @@ RSpec.describe 'loading proxy' do
     end
 
     it 'returns valid ast for a wrapped relation' do
-      relation = tags_relation.wrap_parent(task: tasks_relation)
+      relation = tags_relation.wrap(:task)
 
       tags_schema = tags_relation.schema
       tasks_schema = tasks_relation.schema.wrap
@@ -170,8 +170,7 @@ RSpec.describe 'loading proxy' do
                  tasks_schema[:user_id].to_read_ast,
                  tasks_schema[:title].to_read_ast
               ],
-              { dataset: :tasks, keys: { id: :task_id },
-                wrap_from_assoc: false, wrap: true, combine_name: :task }
+              { dataset: :tasks, wrap: true, combine_name: :task, model: false }
             ]]
           ],
           { dataset: :tags }
