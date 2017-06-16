@@ -51,9 +51,10 @@ module ROM
     include Relation::Commands
 
     extend Dry::Core::ClassAttributes
-    defines :schema_class, :schema_inferrer, :schema_dsl, :wrap_class
+    defines :schema_class, :schema_attr_class, :schema_inferrer, :schema_dsl, :wrap_class
 
     schema_dsl Schema::DSL
+    schema_attr_class Schema::Attribute
     schema_class Schema
     schema_inferrer Schema::DEFAULT_INFERRER
     wrap_class Relation::Wrap

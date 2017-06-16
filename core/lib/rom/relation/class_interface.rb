@@ -173,7 +173,11 @@ module ROM
             raise MissingSchemaClassError.new(self)
           end
 
-          dsl = schema_dsl.new(name, schema_class: schema_class, inferrer: inferrer, &block)
+          dsl = schema_dsl.new(
+            name,
+            schema_class: schema_class, attr_class: schema_attr_class, inferrer: inferrer,
+            &block
+          )
 
           @schema = dsl.call
         end
