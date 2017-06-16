@@ -60,7 +60,7 @@ RSpec.describe ROM::Repository::Root do
     include_context 'seeds'
 
     it 'builds an aggregate from the root relation and other relation(s)' do
-      user = repo.aggregate(many: repo.tasks).where(name: 'Jane').one
+      user = repo.aggregate(:tasks).where(name: 'Jane').one
 
       expect(user.name).to eql('Jane')
       expect(user.tasks.size).to be(1)
@@ -97,7 +97,7 @@ RSpec.describe ROM::Repository::Root do
 
       it 'builds same relation as manual combine' do
         left = repo.aggregate(:posts)
-        right = repo.users.combine_children(many: repo.posts)
+        right = repo.users.combine(:posts)
 
         expect(left.to_ast).to eql(right.to_ast)
       end

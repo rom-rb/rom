@@ -97,11 +97,7 @@ module ROM
       #
       # @api public
       def aggregate(*args)
-        if args.all? { |arg| arg.is_a?(Symbol) }
-          root.combine(*args)
-        else
-          args.reduce(root) { |a, e| a.combine(e) }
-        end
+        root.combine(*args)
       end
 
       # @overload changeset(name, *args)

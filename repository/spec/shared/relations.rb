@@ -27,6 +27,8 @@ RSpec.shared_context 'relations' do
           has_many :posts, as: :aliased_posts
           has_many :labels, through: :posts
           has_many :books, foreign_key: :author_id
+          has_many :tasks
+          has_one :task
         end
       end
 
@@ -52,6 +54,8 @@ RSpec.shared_context 'relations' do
         associations do
           belongs_to :user
           belongs_to :users, as: :assignee
+          has_many :tags
+          has_one :tag
         end
       end
 
@@ -65,7 +69,11 @@ RSpec.shared_context 'relations' do
     end
 
     configuration.relation(:tags) do
-      schema(infer: true)
+      schema(infer: true) do
+        associations do
+          belongs_to :tasks, as: :task
+        end
+      end
     end
 
     configuration.relation(:labels) do
@@ -98,6 +106,7 @@ RSpec.shared_context 'relations' do
     configuration.relation(:comments) do
       schema(:messages, infer: true) do
         associations do
+          has_many :likes
           has_many :reactions, relation: :likes
           has_many :reactions, relation: :likes, as: :emotions
         end

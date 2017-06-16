@@ -10,15 +10,13 @@ require 'rom/relation/loaded'
 require 'rom/relation/curried'
 require 'rom/relation/composite'
 require 'rom/relation/graph'
+require 'rom/relation/wrap'
 require 'rom/relation/materializable'
 require 'rom/relation/commands'
 require 'rom/association_set'
 
 require 'rom/types'
 require 'rom/schema'
-
-require 'rom/relation/combine'
-require 'rom/relation/wrap_methods'
 
 module ROM
   # Base relation class
@@ -46,11 +44,10 @@ module ROM
     extend Initializer
     extend ClassInterface
 
-    include Combine
-    include WrapMethods
     include Relation::Commands
 
     extend Dry::Core::ClassAttributes
+
     defines :schema_class, :schema_attr_class, :schema_inferrer, :schema_dsl, :wrap_class
 
     schema_dsl Schema::DSL
@@ -157,6 +154,55 @@ module ROM
     # @api public
     def graph(*others)
       Graph.build(self, others)
+    end
+
+    # Combine with other relations
+    #
+    # @overload combine(*associations)
+    #   Composes relations using configured associations
+
+    #   @example
+    #     users.combine(:tasks, :posts)
+    #   @param *associations [Array<Symbol>] A list of association names
+    #
+    # @return [Relation]
+    #
+    # @api public
+    def combine(*args)
+      graph(*nodes(*args))
+    end
+
+    # @api private
+    def nodes(*args)
+      args.map do |arg|
+        case arg
+        when Symbol
+          node(arg)
+        when Hash
+          arg.reduce(self) { |r, (k, v)| r.node(k).combine(*v) }
+        when Array
+          arg.map { |opts| nodes(opts) }
+        end
+      end.flatten(0)
+    end
+
+    # @api private
+    def node(name)
+      associations[name].node
+    end
+
+    # Wrap other relations
+    #
+    # @example
+    #   tasks.wrap(:owner)
+    #
+    # @param [Hash] options
+    #
+    # @return [RelationProxy]
+    #
+    # @api public
+    def wrap(*names)
+      wrap_class.new(self, names.map { |n| associations[n].wrap })
     end
 
     # Loads relation

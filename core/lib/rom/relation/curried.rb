@@ -8,8 +8,12 @@ module ROM
   class Relation
     class Curried
       extend Initializer
+
       include Materializable
       include Pipeline
+
+      undef :map_with
+      undef :as
 
       param :relation
 
@@ -86,7 +90,7 @@ module ROM
 
           super if response.is_a?(self.class)
 
-          if response.is_a?(Relation) || response.is_a?(Graph)
+          if response.is_a?(Relation) || response.is_a?(Graph) || response.is_a?(Wrap) || response.is_a?(Composite)
             __new__(response)
           else
             response
