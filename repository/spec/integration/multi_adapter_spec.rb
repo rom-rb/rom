@@ -38,8 +38,6 @@ RSpec.describe 'Repository with multi-adapters configuration' do
         register_as :memory_tasks
         gateway :memory
 
-        use :key_inference
-
         view(:base, [:user_id, :title]) do
           self
         end
