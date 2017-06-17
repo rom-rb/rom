@@ -61,11 +61,6 @@ module ROM
         definition.result
       end
 
-      # @api public
-      def join(type, source = self.source, target = self.target)
-        source.__send__(type, target.name.dataset, join_keys).qualified
-      end
-
       # @api protected
       def apply_view(schema, relation)
         view_rel = relation.public_send(view)
