@@ -115,6 +115,7 @@ module ROM
         end
 
         klass.extend(AutoCurry)
+        klass.auto_curry(:preload_assoc)
       end
 
       # Return adapter-specific relation subclass

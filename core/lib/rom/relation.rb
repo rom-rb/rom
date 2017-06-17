@@ -186,9 +186,21 @@ module ROM
       end.flatten(0)
     end
 
-    # @api private
+    # @api public
     def node(name)
-      associations[name].node
+      assoc = associations[name]
+      other = assoc.node
+      other.eager_load(assoc)
+    end
+
+    # @api public
+    def eager_load(assoc)
+      assoc.prepare(self).preload_assoc(assoc)
+    end
+
+    # @api private
+    def preload_assoc(assoc, other)
+      assoc.preload(self, other)
     end
 
     # Wrap other relations
