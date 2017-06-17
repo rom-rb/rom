@@ -1,4 +1,6 @@
+require 'dry/core/deprecations'
 require 'dry/core/inflector'
+
 require 'rom/registry'
 
 module ROM
@@ -10,6 +12,14 @@ module ROM
       if key?(key) || key?(singularize(key))
         yield(self[key])
       else
+        msg = <<-STR
+          Key inference will be removed in rom 4.0. You need to define :#{key} association.
+            => Called at:
+               #{caller.join("\n")}
+          STR
+
+        Dry::Core::Deprecations.warn(msg)
+
         false
       end
     end
