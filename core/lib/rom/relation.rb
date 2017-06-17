@@ -423,6 +423,18 @@ module ROM
       self.class.adapter
     end
 
+    # @api private
+    def foreign_key(name)
+      attr = schema.foreign_key(name.dataset)
+
+      if attr
+        attr.name
+      else
+        # TODO: remove this once ManyToOne uses a different query
+        :"#{Dry::Core::Inflector.singularize(name.dataset)}_id"
+      end
+    end
+
     private
 
     # Hook used by `Pipeline` to get the class that should be used for composition

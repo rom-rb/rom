@@ -18,7 +18,7 @@ module ROM
 
       # @api private
       def with_keys(&block)
-        source_key = foreign_key || source.foreign_key(target.name.dataset)
+        source_key = foreign_key || source.foreign_key(target.name)
         target_key = target.schema.primary_key_name
         return [source_key, target_key] unless block
         yield(source_key, target_key)

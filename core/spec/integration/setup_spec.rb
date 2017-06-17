@@ -1,6 +1,4 @@
-require 'spec_helper'
-require 'rom/plugins/relation/key_inference'
-require 'dry-struct'
+require 'dry/struct'
 
 RSpec.describe 'Configuring ROM' do
   context 'with existing schema' do
@@ -175,8 +173,6 @@ RSpec.describe 'Configuring ROM' do
         p.notifications = Test::Notifications
       end
 
-      configuration.plugin(:memory, relations: :key_inference)
-
       configuration.relation(:users)
 
       container = ROM.container(configuration)
@@ -184,7 +180,6 @@ RSpec.describe 'Configuring ROM' do
       users = container.relations[:users]
 
       expect(users.notifications).to be(Test::Notifications)
-      expect(users).to respond_to(:foreign_key)
     end
   end
 end
