@@ -4,15 +4,8 @@ module ROM
   module Associations
     class OneToMany < Abstract
       # @api public
-      def call(right = self.target)
+      def call(*)
         raise NotImplementedError
-      end
-
-      # @api public
-      def join_keys
-        with_keys { |source_key, target_key|
-          { source[source_key].qualified(source_alias) => target[target_key].qualified }
-        }
       end
 
       # @api private

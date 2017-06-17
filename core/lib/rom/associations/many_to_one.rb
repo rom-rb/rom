@@ -4,7 +4,7 @@ module ROM
   module Associations
     class ManyToOne < Abstract
       # @api public
-      def call(left = self.target)
+      def call(*)
         raise NotImplementedError
       end
 

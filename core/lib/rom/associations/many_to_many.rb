@@ -13,7 +13,7 @@ module ROM
       end
 
       # @api public
-      def call(target_rel = nil)
+      def call(*)
         raise NotImplementedError
       end
 
