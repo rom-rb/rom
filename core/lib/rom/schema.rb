@@ -341,6 +341,7 @@ module ROM
       count_index
       name_index
       source_index
+      to_ast
 
       self
     end

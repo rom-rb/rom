@@ -391,7 +391,7 @@ module ROM
       def meta_ast
         meta_keys = %i(wrapped alias primary_key)
         ast = meta.select { |k, _| meta_keys.include?(k) }
-        ast[:source] = source.relation if source
+        ast[:source] = source.to_sym if source
         ast
       end
 

@@ -11,6 +11,10 @@ RSpec.describe ROM::Schema, '#finalize!' do
     it 'returns a frozen canonical schema' do
       expect(schema).to be_frozen
     end
+
+    it 'gives access to the AST' do
+      expect(schema.to_ast).to be_an Array
+    end
   end
 
   context 'with inferrer' do
