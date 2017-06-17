@@ -61,6 +61,11 @@ module ROM
         definition.result
       end
 
+      # @api public
+      def override?
+        definition.view
+      end
+
       # @api protected
       def apply_view(schema, relation)
         view_rel = relation.public_send(view)
@@ -96,7 +101,11 @@ module ROM
 
       # @api private
       def prepare(target)
-        call(target: target)
+        if override?
+          target.public_send(view)
+        else
+          call(target: target)
+        end
       end
 
       # @api private
