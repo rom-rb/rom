@@ -79,27 +79,28 @@ RSpec.describe ROM::Relation::Graph do
 
   describe '#call' do
     it 'materializes relations' do
-      expect(graph.call).to match_array([
-        users_relation,
-        [tasks_relation]
-      ])
+      root, nodes = graph.call.to_a
+
+      expect(root.to_a).to eql(users_relation.to_a)
+      expect(nodes.flatten).to eql(tasks_relation.to_a)
     end
   end
 
   describe '#to_a' do
     it 'coerces to an array' do
-      expect(graph).to match_array([
-        users_relation.to_a,
-        [tasks_relation.for_users(users_relation).to_a]
-      ])
+      root, nodes = graph.to_a
+
+      expect(root.to_a).to eql(users_relation.to_a)
+      expect(nodes.flatten).to eql(tasks_relation.for_users(users_relation).to_a)
     end
 
     it 'returns empty arrays when left was empty' do
       graph = ROM::Relation::Graph.new(users_relation.by_name('Not here'), [tasks_relation.for_users])
 
-      expect(graph).to match_array([
-        [], [ROM::Relation::Loaded.new(tasks_relation.for_users, [])]
-      ])
+      root, nodes = graph.to_a
+
+      expect(root).to be_empty
+      expect(nodes.flatten).to be_empty
     end
   end
 end
