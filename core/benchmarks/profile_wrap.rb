@@ -1,7 +1,7 @@
 require_relative 'setup'
 require 'hotch'
 
-rel = user_repo.tasks.limit(100).wrap(:user)
+rel = tasks.limit(100).wrap(:user)
 
 rel.to_a
 
