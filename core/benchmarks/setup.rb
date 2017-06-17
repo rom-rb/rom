@@ -19,8 +19,24 @@ def rom
   ROM_ENV
 end
 
-def user_repo
-  @user_repo ||= UserRepo.new(rom)
+def relations
+  rom.relations
+end
+
+def posts
+  @posts ||= rom.relations[:posts].with(auto_map: true, auto_struct: true)
+end
+
+def users
+  @users ||= rom.relations[:users].with(auto_map: true, auto_struct: true)
+end
+
+def users_hashes
+  @users_hashes ||= rom.relations[:users].with(auto_map: true)
+end
+
+def tasks
+  @tasks ||= rom.relations[:tasks].with(auto_map: true, auto_struct: true)
 end
 
 def hr
@@ -79,15 +95,28 @@ setup = ROM::Configuration.new(:sql, DATABASE_URL)
 setup.default.use_logger(Logger.new('./log/bench_rom.log'))
 conn = setup.default.connection
 
+conn.drop_table?(:users_posts)
 conn.drop_table?(:tags)
 conn.drop_table?(:tasks)
 conn.drop_table?(:users)
+conn.drop_table?(:posts)
 
 conn.create_table :users do
   primary_key :id
   String :name
   String :email
   Integer :age
+end
+
+conn.create_table :posts do
+  primary_key :id
+  String :title
+end
+
+conn.create_table :users_posts do
+  primary_key :id
+  foreign_key :user_id, :users
+  foreign_key :post_id, :posts
 end
 
 conn.create_table :tasks do
@@ -134,16 +163,25 @@ class ARTag < ActiveRecord::Base
   belongs_to :task, class_name: 'ARTask', foreign_key: :task_id
 end
 
+class ARPost < ActiveRecord::Base
+  self.table_name = :posts
+  has_many :users_posts, class_name: 'ARUserPost', foreign_key: 'post_id'
+  has_many :users, through: :users_posts, class_name: 'ARUser', foreign_key: 'user_id'
+end
+
+class ARUserPost < ActiveRecord::Base
+  self.table_name = :users_posts
+  belongs_to :user, class_name: 'ARUser', foreign_key: 'user_id'
+  belongs_to :post, class_name: 'ARPost', foreign_key: 'post_id'
+end
+
 module Relations
   class Users < ROM::Relation[:sql]
-    schema(:users) do
-      attribute :id, Types::Serial
-      attribute :name, Types::String
-      attribute :email, Types::String
-      attribute :age, Types::Int
-
+    schema(:users, infer: true) do
       associations do
         has_many :tasks
+        has_many :users_posts
+        has_many :posts, through: :users_posts
       end
     end
 
@@ -153,11 +191,7 @@ module Relations
   end
 
   class Tasks < ROM::Relation[:sql]
-    schema(:tasks) do
-      attribute :id, Types::Serial
-      attribute :title, Types::String
-      attribute :user_id, Types::ForeignKey(:users)
-
+    schema(:tasks, infer: true) do
       associations do
         belongs_to :user
         has_many :tags
@@ -169,12 +203,26 @@ module Relations
     end
   end
 
-  class Tags < ROM::Relation[:sql]
-    schema(:tags) do
-      attribute :id, Types::Serial
-      attribute :name, Types::String
-      attribute :task_id, Types::ForeignKey(:tasks)
+  class UsersPosts < ROM::Relation[:sql]
+    schema(:users_posts, infer: true) do
+      associations do
+        belongs_to :users
+        belongs_to :posts
+      end
+    end
+  end
 
+  class Posts < ROM::Relation[:sql]
+    schema(:posts, infer: true) do
+      associations do
+        has_many :users_posts
+        has_many :users, through: :users_posts
+      end
+    end
+  end
+
+  class Tags < ROM::Relation[:sql]
+    schema(:tags, infer: true) do
       associations do
         belongs_to :task
       end
@@ -185,10 +233,8 @@ end
 setup.register_relation(Relations::Users)
 setup.register_relation(Relations::Tasks)
 setup.register_relation(Relations::Tags)
-
-class UserRepo < ROM::Repository[:users]
-  relations :tasks, :tags
-end
+setup.register_relation(Relations::Posts)
+setup.register_relation(Relations::UsersPosts)
 
 ROM_ENV = ROM.container(setup)
 
@@ -208,6 +254,16 @@ TASK_SEED = USER_SEED.map { |user|
   end
 }.flatten
 
+POST_SEED = 3000.times.map { |i|
+  { id: i + 1, title: "Post #{i + 1}" }
+}
+
+USER_POST_SEED = POST_SEED.map { |post|
+  3.times.map do |i|
+    { post_id: post[:id], user_id: USER_SEED.pluck(:id).sample }
+  end
+}.flatten
+
 def seed
   hr
 
@@ -220,6 +276,16 @@ def seed
   TASK_SEED.each do |attributes|
     id = rom.relations.tasks.insert(attributes)
     3.times { |i| rom.relations.tags.insert(task_id: id, name: "Tag #{i}") }
+  end
+
+  puts "SEEDING #{POST_SEED.count} posts"
+  POST_SEED.each do |attributes|
+    rom.relations.posts.insert(attributes)
+  end
+
+  puts "SEEDING #{USER_POST_SEED.count} user posts"
+  USER_POST_SEED.each do |attributes|
+    rom.relations.users_posts.insert(attributes)
   end
 
   hr
