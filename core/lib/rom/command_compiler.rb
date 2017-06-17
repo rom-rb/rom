@@ -227,8 +227,7 @@ module ROM
       if assoc_name
         klass.associates(assoc_name)
       else
-        keys = meta[:keys].invert.to_a.flatten
-        klass.associates(parent_relation, key: keys)
+        klass.associates(parent_relation)
       end
     end
 

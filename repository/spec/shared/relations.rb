@@ -90,6 +90,7 @@ RSpec.shared_context 'relations' do
         associations do
           has_many :labels, through: :posts_labels
           belongs_to :user, as: :author
+          belongs_to :users
         end
       end
     end
@@ -117,6 +118,7 @@ RSpec.shared_context 'relations' do
       schema(:reactions, infer: true) do
         associations do
           belongs_to :message, relation: :comments
+          belongs_to :comments
         end
       end
     end
