@@ -25,24 +25,31 @@ RSpec.describe 'Repository with multi-adapters configuration' do
     module Test
       class Users < ROM::Relation[:sql]
         gateway :default
-        schema(:users, infer: true)
-        register_as :sql_users
+
+        schema(:users, as: :sql_users, infer: true) do
+          associations do
+            has_many :memory_tasks, as: :tasks, view: :for_users, override: true
+          end
+        end
+
+        def for_tasks(assoc, tasks)
+          where(id: tasks.pluck(:user_id))
+        end
       end
 
       class Tasks < ROM::Relation[:memory]
-        schema(:tasks) do
-          attribute :user_id, ROM::Types::Int
-          attribute :title, ROM::Types::String
-        end
-
-        register_as :memory_tasks
         gateway :memory
 
-        view(:base, [:user_id, :title]) do
-          self
+        schema(:tasks, as: :memory_tasks) do
+          attribute :user_id, ROM::Types::Int.meta(foreign_key: true, target: :sql_users)
+          attribute :title, ROM::Types::String
+
+          associations do
+            belongs_to :sql_users, as: :user, view: :for_tasks, override: true
+          end
         end
 
-        def for_users(users)
+        def for_users(assoc, users)
           restrict(user_id: users.pluck(:id))
         end
       end
@@ -52,6 +59,10 @@ RSpec.describe 'Repository with multi-adapters configuration' do
 
         def users_with_tasks(id)
           aggregate(:tasks).where(id: id)
+        end
+
+        def tasks_with_users(id)
+          memory_tasks.combine(:user).restrict(id: id)
         end
       end
     end
@@ -64,13 +75,16 @@ RSpec.describe 'Repository with multi-adapters configuration' do
   end
 
   specify 'ᕕ⁞ ᵒ̌ 〜 ᵒ̌ ⁞ᕗ' do
-    pending "memory adapter doesn't support associations yet"
-
     user = repo.users_with_tasks(users.last[:id]).first
 
     expect(user.name).to eql('Jane')
 
     expect(user.tasks[0].user_id).to eql(user.id)
     expect(user.tasks[0].title).to eql('Jane Task')
+
+    task = repo.tasks_with_users(tasks.first[:id]).first
+
+    expect(task.title).to eql('Jane Task')
+    expect(task.user.name).to eql('Jane')
   end
 end

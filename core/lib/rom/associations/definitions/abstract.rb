@@ -47,6 +47,10 @@ module ROM
         #   @return [Symbol] An optional view that should be used to extend assoc relation
         option :view, optional: true
 
+        # @!attribute [r] override
+        #   @return [TrueClass,FalseClass] Whether custom view should override default one or not
+        option :override, optional: true, default: -> { false }
+
         alias_method :name, :as
 
         # @api public
@@ -56,6 +60,11 @@ module ROM
             Name[options[:relation] || target, target, options[:as] || target],
             options
           )
+        end
+
+        # @api public
+        def override?
+          options[:override].equal?(true)
         end
 
         # @api public

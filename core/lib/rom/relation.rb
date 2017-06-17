@@ -195,7 +195,13 @@ module ROM
 
     # @api public
     def eager_load(assoc)
-      assoc.prepare(self).preload_assoc(assoc)
+      relation = assoc.prepare(self)
+
+      if assoc.override?
+        relation.(assoc)
+      else
+        relation.preload_assoc(assoc)
+      end
     end
 
     # @api private
