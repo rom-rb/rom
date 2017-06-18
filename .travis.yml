@@ -3,11 +3,12 @@ dist: trusty
 sudo: required
 cache: bundler
 install:
-  - "cd $GEM"
-  - "bundle install --without sql benchmarks console tools"
+  - "cd core && bundle install --without sql benchmarks console tools"
+  - "cd mapper && bundle install --without sql benchmarks console tools"
+  - "cd repository && bundle install --without sql benchmarks console tools"
 before_script:
-  - "[[ $GEM != 'repository' ]] || psql -c 'create database rom_repository' -U postgres"
-script: "cd $TRAVIS_BUILD_DIR && rake spec:$GEM"
+  - "psql -c 'create database rom_repository' -U postgres"
+script: "cd $TRAVIS_BUILD_DIR && rake spec"
 after_succes:
   - bundle exec codeclimate-test-reporter
 rvm:
@@ -19,10 +20,6 @@ env:
   global:
     - JRUBY_OPTS='--dev -J-Xmx1024M'
     - COVERAGE='true'
-  matrix:
-    - "GEM=core"
-    - "GEM=mapper"
-    - "GEM=repository"
 notifications:
   webhooks:
     urls:
