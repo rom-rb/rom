@@ -60,7 +60,7 @@ module ROM
       def dataset(&block)
         if defined?(@dataset)
           @dataset
-        else block
+        else
           @dataset = block || DEFAULT_DATASET_PROC
         end
       end
