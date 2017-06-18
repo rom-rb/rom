@@ -6,7 +6,7 @@ If you found a bug, report an issue and describe what's the expected behavior ve
 
 ## Reporting feature requests
 
-Report a feature request **only after discourseing it first on [discourse.rom-rb.org](https://discourse.rom-rb.org)** where it was accepted. Please provide a concise description of the feature, don't link to a discourseion thread, and instead summarize what was discourseed.
+Report a feature request **only after discussing it first on [discourse.rom-rb.org](https://discourse.rom-rb.org)** where it was accepted. Please provide a concise description of the feature, don't link to a discussion thread, and instead summarize what was discussed.
 
 ## Reporting questions, support requests, ideas, concerns etc.
 
