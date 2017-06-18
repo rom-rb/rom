@@ -68,8 +68,8 @@ module ROM
     # Hook for respond_to? used internally
     #
     # @api private
-    def respond_to?(name, include_all=false)
-      gateways.has_key?(name) || super
+    def respond_to?(name, include_all = false)
+      gateways.key?(name) || super
     end
 
     # @api private

@@ -20,13 +20,13 @@ module ROM
   #
   # @private
   class Finalize
-    attr_reader :gateways, :repo_adapter, :datasets, :gateway_map,
-      :relation_classes, :mapper_classes, :mapper_objects, :command_classes, :plugins, :config
+    attr_reader :gateways, :repo_adapter, :datasets,
+                :relation_classes, :mapper_classes, :mapper_objects,
+                :command_classes, :plugins, :config
 
     # @api private
     def initialize(options)
       @gateways = options.fetch(:gateways)
-      @gateway_map = options.fetch(:gateway_map)
 
       @relation_classes = options.fetch(:relation_classes)
       @command_classes = options.fetch(:command_classes)
@@ -48,7 +48,7 @@ module ROM
     #
     # @api private
     def adapter_for(gateway)
-      @gateway_map.fetch(gateways[gateway])
+      gateways[gateway].adapter
     end
 
     # Run the finalization process

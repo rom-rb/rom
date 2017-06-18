@@ -35,23 +35,23 @@ module ROM
 
     # @api private
     def normalize_gateway_args(*args)
-      args.first.is_a?(Hash) ? args.first : {default: args}
+      args.first.is_a?(Hash) ? args.first : { default: args }
     end
 
     # Build gateways using the setup interface
     #
     # @api private
     def normalize_gateways(gateways_config)
-      gateways_config.each_with_object({map: {}, gateways: {}}) do |(name, spec), hash|
+      gateways_config.each_with_object(map: {}, gateways: {}) do |(name, spec), hash|
         identifier, *args = Array(spec)
 
         if identifier.is_a?(Gateway)
           gateway = identifier
         else
-          gateway = Gateway.setup(identifier, *(args.flatten))
-          hash[:map][gateway] = identifier
+          gateway = Gateway.setup(identifier, *args.flatten)
         end
 
+        hash[:map][gateway] = name
         hash[:gateways][name] = gateway
       end
     end

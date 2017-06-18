@@ -23,7 +23,6 @@ module ROM
 
       finalize = Finalize.new(
         gateways: environment.gateways,
-        gateway_map: environment.gateways_map,
         relation_classes: setup.relation_classes,
         command_classes: setup.command_classes,
         mappers: setup.mapper_classes,
