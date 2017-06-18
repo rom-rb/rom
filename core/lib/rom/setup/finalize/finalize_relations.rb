@@ -31,8 +31,7 @@ module ROM
 
             if registry.key?(key)
               raise RelationAlreadyDefinedError,
-                    "Relation with `register_as #{key.inspect}` registered more " \
-                    "than once"
+                    "Relation with name #{key.inspect} registered more than once"
             end
 
             relations[key] = relation
@@ -58,17 +57,14 @@ module ROM
         # TODO: raise a meaningful error here and add spec covering the case
         #       where klass' gateway points to non-existant repo
         gateway = @gateways.fetch(klass.gateway)
-        ds_proc = klass.dataset_proc || -> _ { self }
-
-        klass.schema(infer: true) unless klass.schema
         schema = klass.schema.finalize_attributes!(gateway: gateway, relations: registry)
 
         @plugins.each do |plugin|
           plugin.apply_to(klass)
         end
 
-        rel_key = klass.register_as
-        dataset = gateway.dataset(klass.dataset).instance_exec(klass, &ds_proc)
+        rel_key = klass.schema.name.to_sym
+        dataset = gateway.dataset(klass.schema.name.dataset).instance_exec(klass, &klass.dataset)
         mappers = @mappers.key?(rel_key) ? @mappers[rel_key] : MapperRegistry.new
 
         options = { __registry__: registry, mappers: mappers, schema: schema, **plugin_options }

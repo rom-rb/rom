@@ -23,8 +23,7 @@ RSpec.describe ROM::CreateContainer do
         allow(repo).to receive(:dataset).with(:users).and_return(dataset_double)
 
         users = Class.new(ROM::Relation[:memory]) do
-          register_as :users
-          dataset :users
+          schema(:users) { }
         end
 
         configuration.register_relation(users)
@@ -80,8 +79,7 @@ RSpec.describe ROM::CreateContainer do
         configuration
 
         apples = Class.new(ROM::Relation[:memory]) do
-          dataset :fruits
-          register_as :apples
+          schema(:fruits, as: :apples) { }
 
           def apple?
             true
@@ -89,8 +87,7 @@ RSpec.describe ROM::CreateContainer do
         end
 
         oranges = Class.new(ROM::Relation[:memory]) do
-          dataset :fruits
-          register_as :oranges
+          schema(:fruits, as: :oranges) { }
 
           def orange?
             true
@@ -105,24 +102,22 @@ RSpec.describe ROM::CreateContainer do
         expect(container.relations.apples).to_not eq(container.relations.oranges)
       end
 
-      it "raises an error when registering relations with the same `register_as`" do
+      it "raises an error when registering relations with the same `name`" do
         configuration
 
         users = Class.new(ROM::Relation[:memory]) do
-          dataset :guests
-          register_as :users
+          schema(:quests, as: :users) { }
         end
 
         users2 = Class.new(ROM::Relation[:memory]) do
-          dataset :admins
-          register_as :users
+          schema(:admins, as: :users) { }
         end
 
         configuration.register_relation(users)
         configuration.register_relation(users2)
 
         expect { container }.to raise_error(
-          ROM::RelationAlreadyDefinedError, /register_as :users/
+          ROM::RelationAlreadyDefinedError, /name :users/
         )
       end
     end

@@ -9,7 +9,7 @@ RSpec.describe 'ROM repository with typed structs' do
   context 'typed projections' do
     before do
       configuration.relation(:books) do
-        schema(infer: true)
+        schema(:books, infer: true)
 
         view(:index) do
           schema { project(:id, :title, :created_at) }
@@ -34,7 +34,7 @@ RSpec.describe 'ROM repository with typed structs' do
   context 'read-write type coercions' do
     before do
       configuration.relation(:books) do
-        schema(infer: true) do
+        schema(:books, infer: true) do
           attribute :title,
                     ROM::Types::Coercible::String.meta(
                       read: ROM::Types::Symbol.constructor(&:to_sym)

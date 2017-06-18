@@ -43,7 +43,9 @@ RSpec.describe 'Configuring ROM' do
     let(:container) do
       ROM.container(:memory) do |config|
         class Test::UserRelation < ROM::Relation[:memory]
-          dataset :users
+          schema(:users) do
+            attribute :name, ROM::Types::String
+          end
 
           def by_name(name)
             restrict(name: name)
@@ -51,7 +53,9 @@ RSpec.describe 'Configuring ROM' do
         end
 
         class Test::TaskRelation < ROM::Relation[:memory]
-          dataset :tasks
+          schema(:tasks) do
+            attribute :title, ROM::Types::String
+          end
         end
 
         class Test::CreateUser < ROM::Commands::Update[:memory]
@@ -72,11 +76,6 @@ RSpec.describe 'Configuring ROM' do
 
       expect(container.relations.tasks).to be_kind_of(Test::TaskRelation)
       expect(container.relations.tasks.users).to eql(container.relations.users)
-    end
-
-    it 'sets empty schemas by default' do
-      expect(container.relations[:users].schema).to be_empty
-      expect(container.relations[:tasks].schema).to be_empty
     end
   end
 
@@ -151,9 +150,7 @@ RSpec.describe 'Configuring ROM' do
 
   it 'allows to use a relation with a schema in multiple containers' do
     class Test::UserRelation < ROM::Relation[:memory]
-      dataset :users
-
-      schema do
+      schema(:users) do
         attribute :id, Types::Int.meta(primary_key: true)
       end
     end

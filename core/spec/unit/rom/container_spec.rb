@@ -5,8 +5,6 @@ RSpec.describe ROM::Container do
   include_context 'users and tasks'
 
   before do
-    configuration
-
     users = Class.new(ROM::Relation[:memory]) do
       schema(:users) do
         attribute :name, ROM::Types::String

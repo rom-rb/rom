@@ -5,7 +5,7 @@ RSpec.describe ROM::Relation, '.dataset' do
 
   it 'injects configured dataset when block was provided' do
     configuration.relation(:users) do
-      dataset do
+      dataset do |klass|
         insert(id: 2, name: 'Joe')
         insert(id: 1, name: 'Jane')
 
@@ -18,7 +18,7 @@ RSpec.describe ROM::Relation, '.dataset' do
 
   it 'yields relation class for setting custom dataset proc' do
     configuration.relation(:users) do
-      schema do
+      schema(:users) do
         attribute :id, ROM::Memory::Types::Int.meta(primary_key: true)
         attribute :name, ROM::Memory::Types::String
       end

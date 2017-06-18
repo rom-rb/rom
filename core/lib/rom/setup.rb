@@ -17,7 +17,6 @@ module ROM
     # @api private
     attr_reader :command_classes
 
-
     # @api private
     attr_reader :plugins
 

@@ -18,7 +18,7 @@ module ROM
 
         Dry::Core::ClassBuilder.new(name: class_name, parent: ROM::Relation[adapter]).call do |klass|
           klass.gateway(options.fetch(:gateway, :default))
-          klass.dataset(name)
+          klass.schema(name) { }
         end
       end
     end

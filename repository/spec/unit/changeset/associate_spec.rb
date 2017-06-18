@@ -24,7 +24,7 @@ RSpec.describe ROM::Changeset, '#associate' do
     end
 
     configuration.relation(:people) do
-      schema(infer: true) do
+      schema(:people, infer: true) do
         associations do
           has_many :todos
         end
@@ -32,7 +32,7 @@ RSpec.describe ROM::Changeset, '#associate' do
     end
 
     configuration.relation(:projects) do
-      schema(infer: true) do
+      schema(:projects, infer: true) do
         associations do
           has_many :todos
         end
@@ -40,7 +40,7 @@ RSpec.describe ROM::Changeset, '#associate' do
     end
 
     configuration.relation(:todos) do
-      schema(infer: true) do
+      schema(:todos, infer: true) do
         associations do
           belongs_to :people, as: :user
           belongs_to :projects, as: :project

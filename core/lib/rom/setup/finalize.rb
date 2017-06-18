@@ -125,7 +125,6 @@ module ROM
           if infer_relation?(gateway, name)
             klass = ROM::ConfigurationDSL::Relation.build_class(name, adapter: adapter_for(gateway))
             klass.gateway(gateway)
-            klass.dataset(name)
             @relation_classes << klass
           else
             next
@@ -136,7 +135,7 @@ module ROM
 
     def infer_relation?(gateway, name)
       inferrable_relations(gateway).include?(name) && relation_classes.none? { |klass|
-        klass.dataset == name
+        klass.schema.name.dataset == name
       }
     end
 

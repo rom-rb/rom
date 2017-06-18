@@ -1,4 +1,4 @@
-shared_context 'command graph' do
+RSpec.shared_context 'command graph' do
   include_context 'container'
 
   before do

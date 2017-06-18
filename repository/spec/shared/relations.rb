@@ -7,7 +7,7 @@ RSpec.shared_context 'relations' do
 
   before do
     configuration.relation(:books) do
-      schema(:books) do
+      schema do
         attribute :id, ROM::SQL::Types::Serial
         attribute :author_id, ROM::SQL::Types.ForeignKey(:users)
         attribute :title, ROM::SQL::Types::String
@@ -46,11 +46,11 @@ RSpec.shared_context 'relations' do
     end
 
     configuration.relation(:authors) do
-      schema(:users, infer: true)
+      schema(:users, as: :authors, infer: true)
     end
 
     configuration.relation(:tasks) do
-      schema(infer: true) do
+      schema(:tasks, infer: true) do
         associations do
           belongs_to :user
           belongs_to :users, as: :assignee
@@ -69,7 +69,7 @@ RSpec.shared_context 'relations' do
     end
 
     configuration.relation(:tags) do
-      schema(infer: true) do
+      schema(:tags, infer: true) do
         associations do
           belongs_to :tasks, as: :task
         end
@@ -77,7 +77,7 @@ RSpec.shared_context 'relations' do
     end
 
     configuration.relation(:labels) do
-      schema(infer: true) do
+      schema(:labels, infer: true) do
         associations do
           has_many :posts_labels
           has_many :posts, through: :posts_labels
@@ -96,7 +96,7 @@ RSpec.shared_context 'relations' do
     end
 
     configuration.relation(:posts_labels) do
-      schema(infer: true) do
+      schema(:posts_labels, infer: true) do
         associations do
           belongs_to :post
           belongs_to :label
@@ -105,7 +105,7 @@ RSpec.shared_context 'relations' do
     end
 
     configuration.relation(:comments) do
-      schema(:messages, infer: true) do
+      schema(:messages, as: :comments, infer: true) do
         associations do
           has_many :likes
           has_many :reactions, relation: :likes
@@ -115,7 +115,7 @@ RSpec.shared_context 'relations' do
     end
 
     configuration.relation(:likes) do
-      schema(:reactions, infer: true) do
+      schema(:reactions, as: :likes, infer: true) do
         associations do
           belongs_to :message, relation: :comments
           belongs_to :comments

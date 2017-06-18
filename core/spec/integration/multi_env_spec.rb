@@ -20,7 +20,7 @@ RSpec.describe 'Setting up ROM with multiple environments' do
     before do
       module Test
         class Users < ROM::Relation[:memory]
-          dataset :users
+          schema(:users) { }
         end
 
         class CreateUser < ROM::Commands::Create[:memory]
