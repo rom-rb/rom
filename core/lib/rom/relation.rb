@@ -51,8 +51,8 @@ module ROM
 
     extend Dry::Core::ClassAttributes
 
-    defines :gateway, :schema_opts, :schema_class, :schema_attr_class,
-            :schema_inferrer, :schema_dsl, :wrap_class
+    defines :adapter, :gateway, :schema_opts, :schema_class,
+            :schema_attr_class, :schema_inferrer, :schema_dsl, :wrap_class
 
     gateway :default
     schema_opts EMPTY_HASH

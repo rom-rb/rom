@@ -15,25 +15,16 @@ module ROM
 
       DEFAULT_DATASET_PROC = -> * { self }.freeze
 
-      # Register adapter relation subclasses during setup phase
-      #
-      # In adition those subclasses are extended with an interface for accessing
-      # relation registry and to define `register_as` setting
+      # This makes sure adapter is set and schema is inherited (when it exists)
       #
       # @api private
       def inherited(klass)
         super
 
-        if respond_to?(:adapter) && adapter.nil?
+        if adapter.nil? && self != ROM::Relation
           raise MissingAdapterIdentifierError,
                 "relation class +#{self}+ is missing the adapter identifier"
         end
-
-        klass.defines :adapter
-
-        # Extend with functionality required by adapters *only* if this is a direct
-        # descendant of an adapter-specific relation subclass
-        return unless respond_to?(:adapter) && klass.superclass == ROM::Relation[adapter]
 
         if instance_variable_defined?(:@schema)
           klass.instance_variable_set(:@schema, @schema)
