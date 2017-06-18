@@ -38,34 +38,6 @@ module ROM
         if instance_variable_defined?(:@schema)
           klass.instance_variable_set(:@schema, @schema)
         end
-
-        klass.class_eval do
-          # Set or get custom dataset block
-          #
-          # If a block is passed it will be evaluated in the context of the dataset
-          # to define the default dataset which will be injected into a relation
-          # when setting up relation registry
-          #
-          # @example
-          #   class Relations::Users < ROM::Relation[:memory]
-          #     dataset :users
-          #   end
-          #
-          #   class Users < ROM::Relation[:memory]
-          #     dataset { sort_by(:id) }
-          #   end
-          #
-          # @param [Symbol] value The name of the dataset
-          #
-          # @api public
-          def self.dataset(&block)
-            if defined?(@dataset)
-              @dataset
-            else block
-              @dataset = block || DEFAULT_DATASET_PROC
-            end
-          end
-        end
       end
 
       # Return adapter-specific relation subclass
@@ -81,6 +53,25 @@ module ROM
         ROM.adapters.fetch(adapter).const_get(:Relation)
       rescue KeyError
         raise AdapterNotPresentError.new(adapter, :relation)
+      end
+
+      # Set or get custom dataset block
+      #
+      # This block will be evaluated when a relation is instantiated and registered
+      # in a relation registry.
+      #
+      # @example
+      #   class Users < ROM::Relation[:memory]
+      #     dataset { sort_by(:id) }
+      #   end
+      #
+      # @api public
+      def dataset(&block)
+        if defined?(@dataset)
+          @dataset
+        else block
+          @dataset = block || DEFAULT_DATASET_PROC
+        end
       end
 
       # Specify canonical schema for a relation
