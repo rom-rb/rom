@@ -1,8 +1,0 @@
-#!/bin/bash
-
-for p in core mapper repository
-do
-  cd $p
-  bundle exec rake spec
-  cd ..
-done
