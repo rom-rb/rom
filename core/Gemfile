@@ -16,7 +16,6 @@ group :test do
   gem 'rom-mapper', path: '../mapper'
 
   platforms :mri do
-    gem 'codeclimate-test-reporter', require: false
     gem 'simplecov', require: false
   end
 

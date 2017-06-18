@@ -23,7 +23,6 @@ group :test do
   gem 'jdbc-postgres', platforms: :jruby
 
   platform :mri do
-    gem 'codeclimate-test-reporter', require: false
     gem 'simplecov'
   end
 end
