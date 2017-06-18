@@ -1,5 +1,4 @@
 exclude_paths:
-  - "lib/**/*.rb"
-  - "benchmarks"
-  - "examples"
-  - "*/spec/**/*.rb"
+  - "benchmarks/"
+  - "examples/"
+  - "spec/"
