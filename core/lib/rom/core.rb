@@ -1,4 +1,4 @@
-require 'dry-equalizer'
+require 'dry/equalizer'
 require 'dry/core/constants'
 
 require 'rom/version'

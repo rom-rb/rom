@@ -1,4 +1,4 @@
-require 'dry-equalizer'
+require 'dry/equalizer'
 
 require 'rom/schema/attribute'
 require 'rom/schema/dsl'
