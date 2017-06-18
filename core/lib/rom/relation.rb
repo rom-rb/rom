@@ -1,5 +1,6 @@
 require 'dry/core/class_attributes'
 
+require 'rom/constants'
 require 'rom/initializer'
 require 'rom/relation/class_interface'
 
@@ -48,8 +49,9 @@ module ROM
 
     extend Dry::Core::ClassAttributes
 
-    defines :schema_class, :schema_attr_class, :schema_inferrer, :schema_dsl, :wrap_class
+    defines :schema_opts, :schema_class, :schema_attr_class, :schema_inferrer, :schema_dsl, :wrap_class
 
+    schema_opts EMPTY_HASH
     schema_dsl Schema::DSL
     schema_attr_class Schema::Attribute
     schema_class Schema
@@ -59,18 +61,6 @@ module ROM
     include Dry::Equalizer(:name, :dataset)
     include Materializable
     include Pipeline
-
-    # @!attribute [r] name
-    #   @return [Object] The relation name
-    #   @api public
-    option :name, default: -> {
-      # FIXME: this will be gone once we remove `register_as` and `dataset` settings
-      if self.class.respond_to?(:register_as)
-        Name[self.class.register_as, self.class.dataset]
-      else
-        Name[:anonymous]
-      end
-    }
 
     # @!attribute [r] dataset
     #   @return [Object] dataset used by the relation provided by relation's gateway
@@ -82,12 +72,17 @@ module ROM
     #                    schema (if it was defined) and sets an empty one as
     #                    the fallback
     #   @api public
-    option :schema, default: -> { self.class.default_schema(self) }
+    option :schema, default: -> { self.class.schema || self.class.default_schema }
+
+    # @!attribute [r] name
+    #   @return [Object] The relation name
+    #   @api public
+    option :name, default: -> { self.class.schema ? self.class.schema.name : self.class.default_name }
 
     # @!attribute [r] input_schema
     #   @return [Object#[]] tuple processing function, uses schema or defaults to Hash[]
     #   @api private
-    option :input_schema, default: -> { schema? ? schema.to_input_hash : Hash }
+    option :input_schema, default: -> { schema.to_input_hash }
 
     # @!attribute [r] output_schema
     #   @return [Object#[]] tuple processing function, uses schema or defaults to NOOP_OUTPUT_SCHEMA

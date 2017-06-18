@@ -15,6 +15,8 @@ module ROM
     module ClassInterface
       include Dry::Core::Constants
 
+      DEFAULT_DATASET_PROC = -> * { self }.freeze
+
       # Register adapter relation subclasses during setup phase
       #
       # In adition those subclasses are extended with an interface for accessing
@@ -35,16 +37,18 @@ module ROM
         # descendant of an adapter-specific relation subclass
         return unless respond_to?(:adapter) && klass.superclass == ROM::Relation[adapter]
 
+        if instance_variable_defined?(:@schema)
+          klass.instance_variable_set(:@schema, @schema)
+        end
+
         klass.class_eval do
           use :registry_reader
 
-          defines :gateway, :dataset, :dataset_proc, :register_as
+          defines :gateway
 
           gateway :default
 
-          dataset default_name
-
-          # Set dataset name
+          # Set or get custom dataset block
           #
           # If a block is passed it will be evaluated in the context of the dataset
           # to define the default dataset which will be injected into a relation
@@ -62,31 +66,11 @@ module ROM
           # @param [Symbol] value The name of the dataset
           #
           # @api public
-          def self.dataset(value = Undefined, &block)
-            dataset_proc(block) if block
-            super
-          end
-
-          # Set or get name under which a relation will be registered
-          #
-          # This defaults to `dataset` or `default_name` for descendant relations
-          #
-          # @return [Symbol]
-          #
-          # @api public
-          def self.register_as(value = Undefined)
-            if value == Undefined
-              return @register_as if defined?(@register_as)
-
-              super_val = super()
-
-              if superclass == ROM::Relation[adapter]
-                super_val || dataset
-              else
-                super_val == dataset ? default_name : super_val
-              end
-            else
-              super
+          def self.dataset(&block)
+            if defined?(@dataset)
+              @dataset
+            else block
+              @dataset = block || DEFAULT_DATASET_PROC
             end
           end
 
@@ -142,18 +126,13 @@ module ROM
       #
       # @api public
       def schema(dataset = nil, as: nil, infer: false, &block)
-        if defined?(@schema)
+        if defined?(@schema) && !block && !infer
           @schema
         elsif block || infer
-          self.dataset(dataset) if dataset
+          ds_name = schema_opts.fetch(:dataset, dataset || default_name.dataset)
+          relation = as || ds_name || default_name.relation
 
-          if as
-            self.register_as(as)
-          else
-            self.register_as(self.dataset) unless register_as
-          end
-
-          name = Name[register_as, self.dataset]
+          name = Name[relation, dataset]
           inferrer = infer ? schema_inferrer : nil
 
           unless schema_class
@@ -285,16 +264,6 @@ module ROM
         ROM.plugin_registry.relations.fetch(plugin, adapter).apply_to(self)
       end
 
-      # Return default relation name used for `register_as` setting
-      #
-      # @return [Symbol]
-      #
-      # @api private
-      def default_name
-        return unless name
-        Dry::Core::Inflector.underscore(name).tr('/', '_').to_sym
-      end
-
       # @api private
       def curried
         Curried
@@ -313,10 +282,23 @@ module ROM
         @schemas ||= {}
       end
 
+      # Return default relation name used in schemas
+      #
+      # @return [Name]
+      #
       # @api private
-      def default_schema(relation)
-        relation_class = relation.class
-        relation_class.schema || relation_class.schema_class.define(relation_class.default_name)
+      def default_name
+        Name[Dry::Core::Inflector.underscore(name).tr('/', '_').to_sym]
+      end
+
+      # @api private
+      def default_schema(klass = self)
+        klass.schema || klass.schema_class.define(klass.default_name)
+      end
+
+      # @api private
+      def name
+        super || superclass.name
       end
 
       # Hook to finalize a relation after its instance was created

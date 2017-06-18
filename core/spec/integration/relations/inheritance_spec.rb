@@ -6,7 +6,7 @@ RSpec.describe 'Inheritance relation hierarchy' do
   before do
     module Test
       class Users < ROM::Relation[:memory]
-        dataset :users
+        schema(:users) { }
 
         def by_email(email)
           restrict(email: email)
@@ -14,7 +14,7 @@ RSpec.describe 'Inheritance relation hierarchy' do
       end
 
       class OtherUsers < Users
-        register_as :other_users
+        schema(:other_users) { }
       end
     end
 

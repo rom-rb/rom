@@ -35,7 +35,7 @@ RSpec.describe "ROM::PluginRegistry" do
 
   it "includes relation plugins" do
     users = Class.new(ROM::Relation[:memory]) do
-      register_as :users
+      schema(:users) { }
       use :pager
     end
     configuration.register_relation(users)
@@ -45,7 +45,7 @@ RSpec.describe "ROM::PluginRegistry" do
 
   it "makes command plugins available" do
     users = Class.new(ROM::Relation[:memory]) do
-      register_as :users
+      schema(:users) { }
     end
 
     create_user = Class.new(ROM::Commands::Create[:memory]) do
@@ -62,7 +62,7 @@ RSpec.describe "ROM::PluginRegistry" do
 
   it "inclues plugins in mappers" do
     users = Class.new(ROM::Relation[:memory]) do
-      register_as :users
+      schema(:users) { }
     end
     translator = Class.new(ROM::Mapper) do
       relation :users
@@ -98,7 +98,7 @@ RSpec.describe "ROM::PluginRegistry" do
     end
 
     users = Class.new(ROM::Relation[:memory]) do
-      register_as :users
+      schema(:users) { }
       use :lazy
     end
     configuration.register_relation(users)
@@ -124,7 +124,7 @@ RSpec.describe "ROM::PluginRegistry" do
     end
 
     users = Class.new(ROM::Relation[:memory]) do
-      register_as :users
+      schema(:users) { }
     end
 
     create_user = Class.new(ROM::Commands::Create[:memory]) do

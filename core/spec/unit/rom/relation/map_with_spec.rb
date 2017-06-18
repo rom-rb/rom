@@ -3,7 +3,12 @@ require 'rom/relation'
 
 RSpec.describe ROM::Relation, '#map_with' do
   subject(:relation) do
-    ROM::Relation.new(dataset, mappers: mappers, name: ROM::Relation::Name[:users])
+    ROM::Relation.new(
+      dataset,
+      name: ROM::Relation::Name[:users],
+      schema: ROM::Relation.default_schema,
+      mappers: mappers
+    )
   end
 
   let(:mappers) { ROM::MapperRegistry.new({}) }
