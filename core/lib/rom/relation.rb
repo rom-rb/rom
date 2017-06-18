@@ -60,6 +60,18 @@ module ROM
     include Materializable
     include Pipeline
 
+    # @!attribute [r] name
+    #   @return [Object] The relation name
+    #   @api public
+    option :name, default: -> {
+      # FIXME: this will be gone once we remove `register_as` and `dataset` settings
+      if self.class.respond_to?(:register_as)
+        Name[self.class.register_as, self.class.dataset]
+      else
+        Name[:anonymous]
+      end
+    }
+
     # @!attribute [r] dataset
     #   @return [Object] dataset used by the relation provided by relation's gateway
     #   @api public

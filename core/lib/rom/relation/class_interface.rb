@@ -44,20 +44,6 @@ module ROM
 
           dataset default_name
 
-          # skip defining :name option if it's a class that already has this method
-          # which can happen when an adapter's relation class inherits from another
-          # adapter's relation class (ie YAML::Relation < Memory::Relation)
-          unless instance_methods.include?(:name)
-            # Relation's dataset name
-            #
-            # In example a table name in an SQL database
-            #
-            # @return [Symbol]
-            #
-            # @api public
-            option :name, default: -> { Name.new(self.class.register_as, self.class.dataset) }
-          end
-
           # Set dataset name
           #
           # If a block is passed it will be evaluated in the context of the dataset
