@@ -7,7 +7,7 @@ install:
   - "bundle install --without sql benchmarks console tools"
 before_script:
   - "[[ $GEM != 'repository' ]] || psql -c 'create database rom_repository' -U postgres"
-script: "cd $TRAVIS_BUILD_DIR && rake spec:$(GEM)"
+script: "cd $TRAVIS_BUILD_DIR && rake spec:$GEM"
 rvm:
   - 2.2.7
   - 2.3.4
