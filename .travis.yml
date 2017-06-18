@@ -2,16 +2,8 @@ language: ruby
 dist: trusty
 sudo: required
 cache: bundler
-install:
-  - "bundle install"
-  - "cd $TRAVIS_BUILD_DIR/core && bundle install --without sql benchmarks console tools"
-  - "cd $TRAVIS_BUILD_DIR/mapper && bundle install --without sql benchmarks console tools"
-  - "cd $TRAVIS_BUILD_DIR/repository && bundle install --without sql benchmarks console tools"
-before_script:
-  - "psql -c 'create database rom_repository' -U postgres"
-script: "cd $TRAVIS_BUILD_DIR && rake spec"
-after_success:
-  - '[ -d coverage ] && bundle exec codeclimate-test-reporter'
+script: 'bin/ci'
+after_success: '[ -d coverage ] && bundle exec codeclimate-test-reporter'
 rvm:
   - 2.2.7
   - 2.3.4

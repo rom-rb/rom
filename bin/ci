@@ -1,5 +1,7 @@
 #!/bin/bash
 
+psql -c 'create database rom_repository' -U postgres
+
 for p in core mapper repository
 do
   cd $p
