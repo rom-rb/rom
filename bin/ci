@@ -1,11 +1,8 @@
 #!/bin/bash
 
-psql -c 'create database rom_repository' -U postgres
-
 for p in core mapper repository
 do
   cd $p
-  bundle install --without sql benchmarks console tools
   bundle exec rake spec
   cd ..
 done
