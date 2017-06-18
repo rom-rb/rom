@@ -1,3 +1,5 @@
 --query '@api.text != "private"'
 --embed-mixins
 -o ../doc/rom-repository
+-r README.md
+--files CHANGELOG.md
