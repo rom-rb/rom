@@ -25,6 +25,8 @@ module ROM
       def run!
         relation_registry = RelationRegistry.new do |registry, relations|
           @relation_classes.each do |klass|
+            klass.use(:registry_reader)
+
             relation = build_relation(klass, registry)
 
             key = relation.name.to_sym

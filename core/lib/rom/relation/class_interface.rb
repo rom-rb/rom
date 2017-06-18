@@ -3,8 +3,6 @@ require 'set'
 require 'dry/core/inflector'
 require 'dry/core/constants'
 
-require 'rom/auto_curry'
-require 'rom/relation/curried'
 require 'rom/relation/name'
 require 'rom/relation/view_dsl'
 require 'rom/schema'
@@ -42,12 +40,6 @@ module ROM
         end
 
         klass.class_eval do
-          use :registry_reader
-
-          defines :gateway
-
-          gateway :default
-
           # Set or get custom dataset block
           #
           # If a block is passed it will be evaluated in the context of the dataset
@@ -73,19 +65,7 @@ module ROM
               @dataset = block || DEFAULT_DATASET_PROC
             end
           end
-
-          # Return name of the source gateway of this relation
-          #
-          # @return [Symbol]
-          #
-          # @api private
-          def gateway
-            self.class.gateway
-          end
         end
-
-        klass.extend(AutoCurry)
-        klass.auto_curry(:preload_assoc)
       end
 
       # Return adapter-specific relation subclass

@@ -4,6 +4,7 @@ require 'rom/constants'
 require 'rom/initializer'
 require 'rom/relation/class_interface'
 
+require 'rom/auto_curry'
 require 'rom/pipeline'
 require 'rom/mapper_registry'
 
@@ -43,14 +44,17 @@ module ROM
     NOOP_OUTPUT_SCHEMA = -> tuple { tuple }.freeze
 
     extend Initializer
+    extend AutoCurry
     extend ClassInterface
 
     include Relation::Commands
 
     extend Dry::Core::ClassAttributes
 
-    defines :schema_opts, :schema_class, :schema_attr_class, :schema_inferrer, :schema_dsl, :wrap_class
+    defines :gateway, :schema_opts, :schema_class, :schema_attr_class,
+            :schema_inferrer, :schema_dsl, :wrap_class
 
+    gateway :default
     schema_opts EMPTY_HASH
     schema_dsl Schema::DSL
     schema_attr_class Schema::Attribute
@@ -212,7 +216,7 @@ module ROM
     end
 
     # @api private
-    def preload_assoc(assoc, other)
+    auto_curry def preload_assoc(assoc, other)
       assoc.preload(self, other)
     end
 
@@ -446,6 +450,15 @@ module ROM
     # @api private
     def adapter
       self.class.adapter
+    end
+
+    # Return name of the source gateway of this relation
+    #
+    # @return [Symbol]
+    #
+    # @api private
+    def gateway
+      self.class.gateway
     end
 
     # @api private
