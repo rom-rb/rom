@@ -15,7 +15,7 @@ script:
   - 'cd $TRAVIS_BUILD_DIR'
   - 'rake spec'
 after_success:
-  - '[ -d coverage ] && bundle exec codeclimate-test-reporter'
+  - '[ -d coverage ] && codeclimate-test-reporter'
 rvm:
   - 2.2.7
   - 2.3.4
