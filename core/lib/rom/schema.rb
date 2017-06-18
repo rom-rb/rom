@@ -40,12 +40,6 @@ module ROM
 
     AttributeAlreadyDefinedError = Class.new(StandardError)
 
-    include Dry::Equalizer(:name, :attributes)
-    include Enumerable
-
-    attr_reader :name, :attributes, :inferrer, :associations_dsl
-
-
     include Dry::Equalizer(:name, :attributes, :associations)
     include Enumerable
 
