@@ -8,6 +8,8 @@ install:
 before_script:
   - "[[ $GEM != 'repository' ]] || psql -c 'create database rom_repository' -U postgres"
 script: "cd $TRAVIS_BUILD_DIR && rake spec:$GEM"
+after_succes:
+  - bundle exec codeclimate-test-reporter
 rvm:
   - 2.2.7
   - 2.3.4
