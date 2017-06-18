@@ -2,7 +2,6 @@ language: ruby
 dist: trusty
 sudo: required
 install:
-  - "bundle install"
   - "cd $TRAVIS_BUILD_DIR/core"
   - "bundle install --without sql benchmarks console tools --gemfile ./Gemfile"
   - "cd $TRAVIS_BUILD_DIR/mapper"
