@@ -1,4 +1,8 @@
-exclude_paths:
-  - "*/benchmarks/"
-  - "*/examples/"
-  - "*/spec/"
+engines:
+  rubocop:
+    enabled: true
+ratings:
+  paths:
+    - core/lib/**
+    - mapper/lib/**
+    - repository/lib/**
