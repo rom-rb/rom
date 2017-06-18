@@ -1,0 +1,7 @@
+files:
+  included:
+    - core/lib/**/*.rb
+    - mapper/lib/**/*.rb
+    - repository/lib/**/*.rb
+  excluded:
+    - lib/**/*.rb
