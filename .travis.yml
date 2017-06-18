@@ -13,7 +13,7 @@ before_script:
   - "psql -c 'create database rom_repository' -U postgres"
 script:
   - 'cd $TRAVIS_BUILD_DIR'
-  - 'bundle exec rake spec'
+  - 'rake spec'
 after_success:
   - '[ -d coverage ] && bundle exec codeclimate-test-reporter'
 rvm:
