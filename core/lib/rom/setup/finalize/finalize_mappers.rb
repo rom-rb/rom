@@ -36,7 +36,7 @@ module ROM
       private
 
       def check_duplicate_registered_mappers
-        mappers_register_as = mapper_classes.map(&:register_as)
+        mappers_register_as = mapper_classes.map(&:register_as).compact
         mappers_register_as.select { |register_as| mappers_register_as.count(register_as) > 1 }
           .uniq
           .each do |duplicated_mappers|
