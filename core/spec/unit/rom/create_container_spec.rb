@@ -106,7 +106,7 @@ RSpec.describe ROM::CreateContainer do
         configuration
 
         users = Class.new(ROM::Relation[:memory]) do
-          schema(:quests, as: :users) { }
+          schema(:guests, as: :users) { }
         end
 
         users2 = Class.new(ROM::Relation[:memory]) do

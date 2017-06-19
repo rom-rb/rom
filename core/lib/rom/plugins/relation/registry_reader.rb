@@ -1,33 +1,42 @@
+require 'dry/core/cache'
 require 'rom/constants'
 
 module ROM
   module Plugins
     module Relation
-      EMPTY_REGISTRY = RelationRegistry.new(EMPTY_HASH).freeze
-
       # Allows relations to access all other relations through registry
       #
       # For now this plugin is always enabled
       #
       # @api public
-      module RegistryReader
+      class RegistryReader < Module
+        extend Dry::Core::Cache
+
+        EMPTY_REGISTRY = RelationRegistry.new(EMPTY_HASH).freeze
+
         # @api private
-        def self.included(klass)
+        attr_reader :relations
+
+        # @api private
+        def initialize(relations)
+          @relations = relations
+          define_readers!
+        end
+
+        # @api private
+        def included(klass)
           super
           return if klass.instance_methods.include?(:__registry__)
           klass.option :__registry__, default: -> { EMPTY_REGISTRY }
         end
 
-        # @api private
-        def respond_to_missing?(name, _include_private = false)
-          __registry__.key?(name) || super
-        end
-
         private
 
         # @api private
-        def method_missing(name, *)
-          __registry__.fetch(name) { super }
+        def define_readers!
+          relations.each do |name|
+            define_method(name) { __registry__[name] }
+          end
         end
       end
     end

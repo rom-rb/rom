@@ -25,18 +25,16 @@ module ROM
       def run!
         relation_registry = RelationRegistry.new do |registry, relations|
           @relation_classes.each do |klass|
-            klass.use(:registry_reader)
-
-            relation = build_relation(klass, registry)
-
-            key = relation.name.to_sym
+            key = klass.schema.name.relation
 
             if registry.key?(key)
               raise RelationAlreadyDefinedError,
                     "Relation with name #{key.inspect} registered more than once"
             end
 
-            relations[key] = relation
+            klass.use(:registry_reader, relation_names)
+
+            relations[key] = build_relation(klass, registry)
           end
 
           relations.each_value do |relation|
@@ -77,6 +75,11 @@ module ROM
       # @api private
       def plugin_options
         @plugins.map(&:config).map(&:to_hash).reduce(:merge) || EMPTY_HASH
+      end
+
+      # @api private
+      def relation_names
+        @relation_classes.map(&:schema).map(&:name).map(&:relation).uniq
       end
     end
   end
