@@ -130,7 +130,7 @@ module ROM
         default_mapping =
           if meta[:combine_type] == :many
             name
-          else meta[:combine_type] == :one
+          else
             { Dry::Core::Inflector.singularize(name).to_sym => name }
           end
 
