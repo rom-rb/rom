@@ -73,8 +73,8 @@ module ROM
           plugin.apply_to(klass)
         end
 
-        rel_key = klass.schema.name.to_sym
-        dataset = gateway.dataset(klass.schema.name.dataset).instance_exec(klass, &klass.dataset)
+        rel_key = schema.name.to_sym
+        dataset = gateway.dataset(schema.name.dataset).instance_exec(klass, &klass.dataset)
         mappers = @mappers.key?(rel_key) ? @mappers[rel_key] : MapperRegistry.new
 
         options = { __registry__: registry, mappers: mappers, schema: schema, **plugin_options }
