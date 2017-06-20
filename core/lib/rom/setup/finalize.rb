@@ -74,11 +74,13 @@ module ROM
     #
     # @api private
     def load_relations(mappers)
+      global_plugins = plugins.select { |p| p.relation? || p.schema? }
+
       FinalizeRelations.new(
         gateways,
         relation_classes,
         mappers: mappers,
-        plugins: plugins.select(&:relation?)
+        plugins: global_plugins
       ).run!
     end
 

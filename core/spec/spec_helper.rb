@@ -15,12 +15,12 @@ end
 require 'dry/core/deprecations'
 Dry::Core::Deprecations.set_logger!(SPEC_ROOT.join('../log/deprecations.log'))
 
-require 'rom/core'
-
 begin
   require 'byebug'
 rescue LoadError
 end
+
+require 'rom/core'
 
 Dir[root.join('support/*.rb').to_s].each do |f|
   require f

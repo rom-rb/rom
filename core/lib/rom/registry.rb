@@ -19,7 +19,9 @@ module ROM
     def self.new(*args)
       case args.size
       when 0
-        super({})
+        super({}, {})
+      when 1
+        super(*args, {})
       else
         super(*args)
       end

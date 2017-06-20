@@ -84,7 +84,7 @@ module ROM
         associations: associations,
         inferrer: inferrer,
         attr_class: attr_class
-      )
+      ) { |schema| yield(schema) if block_given? }
     end
 
     # @api private
@@ -100,6 +100,8 @@ module ROM
       @associations = options[:associations]
       @inferrer = options[:inferrer] || DEFAULT_INFERRER
       @relations = options[:relations] || EMPTY_HASH
+
+      yield(self) if block_given?
     end
 
     # Abstract method for creating a new relation based on schema definition
@@ -389,6 +391,11 @@ module ROM
       self.class.new(name, options.merge(new_options))
     end
 
+    # @api private
+    def attr_class
+      options.fetch(:attr_class)
+    end
+
     # Return AST for the schema
     #
     # @return [Array]
@@ -416,11 +423,6 @@ module ROM
                           group_by(&:source).
                           map { |src, grp| [src.to_sym, grp.map { |attr| [attr.name, attr] }.to_h] }.
                           to_h
-    end
-
-    # @api private
-    def attr_class
-      options.fetch(:attr_class)
     end
 
     # @api private

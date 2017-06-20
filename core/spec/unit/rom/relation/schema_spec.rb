@@ -11,7 +11,7 @@ RSpec.describe ROM::Relation, '.schema' do
       end
     end
 
-    Test::Users.schema.finalize_attributes!
+    Test::Users.schema_proc.call.finalize_attributes!
 
     relation_name = ROM::Relation::Name[:test_users]
 
@@ -24,11 +24,11 @@ RSpec.describe ROM::Relation, '.schema' do
       ]
     ).finalize_attributes!
 
-    expect(Test::Users.schema.primary_key).to eql([Test::Users.schema[:id]])
+    expect(schema.primary_key).to eql([schema[:id]])
 
-    expect(Test::Users.schema).to eql(schema)
+    expect(schema).to eql(schema)
 
-    expect(Test::Users.schema.relations).to be_empty
+    expect(schema.relations).to be_empty
   end
 
   it 'allows defining types for reading tuples' do
@@ -45,7 +45,7 @@ RSpec.describe ROM::Relation, '.schema' do
       end
     end
 
-    schema = Test::Users.schema
+    schema = Test::Users.schema_proc.call
 
     expect(schema.to_output_hash).
       to eql(ROM::Types::Coercible::Hash.schema(id: schema[:id].type, date: schema[:date].meta[:read]))
@@ -61,7 +61,7 @@ RSpec.describe ROM::Relation, '.schema' do
       end
     end
 
-    schema = Test::Users.schema.finalize_attributes!
+    schema = Test::Users.schema_proc.call.finalize_attributes!
 
     expect(schema.primary_key).to eql([schema[:name], schema[:email]])
   end
@@ -74,7 +74,7 @@ RSpec.describe ROM::Relation, '.schema' do
       end
     end
 
-    schema = Test::Posts.schema
+    schema = Test::Posts.schema_proc.call
 
     expect(schema[:author_id].primitive).to be(Integer)
 
@@ -89,8 +89,8 @@ RSpec.describe ROM::Relation, '.schema' do
       end
     end
 
-    expect(Test::Users.schema.name.dataset).to be(:users)
-    expect(Test::Users.schema.name.relation).to be(:users)
+    expect(Test::Users.relation_name.dataset).to be(:users)
+    expect(Test::Users.relation_name.relation).to be(:users)
   end
 
   it 'sets dataset and respects custom register_as' do
@@ -101,8 +101,8 @@ RSpec.describe ROM::Relation, '.schema' do
       end
     end
 
-    expect(Test::Users.schema.name.dataset).to be(:users)
-    expect(Test::Users.schema.name.relation).to be(:test_users)
+    expect(Test::Users.relation_name.dataset).to be(:users)
+    expect(Test::Users.relation_name.relation).to be(:test_users)
   end
 
   it 'raises error when schema_class is missing' do
@@ -144,7 +144,9 @@ RSpec.describe ROM::Relation, '.schema' do
         end
       end
 
-      expect(Test::Users.schema[:admin]).to eql(ROM::Types::Bool.meta(name: :admin, source: ROM::Relation::Name[:test_users]))
+      schema = Test::Users.schema_proc.call
+
+      expect(schema[:admin]).to eql(ROM::Types::Bool.meta(name: :admin, source: ROM::Relation::Name[:test_users]))
     end
 
     it 'raises an error on double definition' do
@@ -156,6 +158,8 @@ RSpec.describe ROM::Relation, '.schema' do
             attribute :id, Types::Int
           end
         end
+
+        Test::Users.schema_proc.call
       }.to raise_error(ROM::Schema::AttributeAlreadyDefinedError,
                        /:id already defined/)
     end

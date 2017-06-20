@@ -28,6 +28,11 @@ module ROM
       type == :relation
     end
 
+    # @api private
+    def schema?
+      type == :schema
+    end
+
     # Apply this plugin to the provided class
     #
     # @param [Mixed] base

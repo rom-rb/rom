@@ -108,7 +108,8 @@ RSpec.describe ROM::Relation, '.view' do
   context 'with an inferred schema' do
     before do
       # this is normally called automatically during setup
-      relation_class.schema.finalize_attributes!
+      schema = relation_class.schema_proc.call.finalize_attributes!
+      relation_class.set_schema!(schema)
       relation_class.finalize(registry, relation)
     end
 

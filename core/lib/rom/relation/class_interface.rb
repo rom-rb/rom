@@ -25,10 +25,6 @@ module ROM
           raise MissingAdapterIdentifierError,
                 "relation class +#{self}+ is missing the adapter identifier"
         end
-
-        if instance_variable_defined?(:@schema)
-          klass.instance_variable_set(:@schema, @schema)
-        end
       end
 
       # Return adapter-specific relation subclass
@@ -94,7 +90,7 @@ module ROM
           ds_name = dataset || schema_opts.fetch(:dataset, default_name.dataset)
           relation = as || schema_opts.fetch(:relation, ds_name)
 
-          name = Name[relation, ds_name]
+          @relation_name = Name[relation, ds_name]
           inferrer = infer ? schema_inferrer : nil
 
           unless schema_class
@@ -102,13 +98,28 @@ module ROM
           end
 
           dsl = schema_dsl.new(
-            name,
+            relation_name,
             schema_class: schema_class, attr_class: schema_attr_class, inferrer: inferrer,
             &block
           )
 
-          @schema = dsl.call
+          @schema_proc = dsl.method(:call).to_proc
         end
+      end
+
+      # @api private
+      def set_schema!(schema)
+        @schema = schema
+      end
+
+      # @api private
+      attr_reader :schema_proc
+
+      # !@attribute [r] relation_name
+      #   @return [Name] Qualified relation name
+      def relation_name
+        raise MissingSchemaError.new(self) unless defined?(@relation_name)
+        @relation_name
       end
 
       # Define a relation view with a specific schema
@@ -174,7 +185,7 @@ module ROM
 
         schemas[name] =
           if args.size == 2
-            schema.project(*args[1])
+            -> _ { schema.project(*args[1]) }
           else
             new_schema_fn
           end
@@ -255,10 +266,14 @@ module ROM
 
       # @api private
       def default_schema(klass = self)
-        klass.schema || klass.schema_class.define(klass.default_name)
+        klass.schema ||
+          if klass.schema_proc
+            klass.set_schema!(klass.schema_proc.call)
+          else
+            klass.schema_class.define(klass.default_name)
+          end
       end
 
-      # @api private
       def name
         super || superclass.name
       end

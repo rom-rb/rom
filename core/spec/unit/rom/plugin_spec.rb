@@ -12,12 +12,28 @@ RSpec.describe "ROM::PluginRegistry" do
         "a relation"
       end
     end
+    Test::SchemaPlugin = Module.new do
+      def self.apply(schema, _)
+        schema.attributes.concat(
+          [ROM::Schema::Attribute.new(ROM::Types::Date.meta(name: :created_at, source: schema.name)),
+           ROM::Schema::Attribute.new(ROM::Types::Date.meta(name: :updated_at, source: schema.name))]
+        )
+      end
+    end
+    Test::SchemaDSLExt = Module.new
+    Test::SchemaDSLExt::DSL = Module.new do
+      def build_type(*)
+        super.meta(plugged_in: true)
+      end
+    end
 
     ROM.plugins do
-      register :registration, Test::ConfigurationPlugin, type: :configuration
-      register :publisher,    Test::CommandPlugin,     type: :command
-      register :pager,        Test::RelationPlugin,    type: :relation
-      register :translater,   Test::MapperPlugin,      type: :mapper
+      register :registration,   Test::ConfigurationPlugin, type: :configuration
+      register :publisher,      Test::CommandPlugin,       type: :command
+      register :pager,          Test::RelationPlugin,      type: :relation
+      register :translater,     Test::MapperPlugin,        type: :mapper
+      register :datestamps,     Test::SchemaPlugin,        type: :schema
+      register :schema_dsl_ext, Test::SchemaDSLExt,        type: :schema
     end
 
     configuration
@@ -60,7 +76,7 @@ RSpec.describe "ROM::PluginRegistry" do
     expect(container.command(:users).create).to be_kind_of Test::CommandPlugin
   end
 
-  it "inclues plugins in mappers" do
+  it "includes plugins in mappers" do
     users = Class.new(ROM::Relation[:memory]) do
       schema(:users) { }
     end
@@ -146,5 +162,30 @@ RSpec.describe "ROM::PluginRegistry" do
     expect(container.command(:users).create).not_to be_kind_of Test::LazySQLPlugin
     expect(container.command(:users).create).to be_kind_of Test::LazyPlugin
     expect(container.command(:users).update).to be_kind_of Test::LazyMemoryPlugin
+  end
+
+  it 'applies plugins to schemas' do
+    rel_name = ROM::Relation::Name[:users]
+
+    users = ROM::Schema::DSL.new(rel_name) {
+      attribute :id, ROM::Types::Int
+      attribute :name, ROM::Types::String
+
+      use :datestamps
+    }.call
+
+    expect(users.to_h.keys).to eql %i(id name created_at updated_at)
+  end
+
+  it 'applies extensions to schema DSL' do
+    rel_name = ROM::Relation::Name[:users]
+
+    users = ROM::Schema::DSL.new(rel_name) {
+      use :schema_dsl_ext
+
+      attribute :id, ROM::Types::Int
+    }.call
+
+    expect(users[:id].meta[:plugged_in]).to be true
   end
 end

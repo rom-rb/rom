@@ -11,6 +11,7 @@ end
 # core parts
 require 'rom/configuration_plugin'
 require 'rom/plugin'
+require 'rom/schema_plugin'
 require 'rom/relation'
 require 'rom-mapper'
 require 'rom/mapper/configuration_plugin'
@@ -33,6 +34,7 @@ require 'rom/plugins/configuration/configuration_dsl'
 require 'rom/plugins/relation/registry_reader'
 require 'rom/plugins/relation/instrumentation'
 require 'rom/plugins/command/schema'
+require 'rom/plugins/schema/timestamps'
 
 module ROM
   extend Global

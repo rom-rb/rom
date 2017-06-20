@@ -25,7 +25,7 @@ module ROM
       def run!
         relation_registry = RelationRegistry.new do |registry, relations|
           @relation_classes.each do |klass|
-            key = klass.schema.name.relation
+            key = klass.relation_name.to_sym
 
             if registry.key?(key)
               raise RelationAlreadyDefinedError,
@@ -57,9 +57,19 @@ module ROM
         # TODO: raise a meaningful error here and add spec covering the case
         #       where klass' gateway points to non-existant repo
         gateway = @gateways.fetch(klass.gateway)
+
+        if klass.schema_proc && !klass.schema
+          plugins = schema_plugins
+          resolved_schema = klass.schema_proc.call do
+            plugins.each { |plugin| app_plugin(plugin) }
+          end
+
+          klass.set_schema!(resolved_schema)
+        end
+
         schema = klass.schema.finalize_attributes!(gateway: gateway, relations: registry)
 
-        @plugins.each do |plugin|
+        relation_plugins.each do |plugin|
           plugin.apply_to(klass)
         end
 
@@ -74,12 +84,22 @@ module ROM
 
       # @api private
       def plugin_options
-        @plugins.map(&:config).map(&:to_hash).reduce(:merge) || EMPTY_HASH
+        relation_plugins.map(&:config).map(&:to_hash).reduce(:merge) || EMPTY_HASH
+      end
+
+      # @api private
+      def relation_plugins
+        @plugins.select(&:relation?)
+      end
+
+      # @api private
+      def schema_plugins
+        @plugins.select(&:schema?)
       end
 
       # @api private
       def relation_names
-        @relation_classes.map(&:schema).map(&:name).map(&:relation).uniq
+        @relation_classes.map(&:relation_name).map(&:relation).uniq
       end
     end
   end

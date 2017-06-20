@@ -11,19 +11,31 @@ module ROM
   class Schema
     # @api public
     class DSL < BasicObject
-      attr_reader :relation, :attributes, :inferrer, :schema_class, :attr_class, :associations_dsl
+      KERNEL_METHODS = %i(extend method).freeze
+      KERNEL_METHODS.each { |m| define_method(m, ::Kernel.instance_method(m)) }
+
+      extend Initializer
+
+      param :relation
+
+      option :inferrer, default: -> { DEFAULT_INFERRER }
+
+      option :schema_class, default: -> { Schema }
+
+      option :attr_class, default: -> { Attribute }
+
+      option :adapter, default: -> { :default }
+
+      attr_reader :attributes, :plugins, :definition, :associations_dsl
 
       # @api private
-      def initialize(relation, schema_class: Schema, attr_class: Attribute, inferrer: Schema::DEFAULT_INFERRER, &block)
-        @relation = relation
-        @inferrer = inferrer
-        @schema_class = schema_class
-        @attr_class = attr_class
-        @attributes = {}
+      def initialize(*, &block)
+        super
 
-        if block
-          instance_exec(&block)
-        end
+        @attributes = {}
+        @plugins = {}
+
+        @definition = block
       end
 
       # Defines a relation attribute with its type
@@ -32,17 +44,12 @@ module ROM
       #
       # @api public
       def attribute(name, type, options = EMPTY_HASH)
-        if @attributes.key?(name)
+        if attributes.key?(name)
           ::Kernel.raise ::ROM::Schema::AttributeAlreadyDefinedError,
                          "Attribute #{ name.inspect } already defined"
         end
 
-        @attributes[name] =
-          if options[:read]
-            type.meta(name: name, source: relation, read: options[:read])
-          else
-            type.meta(name: name, source: relation)
-          end
+        attributes[name] = build_type(name, type, options)
       end
 
       # Define associations for a relation
@@ -78,6 +85,19 @@ module ROM
         @associations_dsl = AssociationsDSL.new(relation, &block)
       end
 
+      # Builds a type instance from a name, options and a base type
+      #
+      # @return [Dry::Types::Type] Type instance
+      #
+      # @api private
+      def build_type(name, type, options = EMPTY_HASH)
+        if options[:read]
+          type.meta(name: name, source: relation, read: options[:read])
+        else
+          type.meta(name: name, source: relation)
+        end
+      end
+
       # Specify which key(s) should be the primary key
       #
       # @api public
@@ -88,9 +108,39 @@ module ROM
         self
       end
 
+      # Enables for the schema
+      #
+      # @param [Symbol] plugin Plugin name
+      # @param [Hash] options Plugin options
+      #
+      # @api public
+      def use(plugin, options = ::ROM::EMPTY_HASH)
+        mod = ::ROM.plugin_registry.schemas.adapter(adapter).fetch(plugin)
+        app_plugin(mod, options)
+      end
+
       # @api private
-      def call
-        schema_class.define(relation, opts)
+      def app_plugin(plugin, options = ::ROM::EMPTY_HASH)
+        plugin_name = ::ROM.plugin_registry.schemas.adapter(adapter).plugin_name(plugin)
+        plugin.extend_dsl(self)
+        @plugins[plugin_name] = [plugin, plugin.config.to_hash.merge(options)]
+      end
+
+      # @api private
+      def call(&block)
+        instance_exec(&block) if block
+        instance_exec(&definition) if definition
+
+        schema_class.define(relation, opts) do |schema|
+          plugins.values.each { |(plugin, options)|
+            plugin.apply_to(schema, options)
+          }
+        end
+      end
+
+      # @api private
+      def plugin_options(plugin)
+        @plugins[plugin][1]
       end
 
       private
