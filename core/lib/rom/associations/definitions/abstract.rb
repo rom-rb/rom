@@ -3,7 +3,7 @@ require 'dry/core/class_attributes'
 
 require 'rom/types'
 require 'rom/initializer'
-require 'rom/associations/name'
+require 'rom/relation/name'
 
 module ROM
   module Associations
@@ -20,11 +20,11 @@ module ROM
         defines :result
 
         # @!attribute [r] source
-        #   @return [Associations::Name] the source relation name
+        #   @return [Relation::Name] the source relation name
         param :source
 
         # @!attribute [r] target
-        #   @return [Associations::Name] the target relation name
+        #   @return [Relation::Name] the target relation name
         param :target
 
         # @!attribute [r] relation
@@ -66,16 +66,15 @@ module ROM
         #
         # @api public
         def self.new(source, target, options = EMPTY_HASH)
-          super(Name[source], resolve_target_name(target, options), options)
+          super(Relation::Name[source], resolve_target_name(target, options), options)
         end
 
         # @api private
         def self.resolve_target_name(target, options)
           dataset = target
           relation = options.fetch(:relation, target)
-          aliaz = options.fetch(:as, target)
 
-          Name[relation, dataset, aliaz]
+          Relation::Name[relation, dataset, options[:as]]
         end
 
         # @api public
