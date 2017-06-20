@@ -41,7 +41,7 @@ RSpec.describe 'Commands / Create' do
 
     class Test::UserMapper < ROM::Mapper
       relation :users
-      register_as :entity
+      register_as :user_entity
       model Test::User
       attribute :name
       attribute :email
@@ -49,7 +49,7 @@ RSpec.describe 'Commands / Create' do
 
     class Test::TaskMapper < ROM::Mapper
       relation :tasks
-      register_as :entity
+      register_as :task_entity
       model Test::Task
       attribute :name
       attribute :title
@@ -112,7 +112,7 @@ RSpec.describe 'Commands / Create' do
     end
 
     it 'uses registered mapper to process the result for :one result' do
-      command = container.command(:users).as(:entity).create
+      command = container.command(:users).as(:user_entity).create
       result = command[attributes]
 
       expect(result).to eql(Test::User.new(attributes))
@@ -125,11 +125,11 @@ RSpec.describe 'Commands / Create' do
         mapper_input = tuples
       end
 
-      left = container.command(:users).as(:entity).create.with(
+      left = container.command(:users).as(:user_entity).create.with(
         name: 'Jane', email: 'jane@doe.org'
       )
 
-      right = container.command(:tasks).as(:entity).create.with(
+      right = container.command(:tasks).as(:task_entity).create.with(
         title: 'Jane task'
       )
 
@@ -148,7 +148,7 @@ RSpec.describe 'Commands / Create' do
         define(:create_many, type: :create)
       end
 
-      command = container.command(:users).as(:entity).create_many
+      command = container.command(:users).as(:user_entity).create_many
       result = command[attributes]
 
       expect(result).to eql([Test::User.new(attributes)])
