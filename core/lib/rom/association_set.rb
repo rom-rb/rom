@@ -1,28 +1,16 @@
-require 'dry/core/inflector'
 require 'rom/registry'
 
 module ROM
+  # @api public
   class AssociationSet < ROM::Registry
     # @api private
-    def [](name)
-      key = name.to_sym
-
-      if key?(key)
-        super
-      else
-        sk = singularize(key)
-
-        if key?(sk)
-          super(sk)
-        else
-          super
+    def initialize(*)
+      super
+      elements.values.each do |assoc|
+        if assoc.aliased? && !key?(assoc.name)
+          elements[assoc.name] = assoc
         end
       end
-    end
-
-    # @api private
-    def singularize(key)
-      Dry::Core::Inflector.singularize(key).to_sym
     end
   end
 end
