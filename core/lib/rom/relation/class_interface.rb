@@ -91,8 +91,8 @@ module ROM
         if defined?(@schema) && !block && !infer
           @schema
         elsif block || infer
-          ds_name = schema_opts.fetch(:dataset, dataset || default_name.dataset)
-          relation = as || ds_name || default_name.relation
+          ds_name = dataset || schema_opts.fetch(:dataset, default_name.dataset)
+          relation = as || schema_opts.fetch(:relation, ds_name)
 
           @relation_name = Name[relation, ds_name]
           inferrer = infer ? schema_inferrer : nil
