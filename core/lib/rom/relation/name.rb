@@ -69,6 +69,11 @@ module ROM
         self.class[relation, dataset, aliaz]
       end
 
+      # @api private
+      def aliased?
+        !aliaz.nil?
+      end
+
       # Return relation name
       #
       # @return [String]
