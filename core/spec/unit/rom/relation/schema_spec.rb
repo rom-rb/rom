@@ -11,7 +11,7 @@ RSpec.describe ROM::Relation, '.schema' do
       end
     end
 
-    schema = Test::Users.schema_proc.call.finalize_attributes!
+    Test::Users.schema_proc.call.finalize_attributes!
 
     relation_name = ROM::Relation::Name[:test_users]
 
