@@ -20,11 +20,11 @@ module ROM
         defines :result
 
         # @!attribute [r] source
-        #   @return [ROM::Relation::Name] the source relation name
+        #   @return [Associations::Name] the source relation name
         param :source
 
         # @!attribute [r] target
-        #   @return [ROM::Relation::Name] the target relation name
+        #   @return [Associations::Name] the target relation name
         param :target
 
         # @!attribute [r] relation
@@ -53,13 +53,29 @@ module ROM
 
         alias_method :name, :as
 
+        # Instantiate a new association definition
+        #
+        # @param [Symbol] source The name of the source dataset
+        # @param [Symbol] target The name of the target dataset
+        # @param [Hash] options The option hash
+        # @option options [Symbol] :as The name of the association (defaults to target)
+        # @option options [Symbol] :relation The name of the target relation (defaults to target)
+        # @option options [Symbol] :foreign_key The name of a custom foreign key
+        # @option options [Symbol] :view The name of a custom relation view on the target's relation side
+        # @option options [TrueClass,FalseClass] :override Whether provided :view should override association's default view
+        #
         # @api public
         def self.new(source, target, options = EMPTY_HASH)
-          super(
-            Name[source],
-            Name[options[:relation] || target, target, options[:as] || target],
-            options
-          )
+          super(Name[source], resolve_target_name(target, options), options)
+        end
+
+        # @api private
+        def self.resolve_target_name(target, options)
+          dataset = target
+          relation = options.fetch(:relation, target)
+          aliaz = options.fetch(:as, target)
+
+          Name[relation, dataset, aliaz]
         end
 
         # @api public
