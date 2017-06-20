@@ -25,10 +25,6 @@ module ROM
           raise MissingAdapterIdentifierError,
                 "relation class +#{self}+ is missing the adapter identifier"
         end
-
-        if instance_variable_defined?(:@schema)
-          klass.instance_variable_set(:@schema, @schema)
-        end
       end
 
       # Return adapter-specific relation subclass
