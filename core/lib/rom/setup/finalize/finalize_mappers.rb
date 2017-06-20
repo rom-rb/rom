@@ -10,6 +10,8 @@ module ROM
         @mapper_classes = mapper_classes
         @mapper_objects = mapper_objects
 
+        check_duplicate_registered_mappers
+
         @registry_hash = [@mapper_classes.map(&:base_relation) + @mapper_objects.keys].
                            flatten.
                            uniq.
@@ -32,6 +34,17 @@ module ROM
       end
 
       private
+
+      def check_duplicate_registered_mappers
+        mappers_register_as = mapper_classes.map(&:register_as).compact
+        mappers_register_as.select { |register_as| mappers_register_as.count(register_as) > 1 }
+          .uniq
+          .each do |duplicated_mappers|
+            raise MapperAlreadyDefinedError,
+                  "Mapper with `register_as #{duplicated_mappers.inspect}` registered more " \
+                  "than once"
+          end
+      end
 
       def build_mappers(relation_name)
         mapper_classes.
