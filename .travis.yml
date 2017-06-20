@@ -1,16 +1,25 @@
 language: ruby
 dist: trusty
 sudo: required
-cache: bundler
-bundler_args: --without sql benchmarks console tools
-script: "bundle exec rake ci"
+install:
+  - "cd $TRAVIS_BUILD_DIR/core"
+  - "bundle install --without sql benchmarks console tools --gemfile ./Gemfile"
+  - "cd $TRAVIS_BUILD_DIR/mapper"
+  - "bundle install --without sql benchmarks console tools --gemfile ./Gemfile"
+  - "cd $TRAVIS_BUILD_DIR/repository"
+  - "bundle install --without sql benchmarks console tools --gemfile ./Gemfile"
+  - "gem install rspec codeclimate-test-reporter"
+before_script:
+  - "psql -c 'create database rom_repository' -U postgres"
+script:
+  - 'cd $TRAVIS_BUILD_DIR'
+  - 'rake spec'
 after_success:
-  - '[ -d coverage ] && bundle exec codeclimate-test-reporter'
+  - '[ -d coverage ] && codeclimate-test-reporter'
 rvm:
-  - 2.2.6
-  - 2.3.3
+  - 2.2.7
+  - 2.3.4
   - 2.4.1
-  - rbx-3
   - jruby
 env:
   global:
@@ -22,4 +31,3 @@ notifications:
       - https://webhooks.gitter.im/e/39e1225f489f38b0bd09
     on_success: change
     on_failure: always
-    on_start: false

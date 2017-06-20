@@ -1,0 +1,6 @@
+#!/bin/bash
+
+for p in core mapper repository
+do
+  cd $p && yard && cd ..
+done

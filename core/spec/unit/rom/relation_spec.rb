@@ -1,0 +1,207 @@
+require 'rom/memory'
+
+RSpec.describe ROM::Relation do
+  subject(:relation) { Class.new(ROM::Relation) { schema(:users) { } }.new(dataset) }
+
+  let(:dataset) { ROM::Memory::Dataset.new([jane, joe]) }
+
+  let(:jane) { { id: 1, name: 'Jane' } }
+  let(:joe) { { id: 2, name: 'Joe' } }
+
+  describe '.[]' do
+    before do
+      module Test::TestAdapter
+        class Relation < ROM::Relation
+          adapter :test
+
+          def test_relation?
+            true
+          end
+        end
+      end
+
+      module Test::BrokenAdapter
+        class Relation < ROM::Relation
+          def test_relation?
+            true
+          end
+        end
+      end
+
+      ROM.register_adapter(:test, Test::TestAdapter)
+      ROM.register_adapter(:broken, Test::BrokenAdapter)
+    end
+
+    it 'returns relation subclass from the registered adapter' do
+      subclass = Class.new(ROM::Relation[:test]) { schema(:test) { } }
+
+      relation = subclass.new([])
+
+      expect(relation).to be_test_relation
+    end
+
+    it 'raises error when adapter relation has no identifier' do
+      expect {
+        Class.new(ROM::Relation[:broken])
+      }.to raise_error(ROM::MissingAdapterIdentifierError, /Test::BrokenAdapter::Relation/)
+    end
+  end
+
+  describe '#name' do
+    context 'missing dataset' do
+      context 'with Relation inside module' do
+        before do
+          module Test::Test
+            class SuperRelation < ROM::Relation[:memory]
+              schema { }
+            end
+          end
+        end
+
+        it 'returns name based on module and class' do
+          relation = Test::Test::SuperRelation.new([])
+
+          expect(relation.name).to eql(ROM::Relation::Name[:test_test_super_relation])
+        end
+      end
+
+      context 'with Relation without module' do
+        before do
+          class Test::SuperRelation < ROM::Relation[:memory]
+            schema { }
+          end
+        end
+
+        it 'returns name based only on class' do
+          relation = Test::SuperRelation.new([])
+
+          expect(relation.name).to eql(ROM::Relation::Name[:test_super_relation])
+        end
+      end
+
+      context 'with a descendant relation' do
+        before do
+          class Test::SuperRelation < ROM::Relation[:memory]
+            schema { }
+          end
+
+          class Test::DescendantRelation < Test::SuperRelation
+            schema { }
+          end
+        end
+
+        it 'sets custom relation schema' do
+          relation = Test::DescendantRelation.new([])
+
+          expect(relation.name).to eql(ROM::Relation::Name[:test_descendant_relation])
+        end
+      end
+    end
+
+    context 'manualy set dataset' do
+      before do
+        module Test::TestAdapter
+          class Relation < ROM::Relation[:memory]
+            schema(:foo_bar) { }
+          end
+        end
+      end
+
+      it 'returns name based on dataset' do
+        relation = Test::TestAdapter::Relation.new([])
+
+        expect(relation.name).to eql(ROM::Relation::Name[:foo_bar])
+      end
+    end
+  end
+
+  describe "#each" do
+    it "yields all objects" do
+      result = []
+
+      relation.each do |user|
+        result << user
+      end
+
+      expect(result).to eql([jane, joe])
+    end
+
+    it "returns an enumerator if block is not provided" do
+      expect(relation.each).to be_instance_of(Enumerator)
+    end
+  end
+
+  describe "#to_a" do
+    it "materializes relation to an array" do
+      expect(relation.to_a).to eql([jane, joe])
+    end
+  end
+
+  describe "#with" do
+    it "returns a new instance with the original dataset and given custom options" do
+      relation = Class.new(ROM::Relation) {
+        schema(:users) { }
+        option :custom
+      }.new([], custom: true)
+
+      custom_opts = { mappers: "Custom Mapper Registry" }
+      new_relation = relation.with(custom_opts).with(custom: true)
+
+      expect(new_relation.dataset).to be(relation.dataset)
+      expect(new_relation.options).to include(custom_opts.merge(custom: true))
+    end
+  end
+
+  describe '#graph?' do
+    it 'returns false' do
+      expect(relation.graph?).to be(false)
+    end
+
+    it 'returns false when curried' do
+      relation = Class.new(ROM::Relation[:memory]) do
+        schema(:users) { }
+
+        def by_name(*)
+          self
+        end
+      end.new([])
+
+      expect(relation.by_name.graph?).to be(false)
+    end
+  end
+
+  describe '#schema' do
+    it 'returns an empty schema by default' do
+      relation = Class.new(ROM::Relation) {
+        schema(:test_some_relation) { }
+      }.new([])
+
+      expect(relation.schema).to be_empty
+      expect(relation.schema.inferrer).to be(ROM::Schema::DEFAULT_INFERRER)
+      expect(relation.schema.name).to eql(ROM::Relation::Name[:test_some_relation])
+      expect(relation.schema?).to be(false)
+    end
+  end
+
+  describe '#input_schema' do
+    it 'returns a schema hash type' do
+      relation = Class.new(ROM::Relation[:memory]) do
+        schema { attribute :id, ROM::Types::Coercible::Int }
+      end.new([])
+
+      expect(relation.input_schema[id: '1']).to eql(id: 1)
+    end
+
+    it 'returns a default input schema' do
+      relation = Class.new(ROM::Relation[:memory]) do
+        schema(:users) {
+          attribute :id, ROM::Types::String
+        }
+      end.new([])
+
+      tuple = { id: '1' }
+
+      expect(relation.input_schema[tuple]).to eql(id: '1')
+    end
+  end
+end

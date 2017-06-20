@@ -13,6 +13,8 @@
 [![Code Climate](https://codeclimate.com/github/rom-rb/rom/badges/gpa.svg)][codeclimate]
 [![Test Coverage](https://codeclimate.com/github/rom-rb/rom/badges/coverage.svg)][codeclimate]
 [![Inline docs](http://inch-ci.org/github/rom-rb/rom.svg?branch=master&style=flat)][inchpages]
+[![OpenCollective](https://opencollective.com/rom/backers/badge.svg)](#backers) 
+[![OpenCollective](https://opencollective.com/rom/sponsors/badge.svg)](#sponsors)
 
 Ruby Object Mapper (ROM) is a data mapping and persistence toolkit for Ruby
 with the goal to provide powerful object mapping capabilities without limiting
@@ -22,10 +24,76 @@ Learn more:
 
 * [Introduction](http://rom-rb.org/learn/introduction)
 * [Quick Start](http://rom-rb.org/learn/repositories/quick-start)
+ 
+## Backers
 
-## Support Campaign
+Support us with a monthly donation and help us continue our activities. [[Become a backer](https://opencollective.com/rom#backer)]
 
-You can support ROM's development via our [campaign on Bountysource](https://salt.bountysource.com/teams/rom-rb). Cheers!
+<a href="https://opencollective.com/rom/backer/0/website" target="_blank"><img src="https://opencollective.com/rom/backer/0/avatar.svg"></a>
+<a href="https://opencollective.com/rom/backer/1/website" target="_blank"><img src="https://opencollective.com/rom/backer/1/avatar.svg"></a>
+<a href="https://opencollective.com/rom/backer/2/website" target="_blank"><img src="https://opencollective.com/rom/backer/2/avatar.svg"></a>
+<a href="https://opencollective.com/rom/backer/3/website" target="_blank"><img src="https://opencollective.com/rom/backer/3/avatar.svg"></a>
+<a href="https://opencollective.com/rom/backer/4/website" target="_blank"><img src="https://opencollective.com/rom/backer/4/avatar.svg"></a>
+<a href="https://opencollective.com/rom/backer/5/website" target="_blank"><img src="https://opencollective.com/rom/backer/5/avatar.svg"></a>
+<a href="https://opencollective.com/rom/backer/6/website" target="_blank"><img src="https://opencollective.com/rom/backer/6/avatar.svg"></a>
+<a href="https://opencollective.com/rom/backer/7/website" target="_blank"><img src="https://opencollective.com/rom/backer/7/avatar.svg"></a>
+<a href="https://opencollective.com/rom/backer/8/website" target="_blank"><img src="https://opencollective.com/rom/backer/8/avatar.svg"></a>
+<a href="https://opencollective.com/rom/backer/9/website" target="_blank"><img src="https://opencollective.com/rom/backer/9/avatar.svg"></a>
+<a href="https://opencollective.com/rom/backer/10/website" target="_blank"><img src="https://opencollective.com/rom/backer/10/avatar.svg"></a>
+<a href="https://opencollective.com/rom/backer/11/website" target="_blank"><img src="https://opencollective.com/rom/backer/11/avatar.svg"></a>
+<a href="https://opencollective.com/rom/backer/12/website" target="_blank"><img src="https://opencollective.com/rom/backer/12/avatar.svg"></a>
+<a href="https://opencollective.com/rom/backer/13/website" target="_blank"><img src="https://opencollective.com/rom/backer/13/avatar.svg"></a>
+<a href="https://opencollective.com/rom/backer/14/website" target="_blank"><img src="https://opencollective.com/rom/backer/14/avatar.svg"></a>
+<a href="https://opencollective.com/rom/backer/15/website" target="_blank"><img src="https://opencollective.com/rom/backer/15/avatar.svg"></a>
+<a href="https://opencollective.com/rom/backer/16/website" target="_blank"><img src="https://opencollective.com/rom/backer/16/avatar.svg"></a>
+<a href="https://opencollective.com/rom/backer/17/website" target="_blank"><img src="https://opencollective.com/rom/backer/17/avatar.svg"></a>
+<a href="https://opencollective.com/rom/backer/18/website" target="_blank"><img src="https://opencollective.com/rom/backer/18/avatar.svg"></a>
+<a href="https://opencollective.com/rom/backer/19/website" target="_blank"><img src="https://opencollective.com/rom/backer/19/avatar.svg"></a>
+<a href="https://opencollective.com/rom/backer/20/website" target="_blank"><img src="https://opencollective.com/rom/backer/20/avatar.svg"></a>
+<a href="https://opencollective.com/rom/backer/21/website" target="_blank"><img src="https://opencollective.com/rom/backer/21/avatar.svg"></a>
+<a href="https://opencollective.com/rom/backer/22/website" target="_blank"><img src="https://opencollective.com/rom/backer/22/avatar.svg"></a>
+<a href="https://opencollective.com/rom/backer/23/website" target="_blank"><img src="https://opencollective.com/rom/backer/23/avatar.svg"></a>
+<a href="https://opencollective.com/rom/backer/24/website" target="_blank"><img src="https://opencollective.com/rom/backer/24/avatar.svg"></a>
+<a href="https://opencollective.com/rom/backer/25/website" target="_blank"><img src="https://opencollective.com/rom/backer/25/avatar.svg"></a>
+<a href="https://opencollective.com/rom/backer/26/website" target="_blank"><img src="https://opencollective.com/rom/backer/26/avatar.svg"></a>
+<a href="https://opencollective.com/rom/backer/27/website" target="_blank"><img src="https://opencollective.com/rom/backer/27/avatar.svg"></a>
+<a href="https://opencollective.com/rom/backer/28/website" target="_blank"><img src="https://opencollective.com/rom/backer/28/avatar.svg"></a>
+<a href="https://opencollective.com/rom/backer/29/website" target="_blank"><img src="https://opencollective.com/rom/backer/29/avatar.svg"></a>
+
+## Sponsors
+
+Become a sponsor and get your logo on our README on Github with a link to your site. [[Become a sponsor](https://opencollective.com/rom#sponsor)]
+
+<a href="https://opencollective.com/rom/sponsor/0/website" target="_blank"><img src="https://opencollective.com/rom/sponsor/0/avatar.svg"></a>
+<a href="https://opencollective.com/rom/sponsor/1/website" target="_blank"><img src="https://opencollective.com/rom/sponsor/1/avatar.svg"></a>
+<a href="https://opencollective.com/rom/sponsor/2/website" target="_blank"><img src="https://opencollective.com/rom/sponsor/2/avatar.svg"></a>
+<a href="https://opencollective.com/rom/sponsor/3/website" target="_blank"><img src="https://opencollective.com/rom/sponsor/3/avatar.svg"></a>
+<a href="https://opencollective.com/rom/sponsor/4/website" target="_blank"><img src="https://opencollective.com/rom/sponsor/4/avatar.svg"></a>
+<a href="https://opencollective.com/rom/sponsor/5/website" target="_blank"><img src="https://opencollective.com/rom/sponsor/5/avatar.svg"></a>
+<a href="https://opencollective.com/rom/sponsor/6/website" target="_blank"><img src="https://opencollective.com/rom/sponsor/6/avatar.svg"></a>
+<a href="https://opencollective.com/rom/sponsor/7/website" target="_blank"><img src="https://opencollective.com/rom/sponsor/7/avatar.svg"></a>
+<a href="https://opencollective.com/rom/sponsor/8/website" target="_blank"><img src="https://opencollective.com/rom/sponsor/8/avatar.svg"></a>
+<a href="https://opencollective.com/rom/sponsor/9/website" target="_blank"><img src="https://opencollective.com/rom/sponsor/9/avatar.svg"></a>
+<a href="https://opencollective.com/rom/sponsor/10/website" target="_blank"><img src="https://opencollective.com/rom/sponsor/10/avatar.svg"></a>
+<a href="https://opencollective.com/rom/sponsor/11/website" target="_blank"><img src="https://opencollective.com/rom/sponsor/11/avatar.svg"></a>
+<a href="https://opencollective.com/rom/sponsor/12/website" target="_blank"><img src="https://opencollective.com/rom/sponsor/12/avatar.svg"></a>
+<a href="https://opencollective.com/rom/sponsor/13/website" target="_blank"><img src="https://opencollective.com/rom/sponsor/13/avatar.svg"></a>
+<a href="https://opencollective.com/rom/sponsor/14/website" target="_blank"><img src="https://opencollective.com/rom/sponsor/14/avatar.svg"></a>
+<a href="https://opencollective.com/rom/sponsor/15/website" target="_blank"><img src="https://opencollective.com/rom/sponsor/15/avatar.svg"></a>
+<a href="https://opencollective.com/rom/sponsor/16/website" target="_blank"><img src="https://opencollective.com/rom/sponsor/16/avatar.svg"></a>
+<a href="https://opencollective.com/rom/sponsor/17/website" target="_blank"><img src="https://opencollective.com/rom/sponsor/17/avatar.svg"></a>
+<a href="https://opencollective.com/rom/sponsor/18/website" target="_blank"><img src="https://opencollective.com/rom/sponsor/18/avatar.svg"></a>
+<a href="https://opencollective.com/rom/sponsor/19/website" target="_blank"><img src="https://opencollective.com/rom/sponsor/19/avatar.svg"></a>
+<a href="https://opencollective.com/rom/sponsor/20/website" target="_blank"><img src="https://opencollective.com/rom/sponsor/20/avatar.svg"></a>
+<a href="https://opencollective.com/rom/sponsor/21/website" target="_blank"><img src="https://opencollective.com/rom/sponsor/21/avatar.svg"></a>
+<a href="https://opencollective.com/rom/sponsor/22/website" target="_blank"><img src="https://opencollective.com/rom/sponsor/22/avatar.svg"></a>
+<a href="https://opencollective.com/rom/sponsor/23/website" target="_blank"><img src="https://opencollective.com/rom/sponsor/23/avatar.svg"></a>
+<a href="https://opencollective.com/rom/sponsor/24/website" target="_blank"><img src="https://opencollective.com/rom/sponsor/24/avatar.svg"></a>
+<a href="https://opencollective.com/rom/sponsor/25/website" target="_blank"><img src="https://opencollective.com/rom/sponsor/25/avatar.svg"></a>
+<a href="https://opencollective.com/rom/sponsor/26/website" target="_blank"><img src="https://opencollective.com/rom/sponsor/26/avatar.svg"></a>
+<a href="https://opencollective.com/rom/sponsor/27/website" target="_blank"><img src="https://opencollective.com/rom/sponsor/27/avatar.svg"></a>
+<a href="https://opencollective.com/rom/sponsor/28/website" target="_blank"><img src="https://opencollective.com/rom/sponsor/28/avatar.svg"></a>
+<a href="https://opencollective.com/rom/sponsor/29/website" target="_blank"><img src="https://opencollective.com/rom/sponsor/29/avatar.svg"></a>
 
 ## Ecosystem
 

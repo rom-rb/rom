@@ -1,0 +1,56 @@
+require 'pathname'
+
+SPEC_ROOT = root = Pathname(__FILE__).dirname
+
+if RUBY_ENGINE == 'ruby' && ENV['COVERAGE'] == 'true'
+  require 'yaml'
+  rubies = YAML.load(File.read(SPEC_ROOT.join('../../.travis.yml')))['rvm']
+  latest_mri = rubies.select { |v| v =~ /\A\d+\.\d+.\d+\z/ }.max
+
+  if RUBY_VERSION == latest_mri
+    require 'simplecov'
+  end
+end
+
+require 'dry/core/deprecations'
+Dry::Core::Deprecations.set_logger!(SPEC_ROOT.join('../log/deprecations.log'))
+
+begin
+  require 'byebug'
+rescue LoadError
+end
+
+require 'rom/core'
+
+Dir[root.join('support/*.rb').to_s].each do |f|
+  require f
+end
+Dir[root.join('shared/*.rb').to_s].each do |f|
+  require f
+end
+
+# Namespace holding all objects created during specs
+module Test
+  def self.remove_constants
+    constants.each(&method(:remove_const))
+  end
+end
+
+def T(*args)
+  ROM::Processor::Transproc::Functions[*args]
+end
+
+RSpec.configure do |config|
+  config.include(SchemaHelpers)
+
+  config.after do
+    Test.remove_constants
+  end
+
+  config.around do |example|
+    ConstantLeakFinder.find(example)
+  end
+
+  config.disable_monkey_patching!
+  config.warnings = true
+end
