@@ -109,7 +109,7 @@ RSpec.describe ROM::Relation, '.view' do
     before do
       # this is normally called automatically during setup
       schema = relation_class.schema_proc.call.finalize_attributes!
-      relation_class.schema(schema)
+      relation_class.set_schema!(schema)
       relation_class.finalize(registry, relation)
     end
 

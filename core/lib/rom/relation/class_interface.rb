@@ -108,9 +108,12 @@ module ROM
           )
 
           @schema_proc = dsl.method(:call).to_proc
-        elsif dataset.is_a?(Schema)
-          @schema = dataset
         end
+      end
+
+      # @api private
+      def set_schema!(schema)
+        @schema = schema
       end
 
       # @api private
@@ -269,7 +272,7 @@ module ROM
       def default_schema(klass = self)
         klass.schema ||
           if klass.schema_proc
-            klass.schema(klass.schema_proc.call)
+            klass.set_schema!(klass.schema_proc.call)
           else
             klass.schema_class.define(klass.default_name)
           end

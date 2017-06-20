@@ -64,7 +64,7 @@ module ROM
             plugins.each { |plugin| app_plugin(plugin) }
           end
 
-          klass.schema(resolved_schema)
+          klass.set_schema!(resolved_schema)
         end
 
         schema = klass.schema.finalize_attributes!(gateway: gateway, relations: registry)
