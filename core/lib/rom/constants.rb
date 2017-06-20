@@ -45,6 +45,12 @@ module ROM
     end
   end
 
+  MissingSchemaError = Class.new(StandardError) do
+    def initialize(klass)
+      super("#{klass.inspect} relation is missing schema definition")
+    end
+  end
+
   DuplicateConfigurationError = Class.new(StandardError)
   DuplicateContainerError = Class.new(StandardError)
 

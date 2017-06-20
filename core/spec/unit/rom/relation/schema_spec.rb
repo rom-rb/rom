@@ -89,8 +89,8 @@ RSpec.describe ROM::Relation, '.schema' do
       end
     end
 
-    expect(Test::Users.schema.name.dataset).to be(:users)
-    expect(Test::Users.schema.name.relation).to be(:users)
+    expect(Test::Users.relation_name.dataset).to be(:users)
+    expect(Test::Users.relation_name.relation).to be(:users)
   end
 
   it 'sets dataset and respects custom register_as' do
@@ -101,8 +101,8 @@ RSpec.describe ROM::Relation, '.schema' do
       end
     end
 
-    expect(Test::Users.schema.name.dataset).to be(:users)
-    expect(Test::Users.schema.name.relation).to be(:test_users)
+    expect(Test::Users.relation_name.dataset).to be(:users)
+    expect(Test::Users.relation_name.relation).to be(:test_users)
   end
 
   it 'raises error when schema_class is missing' do

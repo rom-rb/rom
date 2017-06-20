@@ -94,7 +94,7 @@ module ROM
           ds_name = schema_opts.fetch(:dataset, dataset || default_name.dataset)
           relation = as || ds_name || default_name.relation
 
-          name = Name[relation, dataset]
+          @relation_name = Name[relation, ds_name]
           inferrer = infer ? schema_inferrer : nil
 
           unless schema_class
@@ -102,7 +102,7 @@ module ROM
           end
 
           dsl = schema_dsl.new(
-            name,
+            relation_name,
             schema_class: schema_class, attr_class: schema_attr_class, inferrer: inferrer,
             &block
           )
@@ -115,6 +115,13 @@ module ROM
 
       # @api private
       attr_reader :schema_proc
+
+      # !@attribute [r] relation_name
+      #   @return [Name] Qualified relation name
+      def relation_name
+        raise MissingSchemaError.new(self) unless defined?(@relation_name)
+        @relation_name
+      end
 
       # Define a relation view with a specific schema
       #

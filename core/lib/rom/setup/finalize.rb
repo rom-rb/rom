@@ -137,7 +137,7 @@ module ROM
 
     def infer_relation?(gateway, name)
       inferrable_relations(gateway).include?(name) && relation_classes.none? { |klass|
-        klass.schema.name.dataset == name
+        klass.relation_name.dataset == name
       }
     end
 
