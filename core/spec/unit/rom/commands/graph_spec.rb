@@ -130,7 +130,7 @@ RSpec.describe ROM::Commands::Graph do
 
   describe 'pipeline' do
     subject(:command) do
-      container.command(:users).as(:entity).create.with(user)
+      container.command(:users).map_with(:entity).create.with(user)
         .combine(create_task.with(task)
         .combine(create_many_tags.with(tags)))
     end

@@ -40,7 +40,6 @@ module ROM
       [self, *names.map { |name| mappers[name] }]
         .reduce { |a, e| composite_class.new(a, e) }
     end
-    alias_method :as, :map_with
 
     # Forwards messages to the left side of a pipeline
     #

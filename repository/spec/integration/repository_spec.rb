@@ -355,7 +355,7 @@ RSpec.describe 'ROM repository' do
     it 'uses provided model for the member type' do
       jane = repo.users.
                combine(:posts).
-               node(:posts) { |posts| posts.as(Test::Post) }.
+               node(:posts) { |posts| posts.map_to(Test::Post) }.
                where(name: 'Jane').
                one
 

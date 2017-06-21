@@ -31,7 +31,7 @@ RSpec.describe 'Mappers / Attributes value' do
       weight: 75
     }
 
-    jane = container.relation(:users).as(:users).first
+    jane = container.relation(:users).map_with(:users).first
 
     expect(jane).to eql(id: 123, name: 'John', weight: 90, age: 18)
   end

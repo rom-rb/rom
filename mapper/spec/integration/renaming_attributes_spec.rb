@@ -33,7 +33,7 @@ RSpec.describe 'Mappers / Renaming attributes' do
 
     container.relations.users << { _id: 123, user_name: 'Jane' }
 
-    jane = container.relation(:users).as(:users).first
+    jane = container.relation(:users).map_with(:users).first
 
     expect(jane).to eql(Test::User.new(id: 123, name: 'Jane'))
   end
@@ -69,7 +69,7 @@ RSpec.describe 'Mappers / Renaming attributes' do
     container.relations.addresses <<
       { _id: 123, address_id: 321, address_street: 'Street 1' }
 
-    jane = container.relation(:users).with_address.as(:with_address).first
+    jane = container.relation(:users).with_address.map_with(:with_address).first
 
     expect(jane).to eql(
       Test::UserWithAddress.new(id: 123, name: 'Jane',
@@ -110,7 +110,7 @@ RSpec.describe 'Mappers / Renaming attributes' do
     container.relations.addresses <<
       { _id: 123, address_id: 654, address_street: 'Street 2' }
 
-    jane = container.relation(:users).with_addresses.as(:with_addresses).first
+    jane = container.relation(:users).with_addresses.map_with(:with_addresses).first
 
     expect(jane).to eql(
       Test::UserWithAddresses.new(

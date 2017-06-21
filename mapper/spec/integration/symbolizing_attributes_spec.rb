@@ -36,7 +36,7 @@ RSpec.describe 'Mappers / Symbolizing atributes' do
       'email' => 'jane@doe.org'
     }
 
-    jane = container.relation(:users).as(:users).first
+    jane = container.relation(:users).map_with(:users).first
 
     expect(jane).to eql(
       id: 123, details: { name: 'Jane' }, contact: { email: 'jane@doe.org' }
@@ -66,7 +66,7 @@ RSpec.describe 'Mappers / Symbolizing atributes' do
       'task_description' => 'It is a task'
     }
 
-    task = container.relation(:tasks).as(:tasks).first
+    task = container.relation(:tasks).map_with(:tasks).first
 
     expect(task).to eql(
       title: 'Task One',

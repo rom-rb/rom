@@ -182,7 +182,7 @@ module ROM
     #   rom.command(:users).create
     #
     #   # allows auto-mapping using registered mappers
-    #   rom.command(:users).as(:entity)
+    #   rom.command(:users).map_with(:entity)
     #
     #   # allows building up a command graph for nested input
     #   command = rom.command([:users, [:create, [:tasks, [:create]]]])

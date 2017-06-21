@@ -72,13 +72,13 @@ RSpec.describe ROM::Container do
 
   describe '#relation' do
     it 'yields selected relation to the block and returns a loaded relation' do
-      result = container.relation(:users) { |r| r.by_name('Jane') }.as(:name_list)
+      result = container.relation(:users) { |r| r.by_name('Jane') }.map_with(:name_list)
 
       expect(result.call).to match_array([{ name: 'Jane' }])
     end
 
     it 'returns lazy-mapped relation' do
-      by_name = container.relation(:users).as(:name_list).by_name
+      by_name = container.relation(:users).map_with(:name_list).by_name
 
       expect(by_name['Jane']).to match_array([{ name: 'Jane' }])
     end

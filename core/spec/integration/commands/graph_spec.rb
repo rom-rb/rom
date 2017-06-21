@@ -269,7 +269,7 @@ RSpec.describe 'Building up a command graph for nested input' do
       ]
     ]
 
-    command = container.command(options).as(:entity)
+    command = container.command(options).map_with(:entity)
 
     result = command.call(input)
 

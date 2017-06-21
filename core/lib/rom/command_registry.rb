@@ -70,7 +70,7 @@ module ROM
     #   create_user[name: 'Jane']
     #
     #   # with mapping, assuming :entity mapper is registered for :users relation
-    #   create_user = rom.command(:users).as(:entity)[:create]
+    #   create_user = rom.command(:users).map_with(:entity)[:create]
     #   create_user[name: 'Jane'] # => result is send through :entity mapper
     #
     # @param [Symbol] name The name of a registered command
@@ -96,7 +96,7 @@ module ROM
     # Specify a mapper that should be used for commands from this registry
     #
     # @example
-    #   entity_commands = rom.command(:users).as(:entity)
+    #   entity_commands = rom.command(:users).map_with(:entity)
     #
     #
     # @param [Symbol] mapper_name The name of a registered mapper
@@ -104,7 +104,7 @@ module ROM
     # @return [CommandRegistry]
     #
     # @api public
-    def as(mapper_name)
+    def map_with(mapper_name)
       with(mapper: mappers[mapper_name])
     end
 

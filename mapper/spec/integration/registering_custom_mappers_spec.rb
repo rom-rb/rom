@@ -21,7 +21,7 @@ RSpec.describe 'Registering Custom Mappers' do
       register(:users, entity: mapper)
     end
 
-    users = container.relation(:users).by_name('Jane').as(:entity)
+    users = container.relation(:users).by_name('Jane').map_with(:entity)
 
     expect(users).to match_array([model.new('Jane', 'jane@doe.org')])
   end

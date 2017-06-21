@@ -119,7 +119,11 @@ module ROM
       def map_with(*args)
         self.class.new(root.map_with(*args), nodes)
       end
-      alias_method :as, :map_with
+
+      # @api public
+      def map_to(klass)
+        self.class.new(root.map_to(klass), nodes)
+      end
 
       # Return a new graph with adjusted node returned from a block
       #

@@ -51,7 +51,7 @@ RSpec.describe 'Mappers / embedded' do
       'address' => { 'street' => 'Somewhere 1', 'city' => 'NYC' }
     }
 
-    jane = container.relation(:users).as(:users).first
+    jane = container.relation(:users).map_with(:users).first
 
     Test::Address.send(:include, Dry::Equalizer(:street, :city))
 

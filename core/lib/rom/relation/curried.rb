@@ -13,7 +13,6 @@ module ROM
       include Pipeline
 
       undef :map_with
-      undef :as
 
       param :relation
 

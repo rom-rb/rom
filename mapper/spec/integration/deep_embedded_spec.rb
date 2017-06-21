@@ -31,7 +31,7 @@ RSpec.describe 'Mappers / deeply embedded tuples' do
       ]
     }
 
-    jane = container.relation(:users).as(:users).first
+    jane = container.relation(:users).map_with(:users).first
 
     expect(jane.name).to eql('Jane')
 

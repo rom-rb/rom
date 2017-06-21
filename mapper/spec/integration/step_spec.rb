@@ -17,7 +17,7 @@ RSpec.describe 'Mapper definition DSL' do
   end
 
   describe 'step' do
-    let(:mapped) { container.relation(:lists).as(:lists).to_a }
+    let(:mapped) { container.relation(:lists).map_with(:lists).to_a }
 
     it 'applies transformations one by one' do
       configuration.mappers do

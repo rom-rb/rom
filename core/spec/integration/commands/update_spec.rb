@@ -75,7 +75,7 @@ RSpec.describe 'Commands / Update' do
         end
       end
 
-      command = container.command(:users).as(:entity).update.by_name('Jane')
+      command = container.command(:users).map_with(:entity).update.by_name('Jane')
 
       attributes = { name: 'Jane Doe', email: 'jane@doe.org' }
       result = command[attributes]

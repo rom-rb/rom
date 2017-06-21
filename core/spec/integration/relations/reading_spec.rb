@@ -37,7 +37,7 @@ RSpec.describe 'Reading relations' do
       end
     end
 
-    users = users_relation.sorted.by_name('Jane').as(:users)
+    users = users_relation.sorted.by_name('Jane').map_with(:users)
     user = users.first
 
     expect(user).to be_an_instance_of(Test::User)
@@ -66,13 +66,13 @@ RSpec.describe 'Reading relations' do
     Test::User.send(:include, Dry::Equalizer(:name, :email))
     Test::UserWithTasks.send(:include, Dry::Equalizer(:name, :email, :tasks))
 
-    user = container.relation(:users).sorted.as(:users).first
+    user = container.relation(:users).sorted.map_with(:users).first
 
     expect(user).to eql(
       Test::User.new(name: "Jane", email: "jane@doe.org")
     )
 
-    user = container.relation(:users).with_tasks.sorted.as(:with_tasks).first
+    user = container.relation(:users).with_tasks.sorted.map_with(:with_tasks).first
 
     expect(user).to eql(
       Test::UserWithTasks.new(
@@ -103,7 +103,7 @@ RSpec.describe 'Reading relations' do
     Test::User.send(:include, Dry::Equalizer(:name, :email))
     Test::UserWithTask.send(:include, Dry::Equalizer(:name, :email, :task))
 
-    user = container.relation(:users).sorted.with_task.as(:with_task).first
+    user = container.relation(:users).sorted.with_task.map_with(:with_task).first
 
     expect(user).to eql(
       Test::UserWithTask.new(name: "Jane", email: "jane@doe.org",
@@ -116,7 +116,7 @@ RSpec.describe 'Reading relations' do
       define(:users)
     end
 
-    user = container.relation(:users).by_name("Jane").as(:users).first
+    user = container.relation(:users).by_name("Jane").map_with(:users).first
 
     expect(user).to eql(name: "Jane", email: "jane@doe.org")
   end
@@ -157,7 +157,7 @@ RSpec.describe 'Reading relations' do
     }.to raise_error(NoMethodError, /not_here/)
 
     expect {
-      container.relation(:users) { |users| users.by_name('Joe') }.as(:not_here)
+      container.relation(:users) { |users| users.by_name('Joe') }.map_with(:not_here)
     }.to raise_error(ROM::MapperMissingError, /not_here/)
 
     user = container.relation(:users) { |users|

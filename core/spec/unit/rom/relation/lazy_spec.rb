@@ -52,7 +52,7 @@ RSpec.describe ROM::Relation do
   describe '#map_with' do
     it 'raises error when unknown mapper was selected' do
       expect {
-        users_relation.as(:not_here)
+        users_relation.map_with(:not_here)
       }.to raise_error(ROM::MapperMissingError, /not_here/)
     end
   end

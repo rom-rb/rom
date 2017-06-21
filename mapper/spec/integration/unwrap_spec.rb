@@ -40,7 +40,7 @@ RSpec.describe 'Mapper definition DSL' do
         end
       end
 
-      result = container.relation(:tasks).with_user.as(:with_user).to_a.last
+      result = container.relation(:tasks).with_user.map_with(:with_user).to_a.last
 
       expect(result).to eql(title: 'be cool',
                             priority: 2,
@@ -61,7 +61,7 @@ RSpec.describe 'Mapper definition DSL' do
         end
       end
 
-      result = container.relation(:tasks).with_user.as(:with_user).to_a.last
+      result = container.relation(:tasks).with_user.map_with(:with_user).to_a.last
 
       expect(result).to eql(title: 'be cool',
                             priority: 2,
@@ -81,7 +81,7 @@ RSpec.describe 'Mapper definition DSL' do
         end
       end
 
-      result = container.relation(:tasks).with_user.as(:with_user).to_a.last
+      result = container.relation(:tasks).with_user.map_with(:with_user).to_a.last
 
       expect(result).to eql(title: 'be cool',
                             priority: 2,

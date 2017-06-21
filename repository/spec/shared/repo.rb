@@ -17,7 +17,7 @@ RSpec.shared_context('repo') do
       end
 
       def all_users_as_users
-        users.as(:user).all
+        users.map_with(:user).all
       end
 
       def users_with_posts_and_their_labels

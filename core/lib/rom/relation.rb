@@ -435,15 +435,22 @@ module ROM
     #
     # @api public
     def map_with(*names, **opts)
-      if names.size == 1 && names[0].is_a?(Class)
-        with(meta: { model: names[0] })
-      elsif names.size > 1 && names.any? { |name| name.is_a?(Class) }
-        raise ArgumentError, 'using custom mappers and a model is not supported'
-      else
-        super(*names).with(opts)
-      end
+      super(*names).with(opts)
     end
-    alias_method :as, :map_with
+
+    # Return a new relation that will map its tuples to instance of the provided class
+    #
+    # @example
+    #   users.map_to(MyUserModel)
+    #
+    # @param [Class] klass Your custom model class
+    #
+    # @return [Relation::Composite]
+    #
+    # @api public
+    def map_to(klass, **opts)
+      with(opts.merge(meta: { model: klass }))
+    end
 
     # @return [Symbol] The wrapped relation's adapter identifier ie :sql or :http
     #

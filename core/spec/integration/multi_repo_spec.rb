@@ -37,7 +37,7 @@ RSpec.describe 'Using in-memory gateways for cross-repo access' do
 
     user_and_tasks = container.relation(:users_and_tasks)
       .by_user('Jane')
-      .as(:users_and_tasks)
+      .map_with(:users_and_tasks)
 
     expect(user_and_tasks).to match_array([
       { user_id: 2, name: 'Jane', tasks: [{ title: 'Have fun' }] }
