@@ -1,4 +1,5 @@
-require 'dry-types'
+require 'dry/types'
+require 'dry/core/inflector'
 
 module SchemaHelpers
   def define_schema(source, attrs)
@@ -10,5 +11,11 @@ module SchemaHelpers
 
   def define_type(name, id, **opts)
     ROM::Types.const_get(id).meta(name: name, **opts)
+  end
+
+  def build_assoc(type, *args)
+    klass = Dry::Core::Inflector.classify(type)
+    definition = ROM::Associations::Definitions.const_get(klass).new(*args)
+    ROM::Memory::Associations.const_get(definition.type).new(definition, relations)
   end
 end

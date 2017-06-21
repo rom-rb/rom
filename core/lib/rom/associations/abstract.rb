@@ -108,7 +108,7 @@ module ROM
       # @api private
       def wrap
         target.with(
-          name: target.name.as(name.to_sym),
+          name: target.name.as(key),
           schema: target.schema.wrap,
           meta: { wrap: true, combine_name: key }
         )
