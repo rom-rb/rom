@@ -2,7 +2,7 @@ SPEC_RESULTS = {}
 
 desc 'Run all specs'
 task :spec do
-  %w(core).map do |name|
+  %w(core mapper repository).map do |name|
     Rake::Task["spec:#{name}"].execute
   end
 
