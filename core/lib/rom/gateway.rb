@@ -1,6 +1,7 @@
 require 'dry/core/class_attributes'
 
 require 'rom/transaction'
+require 'rom/support/notifications'
 
 module ROM
   # Abstract gateway class
@@ -13,6 +14,7 @@ module ROM
   # @api public
   class Gateway
     extend Dry::Core::ClassAttributes
+    extend Notifications::Listener
 
     defines :adapter
 
@@ -140,20 +142,6 @@ module ROM
     # @api public
     def logger
       # noop
-    end
-
-    # Extension hook for adding gateway-specific behavior to a command class
-    #
-    # This simply returns back the class by default
-    #
-    # @param [Class] klass The command class
-    # @param [Object] _dataset The dataset that will be used with this command class
-    #
-    # @return [Class]
-    #
-    # @api public
-    def extend_command_class(klass, _dataset)
-      klass
     end
 
     # Schema inference hook

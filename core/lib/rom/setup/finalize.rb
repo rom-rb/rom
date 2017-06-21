@@ -22,7 +22,7 @@ module ROM
   class Finalize
     attr_reader :gateways, :repo_adapter,
                 :relation_classes, :mapper_classes, :mapper_objects,
-                :command_classes, :plugins, :config
+                :command_classes, :plugins, :config, :notifications
 
     # @api private
     def initialize(options)
@@ -36,6 +36,7 @@ module ROM
       @mapper_objects = (mappers - @mapper_classes).reduce(:merge) || {}
 
       @config = options.fetch(:config)
+      @notifications = options.fetch(:notifications)
 
       @plugins = options.fetch(:plugins)
     end
@@ -80,7 +81,8 @@ module ROM
         gateways,
         relation_classes,
         mappers: mappers,
-        plugins: global_plugins
+        plugins: global_plugins,
+        notifications: notifications
       ).run!
     end
 
@@ -95,7 +97,7 @@ module ROM
     #
     # @api private
     def load_commands(relations)
-      FinalizeCommands.new(relations, gateways, command_classes).run!
+      FinalizeCommands.new(relations, gateways, command_classes, notifications).run!
     end
   end
 end

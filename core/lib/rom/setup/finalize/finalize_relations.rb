@@ -4,6 +4,8 @@ require 'rom/mapper_registry'
 module ROM
   class Finalize
     class FinalizeRelations
+      attr_reader :notifications
+
       # Build relation registry of specified descendant classes
       #
       # This is used by the setup
@@ -12,11 +14,12 @@ module ROM
       # @param [Array] relation_classes a list of relation descendants
       #
       # @api private
-      def initialize(gateways, relation_classes, mappers: nil, plugins: EMPTY_ARRAY)
+      def initialize(gateways, relation_classes, notifications:, mappers: nil, plugins: EMPTY_ARRAY)
         @gateways = gateways
         @relation_classes = relation_classes
         @mappers = mappers
         @plugins = plugins
+        @notifications = notifications
       end
 
       # @return [Hash]
@@ -37,15 +40,17 @@ module ROM
             relations[key] = build_relation(klass, registry)
           end
 
-          relations.each_value do |relation|
-            relation.class.finalize(registry, relation)
+          registry.each do |_, relation|
+            notifications.trigger(
+              'configuration.relations.object.registered',
+              relation: relation, registry: registry
+            )
           end
         end
 
-        relation_registry.each do |_, relation|
-          relation.schema.finalize_associations!(relations: relation_registry)
-          relation.schema.finalize!
-        end
+        notifications.trigger(
+          'configuration.relations.registry.created', registry: relation_registry
+        )
 
         relation_registry
       end
@@ -60,6 +65,7 @@ module ROM
 
         if klass.schema_proc && !klass.schema
           plugins = schema_plugins
+
           resolved_schema = klass.schema_proc.call do
             plugins.each { |plugin| app_plugin(plugin) }
           end
@@ -67,14 +73,29 @@ module ROM
           klass.set_schema!(resolved_schema)
         end
 
-        schema = klass.schema.finalize_attributes!(gateway: gateway, relations: registry)
+        notifications.trigger(
+          'configuration.relations.schema.allocated',
+          schema: klass.schema, gateway: gateway, registry: registry
+        )
 
         relation_plugins.each do |plugin|
           plugin.apply_to(klass)
         end
 
+        notifications.trigger(
+          'configuration.relations.schema.set',
+          schema: resolved_schema, relation: klass, adapter: klass.adapter
+        )
+
+        schema = klass.schema
         rel_key = schema.name.to_sym
         dataset = gateway.dataset(schema.name.dataset).instance_exec(klass, &klass.dataset)
+
+        notifications.trigger(
+          'configuration.relations.dataset.allocated',
+          dataset: dataset, relation: klass, adapter: klass.adapter
+        )
+
         mappers = @mappers.key?(rel_key) ? @mappers[rel_key] : MapperRegistry.new
 
         options = { __registry__: registry, mappers: mappers, schema: schema, **plugin_options }

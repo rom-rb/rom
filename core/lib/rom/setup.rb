@@ -21,11 +21,15 @@ module ROM
     attr_reader :plugins
 
     # @api private
-    def initialize
+    attr_reader :notifications
+
+    # @api private
+    def initialize(notifications)
       @relation_classes = []
       @command_classes = []
       @mapper_classes = []
       @plugins = []
+      @notifications = notifications
     end
 
     # Relation sub-classes are being registered with this method during setup

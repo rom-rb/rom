@@ -3,6 +3,7 @@ require 'dry/equalizer'
 require 'rom/schema/attribute'
 require 'rom/schema/dsl'
 require 'rom/association_set'
+require 'rom/support/notifications'
 
 module ROM
   # Relation schema
@@ -28,6 +29,25 @@ module ROM
   #
   # @api public
   class Schema
+    extend Notifications::Listener
+
+    subscribe('configuration.relations.registry.created') do |event|
+      registry = event[:registry]
+
+      registry.each do |_, relation|
+        relation.schema.finalize_associations!(relations: registry)
+        relation.schema.finalize!
+      end
+    end
+
+    subscribe('configuration.relations.schema.allocated') do |event|
+      schema = event[:schema]
+      registry = event[:registry]
+      gateway = event[:gateway]
+
+      schema.finalize_attributes!(gateway: gateway, relations: registry)
+    end
+
     EMPTY_ASSOCIATION_SET = AssociationSet.new(EMPTY_HASH).freeze
 
     DEFAULT_INFERRER = proc { [EMPTY_ARRAY, EMPTY_ARRAY].freeze }

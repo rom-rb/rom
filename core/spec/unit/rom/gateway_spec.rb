@@ -107,14 +107,6 @@ RSpec.describe ROM::Gateway do
     end
   end
 
-  describe '#extend_command_class' do
-    it 'returns the class sent as 1st parameter' do
-      klass = Class.new.freeze
-
-      expect(gateway.extend_command_class(klass, "foo")).to eq(klass)
-    end
-  end
-
   describe '.adapter' do
     let(:gateway_class) { Class.new(ROM::Gateway) }
 

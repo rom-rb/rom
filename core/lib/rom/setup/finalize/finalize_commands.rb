@@ -5,6 +5,8 @@ require 'rom/command_registry'
 module ROM
   class Finalize
     class FinalizeCommands
+      attr_reader :notifications
+
       # Build command registry hash for provided relations
       #
       # @param [RelationRegistry] relations registry
@@ -12,10 +14,11 @@ module ROM
       # @param [Array] command_classes a list of command subclasses
       #
       # @api private
-      def initialize(relations, gateways, command_classes)
+      def initialize(relations, gateways, command_classes, notifications)
         @relations = relations
         @gateways = gateways
         @command_classes = command_classes
+        @notifications = notifications
       end
 
       # @return [Hash]
@@ -30,7 +33,11 @@ module ROM
           name = klass.register_as || klass.default_name
 
           gateway = @gateways[relation.class.gateway]
-          gateway.extend_command_class(klass, relation.dataset)
+
+          notifications.trigger(
+            'configuration.commands.class.before_build',
+            command: klass, gateway: gateway, dataset: relation.dataset
+          )
 
           klass.extend_for_relation(relation) if klass.restrictable
 
