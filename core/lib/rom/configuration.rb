@@ -3,15 +3,26 @@ require 'forwardable'
 require 'rom/environment'
 require 'rom/setup'
 require 'rom/configuration_dsl'
+require 'rom/support/notifications'
 
 module ROM
   class Configuration
     extend Forwardable
+    extend Notifications
+
+    register_event('configuration.relations.class.created')
+    register_event('configuration.relations.object.registered')
+    register_event('configuration.relations.registry.created')
+    register_event('configuration.relations.schema.allocated')
+    register_event('configuration.relations.schema.set')
+    register_event('configuration.relations.dataset.allocated')
+    register_event('configuration.commands.class.before_build')
+
     include ROM::ConfigurationDSL
 
     NoDefaultAdapterError = Class.new(StandardError)
 
-    attr_reader :environment, :setup
+    attr_reader :environment, :setup, :notifications
 
     def_delegators :@setup, :register_relation, :register_command, :register_mapper, :register_plugin,
                             :relation_classes, :command_classes, :mapper_classes,
@@ -22,7 +33,8 @@ module ROM
     # @api public
     def initialize(*args, &block)
       @environment = Environment.new(*args)
-      @setup = Setup.new
+      @notifications = Notifications.event_bus(:configuration)
+      @setup = Setup.new(notifications)
 
       use :mappers # enable mappers by default
 

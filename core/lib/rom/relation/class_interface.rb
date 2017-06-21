@@ -6,12 +6,27 @@ require 'dry/core/constants'
 require 'rom/relation/name'
 require 'rom/relation/view_dsl'
 require 'rom/schema'
+require 'rom/support/notifications'
 
 module ROM
   class Relation
     # @api public
     module ClassInterface
       include Dry::Core::Constants
+
+      extend Notifications::Listener
+
+      subscribe('configuration.relations.object.registered') do |event|
+        relation = event[:relation]
+        registry = event[:registry]
+
+        schemas = relation.schemas.reduce({}) do |h, (a, e)|
+          h.update(a => e.is_a?(Proc) ? relation.class.instance_exec(registry, &e) : e)
+        end
+
+        relation.schemas.update(schemas)
+        relation
+      end
 
       DEFAULT_DATASET_PROC = -> * { self }.freeze
 
@@ -276,17 +291,6 @@ module ROM
 
       def name
         super || superclass.name
-      end
-
-      # Hook to finalize a relation after its instance was created
-      #
-      # @api private
-      def finalize(registry, relation)
-        schemas = relation.schemas.reduce({}) do |h, (a, e)|
-          h.update(a => e.is_a?(Proc) ? instance_exec(registry, &e) : e)
-        end
-        relation.schemas.update(schemas)
-        relation
       end
     end
   end

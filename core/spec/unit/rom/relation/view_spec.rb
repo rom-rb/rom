@@ -60,7 +60,9 @@ RSpec.describe ROM::Relation, '.view' do
   context 'with an explicit schema' do
     before do
       # this is normally called automatically during setup
-      relation_class.finalize(registry, relation)
+      ROM::Notifications.trigger(
+        'configuration.relations.object.registered', relation: relation, registry: registry
+      )
     end
 
     include_context 'relation with views' do
@@ -110,7 +112,10 @@ RSpec.describe ROM::Relation, '.view' do
       # this is normally called automatically during setup
       schema = relation_class.schema_proc.call.finalize_attributes!
       relation_class.set_schema!(schema)
-      relation_class.finalize(registry, relation)
+
+      ROM::Notifications.trigger(
+        'configuration.relations.object.registered', relation: relation, registry: registry
+      )
     end
 
     include_context 'relation with views' do

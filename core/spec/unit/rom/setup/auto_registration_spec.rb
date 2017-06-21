@@ -1,7 +1,10 @@
 require 'rom/setup'
+require 'rom/support/notifications'
 
 RSpec.describe ROM::Setup, '#auto_registration' do
-  subject(:setup) { ROM::Setup.new }
+  subject(:setup) { ROM::Setup.new(notifications) }
+
+  let(:notifications) { instance_double(ROM::Notifications::EventBus) }
 
   context 'with default component_dirs' do
     context 'with namespace turned on' do

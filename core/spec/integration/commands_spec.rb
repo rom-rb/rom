@@ -36,14 +36,11 @@ RSpec.describe 'Commands' do
 
   describe 'extending command with a db-specific behavior' do
     before do
-      gateway.instance_exec do
-        def extend_command_class(klass, _)
-          klass.class_eval do
-            def super_command?
-              true
-            end
+      configuration.notifications.subscribe('configuration.commands.class.before_build') do |event|
+        event[:command].class_eval do
+          def super_command?
+            true
           end
-          klass
         end
       end
     end
