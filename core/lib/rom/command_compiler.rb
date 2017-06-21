@@ -34,6 +34,10 @@ module ROM
     #   @return [ROM::Registry]
     param :commands
 
+    # @!attribute [r] notifications
+    #   @return [Notifications::EventBus] Configuration notifications event bus
+    param :notifications
+
     # @!attribute [r] id
     #   @return [Symbol] The command type registry identifier
     option :id, optional: true
@@ -101,7 +105,7 @@ module ROM
 
     # @api private
     def with(new_options)
-      self.class.new(gateways, relations, commands, options.merge(new_options))
+      self.class.new(gateways, relations, commands, notifications, options.merge(new_options))
     end
 
     # @api private
@@ -189,7 +193,18 @@ module ROM
           setup_associates(klass, relation, meta, parent_relation)
         end
 
-        finalize_command_class(klass, relation)
+        plugins.each do |plugin|
+          klass.use(plugin)
+        end
+
+        gateway = gateways[relation.gateway]
+
+        notifications.trigger(
+          'configuration.commands.class.before_build',
+          command: klass, gateway: gateway, dataset: relation.dataset
+        )
+
+        klass.extend_for_relation(relation) if klass.restrictable
 
         registry[rel_name][type] = klass.build(relation, input: relation.input_schema)
       end
@@ -223,32 +238,6 @@ module ROM
         klass.associates(assoc_name)
       else
         klass.associates(parent_relation)
-      end
-    end
-
-    # Setup a command class for a specific relation
-    #
-    # Every gateway may provide custom command extensions via
-    # `Gateway#extend_command_class`. Furthermore, restrictible commands like
-    # `Update` or `Delete` will be extended with relation view methods, so things
-    # like `delete_user.by_id(1).call` becomes available.
-    #
-    # @param [Class] klass The command class
-    # @param [Relation] relation The command relation
-    #
-    # @return [Class]
-    #
-    # @api private
-    def finalize_command_class(klass, relation)
-      # TODO: this is a copy-paste from rom's FinalizeCommands, we are missing
-      #       an interface!
-      gateway = gateways[relation.class.gateway]
-      gateway.extend_command_class(klass, relation.dataset)
-
-      klass.extend_for_relation(relation) if klass.restrictable
-
-      plugins.each do |plugin|
-        klass.use(plugin)
       end
     end
   end

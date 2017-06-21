@@ -45,7 +45,7 @@ module ROM
         end
 
         registry = Registry.new({})
-        compiler = CommandCompiler.new(@gateways, @relations, registry)
+        compiler = CommandCompiler.new(@gateways, @relations, registry, notifications)
 
         commands = commands_map.each_with_object({}) do |(name, rel_commands), h|
           h[name] = CommandRegistry.new(rel_commands, relation_name: name, compiler: compiler)
