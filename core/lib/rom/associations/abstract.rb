@@ -42,13 +42,23 @@ module ROM
       end
 
       # @api public
-      def view
-        definition.view
+      def aliased?
+        definition.aliased?
+      end
+
+      # @api public
+      def as
+        definition.as
       end
 
       # @api public
       def name
         definition.name
+      end
+
+      # @api public
+      def view
+        definition.view
       end
 
       # @api public
@@ -64,6 +74,11 @@ module ROM
       # @api public
       def override?
         definition.view
+      end
+
+      # @api public
+      def key
+        as || name
       end
 
       # @api protected
@@ -86,7 +101,7 @@ module ROM
       def node
         target.with(
           name: target.name.as(name.to_sym),
-          meta: { keys: combine_keys, combine_type: result, combine_name: name.to_sym }
+          meta: { keys: combine_keys, combine_type: result, combine_name: key }
         )
       end
 
@@ -95,7 +110,7 @@ module ROM
         target.with(
           name: target.name.as(name.to_sym),
           schema: target.schema.wrap,
-          meta: { wrap: true, combine_name: name.to_sym }
+          meta: { wrap: true, combine_name: key }
         )
       end
 

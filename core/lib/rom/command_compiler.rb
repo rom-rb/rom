@@ -138,15 +138,10 @@ module ROM
           if parent_relation
             associations = relations[parent_relation].associations
 
-            assoc =
-              if associations.key?(meta[:combine_name])
-                associations[meta[:combine_name]]
-              elsif associations.key?(name)
-                associations[name]
-              end
+            assoc = associations[meta[:combine_name]]
 
             if assoc
-              { assoc.name.to_sym => assoc.target.name.to_sym }
+              { assoc.key => assoc.target.name.to_sym }
             else
               default_mapping
             end

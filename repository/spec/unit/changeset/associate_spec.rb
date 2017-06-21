@@ -43,7 +43,7 @@ RSpec.describe ROM::Changeset, '#associate' do
       schema(:todos, infer: true) do
         associations do
           belongs_to :people, as: :user
-          belongs_to :projects, as: :project
+          belongs_to :project
         end
       end
     end

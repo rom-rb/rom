@@ -7,14 +7,16 @@ module ROM
       class ManyToMany < Abstract
         result :many
 
-        option :through, reader: true, type: Types::Strict::Symbol.optional
+        option :through, reader: true
 
         # @api private
-        def initialize(*)
-          super
-          @through = Relation::Name[
-            options[:through] || options[:through_relation], options[:through]
-          ]
+        def through_relation
+          through.relation
+        end
+
+        # @api private
+        def through_assoc_name
+          through.assoc_name
         end
       end
     end

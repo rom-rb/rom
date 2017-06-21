@@ -140,8 +140,8 @@ module ROM
       # @return [Associations::ManyToOne]
       #
       # @api public
-      def belongs_to(name, options = {})
-        many_to_one(dataset_name(name), {as: name}.merge(options))
+      def belongs_to(target, options = {})
+        many_to_one(dataset_name(target), { as: target }.merge(options))
       end
 
       # Shortcut for one_to_one which sets alias automatically
@@ -157,8 +157,8 @@ module ROM
       # @return [Associations::ManyToOne]
       #
       # @api public
-      def has_one(name, options = {})
-        one_to_one(dataset_name(name), {as: name}.merge(options))
+      def has_one(target, options = {})
+        one_to_one(dataset_name(target), { as: target }.merge(options))
       end
 
       # Return an association set for a schema
@@ -174,7 +174,16 @@ module ROM
 
       # @api private
       def add(association)
-        registry[association.name] = association
+        key = association.as || association.name
+
+        if registry.key?(key)
+          ::Kernel.raise(
+            ::ArgumentError,
+            "association #{key.inspect} is already defined for #{source.to_sym.inspect} relation"
+          )
+        end
+
+        registry[key] = association
       end
 
       # @api private

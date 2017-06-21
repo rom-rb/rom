@@ -107,7 +107,6 @@ RSpec.shared_context 'relations' do
     configuration.relation(:comments) do
       schema(:messages, as: :comments, infer: true) do
         associations do
-          has_many :likes
           has_many :reactions, relation: :likes
           has_many :reactions, relation: :likes, as: :emotions
         end
@@ -117,8 +116,8 @@ RSpec.shared_context 'relations' do
     configuration.relation(:likes) do
       schema(:reactions, as: :likes, infer: true) do
         associations do
-          belongs_to :message, relation: :comments
-          belongs_to :comments
+          belongs_to :messages, as: :message, relation: :comments
+          belongs_to :messages, as: :comment, relation: :comments
         end
       end
     end

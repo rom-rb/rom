@@ -57,9 +57,18 @@ module ROM
       end
 
       # @api private
+      def join_assoc
+        if join_relation.associations.key?(through.assoc_name)
+          join_relation.associations[through.assoc_name]
+        else
+          join_relation.associations[through.target]
+        end
+      end
+
+      # @api private
       def join_key_map
         left = super
-        right = join_relation.associations[target.name].join_key_map
+        right = join_assoc.join_key_map
 
         [left, right]
       end
