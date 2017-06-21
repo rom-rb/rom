@@ -452,6 +452,20 @@ module ROM
       with(opts.merge(meta: { model: klass }))
     end
 
+    # Return a new relation with an aliased name
+    #
+    # @example
+    #   users.as(:people)
+    #
+    # @param [Class] klass Your custom model class
+    #
+    # @return [Relation::Composite]
+    #
+    # @api public
+    def as(aliaz)
+      with(name: name.as(aliaz))
+    end
+
     # @return [Symbol] The wrapped relation's adapter identifier ie :sql or :http
     #
     # @api private
