@@ -6,7 +6,7 @@ module ROM
     module ClassInterface
       # @api private
       def memoize(*names)
-        prepend(Memoizer.new(names))
+        prepend(Memoizer.new(self, names))
       end
 
       def new(*)
@@ -25,11 +25,13 @@ module ROM
 
     # @api private
     class Memoizer < Module
+      attr_reader :klass
       attr_reader :names
 
       # @api private
-      def initialize(names)
+      def initialize(klass, names)
         @names = names
+        @klass = klass
         define_memoizable_names!
       end
 
@@ -38,8 +40,16 @@ module ROM
       # @api private
       def define_memoizable_names!
         names.each do |name|
-          define_method(name) do
-            __memoized__[__method__] ||= super()
+          meth = klass.instance_method(name)
+
+          if meth.parameters.size > 0
+            define_method(name) do |*args|
+              __memoized__[:"#{name}_#{args.hash}"] ||= super(*args)
+            end
+          else
+            define_method(name) do
+              __memoized__[name] ||= super()
+            end
           end
         end
       end
