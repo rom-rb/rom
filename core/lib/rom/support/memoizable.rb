@@ -13,12 +13,9 @@ module ROM
       klass.extend(ClassInterface)
     end
 
-    attr_reader :__memoized__
-
     # @api private
-    def initialize(*)
-      super
-      @__memoized__ = {}
+    def __memoized__
+      @__memoized__ ||= {}
     end
 
     # @api private
