@@ -58,4 +58,24 @@ RSpec.describe ROM::Configuration do
       }.to raise_error(ROM::AdapterNotPresentError, /not_here/)
     end
   end
+
+  describe '#relation_classes' do
+    fit 'returns the list of relations associated with a gateway' do
+      conf = ROM::Configuration.new(default: [:memory], custom: [:memory])
+      default_gw = conf.gateways[:default]
+      custom_gw = conf.gateways[:custom]
+
+      rel_default = Class.new(ROM::Relation[:memory])
+      rel_custom = Class.new(ROM::Relation[:memory]) { gateway :custom }
+
+      conf.register_relation(rel_default)
+      conf.register_relation(rel_custom)
+
+      expect(conf.relation_classes).to eql([rel_default, rel_custom])
+      expect(conf.relation_classes(default_gw)).to eql([rel_default])
+      expect(conf.relation_classes(:default)).to eql([rel_default])
+      expect(conf.relation_classes(custom_gw)).to eql([rel_custom])
+      expect(conf.relation_classes(:custom)).to eql([rel_custom])
+    end
+  end
 end

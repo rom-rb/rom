@@ -25,7 +25,7 @@ module ROM
     attr_reader :environment, :setup, :notifications
 
     def_delegators :@setup, :register_relation, :register_command, :register_mapper, :register_plugin,
-                            :relation_classes, :command_classes, :mapper_classes,
+                            :command_classes, :mapper_classes,
                             :auto_registration
 
     def_delegators :@environment, :gateways, :gateways_map, :configure, :config
@@ -94,6 +94,16 @@ module ROM
       ROM.adapters.select do |key, value|
         value.const_defined?(:Gateway) && gateway.kind_of?(value.const_get(:Gateway))
       end.keys.first
+    end
+
+    # @api private
+    def relation_classes(gateway = nil)
+      if gateway
+        gw_name = gateway.is_a?(Symbol) ? gateway : gateways_map[gateway]
+        setup.relation_classes.select { |rel| rel.gateway == gw_name }
+      else
+        setup.relation_classes
+      end
     end
 
     # @api private
