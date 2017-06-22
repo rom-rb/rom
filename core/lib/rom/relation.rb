@@ -2,6 +2,8 @@ require 'dry/core/class_attributes'
 
 require 'rom/constants'
 require 'rom/initializer'
+require 'rom/support/memoizable'
+
 require 'rom/relation/class_interface'
 
 require 'rom/auto_curry'
@@ -48,6 +50,7 @@ module ROM
     extend ClassInterface
 
     include Relation::Commands
+    include Memoizable
 
     extend Dry::Core::ClassAttributes
 
@@ -345,17 +348,6 @@ module ROM
       new(dataset, options.merge(new_options))
     end
 
-    # Return all registered relation schemas
-    #
-    # This holds all schemas defined via `view` DSL
-    #
-    # @return [Hash<Symbol=>Schema>]
-    #
-    # @api public
-    def schemas
-      @schemas ||= self.class.schemas
-    end
-
     # Return schema's association set (empty by default)
     #
     # @return [AssociationSet] Schema's association set (empty by default)
@@ -371,7 +363,7 @@ module ROM
     #
     # @api public
     def to_ast
-      @__ast__ ||= [:relation, [name.relation, attr_ast, meta_ast]]
+      [:relation, [name.relation, attr_ast, meta_ast]]
     end
 
     # @api private
@@ -488,6 +480,17 @@ module ROM
       self.class.gateway
     end
 
+    # Return all registered relation schemas
+    #
+    # This holds all schemas defined via `view` DSL
+    #
+    # @return [Hash<Symbol=>Schema>]
+    #
+    # @api public
+    def schemas
+      self.class.schemas
+    end
+
     # @api private
     def foreign_key(name)
       attr = schema.foreign_key(name.dataset)
@@ -499,6 +502,8 @@ module ROM
         :"#{Dry::Core::Inflector.singularize(name.dataset)}_id"
       end
     end
+
+    memoize :to_ast, :auto_map?, :auto_struct?
 
     private
 
