@@ -497,7 +497,7 @@ module ROM
       end
     end
 
-    memoize :to_ast, :auto_map?, :auto_struct?
+    memoize :to_ast, :auto_map?, :auto_struct?, :combine, :wrap, :node
 
     # we do it here because we want to avoid previous methods to be auto_curried
     # via method_added hook, which is what AutoCurry uses
