@@ -72,6 +72,8 @@ module ROM
 
         [left, right]
       end
+
+      memoize :foreign_key, :join_assoc, :join_key_map
     end
   end
 end

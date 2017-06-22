@@ -3,6 +3,7 @@ require 'dry/core/class_attributes'
 
 require 'rom/types'
 require 'rom/initializer'
+require 'rom/support/memoizable'
 
 module ROM
   module Associations
@@ -12,6 +13,7 @@ module ROM
     class Abstract
       extend Initializer
 
+      include Memoizable
       include Dry::Core::Constants
       include Dry::Equalizer(:definition, :source, :target)
 

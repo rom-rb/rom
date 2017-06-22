@@ -28,6 +28,8 @@ module ROM
         return [source_key, target_key] unless block
         yield(source_key, target_key)
       end
+
+      memoize :foreign_key
     end
   end
 end
