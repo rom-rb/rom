@@ -1,10 +1,18 @@
 module ROM
   # @api private
   module Memoizable
+    MEMOIZED_HASH = {}
+
     module ClassInterface
       # @api private
       def memoize(*names)
         prepend(Memoizer.new(names))
+      end
+
+      def new(*)
+        obj = super
+        obj.instance_variable_set(:'@__memoized__', MEMOIZED_HASH.dup)
+        obj
       end
     end
 
@@ -13,10 +21,7 @@ module ROM
       klass.extend(ClassInterface)
     end
 
-    # @api private
-    def __memoized__
-      @__memoized__ ||= {}
-    end
+    attr_reader :__memoized__
 
     # @api private
     class Memoizer < Module

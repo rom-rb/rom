@@ -4,6 +4,7 @@ require 'rom/schema/attribute'
 require 'rom/schema/dsl'
 require 'rom/association_set'
 require 'rom/support/notifications'
+require 'rom/support/memoizable'
 
 module ROM
   # Relation schema
@@ -29,6 +30,8 @@ module ROM
   #
   # @api public
   class Schema
+    include Memoizable
+
     extend Notifications::Listener
 
     subscribe('configuration.relations.registry.created') do |event|
@@ -367,11 +370,6 @@ module ROM
 
       initialize_primary_key_names
 
-      count_index
-      name_index
-      source_index
-      to_ast
-
       self
     end
 
@@ -435,27 +433,27 @@ module ROM
     #
     # @api public
     def to_ast
-      @__ast__ ||= [:schema, [name, attributes.map(&:to_ast)]]
+      [:schema, [name, attributes.map(&:to_ast)]]
     end
 
     private
 
     # @api private
     def count_index
-      @count_index ||= map(&:name).map { |name| [name, count { |attr| attr.name == name }] }.to_h
+      map(&:name).map { |name| [name, count { |attr| attr.name == name }] }.to_h
     end
 
     # @api private
     def name_index
-      @name_index ||= map { |attr| [attr.name, attr] }.to_h
+      map { |attr| [attr.name, attr] }.to_h
     end
 
     # @api private
     def source_index
-      @source_index ||= select(&:source).
-                          group_by(&:source).
-                          map { |src, grp| [src.to_sym, grp.map { |attr| [attr.name, attr] }.to_h] }.
-                          to_h
+      select(&:source).
+        group_by(&:source).
+        map { |src, grp| [src.to_sym, grp.map { |attr| [attr.name, attr] }.to_h] }.
+        to_h
     end
 
     # @api private
@@ -470,5 +468,7 @@ module ROM
         @primary_key_names = primary_key.map { |type| type.meta[:name] }
       end
     end
+
+    memoize :count_index, :name_index, :source_index, :to_ast, :to_input_hash, :to_output_hash
   end
 end
