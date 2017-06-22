@@ -204,4 +204,32 @@ RSpec.describe ROM::Relation do
       expect(relation.input_schema[tuple]).to eql(id: '1')
     end
   end
+
+  describe '#auto_map?' do
+    it 'returns true by default' do
+      relation = ROM::Relation.new([])
+
+      expect(relation).to be_auto_map
+    end
+
+    it 'returns false when auto_map is disabled' do
+      relation = ROM::Relation.new([], auto_map: false)
+
+      expect(relation).not_to be_auto_map
+    end
+  end
+
+  describe '#auto_struct?' do
+    it 'returns false by default' do
+      relation = ROM::Relation.new([])
+
+      expect(relation).not_to be_auto_struct
+    end
+
+    it 'returns true when auto_struct is enabled' do
+      relation = ROM::Relation.new([], auto_struct: true)
+
+      expect(relation).to be_auto_struct
+    end
+  end
 end

@@ -8,6 +8,8 @@ RSpec.describe ROM::Relation, '#graph' do
 
   let(:users_relation) do
     Class.new(ROM::Memory::Relation) do
+      auto_map false
+
       def by_name(name)
         restrict(name: name)
       end
@@ -16,6 +18,8 @@ RSpec.describe ROM::Relation, '#graph' do
 
   let(:tasks_relation) do
     Class.new(ROM::Memory::Relation) do
+      auto_map false
+
       def for_users(users)
         names = users.map { |user| user[:name] }
         restrict { |task| names.include?(task[:name]) }
@@ -25,6 +29,8 @@ RSpec.describe ROM::Relation, '#graph' do
 
   let(:tags_relation) do
     Class.new(ROM::Memory::Relation) do
+      auto_map false
+
       attr_accessor :tasks
       forward :map
 

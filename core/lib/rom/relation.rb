@@ -52,14 +52,20 @@ module ROM
     extend Dry::Core::ClassAttributes
 
     defines :adapter, :gateway, :schema_opts, :schema_class,
-            :schema_attr_class, :schema_inferrer, :schema_dsl, :wrap_class
+            :schema_attr_class, :schema_inferrer, :schema_dsl,
+            :wrap_class, :auto_map, :auto_struct
 
     gateway :default
+
+    auto_map true
+    auto_struct false
+
     schema_opts EMPTY_HASH
     schema_dsl Schema::DSL
     schema_attr_class Schema::Attribute
     schema_class Schema
     schema_inferrer Schema::DEFAULT_INFERRER
+
     wrap_class Relation::Wrap
 
     include Dry::Equalizer(:name, :dataset)
@@ -102,12 +108,12 @@ module ROM
     # @!attribute [r] auto_struct
     #   @return [TrueClass,FalseClass] Whether or not tuples should be auto-mapped to structs
     #   @api private
-    option :auto_struct, reader: true, default: -> { false }
+    option :auto_struct, reader: true, default: -> { self.class.auto_struct }
 
     # @!attribute [r] auto_map
     #   @return [TrueClass,FalseClass] Whether or not a relation and its compositions should be auto-mapped
     #   @api private
-    option :auto_map, reader: true, default: -> { false }
+    option :auto_map, reader: true, default: -> { self.class.auto_map }
 
     # @!attribute [r] commands
     #   @return [CommandRegistry] Command registry

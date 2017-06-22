@@ -6,6 +6,8 @@ RSpec.describe ROM::Relation::Graph do
 
   let(:users_relation) do
     Class.new(ROM::Memory::Relation) do
+      auto_map false
+
       def by_name(name)
         restrict(name: name)
       end
@@ -14,6 +16,8 @@ RSpec.describe ROM::Relation::Graph do
 
   let(:tasks_relation) do
     Class.new(ROM::Memory::Relation) do
+      auto_map false
+
       def for_users(_users)
         self
       end
