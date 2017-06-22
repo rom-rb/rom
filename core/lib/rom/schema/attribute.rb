@@ -1,7 +1,7 @@
-require 'delegate'
 require 'dry/equalizer'
-require 'dry/types/decorator'
+
 require 'rom/initializer'
+require 'rom/support/memoizable'
 
 module ROM
   class Schema
@@ -16,6 +16,7 @@ module ROM
     # @api public
     class Attribute
       include Dry::Equalizer(:type, :options)
+      include Memoizable
 
       extend Initializer
 
@@ -375,7 +376,7 @@ module ROM
       #
       # @api public
       def to_ast
-        @__ast__ ||= [:attribute, [name, type.to_ast(meta: false), meta_ast]]
+        [:attribute, [name, type.to_ast(meta: false), meta_ast]]
       end
 
       # Return AST for the read type
@@ -384,7 +385,7 @@ module ROM
       #
       # @api public
       def to_read_ast
-        @__read_ast__ ||= [:attribute, [name, to_read_type.to_ast(meta: false), meta_ast]]
+        [:attribute, [name, to_read_type.to_ast(meta: false), meta_ast]]
       end
 
       # @api private
@@ -394,6 +395,8 @@ module ROM
         ast[:source] = source.to_sym if source
         ast
       end
+
+      memoize :to_ast, :to_read_ast, :meta_ast
 
       private
 
