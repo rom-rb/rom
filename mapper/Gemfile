@@ -6,7 +6,7 @@ group :test do
   gem 'dry-types', git: 'https://github.com/dry-rb/dry-types', branch: 'master'
   gem 'rom-core', path: '../core'
   gem 'dry-equalizer'
-  gem 'dry-struct'
+  gem 'dry-struct', git: 'https://github.com/dry-rb/dry-struct', branch: 'master'
   gem 'anima', '~> 0.3.0'
   gem 'virtus'
   gem 'inflecto', '~> 0.0', '>= 0.0.2'

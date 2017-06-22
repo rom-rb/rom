@@ -17,7 +17,7 @@ group :test do
   gem 'rom-mapper', path: '../mapper'
   gem 'rom-sql', git: 'https://github.com/rom-rb/rom-sql.git', branch: 'master'
   gem 'rspec'
-  gem 'dry-struct'
+  gem 'dry-struct', git: 'https://github.com/dry-rb/dry-struct', branch: 'master'
   gem 'byebug', platforms: :mri
   gem 'pg', platforms: [:mri, :rbx]
   gem 'jdbc-postgres', platforms: :jruby
