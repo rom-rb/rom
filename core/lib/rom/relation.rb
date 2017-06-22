@@ -393,11 +393,6 @@ module ROM
       mappers[to_ast]
     end
 
-    # @api private
-    def wraps
-      @__wraps__ ||= meta.fetch(:wraps, EMPTY_ARRAY)
-    end
-
     # Maps the wrapped relation with other mappers available in the registry
     #
     # @overload map_with(model)
