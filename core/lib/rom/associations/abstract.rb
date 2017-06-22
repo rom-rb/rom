@@ -100,7 +100,7 @@ module ROM
       # @api private
       def node
         target.with(
-          name: target.name.as(name.to_sym),
+          name: target.name.as(key),
           meta: { keys: combine_keys, combine_type: result, combine_name: key }
         )
       end

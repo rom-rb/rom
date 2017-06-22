@@ -24,4 +24,12 @@ RSpec.describe ROM::Associations::ManyToOne do
       expect(wrap_node.name).to be(ROM::Relation::Name[:groups].as(:group))
     end
   end
+
+  describe '#node' do
+    it 'returns a graph node relation' do
+      graph_node = assoc.node
+
+      expect(graph_node.name).to be(ROM::Relation::Name[:groups].as(:group))
+    end
+  end
 end
