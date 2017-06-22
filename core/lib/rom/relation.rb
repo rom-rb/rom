@@ -485,6 +485,12 @@ module ROM
       self.class.schemas
     end
 
+    # Return a foreign key name for the provided relation name
+    #
+    # @param [Name] name The relation name object
+    #
+    # @return [Symbol]
+    #
     # @api private
     def foreign_key(name)
       attr = schema.foreign_key(name.dataset)
@@ -492,7 +498,6 @@ module ROM
       if attr
         attr.name
       else
-        # TODO: remove this once ManyToOne uses a different query
         :"#{Dry::Core::Inflector.singularize(name.dataset)}_id"
       end
     end
