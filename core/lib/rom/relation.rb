@@ -46,7 +46,6 @@ module ROM
     NOOP_OUTPUT_SCHEMA = -> tuple { tuple }.freeze
 
     extend Initializer
-    extend AutoCurry
     extend ClassInterface
 
     include Relation::Commands
@@ -225,7 +224,7 @@ module ROM
     end
 
     # @api private
-    auto_curry def preload_assoc(assoc, other)
+    def preload_assoc(assoc, other)
       assoc.preload(self, other)
     end
 
@@ -499,6 +498,12 @@ module ROM
     end
 
     memoize :to_ast, :auto_map?, :auto_struct?
+
+    # we do it here because we want to avoid previous methods to be auto_curried
+    # via method_added hook, which is what AutoCurry uses
+    extend AutoCurry
+
+    auto_curry :preload_assoc
 
     private
 
