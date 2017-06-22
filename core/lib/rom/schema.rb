@@ -45,7 +45,9 @@ module ROM
       registry = event[:registry]
       gateway = event[:gateway]
 
-      schema.finalize_attributes!(gateway: gateway, relations: registry)
+      unless schema.frozen?
+        schema.finalize_attributes!(gateway: gateway, relations: registry)
+      end
     end
 
     EMPTY_ASSOCIATION_SET = AssociationSet.new(EMPTY_HASH).freeze
@@ -66,6 +68,15 @@ module ROM
     # @!attribute [r] name
     #   @return [Symbol] The name of this schema
     attr_reader :name
+
+    # @!attribute [r] primary_key_name
+    #   @return [Symbol] The name of the primary key. This is set because in
+    #                    most of the cases relations don't have composite pks
+    attr_reader :primary_key_name
+
+    # @!attribute [r] primary_key_names
+    #   @return [Array<Symbol>] A list of all pk names
+    attr_reader :primary_key_names
 
     # @!attribute [r] attributes
     #   @return [Array] Array with schema attributes
@@ -354,6 +365,8 @@ module ROM
 
       block.call if block
 
+      initialize_primary_key_names
+
       count_index
       name_index
       source_index
@@ -448,6 +461,14 @@ module ROM
     # @api private
     def new(attributes)
       self.class.new(name, options.merge(attributes: attributes))
+    end
+
+    # @api private
+    def initialize_primary_key_names
+      if primary_key.size > 0
+        @primary_key_name = primary_key[0].meta[:name]
+        @primary_key_names = primary_key.map { |type| type.meta[:name] }
+      end
     end
   end
 end

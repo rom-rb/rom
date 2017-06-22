@@ -25,6 +25,8 @@ RSpec.describe ROM::Relation, '.schema' do
     ).finalize_attributes!
 
     expect(schema.primary_key).to eql([schema[:id]])
+    expect(schema.primary_key_name).to be(:id)
+    expect(schema.primary_key_names).to eql([:id])
 
     expect(schema).to eql(schema)
 
