@@ -7,6 +7,8 @@ RSpec.describe 'Mapper definition DSL' do
   describe 'combine' do
     before do
       configuration.relation(:tasks) do
+        auto_map false
+
         def for_users(users)
           names = users.map { |user| user[:name] }
           restrict { |task| names.include?(task[:name]) }
@@ -18,6 +20,8 @@ RSpec.describe 'Mapper definition DSL' do
       end
 
       configuration.relation(:users) do
+        auto_map false
+
         def addresses(_users)
           [{ city: 'NYC', user: 'Jane' }, { city: 'Boston', user: 'Joe' }]
         end
