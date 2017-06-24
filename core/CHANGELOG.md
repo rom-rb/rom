@@ -4,16 +4,43 @@ Previous `rom` gem was renamed to `rom-core`
 
 ## Added
 
-* Relations can be configured with `auto_map: true` which brings auto-mapping functionality known from rom-repository (solnic)
-* Relations can be configured with `auto_struct: true` which brings auto-struct functionality known from rom-repository (solnic)
+* Relations can be configured with `auto_map true` which brings auto-mapping functionality known from rom-repository (solnic)
+* Relations can be configured with `auto_struct true` which brings auto-struct functionality known from rom-repository (solnic)
+* `Relation#map_to(model)` which replaced `as` (solnic)
+* `Relation#wrap` is now part of core API and requires associations to be configured (solnic)
+* `Relation#combine` automatically returns a relation graph based on configured associations (solnic)
+* `Relation#command` which automatically creates a command for a given relation, supports graphs too (solnic)
+* `Relation::to_ast` which returns an AST representation of a relation. This can be used to infer other objects based on relation information (solnic)
+* `Relation::Name#as` which returns an aliased relation name (solnic)
+* Association DSL supports `:override` option which will use configured `:view` as the relation used by association (solnic)
+* Associations are now part of core API and available to all adapters, cross-adapter associations are supported too via `:override` option (solnic)
+* `Schema#primary_key_name` and `Schema#primary_key_names` are now part of core schema API (solnic)
+* `Schema#to_ast` which returns an AST representation of a relation schema (flash-gordon)
+* Plugin system supports schema plugins (flash-gordon)
+* Setup and finalization is now based on events, which you can subscribe to. This allows plugin and adapter developers to hook into components in a simple and stable way (solnic)
 
 ## Changed
 
-* [BREAKING] `Relation#combine` was renamed to `Relation#graph` (solnic)
+* Works with MRI >= 2.2
+* [BREAKING] Inferring relations from database schema **has been removed**. You need to define relations explicitly now (solnic)
+* [BREAKING] Relations have `auto_map` **turned on by default**. This means that wraps and graphs return nested data structures automatically (solnic)
+* [BREAKING] `Relation#combine` behavior from previous versions is now provided by `Relation#graph` (solnic)
+* [BREAKING] `Relation#as` now returns a new relation with aliased name, use `Relation#map_with(*list-of-mapper-ids)` or `Relation#map_to(model)` if you just want to map to custom models (solnic)
+* [BREAKING] `Relation.register_as(:bar)` is removed in favor of `schema(:foo, as: :bar)` (solnic)
+* [BREAKING] `Relation.dataset(:foo)` is removed in favor of `schema(:foo)`. Passing a block still works like before (solnic)
+* Separation between relations that are standalone or registrable in a registry is gone. All relations have names and schemas now.
+  They are automatically set to defaults. In practice this means you can instantiate a relation object manually and it'll Just Work (solnic)
+* Mapper and command objects are cached locally within a given rom container (solnic)
 
 ## Internal
 
 * [BREAKING] `Relation::Curried#name` was renamed to `Relation::Curried#view` (solnic)
+* [BREAKING] `Association::Name` was removed in favor of using `Relation::Name` (solnic)
+* Relations no longer use `method_missing` for accessing other relations from the registry (solnic)
+
+## Fixed
+
+* Inferred struct attributes use simplified types. This fixed a problem when read types from relation schemas would be applied twice (flash-gordon)
 
 # v3.2.2 2017-05-05
 
