@@ -28,6 +28,10 @@ module ROM
           tuple
         end
 
+        def self.get(arr, idx)
+          arr[idx]
+        end
+
         def self.filter_empty(arr)
           arr.reject { |row| row.values.all?(&:nil?) }
         end
@@ -158,7 +162,7 @@ module ROM
         op = with_row_proc(attribute) do |row_proc|
           array_proc =
             if attribute.type == :hash
-              t(:map_array, row_proc) >> -> arr { arr.first }
+              t(:map_array, row_proc) >> t(:get, 0)
             else
               t(:map_array, row_proc)
             end
@@ -169,7 +173,7 @@ module ROM
         if op
           op
         elsif attribute.type == :hash
-          t(:map_value, attribute.name, -> arr { arr.first })
+          t(:map_value, attribute.name, t(:get, 0))
         end
       end
 
