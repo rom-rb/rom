@@ -40,7 +40,21 @@ module ROM
       [self, *names.map { |name| mappers[name] }]
         .reduce { |a, e| composite_class.new(a, e) }
     end
-    alias_method :as, :map_with
+
+    # @api public
+    def as(*names)
+      new_meth = names[0].is_a?(Class) ? 'map_to' : 'map_with'
+
+      msg = <<-STR
+          Relation#as will change behavior in 4.0. Use `#{new_meth}` instead
+            => Called at:
+               #{caller.join("\n")}
+          STR
+
+      Dry::Core::Deprecations.warn(msg)
+
+      map_with(*names)
+    end
 
     # Forwards messages to the left side of a pipeline
     #
