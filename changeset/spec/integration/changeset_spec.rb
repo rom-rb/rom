@@ -105,7 +105,7 @@ RSpec.describe 'Using changesets' do
                     new(repo.users.map_with(:user)).
                     data(name: 'Joe Dane')
 
-      expect(changeset.commit).to eql(Test::User.new(id: 1, name: 'Joe Dane'))
+      expect(changeset.commit).to eql({id: 1, name: 'Joe Dane'})
     end
 
     it 'creates changesets for non-root relations' do

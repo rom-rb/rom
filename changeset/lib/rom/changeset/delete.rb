@@ -1,4 +1,4 @@
-require 'rom/repository/changeset/restricted'
+require 'rom/changeset/restricted'
 
 module ROM
   class Changeset
