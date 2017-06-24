@@ -1,6 +1,7 @@
 require 'set'
 
 require 'dry/core/inflector'
+require 'dry/core/deprecations'
 require 'dry/core/constants'
 
 require 'rom/auto_curry'
@@ -77,7 +78,11 @@ module ROM
           #
           # @api public
           def self.dataset(value = Undefined, &block)
-            dataset_proc(block) if block
+            if block
+              dataset_proc(block)
+            else
+              Dry::Core::Deprecations.warn("Relation.dataset is deprecated in favor of schema settings")
+            end
             super
           end
 
@@ -89,6 +94,8 @@ module ROM
           #
           # @api public
           def self.register_as(value = Undefined)
+            Dry::Core::Deprecations.warn("Relation.register_as is deprecated in favor of schema settings")
+
             if value == Undefined
               return @register_as if defined?(@register_as)
 
