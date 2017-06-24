@@ -65,12 +65,32 @@ module ROM
 
     AttributeAlreadyDefinedError = Class.new(StandardError)
 
+    extend Initializer
+
     include Dry::Equalizer(:name, :attributes, :associations)
     include Enumerable
 
     # @!attribute [r] name
     #   @return [Symbol] The name of this schema
-    attr_reader :name
+    param :name
+
+    # @!attribute [r] attributes
+    #   @return [Array] Array with schema attributes
+    option :attributes, default: -> { EMPTY_ARRAY }
+
+    # @!attribute [r] associations
+    #   @return [AssociationSet] Optional association set (this is adapter-specific)
+    option :associations, optional: true
+
+    # @!attribute [r] inferrer
+    #   @return [#call] An optional inferrer object used in `finalize!`
+    option :inferrer, default: -> { DEFAULT_INFERRER }
+
+    # @api private
+    option :relations, default: -> { EMPTY_HASH }
+
+    # @api private
+    option :attr_class, default: -> { Attribute }
 
     # @!attribute [r] primary_key_name
     #   @return [Symbol] The name of the primary key. This is set because in
@@ -80,24 +100,6 @@ module ROM
     # @!attribute [r] primary_key_names
     #   @return [Array<Symbol>] A list of all pk names
     attr_reader :primary_key_names
-
-    # @!attribute [r] attributes
-    #   @return [Array] Array with schema attributes
-    attr_reader :attributes
-
-    # @!attribute [r] associations
-    #   @return [AssociationSet] Optional association set (this is adapter-specific)
-    attr_reader :associations
-
-    # @!attribute [r] inferrer
-    #   @return [#call] An optional inferrer object used in `finalize!`
-    attr_reader :inferrer
-
-    # @api private
-    attr_reader :options
-
-    # @api private
-    attr_reader :relations
 
     alias_method :to_ary, :attributes
 
@@ -127,13 +129,8 @@ module ROM
     end
 
     # @api private
-    def initialize(name, options)
-      @name = name
-      @options = options
-      @attributes = options[:attributes] || EMPTY_ARRAY
-      @associations = options[:associations]
-      @inferrer = options[:inferrer] || DEFAULT_INFERRER
-      @relations = options[:relations] || EMPTY_HASH
+    def initialize(*)
+      super
 
       yield(self) if block_given?
     end
@@ -420,11 +417,6 @@ module ROM
     # @api public
     def with(new_options)
       self.class.new(name, options.merge(new_options))
-    end
-
-    # @api private
-    def attr_class
-      options.fetch(:attr_class)
     end
 
     # Return AST for the schema
