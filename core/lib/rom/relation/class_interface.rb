@@ -106,7 +106,7 @@ module ROM
           relation = as || schema_opts.fetch(:relation, ds_name)
 
           @relation_name = Name[relation, ds_name]
-          inferrer = infer ? schema_inferrer : nil
+          inferrer = infer ? schema_inferrer : Schema::DEFAULT_INFERRER
 
           unless schema_class
             raise MissingSchemaClassError.new(self)
