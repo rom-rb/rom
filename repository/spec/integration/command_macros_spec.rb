@@ -99,7 +99,7 @@ RSpec.describe ROM::Repository, '.command' do
     struct_definition = [:users, [repo.users.schema[:id].to_read_ast,
                                   repo.users.schema[:name].to_read_ast]]
 
-    expect(user).to be_an_instance_of repo.users.mappers.compiler.struct_builder.cache[struct_definition.hash]
+    expect(user).to be_an_instance_of repo.users.mappers.compiler.struct_compiler.cache[struct_definition.hash]
   end
 
   describe 'using plugins' do

@@ -1,7 +1,7 @@
 require 'rom/initializer'
 require 'rom/mapper'
 require 'rom/struct'
-require 'rom/struct_builder'
+require 'rom/struct_compiler'
 require 'rom/cache'
 
 module ROM
@@ -12,11 +12,11 @@ module ROM
     option :cache, reader: true, default: -> { Cache.new }
     option :struct_namespace, reader: true, default: -> { ROM::Struct }
 
-    attr_reader :struct_builder
+    attr_reader :struct_compiler
 
     def initialize(*args)
       super
-      @struct_builder = StructBuilder.new(namespace: struct_namespace, cache: cache)
+      @struct_compiler = StructCompiler.new(namespace: struct_namespace, cache: cache)
       @cache = cache.namespaced(:mappers)
     end
 
@@ -44,7 +44,7 @@ module ROM
         if meta[:combine_name]
           false
         else
-          struct_builder[name, header]
+          struct_compiler[name, header]
         end
       end
 

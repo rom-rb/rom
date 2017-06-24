@@ -11,7 +11,7 @@ require 'rom/schema/attribute'
 
 module ROM
   # @api private
-  class StructBuilder < Dry::Types::Compiler
+  class StructCompiler < Dry::Types::Compiler
     extend Initializer
 
     param :registry, default: -> { Dry::Types }
