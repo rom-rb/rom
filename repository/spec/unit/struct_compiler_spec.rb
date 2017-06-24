@@ -1,4 +1,4 @@
-RSpec.describe 'struct builder', '#call' do
+RSpec.describe 'struct compiler', '#call' do
   subject(:builder) { ROM::StructCompiler.new }
 
   def attr_ast(name, type, **opts)
