@@ -1,4 +1,4 @@
-require File.expand_path('../core/lib/rom/version', __FILE__)
+require File.expand_path('../lib/rom/version', __FILE__)
 
 Gem::Specification.new do |gem|
   gem.name          = 'rom'
@@ -12,9 +12,9 @@ Gem::Specification.new do |gem|
   gem.test_files    = `git ls-files -- {spec}/*`.split("\n")
   gem.license       = 'MIT'
 
-  gem.add_runtime_dependency 'rom-core', '~> 4.0'
-  gem.add_runtime_dependency 'rom-mapper', '~> 1.0'
-  gem.add_runtime_dependency 'rom-repository', '~> 2.0'
+  gem.add_runtime_dependency 'rom-core', '~> 4.0.0.beta'
+  gem.add_runtime_dependency 'rom-mapper', '~> 1.0.0.beta'
+  gem.add_runtime_dependency 'rom-repository', '~> 2.0.0.beta'
 
   gem.add_development_dependency 'rake', '~> 10.3'
   gem.add_development_dependency 'rspec', '~> 3.5'
