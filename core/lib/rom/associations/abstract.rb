@@ -75,7 +75,7 @@ module ROM
 
       # @api public
       def override?
-        definition.view
+        definition.override
       end
 
       # @api public

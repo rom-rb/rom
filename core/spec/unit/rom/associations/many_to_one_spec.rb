@@ -19,6 +19,14 @@ RSpec.describe ROM::Associations::ManyToOne do
     ROM::Relation.new([], name: ROM::Relation::Name[:groups])
   end
 
+  describe '#override?' do
+    let(:options) { { override: true } }
+
+    it 'returns true when :override was set' do
+      expect(assoc).to be_override
+    end
+  end
+
   describe '#wrap' do
     it 'returns a wrap node relation' do
       wrap_node = assoc.wrap
