@@ -1,3 +1,16 @@
+# v2.0.0 to-be-released
+
+### Changed
+
+* [BREAKING] `Relation#combine` no longer works with arbitrary `many` and `one` options. Configure associations instead and use their identifiers as arguments (solnic)
+* [BREAKING] `Relation#combine_parents` was removed (solnic)
+* [BREAKING] `Relation#combine_children` was removed (solnic)
+* [BREAKING] `Relation#wrap_parent` was removed, configure associations and use their identifiers in `wrap` instead (solnic)
+
+### Internal
+
+* `RelationProxy` was removed as its functionality was ported and improved in rom-core (solnic)
+
 # v1.3.3 2017-05-31
 
 ### Added
