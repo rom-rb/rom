@@ -41,6 +41,7 @@ Previous `rom` gem was renamed to `rom-core`
 ## Fixed
 
 * Inferred struct attributes use simplified types. This fixed a problem when read types from relation schemas would be applied twice (flash-gordon)
+* Trying to register a mapper with the same identifier more than once will raise an error (GustavoCaso)
 
 # v3.2.2 2017-05-05
 
