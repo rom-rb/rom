@@ -96,7 +96,7 @@ module ROM
 
       # @api private
       def join_key_map
-        join_keys.to_a.flatten.map(&:key)
+        join_keys.to_a.flatten(1).map(&:key)
       end
 
       # @api private
