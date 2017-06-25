@@ -1,3 +1,4 @@
+require 'rom/struct'
 require 'rom/registry'
 require 'rom/mapper_compiler'
 
@@ -8,7 +9,8 @@ module ROM
       MapperMissingError
     end
 
-    option :compiler, reader: true, default: -> { MapperCompiler.new }
+    option :struct_namespace, reader: false, default: -> { ROM::Struct }
+    option :compiler, reader: true, default: -> { MapperCompiler.new(struct_namespace: options[:struct_namespace]) }
 
     # @see Registry
     # @api public

@@ -1,5 +1,6 @@
 require 'dry/core/class_attributes'
 
+require 'rom/struct'
 require 'rom/constants'
 require 'rom/initializer'
 require 'rom/support/memoizable'
@@ -55,12 +56,13 @@ module ROM
 
     defines :adapter, :gateway, :schema_opts, :schema_class,
             :schema_attr_class, :schema_inferrer, :schema_dsl,
-            :wrap_class, :auto_map, :auto_struct
+            :wrap_class, :auto_map, :auto_struct, :struct_namespace
 
     gateway :default
 
     auto_map true
     auto_struct false
+    struct_namespace ROM::Struct
 
     schema_opts EMPTY_HASH
     schema_dsl Schema::DSL
@@ -103,19 +105,24 @@ module ROM
       schema.any?(&:read?) ? schema.to_output_hash : NOOP_OUTPUT_SCHEMA
     }
 
-    # @!attribute [r] mappers
-    #   @return [MapperRegistry] an optional mapper registry (empty by default)
-    option :mappers, default: -> { MapperRegistry.new }
+    # @!attribute [r] auto_map
+    #   @return [TrueClass,FalseClass] Whether or not a relation and its compositions should be auto-mapped
+    #   @api private
+    option :auto_map, reader: true, default: -> { self.class.auto_map }
 
     # @!attribute [r] auto_struct
     #   @return [TrueClass,FalseClass] Whether or not tuples should be auto-mapped to structs
     #   @api private
     option :auto_struct, reader: true, default: -> { self.class.auto_struct }
 
-    # @!attribute [r] auto_map
-    #   @return [TrueClass,FalseClass] Whether or not a relation and its compositions should be auto-mapped
+    # @!attribute [r] struct_namespace
+    #   @return [Module] Custom struct namespace
     #   @api private
-    option :auto_map, reader: true, default: -> { self.class.auto_map }
+    option :struct_namespace, reader: false, default: -> { self.class.struct_namespace }
+
+    # @!attribute [r] mappers
+    #   @return [MapperRegistry] an optional mapper registry (empty by default)
+    option :mappers, default: -> { MapperRegistry.new.struct_namespace(self.class.struct_namespace) }
 
     # @!attribute [r] commands
     #   @return [CommandRegistry] Command registry
@@ -500,6 +507,17 @@ module ROM
       else
         :"#{Dry::Core::Inflector.singularize(name.dataset)}_id"
       end
+    end
+
+    # Return a new relation configured with the provided struct namespace
+    #
+    # @param [Module] namespace
+    #
+    # @return [Relation]
+    #
+    # @api public
+    def struct_namespace(ns)
+      with(struct_namespace: ns, mappers: mappers.struct_namespace(ns))
     end
 
     memoize :to_ast, :auto_map?, :auto_struct?, :foreign_key, :combine, :wrap, :node

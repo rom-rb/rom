@@ -113,11 +113,9 @@ module ROM
 
       @relations = RelationRegistry.new do |registry, relations|
         self.class.relations.each do |name|
-          mappers = container.relations[name].mappers.struct_namespace(struct_namespace)
-
-          relation = container.
-                       relation(name).
-                       with(mappers: mappers, auto_map: true, auto_struct: auto_struct)
+          relation = container.relations[name].
+                       with(auto_struct: auto_struct).
+                       struct_namespace(struct_namespace)
 
           instance_variable_set("@#{name}", relation)
 
