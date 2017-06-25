@@ -134,47 +134,6 @@ module ROM
       @relations = relations.map { |r| r.with(commands: commands[r.name.to_sym]) }
     end
 
-    # Get relation instance identified by its name
-    #
-    # This method will use a custom mapper if it was configured. ie if you have
-    # a relation called `:users` and a mapper configured for `:users` relation,
-    # then by default this mapper will be used.
-    #
-    # @example
-    #   rom.relation(:users)
-    #   rom.relation(:users).by_name('Jane')
-    #
-    #   # block syntax allows accessing lower-level query DSLs (usage is discouraged though)
-    #   rom.relation { |r| r.restrict(name: 'Jane') }
-    #
-    #   # with mapping
-    #   rom.relation(:users).map_with(:presenter)
-    #
-    #   # using multiple mappers
-    #   rom.relation(:users).page(1).map_with(:presenter, :json_serializer)
-    #
-    # @param [Symbol] name of the relation to load
-    #
-    # @yield [Relation]
-    #
-    # @return [Relation]
-    #
-    # @api public
-    def relation(name, &block)
-      relation =
-        if block
-          yield(relations[name])
-        else
-          relations[name]
-        end
-
-      if mappers.key?(name)
-        relation.with(mappers: mappers[name])
-      else
-        relation
-      end
-    end
-
     # Returns commands registry for the given relation
     #
     # @example

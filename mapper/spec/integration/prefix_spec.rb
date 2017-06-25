@@ -17,7 +17,7 @@ RSpec.describe 'Mapper definition DSL' do
   end
 
   describe 'prefix' do
-    subject(:mapped_users) { container.relation(:users).map_with(:users).to_a }
+    subject(:mapped_users) { container.relations[:users].map_with(:users).to_a }
 
     it 'applies new prefix to the attributes following it' do
       configuration.mappers do

@@ -29,7 +29,7 @@ RSpec.describe 'Mappers / Prefixing attributes' do
 
     Test::User.send(:include, Dry::Equalizer(:id, :name, :email))
 
-    jane = container.relation(:users).map_with(:users).first
+    jane = container.relations[:users].map_with(:users).first
 
     expect(jane).to eql(Test::User.new(id: 123, name: 'Jane', email: 'jane@doe.org'))
   end

@@ -14,7 +14,7 @@ RSpec.describe 'Mapper definition DSL' do
   end
 
   describe 'unfold' do
-    let(:mapped_users) { container.relation(:users).map_with(:users).to_a }
+    let(:mapped_users) { container.relations[:users].map_with(:users).to_a }
 
     it 'splits the attribute' do
       configuration.mappers do

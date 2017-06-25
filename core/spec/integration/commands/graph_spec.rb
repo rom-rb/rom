@@ -44,20 +44,20 @@ RSpec.describe 'Building up a command graph for nested input' do
 
     command.call(input)
 
-    expect(container.relation(:users)).to match_array([
+    expect(container.relations[:users]).to match_array([
       { name: 'Jane' }
     ])
 
-    expect(container.relation(:tasks)).to match_array([
+    expect(container.relations[:tasks]).to match_array([
       { title: 'Task One', user: 'Jane' }
     ])
 
-    expect(container.relation(:books)).to match_array([
+    expect(container.relations[:books]).to match_array([
       { title: 'Book One', user: 'Jane' },
       { title: 'Book Two', user: 'Jane' }
     ])
 
-    expect(container.relation(:tags)).to match_array([
+    expect(container.relations[:tags]).to match_array([
       { name: 'red', task: 'Task One' },
       { name: 'green', task: 'Task One' },
       { name: 'blue', task: 'Task One' }
@@ -103,16 +103,16 @@ RSpec.describe 'Building up a command graph for nested input' do
 
     command.call(input)
 
-    expect(container.relation(:users)).to match_array([
+    expect(container.relations[:users]).to match_array([
       { name: 'Jane' }
     ])
 
-    expect(container.relation(:tasks)).to match_array([
+    expect(container.relations[:tasks]).to match_array([
       { title: 'Task One', user: 'Jane' },
       { title: 'Task Two', user: 'Jane' }
     ])
 
-    expect(container.relation(:tags)).to match_array([
+    expect(container.relations[:tags]).to match_array([
       { name: 'red', task: 'Task One' },
       { name: 'green', task: 'Task One' },
       { name: 'blue', task: 'Task Two' }
@@ -194,7 +194,7 @@ RSpec.describe 'Building up a command graph for nested input' do
 
     container.command(:tasks).create.with([{ title: 'Task One'}]).(name: 'Jane')
 
-    expect(container.relation(:tasks)).to match_array([
+    expect(container.relations[:tasks]).to match_array([
       { title: 'Change Name', user: 'Johnny' },
       { title: 'Finish that novel', user: 'Johnny' },
       { title: 'Task One', user: 'Jane' }
@@ -202,11 +202,11 @@ RSpec.describe 'Building up a command graph for nested input' do
 
     update.call(updated)
 
-    expect(container.relation(:users)).to match_array([
+    expect(container.relations[:users]).to match_array([
       { name: 'Johnny', email: 'johnathan@doe.org' }
     ])
 
-    expect(container.relation(:tasks)).to match_array([
+    expect(container.relations[:tasks]).to match_array([
       { title: 'Task One', user: 'Jane' },
       { title: 'Finish that novel', priority: 1, user: 'Johnny' }
     ])

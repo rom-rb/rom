@@ -26,7 +26,7 @@ RSpec.describe 'Commands / Delete' do
       { name: 'Joe', email: 'joe@doe.org' }
     ])
 
-    expect(container.relation(:users)).to match_array([])
+    expect(container.relations[:users]).to match_array([])
   end
 
   it 'deletes tuples matching restriction' do
@@ -38,7 +38,7 @@ RSpec.describe 'Commands / Delete' do
 
     expect(result).to match_array([{ name: 'Joe', email: 'joe@doe.org' }])
 
-    expect(container.relation(:users)).to match_array([
+    expect(container.relations[:users]).to match_array([
       { name: 'Jane', email: 'jane@doe.org' }
     ])
   end

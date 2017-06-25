@@ -1,9 +1,9 @@
 RSpec.shared_context 'relations' do
-  let(:users) { rom.relation(:users) }
-  let(:tasks) { rom.relation(:tasks) }
-  let(:tags) { rom.relation(:tags) }
-  let(:posts) { rom.relation(:posts) }
-  let(:books) { rom.relation(:books) }
+  let(:users) { rom.relations[:users] }
+  let(:tasks) { rom.relations[:tasks] }
+  let(:tags) { rom.relations[:tags] }
+  let(:posts) { rom.relations[:posts] }
+  let(:books) { rom.relations[:books] }
 
   before do
     configuration.relation(:books) do

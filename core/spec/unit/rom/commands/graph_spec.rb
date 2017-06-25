@@ -32,15 +32,15 @@ RSpec.describe ROM::Commands::Graph do
       before { command.call }
 
       it 'inserts root' do
-        expect(container.relation(:users)).to match_array([{ name: 'Jane' }])
+        expect(container.relations[:users]).to match_array([{ name: 'Jane' }])
       end
 
       it 'inserts root nodes' do
-        expect(container.relation(:tasks)).to match_array([{ user: 'Jane', title: 'One' }])
+        expect(container.relations[:tasks]).to match_array([{ user: 'Jane', title: 'One' }])
       end
 
       it 'inserts nested graph nodes' do
-        expect(container.relation(:tags)).to match_array([
+        expect(container.relations[:tags]).to match_array([
           { name: 'red', task: 'One' },
           { name: 'green', task: 'One' },
           { name: 'blue', task: 'One' }

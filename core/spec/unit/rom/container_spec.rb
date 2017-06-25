@@ -70,29 +70,6 @@ RSpec.describe ROM::Container do
     end
   end
 
-  describe '#relation' do
-    it 'yields selected relation to the block and returns a loaded relation' do
-      result = container.relation(:users) { |r| r.by_name('Jane') }.map_with(:name_list)
-
-      expect(result.call).to match_array([{ name: 'Jane' }])
-    end
-
-    it 'returns lazy-mapped relation' do
-      by_name = container.relation(:users).map_with(:name_list).by_name
-
-      expect(by_name['Jane']).to match_array([{ name: 'Jane' }])
-    end
-
-    it 'returns relation without mappers when mappers are not defined' do
-      expect(container.relation(:tasks)).to be_kind_of(ROM::Relation)
-      expect(container.relation(:tasks).mappers.elements).to be_empty
-    end
-
-    it 'returns a relation with finalized schema' do
-      expect(container.relation(:tasks).schema).to be_frozen
-    end
-  end
-
   describe '#mappers' do
     it 'returns mappers for all relations' do
       expect(container.mappers.users[:name_list]).to_not be(nil)

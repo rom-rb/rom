@@ -56,7 +56,7 @@ RSpec.describe "ROM::PluginRegistry" do
     end
     configuration.register_relation(users)
 
-    expect(container.relation(:users).plugged_in).to eq "a relation"
+    expect(container.relations[:users].plugged_in).to eq "a relation"
   end
 
   it "makes command plugins available" do
@@ -119,7 +119,7 @@ RSpec.describe "ROM::PluginRegistry" do
     end
     configuration.register_relation(users)
 
-    expect(container.relation(:users)).to be_lazy
+    expect(container.relations[:users]).to be_lazy
   end
 
   it "respects adapter restrictions" do

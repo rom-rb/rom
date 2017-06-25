@@ -13,7 +13,7 @@ RSpec.describe ROM::Relation, '.dataset' do
       end
     end
 
-    expect(container.relation(:users).to_a).to eql([{ id: 1, name: 'Jane' }])
+    expect(container.relations[:users].to_a).to eql([{ id: 1, name: 'Jane' }])
   end
 
   it 'yields relation class for setting custom dataset proc' do
@@ -31,7 +31,7 @@ RSpec.describe ROM::Relation, '.dataset' do
       end
     end
 
-    expect(container.relation(:users).to_a).to eql([
+    expect(container.relations[:users].to_a).to eql([
       { id: 1, name: 'Jane' }, { id: 2, name: 'Joe' }
     ])
   end

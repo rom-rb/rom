@@ -81,7 +81,7 @@ RSpec.describe ROM::Commands::Lazy do
       it 'evaluates the input and calls command' do
         command.call(input)
 
-        expect(container.relation(:users)).to match_array([jane])
+        expect(container.relations[:users]).to match_array([jane])
       end
     end
 
@@ -108,7 +108,7 @@ RSpec.describe ROM::Commands::Lazy do
       it 'evaluates the input and calls command' do
         command.call(input, input[:users])
 
-        expect(container.relation(:tasks)).to match_array([
+        expect(container.relations[:tasks]).to match_array([
           { user: 'Jane', title: 'Jane Task One' },
           { user: 'Jane', title: 'Jane Task Two' },
           { user: 'Joe', title: 'Joe Task One' }
@@ -130,7 +130,7 @@ RSpec.describe ROM::Commands::Lazy do
         input = { user: { name: 'Jane', email: 'jane.doe@rom-rb.org' } }
         command.call(input)
 
-        expect(container.relation(:users)).to match_array([input[:user]])
+        expect(container.relations[:users]).to match_array([input[:user]])
       end
     end
 
@@ -158,9 +158,9 @@ RSpec.describe ROM::Commands::Lazy do
       it 'evaluates the input, restricts the relation and calls its command' do
         command.call(input, input[:user])
 
-        expect(container.relation(:users)).to match_array([jane])
+        expect(container.relations[:users]).to match_array([jane])
 
-        expect(container.relation(:tasks)).to match_array([jane_task])
+        expect(container.relations[:tasks]).to match_array([jane_task])
       end
     end
 
@@ -194,9 +194,9 @@ RSpec.describe ROM::Commands::Lazy do
       it 'evaluates the input, restricts the relation and calls its command' do
         command.call(input, input[:user])
 
-        expect(container.relation(:users)).to match_array([jane])
+        expect(container.relations[:users]).to match_array([jane])
 
-        expect(container.relation(:tasks)).to match_array(jane_tasks)
+        expect(container.relations[:tasks]).to match_array(jane_tasks)
       end
     end
 
@@ -239,7 +239,7 @@ RSpec.describe ROM::Commands::Lazy do
       it 'evaluates the input and calls its command' do
         command.call(input, input[:users])
 
-        expect(container.relation(:tasks)).to match_array([
+        expect(container.relations[:tasks]).to match_array([
           { user: 'Jane', title: 'Jane Task One', priority: 1 },
           { user: 'Jane', title: 'Jane Task Two', priority: 2 },
           { user: 'Joe', title: 'Joe Task One', priority: 1 }
@@ -266,7 +266,7 @@ RSpec.describe ROM::Commands::Lazy do
       it 'restricts the relation and calls its command' do
         command.call(input)
 
-        expect(container.relation(:users)).to match_array([joe])
+        expect(container.relations[:users]).to match_array([joe])
       end
     end
   end

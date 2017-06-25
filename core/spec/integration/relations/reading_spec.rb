@@ -66,13 +66,13 @@ RSpec.describe 'Reading relations' do
     Test::User.send(:include, Dry::Equalizer(:name, :email))
     Test::UserWithTasks.send(:include, Dry::Equalizer(:name, :email, :tasks))
 
-    user = container.relation(:users).sorted.map_with(:users).first
+    user = container.relations[:users].sorted.map_with(:users).first
 
     expect(user).to eql(
       Test::User.new(name: "Jane", email: "jane@doe.org")
     )
 
-    user = container.relation(:users).with_tasks.sorted.map_with(:with_tasks).first
+    user = container.relations[:users].with_tasks.sorted.map_with(:with_tasks).first
 
     expect(user).to eql(
       Test::UserWithTasks.new(
@@ -103,7 +103,7 @@ RSpec.describe 'Reading relations' do
     Test::User.send(:include, Dry::Equalizer(:name, :email))
     Test::UserWithTask.send(:include, Dry::Equalizer(:name, :email, :task))
 
-    user = container.relation(:users).sorted.with_task.map_with(:with_task).first
+    user = container.relations[:users].sorted.with_task.map_with(:with_task).first
 
     expect(user).to eql(
       Test::UserWithTask.new(name: "Jane", email: "jane@doe.org",
@@ -116,7 +116,7 @@ RSpec.describe 'Reading relations' do
       define(:users)
     end
 
-    user = container.relation(:users).by_name("Jane").map_with(:users).first
+    user = container.relations[:users].by_name("Jane").map_with(:users).first
 
     expect(user).to eql(name: "Jane", email: "jane@doe.org")
   end
@@ -134,35 +134,7 @@ RSpec.describe 'Reading relations' do
       end
     end
 
-    user = container.relation(:users).map_with(:prefixer).first
-
-    expect(user).to eql(user_name: 'Joe', user_email: "joe@doe.org")
-  end
-
-  it 'allows passing a block to retrieve relations for mapping' do
-    configuration.mappers do
-      define(:users) do
-        attribute :name
-        attribute :email
-      end
-
-      define(:prefixer, parent: :users) do
-        attribute :user_name, from: :name
-        attribute :user_email, from: :email
-      end
-    end
-
-    expect {
-      container.relation(:users, &:not_here)
-    }.to raise_error(NoMethodError, /not_here/)
-
-    expect {
-      container.relation(:users) { |users| users.by_name('Joe') }.map_with(:not_here)
-    }.to raise_error(ROM::MapperMissingError, /not_here/)
-
-    user = container.relation(:users) { |users|
-      users.by_name('Joe')
-    }.map_with(:prefixer).call.first
+    user = container.relations[:users].map_with(:prefixer).first
 
     expect(user).to eql(user_name: 'Joe', user_email: "joe@doe.org")
   end

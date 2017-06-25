@@ -8,8 +8,8 @@ RSpec.describe 'Repository with multi-adapters configuration' do
 
   let(:rom) { ROM.container(configuration) }
 
-  let(:users) { rom.relation(:sql_users) }
-  let(:tasks) { rom.relation(:memory_tasks) }
+  let(:users) { rom.relations[:sql_users] }
+  let(:tasks) { rom.relations[:memory_tasks] }
 
   let(:repo) { Test::Repository.new(rom) }
 

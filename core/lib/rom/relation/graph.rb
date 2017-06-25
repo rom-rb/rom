@@ -21,7 +21,7 @@ module ROM
     #   rom.relations[:users] << { name: 'Jane' }
     #   rom.relations[:tasks] << { user: 'Jane', title: 'Do something' }
     #
-    #   rom.relation(:users).combine(rom.relation(:tasks).for_users)
+    #   rom.relations[:users].combine(rom.relations[:tasks].for_users)
     #
     # @api public
     class Graph

@@ -42,7 +42,7 @@ RSpec.describe 'Mapper definition DSL' do
 
       Test::TaskWithUser.send(:include, Dry::Equalizer(:title, :priority, :user))
 
-      jane = container.relation(:tasks).with_user.map_with(:with_user).to_a.last
+      jane = container.relations[:tasks].with_user.map_with(:with_user).to_a.last
 
       expect(jane).to eql(
         Test::TaskWithUser.new(
@@ -71,7 +71,7 @@ RSpec.describe 'Mapper definition DSL' do
 
       Test::TaskWithUser.send(:include, Dry::Equalizer(:title, :priority, :user))
 
-      jane = container.relation(:tasks).with_user.map_with(:with_user).to_a.last
+      jane = container.relations[:tasks].with_user.map_with(:with_user).to_a.last
 
       expect(jane).to eql(
         Test::TaskWithUser.new(
@@ -108,7 +108,7 @@ RSpec.describe 'Mapper definition DSL' do
       Test::TaskUser.send(:include, Dry::Equalizer(:name, :contact))
       Test::Contact.send(:include, Dry::Equalizer(:email))
 
-      jane = container.relation(:tasks).with_user.map_with(:with_user).to_a.last
+      jane = container.relations[:tasks].with_user.map_with(:with_user).to_a.last
 
       expect(jane).to eql(
         Test::TaskWithUser.new(
@@ -141,7 +141,7 @@ RSpec.describe 'Mapper definition DSL' do
       Test::TaskWithUser.send(:include, Dry::Equalizer(:title, :priority, :user))
       Test::User.send(:include, Dry::Equalizer(:email))
 
-      jane = container.relation(:tasks).with_user.map_with(:with_user).to_a.last
+      jane = container.relations[:tasks].with_user.map_with(:with_user).to_a.last
 
       expect(jane).to eql(
         Test::TaskWithUser.new(

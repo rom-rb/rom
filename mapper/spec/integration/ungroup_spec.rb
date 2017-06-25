@@ -19,7 +19,7 @@ RSpec.describe 'Mapper definition DSL' do
   end
 
   describe 'ungroup' do
-    subject(:mapped_users) { container.relation(:users).map_with(:users).to_a }
+    subject(:mapped_users) { container.relations[:users].map_with(:users).to_a }
 
     it 'partially ungroups attributes' do
       configuration.mappers do

@@ -22,8 +22,8 @@ RSpec.describe 'Inheritance relation hierarchy' do
   end
 
   it 'registers parent and descendant relations' do
-    users = container.relation(:users)
-    other_users = container.relation(:other_users)
+    users = container.relations[:users]
+    other_users = container.relations[:other_users]
 
     expect(users).to be_instance_of(Test::Users)
     expect(other_users).to be_instance_of(Test::OtherUsers)

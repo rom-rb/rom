@@ -46,7 +46,7 @@ RSpec.describe 'Mapper definition DSL' do
 
       Test::UserWithTasks.send(:include, Dry::Equalizer(:name, :email, :tasks))
 
-      jane = container.relation(:users).with_tasks.map_with(:with_tasks).to_a.last
+      jane = container.relations[:users].with_tasks.map_with(:with_tasks).to_a.last
 
       expect(jane).to eql(
         Test::UserWithTasks.new(
@@ -76,7 +76,7 @@ RSpec.describe 'Mapper definition DSL' do
 
       Test::UserWithTasks.send(:include, Dry::Equalizer(:name, :email, :tasks))
 
-      jane = container.relation(:users).with_tasks.map_with(:with_tasks).to_a.last
+      jane = container.relations[:users].with_tasks.map_with(:with_tasks).to_a.last
 
       expect(jane).to eql(
         Test::UserWithTasks.new(
@@ -109,7 +109,7 @@ RSpec.describe 'Mapper definition DSL' do
       Test::UserWithTasks.send(:include, Dry::Equalizer(:name, :email, :tasks))
       Test::Task.send(:include, Dry::Equalizer(:title, :priority))
 
-      jane = container.relation(:users).with_tasks.map_with(:with_tasks).to_a.last
+      jane = container.relations[:users].with_tasks.map_with(:with_tasks).to_a.last
 
       expect(jane).to eql(
         Test::UserWithTasks.new(
@@ -149,7 +149,7 @@ RSpec.describe 'Mapper definition DSL' do
       Test::TaskUser.send(:include, Dry::Equalizer(:name, :contacts))
       Test::Contact.send(:include, Dry::Equalizer(:email))
 
-      task = container.relation(:tasks).with_users.map_with(:with_users).first
+      task = container.relations[:tasks].with_users.map_with(:with_users).first
 
       expect(task).to eql(
         Test::TaskWithUsers.new(title: 'be nice', priority: 1, users: [

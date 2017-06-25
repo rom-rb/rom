@@ -13,7 +13,7 @@ RSpec.describe 'Mapper definition DSL' do
   end
 
   describe 'exclude' do
-    let(:mapped_users) { container.relation(:users).map_with(:users).to_a }
+    let(:mapped_users) { container.relations[:users].map_with(:users).to_a }
 
     it 'removes the attribute' do
       configuration.mappers do

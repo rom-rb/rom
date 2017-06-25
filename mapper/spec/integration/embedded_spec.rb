@@ -25,7 +25,7 @@ RSpec.describe 'Mappers / embedded' do
       'tasks' => [{ 'title' => 'Task One' }, { 'title' => 'Task Two' }]
     }
 
-    jane = container.relation(:users).map_with(:users).first
+    jane = container.relations[:users].map_with(:users).first
 
     expect(jane.name).to eql('Jane')
     expect(jane.tasks).to eql([{ title: 'Task One' }, { title: 'Task Two' }])
@@ -51,7 +51,7 @@ RSpec.describe 'Mappers / embedded' do
       'address' => { 'street' => 'Somewhere 1', 'city' => 'NYC' }
     }
 
-    jane = container.relation(:users).map_with(:users).first
+    jane = container.relations[:users].map_with(:users).first
 
     Test::Address.send(:include, Dry::Equalizer(:street, :city))
 

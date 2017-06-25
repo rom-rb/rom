@@ -22,7 +22,7 @@ RSpec.describe 'Mapper definition DSL' do
     end
 
     let(:actual) do
-      container.relation(:users).with_tasks.map_with(:users).to_a
+      container.relations[:users].with_tasks.map_with(:users).to_a
     end
 
     it 'groups all attributes and folds the first key' do

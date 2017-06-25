@@ -68,8 +68,8 @@ RSpec.describe 'Mapper definition DSL' do
       end
     end
 
-    let(:users) { container.relation(:users) }
-    let(:tasks) { container.relation(:tasks) }
+    let(:users) { container.relations[:users] }
+    let(:tasks) { container.relations[:tasks] }
 
     let(:joe) {
       Test::User.new(
