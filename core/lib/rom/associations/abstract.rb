@@ -86,7 +86,7 @@ module ROM
       # @api protected
       def apply_view(schema, relation)
         view_rel = relation.public_send(view)
-        schema.merge(view_rel.schema.qualified).uniq(&:to_sql_name).(view_rel)
+        schema.merge(view_rel.schema).uniq(&:key).(view_rel)
       end
 
       # @api public
