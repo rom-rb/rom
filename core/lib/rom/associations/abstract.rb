@@ -129,6 +129,8 @@ module ROM
       def self_ref?
         source.name.dataset == target.name.dataset
       end
+
+      memoize :combine_keys, :join_key_map
     end
   end
 end
