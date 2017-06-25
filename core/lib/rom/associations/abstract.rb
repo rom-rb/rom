@@ -91,7 +91,7 @@ module ROM
 
       # @api public
       def combine_keys
-        Hash[*with_keys]
+        { source_key => target_key }
       end
 
       # @api private
@@ -128,17 +128,6 @@ module ROM
       # @api private
       def self_ref?
         source.name.dataset == target.name.dataset
-      end
-
-      protected
-
-      # @api protected
-      def with_keys(&block)
-        if block
-          yield(source_key, target_key)
-        else
-          [source_key, target_key]
-        end
       end
     end
   end
