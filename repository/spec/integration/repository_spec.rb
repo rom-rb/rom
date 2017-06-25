@@ -249,6 +249,21 @@ RSpec.describe 'ROM repository' do
         expect(user.class).to be < Test::User
         expect(user.class.name).to eql(Test::User.name)
       end
+
+      it 'uses custom namespace for graph nodes' do
+        expect(Test.const_defined?(:User)).to be(false)
+        expect(Test.const_defined?(:Task)).to be(false)
+
+        user = repo.users.combine(:tasks).limit(1).one!
+
+        expect(user.name).to eql('Jane')
+        expect(user.class).to be < Test::User
+        expect(user.class.name).to eql(Test::User.name)
+
+        expect(user.tasks[0].title).to eql('Jane Task')
+        expect(user.tasks[0].class).to be < Test::Task
+        expect(user.tasks[0].class.name).to eql(Test::Task.name)
+      end
     end
   end
 
