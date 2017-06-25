@@ -89,7 +89,7 @@ module ROM
           through = options[:through]
 
           if through
-            options[through] = ThroughIdentifier[through, target.relation, options[:assoc]]
+            options[:through] = ThroughIdentifier[through, target.relation, options[:assoc]]
           end
 
           options[:name] = target.relation
