@@ -129,6 +129,17 @@ module ROM
       def self_ref?
         source.name.dataset == target.name.dataset
       end
+
+      protected
+
+      # @api protected
+      def with_keys(&block)
+        if block
+          yield(source_key, target_key)
+        else
+          [source_key, target_key]
+        end
+      end
     end
   end
 end

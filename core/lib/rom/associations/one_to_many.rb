@@ -21,12 +21,14 @@ module ROM
 
       protected
 
-      # @api private
-      def with_keys(&block)
-        source_key = source.schema.primary_key_name
-        target_key = foreign_key
-        return [source_key, target_key] unless block
-        yield(source_key, target_key)
+      # @api protected
+      def source_key
+        source.schema.primary_key_name
+      end
+
+      # @api protected
+      def target_key
+        foreign_key
       end
 
       memoize :foreign_key

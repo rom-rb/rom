@@ -48,15 +48,17 @@ module ROM
 
       protected
 
-      # @api private
-      def with_keys(&block)
-        source_key = source.primary_key
-        target_key = foreign_key || join_relation.foreign_key(source.name)
-        return [source_key, target_key] unless block
-        yield(source_key, target_key)
+      # @api protected
+      def source_key
+        source.primary_key
       end
 
-      # @api private
+      # @api protected
+      def target_key
+        foreign_key
+      end
+
+      # @api protected
       def join_assoc
         if join_relation.associations.key?(through.assoc_name)
           join_relation.associations[through.assoc_name]
@@ -65,7 +67,7 @@ module ROM
         end
       end
 
-      # @api private
+      # @api protected
       def join_key_map
         left = super
         right = join_assoc.join_key_map
