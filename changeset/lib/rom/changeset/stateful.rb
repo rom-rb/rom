@@ -1,4 +1,4 @@
-require 'rom/repository/changeset/pipe'
+require 'rom/changeset/pipe'
 
 module ROM
   class Changeset
