@@ -14,6 +14,7 @@ Gem::Specification.new do |gem|
   gem.license       = 'MIT'
 
   gem.add_runtime_dependency 'concurrent-ruby', '~> 1.0'
+  gem.add_runtime_dependency 'dry-container', '~> 0.6'
   gem.add_runtime_dependency 'dry-equalizer', '~> 0.2'
   gem.add_runtime_dependency 'dry-types', '~> 0.9', '>= 0.9.4'
   gem.add_runtime_dependency 'dry-core', '~> 0.3'

@@ -1,3 +1,5 @@
+require 'dry/container'
+
 require 'rom/cache'
 
 module ROM
@@ -95,40 +97,47 @@ module ROM
   #
   # @api public
   class Container
+    include Dry::Container::Mixin
     include Dry::Equalizer(:gateways, :relations, :mappers, :commands)
 
-    # @!attribute [r] gateways
-    #   @return [Hash] A hash with configured gateways
-    attr_reader :gateways
-
-    # @!attribute [r] relations
-    #   @return [RelationRegistry] The relation registry
-    attr_reader :relations
-
-    # @!attribute [r] gateways
-    #   @return [CommandRegistry] The command registry
-    attr_reader :commands
-
-    # @!attribute [r] mappers
-    #   @return [MapperRegistry] A hash with configured custom mappers
-    attr_reader :mappers
-
-    # @!attribute [r] mapper_compiler
-    #   @return [Hash] A mapper compiler
-    attr_reader :mapper_compiler
-
-    # @!attribute [r] caches
-    #   @return [Hash] A hash with configured caches for rom components
-    attr_reader :caches
-
     # @api private
-    def initialize(gateways, relations, mappers, commands)
-      @caches = { mappers: Cache.new, commands: Cache.new }.freeze
-      @gateways = gateways
-      @mapper_compiler = MapperCompiler.new(cache: caches[:mappers])
-      @mappers = mappers.map { |r| r.with(compiler: mapper_compiler, cache: caches[:mappers]) }
-      @commands = commands.map { |r| r.with(cache: caches[:commands], mappers: @mappers.key?(r.relation_name) ? @mappers[r.relation_name] : nil) }
-      @relations = relations.map { |r| r.with(commands: commands[r.name.to_sym]) }
+    def self.new(gateways, relations, mappers, commands)
+      container = super()
+
+      caches = { mappers: Cache.new, commands: Cache.new }.freeze
+      mapper_compiler = MapperCompiler.new(cache: caches[:mappers])
+
+      configured_mappers = mappers.map { |r| r.with(compiler: mapper_compiler, cache: caches[:mappers]) }
+      configured_commands = commands.map { |r| r.with(cache: caches[:commands], mappers: configured_mappers.key?(r.relation_name) ? configured_mappers[r.relation_name] : nil) }
+      configured_relations = relations.map { |r| r.with(commands: commands[r.name.to_sym]) }
+
+      container.register(:caches, caches)
+      container.register(:gateways, gateways)
+      container.register(:mappers, configured_mappers)
+      container.register(:commands, configured_commands)
+      container.register(:relations, configured_relations)
+
+      container
+    end
+
+    # @api public
+    def gateways
+      self[:gateways]
+    end
+
+    # @api public
+    def mappers
+      self[:mappers]
+    end
+
+    # @api public
+    def relations
+      self[:relations]
+    end
+
+    # @api public
+    def commands
+      self[:commands]
     end
 
     # Disconnect all gateways
