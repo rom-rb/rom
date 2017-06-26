@@ -52,7 +52,7 @@ RSpec.describe ROM::Changeset::Delete do
       end
 
       it 'can be commited' do
-          expect(changeset.commit).to eql(id: 1, name: 'Jane')
+          expect(changeset.commit.to_h).to eql(id: 1, name: 'Jane')
       end
     end
 
@@ -80,7 +80,7 @@ RSpec.describe ROM::Changeset::Delete do
       end
 
       it 'can be commited' do
-        expect(changeset.commit).to eql(id: 1, name: 'Jade Doe')
+        expect(changeset.commit.to_h).to eql(id: 1, name: 'Jade Doe')
       end
     end
   end

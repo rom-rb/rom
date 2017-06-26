@@ -1,10 +1,8 @@
 require 'dry/core/deprecations'
 
 require 'rom/initializer'
+require 'rom/changeset'
 require 'rom/repository/class_interface'
-require 'rom/mapper_compiler'
-require 'rom/repository/class_interface'
-require 'rom/repository/changeset'
 require 'rom/repository/session'
 
 module ROM

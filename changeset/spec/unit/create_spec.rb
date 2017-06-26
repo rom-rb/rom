@@ -20,7 +20,7 @@ RSpec.describe ROM::Changeset::Create do
     end
 
     it 'can be commited' do
-      expect(changeset.commit).to eql(id: 1, name: 'Jane')
+      expect(changeset.commit.to_h).to eql(id: 1, name: 'Jane')
     end
   end
 
@@ -42,7 +42,7 @@ RSpec.describe ROM::Changeset::Create do
     end
 
     it 'can be commited' do
-      expect(changeset.commit).to eql([{ id: 1, name: 'Jane' }, { id: 2, name: 'Joe' }])
+      expect(changeset.commit.map(&:to_h)).to eql([{ id: 1, name: 'Jane' }, { id: 2, name: 'Joe' }])
     end
   end
 end

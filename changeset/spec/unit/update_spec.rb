@@ -33,7 +33,7 @@ RSpec.describe ROM::Changeset::Update do
     end
 
     it 'can be commited' do
-      expect(changeset.commit).to eql(id: 1, name: 'Jane Doe')
+      expect(changeset.commit.to_h).to eql(id: 1, name: 'Jane Doe')
       expect(repo.users.by_pk(joe[:id]).one).to eql(joe)
     end
   end

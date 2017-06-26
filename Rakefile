@@ -2,7 +2,7 @@ SPEC_RESULTS = {}
 
 desc 'Run all specs'
 task :spec do
-  %w(core mapper repository).map do |name|
+  %w(core mapper repository changeset).map do |name|
     Rake::Task["spec:#{name}"].execute
   end
 
@@ -25,5 +25,10 @@ namespace :spec do
   desc 'Run repository specs'
   task :repository do
     SPEC_RESULTS[:repository] = system('cd repository && bundle exec rake spec')
+  end
+
+  desc 'Run changeset specs'
+  task :changeset do
+    SPEC_RESULTS[:changeset] = system('cd changeset && bundle exec rake spec')
   end
 end
