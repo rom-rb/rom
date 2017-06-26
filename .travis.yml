@@ -8,6 +8,8 @@ install:
   - "bundle install --without sql benchmarks console tools --gemfile ./Gemfile"
   - "cd $TRAVIS_BUILD_DIR/repository"
   - "bundle install --without sql benchmarks console tools --gemfile ./Gemfile"
+  - "cd $TRAVIS_BUILD_DIR/changeset"
+  - "bundle install --without benchmarks console tools --gemfile ./Gemfile"
   - "gem install rspec codeclimate-test-reporter"
 before_script:
   - "psql -c 'create database rom_repository' -U postgres"
