@@ -37,8 +37,8 @@ module ROM
     end
 
     def visit_relation(node)
-      relation_name, header, meta = node
-      name = meta[:combine_name] || relation_name
+      rel_name, header, meta = node
+      name = meta[:combine_name] || meta[:alias] || rel_name
 
       model = meta.fetch(:model) do
         if meta[:combine_name]

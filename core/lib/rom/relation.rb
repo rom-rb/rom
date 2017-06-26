@@ -379,7 +379,7 @@ module ROM
 
     # @api private
     def meta_ast
-      meta = self.meta.merge(dataset: name.dataset)
+      meta = self.meta.merge(dataset: name.dataset, alias: name.aliaz)
       meta[:model] = false unless auto_struct? || meta[:model]
       meta
     end

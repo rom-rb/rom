@@ -44,8 +44,8 @@ module ROM
     private
 
     def visit_relation(node)
-      relation_name, header, meta = node
-      name = meta[:combine_name] || relation_name.relation
+      _, header, meta = node
+      name = meta[:combine_name] || meta[:alias]
 
       model = meta[:model] || call(name, header)
 
