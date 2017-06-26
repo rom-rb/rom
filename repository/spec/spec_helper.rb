@@ -25,14 +25,8 @@ LOGGER = Logger.new(File.open('./log/test.log', 'a'))
 require 'dry/core/deprecations'
 Dry::Core::Deprecations.set_logger!(SPEC_ROOT.join('../log/deprecations.log'))
 
-require 'rom/sql/schema/inferrer'
-
-# Make inference errors quiet
-class ROM::SQL::Schema::Inferrer
-  def self.on_error(*args)
-    # shush
-  end
-end
+# quiet in specs
+ROM::SQL::Relation.tap { |r| r.schema_inferrer(r.schema_inferrer.suppress_errors) }
 
 # Namespace holding all objects created during specs
 module Test
