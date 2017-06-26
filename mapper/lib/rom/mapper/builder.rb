@@ -25,6 +25,7 @@ module ROM
           end
 
         Dry::Core::ClassBuilder.new(name: class_name, parent: parent_class).call do |klass|
+          klass.register_as(name)
           klass.relation(name)
           klass.inherit_header(inherit_header)
 
