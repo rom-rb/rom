@@ -39,12 +39,6 @@ RSpec.describe ROM::Relation do
 
       expect(relation).to be_test_relation
     end
-
-    it 'raises error when adapter relation has no identifier' do
-      expect {
-        Class.new(ROM::Relation[:broken])
-      }.to raise_error(ROM::MissingAdapterIdentifierError, /Test::BrokenAdapter::Relation/)
-    end
   end
 
   describe '#name' do

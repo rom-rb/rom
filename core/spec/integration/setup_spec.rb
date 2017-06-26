@@ -79,6 +79,20 @@ RSpec.describe 'Configuring ROM' do
     end
   end
 
+  describe 'broken relation class' do
+    before do
+      class Test::BrokenRelation < ROM::Relation
+        schema(:users) { }
+      end
+    end
+
+    it 'raises when a class is missing adapter identifier' do
+      expect {
+        ROM.container(:memory) { |config| config.register_relation(Test::BrokenRelation) }
+      }.to raise_error(ROM::MissingAdapterIdentifierError, /Test::BrokenRelation/)
+    end
+  end
+
   describe 'quick setup' do
     # NOTE: move to DSL tests
     it 'exposes boot DSL inside the setup block via `macros` plugin' do

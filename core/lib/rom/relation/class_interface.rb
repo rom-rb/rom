@@ -30,18 +30,6 @@ module ROM
 
       DEFAULT_DATASET_PROC = -> * { self }.freeze
 
-      # This makes sure adapter is set and schema is inherited (when it exists)
-      #
-      # @api private
-      def inherited(klass)
-        super
-
-        if adapter.nil? && self != ROM::Relation
-          raise MissingAdapterIdentifierError,
-                "relation class +#{self}+ is missing the adapter identifier"
-        end
-      end
-
       # Return adapter-specific relation subclass
       #
       # @example

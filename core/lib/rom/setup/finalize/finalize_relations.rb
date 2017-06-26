@@ -1,3 +1,4 @@
+require 'rom/constants'
 require 'rom/relation_registry'
 require 'rom/mapper_registry'
 
@@ -28,6 +29,11 @@ module ROM
       def run!
         relation_registry = RelationRegistry.new do |registry, relations|
           @relation_classes.each do |klass|
+            unless klass.adapter
+              raise MissingAdapterIdentifierError,
+                    "Relation class +#{klass}+ is missing the adapter identifier"
+            end
+
             key = klass.relation_name.to_sym
 
             if registry.key?(key)

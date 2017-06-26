@@ -63,12 +63,14 @@ RSpec.describe ROM::Relation, '#struct_namespace' do
     context 'using inheritance' do
       let(:admins) do
         Class.new(relation.class) do
-          schema(:users, as: :admins)
-        end
+          schema(:users, as: :admins) do
+            attribute :id, ROM::Types::Int
+            attribute :name, ROM::Types::String
+          end
+        end.new(dataset, auto_struct: true)
       end
 
       it 'inherits struct namespace and uses custom alias' do
-        pending 'inheritance is not working yet'
         expect(admins.first).to be_admin
       end
     end
