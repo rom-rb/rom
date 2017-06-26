@@ -1,3 +1,5 @@
+require 'dry/core/deprecations'
+
 require 'rom/relation/loaded'
 require 'rom/commands/graph'
 require 'rom/commands/graph/builder'
@@ -97,6 +99,8 @@ module ROM
   #
   # @api public
   class Container
+    extend Dry::Core::Deprecations[:rom]
+
     include Dry::Equalizer(:gateways, :relations, :mappers, :commands)
 
     # @!attribute [r] gateways
@@ -150,6 +154,8 @@ module ROM
     #
     # @api public
     def relation(name, &block)
+      Dry::Core::Deprecations.warn("#{self.class}#relation is deprecated and will be removed in 4.0")
+
       relation =
         if block
           yield(relations[name])
@@ -184,6 +190,8 @@ module ROM
     #
     # @api public
     def command(options = nil)
+      Dry::Core::Deprecations.warn("#{self.class}#command is deprecated and will be removed in 4.0")
+
       case options
       when Symbol
         name = options
