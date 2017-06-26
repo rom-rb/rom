@@ -16,7 +16,7 @@ group :test do
   gem 'rom-core', path: '../core'
   gem 'rom-mapper', path: '../mapper'
   gem 'rom-changeset', path: '../changeset'
-  gem 'rom-sql', git: 'https://github.com/rom-rb/rom-sql.git', branch: 'add-indexes-to-schema'
+  gem 'rom-sql', git: 'https://github.com/rom-rb/rom-sql.git', branch: 'master'
   gem 'rspec'
   gem 'dry-struct', git: 'https://github.com/dry-rb/dry-struct', branch: 'master'
   gem 'byebug', platforms: :mri

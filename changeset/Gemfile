@@ -15,7 +15,7 @@ group :test do
   gem 'rom-core', path: '../core'
   gem 'rom-mapper', path: '../mapper'
   gem 'rom-repository', path: '../repository'
-  gem 'rom-sql', git: 'https://github.com/rom-rb/rom-sql.git', branch: 'add-indexes-to-schema'
+  gem 'rom-sql', git: 'https://github.com/rom-rb/rom-sql.git', branch: 'master'
   gem 'dry-types', git: 'https://github.com/dry-rb/dry-types.git', branch: 'master'
   gem 'dry-struct', git: 'https://github.com/dry-rb/dry-struct.git', branch: 'master'
   gem 'rspec'
