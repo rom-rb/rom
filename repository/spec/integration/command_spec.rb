@@ -16,20 +16,14 @@ RSpec.describe ROM::Repository, '#command' do
     end
 
     it 'returns registered command' do
-      expect(repo.command(:users).upsert).to be(rom.command(:users).upsert)
-      expect(repo.command(:users)[:upsert]).to be(rom.command(:users).upsert)
-    end
-
-    it 'exposes command builder DSL' do
-      command = repo.command.create(user: :users) { |user| user.create(:tasks) }
-
-      expect(command).to be_instance_of(ROM::Command::Graph)
+      expect(repo.commands[:users].upsert).to be(rom.commands[:users].upsert)
+      expect(repo.commands[:users][:upsert]).to be(rom.commands[:users].upsert)
     end
   end
 
   context ':create' do
     it 'builds Create command for a relation' do
-      create_user = repo.command(create: :users)
+      create_user = repo.command(:create, :users)
 
       user = create_user.call(name: 'Jane Doe')
 
@@ -38,14 +32,8 @@ RSpec.describe ROM::Repository, '#command' do
     end
 
     it 'uses input_schema for command input' do
-      create_user = repo.command(create: :users)
+      create_user = repo.command(:create, :users)
       expect(create_user.input).to eql(repo.users.input_schema)
-    end
-
-    it 'caches commands' do
-      create_user = -> { repo.command(create: :users) }
-
-      expect(create_user.()).to be(create_user.())
     end
 
     it 'builds Create command for a relation graph with one-to-one' do

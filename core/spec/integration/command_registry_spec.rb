@@ -3,7 +3,7 @@ require 'spec_helper'
 RSpec.describe 'ROM::CommandRegistry' do
   include_context 'container'
 
-  let(:users) { container.command(:users) }
+  let(:users) { container.commands[:users] }
 
   before do
     configuration.relation(:users)

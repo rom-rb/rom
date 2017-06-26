@@ -17,7 +17,7 @@ RSpec.describe ROM::Memory::Commands::Update do
     end
   end
 
-  subject(:command) { container.command(:users).update }
+  subject(:command) { container.commands[:users].update }
 
   it_behaves_like 'a command'
 end

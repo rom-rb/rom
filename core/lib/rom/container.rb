@@ -1,7 +1,4 @@
 require 'rom/cache'
-require 'rom/relation/loaded'
-require 'rom/commands/graph'
-require 'rom/commands/graph/builder'
 
 module ROM
   # ROM container is an isolated environment with no global state where all
@@ -130,52 +127,8 @@ module ROM
       @gateways = gateways
       @mapper_compiler = MapperCompiler.new(cache: caches[:mappers])
       @mappers = mappers.map { |r| r.with(compiler: mapper_compiler, cache: caches[:mappers]) }
-      @commands = commands.map { |r| r.with(cache: caches[:commands]) }
+      @commands = commands.map { |r| r.with(cache: caches[:commands], mappers: @mappers.key?(r.relation_name) ? @mappers[r.relation_name] : nil) }
       @relations = relations.map { |r| r.with(commands: commands[r.name.to_sym]) }
-    end
-
-    # Returns commands registry for the given relation
-    #
-    # @example
-    #   # plain command without mapping
-    #   rom.command(:users).create
-    #
-    #   # allows auto-mapping using registered mappers
-    #   rom.command(:users).map_with(:entity)
-    #
-    #   # allows building up a command graph for nested input
-    #   command = rom.command([:users, [:create, [:tasks, [:create]]]])
-    #
-    #   command.call(users: [{ name: 'Jane', tasks: [{ title: 'One' }] }])
-    #
-    # @param [Array,Symbol] options Either graph options or registered command name
-    #
-    # @return [Command, Command::Graph]
-    #
-    # @api public
-    def command(options = nil)
-      case options
-      when Symbol
-        name = options
-        if mappers.key?(name)
-          commands[name].with(mappers: mappers[name])
-        else
-          commands[name]
-        end
-      when Array
-        graph = Commands::Graph.build(commands, options)
-        name = graph.name
-
-        if mappers.key?(name)
-          graph.with(mappers: mappers[name])
-        else
-          graph
-        end
-      when nil
-        Commands::Graph::Builder.new(self)
-      else
-        raise ArgumentError, "#{self.class}#command accepts a symbol or an array"
-      end
     end
 
     # Disconnect all gateways

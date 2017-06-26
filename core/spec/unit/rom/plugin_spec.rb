@@ -73,7 +73,7 @@ RSpec.describe "ROM::PluginRegistry" do
     configuration.register_relation(users)
     configuration.register_command(create_user)
 
-    expect(container.command(:users).create).to be_kind_of Test::CommandPlugin
+    expect(container.commands[:users].create).to be_kind_of Test::CommandPlugin
   end
 
   it "includes plugins in mappers" do
@@ -159,9 +159,9 @@ RSpec.describe "ROM::PluginRegistry" do
     configuration.register_command(create_user)
     configuration.register_command(update_user)
 
-    expect(container.command(:users).create).not_to be_kind_of Test::LazySQLPlugin
-    expect(container.command(:users).create).to be_kind_of Test::LazyPlugin
-    expect(container.command(:users).update).to be_kind_of Test::LazyMemoryPlugin
+    expect(container.commands[:users].create).not_to be_kind_of Test::LazySQLPlugin
+    expect(container.commands[:users].create).to be_kind_of Test::LazyPlugin
+    expect(container.commands[:users].update).to be_kind_of Test::LazyMemoryPlugin
   end
 
   it 'applies plugins to schemas' do

@@ -17,7 +17,7 @@ RSpec.describe ROM::Memory::Commands::Create do
     end
   end
 
-  subject(:command) { container.command(:users).create }
+  subject(:command) { container.commands[:users].create }
 
   it_behaves_like 'a command'
 end

@@ -141,7 +141,7 @@ RSpec.describe 'Configuring ROM' do
 
       container = ROM.container(configuration)
 
-      container.command(:users).create.call(name: 'Jane')
+      container.commands[:users].create.call(name: 'Jane')
 
       expect(container.relations[:users].by_name('Jane').map_with(:users).to_a)
         .to eql([Test::User.new(name: 'Jane')])

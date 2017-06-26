@@ -51,11 +51,11 @@ RSpec.describe ROM::Commands::Graph do
 
   include_context 'container'
 
-  let(:create_user) { container.command(:users).create }
-  let(:create_task) { container.command(:tasks).create }
+  let(:create_user) { container.commands[:users].create }
+  let(:create_task) { container.commands[:tasks].create }
 
-  let(:create_many_tasks) { container.command(:tasks).create_many }
-  let(:create_many_tags) { container.command(:tags).create_many }
+  let(:create_many_tasks) { container.commands[:tasks].create_many }
+  let(:create_many_tags) { container.commands[:tags].create_many }
 
   let(:user) { { name: 'Jane' } }
   let(:task) { { title: 'One' } }
@@ -130,7 +130,7 @@ RSpec.describe ROM::Commands::Graph do
 
   describe 'pipeline' do
     subject(:command) do
-      container.command(:users).map_with(:entity).create.with(user)
+      container.commands[:users].map_with(:entity).create.with(user)
         .combine(create_task.with(task)
         .combine(create_many_tags.with(tags)))
     end

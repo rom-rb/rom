@@ -3,13 +3,13 @@ require 'spec_helper'
 RSpec.describe ROM::Commands::Lazy do
   include_context 'container'
 
-  let(:create_user) { container.command(:users).create }
-  let(:update_user) { container.command(:users).update }
-  let(:delete_user) { container.command(:users).delete }
+  let(:create_user) { container.commands[:users].create }
+  let(:update_user) { container.commands[:users].update }
+  let(:delete_user) { container.commands[:users].delete }
 
-  let(:create_task) { container.command(:tasks).create }
-  let(:create_tasks) { container.command(:tasks).create_many }
-  let(:update_task) { container.command(:tasks).update }
+  let(:create_task) { container.commands[:tasks].create }
+  let(:create_tasks) { container.commands[:tasks].create_many }
+  let(:update_task) { container.commands[:tasks].update }
 
   let(:input) { { user: { name: 'Jane', email: 'jane@doe.org' } } }
   let(:jane) { input[:user] }

@@ -17,8 +17,8 @@ RSpec.describe 'Commands' do
     end
   end
 
-  let(:create) { container.command(:users)[:create] }
-  let(:update) { container.command(:users)[:update] }
+  let(:create) { container.commands[:users][:create] }
+  let(:update) { container.commands[:users][:update] }
 
   describe '#method_missing' do
     it 'forwards known relation view methods' do

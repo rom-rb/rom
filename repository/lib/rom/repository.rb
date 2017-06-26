@@ -162,15 +162,7 @@ module ROM
     #
     # @api public
     def command(*args, **opts, &block)
-      all_args = args + opts.to_a.flatten
-
-      if all_args.size > 1
-        commands.fetch_or_store(all_args.hash) do
-          compile_command(*args, **opts)
-        end
-      else
-        container.command(*args, &block)
-      end
+      compile_command(*args, **opts)
     end
 
     # Return a changeset for a relation
@@ -305,14 +297,14 @@ module ROM
       transaction { session.commit! }
     end
 
-    private
-
-    # Local command cache
+    # Registered commands
     #
     # @api private
     def commands
-      @__commands__ ||= Concurrent::Map.new
+      container.commands
     end
+
+    private
 
     # Build a new command or return existing one
     #

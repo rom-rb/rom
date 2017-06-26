@@ -41,9 +41,9 @@ module ROM
     #
     # @example
     #
-    #   rom.command(:users).try { create(name: 'Jane') }
-    #   rom.command(:users).try { update(:by_id, 1).call(name: 'Jane Doe') }
-    #   rom.command(:users).try { delete(:by_id, 1) }
+    #   rom.commands[:users].try { create(name: 'Jane') }
+    #   rom.commands[:users].try { update(:by_id, 1).call(name: 'Jane Doe') }
+    #   rom.commands[:users].try { delete(:by_id, 1) }
     #
     # @return [Commands::Result]
     #
@@ -66,11 +66,11 @@ module ROM
     # auto-mapping
     #
     # @example
-    #   create_user = rom.command(:users)[:create]
+    #   create_user = rom.commands[:users][:create]
     #   create_user[name: 'Jane']
     #
     #   # with mapping, assuming :entity mapper is registered for :users relation
-    #   create_user = rom.command(:users).map_with(:entity)[:create]
+    #   create_user = rom.commands[:users].map_with(:entity)[:create]
     #   create_user[name: 'Jane'] # => result is send through :entity mapper
     #
     # @param [Symbol] name The name of a registered command
@@ -96,7 +96,7 @@ module ROM
     # Specify a mapper that should be used for commands from this registry
     #
     # @example
-    #   entity_commands = rom.command(:users).map_with(:entity)
+    #   entity_commands = rom.commands[:users].map_with(:entity)
     #
     #
     # @param [Symbol] mapper_name The name of a registered mapper

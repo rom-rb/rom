@@ -17,7 +17,7 @@ RSpec.describe ROM::Memory::Commands::Delete do
     end
   end
 
-  subject(:command) { container.command(:users).delete }
+  subject(:command) { container.commands[:users].delete }
 
   it_behaves_like 'a command'
 end

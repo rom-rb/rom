@@ -52,24 +52,6 @@ RSpec.describe ROM::Container do
     configuration.register_mapper(users_mapper, name_list)
   end
 
-  describe '#command' do
-    it 'returns registered command registry' do
-      expect(container.command(:users)).to be_instance_of(ROM::CommandRegistry)
-    end
-
-    it 'returns registered command' do
-      expect(container.command(:users).create).to be_kind_of(ROM::Commands::Create)
-    end
-
-    it 'accepts an array with graph options and input' do
-      expect(container.command([:users, [:create]])).to be_kind_of(ROM::Commands::Lazy)
-    end
-
-    it 'raises ArgumentError when unsupported arg was passed' do
-      expect { container.command(oops: 'sorry') }.to raise_error(ArgumentError)
-    end
-  end
-
   describe '#mappers' do
     it 'returns mappers for all relations' do
       expect(container.mappers.users[:name_list]).to_not be(nil)
