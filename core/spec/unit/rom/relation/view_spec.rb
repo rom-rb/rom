@@ -120,11 +120,13 @@ RSpec.describe ROM::Relation, '.view' do
 
     include_context 'relation with views' do
       let(:relation_class) do
+        attributes_inferrer = proc {
+          [[define_attribute(:users, :Int, name: :id), define_attribute(:users, :String, name: :name)],
+           []]
+        }
+
         Class.new(ROM::Memory::Relation) do
-          schema_inferrer -> dataset, gateway {
-            [[ROM::Types::Int.meta(name: :id, source: :users),
-             ROM::Types::String.meta(name: :name, source: :users)], []]
-          }
+          schema_inferrer ROM::Schema::DEFAULT_INFERRER.with(attributes_inferrer: attributes_inferrer)
 
           schema(:users, infer: true)
 

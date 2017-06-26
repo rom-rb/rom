@@ -2,6 +2,7 @@ require 'dry/equalizer'
 
 require 'rom/schema/attribute'
 require 'rom/schema/dsl'
+require 'rom/schema/inferrer'
 require 'rom/association_set'
 require 'rom/support/notifications'
 require 'rom/support/memoizable'
@@ -55,13 +56,7 @@ module ROM
 
     EMPTY_ASSOCIATION_SET = AssociationSet.new(EMPTY_HASH).freeze
 
-    DEFAULT_INFERRER = proc { [EMPTY_ARRAY, EMPTY_ARRAY].freeze }
-
-    MissingAttributesError = Class.new(StandardError) do
-      def initialize(name, attributes)
-        super("missing attributes in #{name.inspect} schema: #{attributes.map(&:inspect).join(', ')}")
-      end
-    end
+    DEFAULT_INFERRER = Inferrer.new(enabled: false).freeze
 
     AttributeAlreadyDefinedError = Class.new(StandardError)
 
@@ -348,22 +343,10 @@ module ROM
     # @return [self]
     #
     # @api private
-    def finalize_attributes!(gateway: nil, relations: nil, &block)
-      inferred, missing = inferrer.call(name, gateway)
+    def finalize_attributes!(gateway: nil, relations: nil)
+      inferrer.(self, gateway).each { |key, value| set!(key, value) }
 
-      attr_names = map(&:name)
-      inferred_attrs = self.class.attributes(inferred, attr_class).
-                         reject { |attr| attr_names.include?(attr.name) }
-
-      attributes.concat(inferred_attrs)
-
-      missing_attributes = missing - map(&:name)
-
-      if missing_attributes.size > 0
-        raise MissingAttributesError.new(name, missing_attributes)
-      end
-
-      block.call if block
+      yield if block_given?
 
       initialize_primary_key_names
 
@@ -371,10 +354,8 @@ module ROM
     end
 
     # @api private
-    def finalize_associations!(relations:, &block)
-      if associations.any?
-        options[:associations] = @associations = block.()
-      end
+    def finalize_associations!(relations:)
+      set!(:associations, yield) if associations.any?
       self
     end
 
@@ -450,7 +431,7 @@ module ROM
 
     # @api private
     def new(attributes)
-      self.class.new(name, options.merge(attributes: attributes))
+      self.class.new(name, **options, attributes: attributes)
     end
 
     # @api private
@@ -459,6 +440,12 @@ module ROM
         @primary_key_name = primary_key[0].meta[:name]
         @primary_key_names = primary_key.map { |type| type.meta[:name] }
       end
+    end
+
+    # @api private
+    def set!(key, value)
+      instance_variable_set("@#{ key }", value)
+      options[key] = value
     end
 
     memoize :count_index, :name_index, :source_index, :to_ast, :to_input_hash, :to_output_hash

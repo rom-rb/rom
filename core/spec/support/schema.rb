@@ -13,6 +13,10 @@ module SchemaHelpers
     ROM::Types.const_get(id).meta(name: name, **opts)
   end
 
+  def define_attribute(*args)
+    ROM::Schema::Attribute.new(define_type(*args))
+  end
+
   def build_assoc(type, *args)
     klass = Dry::Core::Inflector.classify(type)
     definition = ROM::Associations::Definitions.const_get(klass).new(*args)

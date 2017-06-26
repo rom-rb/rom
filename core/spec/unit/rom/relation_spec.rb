@@ -171,7 +171,7 @@ RSpec.describe ROM::Relation do
       }.new([])
 
       expect(relation.schema).to be_empty
-      expect(relation.schema.inferrer).to be(ROM::Schema::DEFAULT_INFERRER)
+      expect(relation.schema.inferrer).to eql(ROM::Schema::DEFAULT_INFERRER)
       expect(relation.schema.name).to eql(ROM::Relation::Name[:test_some_relation])
       expect(relation.schema?).to be(false)
     end

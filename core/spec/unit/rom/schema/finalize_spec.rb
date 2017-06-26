@@ -19,11 +19,18 @@ RSpec.describe ROM::Schema, '#finalize!' do
 
   context 'with inferrer' do
     subject(:schema) do
-      ROM::Schema.define(:users, attributes: attributes, inferrer: inferrer)
+      ROM::Schema.define(
+        :users,
+        attributes: attributes,
+        inferrer: ROM::Schema::DEFAULT_INFERRER.with(
+          attributes_inferrer: attributes_inferrer,
+          enabled: true
+        )
+      )
     end
 
-    let(:inferrer) do
-      proc { [[define_type(:name, :String)], [:id, :age]]}
+    let(:attributes_inferrer) do
+      proc { [ [define_attribute(:name, :String)], %i(id age) ] }
     end
 
     context 'when all required attributes are present' do
@@ -56,7 +63,10 @@ RSpec.describe ROM::Schema, '#finalize!' do
 
       it 'raises error' do
         expect { schema.finalize_attributes!.finalize! }.
-          to raise_error(ROM::Schema::MissingAttributesError, /missing attributes in :users schema: :id, :age/)
+          to raise_error(
+               ROM::Schema::Inferrer::MissingAttributesError,
+               /missing attributes in :users schema: :id, :age/
+             )
       end
     end
   end

@@ -90,19 +90,18 @@ module ROM
         if defined?(@schema) && !block && !infer
           @schema
         elsif block || infer
+          raise MissingSchemaClassError.new(self) unless schema_class
+
           ds_name = dataset || schema_opts.fetch(:dataset, default_name.dataset)
           relation = as || schema_opts.fetch(:relation, ds_name)
 
           @relation_name = Name[relation, ds_name]
-          inferrer = infer ? schema_inferrer : Schema::DEFAULT_INFERRER
-
-          unless schema_class
-            raise MissingSchemaClassError.new(self)
-          end
 
           dsl = schema_dsl.new(
             relation_name,
-            schema_class: schema_class, attr_class: schema_attr_class, inferrer: inferrer,
+            schema_class: schema_class,
+            attr_class: schema_attr_class,
+            inferrer: schema_inferrer.with(enabled: infer),
             &block
           )
 
