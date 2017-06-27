@@ -75,7 +75,7 @@ module ROM
 
     # @!attribute [r] associations
     #   @return [AssociationSet] Optional association set (this is adapter-specific)
-    option :associations, optional: true
+    option :associations, default: -> { EMPTY_ASSOCIATION_SET }
 
     # @!attribute [r] inferrer
     #   @return [#call] An optional inferrer object used in `finalize!`
@@ -108,13 +108,11 @@ module ROM
     # @return [Schema]
     #
     # @api public
-    def self.define(name, attr_class: Attribute, attributes: EMPTY_ARRAY, associations: EMPTY_ASSOCIATION_SET, inferrer: DEFAULT_INFERRER)
+    def self.define(name, attributes: EMPTY_ARRAY, attr_class: Attribute, **options)
       new(
         name,
         attributes: attributes(attributes, attr_class),
-        associations: associations,
-        inferrer: inferrer,
-        attr_class: attr_class
+        **options
       ) { |schema| yield(schema) if block_given? }
     end
 
