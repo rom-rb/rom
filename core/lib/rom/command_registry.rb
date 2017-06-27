@@ -108,6 +108,16 @@ module ROM
       with(mapper: mappers[mapper_name])
     end
 
+    # @api private
+    def set_compiler(compiler)
+      options[:compiler] = @compiler = compiler
+    end
+
+    # @api private
+    def set_mappers(mappers)
+      options[:mappers] = @mappers = mappers
+    end
+
     private
 
     # Allow checking if a certain command is available using dot-notation

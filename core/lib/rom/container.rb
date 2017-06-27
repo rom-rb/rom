@@ -102,22 +102,12 @@ module ROM
 
     # @api private
     def self.new(gateways, relations, mappers, commands)
-      container = super()
-
-      caches = { mappers: Cache.new, commands: Cache.new }.freeze
-      mapper_compiler = MapperCompiler.new(cache: caches[:mappers])
-
-      configured_mappers = mappers.map { |r| r.with(compiler: mapper_compiler, cache: caches[:mappers]) }
-      configured_commands = commands.map { |r| r.with(cache: caches[:commands], mappers: configured_mappers.key?(r.relation_name) ? configured_mappers[r.relation_name] : nil) }
-      configured_relations = relations.map { |r| r.with(commands: commands[r.name.to_sym]) }
-
-      container.register(:caches, caches)
-      container.register(:gateways, gateways)
-      container.register(:mappers, configured_mappers)
-      container.register(:commands, configured_commands)
-      container.register(:relations, configured_relations)
-
-      container
+      super().tap do |container|
+        container.register(:gateways, gateways)
+        container.register(:mappers, mappers)
+        container.register(:commands, commands)
+        container.register(:relations, relations)
+      end
     end
 
     # @api public

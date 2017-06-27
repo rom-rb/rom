@@ -25,14 +25,9 @@ module ROM
       #
       # @api private
       def run!
-        commands_map = @command_classes.each_with_object({}) do |klass, h|
-          rel_name = klass.relation
-          next unless rel_name
-
-          relation = @relations[rel_name]
-          name = klass.register_as || klass.default_name
-
-          gateway = @gateways[relation.class.gateway]
+        commands = @command_classes.map do |klass|
+          relation = @relations[klass.relation]
+          gateway = @gateways[relation.gateway]
 
           notifications.trigger(
             'configuration.commands.class.before_build',
@@ -41,23 +36,22 @@ module ROM
 
           klass.extend_for_relation(relation) if klass.restrictable
 
-          (h[rel_name] ||= {})[name] = klass.build(relation)
+          klass.build(relation)
         end
 
         registry = Registry.new({})
         compiler = CommandCompiler.new(@gateways, @relations, registry, notifications)
 
-        commands = commands_map.each_with_object({}) do |(name, rel_commands), h|
-          h[name] = CommandRegistry.new(rel_commands, relation_name: name, compiler: compiler)
-        end
-
         @relations.each do |(name, relation)|
-          unless commands.key?(name)
-            commands[name] = CommandRegistry.new({}, relation_name: name, compiler: compiler)
-          end
-        end
+          commands.
+            select { |c| c.relation.name == relation.name }.
+            each { |c| relation.commands.elements[c.class.register_as || c.class.default_name] = c }
 
-        registry.elements.update(commands)
+          relation.commands.set_compiler(compiler)
+          relation.commands.set_mappers(relation.mappers)
+
+          registry.elements[name] = relation.commands
+        end
 
         registry
       end

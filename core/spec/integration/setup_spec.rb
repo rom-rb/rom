@@ -28,6 +28,7 @@ RSpec.describe 'Configuring ROM' do
       expect(tasks).to be_kind_of(ROM::Relation)
       expect(tasks).to respond_to(:users)
       expect(tasks.users).to eql(users)
+      expect(tasks.users.commands).to be_kind_of(ROM::CommandRegistry)
     end
   end
 
