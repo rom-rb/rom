@@ -38,7 +38,7 @@ module ROM
       #
       # @api public
       def original
-        @original ||= Hash(relation.one)
+        @original ||= relation.one
       end
 
       # Return true if there's a diff between original and changeset data
@@ -67,12 +67,13 @@ module ROM
       def diff
         @diff ||=
           begin
+            source = Hash(original)
             data = pipe.for_diff(__data__)
             data_tuple = data.to_a
-            data_keys = data.keys & original.keys
+            data_keys = data.keys & source.keys
 
             new_tuple = data_tuple.to_a.select { |(k, _)| data_keys.include?(k) }
-            ori_tuple = original.to_a.select { |(k, _)| data_keys.include?(k) }
+            ori_tuple = source.to_a.select { |(k, _)| data_keys.include?(k) }
 
             Hash[new_tuple - (new_tuple & ori_tuple)]
           end

@@ -19,13 +19,6 @@ RSpec.describe 'Using changesets' do
   end
 
   describe 'Create' do
-    subject(:repo) do
-      Class.new(ROM::Repository[:users]) {
-        relations :books, :posts
-        commands :create, update: :by_pk
-      }.new(rom)
-    end
-
     let(:create_changeset) do
       Class.new(ROM::Changeset::Create)
     end
@@ -39,8 +32,9 @@ RSpec.describe 'Using changesets' do
     end
 
     it 'can be passed to a command' do
-      changeset = repo.changeset(name: "Jane Doe")
-      command = repo.command(:create, repo.users)
+      changeset = users.changeset(:create, name: "Jane Doe")
+      command = users.command(:create)
+
       result = command.(changeset)
 
       expect(result.id).to_not be(nil)
@@ -48,11 +42,12 @@ RSpec.describe 'Using changesets' do
     end
 
     it 'can be passed to a command graph' do
-      changeset = repo.changeset(
+      changeset = users.changeset(
+        :create,
         name: "Jane Doe", posts: [{ title: "Just Do It", alien: "or sutin" }]
       )
 
-      command = repo.command(:create, repo.aggregate(:posts))
+      command = users.combine(:posts).command(:create)
       result = command.(changeset)
 
       expect(result.id).to_not be(nil)
@@ -62,8 +57,8 @@ RSpec.describe 'Using changesets' do
     end
 
     it 'preprocesses data using changeset pipes' do
-      changeset = repo.changeset(:books, title: "rom-rb is awesome").map(:add_timestamps)
-      command = repo.command(:create, repo.books)
+      changeset = books.changeset(:create, title: "rom-rb is awesome").map(:add_timestamps)
+      command = books.command(:create)
       result = command.(changeset)
 
       expect(result.id).to_not be(nil)
@@ -73,11 +68,11 @@ RSpec.describe 'Using changesets' do
     end
 
     it 'preprocesses data using custom block' do
-      changeset = repo.
-                    changeset(:books, title: "rom-rb is awesome").
+      changeset = books.
+                    changeset(:create, title: "rom-rb is awesome").
                     map { |tuple| tuple.merge(created_at: Time.now) }
 
-      command = repo.command(:create, repo.books)
+      command = books.command(:create)
       result = command.(changeset)
 
       expect(result.id).to_not be(nil)
@@ -86,11 +81,11 @@ RSpec.describe 'Using changesets' do
     end
 
     it 'preprocesses data using built-in steps and custom block' do
-      changeset = repo.
-                    changeset(:books, title: "rom-rb is awesome").
+      changeset = books.
+                    changeset(:create, title: "rom-rb is awesome").
                     extend(:touch) { |tuple| tuple.merge(created_at: Time.now) }
 
-      command = repo.command(:create, repo.books)
+      command = books.command(:create)
       result = command.(changeset)
 
       expect(result.id).to_not be(nil)
@@ -100,45 +95,23 @@ RSpec.describe 'Using changesets' do
     end
 
     it 'preserves relation mappers with create' do
-      changeset = repo.
-                    changeset(create_changeset).
-                    new(repo.users.map_with(:user)).
-                    data(name: 'Joe Dane')
+      changeset = users.map_with(:user).changeset(:create, name: 'Joe Dane')
 
       expect(changeset.commit.to_h).to eql({id: 1, name: 'Joe Dane'})
-    end
-
-    it 'creates changesets for non-root relations' do
-      repo.create(name: 'John Doe')
-      changeset = repo.changeset(add_book_changeset).data(title: 'The War of the Worlds')
-
-      expect(changeset.commit.to_h).
-        to include(
-             id: 1,
-             title: 'The War of the Worlds',
-             created_at: nil,
-             updated_at: nil
-           )
     end
   end
 
   describe 'Update' do
-    subject(:repo) do
-      Class.new(ROM::Repository[:books]) {
-        commands :create, update: :by_pk
-      }.new(rom)
-    end
-
     it 'can be passed to a command' do
-      book = repo.create(title: 'rom-rb is awesome')
+      book = books.command(:create).call(title: 'rom-rb is awesome')
 
-      changeset = repo
-        .changeset(book.id, title: 'rom-rb is awesome for real')
-        .extend(:touch)
+      changeset = books.by_pk(book.id).
+                    changeset(:update, title: 'rom-rb is awesome for real').
+                    extend(:touch)
 
       expect(changeset.diff).to eql(title: 'rom-rb is awesome for real')
 
-      result = repo.update(book.id, changeset)
+      result = changeset.commit
 
       expect(result.id).to be(book.id)
       expect(result.title).to eql('rom-rb is awesome for real')
@@ -146,15 +119,16 @@ RSpec.describe 'Using changesets' do
     end
 
     it 'skips update execution with no diff' do
-      book = repo.create(title: 'rom-rb is awesome')
+      book = books.command(:create).call(title: 'rom-rb is awesome')
 
-      changeset = repo
-        .changeset(book.id, title: 'rom-rb is awesome')
-        .extend(:touch)
+      changeset = books.
+                    by_pk(book.id).
+                    changeset(:update, title: 'rom-rb is awesome').
+                    extend(:touch)
 
       expect(changeset).to_not be_diff
 
-      result = repo.update(book.id, changeset)
+      result = changeset.commit
 
       expect(result.id).to be(book.id)
       expect(result.title).to eql('rom-rb is awesome')

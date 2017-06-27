@@ -12,7 +12,7 @@ module ROM
           command >> mappers[mapper]
         elsif mappers.any? && !command.is_a?(CommandProxy)
           mappers.reduce(command) { |a, (_, e)| a >> e }
-        elsif auto_struct?
+        elsif auto_struct? || auto_map?
           command >> self.mapper
         else
           command

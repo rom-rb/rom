@@ -10,7 +10,7 @@ module ROM
     extend Forwardable
     extend Notifications
 
-    register_event('configuration.relations.class.created')
+    register_event('configuration.relations.class.ready')
     register_event('configuration.relations.object.registered')
     register_event('configuration.relations.registry.created')
     register_event('configuration.relations.schema.allocated')
