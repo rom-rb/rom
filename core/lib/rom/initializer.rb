@@ -4,10 +4,48 @@ module ROM
 
   # @api private
   module Initializer
+    # @api private
+    module DefineWithHook
+      def param(*)
+        super
+
+        __define_with__
+      end
+
+      def option(*)
+        super
+
+        __define_with__ unless method_defined?(:with)
+      end
+
+      def __define_with__
+        seq_names = __initializer_mixin__.
+                      instance_method(:__initialize__).
+                      parameters.
+                      select { |type, _| type == :req }.
+                      map { |_, name| name }.
+                      join(', ')
+
+        seq_names << ', ' unless seq_names.empty?
+
+        undef_method(:with) if method_defined?(:with)
+
+        class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
+          def with(new_options = EMPTY_HASH)
+            if new_options.empty?
+              self
+            else
+              self.class.new(#{ seq_names }options.merge(new_options))
+            end
+          end
+        RUBY
+      end
+    end
 
     # @api private
     def self.extended(base)
       base.extend(Dry::Initializer[undefined: false])
+      base.extend(DefineWithHook)
       base.include(InstanceMethods)
     end
 

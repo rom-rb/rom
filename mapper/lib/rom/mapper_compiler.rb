@@ -25,10 +25,6 @@ module ROM
     end
     alias_method :[], :call
 
-    def with(new_options)
-      self.class.new(options.merge(new_options))
-    end
-
     private
 
     def visit(node)

@@ -72,13 +72,6 @@ module ROM
         end
       end
 
-      # Return a new graph with updated options
-      #
-      # @api private
-      def with(new_options)
-        self.class.new(root, nodes, options.merge(new_options))
-      end
-
       # @api private
       def graph?
         true

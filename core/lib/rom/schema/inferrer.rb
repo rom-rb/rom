@@ -61,11 +61,6 @@ module ROM
 
         defined + inferred.reject { |attr| defined_names.include?(attr.name) }
       end
-
-      # @api private
-      def with(new_options)
-        self.class.new(options.merge(new_options))
-      end
     end
   end
 end

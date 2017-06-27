@@ -31,15 +31,6 @@ module ROM
       ElementNotFoundError
     end
 
-    # Return new instance of this registry with updated options
-    #
-    # @return [CommandRegistry]
-    #
-    # @api private
-    def with(new_options)
-      self.class.new(elements, options.merge(new_options))
-    end
-
     def map(&block)
       new_elements = elements.each_with_object({}) do |(name, element), h|
         h[name] = yield(element)

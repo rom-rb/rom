@@ -104,11 +104,6 @@ module ROM
     alias_method :[], :call
 
     # @api private
-    def with(new_options)
-      self.class.new(gateways, relations, commands, notifications, options.merge(new_options))
-    end
-
-    # @api private
     def type
       @_type ||= Commands.const_get(Dry::Core::Inflector.classify(id))[adapter]
     rescue NameError
