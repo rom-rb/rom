@@ -1,7 +1,17 @@
-require 'spec_helper'
-
 RSpec.describe ROM::Changeset, '#associate' do
   include_context 'database setup'
+
+  let(:people) do
+    rom.relations[:people].with(auto_struct: true)
+  end
+
+  let(:todos) do
+    rom.relations[:todos].with(auto_struct: true)
+  end
+
+  let(:projects) do
+    rom.relations[:projects].with(auto_struct: true)
+  end
 
   before do
     [:todos, :projects, :people].each { |table| conn.drop_table?(table) }
@@ -49,35 +59,23 @@ RSpec.describe ROM::Changeset, '#associate' do
     end
   end
 
-  let(:user_repo) do
-    Class.new(ROM::Repository[:people]) { commands :create }.new(rom)
-  end
-
-  let(:project_repo) do
-    Class.new(ROM::Repository[:projects]) { commands :create }.new(rom)
-  end
-
-  let(:task_repo) do
-    Class.new(ROM::Repository[:todos]) { commands :create }.new(rom)
-  end
-
   context 'with Create' do
     let(:jane) do
-      user_repo.create(name: 'Jane')
+      people.command(:create).call(name: 'Jane')
     end
 
     let(:project) do
-      project_repo.create(name: 'rom-rb')
+      projects.command(:create).call(name: 'rom-rb')
     end
 
     it 'associates child with parent' do
-      changeset = task_repo.changeset(title: 'Test 1').associate(jane, :user)
+      changeset = todos.changeset(:create, title: 'Test 1').associate(jane)
 
       expect(changeset.commit.to_h).to include(user_id: jane.id, title: 'Test 1')
     end
 
     it 'associates child with multiple parents' do
-      changeset = task_repo.changeset(title: 'Test 1').
+      changeset = todos.changeset(:create, title: 'Test 1').
                     associate(jane, :user).
                     associate(project)
 
@@ -92,28 +90,28 @@ RSpec.describe ROM::Changeset, '#associate' do
         end
       end.new
 
-      expect { task_repo.changeset(title: 'Test 1').associate(other) }.
+      expect { todos.changeset(:create, title: 'Test 1').associate(other) }.
         to raise_error(ArgumentError, /can't infer association name for/)
     end
   end
 
   context 'with Update' do
     let!(:john) do
-      user_repo.create(name: 'John')
+      people.command(:create).call(name: 'John')
     end
 
     let!(:jane) do
-      user_repo.create(name: 'Jane')
+      people.command(:create).call(name: 'Jane')
     end
 
-    let!(:task) do
-      task_repo.create(title: 'Test 1', user_id: john.id)
+    let!(:todo) do
+      todos.command(:create).call(title: 'Test 1', user_id: john.id)
     end
 
     it 'associates child with parent' do
-      changeset = task_repo.changeset(task.id, title: 'Test 2')
+      changeset = todos.by_pk(todo.id).changeset(:update, title: 'Test 2')
 
-      expect(changeset.associate(jane, :user).commit.to_h).
+      expect(changeset.associate(jane).commit.to_h).
         to include(user_id: jane.id, title: 'Test 2')
     end
   end

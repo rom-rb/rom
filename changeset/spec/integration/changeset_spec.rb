@@ -31,6 +31,19 @@ RSpec.describe 'Using changesets' do
       Class.new(ROM::Changeset::Update)
     end
 
+    it 'sets empty data only for stateful changesets' do
+      create = users.changeset(:create)
+      expect(create).to be_empty
+      expect(create).to be_kind_of(ROM::Changeset::Create)
+
+      update = users.changeset(:update)
+      expect(update).to be_empty
+      expect(update).to be_kind_of(ROM::Changeset::Update)
+
+      delete = users.changeset(:delete)
+      expect(delete).to be_kind_of(ROM::Changeset::Delete)
+    end
+
     it 'can be passed to a command' do
       changeset = users.changeset(:create, name: "Jane Doe")
       command = users.command(:create)

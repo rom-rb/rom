@@ -1,22 +1,18 @@
 RSpec.describe ROM::Changeset::Delete do
-  subject(:repo) do
-    Class.new(ROM::Repository) { relations :users }.new(rom)
-  end
-
   include_context 'database'
   include_context 'relations'
 
   describe ROM::Changeset::Delete do
     let(:changeset) do
-      repo.changeset(delete: relation)
+      users.by_pk(user[:id]).changeset(:delete)
     end
 
     let(:relation) do
-      repo.users.by_pk(user[:id])
+      users.by_pk(user[:id])
     end
 
     let(:user) do
-      repo.command(:create, repo.users).call(name: 'Jane')
+      users.command(:create).call(name: 'Jane')
     end
 
     it 'has relation' do
@@ -32,43 +28,43 @@ RSpec.describe ROM::Changeset::Delete do
   describe 'custom changeset class' do
     context 'with a Create' do
       let(:changeset) do
-          repo.changeset(changeset_class[:users]).data({})
+        users.changeset(changeset_class[:users], {})
       end
 
       let(:changeset_class) do
-          Class.new(ROM::Changeset::Create) do
+        Class.new(ROM::Changeset::Create) do
           def to_h
-              __data__.merge(name: 'Jane')
+            __data__.merge(name: 'Jane')
           end
-          end
+        end
       end
 
       it 'has data' do
-          expect(changeset.to_h).to eql(name: 'Jane')
+        expect(changeset.to_h).to eql(name: 'Jane')
       end
 
       it 'has relation' do
-          expect(changeset.relation).to be(repo.users)
+        expect(changeset.relation).to be(users)
       end
 
       it 'can be commited' do
-          expect(changeset.commit.to_h).to eql(id: 1, name: 'Jane')
+        expect(changeset.commit.to_h).to eql(id: 1, name: 'Jane')
       end
     end
 
     context 'with an Update' do
       let(:changeset) do
-        repo.changeset(changeset_class).by_pk(user.id, name: 'Jade')
+        users.by_pk(user.id).changeset(changeset_class, name: 'Jade')
       end
 
       let(:changeset_class) do
         Class.new(ROM::Changeset::Update[:users]) do
-        map { |t| t.merge(name: "#{t[:name]} Doe") }
+          map { |t| t.merge(name: "#{t[:name]} Doe") }
         end
       end
 
       let(:user) do
-        repo.command(:create, repo.users).call(name: 'Jane')
+        users.command(:create).call(name: 'Jane')
       end
 
       it 'has data' do
@@ -76,7 +72,7 @@ RSpec.describe ROM::Changeset::Delete do
       end
 
       it 'has relation restricted by pk' do
-        expect(changeset.relation.dataset).to eql(repo.users.by_pk(user.id).dataset)
+        expect(changeset.relation).to eql(users.by_pk(user.id))
       end
 
       it 'can be commited' do
@@ -86,21 +82,22 @@ RSpec.describe ROM::Changeset::Delete do
   end
 
   it 'raises ArgumentError when unknown type was used' do
-    expect { repo.changeset(not_here: repo.users) }.
-    to raise_error(
-        ArgumentError,
-        '+:not_here+ is not a valid changeset type. Must be one of: [:create, :update, :delete]'
-        )
+    expect {
+      users.changeset(:not_here)
+    }.to raise_error(
+           ArgumentError,
+           '+:not_here+ is not a valid changeset type. Must be one of: [:create, :update, :delete]'
+         )
   end
 
   it 'raises ArgumentError when unknown class was used' do
     klass = Class.new {
       def self.name
-          'SomeClass'
+        'SomeClass'
       end
     }
 
-    expect { repo.changeset(klass) }.
-    to raise_error(ArgumentError, /SomeClass/)
+    expect { users.changeset(klass) }.
+      to raise_error(ArgumentError, /SomeClass/)
   end
 end

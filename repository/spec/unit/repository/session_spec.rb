@@ -1,3 +1,5 @@
+require 'rom-changeset'
+
 RSpec.describe ROM::Repository, '#session' do
   subject(:repo) do
     Class.new(ROM::Repository) { relations :users, :posts, :labels }.new(rom)
@@ -8,7 +10,7 @@ RSpec.describe ROM::Repository, '#session' do
 
   describe 'with :create command' do
     let(:user_changeset) do
-      repo.changeset(:users, name: 'Jane')
+      users.changeset(:create, name: 'Jane')
     end
 
     it 'saves data in a transaction' do
@@ -23,7 +25,7 @@ RSpec.describe ROM::Repository, '#session' do
 
   describe 'with :update command' do
     let(:user_changeset) do
-      repo.changeset(:users, user.id, user.to_h.merge(name: 'Jane Doe'))
+      users.by_pk(user.id).changeset(:update, user.to_h.merge(name: 'Jane Doe'))
     end
 
     let(:user) do
@@ -57,7 +59,7 @@ RSpec.describe ROM::Repository, '#session' do
     end
 
     let(:user_changeset) do
-      repo.changeset(delete: repo.users.by_pk(user.id))
+      users.by_pk(user.id).changeset(:delete)
     end
 
     it 'saves data in a transaction' do
@@ -80,7 +82,7 @@ RSpec.describe ROM::Repository, '#session' do
     end
 
     let(:user_changeset) do
-      repo.changeset(:users, name: 'John').with(command_type: :custom)
+      users.changeset(:create, name: 'John').with(command_type: :custom)
     end
 
     it 'saves data in a transaction' do
@@ -98,11 +100,11 @@ RSpec.describe ROM::Repository, '#session' do
 
   describe 'creating a user with its posts' do
     let(:posts_changeset) do
-      repo.changeset(:posts, [{ title: 'Post 1' }, { title: 'Post 2' }])
+      posts.changeset(:create, [{ title: 'Post 1' }, { title: 'Post 2' }])
     end
 
     let(:user_changeset) do
-      repo.changeset(:users, name: 'Jane')
+      users.changeset(:create, name: 'Jane')
     end
 
     it 'saves data in a transaction' do
@@ -125,18 +127,18 @@ RSpec.describe ROM::Repository, '#session' do
     end
 
     let(:posts_changeset) do
-      repo.
-        changeset(:posts, posts_data).
+      posts.
+        changeset(:create, posts_data).
         associate(labels_changeset, :posts)
     end
 
     let(:labels_changeset) do
-      repo.changeset(:labels, [{ name: 'red' }, { name: 'green' }])
+      labels.changeset(:create, [{ name: 'red' }, { name: 'green' }])
     end
 
     let(:user_changeset) do
-      repo.
-        changeset(:users, name: 'Jane').
+      users.
+        changeset(:create, name: 'Jane').
         associate(posts_changeset, :author)
     end
 
@@ -176,8 +178,8 @@ RSpec.describe ROM::Repository, '#session' do
 
   describe 'creating new posts for existing user' do
     let(:posts_changeset) do
-      repo.
-        changeset(:posts, [{ title: 'Post 1' }, { title: 'Post 2' }]).
+      posts.
+        changeset(:create, [{ title: 'Post 1' }, { title: 'Post 2' }]).
         associate(user, :author)
     end
 
@@ -200,11 +202,11 @@ RSpec.describe ROM::Repository, '#session' do
 
   describe 'nesting sessions' do
     let(:user_changeset) do
-      repo.changeset(:users, name: 'Jane')
+      users.changeset(:create, name: 'Jane')
     end
 
     let(:posts_changeset) do
-      repo.changeset(:posts, post_data)
+      posts.changeset(:create, post_data)
     end
 
     let(:user) do

@@ -1,14 +1,10 @@
 RSpec.describe ROM::Changeset::Create do
-  subject(:repo) do
-    Class.new(ROM::Repository) { relations :users }.new(rom)
-  end
-
   include_context 'database'
   include_context 'relations'
 
   context 'with a hash' do
     let(:changeset) do
-      repo.changeset(:users, name: 'Jane')
+      users.changeset(:create, name: 'Jane')
     end
 
     it 'has data' do
@@ -16,7 +12,7 @@ RSpec.describe ROM::Changeset::Create do
     end
 
     it 'has relation' do
-      expect(changeset.relation).to be(repo.users)
+      expect(changeset.relation).to be(users)
     end
 
     it 'can be commited' do
@@ -26,7 +22,7 @@ RSpec.describe ROM::Changeset::Create do
 
   context 'with an array' do
     let(:changeset) do
-      repo.changeset(:users, data)
+      users.changeset(:create, data)
     end
 
     let(:data) do
@@ -38,7 +34,7 @@ RSpec.describe ROM::Changeset::Create do
     end
 
     it 'has relation' do
-      expect(changeset.relation).to be(repo.users)
+      expect(changeset.relation).to be(users)
     end
 
     it 'can be commited' do
