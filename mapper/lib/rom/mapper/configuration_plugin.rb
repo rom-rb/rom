@@ -10,17 +10,25 @@ module ROM
       #
       # @private
 
-      def self.apply(configuration, options = {})
-        configuration.extend Methods
-        configuration
-      end
+      class DSL < Module
+        def initialize(options)
+          @options = options
+          define_module
+        end
 
-      module Methods
-        def mappers(&block)
-          register_mapper(*MapperDSL.new(self, mapper_classes, block).mapper_classes)
+        def define_module
+          module_exec(@options) do |options|
+            define_method(:mappers) do |&block|
+              register_mapper(*MapperDSL.new(mapper_classes, options, block).mapper_classes)
+            end
+          end
         end
       end
 
+      def self.apply(configuration, options = {})
+        configuration.extend DSL.new(options)
+        configuration
+      end
     end
   end
 end
