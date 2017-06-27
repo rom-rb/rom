@@ -1,4 +1,4 @@
-require 'dry/core/constants'
+require 'rom/constants'
 require 'rom/mapper/dsl'
 require 'rom/mapper/configuration_plugin'
 
@@ -7,7 +7,6 @@ module ROM
   #
   # @private
   class Mapper
-    include Dry::Core::Constants
     include DSL
     include Dry::Equalizer(:transformers, :header)
 

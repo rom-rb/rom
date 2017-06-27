@@ -4,10 +4,6 @@ require 'dry/core/constants'
 require 'rom/version'
 require 'rom/constants'
 
-module ROM
-  include Dry::Core::Constants
-end
-
 # core parts
 require 'rom/configuration_plugin'
 require 'rom/plugin'

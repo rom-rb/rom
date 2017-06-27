@@ -1,8 +1,8 @@
 require 'set'
 
 require 'dry/core/inflector'
-require 'dry/core/constants'
 
+require 'rom/constants'
 require 'rom/relation/name'
 require 'rom/relation/view_dsl'
 require 'rom/schema'
@@ -12,8 +12,6 @@ module ROM
   class Relation
     # @api public
     module ClassInterface
-      include Dry::Core::Constants
-
       extend Notifications::Listener
 
       subscribe('configuration.relations.object.registered') do |event|

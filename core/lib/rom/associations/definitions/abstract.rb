@@ -1,6 +1,6 @@
-require 'dry/core/constants'
 require 'dry/core/class_attributes'
 
+require 'rom/constants'
 require 'rom/types'
 require 'rom/initializer'
 require 'rom/relation/name'
@@ -13,7 +13,6 @@ module ROM
       #
       # @api public
       class Abstract
-        include Dry::Core::Constants
         include Dry::Equalizer(:source, :target, :result)
         extend Initializer
         extend Dry::Core::ClassAttributes

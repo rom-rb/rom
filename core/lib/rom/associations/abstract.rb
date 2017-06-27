@@ -14,7 +14,6 @@ module ROM
       extend Initializer
 
       include Memoizable
-      include Dry::Core::Constants
       include Dry::Equalizer(:definition, :source, :target)
 
       # @!attribute [r] definition

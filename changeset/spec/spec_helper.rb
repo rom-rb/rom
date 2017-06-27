@@ -15,6 +15,7 @@ if RUBY_ENGINE == 'ruby' && ENV['COVERAGE'] == 'true'
   end
 end
 
+require 'rom-changeset'
 require 'rom-sql'
 require 'rom-repository'
 

@@ -1,3 +1,4 @@
+require 'transproc/all'
 require 'transproc/registry'
 require 'transproc/transformer'
 
