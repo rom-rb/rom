@@ -386,20 +386,6 @@ module ROM
       )
     end
 
-    # Return a new schema with new options
-    #
-    # @example
-    #   schema.with(inferrer: my_inferrer)
-    #
-    # @param [Hash] new_options
-    #
-    # @return [Schema]
-    #
-    # @api public
-    def with(new_options)
-      self.class.new(name, options.merge(new_options))
-    end
-
     # Return AST for the schema
     #
     # @return [Array]
