@@ -1,8 +1,10 @@
-require 'spec_helper'
-
 RSpec.describe ROM::Relation::Graph do
   include_context 'gateway only'
   include_context 'users and tasks'
+
+  def t(*args)
+    ROM::Processor::Transproc::Functions[*args]
+  end
 
   let(:users_relation) do
     Class.new(ROM::Memory::Relation) do
@@ -42,7 +44,7 @@ RSpec.describe ROM::Relation::Graph do
 
   it_behaves_like 'materializable relation' do
     let(:mapper) do
-      T(:combine, [[:tasks, name: :name]])
+      t(:combine, [[:tasks, name: :name]])
     end
 
     let(:relation) do
