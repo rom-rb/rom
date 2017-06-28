@@ -1,3 +1,4 @@
 require 'rom-core'
-require 'rom-repository'
 require 'rom-mapper'
+require 'rom-repository'
+require 'rom-changeset'
