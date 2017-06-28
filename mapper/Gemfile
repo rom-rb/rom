@@ -1,34 +1,3 @@
-source 'https://rubygems.org'
+COMPONENTS = %w(core)
 
-gemspec
-
-group :test do
-  gem 'dry-types', git: 'https://github.com/dry-rb/dry-types', branch: 'master'
-  gem 'rom-core', path: '../core'
-  gem 'dry-equalizer'
-  gem 'dry-struct', git: 'https://github.com/dry-rb/dry-struct', branch: 'master'
-  gem 'anima', '~> 0.3.0'
-  gem 'virtus'
-  gem 'inflecto', '~> 0.0', '>= 0.0.2'
-
-  gem 'simplecov', require: false
-end
-
-group :benchmarks do
-  gem 'benchmark-ips', '~> 2.2'
-end
-
-group :tools do
-  gem 'rubocop', '~> 0.31'
-
-  gem 'guard'
-  gem 'guard-rspec'
-  gem 'guard-rubocop'
-
-  gem 'byebug'
-
-  platform :mri do
-    gem 'mutant', '~> 0.8.0'
-    gem 'mutant-rspec'
-  end
-end
+eval_gemfile '../Gemfile'

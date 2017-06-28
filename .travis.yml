@@ -7,7 +7,7 @@ install:
   - "cd $TRAVIS_BUILD_DIR/mapper"
   - "bundle install --without sql benchmarks console tools --gemfile ./Gemfile"
   - "cd $TRAVIS_BUILD_DIR/repository"
-  - "bundle install --without sql benchmarks console tools --gemfile ./Gemfile"
+  - "bundle install --without benchmarks console tools --gemfile ./Gemfile"
   - "cd $TRAVIS_BUILD_DIR/changeset"
   - "bundle install --without benchmarks console tools --gemfile ./Gemfile"
   - "gem install rspec codeclimate-test-reporter"
