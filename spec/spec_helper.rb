@@ -2,11 +2,22 @@ require 'pathname'
 
 SPEC_ROOT = root = Pathname(__FILE__).dirname
 
+if RUBY_ENGINE == 'ruby' && ENV['COVERAGE'] == 'true'
+  require 'yaml'
+  rubies = YAML.load(File.read(SPEC_ROOT.join('../.travis.yml')))['rvm']
+  latest_mri = rubies.select { |v| v =~ /\A\d+\.\d+.\d+\z/ }.max
+
+  if RUBY_VERSION == latest_mri
+    require 'simplecov'
+  end
+end
+
 require 'rom/core'
 
 Dir[root.join('support/*.rb').to_s].each do |f|
   require f
 end
+
 Dir[root.join('shared/*.rb').to_s].each do |f|
   require f
 end
