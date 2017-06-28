@@ -9,8 +9,7 @@ Gem::Specification.new do |gem|
   gem.homepage      = 'http://rom-rb.org'
   gem.require_paths = ['lib']
   gem.version       = ROM::Changeset::VERSION.dup
-  gem.files         = `git ls-files`.split("\n").reject { |name| name.include?('benchmarks') || name.include?('examples') || name.include?('bin/console') }
-  gem.test_files    = `git ls-files -- {spec}/*`.split("\n")
+  gem.files         = Dir["CHANGELOG.md", "LICENSE", "README.md", "lib/**/*"]
   gem.license       = 'MIT'
 
   gem.add_runtime_dependency 'dry-core', '~> 0.3', '>= 0.3.1'

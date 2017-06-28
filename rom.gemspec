@@ -1,16 +1,15 @@
 require File.expand_path('../lib/rom/version', __FILE__)
 
 Gem::Specification.new do |gem|
-  gem.name          = 'rom'
-  gem.summary       = 'Ruby Object Mapper'
-  gem.description   = 'Persistence and mapping toolkit for Ruby'
-  gem.author        = 'Piotr Solnica'
-  gem.email         = 'piotr.solnica@gmail.com'
-  gem.homepage      = 'http://rom-rb.org'
-  gem.version       = ROM::VERSION.dup
-  gem.files         = ['lib/rom.rb', 'README.md']
-  gem.test_files    = `git ls-files -- {spec}/*`.split("\n")
-  gem.license       = 'MIT'
+  gem.name        = 'rom'
+  gem.summary     = 'Persistence and mapping toolkit for Ruby'
+  gem.description = gem.summary
+  gem.author      = 'Piotr Solnica'
+  gem.email       = 'piotr.solnica+oss@gmail.com'
+  gem.homepage    = 'http://rom-rb.org'
+  gem.version     = ROM::VERSION.dup
+  gem.files       = Dir['CHANGELOG.md', 'LICENSE', 'README.md', 'lib/**/*']
+  gem.license     = 'MIT'
 
   gem.add_runtime_dependency 'rom-core', '~> 4.0.0.beta'
   gem.add_runtime_dependency 'rom-mapper', '~> 1.0.0.beta'

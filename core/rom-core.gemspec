@@ -5,12 +5,11 @@ Gem::Specification.new do |gem|
   gem.summary       = 'Ruby Object Mapper'
   gem.description   = 'Persistence and mapping toolkit for Ruby'
   gem.author        = 'Piotr Solnica'
-  gem.email         = 'piotr.solnica@gmail.com'
+  gem.email         = 'piotr.solnica+oss@gmail.com'
   gem.homepage      = 'http://rom-rb.org'
   gem.require_paths = ['lib']
   gem.version       = ROM::Core::VERSION.dup
-  gem.files         = `git ls-files`.split("\n").reject { |name| name.include?('benchmarks') }
-  gem.test_files    = `git ls-files -- {spec}/*`.split("\n")
+  gem.files         = Dir['CHANGELOG.md', 'LICENSE', 'README.md', 'lib/**/*']
   gem.license       = 'MIT'
 
   gem.add_runtime_dependency 'concurrent-ruby', '~> 1.0'
