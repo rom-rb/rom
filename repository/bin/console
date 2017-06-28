@@ -1,7 +1,9 @@
 #!/usr/bin/env ruby
 
 require "bundler/setup"
+
 require "rom-repository"
+require "rom-changeset"
 
 config = ROM::Configuration.new(:sql, 'postgres://localhost/rom_repository')
 

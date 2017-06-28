@@ -1,7 +1,6 @@
 require 'dry/core/deprecations'
 
 require 'rom/initializer'
-require 'rom/changeset'
 require 'rom/repository/class_interface'
 require 'rom/repository/session'
 
@@ -51,13 +50,6 @@ module ROM
   #
   # @api public
   class Repository
-    # Mapping for supported changeset classes used in #changeset(type => relation) method
-    CHANGESET_TYPES = {
-      create: Changeset::Create,
-      update: Changeset::Update,
-      delete: Changeset::Delete
-    }.freeze
-
     extend ClassInterface
     extend Initializer
     extend Dry::Core::ClassAttributes
@@ -161,91 +153,6 @@ module ROM
     # @api public
     def command(*args, **opts, &block)
       compile_command(*args, **opts)
-    end
-
-    # Return a changeset for a relation
-    #
-    # @overload changeset(name, attributes)
-    #   Return a create changeset for a given relation identifier
-    #
-    #   @example
-    #     repo.changeset(:users, name: "Jane")
-    #
-    #   @param name [Symbol] The relation container identifier
-    #   @param attributes [Hash]
-    #
-    #   @return [Changeset::Create]
-    #
-    # @overload changeset(name, primary_key, attributes)
-    #   Return an update changeset for a given relation identifier
-    #
-    #   @example
-    #     repo.changeset(:users, 1, name: "Jane Doe")
-    #
-    #   @param name [Symbol] The relation container identifier
-    #   @param restriction_arg [Object] The argument passed to restricted view
-    #
-    #   @return [Changeset::Update]
-    #
-    # @overload changeset(changeset_class)
-    #   Return a changeset object using provided class
-    #
-    #   @example
-    #     repo.changeset(NewUserChangeset).data(attributes)
-    #
-    #   @param [Class] changeset_class Custom changeset class
-    #
-    #   @return [Changeset]
-    #
-    # @overload changeset(opts)
-    #   Return a changeset object using provided changeset type and relation
-    #
-    #   @example
-    #     repo.changeset(delete: repo.users.where { id > 10 })
-    #
-    #   @param [Hash<Symbol=>Relation] opts Command type => Relation config
-    #
-    #   @return [Changeset]
-    #
-    # @api public
-    def changeset(*args)
-      opts = {}
-
-      if args.size == 2
-        name, data = args
-      elsif args.size == 3
-        name, pk, data = args
-      elsif args.size == 1
-        if args[0].is_a?(Class)
-          klass = args[0]
-
-          if klass < Changeset
-            return klass.new(relations[klass.relation], opts)
-          else
-            raise ArgumentError, "+#{klass.name}+ is not a Changeset subclass"
-          end
-        else
-          type, relation = args[0].to_a[0]
-        end
-      else
-        raise ArgumentError, 'Repository#changeset accepts 1-3 arguments'
-      end
-
-      if type
-        klass = CHANGESET_TYPES.fetch(type) {
-          raise ArgumentError, "+#{type.inspect}+ is not a valid changeset type. Must be one of: #{CHANGESET_TYPES.keys.inspect}"
-        }
-
-        klass.new(relation, opts)
-      else
-        relation = relations[name]
-
-        if pk
-          Changeset::Update.new(relation.by_pk(pk), opts.update(__data__: data))
-        else
-          Changeset::Create.new(relation, opts.update(__data__: data))
-        end
-      end
     end
 
     # Open a database transaction

@@ -4,6 +4,7 @@ RSpec.shared_context 'relations' do
   let(:tags) { rom.relations[:tags] }
   let(:posts) { rom.relations[:posts] }
   let(:books) { rom.relations[:books] }
+  let(:labels) { rom.relations[:labels] }
 
   before do
     configuration.relation(:books) do

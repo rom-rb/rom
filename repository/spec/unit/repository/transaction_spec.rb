@@ -1,3 +1,5 @@
+require 'rom-changeset'
+
 RSpec.describe ROM::Repository, '#transaction' do
   let(:user_repo) do
     Class.new(ROM::Repository[:users]) { commands :create }.new(rom)
@@ -12,8 +14,8 @@ RSpec.describe ROM::Repository, '#transaction' do
 
   it 'creating user with tasks' do
     user, task = user_repo.transaction do
-      user_changeset = user_repo.changeset(name: 'Jane')
-      task_changeset = task_repo.changeset(title: 'Task One')
+      user_changeset = users.changeset(:create, name: 'Jane')
+      task_changeset = tasks.changeset(:create, title: 'Task One')
 
       user = user_repo.create(user_changeset)
       task = task_repo.create(task_changeset.associate(user, :user))
@@ -32,7 +34,11 @@ RSpec.describe ROM::Repository, '#transaction' do
     task = task_repo.create(title: 'Jane Task', user_id: jane.id)
 
     task = task_repo.transaction do
-      task_changeset = task_repo.changeset(task.id, title: 'John Task').associate(john, :user).commit
+      task_changeset = tasks.by_pk(task.id).
+                         changeset(:update, title: 'John Task').
+                         associate(john, :user).
+                         commit
+
       task_repo.update(task_changeset)
     end
 
