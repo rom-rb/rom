@@ -10,6 +10,7 @@ require 'rom/relation/class_interface'
 require 'rom/auto_curry'
 require 'rom/pipeline'
 require 'rom/mapper_registry'
+require 'rom/command_registry'
 
 require 'rom/relation/loaded'
 require 'rom/relation/curried'
