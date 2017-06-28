@@ -15,6 +15,7 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency 'rom-core', '~> 4.0.0.beta'
   gem.add_runtime_dependency 'rom-mapper', '~> 1.0.0.beta'
   gem.add_runtime_dependency 'rom-repository', '~> 2.0.0.beta'
+  gem.add_runtime_dependency 'rom-changeset', '~> 1.0.0.beta'
 
   gem.add_development_dependency 'rake', '~> 10.3'
   gem.add_development_dependency 'rspec', '~> 3.5'
