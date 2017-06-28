@@ -103,32 +103,32 @@ conn.drop_table?(:posts)
 
 conn.create_table :users do
   primary_key :id
-  String :name
-  String :email
-  Integer :age
+  column :name, String, null: false
+  column :email, String, null: false
+  column :age, Integer, null: false
 end
 
 conn.create_table :posts do
   primary_key :id
-  String :title
+  column :title, String, null: false
 end
 
 conn.create_table :users_posts do
   primary_key :id
-  foreign_key :user_id, :users
-  foreign_key :post_id, :posts
+  foreign_key :user_id, :users, null: false
+  foreign_key :post_id, :posts, null: false
 end
 
 conn.create_table :tasks do
   primary_key :id
-  Integer :user_id
-  String :title
+  foreign_key :user_id, :users, null: false
+  column :title, String, null: false
 end
 
 conn.create_table :tags do
   primary_key :id
-  Integer :task_id
-  String :name
+  foreign_key :task_id, :tasks, null: false
+  column :name, String, null: false
 end
 
 if RUBY_ENGINE == 'jruby'
