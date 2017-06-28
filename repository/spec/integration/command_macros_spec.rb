@@ -36,7 +36,7 @@ RSpec.describe ROM::Repository, '.command' do
       commands update: :by_name
     end.new(rom)
 
-    repo.relations.users.insert(name: 'Jade')
+    repo.users.insert(name: 'Jade')
 
     user = repo.update('Jade', name: 'Jade Doe')
     expect(user.name).to eql('Jade Doe')

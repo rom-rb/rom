@@ -2,7 +2,7 @@ require 'rom-changeset'
 
 RSpec.describe ROM::Repository, '#session' do
   subject(:repo) do
-    Class.new(ROM::Repository) { relations :users, :posts, :labels }.new(rom)
+    Class.new(ROM::Repository).new(rom)
   end
 
   include_context 'database'

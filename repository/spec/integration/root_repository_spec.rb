@@ -1,8 +1,6 @@
 RSpec.describe ROM::Repository::Root do
   subject(:repo) do
-    Class.new(ROM::Repository[:users]) do
-      relations :tasks, :posts, :labels
-    end.new(rom)
+    Class.new(ROM::Repository[:users]).new(rom)
   end
 
   include_context 'database'
@@ -12,12 +10,10 @@ RSpec.describe ROM::Repository::Root do
     it 'creates a pre-configured root repo class' do
       klass = ROM::Repository[:users]
 
-      expect(klass.relations).to eql([:users])
       expect(klass.root).to be(:users)
 
       child = klass[:users]
 
-      expect(child.relations).to eql([:users])
       expect(child.root).to be(:users)
       expect(child < klass).to be(true)
     end
@@ -27,14 +23,12 @@ RSpec.describe ROM::Repository::Root do
     it 'inherits root and relations' do
       klass = Class.new(repo.class)
 
-      expect(klass.relations).to eql([:users, :tasks, :posts, :labels])
       expect(klass.root).to be(:users)
     end
 
     it 'creates base root class' do
       klass = Class.new(ROM::Repository)[:users]
 
-      expect(klass.relations).to eql([:users])
       expect(klass.root).to be(:users)
     end
   end

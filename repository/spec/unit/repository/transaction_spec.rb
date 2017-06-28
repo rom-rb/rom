@@ -14,8 +14,8 @@ RSpec.describe ROM::Repository, '#transaction' do
 
   it 'creating user with tasks' do
     user, task = user_repo.transaction do
-      user_changeset = users.changeset(:create, name: 'Jane')
-      task_changeset = tasks.changeset(:create, title: 'Task One')
+      user_changeset = user_repo.users.changeset(:create, name: 'Jane')
+      task_changeset = user_repo.tasks.changeset(:create, title: 'Task One')
 
       user = user_repo.create(user_changeset)
       task = task_repo.create(task_changeset.associate(user, :user))

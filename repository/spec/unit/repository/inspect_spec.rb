@@ -1,8 +1,6 @@
 RSpec.describe ROM::Repository, '#inspect' do
   subject(:repo) do
     Class.new(ROM::Repository) do
-      relations :users
-
       def self.to_s
         'UserRepo'
       end
@@ -13,6 +11,6 @@ RSpec.describe ROM::Repository, '#inspect' do
   include_context 'relations'
 
   specify do
-    expect(repo.inspect).to eql('#<UserRepo relations=[:users]>')
+    expect(repo.inspect).to eql('#<UserRepo struct_namespace=ROM::Struct auto_struct=true>')
   end
 end

@@ -1,8 +1,6 @@
 RSpec.describe ROM::Repository::Root, '#aggregate' do
   subject(:repo) do
-    Class.new(ROM::Repository[:users]) do
-      relations :tasks, :posts, :labels
-    end.new(rom)
+    Class.new(ROM::Repository[:users]).new(rom)
   end
 
   include_context 'database'

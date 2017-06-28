@@ -1,3 +1,5 @@
+require 'rom/repository/relation_reader'
+
 module ROM
   class Repository
     # Class-level APIs for repositories
@@ -18,9 +20,18 @@ module ROM
       # @api public
       def [](name)
         klass = Class.new(self < Repository::Root ? self : Repository::Root)
-        klass.relations(name)
         klass.root(name)
         klass
+      end
+
+      # @api public
+      def new(container, options = EMPTY_HASH)
+        unless relation_reader
+          relation_reader(RelationReader.new(self, container.relations.elements.keys))
+          include(relation_reader)
+        end
+
+        super
       end
 
       # Inherits configured relations and commands
@@ -31,32 +42,7 @@ module ROM
 
         return if self === Repository
 
-        klass.relations(*relations)
         klass.commands(*commands)
-      end
-
-      # Define which relations your repository is going to use
-      #
-      # @example
-      #   class MyRepo < ROM::Repository
-      #     relations :users, :tasks
-      #   end
-      #
-      #   my_repo = MyRepo.new(rom)
-      #
-      #   my_repo.users
-      #   my_repo.tasks
-      #
-      # @return [Array<Symbol>]
-      #
-      # @api public
-      def relations(*names)
-        if names.empty?
-          @relations ||= []
-        else
-          attr_reader(*(names - relations))
-          @relations = relations | names
-        end
       end
 
       # Defines command methods on a root repository
@@ -107,8 +93,7 @@ module ROM
       def define_command_method(type, **opts)
         define_method(type) do |*input|
           if input.size == 1 && input[0].respond_to?(:commit)
-            changeset = input[0]
-            map_tuple(changeset.relation, changeset.commit)
+            input[0].commit
           else
             command(type => self.class.root, **opts).call(*input)
           end

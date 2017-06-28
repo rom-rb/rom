@@ -6,8 +6,6 @@ RSpec.shared_context('repo') do
 
   let(:repo_class) do
     Class.new(ROM::Repository[:users]) do
-      relations :tasks, :tags, :posts, :labels, :posts_labels, :books, :authors
-
       def find_users(criteria)
         users.find(criteria)
       end
@@ -52,8 +50,6 @@ RSpec.shared_context('repo') do
 
   let(:comments_repo) do
     Class.new(ROM::Repository[:comments]) do
-      relations :likes
-
       def comments_with_likes
         aggregate(:likes)
       end

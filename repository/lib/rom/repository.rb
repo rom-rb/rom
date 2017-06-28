@@ -74,6 +74,11 @@ module ROM
     #   Get or set struct namespace
     defines :struct_namespace
 
+    # @!method self.relation_reader
+    #   Get or set relation reader module
+    #   @return [RelationReader]
+    defines :relation_reader
+
     struct_namespace ROM::Struct
 
     # @!attribute [r] container
@@ -97,21 +102,10 @@ module ROM
     #
     # @param container [ROM::Container] The rom container with relations and optional commands
     #
-    # @api public
-    def initialize(container, opts = EMPTY_HASH)
+    # @api private
+    def initialize(container, options = EMPTY_HASH)
       super
-
-      @relations = RelationRegistry.new do |registry, relations|
-        self.class.relations.each do |name|
-          relation = container.relations[name].
-                       with(auto_struct: auto_struct).
-                       struct_namespace(struct_namespace)
-
-          instance_variable_set("@#{name}", relation)
-
-          relations[name] = relation
-        end
-      end
+      @relations = {}
     end
 
     # Return a command for a relation
@@ -185,7 +179,7 @@ module ROM
     #
     # @api public
     def inspect
-      %(#<#{self.class} relations=[#{self.class.relations.map(&:inspect).join(' ')}]>)
+      %(#<#{self.class} struct_namespace=#{struct_namespace} auto_struct=#{auto_struct}>)
     end
 
     # Start a session for multiple changesets
@@ -219,11 +213,6 @@ module ROM
       relation = name.is_a?(Symbol) ? relations[name] : name
 
       relation.command(type, mapper: mapper, use: use, **opts)
-    end
-
-    # @api private
-    def map_tuple(relation, tuple)
-      relations[relation.name].mapper.([tuple]).first
     end
   end
 end

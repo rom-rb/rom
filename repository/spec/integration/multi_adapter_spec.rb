@@ -55,8 +55,6 @@ RSpec.describe 'Repository with multi-adapters configuration' do
       end
 
       class Repository < ROM::Repository[:sql_users]
-        relations :memory_tasks
-
         def users_with_tasks(id)
           aggregate(:tasks).where(id: id)
         end
