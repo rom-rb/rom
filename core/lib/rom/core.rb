@@ -38,6 +38,7 @@ module ROM
   plugins do
     register :mappers, ROM::Mapper::ConfigurationPlugin, type: :configuration
     register :macros, ROM::ConfigurationPlugins::ConfigurationDSL, type: :configuration
+    register :timestamps, ROM::Plugins::Schema::Timestamps, type: :schema
     register :registry_reader, ROM::Plugins::Relation::RegistryReader, type: :relation
     register :instrumentation, ROM::Plugins::Relation::Instrumentation, type: :relation
     register :schema, ROM::Plugins::Command::Schema, type: :command
