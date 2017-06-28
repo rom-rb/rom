@@ -19,7 +19,7 @@ RSpec.describe 'Commands / Delete' do
       define(:delete)
     end
 
-    result = users.try { users.delete.call }
+    result = users.delete.call
 
     expect(result).to match_array([
       { name: 'Jane', email: 'jane@doe.org' },
@@ -34,7 +34,7 @@ RSpec.describe 'Commands / Delete' do
       define(:delete)
     end
 
-    result = users.try { users.delete.by_name('Joe').call }
+    result = users.delete.by_name('Joe').call
 
     expect(result).to match_array([{ name: 'Joe', email: 'joe@doe.org' }])
 
@@ -48,7 +48,7 @@ RSpec.describe 'Commands / Delete' do
       define(:delete)
     end
 
-    result = users.try { users.delete.by_name('Not here').call }
+    result = users.delete.by_name('Not here').call
 
     expect(result).to match_array([])
   end
@@ -60,8 +60,8 @@ RSpec.describe 'Commands / Delete' do
       end
     end
 
-    result = users.try { users.delete_one.by_name('Jane').call }
+    result = users.delete_one.by_name('Jane').call
 
-    expect(result.value).to eql(name: 'Jane', email: 'jane@doe.org')
+    expect(result).to eql(name: 'Jane', email: 'jane@doe.org')
   end
 end

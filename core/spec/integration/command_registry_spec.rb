@@ -26,22 +26,4 @@ RSpec.describe 'ROM::CommandRegistry' do
       )
     end
   end
-
-  describe '#try' do
-    it 'returns a success result object on successful execution' do
-      result = users.try { users.create.call(name: 'Jane') }
-
-      expect(result).to match_array([{ name: 'Jane' }])
-    end
-
-    it 'returns a success result on successful curried-command execution' do
-      result = users.try { users.create.curry(name: 'Jane') }
-
-      expect(result).to match_array([{ name: 'Jane' }])
-    end
-
-    it 'allows checking if a command is available using respond_to?' do
-      expect(users).to respond_to(:create)
-    end
-  end
 end

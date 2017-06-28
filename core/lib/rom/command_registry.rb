@@ -2,15 +2,12 @@ require 'concurrent/map'
 
 require 'rom/constants'
 require 'rom/registry'
-require 'rom/commands/result'
 
 module ROM
   # Specialized registry class for commands
   #
   # @api public
   class CommandRegistry < Registry
-    include Commands
-
     # Internal command registry
     #
     # @return [Registry]
@@ -33,31 +30,6 @@ module ROM
 
     def self.element_not_found_error
       CommandNotFoundError
-    end
-
-    # Try to execute a command in a block
-    #
-    # @yield [command] Passes command to the block
-    #
-    # @example
-    #
-    #   rom.commands[:users].try { create(name: 'Jane') }
-    #   rom.commands[:users].try { update(:by_id, 1).call(name: 'Jane Doe') }
-    #   rom.commands[:users].try { delete(:by_id, 1) }
-    #
-    # @return [Commands::Result]
-    #
-    # @api public
-    def try(&block)
-      response = block.call
-
-      if response.is_a?(Command) || response.is_a?(Composite)
-        try { response.call }
-      else
-        Result::Success.new(response)
-      end
-    rescue CommandError => e
-      Result::Failure.new(e)
     end
 
     # Return a command from the registry

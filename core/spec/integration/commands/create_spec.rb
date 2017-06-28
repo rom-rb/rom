@@ -60,21 +60,16 @@ RSpec.describe 'Commands / Create' do
   end
 
   it 'inserts user on successful validation' do
-    result = users.try {
-      users.create.call(name: 'Piotr', email: 'piotr@solnic.eu')
-    }
+    result = users.create.call(name: 'Piotr', email: 'piotr@solnic.eu')
 
-    expect(result.value).to eql(name: 'Piotr', email: 'piotr@solnic.eu')
+    expect(result).to eql(name: 'Piotr', email: 'piotr@solnic.eu')
   end
 
   it 'inserts user and associated task when things go well' do
-    result = users.try {
-      command = users.create.with(name: 'Piotr', email: 'piotr@solnic.eu')
-      command >>= tasks.create.with(title: 'Finish command-api')
-      command
-    }
+    result = users.create.with(name: 'Piotr', email: 'piotr@solnic.eu').
+              >> tasks.create.with(title: 'Finish command-api')
 
-    expect(result.value).to eql(name: 'Piotr', title: 'Finish command-api')
+    expect(result.call).to eql(name: 'Piotr', title: 'Finish command-api')
   end
 
   describe '"result" option' do
@@ -87,11 +82,9 @@ RSpec.describe 'Commands / Create' do
 
       tuple = { name: 'Piotr', email: 'piotr@solnic.eu' }
 
-      result = users.try {
-        users.create_one.call(tuple)
-      }
+      result = users.create_one.call(tuple)
 
-      expect(result.value).to eql(tuple)
+      expect(result).to eql(tuple)
     end
 
     it 'allows only valid result types' do

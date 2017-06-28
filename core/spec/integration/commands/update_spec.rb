@@ -26,9 +26,7 @@ RSpec.describe 'Commands / Update' do
   end
 
   it 'update tuples' do
-    result = users.try {
-      users.update.all(name: 'Jane').call(email: 'jane.doe@test.com')
-    }
+    result = users.update.all(name: 'Jane').call(email: 'jane.doe@test.com')
 
     expect(result)
       .to match_array([{ name: 'Jane', email: 'jane.doe@test.com' }])
@@ -42,11 +40,9 @@ RSpec.describe 'Commands / Update' do
         end
       end
 
-      result = users.try {
-        users.update_one.by_name('Jane').call(email: 'jane.doe@test.com')
-      }
+      result = users.update_one.by_name('Jane').call(email: 'jane.doe@test.com')
 
-      expect(result.value).to eql(name: 'Jane', email: 'jane.doe@test.com')
+      expect(result).to eql(name: 'Jane', email: 'jane.doe@test.com')
     end
 
     it 'allows only valid result types' do
