@@ -99,58 +99,6 @@ module ROM
       def aggregate(*args)
         root.combine(*args)
       end
-
-      # @overload changeset(name, *args)
-      #   Delegate to Repository#changeset
-      #
-      #   @see Repository#changeset
-      #
-      # @overload changeset(data)
-      #   Builds a create changeset for the root relation
-      #
-      #   @example
-      #     user_repo.changeset(name: "Jane")
-      #
-      #   @param data [Hash] New data
-      #
-      #   @return [Changeset::Create]
-      #
-      # @overload changeset(primary_key, data)
-      #   Builds an update changeset for the root relation
-      #
-      #   @example
-      #     user_repo.changeset(1, name: "Jane Doe")
-      #
-      #   @param primary_key [Object] Primary key for restricting relation
-      #
-      #   @return [Changeset::Update]
-      #
-      # @overload changeset(changeset_class)
-      #   Return a changeset prepared for repo's root relation
-      #
-      #   @example
-      #     changeset = user_repo.changeset(MyChangeset)
-      #
-      #     changeset.relation == user_repo.root
-      #     # true
-      #
-      #   @param [Class] changeset_class Your custom changeset class
-      #
-      #   @return [Changeset]
-      #
-      # @see Repository#changeset
-      #
-      # @api public
-      def changeset(*args)
-        if args.first.is_a?(Symbol) && relations.key?(args.first)
-          super
-        elsif args.first.is_a?(Class)
-          klass, *rest = args
-          super(klass[klass.relation || self.class.root], *rest)
-        else
-          super(root.name, *args)
-        end
-      end
     end
   end
 end
