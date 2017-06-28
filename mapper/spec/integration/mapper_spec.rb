@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe ROM::Mapper do
   let(:mapper_klass) do
     Class.new(ROM::Mapper).tap do |mapper_klass|

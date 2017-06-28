@@ -25,7 +25,6 @@ group :test do
   gem 'dry-types', git: 'https://github.com/dry-rb/dry-types', branch: 'master'
   gem 'dry-struct', git: 'https://github.com/dry-rb/dry-struct', branch: 'master'
   gem 'simplecov', platforms: :mri
-  gem 'virtus'
 end
 
 group :tools do

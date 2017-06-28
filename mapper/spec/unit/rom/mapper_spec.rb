@@ -1,5 +1,4 @@
-require 'spec_helper'
-
+require 'dry/equalizer'
 require 'ostruct'
 
 RSpec.describe ROM::Mapper do
@@ -20,7 +19,7 @@ RSpec.describe ROM::Mapper do
   end
 
   let(:user_model) do
-    Class.new(OpenStruct) { include Equalizer.new(:id, :name) }
+    Class.new(OpenStruct) { include Dry::Equalizer(:id, :name) }
   end
 
   let(:jane) { user_model.new(id: 1, name: 'Jane') }

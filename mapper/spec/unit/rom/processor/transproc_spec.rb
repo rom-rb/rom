@@ -1,6 +1,3 @@
-require 'spec_helper'
-require 'virtus'
-
 RSpec.describe ROM::Processor::Transproc do
   subject(:transproc) { ROM::Processor::Transproc.build(binding, header) }
 
@@ -32,9 +29,8 @@ RSpec.describe ROM::Processor::Transproc do
     let(:options) { { model: model } }
 
     let(:model) do
-      Class.new do
-        include Virtus.value_object
-        values { attribute :name }
+      Class.new(Dry::Struct) do
+        attribute :name, ROM::Types::String
       end
     end
 
