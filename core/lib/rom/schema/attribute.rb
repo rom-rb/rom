@@ -20,7 +20,7 @@ module ROM
 
       extend Initializer
 
-      # !@attribute [r] type
+      # @!attribute [r] type
       #   @return [Dry::Types::Definition, Dry::Types::Sum, Dry::Types::Constrained]
       param :type
 
