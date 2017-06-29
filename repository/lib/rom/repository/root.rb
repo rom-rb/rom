@@ -59,7 +59,7 @@ module ROM
       # @see Repository#initialize
       def initialize(container, options = EMPTY_HASH)
         super
-        @root = public_send(self.class.root)
+        @root = set_relation(self.class.root)
       end
 
       # Compose a relation aggregate from the root relation

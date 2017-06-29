@@ -1,6 +1,10 @@
 RSpec.describe ROM::Repository::Root do
   subject(:repo) do
-    Class.new(ROM::Repository[:users]).new(rom)
+    klass.new(rom)
+  end
+
+  let(:klass) do
+    Class.new(ROM::Repository[:users])
   end
 
   include_context 'database'
@@ -30,6 +34,28 @@ RSpec.describe ROM::Repository::Root do
       klass = Class.new(ROM::Repository)[:users]
 
       expect(klass.root).to be(:users)
+    end
+  end
+
+  describe 'overriding reader' do
+    it 'works with super' do
+      klass.class_eval do
+        def users
+          super.limit(10)
+        end
+      end
+
+      expect(repo.users.dataset.opts[:limit]).to be(10)
+    end
+
+    it 'works with aggregate' do
+      klass.class_eval do
+        def users
+          aggregate(:tasks)
+        end
+      end
+
+      expect(repo.users).to be_instance_of(ROM::Relation::Graph)
     end
   end
 

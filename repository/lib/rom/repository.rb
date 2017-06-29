@@ -210,7 +210,7 @@ module ROM
     # @api private
     def compile_command(*args, mapper: nil, use: EMPTY_ARRAY, **opts)
       type, name = args + opts.to_a.flatten(1)
-      relation = name.is_a?(Symbol) ? relations[name] : name
+      relation = name.is_a?(Symbol) ? __send__(name) : name
 
       relation.command(type, mapper: mapper, use: use, **opts)
     end
