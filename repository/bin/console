@@ -1,7 +1,10 @@
 #!/usr/bin/env ruby
 
-require "bundler/setup"
+require "bundler"
 
+Bundler.setup
+
+require "pry"
 require "rom-repository"
 require "rom-changeset"
 
@@ -22,18 +25,6 @@ config.relation(:users) do
       has_many :tasks
     end
   end
-
-  def by_id(id)
-    where(id: id)
-  end
-
-  def all
-    select(:id, :name).order(:name, :id)
-  end
-
-  def find(criteria)
-    where(criteria)
-  end
 end
 
 config.relation(:tasks) do
@@ -42,24 +33,16 @@ config.relation(:tasks) do
       belongs_to :user
     end
   end
-
-  def find(criteria)
-    where(criteria)
-  end
-
-  def for_users(users)
-    where(user_id: users.map { |u| u[:id] })
-  end
 end
 
-config.relation(:tags)
+config.relation(:tags) do
+  schema(infer: true)
+end
 
 rom = ROM.container(config)
 
 repo = Class.new(ROM::Repository[:users]) {
   commands :create, update: :by_pk, delete: :by_pk
-  relations :tasks, :tags, :books
 }.new(rom)
 
-require "pry"
-binding.pry
+Pry.start(self)
