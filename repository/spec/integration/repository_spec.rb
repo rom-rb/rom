@@ -65,7 +65,7 @@ RSpec.describe 'ROM repository' do
   it 'loads wraps using aliased relation' do
     author = repo.users.where(name: 'Jane').one
 
-    repo.command(:create, repo.books).(title: 'Hello World', author_id: author.id)
+    repo.books.command(:create).(title: 'Hello World', author_id: author.id)
 
     book = repo.books.wrap(:author).to_a.first
 

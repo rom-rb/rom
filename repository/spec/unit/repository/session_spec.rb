@@ -33,8 +33,8 @@ RSpec.describe ROM::Repository, '#session' do
     end
 
     before do
-      repo.command(:create, repo.users).call(name: 'John')
-      repo.command(:create, repo.users).call(name: 'Jane')
+      repo.users.command(:create).call(name: 'John')
+      repo.users.command(:create).call(name: 'Jane')
     end
 
     it 'saves data in a transaction' do
@@ -54,8 +54,8 @@ RSpec.describe ROM::Repository, '#session' do
     end
 
     before do
-      repo.command(:create, repo.users).call(name: 'John')
-      repo.command(:create, repo.users).call(name: 'Jane')
+      repo.users.command(:create).call(name: 'John')
+      repo.users.command(:create).call(name: 'Jane')
     end
 
     let(:user_changeset) do
@@ -184,7 +184,7 @@ RSpec.describe ROM::Repository, '#session' do
     end
 
     let(:user) do
-      repo.command(:create, repo.users).call(name: 'Jane')
+      repo.users.command(:create).call(name: 'Jane')
     end
 
     it 'saves data in a transaction' do

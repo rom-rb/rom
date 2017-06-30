@@ -108,47 +108,6 @@ module ROM
       @relations = {}
     end
 
-    # Return a command for a relation
-    #
-    # @overload command(type, relation)
-    #   Returns a command for a relation
-    #
-    #   @example
-    #     repo.command(:create, repo.users)
-    #
-    #   @param type [Symbol] The command type (:create, :update or :delete)
-    #   @param relation [RelationProxy] The relation for which command should be built for
-    #
-    # @overload command(options)
-    #   Builds a command for a given relation identifier
-    #
-    #   @example
-    #     repo.command(create: :users)
-    #
-    #   @param options [Hash<Symbol=>Symbol>] A type => rel_name map
-    #
-    # @overload command(rel_name)
-    #   Returns command registry for a given relation identifier
-    #
-    #   @example
-    #     repo.command(:users)[:my_custom_command]
-    #
-    #   @param rel_name [Symbol] The relation identifier from the container
-    #
-    #   @return [CommandRegistry]
-    #
-    # @overload command(rel_name, &block)
-    #   Yields a command graph composer for a given relation identifier
-    #
-    #   @param rel_name [Symbol] The relation identifier from the container
-    #
-    # @return [ROM::Command]
-    #
-    # @api public
-    def command(*args, **opts, &block)
-      compile_command(*args, **opts)
-    end
-
     # Open a database transaction
     #
     # @example commited transaction
@@ -194,25 +153,6 @@ module ROM
       session = Session.new(self)
       yield(session)
       transaction { session.commit! }
-    end
-
-    # Registered commands
-    #
-    # @api private
-    def commands
-      container.commands
-    end
-
-    private
-
-    # Build a new command or return existing one
-    #
-    # @api private
-    def compile_command(*args, mapper: nil, use: EMPTY_ARRAY, **opts)
-      type, name = args + opts.to_a.flatten(1)
-      relation = name.is_a?(Symbol) ? __send__(name) : name
-
-      relation.command(type, mapper: mapper, use: use, **opts)
     end
   end
 end

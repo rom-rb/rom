@@ -1,3 +1,5 @@
+require 'rom-changeset'
+
 RSpec.describe ROM::Repository, '.command' do
   include_context 'database'
   include_context 'relations'
@@ -11,6 +13,26 @@ RSpec.describe ROM::Repository, '.command' do
 
     expect(user.id).to_not be(nil)
     expect(user.name).to eql('Jane')
+  end
+
+  it 'allows configuring an update command' do
+    repo = Class.new(ROM::Repository[:users]) do
+      commands update: :by_pk
+    end.new(rom)
+
+    user_id = users.insert(name: 'Jane')
+
+    repo.update(user_id, name: 'Jane Doe')
+
+    user = repo.users.by_pk(user_id).one
+
+    expect(user.name).to eql('Jane Doe')
+
+    repo.update(user_id, users.changeset(:update, name: 'Jade'))
+
+    user = repo.users.by_pk(user_id).one
+
+    expect(user.name).to eql('Jade')
   end
 
   it 'allows configuring an update and delete commands' do
@@ -49,11 +71,11 @@ RSpec.describe ROM::Repository, '.command' do
       commands update: :by_pk
     end.new(rom)
 
-    user = repo.command(create: :users)[name: 'Jane']
+    user_id = users.insert(name: 'Jane')
 
-    repo.update(user.id, name: 'Jane Doe')
+    repo.update(user_id, name: 'Jane Doe')
 
-    updated_user = repo.users.by_pk(user.id).one
+    updated_user = repo.users.by_pk(user_id).one
 
     expect(updated_user.name).to eql('Jane Doe')
   end
@@ -150,7 +172,7 @@ RSpec.describe ROM::Repository, '.command' do
     it 'allows to use named mapper in commands' do
       repo = Class.new(ROM::Repository[:users]).new(rom)
 
-      name = repo.command(create: :users, mapper: :name_list).call(name: 'Jane')
+      name = repo.users.command(:create, mapper: :name_list).call(name: 'Jane')
 
       expect(name).to eql('Jane')
     end

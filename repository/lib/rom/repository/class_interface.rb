@@ -95,7 +95,7 @@ module ROM
           if input.size == 1 && input[0].respond_to?(:commit)
             input[0].commit
           else
-            command(type => self.class.root, **opts).call(*input)
+            root.command(type, **opts).call(*input)
           end
         end
       end
@@ -111,11 +111,9 @@ module ROM
             changeset = input.first
 
             if changeset.respond_to?(:commit)
-              map_tuple(changeset.relation, changeset.commit)
+              changeset.commit
             else
-              command(type => self.class.root, **opts)
-                .public_send(view_name, *view_args)
-                .call(*input)
+              root.command(type, **opts).public_send(view_name, *view_args).call(*input)
             end
           end
         end

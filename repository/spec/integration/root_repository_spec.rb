@@ -94,16 +94,6 @@ RSpec.describe ROM::Repository::Root do
         expect(user.posts[0].labels.size).to be(1)
       end
 
-      it 'builds a command from an aggregate' do
-        command = repo.command(:create, repo.aggregate(:posts))
-
-        result = command.call(name: 'Jade', posts: [{ title: 'Jade post' }])
-
-        expect(result.name).to eql('Jade')
-        expect(result.posts.size).to be(1)
-        expect(result.posts[0].title).to eql('Jade post')
-      end
-
       it 'builds same relation as manual combine' do
         left = repo.aggregate(:posts)
         right = repo.users.combine(:posts)
