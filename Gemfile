@@ -22,8 +22,6 @@ end
 group :test do
   gem 'rspec', '~> 3.6'
   gem 'inflecto'
-  gem 'dry-types', git: 'https://github.com/dry-rb/dry-types', branch: 'master'
-  gem 'dry-struct', git: 'https://github.com/dry-rb/dry-struct', branch: 'master'
   gem 'simplecov', platforms: :mri
 end
 
