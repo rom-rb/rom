@@ -6,6 +6,7 @@
 * [BREAKING] `Relation#combine_parents` was removed (solnic)
 * [BREAKING] `Relation#combine_children` was removed (solnic)
 * [BREAKING] `Relation#wrap_parent` was removed, configure associations and use their identifiers in `wrap` instead (solnic)
+* [BREAKING] `Repository#command` was removed in favor of `Relation#command` (solnic)
 
 ### Internal
 
@@ -19,7 +20,7 @@
   to filter out timestamp changes prior to updates so that we can avoid
   hitting the database in case of timestamp-only changes. You still can call `.map(:touch)`
   if you want to have `updated_at` refreshed unconditionally (flash-gordon)
-  
+
 ## Fixed
 
 * `aggregate` and `combine` works correctly with nested graph options where associations are aliased (solnic)
