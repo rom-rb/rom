@@ -123,7 +123,7 @@ module ROM
 
     # @!attribute [r] mappers
     #   @return [MapperRegistry] an optional mapper registry (empty by default)
-    option :mappers, default: -> { MapperRegistry.new.struct_namespace(self.class.struct_namespace) }
+    option :mappers, default: -> { MapperRegistry.new }
 
     # @!attribute [r] commands
     #   @return [CommandRegistry] Command registry
@@ -380,7 +380,7 @@ module ROM
 
     # @api private
     def meta_ast
-      meta = self.meta.merge(dataset: name.dataset, alias: name.aliaz)
+      meta = self.meta.merge(dataset: name.dataset, alias: name.aliaz, struct_namespace: options[:struct_namespace])
       meta[:model] = false unless auto_struct? || meta[:model]
       meta
     end
@@ -518,7 +518,7 @@ module ROM
     #
     # @api public
     def struct_namespace(ns)
-      with(struct_namespace: ns, mappers: mappers.struct_namespace(ns))
+      options[:struct_namespace] == ns ? self : with(struct_namespace: ns)
     end
 
     memoize :to_ast, :auto_map?, :auto_struct?, :foreign_key, :combine, :wrap, :node

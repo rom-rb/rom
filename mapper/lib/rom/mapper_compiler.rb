@@ -10,18 +10,17 @@ module ROM
     extend Initializer
 
     option :cache, reader: true, default: -> { Cache.new }
-    option :struct_namespace, reader: true, default: -> { ROM::Struct }
 
     attr_reader :struct_compiler
 
     def initialize(*args)
       super
-      @struct_compiler = StructCompiler.new(namespace: struct_namespace, cache: cache)
+      @struct_compiler = StructCompiler.new(cache: cache)
       @cache = cache.namespaced(:mappers)
     end
 
     def call(ast)
-      cache.fetch_or_store(ast) { Mapper.build(Header.coerce(*visit(ast))) }
+      cache.fetch_or_store(ast.hash) { Mapper.build(Header.coerce(*visit(ast))) }
     end
     alias_method :[], :call
 
@@ -35,12 +34,13 @@ module ROM
     def visit_relation(node)
       rel_name, header, meta = node
       name = meta[:combine_name] || meta[:alias] || rel_name
+      namespace = meta.fetch(:struct_namespace)
 
       model = meta.fetch(:model) do
         if meta[:combine_name]
           false
         else
-          struct_compiler[name, header]
+          struct_compiler[name, header, namespace]
         end
       end
 

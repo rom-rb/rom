@@ -19,6 +19,14 @@ RSpec.describe ROM::Relation, '#struct_namespace' do
         end
       end
     end
+
+    module Test::Models
+      class User < ROM::Struct
+        def super_user?
+          true
+        end
+      end
+    end
   end
 
   context 'setting at runtime' do
@@ -41,6 +49,14 @@ RSpec.describe ROM::Relation, '#struct_namespace' do
       users = relation.as(:admins).struct_namespace(Test::Entities)
 
       expect(users.first).to be_admin
+    end
+
+    it 'allows switching namespaces at runtime' do
+      entities = relation.struct_namespace(Test::Entities)
+      models = relation.struct_namespace(Test::Models)
+
+      expect(entities.first).to be_my_user
+      expect(models.first).to be_super_user
     end
   end
 

@@ -15,8 +15,7 @@ module ROM
     extend Initializer
 
     param :registry, default: -> { Dry::Types }
-    option :namespace, reader: true, default: -> { ROM::Struct }
-    option :cache, reader: true, default: -> { Cache.new }
+    option :cache, default: -> { Cache.new }
 
     def initialize(*args)
       super
@@ -24,14 +23,14 @@ module ROM
     end
 
     def call(*args)
-      cache.fetch_or_store(*args) do
-        name, header = args
+      cache.fetch_or_store(args.hash) do
+        name, header, ns = args
         attributes = header.map(&method(:visit)).compact
 
         if attributes.empty?
           ROM::OpenStruct
         else
-          build_class(name, ROM::Struct) do |klass|
+          build_class(name, ROM::Struct, ns) do |klass|
             attributes.each do |(name, type)|
               klass.attribute(name, type)
             end
@@ -46,8 +45,9 @@ module ROM
     def visit_relation(node)
       _, header, meta = node
       name = meta[:combine_name] || meta[:alias]
+      namespace = meta.fetch(:struct_namespace)
 
-      model = meta[:model] || call(name, header)
+      model = meta[:model] || call(name, header, namespace)
 
       member =
         if model < Dry::Struct
@@ -81,8 +81,10 @@ module ROM
       visit(definition)
     end
 
-    def build_class(name, parent, &block)
-      Dry::Core::ClassBuilder.new(name: class_name(name), parent: parent, namespace: namespace).call(&block)
+    def build_class(name, parent, ns, &block)
+      Dry::Core::ClassBuilder.
+        new(name: class_name(name), parent: parent, namespace: ns).
+        call(&block)
     end
 
     def class_name(name)

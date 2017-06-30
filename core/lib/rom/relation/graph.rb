@@ -59,8 +59,9 @@ module ROM
 
       # @api private
       def initialize(root, nodes)
+        root_ns = root.options[:struct_namespace]
         @root = root
-        @nodes = nodes
+        @nodes = nodes.map { |node| node.struct_namespace(root_ns) }
       end
 
       # @api public

@@ -9,8 +9,7 @@ module ROM
       MapperMissingError
     end
 
-    option :struct_namespace, reader: false, default: -> { ROM::Struct }
-    option :compiler, reader: true, default: -> { MapperCompiler.new(struct_namespace: options[:struct_namespace]) }
+    option :compiler, default: -> { MapperCompiler.new }
 
     # @see Registry
     # @api public
@@ -20,15 +19,6 @@ module ROM
       else
         cache.fetch_or_store(args.hash) { compiler.(*args) }
       end
-    end
-
-    # Get a new mapper registry configured with a specific struct namespace
-    #
-    # @return [MapperRegistry]
-    #
-    # @api private
-    def struct_namespace(namespace)
-      with(compiler: compiler.with(struct_namespace: namespace))
     end
   end
 end

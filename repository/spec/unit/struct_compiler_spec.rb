@@ -10,10 +10,8 @@ RSpec.describe 'struct compiler', '#call' do
   end
 
   context 'ROM::Struct' do
-    before { builder[*input] }
-
     it 'generates a struct for a given relation name and columns' do
-      struct = builder.cache[input.hash]
+      struct = builder[*input, ROM::Struct]
 
       user = struct.new(id: 1, name: 'Jane')
 
@@ -30,7 +28,7 @@ RSpec.describe 'struct compiler', '#call' do
     end
 
     it 'stores struct in the cache' do
-      expect(builder.cache[input.hash]).to be(builder[*input])
+      expect(builder[*input, ROM::Struct]).to be(builder[*input, ROM::Struct])
     end
 
     context 'with reserved keywords as attribute names' do
@@ -42,7 +40,7 @@ RSpec.describe 'struct compiler', '#call' do
       end
 
       it 'allows to build a struct class without complaining' do
-        struct = builder.cache[input.hash]
+        struct = builder[*input, ROM::Struct]
 
         user = struct.new(id: 1, name: 'Jane', alias: 'JD', until: Time.new(2030))
 
@@ -54,11 +52,9 @@ RSpec.describe 'struct compiler', '#call' do
     end
 
     it 'raise a friendly error on missing keys' do
-      struct = builder.cache[input.hash]
+      struct = builder[*input, ROM::Struct]
 
-      expect { struct.new(id: 1) }.to raise_error(
-                                        Dry::Struct::Error, /:name is missing/
-                                      )
+      expect { struct.new(id: 1) }.to raise_error(Dry::Struct::Error, /:name is missing/)
     end
   end
 
@@ -70,8 +66,7 @@ RSpec.describe 'struct compiler', '#call' do
       end
     end
 
-    let(:struct) { builder[*input] }
-    subject(:builder) { ROM::StructCompiler.new(namespace: Test::Custom) }
+    let(:struct) { builder[*input, Test::Custom] }
 
     it 'generates a struct class inside a given module' do
       expect(struct.name).to eql('Test::Custom::User')
@@ -103,10 +98,7 @@ RSpec.describe 'struct compiler', '#call' do
 
       expect {
         user.upcased_middle_name
-      }.to raise_error(
-             ROM::Struct::MissingAttribute,
-             /not loaded attribute\?/
-           )
+      }.to raise_error(ROM::Struct::MissingAttribute, /not loaded attribute\?/)
     end
 
     it 'works with implicit coercions' do
