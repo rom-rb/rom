@@ -1,3 +1,5 @@
+require 'dry/core/deprecations'
+
 require 'rom/types'
 require 'rom/commands/result'
 
@@ -7,6 +9,8 @@ module ROM
   # @api public
   class CommandRegistry
     extend Initializer
+    extend Dry::Core::Deprecations[:rom]
+
     include Commands
 
     CommandNotFoundError = Class.new(KeyError)
@@ -43,6 +47,8 @@ module ROM
     #
     # @api public
     def try(&block)
+      self.class.warn "CommandRegistry#try will be removed in rom 4.0"
+
       response = block.call
 
       if response.is_a?(Command) || response.is_a?(Composite)
