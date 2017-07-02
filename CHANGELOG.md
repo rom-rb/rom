@@ -1,3 +1,9 @@
+# v3.2.4 2017-07-02
+
+This release only adds deprecation warnings in preparation for rom 4.0 release.
+
+[Compare v3.2.4...v3.2.4](https://github.com/rom-rb/rom/compare/v3.2.3...v3.2.4)
+
 # v3.2.3 2017-05-31
 
 ## Added
