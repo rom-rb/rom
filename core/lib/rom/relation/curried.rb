@@ -1,3 +1,5 @@
+require 'dry/equalizer'
+
 require 'rom/types'
 require 'rom/initializer'
 require 'rom/pipeline'
@@ -9,6 +11,7 @@ module ROM
     class Curried
       extend Initializer
 
+      include Dry::Equalizer(:relation, :options)
       include Materializable
       include Pipeline
 

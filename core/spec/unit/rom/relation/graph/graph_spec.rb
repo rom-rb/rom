@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe ROM::Relation, '#graph' do
   include_context 'gateway only'
   include_context 'users and tasks'

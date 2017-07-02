@@ -1,3 +1,5 @@
+require 'dry/equalizer'
+
 module ROM
   class Relation
     # Materializes a relation and exposes interface to access the data
@@ -5,6 +7,7 @@ module ROM
     # @api public
     class Loaded
       include Enumerable
+      include Dry::Equalizer(:source, :collection)
 
       # Coerce loaded relation to an array
       #

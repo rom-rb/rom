@@ -1,3 +1,5 @@
+require 'dry/equalizer'
+
 require 'rom/relation/loaded'
 require 'rom/relation/composite'
 require 'rom/relation/materializable'
@@ -25,6 +27,7 @@ module ROM
     #
     # @api public
     class Graph
+      include Dry::Equalizer(:root, :nodes)
       include Materializable
       include Commands
       include Pipeline
