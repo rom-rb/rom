@@ -1,4 +1,4 @@
-RSpec.describe ROM::Relation::Graph do
+RSpec.describe ROM::Relation::Combined do
   include_context 'gateway only'
   include_context 'users and tasks'
 
@@ -36,7 +36,7 @@ RSpec.describe ROM::Relation::Graph do
     end
 
     let(:relation) do
-      ROM::Relation::Graph.new(users.by_name('Jane'), [tasks.for_users]) >> mapper
+      ROM::Relation::Combined.new(users.by_name('Jane'), [tasks.for_users]) >> mapper
     end
   end
 end

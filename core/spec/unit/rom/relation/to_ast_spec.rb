@@ -50,7 +50,7 @@ RSpec.describe ROM::Relation, '#to_ast' do
   end
 
   it 'returns valid ast for a combined relation' do
-    relation = users.graph(tasks)
+    relation = users.combine_with(tasks)
 
     expect(relation.to_ast).to eql(
       [:relation, [
@@ -74,8 +74,7 @@ RSpec.describe ROM::Relation, '#to_ast' do
   end
 
   it 'returns valid ast for a wrapped relation' do
-    # FIXME: seems like `wrap` is not nonsistent with `graph`
-    relation = tasks.send(:wrap_class).new(tasks, [users])
+    relation = tasks.wrap_around(users)
 
     tasks_schema = tasks.schema
     users_schema = users.schema

@@ -1,6 +1,6 @@
-RSpec.describe ROM::Relation::Graph do
+RSpec.describe ROM::Relation::Combined do
   subject(:relation) do
-    ROM::Relation::Graph.new(users, [])
+    ROM::Relation::Combined.new(users, [])
   end
 
   let(:users) do
@@ -17,11 +17,11 @@ RSpec.describe ROM::Relation::Graph do
     end
 
     it 'forwards methods to the root and decorates response' do
-      expect(relation.by_name('Jane')).to be_instance_of(ROM::Relation::Graph)
+      expect(relation.by_name('Jane')).to be_instance_of(ROM::Relation::Combined)
     end
 
     it 'forwards methods to the root and decorates curried response' do
-      expect(relation.by_name).to be_instance_of(ROM::Relation::Graph)
+      expect(relation.by_name).to be_instance_of(ROM::Relation::Combined)
     end
 
     it 'returns original response from the root' do

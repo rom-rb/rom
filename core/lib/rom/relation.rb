@@ -15,7 +15,7 @@ require 'rom/command_registry'
 require 'rom/relation/loaded'
 require 'rom/relation/curried'
 require 'rom/relation/composite'
-require 'rom/relation/graph'
+require 'rom/relation/combined'
 require 'rom/relation/wrap'
 require 'rom/relation/materializable'
 require 'rom/relation/commands'
@@ -172,17 +172,6 @@ module ROM
       end
     end
 
-    # Composes with other relations
-    #
-    # @param [Array<Relation>] others The other relation(s) to compose with
-    #
-    # @return [Relation::Graph]
-    #
-    # @api public
-    def graph(*others)
-      Graph.build(self, others)
-    end
-
     # Combine with other relations
     #
     # @overload combine(*associations)
@@ -196,7 +185,18 @@ module ROM
     #
     # @api public
     def combine(*args)
-      graph(*nodes(*args))
+      combine_with(*nodes(*args))
+    end
+
+    # Composes with other relations
+    #
+    # @param [Array<Relation>] others The other relation(s) to compose with
+    #
+    # @return [Relation::Graph]
+    #
+    # @api public
+    def combine_with(*others)
+      Combined.new(self, others)
     end
 
     # @api private
@@ -236,18 +236,27 @@ module ROM
       assoc.preload(self, other)
     end
 
-    # Wrap other relations
+    # Wrap other relations using association names
     #
     # @example
     #   tasks.wrap(:owner)
     #
     # @param [Hash] options
     #
-    # @return [RelationProxy]
+    # @return [Relation]
     #
     # @api public
     def wrap(*names)
-      wrap_class.new(self, names.map { |n| associations[n].wrap })
+      wrap_around(*names.map { |n| associations[n].wrap })
+    end
+
+    # Wrap around other relations
+    #
+    # @return [Relation::Wrap]
+    #
+    # @api public
+    def wrap_around(*others)
+      wrap_class.new(self, others)
     end
 
     # Loads relation

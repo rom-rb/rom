@@ -1,4 +1,4 @@
-RSpec.describe ROM::Relation, '#graph' do
+RSpec.describe ROM::Relation, '#combine_with' do
   include_context 'gateway only'
   include_context 'users and tasks'
 
@@ -95,12 +95,6 @@ RSpec.describe ROM::Relation, '#graph' do
     }
   }
 
-  it 'raises error when composite relation is passed as a node' do
-    expect {
-      users_relation.graph(tasks_relation >> proc {})
-    }.to raise_error(ROM::UnsupportedRelationError)
-  end
-
   it 'supports more than one eagerly-loaded relation' do
     expected = [
       {
@@ -117,7 +111,7 @@ RSpec.describe ROM::Relation, '#graph' do
     ]
 
     user_with_tasks_and_tags = users_relation.by_name('Jane')
-      .graph(tasks_relation.for_users, tags_relation.for_users)
+      .combine_with(tasks_relation.for_users, tags_relation.for_users)
 
     result = user_with_tasks_and_tags >> map_user_with_tasks_and_tags
 
@@ -140,7 +134,7 @@ RSpec.describe ROM::Relation, '#graph' do
     ]
 
     user_with_tasks_and_tags = users_relation.by_name('Jane')
-      .graph(tasks_relation.for_users).graph(tags_relation.for_users)
+      .combine_with(tasks_relation.for_users).combine_with(tags_relation.for_users)
 
     result = user_with_tasks_and_tags >> map_user_with_tasks_and_tags
 
@@ -160,7 +154,7 @@ RSpec.describe ROM::Relation, '#graph' do
     ]
 
     user_with_tasks = users_relation.by_name('Jane')
-      .graph(tasks_relation.for_users.graph(tags_relation.for_tasks))
+      .combine_with(tasks_relation.for_users.combine_with(tags_relation.for_tasks))
 
     result = user_with_tasks >> map_user_with_tasks
 

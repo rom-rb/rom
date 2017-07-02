@@ -1,15 +1,11 @@
-require 'rom/initializer'
-require 'rom/relation/loaded'
-require 'rom/relation/composite'
-require 'rom/relation/materializable'
-require 'rom/pipeline'
+require 'rom/relation/graph'
 
 module ROM
   class Relation
     # Relation wrapping other relations
     #
     # @api public
-    class Wrap
+    class Wrap < Graph
       extend Initializer
 
       include Materializable
@@ -58,11 +54,6 @@ module ROM
         nodes.map(&:to_ast)
       end
 
-      # @api private
-      def mapper
-        mappers[to_ast]
-      end
-
       # Return if this is a wrap relation
       #
       # @return [true]
@@ -70,13 +61,6 @@ module ROM
       # @api private
       def wrap?
         true
-      end
-
-      private
-
-      # @api private
-      def decorate?(other)
-        super || other.is_a?(Composite) || other.is_a?(Curried)
       end
     end
   end

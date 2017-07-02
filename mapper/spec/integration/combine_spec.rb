@@ -109,8 +109,8 @@ RSpec.describe 'Mapper definition DSL' do
       Test::Task.send(:include, Dry::Equalizer(:title, :meta))
       Test::Address.send(:include, Dry::Equalizer(:city))
 
-      result = users.graph(
-        tasks.for_users.graph(tasks.tags),
+      result = users.combine_with(
+        tasks.for_users.combine_with(tasks.tags),
         users.addresses,
         users.books
       ) >> users.mappers[:entity]

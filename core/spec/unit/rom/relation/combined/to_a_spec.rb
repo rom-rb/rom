@@ -1,6 +1,6 @@
-RSpec.describe ROM::Relation::Graph, '#to_a' do
+RSpec.describe ROM::Relation::Combined, '#to_a' do
   subject(:relation) do
-    ROM::Relation::Graph.new(users, [tasks.for_users])
+    ROM::Relation::Combined.new(users, [tasks.for_users])
   end
 
   let(:users) do

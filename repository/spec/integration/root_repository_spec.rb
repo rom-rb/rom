@@ -55,7 +55,7 @@ RSpec.describe ROM::Repository::Root do
         end
       end
 
-      expect(repo.users).to be_instance_of(ROM::Relation::Graph)
+      expect(repo.users).to be_graph
     end
   end
 
