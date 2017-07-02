@@ -16,7 +16,7 @@ group :sql do
   gem 'jdbc-sqlite3', platforms: :jruby
   gem 'pg', platforms: [:mri, :rbx]
   gem 'jdbc-postgres', platforms: :jruby
-  gem 'rom-sql', git: 'https://github.com/rom-rb/rom-sql.git', branch: 'master'
+  gem 'rom-sql', git: 'https://github.com/rom-rb/rom-sql.git', branch: 'remove-command-transaction-and-try'
 end
 
 group :test do
