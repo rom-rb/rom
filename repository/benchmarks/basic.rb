@@ -6,7 +6,7 @@ benchmark('creating a user') do |x|
   end
 
   x.report('rom-repository with a changeset') do
-    changeset = user_repo.changeset(name: 'Jane', email: 'jane@doe.org', age: 21)
+    changeset = user_repo.users.changeset(:create, name: 'Jane', email: 'jane@doe.org', age: 21)
     user_repo.create(changeset)
   end
 
@@ -30,7 +30,7 @@ benchmark('creating and updating a user') do |x|
 
   x.report('rom-repository with a changeset') do
     user = user_repo.create(name: 'Jane', email: 'jane@doe.org', age: 21)
-    changeset = user_repo.changeset(user.id, name: 'Jane Doe')
+    changeset = user_repo.users.by_pk(user.id).changeset(:update, name: 'Jane Doe')
 
     user_repo.update(user.id, changeset)
   end
