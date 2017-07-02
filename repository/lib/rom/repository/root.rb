@@ -45,7 +45,7 @@ module ROM
       defines :root
 
       # @!attribute [r] root
-      #   @return [RelationProxy] The root relation
+      #   @return [Relation] The root relation
       attr_reader :root
 
       # Sets descendant root relation
@@ -91,9 +91,9 @@ module ROM
       #
       #   @param options [Hash] An option hash
       #
-      #   @see RelationProxy::Combine#combine_children
+      #   @see Relation::Combine#combine_children
       #
-      # @return [RelationProxy]
+      # @return [Relation]
       #
       # @api public
       def aggregate(*args)

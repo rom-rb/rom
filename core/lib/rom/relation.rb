@@ -440,7 +440,7 @@ module ROM
     #
     #   @param [Array<Symbol>] mappers A list of mapper identifiers
     #
-    # @return [RelationProxy] A new relation proxy with pipelined relation
+    # @return [Relation] A new relation proxy with pipelined relation
     #
     # @api public
     def map_with(*names, **opts)

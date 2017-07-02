@@ -72,10 +72,10 @@ module ROM
       #
       # @param [Symbol] name The node relation name
       #
-      # @yieldparam [RelationProxy] The relation node
-      # @yieldreturn [RelationProxy] The new relation node
+      # @yieldparam [Relation] The relation node
+      # @yieldreturn [Relation] The new relation node
       #
-      # @return [RelationProxy]
+      # @return [Relation]
       #
       # @api public
       def node(name, &block)
