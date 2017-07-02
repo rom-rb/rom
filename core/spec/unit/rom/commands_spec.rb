@@ -143,7 +143,7 @@ RSpec.describe 'Commands' do
 
       expect(users).to receive(:insert).with(user_input).and_return(user_tuple)
 
-      command.with(user_input).call
+      command.curry(user_input).call
     end
 
     it 'short-circuits pipeline when left-side result is empty' do
@@ -166,23 +166,6 @@ RSpec.describe 'Commands' do
       end.build(users) >> -> result { result.map(&:to_a) }
 
       expect(command.call('foo')).to be(ROM::EMPTY_ARRAY)
-    end
-  end
-
-  describe '#with_opts' do
-    subject(:command) do
-      Class.new(ROM::Command::Create).build(relation, options)
-    end
-
-    let(:relation) { double(:relation) }
-    let(:options) { { result: :one } }
-
-    it 'returns a new command with updated options' do
-      new_command = command.with_opts(before: :test)
-
-      expect(new_command.relation).to be(relation)
-      expect(new_command.result).to be(:one)
-      expect(new_command.before_hooks).to eql([:test])
     end
   end
 end

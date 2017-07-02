@@ -23,13 +23,14 @@ module ROM
   #
   # @api public
   class Command
+    extend Dry::Core::ClassAttributes
     extend Initializer
+    extend ClassInterface
+
     include Dry::Equalizer(:relation, :options)
     include Commands
     include Pipeline::Operator
 
-    extend Dry::Core::ClassAttributes
-    extend ClassInterface
 
     # @!method self.adapter
     #   Get or set adapter identifier
@@ -316,7 +317,6 @@ module ROM
         self.class.build(relation, **options, curry_args: args)
       end
     end
-    alias_method :with, :curry
 
     # Compose this command with other commands
     #
@@ -336,17 +336,6 @@ module ROM
     # @api public
     def curried?
       curry_args.size > 0
-    end
-
-    # Return a new command with new options
-    #
-    # @param [Hash] new_opts A hash with new options
-    #
-    # @return [Command]
-    #
-    # @api public
-    def with_opts(new_opts)
-      self.class.new(relation, options.merge(new_opts))
     end
 
     # Return a new command with appended before hooks

@@ -143,7 +143,7 @@ RSpec.describe ROM::Commands::Create[:memory], 'before/after hooks' do
         { id: 2, email: 'user-2@test.com', name: 'User 2', finalized: true }
       ]
 
-      expect(command.with(tuples).call('User')).to eql(result)
+      expect(command.curry(tuples).call('User')).to eql(result)
 
       expect(relation).to have_received(:insert).with(insert_tuples)
     end
@@ -191,7 +191,7 @@ RSpec.describe ROM::Commands::Create[:memory], 'before/after hooks' do
         { id: 2, email: 'user-2@test.com', name: 'User 2', finalized: true }
       ]
 
-      expect(command.with(tuples, 'User').call).to eql(result)
+      expect(command.curry(tuples, 'User').call).to eql(result)
 
       expect(relation).to have_received(:insert).with(insert_tuples)
     end
@@ -287,7 +287,7 @@ RSpec.describe ROM::Commands::Create[:memory], 'before/after hooks' do
         { id: 2, name: 'Joe', parent_size: 1, user_id: 1, prepared: true, finalized: true }
       ]
 
-      expect(command.with(tuples).call(id: 1)).to eql(result)
+      expect(command.curry(tuples).call(id: 1)).to eql(result)
 
       expect(relation).to have_received(:insert).with(insert_tuples)
     end

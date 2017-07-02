@@ -66,8 +66,8 @@ RSpec.describe 'Commands / Create' do
   end
 
   it 'inserts user and associated task when things go well' do
-    result = users.create.with(name: 'Piotr', email: 'piotr@solnic.eu').
-              >> tasks.create.with(title: 'Finish command-api')
+    result = users.create.curry(name: 'Piotr', email: 'piotr@solnic.eu').
+              >> tasks.create.curry(title: 'Finish command-api')
 
     expect(result.call).to eql(name: 'Piotr', title: 'Finish command-api')
   end
@@ -118,11 +118,11 @@ RSpec.describe 'Commands / Create' do
         mapper_input = tuples
       end
 
-      left = container.commands[:users].map_with(:user_entity).create.with(
+      left = container.commands[:users].map_with(:user_entity).create.curry(
         name: 'Jane', email: 'jane@doe.org'
       )
 
-      right = container.commands[:tasks].map_with(:task_entity).create.with(
+      right = container.commands[:tasks].map_with(:task_entity).create.curry(
         title: 'Jane task'
       )
 

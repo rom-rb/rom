@@ -110,9 +110,9 @@ RSpec.describe ROM::Commands::Graph do
     context 'when result is :one in root and its direct children' do
       it_behaves_like 'a persisted graph' do
         subject(:command) do
-          create_user.with(user)
-            .combine(create_task.with(task)
-            .combine(create_many_tags.with(tags)))
+          create_user.curry(user)
+            .combine(create_task.curry(task)
+            .combine(create_many_tags.curry(tags)))
         end
       end
     end
@@ -120,9 +120,9 @@ RSpec.describe ROM::Commands::Graph do
     context 'when result is :many for root direct children' do
       it_behaves_like 'a persisted graph' do
         subject(:command) do
-          create_user.with(user)
-            .combine(create_many_tasks.with([task])
-            .combine(create_many_tags.with(tags)))
+          create_user.curry(user)
+            .combine(create_many_tasks.curry([task])
+            .combine(create_many_tags.curry(tags)))
         end
       end
     end
@@ -130,9 +130,9 @@ RSpec.describe ROM::Commands::Graph do
 
   describe 'pipeline' do
     subject(:command) do
-      container.commands[:users].map_with(:entity).create.with(user)
-        .combine(create_task.with(task)
-        .combine(create_many_tags.with(tags)))
+      container.commands[:users].map_with(:entity).create.curry(user)
+        .combine(create_task.curry(task)
+        .combine(create_many_tags.curry(tags)))
     end
 
     before do

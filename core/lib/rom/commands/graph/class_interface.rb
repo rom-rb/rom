@@ -44,7 +44,7 @@ module ROM
           tuple_path = Array[*path] << key
           input_proc = InputEvaluator.build(tuple_path, nodes)
 
-          command = command.with(input_proc, opts)
+          command = command.curry(input_proc, opts)
 
           if nodes
             if nodes.all? { |node| node.is_a?(Array) }

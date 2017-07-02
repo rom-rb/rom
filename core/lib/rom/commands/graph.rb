@@ -39,8 +39,8 @@ module ROM
       #   create_task = rom.commands[:tasks].create
       #
       #   command = create_user
-      #     .with(name: 'Jane')
-      #     .combine(create_task.with(title: 'Task'))
+      #     .curry(name: 'Jane')
+      #     .combine(create_task.curry(title: 'Task'))
       #
       #   command.call
       #
