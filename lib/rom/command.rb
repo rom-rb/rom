@@ -29,6 +29,7 @@ module ROM
     include Pipeline::Operator
 
     extend Dry::Core::ClassAttributes
+    extend Dry::Core::Deprecations[:rom]
     extend ClassInterface
 
     # @!method self.adapter
@@ -316,7 +317,12 @@ module ROM
         self.class.build(relation, **options, curry_args: args)
       end
     end
-    alias_method :with, :curry
+
+    # @api public
+    def with(*args)
+      self.class.warn "Command#with will change its behavior in rom 4.0. Use Command#curry instead."
+      curry(*args)
+    end
 
     # Compose this command with other commands
     #
