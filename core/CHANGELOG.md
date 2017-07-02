@@ -28,7 +28,8 @@ Previous `rom` gem was renamed to `rom-core`
 * [BREAKING] `Relation#as` now returns a new relation with aliased name, use `Relation#map_with(*list-of-mapper-ids)` or `Relation#map_to(model)` if you just want to map to custom models (solnic)
 * [BREAKING] `Relation.register_as(:bar)` is removed in favor of `schema(:foo, as: :bar)` (solnic)
 * [BREAKING] `Relation.dataset(:foo)` is removed in favor of `schema(:foo)`. Passing a block still works like before (solnic)
-* [BREAKING] `CommandRegistry#try` is gone (solnic)
+* [BREAKING] `CommandRegistry#try` is removed (solnic)
+* [BREAKING] `Command#with` changed behavior, use `Command#curry` instead (solnic)
 * Separation between relations that are standalone or registrable in a registry is gone. All relations have names and schemas now.
   They are automatically set to defaults. In practice this means you can instantiate a relation object manually and it'll Just Work (solnic)
 * Mapper and command objects are cached locally within a given rom container (solnic)
