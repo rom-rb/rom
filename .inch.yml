@@ -3,5 +3,6 @@ files:
     - core/lib/**/*.rb
     - mapper/lib/**/*.rb
     - repository/lib/**/*.rb
+    - changeset/lib/**/*.rb
   excluded:
     - lib/**/*.rb
