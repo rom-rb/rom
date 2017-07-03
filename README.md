@@ -16,9 +16,16 @@
 [![OpenCollective](https://opencollective.com/rom/backers/badge.svg)](#backers) 
 [![OpenCollective](https://opencollective.com/rom/sponsors/badge.svg)](#sponsors)
 
-Ruby Object Mapper (ROM) is a data mapping and persistence toolkit for Ruby
+Ruby Object Mapper (rom-rb) is a data mapping and persistence toolkit for Ruby
 with the goal to provide powerful object mapping capabilities without limiting
-the full power of your datastore.
+the full power of your database.
+
+Main rom gem provides following components:
+
+* [core](https://github.com/rom-rb/rom/blob/master/core/README.md) - Core and Adapter APIs
+* [mapper](https://github.com/rom-rb/rom/blob/master/mapper/README.md) - Data mappers integrated with rom-core
+* [changeset](https://github.com/rom-rb/rom/blob/master/changeset/README.md) - Changeset objects integrated with rom-core
+* [repository](https://github.com/rom-rb/rom/blob/master/repository/README.md) - Additional repository abstraction integrated with rom-core
 
 Learn more:
 
@@ -99,13 +106,14 @@ Become a sponsor and get your logo on our README on Github with a link to your s
 
 There are other gems within the rom ecosystem that you will find useful:
 
-* [rom-repository](https://github.com/rom-rb/rom-repository) a higher-level, convenient abstraction with auto-mapping
+* [rom-factory](https://github.com/rom-rb/rom-factory) struct generator with support for persistence
 * (WIP) [rom-migrator](https://github.com/rom-rb/rom-migrator) common APIs for database migrations
 
 ## Adapters
 
-* [rom-sql](https://github.com/rom-rb/rom-sql) (supported URI schemes: ado amalgalite cubrid db2 dbi do fdbsql firebird ibmdb informix jdbc mysql mysql2 odbc openbase oracle postgres sqlanywhere sqlite swift tinytds)
+* [rom-sql](https://github.com/rom-rb/rom-sql)
 * [rom-yesql](https://github.com/rom-rb/rom-yesql)
+* [rom-elasticsearch](https://github.com/rom-rb/rom-elasticsearch)
 * [rom-http](https://github.com/rom-rb/rom-http)
 * [rom-couchdb](https://github.com/rom-rb/rom-couchdb)
 * [rom-csv](https://github.com/rom-rb/rom-csv)
@@ -120,13 +128,9 @@ There are other gems within the rom ecosystem that you will find useful:
 * [rom-neo4j](https://github.com/rom-rb/rom-neo4j)
 * [rom-rethinkdb](https://github.com/rom-rb/rom-rethinkdb)
 
-See [issues](https://github.com/rom-rb/rom/issues?q=is%3Aopen+is%3Aissue+label%3Aadapter+label%3Afeature)
-for a list of adapters that are planned to be added soon.
-
 ## Framework integrations
 
 * [rom-rails](https://github.com/rom-rb/rom-rails)
-* [rom-roda](https://github.com/rom-rb/rom-roda)
 
 ## Community
 
