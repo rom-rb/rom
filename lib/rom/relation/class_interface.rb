@@ -14,6 +14,8 @@ module ROM
   class Relation
     # @api public
     module ClassInterface
+      extend Dry::Core::Deprecations[:rom]
+
       include Dry::Core::Constants
 
       # Register adapter relation subclasses during setup phase
@@ -81,7 +83,7 @@ module ROM
             if block
               dataset_proc(block)
             else
-              Dry::Core::Deprecations.warn("Relation.dataset is deprecated in favor of schema settings")
+              warn("Relation.dataset is deprecated in favor of schema settings\n\n#{caller[0..5].join("\n")}")
             end
             super
           end
@@ -94,7 +96,7 @@ module ROM
           #
           # @api public
           def self.register_as(value = Undefined)
-            Dry::Core::Deprecations.warn("Relation.register_as is deprecated in favor of schema settings")
+            warn("Relation.register_as is deprecated in favor of schema settings\n\n#{caller[0..5].join("\n")}")
 
             if value == Undefined
               return @register_as if defined?(@register_as)
