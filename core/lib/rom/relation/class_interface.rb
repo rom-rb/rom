@@ -95,14 +95,14 @@ module ROM
 
           @relation_name = Name[relation, ds_name]
 
-          @schema_proc = proc do
+          @schema_proc = proc do |*args, &inner_block|
             schema_dsl.new(
               relation_name,
               schema_class: schema_class,
               attr_class: schema_attr_class,
               inferrer: schema_inferrer.with(enabled: infer),
               &block
-            ).call
+            ).call(*args, &inner_block)
           end
         end
       end
