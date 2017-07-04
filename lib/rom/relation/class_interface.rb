@@ -79,13 +79,15 @@ module ROM
           # @param [Symbol] value The name of the dataset
           #
           # @api public
-          def self.dataset(value = Undefined, &block)
+          def self.dataset(*args, deprecation: true, &block)
             if block
               dataset_proc(block)
-            else
-              warn("Relation.dataset is deprecated in favor of schema settings\n\n#{caller[0..5].join("\n")}")
+            elsif args.size > 0
+              if deprecation
+                warn("Relation.dataset is deprecated in favor of schema settings\n\n#{caller[0..5].join("\n")}")
+              end
             end
-            super
+            super(*args)
           end
 
           # Set or get name under which a relation will be registered
@@ -95,10 +97,12 @@ module ROM
           # @return [Symbol]
           #
           # @api public
-          def self.register_as(value = Undefined)
-            warn("Relation.register_as is deprecated in favor of schema settings\n\n#{caller[0..5].join("\n")}")
+          def self.register_as(*args, deprecation: true)
+            if deprecation && args.size > 0
+              warn("Relation.register_as is deprecated in favor of schema settings\n\n#{caller[0..5].join("\n")}")
+            end
 
-            if value == Undefined
+            if args.empty?
               return @register_as if defined?(@register_as)
 
               super_val = super()
@@ -109,7 +113,7 @@ module ROM
                 super_val == dataset ? default_name : super_val
               end
             else
-              super
+              super(*args)
             end
           end
 
@@ -167,12 +171,12 @@ module ROM
         if defined?(@schema)
           @schema
         elsif block || infer
-          self.dataset(dataset) if dataset
+          self.dataset(dataset, deprecation: false) if dataset
 
           if as
-            self.register_as(as)
+            self.register_as(as, deprecation: false)
           else
-            self.register_as(self.dataset) unless register_as
+            self.register_as(self.dataset, deprecation: false) unless register_as
           end
 
           name = Name[register_as, self.dataset]

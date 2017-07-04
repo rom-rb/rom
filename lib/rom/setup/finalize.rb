@@ -120,7 +120,7 @@ module ROM
           if infer_relation?(gateway, name)
             klass = ROM::ConfigurationDSL::Relation.build_class(name, adapter: adapter_for(gateway))
             klass.gateway(gateway)
-            klass.dataset(name)
+            klass.dataset(name, deprecation: false)
             @relation_classes << klass
           else
             next

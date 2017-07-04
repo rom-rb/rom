@@ -58,7 +58,7 @@ module ROM
           plugin.apply_to(klass)
         end
 
-        dataset = gateway.dataset(klass.dataset).instance_exec(klass, &ds_proc)
+        dataset = gateway.dataset(klass.schema.name.dataset).instance_exec(klass, &ds_proc)
 
         options = { __registry__: registry, schema: schema.with(relations: registry), **plugin_options }
 

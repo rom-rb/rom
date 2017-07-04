@@ -21,7 +21,7 @@ module ROM
     def relation(name, options = EMPTY_HASH, &block)
       klass_opts = { adapter: default_adapter }.merge(options)
       klass = Relation.build_class(name, klass_opts)
-      klass.register_as(name)
+      klass.register_as(name, deprecation: false)
       klass.class_eval(&block) if block
       register_relation(klass)
       klass
