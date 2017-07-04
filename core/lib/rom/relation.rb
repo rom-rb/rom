@@ -201,16 +201,18 @@ module ROM
 
     # @api private
     def nodes(*args)
-      args.map do |arg|
+      args.reduce([]) do |acc, arg|
         case arg
         when Symbol
-          node(arg)
+          acc << node(arg)
         when Hash
-          arg.reduce(self) { |r, (k, v)| r.node(k).combine(*v) }
+          acc << arg.reduce(self) do |root, (name, *opts)|
+            root.node(name).combine(*opts)
+          end
         when Array
-          arg.map { |opts| nodes(opts) }
+          acc.concat(arg.map { |opts| nodes(opts) }.reduce(:concat))
         end
-      end.flatten(0)
+      end
     end
 
     # @api public

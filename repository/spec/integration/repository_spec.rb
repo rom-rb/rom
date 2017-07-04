@@ -134,6 +134,23 @@ RSpec.describe 'ROM repository' do
     expect(jane.posts[0].author.labels[1].name).to eql('blue')
   end
 
+  it 'loads an aggregate with multiple nodes and deeply nested assoc options' do
+    jane = repo.aggregate(:books, posts: [{ author: { labels: :posts } }]).where(name: 'Jane').one
+
+    expect(jane.books).to be_empty
+
+    expect(jane.posts.size).to be(1)
+    expect(jane.posts[0].title).to eql('Hello From Jane')
+
+    expect(jane.posts[0].author.id).to eql(jane.id)
+    expect(jane.posts[0].author.labels.size).to be(2)
+    expect(jane.posts[0].author.labels[0].name).to eql('red')
+    expect(jane.posts[0].author.labels[1].name).to eql('blue')
+
+    expect(jane.posts[0].author.labels[0].posts.size).to be(1)
+    expect(jane.posts[0].author.labels[0].posts[0].title).to eql('Hello From Jane')
+  end
+
   it 'loads an aggregate with multiple associations' do
     jane = repo.aggregate(:posts, :labels).where(name: 'Jane').one
 
