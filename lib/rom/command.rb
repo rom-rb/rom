@@ -320,7 +320,7 @@ module ROM
 
     # @api public
     def with(*args)
-      self.class.warn "Command#with will change its behavior in rom 4.0. Use Command#curry instead."
+      self.class.warn "Command#with will change its behavior in rom 4.0. Use Command#curry instead.\n\n#{caller[0..5].join("\n")}"
       curry(*args)
     end
 
