@@ -154,7 +154,7 @@ module ROM
     #
     # @api public
     def relation(name, &block)
-      Dry::Core::Deprecations.warn("#{self.class}#relation is deprecated and will be removed in 4.0")
+      Dry::Core::Deprecations.warn("#{self.class}#relation is deprecated and will be removed in 4.0\n\n#{caller[0..5].join("\n")}")
 
       relation =
         if block
@@ -190,7 +190,7 @@ module ROM
     #
     # @api public
     def command(options = nil)
-      Dry::Core::Deprecations.warn("#{self.class}#command is deprecated and will be removed in 4.0")
+      Dry::Core::Deprecations.warn("#{self.class}#command is deprecated and will be removed in 4.0\n\n#{caller[0..5].join("\n")}")
 
       case options
       when Symbol
