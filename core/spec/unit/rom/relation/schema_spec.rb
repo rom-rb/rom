@@ -166,4 +166,19 @@ RSpec.describe ROM::Relation, '.schema' do
                        /:id already defined/)
     end
   end
+
+  describe '#schema_proc' do
+    it 'is idempotent' do
+      class Test::Users < ROM::Relation[:memory]
+        schema do
+          attribute :id, Types::Int.meta(primary_key: true)
+          attribute :name, Types::String
+          attribute :admin, Types::Bool
+        end
+      end
+
+      expect(Test::Users.schema_proc.call.finalize_attributes!).
+        to eql(Test::Users.schema_proc.call.finalize_attributes!)
+    end
+  end
 end
