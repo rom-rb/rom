@@ -1,5 +1,5 @@
 module ROM
   module Core
-    VERSION = '4.0.0.beta1'.freeze
+    VERSION = '4.0.0.beta2'.freeze
   end
 end
