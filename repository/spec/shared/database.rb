@@ -14,7 +14,7 @@ RSpec.shared_context 'database' do
   include_context 'database setup'
 
   before do
-    [:tags, :tasks, :posts, :books, :users, :posts_labels, :labels,
+    [:tags, :tasks, :books, :posts_labels, :posts, :users, :labels,
      :reactions, :messages].each { |table| conn.drop_table?(table) }
 
     conn.create_table :users do
@@ -55,7 +55,7 @@ RSpec.shared_context 'database' do
     end
 
     conn.create_table :posts_labels do
-      foreign_key :post_id, :labels, null: false, on_delete: :cascade
+      foreign_key :post_id, :posts, null: false, on_delete: :cascade
       foreign_key :label_id, :labels, null: false, on_delete: :cascade
       primary_key [:post_id, :label_id]
     end
