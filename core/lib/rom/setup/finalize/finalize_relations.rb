@@ -92,7 +92,7 @@ module ROM
 
         notifications.trigger(
           'configuration.relations.schema.set',
-          schema: resolved_schema, relation: klass, adapter: klass.adapter
+          schema: klass.schema, relation: klass, adapter: klass.adapter
         )
 
         schema = klass.schema
