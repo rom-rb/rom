@@ -112,6 +112,36 @@ RSpec.describe ROM::Relation do
         expect(relation.name).to eql(ROM::Relation::Name[:foo_bar])
       end
     end
+
+    context 'invalid names' do
+      let(:relation_name_symbol) do
+        module Test
+          class Relations < ROM::Relation[:memory]
+            schema(:relations) { }
+          end
+        end
+      end
+
+      let(:relation_name_string) do
+        module Test
+          class Relations < ROM::Relation[:memory]
+            schema('relations') { }
+          end
+        end
+      end
+
+      it 'raises an exception when is symbol' do
+        expect {
+          relation_name_symbol
+        }.to raise_error(ROM::InvalidRelationName)
+      end
+
+      it 'raises an exception when is string' do
+        expect {
+          relation_name_string
+        }.to raise_error(ROM::InvalidRelationName)
+      end
+    end
   end
 
   describe "#each" do

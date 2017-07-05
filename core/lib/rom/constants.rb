@@ -19,6 +19,7 @@ module ROM
   RelationAlreadyDefinedError = Class.new(StandardError)
   MapperAlreadyDefinedError = Class.new(StandardError)
   NoRelationError = Class.new(StandardError)
+  InvalidRelationName = Class.new(StandardError)
   CommandError = Class.new(StandardError)
   KeyMissing = Class.new(ROM::CommandError)
   TupleCountMismatchError = Class.new(CommandError)

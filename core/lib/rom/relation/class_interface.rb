@@ -27,6 +27,9 @@ module ROM
       end
 
       DEFAULT_DATASET_PROC = -> * { self }.freeze
+      INVALID_RELATIONS_NAMES = [
+        :relations
+      ].freeze
 
       # Return adapter-specific relation subclass
       #
@@ -92,6 +95,10 @@ module ROM
 
           ds_name = dataset || schema_opts.fetch(:dataset, default_name.dataset)
           relation = as || schema_opts.fetch(:relation, ds_name)
+
+          if INVALID_RELATIONS_NAMES.include?(relation.to_sym)
+            raise InvalidRelationName.new(invalid_relation_msg(relation))
+          end
 
           @relation_name = Name[relation, ds_name]
 
@@ -276,6 +283,12 @@ module ROM
 
       def name
         super || superclass.name
+      end
+
+      private
+
+      def invalid_relation_msg(relation)
+        "Relation name: #{relation} is a protected word, please use another relation name"
       end
     end
   end
