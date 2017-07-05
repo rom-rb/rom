@@ -39,8 +39,10 @@ module ROM
       registry = event[:registry]
 
       registry.each do |_, relation|
-        relation.schema.finalize_associations!(relations: registry)
-        relation.schema.finalize!
+        unless relation.schema.frozen?
+          relation.schema.finalize_associations!(relations: registry)
+          relation.schema.finalize!
+        end
       end
     end
 
