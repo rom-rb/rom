@@ -14,7 +14,7 @@ RSpec.shared_context 'database' do
   include_context 'database setup'
 
   before do
-    [:tags, :tasks, :posts, :books, :users, :posts_labels, :labels,
+    [:tags, :tasks, :books, :posts_labels, :posts, :users, :labels,
      :reactions, :messages].each { |table| conn.drop_table?(table) }
 
     conn.create_table :users do
