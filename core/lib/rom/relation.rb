@@ -334,13 +334,14 @@ module ROM
     #
     # @api public
     def new(dataset, new_opts = EMPTY_HASH)
-      if new_opts.empty?
-        opts = options
-      elsif new_opts.key?(:schema)
-        opts = options.reject { |k, _| k == :input_schema || k == :output_schema }.merge(new_opts)
-      else
-        opts = options.merge(new_opts)
-      end
+      opts =
+        if new_opts.empty?
+          options
+        elsif new_opts.key?(:schema)
+          options.reject { |k, _| k == :input_schema || k == :output_schema }.merge(new_opts)
+        else
+          options.merge(new_opts)
+        end
 
       self.class.new(dataset, opts)
     end
