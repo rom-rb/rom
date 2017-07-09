@@ -45,6 +45,16 @@ RSpec.describe ROM::Relation::Curried do
     end
   end
 
+  describe '#curried?' do
+    it 'returns true' do
+      expect(users_relation.by_name).to be_curried
+    end
+
+    it 'returns false when relation is not curried' do
+      expect(users_relation.by_name('Jane')).to_not be_curried
+    end
+  end
+
   describe '#respond_to?' do
     it 'returns true if wrapped relation responds to a method' do
       expect(users_relation.by_name).to respond_to(:dataset)
