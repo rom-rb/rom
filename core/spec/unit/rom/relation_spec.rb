@@ -1,7 +1,12 @@
 require 'rom/memory'
 
 RSpec.describe ROM::Relation do
-  subject(:relation) { Class.new(ROM::Relation) { schema(:users) { } }.new(dataset) }
+  subject(:relation) do
+    Class.new(ROM::Relation) do
+      adapter :test
+      schema(:users) { }
+    end.new(dataset)
+  end
 
   let(:dataset) { ROM::Memory::Dataset.new([jane, joe]) }
 
@@ -143,6 +148,18 @@ RSpec.describe ROM::Relation do
 
       expect(new_relation.dataset).to be(relation.dataset)
       expect(new_relation.options).to include(custom_opts.merge(custom: true))
+    end
+  end
+
+  describe '#wrap?' do
+    it 'returns false' do
+      expect(relation).to_not be_wrap
+    end
+  end
+
+  describe '#adapter' do
+    it 'returns adapter set on the class' do
+      expect(relation.adapter).to be(:test)
     end
   end
 
