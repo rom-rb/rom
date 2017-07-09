@@ -1,4 +1,5 @@
 require 'rom/relation/graph'
+require 'rom/relation/combined'
 
 module ROM
   class Relation
@@ -49,6 +50,13 @@ module ROM
       # @api private
       def wrap?
         true
+      end
+
+      private
+
+      # @api private
+      def decorate?(other)
+        super || other.is_a?(Combined)
       end
     end
   end
