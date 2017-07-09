@@ -23,10 +23,8 @@ module ROM
 
         if response.is_a?(Loaded)
           response
-        elsif relation.is_a?(Loaded)
-          relation.new(response)
         else
-          Loaded.new(relation, response)
+          relation.new(response)
         end
       end
       alias_method :[], :call
