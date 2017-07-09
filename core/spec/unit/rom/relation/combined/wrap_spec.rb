@@ -6,15 +6,15 @@ RSpec.describe ROM::Relation::Combined, '#wrap' do
   end
 
   let(:users) do
-    ROM::Relation.new(:[])
+    ROM::Relation.new([])
   end
 
   let(:tasks) do
-    ROM::Relation.new(:[])
+    ROM::Relation.new([])
   end
 
   let(:posts) do
-    ROM::Relation.new(:[])
+    ROM::Relation.new([])
   end
 
   it 'returns a new graph with new root as a wrap relation' do

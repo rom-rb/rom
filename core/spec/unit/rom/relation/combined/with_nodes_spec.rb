@@ -4,15 +4,15 @@ RSpec.describe ROM::Relation::Combined do
   end
 
   let(:users) do
-    ROM::Relation.new(:[])
+    ROM::Relation.new([])
   end
 
   let(:tasks) do
-    ROM::Relation.new(:[])
+    ROM::Relation.new([])
   end
 
   let(:posts) do
-    ROM::Relation.new(:[])
+    ROM::Relation.new([])
   end
 
   describe '#with_nodes' do
