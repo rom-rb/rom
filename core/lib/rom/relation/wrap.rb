@@ -6,18 +6,6 @@ module ROM
     #
     # @api public
     class Wrap < Graph
-      extend Initializer
-
-      include Materializable
-      include Pipeline
-      include Pipeline::Proxy
-
-      param :root
-      param :nodes
-
-      alias_method :left, :root
-      alias_method :right, :nodes
-
       # @api public
       def wrap(*args)
         self.class.new(root, nodes + root.wrap(*args).nodes)
