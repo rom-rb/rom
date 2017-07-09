@@ -111,6 +111,13 @@ module ROM
       def node_ast
         nodes.map(&:to_ast)
       end
+
+      private
+
+      # @api private
+      def decorate?(other)
+        super || other.is_a?(Wrap)
+      end
     end
   end
 end
