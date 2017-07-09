@@ -1,3 +1,11 @@
+# v3.3.1 2017-07-09
+
+### Fixed
+
+* `Relation#map_with` works with custom mappers (solnic)
+
+[Compare v3.3.0...v3.3.1](https://github.com/rom-rb/rom/compare/v3.3.0...v3.3.1)
+
 # v3.3.0 2017-07-05
 
 This release only adds deprecation warnings in preparation for rom 4.0 release.
