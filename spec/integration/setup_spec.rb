@@ -113,6 +113,9 @@ RSpec.describe 'Configuring ROM' do
 
       expect(container.relation(:users).by_name('Jane').as(:users).to_a)
         .to eql([Test::User.new(name: 'Jane')])
+
+      expect(container.relations[:users].map_with(:users).to_a)
+        .to eql([Test::User.new(name: 'Jane')])
     end
   end
 
