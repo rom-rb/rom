@@ -71,7 +71,7 @@ module ROM
 
       # @api private
       def aliased?
-        !aliaz.nil?
+        aliaz && aliaz != relation
       end
 
       # Return relation name
@@ -80,7 +80,7 @@ module ROM
       #
       # @api private
       def to_s
-        if aliaz
+        if aliased?
           "#{relation} on #{dataset} as #{aliaz}"
         elsif relation == dataset
           relation.to_s
