@@ -4,13 +4,6 @@ module ROM
     #
     # @api public
     module Materializable
-      # @abstract
-      #
-      # @api public
-      def call(*)
-        raise NotImplementedError, "#{self.class}#call must be implemented"
-      end
-
       # Coerce the relation to an array
       #
       # @return [Array]
