@@ -20,7 +20,7 @@ module ROM
       param :relation
 
       option :view, type: Types::Strict::Symbol
-      option :arity, type: Types::Strict::Int, default: -> { -1 }
+      option :arity, type: Types::Strict::Int
       option :curry_args, default: -> { EMPTY_ARRAY }
 
       # Load relation if args match the arity
@@ -29,22 +29,18 @@ module ROM
       #
       # @api public
       def call(*args)
-        if arity != -1
-          all_args = curry_args + args
+        all_args = curry_args + args
 
-          if all_args.empty?
-            raise ArgumentError, "curried #{relation.class}##{view} relation was called without any arguments"
-          end
+        if all_args.empty?
+          raise ArgumentError, "curried #{relation.class}##{view} relation was called without any arguments"
+        end
 
-          if args.empty?
-            self
-          elsif arity == all_args.size
-            Loaded.new(relation.__send__(view, *all_args))
-          else
-            __new__(relation, curry_args: all_args)
-          end
+        if args.empty?
+          self
+        elsif arity == all_args.size
+          Loaded.new(relation.__send__(view, *all_args))
         else
-          super
+          __new__(relation, curry_args: all_args)
         end
       end
       alias_method :[], :call

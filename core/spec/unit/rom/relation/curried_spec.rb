@@ -10,6 +10,10 @@ RSpec.describe ROM::Relation::Curried do
         restrict(name: name)
       end
 
+      def by_names(*names)
+        select { |t| names.include?(t[:name]) }
+      end
+
       def by_name_and_age(name, age)
         restrict(name: name, age: age)
       end
@@ -21,18 +25,25 @@ RSpec.describe ROM::Relation::Curried do
   end
 
   describe '#call' do
-    let(:relation) { users_relation.by_name }
+    let(:relation) { users_relation }
 
     it 'materializes a relation' do
-      expect(relation.('Jane').to_a).to eql([name: 'Jane', email: 'jane@doe.org'])
+      expect(relation.by_name.('Jane').to_a).to eql([name: 'Jane', email: 'jane@doe.org'])
+    end
+
+    it 'materializes a relation view with arity -1' do
+      expect(relation.by_names('Jane', 'Joe').to_a).
+        to eql([{ name: 'Joe', email: 'joe@doe.org' }, { name: 'Jane', email: 'jane@doe.org' }])
+
+      expect(relation.by_names).to eql([])
     end
 
     it 'returns a loaded relation' do
-      expect(relation.('Jane').source).to eql(users_relation.by_name('Jane'))
+      expect(relation.by_name.('Jane').source).to eql(users_relation.by_name('Jane'))
     end
 
     it 'raises argument error if no arguments were provided' do
-      expect { relation.() }.
+      expect { relation.by_name.() }.
         to raise_error(
              ArgumentError,
              "curried #{users_relation.class}#by_name relation was called without any arguments")
@@ -72,6 +83,10 @@ RSpec.describe ROM::Relation::Curried do
 
     it 'does not forward to the relation when method is auto-curried' do
       expect { users_relation.by_name.find }.to raise_error(NoMethodError, /find/)
+    end
+
+    it 'raises no method error when method is not defined' do
+      expect { users_relation.by_name.not_here }.to raise_error(NoMethodError, /not_here/)
     end
   end
 end
