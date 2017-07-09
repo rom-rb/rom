@@ -42,6 +42,18 @@ RSpec.describe ROM::Relation::Name do
     end
   end
 
+  describe '#aliased' do
+    let(:name) { ROM::Relation::Name[:users] }
+
+    it 'returns true when name is aliased' do
+      expect(name.as(:people)).to be_aliased
+    end
+
+    it 'returns true when name is not aliased' do
+      expect(name).to_not be_aliased
+    end
+  end
+
   describe '#to_sym' do
     it 'returns relation name' do
       expect(ROM::Relation::Name.new(:users).to_sym).to be(:users)
