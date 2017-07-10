@@ -96,9 +96,7 @@ module ROM
           ds_name = dataset || schema_opts.fetch(:dataset, default_name.dataset)
           relation = as || schema_opts.fetch(:relation, ds_name)
 
-          if INVALID_RELATIONS_NAMES.include?(relation.to_sym)
-            raise InvalidRelationName.new(invalid_relation_msg(relation))
-          end
+          raise InvalidRelationName.new(relation) if invalid_relation_name?(relation)
 
           @relation_name = Name[relation, ds_name]
 
@@ -287,8 +285,8 @@ module ROM
 
       private
 
-      def invalid_relation_msg(relation)
-        "Relation name: #{relation} is a protected word, please use another relation name"
+      def invalid_relation_name?(relation)
+        INVALID_RELATIONS_NAMES.include?(relation.to_sym)
       end
     end
   end

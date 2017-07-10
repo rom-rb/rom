@@ -27,6 +27,12 @@ module ROM
   UnsupportedRelationError = Class.new(StandardError)
   MissingAdapterIdentifierError = Class.new(StandardError)
 
+  class InvalidRelationName < StandardError
+    def initialize(relation)
+      super("Relation name: #{relation} is a protected word, please use another relation name")
+    end
+  end
+
   class ElementNotFoundError < KeyError
     def initialize(key, registry)
       super(set_message(key, registry))
