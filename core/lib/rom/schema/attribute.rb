@@ -365,6 +365,16 @@ module ROM
         read? ? meta[:read] : type
       end
 
+      # Return nullable attribute
+      #
+      # @return [Schema::Attribute]
+      #
+      # @api public
+      def optional
+        sum = self.class.new(super, options)
+        read? ? sum.meta(read: meta[:read].optional) : sum
+      end
+
       # @api private
       def respond_to_missing?(name, include_private = false)
         type.respond_to?(name) || super

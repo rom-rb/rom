@@ -23,4 +23,13 @@ RSpec.describe ROM::Schema::Attribute do
                              wrapped: true, alias: :users_id]])
     end
   end
+
+  describe '#optional' do
+    subject(:attribute) { ROM::Schema::Attribute.new(ROM::Types::Int).meta(read: ROM::Types::Coercible::Int) }
+
+    it 'transforms read type' do
+      expect(attribute.optional.to_read_type['1']).to eql(1)
+      expect(attribute.optional.to_read_type[nil]).to be_nil
+    end
+  end
 end
