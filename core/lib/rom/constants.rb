@@ -19,12 +19,19 @@ module ROM
   RelationAlreadyDefinedError = Class.new(StandardError)
   MapperAlreadyDefinedError = Class.new(StandardError)
   NoRelationError = Class.new(StandardError)
+  InvalidRelationName = Class.new(StandardError)
   CommandError = Class.new(StandardError)
   KeyMissing = Class.new(ROM::CommandError)
   TupleCountMismatchError = Class.new(CommandError)
   UnknownPluginError = Class.new(StandardError)
   UnsupportedRelationError = Class.new(StandardError)
   MissingAdapterIdentifierError = Class.new(StandardError)
+
+  class InvalidRelationName < StandardError
+    def initialize(relation)
+      super("Relation name: #{relation} is a protected word, please use another relation name")
+    end
+  end
 
   class ElementNotFoundError < KeyError
     def initialize(key, registry)
