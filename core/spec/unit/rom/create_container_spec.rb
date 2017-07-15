@@ -50,21 +50,17 @@ RSpec.describe ROM::CreateContainer, '#finalize' do
                               )
     end
 
-    it "raises an error when registering same mapper twice" do
+    it "raises an error when registering same mapper twice for the same relation" do
       configuration
 
       users_mapper = Class.new(ROM::Mapper) do
         register_as :users
         relation :users
-        attribute :name
-        attribute :email
       end
 
       users_mapper_2 = Class.new(ROM::Mapper) do
         register_as :users
         relation :users
-        attribute :name
-        attribute :email
       end
 
       configuration.register_mapper(users_mapper)
@@ -73,6 +69,43 @@ RSpec.describe ROM::CreateContainer, '#finalize' do
       expect { container }.to raise_error(
                                 ROM::MapperAlreadyDefinedError, /register_as :users/
                               )
+    end
+
+    it "doesn't raise an error when registering same mapper twice for different relation" do
+      configuration
+
+      users_mapper = Class.new(ROM::Mapper) do
+        register_as :users
+        relation :users
+      end
+
+      admin_users_mapper = Class.new(ROM::Mapper) do
+        register_as :users
+        relation :admin_users
+      end
+
+      configuration.register_mapper(users_mapper)
+      configuration.register_mapper(admin_users_mapper)
+
+      expect { container }.not_to raise_error
+    end
+
+    it "doesn't raise an error when registering same mapper twice for different relation when no relation specify" do
+      configuration
+
+      users_mapper = Class.new(ROM::Mapper) do
+        register_as :users
+        relation :users
+      end
+
+      user_mapper_no_relation = Class.new(ROM::Mapper) do
+        register_as :users
+      end
+
+      configuration.register_mapper(users_mapper)
+      configuration.register_mapper(user_mapper_no_relation)
+
+      expect { container }.not_to raise_error
     end
   end
 

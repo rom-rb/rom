@@ -36,13 +36,14 @@ module ROM
       private
 
       def check_duplicate_registered_mappers
-        mappers_register_as = mapper_classes.map(&:register_as).compact
-        mappers_register_as.select { |register_as| mappers_register_as.count(register_as) > 1 }
+        mapper_relation_register = mapper_classes.map {|mapper_class| [mapper_class.relation, mapper_class.register_as].compact }
+        return if mapper_relation_register.uniq.count == mapper_classes.count
+        mapper_relation_register.select { |relation_register_as| mapper_relation_register.count(relation_register_as) > 1 }
           .uniq
           .each do |duplicated_mappers|
             raise MapperAlreadyDefinedError,
-                  "Mapper with `register_as #{duplicated_mappers.inspect}` registered more " \
-                  "than once"
+                  "Mapper with `register_as #{duplicated_mappers.last.inspect}` registered more " \
+                  "than once for relation #{duplicated_mappers.first.inspect}"
           end
       end
 
