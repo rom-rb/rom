@@ -10,7 +10,7 @@ COMPONENTS.each do |component|
   gem "rom-#{component}", path: Pathname(__dir__).join(component).realpath
 end
 
-gem 'dry-types', git: 'https://github.com/dry-rb/dry-types'
+gem 'dry-types', git: 'https://github.com/dry-rb/dry-types', branch: 'master'
 
 group :sql do
   gem 'sequel', '4.45'
