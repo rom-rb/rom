@@ -6,6 +6,7 @@ require 'rom/relation/loaded'
 require 'rom/relation/composite'
 require 'rom/relation/materializable'
 require 'rom/pipeline'
+require 'rom/support/memoizable'
 
 module ROM
   class Relation
@@ -14,6 +15,8 @@ module ROM
     # @api public
     class Graph
       extend Initializer
+
+      include Memoizable
 
       param :root
 
@@ -71,8 +74,8 @@ module ROM
       end
 
       # @api private
-      def to_ast
-        @__ast__ ||= [:relation, [name.relation, attr_ast + nodes.map(&:to_ast), meta_ast]]
+      memoize def to_ast
+        [:relation, [name.relation, attr_ast + nodes.map(&:to_ast), meta_ast]]
       end
 
       private
