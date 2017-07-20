@@ -28,21 +28,6 @@ module ROM
         raise NotImplementedError
       end
 
-      # @api private
-      def to_ast
-        @__ast__ ||= [:relation, [name.relation, attr_ast + nodes_ast, meta_ast]]
-      end
-
-      # @api private
-      def attr_ast
-        root.attr_ast
-      end
-
-      # @api private
-      def nodes_ast
-        nodes.map(&:to_ast)
-      end
-
       # Return if this is a wrap relation
       #
       # @return [true]

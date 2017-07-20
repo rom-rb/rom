@@ -70,6 +70,11 @@ module ROM
         mappers[to_ast]
       end
 
+      # @api private
+      def to_ast
+        @__ast__ ||= [:relation, [name.relation, attr_ast + nodes.map(&:to_ast), meta_ast]]
+      end
+
       private
 
       # @api private

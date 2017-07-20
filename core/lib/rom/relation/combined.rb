@@ -102,16 +102,6 @@ module ROM
         with_nodes(new_nodes)
       end
 
-      # @api public
-      def to_ast
-        [:relation, [name.to_sym, attr_ast + node_ast, meta_ast]]
-      end
-
-      # @api private
-      def node_ast
-        nodes.map(&:to_ast)
-      end
-
       private
 
       # @api private
