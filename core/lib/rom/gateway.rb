@@ -144,17 +144,6 @@ module ROM
       # noop
     end
 
-    # Schema inference hook
-    #
-    # Every gateway that supports schema inference should implement this method
-    #
-    # @return [Array] An array with dataset names
-    #
-    # @api private
-    def schema
-      []
-    end
-
     # Disconnect is optional and it's a no-op by default
     #
     # @api public
