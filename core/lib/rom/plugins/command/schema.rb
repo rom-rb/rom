@@ -19,12 +19,10 @@ module ROM
               default_input = options.fetch(:input, input)
 
               input_handler =
-                if default_input != Hash && relation.schema?
+                if default_input != Hash
                   -> tuple { relation.input_schema[input[tuple]] }
-                elsif relation.schema?
-                  relation.input_schema
                 else
-                  default_input
+                  relation.input_schema
                 end
 
               super(relation, options.merge(input: input_handler))
