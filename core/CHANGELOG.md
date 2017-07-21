@@ -38,6 +38,7 @@ Previous `rom` gem was renamed to `rom-core`
 
 * [BREAKING] `Relation::Curried#name` was renamed to `Relation::Curried#view` (solnic)
 * [BREAKING] `Association::Name` was removed in favor of using `Relation::Name` (solnic)
+* [BREAKING] `ROM::Schema::Attribute` was renamed to `ROM::Attribute` (solnic)
 * Relations no longer use `method_missing` for accessing other relations from the registry (solnic)
 
 ## Fixed
