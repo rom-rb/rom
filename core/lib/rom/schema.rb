@@ -1,6 +1,7 @@
 require 'dry/equalizer'
 
-require 'rom/schema/attribute'
+require 'rom/constants'
+require 'rom/attribute'
 require 'rom/schema/dsl'
 require 'rom/schema/inferrer'
 require 'rom/association_set'
@@ -60,8 +61,6 @@ module ROM
 
     DEFAULT_INFERRER = Inferrer.new(enabled: false).freeze
 
-    AttributeAlreadyDefinedError = Class.new(StandardError)
-
     extend Initializer
 
     include Dry::Equalizer(:name, :attributes, :associations)
@@ -103,7 +102,7 @@ module ROM
     # Define a relation schema from plain rom types
     #
     # Resulting schema will decorate plain rom types with adapter-specific types
-    # By default `Schema::Attribute` will be used
+    # By default `Attribute` will be used
     #
     # @param [Relation::Name, Symbol] name The schema name, typically ROM::Relation::Name
     #
@@ -149,7 +148,7 @@ module ROM
 
     # Iterate over schema's attributes
     #
-    # @yield [Schema::Attribute]
+    # @yield [Attribute]
     #
     # @api public
     def each(&block)
@@ -199,7 +198,7 @@ module ROM
 
     # Project a schema to include only specified attributes
     #
-    # @param [*Array<Symbol, Schema::Attribute>] names Attribute names
+    # @param [*Array<Symbol, Attribute>] names Attribute names
     #
     # @return [Schema]
     #
@@ -262,7 +261,7 @@ module ROM
 
     # Return FK attribute for a given relation name
     #
-    # @return [Schema::Attribute]
+    # @return [Attribute]
     #
     # @api public
     def foreign_key(relation)
@@ -271,7 +270,7 @@ module ROM
 
     # Return primary key attributes
     #
-    # @return [Array<Schema::Attribute>]
+    # @return [Array<Attribute>]
     #
     # @api public
     def primary_key
@@ -294,7 +293,7 @@ module ROM
     #
     # This returns a new schema instance
     #
-    # @param [*Array<Schema::Attribute>]
+    # @param [*Array<Attribute>]
     #
     # @return [Schema]
     #
@@ -305,7 +304,7 @@ module ROM
 
     # Return a new schema with uniq attributes
     #
-    # @param [*Array<Schema::Attribute>]
+    # @param [*Array<Attribute>]
     #
     # @return [Schema]
     #

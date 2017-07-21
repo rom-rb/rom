@@ -7,7 +7,7 @@ require 'rom/types'
 require 'rom/cache'
 require 'rom/struct'
 require 'rom/open_struct'
-require 'rom/schema/attribute'
+require 'rom/attribute'
 
 module ROM
   # @api private

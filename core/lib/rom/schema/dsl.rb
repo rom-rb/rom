@@ -1,7 +1,7 @@
 require 'dry/equalizer'
 
 require 'rom/types'
-require 'rom/schema/attribute'
+require 'rom/attribute'
 require 'rom/schema/associations_dsl'
 
 module ROM
@@ -45,7 +45,7 @@ module ROM
       # @api public
       def attribute(name, type, options = EMPTY_HASH)
         if attributes.key?(name)
-          ::Kernel.raise ::ROM::Schema::AttributeAlreadyDefinedError,
+          ::Kernel.raise ::ROM::AttributeAlreadyDefinedError,
                          "Attribute #{ name.inspect } already defined"
         end
 

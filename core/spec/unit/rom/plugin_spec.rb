@@ -15,8 +15,8 @@ RSpec.describe "ROM::PluginRegistry" do
     Test::SchemaPlugin = Module.new do
       def self.apply(schema, _)
         schema.attributes.concat(
-          [ROM::Schema::Attribute.new(ROM::Types::Date.meta(name: :created_at, source: schema.name)),
-           ROM::Schema::Attribute.new(ROM::Types::Date.meta(name: :updated_at, source: schema.name))]
+          [ROM::Attribute.new(ROM::Types::Date.meta(name: :created_at, source: schema.name)),
+           ROM::Attribute.new(ROM::Types::Date.meta(name: :updated_at, source: schema.name))]
         )
       end
     end

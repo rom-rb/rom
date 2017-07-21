@@ -26,6 +26,7 @@ module ROM
   UnknownPluginError = Class.new(StandardError)
   UnsupportedRelationError = Class.new(StandardError)
   MissingAdapterIdentifierError = Class.new(StandardError)
+  AttributeAlreadyDefinedError = Class.new(StandardError)
 
   class InvalidRelationName < StandardError
     def initialize(relation)

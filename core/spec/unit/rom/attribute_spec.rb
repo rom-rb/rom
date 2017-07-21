@@ -1,6 +1,6 @@
-RSpec.describe ROM::Schema::Attribute do
+RSpec.describe ROM::Attribute do
   describe '#to_ast' do
-    subject(:attribute) { ROM::Schema::Attribute.new(ROM::Types::Int).meta(name: :id) }
+    subject(:attribute) { ROM::Attribute.new(ROM::Types::Int).meta(name: :id) }
 
     types = [
       ROM::Types::Int,
@@ -8,7 +8,7 @@ RSpec.describe ROM::Schema::Attribute do
       ROM::Types::Strict::Int.optional
     ]
 
-    to_attr = -> type { ROM::Schema::Attribute.new(type).meta(name: :id) }
+    to_attr = -> type { ROM::Attribute.new(type).meta(name: :id) }
 
     types.each do |type|
       specify do
@@ -25,7 +25,7 @@ RSpec.describe ROM::Schema::Attribute do
   end
 
   describe '#optional' do
-    subject(:attribute) { ROM::Schema::Attribute.new(ROM::Types::Int).meta(read: ROM::Types::Coercible::Int) }
+    subject(:attribute) { ROM::Attribute.new(ROM::Types::Int).meta(read: ROM::Types::Coercible::Int) }
 
     it 'transforms read type' do
       expect(attribute.optional.to_read_type['1']).to eql(1)

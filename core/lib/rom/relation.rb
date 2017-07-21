@@ -67,7 +67,7 @@ module ROM
 
     schema_opts EMPTY_HASH
     schema_dsl Schema::DSL
-    schema_attr_class Schema::Attribute
+    schema_attr_class Attribute
     schema_class Schema
     schema_inferrer Schema::DEFAULT_INFERRER
 
@@ -146,7 +146,7 @@ module ROM
     #   tasks_with_users[:title, :tasks]
     #   # => #<ROM::SQL::Attribute[String] primary_key=false name=:title source=ROM::Relation::Name(tasks)>
     #
-    # @return [Schema::Attribute]
+    # @return [Attribute]
     #
     # @api public
     def [](name)

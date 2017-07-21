@@ -162,7 +162,7 @@ RSpec.describe ROM::Relation, '.schema' do
         end
 
         Test::Users.schema_proc.call
-      }.to raise_error(ROM::Schema::AttributeAlreadyDefinedError,
+      }.to raise_error(ROM::AttributeAlreadyDefinedError,
                        /:id already defined/)
     end
   end
