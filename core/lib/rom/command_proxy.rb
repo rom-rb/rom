@@ -8,17 +8,25 @@ module ROM
   class CommandProxy
     attr_reader :command, :root
 
-    def initialize(command)
+    # @api private
+    def initialize(command, root = Dry::Core::Inflector.singularize(command.name.relation).to_sym)
       @command = command
-      @root = Dry::Core::Inflector.singularize(command.name.relation).to_sym
+      @root = root
     end
 
+    # @api private
     def call(input)
       command.call(root => input)
     end
 
+    # @api private
     def >>(other)
       self.class.new(command >> other)
+    end
+
+    # @api private
+    def restrictible?
+      command.restrictible?
     end
   end
 end

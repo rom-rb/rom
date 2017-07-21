@@ -432,6 +432,15 @@ module ROM
       result.equal?(:many)
     end
 
+    # Check if this command is restrictible through relation
+    #
+    # @return [TrueClass,FalseClass]
+    #
+    # @api private
+    def restrictible?
+      self.class.restrictable.equal?(true)
+    end
+
     private
 
     # Hook called by Pipeline to get composite class for commands

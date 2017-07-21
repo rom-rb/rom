@@ -1,5 +1,3 @@
-require 'rom/changeset/restricted'
-
 module ROM
   class Changeset
     # Changeset specialization for delete commands
@@ -9,8 +7,6 @@ module ROM
     #
     # @api public
     class Delete < Changeset
-      include Restricted
-
       command_type :delete
     end
   end
