@@ -26,7 +26,6 @@ require 'rom/container'
 require 'rom/create_container'
 
 # register core plugins
-require 'rom/plugins/configuration/configuration_dsl'
 require 'rom/plugins/relation/registry_reader'
 require 'rom/plugins/relation/instrumentation'
 require 'rom/plugins/command/schema'
@@ -37,7 +36,6 @@ module ROM
 
   plugins do
     register :mappers, ROM::Mapper::ConfigurationPlugin, type: :configuration
-    register :macros, ROM::ConfigurationPlugins::ConfigurationDSL, type: :configuration
     register :timestamps, ROM::Plugins::Schema::Timestamps, type: :schema
     register :registry_reader, ROM::Plugins::Relation::RegistryReader, type: :relation
     register :instrumentation, ROM::Plugins::Relation::Instrumentation, type: :relation
