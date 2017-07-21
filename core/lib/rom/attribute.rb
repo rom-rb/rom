@@ -415,7 +415,7 @@ module ROM
         response = type.__send__(meth, *args, &block)
 
         if response.is_a?(type.class)
-          self.class.new(type, options)
+          self.class.new(response, options)
         else
           response
         end
