@@ -20,7 +20,7 @@ module ROM
     end
 
     def auto_curried_methods
-      @__auto_curried_methods__ ||= []
+      @__auto_curried_methods__ ||= Set.new
     end
 
     def auto_curry(name, &block)

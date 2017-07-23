@@ -252,7 +252,7 @@ module ROM
         ancestor_methods = ancestors.reject { |klass| klass == self }
           .map(&:instance_methods).flatten(1)
 
-        instance_methods - ancestor_methods + auto_curried_methods
+        instance_methods - ancestor_methods + auto_curried_methods.to_a
       end
 
       # @api private

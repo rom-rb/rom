@@ -23,7 +23,7 @@ RSpec.describe ROM::AutoCurry do
       end
 
       def arity_2(x, y)
-        [x,y]
+        [x, y]
       end
 
       def arity_many(*args)
@@ -32,6 +32,14 @@ RSpec.describe ROM::AutoCurry do
 
       def yielding_block(arg)
         yield(arg)
+      end
+
+      def repeated(x)
+      end
+
+      undef repeated
+
+      def repeated(x)
       end
 
       protected
@@ -43,7 +51,8 @@ RSpec.describe ROM::AutoCurry do
   end
 
   it 'registers auto-curried methods' do
-    expect(object.class.auto_curried_methods).to eql(%i[arity_1 arity_2 arity_many yielding_block])
+    expect(object.class.auto_curried_methods).
+      to eql(%i[arity_1 arity_2 arity_many yielding_block repeated].to_set)
   end
 
   it 'auto-curries method with arity == 0' do
