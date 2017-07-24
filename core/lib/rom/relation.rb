@@ -57,11 +57,33 @@ module ROM
 
     defines :adapter, :gateway, :schema_opts, :schema_class,
             :schema_attr_class, :schema_inferrer, :schema_dsl,
-            :wrap_class, :auto_map, :auto_struct
+            :wrap_class
+
+    # @!method self.auto_map
+    #   Whether or not a relation and its compositions should be auto-mapped
+    #
+    #   @overload auto_map
+    #     Return auto_map setting value
+    #     @return [Boolean]
+    #
+    #   @overload auto_map(value)
+    #     Set auto_map value
+    defines :auto_map
+
+    # @!method self.auto_struct
+    #   Whether or not tuples should be auto-mapped to structs
+    #
+    #   @overload auto_struct
+    #     Return auto_struct setting value
+    #     @return [Boolean]
+    #
+    #   @overload auto_struct(value)
+    #     Set auto_struct value
+    defines :auto_struct
 
     # @!method self.struct_namespace
     #  Get or set a namespace for auto-generated struct classes.
-    #  By default, new struct classes are created within ROM::Struct.
+    #  By default, new struct classes are created within ROM::Struct
     #
     #   @example using custom namespace
     #     class Users < ROM::Relation[:sql]
