@@ -57,7 +57,26 @@ module ROM
 
     defines :adapter, :gateway, :schema_opts, :schema_class,
             :schema_attr_class, :schema_inferrer, :schema_dsl,
-            :wrap_class, :auto_map, :auto_struct, :struct_namespace
+            :wrap_class, :auto_map, :auto_struct
+
+    # @!method self.struct_namespace
+    #  Get or set a namespace for auto-generated struct classes.
+    #  By default, new struct classes are created within ROM::Struct.
+    #
+    #   @example using custom namespace
+    #     class Users < ROM::Relation[:sql]
+    #       struct_namespace Entities
+    #     end
+    #
+    #     users.by_pk(1).one! # => #<Entities::User id=1 name="Jane Doe">
+    #
+    #  @overload struct_namespace
+    #    @return [Module] Default struct namespace
+    #
+    #  @overload struct_namespace(namespace)
+    #    @param [Module] namespace
+    #
+    defines :struct_namespace
 
     gateway :default
 
@@ -109,12 +128,12 @@ module ROM
     # @!attribute [r] auto_map
     #   @return [TrueClass,FalseClass] Whether or not a relation and its compositions should be auto-mapped
     #   @api private
-    option :auto_map, reader: true, default: -> { self.class.auto_map }
+    option :auto_map, default: -> { self.class.auto_map }
 
     # @!attribute [r] auto_struct
     #   @return [TrueClass,FalseClass] Whether or not tuples should be auto-mapped to structs
     #   @api private
-    option :auto_struct, reader: true, default: -> { self.class.auto_struct }
+    option :auto_struct, default: -> { self.class.auto_struct }
 
     # @!attribute [r] struct_namespace
     #   @return [Module] Custom struct namespace
@@ -176,7 +195,7 @@ module ROM
     #
     # @overload combine(*associations)
     #   Composes relations using configured associations
-
+    #
     #   @example
     #     users.combine(:tasks, :posts)
     #   @param *associations [Array<Symbol>] A list of association names

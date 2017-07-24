@@ -7,7 +7,7 @@ require 'rom/repository/session'
 module ROM
   # Abstract repository class to inherit from
   #
-  # A repository provides access to composable relations, commands and changesets.
+  # A repository provides access to composable relations and commands.
   # Its job is to provide application-specific data that is already materialized, so that
   # relations don't leak into your application layer.
   #
@@ -36,8 +36,6 @@ module ROM
   #   end
   #
   #   class UserRepo < ROM::Repository[:users]
-  #     relations :tasks
-  #
   #     def users_with_tasks
   #       aggregate(:tasks).to_a
   #     end
