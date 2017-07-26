@@ -23,10 +23,6 @@ RSpec.describe 'Using changesets' do
       Class.new(ROM::Changeset::Create)
     end
 
-    let(:add_book_changeset) do
-      Class.new(ROM::Changeset::Create[:books])
-    end
-
     let(:update_changeset) do
       Class.new(ROM::Changeset::Update)
     end
@@ -110,7 +106,7 @@ RSpec.describe 'Using changesets' do
     it 'preserves relation mappers with create' do
       changeset = users.map_with(:user).changeset(:create, name: 'Joe Dane')
 
-      expect(changeset.commit.to_h).to eql({id: 1, name: 'Joe Dane'})
+      expect(changeset.commit.to_h).to eql(id: 1, name: 'Joe Dane')
     end
   end
 
