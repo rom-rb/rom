@@ -14,6 +14,7 @@ require 'rom/command_registry'
 
 require 'rom/relation/loaded'
 require 'rom/relation/curried'
+require 'rom/relation/commands'
 require 'rom/relation/composite'
 require 'rom/relation/combined'
 require 'rom/relation/wrap'
