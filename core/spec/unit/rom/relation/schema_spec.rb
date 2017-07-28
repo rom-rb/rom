@@ -181,4 +181,21 @@ RSpec.describe ROM::Relation, '.schema' do
         to eql(Test::Users.schema_proc.call.finalize_attributes!)
     end
   end
+
+  describe '#with' do
+    it 'resets input and output schemas' do
+      class Test::Users < ROM::Relation[:memory]
+        schema do
+          attribute :id, Types::Int.meta(primary_key: true), read: Types::Int
+          attribute :name, Types::String
+        end
+      end
+
+      users = Test::Users.new([])
+      projected = users.with(schema: users.schema.project(:id))
+
+      expect(projected.input_schema.(id: 1, name: 'Jane')).to eql(id: 1)
+      expect(projected.output_schema.(id: 1, name: 'Jane')).to eql(id: 1)
+    end
+  end
 end

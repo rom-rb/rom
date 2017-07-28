@@ -399,7 +399,7 @@ module ROM
         if new_opts.empty?
           options
         elsif new_opts.key?(:schema)
-          options.reject { |k, _| k == :input_schema || k == :output_schema }.merge(new_opts)
+          options.merge(new_opts).reject { |k, _| k == :input_schema || k == :output_schema }
         else
           options.merge(new_opts)
         end
