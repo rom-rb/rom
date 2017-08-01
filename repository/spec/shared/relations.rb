@@ -19,6 +19,10 @@ RSpec.shared_context 'relations' do
           belongs_to :users, as: :author, relation: :authors, foreign_key: :author_id
         end
       end
+
+      def expired(expiration_time=default_expiration_time)
+        where{ created_at < expiration_time }
+      end
     end
 
     configuration.relation(:users) do
