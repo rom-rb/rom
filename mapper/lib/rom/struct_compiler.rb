@@ -23,7 +23,7 @@ module ROM
     end
 
     def call(*args)
-      cache.fetch_or_store(args.hash) do
+      cache.fetch_or_store(args) do
         name, header, ns = args
         attributes = header.map(&method(:visit)).compact
 
@@ -31,8 +31,8 @@ module ROM
           ROM::OpenStruct
         else
           build_class(name, ROM::Struct, ns) do |klass|
-            attributes.each do |(name, type)|
-              klass.attribute(name, type)
+            attributes.each do |(attr_name, type)|
+              klass.attribute(attr_name, type)
             end
           end
         end
