@@ -71,19 +71,17 @@ module ROM
         #       where klass' gateway points to non-existant repo
         gateway = @gateways.fetch(klass.gateway)
 
-        if klass.schema_proc && !klass.schema
-          plugins = schema_plugins
+        plugins = schema_plugins
 
-          resolved_schema = klass.schema_proc.call do
-            plugins.each { |plugin| app_plugin(plugin) }
-          end
-
-          klass.set_schema!(resolved_schema)
+        schema = klass.schema_proc.call do
+          plugins.each { |plugin| app_plugin(plugin) }
         end
+
+        klass.set_schema!(schema) if klass.schema.nil?
 
         notifications.trigger(
           'configuration.relations.schema.allocated',
-          schema: klass.schema, gateway: gateway, registry: registry
+          schema: schema, gateway: gateway, registry: registry
         )
 
         relation_plugins.each do |plugin|
@@ -92,10 +90,9 @@ module ROM
 
         notifications.trigger(
           'configuration.relations.schema.set',
-          schema: klass.schema, relation: klass, adapter: klass.adapter
+          schema: schema, relation: klass, adapter: klass.adapter
         )
 
-        schema = klass.schema
         rel_key = schema.name.to_sym
         dataset = gateway.dataset(schema.name.dataset).instance_exec(klass, &klass.dataset)
 
