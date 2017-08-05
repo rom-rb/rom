@@ -479,7 +479,7 @@ module ROM
     #   Map tuples to the provided custom model class
     #
     #   @example
-    #     users.as(MyUserModel)
+    #     users.map_with(MyUserModel)
     #
     #   @param [Class>] model Your custom model class
     #
