@@ -66,4 +66,45 @@ RSpec.describe 'Setting up ROM with multiple environments' do
       expect { configuration[:two].register_mapper(Test::UserMapper) }.to_not raise_error
     end
   end
+
+  context 'with associations' do
+    before do
+      module Test
+        class Users < ROM::Relation[:memory]
+          schema(:users) do
+            attribute :id, ROM::Types::Int
+            attribute :name, ROM::Types::String
+
+            associations do
+              has_many :tasks
+            end
+          end
+        end
+
+        class Tasks  < ROM::Relation[:memory]
+          schema(:tasks) do
+            attribute :id, ROM::Types::Int
+            attribute :title, ROM::Types::String
+            attribute :user_id, ROM::Types::Int
+
+            associations do
+              belongs_to :user
+            end
+          end
+        end
+      end
+    end
+
+    it 'separates associations between different configurations' do
+      configuration[:one].register_relation(Test::Users)
+      configuration[:one].register_relation(Test::Tasks)
+
+      configuration[:two].register_relation(Test::Users)
+      configuration[:two].register_relation(Test::Tasks)
+
+      expect(
+        container[:one].relations[:users].schema.associations
+      ).not_to be(container[:two].relations[:users].associations)
+    end
+  end
 end
