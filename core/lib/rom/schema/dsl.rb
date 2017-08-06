@@ -93,6 +93,8 @@ module ROM
       def build_type(name, type, options = EMPTY_HASH)
         if options[:read]
           type.meta(name: name, source: relation, read: options[:read])
+        elsif type.optional? && !type.meta[:read] && type.right.meta[:read]
+          type.meta(name: name, source: relation, read: type.right.meta[:read].optional)
         else
           type.meta(name: name, source: relation)
         end

@@ -165,6 +165,28 @@ RSpec.describe ROM::Relation, '.schema' do
       }.to raise_error(ROM::AttributeAlreadyDefinedError,
                        /:id already defined/)
     end
+
+    it 'builds optional read types automatically' do
+      to_s = Types::String.constructor(:to_s.to_proc)
+      to_s_on_read = Types::String.meta(read: to_s)
+
+      Test::Users = Class.new(ROM::Relation[:memory]) do
+        schema do
+          attribute :id, Types::Int.meta(primary_key: true)
+          attribute :name, to_s_on_read.optional
+        end
+      end
+
+      schema = Test::Users.schema_proc.call
+
+      expect(schema[:name].type).
+        to eql(
+             to_s_on_read.optional.meta(
+               name: :name,
+               source: ROM::Relation::Name[:rom_memory_relation],
+               read: to_s.optional
+             ))
+    end
   end
 
   describe '#schema_proc' do
