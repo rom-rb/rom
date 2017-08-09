@@ -65,7 +65,8 @@ RSpec.describe ROM::Schema, '#finalize!' do
         expect { schema.finalize_attributes!.finalize! }.
           to raise_error(
                ROM::Schema::Inferrer::MissingAttributesError,
-               /missing attributes in :users schema: :id, :age/
+               "Following attributes in :users schema cannot be inferred and "\
+               "have to be defined explicitly: :id, :age"
              )
       end
     end
