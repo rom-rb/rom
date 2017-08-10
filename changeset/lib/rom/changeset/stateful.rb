@@ -92,13 +92,14 @@ module ROM
       def self.inherited(klass)
         return if klass == ROM::Changeset
         super
-        klass.instance_variable_set(:@__pipes__, pipes ? pipes.dup : EMPTY_ARRAY)
+        klass.instance_variable_set(:@__pipes__, pipes.dup)
       end
 
       # @api private
       def self.pipes
         @__pipes__
       end
+      @__pipes__ = EMPTY_ARRAY
 
       # Pipe changeset's data using custom steps define on the pipe
       #

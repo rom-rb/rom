@@ -70,13 +70,13 @@ module ROM
     end
 
     def visit_constructor(node)
-      definition, fn_register_name, meta = node
+      definition, * = node
 
       visit(definition)
     end
 
     def visit_constrained(node)
-      definition, rule = node
+      definition, _ = node
 
       visit(definition)
     end

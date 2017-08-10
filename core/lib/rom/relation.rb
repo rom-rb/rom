@@ -407,6 +407,7 @@ module ROM
       self.class.new(dataset, opts)
     end
 
+    undef_method :with
     # Returns a new instance with the same dataset but new options
     #
     # @example
