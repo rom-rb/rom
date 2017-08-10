@@ -76,16 +76,8 @@ module ROM
         end
       end
 
-      def with(opts)
-        if opts.empty?
-          self
-        else
-          Pipe.new(processor, options.merge(opts))
-        end
-      end
-
       def new(processor, opts = EMPTY_HASH)
-        Pipe.new(processor, options.merge(opts))
+        Pipe.new(processor, opts.empty? ? options : options.merge(opts))
       end
     end
   end

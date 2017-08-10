@@ -71,24 +71,6 @@ module ROM
       }
     end
 
-    # Return a new changeset with updated options
-    #
-    # @example
-    #   class NewUser < ROM::Changeset::Create[:users]
-    #     option :token_generator
-    #   end
-    #
-    #   changeset = user_repo.changeset(NewUser).with(token_generator: my_token_gen)
-    #
-    # @param [Hash] new_options The new options
-    #
-    # @return [Changeset]
-    #
-    # @api public
-    def with(new_options)
-      self.class.new(relation, options.merge(new_options))
-    end
-
     # Return a new changeset with provided relation
     #
     # New options can be provided too
