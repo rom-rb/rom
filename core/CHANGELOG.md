@@ -24,7 +24,7 @@ Previous `rom` gem was renamed to `rom-core`
 * Works with MRI >= 2.2
 * [BREAKING] Inferring relations from database schema **has been removed**. You need to define relations explicitly now (solnic)
 * [BREAKING] Relations have `auto_map` **turned on by default**. This means that wraps and graphs return nested data structures automatically (solnic)
-* [BREAKING] `Relation#combine` behavior from previous versions is now provided by `Relation#graph` (solnic)
+* [BREAKING] `Relation#combine` behavior from previous versions is now provided by `Relation#combine_with` (solnic)
 * [BREAKING] `Relation#as` now returns a new relation with aliased name, use `Relation#map_with(*list-of-mapper-ids)` or `Relation#map_to(model)` if you just want to map to custom models (solnic)
 * [BREAKING] `Relation.register_as(:bar)` is removed in favor of `schema(:foo, as: :bar)` (solnic)
 * [BREAKING] `Relation.dataset(:foo)` is removed in favor of `schema(:foo)`. Passing a block still works like before (solnic)
