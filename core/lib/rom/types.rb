@@ -29,8 +29,6 @@ module ROM
     module CoercibleMethods
       def JsonHash(symbol_keys = false, type = Types::Hash)
         Types.Constructor(type) do |value|
-          next Hash[value] if value.respond_to?(:to_hash)
-
           begin
             ::JSON.parse(value.to_s, symbolize_names: symbol_keys)
           rescue ::JSON::ParserError
@@ -40,10 +38,7 @@ module ROM
       end
 
       def HashJson(type = Types::String)
-        Types.Constructor(type) do |value|
-          next value unless value.respond_to?(:to_hash)
-          ::JSON.dump(value)
-        end
+        Types.Constructor(type) { |value| ::JSON.dump(value) }
       end
 
       def JSON(symbol_keys: false)
