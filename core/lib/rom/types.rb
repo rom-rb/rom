@@ -47,7 +47,7 @@ module ROM
       end
 
       def JSON(symbol_keys: false)
-        self.JsonWrite.meta(read: self.JsonRead(symbol_keys))
+        self.HashJson.meta(read: self.JsonHash(symbol_keys))
       end
     end
   end
