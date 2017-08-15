@@ -27,7 +27,7 @@ module ROM
     end
 
     module CoercibleMethods
-      def JsonRead(symbol_keys = false, type = Types::Hash)
+      def JsonHash(symbol_keys = false, type = Types::Hash)
         Types.Constructor(type) do |value|
           next Hash[value] if value.respond_to?(:to_hash)
 
@@ -39,7 +39,7 @@ module ROM
         end
       end
 
-      def JsonWrite(type = Types::String)
+      def HashJson(type = Types::String)
         Types.Constructor(type) do |value|
           next value unless value.respond_to?(:to_hash)
           ::JSON.dump(value)
