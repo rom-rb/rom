@@ -74,7 +74,7 @@ RSpec.describe ROM::Relation, '.schema' do
       end
     end
 
-    schema = Test::Posts.schema.finalize!
+    schema = Test::Posts.schema
 
     expect(schema[:author_id].primitive).to be(Integer)
 
@@ -88,7 +88,7 @@ RSpec.describe ROM::Relation, '.schema' do
       end
     end
 
-    schema = Test::Posts.schema.finalize!
+    schema = Test::Posts.schema
     json_payload = '{"foo":"bar"}'
     hash_payload = { "foo" => "bar" }
 
@@ -103,7 +103,7 @@ RSpec.describe ROM::Relation, '.schema' do
       end
     end
 
-    schema = Test::Posts.schema.finalize!
+    schema = Test::Posts.schema
     json_payload = '{"foo":"bar"}'
     hash_payload = { foo: "bar" }
 
