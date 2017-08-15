@@ -267,9 +267,7 @@ module ROM
         when Symbol
           acc << node(arg)
         when Hash
-          acc << arg.reduce(self) do |root, (name, *opts)|
-            root.node(name).combine(*opts)
-          end
+          acc.concat(arg.map { |name, opts| node(name).combine(opts) })
         when Array
           acc.concat(arg.map { |opts| nodes(opts) }.reduce(:concat))
         end
