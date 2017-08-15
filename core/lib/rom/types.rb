@@ -1,5 +1,5 @@
-require 'json'
 require 'dry-types'
+require 'json'
 
 module ROM
   module Types
