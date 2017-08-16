@@ -83,6 +83,36 @@ RSpec.describe ROM::Relation, '.schema' do
     expect(schema.foreign_key(:users)).to be(schema[:author_id])
   end
 
+  it 'allows json read/write coersion' do
+    class Test::Posts < ROM::Relation[:memory]
+      schema do
+        attribute :payload, Types::Coercible::JSON
+      end
+    end
+
+    schema = Test::Posts.schema_proc.call
+    json_payload = '{"foo":"bar"}'
+    hash_payload = { "foo" => "bar" }
+
+    expect(schema[:payload][hash_payload]).to eq(json_payload)
+    expect(schema[:payload].meta[:read][json_payload]).to eq(hash_payload)
+  end
+
+  it 'allows json read/write coersion using symbols' do
+    class Test::Posts < ROM::Relation[:memory]
+      schema do
+        attribute :payload, Types::Coercible::JSON(symbol_keys: true)
+      end
+    end
+
+    schema = Test::Posts.schema_proc.call
+    json_payload = '{"foo":"bar"}'
+    hash_payload = { foo: "bar" }
+
+    expect(schema[:payload][hash_payload]).to eq(json_payload)
+    expect(schema[:payload].meta[:read][json_payload]).to eq(hash_payload)
+  end
+
   it 'sets register_as and dataset' do
     class Test::Users < ROM::Relation[:memory]
       schema(:users) do

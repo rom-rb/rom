@@ -1,4 +1,5 @@
 require 'dry-types'
+require 'json'
 
 module ROM
   module Types
@@ -6,6 +7,8 @@ module ROM
 
     def self.included(other)
       other.extend(Methods)
+      other::Coercible.extend(CoercibleMethods)
+      other::Coercible.const_set('JSON', other::Coercible.JSON)
       super
     end
 
@@ -20,6 +23,26 @@ module ROM
     module Methods
       def ForeignKey(relation, type = Types::Int)
         type.meta(foreign_key: true, target: relation)
+      end
+    end
+
+    module CoercibleMethods
+      def JsonHash(symbol_keys = false, type = Types::Hash)
+        Types.Constructor(type) do |value|
+          begin
+            ::JSON.parse(value.to_s, symbolize_names: symbol_keys)
+          rescue ::JSON::ParserError
+            value
+          end
+        end
+      end
+
+      def HashJson(type = Types::String)
+        Types.Constructor(type) { |value| ::JSON.dump(value) }
+      end
+
+      def JSON(symbol_keys: false)
+        self.HashJson.meta(read: self.JsonHash(symbol_keys))
       end
     end
   end
