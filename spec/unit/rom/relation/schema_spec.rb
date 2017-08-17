@@ -81,7 +81,7 @@ RSpec.describe ROM::Relation, '.schema' do
     expect(schema.foreign_key(:users)).to be(schema[:author_id])
   end
 
-  it 'allows json read/write coersion' do
+  it 'allows JSON read/write coersion', aggregate_failures: true do
     class Test::Posts < ROM::Relation[:memory]
       schema do
         attribute :payload, Types::Coercible::JSON
@@ -96,7 +96,7 @@ RSpec.describe ROM::Relation, '.schema' do
     expect(schema[:payload].meta[:read][json_payload]).to eq(hash_payload)
   end
 
-  it 'allows json read/write coersion using symbols' do
+  it 'allows JSON/Hash read/write coersion using symbols as keys', aggregate_failures: true do
     class Test::Posts < ROM::Relation[:memory]
       schema do
         attribute :payload, Types::Coercible::JSON(symbol_keys: true)
@@ -109,6 +109,61 @@ RSpec.describe ROM::Relation, '.schema' do
 
     expect(schema[:payload][hash_payload]).to eq(json_payload)
     expect(schema[:payload].meta[:read][json_payload]).to eq(hash_payload)
+  end
+
+  it 'allows JSON to Hash coersion only' do
+    class Test::Posts < ROM::Relation[:memory]
+      schema do
+        attribute :payload, Types::Coercible::JSONHash
+      end
+    end
+
+    schema = Test::Posts.schema
+    json_payload = '{"foo":"bar"}'
+    hash_payload = { "foo" => "bar" }
+
+    expect(schema[:payload][json_payload]).to eq(hash_payload)
+  end
+
+  it 'returns original payload in JSON to Hash coersion when json is invalid' do
+    class Test::Posts < ROM::Relation[:memory]
+      schema do
+        attribute :payload, Types::Coercible::JSONHash
+      end
+    end
+
+    schema = Test::Posts.schema
+    json_payload = 'invalid: json'
+
+    expect(schema[:payload][json_payload]).to eq(json_payload)
+  end
+
+  it 'allows JSON to Hash coersion only using symbols as keys' do
+    class Test::Posts < ROM::Relation[:memory]
+      schema do
+        attribute :payload, Types::Coercible::JSONHash(symbol_keys: true)
+      end
+    end
+
+    schema = Test::Posts.schema
+    json_payload = '{"foo":"bar"}'
+    hash_payload = { foo: "bar" }
+
+    expect(schema[:payload][json_payload]).to eq(hash_payload)
+  end
+
+  it 'allows Hash to JSON coersion only' do
+    class Test::Posts < ROM::Relation[:memory]
+      schema do
+        attribute :payload, Types::Coercible::HashJSON
+      end
+    end
+
+    schema = Test::Posts.schema
+    json_payload = '{"foo":"bar"}'
+    hash_payload = { "foo" => "bar" }
+
+    expect(schema[:payload][hash_payload]).to eq(json_payload)
   end
 
   it 'sets register_as and dataset' do
