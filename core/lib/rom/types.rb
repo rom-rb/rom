@@ -9,6 +9,8 @@ module ROM
       other.extend(Methods)
       other::Coercible.extend(CoercibleMethods)
       other::Coercible.const_set('JSON', other::Coercible.JSON)
+      other::Coercible.const_set('JSONHash', other::Coercible.JSONHash)
+      other::Coercible.const_set('HashJSON', other::Coercible.HashJSON)
       super
     end
 
@@ -27,7 +29,7 @@ module ROM
     end
 
     module CoercibleMethods
-      def JsonHash(symbol_keys = false, type = Types::Hash)
+      def JSONHash(symbol_keys: false, type: Types::Hash)
         Types.Constructor(type) do |value|
           begin
             ::JSON.parse(value.to_s, symbolize_names: symbol_keys)
@@ -37,12 +39,12 @@ module ROM
         end
       end
 
-      def HashJson(type = Types::String)
+      def HashJSON(type: Types::String)
         Types.Constructor(type) { |value| ::JSON.dump(value) }
       end
 
       def JSON(symbol_keys: false)
-        self.HashJson.meta(read: self.JsonHash(symbol_keys))
+        self.HashJSON.meta(read: self.JSONHash(symbol_keys: symbol_keys))
       end
     end
   end
