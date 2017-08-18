@@ -191,5 +191,17 @@ RSpec.describe ROM::Repository, '.command' do
       deleted_name = repo.delete(1)
       expect(deleted_name).to eql('Jane Doe')
     end
+
+    it 'allows to set update macro with Date objects and not splat them' do
+      repo = Class.new(ROM::Repository[:books]) do
+        commands delete: [:by_pk, :expired]
+      end.new(rom)
+
+      repo.books.insert(title: 'John Doe', created_at: Time.now - 3600)
+
+      repo.delete_expired(Time.now)
+
+      expect(repo.books.count).to be_zero
+    end
   end
 end

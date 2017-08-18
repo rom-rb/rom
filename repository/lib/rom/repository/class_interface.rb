@@ -113,6 +113,7 @@ module ROM
             if changeset.respond_to?(:commit)
               changeset.commit
             else
+              view_args = [view_args] unless view_args.respond_to?(:to_ary)
               root.command(type, **opts).public_send(view_name, *view_args).call(*input)
             end
           end
