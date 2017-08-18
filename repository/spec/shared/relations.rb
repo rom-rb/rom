@@ -20,7 +20,7 @@ RSpec.shared_context 'relations' do
         end
       end
 
-      def expired(expiration_time=default_expiration_time)
+      def expired(expiration_time=Time.now)
         where{ created_at < expiration_time }
       end
     end
