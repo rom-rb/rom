@@ -113,13 +113,8 @@ module ROM
             if changeset.respond_to?(:commit)
               changeset.commit
             else
-              #   in case of view_args been coercible to an array we do not want to splat it
-              #   example: Date and Time objects
-              if view_args.respond_to?(:to_a)
-                root.command(type, **opts).public_send(view_name, view_args).call(*input)
-              else
-                root.command(type, **opts).public_send(view_name, *view_args).call(*input)
-              end
+              view_args = [view_args] unless view_args.respond_to?(:to_ary)
+              root.command(type, **opts).public_send(view_name, *view_args).call(*input)
             end
           end
         end
