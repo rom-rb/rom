@@ -106,7 +106,10 @@ module ROM
           meth_name = views.size > 1 ? :"#{type}_#{view_name}" : type
 
           define_method(meth_name) do |*args|
-            view_args, *input = args
+            arity = root.__send__(view_name).arity
+
+            view_args = args[0..arity-1]
+            input = args[arity..args.size-1]
 
             changeset = input.first
 
