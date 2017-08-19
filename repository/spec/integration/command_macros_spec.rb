@@ -192,14 +192,29 @@ RSpec.describe ROM::Repository, '.command' do
       expect(deleted_name).to eql('Jane Doe')
     end
 
-    it 'allows to set update macro with Date objects and not splat them' do
+    it 'allows to set update macro with Date as arg' do
       repo = Class.new(ROM::Repository[:books]) do
-        commands delete: [:by_pk, :expired]
+        commands delete: :expired
       end.new(rom)
 
       repo.books.insert(title: 'John Doe', created_at: Time.now - 3600)
 
-      repo.delete_expired(Time.now)
+      pending "views with default args are not supported yet"
+
+      repo.delete(Time.now)
+
+      expect(repo.books.count).to be_zero
+    end
+
+    it 'allows to set update macro with multiple args' do
+      repo = Class.new(ROM::Repository[:books]) do
+        commands delete: [:by_author_id_and_title]
+      end.new(rom)
+
+      author_id = repo.users.insert(name: 'Jane Doe')
+      repo.books.insert(title: 'Hello World', author_id: author_id)
+
+      repo.delete(author_id, 'Hello World')
 
       expect(repo.books.count).to be_zero
     end
