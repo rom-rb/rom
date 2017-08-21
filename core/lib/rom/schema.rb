@@ -85,6 +85,10 @@ module ROM
     # @api private
     option :relations, default: -> { EMPTY_HASH }
 
+    # @!attribute [r] canonical
+    #   @return [Symbol] The canonical schema which is carried in all schema instances
+    option :canonical, default: -> { self }
+
     # @api private
     option :attr_class, default: -> { Attribute }
 
@@ -326,6 +330,15 @@ module ROM
     # @api public
     def key?(name)
       ! attributes.detect { |attr| attr.name == name }.nil?
+    end
+
+    # Return if a schema is canonical
+    #
+    # @return [Boolean]
+    #
+    # @api public
+    def canonical?
+      self.equal?(canonical)
     end
 
     # @api private
