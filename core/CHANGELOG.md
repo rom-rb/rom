@@ -12,8 +12,10 @@ Previous `rom` gem was renamed to `rom-core`
 * `Relation#command` which automatically creates a command for a given relation, supports graphs too (solnic)
 * `Relation::to_ast` which returns an AST representation of a relation. This can be used to infer other objects based on relation information (solnic)
 * `Relation::Name#as` which returns an aliased relation name (solnic)
-* Association DSL supports `:override` option which will use configured `:view` as the relation used by association (solnic)
 * Associations are now part of core API and available to all adapters, cross-adapter associations are supported too via `:override` option (solnic)
+* New settings in association DSL:
+  * `:override` option which will use configured `:view` as the relation used by association (solnic)
+  * `:combine_keys` option which overriddes default combine keys that are based on join keys (solnic)
 * `Schema#primary_key_name` and `Schema#primary_key_names` are now part of core schema API (solnic)
 * `Schema#to_ast` which returns an AST representation of a relation schema (flash-gordon)
 * Plugin system supports schema plugins (flash-gordon)
