@@ -7,10 +7,6 @@ module ROM
 
     def self.included(other)
       other.extend(Methods)
-      other::Coercible.extend(CoercibleMethods)
-      other::Coercible.const_set('JSON', other::Coercible.JSON)
-      other::Coercible.const_set('JSONHash', other::Coercible.JSONHash)
-      other::Coercible.const_set('HashJSON', other::Coercible.HashJSON)
       super
     end
 
@@ -28,29 +24,26 @@ module ROM
       end
     end
 
-    module CoercibleMethods
-      def JSONHash(symbol_keys: false, type: Types::Hash)
-        Types.Constructor(type) do |value|
-          next Hash[value] if value.respond_to?(:to_hash)
-
-          begin
-            ::JSON.parse(value.to_s, symbolize_names: symbol_keys)
-          rescue ::JSON::ParserError
-            value
-          end
+    def Coercible.JSONHash(symbol_keys: false, type: Types::Hash)
+      Types.Constructor(type) do |value|
+        begin
+          ::JSON.parse(value.to_s, symbolize_names: symbol_keys)
+        rescue ::JSON::ParserError
+          value
         end
-      end
-
-      def HashJSON(type: Types::String)
-        Types.Constructor(type) do |value|
-          next value unless value.respond_to?(:to_hash)
-          ::JSON.dump(value)
-        end
-      end
-
-      def JSON(symbol_keys: false)
-        self.HashJSON.meta(read: self.JSONHash(symbol_keys: symbol_keys))
       end
     end
+
+    def Coercible.HashJSON(type: Types::String)
+      Types.Constructor(type) { |value| ::JSON.dump(value) }
+    end
+
+    def Coercible.JSON(symbol_keys: false)
+      self.HashJSON.meta(read: self.JSONHash(symbol_keys: symbol_keys))
+    end
+
+    Coercible::JSON = Coercible.JSON
+    Coercible::JSONHash = Coercible.JSONHash
+    Coercible::HashJSON = Coercible.HashJSON
   end
 end
