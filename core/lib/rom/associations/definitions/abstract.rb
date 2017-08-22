@@ -55,6 +55,10 @@ module ROM
         #   @return [TrueClass,FalseClass] Whether custom view should override default one or not
         option :override, optional: true, default: -> { false }
 
+        # @!attribute [r] combine_keys
+        #   @return [Hash<Symbol=>Symbol>] Override inferred combine keys
+        option :combine_keys, optional: true
+
         # Instantiate a new association definition
         #
         # @param [Symbol] source The name of the source dataset

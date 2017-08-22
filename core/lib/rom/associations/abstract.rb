@@ -90,7 +90,7 @@ module ROM
 
       # @api public
       def combine_keys
-        { source_key => target_key }
+        definition.combine_keys || { source_key => target_key }
       end
 
       # @api private

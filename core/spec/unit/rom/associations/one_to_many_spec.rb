@@ -21,7 +21,7 @@ RSpec.describe ROM::Associations::OneToMany do
 
   describe '#foreign_key' do
     context 'when custom fk is not set' do
-      it 'it returns default foreign_key' do
+      it 'returns default foreign_key' do
         expect(users).to receive(:foreign_key).with(groups.name).and_return(:group_id)
 
         expect(assoc.foreign_key).to be(:group_id)
@@ -31,8 +31,28 @@ RSpec.describe ROM::Associations::OneToMany do
     context 'when custom fk is set' do
       let(:options) { { foreign_key: :GroupId } }
 
-      it 'it returns custom fk' do
+      it 'returns custom fk' do
         expect(assoc.foreign_key).to be(:GroupId)
+      end
+    end
+  end
+
+  describe '#combine_keys' do
+    context 'when custom value is not set' do
+      it 'returns default setting' do
+        expect(groups.schema).to receive(:primary_key_name).and_return(:id)
+
+        expect(assoc.combine_keys).to eql(id: :group_id)
+      end
+    end
+
+    context 'when custom value is set' do
+      let(:options) do
+        { combine_keys: { name: :group_name } }
+      end
+
+      it 'returns provided setting' do
+        expect(assoc.combine_keys).to eql(name: :group_name)
       end
     end
   end
