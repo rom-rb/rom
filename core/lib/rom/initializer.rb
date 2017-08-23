@@ -21,10 +21,10 @@ module ROM
 
       # @api private
       def __define_with__
-        seq_names = __initializer_mixin__.
-                      instance_method(:__initialize__).
-                      parameters[0...-1].
-                      map { |_, name| name }.
+        seq_names = dry_initializer.
+                      definitions.
+                      reject { |_, d| d.option }.
+                      keys.
                       join(', ')
 
         seq_names << ', ' unless seq_names.empty?
@@ -58,8 +58,10 @@ module ROM
       #
       # @api public
       def options
-        @__options__
+        self.class.dry_initializer.attributes(self)
       end
+
+      define_method(:class, Kernel.instance_method(:class))
     end
   end
 end
