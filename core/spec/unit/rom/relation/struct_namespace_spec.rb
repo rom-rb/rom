@@ -2,12 +2,28 @@ require 'rom/relation'
 
 RSpec.describe ROM::Relation, '#struct_namespace' do
   let(:dataset) do
-    [{ id: 1, name: 'Jane' }]
+    [{ id: 1, name: 'Jane', age: 30 }]
   end
 
   before do
-    module Test::Entities
+    module Test::BaseEntities
       class User < ROM::Struct
+        def name
+          "Not Jane"
+        end
+
+        def age
+          "#{super} years old"
+        end
+
+        def shared_user?
+          true
+        end
+      end
+    end
+
+    module Test::Entities
+      class User < Test::BaseEntities::User
         def my_user?
           true
         end
@@ -75,19 +91,57 @@ RSpec.describe ROM::Relation, '#struct_namespace' do
     it 'returns a new relation configured for the provided struct namespace' do
       expect(relation.first).to be_my_user
     end
+  end
+
+  describe 'struct behavior' do
+    let(:users) do
+      Class.new(ROM::Relation) do
+        struct_namespace Test::BaseEntities
+
+        schema(:users) do
+          attribute :id, ROM::Types::Int
+          attribute :name, ROM::Types::String
+          attribute :age, ROM::Types::Int
+        end
+      end.new(dataset, auto_struct: true)
+    end
+
+    it 'gives access to the attributes' do
+      expect(users.first.id).to eq 1
+    end
+
+    it 'allows overriding attribute methods and referring to the original value' do
+      expect(users.first.age).to eq "30 years old"
+    end
+
+    it 'allows overriding attribute methods without referring to the original value' do
+      expect(users.first.name).to eq "Not Jane"
+    end
 
     context 'using inheritance' do
       let(:admins) do
-        Class.new(relation.class) do
+        Class.new(ROM::Relation) do
+          struct_namespace Test::Entities
+
           schema(:users, as: :admins) do
             attribute :id, ROM::Types::Int
             attribute :name, ROM::Types::String
+            attribute :age, ROM::Types::Int
           end
         end.new(dataset, auto_struct: true)
       end
 
       it 'inherits struct namespace and uses custom alias' do
         expect(admins.first).to be_admin
+      end
+
+      it 'gives access to non-attribute methods defined in the struct superclass' do
+        expect(admins.first.shared_user?).to be_true
+      end
+
+      it 'gives access to overridden attribute methods idefined n the struct superclass' do
+        expect(admins.first.age).to eq "30 years old"
+        expect(admins.first.name).to eq "Not Jane"
       end
     end
   end
