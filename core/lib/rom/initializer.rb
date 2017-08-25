@@ -21,8 +21,7 @@ module ROM
       def __define_with__
         seq_names = __initializer_mixin__.
                       instance_method(:__initialize__).
-                      parameters.
-                      select { |type, _| type == :req }.
+                      parameters[0...-1].
                       map { |_, name| name }.
                       join(', ')
 

@@ -107,5 +107,12 @@ RSpec.describe ROM::Changeset, '.map' do
 
       expect(klass.pipes).to eql(changeset.class.pipes)
     end
+
+    it 'extends class-level pipe with instance calls' do
+      output = changeset.map(:add_timestamps).to_h
+      expect(output.values_at(:one, :two, :three)).to eql([1, 2, 3])
+      expect(output[:created_at]).to be_a(Time)
+      expect(output[:updated_at]).to be_a(Time)
+    end
   end
 end
