@@ -136,7 +136,7 @@ RSpec.describe ROM::Relation, '#struct_namespace' do
       end
 
       it 'gives access to non-attribute methods defined in the struct superclass' do
-        expect(admins.first.shared_user?).to be_true
+        expect(admins.first).to be_shared_user
       end
 
       it 'gives access to overridden attribute methods idefined n the struct superclass' do

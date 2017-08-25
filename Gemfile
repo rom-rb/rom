@@ -11,6 +11,7 @@ COMPONENTS.each do |component|
 end
 
 gem 'dry-types', git: 'https://github.com/dry-rb/dry-types', branch: 'master'
+gem 'dry-struct', git: 'https://github.com/dry-rb/dry-struct', branch: 'skip-overridding-attr-readers'
 
 group :sql do
   gem 'sequel', '~> 4.45'

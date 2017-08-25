@@ -26,13 +26,20 @@ module ROM
       cache.fetch_or_store(args) do
         name, header, ns = args
         attributes = header.map(&method(:visit)).compact
-
         if attributes.empty?
           ROM::OpenStruct
         else
           build_class(name, ROM::Struct, ns) do |klass|
+            abstract_class = klass.ancestors.select { |k| k < ROM::Struct }.last
+
             attributes.each do |(attr_name, type)|
               klass.attribute(attr_name, type)
+
+              if abstract_class.instance_methods.include?(attr_name)
+                mod = Module.new { attr_reader(attr_name) }
+
+                abstract_class.include(mod)
+              end
             end
           end
         end
