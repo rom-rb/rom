@@ -8,6 +8,14 @@ require 'rom/relation/materializable'
 
 module ROM
   class Relation
+    # Curried relation is a special relation proxy used by auto-curry mechanism.
+    #
+    # When a relation view method is called without all arguments, a curried proxy
+    # is returned that can be fully applied later on.
+    #
+    # Curried relations are typically used for relation composition
+    #
+    # @api public
     class Curried
       extend Initializer
 
@@ -17,10 +25,20 @@ module ROM
 
       undef :map_with
 
+      # @!attribute [r] relation
+      #   @return [Relation] The source relation that is curried
       param :relation
 
+      # @!attribute [r] view
+      #   @return [Symbol] The name of relation's view method
       option :view, type: Types::Strict::Symbol
+
+      # @!attribute [r] arity
+      #   @return [Integer] View's arity
       option :arity, type: Types::Strict::Int
+
+      # @!attribute [r] curry_args
+      #   @return [Array] Arguments that will be passed to curried view
       option :curry_args, default: -> { EMPTY_ARRAY }
 
       # Load relation if args match the arity
@@ -45,6 +63,11 @@ module ROM
       end
       alias_method :[], :call
 
+      # Relations are coercible to an array but a curried relation cannot be coerced
+      # When something tries to do this, an exception will be raised
+      #
+      # @raises ArgumentError
+      #
       # @api public
       def to_a
         raise(

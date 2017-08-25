@@ -18,8 +18,12 @@ module ROM
 
       include Memoizable
 
+      # @!attribute [r] root
+      #   @return [Relation] The root relation
       param :root
 
+      # @!attribute [r] nodes
+      #   @return [Array<Relation>] An array with relation nodes
       param :nodes
 
       include Dry::Equalizer(:root, :nodes)
@@ -27,20 +31,7 @@ module ROM
       include Pipeline
       include Pipeline::Proxy
 
-      # Root aka parent relation
-      #
-      # @return [Relation]
-      #
-      # @api private
-      attr_reader :root
-
-      # Child relation nodes
-      #
-      # @return [Array<Relation>]
-      #
-      # @api private
-      attr_reader :nodes
-
+      # for compatibility with the pipeline
       alias_method :left, :root
       alias_method :right, :nodes
 
@@ -58,16 +49,22 @@ module ROM
         true
       end
 
+      # @see Relation#map_with
+      #
       # @api public
       def map_with(*args)
         self.class.new(root.map_with(*args), nodes)
       end
 
+      # @see Relation#map_to
+      #
       # @api public
       def map_to(klass)
         self.class.new(root.map_to(klass), nodes)
       end
 
+      # @see Relation#mapper
+      #
       # @api private
       def mapper
         mappers[to_ast]

@@ -2,7 +2,9 @@ require 'dry/equalizer'
 
 module ROM
   class Relation
-    # Materializes a relation and exposes interface to access the data
+    # Materializes a relation and exposes interface to access the data.
+    #
+    # This relation type is returned when a lazy relation is called
     #
     # @api public
     class Loaded

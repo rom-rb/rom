@@ -78,8 +78,8 @@ module ROM
       #     end
       #   end
       #
-      #   # access schema
-      #   Users.schema
+      #   # access schema from a finalized relation
+      #   users.schema
       #
       # @return [Schema]
       #
@@ -129,10 +129,10 @@ module ROM
 
       # Define a relation view with a specific schema
       #
-      # Explicit relation views allow relation composition with auto-mapping
-      # in repositories. It's useful for cases like defining custom views
-      # for associations where relations (even from different databases) can
-      # be composed together and automatically mapped in memory to structs.
+      # This method should only be used in cases where a given adapter doesn't
+      # support automatic schema projection at run-time.
+      #
+      # **It's not needed in rom-sql**
       #
       # @overload view(name, schema, &block)
       #   @example View with the canonical schema
