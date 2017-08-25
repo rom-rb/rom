@@ -4,10 +4,10 @@ module ROM
     #
     # Update changesets will only execute their commands when
     # the data is different from the original tuple. Original tuple
-    # is fetched from changeset's relation using `by_pk` relation view.
-    # This means the underlying adapter must provide this view, or you
-    # you need to implement it yourself in your relations if you want to
-    # use Update changesets.
+    # is fetched from changeset's relation using `one` method.
+    #
+    # @example
+    #   users.by_pk(1).changeset(:update, name: "Jane Doe").commit
     #
     # @see Changeset::Stateful
     #
