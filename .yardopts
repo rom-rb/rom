@@ -1,0 +1,9 @@
+--query '@api.text != "private"'
+--embed-mixins
+-o doc
+-r README.md
+--files CHANGELOG.md
+core/lib/**/*.rb
+changeset/lib/**/*.rb
+mapper/lib/**/*.rb
+repository/lib/**/*.rb
