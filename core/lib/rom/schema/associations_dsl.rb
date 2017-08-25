@@ -30,15 +30,24 @@ module ROM
       # @example using relation identifier
       #   has_many :tasks
       #
+      # @example setting custom foreign key name
+      #   has_many :tasks, foreign_key: :assignee_id
+      #
       # @example with a :through option
       #   # this establishes many-to-many association
       #   has_many :tasks, through: :users_tasks
+      #
+      # @example using a custom view which overrides default one
+      #   has_many :posts, view: :published, override: true
       #
       # @example using aliased association with a custom view
       #   has_many :posts, as: :published_posts, view: :published
       #
       # @example using custom target relation
       #   has_many :user_posts, relation: :posts
+      #
+      # @example using custom target relation and an alias
+      #   has_many :user_posts, relation: :posts, as: :published, view: :published
       #
       # @param [Symbol] target The target relation identifier
       # @param [Hash] options A hash with additional options
