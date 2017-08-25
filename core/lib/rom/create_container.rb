@@ -4,15 +4,19 @@ require 'rom/setup'
 require 'rom/setup/finalize'
 
 module ROM
+  # @api private
   class CreateContainer
+    # @api private
     attr_reader :container
 
+    # @api private
     def initialize(environment, setup)
       @container = finalize(environment, setup)
     end
 
     private
 
+    # @api private
     def finalize(environment, setup)
       environment.configure do |config|
         environment.gateways.each_key do |key|
@@ -35,7 +39,9 @@ module ROM
     end
   end
 
+  # @api private
   class InlineCreateContainer < CreateContainer
+    # @api private
     def initialize(*args, &block)
       case args.first
       when Configuration
@@ -54,6 +60,7 @@ module ROM
     end
   end
 
+  # @api private
   def self.container(*args, &block)
     InlineCreateContainer.new(*args, &block).container
   end

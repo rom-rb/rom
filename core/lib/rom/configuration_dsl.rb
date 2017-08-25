@@ -9,7 +9,6 @@ module ROM
     # Relation definition DSL
     #
     # @example
-    #
     #   setup.relation(:users) do
     #     def names
     #       project(:name)
@@ -29,7 +28,6 @@ module ROM
     # Command definition DSL
     #
     # @example
-    #
     #   setup.commands(:users) do
     #     define(:create) do
     #       input NewUserParams

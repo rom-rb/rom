@@ -16,6 +16,20 @@ module ROM
     extend Dry::Core::ClassAttributes
     extend Notifications::Listener
 
+    # @!method self.adapter
+    #  Get or set gateway's adapter identifier
+    #
+    #  @overload adapter
+    #    Return adapter identifier
+    #    @return [Symbol]
+    #
+    #  @overload gateway(adapter)
+    #    @example
+    #      class MyGateway < ROM::Gateway
+    #        adapter :my_adapter
+    #      end
+    #
+    #    @param [Symbol] adapter The adapter identifier
     defines :adapter
 
     # @!attribute [r] connection

@@ -15,19 +15,23 @@ module ROM
     # @api private
     param :elements
 
-    # Name of the relation from which commands are under
-    #
-    # @return [String]
-    #
-    # @api private
+    # @!attribute [r] relation_name
+    #   @return [Relation::Name] The name of a relation
     option :relation_name
 
+    # @!attribute [r] mappers
+    #   @return [MapperRegistry] Optional mapper registry
     option :mappers, optional: true
 
+    # @!attribute [r] mapper
+    #   @return [Object#call] Default mapper for processing command results
     option :mapper, optional: true
 
+    # @!attribute [r] compiler
+    #   @return [CommandCompiler] A command compiler instance
     option :compiler, optional: true
 
+    # @api private
     def self.element_not_found_error
       CommandNotFoundError
     end

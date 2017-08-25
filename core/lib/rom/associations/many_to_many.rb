@@ -3,6 +3,9 @@ require 'rom/associations/abstract'
 
 module ROM
   module Associations
+    # Abstract many-to-many association type
+    #
+    # @api public
     class ManyToMany < Abstract
       attr_reader :join_relation
 
@@ -12,26 +15,47 @@ module ROM
         @join_relation = relations[through]
       end
 
+      # Adapters should implement this method
+      #
+      # @abstract
+      #
       # @api public
       def call(*)
         raise NotImplementedError
       end
 
+      # Return configured or inferred FK name
+      #
       # @api public
       def foreign_key
         definition.foreign_key || join_relation.foreign_key(source.name)
       end
 
+      # Return join-relation name
+      #
+      # @return [Symbol]
+      #
       # @api public
       def through
         definition.through
       end
 
+      # Return parent's relation combine keys
+      #
+      # @return [Hash<Symbol=>Symbol>]
+      #
       # @api private
       def parent_combine_keys
         target.associations[source.name].combine_keys.to_a.flatten(1)
       end
 
+      # Associate child tuples with the provided parent
+      #
+      # @param [Array<Hash>] children An array with child tuples
+      # @param [Array,Hash] parent An array with parent tuples or a single tuple
+      #
+      # @return [Array<Hash>]
+      #
       # @api private
       def associate(children, parent)
         ((spk, sfk), (tfk, tpk)) = join_key_map

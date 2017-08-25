@@ -110,21 +110,37 @@ module ROM
       end
     end
 
+    # Return registered gateways
+    #
+    # @return [Hash<Symbol=>Gateway>]
+    #
     # @api public
     def gateways
       self[:gateways]
     end
 
+    # Return mapper registry for all relations
+    #
+    # @return [Hash<Symbol=>MapperRegistry]
+    #
     # @api public
     def mappers
       self[:mappers]
     end
 
+    # Return relation registry
+    #
+    # @return [RelationRegistry]
+    #
     # @api public
     def relations
       self[:relations]
     end
 
+    # Return command registry
+    #
+    # @return [Hash<Symbol=>CommandRegistry]
+    #
     # @api public
     def commands
       self[:commands]

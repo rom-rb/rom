@@ -1,6 +1,9 @@
 require 'rom/registry'
 
 module ROM
+  # Association set contains a registry with associations defined
+  # in schema DSL
+  #
   # @api public
   class AssociationSet < ROM::Registry
     # @api private

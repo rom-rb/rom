@@ -1,23 +1,25 @@
 require 'dry-initializer'
 
 module ROM
-
   # @api private
   module Initializer
     # @api private
     module DefineWithHook
+      # @api private
       def param(*)
         super
 
         __define_with__
       end
 
+      # @api private
       def option(*)
         super
 
         __define_with__ unless method_defined?(:with)
       end
 
+      # @api private
       def __define_with__
         seq_names = __initializer_mixin__.
                       instance_method(:__initialize__).

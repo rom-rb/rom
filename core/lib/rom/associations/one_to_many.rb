@@ -2,17 +2,35 @@ require 'rom/associations/abstract'
 
 module ROM
   module Associations
+    # Abstract one-to-many association
+    #
+    # @api public
     class OneToMany < Abstract
+      # Adapters must implement this method
+      #
+      # @abstract
+      #
       # @api public
       def call(*)
         raise NotImplementedError
       end
 
+      # Return configured or inferred FK name
+      #
+      # @return [Symbol]
+      #
       # @api public
       def foreign_key
         definition.foreign_key || target.foreign_key(source.name)
       end
 
+      # Associate child tuple with a parent
+      #
+      # @param [Hash] child The child tuple
+      # @param [Hash] parent The parent tuple
+      #
+      # @return [Hash]
+      #
       # @api private
       def associate(child, parent)
         pk, fk = join_key_map

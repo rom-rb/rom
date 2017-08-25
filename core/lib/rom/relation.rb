@@ -30,18 +30,10 @@ module ROM
   #
   # Relation is a proxy for the dataset object provided by the gateway. It
   # can forward methods to the dataset, which is why the "native" interface of
-  # the underlying gateway is available in the relation. This interface,
-  # however, is considered private and should not be used outside of the
-  # relation instance.
+  # the underlying gateway is available in the relation
   #
   # Individual adapters sets up their relation classes and provide different APIs
   # depending on their persistence backend.
-  #
-  # Vanilla Relation class doesn't have APIs that are specific to ROM container setup.
-  # When adapter Relation class inherits from this class, these APIs are added automatically,
-  # so that they can be registered within a container.
-  #
-  # @see ROM::Relation::ClassInterface
   #
   # @api public
   class Relation
@@ -584,7 +576,7 @@ module ROM
 
     # Return a new relation configured with the provided struct namespace
     #
-    # @param [Module] namespace
+    # @param [Module] ns Custom namespace module for auto-structs
     #
     # @return [Relation]
     #
@@ -612,6 +604,10 @@ module ROM
       Relation::Composite
     end
 
+    # Return configured "wrap" relation class used in Relation#wrap
+    #
+    # @return [Class]
+    #
     # @api private
     def wrap_class
       self.class.wrap_class

@@ -1,4 +1,7 @@
 module ROM
+  # Relation extension which provides auto-currying of relation view methods
+  #
+  # @api private
   module AutoCurry
     def self.extended(klass)
       klass.define_singleton_method(:method_added) do |name|
@@ -8,6 +11,7 @@ module ROM
       end
     end
 
+    # @api private
     def auto_curry_guard
       @__auto_curry_busy__ = true
       yield
@@ -15,14 +19,21 @@ module ROM
       @__auto_curry_busy__ = false
     end
 
+    # @api private
     def auto_curry_busy?
       @__auto_curry_busy__ ||= false
     end
 
+    # @api private
     def auto_curried_methods
       @__auto_curried_methods__ ||= Set.new
     end
 
+    # Auto-curry a method
+    #
+    # @param [Symbol] name The name of a method
+    #
+    # @api private
     def auto_curry(name, &block)
       arity = instance_method(name).arity
 

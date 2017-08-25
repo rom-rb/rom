@@ -4,13 +4,13 @@ require 'rom/gateway'
 module ROM
   # Core gateway configuration interface
   #
-  # @api public
+  # @api private
   class Environment
     include Configurable
 
     attr_reader :gateways, :gateways_map
 
-    # @api public
+    # @api private
     def initialize(*args)
       @gateways = {}
       @gateways_map = {}
@@ -20,6 +20,7 @@ module ROM
 
     private
 
+    # @api private
     def configure_gateways(*args)
       normalized_gateway_args = normalize_gateway_args(*args)
       normalized_gateways = normalize_gateways(normalized_gateway_args)
