@@ -20,6 +20,8 @@ module ROM
 
       # @api private
       def run!
+        cache = Cache.new
+
         mappers = registry_hash.each_with_object({}) do |(relation_name, relation_mappers), h|
           relation_mappers.update(build_mappers(relation_name))
 
@@ -27,10 +29,10 @@ module ROM
             relation_mappers.update(mapper_objects[relation_name])
           end
 
-          h[relation_name] = MapperRegistry.new(relation_mappers)
+          h[relation_name] = MapperRegistry.new(relation_mappers, cache: cache)
         end
 
-        Registry.new(mappers)
+        Registry.new(mappers, cache: cache)
       end
 
       private

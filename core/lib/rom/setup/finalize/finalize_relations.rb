@@ -101,7 +101,7 @@ module ROM
           dataset: dataset, relation: klass, adapter: klass.adapter
         )
 
-        mappers = @mappers.key?(rel_key) ? @mappers[rel_key] : MapperRegistry.new
+        mappers = @mappers.key?(rel_key) ? @mappers[rel_key] : MapperRegistry.new({}, cache: @mappers.cache)
 
         options = { __registry__: registry, mappers: mappers, schema: schema, **plugin_options }
 

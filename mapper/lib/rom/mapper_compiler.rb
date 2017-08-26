@@ -9,7 +9,7 @@ module ROM
   class MapperCompiler
     extend Initializer
 
-    option :cache, reader: true, default: -> { Cache.new }
+    option :cache, default: -> { Cache.new }
 
     attr_reader :struct_compiler
 

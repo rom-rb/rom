@@ -404,4 +404,12 @@ RSpec.describe 'ROM repository' do
 
     expect(jane.name).to eql('Jane')
   end
+
+  it 'uses a shared cache between relations to store struct classes' do
+    post = repo.posts.mapper.model
+    user_with_posts = repo.users.combine(:posts).mapper.model
+    post_from_user = user_with_posts.schema[:posts].member
+
+    expect(post).to be(post_from_user)
+  end
 end

@@ -1,4 +1,3 @@
-require 'dry/core/cache'
 require 'rom/constants'
 
 module ROM
@@ -10,8 +9,6 @@ module ROM
       #
       # @api public
       class RegistryReader < Module
-        extend Dry::Core::Cache
-
         EMPTY_REGISTRY = RelationRegistry.new(EMPTY_HASH).freeze
 
         # @api private

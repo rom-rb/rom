@@ -18,7 +18,7 @@ module ROM
 
     # @!attribute [r] cache
     #   @return [Cache] local cache instance
-    option :cache, reader: true, default: -> { Cache.new }
+    option :cache, default: -> { Cache.new }
 
     # @api private
     def self.new(*args)

@@ -30,6 +30,16 @@ module ROM
       def fetch_or_store(*args, &block)
         cache.fetch_or_store([namespace, args.hash].hash, &block)
       end
+
+      # @api private
+      def size
+        cache.size
+      end
+
+      # @api private
+      def inspect
+        %(#<#{self.class} size=#{size}>)
+      end
     end
 
     # @api private
@@ -48,8 +58,18 @@ module ROM
     end
 
     # @api private
+    def size
+      objects.size
+    end
+
+    # @api private
     def namespaced(namespace)
       @namespaced[namespace] ||= Namespaced.new(objects, namespace)
+    end
+
+    # @api private
+    def inspect
+      %(#<#{self.class} size=#{size} namespaced=#{@namespaced.inspect}>)
     end
   end
 end
