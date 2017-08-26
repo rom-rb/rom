@@ -16,7 +16,8 @@ require 'dry/core/deprecations'
 Dry::Core::Deprecations.set_logger!(SPEC_ROOT.join('../log/deprecations.log'))
 
 begin
-  require 'byebug'
+  require 'pry'
+  require 'pry-byebug'
 rescue LoadError
 end
 

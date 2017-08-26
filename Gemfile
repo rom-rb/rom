@@ -30,8 +30,8 @@ end
 group :tools do
   gem 'mutant'
   gem 'mutant-rspec'
-  gem 'byebug', platforms: :mri
-  gem 'pry-byebug'
+  gem 'pry-byebug', platforms: :mri
+  gem 'pry', platforms: :jruby
 end
 
 group :benchmarks do

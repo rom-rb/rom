@@ -16,7 +16,8 @@ require 'rom-sql'
 require 'rom-repository'
 
 begin
-  require 'byebug'
+  require 'pry'
+  require 'pry-byebug'
 rescue LoadError
 end
 

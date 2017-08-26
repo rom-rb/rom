@@ -21,7 +21,8 @@ require 'rom-core'
 require 'dry-struct'
 
 begin
-  require 'byebug'
+  require 'pry'
+  require 'pry-byebug'
 rescue LoadError
 end
 
