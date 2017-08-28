@@ -58,7 +58,7 @@ module ROM
       #
       # @api public
       def options
-        self.class.dry_initializer.attributes(self)
+        @__options__ ||= self.class.dry_initializer.attributes(self)
       end
 
       define_method(:class, Kernel.instance_method(:class))

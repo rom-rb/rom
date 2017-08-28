@@ -21,6 +21,16 @@ begin
 rescue LoadError
 end
 
+module SpecProfiler
+  def report(*)
+    require 'hotch'
+
+    Hotch() do
+      super
+    end
+  end
+end
+
 require 'rom/core'
 
 Dir[root.join('support/*.rb').to_s].each do |f|
@@ -50,4 +60,6 @@ RSpec.configure do |config|
 
   config.disable_monkey_patching!
   config.warnings = true
+
+  config.reporter.extend(SpecProfiler) if ENV['PROFILE'] == 'true'
 end
