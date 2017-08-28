@@ -39,5 +39,3 @@ group :benchmarks do
   gem 'benchmark-ips'
   gem 'activerecord', '~> 5.0'
 end
-
-gem 'dry-initializer', git: 'https://github.com/dry-rb/dry-initializer.git'

@@ -12,12 +12,14 @@ Gem::Specification.new do |gem|
   gem.files         = Dir['CHANGELOG.md', 'LICENSE', 'README.md', 'lib/**/*']
   gem.license       = 'MIT'
 
+  gem.required_ruby_version = ">= 2.3.0"
+
   gem.add_runtime_dependency 'concurrent-ruby', '~> 1.0'
   gem.add_runtime_dependency 'dry-container', '~> 0.6'
   gem.add_runtime_dependency 'dry-equalizer', '~> 0.2'
   gem.add_runtime_dependency 'dry-types', '~> 0.11', '>= 0.11.1'
   gem.add_runtime_dependency 'dry-core', '~> 0.3'
-  gem.add_runtime_dependency 'dry-initializer'#, '~> 1.3'
+  gem.add_runtime_dependency 'dry-initializer', '~> 2.0'
   gem.add_runtime_dependency 'rom-mapper', '~> 1.0.0.beta'
 
   gem.add_development_dependency 'rake', '~> 10.3'
