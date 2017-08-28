@@ -59,7 +59,7 @@ module ROM
 
     EMPTY_ASSOCIATION_SET = AssociationSet.new(EMPTY_HASH).freeze
 
-    DEFAULT_INFERRER = Inferrer.new(enabled: false).tap(&:options).freeze
+    DEFAULT_INFERRER = Inferrer.new(enabled: false).freeze
 
     extend Initializer
 

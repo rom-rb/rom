@@ -7,16 +7,14 @@ module ROM
     module DefineWithHook
       # @api private
       def param(*)
-        super
-
-        __define_with__
+        super.tap { __define_with__ }
       end
 
       # @api private
       def option(*)
-        super
-
-        __define_with__ unless method_defined?(:with)
+        super.tap do
+          __define_with__ unless method_defined?(:with)
+        end
       end
 
       # @api private
@@ -62,6 +60,12 @@ module ROM
       end
 
       define_method(:class, Kernel.instance_method(:class))
+
+      # @api public
+      def freeze
+        options
+        super
+      end
     end
   end
 end
