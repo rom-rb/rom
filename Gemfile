@@ -40,4 +40,4 @@ group :benchmarks do
   gem 'activerecord', '~> 5.0'
 end
 
-gem 'dry-initializer', git: 'https://github.com/dry-rb/dry-initializer.git', branch: '2.0.0'
+gem 'dry-initializer', git: 'https://github.com/dry-rb/dry-initializer.git'
