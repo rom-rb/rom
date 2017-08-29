@@ -14,28 +14,6 @@ module ROM
       super
     end
 
-    # Shortcut for creating a type definition
-    #
-    # @param [Class] primitive The primitive class
-    #
-    # @return [Dry::Types::Definition]
-    #
-    # @api public
-    def self.Definition(primitive)
-      Dry::Types::Definition.new(primitive)
-    end
-
-    # Shortcut for defining a definition with a constructor
-    #
-    # @param [Class] primitive The primitive class
-    #
-    # @return [Dry::Types::Definition]
-    #
-    # @api public
-    def self.Constructor(primitive, &block)
-      Types.Definition(primitive).constructor(&block)
-    end
-
     module Methods
       # Shortcut for defining a foreign key attribute type
       #
