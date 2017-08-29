@@ -46,8 +46,8 @@ module ROM
     end
 
     # @api private
-    def each(&block)
-      return to_enum unless block
+    def each
+      return to_enum unless block_given?
       elements.each { |element| yield(element) }
     end
 

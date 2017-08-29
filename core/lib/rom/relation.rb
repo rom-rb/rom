@@ -215,8 +215,8 @@ module ROM
     # @return [Enumerator] if block is not provided
     #
     # @api public
-    def each(&block)
-      return to_enum unless block
+    def each
+      return to_enum unless block_given?
 
       if auto_struct?
         mapper.(dataset.map { |tuple| output_schema[tuple] }).each { |struct| yield(struct) }

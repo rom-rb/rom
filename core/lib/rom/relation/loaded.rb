@@ -43,8 +43,8 @@ module ROM
       # @yield [Hash]
       #
       # @api public
-      def each(&block)
-        return to_enum unless block
+      def each
+        return to_enum unless block_given?
         collection.each { |tuple| yield(tuple) }
       end
 
