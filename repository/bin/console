@@ -8,8 +8,18 @@ require "pry"
 require "rom-repository"
 require "rom-changeset"
 require "pry-byebug"
+require "dry/monitor/logger"
+require "dry/monitor/notifications"
+require "dry/monitor/sql/logger"
 
 config = ROM::Configuration.new(:sql, 'postgres://localhost/rom_repository')
+notifications = Dry::Monitor::Notifications.new(:console)
+
+config.plugin :sql, relations: :instrumentation do |plugin_config|
+  plugin_config.notifications = notifications
+end
+
+Dry::Monitor::SQL::Logger.new(Logger.new($stdout)).subscribe(notifications)
 
 config.relation(:books) do
   schema(:books) do
