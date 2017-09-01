@@ -57,7 +57,7 @@ module ROM
         end
 
       if meta[:combine_type] == :many
-        [name, Types::Array.member(member)]
+        [name, Types::Array.of(member)]
       else
         [name, member.optional]
       end

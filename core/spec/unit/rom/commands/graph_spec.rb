@@ -142,7 +142,7 @@ RSpec.describe ROM::Commands::Graph do
 
       Test::Task = Class.new(Dry::Struct) {
         attribute :title, Types::String
-        attribute :tags, Types::Array.member(Test::Tag)
+        attribute :tags, Types::Array.of(Test::Tag)
       }
 
       Test::User = Class.new(Dry::Struct) {
