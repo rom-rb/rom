@@ -521,9 +521,9 @@ module ROM
     # @example
     #   users.as(:people)
     #
-    # @param [Class] klass Your custom model class
+    # @param [Symbol] aliaz Aliased name
     #
-    # @return [Relation::Composite]
+    # @return [Relation]
     #
     # @api public
     def as(aliaz)
