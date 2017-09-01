@@ -56,10 +56,13 @@ module ROM
       #
       # @api public
       def options
-        @__options__ ||= self.class.dry_initializer.attributes(self)
+        @__options__ ||= self.class.dry_initializer.definitions.values.each_with_object({}) do |item, obj|
+          obj[item.target] = instance_variable_get(item.ivar)
+        end
       end
 
       define_method(:class, Kernel.instance_method(:class))
+      define_method(:instance_variable_get, Kernel.instance_method(:instance_variable_get))
 
       # @api public
       def freeze
