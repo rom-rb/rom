@@ -7,24 +7,22 @@ module ROM
     module DefineWithHook
       # @api private
       def param(*)
-        super
-
-        __define_with__
+        super.tap { __define_with__ }
       end
 
       # @api private
       def option(*)
-        super
-
-        __define_with__ unless method_defined?(:with)
+        super.tap do
+          __define_with__ unless method_defined?(:with)
+        end
       end
 
       # @api private
       def __define_with__
-        seq_names = __initializer_mixin__.
-                      instance_method(:__initialize__).
-                      parameters[0...-1].
-                      map { |_, name| name }.
+        seq_names = dry_initializer.
+                      definitions.
+                      reject { |_, d| d.option }.
+                      keys.
                       join(', ')
 
         seq_names << ', ' unless seq_names.empty?
@@ -58,7 +56,15 @@ module ROM
       #
       # @api public
       def options
-        @__options__
+        @__options__ ||= self.class.dry_initializer.attributes(self)
+      end
+
+      define_method(:class, Kernel.instance_method(:class))
+
+      # @api public
+      def freeze
+        options
+        super
       end
     end
   end
