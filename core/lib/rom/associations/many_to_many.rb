@@ -7,6 +7,8 @@ module ROM
     #
     # @api public
     class ManyToMany < Abstract
+      # @!attribute [r] join_relation
+      #   @return [Relation] Intermediate join relation
       attr_reader :join_relation
 
       # @api private
@@ -25,6 +27,8 @@ module ROM
       end
 
       # Return configured or inferred FK name
+      #
+      # @return [Symbol]
       #
       # @api public
       def foreign_key

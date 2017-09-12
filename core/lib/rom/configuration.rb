@@ -22,7 +22,17 @@ module ROM
 
     NoDefaultAdapterError = Class.new(StandardError)
 
-    attr_reader :environment, :setup, :notifications
+    # @!attribute [r] environment
+    #   @return [Environment] Environment object with gateways
+    attr_reader :environment
+
+    # @!attribute [r] setup
+    #   @return [Setup] Setup object which collects component classes and plugins
+    attr_reader :setup
+
+    # @!attribute [r] notifications
+    #   @return [Notifications] Notification bus instance
+    attr_reader :notifications
 
     def_delegators :@setup, :register_relation, :register_command, :register_mapper, :register_plugin,
                             :command_classes, :mapper_classes,
@@ -30,7 +40,13 @@ module ROM
 
     def_delegators :@environment, :gateways, :gateways_map, :configure, :config
 
-    # @api public
+    # Initialize a new configuration
+    #
+    # @see Environment#initialize
+    #
+    # @return [Configuration]
+    #
+    # @api private
     def initialize(*args, &block)
       @environment = Environment.new(*args)
       @notifications = Notifications.event_bus(:configuration)
@@ -38,13 +54,15 @@ module ROM
 
       use :mappers # enable mappers by default
 
-      block.call(self) unless block.nil?
+      block.call(self) if block
     end
 
     # Apply a plugin to the configuration
     #
     # @param [Mixed] The plugin identifier, usually a Symbol
     # @param [Hash] Plugin options
+    #
+    # @return [Configuration]
     #
     # @api public
     def use(plugin, options = {})
@@ -66,15 +84,6 @@ module ROM
     # @api private
     def [](name)
       gateways.fetch(name)
-    end
-
-    # Returns gateway if method is a name of a registered gateway
-    #
-    # @return [Gateway]
-    #
-    # @api private
-    def method_missing(name, *)
-      gateways.fetch(name) { super }
     end
 
     # Hook for respond_to? used internally
@@ -109,6 +118,17 @@ module ROM
     # @api private
     def default_adapter
       @default_adapter ||= adapter_for_gateway(default_gateway) || ROM.adapters.keys.first
+    end
+
+    private
+
+    # Returns gateway if method is a name of a registered gateway
+    #
+    # @return [Gateway]
+    #
+    # @api private
+    def method_missing(name, *)
+      gateways.fetch(name) { super }
     end
   end
 end

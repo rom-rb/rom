@@ -24,7 +24,15 @@ module ROM
         defines :mixin
         mixin Module.new
 
+        # Instrumentation extension for relation classes
+        #
+        # @api private
         module ClassInterface
+          # Configure provided methods for instrumentation
+          #
+          # @param [Array<Symbol>] *methods A list of method names
+          #
+          # @api public
           def instrument(*methods)
             (methods - Instrumentation.mixin.instance_methods).each do |meth|
               Instrumentation.mixin.send(:define_method, meth) do
@@ -34,6 +42,8 @@ module ROM
           end
         end
 
+        # Execute a block using instrumentation
+        #
         # @api public
         def instrument(&block)
           notifications.instrument(self.class.adapter, name: name.relation, **notification_payload(self), &block)

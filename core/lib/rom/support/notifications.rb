@@ -188,10 +188,24 @@ module ROM
     class EventBus
       include Publisher
 
+      # @!attribute [r] id
+      #   @return [Symbol] The bus identifier
       attr_reader :id
+
+      # @!attribute [r] events
+      #   @return [Hash] A hash with events registered within a bus
       attr_reader :events
+
+      # @!attribute [r] listeners
+      #   @return [Hash] A hash with event listeners registered within a bus
       attr_reader :listeners
 
+      # Initialize a new event bus
+      #
+      # @param [Symbol] id The bus identifier
+      # @param [Hash] events A hash with events
+      # @param [Hash] listeners A hash with listeners
+      #
       # @api public
       def initialize(id, events: EMPTY_HASH, listeners: LISTENERS_HASH.dup)
         @id = id

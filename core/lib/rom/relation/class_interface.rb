@@ -279,6 +279,7 @@ module ROM
           end
       end
 
+      # @api private
       def name
         super || superclass.name
       end

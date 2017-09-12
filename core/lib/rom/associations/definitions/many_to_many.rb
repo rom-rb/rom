@@ -8,6 +8,8 @@ module ROM
       class ManyToMany < Abstract
         result :many
 
+        # @!attribute [r] through
+        #   @return [ThroughIdentifier] The name of the "through" relation
         option :through, reader: true
 
         # @api private
