@@ -76,7 +76,7 @@ module ROM
     # New options can be provided too
     #
     # @param [Relation] relation
-    # @param [Hash] options
+    # @param [Hash] new_options
     #
     # @return [Changeset]
     #

@@ -57,7 +57,11 @@ module ROM
         Composite.new(self, other)
       end
 
+      # Combine with other lazy commands
+      #
       # @see Abstract#combine
+      #
+      # @return [Graph]
       #
       # @api public
       def combine(*others)

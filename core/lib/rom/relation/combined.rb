@@ -34,8 +34,13 @@ module ROM
         self.class.new(root, nodes + others)
       end
 
-      # @api public
+      # Combine with other relations
+      #
       # @see Relation#combine
+      #
+      # @return [Combined]
+      #
+      # @api public
       def combine(*args)
         self.class.new(root, nodes + root.combine(*args).nodes)
       end

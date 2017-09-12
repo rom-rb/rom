@@ -74,10 +74,18 @@ module ROM
     class Event
       include Dry::Equalizer(:id, :payload)
 
-      # @attr_reader [String] id Event ID
+      # @!attribute [r] id
+      #   @return [Symbol] The event identifier
       attr_reader :id
 
-      # @api public
+      # Initialize a new event
+      #
+      # @param [Symbol] id The event identifier
+      # @param [Hash] payload Optional payload
+      #
+      # @return [Event]
+      #
+      # @api private
       def initialize(id, payload = EMPTY_HASH)
         @id = id
         @payload = payload

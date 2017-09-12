@@ -20,7 +20,7 @@ module ROM
     extend Initializer
 
     # @!attribute [r] type
-    #   @return [Dry::Types::Definition, Dry::Types::Sum, Dry::Types::Constrained]
+    #   @return [Dry::Types::Definition, Dry::Types::Sum, Dry::Types::Constrained] The attribute's type object
     param :type
 
     # @api private

@@ -1,6 +1,8 @@
 module ROM
   module Plugins
     module Command
+      # Command plugin which sets input processing function via relation schema
+      #
       # @api private
       module Schema
         def self.included(klass)
@@ -10,7 +12,12 @@ module ROM
 
         # @api private
         module ClassInterface
+          # Build a command and set it input to relation's input_schema
+          #
           # @see Command.build
+          #
+          # @return [Command]
+          #
           # @api public
           def build(relation, options = {})
             if options.key?(:input) || !relation.schema?

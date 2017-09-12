@@ -23,15 +23,15 @@ module ROM
     end
 
     # @!attribute [r] gateways
-    #   @return [ROM::Registry]
+    #   @return [ROM::Registry] Gateways used for command extensions
     param :gateways
 
     # @!attribute [r] relations
-    #   @return [ROM::RelationRegistry]
+    #   @return [ROM::RelationRegistry] Relations used with a given compiler
     param :relations
 
-    # @!attribute [r] relations
-    #   @return [ROM::Registry]
+    # @!attribute [r] commands
+    #   @return [ROM::Registry] Command registries with custom commands
     param :commands
 
     # @!attribute [r] notifications

@@ -7,12 +7,22 @@ module ROM
     #
     # @api public
     class Wrap < Graph
+      # Wrap more relations
+      #
+      # @see Relation#wrap
+      #
+      # @return [Wrap]
+      #
       # @api public
       def wrap(*args)
         self.class.new(root, nodes + root.wrap(*args).nodes)
       end
 
+      # Materialize a wrap
+      #
       # @see Relation#call
+      #
+      # @return [Loaded]
       #
       # @api public
       def call(*args)
@@ -23,6 +33,10 @@ module ROM
         end
       end
 
+      # Return an adapter-specific relation representing a wrap
+      #
+      # @abstract
+      #
       # @api private
       def relation
         raise NotImplementedError

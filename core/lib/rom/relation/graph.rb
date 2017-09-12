@@ -49,14 +49,22 @@ module ROM
         true
       end
 
+      # Map graph tuples via custom mappers
+      #
       # @see Relation#map_with
+      #
+      # @return [Graph]
       #
       # @api public
       def map_with(*args)
         self.class.new(root.map_with(*args), nodes)
       end
 
+      # Map graph tuples to custom objects
+      #
       # @see Relation#map_to
+      #
+      # @return [Graph]
       #
       # @api public
       def map_to(klass)
