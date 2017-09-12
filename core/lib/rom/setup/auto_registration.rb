@@ -13,19 +13,31 @@ module ROM
     extend Initializer
 
     NamespaceType = Types::Strict::Bool | Types::Strict::String
+
     PathnameType = Types.Constructor(Pathname, &Kernel.method(:Pathname))
+
     DEFAULT_MAPPING = {
       relations: :relations,
       mappers: :mappers,
       commands: :commands
     }.freeze
 
+    # @!attribute [r] directory
+    #   @return [Pathname] The root path
     param :directory, type: PathnameType
 
+    # @!attribute [r] namespace
+    #   @return [Boolean,String]
+    #     The name of the top level namespace or true/false which
+    #     enables/disables default top level namespace inferred from the dir name
     option :namespace, type: NamespaceType, default: -> { true }
 
+    # @!attribute [r] component_dirs
+    #   @return [Hash] component => dir-name map
     option :component_dirs, type: Types::Strict::Hash, default: -> { DEFAULT_MAPPING }
 
+    # @!attribute [r] globs
+    #   @return [Hash] File globbing functions for each component dir
     option :globs, default: -> {
       Hash[
         component_dirs.map { |component, path|
@@ -34,20 +46,32 @@ module ROM
       ]
     }
 
+    # Load relation files
+    #
+    # @api private
     def relations
       load_entities(:relations)
     end
 
+    # Load command files
+    #
+    # @api private
     def commands
       load_entities(:commands)
     end
 
+    # Load mapper files
+    #
+    # @api private
     def mappers
       load_entities(:mappers)
     end
 
     private
 
+    # Load given component files
+    #
+    # @api private
     def load_entities(entity)
       Dir[globs[entity]].map do |file|
         require file
