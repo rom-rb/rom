@@ -294,9 +294,9 @@ module ROM
     # @example
     #   tasks.wrap(:owner)
     #
-    # @param [Hash] options
+    # @param [Array<Symbol>] names A list with association identifiers
     #
-    # @return [Relation]
+    # @return [Wrap]
     #
     # @api public
     def wrap(*names)
@@ -305,6 +305,8 @@ module ROM
 
     # Wrap around other relations
     #
+    # @param [Array<Relation>] others Other relations
+    #
     # @return [Relation::Wrap]
     #
     # @api public
@@ -312,7 +314,7 @@ module ROM
       wrap_class.new(self, others)
     end
 
-    # Loads relation
+    # Loads a relation
     #
     # @return [Relation::Loaded]
     #
@@ -398,16 +400,17 @@ module ROM
     end
 
     undef_method :with
+
     # Returns a new instance with the same dataset but new options
     #
     # @example
     #   users.with(output_schema: -> tuple { .. })
     #
-    # @param new_options [Hash]
+    # @param [Hash] opts New options
     #
     # @return [Relation]
     #
-    # @api private
+    # @api public
     def with(opts)
       new_options =
         if opts.key?(:meta)

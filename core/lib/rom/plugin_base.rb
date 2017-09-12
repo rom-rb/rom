@@ -35,7 +35,7 @@ module ROM
 
     # Apply this plugin to the provided class
     #
-    # @param [Mixed] base
+    # @param [Mixed] _base
     #
     # @api private
     def apply_to(_base)

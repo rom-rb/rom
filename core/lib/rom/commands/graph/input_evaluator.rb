@@ -22,7 +22,7 @@ module ROM
         # Build an input evaluator
         #
         # @param [Array<Symbol>] tuple_path The tuple path
-        # @param [Array]
+        # @param [Array] nodes
         #
         # @return [InputEvaluator]
         #
@@ -66,9 +66,7 @@ module ROM
         # @param [Integer] index Optional index
         #
         # @return [Hash]
-        def call(*args)
-          input, index = args
-
+        def call(input, index = nil)
           value =
             begin
               if index

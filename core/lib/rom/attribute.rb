@@ -336,7 +336,7 @@ module ROM
 
     # Check if the attribute type is equal to another
     #
-    # @param [Dry::Type, Attribute]
+    # @param [Dry::Type, Attribute] other
     #
     # @return [TrueClass,FalseClass]
     #

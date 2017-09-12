@@ -75,12 +75,12 @@ module ROM
 
       # Create a command class with a specific type
       #
-      # @param [Symbol] command name
-      # @param [Class] parent class
+      # @param [Symbol] name Command name
+      # @param [Class] type Command class
       #
-      # @yield [Class] create class
+      # @yield [Class]
       #
-      # @return [Class, Object] return result of the block if it was provided
+      # @return [Class, Object]
       #
       # @api public
       def create_class(name, type, &block)
@@ -105,8 +105,8 @@ module ROM
       #   end
       #
       # @param [Symbol] plugin
-      # @param [Hash] options
-      # @option options [Symbol] :adapter (:default) first adapter to check for plugin
+      # @param [Hash] _options
+      # @option _options [Symbol] :adapter (:default) first adapter to check for plugin
       #
       # @api public
       def use(plugin, _options = EMPTY_HASH)
@@ -115,7 +115,7 @@ module ROM
 
       # Extend a command class with relation view methods
       #
-      # @param [Relation]
+      # @param [Relation] relation
       #
       # @return [Class]
       #

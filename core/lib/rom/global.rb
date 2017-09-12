@@ -37,7 +37,7 @@ module ROM
     #     register :publisher, Plugin::Publisher, type: :command
     #   end
     #
-    # @example
+    # @api public
     def plugins(*args, &block)
       PluginDSL.new(plugin_registry, *args, &block)
     end

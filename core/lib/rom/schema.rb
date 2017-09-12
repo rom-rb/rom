@@ -141,7 +141,7 @@ module ROM
     #
     # Default implementation is a no-op and it simply returns back untouched relation
     #
-    # @param [Relation]
+    # @param [Relation] relation
     #
     # @return [Relation]
     #
@@ -297,7 +297,7 @@ module ROM
     #
     # This returns a new schema instance
     #
-    # @param [*Array<Attribute>]
+    # @param [Array<Attribute>] new_attributes
     #
     # @return [Schema]
     #
@@ -307,8 +307,6 @@ module ROM
     end
 
     # Return a new schema with uniq attributes
-    #
-    # @param [*Array<Attribute>]
     #
     # @return [Schema]
     #

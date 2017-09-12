@@ -59,8 +59,8 @@ module ROM
 
     # Apply a plugin to the configuration
     #
-    # @param [Mixed] The plugin identifier, usually a Symbol
-    # @param [Hash] Plugin options
+    # @param [Mixed] plugin The plugin identifier, usually a Symbol
+    # @param [Hash] options Plugin options
     #
     # @return [Configuration]
     #

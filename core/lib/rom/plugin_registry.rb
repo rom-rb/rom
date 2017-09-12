@@ -137,7 +137,7 @@ module ROM
     #
     # @param [Symbol] name The name of the environment plugin
     #
-    # @raises [UnknownPluginError] if no plugin is found with the given name
+    # @raise [UnknownPluginError] if no plugin is found with the given name
     #
     # @api public
     def fetch(name)
@@ -184,7 +184,7 @@ module ROM
     # @param [Symbol] name The name of the plugin
     # @param [Symbol] adapter_name (:default) The name of the adapter used
     #
-    # @raises [UnknownPluginError] if no plugin is found with the given name
+    # @raise [UnknownPluginError] if no plugin is found with the given name
     #
     # @api public
     def fetch(name, adapter_name = :default)

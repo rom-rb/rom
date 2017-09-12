@@ -25,7 +25,7 @@ module ROM
 
       # Combine this graph with more nodes
       #
-      # @param [Array<Relation::Lazy>]
+      # @param [Array<Relation>] others A list of relations
       #
       # @return [Graph]
       #

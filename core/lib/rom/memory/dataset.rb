@@ -12,7 +12,7 @@ module ROM
 
       # Join with other datasets
       #
-      # @param [Array<Dataset>] *args A list of dataset to join with
+      # @param [Array<Dataset>] args A list of dataset to join with
       #
       # @return [Dataset]
       #
@@ -55,7 +55,7 @@ module ROM
 
       # Project a dataset
       #
-      # @param [Array<Symbol>] *names A list of attribute names
+      # @param [Array<Symbol>] names A list of attribute names
       #
       # @return [Dataset]
       #
@@ -66,7 +66,7 @@ module ROM
 
       # Sort a dataset
       #
-      # @param [Array<Symbol>] names
+      # @param [Array<Symbol>] fields
       #   Names of fields to order tuples by
       #
       # @option [Boolean] :nils_first (false)

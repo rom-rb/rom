@@ -66,7 +66,7 @@ module ROM
       # Relations are coercible to an array but a curried relation cannot be coerced
       # When something tries to do this, an exception will be raised
       #
-      # @raises ArgumentError
+      # @raise ArgumentError
       #
       # @api public
       def to_a

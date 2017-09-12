@@ -30,7 +30,7 @@ module ROM
         module ClassInterface
           # Configure provided methods for instrumentation
           #
-          # @param [Array<Symbol>] *methods A list of method names
+          # @param [Array<Symbol>] methods A list of method names
           #
           # @api public
           def instrument(*methods)

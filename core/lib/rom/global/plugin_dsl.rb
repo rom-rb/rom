@@ -38,7 +38,9 @@ module ROM
 
       # Register plugins for a specific adapter
       #
-      # @param [Symbol] adapter type
+      # @param [Symbol] type The adapter identifier
+      #
+      # @api public
       def adapter(type, &block)
         self.class.new(registry, adapter: type, &block)
       end

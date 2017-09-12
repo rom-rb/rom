@@ -63,12 +63,12 @@ module ROM
         #
         # @param [Symbol] source The name of the source dataset
         # @param [Symbol] target The name of the target dataset
-        # @param [Hash] options The option hash
-        # @option options [Symbol] :as The name of the association (defaults to target)
-        # @option options [Symbol] :relation The name of the target relation (defaults to target)
-        # @option options [Symbol] :foreign_key The name of a custom foreign key
-        # @option options [Symbol] :view The name of a custom relation view on the target's relation side
-        # @option options [TrueClass,FalseClass] :override Whether provided :view should override association's default view
+        # @param [Hash] opts The option hash
+        # @option opts [Symbol] :as The name of the association (defaults to target)
+        # @option opts [Symbol] :relation The name of the target relation (defaults to target)
+        # @option opts [Symbol] :foreign_key The name of a custom foreign key
+        # @option opts [Symbol] :view The name of a custom relation view on the target's relation side
+        # @option opts [TrueClass,FalseClass] :override Whether provided :view should override association's default view
         #
         # @api public
         def self.new(source, target, opts = EMPTY_HASH)

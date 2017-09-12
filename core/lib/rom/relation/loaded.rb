@@ -88,7 +88,8 @@ module ROM
       # @param [Symbol] key The key name
       #
       # @return [Array]
-      # @raises KeyError when provided key doesn't exist in any of the tuples
+      #
+      # @raise KeyError when provided key doesn't exist in any of the tuples
       #
       # @api public
       def pluck(key)

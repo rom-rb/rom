@@ -168,7 +168,8 @@ module ROM
     # Runs a block inside a transaction. The underlying transaction engine
     # is adapter-specific
     #
-    # @param [Hash] Transaction options
+    # @param [Hash] opts Transaction options
+    #
     # @return The result of yielding the block or +nil+ if
     #         the transaction was rolled back
     #
