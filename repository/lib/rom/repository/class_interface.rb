@@ -24,6 +24,14 @@ module ROM
         klass
       end
 
+      # Initialize a new repository object
+      #
+      # @param [ROM::Container] container Finalized rom container
+      #
+      # @param [Hash] options Repository options
+      # @option options [Module] :struct_namespace Custom struct namespace
+      # @option options [Boolean] :auto_struct Enable/Disable auto-struct mapping
+      #
       # @api public
       def new(container, options = EMPTY_HASH)
         unless relation_reader

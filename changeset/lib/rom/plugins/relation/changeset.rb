@@ -7,6 +7,9 @@ require 'rom/changeset/delete'
 module ROM
   module Plugins
     module Relation
+      # Relation plugin which adds `Relation#changeset` method
+      #
+      # @api public
       module Changeset
         TYPES = {
           create: ROM::Changeset::Create,
@@ -20,8 +23,10 @@ module ROM
           event[:relation].include(InstanceMethods)
         end
 
+        # Relation instance methods provided by the Changeset plugin
+        #
+        # @api public
         module InstanceMethods
-
           # Create a changeset for a relation
           #
           # @overload changeset(type, data)

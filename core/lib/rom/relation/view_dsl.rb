@@ -4,7 +4,8 @@ module ROM
     #
     # This is used to establish pre-defined relation views with explicit schemas.
     # Such views can be used to compose relations together, even from multiple
-    # adapters.
+    # adapters. In advanced adapters like rom-sql using view DSL is not required though,
+    # as relation schemas are dynamic and they always represent current tuple structure.
     #
     # @api public
     class ViewDSL

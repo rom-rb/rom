@@ -7,6 +7,7 @@ module ROM
   AdapterLoadError = Class.new(StandardError)
 
   class AdapterNotPresentError < StandardError
+    # @api private
     def initialize(adapter, component)
       super(
         "Failed to find #{component} class for #{adapter} adapter. " \
@@ -29,16 +30,19 @@ module ROM
   AttributeAlreadyDefinedError = Class.new(StandardError)
 
   class InvalidRelationName < StandardError
+    # @api private
     def initialize(relation)
       super("Relation name: #{relation} is a protected word, please use another relation name")
     end
   end
 
   class ElementNotFoundError < KeyError
+    # @api private
     def initialize(key, registry)
       super(set_message(key, registry))
     end
 
+    # @api private
     def set_message(key, registry)
       "#{key.inspect} doesn't exist in #{registry.class.name} registry"
     end
@@ -47,18 +51,21 @@ module ROM
   MapperMissingError = Class.new(ElementNotFoundError)
 
   CommandNotFoundError = Class.new(ElementNotFoundError) do
+    # @api private
     def set_message(key, registry)
       "There is no :#{key} command for :#{registry.relation_name} relation"
     end
   end
 
   MissingSchemaClassError = Class.new(StandardError) do
+    # @api private
     def initialize(klass)
       super("#{klass.inspect} relation is missing schema_class")
     end
   end
 
   MissingSchemaError = Class.new(StandardError) do
+    # @api private
     def initialize(klass)
       super("#{klass.inspect} relation is missing schema definition")
     end

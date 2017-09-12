@@ -100,16 +100,28 @@ module ROM
           options
         end
 
+        # Return true if association's default relation view should be overridden by a custom one
+        #
+        # @return [Boolean]
+        #
         # @api public
         def override?
           options[:override].equal?(true)
         end
 
+        # Return true if association is aliased
+        #
+        # @return [Boolean]
+        #
         # @api public
         def aliased?
           options.key?(:as)
         end
 
+        # Return association class for a given definition object
+        #
+        # @return [Class]
+        #
         # @api public
         def type
           Dry::Core::Inflector.demodulize(self.class.name).to_sym

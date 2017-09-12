@@ -53,6 +53,12 @@ module ROM
         command.call
       end
 
+      # Associate with other changesets
+      #
+      # @see Changeset#associate
+      #
+      # @return [Associated]
+      #
       # @api public
       def associate(other, name = Associated.infer_assoc_name(other))
         self.class.new(left, associations: associations.merge(name => other))
