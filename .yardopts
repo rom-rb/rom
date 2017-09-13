@@ -3,6 +3,8 @@
 -o doc
 -r README.md
 --files CHANGELOG.md
+--markup-provider=redcarpet
+--markup=markdown
 core/lib/**/*.rb
 changeset/lib/**/*.rb
 mapper/lib/**/*.rb
