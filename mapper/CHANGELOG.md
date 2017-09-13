@@ -1,3 +1,9 @@
+# 1.0.0 to-be-released
+
+### Added
+
+* New mapper type - `ROM::Transformer`, which exposes [transproc](https://github.com/solnic/transproc)'s DSL (solnic)
+
 # 0.5.1 2017-05-04
 
 ### Changed
