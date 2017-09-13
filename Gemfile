@@ -11,6 +11,7 @@ COMPONENTS.each do |component|
 end
 
 gem 'dry-types', git: 'https://github.com/dry-rb/dry-types', branch: 'master'
+gem 'dry-logic', git: 'https://github.com/dry-rb/dry-logic', branch: 'master'
 
 group :sql do
   gem 'sequel', '~> 5.0'
