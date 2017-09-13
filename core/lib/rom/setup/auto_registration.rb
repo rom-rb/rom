@@ -9,6 +9,9 @@ require 'rom/setup/auto_registration_strategies/with_namespace'
 require 'rom/setup/auto_registration_strategies/custom_namespace'
 
 module ROM
+  # AutoRegistration is used to load component files automatically from the provided directory path
+  #
+  # @api public
   class AutoRegistration
     extend Initializer
 

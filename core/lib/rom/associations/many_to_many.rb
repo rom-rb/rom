@@ -76,16 +76,28 @@ module ROM
 
       protected
 
+      # Primary key name on the source side
+      #
+      # @return [Symbol]
+      #
       # @api protected
       def source_key
         source.primary_key
       end
 
+      # Foreign key name on the target side
+      #
+      # @return [Symbol]
+      #
       # @api protected
       def target_key
         foreign_key
       end
 
+      # Return association for many-to-many-through
+      #
+      # @return [Association]
+      #
       # @api protected
       def join_assoc
         if join_relation.associations.key?(through.assoc_name)
@@ -95,6 +107,10 @@ module ROM
         end
       end
 
+      # Return a [pk, fk] mapping for source/target relations
+      #
+      # @return [Array<Symbol>]
+      #
       # @api protected
       def join_key_map
         left = super

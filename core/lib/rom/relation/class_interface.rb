@@ -10,6 +10,8 @@ require 'rom/support/notifications'
 
 module ROM
   class Relation
+    # Global class-level API for relation classes
+    #
     # @api public
     module ClassInterface
       extend Notifications::Listener
@@ -112,6 +114,12 @@ module ROM
         end
       end
 
+      # Assign a schema to a relation class
+      #
+      # @param [Schema] schema
+      #
+      # @return [Schema]
+      #
       # @api private
       def set_schema!(schema)
         @schema = schema

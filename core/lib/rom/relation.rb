@@ -266,6 +266,12 @@ module ROM
       end
     end
 
+    # Create a graph node for a given association identifier
+    #
+    # @param [Symbol, Relation::Name]
+    #
+    # @return [Relation]
+    #
     # @api public
     def node(name)
       assoc = associations[name]
@@ -273,6 +279,12 @@ module ROM
       other.eager_load(assoc)
     end
 
+    # Return a graph node prepared by the given association
+    #
+    # @param [Association] An association object
+    #
+    # @return [Relation]
+    #
     # @api public
     def eager_load(assoc)
       relation = assoc.prepare(self)
@@ -284,6 +296,12 @@ module ROM
       end
     end
 
+    # Preload other relation via association
+    #
+    # This is used internally when relations are composed
+    #
+    # @return [Relation::Curried]
+    #
     # @api private
     def preload_assoc(assoc, other)
       assoc.preload(self, other)

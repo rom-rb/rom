@@ -5,10 +5,9 @@ require 'rom/attribute'
 require 'rom/schema/associations_dsl'
 
 module ROM
-  # Relation schema
-  #
-  # @api public
   class Schema
+    # Schema DSL exposed as `schema { .. }` in relation classes
+    #
     # @api public
     class DSL < BasicObject
       KERNEL_METHODS = %i(extend method).freeze
@@ -16,17 +15,41 @@ module ROM
 
       extend Initializer
 
+      # @!attribute [r] relation
+      #   @return [Relation::Name] The name of the schema's relation
       param :relation
 
+      # @!attribute [r] inferrer
+      #   @return [Inferrer] Optional attribute inferrer
       option :inferrer, default: -> { DEFAULT_INFERRER }
 
+      # @!attribute [r] schema_class
+      #   @return [Class] Schema class that should be instantiated
       option :schema_class, default: -> { Schema }
 
+      # @!attribute [r] attr_class
+      #   @return [Class] Attribute class that should be used
       option :attr_class, default: -> { Attribute }
 
+      # @!attribute [r] adapter
+      #   @return [Symbol] The adapter identifier used in gateways
       option :adapter, default: -> { :default }
 
-      attr_reader :attributes, :plugins, :definition, :associations_dsl
+      # @!attribute [r] attributes
+      #   @return [Hash] A hash with attributes defined by the DSL
+      attr_reader :attributes
+
+      # @!attribute [r] plugins
+      #   @return [Hash] A hash with schema plugins enabled in a schema
+      attr_reader :plugins
+
+      # @!attribute [r] definition
+      #   @return [Proc] Definition block passed to DSL
+      attr_reader :definition
+
+      # @!attribute [r] associations_dsl
+      #   @return [AssociationDSL] Associations defined within a block
+      attr_reader :associations_dsl
 
       # @api private
       def initialize(*, &block)

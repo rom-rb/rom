@@ -339,6 +339,10 @@ module ROM
       self.equal?(canonical)
     end
 
+    # Finalize a schema
+    #
+    # @return [self]
+    #
     # @api private
     def finalize!(**opts)
       return self if frozen?
@@ -363,6 +367,12 @@ module ROM
       self
     end
 
+    # Finalize associations defined in a schema
+    #
+    # @param [RelationRegistry] relations
+    #
+    # @return [self]
+    #
     # @api private
     def finalize_associations!(relations:)
       set!(:associations, yield) if associations.any?

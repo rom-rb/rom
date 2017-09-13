@@ -35,6 +35,12 @@ module ROM
       alias_method :left, :root
       alias_method :right, :nodes
 
+      # Rebuild a graph with new nodes
+      #
+      # @param [Array<Relation>] nodes
+      #
+      # @return [Graph]
+      #
       # @api public
       def with_nodes(nodes)
         self.class.new(root, nodes)

@@ -39,11 +39,19 @@ module ROM
 
       protected
 
+      # Return primary key on the source side
+      #
+      # @return [Symbol]
+      #
       # @api protected
       def source_key
         source.schema.primary_key_name
       end
 
+      # Return foreign key name on the target side
+      #
+      # @return [Symbol]
+      #
       # @api protected
       def target_key
         foreign_key

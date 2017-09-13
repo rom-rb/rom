@@ -1,9 +1,14 @@
 module ROM
+  # This extension is only used for environment objects to configure arbitrary options, each
+  # adapter can use them according to what they need.
+  #
   # @api private
   module Configurable
     class Config
       WRITER_REGEXP = /=$/.freeze
 
+      # @!attribute [r] settings
+      #   @return [Hash] A hash with defined settings
       attr_reader :settings
 
       # @api private
@@ -11,6 +16,10 @@ module ROM
         @settings = settings
       end
 
+      # Return a setting
+      #
+      # @return [Mixed]
+      #
       # @api public
       def [](name)
         public_send(name)
@@ -36,6 +45,7 @@ module ROM
         true
       end
 
+      # @api private
       def dup
         self.class.new(dup_settings(settings))
       end
@@ -72,10 +82,19 @@ module ROM
       end
     end
 
+    # Return config instance
+    #
+    # @return [Config]
+    #
+    # @api private
     def config
       @config ||= Config.new
     end
 
+    # Yield config instance
+    #
+    # @return [self]
+    #
     # @api public
     def configure
       yield(config)

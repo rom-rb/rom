@@ -1,7 +1,17 @@
 module ROM
   module Commands
     class Lazy
+      # Lazy command wrapper for update commands
+      #
+      # @api public
       class Update < Lazy
+        # Execute a lazy update command
+        #
+        # @see Commands::Update#call
+        #
+        # @return [Hash, Array<Hash>]
+        #
+        # @api public
         def call(*args)
           first = args.first
           last = args.last

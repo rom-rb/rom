@@ -14,6 +14,9 @@ module ROM
       super
     end
 
+    # Type extensions
+    #
+    # @api public
     module Methods
       # Shortcut for defining a foreign key attribute type
       #

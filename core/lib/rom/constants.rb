@@ -6,6 +6,7 @@ module ROM
 
   AdapterLoadError = Class.new(StandardError)
 
+  # Exception raised when a component is configured with an adapter that's not loaded
   class AdapterNotPresentError < StandardError
     # @api private
     def initialize(adapter, component)
@@ -29,6 +30,7 @@ module ROM
   MissingAdapterIdentifierError = Class.new(StandardError)
   AttributeAlreadyDefinedError = Class.new(StandardError)
 
+  # Exception raised when a reserved keyword is used as a relation name
   class InvalidRelationName < StandardError
     # @api private
     def initialize(relation)
@@ -36,6 +38,7 @@ module ROM
     end
   end
 
+  # Exception raised when an element inside a component registry is not found
   class ElementNotFoundError < KeyError
     # @api private
     def initialize(key, registry)

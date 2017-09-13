@@ -38,6 +38,9 @@ module ROM
   module Notifications
     LISTENERS_HASH = Hash.new { |h, k| h[k] = [] }
 
+    # Extension used for classes that can trigger events
+    #
+    # @api public
     module Publisher
       # Subscribe to events.
       # If the query parameter is provided, filters events by payload.
@@ -166,6 +169,8 @@ module ROM
       EventBus.new(id, events: events.dup, listeners: listeners.dup)
     end
 
+    # Extension for objects that can listen to events
+    #
     # @api public
     module Listener
       # Subscribe to events

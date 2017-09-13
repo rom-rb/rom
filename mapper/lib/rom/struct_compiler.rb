@@ -17,11 +17,15 @@ module ROM
     param :registry, default: -> { Dry::Types }
     option :cache, default: -> { Cache.new }
 
+    # @api private
     def initialize(*args)
       super
       @cache = cache.namespaced(:structs)
     end
 
+    # Build a struct class based on relation header ast
+    #
+    # @api private
     def call(*args)
       cache.fetch_or_store(args) do
         name, header, ns = args
@@ -42,6 +46,7 @@ module ROM
 
     private
 
+    # @api private
     def visit_relation(node)
       _, header, meta = node
       name = meta[:combine_name] || meta[:alias]
@@ -63,30 +68,35 @@ module ROM
       end
     end
 
+    # @api private
     def visit_attribute(node)
       name, type, meta = node
 
       [meta[:alias] && !meta[:wrapped] ? meta[:alias] : name, visit(type).meta(meta)]
     end
 
+    # @api private
     def visit_constructor(node)
       definition, * = node
 
       visit(definition)
     end
 
+    # @api private
     def visit_constrained(node)
       definition, _ = node
 
       visit(definition)
     end
 
+    # @api private
     def build_class(name, parent, ns, &block)
       Dry::Core::ClassBuilder.
         new(name: class_name(name), parent: parent, namespace: ns).
         call(&block)
     end
 
+    # @api private
     def class_name(name)
       Dry::Core::Inflector.classify(Dry::Core::Inflector.singularize(name))
     end

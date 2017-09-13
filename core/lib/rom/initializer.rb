@@ -64,6 +64,8 @@ module ROM
       define_method(:class, Kernel.instance_method(:class))
       define_method(:instance_variable_get, Kernel.instance_method(:instance_variable_get))
 
+      # This makes sure we memoize options before an object becomes frozen
+      #
       # @api public
       def freeze
         options

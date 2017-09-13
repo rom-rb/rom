@@ -1,7 +1,17 @@
 module ROM
   module Commands
     class Lazy
+      # Lazy command wrapper for delete commands
+      #
+      # @api public
       class Delete < Lazy
+        # Execute a lazy delete command
+        #
+        # @see Commands::Delete#call
+        #
+        # @return [Hash, Array<Hash>]
+        #
+        # @api public
         def call(*args)
           first = args.first
           last = args.last
