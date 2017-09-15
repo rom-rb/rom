@@ -12,7 +12,7 @@ Gem::Specification.new do |gem|
   gem.files         = Dir['CHANGELOG.md', 'LICENSE', 'README.md', 'lib/**/*']
   gem.license       = 'MIT'
 
-  gem.add_runtime_dependency 'rom-mapper', '~> 1.0.0.beta'
+  gem.add_runtime_dependency 'rom-mapper', '~> 1.0.0.rc'
   gem.add_runtime_dependency 'dry-struct', '~> 0.3'
 
   gem.add_development_dependency 'rake', '~> 11.2'
