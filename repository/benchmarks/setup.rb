@@ -3,6 +3,7 @@ require 'bundler'
 Bundler.require
 
 require 'benchmark/ips'
+require 'sequel'
 require 'rom-sql'
 require 'rom-repository'
 require 'active_record'
@@ -20,6 +21,7 @@ def benchmark(title)
   Benchmark.ips do |x|
     x.config(suite: GCSuite.new)
     def x.verify(*); end
+    def x.prepare(*); yield; end
     yield x
     x.compare!
   end
@@ -125,6 +127,10 @@ end
 
 def rom
   ROM_ENV
+end
+
+def users
+  rom.relations[:users]
 end
 
 def user_repo
