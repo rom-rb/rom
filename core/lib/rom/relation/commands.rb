@@ -6,20 +6,30 @@ module ROM
     module Commands
       # Return a command for the relation
       #
-      # @example
+      # @example build a simple :create command
       #   users.command(:create)
       #
+      # @example build a command which returns multiple results
+      #   users.command(:create, result: many)
+      #
+      # @example build a command which uses a specific plugin
+      #   users.command(:create, plugin: :timestamps)
+      #
+      # @example build a command which sends results through a custom mapper
+      #   users.command(:create, mapper: :my_mapper_identifier)
+      #
       # @param type [Symbol] The command type (:create, :update or :delete)
-      # @option :mapper [ROM::Mapper] An optional mapper applied to the command result
-      # @option :use [Array<Symbol>] A list of command plugins
-      # @option :result [:one, :many] Whether the command result has one or more rows.
-      #                               :one is default
+      # @param opts [Hash] Additional options
+      # @option opts [Symbol] :mapper (nil) An optional mapper applied to the command result
+      # @option opts [Array<Symbol>] :use ([]) A list of command plugins
+      # @option opts [Symbol] :result (:one) Set how many results the command should return.
+      #                                       Can be `:one` or `:many`
       #
       # @return [ROM::Command]
       #
       # @api public
       def command(type, mapper: nil, use: EMPTY_ARRAY, **opts)
-        base_command = commands[type, adapter, to_ast, use, opts]
+        base_command = commands.key?(type) ? commands[type] : commands[type, adapter, to_ast, use, opts]
 
         command =
           if mapper
