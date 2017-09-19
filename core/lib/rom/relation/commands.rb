@@ -6,6 +6,10 @@ module ROM
     module Commands
       # Return a command for the relation
       #
+      # This method can either return an existing custom command identified
+      # by `type` param, or generate a command dynamically based on relation
+      # AST.
+      #
       # @example build a simple :create command
       #   users.command(:create)
       #
@@ -17,6 +21,9 @@ module ROM
       #
       # @example build a command which sends results through a custom mapper
       #   users.command(:create, mapper: :my_mapper_identifier)
+      #
+      # @example return an existing custom command
+      #   users.command(:my_custom_command_identifier)
       #
       # @param type [Symbol] The command type (:create, :update or :delete)
       # @param opts [Hash] Additional options

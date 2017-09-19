@@ -107,6 +107,26 @@ module ROM
         with_nodes(new_nodes)
       end
 
+      # Return a `:create` command that can insert data from a nested hash.
+      #
+      # This is limited to `:create` commands only, because automatic restriction
+      # for `:update` commands would be quite complex. It's possible that in the
+      # future support for `:update` commands will be added though.
+      #
+      # Another limitation is that it can only work when you're composing
+      # parent and its child(ren), which follows canonical hierarchy from your
+      # database, so that parents are created first, then their PKs are set
+      # as FKs in child tuples. It should be possible to make it work with
+      # both directions (parent => child or child => parent), and it would
+      # require converting input tuples based on how they depend on each other,
+      # which we could do in the future.
+      #
+      # Expanding functionality of this method is planned for rom 5.0.
+      #
+      # @see Relation#command
+      #
+      # @raise NotImplementedError when type is not `:create`
+      #
       # @api public
       def command(type, *args)
         if type == :create
