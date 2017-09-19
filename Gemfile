@@ -31,7 +31,7 @@ group :tools do
   gem 'mutant-rspec'
   gem 'pry-byebug', platforms: :mri
   gem 'pry', platforms: :jruby
-  gem 'redcarpet'
+  gem 'redcarpet', platforms: :mri # for yard
 end
 
 group :benchmarks do
