@@ -22,7 +22,7 @@ after_success:
 rvm:
   - 2.3.4
   - 2.4.1
-  - jruby
+  - jruby-9.1.13.0
 env:
   global:
     - JRUBY_OPTS='--dev -J-Xmx1024M'
