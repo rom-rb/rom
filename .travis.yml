@@ -1,6 +1,5 @@
 language: ruby
-dist: trusty
-sudo: required
+sudo: false
 install:
   - "cd $TRAVIS_BUILD_DIR/core"
   - "bundle install --without sql benchmarks console tools --gemfile ./Gemfile"
