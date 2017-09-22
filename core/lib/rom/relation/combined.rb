@@ -77,7 +77,7 @@ module ROM
       #
       # @param [Symbol] name The node relation name
       #
-      # @yieldparam [Relation] The relation node
+      # @yieldparam [Relation] relation The relation node
       # @yieldreturn [Relation] The new relation node
       #
       # @return [Relation]
