@@ -29,8 +29,8 @@ module ROM
       extend Initializer
 
       param :processor, default: -> { self.class.transproc }
-      option :diff_processor, optional: true
       option :use_for_diff, optional: true, default: -> { true }
+      option :diff_processor, default: -> { use_for_diff ? processor : nil }
 
       def self.[](name)
         container[name]

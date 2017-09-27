@@ -68,8 +68,8 @@ module ROM
             data_tuple = data.to_a
             data_keys = data.keys & source.keys
 
-            new_tuple = data_tuple.to_a.select { |(k, _)| data_keys.include?(k) }
-            ori_tuple = source.to_a.select { |(k, _)| data_keys.include?(k) }
+            new_tuple = data_tuple.to_a.select { |k, _| data_keys.include?(k) }
+            ori_tuple = source.to_a.select { |k, _| data_keys.include?(k) }
 
             Hash[new_tuple - (new_tuple & ori_tuple)]
           end

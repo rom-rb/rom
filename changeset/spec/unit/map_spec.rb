@@ -115,4 +115,24 @@ RSpec.describe ROM::Changeset, '.map' do
       expect(output[:updated_at]).to be_a(Time)
     end
   end
+
+  context 'multiple mapping with update' do
+    let(:relation) { double(:relation, one: { three: 0 }) }
+
+    subject(:changeset) do
+      Class.new(ROM::Changeset::Update) do
+        map do |one: |
+          { two: one + 1 }
+        end
+
+        map do |two: |
+          { three: two + 1 }
+        end
+      end.new(relation).with({}).data(one: 1)
+    end
+
+    it 'applies map blocks' do
+      expect(changeset.diff).to eql(three: 3)
+    end
+  end
 end

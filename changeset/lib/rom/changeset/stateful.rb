@@ -8,7 +8,7 @@ module ROM
     # @abstract
     class Stateful < Changeset
       # Default no-op pipe
-      EMPTY_PIPE = Pipe.new.freeze
+      EMPTY_PIPE = Pipe.new(use_for_diff: false).freeze
 
       # @!attribute [r] __data__
       #   @return [Hash] The relation data
