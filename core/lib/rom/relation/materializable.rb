@@ -47,15 +47,6 @@ module ROM
       def one!
         call.one!
       end
-
-      # Return first tuple from a relation coerced to an array
-      #
-      # @return [Object]
-      #
-      # @api public
-      def first
-        to_a.first
-      end
     end
   end
 end
