@@ -16,6 +16,23 @@ shared_examples_for 'materializable relation' do
     end
   end
 
+  describe '#map' do
+    it 'yields objects' do
+      count = relation.to_a.size
+      result = []
+
+      relation.map do |object|
+        result << object
+      end
+
+      expect(result.count).to eql(count)
+    end
+
+    it 'returns enumerator when block is not provided' do
+      expect(relation.map.to_a).to eql(relation.to_a)
+    end
+  end
+
   describe '#one' do
     it 'returns one tuple' do
       expect(relation.one).to be_instance_of(Hash)

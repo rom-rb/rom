@@ -82,7 +82,7 @@ RSpec.describe ROM::Relation::Curried do
     end
 
     it 'does not forward to the relation when method is auto-curried' do
-      expect { users_relation.by_name.find }.to raise_error(NoMethodError, /find/)
+      expect { users_relation.by_name.by_name }.to raise_error(NoMethodError, /by_name/)
     end
 
     it 'raises no method error when method is not defined' do
