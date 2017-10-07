@@ -4,6 +4,8 @@ module ROM
     #
     # @api public
     module Materializable
+      include Enumerable
+
       # Coerce the relation to an array
       #
       # @return [Array]
@@ -44,15 +46,6 @@ module ROM
       # @api public
       def one!
         call.one!
-      end
-
-      # Return first tuple from a relation coerced to an array
-      #
-      # @return [Object]
-      #
-      # @api public
-      def first
-        to_a.first
       end
     end
   end
