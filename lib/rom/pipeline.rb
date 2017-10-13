@@ -94,6 +94,8 @@ module ROM
     #
     # @api private
     class Composite
+      (Kernel.private_instance_methods - %i(respond_to_missing?)).each(&method(:undef_method))
+
       include Dry::Equalizer(:left, :right)
       include Proxy
 

@@ -6,12 +6,21 @@ RSpec.describe ROM::Relation::Composite do
 
   let(:users_relation) do
     Class.new(ROM::Memory::Relation) do
+      schema do
+        attribute :name, ROM::Types::String
+        attribute :email, ROM::Types::String
+      end
+
       def by_name(name)
         restrict(name: name)
       end
 
       def sorted(other)
         other.source.order(:name)
+      end
+
+      def select(key)
+        project(key)
       end
     end.new(users_dataset)
   end
@@ -84,6 +93,14 @@ RSpec.describe ROM::Relation::Composite do
 
     it 'calls and returns the first object' do
       expect(relation.first).to eql('JOE')
+    end
+  end
+
+  describe '#__send__' do
+    it 'proxies Kernel methods' do
+      relation = (users_relation >> name_list >> upcaser).__send__(:select, :name)
+
+      expect(relation.call).to match_array(%w(JANE JOE))
     end
   end
 end
