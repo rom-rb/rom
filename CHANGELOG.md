@@ -1,3 +1,11 @@
+# v3.3.2 2017-10-14
+
+### Fixed
+
+* Delegate private method calls in composite relations (flash-gordon)
+
+[Compare v3.3.1...v3.3.2](https://github.com/rom-rb/rom/compare/v3.3.1...v3.3.2)
+
 # v3.3.1 2017-07-09
 
 ### Fixed
