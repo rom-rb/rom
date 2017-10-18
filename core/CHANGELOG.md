@@ -1,4 +1,4 @@
-# v4.0.0 to-be-released
+# v4.0.0 2017-10-18
 
 Previous `rom` gem was renamed to `rom-core`
 

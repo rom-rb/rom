@@ -1,4 +1,4 @@
-# v2.0.0 to-be-released
+# v2.0.0 2017-10-18
 
 ### Changed
 
@@ -7,6 +7,7 @@
 * [BREAKING] `Relation#combine_children` was removed (solnic)
 * [BREAKING] `Relation#wrap_parent` was removed, configure associations and use their identifiers in `wrap` instead (solnic)
 * [BREAKING] `Repository#command` was removed in favor of `Relation#command` (solnic)
+* [BREAKING] `Repository#changeset` was removed in favor of `Relation#changeset` (solnic)
 
 ### Internal
 

@@ -1,4 +1,4 @@
-# 1.0.0 to-be-released
+# 1.0.0 2017-10-18
 
 rom-changeset was extracted from rom-repository
 
