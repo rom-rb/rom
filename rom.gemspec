@@ -11,10 +11,10 @@ Gem::Specification.new do |gem|
   gem.files       = Dir['CHANGELOG.md', 'LICENSE', 'README.md', 'lib/**/*']
   gem.license     = 'MIT'
 
-  gem.add_runtime_dependency 'rom-core', '~> 4.0.0.rc'
-  gem.add_runtime_dependency 'rom-mapper', '~> 1.0.0.rc'
-  gem.add_runtime_dependency 'rom-repository', '~> 2.0.0.rc'
-  gem.add_runtime_dependency 'rom-changeset', '~> 1.0.0.rc'
+  gem.add_runtime_dependency 'rom-core', '~> 4.0'
+  gem.add_runtime_dependency 'rom-mapper', '~> 1.0'
+  gem.add_runtime_dependency 'rom-repository', '~> 2.0'
+  gem.add_runtime_dependency 'rom-changeset', '~> 1.0'
 
   gem.add_development_dependency 'rake', '~> 10.3'
   gem.add_development_dependency 'rspec', '~> 3.5'
