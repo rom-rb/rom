@@ -1,3 +1,11 @@
+# v3.3.3 2017-10-19
+
+### Fixed
+
+* Fix warnings issued by redefining JSON types (graywolf)
+
+[Compare v3.3.2...v3.3.3](https://github.com/rom-rb/rom/compare/v3.3.2...v3.3.3)
+
 # v3.3.2 2017-10-14
 
 ### Fixed
