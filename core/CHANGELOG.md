@@ -1,3 +1,11 @@
+# v4.0.1 to-be-released
+
+## Fixed
+
+* YARD docs for `Repository::Root` no longer mention `Repository#changeset` as it was removed in 4.0.0 (solnic)
+
+[Compare v4.0.0...v4.0.1](https://github.com/rom-rb/rom/compare/v4.0.0...v4.0.1)
+
 # v4.0.0 2017-10-18
 
 Previous `rom` gem was renamed to `rom-core`
