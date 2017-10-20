@@ -1,3 +1,9 @@
+# v2.0.1 to-be-released
+
+## Fixed
+
+* YARD docs for `Repository::Root` no longer mention `Repository#changeset` as it was removed in 4.0.0 (solnic)
+
 # v2.0.0 2017-10-18
 
 ### Changed
