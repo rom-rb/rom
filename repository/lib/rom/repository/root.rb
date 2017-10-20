@@ -22,8 +22,7 @@ module ROM
     #
     #   user = user_repo.create(name: "Jane")
     #
-    #   changeset = user_repo.changeset(user.id, name: "Jane Doe")
-    #   user_repo.update(user.id, changeset)
+    #   user_repo.update(user.id, name: "Jane Doe")
     #
     #   user_repo.delete(user.id)
     #
@@ -83,7 +82,7 @@ module ROM
       #   @param [Hash] Association options for nested aggregates
       #
       # @overload aggregate(options)
-      #   Composes an aggregate by delegating to combine_children method.
+      #   Composes an aggregate by delegating to combine method.
       #
       #   @example
       #     user_repo.aggregate(tasks: :labels)
