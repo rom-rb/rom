@@ -225,14 +225,26 @@ module ROM
       end
     end
 
-    # Combine with other relations
+    # Combine with other relations using configured associations
     #
     # @overload combine(*associations)
-    #   Composes relations using configured associations
-    #
     #   @example
     #     users.combine(:tasks, :posts)
+    #
     #   @param *associations [Array<Symbol>] A list of association names
+    #
+    # @overload combine(*associations, **nested_associations)
+    #   @example
+    #     users.combine(:tasks, posts: :authors)
+    #
+    #   @param *associations [Array<Symbol>] A list of association names
+    #   @param *nested_associations [Hash] A hash with nested association names
+    #
+    # @overload combine(associations)
+    #   @example
+    #     users.combine(posts: [:authors, reviews: [:tags, comments: :author])
+    #
+    #   @param *associations [Hash] A hash with nested association names
     #
     # @return [Relation]
     #
