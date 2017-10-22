@@ -355,13 +355,22 @@ module ROM
       ! meta[:read].nil?
     end
 
-    # Return read type or self
+    # Return read type
     #
-    # @return [Attribute]
+    # @return [Dry::Types::Type]
     #
     # @api private
     def to_read_type
       read? ? meta[:read] : type
+    end
+
+    # Return write type
+    #
+    # @return [Dry::Types::Type]
+    #
+    # @api private
+    def to_write_type
+      type
     end
 
     # Return nullable attribute

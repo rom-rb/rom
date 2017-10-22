@@ -402,7 +402,7 @@ module ROM
     # @api private
     def to_input_hash
       Types::Coercible::Hash.schema(
-        map { |attr| [attr.name, attr] }.to_h
+        map { |attr| [attr.name, attr.to_write_type] }.to_h
       )
     end
 
