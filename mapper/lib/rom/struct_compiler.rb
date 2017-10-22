@@ -90,6 +90,12 @@ module ROM
     end
 
     # @api private
+    def visit_enum(node)
+      type_node, * = node
+      visit(type_node)
+    end
+
+    # @api private
     def build_class(name, parent, ns, &block)
       Dry::Core::ClassBuilder.
         new(name: class_name(name), parent: parent, namespace: ns).

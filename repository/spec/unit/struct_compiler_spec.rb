@@ -58,6 +58,25 @@ RSpec.describe 'struct compiler', '#call' do
     end
   end
 
+  context 'with constrained types' do
+    let(:input) do
+      [:posts, [[:attribute, [:id, ROM::Types::Strict::Int.to_ast, alias: false, wrapped: false]],
+                [:attribute, [:status, ROM::Types::Strict::String.enum(%(Foo Bar)).to_ast, alias: false, wrapped: false]]]]
+    end
+
+    let(:struct) do
+      builder[*input, ROM::Struct]
+    end
+
+    it 'reduces a constrained type to plain definition' do
+      expect(struct.schema[:id]).to_not be_constrained
+    end
+
+    it 'reduces an enum type to plain definition' do
+      expect(struct.schema[:status]).to_not be_constrained
+    end
+  end
+
   context 'custom entity container' do
     before do
       module Test
