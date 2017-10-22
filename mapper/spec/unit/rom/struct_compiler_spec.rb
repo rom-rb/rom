@@ -1,5 +1,7 @@
-RSpec.describe 'struct compiler', '#call' do
-  subject(:builder) { ROM::StructCompiler.new }
+require 'rom/struct_compiler'
+
+RSpec.describe ROM::StructCompiler, '#call' do
+  subject(:struct_compiler) { ROM::StructCompiler.new }
 
   def attr_ast(name, type, **opts)
     [name, ROM::Types.const_get(type).to_ast, alias: false, wrapped: false]
@@ -11,7 +13,7 @@ RSpec.describe 'struct compiler', '#call' do
 
   context 'ROM::Struct' do
     it 'generates a struct for a given relation name and columns' do
-      struct = builder[*input, ROM::Struct]
+      struct = struct_compiler[*input, ROM::Struct]
 
       user = struct.new(id: 1, name: 'Jane')
 
@@ -28,7 +30,7 @@ RSpec.describe 'struct compiler', '#call' do
     end
 
     it 'stores struct in the cache' do
-      expect(builder[*input, ROM::Struct]).to be(builder[*input, ROM::Struct])
+      expect(struct_compiler[*input, ROM::Struct]).to be(struct_compiler[*input, ROM::Struct])
     end
 
     context 'with reserved keywords as attribute names' do
@@ -40,7 +42,7 @@ RSpec.describe 'struct compiler', '#call' do
       end
 
       it 'allows to build a struct class without complaining' do
-        struct = builder[*input, ROM::Struct]
+        struct = struct_compiler[*input, ROM::Struct]
 
         user = struct.new(id: 1, name: 'Jane', alias: 'JD', until: Time.new(2030))
 
@@ -52,7 +54,7 @@ RSpec.describe 'struct compiler', '#call' do
     end
 
     it 'raise a friendly error on missing keys' do
-      struct = builder[*input, ROM::Struct]
+      struct = struct_compiler[*input, ROM::Struct]
 
       expect { struct.new(id: 1) }.to raise_error(Dry::Struct::Error, /:name is missing/)
     end
@@ -65,7 +67,7 @@ RSpec.describe 'struct compiler', '#call' do
     end
 
     let(:struct) do
-      builder[*input, ROM::Struct]
+      struct_compiler[*input, ROM::Struct]
     end
 
     it 'reduces a constrained type to plain definition' do
@@ -85,7 +87,7 @@ RSpec.describe 'struct compiler', '#call' do
       end
     end
 
-    let(:struct) { builder[*input, Test::Custom] }
+    let(:struct) { struct_compiler[*input, Test::Custom] }
 
     it 'generates a struct class inside a given module' do
       expect(struct.name).to eql('Test::Custom::User')
