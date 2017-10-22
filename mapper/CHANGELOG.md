@@ -1,3 +1,11 @@
+# 1.0.1 2017-10-22
+
+### Added
+
+* Support for inferred enum schema attributes (solnic)
+
+[Compare v4.0.0..v4.0.1](https://github.com/rom-rb/rom-mapper/compare/v4.0.0...v4.0.1)
+
 # 1.0.0 2017-10-18
 
 ### Added

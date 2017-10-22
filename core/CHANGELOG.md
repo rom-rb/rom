@@ -1,4 +1,8 @@
-# v4.0.1 to-be-released
+# v4.0.1 2017-10-22
+
+## Internal
+
+* `Schema#to_input_hash` uses attribute types instead of whole attribute objects (solnic)
 
 [Compare v4.0.0...v4.0.1](https://github.com/rom-rb/rom/compare/v4.0.0...v4.0.1)
 
