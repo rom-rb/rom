@@ -119,13 +119,27 @@ RSpec.describe ROM::StructCompiler, '#call' do
 
       expect {
         user.upcased_middle_name
-      }.to raise_error(ROM::Struct::MissingAttribute, /not loaded attribute\?/)
+      }.to raise_error(ROM::Struct::MissingAttribute, /attribute not loaded\?/)
     end
 
     it 'works with implicit coercions' do
       user = struct.new(id: 1, name: 'Jane')
 
       expect([user].flatten).to eql([user])
+    end
+
+    it 'generates a proper error if with overridden getters and a missing method in them' do
+      class Test::Custom::User < ROM::Struct
+        def name
+          first_name
+        end
+      end
+
+      user = struct.new(id: 1, name: 'Jane')
+
+      expect {
+        user.name
+      }.to raise_error(ROM::Struct::MissingAttribute, /attribute not loaded\?/)
     end
   end
 end
