@@ -116,6 +116,7 @@ module ROM
     def self.define(name, attributes: EMPTY_ARRAY, attr_class: Attribute, **options)
       new(
         name,
+        attr_class: attr_class,
         attributes: attributes(attributes, attr_class),
         **options
       ) { |schema| yield(schema) if block_given? }
