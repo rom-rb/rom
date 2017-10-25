@@ -222,6 +222,25 @@ RSpec.describe ROM::Relation do
       expect(relation.schema.name).to eql(ROM::Relation::Name[:test_some_relation])
       expect(relation.schema?).to be(false)
     end
+
+    context 'when relation has custom attribute class' do
+      before do
+        module Test
+          class Attribute < ROM::Attribute; end
+          class Relation < ROM::Relation
+            schema_attr_class Test::Attribute
+          end
+        end
+      end
+
+      it 'define schema with attribute class' do
+        relation = Class.new(Test::Relation) do
+          schema(:test_some_relation) {}
+        end.new([])
+
+        expect(relation.schema.attr_class).to eq Test::Attribute
+      end
+    end
   end
 
   describe '#input_schema' do
