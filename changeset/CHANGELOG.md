@@ -1,3 +1,9 @@
+# 1.0.1 to-be-released
+
+### Fixed
+
+* Depends on final release of `rom-core ~> 4.0` (solnic)
+
 # 1.0.0 2017-10-18
 
 rom-changeset was extracted from rom-repository

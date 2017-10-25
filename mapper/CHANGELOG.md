@@ -1,3 +1,9 @@
+# 1.0.2 to-be-released
+
+### Fixed
+
+* Missing dependency on `dry-struct` was added (solnic)
+
 # 1.0.1 2017-10-22
 
 ### Added

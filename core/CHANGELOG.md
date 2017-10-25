@@ -1,3 +1,9 @@
+# v4.0.2 to-be-released
+
+## Fixed
+
+* Defining schema uses default attribute class correctly again (v-kolesnikov)
+
 # v4.0.1 2017-10-22
 
 ## Internal

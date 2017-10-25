@@ -1,3 +1,12 @@
+# 4.0.2 to-be-released
+
+* `rom-core` updated to `['~> 4.0', '>= 4.0.2']`
+* `rom-mapper` updated to `['~> 1.0', '>= 1.0.2']`
+* `rom-changeset` updated to `['~> 1.0', '>= 1.0.1']`
+* `rom-repository` updated to `['~> 2.0', '>= 2.0.1']`
+
+[Compare v4.0.1...v4.0.2](https://github.com/rom-rb/rom/compare/v4.0.1...v4.0.2)
+
 # 4.0.1 2017-10-22
 
 * `rom-core` updated to `['~> 4.0', '>= 4.0.1']`
