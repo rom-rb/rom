@@ -62,6 +62,8 @@ module ROM
 
     DEFAULT_INFERRER = Inferrer.new(enabled: false).freeze
 
+    VALID_IVAR_REGEX = /^[a-z_][a-zA-Z_0-9]*$/
+
     extend Initializer
 
     include Dry::Equalizer(:name, :attributes, :associations)
@@ -360,7 +362,12 @@ module ROM
     #
     # @api private
     def finalize_attributes!(gateway: nil, relations: nil)
-      inferrer.(self, gateway).each { |key, value| set!(key, value) }
+      inferrer.(self, gateway).each do |key, value|
+        value.each do |attr|
+          raise MapperInvalidAttributeName.new(attr.name) unless attr.name.match(VALID_IVAR_REGEX)
+        end
+        set!(key, value)
+      end
 
       yield if block_given?
 

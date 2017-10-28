@@ -17,6 +17,39 @@ RSpec.describe ROM::Schema, '#finalize!' do
     end
   end
 
+  context 'raise error when invalid column names' do
+    context 'without inferrer' do
+      subject(:schema) do
+        define_schema(:users, id: :Int, 'white space' => :String)
+      end
+
+      it 'raises error' do
+        expect {
+          schema.finalize_attributes!.finalize!
+        }.to raise_error(ROM::MapperInvalidAttributeName)
+      end
+    end
+
+    context 'with inferrer' do
+      subject(:schema) do
+        ROM::Schema.define(
+          :users,
+          attributes: [define_type(:id, :Int), define_type('white space', :String)],
+          inferrer: ROM::Schema::DEFAULT_INFERRER.with(
+            attributes_inferrer: proc { [ [define_attribute(:name, :String)], [:id, 'white space'] ] },
+            enabled: true
+          )
+        )
+      end
+
+      it 'raises error' do
+        expect {
+          schema.finalize_attributes!.finalize!
+        }.to raise_error(ROM::MapperInvalidAttributeName)
+      end
+    end
+  end
+
   context 'with inferrer' do
     subject(:schema) do
       ROM::Schema.define(

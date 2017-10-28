@@ -17,6 +17,13 @@ module ROM
     end
   end
 
+  class MapperInvalidAttributeName < StandardError
+    # @api private
+    def initialize(attr_name)
+      super("Attribute name: #{attr_name} is invalid for been set as an instance variable")
+    end
+  end
+
   EnvAlreadyFinalizedError = Class.new(StandardError)
   RelationAlreadyDefinedError = Class.new(StandardError)
   MapperAlreadyDefinedError = Class.new(StandardError)
