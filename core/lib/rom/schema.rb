@@ -363,8 +363,10 @@ module ROM
     # @api private
     def finalize_attributes!(gateway: nil, relations: nil)
       inferrer.(self, gateway).each do |key, value|
-        value.each do |attr|
-          raise MapperInvalidAttributeName.new(attr.name) unless attr.name.match(VALID_IVAR_REGEX)
+        if key == :attributes
+          value.each do |attr|
+            raise MapperInvalidAttributeName.new(attr.name) unless attr.name.match(VALID_IVAR_REGEX)
+          end
         end
         set!(key, value)
       end
