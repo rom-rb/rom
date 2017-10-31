@@ -343,6 +343,17 @@ module ROM
       self.equal?(canonical)
     end
 
+    # Return if a schema attribute is valid
+    #
+    # @param [Attribute] attribute
+    #
+    # @return [Boolean]
+    #
+    # @api public
+    def valid?(attribute)
+      !!attribute.name.match(VALID_IVAR_REGEX)
+    end
+
     # Finalize a schema
     #
     # @return [self]
