@@ -96,11 +96,11 @@ module ROM
     # @!attribute [r] primary_key_name
     #   @return [Symbol] The name of the primary key. This is set because in
     #                    most of the cases relations don't have composite pks
-    attr_reader :primary_key_name
+    option :primary_key_name, optional: true
 
     # @!attribute [r] primary_key_names
     #   @return [Array<Symbol>] A list of all pk names
-    attr_reader :primary_key_names
+    option :primary_key_names, optional: true
 
     alias_method :to_ary, :attributes
 
@@ -451,8 +451,8 @@ module ROM
     # @api private
     def initialize_primary_key_names
       if primary_key.size > 0
-        @primary_key_name = primary_key[0].meta[:name]
-        @primary_key_names = primary_key.map { |type| type.meta[:name] }
+        set!(:primary_key_name, primary_key[0].meta[:name])
+        set!(:primary_key_names, primary_key.map { |type| type.meta[:name] })
       end
     end
 
