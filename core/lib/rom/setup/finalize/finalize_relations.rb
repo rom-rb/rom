@@ -90,7 +90,7 @@ module ROM
 
         notifications.trigger(
           'configuration.relations.schema.set',
-          schema: schema, relation: klass, adapter: klass.adapter
+          schema: schema, relation: klass, registry: registry, adapter: klass.adapter
         )
 
         rel_key = schema.name.to_sym

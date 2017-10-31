@@ -54,6 +54,7 @@ module ROM
 
       unless schema.frozen?
         schema.finalize_attributes!(gateway: gateway, relations: registry)
+        schema.set!(:relations, registry)
       end
     end
 
@@ -416,6 +417,12 @@ module ROM
       [:schema, [name, attributes.map(&:to_ast)]]
     end
 
+    # @api private
+    def set!(key, value)
+      instance_variable_set("@#{ key }", value)
+      options[key] = value
+    end
+
     private
 
     # @api private
@@ -447,12 +454,6 @@ module ROM
         @primary_key_name = primary_key[0].meta[:name]
         @primary_key_names = primary_key.map { |type| type.meta[:name] }
       end
-    end
-
-    # @api private
-    def set!(key, value)
-      instance_variable_set("@#{ key }", value)
-      options[key] = value
     end
 
     memoize :count_index, :name_index, :source_index, :to_ast, :to_input_hash, :to_output_hash
