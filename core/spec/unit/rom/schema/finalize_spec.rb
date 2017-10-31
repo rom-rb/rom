@@ -26,7 +26,7 @@ RSpec.describe ROM::Schema, '#finalize!' do
       it 'raises error' do
         expect {
           schema.finalize_attributes!.finalize!
-        }.to raise_error(ROM::MapperInvalidAttributeName)
+        }.to raise_error(ROM::Schema::Inferrer::MapperInvalidAttributeName)
       end
     end
 
@@ -45,7 +45,7 @@ RSpec.describe ROM::Schema, '#finalize!' do
       it 'raises error' do
         expect {
           schema.finalize_attributes!.finalize!
-        }.to raise_error(ROM::MapperInvalidAttributeName)
+        }.to raise_error(ROM::Schema::Inferrer::MapperInvalidAttributeName)
       end
     end
   end

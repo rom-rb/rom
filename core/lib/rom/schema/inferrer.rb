@@ -18,6 +18,15 @@ module ROM
         end
       end
 
+      MapperInvalidAttributeName = Class.new(StandardError) do
+        def initialize(name, attributes)
+          super(
+            "Following attributes in #{Relation::Name[name].relation.inspect} schema "\
+            "have invalid names and can not convert to instance variable: #{attributes.map(&:inspect).join(', ')}"
+          )
+        end
+      end
+
       DEFAULT_ATTRIBUTES = [EMPTY_ARRAY, EMPTY_ARRAY].freeze
 
       attributes_inferrer -> * { DEFAULT_ATTRIBUTES }
@@ -46,6 +55,8 @@ module ROM
 
         check_all_attributes_defined(schema, attributes, missing)
 
+        check_for_invalid_attributes_defined(schema, attributes)
+
         { attributes: attributes }
       end
 
@@ -55,6 +66,15 @@ module ROM
 
         if not_defined.size > 0
           raise MissingAttributesError.new(schema.name, not_defined)
+        end
+      end
+
+      # @api private
+      def check_for_invalid_attributes_defined(schema, attributes)
+        invalid_attributes = attributes.select { |attr| !schema.valid?(attr) }
+
+        if invalid_attributes.any?
+          raise MapperInvalidAttributeName.new(schema.name, invalid_attributes)
         end
       end
 

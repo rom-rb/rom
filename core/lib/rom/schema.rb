@@ -373,14 +373,7 @@ module ROM
     #
     # @api private
     def finalize_attributes!(gateway: nil, relations: nil)
-      inferrer.(self, gateway).each do |key, value|
-        if key == :attributes
-          value.each do |attr|
-            raise MapperInvalidAttributeName.new(attr.name) unless attr.name.match(VALID_IVAR_REGEX)
-          end
-        end
-        set!(key, value)
-      end
+      inferrer.(self, gateway).each { |key, value| set!(key, value) }
 
       yield if block_given?
 
