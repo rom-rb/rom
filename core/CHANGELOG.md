@@ -1,8 +1,13 @@
 # v4.0.2 to-be-released
 
+## Added
+
+* Schemas have access to finalized relation registry (GustavoCaso + flash-gordon + solnic)
+
 ## Fixed
 
 * Defining schema uses default attribute class correctly again (v-kolesnikov)
+* Primary key name(s) are preserved when projecting schemas (flash-gordon + solnic)
 
 # v4.0.1 2017-10-22
 
