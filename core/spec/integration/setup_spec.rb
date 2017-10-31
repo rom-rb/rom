@@ -30,6 +30,13 @@ RSpec.describe 'Configuring ROM' do
       expect(tasks.users).to eql(users)
       expect(tasks.users.commands).to be_kind_of(ROM::CommandRegistry)
     end
+
+    it 'configures rom schema to store relations' do
+      users_schema = users_relation.schema
+      tasks_schema = tasks_relation.schema
+      expect(users_schema.relations[:users]).to eql(users_relation)
+      expect(tasks_schema.relations[:tasks]).to eql(tasks_relation)
+    end
   end
 
   context 'without schema' do
