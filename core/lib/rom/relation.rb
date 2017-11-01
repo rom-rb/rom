@@ -19,7 +19,6 @@ require 'rom/relation/composite'
 require 'rom/relation/combined'
 require 'rom/relation/wrap'
 require 'rom/relation/materializable'
-require 'rom/relation/commands'
 require 'rom/association_set'
 
 require 'rom/types'
