@@ -1,4 +1,4 @@
-# v2.0.1 to-be-released
+# v2.0.1 2017-11-02
 
 ## Fixed
 
