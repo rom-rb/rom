@@ -1,4 +1,4 @@
-# v4.0.2 to-be-released
+# v4.0.2 2017-11-02
 
 ## Added
 
@@ -8,6 +8,7 @@
 
 * Defining schema uses default attribute class correctly again (v-kolesnikov)
 * Primary key name(s) are preserved when projecting schemas (flash-gordon + solnic)
+* Global command cache was replaced with a local one (flash-gordon)
 
 # v4.0.1 2017-10-22
 
