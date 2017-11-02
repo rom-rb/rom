@@ -1,5 +1,4 @@
 require 'dry/core/inflector'
-require 'dry/core/cache'
 
 require 'rom/initializer'
 require 'rom/commands'
@@ -14,7 +13,6 @@ module ROM
   #
   # @api private
   class CommandCompiler
-    extend Dry::Core::Cache
     extend Initializer
 
     # @api private
@@ -58,6 +56,10 @@ module ROM
     #   @return [Array<Symbol>] Meta data for a command
     option :meta, optional: true
 
+    # @!attribute [r] cache
+    #   @return [Cache] local cache instance
+    option :cache, default: -> { Cache.new }
+
     # Return a specific command type for a given adapter and relation AST
     #
     # This class holds its own registry where all generated commands are being
@@ -79,7 +81,7 @@ module ROM
     #
     # @api private
     def call(*args)
-      fetch_or_store(args.hash) do
+      cache.fetch_or_store(args.hash) do
         type, adapter, ast, plugins, meta = args
 
         compiler = with(

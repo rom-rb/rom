@@ -60,7 +60,7 @@ RSpec.describe ROM::Configuration do
   end
 
   describe '#relation_classes' do
-    fit 'returns the list of relations associated with a gateway' do
+    it 'returns the list of relations associated with a gateway' do
       conf = ROM::Configuration.new(default: [:memory], custom: [:memory])
       default_gw = conf.gateways[:default]
       custom_gw = conf.gateways[:custom]
