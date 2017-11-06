@@ -70,10 +70,10 @@ module ROM
       # Return a new combined relation with adjusted node returned from a block
       #
       # @example with a node identifier
-      #   aggregate(:tasks).node(:tasks) { |tasks| tasks.prioritized }
+      #   combine(:tasks).node(:tasks) { |tasks| tasks.prioritized }
       #
       # @example with a nested path
-      #   aggregate(tasks: :tags).node(tasks: :tags) { |tags| tags.where(name: 'red') }
+      #   combine(tasks: :tags).node(tasks: :tags) { |tags| tags.where(name: 'red') }
       #
       # @param [Symbol] name The node relation name
       #
