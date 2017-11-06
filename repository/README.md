@@ -11,7 +11,7 @@ Repositories for [rom-rb](https://github.com/rom-rb/rom) with auto-mapping, chan
 Resources:
 
 * [User documentation](http://rom-rb.org/learn/repositories)
-* [API documentation](http://rubydoc.info/gems/rom-repository)
+* [API documentation](http://api.rom-rb.org/rom/)
 
 ## License
 

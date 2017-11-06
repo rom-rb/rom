@@ -11,7 +11,7 @@ backends. It is the default mapper in ROM.
 
 Resources:
 
-- [API documentation](http://rubydoc.info/gems/rom-mapper)
+* [API documentation](http://api.rom-rb.org/rom/)
 
 ## License
 

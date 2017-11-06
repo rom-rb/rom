@@ -13,7 +13,7 @@
 [![Code Climate](https://codeclimate.com/github/rom-rb/rom/badges/gpa.svg)][codeclimate]
 [![Test Coverage](https://codeclimate.com/github/rom-rb/rom/badges/coverage.svg)][codeclimate]
 [![Inline docs](http://inch-ci.org/github/rom-rb/rom.svg?branch=master&style=flat)][inchpages]
-[![OpenCollective](https://opencollective.com/rom/backers/badge.svg)](#backers) 
+[![OpenCollective](https://opencollective.com/rom/backers/badge.svg)](#backers)
 [![OpenCollective](https://opencollective.com/rom/sponsors/badge.svg)](#sponsors)
 
 Ruby Object Mapper (rom-rb) is a data mapping and persistence toolkit for Ruby
@@ -31,7 +31,7 @@ Learn more:
 
 * [Introduction](http://rom-rb.org/learn/introduction)
 * [Quick Start](http://rom-rb.org/learn/repositories/quick-start)
- 
+
 ## Backers
 
 Support us with a monthly donation and help us continue our activities. [[Become a backer](https://opencollective.com/rom#backer)]

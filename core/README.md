@@ -11,7 +11,7 @@ Core API for rom-rb and its adapters and extensions.
 Resources:
 
 * [User documentation](http://rom-rb.org/learn/core)
-* [API documentation](http://rubydoc.info/gems/rom-core)
+* [API documentation](http://api.rom-rb.org/rom/)
 
 ## License
 
