@@ -27,20 +27,25 @@ module ROM
           @datestamps = store_attributes(datestamps)
         end
 
+        # @api private
         def store_attributes(attr)
           attr.is_a?(Array) ? attr : Array[attr]
         end
 
         # @api private
         def included(klass)
+          initialize_timestamp_attributes(klass)
+          klass.include(InstanceMethods)
+          klass.extend(ClassInterface)
+          super
+        end
+
+        def initialize_timestamp_attributes(klass)
           klass.defines :timestamp_columns, :datestamp_columns
           klass.timestamp_columns Set.new
           klass.datestamp_columns Set.new
           klass.timestamp_columns klass.timestamp_columns.merge(timestamps) if timestamps.any?
           klass.datestamp_columns klass.datestamp_columns.merge(datestamps) if datestamps.any?
-          klass.include(InstanceMethods)
-          klass.extend(ClassInterface)
-          super
         end
 
         module InstanceMethods
