@@ -142,7 +142,7 @@ RSpec.describe ROM::Plugins::Command::Timestamps do
     expect(updated[:updated_at]).not_to eq initial_updated_at
   end
 
-  it "allows overriding timestamps" do |ex|
+  it "allows overriding timestamps" do
     tomorrow = (Time.now + (60 * 60 * 24))
 
     users.create.call(name: 'Piotr', email: 'piotr@solnic.eu')
