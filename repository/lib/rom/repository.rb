@@ -1,6 +1,8 @@
 require 'dry/core/deprecations'
 
 require 'rom/initializer'
+require 'rom/struct'
+require 'rom/container'
 require 'rom/repository/class_interface'
 require 'rom/repository/session'
 
