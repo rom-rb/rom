@@ -62,7 +62,7 @@ module ROM
       #
       #   # with custom command plugin
       #   class UserRepo < ROM::Repository[:users]
-      #     commands :create, plugin: :my_command_plugin
+      #     commands :create, use: :my_command_plugin
       #   end
       #
       #   # with custom mapper
