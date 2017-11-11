@@ -40,12 +40,12 @@ RSpec.describe 'ROM::CommandCompiler' do
     end
 
     it 'builds commands using ast' do
-      command = compiler[:create, :memory, [:relation, users_ast], [], {}]
+      command = compiler[:create, :memory, [:relation, users_ast], [], {}, {}]
       expect(command).to be_a(ROM::Memory::Commands::Create)
     end
 
     it "doesn't use a global cache" do
-      args = [:create, :memory, [:relation, users_ast], [], {}]
+      args = [:create, :memory, [:relation, users_ast], [], {}, {}]
       command = compiler[*args]
       second_command = second_compiler[*args]
 

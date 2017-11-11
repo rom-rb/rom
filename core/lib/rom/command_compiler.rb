@@ -52,6 +52,10 @@ module ROM
     #   @return [Array<Symbol>] a list of optional plugins that will be enabled for commands
     option :plugins, optional: true, default: -> { EMPTY_ARRAY }
 
+    # @!attribute [r] plugins_options
+    #   @return [Hash] a hash of options for the plugins
+    option :plugins_options, optional: true, default: -> { EMPTY_HASH }
+
     # @!attribute [r] meta
     #   @return [Array<Symbol>] Meta data for a command
     option :meta, optional: true
@@ -82,12 +86,13 @@ module ROM
     # @api private
     def call(*args)
       cache.fetch_or_store(args.hash) do
-        type, adapter, ast, plugins, meta = args
+        type, adapter, ast, plugins, plugins_options, meta = args
 
         compiler = with(
           id: type,
           adapter: adapter,
           plugins: Array(plugins),
+          plugins_options: plugins_options,
           meta: meta
         )
 
@@ -191,7 +196,8 @@ module ROM
         end
 
         plugins.each do |plugin|
-          klass.use(plugin)
+          plugin_options = plugins_options.fetch(plugin) { EMPTY_HASH }
+          klass.use(plugin, plugin_options)
         end
 
         gateway = gateways[relation.gateway]
