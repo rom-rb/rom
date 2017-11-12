@@ -44,16 +44,12 @@ module ROM
           klass.defines :timestamp_columns, :datestamp_columns
           klass.timestamp_columns Set.new
           klass.datestamp_columns Set.new
+          klass.before :set_timestamps
           klass.timestamp_columns klass.timestamp_columns.merge(timestamps) if timestamps.any?
           klass.datestamp_columns klass.datestamp_columns.merge(datestamps) if datestamps.any?
         end
 
         module InstanceMethods
-          # @api private
-          def self.included(base)
-            base.before :set_timestamps
-          end
-
           # @api private
           def timestamp_columns
             self.class.timestamp_columns
