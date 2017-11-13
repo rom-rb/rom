@@ -20,7 +20,7 @@ RSpec.describe ROM::Relation, '#call' do
     end
 
     let(:data) do
-      [{ id: '1', name: 'Jane' }, { id: '2', name: 'John'} ]
+      ROM::Memory::Dataset.new([{ id: '1', name: 'Jane' }, { id: '2', name: 'John'} ])
     end
 
     it 'has noop output_schema' do
@@ -29,7 +29,7 @@ RSpec.describe ROM::Relation, '#call' do
 
     it 'returns loaded relation with data' do
       expect(relation.call.collection).
-        to eql(data)
+        to eql(data.to_a)
     end
   end
 
@@ -68,7 +68,7 @@ RSpec.describe ROM::Relation, '#call' do
     end
 
     let(:data) do
-      [{ id: 1, name: 'Jane' }, { id: 2, name: 'John'} ]
+      ROM::Memory::Dataset.new([{ id: 1, name: 'Jane' }, { id: 2, name: 'John'} ])
     end
 
     it 'automatically maps to structs' do
@@ -79,6 +79,16 @@ RSpec.describe ROM::Relation, '#call' do
 
       expect(result[1].id).to be(2)
       expect(result[1].name).to eql('John')
+    end
+
+    it 'supports aliasing' do
+      result = relation.rename(id: :user_id, name: :user_name).call.to_a
+
+      expect(result[0].user_id).to be(1)
+      expect(result[0].user_name).to eql('Jane')
+
+      expect(result[1].user_id).to be(2)
+      expect(result[1].user_name).to eql('John')
     end
   end
 end

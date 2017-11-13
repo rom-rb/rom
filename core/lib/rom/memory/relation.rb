@@ -30,6 +30,13 @@ module ROM
         schema.project(*names).(self)
       end
 
+      # Rename attributes in a relation
+      #
+      # @api public
+      def rename(mapping)
+        schema.rename(mapping).(self)
+      end
+
       # Insert tuples into the relation
       #
       # @example

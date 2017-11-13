@@ -61,8 +61,8 @@ module ROM
     def visit_attribute(node)
       name, _, meta = node
 
-      if meta[:wrapped]
-        [name, from: meta[:alias]]
+      if meta[:alias]
+        [meta[:alias], from: name]
       else
         [name]
       end
