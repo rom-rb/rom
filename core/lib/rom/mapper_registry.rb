@@ -12,7 +12,9 @@ module ROM
 
     # @!attribute [r] compiler
     #   @return [MapperCompiler] A mapper compiler instance
-    option :compiler, default: -> { MapperCompiler.new(cache: cache) }
+    option :compiler, default: -> do
+      MapperCompiler.new(cache: cache)
+    end
 
     # @see Registry
     # @api public

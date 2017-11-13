@@ -118,4 +118,10 @@ RSpec.describe ROM::Memory::Relation do
       ])
     end
   end
+
+  describe '#mappers' do
+    it 'uses custom mapper compiler' do
+      expect(relation.mappers.compiler).to be_instance_of(ROM::Memory::MapperCompiler)
+    end
+  end
 end

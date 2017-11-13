@@ -175,7 +175,7 @@ module ROM
 
     # @!attribute [r] mappers
     #   @return [MapperRegistry] an optional mapper registry (empty by default)
-    option :mappers, default: -> { MapperRegistry.new }
+    option :mappers, default: -> { self.class.mapper_registry }
 
     # @!attribute [r] commands
     #   @return [CommandRegistry] Command registry

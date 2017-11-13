@@ -250,6 +250,24 @@ module ROM
         ROM.plugin_registry.relations.fetch(plugin, adapter).apply_to(self, options)
       end
 
+      # Build default mapper registry
+      #
+      # @return [MapperRegistry]
+      #
+      # @api private
+      def mapper_registry(opts = EMPTY_HASH)
+        adapter_ns = ROM.adapters[adapter]
+
+        compiler =
+          if adapter_ns && adapter_ns.const_defined?(:MapperCompiler)
+            adapter_ns.const_get(:MapperCompiler)
+          else
+            MapperCompiler
+          end
+
+        MapperRegistry.new({}, { compiler: compiler.new(opts) }.merge(opts))
+      end
+
       # @api private
       def curried
         Curried
