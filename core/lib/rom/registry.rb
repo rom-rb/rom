@@ -38,6 +38,16 @@ module ROM
     end
 
     # @api private
+    def merge(other)
+      self.class.new(Hash(other), options)
+    end
+
+    # @api private
+    def to_hash
+      elements
+    end
+
+    # @api private
     def map(&block)
       new_elements = elements.each_with_object({}) do |(name, element), h|
         h[name] = yield(element)

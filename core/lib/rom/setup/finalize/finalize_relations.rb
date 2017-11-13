@@ -108,10 +108,12 @@ module ROM
 
       # @api private
       def mapper_registry(rel_key, rel_class)
+        registry = rel_class.mapper_registry(cache: @mappers.cache)
+
         if @mappers.key?(rel_key)
-          @mappers[rel_key]
+          registry.merge(@mappers[rel_key])
         else
-          rel_class.mapper_registry(cache: @mappers.cache)
+          registry
         end
       end
 

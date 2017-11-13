@@ -132,6 +132,8 @@ RSpec.describe 'Configuring ROM' do
 
       expect(container.relations[:users].by_name('Jane').map_with(:users).to_a)
         .to eql([Test::User.new(name: 'Jane')])
+
+      expect(container.relations[:users].mappers.compiler).to be_instance_of(ROM::Memory::MapperCompiler)
     end
   end
 
