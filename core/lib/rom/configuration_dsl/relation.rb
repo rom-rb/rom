@@ -1,5 +1,5 @@
 require 'dry/core/class_builder'
-require 'dry/core/inflector'
+require 'rom/support/inflector'
 
 module ROM
   module ConfigurationDSL
@@ -13,7 +13,7 @@ module ROM
       #
       # @api private
       def self.build_class(name, options = EMPTY_HASH)
-        class_name = "ROM::Relation[#{Dry::Core::Inflector.camelize(name)}]"
+        class_name = "ROM::Relation[#{Inflector.camelize(name)}]"
         adapter = options.fetch(:adapter)
 
         Dry::Core::ClassBuilder.new(name: class_name, parent: ROM::Relation[adapter]).call do |klass|

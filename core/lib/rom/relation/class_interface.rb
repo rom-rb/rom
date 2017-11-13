@@ -1,6 +1,6 @@
 require 'set'
 
-require 'dry/core/inflector'
+require 'rom/support/inflector'
 
 require 'rom/constants'
 require 'rom/relation/name'
@@ -292,7 +292,7 @@ module ROM
       #
       # @api private
       def default_name
-        Name[Dry::Core::Inflector.underscore(name).tr('/', '_').to_sym]
+        Name[Inflector.underscore(name).tr('/', '_').to_sym]
       end
 
       # @api private

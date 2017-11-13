@@ -1,6 +1,6 @@
 require 'pathname'
 
-require 'dry/core/inflector'
+require 'rom/support/inflector'
 
 require 'rom/types'
 require 'rom/initializer'
@@ -94,7 +94,7 @@ module ROM
             ).call
           end
 
-        Dry::Core::Inflector.constantize(klass_name)
+        Inflector.constantize(klass_name)
       end
     end
   end

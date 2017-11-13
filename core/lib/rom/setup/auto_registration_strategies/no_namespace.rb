@@ -1,6 +1,6 @@
 require 'pathname'
 
-require 'dry/core/inflector'
+require 'rom/support/inflector'
 require 'rom/types'
 require 'rom/setup/auto_registration_strategies/base'
 
@@ -22,7 +22,7 @@ module ROM
       #
       # @api private
       def call
-        Dry::Core::Inflector.camelize(
+        Inflector.camelize(
           file.sub(/^#{directory}\/#{entity}\//, '').sub(EXTENSION_REGEX, '')
         )
       end
