@@ -1,3 +1,13 @@
+# 1.1.0 to-be-released
+
+### Fixed
+
+* Aliased attributes are handled correctly by mapper compiler (solnic)
+
+### Changed
+
+* Mapper compiler no longer handles wrapped attributes in an SQL-specific way (solnic)
+
 # 1.0.2 2017-11-02
 
 ### Fixed

@@ -1,3 +1,10 @@
+# v4.1.0 to-be-released
+
+## Added
+
+* Support for providing a custom mapper compiler by adapters (solnic)
+* Support for aliased attributes in auto-mapping (solnic)
+
 # v4.0.2 2017-11-02
 
 ## Added
