@@ -198,7 +198,7 @@ module ROM
 
         notifications.trigger(
           'configuration.commands.class.before_build',
-          command: klass, gateway: gateway, dataset: relation.dataset
+          command: klass, gateway: gateway, dataset: relation.dataset, adapter: adapter
         )
 
         klass.extend_for_relation(relation) if klass.restrictable
