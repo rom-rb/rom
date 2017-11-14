@@ -1,4 +1,6 @@
-# v4.0.3 2017-11-14
+# v4.0.4 2017-11-14
+
+Warning: `4.0.3` was yanked on rubygems.org as the gem was built from master branch by an accident. `4.0.4` is the right version.
 
 ## Added
 
