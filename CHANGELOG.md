@@ -3,7 +3,13 @@
 * `rom-core` updated to `['~> 4.1']`
 * `rom-mapper` updated to `'~> 1.1'`
 
-[Compare v4.0.2...v4.1.0](https://github.com/rom-rb/rom/compare/v4.0.2...v4.1.0)
+[Compare v4.0.3...v4.1.0](https://github.com/rom-rb/rom/compare/v4.0.3...v4.1.0)
+
+# 4.0.3 2017-11-14
+
+* `rom-core` updated to `['~> 4.0', '>= 4.0.3']`
+
+[Compare v4.0.2...v4.0.3](https://github.com/rom-rb/rom/compare/v4.0.2...v4.0.3)
 
 # 4.0.2 2017-11-02
 
