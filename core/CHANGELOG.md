@@ -1,3 +1,14 @@
+# v4.0.3 2017-11-14
+
+## Added
+
+* `''configuration.relations.class.ready''` event is triggered with `:adapter` (solnic)
+
+## Fixed
+
+* `'configuration.commands.class.before_build'` event is triggered with `:adapter` set, so that adapters can subscribe only to their events. This fixes a bug where an incorrect adapter would try to handle this event with a command class coming from another adapter (solnic)
+* Command compiler no longer uses global temporary registry (solnic)
+
 # v4.0.2 2017-11-02
 
 ## Added

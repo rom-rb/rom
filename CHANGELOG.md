@@ -1,3 +1,9 @@
+# 4.0.3 2017-11-14
+
+* `rom-core` updated to `['~> 4.0', '>= 4.0.3']`
+
+[Compare v4.0.2...v4.0.3](https://github.com/rom-rb/rom/compare/v4.0.2...v4.0.3)
+
 # 4.0.2 2017-11-02
 
 * `rom-core` updated to `['~> 4.0', '>= 4.0.2']`
