@@ -17,7 +17,7 @@ module ROM
 
     # @api private
     def self.registry
-      @__registry__ ||= Hash.new { |h, k| h[k] = {} }
+      Hash.new { |h, k| h[k] = {} }
     end
 
     # @!attribute [r] gateways
