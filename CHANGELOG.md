@@ -1,6 +1,8 @@
-# 4.0.3 2017-11-14
+# 4.0.4 2017-11-14
 
-* `rom-core` updated to `['~> 4.0', '>= 4.0.3']`
+Warning: `4.0.3` was yanked as the gem was built from master branch by an accident. `4.0.4` is the right version.
+
+* `rom-core` updated to `['~> 4.0', '>= 4.0.4']`
 
 [Compare v4.0.2...v4.0.3](https://github.com/rom-rb/rom/compare/v4.0.2...v4.0.3)
 
