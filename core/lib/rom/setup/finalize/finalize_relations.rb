@@ -43,7 +43,7 @@ module ROM
 
             klass.use(:registry_reader, relation_names)
 
-            notifications.trigger('configuration.relations.class.ready', relation: klass)
+            notifications.trigger('configuration.relations.class.ready', relation: klass, adapter: klass.adapter)
 
             relations[key] = build_relation(klass, registry)
           end
