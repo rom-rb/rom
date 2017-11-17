@@ -1,4 +1,4 @@
-require 'dry/core/inflector'
+require 'rom/support/inflector'
 
 require 'rom/initializer'
 require 'rom/commands'
@@ -112,7 +112,7 @@ module ROM
 
     # @api private
     def type
-      @_type ||= Commands.const_get(Dry::Core::Inflector.classify(id))[adapter]
+      @_type ||= Commands.const_get(Inflector.classify(id))[adapter]
     rescue NameError
       nil
     end
@@ -137,7 +137,7 @@ module ROM
           if meta[:combine_type] == :many
             name
           else
-            { Dry::Core::Inflector.singularize(name).to_sym => name }
+            { Inflector.singularize(name).to_sym => name }
           end
 
         mapping =
@@ -233,7 +233,7 @@ module ROM
         if relation.associations.key?(parent_relation)
           parent_relation
         else
-          singular_name = Dry::Core::Inflector.singularize(parent_relation).to_sym
+          singular_name = Inflector.singularize(parent_relation).to_sym
           singular_name if relation.associations.key?(singular_name)
         end
 

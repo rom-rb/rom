@@ -1,4 +1,4 @@
-require 'dry/core/inflector'
+require 'rom/support/inflector'
 require 'dry/core/class_builder'
 require 'dry/types/compiler'
 
@@ -104,7 +104,7 @@ module ROM
 
     # @api private
     def class_name(name)
-      Dry::Core::Inflector.classify(Dry::Core::Inflector.singularize(name))
+      Inflector.classify(Inflector.singularize(name))
     end
   end
 end
