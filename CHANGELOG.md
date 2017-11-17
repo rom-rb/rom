@@ -1,4 +1,4 @@
-# 4.1.0 to-be-released
+# 4.1.0 2017-11-17
 
 * `rom-core` updated to `['~> 4.1']`
 * `rom-mapper` updated to `'~> 1.1'`
