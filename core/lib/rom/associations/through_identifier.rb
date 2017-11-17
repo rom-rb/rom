@@ -1,4 +1,4 @@
-require 'rom/support/inflector'
+require 'dry/core/inflector'
 
 module ROM
   module Associations
@@ -20,7 +20,7 @@ module ROM
 
       # @api private
       def self.default_assoc_name(relation)
-        Inflector.singularize(relation).to_sym
+        Dry::Core::Inflector.singularize(relation).to_sym
       end
 
       # @api private
