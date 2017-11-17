@@ -4,6 +4,7 @@
 
 * Support for providing a custom mapper compiler by adapters (solnic)
 * Support for aliased attributes in auto-mapping (solnic)
+* Support for command plugin options, ie `use :timestamps, timestamps: %i(created_at, updated_at), datestamps: %i(:written_on)` (GustavoCaso)
 
 # v4.0.3 2017-11-14
 
