@@ -29,6 +29,7 @@ require 'rom/create_container'
 require 'rom/plugins/relation/registry_reader'
 require 'rom/plugins/relation/instrumentation'
 require 'rom/plugins/command/schema'
+require 'rom/plugins/command/timestamps'
 require 'rom/plugins/schema/timestamps'
 
 module ROM
@@ -40,5 +41,6 @@ module ROM
     register :registry_reader, ROM::Plugins::Relation::RegistryReader, type: :relation
     register :instrumentation, ROM::Plugins::Relation::Instrumentation, type: :relation
     register :schema, ROM::Plugins::Command::Schema, type: :command
+    register :timestamps, ROM::Plugins::Command::Timestamps, type: :command
   end
 end

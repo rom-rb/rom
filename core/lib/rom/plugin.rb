@@ -15,7 +15,7 @@ module ROM
     #
     # @api private
     def apply_to(klass, options = EMPTY_HASH)
-      if options.any?
+      if mod.respond_to?(:new)
         klass.send(:include, mod.new(options))
       else
         klass.send(:include, mod)

@@ -35,8 +35,8 @@ module ROM
       # @return [ROM::Command]
       #
       # @api public
-      def command(type, mapper: nil, use: EMPTY_ARRAY, **opts)
-        base_command = commands.key?(type) ? commands[type] : commands[type, adapter, to_ast, use, opts]
+      def command(type, mapper: nil, use: EMPTY_ARRAY, plugins_options: EMPTY_HASH, **opts)
+        base_command = commands.key?(type) ? commands[type] : commands[type, adapter, to_ast, use, plugins_options, opts]
 
         command =
           if mapper

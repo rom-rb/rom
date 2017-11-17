@@ -149,6 +149,15 @@ RSpec.describe ROM::Repository, '.command' do
       expect(updated_user.updated_at).to be > updated_user.created_at
     end
 
+    it 'allows to pass options to plugins' do
+      repo = Class.new(ROM::Repository[:users]) do
+        commands :create, update: :by_pk, use: %i(modify_name timestamps), plugins_options: { modify_name: { reverse: true } }
+      end.new(rom)
+
+      user = repo.create(name: 'Jane')
+      expect(user.name).to eq 'enaJ'
+    end
+
     it 'allows to use several plugins' do
       repo = Class.new(ROM::Repository[:users]) do
         commands :create, use: %i(upcase_name timestamps)

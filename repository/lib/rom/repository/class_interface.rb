@@ -62,7 +62,7 @@ module ROM
       #
       #   # with custom command plugin
       #   class UserRepo < ROM::Repository[:users]
-      #     commands :create, plugin: :my_command_plugin
+      #     commands :create, use: :my_command_plugin
       #   end
       #
       #   # with custom mapper
@@ -77,7 +77,7 @@ module ROM
       # @return [Array<Symbol>] A list of defined command names
       #
       # @api public
-      def commands(*names, mapper: nil, use: nil, **opts)
+      def commands(*names, mapper: nil, use: nil, plugins_options: EMPTY_HASH, **opts)
         if names.any? || opts.any?
           @commands = names + opts.to_a
 
@@ -85,9 +85,9 @@ module ROM
             type, *view = Array(spec).flatten
 
             if view.size > 0
-              define_restricted_command_method(type, view, mapper: mapper, use: use)
+              define_restricted_command_method(type, view, mapper: mapper, use: use, plugins_options: plugins_options)
             else
-              define_command_method(type, mapper: mapper, use: use)
+              define_command_method(type, mapper: mapper, use: use, plugins_options: plugins_options)
             end
           end
         else

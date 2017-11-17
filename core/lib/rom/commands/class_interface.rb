@@ -109,8 +109,8 @@ module ROM
       # @option _options [Symbol] :adapter (:default) first adapter to check for plugin
       #
       # @api public
-      def use(plugin, _options = EMPTY_HASH)
-        ROM.plugin_registry.commands.fetch(plugin, adapter).apply_to(self)
+      def use(plugin, options = EMPTY_HASH)
+        ROM.plugin_registry.commands.fetch(plugin, adapter).apply_to(self, options)
       end
 
       # Extend a command class with relation view methods
