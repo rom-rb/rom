@@ -602,7 +602,7 @@ module ROM
       if attr
         attr.name
       else
-        :"#{Dry::Core::Inflector.singularize(name.dataset)}_id"
+        :"#{Inflector.singularize(name.dataset)}_id"
       end
     end
 

@@ -1,4 +1,4 @@
-require 'dry/core/inflector'
+require 'rom/support/inflector'
 
 module ROM
   # Model builders can be used to build model classes for mappers
@@ -54,7 +54,7 @@ module ROM
 
         @namespace =
           if parts.any?
-            Dry::Core::Inflector.constantize(parts.join('::'))
+            Inflector.constantize(parts.join('::'))
           else
             Object
           end
