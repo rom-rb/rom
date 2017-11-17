@@ -11,8 +11,6 @@ COMPONENTS.each do |component|
 end
 
 gem 'dry-struct', git: 'https://github.com/dry-rb/dry-struct.git', branch: 'master'
-gem 'dry-inflector', git: 'https://github.com/dry-rb/dry-inflector.git', branch: 'master'
-gem 'dry-core', git: 'https://github.com/dry-rb/dry-core.git', branch: 'master'
 
 group :sql do
   gem 'sequel', '~> 5.0'
