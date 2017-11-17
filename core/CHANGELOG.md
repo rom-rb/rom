@@ -6,6 +6,10 @@
 * Support for aliased attributes in auto-mapping (solnic)
 * Support for command plugin options, ie `use :timestamps, timestamps: %i(created_at, updated_at), datestamps: %i(:written_on)` (GustavoCaso)
 
+## Changed
+
+* Uses `dry-inflector` now (solnic)
+
 # v4.0.3 2017-11-14
 
 ## Added
