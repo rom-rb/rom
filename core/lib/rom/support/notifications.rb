@@ -103,6 +103,16 @@ module ROM
         @payload.fetch(name)
       end
 
+      # Coerce an event to a hash
+      #
+      # @return [Hash]
+      #
+      # @api public
+      def to_h
+        @payload
+      end
+      alias_method :to_hash, :to_h
+
       # Get or set a payload
       #
       # @overload
