@@ -5,21 +5,18 @@
 * Support for providing a custom mapper compiler by adapters (solnic)
 * Support for aliased attributes in auto-mapping (solnic)
 * Support for command plugin options, ie `use :timestamps, timestamps: %i(created_at, updated_at), datestamps: %i(:written_on)` (GustavoCaso)
-
-## Changed
-
-* Uses `dry-inflector` now (solnic)
-
-# v4.0.3 2017-11-14
-
-## Added
-
-* `''configuration.relations.class.ready''` event is triggered with `:adapter` (solnic)
+* `''configuration.relations.class.ready''` event is triggered with `:adapter` filter (solnic)
 
 ## Fixed
 
 * `'configuration.commands.class.before_build'` event is triggered with `:adapter` set, so that adapters can subscribe only to their events. This fixes a bug where an incorrect adapter would try to handle this event with a command class coming from another adapter (solnic)
 * Command compiler no longer uses global temporary registry (solnic)
+
+## Changed
+
+* Uses `dry-inflector` now (solnic)
+
+[Compare v4.0.2...v4.1.0](https://github.com/rom-rb/rom/compare/v4.0.2...v4.1.0)
 
 # v4.0.2 2017-11-02
 
