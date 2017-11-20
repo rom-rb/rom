@@ -87,7 +87,7 @@ module ROM
   class PluginRegistryBase < Registry
     include Dry::Equalizer(:elements, :plugin_type)
 
-    # !@attribute [r] plugin_type
+    # @!attribute [r] plugin_type
     #   @return [Class] Typically ROM::PluginBase or its descendant
     option :plugin_type
 
