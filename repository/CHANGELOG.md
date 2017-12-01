@@ -1,3 +1,13 @@
+# v2.0.2 2017-12-01
+
+## Added
+
+* `commands` macro supports passing options for plugins via `plugins_options` (GustavoCaso)
+
+## Fixed
+
+* Root repository classes are cached now, which fixes problems with superclass mismatch exceptions (solnic)
+
 # v2.0.1 2017-11-02
 
 ## Fixed
