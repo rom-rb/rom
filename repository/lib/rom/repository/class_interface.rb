@@ -1,3 +1,5 @@
+require 'dry/core/cache'
+
 require 'rom/repository/relation_reader'
 
 module ROM
@@ -19,9 +21,11 @@ module ROM
       #
       # @api public
       def [](name)
-        klass = Class.new(self < Repository::Root ? self : Repository::Root)
-        klass.root(name)
-        klass
+        fetch_or_store(name) do
+          klass = Class.new(self < Repository::Root ? self : Repository::Root)
+          klass.root(name)
+          klass
+        end
       end
 
       # Initialize a new repository object
@@ -50,6 +54,7 @@ module ROM
 
         return if self === Repository
 
+        klass.extend(Dry::Core::Cache)
         klass.commands(*commands)
       end
 

@@ -1,4 +1,5 @@
-require 'dry/core/deprecations'
+require 'dry/core/cache'
+require 'dry/core/class_attributes'
 
 require 'rom/initializer'
 require 'rom/struct'
@@ -50,9 +51,11 @@ module ROM
   #
   # @api public
   class Repository
+    extend Dry::Core::Cache
+    extend Dry::Core::ClassAttributes
+
     extend ClassInterface
     extend Initializer
-    extend Dry::Core::ClassAttributes
 
     # @!method self.auto_struct
     #   Get or set auto_struct setting
