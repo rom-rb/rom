@@ -1,3 +1,9 @@
+# 4.1.1 2017-12-01
+
+* `rom-repository` updated to `['~> 2.0', '>= 2.0.2']`
+
+[Compare v4.1.0...v4.1.1](https://github.com/rom-rb/rom/compare/v4.1.0...v4.1.1)
+
 # 4.1.0 2017-11-17
 
 * `rom-core` updated to `['~> 4.1']`
