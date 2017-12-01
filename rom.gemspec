@@ -12,7 +12,7 @@ Gem::Specification.new do |gem|
   gem.license     = 'MIT'
 
   gem.add_runtime_dependency 'rom-core', '~> 4.1'
-  gem.add_runtime_dependency 'rom-repository', '~> 2.0', '>= 2.0.1'
+  gem.add_runtime_dependency 'rom-repository', '~> 2.0', '>= 2.0.2'
   gem.add_runtime_dependency 'rom-changeset', '~> 1.0', '>= 1.0.1'
 
   gem.add_development_dependency 'rake', '~> 10.3'
