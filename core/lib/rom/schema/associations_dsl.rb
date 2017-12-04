@@ -156,10 +156,10 @@ module ROM
       # Shortcut for one_to_one which sets alias automatically
       #
       # @example with an alias (relation identifier is inferred via pluralization)
-      #   one_to_one :address
+      #   has_one :address
       #
       # @example with an explicit alias and a custom view
-      #   one_to_one :posts, as: :priority_post, view: :prioritized
+      #   has_one :posts, as: :priority_post, view: :prioritized
       #
       # @see #one_to_one
       #
