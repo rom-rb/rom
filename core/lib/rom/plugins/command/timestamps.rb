@@ -70,12 +70,7 @@ module ROM
           def set_timestamps(tuples, *)
             timestamps = build_timestamps
 
-            case tuples
-            when Hash
-              timestamps.merge(tuples)
-            when Array
-              tuples.map { |t| timestamps.merge(t) }
-            end
+            map_input_tuples(tuples) { |t| timestamps.merge(t) }
           end
 
           private
