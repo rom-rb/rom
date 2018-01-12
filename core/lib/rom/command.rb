@@ -441,6 +441,19 @@ module ROM
       self.class.restrictable.equal?(true)
     end
 
+    # Yields tuples for insertion or return an enumerator
+    #
+    # @api private
+    def map_input_tuples(tuples, &mapper)
+      return enum_for(:with_input_tuples, tuples) unless mapper
+
+      if tuples.respond_to? :merge
+        mapper[tuples]
+      else
+        tuples.map(&mapper)
+      end
+    end
+
     private
 
     # Hook called by Pipeline to get composite class for commands

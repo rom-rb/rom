@@ -36,6 +36,25 @@ RSpec.describe 'Using changesets' do
       expect(delete).to be_kind_of(ROM::Changeset::Delete)
     end
 
+    it 'works with command plugins' do
+      configuration.commands(:books) do
+        define(:create) do
+          use :timestamps
+          timestamp :created_at, :updated_at
+          result :one
+        end
+      end
+
+      changeset = books.changeset(:create, title: "rom-rb is awesome")
+
+      result = changeset.commit
+
+      expect(result.id).to_not be(nil)
+      expect(result.title).to eql("rom-rb is awesome")
+      expect(result.created_at).to be_instance_of(Time)
+      expect(result.updated_at).to be_instance_of(Time)
+    end
+
     it 'can be passed to a command' do
       changeset = users.changeset(:create, name: "Jane Doe")
       command = users.command(:create)
@@ -122,6 +141,28 @@ RSpec.describe 'Using changesets' do
       expect(result.title).to eql('rom-rb is awesome for real')
       expect(result.updated_at).to be_instance_of(Time)
     end
+
+
+    it 'works with command plugins' do
+      configuration.commands(:books) do
+        define(:update) do
+          use :timestamps
+          timestamp :updated_at
+          result :one
+        end
+      end
+
+      book = books.command(:create).call(title: 'rom-rb is awesome')
+
+      changeset = books.by_pk(book.id).changeset(:update, title: "rom-rb is awesome for real")
+
+      result = changeset.commit
+
+      expect(result.id).to_not be(nil)
+      expect(result.title).to eql("rom-rb is awesome for real")
+      expect(result.updated_at).to be_instance_of(Time)
+    end
+
 
     it 'skips update execution with no diff' do
       book = books.command(:create).call(title: 'rom-rb is awesome')
