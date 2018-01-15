@@ -1,5 +1,6 @@
-require 'rom-repository'
-require 'byebug'
+require 'rom'
+require 'rom/repository'
+require 'rom/changeset'
 
 conf = ROM::Configuration.new(:sql, 'postgres://localhost/rom_example')
 
@@ -76,32 +77,27 @@ conf.register_command(CreateTags)
 
 rom = ROM.container(conf)
 
-class BookRepo < ROM::Repository[:books]
-  relations :tags
+books = rom.relations[:books]
+tags = rom.relations[:tags]
 
-  commands :create
-end
+book = rom.relations[:books].changeset(:create, title: 'Hello World')
 
-book_repo = BookRepo.new(rom)
-
-book = book_repo.changeset(title: 'Hello World')
-
-tags = book_repo.
-         changeset(:tags, [{ name: 'red' }, { name: 'green' }]).
+tags = rom.relations[:tags].
+         changeset(:create, [{ name: 'red' }, { name: 'green' }]).
          with(command_type: :fetch_or_create)
 
 # return tags associated with the book
-book_repo.transaction do
+books.transaction do
   puts book.associate(tags, :books).commit.inspect
 end
 
 # return book associated with the tags
-book_repo.transaction do
+books.transaction do
   puts tags.associate(book, :tags).commit.inspect
 end
 
 # commit separately and return what you need
-book_repo.transaction do
+books.transaction do
   new_tags = tags.commit
   new_book = book.associate(new_tags, :tags).commit
 
