@@ -1,10 +1,8 @@
-# v4.1.1 to-be-released
+# v4.1.1 2018-01-15
 
 ## Fixed
 
 * Changesets work with `timestamp` plugin (cflipse)
-
-[Compare v4.1.0...v4.1.1](https://github.com/rom-rb/rom/compare/v4.1.0...v4.1.1)
 
 # v4.1.0 2017-11-17
 
