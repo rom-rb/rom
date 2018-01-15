@@ -204,14 +204,14 @@ module ROM
       # Associate a changeset with another changeset or hash-like object
       #
       # @example with another changeset
-      #   new_user = user_repo.changeset(name: 'Jane')
-      #   new_task = user_repo.changeset(:tasks, title: 'A task')
+      #   new_user = users.changeset(name: 'Jane')
+      #   new_task = users.changeset(:tasks, title: 'A task')
       #
       #   new_task.associate(new_user, :users)
       #
       # @example with a hash-like object
-      #   user = user_repo.users.by_pk(1).one
-      #   new_task = user_repo.changeset(:tasks, title: 'A task')
+      #   user = users.users.by_pk(1).one
+      #   new_task = users.changeset(:tasks, title: 'A task')
       #
       #   new_task.associate(user, :users)
       #

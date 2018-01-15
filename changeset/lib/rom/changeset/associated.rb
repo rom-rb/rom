@@ -40,7 +40,7 @@ module ROM
       # Commit changeset's composite command
       #
       # @example
-      #   task_changeset = task_repo.
+      #   task_changeset = tasks.
       #     changeset(title: 'Task One').
       #     associate(user, :user).
       #     commit
@@ -67,17 +67,17 @@ module ROM
       # Create a composed command
       #
       # @example using existing parent data
-      #   user_changeset = user_repo.changeset(name: 'Jane')
-      #   task_changeset = task_repo.changeset(title: 'Task One')
+      #   user_changeset = users.changeset(name: 'Jane')
+      #   task_changeset = tasks.changeset(title: 'Task One')
       #
-      #   user = user_repo.create(user_changeset)
-      #   task = task_repo.create(task_changeset.associate(user, :user))
+      #   user = users.create(user_changeset)
+      #   task = tasks.create(task_changeset.associate(user, :user))
       #
       # @example saving both parent and child in one go
-      #   user_changeset = user_repo.changeset(name: 'Jane')
-      #   task_changeset = task_repo.changeset(title: 'Task One')
+      #   user_changeset = users.changeset(name: 'Jane')
+      #   task_changeset = tasks.changeset(title: 'Task One')
       #
-      #   task = task_repo.create(task_changeset.associate(user, :user))
+      #   task = tasks.create(task_changeset.associate(user, :user))
       #
       # This works *only* with parent => child(ren) changeset hierarchy
       #

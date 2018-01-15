@@ -62,7 +62,7 @@ module ROM
     #   class NewUserChangeset < ROM::Changeset::Create[:users]
     #   end
     #
-    #   user_repo.changeset(NewUserChangeset).data(name: 'Jane')
+    #   users.changeset(NewUserChangeset).data(name: 'Jane')
     #
     # @api public
     def self.[](relation_name)
@@ -88,7 +88,7 @@ module ROM
     # Persist changeset
     #
     # @example
-    #   changeset = user_repo.changeset(name: 'Jane')
+    #   changeset = users.changeset(name: 'Jane')
     #   changeset.commit
     #   # => { id: 1, name: 'Jane' }
     #
