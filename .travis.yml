@@ -1,5 +1,6 @@
 language: ruby
 sudo: false
+before_install: gem update --system
 install:
   - "cd $TRAVIS_BUILD_DIR/core"
   - "bundle install --without sql benchmarks console tools --gemfile ./Gemfile"
@@ -20,8 +21,9 @@ script:
 after_success:
   - '[ -d coverage ] && codeclimate-test-reporter'
 rvm:
-  - 2.3.4
-  - 2.4.1
+  - 2.5.0
+  - 2.3.6
+  - 2.4.2
   - jruby-9.1.13.0
 env:
   global:
