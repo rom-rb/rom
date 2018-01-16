@@ -50,7 +50,7 @@ RSpec.describe ROM::Relation, '.schema' do
     schema = Test::Users.schema_proc.call
 
     expect(schema.to_output_hash).
-      to eql(ROM::Types::Coercible::Hash.schema(id: schema[:id].type, date: schema[:date].meta[:read]))
+      to eql(ROM::Schema::HASH_SCHEMA.schema(id: schema[:id].type, date: schema[:date].meta[:read]))
   end
 
   it 'allows setting composite primary key' do

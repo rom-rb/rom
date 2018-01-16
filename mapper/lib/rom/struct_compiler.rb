@@ -35,7 +35,7 @@ module ROM
           ROM::OpenStruct
         else
           build_class(name, ROM::Struct, ns) do |klass|
-            attributes.each do |(attr_name, type)|
+            attributes.each do |attr_name, type|
               klass.attribute(attr_name, type)
             end
           end

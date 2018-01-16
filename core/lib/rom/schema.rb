@@ -62,6 +62,19 @@ module ROM
 
     DEFAULT_INFERRER = Inferrer.new(enabled: false).freeze
 
+    type_transformation = -> type do
+      t = if type.default?
+            type.constructor { |value| value.nil? ? Undefined : value }
+          else
+            type
+          end
+      t.meta(omittable: true)
+    end
+
+    HASH_SCHEMA = Types::Coercible::Hash.
+                    schema(EMPTY_HASH).
+                    with_type_transform(type_transformation)
+
     extend Initializer
 
     include Dry::Equalizer(:name, :attributes, :associations)
@@ -389,7 +402,7 @@ module ROM
     #
     # @api private
     def to_output_hash
-      Types::Coercible::Hash.schema(
+      HASH_SCHEMA.schema(
         map { |attr| [attr.key, attr.to_read_type] }.to_h
       )
     end
@@ -403,7 +416,7 @@ module ROM
     #
     # @api private
     def to_input_hash
-      Types::Coercible::Hash.schema(
+      HASH_SCHEMA.schema(
         map { |attr| [attr.name, attr.to_write_type] }.to_h
       )
     end
