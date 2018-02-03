@@ -151,6 +151,21 @@ RSpec.describe ROM::Setup, '#auto_registration' do
             expect(setup.mapper_classes).to eql([My::Namespace::Mappers::CustomerList])
           end
         end
+
+        context 'with possibly clashing namespace' do
+          before do
+            module My
+              module Namespace
+                module Customers
+                end
+              end
+            end
+          end
+
+          it 'starts with the deepest constant' do
+            expect(setup.relation_classes).to eql([My::Namespace::Relations::Customers])
+          end
+        end
       end
 
       context 'when namespace has wrong subnamespace' do
