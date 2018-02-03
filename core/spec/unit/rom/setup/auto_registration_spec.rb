@@ -2,9 +2,19 @@ require 'rom/setup'
 require 'rom/support/notifications'
 
 RSpec.describe ROM::Setup, '#auto_registration' do
+  let!(:loaded_features) { $LOADED_FEATURES.dup }
+
   subject(:setup) { ROM::Setup.new(notifications) }
 
   let(:notifications) { instance_double(ROM::Notifications::EventBus) }
+
+  after do
+    %i(Persistence Users CreateUser UserList My).each do |const|
+      Object.send(:remove_const, const) if Object.const_defined?(const)
+    end
+
+    $LOADED_FEATURES.replace(loaded_features)
+  end
 
   context 'with default component_dirs' do
     context 'with namespace turned on' do
