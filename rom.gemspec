@@ -11,7 +11,7 @@ Gem::Specification.new do |gem|
   gem.files       = Dir['CHANGELOG.md', 'LICENSE', 'README.md', 'lib/**/*']
   gem.license     = 'MIT'
 
-  gem.add_runtime_dependency 'rom-core', '~> 4.1', '>= 4.1.1'
+  gem.add_runtime_dependency 'rom-core', '~> 4.1', '>= 4.1.2'
   gem.add_runtime_dependency 'rom-repository', '~> 2.0', '>= 2.0.2'
   gem.add_runtime_dependency 'rom-changeset', '~> 1.0', '>= 1.0.1'
 
