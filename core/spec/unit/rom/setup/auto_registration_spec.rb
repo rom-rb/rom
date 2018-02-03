@@ -2,9 +2,19 @@ require 'rom/setup'
 require 'rom/support/notifications'
 
 RSpec.describe ROM::Setup, '#auto_registration' do
+  let!(:loaded_features) { $LOADED_FEATURES.dup }
+
   subject(:setup) { ROM::Setup.new(notifications) }
 
   let(:notifications) { instance_double(ROM::Notifications::EventBus) }
+
+  after do
+    %i(Persistence Users CreateUser UserList My).each do |const|
+      Object.send(:remove_const, const) if Object.const_defined?(const)
+    end
+
+    $LOADED_FEATURES.replace(loaded_features)
+  end
 
   context 'with default component_dirs' do
     context 'with namespace turned on' do
@@ -149,6 +159,21 @@ RSpec.describe ROM::Setup, '#auto_registration' do
         describe '#mappers' do
           it 'loads files and returns constants' do
             expect(setup.mapper_classes).to eql([My::Namespace::Mappers::CustomerList])
+          end
+        end
+
+        context 'with possibly clashing namespace' do
+          before do
+            module My
+              module Namespace
+                module Customers
+                end
+              end
+            end
+          end
+
+          it 'starts with the deepest constant' do
+            expect(setup.relation_classes).to eql([My::Namespace::Relations::Customers])
           end
         end
       end

@@ -23,13 +23,14 @@ module ROM
       #
       # @api private
       def call
-        potential = []
+        parts = path_arr.map { |part| Inflector.camelize(part) }
+        potential = parts.map.with_index do |_, i|
+          parts[(i - parts.size)..parts.size]
+        end
         attempted = []
 
-        path_arr.reverse.each do |dir|
-          const_fragment = potential.unshift(
-            Inflector.camelize(dir)
-          ).join("::")
+        potential.map do |path|
+          const_fragment = path.join("::")
 
           constant = "#{namespace}::#{const_fragment}"
 
