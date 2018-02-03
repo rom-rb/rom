@@ -24,9 +24,9 @@ module ROM
       # @api private
       def call
         parts = path_arr.map { |part| Inflector.camelize(part) }
-        potential = parts.map.with_index { |arr, i|
+        potential = parts.map.with_index do |_, i|
           parts[(i - parts.size)..parts.size]
-        }
+        end
         attempted = []
 
         potential.map do |path|
