@@ -1,8 +1,18 @@
+# v4.1.2 2018-02-03
+
+## Fixed
+
+* Auto-registration with a custom namespace now starts with the longest constant name, otherwise it could pick up a less specific constant (e.g. a module) and treat it as a ROM entity class (flash-gordon)
+
+[Compare v4.1.1...v4.1.2](https://github.com/rom-rb/rom/compare/v4.1.1...v4.1.2)
+
 # v4.1.1 2018-01-15
 
 ## Fixed
 
 * Changesets work with `timestamp` plugin (cflipse)
+
+[Compare v4.1.0...v4.1.1](https://github.com/rom-rb/rom/compare/v4.1.0...v4.1.1)
 
 # v4.1.0 2017-11-17
 
