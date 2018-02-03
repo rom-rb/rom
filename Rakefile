@@ -1,3 +1,5 @@
+require "bundler/gem_tasks"
+
 SPEC_RESULTS = {}
 
 desc 'Run all specs'
