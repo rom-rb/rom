@@ -251,6 +251,32 @@ RSpec.describe ROM::Relation, '.schema' do
       expect(schema[:admin]).to eql(ROM::Types::Bool.meta(name: :admin, source: ROM::Relation::Name[:test_users]))
     end
 
+    it 'passes adapter to schema_dsl' do
+      module Test::ExamplePlugin
+        def self.apply(schema, name: :example, type: ROM::Types::String)
+          attr = type.meta(name: name, source: schema.name)
+
+          schema.attributes.concat(schema.class.attributes([attr], schema.attr_class))
+        end
+      end
+
+      ROM.plugins do
+        adapter :memory do
+          register :example, Test::ExamplePlugin, type: :schema
+        end
+      end
+
+      class Test::Users < ROM::Relation[:memory]
+        schema do
+          use :example
+        end
+      end
+
+      schema = Test::Users.schema_proc.call
+
+      expect(schema[:example]).to eql(ROM::Types::String.meta(name: :example, source: ROM::Relation::Name[:test_users]))
+    end
+
     it 'raises an error on double definition' do
       expect {
         class Test::Users < ROM::Relation[:memory]
