@@ -105,6 +105,7 @@ module ROM
           @schema_proc = proc do |*args, &inner_block|
             schema_dsl.new(
               relation_name,
+              adapter: adapter,
               schema_class: schema_class,
               attr_class: schema_attr_class,
               inferrer: schema_inferrer.with(enabled: infer),
