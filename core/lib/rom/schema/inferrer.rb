@@ -7,6 +7,21 @@ module ROM
       extend Dry::Core::ClassAttributes
       extend Initializer
 
+      # @!method self.attributes_inferrer
+      #   @overload attributes_inferrer
+      #     @return [Proc]
+      #
+      #   @overload attributes_inferrer(value)
+      #     @param value [Proc]
+      #     @return [Proc]
+      #
+      # @!method self.attr_class
+      #   @overload attr_class
+      #     @return [Class(ROM::Attribute)]
+      #
+      #   @overload attr_class(value)
+      #     @param value [Class(ROM::Attribute)]
+      #     @return [Class(ROM::Attribute)]
       defines :attributes_inferrer, :attr_class
 
       MissingAttributesError = Class.new(StandardError) do
@@ -26,12 +41,18 @@ module ROM
 
       include Dry::Equalizer(:options)
 
+      # @!attribute [r] attr_class
+      #   @return [Class(ROM::Attribute)]
       option :attr_class, default: -> { self.class.attr_class }
 
+      # @!attribute [r] enabled
+      #   @return [Boolean]
       option :enabled, default: -> { true }
 
       alias_method :enabled?, :enabled
 
+      # @!attribute [r] attributes_inferrer
+      #   @return [ROM::Schema::AttributesInferrer]
       option :attributes_inferrer, default: -> { self.class.attributes_inferrer }
 
       # @api private

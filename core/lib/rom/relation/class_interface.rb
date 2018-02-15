@@ -128,7 +128,7 @@ module ROM
       # @api private
       attr_reader :schema_proc
 
-      # !@attribute [r] relation_name
+      # @!attribute [r] relation_name
       #   @return [Name] Qualified relation name
       def relation_name
         raise MissingSchemaError.new(self) unless defined?(@relation_name)
