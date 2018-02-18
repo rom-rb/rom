@@ -1,3 +1,11 @@
+# v4.1.2 2018-02-18
+
+## Fixed
+
+* Adapter-specific schema plugins work now (alsemyonov)
+
+[Compare v4.1.2...v4.1.3](https://github.com/rom-rb/rom/compare/v4.1.2...v4.1.3)
+
 # v4.1.2 2018-02-03
 
 ## Fixed
