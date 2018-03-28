@@ -1,8 +1,13 @@
-# v4.1.2 2018-02-18
+# v4.1.3 2018-03-28
 
 ## Fixed
 
-* Adapter-specific schema plugins work now (alsemyonov)
+* `Relation#map_with` applies auto-mapping prior custom mappers (solnic)
+* `Relation#map_to` works along with `Relation#map_with` (solnic)
+
+## Added
+
+* Custom `MapperCompiler` subclass can provide mapper options via `mapper_options(...)` class attribute (solnic)
 
 [Compare v4.1.2...v4.1.3](https://github.com/rom-rb/rom/compare/v4.1.2...v4.1.3)
 
