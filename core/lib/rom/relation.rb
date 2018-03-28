@@ -545,7 +545,7 @@ module ROM
     #
     # @api public
     def map_to(klass, **opts)
-      with(opts.merge(auto_struct: true, meta: { model: klass }))
+      with(opts.merge(auto_map: false, auto_struct: true, meta: { model: klass }))
     end
 
     # Return a new relation with an aliased name
