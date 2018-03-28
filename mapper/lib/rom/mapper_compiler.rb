@@ -1,3 +1,6 @@
+require 'dry/core/class_attributes'
+
+require 'rom/constants'
 require 'rom/initializer'
 require 'rom/mapper'
 require 'rom/struct'
@@ -7,16 +10,24 @@ require 'rom/cache'
 module ROM
   # @api private
   class MapperCompiler
+    extend Dry::Core::ClassAttributes
     extend Initializer
+
+    defines :mapper_options
+
+    mapper_options(EMPTY_HASH)
 
     option :cache, default: -> { Cache.new }
 
     attr_reader :struct_compiler
 
+    attr_reader :mapper_options
+
     def initialize(*args)
       super
       @struct_compiler = StructCompiler.new(cache: cache)
       @cache = cache.namespaced(:mappers)
+      @mapper_options = self.class.mapper_options
     end
 
     def call(ast)
@@ -44,7 +55,7 @@ module ROM
         end
       end
 
-      options = [header.map(&method(:visit)), model: model]
+      options = [header.map(&method(:visit)), mapper_options.merge(model: model)]
 
       if meta[:combine_type]
         type = meta[:combine_type] == :many ? :array : :hash
