@@ -29,6 +29,13 @@ module ROM
       end
       alias_method :[], :call
 
+      # @see Relation#map_to
+      #
+      # @api public
+      def map_to(klass)
+        self >> left.map_to(klass).mapper
+      end
+
       private
 
       # @api private

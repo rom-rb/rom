@@ -51,7 +51,7 @@ module ROM
       #
       # @api public
       def call(*args)
-        left = root.with(auto_struct: false).call(*args)
+        left = root.with(auto_map: false, auto_struct: false).call(*args)
 
         right =
           if left.empty?

@@ -27,7 +27,7 @@ module ROM
       # @api public
       def call(*args)
         if auto_map?
-          Loaded.new(self, mapper.(relation.with(auto_struct: false)))
+          Loaded.new(self, mapper.(relation.with(auto_map: false, auto_struct: false)))
         else
           Loaded.new(self, relation.(*args))
         end
