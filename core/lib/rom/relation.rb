@@ -496,15 +496,12 @@ module ROM
       mappers[to_ast]
     end
 
-    # Maps the wrapped relation with other mappers available in the registry
+    # Maps relation with custom mappers available in the registry
     #
-    # @overload map_with(model)
-    #   Map tuples to the provided custom model class
-    #
-    #   @example
-    #     users.map_with(MyUserModel)
-    #
-    #   @param [Class>] model Your custom model class
+    # When `auto_map` is enabled, your mappers will be applied after performing
+    # default auto-mapping. This means that you can compose complex relations
+    # and have them auto-mapped, and use much simpler custom mappers to adjust
+    # resulting data according to your requirements.
     #
     # @overload map_with(*mappers)
     #   Map tuples using registered mappers
@@ -515,33 +512,28 @@ module ROM
     #   @param [Array<Symbol>] mappers A list of mapper identifiers
     #
     # @overload map_with(*mappers, auto_map: true)
-    #   Map tuples using auto-mapping and custom registered mappers
-    #
-    #   If `auto_map` is enabled, your mappers will be applied after performing
-    #   default auto-mapping. This means that you can compose complex relations
-    #   and have them auto-mapped, and use much simpler custom mappers to adjust
-    #   resulting data according to your requirements.
+    #   Map tuples using custom registered mappers and enforce auto-mapping
     #
     #   @example
     #     users.map_with(:my_mapper, :my_other_mapper, auto_map: true)
     #
     #   @param [Array<Symbol>] mappers A list of mapper identifiers
     #
-    # @return [Relation] A new relation proxy with pipelined relation
+    # @return [Relation::Composite] Mapped relation
     #
     # @api public
     def map_with(*names, **opts)
       super(*names).with(opts)
     end
 
-    # Return a new relation that will map its tuples to instance of the provided class
+    # Return a new relation that will map its tuples to instances of the provided class
     #
     # @example
     #   users.map_to(MyUserModel)
     #
     # @param [Class] klass Your custom model class
     #
-    # @return [Relation::Composite]
+    # @return [Relation]
     #
     # @api public
     def map_to(klass, **opts)
