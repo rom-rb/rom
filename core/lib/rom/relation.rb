@@ -217,7 +217,7 @@ module ROM
     def each
       return to_enum unless block_given?
 
-      if auto_struct?
+      if auto_map?
         mapper.(dataset.map { |tuple| output_schema[tuple] }).each { |struct| yield(struct) }
       else
         dataset.each { |tuple| yield(output_schema[tuple]) }
