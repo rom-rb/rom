@@ -14,11 +14,11 @@ module ROM
 
       def self.add_timestamps(data)
         now = Time.now
-        data.merge(created_at: now, updated_at: now)
+        Hash(created_at: now, updated_at: now).merge(data)
       end
 
       def self.touch(data)
-        data.merge(updated_at: Time.now)
+        Hash(updated_at: Time.now).merge(data)
       end
     end
 
