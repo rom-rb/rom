@@ -1,3 +1,9 @@
+# 1.0.2 2018-03-29
+
+### Fixed
+
+* `add_timestamps` mapping no longer overwrites existing timestamps (cgeorgii)
+
 # 1.0.1 2017-11-02
 
 ### Fixed
