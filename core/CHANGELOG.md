@@ -4,6 +4,7 @@
 
 * `Relation#map_with` applies auto-mapping prior custom mappers (solnic)
 * `Relation#map_to` works along with `Relation#map_with` (solnic)
+* `Relation#commands` no longers tries to map results through all custom registered mappers (solnic)
 
 ## Added
 
