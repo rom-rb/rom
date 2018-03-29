@@ -1,3 +1,9 @@
+# 1.2.0 2018-03-29
+
+## Added
+
+* Custom `MapperCompiler` subclass can provide mapper options via `mapper_options(...)` class attribute (solnic)
+
 # 1.1.0 2017-11-17
 
 ### Fixed

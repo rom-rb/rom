@@ -6,10 +6,6 @@
 * `Relation#map_to` works along with `Relation#map_with` (solnic)
 * `Relation#commands` no longers tries to map results through all custom registered mappers (solnic)
 
-## Added
-
-* Custom `MapperCompiler` subclass can provide mapper options via `mapper_options(...)` class attribute (solnic)
-
 [Compare v4.1.2...v4.2.0](https://github.com/rom-rb/rom/compare/v4.1.2...v4.2.0)
 
 # v4.1.2 2018-02-03
