@@ -36,14 +36,17 @@ module ROM
       #
       # @api public
       def command(type, mapper: nil, use: EMPTY_ARRAY, plugins_options: EMPTY_HASH, **opts)
-        base_command = commands.key?(type) ? commands[type] : commands[type, adapter, to_ast, use, plugins_options, opts]
+        base_command =
+          if commands.key?(type)
+            commands[type]
+          else
+            commands[type, adapter, to_ast, use, plugins_options, opts]
+          end
 
         command =
           if mapper
             base_command >> mappers[mapper]
-          elsif mappers.any? && !base_command.is_a?(CommandProxy)
-            mappers.reduce(base_command) { |a, (_, e)| a >> e }
-          elsif auto_struct? || auto_map?
+          elsif auto_map?
             base_command >> self.mapper
           else
             base_command
