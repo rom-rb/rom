@@ -1,3 +1,3 @@
 module ROM
-  VERSION = '4.1.4'.freeze
+  VERSION = '4.2.0'.freeze
 end
