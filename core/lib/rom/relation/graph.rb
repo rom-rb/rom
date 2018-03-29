@@ -59,11 +59,11 @@ module ROM
       #
       # @see Relation#map_with
       #
-      # @return [Graph]
+      # @return [Relation::Composite]
       #
       # @api public
-      def map_with(*args)
-        self.class.new(root.map_with(*args), nodes)
+      def map_with(*names, **opts)
+        names.reduce(self.class.new(root.with(opts), nodes)) { |a, e| a >> mappers[e] }
       end
 
       # Map graph tuples to custom objects
