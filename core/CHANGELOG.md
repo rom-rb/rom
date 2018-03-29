@@ -1,4 +1,4 @@
-# v4.1.3 2018-03-28
+# v4.2.0 2018-03-29
 
 ## Fixed
 
@@ -10,7 +10,7 @@
 
 * Custom `MapperCompiler` subclass can provide mapper options via `mapper_options(...)` class attribute (solnic)
 
-[Compare v4.1.2...v4.1.3](https://github.com/rom-rb/rom/compare/v4.1.2...v4.1.3)
+[Compare v4.1.2...v4.2.0](https://github.com/rom-rb/rom/compare/v4.1.2...v4.2.0)
 
 # v4.1.2 2018-02-03
 
