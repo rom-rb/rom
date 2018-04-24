@@ -12,6 +12,7 @@ end
 
 gem 'dry-types', git: 'http://github.com/dry-rb/dry-types'
 gem 'dry-struct', git: 'http://github.com/dry-rb/dry-struct'
+gem 'dry-inflector', git: 'http://github.com/dry-rb/dry-inflector'
 
 group :sql do
   gem 'sequel', '~> 5.0'
