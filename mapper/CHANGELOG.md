@@ -1,3 +1,7 @@
+# 1.2.1 2018-05-03
+
+* `dry-types` dependency is constrained with `~> 0.12.1`
+
 # 1.2.0 2018-03-29
 
 ## Added

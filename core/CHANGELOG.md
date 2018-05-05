@@ -1,3 +1,9 @@
+# v4.2.1 2018-05-03
+
+* `dry-types` dependency is constrained with `~> 0.12.1`
+
+[Compare v4.2.0...v4.2.1](https://github.com/rom-rb/rom/compare/v4.2.0...v4.2.1)
+
 # v4.2.0 2018-03-29
 
 ## Fixed

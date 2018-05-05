@@ -1,13 +1,21 @@
+# 4.2.1 2018-05-03
+
+* `rom-core` updated to `['~> 4.2', '>= 4.2.1']`
+
+[Compare v4.2.0...v4.2.1](https://github.com/rom-rb/rom/compare/v4.2.0...v4.2.1)
+
 # 4.2.0 2018-03-29
 
-* `rom-core` updated to `['~> 4.1', '>= 4.1.3']`
+* `rom-core` updated to `['~> 4.2', '>= 4.2.0']`
 * `rom-changeset` updated to `['~> 1.0', '>= 1.0.2']`
+
+[Compare v4.1.3...v4.2.0](https://github.com/rom-rb/rom/compare/v4.1.3...v4.2.0)
 
 # 4.1.3 2018-02-03
 
-* `rom-core` updated to `['~> 4.1', '>= 4.1.2']`
+* `rom-core` updated to `['~> 4.1', '>= 4.1.3']`
 
-[Compare v4.1.2...v4.2.0](https://github.com/rom-rb/rom/compare/v4.1.2...v4.2.0)
+[Compare v4.1.2...v4.2.0](https://github.com/rom-rb/rom/compare/v4.1.2...v4.1.3)
 
 # 4.1.2 2018-01-15
 
