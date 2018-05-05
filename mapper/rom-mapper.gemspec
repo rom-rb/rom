@@ -12,10 +12,11 @@ Gem::Specification.new do |gem|
   gem.files         = Dir['CHANGELOG.md', 'LICENSE', 'README.md', 'lib/**/*']
   gem.license       = 'MIT'
 
-  gem.add_dependency 'dry-equalizer', '~> 0.2'
-  gem.add_dependency 'dry-core', '~> 0.3', '>= 0.3.1'
-  gem.add_dependency 'dry-struct', '~> 0.3'
-  gem.add_dependency 'transproc', '~> 1.0'
+  gem.add_runtime_dependency 'dry-equalizer', '~> 0.2'
+  gem.add_runtime_dependency 'dry-core', '~> 0.3', '>= 0.3.1'
+  gem.add_runtime_dependency 'dry-types', '~> 0.12.1'
+  gem.add_runtime_dependency 'dry-struct', '~> 0.4.0'
+  gem.add_runtime_dependency 'transproc', '~> 1.0'
 
   gem.add_development_dependency 'rake', '~> 11.3'
   gem.add_development_dependency 'rspec', '~> 3.5'

@@ -19,7 +19,7 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency 'dry-inflector', '~> 0.1'
   gem.add_runtime_dependency 'dry-container', '~> 0.6'
   gem.add_runtime_dependency 'dry-equalizer', '~> 0.2'
-  gem.add_runtime_dependency 'dry-types', '~> 0.12', '>= 0.12.1'
+  gem.add_runtime_dependency 'dry-types', '~> 0.12.1'
   gem.add_runtime_dependency 'dry-initializer', '~> 2.0'
   gem.add_runtime_dependency 'rom-mapper', '~> 1.1'
 
