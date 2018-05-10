@@ -1,5 +1,3 @@
-require 'rom/support/inflector'
-
 require 'rom/associations/definitions'
 
 module ROM
@@ -64,7 +62,7 @@ module ROM
           add(::ROM::Associations::Definitions::OneToMany.new(source, target, options))
         end
       end
-      alias_method :has_many, :one_to_many
+      alias has_many one_to_many
 
       # Establish a one-to-one association
       #
@@ -197,7 +195,7 @@ module ROM
 
       # @api private
       def dataset_name(name)
-        Inflector.pluralize(name).to_sym
+        ::ROM.inflector.pluralize(name).to_sym
       end
     end
   end

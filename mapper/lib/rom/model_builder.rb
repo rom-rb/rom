@@ -1,5 +1,3 @@
-require 'rom/support/inflector'
-
 module ROM
   # Model builders can be used to build model classes for mappers
   #
@@ -54,7 +52,7 @@ module ROM
 
         @namespace =
           if parts.any?
-            Inflector.constantize(parts.join('::'))
+            ROM.inflector.constantize(parts.join('::'))
           else
             Object
           end

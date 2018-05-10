@@ -124,7 +124,7 @@ module ROM
         #
         # @api public
         def type
-          Inflector.demodulize(self.class.name).to_sym
+          ROM.inflector.demodulize(self.class.name).to_sym
         end
       end
     end

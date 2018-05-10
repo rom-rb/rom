@@ -1,4 +1,3 @@
-require 'rom/support/inflector'
 require 'dry/core/class_builder'
 
 module ROM
@@ -14,7 +13,7 @@ module ROM
       # @api private
       def self.build_class(name, relation, options = EMPTY_HASH, &block)
         type = options.fetch(:type) { name }
-        command_type = Inflector.classify(type)
+        command_type = ROM.inflector.classify(type)
         adapter = options.fetch(:adapter)
         parent = ROM::Command.adapter_namespace(adapter).const_get(command_type)
         class_name = generate_class_name(adapter, command_type, relation)
@@ -31,9 +30,9 @@ module ROM
       # @api private
       def self.generate_class_name(adapter, command_type, relation)
         pieces = ['ROM']
-        pieces << Inflector.classify(adapter)
+        pieces << ROM.inflector.classify(adapter)
         pieces << 'Commands'
-        pieces << "#{command_type}[#{Inflector.classify(relation)}s]"
+        pieces << "#{command_type}[#{ROM.inflector.classify(relation)}s]"
         pieces.join('::')
       end
     end

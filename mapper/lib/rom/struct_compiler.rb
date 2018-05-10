@@ -1,4 +1,3 @@
-require 'rom/support/inflector'
 require 'dry/core/class_builder'
 require 'dry/types/compiler'
 
@@ -42,7 +41,7 @@ module ROM
         end
       end
     end
-    alias_method :[], :call
+    alias [] call
 
     private
 
@@ -84,7 +83,7 @@ module ROM
 
     # @api private
     def visit_constrained(node)
-      definition, _ = node
+      definition, = node
 
       visit(definition)
     end
@@ -97,14 +96,14 @@ module ROM
 
     # @api private
     def build_class(name, parent, ns, &block)
-      Dry::Core::ClassBuilder.
-        new(name: class_name(name), parent: parent, namespace: ns).
-        call(&block)
+      Dry::Core::ClassBuilder
+        .new(name: class_name(name), parent: parent, namespace: ns)
+        .call(&block)
     end
 
     # @api private
     def class_name(name)
-      Inflector.classify(Inflector.singularize(name))
+      ROM.inflector.classify(ROM.inflector.singularize(name))
     end
   end
 end

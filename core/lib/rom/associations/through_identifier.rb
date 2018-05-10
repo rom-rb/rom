@@ -1,5 +1,3 @@
-require 'rom/support/inflector'
-
 module ROM
   module Associations
     # @api private
@@ -20,7 +18,7 @@ module ROM
 
       # @api private
       def self.default_assoc_name(relation)
-        Inflector.singularize(relation).to_sym
+        ROM.inflector.singularize(relation).to_sym
       end
 
       # @api private

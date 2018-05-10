@@ -1,7 +1,5 @@
 require 'pathname'
 
-require 'rom/support/inflector'
-
 require 'rom/types'
 require 'rom/initializer'
 require 'rom/setup/auto_registration_strategies/no_namespace'
@@ -94,7 +92,7 @@ module ROM
             ).call
           end
 
-        Inflector.constantize(klass_name)
+        ROM.inflector.constantize(klass_name)
       end
     end
   end

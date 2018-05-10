@@ -1,3 +1,4 @@
+require 'dry/inflector'
 require 'rom/plugin_registry'
 require 'rom/global/plugin_dsl'
 
@@ -14,6 +15,10 @@ module ROM
 
       rom.instance_variable_set('@adapters', {})
       rom.instance_variable_set('@plugin_registry', PluginRegistry.new)
+      rom.instance_variable_set(
+        '@inflector_implementation',
+        default_inflector_implementation
+      )
     end
 
     # An internal adapter identifier => adapter module map used by setup
@@ -29,6 +34,13 @@ module ROM
     #
     # @api private
     attr_reader :plugin_registry
+
+    # Set the nflector implementation used for all inflections
+    #
+    # @return [Dry::Inflector]
+    #
+    # @api public
+    attr_writer :inflector_implementation
 
     # Global plugin setup DSL
     #
@@ -53,6 +65,25 @@ module ROM
     def register_adapter(identifier, adapter)
       adapters[identifier] = adapter
       self
+    end
+
+    # The inflector used in ROM
+    #
+    # @return [Dry::Inflector]
+    #
+    # @api public
+    def inflector
+      @inflector_implementation
+    end
+
+    class << self
+      private
+
+      def default_inflector_implementation
+        Dry::Inflector.new do |i|
+          i.plural(/people\z/i, 'people')
+        end
+      end
     end
   end
 end
