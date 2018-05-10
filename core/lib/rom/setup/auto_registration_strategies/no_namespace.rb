@@ -1,6 +1,5 @@
 require 'pathname'
 
-require 'rom/support/inflector'
 require 'rom/types'
 require 'rom/setup/auto_registration_strategies/base'
 
@@ -22,7 +21,7 @@ module ROM
       #
       # @api private
       def call
-        Inflector.camelize(
+        ROM.inflector.camelize(
           file.sub(/^#{directory}\/#{entity}\//, '').sub(EXTENSION_REGEX, '')
         )
       end

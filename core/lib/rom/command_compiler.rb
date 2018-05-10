@@ -1,5 +1,3 @@
-require 'rom/support/inflector'
-
 require 'rom/initializer'
 require 'rom/commands'
 require 'rom/command_proxy'
@@ -108,11 +106,11 @@ module ROM
         end
       end
     end
-    alias_method :[], :call
+    alias [] call
 
     # @api private
     def type
-      @_type ||= Commands.const_get(Inflector.classify(id))[adapter]
+      @_type ||= Commands.const_get(ROM.inflector.classify(id))[adapter]
     rescue NameError
       nil
     end
@@ -137,7 +135,7 @@ module ROM
           if meta[:combine_type] == :many
             name
           else
-            { Inflector.singularize(name).to_sym => name }
+            { ROM.inflector.singularize(name).to_sym => name }
           end
 
         mapping =
@@ -155,7 +153,7 @@ module ROM
             default_mapping
           end
 
-        if other.size > 0
+        if !other.empty?
           [mapping, [type, other]]
         else
           [mapping, type]
@@ -167,7 +165,7 @@ module ROM
     end
 
     # @api private
-    def visit_attribute(*args)
+    def visit_attribute(*_args)
       nil
     end
 
@@ -228,12 +226,12 @@ module ROM
     # @param [Relation] relation The relation for the command
     #
     # @api private
-    def setup_associates(klass, relation, meta, parent_relation)
+    def setup_associates(klass, relation, _meta, parent_relation)
       assoc_name =
         if relation.associations.key?(parent_relation)
           parent_relation
         else
-          singular_name = Inflector.singularize(parent_relation).to_sym
+          singular_name = ROM.inflector.singularize(parent_relation).to_sym
           singular_name if relation.associations.key?(singular_name)
         end
 

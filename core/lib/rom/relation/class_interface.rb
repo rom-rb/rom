@@ -1,7 +1,5 @@
 require 'set'
 
-require 'rom/support/inflector'
-
 require 'rom/constants'
 require 'rom/relation/name'
 require 'rom/relation/view_dsl'
@@ -292,7 +290,7 @@ module ROM
       #
       # @api private
       def default_name
-        Name[Inflector.underscore(name).tr('/', '_').to_sym]
+        Name[ROM.inflector.underscore(name).tr('/', '_').to_sym]
       end
 
       # @api private

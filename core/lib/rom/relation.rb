@@ -594,7 +594,7 @@ module ROM
       if attr
         attr.name
       else
-        :"#{Inflector.singularize(name.dataset)}_id"
+        :"#{ROM.inflector.singularize(name.dataset)}_id"
       end
     end
 

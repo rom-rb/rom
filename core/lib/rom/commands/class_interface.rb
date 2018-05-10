@@ -1,5 +1,4 @@
 require 'dry/core/class_builder'
-require 'rom/support/inflector'
 
 module ROM
   # Base command class with factory class-level interface and setup-related logic
@@ -39,7 +38,7 @@ module ROM
       #
       # @api public
       def [](adapter)
-        adapter_namespace(adapter).const_get(Inflector.demodulize(name))
+        adapter_namespace(adapter).const_get(ROM.inflector.demodulize(name))
       end
 
       # Return namespaces that contains command subclasses of a specific adapter
@@ -85,7 +84,7 @@ module ROM
       # @api public
       def create_class(name, type, &block)
         klass = Dry::Core::ClassBuilder
-          .new(name: "#{Inflector.classify(type)}[:#{name}]", parent: type)
+          .new(name: "#{ROM.inflector.classify(type)}[:#{name}]", parent: type)
           .call
 
         if block
@@ -235,7 +234,7 @@ module ROM
       #
       # @api private
       def default_name
-        Inflector.underscore(Inflector.demodulize(name)).to_sym
+        ROM.inflector.underscore(ROM.inflector.demodulize(name)).to_sym
       end
 
       # Return default options based on class macros

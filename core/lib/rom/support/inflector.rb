@@ -1,7 +1,5 @@
-require 'dry/inflector'
+require 'rom/core'
 
 module ROM
-  Inflector = Dry::Inflector.new do |i|
-    i.plural(/people\z/i, 'people')
-  end
+  Inflector = ROM.inflector
 end

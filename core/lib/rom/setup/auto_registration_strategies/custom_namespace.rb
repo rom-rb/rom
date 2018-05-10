@@ -1,6 +1,5 @@
 require 'pathname'
 
-require 'rom/support/inflector'
 require 'rom/types'
 require 'rom/setup/auto_registration_strategies/base'
 
@@ -23,7 +22,7 @@ module ROM
       #
       # @api private
       def call
-        parts = path_arr.map { |part| Inflector.camelize(part) }
+        parts = path_arr.map { |part| ROM.inflector.camelize(part) }
         potential = parts.map.with_index do |_, i|
           parts[(i - parts.size)..parts.size]
         end
@@ -41,7 +40,7 @@ module ROM
 
         # If we have reached this point, its means constant is not defined and
         # NameError will be thrown if we attempt to camelize something like:
-        # `"#{namespace}::#{Inflector.camelize(filename)}"`
+        # `"#{namespace}::#{ROM.inflector.camelize(filename)}"`
         # so we can assume naming convention was not respected in required
         # file.
 
@@ -64,7 +63,7 @@ module ROM
 
       # @api private
       def ns_const
-        @namespace_constant ||= Inflector.constantize(namespace)
+        @namespace_constant ||= ROM.inflector.constantize(namespace)
       end
 
       # @api private
