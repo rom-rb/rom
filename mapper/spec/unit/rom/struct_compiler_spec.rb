@@ -11,6 +11,10 @@ RSpec.describe ROM::StructCompiler, '#call' do
     [:users, [[:attribute, attr_ast(:id, :Int)], [:attribute, attr_ast(:name, :String)]]]
   end
 
+  before do
+    ROM::Struct.send(:remove_const, :User) if ROM::Struct.constants.include?(:User)
+  end
+
   context 'ROM::Struct' do
     it 'generates a struct for a given relation name and columns' do
       struct = struct_compiler[*input, ROM::Struct]

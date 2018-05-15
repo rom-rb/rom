@@ -34,11 +34,13 @@ module ROM
         if attributes.empty?
           ROM::OpenStruct
         else
-          build_class(name, ROM::Struct, ns) do |klass|
-            attributes.each do |(attr_name, type)|
-              klass.attribute(attr_name, type)
-            end
+          klass = get_class(name, ns) || build_class(name, ROM::Struct, ns)
+
+          attributes.each do |(attr_name, type)|
+            klass.attribute(attr_name, type)
           end
+
+          klass
         end
       end
     end
@@ -93,6 +95,13 @@ module ROM
     def visit_enum(node)
       type_node, * = node
       visit(type_node)
+    end
+
+    # @api private
+    def get_class(name, ns)
+      ns.const_get(class_name(name))
+    rescue NameError
+      nil
     end
 
     # @api private
