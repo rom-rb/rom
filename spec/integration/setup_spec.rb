@@ -10,7 +10,7 @@ RSpec.describe 'Setting up rom suite' do
   before do
     class Test::Users < ROM::Relation[:memory]
       schema(:users) do
-        attribute :id, Types::Int
+        attribute :id, Types::Integer
         attribute :name, Types::String
       end
     end
