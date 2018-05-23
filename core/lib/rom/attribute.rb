@@ -24,8 +24,8 @@ module ROM
     param :type
 
     # @api private
-    def [](input)
-      type[input]
+    def [](*args)
+      type[*args]
     end
 
     # Return true if this attribute type is a primary key
@@ -33,7 +33,7 @@ module ROM
     # @example
     #   class Users < ROM::Relation[:memory]
     #     schema do
-    #       attribute :id, Types::Int
+    #       attribute :id, Types::Integer
     #       attribute :name, Types::String
     #
     #       primary_key :id
@@ -58,7 +58,7 @@ module ROM
     # @example
     #   class Tasks < ROM::Relation[:memory]
     #     schema do
-    #       attribute :id, Types::Int
+    #       attribute :id, Types::Integer
     #       attribute :user_id, Types.ForeignKey(:users)
     #     end
     #   end
@@ -81,7 +81,7 @@ module ROM
     # @example
     #   class Tasks < ROM::Relation[:memory]
     #     schema do
-    #       attribute :user_id, Types::Int.meta(alias: :id)
+    #       attribute :user_id, Types::Integer.meta(alias: :id)
     #       attribute :name, Types::String
     #     end
     #   end
@@ -104,7 +104,7 @@ module ROM
     # @example
     #   class Tasks < ROM::Relation[:memory]
     #     schema do
-    #       attribute :id, Types::Int
+    #       attribute :id, Types::Integer
     #       attribute :user_id, Types.ForeignKey(:users)
     #     end
     #   end
@@ -127,7 +127,7 @@ module ROM
     # @example
     #   class Tasks < ROM::Relation[:memory]
     #     schema do
-    #       attribute :id, Types::Int
+    #       attribute :id, Types::Integer
     #       attribute :user_id, Types.ForeignKey(:users)
     #     end
     #   end
@@ -153,7 +153,7 @@ module ROM
     # @example
     #   class Tasks < ROM::Relation[:memory]
     #     schema do
-    #       attribute :user_id, Types::Int.meta(alias: :id)
+    #       attribute :user_id, Types::Integer.meta(alias: :id)
     #       attribute :name, Types::String
     #     end
     #   end
@@ -178,7 +178,7 @@ module ROM
     # @example
     #   class Tasks < ROM::Relation[:memory]
     #     schema do
-    #       attribute :user_id, Types::Int.meta(alias: :id)
+    #       attribute :user_id, Types::Integer.meta(alias: :id)
     #       attribute :name, Types::String
     #     end
     #   end
@@ -201,7 +201,7 @@ module ROM
     # @example
     #   class Tasks < ROM::Relation[:memory]
     #     schema do
-    #       attribute :user_id, Types::Int.meta(alias: :id)
+    #       attribute :user_id, Types::Integer.meta(alias: :id)
     #       attribute :name, Types::String
     #     end
     #   end
@@ -224,7 +224,7 @@ module ROM
     # @example
     #   class Tasks < ROM::Relation[:memory]
     #     schema do
-    #       attribute :user_id, Types::Int
+    #       attribute :user_id, Types::Integer
     #       attribute :name, Types::String
     #     end
     #   end
@@ -255,7 +255,7 @@ module ROM
     # @example
     #   class Users < ROM::Relation[:memory]
     #     schema do
-    #       attribute :id, Types::Int
+    #       attribute :id, Types::Integer
     #       attribute :name, Types::String
     #     end
     #   end
@@ -370,7 +370,7 @@ module ROM
     #
     # @api private
     def to_write_type
-      type
+      type.meta(omittable: true)
     end
 
     # Return nullable attribute

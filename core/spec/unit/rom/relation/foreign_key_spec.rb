@@ -4,8 +4,8 @@ RSpec.describe ROM::Relation, '#foreign_key' do
   subject(:relation) do
     Class.new(ROM::Relation) do
       schema(:users) do
-        attribute :id, ROM::Types::Int
-        attribute :group_id, ROM::Types::Int.meta(foreign_key: true, target: :groups)
+        attribute :id, ROM::Types::Integer
+        attribute :group_id, ROM::Types::Integer.meta(foreign_key: true, target: :groups)
       end
     end.new([])
   end

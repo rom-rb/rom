@@ -2,7 +2,7 @@ require 'rom/schema'
 
 RSpec.describe ROM::Schema, '#project' do
   subject(:schema) do
-    define_schema(:users, id: :Int, name: :String, age: :Int)
+    define_schema(:users, id: :Integer, name: :String, age: :Integer)
   end
 
   it 'projects provided attribute names' do

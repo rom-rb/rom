@@ -18,7 +18,7 @@ RSpec.describe ROM::Relation, '#map_with' do
 
   context 'without the default mapper' do
     let(:schema) do
-      define_schema(:users, id: :Int, name: :String)
+      define_schema(:users, id: :Integer, name: :String)
     end
 
     let(:mappers) do
@@ -40,7 +40,7 @@ RSpec.describe ROM::Relation, '#map_with' do
 
   context 'with the default mapper' do
     let(:schema) do
-      define_schema(:users, id: :Int, name: :String).prefix(:user)
+      define_schema(:users, id: :Integer, name: :String).prefix(:user)
     end
 
     let(:mappers) do

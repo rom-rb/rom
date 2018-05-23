@@ -72,7 +72,7 @@ RSpec.describe 'Setting up ROM with multiple environments' do
       module Test
         class Users < ROM::Relation[:memory]
           schema(:users) do
-            attribute :id, ROM::Types::Int
+            attribute :id, ROM::Types::Integer
             attribute :name, ROM::Types::String
 
             associations do
@@ -83,9 +83,9 @@ RSpec.describe 'Setting up ROM with multiple environments' do
 
         class Tasks  < ROM::Relation[:memory]
           schema(:tasks) do
-            attribute :id, ROM::Types::Int
+            attribute :id, ROM::Types::Integer
             attribute :title, ROM::Types::String
-            attribute :user_id, ROM::Types::Int
+            attribute :user_id, ROM::Types::Integer
 
             associations do
               belongs_to :user

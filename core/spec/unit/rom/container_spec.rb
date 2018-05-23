@@ -20,7 +20,7 @@ RSpec.describe ROM::Container do
       schema(:tasks) do
         attribute :name, ROM::Types::String
         attribute :title, ROM::Types::String
-        attribute :priority, ROM::Types::Int
+        attribute :priority, ROM::Types::Integer
       end
     end
 

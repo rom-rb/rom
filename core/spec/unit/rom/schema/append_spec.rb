@@ -4,11 +4,11 @@ RSpec.describe ROM::Schema, '#append' do
   subject(:schema) { left.append(*right) }
 
   let(:left) do
-    define_schema(:users, id: :Int, name: :String)
+    define_schema(:users, id: :Integer, name: :String)
   end
 
   let(:right) do
-    define_schema(:tasks, user_id: :Int)
+    define_schema(:tasks, user_id: :Integer)
   end
 
   it 'returns a new schema with attributes from two schemas' do

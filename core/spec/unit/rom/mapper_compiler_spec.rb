@@ -6,7 +6,7 @@ RSpec.describe ROM::MapperCompiler, '#call' do
   end
 
   let(:ast) do
-    ROM::Relation.new([], schema: define_schema(:users, id: :Int, name: :String)).to_ast
+    ROM::Relation.new([], schema: define_schema(:users, id: :Integer, name: :String)).to_ast
   end
 
   let(:data) do

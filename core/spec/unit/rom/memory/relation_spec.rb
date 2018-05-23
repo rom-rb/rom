@@ -10,7 +10,7 @@ RSpec.describe ROM::Memory::Relation do
       schema do
         attribute :name, ROM::Types::String
         attribute :email, ROM::Types::String
-        attribute :age, ROM::Types::Int
+        attribute :age, ROM::Types::Integer
       end
     end.new(dataset)
   end

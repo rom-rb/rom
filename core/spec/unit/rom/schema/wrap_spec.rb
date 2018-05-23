@@ -2,7 +2,7 @@ require 'rom/schema'
 
 RSpec.describe ROM::Schema, '#wrap' do
   subject(:schema) do
-    define_schema(:users, id: :Int, name: :String)
+    define_schema(:users, id: :Integer, name: :String)
   end
 
   let(:wrapped) do

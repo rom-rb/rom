@@ -168,7 +168,7 @@ RSpec.describe "ROM::PluginRegistry" do
     rel_name = ROM::Relation::Name[:users]
 
     users = ROM::Schema::DSL.new(rel_name) {
-      attribute :id, ROM::Types::Int
+      attribute :id, ROM::Types::Integer
       attribute :name, ROM::Types::String
 
       use :datestamps
@@ -183,7 +183,7 @@ RSpec.describe "ROM::PluginRegistry" do
     users = ROM::Schema::DSL.new(rel_name) {
       use :schema_dsl_ext
 
-      attribute :id, ROM::Types::Int
+      attribute :id, ROM::Types::Integer
     }.call
 
     expect(users[:id].meta[:plugged_in]).to be true
