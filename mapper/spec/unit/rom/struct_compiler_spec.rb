@@ -8,7 +8,7 @@ RSpec.describe ROM::StructCompiler, '#call' do
   end
 
   let(:input) do
-    [:users, [[:attribute, attr_ast(:id, :Int)], [:attribute, attr_ast(:name, :String)]]]
+    [:users, [[:attribute, attr_ast(:id, :Integer)], [:attribute, attr_ast(:name, :String)]]]
   end
 
   context 'ROM::Struct' do
@@ -35,7 +35,7 @@ RSpec.describe ROM::StructCompiler, '#call' do
 
     context 'with reserved keywords as attribute names' do
       let(:input) do
-        [:users, [[:attribute, attr_ast(:id, :Int)],
+        [:users, [[:attribute, attr_ast(:id, :Integer)],
                     [:attribute, attr_ast(:name, :String)],
                     [:attribute, attr_ast(:alias, :String)],
                     [:attribute, attr_ast(:until, :Time)]]]
@@ -62,7 +62,7 @@ RSpec.describe ROM::StructCompiler, '#call' do
 
   context 'with constrained types' do
     let(:input) do
-      [:posts, [[:attribute, [:id, ROM::Types::Strict::Int.to_ast, alias: false, wrapped: false]],
+      [:posts, [[:attribute, [:id, ROM::Types::Strict::Integer.to_ast, alias: false, wrapped: false]],
                 [:attribute, [:status, ROM::Types::Strict::String.enum(%(Foo Bar)).to_ast, alias: false, wrapped: false]]]]
     end
 
