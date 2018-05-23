@@ -4,7 +4,7 @@ RSpec.describe ROM::Attribute do
   describe '#inspect' do
     context 'with a primitive definition' do
       subject(:type) do
-        ROM::Attribute.new(ROM::Types::Int).meta(name: :id, primary_key: true)
+        ROM::Attribute.new(ROM::Types::Integer).meta(name: :id, primary_key: true)
       end
 
       specify do
@@ -35,7 +35,7 @@ RSpec.describe ROM::Attribute do
 
   describe '#method_missing' do
     subject(:type) do
-      ROM::Attribute.new(ROM::Types::Int).meta(name: :id, primary_key: true)
+      ROM::Attribute.new(ROM::Types::Integer).meta(name: :id, primary_key: true)
     end
 
     specify do

@@ -4,7 +4,7 @@ RSpec.describe ROM::Schema, '#rename' do
   subject(:schema) do
     define_schema(
       :users,
-      user_id: :Int, user_name: :String, user_email: :String
+      user_id: :Integer, user_name: :String, user_email: :String
     )
   end
 

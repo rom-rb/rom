@@ -35,7 +35,7 @@ module ROM
 
       # @!attribute [r] arity
       #   @return [Integer] View's arity
-      option :arity, type: Types::Strict::Int
+      option :arity, type: Types::Strict::Integer
 
       # @!attribute [r] curry_args
       #   @return [Array] Arguments that will be passed to curried view

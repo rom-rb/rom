@@ -4,7 +4,7 @@ RSpec.describe ROM::Relation, '#[]' do
   it 'defines a canonical schema for a relation' do
     class Test::Users < ROM::Relation[:memory]
       schema do
-        attribute :id, Types::Int
+        attribute :id, Types::Integer
         attribute :name, Types::String
       end
     end

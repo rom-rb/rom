@@ -33,7 +33,7 @@ RSpec.describe ROM::Relation, '#struct_namespace' do
     subject(:relation) do
       Class.new(ROM::Relation) do
         schema(:users) do
-          attribute :id, ROM::Types::Int
+          attribute :id, ROM::Types::Integer
           attribute :name, ROM::Types::String
         end
       end.new(dataset, auto_struct: true)
@@ -66,7 +66,7 @@ RSpec.describe ROM::Relation, '#struct_namespace' do
         struct_namespace Test::Entities
 
         schema(:users) do
-          attribute :id, ROM::Types::Int
+          attribute :id, ROM::Types::Integer
           attribute :name, ROM::Types::String
         end
       end.new(dataset, auto_struct: true)
@@ -80,7 +80,7 @@ RSpec.describe ROM::Relation, '#struct_namespace' do
       let(:admins) do
         Class.new(relation.class) do
           schema(:users, as: :admins) do
-            attribute :id, ROM::Types::Int
+            attribute :id, ROM::Types::Integer
             attribute :name, ROM::Types::String
           end
         end.new(dataset, auto_struct: true)

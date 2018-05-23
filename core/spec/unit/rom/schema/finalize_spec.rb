@@ -3,7 +3,7 @@ require 'rom/schema'
 RSpec.describe ROM::Schema, '#finalize!' do
   context 'without inferrer' do
     subject(:schema) do
-      define_schema(:users, id: :Int, name: :String)
+      define_schema(:users, id: :Integer, name: :String)
     end
 
     before { schema.finalize_attributes!.finalize! }
@@ -35,7 +35,7 @@ RSpec.describe ROM::Schema, '#finalize!' do
 
     context 'when all required attributes are present' do
       let(:attributes) do
-        [define_type(:id, :Int), define_type(:age, :Int)]
+        [define_type(:id, :Integer), define_type(:age, :Integer)]
       end
 
       it 'concats defined attributes with inferred attributes' do
@@ -45,8 +45,8 @@ RSpec.describe ROM::Schema, '#finalize!' do
 
     context 'when inferred attributes are overridden' do
       let(:attributes) do
-        [define_type(:id, :Int),
-         define_type(:age, :Int),
+        [define_type(:id, :Integer),
+         define_type(:age, :Integer),
          define_type(:name, :String).meta(custom: true)]
       end
 

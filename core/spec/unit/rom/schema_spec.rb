@@ -1,7 +1,7 @@
 RSpec.describe ROM::Schema do
   describe '#to_h' do
     it 'returns hash with attributes' do
-      attrs = { id: ROM::Types::Int.meta(name: :id), name: ROM::Types::String.meta(name: :name) }
+      attrs = { id: ROM::Types::Integer.meta(name: :id), name: ROM::Types::String.meta(name: :name) }
       schema = ROM::Schema.define(:name, attributes: attrs.values)
 
       expect(schema.to_h).to eql(attrs)
@@ -10,7 +10,7 @@ RSpec.describe ROM::Schema do
 
   describe '#to_ast' do
     specify do
-      attrs = { id: ROM::Types::Int.meta(name: :id), name: ROM::Types::String.meta(name: :name) }
+      attrs = { id: ROM::Types::Integer.meta(name: :id), name: ROM::Types::String.meta(name: :name) }
       schema = ROM::Schema.define(:name, attributes: attrs.values)
 
       expect(schema.to_ast).
@@ -25,8 +25,8 @@ RSpec.describe ROM::Schema do
     subject(:schema) { ROM::Schema.define(:name, attributes: attrs.values).finalize_attributes! }
 
     let(:attrs) do
-      { user_id: ROM::Types::Int.meta(name: :user_id, primary_key: true),
-        group_id: ROM::Types::Int.meta(name: :group_id, primary_key: true),
+      { user_id: ROM::Types::Integer.meta(name: :user_id, primary_key: true),
+        group_id: ROM::Types::Integer.meta(name: :group_id, primary_key: true),
         name: ROM::Types::String.meta(name: :name) }
     end
 
@@ -43,7 +43,7 @@ RSpec.describe ROM::Schema do
     subject(:schema) { ROM::Schema.define(:name, attributes: attrs.values).finalize_attributes! }
 
     let(:attrs) do
-      { id: ROM::Types::Int.meta(name: :id, primary_key: true), name: ROM::Types::String.meta(name: :name) }
+      { id: ROM::Types::Integer.meta(name: :id, primary_key: true), name: ROM::Types::String.meta(name: :name) }
     end
 
     it 'returns the name of the primary key attribute' do
