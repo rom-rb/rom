@@ -28,7 +28,7 @@ RSpec.describe ROM::Attribute, '#method_missing' do
     it 'returns a new attribute if forwarded method returned a new type' do
       new_attribute = attribute.default(2)
 
-      expect(new_attribute[nil]).to be(2)
+      expect(new_attribute[]).to be(2)
     end
   end
 end

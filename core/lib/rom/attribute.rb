@@ -24,8 +24,8 @@ module ROM
     param :type
 
     # @api private
-    def [](input)
-      type[input]
+    def [](*args)
+      type[*args]
     end
 
     # Return true if this attribute type is a primary key
