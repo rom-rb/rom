@@ -370,7 +370,7 @@ module ROM
     #
     # @api private
     def to_write_type
-      type
+      type.meta(omittable: true)
     end
 
     # Return nullable attribute
