@@ -8,7 +8,7 @@ RSpec.describe ROM::Attribute, '#method_missing' do
 
   context 'with a plain definition' do
     let(:type) do
-      ROM::Types::Int
+      ROM::Types::Integer
     end
 
     it 'forwards to its type' do
@@ -22,7 +22,7 @@ RSpec.describe ROM::Attribute, '#method_missing' do
 
   context 'with a type that can return new instances of its class' do
     let(:type) do
-      ROM::Types::Int.default(1)
+      ROM::Types::Integer.default(1)
     end
 
     it 'returns a new attribute if forwarded method returned a new type' do

@@ -27,7 +27,7 @@ module ROM
       # @return [Dry::Types::Definition]
       #
       # @api public
-      def ForeignKey(relation, type = Types::Int)
+      def ForeignKey(relation, type = Types::Integer)
         type.meta(foreign_key: true, target: relation)
       end
     end

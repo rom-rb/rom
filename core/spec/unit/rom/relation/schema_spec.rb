@@ -5,7 +5,7 @@ RSpec.describe ROM::Relation, '.schema' do
   it 'defines a canonical schema for a relation' do
     class Test::Users < ROM::Relation[:memory]
       schema do
-        attribute :id, Types::Int.meta(primary_key: true)
+        attribute :id, Types::Integer.meta(primary_key: true)
         attribute :name, Types::String
         attribute :admin, Types::Bool
       end
@@ -18,7 +18,7 @@ RSpec.describe ROM::Relation, '.schema' do
     schema = ROM::Memory::Schema.define(
       ROM::Relation::Name.new(:test_users),
       attributes: [
-        ROM::Memory::Types::Int.meta(primary_key: true, name: :id, source: relation_name),
+        ROM::Memory::Types::Integer.meta(primary_key: true, name: :id, source: relation_name),
         ROM::Memory::Types::String.meta(name: :name, source: relation_name),
         ROM::Memory::Types::Bool.meta(name: :admin, source: relation_name)
       ]
@@ -42,7 +42,7 @@ RSpec.describe ROM::Relation, '.schema' do
 
     class Test::Users < ROM::Relation[:memory]
       schema do
-        attribute :id, Types::Int
+        attribute :id, Types::Integer
         attribute :date, Types::Coercible::String, read: Test::Types::CoercibleDate
       end
     end
@@ -186,7 +186,7 @@ RSpec.describe ROM::Relation, '.schema' do
   it 'sets register_as and dataset' do
     class Test::Users < ROM::Relation[:memory]
       schema(:users) do
-        attribute :id, Types::Int
+        attribute :id, Types::Integer
         attribute :name, Types::String
       end
     end
@@ -198,7 +198,7 @@ RSpec.describe ROM::Relation, '.schema' do
   it 'sets dataset and respects custom register_as' do
     class Test::Users < ROM::Relation[:memory]
       schema(:users, as: :test_users) do
-        attribute :id, Types::Int
+        attribute :id, Types::Integer
         attribute :name, Types::String
       end
     end
@@ -220,7 +220,7 @@ RSpec.describe ROM::Relation, '.schema' do
     it 'returns defined schema' do
       class Test::Users < ROM::Relation[:memory]
         schema do
-          attribute :id, Types::Int.meta(primary_key: true)
+          attribute :id, Types::Integer.meta(primary_key: true)
           attribute :name, Types::String
           attribute :admin, Types::Bool
         end
@@ -255,9 +255,9 @@ RSpec.describe ROM::Relation, '.schema' do
       expect {
         class Test::Users < ROM::Relation[:memory]
           schema do
-            attribute :id, Types::Int.meta(primary_key: true)
+            attribute :id, Types::Integer.meta(primary_key: true)
             attribute :name, Types::String
-            attribute :id, Types::Int
+            attribute :id, Types::Integer
           end
         end
 
@@ -272,7 +272,7 @@ RSpec.describe ROM::Relation, '.schema' do
 
       Test::Users = Class.new(ROM::Relation[:memory]) do
         schema do
-          attribute :id, Types::Int.meta(primary_key: true)
+          attribute :id, Types::Integer.meta(primary_key: true)
           attribute :name, to_s_on_read.optional
         end
       end
@@ -293,7 +293,7 @@ RSpec.describe ROM::Relation, '.schema' do
     it 'is idempotent' do
       class Test::Users < ROM::Relation[:memory]
         schema do
-          attribute :id, Types::Int.meta(primary_key: true)
+          attribute :id, Types::Integer.meta(primary_key: true)
           attribute :name, Types::String
           attribute :admin, Types::Bool
         end
@@ -308,7 +308,7 @@ RSpec.describe ROM::Relation, '.schema' do
     it 'resets input and output schemas' do
       class Test::Users < ROM::Relation[:memory]
         schema do
-          attribute :id, Types::Int.meta(primary_key: true), read: Types::Int
+          attribute :id, Types::Integer.meta(primary_key: true), read: Types::Integer
           attribute :name, Types::String
         end
       end

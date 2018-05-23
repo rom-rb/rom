@@ -4,7 +4,7 @@ RSpec.describe ROM::Relation, '#output_schema' do
   subject(:relation) do
     Class.new(ROM::Relation[:memory]) do
       schema do
-        attribute :id, ROM::Types::String, read: ROM::Types::Int
+        attribute :id, ROM::Types::String, read: ROM::Types::Integer
         attribute :name, ROM::Types::String
       end
     end.new(ROM::Memory::Dataset.new([]))
