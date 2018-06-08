@@ -19,7 +19,7 @@ RSpec.describe ROM::Relation, '.dataset' do
   it 'yields relation class for setting custom dataset proc' do
     configuration.relation(:users) do
       schema(:users) do
-        attribute :id, ROM::Memory::Types::Int.meta(primary_key: true)
+        attribute :id, ROM::Memory::Types::Integer.meta(primary_key: true)
         attribute :name, ROM::Memory::Types::String
       end
 

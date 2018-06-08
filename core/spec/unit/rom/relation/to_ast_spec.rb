@@ -4,7 +4,7 @@ RSpec.describe ROM::Relation, '#to_ast' do
   let(:user_relation) do
     Class.new(ROM::Relation[:memory]) do
       schema(:users) do
-        attribute :id, ROM::Types::Int
+        attribute :id, ROM::Types::Integer
         attribute :name, ROM::Types::String
       end
 
@@ -17,8 +17,8 @@ RSpec.describe ROM::Relation, '#to_ast' do
   let(:task_relation) do
     Class.new(ROM::Relation[:memory]) do
       schema(:tasks) do
-        attribute :id, ROM::Types::Int
-        attribute :user_id, ROM::Types::Int.meta(foreign_key: true, target: :users)
+        attribute :id, ROM::Types::Integer
+        attribute :user_id, ROM::Types::Integer.meta(foreign_key: true, target: :users)
         attribute :title, ROM::Types::String
       end
 

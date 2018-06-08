@@ -13,7 +13,7 @@ RSpec.describe ROM::Relation, '#call' do
     let(:relation_class) do
       Class.new(ROM::Relation[:memory]) do
         schema do
-          attribute :id, ROM::Types::Int
+          attribute :id, ROM::Types::Integer
           attribute :name, ROM::Types::String
         end
       end
@@ -37,7 +37,7 @@ RSpec.describe ROM::Relation, '#call' do
     let(:relation_class) do
       Class.new(ROM::Relation[:memory]) do
         schema do
-          attribute :id, ROM::Types::String, read: ROM::Types::Coercible::Int
+          attribute :id, ROM::Types::String, read: ROM::Types::Coercible::Integer
           attribute :name, ROM::Types::String
         end
       end
@@ -57,7 +57,7 @@ RSpec.describe ROM::Relation, '#call' do
     let(:relation_class) do
       Class.new(ROM::Relation[:memory]) do
         schema(:users) do
-          attribute :id, ROM::Types::Int
+          attribute :id, ROM::Types::Integer
           attribute :name, ROM::Types::String
         end
       end
