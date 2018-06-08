@@ -62,7 +62,7 @@ module ROM
 
     DEFAULT_INFERRER = Inferrer.new(enabled: false).freeze
 
-    type_transformation = -> type, _ do
+    type_transformation = lambda do |type, _|
       t = if type.default?
             type.constructor { |value| value.nil? ? Undefined : value }
           else
