@@ -3,7 +3,7 @@ require 'rom/attribute'
 
 RSpec.describe ROM::Attribute, '#optional' do
   subject(:attribute) do
-    ROM::Attribute.new(ROM::Types::Int).meta(read: ROM::Types::Coercible::Int)
+    ROM::Attribute.new(ROM::Types::Integer).meta(read: ROM::Types::Coercible::Integer)
   end
 
   it 'transforms read type' do

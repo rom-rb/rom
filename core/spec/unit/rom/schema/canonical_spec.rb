@@ -2,7 +2,7 @@ require 'rom/schema'
 
 RSpec.describe ROM::Schema, '#canonical' do
   subject(:schema) {
-    define_schema(:users, id: :Int, name: :String)
+    define_schema(:users, id: :Integer, name: :String)
   }
 
   it 'returns self by default' do

@@ -175,7 +175,7 @@ RSpec.describe 'Configuring ROM' do
   it 'allows to use a relation with a schema in multiple containers' do
     class Test::UserRelation < ROM::Relation[:memory]
       schema(:users) do
-        attribute :id, Types::Int.meta(primary_key: true)
+        attribute :id, Types::Integer.meta(primary_key: true)
       end
     end
 

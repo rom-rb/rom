@@ -4,11 +4,11 @@ RSpec.describe ROM::Schema, '#uniq' do
   subject(:schema) { left.merge(right) }
 
   let(:left) do
-    define_schema(:users, id: :Int, name: :String)
+    define_schema(:users, id: :Integer, name: :String)
   end
 
   let(:right) do
-    define_schema(:tasks, id: :Int, user_id: :Int)
+    define_schema(:tasks, id: :Integer, user_id: :Integer)
   end
 
   it 'returns a new schema with unique attributes from two schemas' do

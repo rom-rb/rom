@@ -18,7 +18,7 @@ RSpec.describe ROM::Relation, '.view' do
 
   it 'returns view method name' do
     klass = Class.new(ROM::Relation[:memory]) {
-      schema { attribute :id, ROM::Types::Int }
+      schema { attribute :id, ROM::Types::Integer }
     }
 
     name = klass.view(:by_id, klass.schema) { self }
@@ -76,7 +76,7 @@ RSpec.describe ROM::Relation, '.view' do
       let(:relation_class) do
         Class.new(ROM::Memory::Relation) do
           schema(:users) do
-            attribute :id, ROM::Types::Int
+            attribute :id, ROM::Types::Integer
             attribute :name, ROM::Types::String
           end
 
@@ -128,7 +128,7 @@ RSpec.describe ROM::Relation, '.view' do
     include_context 'relation with views' do
       let(:relation_class) do
         attributes_inferrer = proc {
-          [[define_attribute(:users, :Int, name: :id), define_attribute(:users, :String, name: :name)],
+          [[define_attribute(:users, :Integer, name: :id), define_attribute(:users, :String, name: :name)],
            []]
         }
 

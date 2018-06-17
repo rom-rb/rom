@@ -14,8 +14,8 @@ Gem::Specification.new do |gem|
 
   gem.add_runtime_dependency 'dry-equalizer', '~> 0.2'
   gem.add_runtime_dependency 'dry-core', '~> 0.3', '>= 0.3.1'
-  gem.add_runtime_dependency 'dry-types', '~> 0.12.1'
-  gem.add_runtime_dependency 'dry-struct', '~> 0.4.0'
+  gem.add_runtime_dependency 'dry-struct', '~> 0.5.0'
+  gem.add_runtime_dependency 'dry-types', '~> 0.13.0'
   gem.add_runtime_dependency 'transproc', '~> 1.0'
 
   gem.add_development_dependency 'rake', '~> 11.3'
