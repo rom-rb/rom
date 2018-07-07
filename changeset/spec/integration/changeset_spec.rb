@@ -19,10 +19,6 @@ RSpec.describe 'Using changesets' do
   end
 
   describe 'Create' do
-    let(:create_changeset) do
-      Class.new(ROM::Changeset::Create)
-    end
-
     it 'sets empty data only for stateful changesets' do
       create = users.changeset(:create)
       expect(create).to be_empty
