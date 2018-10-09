@@ -28,22 +28,36 @@ module ROM
         end
       end
 
-      # Initialize a new repository object
+      # Initialize a new repository object, establishing configured relation proxies from
+      # the passed container
       #
-      # @param [ROM::Container] container Finalized rom container
+      # @overload new(container, **options)
+      #   Initialize with container as leading parameter
       #
-      # @param [Hash] options Repository options
-      # @option options [Module] :struct_namespace Custom struct namespace
-      # @option options [Boolean] :auto_struct Enable/Disable auto-struct mapping
+      #   @param [ROM::Container] container Finalized rom container
+      #
+      #   @param [Hash] options Repository options
+      #   @option options [Module] :struct_namespace Custom struct namespace
+      #   @option options [Boolean] :auto_struct Enable/Disable auto-struct mapping
+      #
+      # @overload new(**options)
+      #   Inititalize with container as option
+      #
+      #   @param [Hash] options Repository options
+      #   @option options [ROM::Container] :container Finalized rom container
+      #   @option options [Module] :struct_namespace Custom struct namespace
+      #   @option options [Boolean] :auto_struct Enable/Disable auto-struct mapping
       #
       # @api public
-      def new(container, options = EMPTY_HASH)
+      def new(container = nil, **options)
+        container ||= options.fetch(:container)
+
         unless relation_reader
           relation_reader(RelationReader.new(self, container.relations.elements.keys))
           include(relation_reader)
         end
 
-        super
+        super(options.merge(container: container))
       end
 
       # Inherits configured relations and commands

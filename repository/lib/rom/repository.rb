@@ -86,7 +86,7 @@ module ROM
 
     # @!attribute [r] container
     #   @return [ROM::Container] The container used to set up a repo
-    param :container, allow: ROM::Container
+    option :container, allow: ROM::Container
 
     # @!attribute [r] struct_namespace
     #   @return [Module,Class] The namespace for auto-generated structs
@@ -100,13 +100,10 @@ module ROM
     #   @return [RelationRegistry] The relation proxy registry used by a repo
     attr_reader :relations
 
-    # Initializes a new repo by establishing configured relation proxies from
-    # the passed container
-    #
-    # @param container [ROM::Container] The rom container with relations and optional commands
+    # Initializes a new repository object
     #
     # @api private
-    def initialize(container, options = EMPTY_HASH)
+    def initialize(*)
       super
       @relations = {}
     end
