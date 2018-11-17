@@ -1,3 +1,1 @@
-COMPONENTS = %w(mapper)
-
 eval_gemfile '../Gemfile'

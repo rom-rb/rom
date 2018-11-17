@@ -1,3 +1,0 @@
-COMPONENTS = %w(core)
-
-eval_gemfile '../Gemfile'

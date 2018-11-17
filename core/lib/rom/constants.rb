@@ -20,6 +20,7 @@ module ROM
   EnvAlreadyFinalizedError = Class.new(StandardError)
   RelationAlreadyDefinedError = Class.new(StandardError)
   MapperAlreadyDefinedError = Class.new(StandardError)
+  MapperMisconfiguredError = Class.new(StandardError)
   NoRelationError = Class.new(StandardError)
   InvalidRelationName = Class.new(StandardError)
   CommandError = Class.new(StandardError)

@@ -4,8 +4,6 @@ before_install: gem update --system
 install:
   - "cd $TRAVIS_BUILD_DIR/core"
   - "bundle install --without sql benchmarks console tools --gemfile ./Gemfile"
-  - "cd $TRAVIS_BUILD_DIR/mapper"
-  - "bundle install --without sql benchmarks console tools --gemfile ./Gemfile"
   - "cd $TRAVIS_BUILD_DIR/repository"
   - "bundle install --without benchmarks console tools --gemfile ./Gemfile"
   - "cd $TRAVIS_BUILD_DIR/changeset"

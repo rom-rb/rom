@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 gemspec
 
 unless defined?(COMPONENTS)
-  COMPONENTS = %w(core mapper repository changeset)
+  COMPONENTS = %w(core repository changeset)
 end
 
 COMPONENTS.each do |component|
