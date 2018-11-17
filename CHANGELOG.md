@@ -1,3 +1,9 @@
+# 5.0.0 to-be-released
+
+* `rom-mapper` was moved to `core` under `rom/mapper` (solnic)
+
+[Compare v4.2.1...master](https://github.com/rom-rb/rom/compare/v4.2.1...master)
+
 # 4.2.1 2018-05-03
 
 * `rom-core` updated to `['~> 4.2', '>= 4.2.1']`
