@@ -36,7 +36,7 @@ module Test
   end
 end
 
-warning_api_available = RUBY_VERSION >= '2.4.0'
+warning_api_available = defined?(Warning)
 
 module SileneceWarnings
   def warn(str)
