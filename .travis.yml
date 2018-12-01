@@ -26,6 +26,10 @@ rvm:
   - 2.5.5
   - 2.4.6
   - jruby-9.2.7.0
+  - truffleruby
+matrix:
+  allow_failures:
+    - rvm: truffleruby
 env:
   global:
     - COVERAGE='true'
