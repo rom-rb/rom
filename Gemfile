@@ -18,10 +18,10 @@ end
 
 group :sql do
   gem 'sequel', '~> 5.0'
-  gem 'sqlite3', platforms: :mri
+  gem 'sqlite3', platforms: [:mri, :truffleruby]
   gem 'jdbc-sqlite3', platforms: :jruby
   gem 'jdbc-postgres', platforms: :jruby
-  gem 'pg', platforms: :mri
+  gem 'pg', platforms: [:mri, :truffleruby]
   gem 'dry-monitor'
 
   if ENV['USE_ROM_SQL_MASTER'].eql?('true')
