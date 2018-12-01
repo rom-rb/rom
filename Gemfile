@@ -12,9 +12,9 @@ end
 
 group :sql do
   gem 'sequel', '~> 5.0'
-  gem 'sqlite3', platforms: [:mri, :rbx]
+  gem 'sqlite3', platforms: [:mri, :rbx, :truffleruby]
   gem 'jdbc-sqlite3', platforms: :jruby
-  gem 'pg', platforms: [:mri, :rbx]
+  gem 'pg', platforms: [:mri, :rbx, :truffleruby]
   gem 'jdbc-postgres', platforms: :jruby
   gem 'rom-sql', git: 'https://github.com/rom-rb/rom-sql.git', branch: 'master'
   gem 'dry-monitor'
