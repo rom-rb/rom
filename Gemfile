@@ -2,6 +2,8 @@ source 'https://rubygems.org'
 
 gemspec
 
+gem 'dry-container', git: 'https://github.com/dry-rb/dry-container'
+
 unless defined?(COMPONENTS)
   COMPONENTS = %w(core repository changeset)
 end
