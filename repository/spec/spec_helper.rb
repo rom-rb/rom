@@ -48,10 +48,12 @@ module SileneceWarnings
   end
 end
 
+base_db_uri = ENV.fetch("BASE_DB_URI", "localhost/rom_repository")
+
 DB_URI = if defined? JRUBY_VERSION
-           'jdbc:postgresql://localhost/rom_repository'
+           "jdbc:postgresql://#{base_db_uri}"
          else
-           'postgres://localhost/rom_repository'
+           "postgres://#{base_db_uri}"
          end
 
 Warning.extend(SileneceWarnings) if warning_api_available

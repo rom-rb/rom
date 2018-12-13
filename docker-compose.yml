@@ -1,0 +1,17 @@
+version: '2'
+services:
+  db:
+    image: postgres:latest
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: rom_repository
+  app:
+    build: .
+    command: tail -f Gemfile
+    environment:
+      BASE_DB_URI: postgres@db/rom_repository
+    volumes:
+      - .:/opt/rom
+    links:
+      - db
