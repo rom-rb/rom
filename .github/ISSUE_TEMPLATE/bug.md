@@ -1,9 +1,9 @@
 ---
-name: A bug report
-about: A detailed bug report
-title: 
-labels: 
-assignees: 
+name: bug
+about: "\U0001F41B A detailed bug report"
+title: ''
+labels: bug
+assignees: ''
 
 ---
 
