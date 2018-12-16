@@ -1,3 +1,9 @@
+# To be released
+
+### Changed
+
+* [BREAKING] `Repository::Root#aggregate` was removed in favor of `Relation#combine` (v-kolesnikov)
+
 # v2.0.2 2017-12-01
 
 ## Added

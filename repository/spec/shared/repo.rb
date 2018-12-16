@@ -51,7 +51,7 @@ RSpec.shared_context('repo') do
   let(:comments_repo) do
     Class.new(ROM::Repository[:comments]) do
       def comments_with_likes
-        aggregate(:likes)
+        comments.combine(:likes)
       end
 
       def comments_with_emotions
