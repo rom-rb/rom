@@ -60,44 +60,6 @@ module ROM
         super
         @root = set_relation(self.class.root)
       end
-
-      # Compose a relation aggregate from the root relation
-      #
-      # @overload aggregate(*associations)
-      #   Composes an aggregate from configured associations on the root relation
-      #
-      #   @example
-      #     user_repo.aggregate(:tasks, :posts)
-      #
-      #   @param *associations [Array<Symbol>] A list of association names
-      #
-      # @overload aggregate(*associations, *assoc_opts)
-      #   Composes an aggregate from configured associations and assoc opts
-      #   on the root relation
-      #
-      #   @example
-      #     user_repo.aggregate(:tasks, posts: :tags)
-      #
-      #   @param *associations [Array<Symbol>] A list of association names
-      #   @param [Hash] Association options for nested aggregates
-      #
-      # @overload aggregate(options)
-      #   Composes an aggregate by delegating to combine method.
-      #
-      #   @example
-      #     user_repo.aggregate(tasks: :labels)
-      #     user_repo.aggregate(posts: [:tags, :comments])
-      #
-      #   @param options [Hash] An option hash
-      #
-      #   @see Relation::Combine#combine_children
-      #
-      # @return [Relation]
-      #
-      # @api public
-      def aggregate(*args)
-        root.combine(*args)
-      end
     end
   end
 end

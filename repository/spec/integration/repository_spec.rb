@@ -81,21 +81,21 @@ RSpec.describe 'ROM repository' do
   end
 
   it 'loads an aggregate via custom fks' do
-    jane = repo.aggregate(:posts).where(name: 'Jane').one
+    jane = repo.root.combine(:posts).where(name: 'Jane').one
 
     expect(jane.posts.size).to be(1)
     expect(jane.posts.first.title).to eql('Hello From Jane')
   end
 
   it 'loads an aggregate via assoc name' do
-    jane = repo.aggregate(:posts).where(name: 'Jane').one
+    jane = repo.root.combine(:posts).where(name: 'Jane').one
 
     expect(jane.posts.size).to be(1)
     expect(jane.posts.first.title).to eql('Hello From Jane')
   end
 
   it 'loads an aggregate via assoc options' do
-    jane = repo.aggregate(posts: :labels).where(name: 'Jane').one
+    jane = repo.root.combine(posts: :labels).where(name: 'Jane').one
 
     expect(jane.name).to eql('Jane')
     expect(jane.posts.size).to be(1)
@@ -106,7 +106,7 @@ RSpec.describe 'ROM repository' do
   end
 
   it 'loads an aggregate with multiple assoc options' do
-    jane = repo.aggregate(:labels, posts: :labels).where(name: 'Jane').one
+    jane = repo.root.combine(:labels, posts: :labels).where(name: 'Jane').one
 
     expect(jane.name).to eql('Jane')
 
@@ -123,7 +123,7 @@ RSpec.describe 'ROM repository' do
   end
 
   it 'loads an aggregate with deeply nested assoc options' do
-    jane = repo.aggregate(posts: [{ author: :labels }]).where(name: 'Jane').one
+    jane = repo.root.combine(posts: [{ author: :labels }]).where(name: 'Jane').one
 
     expect(jane.posts.size).to be(1)
     expect(jane.posts[0].title).to eql('Hello From Jane')
@@ -135,7 +135,7 @@ RSpec.describe 'ROM repository' do
   end
 
   it 'loads an aggregate with multiple nodes and deeply nested assoc options' do
-    jane = repo.aggregate(:books, posts: [{ author: { labels: :posts } }]).where(name: 'Jane').one
+    jane = repo.root.combine(:books, posts: [{ author: { labels: :posts } }]).where(name: 'Jane').one
 
     expect(jane.books).to be_empty
 
@@ -152,7 +152,7 @@ RSpec.describe 'ROM repository' do
   end
 
   it 'loads an aggregate with multiple associations' do
-    jane = repo.aggregate(:posts, :labels).where(name: 'Jane').one
+    jane = repo.root.combine(:posts, :labels).where(name: 'Jane').one
 
     expect(jane.posts.size).to be(1)
     expect(jane.posts.first.title).to eql('Hello From Jane')
@@ -312,7 +312,7 @@ RSpec.describe 'ROM repository' do
         end
 
         it 'returns a nested hash for an aggregate' do
-          expect(repo.aggregate(:posts).limit(1).one).
+          expect(repo.root.combine(:posts).limit(1).one).
             to eql(id: 1, name: 'Jane', posts: [{ id: 1, author_id: 1, title: 'Hello From Jane', body: 'Jane Post'}])
         end
       end
@@ -366,7 +366,7 @@ RSpec.describe 'ROM repository' do
     end
 
     it 'applies a custom mapper inside #node' do
-      jane = repo.aggregate(:posts).node(:posts) { |posts|
+      jane = repo.root.combine(:posts).node(:posts) { |posts|
         posts.map_with(:nested_mapper)
       }.first
 
