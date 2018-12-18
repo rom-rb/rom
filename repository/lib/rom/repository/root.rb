@@ -1,4 +1,5 @@
 require 'dry/core/class_attributes'
+require 'dry/core/deprecations'
 
 module ROM
   class Repository
@@ -28,6 +29,8 @@ module ROM
     #
     # @api public
     class Root < Repository
+      extend Dry::Core::Deprecations::Interface
+
       # @!method self.root
       #   Get or set repository root relation identifier
       #
@@ -95,9 +98,12 @@ module ROM
       # @return [Relation]
       #
       # @api public
+      #
+      # @deprecated Use {ROM::Relation#combine} instead
       def aggregate(*args)
         root.combine(*args)
       end
+      deprecate :aggregate, message: 'Use ROM::Relation#combine instead'
     end
   end
 end
