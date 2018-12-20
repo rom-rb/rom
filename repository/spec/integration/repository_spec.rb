@@ -234,6 +234,16 @@ RSpec.describe 'ROM repository' do
   describe 'projecting virtual attributes' do
     shared_context 'auto-mapping' do
       it 'loads auto-mapped structs' do
+        module ROM
+          module SQL
+            class Function < ROM::Attribute
+              def name
+                self.alias || super
+              end
+            end
+          end
+        end
+
         user = repo.users.
                  inner_join(:posts, author_id: :id).
                  select_group { [id.qualified, name.qualified] }.

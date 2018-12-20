@@ -11,7 +11,7 @@ RSpec.describe ROM::Schema, '#[]' do
     end
 
     it 'returns an aliased attribute identified by its canonical name' do
-      expect(schema.rename(id: :user_id)[:id]).to eql(define_type(:id, :Integer, source: :users, alias: :user_id))
+      expect(schema.rename(id: :user_id)[:id]).to eql(define_type(:id, :Integer, source: :users))
     end
 
     it 'raises KeyError when attribute is not found' do

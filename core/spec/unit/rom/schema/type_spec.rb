@@ -29,7 +29,7 @@ RSpec.describe ROM::Attribute do
     end
 
     specify do
-      expect(type.as(:name).meta[:alias]).to eql(:name)
+      expect(type.as(:name).alias).to eql(:name)
     end
   end
 
