@@ -85,7 +85,7 @@ module ROM
     # @api public
     defines :relation
 
-    # @!method self.relation
+    # @!method self.result
     #   Get or set result type
     #
     #   @overload result
@@ -101,7 +101,7 @@ module ROM
     #
     #     @return [Symbol]
     #
-    #   @overload relation(identifier)
+    #   @overload result(identifier)
     #     Set result type
     #
     #     @example
@@ -112,7 +112,7 @@ module ROM
     # @api public
     defines :result
 
-    # @!method self.relation
+    # @!method self.input
     #   Get or set input processing function. This is typically set during setup
     #   to relation's input_schema
     #
