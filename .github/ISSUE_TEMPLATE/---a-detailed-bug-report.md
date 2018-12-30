@@ -1,13 +1,13 @@
 ---
 name: "\U0001F41B A detailed bug report"
-about: Report a bug
+about: See CONTRIBUTING.md for more information
 title: ''
 labels: bug
 assignees: ''
 
 ---
 
-**Before you submit this: WE ONLY ACCEPT BUG REPORTS**
+**Before you submit this: WE ONLY ACCEPT BUG REPORTS AND FEATURE REQUESTS**
 
 For more information see [our contribution guidelines](https://github.com/rom-rb/rom/blob/master/CONTRIBUTING.md)
 
