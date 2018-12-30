@@ -6,12 +6,18 @@ services:
       - 5432:5432
     environment:
       POSTGRES_DB: rom_repository
+
   app:
     build: .
-    command: tail -f Gemfile
+    command: ./docker_start.sh
     environment:
       BASE_DB_URI: postgres@db/rom_repository
     volumes:
       - .:/opt/rom
+      - bundle_box:/opt/bundle_box
     links:
       - db
+
+volumes:
+  bundle_box:
+
