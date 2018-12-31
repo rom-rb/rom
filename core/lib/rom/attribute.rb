@@ -4,6 +4,7 @@ require 'dry/equalizer'
 
 require 'rom/initializer'
 require 'rom/support/memoizable'
+require 'rom/types'
 
 module ROM
   # Schema attributes provide meta information about types and an API
@@ -27,7 +28,7 @@ module ROM
 
     # @!attribute [r] type
     #   @return [Symbol, nil] Alias to use instead of attribute name
-    option :alias, optional: true
+    option :alias, optional: true, type: Types::Strict::Symbol.optional
 
     # @api private
     def [](value = Undefined)
