@@ -26,8 +26,7 @@ module ROM
     param :type
 
     # @!attribute [r] type
-    #   @return [Dry::Types::String, Dry::Types::Symbol, nil] Alias to
-    #   use instead of attribute name
+    #   @return [Symbol, nil] Alias to use instead of attribute name
     option :alias, optional: true
 
     # @api private
