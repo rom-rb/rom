@@ -8,7 +8,7 @@ RSpec.describe ROM::Attribute do
       end
 
       specify do
-        expect(type.inspect).to eql("#<ROM::Attribute[Integer] name=:id primary_key=true>")
+        expect(type.inspect).to eql("#<ROM::Attribute[Integer] name=:id primary_key=true alias=nil>")
       end
     end
 
@@ -18,7 +18,17 @@ RSpec.describe ROM::Attribute do
       end
 
       specify do
-        expect(type.inspect).to eql("#<ROM::Attribute[TrueClass | FalseClass] name=:admin>")
+        expect(type.inspect).to eql("#<ROM::Attribute[TrueClass | FalseClass] name=:admin alias=nil>")
+      end
+    end
+
+    context 'with an option' do
+      subject(:type) do
+        ROM::Attribute.new(ROM::Types::Bool, alias: :adm).meta(name: :admin)
+      end
+
+      specify do
+        expect(type.inspect).to eql("#<ROM::Attribute[TrueClass | FalseClass] name=:admin alias=:adm>")
       end
     end
   end

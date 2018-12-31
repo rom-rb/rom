@@ -314,7 +314,9 @@ module ROM
     #
     # @api public
     def inspect
-      %(#<#{self.class}[#{type.name}] #{meta.map { |k, v| "#{k}=#{v.inspect}" }.join(' ')}>)
+      opts = options.reject { |k| k == :type }
+      meta_and_opts = meta.merge(opts).map { |k, v| "#{k}=#{v.inspect}" }
+      %(#<#{self.class}[#{type.name}] #{meta_and_opts.join(' ')}>)
     end
     alias_method :pretty_inspect, :inspect
 
