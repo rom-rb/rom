@@ -450,6 +450,17 @@ module ROM
       [:schema, [name, attributes.map(&:to_ast)]]
     end
 
+    # Hash from canonical name to alias for aliased attributes
+    #
+    # @return [Hash<Symbol, Symbol>]
+    #
+    # @api public
+    def alias_mapping
+      each_with_object({}) do |attr, obj|
+        obj[attr.name] = attr.alias if attr.aliased?
+      end
+    end
+
     # @api private
     def set!(key, value)
       instance_variable_set("@#{ key }", value)
