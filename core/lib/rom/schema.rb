@@ -142,7 +142,7 @@ module ROM
     def self.attributes(attributes, attr_class)
       attributes.map do |attr|
         if attr.is_a?(Hash)
-          attr_class.new(attr[:type], **attr[:options] || {})
+          attr_class.new(attr[:type], attr.fetch(:options, EMPTY_HASH))
         else
           attr_class.new(attr)
         end
