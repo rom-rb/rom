@@ -119,7 +119,7 @@ module ROM
 
     alias_method :to_ary, :attributes
 
-    # Define a relation schema from plain rom types
+    # Define a relation schema from plain rom types and optional options
     #
     # Resulting schema will decorate plain rom types with adapter-specific types
     # By default `Attribute` will be used
@@ -140,7 +140,13 @@ module ROM
 
     # @api private
     def self.attributes(attributes, attr_class)
-      attributes.map { |type| attr_class.new(type) }
+      attributes.map do |attr|
+        if attr.is_a?(Hash)
+          attr_class.new(attr[:type], **attr[:options] || {})
+        else
+          attr_class.new(attr)
+        end
+      end
     end
 
     # @api private

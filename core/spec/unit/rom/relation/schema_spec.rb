@@ -83,6 +83,18 @@ RSpec.describe ROM::Relation, '.schema' do
     expect(schema.foreign_key(:users)).to be(schema[:author_id])
   end
 
+  it 'allows setting attribute options' do
+    class Test::Users < ROM::Relation[:memory]
+      schema do
+        attribute :name, Types::String, alias: :username
+      end
+    end
+
+    schema = Test::Users.schema_proc.call
+
+    expect(schema[:name].alias).to be(:username)
+  end
+
   it 'allows JSON read/write coersion', aggregate_failures: true do
     class Test::Posts < ROM::Relation[:memory]
       schema do

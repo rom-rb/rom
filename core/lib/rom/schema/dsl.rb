@@ -38,7 +38,10 @@ module ROM
       option :adapter, default: -> { :default }
 
       # @!attribute [r] attributes
-      #   @return [Hash] A hash with attributes defined by the DSL
+      #   @return [Hash<Symbol, Hash>] A hash, indexed by names, with
+      #   the information needed to build the attributes extracted
+      #   from the DSL. Each value is itself a hash with `:type` and
+      #   `:options` keys.
       attr_reader :attributes
 
       # @!attribute [r] plugins
@@ -74,7 +77,7 @@ module ROM
                          "Attribute #{ name.inspect } already defined"
         end
 
-        attributes[name] = build_type(name, type, options)
+        attributes[name] = build_attribute_info(name, type, options)
       end
 
       # Define associations for a relation
@@ -110,6 +113,19 @@ module ROM
         @associations_dsl = AssociationsDSL.new(relation, &block)
       end
 
+      # Builds a representation of the information needed to create an
+      # attribute. It returns a hash with `:type` and `:options` keys.
+      #
+      # @return [Hash]
+      #
+      # @api private
+      def build_attribute_info(name, type, options = EMPTY_HASH)
+        {
+          type: build_type(name, type, options),
+          options: options
+        }
+      end
+
       # Builds a type instance from a name, options and a base type
       #
       # @return [Dry::Types::Type] Type instance
@@ -130,7 +146,7 @@ module ROM
       # @api public
       def primary_key(*names)
         names.each do |name|
-          attributes[name] = attributes[name].meta(primary_key: true)
+          attributes[name] = attributes[name][:type].meta(primary_key: true)
         end
         self
       end
