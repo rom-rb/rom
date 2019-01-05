@@ -1,16 +1,23 @@
 RSpec.describe ROM::Schema do
   describe '#to_h' do
     it 'returns hash with attributes' do
-      attrs = { id: ROM::Types::Integer.meta(name: :id), name: ROM::Types::String.meta(name: :name) }
+      attrs = {
+        id: define_attr_info(:Integer, name: :id),
+        name: define_attr_info(:String, name: :name)
+      }
       schema = ROM::Schema.define(:name, attributes: attrs.values)
 
-      expect(schema.to_h).to eql(attrs)
+      expect(schema.to_h).to eql({ id: ROM::Attribute.new(ROM::Types::Integer, name: :id),
+                                   name: ROM::Attribute.new(ROM::Types::String, name: :name) })
     end
   end
 
   describe '#to_ast' do
     specify do
-      attrs = { id: ROM::Types::Integer.meta(name: :id), name: ROM::Types::String.meta(name: :name) }
+      attrs = {
+        id: define_attr_info(:Integer, name: :id),
+        name: define_attr_info(:String, name: :name)
+      }
       schema = ROM::Schema.define(:name, attributes: attrs.values)
 
       expect(schema.to_ast).
@@ -25,9 +32,11 @@ RSpec.describe ROM::Schema do
     subject(:schema) { ROM::Schema.define(:name, attributes: attrs.values).finalize_attributes! }
 
     let(:attrs) do
-      { user_id: ROM::Types::Integer.meta(name: :user_id, primary_key: true),
-        group_id: ROM::Types::Integer.meta(name: :group_id, primary_key: true),
-        name: ROM::Types::String.meta(name: :name) }
+      {
+        user_id: define_attr_info(:Integer, { name: :user_id }, primary_key: true),
+        group_id: define_attr_info(:Integer, { name: :group_id }, primary_key: true),
+        name_id: define_attr_info(:String, name: :name ),
+      }
     end
 
     it 'returns the name of the primary key attribute' do
@@ -43,7 +52,10 @@ RSpec.describe ROM::Schema do
     subject(:schema) { ROM::Schema.define(:name, attributes: attrs.values).finalize_attributes! }
 
     let(:attrs) do
-      { id: ROM::Types::Integer.meta(name: :id, primary_key: true), name: ROM::Types::String.meta(name: :name) }
+      {
+        id: define_attr_info(:Integer, { name: :id }, primary_key: true),
+        name: define_attr_info(:String, name: :name)
+      }
     end
 
     it 'returns the name of the primary key attribute' do

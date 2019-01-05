@@ -8,7 +8,7 @@ RSpec.describe ROM::Plugins::Schema::Timestamps do
   subject(:schema) { schema_dsl.call }
 
   it 'adds timestamp attributes' do
-    ts_attribute = -> name { ROM::Attribute.new(ROM::Types::Time.meta(name: name, source: relation)) }
+    ts_attribute = -> name { ROM::Attribute.new(ROM::Types::Time.meta(source: relation), name: name) }
 
     schema_dsl.use :timestamps
 
@@ -25,7 +25,7 @@ RSpec.describe ROM::Plugins::Schema::Timestamps do
 
   it 'supports custom types' do
     schema_dsl.use :timestamps, type: ROM::Types::Date
-    dt_attribute = -> name { ROM::Attribute.new(ROM::Types::Date.meta(name: name, source: relation)) }
+    dt_attribute = -> name { ROM::Attribute.new(ROM::Types::Date.meta(source: relation), name: name) }
 
     expect(schema[:created_at]).to eql(dt_attribute.(:created_at))
     expect(schema[:updated_at]).to eql(dt_attribute.(:updated_at))

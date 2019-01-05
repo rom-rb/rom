@@ -30,12 +30,13 @@ RSpec.describe ROM::Schema, '#finalize!' do
     end
 
     let(:attributes_inferrer) do
-      proc { [ [define_attribute(:name, :String)], %i(id age) ] }
+      proc { [ [define_attribute(:String, name: :name)], %i(id age) ] }
     end
 
     context 'when all required attributes are present' do
       let(:attributes) do
-        [define_type(:id, :Integer), define_type(:age, :Integer)]
+        [define_attr_info(:Integer, name: :id),
+         define_attr_info(:Integer, name: :age)]
       end
 
       it 'concats defined attributes with inferred attributes' do
@@ -45,9 +46,9 @@ RSpec.describe ROM::Schema, '#finalize!' do
 
     context 'when inferred attributes are overridden' do
       let(:attributes) do
-        [define_type(:id, :Integer),
-         define_type(:age, :Integer),
-         define_type(:name, :String).meta(custom: true)]
+        [define_attr_info(:Integer, name: :id),
+         define_attr_info(:Integer, name: :age),
+         define_attr_info(:String, { name: :name }, custom: true)]
       end
 
       it 'respects overridden attributes' do

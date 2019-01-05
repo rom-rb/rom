@@ -3,7 +3,7 @@ require 'rom/attribute'
 
 RSpec.describe ROM::Attribute, '#method_missing' do
   subject(:attribute) do
-    ROM::Attribute.new(type)
+    ROM::Attribute.new(type, name: :foo)
   end
 
   context 'with a plain definition' do

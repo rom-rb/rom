@@ -38,10 +38,10 @@ module ROM
       option :adapter, default: -> { :default }
 
       # @!attribute [r] attributes
-      #   @return [Hash<Symbol, Hash>] A hash, indexed by names, with
-      #   the information needed to build the attributes extracted
-      #   from the DSL. Each value is itself a hash with `:type` and
-      #   `:options` keys.
+      #   @return [Hash<Symbol, Hash>] A hash with attribute names as
+      #   keys and attribute representations as values.
+      #
+      #   @see [Schema.build_attribute_info]
       attr_reader :attributes
 
       # @!attribute [r] plugins
@@ -118,26 +118,28 @@ module ROM
       #
       # @return [Hash]
       #
+      # @see [Schema.build_attribute_info]
+      #
       # @api private
       def build_attribute_info(name, type, options = EMPTY_HASH)
-        {
-          type: build_type(name, type, options),
-          options: options
-        }
+        Schema.build_attribute_info(
+          build_type(type, options),
+          options.merge(name: name)
+        )
       end
 
-      # Builds a type instance from a name, options and a base type
+      # Builds a type instance from base type and meta options
       #
       # @return [Dry::Types::Type] Type instance
       #
       # @api private
-      def build_type(name, type, options = EMPTY_HASH)
+      def build_type(type, options = EMPTY_HASH)
         if options[:read]
-          type.meta(name: name, source: relation, read: options[:read])
+          type.meta(source: relation, read: options[:read])
         elsif type.optional? && !type.meta[:read] && type.right.meta[:read]
-          type.meta(name: name, source: relation, read: type.right.meta[:read].optional)
+          type.meta(source: relation, read: type.right.meta[:read].optional)
         else
-          type.meta(name: name, source: relation)
+          type.meta(source: relation)
         end
       end
 
@@ -146,7 +148,7 @@ module ROM
       # @api public
       def primary_key(*names)
         names.each do |name|
-          attributes[name] = attributes[name][:type].meta(primary_key: true)
+          attributes[name][:type] = attributes[name][:type].meta(primary_key: true)
         end
         self
       end

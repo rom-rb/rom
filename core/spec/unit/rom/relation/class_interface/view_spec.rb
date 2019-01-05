@@ -128,7 +128,7 @@ RSpec.describe ROM::Relation, '.view' do
     include_context 'relation with views' do
       let(:relation_class) do
         attributes_inferrer = proc {
-          [[define_attribute(:users, :Integer, name: :id), define_attribute(:users, :String, name: :name)],
+          [[define_attribute(:Integer, name: :id), define_attribute(:String, name: :name)],
            []]
         }
 

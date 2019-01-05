@@ -27,6 +27,10 @@ module ROM
     param :type
 
     # @!attribute [r] type
+    #   @return [Symbol] Attribute name. This is the canonical name used in the datastore.
+    option :name, type: Types::Strict::Symbol
+
+    # @!attribute [r] type
     #   @return [Symbol, nil] Alias to use instead of attribute name
     option :alias, optional: true, type: Types::Strict::Symbol.optional
 
@@ -150,32 +154,6 @@ module ROM
     # @api public
     def target
       meta[:target]
-    end
-
-    # Return the canonical name of this attribute name
-    #
-    # This *always* returns the name that is used in the datastore, even when
-    # an attribute is aliased
-    #
-    # @example
-    #   class Tasks < ROM::Relation[:memory]
-    #     schema do
-    #       attribute :user_id, Types::Integer, alias: :id
-    #       attribute :name, Types::String
-    #     end
-    #   end
-    #
-    #   Users.schema[:id].name
-    #   # => :id
-    #
-    #   Users.schema[:user_id].name
-    #   # => :user_id
-    #
-    # @return [Symbol]
-    #
-    # @api public
-    def name
-      meta[:name]
     end
 
     # Return tuple key
@@ -314,9 +292,9 @@ module ROM
     #
     # @api public
     def inspect
-      opts = options.reject { |k| k == :type }
+      opts = options.reject { |k| [:type, :name].include?(k) }
       meta_and_opts = meta.merge(opts).map { |k, v| "#{k}=#{v.inspect}" }
-      %(#<#{self.class}[#{type.name}] #{meta_and_opts.join(' ')}>)
+      %(#<#{self.class}[#{type.name}] name=#{name.inspect} #{meta_and_opts.join(' ')}>)
     end
     alias_method :pretty_inspect, :inspect
 

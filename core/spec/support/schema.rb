@@ -5,16 +5,28 @@ module SchemaHelpers
   def define_schema(source, attrs)
     ROM::Schema.define(
       source,
-      attributes: attrs.map { |name, type| define_type(name, type, source: source) }
+      attributes: attrs.map do |name, id|
+        {
+          type: define_type(id, source: source),
+          options: { name: name }
+        }
+      end)
+  end
+
+  def define_type(id, **meta)
+    ROM::Types.const_get(id).meta(**meta)
+  end
+
+  def define_attribute(id, opts, **meta)
+    type = define_type(id, **meta)
+    ROM::Attribute.new(type, opts)
+  end
+
+  def define_attr_info(id, opts, **meta)
+    ROM::Schema.build_attribute_info(
+      define_type(id, **meta),
+      opts
     )
-  end
-
-  def define_type(name, id, **opts)
-    ROM::Types.const_get(id).meta({name: name, **opts})
-  end
-
-  def define_attribute(*args)
-    ROM::Attribute.new(define_type(*args))
   end
 
   def build_assoc(type, *args)

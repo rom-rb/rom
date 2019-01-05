@@ -18,9 +18,12 @@ RSpec.describe ROM::Relation, '.schema' do
     schema = ROM::Memory::Schema.define(
       ROM::Relation::Name.new(:test_users),
       attributes: [
-        ROM::Memory::Types::Integer.meta(primary_key: true, name: :id, source: relation_name),
-        ROM::Memory::Types::String.meta(name: :name, source: relation_name),
-        ROM::Memory::Types::Bool.meta(name: :admin, source: relation_name)
+        { type: ROM::Memory::Types::Integer.meta(primary_key: true, source: relation_name),
+          options: { name: :id } },
+        { type: ROM::Memory::Types::String.meta(source: relation_name),
+          options: { name: :name } },
+        { type: ROM::Memory::Types::Bool.meta(source: relation_name),
+          options: { name: :admin } }
       ]
     ).finalize_attributes!
 
@@ -260,7 +263,7 @@ RSpec.describe ROM::Relation, '.schema' do
 
       schema = Test::Users.schema_proc.call
 
-      expect(schema[:admin]).to eql(ROM::Types::Bool.meta(name: :admin, source: ROM::Relation::Name[:test_users]))
+      expect(schema[:admin]).to eql(ROM::Attribute.new(ROM::Types::Bool.meta(source: ROM::Relation::Name[:test_users]), name: :admin))
     end
 
     it 'raises an error on double definition' do
@@ -294,7 +297,6 @@ RSpec.describe ROM::Relation, '.schema' do
       expect(schema[:name].type).
         to eql(
              to_s_on_read.optional.meta(
-               name: :name,
                source: ROM::Relation::Name[:rom_memory_relation],
                read: to_s.optional
              ))

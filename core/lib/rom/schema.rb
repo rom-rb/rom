@@ -138,14 +138,26 @@ module ROM
       ) { |schema| yield(schema) if block_given? }
     end
 
+    # Builds a representation of the information needed to create an
+    # attribute.
+    #
+    # This representation is consumed by `Schema.define` in order to create
+    # the actual attributes.
+    #
+    # @return [Hash] A hash with `:type` and `:options` keys.
+    #
+    # @api private
+    def self.build_attribute_info(type, options)
+      {
+        type: type,
+        options: options
+      }
+    end
+
     # @api private
     def self.attributes(attributes, attr_class)
       attributes.map do |attr|
-        if attr.is_a?(Hash)
-          attr_class.new(attr[:type], attr.fetch(:options, EMPTY_HASH))
-        else
-          attr_class.new(attr)
-        end
+        attr_class.new(attr[:type], attr.fetch(:options))
       end
     end
 
@@ -472,8 +484,8 @@ module ROM
     # @api private
     def initialize_primary_key_names
       if primary_key.size > 0
-        set!(:primary_key_name, primary_key[0].meta[:name])
-        set!(:primary_key_names, primary_key.map { |type| type.meta[:name] })
+        set!(:primary_key_name, primary_key[0].name)
+        set!(:primary_key_names, primary_key.map { |attr| attr.name })
       end
     end
 
