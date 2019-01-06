@@ -66,18 +66,22 @@ module ROM
         @definition = block
       end
 
-      # Defines a relation attribute with its type
+      # Defines a relation attribute with its type and options.
+      #
+      # When only options are given, type is left as nil. It makes
+      # sense when it is used alongside an schema inferrer, which will
+      # populate the type.
       #
       # @see Relation.schema
       #
       # @api public
-      def attribute(name, type, options = EMPTY_HASH)
+      def attribute(name, type_or_options, options = EMPTY_HASH)
         if attributes.key?(name)
           ::Kernel.raise ::ROM::AttributeAlreadyDefinedError,
                          "Attribute #{ name.inspect } already defined"
         end
 
-        attributes[name] = build_attribute_info(name, type, options)
+        attributes[name] = build_attribute_info(name, type_or_options, options)
       end
 
       # Define associations for a relation
@@ -121,9 +125,14 @@ module ROM
       # @see [Schema.build_attribute_info]
       #
       # @api private
-      def build_attribute_info(name, type, options = EMPTY_HASH)
+      def build_attribute_info(name, type_or_options, options = EMPTY_HASH)
+        type, options = if type_or_options.is_a?(::Hash)
+                          [nil, type_or_options]
+                        else
+                          [build_type(type_or_options, options), options]
+                        end
         Schema.build_attribute_info(
-          build_type(type, options),
+          type,
           options.merge(name: name)
         )
       end

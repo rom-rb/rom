@@ -57,6 +57,20 @@ RSpec.describe ROM::Schema, '#finalize!' do
       end
     end
 
+    context 'when some attributes are defined without type' do
+      let(:attributes) do
+        [define_attr_info(:Integer, name: :id),
+         define_attr_info(:Integer, name: :age),
+         ROM::Schema.build_attribute_info(nil, name: :name, alias: :username)]
+      end
+
+      it 'fills type in and respects given options' do
+        expect(schema.finalize_attributes!.finalize!.map(&:name)).to eql(%i[id age name])
+        expect(schema[:name].alias).to be(:username)
+        expect(schema[:name].type).to eq(define_type(:String))
+      end
+    end
+
     context 'when some attributes are missing' do
       let(:attributes) do
         []
