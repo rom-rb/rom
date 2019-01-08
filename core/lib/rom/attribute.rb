@@ -28,7 +28,7 @@ module ROM
 
     # @!attribute [r] type
     #   @return [Symbol] Attribute name. This is the canonical name used in the datastore.
-    option :name, type: Types::Strict::Symbol
+    option :name, optional: true, type: Types::Strict::Symbol
 
     # @!attribute [r] type
     #   @return [Symbol, nil] Alias to use instead of attribute name
