@@ -26,8 +26,30 @@ module ROM
     #   @return [Dry::Types::Nominal, Dry::Types::Sum, Dry::Types::Constrained] The attribute's type object
     param :type
 
-    # @!attribute [r] type
-    #   @return [Symbol] Attribute name. This is the canonical name used in the datastore.
+    # @!attribute [r] name
+    #
+    # Return the canonical name of this attribute name
+    #
+    # This *always* returns the name that is used in the datastore, even when
+    # an attribute is aliased
+    #
+    # @example
+    #   class Users < ROM::Relation[:memory]
+    #     schema do
+    #       attribute :user_id, Types::Integer, alias: :id
+    #       attribute :email, Types::String
+    #     end
+    #   end
+    #
+    #   users[:user_id].name
+    #   # => :user_id
+    #
+    #   users[:email].name
+    #   # => :email
+    #
+    # @return [Symbol]
+    #
+    # @api public
     option :name, optional: true, type: Types::Strict::Symbol
 
     # @!attribute [r] type
