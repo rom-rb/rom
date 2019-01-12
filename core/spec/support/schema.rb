@@ -17,6 +17,7 @@ module SchemaHelpers
     ROM::Types.const_get(id).meta(**meta)
   end
 
+  # @todo Use this method consistently in all the test suite
   def define_attribute(id, opts, **meta)
     type = define_type(id, **meta)
     ROM::Attribute.new(type, opts)
