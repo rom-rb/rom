@@ -157,7 +157,8 @@ module ROM
       # @api public
       def primary_key(*names)
         names.each do |name|
-          attributes[name][:type] = attributes[name][:type].meta(primary_key: true)
+          attributes[name][:type] =
+            attributes[name][:type].meta(primary_key: true)
         end
         self
       end

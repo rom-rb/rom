@@ -83,19 +83,25 @@ module ROM
 
       # @api private
       def merge_attributes(defined, inferred)
-        type_lookup = -> attrs, name do
+        type_lookup = lambda do |attrs, name|
           attrs.find { |a| a.name == name }.type
         end
-        defined_with_type, defined_names = defined.each_with_object([[], []]) do |attr, (attrs, names)|
-          if attr.type.nil?
-            attrs << attr.class.new(type_lookup.(inferred, attr.name), attr.options)
-          else
-            attrs << attr
+        defined_with_type, defined_names =
+          defined.each_with_object([[], []]) do |attr, (attrs, names)|
+            attrs << if attr.type.nil?
+                       attr.class.new(
+                         type_lookup.(inferred, attr.name),
+                         attr.options
+                       )
+                     else
+                       attr
+                     end
+            names << attr.name
           end
-          names << attr.name
-        end
 
-        defined_with_type + inferred.reject { |attr| defined_names.include?(attr.name) }
+        defined_with_type + inferred.reject do |attr|
+          defined_names.include?(attr.name)
+        end
       end
     end
   end
