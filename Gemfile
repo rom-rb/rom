@@ -26,8 +26,6 @@ group :test do
 end
 
 group :tools do
-  gem 'mutant'
-  gem 'mutant-rspec'
   gem 'pry-byebug', platforms: :mri
   gem 'pry', platforms: :jruby
   gem 'redcarpet', platforms: :mri # for yard
