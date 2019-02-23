@@ -71,11 +71,11 @@ RSpec.describe ROM::StructCompiler, '#call' do
     end
 
     it 'reduces a constrained type to plain definition' do
-      expect(struct.schema[:id]).to_not be_constrained
+      expect(struct.schema.key(:id).type).to_not be_constrained
     end
 
     it 'reduces an enum type to plain definition' do
-      expect(struct.schema[:status]).to_not be_constrained
+      expect(struct.schema.key(:status).type).to_not be_constrained
     end
   end
 

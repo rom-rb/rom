@@ -1,10 +1,15 @@
 source 'https://rubygems.org'
 
+git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
+
 gemspec
 
 unless defined?(COMPONENTS)
   COMPONENTS = %w(core repository changeset)
 end
+
+gem 'dry-types', github: 'dry-rb/dry-types', branch: 'rework-schemas'
+gem 'dry-struct', github: 'dry-rb/dry-struct', branch: 'update-schemas'
 
 COMPONENTS.each do |component|
   gem "rom-#{component}", path: Pathname(__dir__).join(component).realpath

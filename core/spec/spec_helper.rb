@@ -60,6 +60,7 @@ RSpec.configure do |config|
 
   config.disable_monkey_patching!
   config.warnings = true
+  config.filter_run_when_matching :focus
 
   config.reporter.extend(SpecProfiler) if ENV['PROFILE'] == 'true'
 end
