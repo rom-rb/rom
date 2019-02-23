@@ -21,7 +21,7 @@ group :sql do
   gem 'jdbc-sqlite3', platforms: :jruby
   gem 'pg', platforms: [:mri, :rbx]
   gem 'jdbc-postgres', platforms: :jruby
-  gem 'rom-sql', git: 'https://github.com/rom-rb/rom-sql.git', branch: 'master'
+  gem 'rom-sql', github: 'rom-rb/rom-sql'
   gem 'dry-monitor'
 end
 
