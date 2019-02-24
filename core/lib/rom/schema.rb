@@ -62,13 +62,13 @@ module ROM
 
     DEFAULT_INFERRER = Inferrer.new(enabled: false).freeze
 
-    type_transformation = lambda do |type, _|
-      t = if type.default?
-            type.constructor { |value| value.nil? ? Undefined : value }
+    type_transformation = lambda do |key|
+      k = if key.default?
+            key.constructor { |value| value.nil? ? Undefined : value }
           else
-            type
+            key
           end
-      t.meta(omittable: true)
+      k.required(false)
     end
 
     HASH_SCHEMA = Types::Coercible::Hash.
