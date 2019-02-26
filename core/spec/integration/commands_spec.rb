@@ -26,7 +26,7 @@ RSpec.describe 'Commands' do
     end
 
     it 'raises no-method error when a non-view relation method was sent' do
-      expect { update.map_with(:foo) }.to raise_error(NoMethodError, /as/)
+      expect { update.map_with(:foo) }.to raise_error(NoMethodError, /map_with/)
     end
 
     it 'does not forward relation view methods to non-restrictable commands' do
