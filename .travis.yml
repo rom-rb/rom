@@ -19,10 +19,10 @@ script:
 after_success:
   - '[ -d coverage ] && codeclimate-test-reporter'
 rvm:
-  - 2.5.0
-  - 2.3.6
-  - 2.4.2
-  - jruby-9.1.13.0
+  - 2.6.1
+  - 2.5.3
+  - 2.4.5
+  - jruby-9.2.6.0
 env:
   global:
     - JRUBY_OPTS='--dev -J-Xmx1024M'
