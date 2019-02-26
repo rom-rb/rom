@@ -12,7 +12,7 @@ Gem::Specification.new do |gem|
   gem.files         = Dir['CHANGELOG.md', 'LICENSE', 'README.md', 'lib/**/*']
   gem.license       = 'MIT'
 
-  gem.required_ruby_version = ">= 2.3.0"
+  gem.required_ruby_version = ">= 2.4.0"
 
   gem.add_runtime_dependency 'concurrent-ruby', '~> 1.0'
   gem.add_runtime_dependency 'dry-core', '~> 0.3'
