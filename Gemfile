@@ -8,8 +8,8 @@ unless defined?(COMPONENTS)
   COMPONENTS = %w(core repository changeset)
 end
 
-gem 'dry-types', github: 'dry-rb/dry-types', branch: 'rework-schemas'
-gem 'dry-struct', github: 'dry-rb/dry-struct', branch: 'update-schemas'
+gem 'dry-types', github: 'dry-rb/dry-types'
+gem 'dry-struct', github: 'dry-rb/dry-struct'
 
 COMPONENTS.each do |component|
   gem "rom-#{component}", path: Pathname(__dir__).join(component).realpath
