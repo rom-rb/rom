@@ -10,7 +10,7 @@ module SchemaHelpers
   end
 
   def define_type(name, id, **opts)
-    ROM::Types.const_get(id).meta(name: name, **opts)
+    ROM::Types.const_get(id).meta({name: name, **opts})
   end
 
   def define_attribute(*args)
