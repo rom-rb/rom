@@ -1,5 +1,4 @@
 require 'dry-types'
-require 'dry/types/compat/int'
 require 'json'
 
 module ROM
