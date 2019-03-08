@@ -5,7 +5,7 @@ RSpec.describe 'Using changesets' do
   before do
     module Test
       class User < Dry::Struct
-        attribute :id, Dry::Types['strict.int']
+        attribute :id, Dry::Types['strict.integer']
         attribute :name, Dry::Types['strict.string']
       end
     end
