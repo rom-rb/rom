@@ -8,6 +8,7 @@ unless defined?(COMPONENTS)
   COMPONENTS = %w(core repository changeset)
 end
 
+gem 'dry-equalizer', github: 'dry-rb/dry-equalizer'
 gem 'dry-types', github: 'dry-rb/dry-types'
 gem 'dry-struct', github: 'dry-rb/dry-struct'
 

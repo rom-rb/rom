@@ -41,7 +41,7 @@ RSpec.describe 'Repository with multi-adapters configuration' do
         gateway :memory
 
         schema(:tasks, as: :memory_tasks) do
-          attribute :user_id, ROM::Types::Int.meta(foreign_key: true, target: :sql_users)
+          attribute :user_id, ROM::Types::Integer.meta(foreign_key: true, target: :sql_users)
           attribute :title, ROM::Types::String
 
           associations do
