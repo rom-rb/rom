@@ -2,22 +2,22 @@ language: ruby
 sudo: false
 before_install: gem update --system
 install:
-  - "cd $TRAVIS_BUILD_DIR/core"
-  - "bundle install --without sql benchmarks console tools --gemfile ./Gemfile"
-  - "cd $TRAVIS_BUILD_DIR/repository"
-  - "bundle install --without benchmarks console tools --gemfile ./Gemfile"
-  - "cd $TRAVIS_BUILD_DIR/changeset"
-  - "bundle install --without benchmarks console tools --gemfile ./Gemfile"
-  - "cd $TRAVIS_BUILD_DIR"
-  - "bundle install --without benchmarks console tools --gemfile ./Gemfile"
-  - "gem install codeclimate-test-reporter"
+  - cd $TRAVIS_BUILD_DIR/core
+  - bundle install --without sql benchmarks console tools --gemfile ./Gemfile
+  - cd $TRAVIS_BUILD_DIR/repository
+  - bundle install --without benchmarks console tools --gemfile ./Gemfile
+  - cd $TRAVIS_BUILD_DIR/changeset
+  - bundle install --without benchmarks console tools --gemfile ./Gemfile
+  - cd $TRAVIS_BUILD_DIR
+  - bundle install --without benchmarks console tools --gemfile ./Gemfile
+  - gem install codeclimate-test-reporter
 before_script:
-  - "psql -c 'create database rom_repository' -U postgres"
+  - psql -c 'create database rom_repository' -U postgres
 script:
-  - 'cd $TRAVIS_BUILD_DIR'
-  - 'rake spec'
+  - cd $TRAVIS_BUILD_DIR
+  - rake spec
 after_success:
-  - '[ -d coverage ] && codeclimate-test-reporter'
+  - "[ -d coverage ] && codeclimate-test-reporter"
 rvm:
   - 2.6.1
   - 2.5.3
@@ -33,3 +33,6 @@ notifications:
       - https://webhooks.gitter.im/e/39e1225f489f38b0bd09
     on_success: change
     on_failure: always
+  slack:
+    secure: aB2OsVI4oFha1RoqvhpRei+N5BZjTdY53B24DtcKK8b5I4Lq1wUvmPo75Qiz7YhLbT4Uvnjh3rZ0qSS+gMJGIKeeH0hzrqNcZHij0KWG96JbBScmGhvKgskkTlBWfjErwRP0Zpc8wPLmCmz/Pq7Wy35jaa9NSQRQXTSWB1nJMv8=
+
