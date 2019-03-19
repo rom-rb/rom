@@ -56,7 +56,7 @@ module ROM
         if model < Dry::Struct
           model
         else
-          Dry::Types::Definition.new(model).constructor(&model.method(:new))
+          Dry::Types::Nominal.new(model).constructor(&model.method(:new))
         end
 
       if meta[:combine_type] == :many

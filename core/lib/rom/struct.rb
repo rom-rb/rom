@@ -41,11 +41,11 @@ module ROM
   #
   #   # see struct's schema attributes
   #
-  #   # model.schema[:id]
-  #   # => #<Dry::Types::Constrained type=#<Dry::Types::Definition primitive=Integer options={}> options={:rule=>#<Dry::Logic::Rule::Predicate predicate=#<Method: Module(Dry::Logic::Predicates::Methods)#gt?> options={:args=>[0]}>, :meta=>{:primary_key=>true, :name=>:id, :source=>ROM::Relation::Name(users)}} rule=#<Dry::Logic::Rule::Predicate predicate=#<Method: Module(Dry::Logic::Predicates::Methods)#gt?> options={:args=>[0]}>>
+  #   # model.schema.key(:id)
+  #   # => #<Dry::Types[id: Nominal<Integer meta={primary_key: true, source: :users}>]>
   #
   #   model.schema[:name]
-  #   # => #<Dry::Types::Sum left=#<Dry::Types::Constrained type=#<Dry::Types::Definition primitive=NilClass options={}> options={:rule=>#<Dry::Logic::Rule::Predicate predicate=#<Method: Module(Dry::Logic::Predicates::Methods)#type?> options={:args=>[NilClass]}>} rule=#<Dry::Logic::Rule::Predicate predicate=#<Method: Module(Dry::Logic::Predicates::Methods)#type?> options={:args=>[NilClass]}>> right=#<Dry::Types::Definition primitive=String options={}> options={:meta=>{:name=>:name, :source=>ROM::Relation::Name(users)}}>
+  #   # => #<Dry::Types[name: Sum<Nominal<NilClass> | Nominal<String> meta={source: :users}>]>
   #
   # @example passing a namespace with an existing parent class
   #   module Entities

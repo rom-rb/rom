@@ -6,7 +6,7 @@ module ROM
   #
   # @api public
   module Types
-    include Dry::Types.module
+    include Dry::Types(default: :nominal)
 
     # @api private
     def self.included(other)
@@ -23,7 +23,7 @@ module ROM
       # @param [Symbol] relation The name of the target relation
       # @param [Object] type The type of an attribute
       #
-      # @return [Dry::Types::Definition]
+      # @return [Dry::Types::Nominal]
       #
       # @api public
       def ForeignKey(relation, type = Types::Integer)

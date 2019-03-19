@@ -9,7 +9,7 @@ module ROM
     class Base
       extend Initializer
 
-      PathnameType = Types.Definition(Pathname).constrained(type: Pathname)
+      PathnameType = Types.Instance(Pathname)
 
       EXTENSION_REGEX = /\.rb\z/
 
