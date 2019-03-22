@@ -8,6 +8,10 @@ unless defined?(COMPONENTS)
   COMPONENTS = %w(core repository changeset)
 end
 
+gem 'dry-equalizer', github: 'dry-rb/dry-equalizer', branch: 'master'
+gem 'dry-types', github: 'dry-rb/dry-types', branch: 'master'
+gem 'dry-struct', github: 'dry-rb/dry-struct', branch: 'master'
+
 COMPONENTS.each do |component|
   gem "rom-#{component}", path: Pathname(__dir__).join(component).realpath
 end
@@ -18,7 +22,7 @@ group :sql do
   gem 'jdbc-sqlite3', platforms: :jruby
   gem 'pg', platforms: [:mri, :rbx]
   gem 'jdbc-postgres', platforms: :jruby
-  gem 'rom-sql', github: 'rom-rb/rom-sql'
+  gem 'rom-sql', github: 'rom-rb/rom-sql', branch: 'master'
   gem 'dry-monitor'
 end
 
