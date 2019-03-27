@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rom/configuration'
 require 'rom/environment'
 require 'rom/setup'

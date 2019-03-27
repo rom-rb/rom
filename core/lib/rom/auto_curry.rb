@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ROM
   # Relation extension which provides auto-currying of relation view methods
   #

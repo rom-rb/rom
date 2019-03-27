@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rom/commands/composite'
 require 'rom/commands/graph'
 

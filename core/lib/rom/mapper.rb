@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rom/constants'
 require 'rom/mapper/dsl'
 require 'rom/mapper/configuration_plugin'

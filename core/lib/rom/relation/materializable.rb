@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ROM
   class Relation
     # Interface for objects that can be materialized into a loaded relation

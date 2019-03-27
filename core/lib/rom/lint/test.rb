@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rom/lint/gateway'
 require 'rom/lint/enumerable_dataset'
 

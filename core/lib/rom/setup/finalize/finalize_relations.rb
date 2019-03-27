@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rom/constants'
 require 'rom/relation_registry'
 require 'rom/mapper_registry'

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rom/constants'
 require 'rom/plugin_base'
 require 'rom/support/configurable'

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rom/struct'
 require 'rom/registry'
 require 'rom/mapper_compiler'

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ROM
   # ROM's open structs are used for relations with empty schemas.
   # Such relations may exist in cases like using raw SQL strings

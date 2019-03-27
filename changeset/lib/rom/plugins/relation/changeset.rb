@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rom/support/notifications'
 
 require 'rom/changeset/create'

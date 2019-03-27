@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rom/header'
 require 'rom/mapper/model_dsl'
 

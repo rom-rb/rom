@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rom/commands/graph/input_evaluator'
 
 module ROM

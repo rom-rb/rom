@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ROM
   # This extension is only used for environment objects to configure arbitrary options, each
   # adapter can use them according to what they need.

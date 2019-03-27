@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rom/array_dataset'
 
 module ROM

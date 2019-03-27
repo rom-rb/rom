@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'transproc/all'
 require 'transproc/registry'
 require 'transproc/transformer'

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ROM
   class Relation
     # Extensions for relation classes which provide access to commands

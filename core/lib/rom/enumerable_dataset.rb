@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rom/initializer'
 require 'rom/data_proxy'
 

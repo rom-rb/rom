@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rom/plugin_registry'
 require 'rom/global/plugin_dsl'
 

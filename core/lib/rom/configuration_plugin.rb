@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rom/plugin_base'
 
 module ROM

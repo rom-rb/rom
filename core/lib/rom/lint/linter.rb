@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ROM
   module Lint
     # Base class for building linters that check source code

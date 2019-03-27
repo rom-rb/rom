@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rom/registry'
 require 'rom/command_compiler'
 require 'rom/command_registry'

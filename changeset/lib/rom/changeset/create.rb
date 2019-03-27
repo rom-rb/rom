@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ROM
   class Changeset
     # Changeset specialization for create commands

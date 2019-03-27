@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rom/changeset/pipe'
 
 module ROM

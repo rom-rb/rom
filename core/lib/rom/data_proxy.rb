@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ROM
   # Helper module for dataset classes
   #

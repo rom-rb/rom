@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ROM
   class Relation
     # ViewDSL is exposed in `Relation.view` method

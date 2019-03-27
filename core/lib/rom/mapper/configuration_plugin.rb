@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rom/mapper/mapper_dsl'
 
 module ROM

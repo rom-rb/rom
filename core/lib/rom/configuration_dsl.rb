@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rom/configuration_dsl/relation'
 require 'rom/configuration_dsl/command_dsl'
 

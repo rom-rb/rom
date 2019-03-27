@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rom/schema'
 require 'rom/memory/associations'
 

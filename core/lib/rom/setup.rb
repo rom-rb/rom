@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rom/setup/auto_registration'
 
 module ROM
