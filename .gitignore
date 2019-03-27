@@ -26,3 +26,4 @@ doc/
 */.ruby-version
 */Gemfile.lock
 */doc
+.rubocop.yml
