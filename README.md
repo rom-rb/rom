@@ -133,8 +133,8 @@ There are other gems within the rom ecosystem that you will find useful:
 ## Community
 
 * [Official Blog](http://rom-rb.org/blog/)
-* [Discussion Forum](http://discuss.rom-rb.org)
-* [Gitter Channel](https://gitter.im/rom-rb/chat)
+* [Discussion Forum](http://discourse.rom-rb.org)
+* [Chat](https://rom-rb.zulipchat.com)
 
 ## Credits
 
