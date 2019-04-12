@@ -1,10 +1,10 @@
 [gem]: https://rubygems.org/gems/rom
 [travis]: https://travis-ci.org/rom-rb/rom
 [codeclimate]: https://codeclimate.com/github/rom-rb/rom
-[coveralls]: https://coveralls.io/r/rom-rb/rom
 [inchpages]: http://inch-ci.org/github/rom-rb/rom/
+[chat]: https://rom-rb.zulipchat.com
 
-# rom [![Gitter chat](https://badges.gitter.im/rom-rb/chat.svg)](https://gitter.im/rom-rb/chat)
+# rom [![Join the chat at https://rom-rb.zulipchat.com](https://img.shields.io/badge/rom--rb-join%20chat-942283.svg)][chat]
 
 [![Gem Version](https://badge.fury.io/rb/rom.svg)][gem]
 [![Build Status](https://travis-ci.org/rom-rb/rom.svg?branch=master)][travis]
