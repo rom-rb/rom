@@ -15,6 +15,8 @@ end
 
 require_relative 'gc_suite'
 
+SEED = ENV['SEED'] == 'true'
+
 def rom
   ROM_ENV
 end
@@ -95,40 +97,42 @@ setup = ROM::Configuration.new(:sql, DATABASE_URL)
 setup.default.use_logger(Logger.new('./log/bench_rom.log'))
 conn = setup.default.connection
 
-conn.drop_table?(:users_posts)
-conn.drop_table?(:tags)
-conn.drop_table?(:tasks)
-conn.drop_table?(:users)
-conn.drop_table?(:posts)
+if SEED
+  conn.drop_table?(:users_posts)
+  conn.drop_table?(:tags)
+  conn.drop_table?(:tasks)
+  conn.drop_table?(:users)
+  conn.drop_table?(:posts)
 
-conn.create_table :users do
-  primary_key :id
-  column :name, String, null: false
-  column :email, String, null: false
-  column :age, Integer, null: false
-end
+  conn.create_table :users do
+    primary_key :id
+    column :name, String, null: false
+    column :email, String, null: false
+    column :age, Integer, null: false
+  end
 
-conn.create_table :posts do
-  primary_key :id
-  column :title, String, null: false
-end
+  conn.create_table :posts do
+    primary_key :id
+    column :title, String, null: false
+  end
 
-conn.create_table :users_posts do
-  primary_key :id
-  foreign_key :user_id, :users, null: false
-  foreign_key :post_id, :posts, null: false
-end
+  conn.create_table :users_posts do
+    primary_key :id
+    foreign_key :user_id, :users, null: false
+    foreign_key :post_id, :posts, null: false
+  end
 
-conn.create_table :tasks do
-  primary_key :id
-  foreign_key :user_id, :users, null: false
-  column :title, String, null: false
-end
+  conn.create_table :tasks do
+    primary_key :id
+    foreign_key :user_id, :users, null: false
+    column :title, String, null: false
+  end
 
-conn.create_table :tags do
-  primary_key :id
-  foreign_key :task_id, :tasks, null: false
-  column :name, String, null: false
+  conn.create_table :tags do
+    primary_key :id
+    foreign_key :task_id, :tasks, null: false
+    column :name, String, null: false
+  end
 end
 
 if RUBY_ENGINE == 'jruby'
@@ -291,10 +295,12 @@ def seed
   hr
 end
 
-seed
+if SEED
+  seed
 
-hr
-puts "INSERTED #{rom.relations.users.count} users via ROM/Sequel"
-puts "INSERTED #{rom.relations.tasks.count} tasks via ROM/Sequel"
-puts "INSERTED #{rom.relations.tags.count} tags via ROM/Sequel"
-hr
+  hr
+  puts "INSERTED #{rom.relations.users.count} users via ROM/Sequel"
+  puts "INSERTED #{rom.relations.tasks.count} tasks via ROM/Sequel"
+  puts "INSERTED #{rom.relations.tags.count} tags via ROM/Sequel"
+  hr
+end
