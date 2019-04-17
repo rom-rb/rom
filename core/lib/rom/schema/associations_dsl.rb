@@ -112,7 +112,7 @@ module ROM
       # @param [Symbol] target The target relation identifier
       # @param [Hash] options A hash with additional options
       #
-      # @return [Associations::OneToOne]
+      # @return [Associations::ManyToMany]
       #
       # @see #one_to_many
       #
@@ -129,7 +129,7 @@ module ROM
       # @param [Symbol] target The target relation identifier
       # @param [Hash] options A hash with additional options
       #
-      # @return [Associations::OneToOne]
+      # @return [Associations::ManyToOne]
       #
       # @see #one_to_many
       #
@@ -165,7 +165,7 @@ module ROM
       #
       # @see #one_to_one
       #
-      # @return [Associations::ManyToOne]
+      # @return [Associations::OneToOne]
       #
       # @api public
       def has_one(target, options = {})
