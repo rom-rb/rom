@@ -10,7 +10,8 @@ module SchemaHelpers
           type: define_type(id, source: source),
           options: { name: name }
         }
-      end)
+      end
+    )
   end
 
   def define_type(id, **meta)

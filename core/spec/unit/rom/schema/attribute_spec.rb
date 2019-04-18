@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'rom/attribute'
 
 RSpec.describe ROM::Attribute do
@@ -8,7 +9,9 @@ RSpec.describe ROM::Attribute do
       end
 
       specify do
-        expect(attr.inspect).to eql("#<ROM::Attribute[Integer] name=:id primary_key=true alias=nil>")
+        expect(
+          attr.inspect
+        ).to eql('#<ROM::Attribute[Integer] name=:id primary_key=true alias=nil>')
       end
     end
 
@@ -18,7 +21,9 @@ RSpec.describe ROM::Attribute do
       end
 
       specify do
-        expect(attr.inspect).to eql("#<ROM::Attribute[TrueClass | FalseClass] name=:admin alias=nil>")
+        expect(
+          attr.inspect
+        ).to eql('#<ROM::Attribute[TrueClass | FalseClass] name=:admin alias=nil>')
       end
     end
 
@@ -28,7 +33,9 @@ RSpec.describe ROM::Attribute do
       end
 
       specify do
-        expect(attr.inspect).to eql("#<ROM::Attribute[TrueClass | FalseClass] name=:admin alias=:adm>")
+        expect(
+          attr.inspect
+        ).to eql('#<ROM::Attribute[TrueClass | FalseClass] name=:admin alias=:adm>')
       end
     end
   end

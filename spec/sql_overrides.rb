@@ -1,5 +1,6 @@
-require "rom"
-require "rom-sql"
+# frozen_string_literal: true
+require 'rom'
+require 'rom-sql'
 
 # Overrides to be done in rom-sql
 module ROM
@@ -17,7 +18,7 @@ module ROM
             attr_class.new(type.meta(source: schema.name), name: name) if type
           end.compact
 
-          missing = columns.map(&:first) - inferred.map { |attr| attr.name }
+          missing = columns.map(&:first) - inferred.map(&:name)
 
           [inferred, missing]
         end

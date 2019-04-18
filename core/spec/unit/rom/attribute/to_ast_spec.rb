@@ -14,7 +14,9 @@ RSpec.describe ROM::Attribute, '#to_ast' do
 
   types.each do |type|
     specify do
-      expect(to_attr.(type).to_ast).to eql([:attribute, [:id, type.to_ast, {alias: nil}]])
+      expect(
+        to_attr.(type).to_ast
+      ).to eql([:attribute, [:id, type.to_ast, alias: nil]])
     end
   end
 

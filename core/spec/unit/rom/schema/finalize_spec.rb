@@ -30,7 +30,7 @@ RSpec.describe ROM::Schema, '#finalize!' do
     end
 
     let(:attributes_inferrer) do
-      proc { [ [define_attribute(:String, name: :name)], %i(id age) ] }
+      proc { [[define_attribute(:String, name: :name)], %i[id age]] }
     end
 
     context 'when all required attributes are present' do

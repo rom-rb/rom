@@ -99,7 +99,7 @@ RSpec.describe ROM::Relation, '.schema' do
   end
 
   it 'allows setting attribute options while still leaving type undefined' do
-     class Test::Users < ROM::Relation[:memory]
+    class Test::Users < ROM::Relation[:memory]
       schema do
         attribute :name, alias: :username
       end
@@ -276,7 +276,11 @@ RSpec.describe ROM::Relation, '.schema' do
 
       schema = Test::Users.schema_proc.call
 
-      expect(schema[:admin]).to eql(ROM::Attribute.new(ROM::Types::Bool.meta(source: ROM::Relation::Name[:test_users]), name: :admin))
+      expect(
+        schema[:admin]
+      ).to eql(ROM::Attribute.new(
+                 ROM::Types::Bool.meta(source: ROM::Relation::Name[:test_users]),
+                 name: :admin))
     end
 
     it 'raises an error on double definition' do

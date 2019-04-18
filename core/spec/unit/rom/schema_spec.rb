@@ -7,8 +7,8 @@ RSpec.describe ROM::Schema do
       }
       schema = ROM::Schema.define(:name, attributes: attrs.values)
 
-      expect(schema.to_h).to eql({ id: ROM::Attribute.new(ROM::Types::Integer, name: :id),
-                                   name: ROM::Attribute.new(ROM::Types::String, name: :name) })
+      expect(schema.to_h).to eql(id: ROM::Attribute.new(ROM::Types::Integer, name: :id),
+                                 name: ROM::Attribute.new(ROM::Types::String, name: :name))
     end
   end
 
@@ -23,8 +23,9 @@ RSpec.describe ROM::Schema do
       expect(schema.to_ast).
         to eql([:schema, [
                   :name,
-                  [[:attribute, [:id, [:nominal, [Integer, {}]], {alias: nil}]],
-                   [:attribute, [:name, [:nominal, [String, {}]], {alias: nil}]]]]])
+                  [[:attribute, [:id, [:nominal, [Integer, {}]], alias: nil]],
+                   [:attribute, [:name, [:nominal, [String, {}]], alias: nil]]]
+                ]])
     end
   end
 
@@ -35,7 +36,7 @@ RSpec.describe ROM::Schema do
       {
         user_id: define_attr_info(:Integer, { name: :user_id }, primary_key: true),
         group_id: define_attr_info(:Integer, { name: :group_id }, primary_key: true),
-        name_id: define_attr_info(:String, name: :name ),
+        name_id: define_attr_info(:String, name: :name)
       }
     end
 

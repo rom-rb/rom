@@ -395,7 +395,7 @@ module ROM
     # @api private
     def meta_options_ast
       keys = %i[wrapped primary_key alias]
-      ast = (meta.merge(options)).select { |k, _| keys.include?(k) }
+      ast = meta.merge(options).select { |k, _| keys.include?(k) }
       ast[:source] = source.to_sym if source
       ast
     end

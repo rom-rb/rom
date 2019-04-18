@@ -27,7 +27,7 @@ RSpec.describe ROM::Relation, '.dataset' do
         insert(id: 2, name: 'Joe')
         insert(id: 1, name: 'Jane')
 
-        order(*rel_klass.schema.primary_key.map { |t| t.name })
+        order(*rel_klass.schema.primary_key.map(&:name))
       end
     end
 
