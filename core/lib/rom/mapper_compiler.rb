@@ -45,12 +45,12 @@ module ROM
     end
 
     def visit_relation(node)
-      rel_name, header, meta = node
-      name = meta[:combine_name] || meta[:alias] || rel_name
-      namespace = meta.fetch(:struct_namespace)
+      rel_name, header, meta_options = node
+      name = meta_options[:combine_name] || meta_options[:alias] || rel_name
+      namespace = meta_options.fetch(:struct_namespace)
 
-      model = meta.fetch(:model) do
-        if meta[:combine_name]
+      model = meta_options.fetch(:model) do
+        if meta_options[:combine_name]
           false
         else
           struct_compiler[name, header, namespace]
@@ -59,12 +59,12 @@ module ROM
 
       options = [header.map(&method(:visit)), mapper_options.merge(model: model)]
 
-      if meta[:combine_type]
-        type = meta[:combine_type] == :many ? :array : :hash
-        keys = meta.fetch(:keys)
+      if meta_options[:combine_type]
+        type = meta_options[:combine_type] == :many ? :array : :hash
+        keys = meta_options.fetch(:keys)
 
         [name, combine: true, type: type, keys: keys, header: Header.coerce(*options)]
-      elsif meta[:wrap]
+      elsif meta_options[:wrap]
         [name, wrap: true, type: :hash, header: Header.coerce(*options)]
       else
         options
@@ -72,10 +72,10 @@ module ROM
     end
 
     def visit_attribute(node)
-      name, _, meta = node
+      name, _, meta_options = node
 
-      if meta[:alias]
-        [meta[:alias], from: name]
+      if meta_options[:alias]
+        [meta_options[:alias], from: name]
       else
         [name]
       end
