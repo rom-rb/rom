@@ -99,7 +99,7 @@ RSpec.describe ROM::Relation, '.schema' do
   end
 
   it 'allows setting attribute options while still leaving type undefined' do
-     class Test::Users < ROM::Relation[:memory]
+    class Test::Users < ROM::Relation[:memory]
       schema do
         attribute :name, alias: :username
       end
