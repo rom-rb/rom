@@ -15,7 +15,7 @@ module SchemaHelpers
   end
 
   def define_type(id, **meta)
-    ROM::Types.const_get(id).meta(**meta)
+    ROM::Types.const_get(id).meta(meta)
   end
 
   # @todo Use this method consistently in all the test suite
