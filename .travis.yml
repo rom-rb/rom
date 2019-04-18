@@ -19,20 +19,16 @@ script:
 after_success:
   - "[ -d coverage ] && codeclimate-test-reporter"
 rvm:
-  - 2.6.1
-  - 2.5.3
-  - 2.4.5
-  - jruby-9.2.6.0
+  - 2.6.2
+  - 2.5.5
+  - 2.4.6
+  - jruby-9.2.7.0
 env:
   global:
-    - JRUBY_OPTS='--dev -J-Xmx1024M'
     - COVERAGE='true'
 notifications:
   webhooks:
     urls:
-      - https://webhooks.gitter.im/e/39e1225f489f38b0bd09
+      - https://rom-rb.zulipchat.com/api/v1/external/travis?api_key=S1S2GRkXHlzlaCGyUwm7o4lg50IZrwCH&stream=notifications&topic=ci
     on_success: change
     on_failure: always
-  slack:
-    secure: aB2OsVI4oFha1RoqvhpRei+N5BZjTdY53B24DtcKK8b5I4Lq1wUvmPo75Qiz7YhLbT4Uvnjh3rZ0qSS+gMJGIKeeH0hzrqNcZHij0KWG96JbBScmGhvKgskkTlBWfjErwRP0Zpc8wPLmCmz/Pq7Wy35jaa9NSQRQXTSWB1nJMv8=
-
