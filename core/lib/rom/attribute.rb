@@ -4,6 +4,7 @@ require 'dry/equalizer'
 
 require 'rom/initializer'
 require 'rom/support/memoizable'
+require 'rom/types'
 
 module ROM
   # Schema attributes provide meta information about types and an API
@@ -24,6 +25,36 @@ module ROM
     # @!attribute [r] type
     #   @return [Dry::Types::Nominal, Dry::Types::Sum, Dry::Types::Constrained] The attribute's type object
     param :type
+
+    # @!attribute [r] name
+    #
+    # Return the canonical name of this attribute name
+    #
+    # This *always* returns the name that is used in the datastore, even when
+    # an attribute is aliased
+    #
+    # @example
+    #   class Users < ROM::Relation[:memory]
+    #     schema do
+    #       attribute :user_id, Types::Integer, alias: :id
+    #       attribute :email, Types::String
+    #     end
+    #   end
+    #
+    #   users[:user_id].name
+    #   # => :user_id
+    #
+    #   users[:email].name
+    #   # => :email
+    #
+    # @return [Symbol]
+    #
+    # @api public
+    option :name, optional: true, type: Types::Strict::Symbol
+
+    # @!attribute [r] type
+    #   @return [Symbol, nil] Alias to use instead of attribute name
+    option :alias, optional: true, type: Types::Strict::Symbol.optional
 
     # @api private
     def [](value = Undefined)
@@ -78,12 +109,12 @@ module ROM
       meta[:foreign_key].equal?(true)
     end
 
-    # Return true if this attribute type is a foreign key
+    # Return true if this attribute has a configured alias
     #
     # @example
     #   class Tasks < ROM::Relation[:memory]
     #     schema do
-    #       attribute :user_id, Types::Integer.meta(alias: :id)
+    #       attribute :user_id, Types::Integer, alias: :id
     #       attribute :name, Types::String
     #     end
     #   end
@@ -98,7 +129,7 @@ module ROM
     #
     # @api public
     def aliased?
-      !meta[:alias].nil?
+      !self.alias.nil?
     end
 
     # Return source relation of this attribute type
@@ -147,32 +178,6 @@ module ROM
       meta[:target]
     end
 
-    # Return the canonical name of this attribute name
-    #
-    # This *always* returns the name that is used in the datastore, even when
-    # an attribute is aliased
-    #
-    # @example
-    #   class Tasks < ROM::Relation[:memory]
-    #     schema do
-    #       attribute :user_id, Types::Integer.meta(alias: :id)
-    #       attribute :name, Types::String
-    #     end
-    #   end
-    #
-    #   Users.schema[:id].name
-    #   # => :id
-    #
-    #   Users.schema[:user_id].name
-    #   # => :user_id
-    #
-    # @return [Symbol]
-    #
-    # @api public
-    def name
-      meta[:name]
-    end
-
     # Return tuple key
     #
     # When schemas are projected with aliased attributes, we need a simple access to tuple keys
@@ -180,7 +185,7 @@ module ROM
     # @example
     #   class Tasks < ROM::Relation[:memory]
     #     schema do
-    #       attribute :user_id, Types::Integer.meta(alias: :id)
+    #       attribute :user_id, Types::Integer, alias: :id
     #       attribute :name, Types::String
     #     end
     #   end
@@ -195,30 +200,7 @@ module ROM
     #
     # @api public
     def key
-      meta[:alias] || name
-    end
-
-    # Return attribute's alias
-    #
-    # @example
-    #   class Tasks < ROM::Relation[:memory]
-    #     schema do
-    #       attribute :user_id, Types::Integer.meta(alias: :id)
-    #       attribute :name, Types::String
-    #     end
-    #   end
-    #
-    #   Users.schema[:user_id].alias
-    #   # => :user_id
-    #
-    #   Users.schema[:name].alias
-    #   # => nil
-    #
-    # @return [NilClass,Symbol]
-    #
-    # @api public
-    def alias
-      meta[:alias]
+      self.alias || name
     end
 
     # Return new attribute type with provided alias
@@ -248,7 +230,7 @@ module ROM
     #
     # @api public
     def aliased(name)
-      meta(alias: name)
+      with(alias: name)
     end
     alias_method :as, :aliased
 
@@ -320,7 +302,7 @@ module ROM
     # @api public
     def meta(opts = nil)
       if opts
-        self.class.new(type.meta(opts))
+        self.class.new(type.meta(opts), options)
       else
         type.meta
       end
@@ -332,7 +314,9 @@ module ROM
     #
     # @api public
     def inspect
-      %(#<#{self.class}[#{type.name}] #{meta.map { |k, v| "#{k}=#{v.inspect}" }.join(' ')}>)
+      opts = options.reject { |k| %i[type name].include?(k) }
+      meta_and_opts = meta.merge(opts).map { |k, v| "#{k}=#{v.inspect}" }
+      %(#<#{self.class}[#{type.name}] name=#{name.inspect} #{meta_and_opts.join(' ')}>)
     end
     alias_method :pretty_inspect, :inspect
 
@@ -396,7 +380,7 @@ module ROM
     #
     # @api public
     def to_ast
-      [:attribute, [name, type.to_ast(meta: false), meta_ast]]
+      [:attribute, [name, type.to_ast(meta: false), meta_options_ast]]
     end
 
     # Return AST for the read type
@@ -405,18 +389,18 @@ module ROM
     #
     # @api public
     def to_read_ast
-      [:attribute, [name, to_read_type.to_ast(meta: false), meta_ast]]
+      [:attribute, [name, to_read_type.to_ast(meta: false), meta_options_ast]]
     end
 
     # @api private
-    def meta_ast
-      meta_keys = %i(wrapped alias primary_key)
-      ast = meta.select { |k, _| meta_keys.include?(k) }
+    def meta_options_ast
+      keys = %i[wrapped primary_key alias]
+      ast = (meta.merge(options)).select { |k, _| keys.include?(k) }
       ast[:source] = source.to_sym if source
       ast
     end
 
-    memoize :to_ast, :to_read_ast, :meta_ast
+    memoize :to_ast, :to_read_ast, :meta_options_ast
 
     private
 

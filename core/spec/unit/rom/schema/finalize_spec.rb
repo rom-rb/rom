@@ -30,12 +30,13 @@ RSpec.describe ROM::Schema, '#finalize!' do
     end
 
     let(:attributes_inferrer) do
-      proc { [ [define_attribute(:name, :String)], %i(id age) ] }
+      proc { [ [define_attribute(:String, name: :name)], %i(id age) ] }
     end
 
     context 'when all required attributes are present' do
       let(:attributes) do
-        [define_type(:id, :Integer), define_type(:age, :Integer)]
+        [define_attr_info(:Integer, name: :id),
+         define_attr_info(:Integer, name: :age)]
       end
 
       it 'concats defined attributes with inferred attributes' do
@@ -45,14 +46,28 @@ RSpec.describe ROM::Schema, '#finalize!' do
 
     context 'when inferred attributes are overridden' do
       let(:attributes) do
-        [define_type(:id, :Integer),
-         define_type(:age, :Integer),
-         define_type(:name, :String).meta(custom: true)]
+        [define_attr_info(:Integer, name: :id),
+         define_attr_info(:Integer, name: :age),
+         define_attr_info(:String, { name: :name }, custom: true)]
       end
 
       it 'respects overridden attributes' do
         expect(schema.finalize_attributes!.finalize!.map(&:name)).to eql(%i[id age name])
         expect(schema[:name].meta[:custom]).to be(true)
+      end
+    end
+
+    context 'when some attributes are defined without type' do
+      let(:attributes) do
+        [define_attr_info(:Integer, name: :id),
+         define_attr_info(:Integer, name: :age),
+         ROM::Schema.build_attribute_info(nil, name: :name, alias: :username)]
+      end
+
+      it 'fills type in and respects given options' do
+        expect(schema.finalize_attributes!.finalize!.map(&:name)).to eql(%i[id age name])
+        expect(schema[:name].alias).to be(:username)
+        expect(schema[:name].type).to eq(define_type(:String))
       end
     end
 

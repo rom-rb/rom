@@ -29,7 +29,12 @@ module ROM
         def self.apply(schema, options)
           type = options.fetch(:type, Types::Time)
           names = options.fetch(:attributes, DEFAULT_TIMESTAMPS)
-          attributes = names.map { |name| type.meta(name: name, source: schema.name) }
+          attributes = names.map do |name|
+            ROM::Schema.build_attribute_info(
+              type.meta(source: schema.name),
+              name: name
+            )
+          end
 
           schema.attributes.concat(
             schema.class.attributes(attributes, schema.attr_class)

@@ -38,7 +38,10 @@ module ROM
       option :adapter, default: -> { :default }
 
       # @!attribute [r] attributes
-      #   @return [Hash] A hash with attributes defined by the DSL
+      #   @return [Hash<Symbol, Hash>] A hash with attribute names as
+      #   keys and attribute representations as values.
+      #
+      #   @see [Schema.build_attribute_info]
       attr_reader :attributes
 
       # @!attribute [r] plugins
@@ -63,18 +66,22 @@ module ROM
         @definition = block
       end
 
-      # Defines a relation attribute with its type
+      # Defines a relation attribute with its type and options.
+      #
+      # When only options are given, type is left as nil. It makes
+      # sense when it is used alongside an schema inferrer, which will
+      # populate the type.
       #
       # @see Relation.schema
       #
       # @api public
-      def attribute(name, type, options = EMPTY_HASH)
+      def attribute(name, type_or_options, options = EMPTY_HASH)
         if attributes.key?(name)
           ::Kernel.raise ::ROM::AttributeAlreadyDefinedError,
                          "Attribute #{ name.inspect } already defined"
         end
 
-        attributes[name] = build_type(name, type, options)
+        attributes[name] = build_attribute_info(name, type_or_options, options)
       end
 
       # Define associations for a relation
@@ -110,18 +117,38 @@ module ROM
         @associations_dsl = AssociationsDSL.new(relation, &block)
       end
 
-      # Builds a type instance from a name, options and a base type
+      # Builds a representation of the information needed to create an
+      # attribute. It returns a hash with `:type` and `:options` keys.
+      #
+      # @return [Hash]
+      #
+      # @see [Schema.build_attribute_info]
+      #
+      # @api private
+      def build_attribute_info(name, type_or_options, options = EMPTY_HASH)
+        type, options = if type_or_options.is_a?(::Hash)
+                          [nil, type_or_options]
+                        else
+                          [build_type(type_or_options, options), options]
+                        end
+        Schema.build_attribute_info(
+          type,
+          options.merge(name: name)
+        )
+      end
+
+      # Builds a type instance from base type and meta options
       #
       # @return [Dry::Types::Type] Type instance
       #
       # @api private
-      def build_type(name, type, options = EMPTY_HASH)
+      def build_type(type, options = EMPTY_HASH)
         if options[:read]
-          type.meta(name: name, source: relation, read: options[:read])
+          type.meta(source: relation, read: options[:read])
         elsif type.optional? && !type.meta[:read] && type.right.meta[:read]
-          type.meta(name: name, source: relation, read: type.right.meta[:read].optional)
+          type.meta(source: relation, read: type.right.meta[:read].optional)
         else
-          type.meta(name: name, source: relation)
+          type.meta(source: relation)
         end
       end
 
@@ -130,7 +157,8 @@ module ROM
       # @api public
       def primary_key(*names)
         names.each do |name|
-          attributes[name] = attributes[name].meta(primary_key: true)
+          attributes[name][:type] =
+            attributes[name][:type].meta(primary_key: true)
         end
         self
       end

@@ -11,7 +11,7 @@ RSpec.describe ROM::Schema, '#wrap' do
 
   it 'returns projected schema with renamed attributes using provided prefix' do
     expect(wrapped.map(&:alias)).to eql(%i[users_id users_name])
-    expect(wrapped.map { |attr| attr.meta[:name] }).to eql(%i[id name])
+    expect(wrapped.map { |attr| attr.name }).to eql(%i[id name])
     expect(wrapped.all?(&:wrapped?)).to be(true)
     expect(wrapped.wrap(:foo)).to eql(wrapped)
   end

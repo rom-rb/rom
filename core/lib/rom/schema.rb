@@ -119,7 +119,7 @@ module ROM
 
     alias_method :to_ary, :attributes
 
-    # Define a relation schema from plain rom types
+    # Define a relation schema from plain rom types and optional options
     #
     # Resulting schema will decorate plain rom types with adapter-specific types
     # By default `Attribute` will be used
@@ -138,9 +138,27 @@ module ROM
       ) { |schema| yield(schema) if block_given? }
     end
 
+    # Builds a representation of the information needed to create an
+    # attribute.
+    #
+    # This representation is consumed by `Schema.define` in order to create
+    # the actual attributes.
+    #
+    # @return [Hash] A hash with `:type` and `:options` keys.
+    #
+    # @api private
+    def self.build_attribute_info(type, options)
+      {
+        type: type,
+        options: options
+      }
+    end
+
     # @api private
     def self.attributes(attributes, attr_class)
-      attributes.map { |type| attr_class.new(type) }
+      attributes.map do |attr|
+        attr_class.new(attr[:type], attr.fetch(:options))
+      end
     end
 
     # @api private
@@ -466,8 +484,8 @@ module ROM
     # @api private
     def initialize_primary_key_names
       if primary_key.size > 0
-        set!(:primary_key_name, primary_key[0].meta[:name])
-        set!(:primary_key_names, primary_key.map { |type| type.meta[:name] })
+        set!(:primary_key_name, primary_key[0].name)
+        set!(:primary_key_names, primary_key.map(&:name))
       end
     end
 
