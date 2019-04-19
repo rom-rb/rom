@@ -9,6 +9,7 @@ unless defined?(COMPONENTS)
 end
 
 gem 'dry-equalizer', github: 'dry-rb/dry-equalizer', branch: 'master'
+gem 'dry-logic', github: 'dry-rb/dry-logic', branch: 'master'
 gem 'dry-types', github: 'dry-rb/dry-types', branch: 'master'
 gem 'dry-struct', github: 'dry-rb/dry-struct', branch: 'master'
 
