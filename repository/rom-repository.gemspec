@@ -14,7 +14,7 @@ Gem::Specification.new do |gem|
 
   gem.add_runtime_dependency 'dry-initializer', '~> 2.0'
   gem.add_runtime_dependency 'dry-core', '~> 0.3'
-  gem.add_runtime_dependency 'rom-core', '~> 4.0'
+  gem.add_runtime_dependency 'rom-core', '~> 5.0'
 
   gem.add_development_dependency 'rake', '~> 11.2'
   gem.add_development_dependency 'rspec', '~> 3.5'

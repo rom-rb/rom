@@ -13,7 +13,7 @@ Gem::Specification.new do |gem|
   gem.license       = 'MIT'
 
   gem.add_runtime_dependency 'dry-core', '~> 0.3', '>= 0.3.1'
-  gem.add_runtime_dependency 'rom-core', '~> 4.0'
+  gem.add_runtime_dependency 'rom-core', '~> 5.0'
   gem.add_runtime_dependency 'transproc', '~> 1.0'
 
   gem.add_development_dependency 'rake', '~> 11.2'

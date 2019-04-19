@@ -2,6 +2,6 @@
 
 module ROM
   module Core
-    VERSION = '4.2.1'.freeze
+    VERSION = '5.0.0'
   end
 end

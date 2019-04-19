@@ -2,6 +2,6 @@
 
 module ROM
   class Changeset
-    VERSION = '1.0.2'.freeze
+    VERSION = '5.0.0'
   end
 end
