@@ -12,7 +12,7 @@ Gem::Specification.new do |gem|
   gem.files         = Dir['CHANGELOG.md', 'LICENSE', 'README.md', 'lib/**/*']
   gem.license       = 'MIT'
 
-  gem.add_runtime_dependency 'dry-initializer', '~> 2.0'
+  gem.add_runtime_dependency 'dry-initializer', '~> 3.0', '>= 3.0.1'
   gem.add_runtime_dependency 'dry-core', '~> 0.3'
   gem.add_runtime_dependency 'rom-core', '~> 5.0'
 
