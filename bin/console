@@ -1,17 +1,17 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require "bundler"
+require 'bundler'
 
 Bundler.setup
 
-require "pry"
-require "rom-repository"
-require "rom-changeset"
-require "pry-byebug"
-require "dry/monitor/logger"
-require "dry/monitor/notifications"
-require "dry/monitor/sql/logger"
+require 'pry'
+require 'rom-repository'
+require 'rom-changeset'
+require 'pry-byebug'
+require 'dry/monitor/logger'
+require 'dry/monitor/notifications'
+require 'dry/monitor/sql/logger'
 
 config = ROM::Configuration.new(:sql, 'postgres://localhost/rom_repository')
 notifications = Dry::Monitor::Notifications.new(:console)
@@ -53,8 +53,8 @@ end
 
 rom = ROM.container(config)
 
-repo = Class.new(ROM::Repository[:users]) {
+repo = Class.new(ROM::Repository[:users]) do
   commands :create, update: :by_pk, delete: :by_pk
-}.new(rom)
+end.new(rom)
 
 Pry.start(self)
