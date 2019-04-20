@@ -13,7 +13,7 @@ require 'dry/monitor/logger'
 require 'dry/monitor/notifications'
 require 'dry/monitor/sql/logger'
 
-config = ROM::Configuration.new(:sql, 'postgres://localhost/rom_repository')
+config = ROM::Configuration.new(:sql, 'postgres://localhost/rom_console')
 notifications = Dry::Monitor::Notifications.new(:console)
 
 config.plugin :sql, relations: :instrumentation do |plugin_config|
@@ -22,13 +22,33 @@ end
 
 Dry::Monitor::SQL::Logger.new(Logger.new($stdout)).subscribe(notifications)
 
+gateway = config.gateways[:default]
+
+gateway.connection.drop_table?(:books)
+gateway.connection.drop_table?(:tasks)
+gateway.connection.drop_table?(:users)
+
+gateway.create_table :books do
+  primary_key :id
+  column :title, String
+  column :meta, :jsonb
+  column :created_at, Time
+  column :updated_at, Time
+end
+
+gateway.create_table :users do
+  primary_key :id
+  column :name, String
+end
+
+gateway.create_table :tasks do
+  primary_key :id
+  foreign_key :user_id, :users, on_delete: :cascade
+  column :title, String
+end
+
 config.relation(:books) do
-  schema(:books) do
-    attribute :id, ROM::SQL::Types::Serial
-    attribute :title, ROM::SQL::Types::String
-    attribute :created_at, ROM::SQL::Types::Time
-    attribute :updated_at, ROM::SQL::Types::Time
-  end
+  schema(infer: true)
 end
 
 config.relation(:users) do
@@ -45,10 +65,6 @@ config.relation(:tasks) do
       belongs_to :user
     end
   end
-end
-
-config.relation(:tags) do
-  schema(infer: true)
 end
 
 rom = ROM.container(config)
