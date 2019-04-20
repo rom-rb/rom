@@ -1,6 +1,31 @@
 # 5.0.0 to-be-released
 
-* `rom-mapper` was moved to `core` under `rom/mapper` (solnic)
+* All version numbers have been inlined to `5.0.0`
+* `rom-mapper` gem has been retired and `ROM::Mapper` is now part of `rom-core`
+
+## rom
+
+* `rom-core` bumped to `5.0.0` (solnic)
+* `rom-changeset` bumped to `5.0.0` (solnic)
+* `rom-repository` bumped to `5.0.0` (solnic)
+* `rom-mapper` was moved to `core` under `rom/mapper` so it's no longer a runtime dependency (solnic)
+
+## rom-core
+
+* [BREAKING] `Types::Int` is now `Types::Integer` (flash-gordon)
+* [BREAKING] Attribute aliases are no longer stored in attribute's type meta (waiting-for-dev)
+* Updated to work with `dry-types 1.0.0` (flash-gordon)
+* Updated to work with `dry-struct 1.0.0` (flash-gordon)
+* Updated to work with `dry-initializer 3.0.0` (solnic)
+
+## rom-repository
+
+* [BREAKING] Support for ruby <= `2.4` was dropped (flash-gordon)
+* [BREAKING] `Repository::Root#aggregate` was removed in favor of `Relation#combine` (v-kolesnikov)
+
+## rom-changeset
+
+*No changes*
 
 [Compare v4.2.1...master](https://github.com/rom-rb/rom/compare/v4.2.1...master)
 
