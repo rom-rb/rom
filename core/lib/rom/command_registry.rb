@@ -43,15 +43,19 @@ module ROM
     # If mapper is set command will be turned into a composite command with
     # auto-mapping
     #
-    # @example
-    #   create_user = rom.commands[:users][:create]
-    #   create_user[name: 'Jane']
+    # @overload [](name)
+    #   @param [Symbol] name The command identifier from the registry
+    #   @example
+    #     create_user = rom.commands[:users][:create]
+    #     create_user[name: 'Jane']
     #
-    #   # with mapping, assuming :entity mapper is registered for :users relation
-    #   create_user = rom.commands[:users].map_with(:entity)[:create]
-    #   create_user[name: 'Jane'] # => result is send through :entity mapper
+    #     # with mapping, assuming :entity mapper is registered for :users relation
+    #     create_user = rom.commands[:users].map_with(:entity)[:create]
+    #     create_user[name: 'Jane'] # => result is sent through :entity mapper
     #
-    # @param [Symbol] name The name of a registered command
+    # @overload [](*args)
+    #   @param [Array] *args {CommandCompiler} arguments
+    #   @see CommandCompiler#call
     #
     # @return [Command,Command::Composite]
     #

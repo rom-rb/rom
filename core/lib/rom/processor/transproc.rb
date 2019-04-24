@@ -211,7 +211,7 @@ module ROM
       #
       # :unwrap transformation is added to handle unwrapping
       #
-      # @param [Header::Attributes::Unwrap]
+      # @param [Header::Attributes::Unwrap] attribute
       #
       # @api private
       def visit_unwrap(attribute)

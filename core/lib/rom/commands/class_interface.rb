@@ -107,8 +107,8 @@ module ROM
       #   end
       #
       # @param [Symbol] plugin
-      # @param [Hash] _options
-      # @option _options [Symbol] :adapter (:default) first adapter to check for plugin
+      # @param [Hash] options
+      # @option options [Symbol] :adapter (:default) first adapter to check for plugin
       #
       # @api public
       def use(plugin, options = EMPTY_HASH)
