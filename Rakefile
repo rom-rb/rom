@@ -1,5 +1,4 @@
 require "bundler/gem_tasks"
-require 'yard-junk/rake'
 
 SPEC_RESULTS = {}
 
@@ -36,4 +35,7 @@ namespace :spec do
   end
 end
 
-YardJunk::Rake.define_task(:text)
+begin
+  require 'yard-junk/rake'
+  YardJunk::Rake.define_task(:text)
+rescue LoadError;end
