@@ -27,14 +27,19 @@ group :test do
   gem 'simplecov', platforms: :mri
 end
 
+group :docs do
+  platform :mri do
+    gem 'redcarpet'
+    gem 'yard'
+    gem 'yard-junk'
+  end
+end
+
 group :tools do
   gem 'pry', platforms: :jruby
 
   platform :mri do
     gem 'pry-byebug'
-    gem 'redcarpet' # for yard
-    gem 'yard'
-    gem 'yard-junk'
   end
 end
 
