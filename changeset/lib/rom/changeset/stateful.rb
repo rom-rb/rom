@@ -218,7 +218,7 @@ module ROM
       #   new_task.associate(user, :users)
       #
       # @param [#to_hash, Changeset] other Other changeset or hash-like object
-      # @param [Symbol] assoc The association identifier from schema
+      # @param [Symbol] name The association identifier from schema
       #
       # @api public
       def associate(other, name = Associated.infer_assoc_name(other))

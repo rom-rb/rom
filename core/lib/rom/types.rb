@@ -7,6 +7,8 @@ module ROM
   # Default namespace with built-in attribute types
   #
   # @api public
+  #
+  # rubocop:disable Naming/MethodName
   module Types
     include Dry::Types(default: :nominal)
 
@@ -32,6 +34,8 @@ module ROM
         type.meta(foreign_key: true, target: relation)
       end
     end
+
+    # @!parse module Coercible;end
 
     # Define a json-to-hash attribute type
     #
@@ -70,4 +74,5 @@ module ROM
     Coercible::JSONHash = Coercible.JSONHash
     Coercible::HashJSON = Coercible.HashJSON
   end
+  # rubocop:enable Naming/MethodName
 end

@@ -281,7 +281,7 @@ module ROM
 
     # Create a graph node for a given association identifier
     #
-    # @param [Symbol, Relation::Name]
+    # @param [Symbol, Relation::Name] name
     #
     # @return [Relation]
     #
@@ -294,7 +294,7 @@ module ROM
 
     # Return a graph node prepared by the given association
     #
-    # @param [Association] An association object
+    # @param [Association] assoc An association object
     #
     # @return [Relation]
     #
