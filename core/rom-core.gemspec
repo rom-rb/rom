@@ -22,6 +22,7 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency 'dry-types', '~> 1.0'
   gem.add_runtime_dependency 'dry-struct', '~> 1.0'
   gem.add_runtime_dependency 'dry-initializer', '~> 3.0', '>= 3.0.1'
+  gem.add_runtime_dependency 'transproc', '~> 1.0'
 
   gem.add_development_dependency 'rake', '~> 10.3'
   gem.add_development_dependency 'rspec', '~> 3.5'
