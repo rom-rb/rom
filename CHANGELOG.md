@@ -1,4 +1,4 @@
-# 5.0.0 to-be-released
+# 5.0.0 2019-04-24
 
 * All version numbers have been inlined to `5.0.0`
 * `rom-mapper` gem has been retired and `ROM::Mapper` is now part of `rom-core`
@@ -27,7 +27,7 @@
 
 *No changes*
 
-[Compare v4.2.1...master](https://github.com/rom-rb/rom/compare/v4.2.1...master)
+[Compare v4.2.1...v5.0.0](https://github.com/rom-rb/rom/compare/v4.2.1...v5.0.0)
 
 # 4.2.1 2018-05-03
 
