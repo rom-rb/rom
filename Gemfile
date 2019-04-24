@@ -28,9 +28,14 @@ group :test do
 end
 
 group :tools do
-  gem 'pry-byebug', platforms: :mri
   gem 'pry', platforms: :jruby
-  gem 'redcarpet', platforms: :mri # for yard
+
+  platform :mri do
+    gem 'pry-byebug'
+    gem 'redcarpet' # for yard
+    gem 'yard'
+    gem 'yard-junk'
+  end
 end
 
 group :benchmarks do

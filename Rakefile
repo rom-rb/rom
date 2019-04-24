@@ -1,4 +1,5 @@
 require "bundler/gem_tasks"
+require 'yard-junk/rake'
 
 SPEC_RESULTS = {}
 
@@ -34,3 +35,5 @@ namespace :spec do
     SPEC_RESULTS[:changeset] = system('cd changeset && bundle exec rake spec')
   end
 end
+
+YardJunk::Rake.define_task(:text)
