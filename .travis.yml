@@ -12,12 +12,15 @@ install:
   - bundle install --without benchmarks console tools --gemfile ./Gemfile
   - gem install codeclimate-test-reporter
 before_script:
+  - '[ $COVERAGE == "true" ] && curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter'
+  - '[ $COVERAGE == "true" ] && chmod +x ./cc-test-reporter'
+  - '[ $COVERAGE == "true" ] && ./cc-test-reporter before-build'
   - psql -c 'create database rom_repository' -U postgres
 script:
   - cd $TRAVIS_BUILD_DIR
   - rake spec
-after_success:
-  - "[ -d coverage ] && codeclimate-test-reporter"
+after_script:
+  - "[ -d coverage ] && ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT"
 rvm:
   - 2.6.3
   - 2.5.5
