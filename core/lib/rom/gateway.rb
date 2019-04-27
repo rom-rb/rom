@@ -90,17 +90,15 @@ module ROM
       when Symbol
         klass = class_from_symbol(gateway_or_scheme)
 
-        if klass.instance_method(:initialize).arity == 0
+        if klass.instance_method(:initialize).arity.zero?
           klass.new
         else
           klass.new(*args)
         end
       else
-        if args.empty?
-          gateway_or_scheme
-        else
-          raise ArgumentError, "Can't accept arguments when passing an instance"
-        end
+        raise ArgumentError, "Can't accept arguments when passing an instance" unless args.empty?
+
+        gateway_or_scheme
       end
     end
 
@@ -112,7 +110,7 @@ module ROM
     #
     # @api private
     def self.class_from_symbol(type)
-      adapter = ROM.adapters.fetch(type) {
+      adapter = ROM.adapters.fetch(type) do
         begin
           require "rom/#{type}"
         rescue LoadError
@@ -120,7 +118,7 @@ module ROM
         end
 
         ROM.adapters.fetch(type)
-      }
+      end
 
       adapter.const_get(:Gateway)
     end
