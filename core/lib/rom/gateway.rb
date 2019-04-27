@@ -34,22 +34,6 @@ module ROM
     #    @param [Symbol] adapter The adapter identifier
     defines :adapter
 
-    # @!method self.mapper_compiler
-    #  Get or set gateway-specific mapper compiler class
-    #
-    #  @overload mapper_compiler
-    #    Return mapper compiler class
-    #    @return [Class]
-    #
-    #  @overload mapper_compiler(klass)
-    #    @example
-    #      class MyGateway < ROM::Gateway
-    #        mapper_compiler MyMapperCompiler
-    #      end
-    #
-    #    @param [Class] klass The mapper compiler class
-    defines :mapper_compiler
-
     # @!attribute [r] connection
     #   @return [Object] The gateway's connection object (type varies across adapters)
     attr_reader :connection
@@ -194,15 +178,6 @@ module ROM
     # @api public
     def transaction(opts = EMPTY_HASH, &block)
       transaction_runner(opts).run(opts, &block)
-    end
-
-    # Return configured mapper compiler class
-    #
-    # @return [Class]
-    #
-    # @api private
-    def mapper_compiler
-      self.class.mapper_compiler
     end
 
     private
