@@ -1,3 +1,13 @@
+# 5.0.1 2019-04-24
+
+## rom
+
+* Dependency on `rom-core` was bumped to `~> 5.0`, `>= 5.0.1` (solnic)
+
+## rom-core
+
+* Missing dependency on `transproc` was added (solnic)
+
 # 5.0.0 2019-04-24
 
 * All version numbers have been inlined to `5.0.0`
