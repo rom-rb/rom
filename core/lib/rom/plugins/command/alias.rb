@@ -9,7 +9,7 @@ module ROM
       # @example
       #   class User < ROM::Relations[:sql]
       #     schema(infer: true) do
-      #       attribute :first_name, Types::String.meta(alias: name)
+      #       attribute :first_name, alias: name
       #     end
       #   end
       #
