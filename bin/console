@@ -73,4 +73,21 @@ repo = Class.new(ROM::Repository[:users]) do
   commands :create, update: :by_pk, delete: :by_pk
 end.new(rom)
 
-Pry.start(self)
+class Context
+  attr_reader :rom, :repo
+
+  def initialize(rom, repo)
+    @rom = rom
+    @repo = repo
+  end
+
+  def users
+    rom.relations[:users]
+  end
+
+  def tasks
+    rom.relations[:tasks]
+  end
+end
+
+Pry.start(Context.new(rom, repo))
