@@ -1,5 +1,3 @@
-require 'set'
-
 module ROM
   module Plugins
     module Command
