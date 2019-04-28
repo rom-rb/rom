@@ -70,8 +70,11 @@ RSpec.describe ROM::Schema do
 
   describe '#alias_mapping' do
     it 'returns a hash from canonical name to alias including aliased attributes' do
-      attrs = { id: ROM::Types::Integer.meta(name: :id, alias: :pk), name: ROM::Types::String }
-      schema = ROM::Schema.define(:name, attributes: attrs.values)
+      attrs = [
+        define_attr_info(:Integer, name: :id, alias: :pk),
+        define_attr_info(:String, name: :name)
+      ]
+      schema = ROM::Schema.define(:name, attributes: attrs)
 
       expect(schema.alias_mapping).to eq(id: :pk)
     end

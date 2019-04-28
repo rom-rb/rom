@@ -10,7 +10,7 @@ RSpec.describe ROM::Plugins::Command::Alias do
   before do
     configuration.relation :users do
       schema(:users) do
-        attribute :first_name, Types::String.meta(alias: :name)
+        attribute :first_name, Types::String, alias: :name
       end
     end
 
