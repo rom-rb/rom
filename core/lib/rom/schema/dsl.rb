@@ -149,7 +149,7 @@ module ROM
           type.meta(source: relation, read: type.meta[:read].optional)
         else
           type.meta(source: relation)
-        end.meta(options.slice(*Attribute::META_OPTIONS).compact)
+        end.meta(Attribute::META_OPTIONS.map { |opt| [opt, options[opt]] if options.key?(opt) }.compact.to_h)
       end
 
       # Specify which key(s) should be the primary key
