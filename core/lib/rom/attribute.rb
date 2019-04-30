@@ -22,6 +22,8 @@ module ROM
 
     extend Initializer
 
+    META_OPTIONS = %i[primary_key foreign_key source target relation].freeze
+
     # @!attribute [r] type
     #   @return [Dry::Types::Nominal, Dry::Types::Sum, Dry::Types::Constrained] The attribute's type object
     param :type
