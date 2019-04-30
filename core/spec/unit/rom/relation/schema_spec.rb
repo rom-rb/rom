@@ -56,7 +56,7 @@ RSpec.describe ROM::Relation, '.schema' do
       to eql(ROM::Schema::HASH_SCHEMA.schema(id: schema[:id].type, date: schema[:date].meta[:read]))
   end
 
-  it 'allows setting composite primary key' do
+  it 'allows setting composite primary key using `primary_key` macro' do
     class Test::Users < ROM::Relation[:memory]
       schema do
         attribute :name, Types::String
@@ -71,10 +71,38 @@ RSpec.describe ROM::Relation, '.schema' do
     expect(schema.primary_key).to eql([schema[:name], schema[:email]])
   end
 
-  it 'allows setting foreign keys' do
+  it 'allows setting composite primary key using attribute options' do
+    class Test::Users < ROM::Relation[:memory]
+      schema do
+        attribute :name, Types::String, primary_key: true
+        attribute :email, Types::String
+      end
+    end
+
+    schema = Test::Users.schema_proc.call.finalize_attributes!
+
+    expect(schema.primary_key).to eql([schema[:name]])
+  end
+
+  it 'allows setting foreign keys using Types::ForeignKey' do
     class Test::Posts < ROM::Relation[:memory]
       schema do
         attribute :author_id, Types::ForeignKey(:users)
+        attribute :title, Types::String
+      end
+    end
+
+    schema = Test::Posts.schema_proc.call
+
+    expect(schema[:author_id].primitive).to be(Integer)
+
+    expect(schema.foreign_key(:users)).to be(schema[:author_id])
+  end
+
+  it 'allows setting foreign keys using attribute options' do
+    class Test::Posts < ROM::Relation[:memory]
+      schema do
+        attribute :author_id, Types::Integer, foreign_key: true, target: :users
         attribute :title, Types::String
       end
     end
@@ -299,12 +327,12 @@ RSpec.describe ROM::Relation, '.schema' do
     end
 
     it 'builds optional read types automatically' do
-      to_s = Types::String.constructor(:to_s.to_proc)
-      to_s_on_read = Types::String.meta(read: to_s)
+      to_s = ROM::Types::String.constructor(:to_s.to_proc)
+      to_s_on_read = ROM::Types::String.meta(read: to_s)
 
       Test::Users = Class.new(ROM::Relation[:memory]) do
         schema do
-          attribute :id, Types::Integer.meta(primary_key: true)
+          attribute :id, ROM::Types::Integer.meta(primary_key: true)
           attribute :name, to_s_on_read.optional
         end
       end
