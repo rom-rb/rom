@@ -1,3 +1,30 @@
+# 5.0.2 2019-05-01
+
+## rom
+
+* Dependency on `rom-core` was bumped to `~> 5.0`, `>= 5.0.2` (solnic)
+* Dependency on `rom-changeset` was bumped to `~> 5.0`, `>= 5.0.1` (solnic)
+
+## rom-core 5.0.2
+
+### Fixed
+
+* Forwarding to `root` in `Relation::Combined` behaves as expected when another combined relation was returned from the root (issue #525) (solnic)
+* Specifying attribute options as the third argument in `attribute` DSL works again (issue #540) (solnic)
+
+## rom-changeset 5.0.1
+
+### Changed
+
+* `Relation::Combined#changeset` will raise a meaningful `NotImplementedError` now (solnic)
+* Passing an array to `Changeset#associate` will raise a meaningful `NotImplementedError` now (solnic)
+
+## rom-repository
+
+*No changes*
+
+[Compare v5.0.1...v5.0.2](https://github.com/rom-rb/rom/compare/v5.0.1...v5.0.2)
+
 # 5.0.1 2019-04-24
 
 ## rom
