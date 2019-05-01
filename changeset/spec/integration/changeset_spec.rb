@@ -119,6 +119,26 @@ RSpec.describe 'Using changesets' do
 
       expect(changeset.commit.to_h).to eql(id: 1, name: 'Joe Dane')
     end
+
+    context 'combined relations' do
+      it 'automatically builds associated changeset' do
+        pending 'Not implemented yet. This feature is scheduled for 6.0'
+
+        data = { name: 'Jane Doe', posts: [{ title: 'Task 1' }, { title: 'Task 2' }] }
+        changeset = users.combine(:posts).changeset(:create, data)
+
+        result = changeset.commit
+
+        expect(result[:id]).not_to be(nil)
+        expect(result[:name]).not_to eql('Jane Doe')
+        expect(result[:posts].size).to be(2)
+        
+        post_1, post_2 = result[:posts]
+        
+        expect(post_1).to include(data[:posts][0])
+        expect(post_2).to include(data[:posts][1])
+      end
+    end
   end
 
   describe 'Update' do

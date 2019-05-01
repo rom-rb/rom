@@ -6,6 +6,8 @@ require 'rom/changeset/create'
 require 'rom/changeset/update'
 require 'rom/changeset/delete'
 
+require 'rom/changeset/extensions/relation'
+
 module ROM
   module Plugins
     module Relation
