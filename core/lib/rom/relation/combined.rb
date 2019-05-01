@@ -14,15 +14,25 @@ module ROM
 
       # Create a new relation combined with others
       #
-      # @param [Relation] root
+      # @param [Relation] relation
       # @param [Array<Relation>] nodes
       #
       # @return [Combined]
       #
       # @api public
-      def self.new(root, nodes)
-        root_ns = root.options[:struct_namespace]
-        super(root, nodes.map { |node| node.struct_namespace(root_ns) })
+      def self.new(relation, nodes)
+        struct_ns = relation.options[:struct_namespace]
+        new_nodes = nodes.map { |node| node.struct_namespace(struct_ns) }
+
+        root =
+          if relation.is_a?(self)
+            new_nodes.concat(relation.nodes)
+            relation.root
+          else
+            relation
+          end
+
+        super(root, new_nodes)
       end
 
       # Combine this graph with more nodes
@@ -142,7 +152,7 @@ module ROM
 
       # @api private
       def decorate?(other)
-        super || other.is_a?(Wrap)
+        super || other.is_a?(self.class) || other.is_a?(Wrap)
       end
     end
   end
