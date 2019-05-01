@@ -93,6 +93,8 @@ module ROM
             a >> other.command.with_association(assoc).curry(other)
           when Associated
             a >> other.command.with_association(assoc)
+          when Array
+            raise NotImplementedError, 'Changeset::Associate does not support arrays yet'
           else
             a.with_association(assoc, parent: other)
           end

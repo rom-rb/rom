@@ -83,6 +83,23 @@ RSpec.describe ROM::Changeset, '#associate' do
         to include(user_id: jane.id, project_id: project.id, title: 'Test 1')
     end
 
+    it 'associates multiple children with a parent' do
+      pending 'This is not implemented yet'
+
+      project_todos = [
+        { user_id: jane.id, title: 'Test 1' },
+        { user_id: jane.id, title: 'Test 2' }
+      ]
+
+      changeset = projects.changeset(:create, name: 'rom-rb')
+        .associate(project_todos, :project)
+
+      result = changeset.commit
+
+      expect(result).to include(name: 'rom-rb')
+      expect(result[:todos].size).to be(2)
+    end
+
     it 'raises when assoc name cannot be inferred' do
       other = Class.new do
         def self.schema
