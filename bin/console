@@ -67,11 +67,12 @@ config.relation(:tasks) do
   end
 end
 
-rom = ROM.container(config)
-
-repo = Class.new(ROM::Repository[:users]) do
+class UserRepo < ROM::Repository[:users]
   commands :create, update: :by_pk, delete: :by_pk
-end.new(rom)
+end
+
+rom = ROM.container(config)
+repo = UserRepo.new(rom)
 
 class Context
   attr_reader :rom, :repo
