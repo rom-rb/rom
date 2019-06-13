@@ -112,7 +112,7 @@ module ROM
       #
       # @api public
       def use(plugin, options = EMPTY_HASH)
-        ROM.plugin_registry.commands.fetch(plugin, adapter).apply_to(self, options)
+        ROM.plugin_registry[:command].fetch(plugin, adapter).apply_to(self, options)
       end
 
       # Extend a command class with relation view methods

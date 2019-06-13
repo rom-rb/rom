@@ -70,7 +70,9 @@ module ROM
     # @api public
     def plugin(adapter, spec, &block)
       type, name = spec.flatten(1)
-      plugin = plugin_registry.send(type).adapter(adapter).fetch(name) { plugin_registry.send(type).fetch(name) }
+      plugin = plugin_registry[type].adapter(adapter).fetch(name) do
+        plugin_registry[type].fetch(name)
+      end
 
       if block
         register_plugin(plugin.configure(&block))

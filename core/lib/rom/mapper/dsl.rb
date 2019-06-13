@@ -40,7 +40,7 @@ module ROM
         def use(plugin, options = {})
           adapter = options.fetch(:adapter, :default)
 
-          ROM.plugin_registry.mappers.fetch(plugin, adapter).apply_to(self)
+          ROM.plugin_registry[:mapper].fetch(plugin, adapter).apply_to(self)
         end
 
         # Return base_relation used for creating mapper registry

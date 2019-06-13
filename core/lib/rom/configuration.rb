@@ -73,7 +73,7 @@ module ROM
       elsif plugin.is_a?(Hash)
         plugin.to_a.each { |p| use(*p) }
       else
-        ROM.plugin_registry.configuration.fetch(plugin).apply_to(self, options)
+        ROM.plugin_registry[:configuration].fetch(plugin).apply_to(self, options)
       end
 
       self

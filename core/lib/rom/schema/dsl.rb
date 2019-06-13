@@ -170,13 +170,12 @@ module ROM
       #
       # @api public
       def use(plugin, options = ::ROM::EMPTY_HASH)
-        mod = ::ROM.plugin_registry.schemas.adapter(adapter).fetch(plugin)
-        app_plugin(mod, options)
+        mod = ::ROM.plugin_registry[:schema].fetch(plugin, adapter)
+        app_plugin(plugin, mod, options)
       end
 
       # @api private
-      def app_plugin(plugin, options = ::ROM::EMPTY_HASH)
-        plugin_name = ::ROM.plugin_registry.schemas.adapter(adapter).plugin_name(plugin)
+      def app_plugin(plugin_name, plugin, options = ::ROM::EMPTY_HASH)
         plugin.extend_dsl(self)
         @plugins[plugin_name] = [plugin, plugin.config.to_hash.merge(options)]
       end
