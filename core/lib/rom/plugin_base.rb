@@ -5,6 +5,11 @@ module ROM
   #
   # @private
   class PluginBase
+    # @return [Symbol] plugin name
+    #
+    # @api private
+    attr_reader :name
+
     # @return [Module] a module representing the plugin
     #
     # @api private
@@ -19,10 +24,11 @@ module ROM
     attr_reader :type
 
     # @api private
-    def initialize(mod, options)
-      @mod      = mod
-      @options  = options
-      @type = options.fetch(:type)
+    def initialize(name, mod, options)
+      @name    = name
+      @mod     = mod
+      @options = options
+      @type    = options.fetch(:type)
     end
 
     # @api private

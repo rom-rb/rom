@@ -22,8 +22,8 @@ RSpec.describe 'Setting up rom suite' do
 
   describe 'configuring plugins for schemas' do
     after do
-      ROM.plugin_registry
-        .schemas.adapter(:default)
+      ROM.plugin_registry[:schema]
+        .adapter(:default)
         .fetch(:timestamps)
         .instance_variable_set(:@config, nil)
     end

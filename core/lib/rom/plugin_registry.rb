@@ -61,7 +61,7 @@ module ROM
       when :relations then :relation
       when :commands then :command
       when :mappers then :mapper
-      when :schema then :schema
+      when :schemas then :schema
       else type
       end
     end
@@ -85,7 +85,7 @@ module ROM
     #
     # @api private
     def register(name, mod, options)
-      elements[name] = plugin_type.new(mod, options)
+      elements[name] = plugin_type.new(name, mod, options)
     end
 
     # Returns plugin name by instance
