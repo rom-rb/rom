@@ -3,14 +3,6 @@
 require 'concurrent/map'
 require 'rom/registry'
 require 'rom/plugins'
-require 'rom/schema_plugin'
-require 'rom/configuration_plugin'
-
-ROM::Plugins.register(:command)
-ROM::Plugins.register(:mapper)
-ROM::Plugins.register(:relation)
-ROM::Plugins.register(:schema, ROM::SchemaPlugin)
-ROM::Plugins.register(:configuration, ROM::ConfigurationPlugin)
 
 module ROM
   # Stores all registered plugins
@@ -41,9 +33,10 @@ module ROM
     # @api private
     def type(type)
       types.fetch_or_store(type) do
-        case type
-        when :configuration then PluginsContainer.new({}, type: type)
-        else AdapterPluginsContainer.new(type)
+        if Plugins[type][:adapter]
+          AdapterPluginsContainer.new(type)
+        else
+          PluginsContainer.new({}, type: type)
         end
       end
     end
@@ -100,7 +93,7 @@ module ROM
 
     # @api private
     def plugin_type
-      Plugins[type]
+      Plugins[type][:plugin_type]
     end
   end
 
