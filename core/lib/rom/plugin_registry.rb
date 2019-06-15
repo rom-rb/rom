@@ -81,16 +81,6 @@ module ROM
       elements[name] = plugin_type.new(name, mod, options)
     end
 
-    # Returns plugin name by instance
-    #
-    # @return [Symbol] Plugin name
-    #
-    # @api private
-    def plugin_name(plugin)
-      name, * = elements.find { |_, p| p.equal?(plugin) }
-      name
-    end
-
     # @api private
     def plugin_type
       Plugins[type][:plugin_type]
