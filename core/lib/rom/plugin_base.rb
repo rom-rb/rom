@@ -1,35 +1,28 @@
 # frozen_string_literal: true
 
+require 'rom/initializer'
+
 module ROM
   # Abstract plugin base
   #
   # @private
   class PluginBase
-    # @return [Symbol] plugin name
-    #
-    # @api private
-    attr_reader :name
+    extend Initializer
 
-    # @return [Module] a module representing the plugin
-    #
+    # @!attribute [r] name
+    #   @return [Symbol] plugin name
     # @api private
-    attr_reader :mod
+    param :name
 
-    # @return [Hash] configuration options
-    #
+    # @!attribute [r] mod
+    #   @return [Module] a module representing the plugin
     # @api private
-    attr_reader :options
+    param :mod
 
+    # @!attribute [r] type
+    #   @return [Symbol] plugin type
     # @api private
-    attr_reader :type
-
-    # @api private
-    def initialize(name, mod, options)
-      @name    = name
-      @mod     = mod
-      @options = options
-      @type    = options.fetch(:type)
-    end
+    option :type
 
     # @api private
     def relation?
