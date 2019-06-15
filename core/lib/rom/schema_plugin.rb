@@ -1,22 +1,10 @@
 # frozen_string_literal: true
 
-require 'rom/plugin_base'
+require 'rom/plugin'
 
 module ROM
   # @api private
-  class SchemaPlugin < PluginBase
-    include Configurable
-
-    # Apply this plugin to the provided configuration
-    #
-    # @param [ROM::Schema] schema A schema instance for extension
-    # @param [Hash] options Extension options
-    #
-    # @api private
-    def apply_to(schema, options = EMPTY_HASH)
-      mod.apply(schema, options) if mod.respond_to?(:apply)
-    end
-
+  class SchemaPlugin < Plugin
     # Extends a DSL instance with a module provided by the plugin
     #
     # @param [ROM::Schema::DSL] dsl

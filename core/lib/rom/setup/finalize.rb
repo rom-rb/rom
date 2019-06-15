@@ -77,7 +77,7 @@ module ROM
     #
     # @api private
     def load_relations(mappers)
-      global_plugins = plugins.select { |p| p.relation? || p.schema? }
+      global_plugins = plugins.select { |p| p.type == :relation || p.type == :schema }
 
       FinalizeRelations.new(
         gateways,

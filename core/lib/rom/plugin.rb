@@ -1,26 +1,44 @@
 # frozen_string_literal: true
 
+require 'rom/initializer'
 require 'rom/constants'
-require 'rom/plugin_base'
 require 'rom/support/configurable'
 
 module ROM
   # Plugin is a simple object used to store plugin configurations
   #
   # @private
-  class Plugin < PluginBase
+  class Plugin
+    extend Initializer
     include Configurable
 
-    # Apply this plugin to the provided class
+    # @!attribute [r] name
+    #   @return [Symbol] plugin name
+    # @api private
+    param :name
+
+    # @!attribute [r] mod
+    #   @return [Module] a module representing the plugin
+    # @api private
+    param :mod
+
+    # @!attribute [r] type
+    #   @return [Symbol] plugin type
+    # @api private
+    option :type
+
+    # Apply this plugin to the target
     #
-    # @param [Class] klass
+    # @param [Class,Object] target
     #
     # @api private
-    def apply_to(klass, options = EMPTY_HASH)
-      if mod.respond_to?(:new)
-        klass.send(:include, mod.new(options))
-      else
-        klass.send(:include, mod)
+    def apply_to(target, options = EMPTY_HASH)
+      if mod.respond_to?(:apply)
+        mod.apply(target, options)
+      elsif mod.respond_to?(:new)
+        target.include(mod.new(options))
+      elsif target.is_a?(::Module)
+        target.include(mod)
       end
     end
   end

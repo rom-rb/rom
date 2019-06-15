@@ -165,20 +165,19 @@ module ROM
 
       # Enables for the schema
       #
-      # @param [Symbol] plugin Plugin name
+      # @param [Symbol] plugin_name Plugin name
       # @param [Hash] options Plugin options
       #
       # @api public
-      def use(plugin, options = ::ROM::EMPTY_HASH)
-        mod = ::ROM.plugin_registry.schemas.adapter(adapter).fetch(plugin)
-        app_plugin(mod, options)
+      def use(plugin_name, options = ::ROM::EMPTY_HASH)
+        plugin = ::ROM.plugin_registry[:schema].fetch(plugin_name, adapter)
+        app_plugin(plugin, options)
       end
 
       # @api private
       def app_plugin(plugin, options = ::ROM::EMPTY_HASH)
-        plugin_name = ::ROM.plugin_registry.schemas.adapter(adapter).plugin_name(plugin)
         plugin.extend_dsl(self)
-        @plugins[plugin_name] = [plugin, plugin.config.to_hash.merge(options)]
+        @plugins[plugin.name] = [plugin, plugin.config.to_hash.merge(options)]
       end
 
       # @api private
@@ -187,9 +186,9 @@ module ROM
         instance_exec(&definition) if definition
 
         schema_class.define(relation, opts) do |schema|
-          plugins.values.each { |(plugin, options)|
+          plugins.values.each do |plugin, options|
             plugin.apply_to(schema, options)
-          }
+          end
         end
       end
 

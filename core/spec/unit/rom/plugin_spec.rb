@@ -46,7 +46,8 @@ RSpec.describe "ROM::PluginRegistry" do
   end
 
   it "makes configuration plugins available" do
-    expect(ROM.plugin_registry.configuration[:registration].mod).to eq Test::ConfigurationPlugin
+    expect(ROM.plugin_registry[:configuration].fetch(:registration).mod)
+      .to eq Test::ConfigurationPlugin
   end
 
   it "includes relation plugins" do

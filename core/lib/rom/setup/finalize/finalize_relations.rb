@@ -126,12 +126,12 @@ module ROM
 
       # @api private
       def relation_plugins
-        @plugins.select(&:relation?)
+        @plugins.select { |p| p.type == :relation }
       end
 
       # @api private
       def schema_plugins
-        @plugins.select(&:schema?)
+        @plugins.select { |p| p.type == :schema }
       end
 
       # @api private

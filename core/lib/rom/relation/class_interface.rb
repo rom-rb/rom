@@ -249,7 +249,7 @@ module ROM
       #
       # @api public
       def use(plugin, options = EMPTY_HASH)
-        ROM.plugin_registry.relations.fetch(plugin, adapter).apply_to(self, options)
+        ROM.plugin_registry[:relation].fetch(plugin, adapter).apply_to(self, options)
       end
 
       # Build default mapper registry

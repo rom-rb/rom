@@ -1,54 +1,20 @@
 # frozen_string_literal: true
 
+require 'concurrent/map'
 require 'rom/registry'
+require 'rom/plugins'
 
 module ROM
   # Stores all registered plugins
   #
   # @api private
   class PluginRegistry
-    # Internal registry for configuration plugins
-    #
-    # @return [ConfigurationPluginRegistry]
-    #
     # @api private
-    attr_reader :configuration
-
-    # Internal registry for command plugins
-    #
-    # @return [InternalPluginRegistry]
-    #
-    # @api private
-    attr_reader :commands
-
-    # Internal registry for mapper plugins
-    #
-    # @return [InternalPluginRegistry]
-    #
-    # @api private
-    attr_reader :mappers
-
-    # Internal registry for relation plugins
-    #
-    # @return [InternalPluginRegistry]
-    #
-    # @api private
-    attr_reader :relations
-
-    # Internal registry for schema plugins
-    #
-    # @return [InternalPluginRegistry]
-    #
-    # @api private
-    attr_reader :schemas
+    attr_reader :types
 
     # @api private
     def initialize
-      @configuration = ConfigurationPluginRegistry.new
-      @mappers = InternalPluginRegistry.new
-      @commands = InternalPluginRegistry.new
-      @relations = InternalPluginRegistry.new
-      @schemas = InternalPluginRegistry.new(SchemaPlugin)
+      @types = ::Concurrent::Map.new
     end
 
     # Register a plugin for future use
@@ -61,24 +27,35 @@ module ROM
     # @option options [Symbol] :adapter (:default) which adapter this plugin
     # applies to. Leave blank for all adapters
     def register(name, mod, options = EMPTY_HASH)
-      type    = options.fetch(:type)
-      adapter = options.fetch(:adapter, :default)
-
-      plugins_for(type, adapter).register(name, mod, options)
+      type(options.fetch(:type)).register(name, mod, options)
     end
 
-    private
+    # @api private
+    def type(type)
+      types.fetch_or_store(type) do
+        if Plugins[type][:adapter]
+          AdapterPluginsContainer.new(type)
+        else
+          PluginsContainer.new({}, type: type)
+        end
+      end
+    end
 
-    # Determine which specific registry to use
+    # @api private
+    def [](type)
+      types.fetch(singularize(type))
+    end
+
+    # Old API compatibility
     #
     # @api private
-    def plugins_for(type, adapter)
+    def singularize(type)
       case type
-      when :configuration then configuration
-      when :command       then commands.adapter(adapter)
-      when :mapper        then mappers.adapter(adapter)
-      when :relation      then relations.adapter(adapter)
-      when :schema        then schemas.adapter(adapter)
+      when :relations then :relation
+      when :commands then :command
+      when :mappers then :mapper
+      when :schemas then :schema
+      else type
       end
     end
   end
@@ -86,23 +63,12 @@ module ROM
   # Abstract registry defining common behaviour
   #
   # @api private
-  class PluginRegistryBase < Registry
-    include Dry::Equalizer(:elements, :plugin_type)
+  class PluginsContainer < Registry
+    include Dry::Equalizer(:elements, :type)
 
     # @!attribute [r] plugin_type
     #   @return [Class] Typically ROM::PluginBase or its descendant
-    option :plugin_type
-
-    # Retrieve a registered plugin
-    #
-    # @param [Symbol] name The plugin to retrieve
-    #
-    # @return [Plugin]
-    #
-    # @api public
-    def [](name)
-      elements[name]
-    end
+    option :type
 
     # Assign a plugin to this environment registry
     #
@@ -112,52 +78,19 @@ module ROM
     #
     # @api private
     def register(name, mod, options)
-      elements[name] = plugin_type.new(mod, options)
+      elements[name] = plugin_type.new(name, mod, options)
     end
 
-    # Returns plugin name by instance
-    #
-    # @return [Symbol] Plugin name
-    #
     # @api private
-    def plugin_name(plugin)
-     tuple = elements.find { |(_, p)| p.equal?(plugin) }
-     tuple[0] if tuple
+    def plugin_type
+      Plugins[type][:plugin_type]
     end
-  end
-
-  # A registry storing environment specific plugins
-  #
-  # @api private
-  class ConfigurationPluginRegistry < PluginRegistryBase
-    # @api private
-    def initialize(*args, **kwargs)
-      super(*args, **kwargs, plugin_type: ConfigurationPlugin)
-    end
-
-    # Return an environment plugin
-    #
-    # @param [Symbol] name The name of the environment plugin
-    #
-    # @raise [UnknownPluginError] if no plugin is found with the given name
-    #
-    # @api public
-    def fetch(name)
-      self[name] || raise(UnknownPluginError, name)
-    end
-  end
-
-  # A registry storing adapter specific plugins
-  #
-  # @api private
-  class AdapterPluginRegistry < PluginRegistryBase
-    option :plugin_type, default: -> { Plugin }
   end
 
   # Store a set of registries grouped by adapter
   #
   # @api private
-  class InternalPluginRegistry
+  class AdapterPluginsContainer
     # Return the existing registries
     #
     # @return [Hash]
@@ -166,8 +99,12 @@ module ROM
     attr_reader :registries
 
     # @api private
-    def initialize(plugin_type = Plugin)
-      @registries = Hash.new { |h, v| h[v] = AdapterPluginRegistry.new({}, plugin_type: plugin_type) }
+    attr_reader :type
+
+    # @api private
+    def initialize(type)
+      @registries = ::Hash.new { |h, v| h[v] = PluginsContainer.new({}, type: type) }
+      @type = type
     end
 
     # Return the plugin registry for a specific adapter
@@ -181,6 +118,11 @@ module ROM
       registries[name]
     end
 
+    # @api private
+    def register(name, mod, options)
+      adapter(options.fetch(:adapter, :default)).register(name, mod, options)
+    end
+
     # Return the plugin for a given adapter
     #
     # @param [Symbol] name The name of the plugin
@@ -190,8 +132,11 @@ module ROM
     #
     # @api public
     def fetch(name, adapter_name = :default)
-      adapter(adapter_name)[name] || adapter(:default)[name] ||
-        raise(UnknownPluginError, name)
+      adapter(adapter_name).fetch(name) do
+        adapter(:default).fetch(name) do
+          raise(UnknownPluginError, name)
+        end
+      end
     end
 
     alias_method :[], :fetch
