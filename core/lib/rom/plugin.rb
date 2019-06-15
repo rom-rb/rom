@@ -27,16 +27,6 @@ module ROM
     # @api private
     option :type
 
-    # @api private
-    def relation?
-      type == :relation
-    end
-
-    # @api private
-    def schema?
-      type == :schema
-    end
-
     # Apply this plugin to the target
     #
     # @param [Class,Object] target

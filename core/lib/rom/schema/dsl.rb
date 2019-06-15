@@ -186,9 +186,9 @@ module ROM
         instance_exec(&definition) if definition
 
         schema_class.define(relation, opts) do |schema|
-          plugins.values.each { |plugin, options|
+          plugins.values.each do |plugin, options|
             plugin.apply_to(schema, options)
-          }
+          end
         end
       end
 
