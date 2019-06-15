@@ -116,6 +116,11 @@ module ROM
         end
       end
 
+      # @api public
+      def use(plugin, options = EMPTY_HASH)
+        ROM.plugin_registry[:repository].fetch(plugin).apply_to(self, options)
+      end
+
       private
 
       # @api private
