@@ -1,3 +1,23 @@
+# 5.1.0 to-be-released
+
+## rom-core
+
+### Fixed
+
+* Combining same relation multiple times no longer crashes auto-mapping (fixes #547) (@solnic)
+
+### Changed
+
+* Plugin API has been generalized to enable arbitrary component plugins (@flash-gordon)
+
+## rom-repository
+
+### Added
+
+* Plugin API :tada: (@flash-gordon)
+
+[Compare v5.0.2...v5.1.0](https://github.com/rom-rb/rom/compare/v5.0.2...v5.1.0)
+
 # 5.0.2 2019-05-01
 
 ## rom
