@@ -7,7 +7,6 @@ require 'rom/version'
 require 'rom/constants'
 
 # core parts
-require 'rom/configuration_plugin'
 require 'rom/plugin'
 require 'rom/schema_plugin'
 require 'rom/relation'
@@ -30,13 +29,12 @@ require 'rom/create_container'
 
 # register known plugin types
 require 'rom/schema_plugin'
-require 'rom/configuration_plugin'
 
 ROM::Plugins.register(:command)
 ROM::Plugins.register(:mapper)
 ROM::Plugins.register(:relation)
 ROM::Plugins.register(:schema, plugin_type: ROM::SchemaPlugin)
-ROM::Plugins.register(:configuration, plugin_type: ROM::ConfigurationPlugin, adapter: false)
+ROM::Plugins.register(:configuration, adapter: false)
 
 # register core plugins
 require 'rom/plugins/relation/registry_reader'
