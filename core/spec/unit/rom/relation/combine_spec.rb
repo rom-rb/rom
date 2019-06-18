@@ -67,6 +67,18 @@ RSpec.describe ROM::Relation, '#combine' do
       expect(relation.root).to be(users)
       expect(relation.nodes).to eql([tasks])
     end
+
+    it 'allows combining the same assoc multiple times' do
+      tasks_node = double(:tasks_node)
+
+      expect(tasks_assoc).to receive(:node).and_return(tasks_node)
+      expect(tasks_node).to receive(:eager_load).with(tasks_assoc).and_return(tasks)
+
+      relation = users.combine(:tasks).combine(:tasks)
+
+      expect(relation.root).to be(users)
+      expect(relation.nodes).to eql([tasks])
+    end
   end
 
   context 'with a hash with nested assocs' do

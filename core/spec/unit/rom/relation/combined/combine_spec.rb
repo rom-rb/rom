@@ -6,19 +6,19 @@ RSpec.describe ROM::Relation::Combined, '#combine' do
   end
 
   let(:users) do
-    ROM::Relation.new([])
+    ROM::Relation.new([], name: ROM::Relation::Name[:users])
   end
 
   let(:tasks) do
-    ROM::Relation.new([])
+    ROM::Relation.new([], name: ROM::Relation::Name[:tasks])
   end
 
   let(:posts) do
-    ROM::Relation.new([])
+    ROM::Relation.new([], name: ROM::Relation::Name[:posts])
   end
 
   let(:tags) do
-    ROM::Relation.new([])
+    ROM::Relation.new([], name: ROM::Relation::Name[:tags])
   end
 
   it 'returns another combined relation with nodes appended' do
