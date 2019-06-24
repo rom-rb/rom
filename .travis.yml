@@ -30,6 +30,7 @@ env:
   global:
     - COVERAGE='true'
   matrix:
+    - USE_TRANSPROC_MASTER=false
     - USE_TRANSPROC_MASTER=true
   
 notifications:
