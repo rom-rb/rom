@@ -29,6 +29,9 @@ rvm:
 env:
   global:
     - COVERAGE='true'
+  matrix:
+    - USE_TRANSPROC_MASTER=true
+  
 notifications:
   webhooks:
     urls:

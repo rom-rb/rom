@@ -12,6 +12,10 @@ COMPONENTS.each do |component|
   gem "rom-#{component}", path: Pathname(__dir__).join(component).realpath
 end
 
+if ENV['USE_TRANSPROC_MASTER'].eql?('true')
+  gem 'transproc', github: 'solnic/transproc', branch: 'master'
+end
+
 group :sql do
   gem 'sequel', '~> 5.0'
   gem 'sqlite3', platforms: :mri
