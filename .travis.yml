@@ -1,6 +1,6 @@
 language: ruby
-sudo: false
-before_install: gem update --system
+services:
+  - postgresql
 install:
   - cd $TRAVIS_BUILD_DIR/core
   - bundle install --without sql benchmarks console tools --gemfile ./Gemfile
@@ -32,6 +32,10 @@ env:
   matrix:
     - USE_TRANSPROC_MASTER=false
     - USE_TRANSPROC_MASTER=true
+
+matrix:
+  allow_failures:
+    - rvm: jruby-9.2.7.0
   
 notifications:
   webhooks:
