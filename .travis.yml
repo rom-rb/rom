@@ -1,4 +1,5 @@
 language: ruby
+cache: bundler
 services:
   - postgresql
 install:
@@ -27,9 +28,7 @@ rvm:
   - 2.4.6
   - jruby-9.2.7.0
   - truffleruby
-matrix:
-  allow_failures:
-    - rvm: truffleruby
+
 env:
   global:
     - COVERAGE='true'
@@ -42,7 +41,8 @@ env:
 matrix:
   allow_failures:
     - rvm: jruby-9.2.7.0
-  
+    - rvm: truffleruby
+
 notifications:
   webhooks:
     urls:
