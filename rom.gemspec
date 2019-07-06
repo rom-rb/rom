@@ -10,6 +10,12 @@ Gem::Specification.new do |gem|
   gem.version     = ROM::VERSION.dup
   gem.files       = Dir['CHANGELOG.md', 'LICENSE', 'README.md', 'lib/**/*']
   gem.license     = 'MIT'
+  gem.metadata    = {
+    'source_code_uri'   => 'https://github.com/rom-rb/rom',
+    'documentation_uri' => 'https://api.rom-rb.org/rom/',
+    'mailing_list_uri'  => 'https://discourse.rom-rb.org/',
+    'bug_tracker_uri'   => 'https://github.com/rom-rb/rom/issues',
+  }
 
   gem.add_runtime_dependency 'rom-core', '~> 5.0', '>= 5.0.2'
   gem.add_runtime_dependency 'rom-repository', '~> 5.0'
