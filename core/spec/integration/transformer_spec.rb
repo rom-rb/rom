@@ -20,8 +20,7 @@ RSpec.describe ROM::Transformer do
 
   let(:mapper_class) do
     Class.new(ROM::Transformer) do
-      relation :users
-      register_as :default
+      relation :users, as: :default
 
       map do
         rename_keys user_id: :id
