@@ -15,6 +15,25 @@ module ROM
 
     defines :relation, :register_as
 
+    # Define transformation pipeline
+    #
+    # @example
+    #   class UsersMapper < ROM::Transformer
+    #     map do
+    #       rename_keys user_id: :id
+    #       deep_stringify_keys
+    #     end
+    #   end
+    #
+    # @return [self]
+    #
+    # @api public
+    def self.map(&block)
+      define! do
+        map_array(&block)
+      end
+    end
+
     # This is needed to make transformers compatible with rom setup
     #
     # @api private

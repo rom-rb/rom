@@ -23,7 +23,7 @@ RSpec.describe ROM::Transformer do
       relation :users
       register_as :default
 
-      map_array do
+      map do
         rename_keys user_id: :id
       end
     end
