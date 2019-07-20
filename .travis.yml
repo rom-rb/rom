@@ -32,6 +32,8 @@ env:
   matrix:
     - USE_TRANSPROC_MASTER=false
     - USE_TRANSPROC_MASTER=true
+    - USE_ROM_SQL_MASTER=false
+    - USE_ROM_SQL_MASTER=true
 
 matrix:
   allow_failures:

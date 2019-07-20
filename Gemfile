@@ -22,8 +22,13 @@ group :sql do
   gem 'jdbc-sqlite3', platforms: :jruby
   gem 'jdbc-postgres', platforms: :jruby
   gem 'pg', platforms: :mri
-  gem 'rom-sql', github: 'rom-rb/rom-sql', branch: 'master'
   gem 'dry-monitor'
+
+  if ENV['USE_ROM_SQL_MASTER'].eql?('true')
+    gem 'rom-sql', github: 'rom-rb/rom-sql', branch: 'master'
+  else
+    gem 'rom-sql', '~> 3.0'
+  end
 end
 
 group :test do
