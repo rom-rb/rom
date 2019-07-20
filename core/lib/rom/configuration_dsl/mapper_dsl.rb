@@ -3,7 +3,7 @@
 require 'rom/mapper/builder'
 
 module ROM
-  class Mapper
+  module ConfigurationDSL
     # Mapper definition DSL used by Setup DSL
     #
     # @private
@@ -30,7 +30,7 @@ module ROM
       #
       # @api public
       def define(name, options = EMPTY_HASH, &block)
-        @defined_mappers << Builder.build_class(name, (@mapper_classes + @defined_mappers), options, &block)
+        @defined_mappers << Mapper::Builder.build_class(name, (@mapper_classes + @defined_mappers), options, &block)
         self
       end
 

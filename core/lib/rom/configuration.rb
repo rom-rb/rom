@@ -54,8 +54,6 @@ module ROM
       @notifications = Notifications.event_bus(:configuration)
       @setup = Setup.new(notifications)
 
-      use :mappers # enable mappers by default
-
       block.call(self) if block
     end
 
