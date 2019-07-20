@@ -40,11 +40,8 @@ group :docs do
 end
 
 group :tools do
-  gem 'pry', platforms: :jruby
-
-  platform :mri do
-    gem 'pry-byebug'
-  end
+  gem 'pry'
+  gem 'pry-byebug', platforms: :mri
 end
 
 group :benchmarks do
