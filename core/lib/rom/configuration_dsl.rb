@@ -2,6 +2,7 @@
 
 require 'rom/configuration_dsl/relation'
 require 'rom/configuration_dsl/command_dsl'
+require 'rom/configuration_dsl/mapper_dsl'
 
 module ROM
   # This extends Configuration class with the DSL methods
@@ -49,6 +50,13 @@ module ROM
     # @api public
     def commands(name, &block)
       register_command(*CommandDSL.new(name, default_adapter, &block).command_classes)
+    end
+
+    # Mapper definition DSL
+    #
+    # @api public
+    def mappers(&block)
+      register_mapper(*MapperDSL.new(self, mapper_classes, block).mapper_classes)
     end
 
     # Configures a plugin for a specific adapter to be enabled for all relations

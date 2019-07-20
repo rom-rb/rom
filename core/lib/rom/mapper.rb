@@ -2,7 +2,6 @@
 
 require 'rom/constants'
 require 'rom/mapper/dsl'
-require 'rom/mapper/configuration_plugin'
 
 module ROM
   # Mapper is a simple object that uses transformers to load relations
