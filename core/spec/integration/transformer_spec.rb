@@ -2,11 +2,7 @@ require 'rom'
 require 'rom/transformer'
 
 RSpec.describe ROM::Transformer do
-  subject(:mapper) do
-    rom.mappers[:users][:default]
-  end
-
-  let(:relation) do
+  subject(:relation) do
     rom.relations[:users]
   end
 
@@ -14,17 +10,27 @@ RSpec.describe ROM::Transformer do
     ROM.container(:memory) do |config|
       config.relation(:users)
 
-      config.register_mapper(mapper_class)
+      config.register_mapper(default_mapper)
+      config.register_mapper(json_mapper)
     end
   end
 
-  let(:mapper_class) do
+  let(:default_mapper) do
     Class.new(ROM::Transformer) do
-      relation :users
-      register_as :default
+      relation :users, as: :default
 
-      map_array do
+      map do
         rename_keys user_id: :id
+      end
+    end
+  end
+
+  let(:json_mapper) do
+    Class.new(default_mapper) do
+      relation :users, as: :json
+
+      map do
+        deep_stringify_keys
       end
     end
   end
@@ -32,6 +38,7 @@ RSpec.describe ROM::Transformer do
   it 'works with rom container' do
     relation.insert(user_id: 1, name: 'Jane')
 
-    expect(relation.map_with(:default).to_a).to include(id: 1, name: 'Jane')
+    expect(relation.map_with(:default).to_a).to eql([id: 1, name: 'Jane'])
+    expect(relation.map_with(:json).to_a).to eql(['id' => 1, 'name' => 'Jane'])
   end
 end
