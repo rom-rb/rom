@@ -73,6 +73,13 @@ module ROM
       }
     end
 
+    # Enable a plugin for the changeset
+    #
+    # @api public
+    def self.use(plugin, options = EMPTY_HASH)
+      ROM.plugin_registry[:changeset].fetch(plugin).apply_to(self, options)
+    end
+
     # Return a new changeset with provided relation
     #
     # New options can be provided too
@@ -127,3 +134,7 @@ require 'rom/changeset/associated'
 require 'rom/changeset/create'
 require 'rom/changeset/update'
 require 'rom/changeset/delete'
+
+require 'rom/plugins'
+
+ROM::Plugins.register(:changeset, adapter: false)
