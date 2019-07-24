@@ -236,7 +236,7 @@ module ROM
 
       # @api public
       def command
-        relation.command(command_type, DEFAULT_COMMAND_OPTS.merge(result: result))
+        relation.command(command_type, command_options.merge(result: result))
       end
 
       # Return string representation of the changeset

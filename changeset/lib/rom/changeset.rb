@@ -37,6 +37,19 @@ module ROM
     #     @return [Symbol]
     defines :command_type
 
+    # @!method self.command_options
+    #   Get or set command options
+    #
+    #   @overload command_options
+    #     Return configured command_options
+    #     @return [Hash,nil]
+    #
+    #   @overload command_options(**options)
+    #     Set command options
+    #     @param options [Hash] The command options
+    #     @return [Hash]
+    defines :command_options
+
     # @!method self.relation
     #   Get or set changeset relation identifier
     #
@@ -57,6 +70,13 @@ module ROM
     # @!attribute [r] command_type
     #   @return [Symbol] a custom command identifier
     option :command_type, default: -> { self.class.command_type }
+
+    # @!attribute [r] command_options
+    #   @return [Hash] Configured options for the command
+    option :command_options, default: -> { self.class.command_options }
+
+    # Set the default command options
+    command_options(mapper: false)
 
     # Create a changeset class preconfigured for a specific relation
     #
@@ -123,7 +143,16 @@ module ROM
     #
     # @api private
     def command
-      relation.command(command_type, DEFAULT_COMMAND_OPTS)
+      relation.command(command_type, command_options)
+    end
+
+    # Return configured command options
+    #
+    # @return [Hash]
+    #
+    # @api private
+    def command_options
+      DEFAULT_COMMAND_OPTS.merge(self.class.command_options)
     end
   end
 end
