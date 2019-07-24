@@ -234,11 +234,6 @@ module ROM
         __data__.is_a?(Array) ? :many : :one
       end
 
-      # @api public
-      def command
-        relation.command(command_type, command_options.merge(result: result))
-      end
-
       # Return string representation of the changeset
       #
       # @return [String]
@@ -246,6 +241,11 @@ module ROM
       # @api public
       def inspect
         %(#<#{self.class} relation=#{relation.name.inspect} data=#{__data__}>)
+      end
+
+      # @api private
+      def command_compiler_options
+        super.merge(result: result)
       end
 
       # Data transformation pipe
