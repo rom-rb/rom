@@ -5,6 +5,11 @@ RSpec.shared_context 'database setup' do
 
   let(:rom) { ROM.container(configuration) }
 
+  before :all do
+    Sequel.database_timezone = :utc
+    Sequel.application_timezone = :utc
+  end
+
   before do
     conn.loggers << LOGGER
   end
