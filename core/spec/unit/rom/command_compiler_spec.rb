@@ -44,6 +44,13 @@ RSpec.describe 'ROM::CommandCompiler' do
       expect(command).to be_a(ROM::Memory::Commands::Create)
     end
 
+    it 'builds commands using custom options' do
+      input = -> t { t }
+      command = compiler[:create, :memory, [:relation, users_ast], [], {}, input: input]
+      expect(command).to be_a(ROM::Memory::Commands::Create)
+      expect(command.input).to be(input)
+    end
+
     it "doesn't use a global cache" do
       args = [:create, :memory, [:relation, users_ast], [], {}, {}]
       command = compiler[*args]

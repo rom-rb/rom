@@ -187,14 +187,20 @@ module ROM
     # @return [ROM::Command]
     #
     # @api private
-    def register_command(rel_name, type, meta, parent_relation = nil)
+    def register_command(rel_name, type, rel_meta, parent_relation = nil)
       relation = relations[rel_name]
 
       type.create_class(rel_name, type) do |klass|
-        klass.result(meta.fetch(:combine_type, result))
+        klass.result(rel_meta.fetch(:combine_type, result))
 
-        if meta[:combine_type]
-          setup_associates(klass, relation, meta, parent_relation)
+        klass.input(meta.fetch(:input, relation.input_schema))
+
+        meta.each do |name, value|
+          klass.public_send(name, value)
+        end
+
+        if rel_meta[:combine_type]
+          setup_associates(klass, relation, rel_meta, parent_relation)
         end
 
         plugins.each do |plugin|
@@ -211,7 +217,7 @@ module ROM
 
         klass.extend_for_relation(relation) if klass.restrictable
 
-        registry[rel_name][type] = klass.build(relation, input: relation.input_schema)
+        registry[rel_name][type] = klass.build(relation)
       end
     end
 
