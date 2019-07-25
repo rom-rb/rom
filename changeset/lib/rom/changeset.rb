@@ -18,8 +18,6 @@ module ROM
   #
   # @abstract
   class Changeset
-    DEFAULT_COMMAND_OPTS = { mapper: false }.freeze
-
     extend Initializer
     extend Dry::Core::Cache
     extend Dry::Core::ClassAttributes
@@ -36,6 +34,32 @@ module ROM
     #     @param [Symbol] identifier The command type identifier
     #     @return [Symbol]
     defines :command_type
+
+    # @!method self.command_options
+    #   Get or set command options
+    #
+    #   @overload command_options
+    #     Return configured command_options
+    #     @return [Hash,nil]
+    #
+    #   @overload command_options(**options)
+    #     Set command options
+    #     @param options [Hash] The command options
+    #     @return [Hash]
+    defines :command_options
+
+    # @!method self.command_plugins
+    #   Get or set command plugins options
+    #
+    #   @overload command_plugins
+    #     Return configured command_plugins
+    #     @return [Hash,nil]
+    #
+    #   @overload command_plugins(**options)
+    #     Set command plugin options
+    #     @param options [Hash] The command plugin options
+    #     @return [Hash]
+    defines :command_plugins
 
     # @!method self.relation
     #   Get or set changeset relation identifier
@@ -57,6 +81,20 @@ module ROM
     # @!attribute [r] command_type
     #   @return [Symbol] a custom command identifier
     option :command_type, default: -> { self.class.command_type }
+
+    # @!attribute [r] command_options
+    #   @return [Hash] Configured options for the command
+    option :command_options, default: -> { self.class.command_options }
+
+    # @!attribute [r] command_plugins
+    #   @return [Hash] Configured plugin options for the command
+    option :command_plugins, default: -> { self.class.command_plugins }
+
+    # Set the default command options
+    command_options(mapper: false)
+
+    # Set the default command plugin options
+    command_plugins(EMPTY_HASH)
 
     # Create a changeset class preconfigured for a specific relation
     #
@@ -123,7 +161,16 @@ module ROM
     #
     # @api private
     def command
-      relation.command(command_type, DEFAULT_COMMAND_OPTS)
+      relation.command(command_type, command_compiler_options)
+    end
+
+    # Return configured command compiler options
+    #
+    # @return [Hash]
+    #
+    # @api private
+    def command_compiler_options
+      command_options.merge(use: command_plugins.keys, plugins_options: command_plugins)
     end
   end
 end
