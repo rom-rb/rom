@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe ROM::AssociationSet do
   describe '#[]' do
     let(:users) { double(:users, aliased?: false) }
