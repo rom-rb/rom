@@ -178,7 +178,7 @@ module ROM
       #
       # @api private
       def call
-        AssociationSet.new(registry)
+        AssociationSet[source.relation].new(registry)
       end
 
       private
