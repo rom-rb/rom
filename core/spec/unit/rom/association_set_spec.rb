@@ -7,7 +7,7 @@ RSpec.describe ROM::AssociationSet do
     it 'builds a class with the provided identifier' do
       klass = ROM::AssociationSet[:users]
 
-      expect(klass.name).to eql("ROM::AssociationSet[:users]")
+      expect(klass.name).to eql('ROM::AssociationSet[:users]')
     end
 
     it 'caches the class' do
