@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require 'dry/equalizer'
+require 'dry/core/cache'
+require 'dry/core/class_builder'
 
 require 'rom/initializer'
 require 'rom/cache'
@@ -10,6 +12,7 @@ module ROM
   # @api private
   class Registry
     extend Initializer
+    extend Dry::Core::Cache
 
     include Enumerable
     include Dry::Equalizer(:elements)
@@ -31,6 +34,15 @@ module ROM
         super(*args, {})
       else
         super(*args)
+      end
+    end
+
+    # @api private
+    def self.[](identifier)
+      fetch_or_store(identifier) do
+        Dry::Core::ClassBuilder
+          .new(parent: self, name: "#{name}[:#{identifier}]")
+          .call
       end
     end
 
@@ -79,6 +91,10 @@ module ROM
       end
     end
     alias_method :[], :fetch
+
+    def type
+      self.class.name
+    end
 
     # @api private
     def respond_to_missing?(name, include_private = false)

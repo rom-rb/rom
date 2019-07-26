@@ -50,7 +50,7 @@ module ROM
 
     # @api private
     def set_message(key, registry)
-      "#{key.inspect} doesn't exist in #{registry.class.name} registry"
+      "#{key.inspect} doesn't exist in #{registry.type} registry"
     end
   end
 
