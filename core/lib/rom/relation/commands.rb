@@ -19,7 +19,7 @@ module ROM
       #   users.command(:create, result: many)
       #
       # @example build a command which uses a specific plugin
-      #   users.command(:create, plugin: :timestamps)
+      #   users.command(:create, use: :timestamps)
       #
       # @example build a command which sends results through a custom mapper
       #   users.command(:create, mapper: :my_mapper_identifier)

@@ -181,7 +181,7 @@ module ROM
     #
     # @param [Symbol] rel_name A relation identifier from the container registry
     # @param [Symbol] type The command type
-    # @param [Hash] meta Meta information from relation AST
+    # @param [Hash] rel_meta Meta information from relation AST
     # @param [Symbol] parent_relation Optional parent relation identifier
     #
     # @return [ROM::Command]
