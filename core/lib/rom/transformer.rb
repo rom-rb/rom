@@ -13,7 +13,24 @@ module ROM
   class Transformer < Transproc::Transformer[ROM::Processor::Transproc::Functions]
     extend Dry::Core::ClassAttributes
 
-    defines :relation, :register_as
+    # @!method self.register_as
+    #  Get or set registration name
+    #
+    #  @overload register_as
+    #    Return the registration name
+    #    @return [Symbol]
+    #
+    #  @overload register_as(name)
+    #    Configure registration name
+    #
+    #    @example
+    #      class MyMapper < ROM::Transformer
+    #        relation :users
+    #        register_as :my_mapper
+    #      end
+    #
+    #    @param name [Symbol] The registration name
+    defines :register_as
 
     # Configure relation for the transformer
     #
