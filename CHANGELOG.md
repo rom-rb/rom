@@ -2,13 +2,30 @@
 
 ## rom-core
 
+### Added
+
+* `ROM::Transformer.map` shortcut for defining transformations (@solnic)
+* `ROM::Transformer` supports instance methods as mapping functions now (@solnic)
+* `ROM::Transformer` configuration can be now inlined ie `relation :users, as: :json_serializer` (@solnic)
+
 ### Fixed
 
 * Combining same relation multiple times no longer crashes auto-mapping (fixes #547) (@solnic)
+* `ROM::Transformer` works correctly with inheritance (@solnic)
+* `CommandCompiler` supports command options correctly now (@solnic)
 
 ### Changed
 
 * Plugin API has been generalized to enable arbitrary component plugins (@flash-gordon)
+* `ROM::Transformer.register_as` is now deprecated (@solnic)
+
+## rom-changeset
+
+### Added
+
+* Plugin API :tada: (@solnic)
+* Support for `command_options` in changesets for providing any additional command options (@solnic)
+* Support for `command_plugins` in changesets for enabling command plugins and configuring them (@solnic)
 
 ## rom-repository
 
