@@ -17,7 +17,6 @@
 ### Changed
 
 * Plugin API has been generalized to enable arbitrary component plugins (@flash-gordon)
-* `ROM::Transformer.register_as` is now deprecated (@solnic)
 
 ## rom-changeset
 
