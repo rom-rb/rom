@@ -1,4 +1,4 @@
-require File.expand_path('../lib/rom/version', __FILE__)
+require File.expand_path('../lib/rom/core/version', __FILE__)
 
 Gem::Specification.new do |gem|
   gem.name          = 'rom-core'
