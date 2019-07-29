@@ -54,7 +54,7 @@ module ROM
     def self.relation(name = Undefined, options = EMPTY_HASH)
       return @relation if name.equal?(Undefined) && defined?(@relation)
       register_as(options.fetch(:as, name))
-      super(name)
+      @relation = name
     end
 
     # Define transformation pipeline
