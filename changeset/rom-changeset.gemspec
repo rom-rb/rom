@@ -19,8 +19,8 @@ Gem::Specification.new do |gem|
   }
 
   gem.add_runtime_dependency 'dry-core', '~> 0.4'
-  gem.add_runtime_dependency 'rom-core', '~> 5.0'
-  gem.add_runtime_dependency 'transproc', '~> 1.0'
+  gem.add_runtime_dependency 'rom-core', '~> 5.1'
+  gem.add_runtime_dependency 'transproc', '~> 1.0', '>= 1.1.0'
 
   gem.add_development_dependency 'rake', '~> 11.2'
   gem.add_development_dependency 'rspec', '~> 3.5'
