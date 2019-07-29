@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'dry/core/deprecations'
 require 'dry/core/class_attributes'
 
 require 'rom/types'
@@ -32,7 +31,6 @@ module ROM
     include Dry::Equalizer(:relation, :options)
     include Commands
     include Pipeline::Operator
-
 
     # @!method self.adapter
     #   Get or set adapter identifier
