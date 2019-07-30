@@ -1,4 +1,4 @@
-# 5.1.0 to-be-released
+# 5.1.0 2019-07-30
 
 ## rom-core
 
