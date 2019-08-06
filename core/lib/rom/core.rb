@@ -3,7 +3,6 @@
 require 'dry/equalizer'
 require 'dry/core/constants'
 
-require 'rom/version'
 require 'rom/constants'
 
 # core parts
