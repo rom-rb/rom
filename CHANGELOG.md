@@ -1,3 +1,31 @@
+# 5.1.1 2019-08-06
+
+## rom
+
+### Changed
+
+* Dependency on `rom-core` was bumped to `>= 5.1.1` (@solnic)
+
+## rom-core
+
+### Fixed
+
+* Loading the gem no longer crashes in the absence of `rom` gem (issue #341) (@solnic)
+
+## rom-changeset
+
+### Changed
+
+* Dependency on `rom-core` was bumped to `>= 5.1.1` (@solnic)
+
+## rom-repository
+
+### Changed
+
+* Dependency on `rom-core` was bumped to `>= 5.1.1` (@solnic)
+
+[Compare v5.1.0...v5.1.1](https://github.com/rom-rb/rom/compare/v5.1.0...v5.1.1)
+
 # 5.1.0 2019-07-30
 
 ## rom-core
