@@ -10,7 +10,7 @@
 
 ### Fixed
 
-* Loading the gem no longer crashes in the absence of `rom` gem (issue #341) (@solnic)
+* Loading the gem no longer crashes in the absence of `rom` gem (issue #560) (@solnic)
 
 ## rom-changeset
 
