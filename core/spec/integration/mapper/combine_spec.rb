@@ -9,6 +9,8 @@ RSpec.describe 'Mapper definition DSL' do
       configuration.relation(:tasks) do
         auto_map false
 
+        schema(:tasks) { }
+
         def for_users(users)
           names = users.map { |user| user[:name] }
           restrict { |task| names.include?(task[:name]) }
@@ -21,6 +23,8 @@ RSpec.describe 'Mapper definition DSL' do
 
       configuration.relation(:users) do
         auto_map false
+
+        schema(:users) { }
 
         def addresses(_users)
           [{ city: 'NYC', user: 'Jane' }, { city: 'Boston', user: 'Joe' }]
@@ -110,9 +114,9 @@ RSpec.describe 'Mapper definition DSL' do
       Test::Address.send(:include, Dry::Equalizer(:city))
 
       result = users.combine_with(
-        tasks.for_users.combine_with(tasks.tags),
-        users.addresses,
-        users.books
+        tasks.as(:tasks).for_users.combine_with(tasks.tags.as(:tags)),
+        users.addresses.as(:addresses),
+        users.books.as(:books)
       ) >> users.mappers[:entity]
 
       expect(result).to match_array([joe, jane])
