@@ -16,7 +16,7 @@ module ROM
     #
     # @api private
     class Name
-      include Dry::Equalizer(:relation, :dataset)
+      include Dry::Equalizer(:relation, :dataset, :key)
 
       # Coerce an object to a Name instance
       #
