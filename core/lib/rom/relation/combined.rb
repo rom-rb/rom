@@ -22,7 +22,7 @@ module ROM
       # @api public
       def self.new(relation, nodes)
         struct_ns = relation.options[:struct_namespace]
-        new_nodes = nodes.uniq.map { |node| node.struct_namespace(struct_ns) }
+        new_nodes = nodes.uniq(&:name).map { |node| node.struct_namespace(struct_ns) }
 
         root =
           if relation.is_a?(self)

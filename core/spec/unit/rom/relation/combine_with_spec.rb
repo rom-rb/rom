@@ -8,6 +8,8 @@ RSpec.describe ROM::Relation, '#combine_with' do
     Class.new(ROM::Memory::Relation) do
       auto_map false
 
+      schema(:users) { }
+
       def by_name(name)
         restrict(name: name)
       end
@@ -17,6 +19,8 @@ RSpec.describe ROM::Relation, '#combine_with' do
   let(:tasks_relation) do
     Class.new(ROM::Memory::Relation) do
       auto_map false
+
+      schema(:tasks) { }
 
       def for_users(users)
         names = users.map { |user| user[:name] }
@@ -28,6 +32,8 @@ RSpec.describe ROM::Relation, '#combine_with' do
   let(:tags_relation) do
     Class.new(ROM::Memory::Relation) do
       auto_map false
+
+      schema(:tags) { }
 
       attr_accessor :tasks
       forward :map
