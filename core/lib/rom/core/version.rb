@@ -2,6 +2,6 @@
 
 module ROM
   module Core
-    VERSION = '5.1.3'
+    VERSION = '5.1.2'
   end
 end
