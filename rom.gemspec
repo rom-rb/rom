@@ -17,7 +17,7 @@ Gem::Specification.new do |gem|
     'bug_tracker_uri'   => 'https://github.com/rom-rb/rom/issues',
   }
 
-  gem.add_runtime_dependency 'rom-core', '~> 5.1', '>= 5.1.1'
+  gem.add_runtime_dependency 'rom-core', '~> 5.1', '>= 5.1.2'
   gem.add_runtime_dependency 'rom-repository', '~> 5.1'
   gem.add_runtime_dependency 'rom-changeset', '~> 5.1'
 
