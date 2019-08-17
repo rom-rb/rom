@@ -12,6 +12,20 @@ RSpec.describe ROM::StructCompiler, '#call' do
   end
 
   context 'ROM::Struct' do
+    it 'generates valid class name in the default namespace' do
+      ast = [
+        :statuses,
+        [
+          [:attribute, attr_ast(:id, :Integer)],
+          [:attribute, attr_ast(:name, :String)]
+        ]
+      ]
+
+      struct = struct_compiler[*ast, ROM::Struct]
+
+      expect(struct.name).to eql('ROM::Struct::Status')
+    end
+
     it 'generates a struct for a given relation name and columns' do
       struct = struct_compiler[*input, ROM::Struct]
 
