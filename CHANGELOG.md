@@ -12,6 +12,7 @@
 
 * Filtering out duplicated combine nodes works correctly with aliased nodes (@solnic)
 * Filtering out duplicated combine nodes should no longer cause performance issues (@solnic)
+* Relation names are properly equalized now (@solnic)
 * Inferring class name for auto-structs works correctly with `:statuses` and `:aliases` relation names (@solnic)
 
 ## rom-changeset
