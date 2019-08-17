@@ -104,7 +104,7 @@ module ROM
 
     # @api private
     def class_name(name)
-      Inflector.classify(Inflector.singularize(name))
+      Inflector.classify(name)
     end
   end
 end
