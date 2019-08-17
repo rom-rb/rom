@@ -1,3 +1,33 @@
+# 5.1.2 2019-08-17
+
+## rom
+
+### Changed
+
+* Dependency on `rom-core` was bumped to `>= 5.1.2` (@solnic)
+
+## rom-core
+
+### Fixed
+
+* Filtering out duplicated combine nodes works correctly with aliased nodes (@solnic)
+* Filtering out duplicated combine nodes should no longer cause performance issues (@solnic)
+* Inferring class name for auto-structs works correctly with `:statuses` and `:aliases` relation names (@solnic)
+
+## rom-changeset
+
+### Changed
+
+* Dependency on `rom-core` was bumped to `>= 5.1.2` (@solnic)
+
+## rom-repository
+
+### Changed
+
+* Dependency on `rom-core` was bumped to `>= 5.1.2` (@solnic)
+
+[Compare v5.1.1...v5.1.2](https://github.com/rom-rb/rom/compare/v5.1.1...v5.1.2)
+
 # 5.1.1 2019-08-06
 
 ## rom
