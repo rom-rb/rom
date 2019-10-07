@@ -151,7 +151,7 @@ module ROM
       #       relation :users
       #       register_as :create
       #
-      #       before my_hook: { arg1: 1, arg1: 2 }
+      #       before my_hook: { arg1: 1, arg2: 2 }
       #
       #       def my_hook(tuple, arg1:, arg2:)
       #         puts "hook called with args: #{arg1} and #{arg2}"
