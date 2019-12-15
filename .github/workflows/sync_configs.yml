@@ -1,0 +1,30 @@
+# this file is managed by rom-rb/devtools project
+
+name: sync_configs
+
+on:
+  repository_dispatch:
+
+jobs:
+  sync-configs:
+    runs-on: ubuntu-latest
+    if: github.event.action == 'sync_configs'
+    steps:
+      - uses: actions/checkout@v1
+      - name: Update configuration files from devtools
+        env:
+          GITHUB_LOGIN: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          git clone https://github.com/rom-rb/devtools.git tmp/devtools
+
+          rsync -av tmp/devtools/shared/ .
+
+          git config --local user.email "rom-bot@rom-rb.org"
+          git config --local user.name "rom-bot"
+          git add -A
+          git commit -m "[devtools] config sync" || echo "nothing changed"
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GH_PAT }}
