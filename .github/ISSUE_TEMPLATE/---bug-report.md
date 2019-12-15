@@ -11,10 +11,6 @@ assignees: ''
 
 For more information see [our contribution guidelines](https://github.com/rom-rb/rom/blob/master/CONTRIBUTING.md)
 
-**Before you report**
-
-:warning: If you have a problem related to a schema, please **report it under [dry-schema issues](https://github.com/rom-rb/dry-schema/issues/new?assignees=&labels=bug&template=---bug-report.md&title=)** instead.
-
 **Describe the bug**
 
 A clear and concise description of what the bug is.
