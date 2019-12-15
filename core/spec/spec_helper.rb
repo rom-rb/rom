@@ -2,6 +2,10 @@ require 'pathname'
 
 SPEC_ROOT = root = Pathname(__FILE__).dirname
 
+if ENV['COVERAGE'] == 'true'
+  require 'simplecov'
+end
+
 require 'dry/core/deprecations'
 Dry::Core::Deprecations.set_logger!(SPEC_ROOT.join('../log/deprecations.log'))
 

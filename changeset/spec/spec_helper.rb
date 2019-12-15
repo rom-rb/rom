@@ -2,6 +2,10 @@ require 'pathname'
 
 SPEC_ROOT = Pathname(__FILE__).dirname
 
+if ENV['COVERAGE'] == 'true'
+  require 'simplecov'
+end
+
 require 'rom-changeset'
 require 'rom-sql'
 require 'rom-repository'
