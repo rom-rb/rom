@@ -1,0 +1,111 @@
+name: ci
+
+on:
+  push:
+    paths:
+      - .github/workflows/custom_ci.yml
+      - "**/*.rb"
+      - Gemfile
+      - "*.gemspec"
+      - ".rubocop.yml"
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  tests-mri:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby: ["2.6.x", "2.5.x", "2.4.x"]
+        runtime_deps: ["rom-sql-latest", "rom-sql-master", "transproc-latest", "transproc-master"]
+        include:
+          - ruby: "2.6.x"
+            coverage: "true"
+          - runtime_deps: "rom-sql-latest"
+            use_rom_sql_master: "false"
+          - runtime_deps: "rom-sql-master"
+            use_rom_sql_master: "true"
+          - runtime_deps: "transproc-latest"
+            use_transproc_master: "false"
+          - runtime_deps: "transproc-master"
+            use_transproc_master: "true"
+    steps:
+      - uses: actions/checkout@v1
+      - name: Install dependencies
+        run: sudo apt-get install -y --no-install-recommends libpq-dev libsqlite3-dev
+      - uses: harmon758/postgresql-action@v1
+        with:
+          postgresql version: '11'
+          postgresql db: rom_repository
+          postgresql user: runner
+      - name: Set up Ruby
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: ${{matrix.ruby}}
+      - name: Install bundler
+        run: gem install bundler
+      - name: Bundle
+        env:
+          USE_TRANSPROC_MASTER: ${{matrix.use_transproc_master}}
+          USE_ROM_SQL_MASTER: ${{matrix.use_rom_sql_master}}
+        run: bin/bundle
+      - name: Run all tests
+        env:
+          USE_TRANSPROC_MASTER: ${{matrix.use_transproc_master}}
+          USE_ROM_SQL_MASTER: ${{matrix.use_rom_sql_master}}
+          COVERAGE: ${{matrix.coverage}}
+          CODACY_RUN_LOCAL: ${{matrix.coverage}}
+          CODACY_PROJECT_TOKEN: ${{secrets.CODACY_PROJECT_TOKEN}}
+          BUNDLE_GEMFILE: ${{matrix.gemfile}}
+          BASE_DB_URI: localhost/rom_repository
+        run: bundle exec rake spec
+      - name: Download test reporter
+        if: "matrix.coverage == 'true'"
+        env:
+          CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
+        run: |
+          [ "$CC_TEST_REPORTER_ID" = "" ] && exit 0
+          mkdir -p tmp/
+          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./tmp/cc-test-reporter
+          chmod +x ./tmp/cc-test-reporter
+          ./tmp/cc-test-reporter before-build
+      - name: Send coverage results
+        if: "matrix.coverage == 'true'"
+        env:
+          CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
+          GIT_COMMIT_SHA: ${{github.sha}}
+          GIT_BRANCH: ${{github.ref}}
+          GIT_COMMITTED_AT: ${{github.event.head_commit.timestamp}}
+        run: |
+          [ "$CC_TEST_REPORTER_ID" = "" ] && exit 0
+          GIT_BRANCH=`ruby -e "puts ENV['GITHUB_REF'].split('/', 3).last"` \
+          GIT_COMMITTED_AT=`ruby -r time -e "puts Time.iso8601(ENV['GIT_COMMITTED_AT']).to_i"` \
+          ./tmp/cc-test-reporter after-build
+
+  tests-jruby:
+    runs-on: ubuntu-latest
+    container:
+      image: "jruby:9.2.9"
+    services:
+      postgres_db:
+        image: postgres:10.8
+        env:
+          POSTGRES_USER: root
+          POSTGRES_PASSWORD: ""
+          POSTGRES_DB: rom_repository
+        ports:
+        - 5432:5432
+        # needed because the postgres container does not provide a healthcheck
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+    steps:
+      - uses: actions/checkout@v1
+      - name: Install bundler
+        run: gem install bundler
+      - name: Bundle
+        run: bin/bundle
+      - name: Run all tests
+        run: bundle exec rake spec
+        env:
+          BASE_DB_URI: postgres_db/rom_repository

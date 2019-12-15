@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+for p in core repository changeset; do
+  cd $p && bundle install --without benchmarks console tools --gemfile ./Gemfile && cd ..
+done
+
+bundle install --without benchmarks console tools --gemfile ./Gemfile
