@@ -1,5 +1,5 @@
 [gem]: https://rubygems.org/gems/rom
-[travis]: https://travis-ci.com/rom-rb/rom
+[actions]: https://github.com/rom-rb/rom/actions
 [codeclimate]: https://codeclimate.com/github/rom-rb/rom
 [inchpages]: http://inch-ci.org/github/rom-rb/rom/
 [chat]: https://rom-rb.zulipchat.com
@@ -7,7 +7,7 @@
 # rom [![Join the chat at https://rom-rb.zulipchat.com](https://img.shields.io/badge/rom--rb-join%20chat-942283.svg)][chat]
 
 [![Gem Version](https://badge.fury.io/rb/rom.svg)][gem]
-[![Build Status](https://travis-ci.com/rom-rb/rom.svg?branch=master)][travis]
+[![CI Status](https://github.com/rom-rb/rom/workflows/ci/badge.svg)][actions]
 [![Code Climate](https://codeclimate.com/github/rom-rb/rom/badges/gpa.svg)][codeclimate]
 [![Test Coverage](https://codeclimate.com/github/rom-rb/rom/badges/coverage.svg)][codeclimate]
 [![Inline docs](http://inch-ci.org/github/rom-rb/rom.svg?branch=master&style=flat)][inchpages]
@@ -21,7 +21,6 @@ the full power of your database.
 Main rom gem provides following components:
 
 * [core](https://github.com/rom-rb/rom/blob/master/core/README.md) - Core and Adapter APIs
-* [mapper](https://github.com/rom-rb/rom/blob/master/mapper/README.md) - Data mappers integrated with rom-core
 * [changeset](https://github.com/rom-rb/rom/blob/master/changeset/README.md) - Changeset objects integrated with rom-core
 * [repository](https://github.com/rom-rb/rom/blob/master/repository/README.md) - Additional repository abstraction integrated with rom-core
 
