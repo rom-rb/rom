@@ -1,0 +1,34 @@
+# this file is managed by rom-rb/devtools project
+
+name: docsite
+
+on:
+  push:
+    paths:
+      - docsite/**
+      - .github/workflows/docsite.yml
+    branches:
+      - master
+      - release-**
+    tags:
+
+jobs:
+  update-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up Ruby
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: "2.6.x"
+      - name: Install dependencies
+        run: |
+          gem install bundler
+          bundle install --jobs 4 --retry 3 --without benchmarks sql
+      - name: Symlink ossy
+        run: mkdir -p bin && ln -sf "$(bundle show ossy)/bin/ossy" bin/ossy
+      - name: Trigger rom-rb.org deploy
+        env:
+          GITHUB_LOGIN: rom-bot
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+        run: bin/ossy github workflow rom-rb/rom-rb.org ci

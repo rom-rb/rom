@@ -1,18 +1,11 @@
-version: "2"
+# this file is managed by rom-rb/devtools project
 
-prepare:
-  fetch:
-  - url: "https://raw.githubusercontent.com/rom-rb/devtools/master/.rubocop.yml"
-    path: ".rubocop.yml"
+version: "2"
 
 exclude_patterns:
   - "benchmarks/"
   - "examples/"
   - "spec/"
-  - "*/spec/"
-  - "*/examples/"
-  - "*/benchmarks/"
-  - "!*.rb"
 
 plugins:
   rubocop:
