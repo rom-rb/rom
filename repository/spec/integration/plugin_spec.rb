@@ -6,7 +6,7 @@ RSpec.describe 'repository plugin' do
 
   let(:nullify_plugin) do
     Module.new do
-      def self.apply(target, _options)
+      def self.apply(target, **)
         target.prepend(self)
       end
 

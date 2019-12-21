@@ -59,7 +59,7 @@ module ROM
           include(relation_reader)
         end
 
-        super(options.merge(container: container))
+        super(**options, container: container)
       end
 
       # Inherits configured relations and commands
@@ -70,7 +70,7 @@ module ROM
 
         return if self === Repository
 
-        klass.extend(Dry::Core::Cache)
+        klass.extend(::Dry::Core::Cache)
         klass.commands(*commands)
       end
 
@@ -117,8 +117,8 @@ module ROM
       end
 
       # @api public
-      def use(plugin, options = EMPTY_HASH)
-        ROM.plugin_registry[:repository].fetch(plugin).apply_to(self, options)
+      def use(plugin, **options)
+        ROM.plugin_registry[:repository].fetch(plugin).apply_to(self, **options)
       end
 
       private

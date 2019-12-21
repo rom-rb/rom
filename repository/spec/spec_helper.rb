@@ -6,6 +6,15 @@ if ENV['COVERAGE'] == 'true'
   require 'simplecov'
 end
 
+require 'warning'
+
+Warning.ignore(/sequel/)
+Warning.ignore(/mysql2/)
+Warning.ignore(/rspec-core/)
+Warning.ignore(/__FILE__/)
+Warning.ignore(/__LINE__/)
+Warning.process { |w| raise RuntimeError, w } unless ENV['NO_WARNING']
+
 require 'rom-sql'
 require 'rom-repository'
 
@@ -30,18 +39,6 @@ module Test
   end
 end
 
-warning_api_available = defined?(Warning)
-
-module SileneceWarnings
-  def warn(str)
-    if str['/sequel/'] || str['/rspec-core']
-      nil
-    else
-      super
-    end
-  end
-end
-
 base_db_uri = ENV.fetch("BASE_DB_URI", "localhost/rom_repository")
 
 DB_URI = if defined? JRUBY_VERSION
@@ -50,11 +47,9 @@ DB_URI = if defined? JRUBY_VERSION
            "postgres://#{base_db_uri}"
          end
 
-Warning.extend(SileneceWarnings) if warning_api_available
-
 RSpec.configure do |config|
   config.disable_monkey_patching!
-  config.warnings = warning_api_available
+  config.warnings = true
   config.filter_run_when_matching :focus
 
   config.after do

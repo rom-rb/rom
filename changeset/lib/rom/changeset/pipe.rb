@@ -27,7 +27,7 @@ module ROM
     # Composable data transformation pipe used by default in changesets
     #
     # @api private
-    class Pipe < Transproc::Transformer[PipeRegistry]
+    class Pipe < ::Transproc::Transformer[PipeRegistry]
       extend Initializer
 
       param :processor, default: -> { self.class.transproc }
@@ -43,7 +43,7 @@ module ROM
       end
 
       def bind(context)
-        if processor.is_a?(Proc)
+        if processor.is_a?(::Proc)
           self.class.new(Pipe[-> *args { context.instance_exec(*args, &processor) }])
         else
           self
@@ -78,8 +78,8 @@ module ROM
         end
       end
 
-      def new(processor, opts = EMPTY_HASH)
-        Pipe.new(processor, opts.empty? ? options : options.merge(opts))
+      def new(processor, **opts)
+        Pipe.new(processor, **options, **opts)
       end
     end
   end

@@ -76,14 +76,15 @@ RSpec.describe ROM::Changeset, '.map' do
           tuple.merge(two: next_value)
         end
 
-        map do |three: next_value, **other|
-          { three: three, **other }
+        map do |t|
+          { **t, three: t.fetch(:three) { next_value } }
         end
 
-        def initialize(*args)
+        def initialize(*)
           super
           @counter = 0
         end
+        ruby2_keywords(:initialize) if respond_to?(:ruby2_keywords, true)
 
         def default_command_type
           :test
@@ -121,14 +122,14 @@ RSpec.describe ROM::Changeset, '.map' do
 
     subject(:changeset) do
       Class.new(ROM::Changeset::Update) do
-        map do |one: |
-          { two: one + 1 }
+        map do |t|
+          { two: t[:one] + 1 }
         end
 
-        map do |two: |
-          { three: two + 1 }
+        map do |t|
+          { three: t[:two] + 1 }
         end
-      end.new(relation).with({}).data(one: 1)
+      end.new(relation).with(**{}).data(one: 1)
     end
 
     it 'applies map blocks' do

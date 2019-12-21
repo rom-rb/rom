@@ -62,6 +62,7 @@ module ROM
         super
         @root = set_relation(self.class.root)
       end
+      ruby2_keywords(:initialize) if respond_to?(:ruby2_keywords, true)
     end
   end
 end

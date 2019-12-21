@@ -17,7 +17,7 @@ RSpec.describe 'changeset plugin' do
   before do
     module Test
       module AutoTouch
-        def self.apply(target, _options)
+        def self.apply(target, **)
           target.map { add_timestamps }
         end
       end
