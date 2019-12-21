@@ -22,8 +22,8 @@ RSpec.shared_context 'plugins' do
         end
 
         module ClassInterface
-          def build(relation, options = {})
-            super(relation, options.merge(input: InputWithTimestamp.new(input)))
+          def build(relation, **options)
+            super(relation, **options, input: InputWithTimestamp.new(input))
           end
         end
 
@@ -43,8 +43,8 @@ RSpec.shared_context 'plugins' do
         end
 
         module ClassInterface
-          def build(relation, options = {})
-            super(relation, options.merge(input: UpcaseNameInput.new(options.fetch(:input))))
+          def build(relation, **options)
+            super(relation, **options, input: UpcaseNameInput.new(options.fetch(:input)))
           end
         end
 

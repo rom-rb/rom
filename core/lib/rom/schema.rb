@@ -147,7 +147,7 @@ module ROM
     # @return [Hash] A hash with `:type` and `:options` keys.
     #
     # @api private
-    def self.build_attribute_info(type, options)
+    def self.build_attribute_info(type, **options)
       {
         type: type,
         options: options

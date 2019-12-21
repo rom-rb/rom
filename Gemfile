@@ -29,7 +29,7 @@ group :sql do
   if ENV['USE_ROM_SQL_MASTER'].eql?('true')
     gem 'rom-sql', github: 'rom-rb/rom-sql', branch: 'master'
   else
-    gem 'rom-sql', '~> 3.0'
+    gem 'rom-sql', github: 'rom-rb/rom-sql', branch: 'fix-keyword-warnings'
   end
 end
 

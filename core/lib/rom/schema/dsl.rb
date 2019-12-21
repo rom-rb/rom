@@ -133,8 +133,7 @@ module ROM
                           [build_type(type_or_options, options), options]
                         end
         Schema.build_attribute_info(
-          type,
-          options.merge(name: name)
+          type, **options, name: name
         )
       end
 
