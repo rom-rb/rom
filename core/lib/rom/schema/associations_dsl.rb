@@ -59,11 +59,11 @@ module ROM
       # @see #many_to_many
       #
       # @api public
-      def one_to_many(target, options = {})
+      def one_to_many(target, **options)
         if options[:through]
-          many_to_many(target, options)
+          many_to_many(target, **options)
         else
-          add(::ROM::Associations::Definitions::OneToMany.new(source, target, options))
+          add(::ROM::Associations::Definitions::OneToMany.new(source, target, **options))
         end
       end
       alias_method :has_many, :one_to_many
@@ -84,11 +84,11 @@ module ROM
       # @see #belongs_to
       #
       # @api public
-      def one_to_one(target, options = {})
+      def one_to_one(target, **options)
         if options[:through]
-          one_to_one_through(target, options)
+          one_to_one_through(target, **options)
         else
-          add(::ROM::Associations::Definitions::OneToOne.new(source, target, options))
+          add(::ROM::Associations::Definitions::OneToOne.new(source, target, **options))
         end
       end
 
@@ -100,8 +100,8 @@ module ROM
       # @return [Associations::OneToOneThrough]
       #
       # @api public
-      def one_to_one_through(target, options = {})
-        add(::ROM::Associations::Definitions::OneToOneThrough.new(source, target, options))
+      def one_to_one_through(target, **options)
+        add(::ROM::Associations::Definitions::OneToOneThrough.new(source, target, **options))
       end
 
       # Establish a many-to-many association
@@ -117,8 +117,8 @@ module ROM
       # @see #one_to_many
       #
       # @api public
-      def many_to_many(target, options = {})
-        add(::ROM::Associations::Definitions::ManyToMany.new(source, target, options))
+      def many_to_many(target, **options)
+        add(::ROM::Associations::Definitions::ManyToMany.new(source, target, **options))
       end
 
       # Establish a many-to-one association
@@ -134,8 +134,8 @@ module ROM
       # @see #one_to_many
       #
       # @api public
-      def many_to_one(target, options = {})
-        add(::ROM::Associations::Definitions::ManyToOne.new(source, target, options))
+      def many_to_one(target, **options)
+        add(::ROM::Associations::Definitions::ManyToOne.new(source, target, **options))
       end
 
       # Shortcut for many_to_one which sets alias automatically
@@ -151,8 +151,8 @@ module ROM
       # @return [Associations::ManyToOne]
       #
       # @api public
-      def belongs_to(target, options = {})
-        many_to_one(dataset_name(target), { as: target }.merge(options))
+      def belongs_to(target, **options)
+        many_to_one(dataset_name(target), as: target, **options)
       end
 
       # Shortcut for one_to_one which sets alias automatically
@@ -168,8 +168,8 @@ module ROM
       # @return [Associations::OneToOne]
       #
       # @api public
-      def has_one(target, options = {})
-        one_to_one(dataset_name(target), { as: target }.merge(options))
+      def has_one(target, **options)
+        one_to_one(dataset_name(target), as: target, **options)
       end
 
       # Return an association set for a schema
@@ -178,7 +178,7 @@ module ROM
       #
       # @api private
       def call
-        AssociationSet[source.relation].new(registry)
+        AssociationSet[source.relation].build(registry)
       end
 
       private

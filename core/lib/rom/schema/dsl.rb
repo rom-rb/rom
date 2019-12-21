@@ -65,6 +65,7 @@ module ROM
 
         @definition = block
       end
+      ruby2_keywords(:initialize) if respond_to?(:ruby2_keywords, true)
 
       # Defines a relation attribute with its type and options.
       #
@@ -185,9 +186,9 @@ module ROM
         instance_exec(&block) if block
         instance_exec(&definition) if definition
 
-        schema_class.define(relation, opts) do |schema|
+        schema_class.define(relation, **opts) do |schema|
           plugins.values.each do |plugin, options|
-            plugin.apply_to(schema, options)
+            plugin.apply_to(schema, **options)
           end
         end
       end

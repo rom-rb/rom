@@ -30,7 +30,7 @@ RSpec.shared_examples_for 'registry fetch' do
 end
 
 RSpec.describe ROM::Registry do
-  subject(:registry) { registry_class.new(mars: mars) }
+  subject(:registry) { registry_class.build(mars: mars) }
 
   let(:mars) { double('mars') }
 

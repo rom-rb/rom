@@ -26,21 +26,25 @@ module ROM
     option :cache, default: -> { Cache.new }
 
     # @api private
-    def self.new(*args)
-      case args.size
-      when 0
-        super({}, {})
-      when 1
-        super(*args, {})
+    def self.new(*args, **kwargs)
+      if args.empty? && kwargs.empty?
+        super({}, **{})
       else
-        super(*args)
+        super
       end
+    end
+
+    # Create a registry without options
+    #
+    # @api private
+    def self.build(elements = {})
+      new(elements, **{})
     end
 
     # @api private
     def self.[](identifier)
       fetch_or_store(identifier) do
-        Dry::Core::ClassBuilder
+        ::Dry::Core::ClassBuilder
           .new(parent: self, name: "#{name}[:#{identifier}]")
           .call
       end
@@ -53,7 +57,7 @@ module ROM
 
     # @api private
     def merge(other)
-      self.class.new(Hash(other), options)
+      self.class.new(Hash(other), **options)
     end
 
     # @api private
@@ -66,7 +70,7 @@ module ROM
       new_elements = elements.each_with_object({}) do |(name, element), h|
         h[name] = yield(element)
       end
-      self.class.new(new_elements, options)
+      self.class.new(new_elements, **options)
     end
 
     # @api private

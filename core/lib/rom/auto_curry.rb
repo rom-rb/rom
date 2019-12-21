@@ -58,6 +58,7 @@ module ROM
             response
           end
         end
+        ruby2_keywords(name) if respond_to?(:ruby2_keywords, true)
       end
 
       auto_curried_methods << name

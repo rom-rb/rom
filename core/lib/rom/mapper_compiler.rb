@@ -25,12 +25,13 @@ module ROM
 
     attr_reader :mapper_options
 
-    def initialize(*args)
+    def initialize(*)
       super
       @struct_compiler = StructCompiler.new(cache: cache)
       @cache = cache.namespaced(:mappers)
       @mapper_options = self.class.mapper_options
     end
+    ruby2_keywords(:initialize) if respond_to?(:ruby2_keywords, true)
 
     def call(ast)
       cache.fetch_or_store(ast.hash) { Mapper.build(Header.coerce(*visit(ast))) }

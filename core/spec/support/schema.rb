@@ -19,21 +19,21 @@ module SchemaHelpers
   end
 
   # @todo Use this method consistently in all the test suite
-  def define_attribute(id, opts, **meta)
+  def define_attribute(id, opts, meta = {})
     type = define_type(id, **meta)
-    ROM::Attribute.new(type, opts)
+    ROM::Attribute.new(type, **opts)
   end
 
-  def define_attr_info(id, opts, **meta)
+  def define_attr_info(id, opts, meta = {})
     ROM::Schema.build_attribute_info(
       define_type(id, **meta),
-      opts
+      **opts
     )
   end
 
-  def build_assoc(type, *args)
+  def build_assoc(type, *args, **kwargs)
     klass = ROM::Inflector.classify(type)
-    definition = ROM::Associations::Definitions.const_get(klass).new(*args)
+    definition = ROM::Associations::Definitions.const_get(klass).new(*args, **kwargs)
     ROM::Memory::Associations.const_get(definition.type).new(definition, relations)
   end
 end

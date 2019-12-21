@@ -60,7 +60,7 @@ module ROM
       end
     end
 
-    EMPTY_ASSOCIATION_SET = AssociationSet.new(EMPTY_HASH).freeze
+    EMPTY_ASSOCIATION_SET = AssociationSet.build(EMPTY_HASH).freeze
 
     DEFAULT_INFERRER = Inferrer.new(enabled: false).freeze
 
@@ -157,7 +157,7 @@ module ROM
     # @api private
     def self.attributes(attributes, attr_class)
       attributes.map do |attr|
-        attr_class.new(attr[:type], attr.fetch(:options))
+        attr_class.new(attr[:type], **attr.fetch(:options))
       end
     end
 
@@ -167,6 +167,7 @@ module ROM
 
       yield(self) if block_given?
     end
+    ruby2_keywords(:initialize) if respond_to?(:ruby2_keywords, true)
 
     # Abstract method for creating a new relation based on schema definition
     #

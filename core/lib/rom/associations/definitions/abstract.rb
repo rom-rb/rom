@@ -73,12 +73,12 @@ module ROM
         # @option opts [TrueClass,FalseClass] :override Whether provided :view should override association's default view
         #
         # @api public
-        def self.new(source, target, opts = EMPTY_HASH)
+        def self.new(source, target, **opts)
           source_name = Relation::Name[source]
           target_name = resolve_target_name(target, opts)
           options = process_options(target_name, Hash[opts])
 
-          super(source_name, target_name, options)
+          super(source_name, target_name, **options)
         end
 
         # @api private

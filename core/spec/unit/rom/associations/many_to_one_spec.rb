@@ -2,7 +2,7 @@ require 'rom/associations/many_to_one'
 
 RSpec.describe ROM::Associations::ManyToOne do
   subject(:assoc) do
-    build_assoc(:many_to_one, :users, :groups, options.merge(as: :group))
+    build_assoc(:many_to_one, :users, :groups, **options, as: :group)
   end
 
   let(:options) { {} }

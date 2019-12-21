@@ -97,8 +97,8 @@ module ROM
       private
 
       # @api private
-      def __new__(relation, new_opts = EMPTY_HASH)
-        self.class.new(relation, new_opts.empty? ? options : options.merge(new_opts))
+      def __new__(relation, **new_opts)
+        self.class.new(relation, **options, **new_opts)
       end
 
       # @api private

@@ -16,6 +16,7 @@ module ROM
         obj.instance_variable_set(:'@__memoized__', MEMOIZED_HASH.dup)
         obj
       end
+      ruby2_keywords(:new) if respond_to?(:ruby2_keywords, true)
     end
 
     def self.included(klass)

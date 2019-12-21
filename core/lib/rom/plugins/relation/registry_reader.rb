@@ -10,14 +10,14 @@ module ROM
       # For now this plugin is always enabled
       #
       # @api public
-      class RegistryReader < Module
-        EMPTY_REGISTRY = RelationRegistry.new(EMPTY_HASH).freeze
+      class RegistryReader < ::Module
+        EMPTY_REGISTRY = RelationRegistry.build(EMPTY_HASH).freeze
 
         # @api private
         attr_reader :relations
 
         # @api private
-        def initialize(relations)
+        def initialize(relations:)
           @relations = relations
           define_readers!
         end

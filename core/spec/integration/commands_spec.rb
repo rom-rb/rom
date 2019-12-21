@@ -36,7 +36,11 @@ RSpec.describe 'Commands' do
 
   describe 'extending command with a db-specific behavior' do
     before do
-      configuration.notifications.subscribe('configuration.commands.class.before_build') do |command:, adapter:, gateway:, dataset:|
+      configuration.notifications.subscribe('configuration.commands.class.before_build') do |event|
+        payload = event.to_h
+        command = payload.fetch(:command)
+        %i(adapter gateway dataset).each { |expected_key| payload.fetch(expected_key) }
+
         command.class_eval do
           def super_command?
             true

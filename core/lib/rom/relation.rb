@@ -417,7 +417,7 @@ module ROM
     # @param [Hash] new_opts Additional options
     #
     # @api public
-    def new(dataset, new_opts = EMPTY_HASH)
+    def new(dataset, **new_opts)
       opts =
         if new_opts.empty?
           options
@@ -427,7 +427,7 @@ module ROM
           options.merge(new_opts)
         end
 
-      self.class.new(dataset, opts)
+      self.class.new(dataset, **opts)
     end
 
     undef_method :with
@@ -450,7 +450,7 @@ module ROM
           opts
         end
 
-      new(dataset, options.merge(new_options))
+      new(dataset, **options, **new_options)
     end
 
     # Return schema's association set (empty by default)

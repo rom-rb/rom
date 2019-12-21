@@ -14,6 +14,8 @@ end
 
 if ENV['USE_TRANSPROC_MASTER'].eql?('true')
   gem 'transproc', github: 'solnic/transproc', branch: 'master'
+else
+  gem 'transproc', github: 'solnic/transproc', branch: 'fix-keyword-warnings'
 end
 
 group :sql do
@@ -35,6 +37,7 @@ group :test do
   gem 'rspec', '~> 3.6'
   gem 'codacy-coverage', require: false
   gem 'simplecov', platforms: :mri
+  gem 'warning'
 end
 
 group :docs do
