@@ -314,7 +314,7 @@ module ROM
       if curry_args.empty? && args.first.is_a?(Graph::InputEvaluator)
         Lazy[self].new(self, *args)
       else
-        self.class.build(relation, { **options, curry_args: args })
+        self.class.build(relation, **options, curry_args: args)
       end
     end
 
@@ -386,7 +386,7 @@ module ROM
     #
     # @api public
     def new(new_relation)
-      self.class.build(new_relation, {**options, source: relation})
+      self.class.build(new_relation, **options, source: relation)
     end
 
     # Check if this command has any hooks

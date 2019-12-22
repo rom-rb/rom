@@ -31,7 +31,7 @@ module ROM
           join_map[tuple].map { |other| tuple.merge(other) }
         }
 
-        self.class.new(tuples, options)
+        self.class.new(tuples, **options)
       end
 
       # Restrict a dataset

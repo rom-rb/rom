@@ -248,8 +248,8 @@ module ROM
       # @option options [Symbol] :adapter (:default) first adapter to check for plugin
       #
       # @api public
-      def use(plugin, options = EMPTY_HASH)
-        ROM.plugin_registry[:relation].fetch(plugin, adapter).apply_to(self, options)
+      def use(plugin, **options)
+        ROM.plugin_registry[:relation].fetch(plugin, adapter).apply_to(self, **options)
       end
 
       # Build default mapper registry
@@ -267,7 +267,7 @@ module ROM
             MapperCompiler
           end
 
-        MapperRegistry.new({}, { compiler: compiler.new(opts) }.merge(opts))
+        MapperRegistry.new({}, compiler: compiler.new(**opts), **opts)
       end
 
       # @api private

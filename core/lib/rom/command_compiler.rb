@@ -205,7 +205,7 @@ module ROM
 
         plugins.each do |plugin|
           plugin_options = plugins_options.fetch(plugin) { EMPTY_HASH }
-          klass.use(plugin, plugin_options)
+          klass.use(plugin, **plugin_options)
         end
 
         gateway = gateways[relation.gateway]

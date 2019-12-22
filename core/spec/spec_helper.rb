@@ -6,6 +6,12 @@ if ENV['COVERAGE'] == 'true'
   require 'simplecov'
 end
 
+require 'warning'
+
+Warning.ignore(/__FILE__/)
+Warning.ignore(/__LINE__/)
+Warning.process { |w| raise RuntimeError, w } if ENV['FAIL_ON_WARNINGS'].eql?('true')
+
 require 'dry/core/deprecations'
 Dry::Core::Deprecations.set_logger!(SPEC_ROOT.join('../log/deprecations.log'))
 

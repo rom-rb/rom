@@ -304,7 +304,7 @@ module ROM
     # @api public
     def meta(opts = nil)
       if opts
-        self.class.new(type.meta(opts), options)
+        self.class.new(type.meta(opts), **options)
       else
         type.meta
       end
@@ -367,7 +367,7 @@ module ROM
     #
     # @api public
     def optional
-      sum = self.class.new(super, options)
+      sum = self.class.new(super, **options)
       read? ? sum.meta(read: meta[:read].optional) : sum
     end
 
@@ -412,7 +412,7 @@ module ROM
         response = type.__send__(meth, *args, &block)
 
         if response.is_a?(type.class)
-          self.class.new(response, options)
+          self.class.new(response, **options)
         else
           response
         end

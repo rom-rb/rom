@@ -18,6 +18,7 @@ module ROM
         super
         @join_relation = relations[through]
       end
+      ruby2_keywords(:initialize) if respond_to?(:ruby2_keywords, true)
 
       # Adapters should implement this method
       #

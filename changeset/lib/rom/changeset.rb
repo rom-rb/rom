@@ -114,8 +114,8 @@ module ROM
     # Enable a plugin for the changeset
     #
     # @api public
-    def self.use(plugin, options = EMPTY_HASH)
-      ROM.plugin_registry[:changeset].fetch(plugin).apply_to(self, options)
+    def self.use(plugin, **options)
+      ROM.plugin_registry[:changeset].fetch(plugin).apply_to(self, **options)
     end
 
     # Return a new changeset with provided relation
@@ -128,8 +128,8 @@ module ROM
     # @return [Changeset]
     #
     # @api public
-    def new(relation, new_options = EMPTY_HASH)
-      self.class.new(relation, new_options.empty? ? options : options.merge(new_options))
+    def new(relation, **new_options)
+      self.class.new(relation, **options, **new_options)
     end
 
     # Persist changeset
@@ -161,7 +161,7 @@ module ROM
     #
     # @api private
     def command
-      relation.command(command_type, command_compiler_options)
+      relation.command(command_type, **command_compiler_options)
     end
 
     # Return configured command compiler options

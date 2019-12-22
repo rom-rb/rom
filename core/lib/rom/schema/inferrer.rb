@@ -91,7 +91,7 @@ module ROM
             attrs << if attr.type.nil?
                        attr.class.new(
                          type_lookup.(inferred, attr.name),
-                         attr.options
+                         **attr.options
                        )
                      else
                        attr

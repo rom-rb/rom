@@ -21,7 +21,7 @@ module ROM
           # @return [Command]
           #
           # @api public
-          def build(relation, options = {})
+          def build(relation, **options)
             if options.key?(:input) || !relation.schema?
               super
             else
@@ -34,7 +34,7 @@ module ROM
                   relation.input_schema
                 end
 
-              super(relation, options.merge(input: input_handler))
+              super(relation, **options, input: input_handler)
             end
           end
         end

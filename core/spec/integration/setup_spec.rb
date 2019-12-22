@@ -43,7 +43,7 @@ RSpec.describe 'Configuring ROM' do
     it 'builds empty registries if there is no schema' do
       container = ROM.container(:memory)
       expect(container.relations).to eql(ROM::RelationRegistry.new)
-      expect(container.mappers).to eql(ROM::Registry.new({}))
+      expect(container.mappers).to eql(ROM::Registry.new)
     end
   end
 

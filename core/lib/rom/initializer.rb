@@ -11,6 +11,7 @@ module ROM
       def param(*)
         super.tap { __define_with__ }
       end
+      ruby2_keywords(:param) if respond_to?(:ruby2_keywords, true)
 
       # @api private
       def option(*)
@@ -18,6 +19,7 @@ module ROM
           __define_with__ unless method_defined?(:with)
         end
       end
+      ruby2_keywords(:option) if respond_to?(:ruby2_keywords, true)
 
       # @api private
       def __define_with__
@@ -32,11 +34,11 @@ module ROM
         undef_method(:with) if method_defined?(:with)
 
         class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
-          def with(new_options = EMPTY_HASH)
+          def with(**new_options)
             if new_options.empty?
               self
             else
-              self.class.new(#{ seq_names }options.merge(new_options))
+              self.class.new(#{seq_names}**options, **new_options)
             end
           end
         RUBY

@@ -35,6 +35,7 @@ group :test do
   gem 'rspec', '~> 3.6'
   gem 'codacy-coverage', require: false
   gem 'simplecov', platforms: :mri
+  gem 'warning'
 end
 
 group :docs do

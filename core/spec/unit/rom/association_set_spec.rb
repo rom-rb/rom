@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe ROM::AssociationSet do
-  subject(:set) { ROM::AssociationSet[:projects].new(elements) }
+  subject(:set) { ROM::AssociationSet[:projects].build(elements) }
 
   describe '.[]' do
     it 'builds a class with the provided identifier' do

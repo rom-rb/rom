@@ -62,7 +62,7 @@ module ROM
       class_eval <<-RUBY, __FILE__, __LINE__ + 1
         def #{method}(*args, &block)
           return to_enum unless block
-          self.class.new(super(*args, &block), options)
+          self.class.new(super(*args, &block), **options)
         end
       RUBY
     end

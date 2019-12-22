@@ -78,7 +78,7 @@ module ROM
     #
     # @api private
     def register(name, mod, options)
-      elements[name] = plugin_type.new(name, mod, options)
+      elements[name] = plugin_type.new(name, mod, **options)
     end
 
     # @api private

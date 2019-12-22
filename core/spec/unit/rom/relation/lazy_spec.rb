@@ -109,7 +109,7 @@ RSpec.describe ROM::Relation do
     end
 
     describe 'using mappers' do
-      subject(:users) { users_relation.with(mappers: ROM::MapperRegistry.new(mappers)) }
+      subject(:users) { users_relation.with(mappers: ROM::MapperRegistry.build(mappers)) }
 
       let(:name_list) { proc { |r| r.map { |t| t[:name] } } }
       let(:upcaser) { proc { |r| r.map(&:upcase) } }

@@ -43,7 +43,7 @@ module ROM
                     "Relation with name #{key.inspect} registered more than once"
             end
 
-            klass.use(:registry_reader, relation_names)
+            klass.use(:registry_reader, relations: relation_names)
 
             notifications.trigger('configuration.relations.class.ready', relation: klass, adapter: klass.adapter)
 
@@ -105,7 +105,7 @@ module ROM
 
         options = { __registry__: registry, mappers: mapper_registry(rel_key, klass), schema: schema, **plugin_options }
 
-        klass.new(dataset, options)
+        klass.new(dataset, **options)
       end
 
       # @api private

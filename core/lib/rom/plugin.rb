@@ -32,11 +32,11 @@ module ROM
     # @param [Class,Object] target
     #
     # @api private
-    def apply_to(target, options = EMPTY_HASH)
+    def apply_to(target, **options)
       if mod.respond_to?(:apply)
-        mod.apply(target, options)
+        mod.apply(target, **options)
       elsif mod.respond_to?(:new)
-        target.include(mod.new(options))
+        target.include(mod.new(**options))
       elsif target.is_a?(::Module)
         target.include(mod)
       end

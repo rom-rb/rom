@@ -41,7 +41,7 @@ module ROM
           klass.build(relation)
         end
 
-        registry = Registry.new({})
+        registry = Registry.new
         compiler = CommandCompiler.new(@gateways, @relations, registry, notifications)
 
         @relations.each do |(name, relation)|

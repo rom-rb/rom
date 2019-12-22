@@ -7,7 +7,7 @@ RSpec.describe ROM::Relation, '#new' do
         attribute :id, ROM::Types::String, read: ROM::Types::Coercible::Integer
         attribute :name, ROM::Types::String
       end
-    end.new([], options)
+    end.new([], **options)
   end
 
   let(:options) { {} }

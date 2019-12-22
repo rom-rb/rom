@@ -26,10 +26,8 @@ module ROM
         DEFAULT_TIMESTAMPS = %i(created_at updated_at).freeze
 
         # @api private
-        def self.apply(schema, options)
-          type = options.fetch(:type, Types::Time)
-          names = options.fetch(:attributes, DEFAULT_TIMESTAMPS)
-          attributes = names.map do |name|
+        def self.apply(schema, type: Types::Time, attributes: DEFAULT_TIMESTAMPS)
+          attrs = attributes.map do |name|
             ROM::Schema.build_attribute_info(
               type.meta(source: schema.name),
               name: name
@@ -37,7 +35,7 @@ module ROM
           end
 
           schema.attributes.concat(
-            schema.class.attributes(attributes, schema.attr_class)
+            schema.class.attributes(attrs, schema.attr_class)
           )
         end
 

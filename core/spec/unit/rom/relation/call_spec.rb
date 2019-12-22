@@ -2,7 +2,7 @@ require 'rom/relation'
 
 RSpec.describe ROM::Relation, '#call' do
   subject(:relation) do
-    relation_class.new(data, options)
+    relation_class.new(data, **options)
   end
 
   let(:options) do

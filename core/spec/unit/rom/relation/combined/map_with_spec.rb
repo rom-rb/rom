@@ -21,7 +21,7 @@ RSpec.describe ROM::Relation::Combined, '#map_with' do
     end.new([{ user_id: 2, title: "John's Task" }, { user_id: 1, title: "Jane's Task" }])
   end
 
-  let(:mapper_registry) { ROM::MapperRegistry.new(mappers) }
+  let(:mapper_registry) { ROM::MapperRegistry.build(mappers) }
 
   let(:mappers) do
     { task_list: -> users {

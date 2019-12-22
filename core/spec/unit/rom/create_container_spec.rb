@@ -126,7 +126,7 @@ RSpec.describe ROM::CreateContainer, '#finalize' do
     end
 
     it 'builds empty commands' do
-      expect(container.commands).to eql(ROM::Registry.new)
+      expect(container.commands).to eql(ROM::Registry.build)
     end
   end
 end

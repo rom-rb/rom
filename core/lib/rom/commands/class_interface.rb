@@ -71,8 +71,8 @@ module ROM
       # @return [Command]
       #
       # @api public
-      def build(relation, options = EMPTY_HASH)
-        new(relation, self.options.merge(options))
+      def build(relation, **options)
+        new(relation, **self.options, **options)
       end
 
       # Create a command class with a specific type
@@ -111,8 +111,8 @@ module ROM
       # @option options [Symbol] :adapter (:default) first adapter to check for plugin
       #
       # @api public
-      def use(plugin, options = EMPTY_HASH)
-        ROM.plugin_registry[:command].fetch(plugin, adapter).apply_to(self, options)
+      def use(plugin, **options)
+        ROM.plugin_registry[:command].fetch(plugin, adapter).apply_to(self, **options)
       end
 
       # Extend a command class with relation view methods
