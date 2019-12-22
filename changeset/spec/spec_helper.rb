@@ -3,7 +3,8 @@ require 'pathname'
 SPEC_ROOT = Pathname(__FILE__).dirname
 
 if ENV['COVERAGE'] == 'true'
-  require 'simplecov'
+  require 'codacy-coverage'
+  Codacy::Reporter.start(partial: true)
 end
 
 require 'warning'

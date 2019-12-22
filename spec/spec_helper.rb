@@ -4,7 +4,7 @@ SPEC_ROOT = root = Pathname(__FILE__).dirname
 
 if ENV['COVERAGE'] == 'true'
   require 'codacy-coverage'
-  Codacy::Reporter.start
+  Codacy::Reporter.start(partial: true)
 end
 
 require 'rom/core'
