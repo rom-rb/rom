@@ -61,32 +61,14 @@ jobs:
           USE_ROM_SQL_MASTER: ${{matrix.use_rom_sql_master}}
           COVERAGE: ${{matrix.coverage}}
           CODACY_RUN_LOCAL: ${{matrix.coverage}}
-          CODACY_PROJECT_TOKEN: ${{secrets.CODACY_PROJECT_TOKEN}}
           BUNDLE_GEMFILE: ${{matrix.gemfile}}
           BASE_DB_URI: localhost/rom_repository
         run: bundle exec rake spec
-      - name: Download test reporter
-        if: "matrix.coverage == 'true'"
-        env:
-          CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
-        run: |
-          [ "$CC_TEST_REPORTER_ID" = "" ] && exit 0
-          mkdir -p tmp/
-          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./tmp/cc-test-reporter
-          chmod +x ./tmp/cc-test-reporter
-          ./tmp/cc-test-reporter before-build
       - name: Send coverage results
         if: "matrix.coverage == 'true'"
         env:
-          CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
-          GIT_COMMIT_SHA: ${{github.sha}}
-          GIT_BRANCH: ${{github.ref}}
-          GIT_COMMITTED_AT: ${{github.event.head_commit.timestamp}}
-        run: |
-          [ "$CC_TEST_REPORTER_ID" = "" ] && exit 0
-          GIT_BRANCH=`ruby -e "puts ENV['GITHUB_REF'].split('/', 3).last"` \
-          GIT_COMMITTED_AT=`ruby -r time -e "puts Time.iso8601(ENV['GIT_COMMITTED_AT']).to_i"` \
-          ./tmp/cc-test-reporter after-build
+          CODACY_PROJECT_TOKEN: ${{secrets.CODACY_PROJECT_TOKEN}}
+        run: codacy_final_reporter
 
   tests-jruby:
     runs-on: ubuntu-latest
