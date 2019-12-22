@@ -70,7 +70,7 @@ jobs:
           CODACY_PROJECT_TOKEN: ${{secrets.CODACY_PROJECT_TOKEN}}
         run: codacy_final_reporter
 
-  tests-jruby:
+  tests-others:
     runs-on: ubuntu-latest
     container:
       image: ${{matrix.image}}
