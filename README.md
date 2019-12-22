@@ -1,6 +1,6 @@
 [gem]: https://rubygems.org/gems/rom
 [actions]: https://github.com/rom-rb/rom/actions
-[codeclimate]: https://codeclimate.com/github/rom-rb/rom
+[codacy]: https://www.codacy.com/gh/rom-rb/rom
 [inchpages]: http://inch-ci.org/github/rom-rb/rom/
 [chat]: https://rom-rb.zulipchat.com
 
@@ -8,8 +8,8 @@
 
 [![Gem Version](https://badge.fury.io/rb/rom.svg)][gem]
 [![CI Status](https://github.com/rom-rb/rom/workflows/ci/badge.svg)][actions]
-[![Code Climate](https://codeclimate.com/github/rom-rb/rom/badges/gpa.svg)][codeclimate]
-[![Test Coverage](https://codeclimate.com/github/rom-rb/rom/badges/coverage.svg)][codeclimate]
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/f473a2496d6e41ed94d3fc1e96c4a486)][codacy]
+[![Codacy Badge](https://api.codacy.com/project/badge/Coverage/f473a2496d6e41ed94d3fc1e96c4a486)][codacy]
 [![Inline docs](http://inch-ci.org/github/rom-rb/rom.svg?branch=master&style=flat)][inchpages]
 [![OpenCollective](https://opencollective.com/rom/backers/badge.svg)](#backers)
 [![OpenCollective](https://opencollective.com/rom/sponsors/badge.svg)](#sponsors)
