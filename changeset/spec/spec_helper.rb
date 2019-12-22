@@ -13,7 +13,7 @@ Warning.ignore(/mysql2/)
 Warning.ignore(/rspec-core/)
 Warning.ignore(/__FILE__/)
 Warning.ignore(/__LINE__/)
-Warning.process { |w| raise RuntimeError, w } unless ENV['NO_WARNING']
+Warning.process { |w| raise RuntimeError, w } if ENV['FAIL_ON_WARNINGS'].eql?('true')
 
 require 'rom-changeset'
 require 'rom-sql'

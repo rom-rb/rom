@@ -14,8 +14,6 @@ end
 
 if ENV['USE_TRANSPROC_MASTER'].eql?('true')
   gem 'transproc', github: 'solnic/transproc', branch: 'master'
-else
-  gem 'transproc', github: 'solnic/transproc', branch: 'fix-keyword-warnings'
 end
 
 group :sql do
@@ -29,7 +27,7 @@ group :sql do
   if ENV['USE_ROM_SQL_MASTER'].eql?('true')
     gem 'rom-sql', github: 'rom-rb/rom-sql', branch: 'master'
   else
-    gem 'rom-sql', github: 'rom-rb/rom-sql', branch: 'fix-keyword-warnings'
+    gem 'rom-sql', '~> 3.0'
   end
 end
 
