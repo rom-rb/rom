@@ -19,7 +19,11 @@ jobs:
       fail-fast: false
       matrix:
         ruby: ["2.6.x", "2.5.x", "2.4.x"]
-        runtime_deps: ["rom-sql-latest", "rom-sql-master", "transproc-latest", "transproc-master"]
+        runtime_deps:
+          - "rom-sql-latest"
+          - "rom-sql-master"
+          - "transproc-latest"
+          - "transproc-master"
         include:
           - ruby: "2.6.x"
             coverage: "true"
@@ -37,7 +41,7 @@ jobs:
         run: sudo apt-get install -y --no-install-recommends libpq-dev libsqlite3-dev
       - uses: harmon758/postgresql-action@v1
         with:
-          postgresql version: '11'
+          postgresql version: "11"
           postgresql db: rom_repository
           postgresql user: runner
       - name: Set up Ruby
@@ -87,7 +91,19 @@ jobs:
   tests-jruby:
     runs-on: ubuntu-latest
     container:
-      image: "jruby:9.2.9"
+      image: ${{matrix.image}}
+    strategy:
+      fail-fast: false
+      matrix:
+        image: ["jruby:9.2.9", "ruby:rc"]
+        include:
+          - image: "jruby:9.2.9"
+            fail_on_warnings: "false"
+            use_rom_sql_master: "false"
+          - image: "ruby:rc"
+            fail_on_warnings: "true"
+            use_rom_sql_master: "true"
+
     services:
       postgres_db:
         image: postgres:10.8
@@ -96,7 +112,7 @@ jobs:
           POSTGRES_PASSWORD: ""
           POSTGRES_DB: rom_repository
         ports:
-        - 5432:5432
+          - 5432:5432
         # needed because the postgres container does not provide a healthcheck
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     steps:
@@ -105,7 +121,11 @@ jobs:
         run: gem install bundler
       - name: Bundle
         run: bin/bundle
+        env:
+          USE_ROM_SQL_MASTER: ${{matrix.use_rom_sql_master}}
       - name: Run all tests
         run: bundle exec rake spec
         env:
           BASE_DB_URI: postgres_db/rom_repository
+          FAIL_ON_WARNINGS: ${{matrix.fail_on_warnings}}
+          USE_ROM_SQL_MASTER: ${{matrix.use_rom_sql_master}}
