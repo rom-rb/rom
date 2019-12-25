@@ -32,7 +32,7 @@ Layout/MultilineMethodCallIndentation:
   Enabled: true
   EnforcedStyle: indented
 
-Layout/LineLength:
+Metrics/LineLength:
   Max: 100
 
 Metrics/MethodLength:
@@ -60,14 +60,14 @@ Style/AccessModifierDeclarations:
 Style/BlockDelimiters:
   Enabled: false
 
-Layout/FirstArrayElementIndentation:
+Layout/IndentFirstArrayElement:
   EnforcedStyle: consistent
 
 Style/ClassAndModuleChildren:
   Exclude:
     - "spec/**/*_spec.rb"
 
-Lint/SuppressedException:
+Lint/HandleExceptions:
   Exclude:
     - "spec/spec_helper.rb"
 
