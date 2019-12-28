@@ -2,6 +2,6 @@
 
 module ROM
   class Repository
-    VERSION = '5.1.2'
+    VERSION = '5.2.0'
   end
 end
