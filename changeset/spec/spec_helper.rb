@@ -16,15 +16,15 @@ Warning.ignore(/__FILE__/)
 Warning.ignore(/__LINE__/)
 Warning.process { |w| raise RuntimeError, w } if ENV['FAIL_ON_WARNINGS'].eql?('true')
 
-require 'rom-changeset'
-require 'rom-sql'
-require 'rom-repository'
-
 begin
   require 'pry'
   require 'pry-byebug'
 rescue LoadError
 end
+
+require 'rom-changeset'
+require 'rom-sql'
+require 'rom-repository'
 
 LOGGER = Logger.new(File.open('./log/test.log', 'a'))
 
