@@ -52,9 +52,9 @@ module ROM
       #     end
       #   end
       #
-      # @return [Array<Pipe>, Transproc::Function>]
+      # @return [Array<Pipe>, Dry::Transformer::Function>]
       #
-      # @see https://github.com/solnic/transproc Transproc
+      # @see https://github.com/dry-rb/dry-transformer
       #
       # @api public
       def self.map(**options, &block)
@@ -70,7 +70,7 @@ module ROM
       # @see Changeset::Stateful.map
       # @see Changeset::Stateful#extend
       #
-      # @return [Array<Pipe>, Transproc::Function>]
+      # @return [Array<Pipe>, Dry::Transformer::Function>]
       #
       # @api public
       def self.extend(*, &block)
