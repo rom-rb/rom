@@ -61,7 +61,7 @@ module ROM
     # @return [Mapper]
     #
     # @api private
-    def self.build(header = self.header, processor = :transproc)
+    def self.build(header = self.header, processor = :transformer)
       new(header, processor)
     end
 
@@ -74,7 +74,7 @@ module ROM
     end
 
     # @api private
-    def initialize(header, processor = :transproc)
+    def initialize(header, processor = :transformer)
       processor = Mapper.processors.fetch(processor)
       @transformers = self.class.headers(header).map do |hdr|
         processor.build(self, hdr)

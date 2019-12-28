@@ -1,16 +1,15 @@
 # frozen_string_literal: true
 
 require 'dry/core/class_attributes'
-require 'transproc/transformer'
+require 'dry/transformer'
 
-require 'rom/processor/transproc'
+require 'rom/processor/transformer'
 
 module ROM
-  # Transformer is a data mapper which uses Transproc's transformer DSL to define
-  # transformations.
+  # Transformer is a data mapper which uses `Dry::Transformer`'s DSL to define transformations.
   #
   # @api public
-  class Transformer < Transproc::Transformer[ROM::Processor::Transproc::Functions]
+  class Transformer < Dry::Transformer[Processor::Transformer::Functions]
     extend Dry::Core::ClassAttributes
 
     # @!method self.register_as

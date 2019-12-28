@@ -1,5 +1,5 @@
-RSpec.describe ROM::Processor::Transproc do
-  subject(:transproc) { ROM::Processor::Transproc.build(binding, header) }
+RSpec.describe ROM::Processor::Transformer do
+  subject(:transformer) { ROM::Processor::Transformer.build(binding, header) }
 
   let(:binding) { nil }
   let(:header) { ROM::Header.coerce(attributes, options) }
@@ -10,7 +10,7 @@ RSpec.describe ROM::Processor::Transproc do
     let(:relation) { [{ name: 'Jane' }, { name: 'Joe' }] }
 
     it 'returns tuples' do
-      expect(transproc[relation]).to eql(relation)
+      expect(transformer[relation]).to eql(relation)
     end
   end
 
@@ -19,7 +19,7 @@ RSpec.describe ROM::Processor::Transproc do
     let(:relation) { [{ name: :Jane, age: '1' }, { name: :Joe, age: '2' }] }
 
     it 'returns tuples' do
-      expect(transproc[relation]).to eql([
+      expect(transformer[relation]).to eql([
         { name: 'Jane', age: 1 }, { name: 'Joe', age: 2 }
       ])
     end
@@ -38,7 +38,7 @@ RSpec.describe ROM::Processor::Transproc do
     let(:relation) { [{ name: 'Jane' }, { name: 'Joe' }] }
 
     it 'returns tuples' do
-      expect(transproc[relation]).to eql([
+      expect(transformer[relation]).to eql([
         model.new(name: 'Jane'), model.new(name: 'Joe')
       ])
     end
@@ -60,7 +60,7 @@ RSpec.describe ROM::Processor::Transproc do
     end
 
     it 'returns tuples with rejected keys' do
-      expect(transproc[relation]).to eql([{ name: 'Jane' }, { name: 'Joe' }])
+      expect(transformer[relation]).to eql([{ name: 'Jane' }, { name: 'Joe' }])
     end
   end
 
@@ -78,7 +78,7 @@ RSpec.describe ROM::Processor::Transproc do
     end
 
     it 'copies without removing the original' do
-      expect(transproc[relation]).to eql([{ 'a' => 'copy', 'b' => 'copy', 'c' => 'copy' }])
+      expect(transformer[relation]).to eql([{ 'a' => 'copy', 'b' => 'copy', 'c' => 'copy' }])
     end
   end
 
@@ -107,17 +107,17 @@ RSpec.describe ROM::Processor::Transproc do
     end
 
     it 'returns tuples a new key added based on exsiting keys' do
-      expect(transproc[relation]).to eql(expected_result)
+      expect(transformer[relation]).to eql(expected_result)
     end
 
     it 'raises a configuration exception if coercer block does not exist' do
       attributes[0][1][:coercer] = nil
-      expect { transproc[relation] }.to raise_error(ROM::MapperMisconfiguredError)
+      expect { transformer[relation] }.to raise_error(ROM::MapperMisconfiguredError)
     end
 
     it 'honors the copy_keys option' do
       options.merge!({ copy_keys: true })
-      expect(transproc[relation]).to eql(copy_keys_expected_result)
+      expect(transformer[relation]).to eql(copy_keys_expected_result)
     end
   end
 
@@ -140,7 +140,7 @@ RSpec.describe ROM::Processor::Transproc do
     end
 
     it 'returns tuples with unknown keys rejected' do
-      expect(transproc[relation]).to eql([
+      expect(transformer[relation]).to eql([
         { 'name' => 'Jane',
           'tasks' => [{ 'title' => 'Task One' }, { 'title' => 'Task Two' }] },
         { 'name' => 'Joe',
@@ -161,7 +161,7 @@ RSpec.describe ROM::Processor::Transproc do
       let(:attributes) { [['name'], ['task', type: :hash, header: [[:title]]]] }
 
       it 'returns tuples' do
-        expect(transproc[relation]).to eql(relation)
+        expect(transformer[relation]).to eql(relation)
       end
     end
 
@@ -184,7 +184,7 @@ RSpec.describe ROM::Processor::Transproc do
         end
 
         it 'returns tuples' do
-          expect(transproc[relation]).to eql(relation)
+          expect(transformer[relation]).to eql(relation)
         end
       end
 
@@ -206,7 +206,7 @@ RSpec.describe ROM::Processor::Transproc do
         end
 
         it 'returns tuples' do
-          expect(transproc[relation]).to eql(relation)
+          expect(transformer[relation]).to eql(relation)
         end
       end
     end
@@ -221,7 +221,7 @@ RSpec.describe ROM::Processor::Transproc do
         end
 
         it 'returns tuples with key renamed in the nested hash' do
-          expect(transproc[relation]).to eql([
+          expect(transformer[relation]).to eql([
             { 'name' => 'Jane', :task => { title: 'Task One' } },
             { 'name' => 'Joe', :task => { title: 'Task Two' } }
           ])
@@ -237,7 +237,7 @@ RSpec.describe ROM::Processor::Transproc do
         end
 
         it 'returns tuples with key renamed in the nested hash' do
-          expect(transproc[relation]).to eql([
+          expect(transformer[relation]).to eql([
             { name: 'Jane', task: { title: 'Task One' } },
             { name: 'Joe', task: { title: 'Task Two' } }
           ])
@@ -263,7 +263,7 @@ RSpec.describe ROM::Processor::Transproc do
       end
 
       it 'returns wrapped tuples' do
-        expect(transproc[relation]).to eql([
+        expect(transformer[relation]).to eql([
           { 'name' => 'Jane', 'task' => { 'title' => 'Task One' } },
           { 'name' => 'Joe', 'task' => { 'title' => 'Task Two' } }
         ])
@@ -281,7 +281,7 @@ RSpec.describe ROM::Processor::Transproc do
       end
 
       it 'returns wrapped tuples' do
-        expect(transproc[relation]).to eql([
+        expect(transformer[relation]).to eql([
           { 'user' => { 'name' => 'Jane', 'task' => { 'title' => 'Task One' } } },
           { 'user' => { 'name' => 'Joe', 'task' => { 'title' => 'Task Two' } } }
         ])
@@ -298,7 +298,7 @@ RSpec.describe ROM::Processor::Transproc do
         end
 
         it 'returns wrapped tuples with renamed keys' do
-          expect(transproc[relation]).to eql([
+          expect(transformer[relation]).to eql([
             { 'name' => 'Jane', 'task' => { title: 'Task One' } },
             { 'name' => 'Joe', 'task' => { title: 'Task Two' } }
           ])
@@ -314,7 +314,7 @@ RSpec.describe ROM::Processor::Transproc do
         end
 
         it 'returns wrapped tuples with all keys renamed' do
-          expect(transproc[relation]).to eql([
+          expect(transformer[relation]).to eql([
             { name: 'Jane', task: { title: 'Task One' } },
             { name: 'Joe', task: { title: 'Task Two' } }
           ])
@@ -339,7 +339,7 @@ RSpec.describe ROM::Processor::Transproc do
       end
 
       it 'returns unwrapped tuples' do
-        expect(transproc[relation]).to eql([
+        expect(transformer[relation]).to eql([
           { 'name' => 'Leo', 'task' => { 'title' => 'Task 1' } },
           { 'name' => 'Joe', 'task' => { 'title' => 'Task 2' } }
         ])
@@ -355,7 +355,7 @@ RSpec.describe ROM::Processor::Transproc do
         end
 
         it 'returns unwrapped tuples' do
-          expect(transproc[relation]).to eql([
+          expect(transformer[relation]).to eql([
             { 'user' => { 'name' => 'Leo' }, 'task' => { 'title' => 'Task 1' } },
             { 'user' => { 'name' => 'Joe' }, 'task' => { 'title' => 'Task 2' } }
           ])
@@ -370,7 +370,7 @@ RSpec.describe ROM::Processor::Transproc do
         end
 
         it 'returns unwrapped tuples' do
-          expect(transproc[relation]).to eql([
+          expect(transformer[relation]).to eql([
             { 'man' => { 'name' => 'Leo' }, 'task' => { 'title' => 'Task 1' } },
             { 'man' => { 'name' => 'Joe' }, 'task' => { 'title' => 'Task 2' } }
           ])
@@ -390,7 +390,7 @@ RSpec.describe ROM::Processor::Transproc do
       end
 
       it 'returns unwrapped tuples' do
-        expect(transproc[relation]).to eql([
+        expect(transformer[relation]).to eql([
           { 'name' => 'Leo', 'title' => 'Task 1' },
           { 'name' => 'Joe', 'title' => 'Task 2' }
         ])
@@ -417,7 +417,7 @@ RSpec.describe ROM::Processor::Transproc do
       end
 
       it 'returns wrapped tuples with all keys renamed' do
-        expect(transproc[relation]).to eql([
+        expect(transformer[relation]).to eql([
           { 'name' => 'Jane',
             'tasks' => [{ 'title' => 'Task One' }, { 'title' => 'Task Two' }] },
           { 'name' => 'Joe',
@@ -436,7 +436,7 @@ RSpec.describe ROM::Processor::Transproc do
         end
 
         it 'returns grouped tuples with renamed keys' do
-          expect(transproc[relation]).to eql([
+          expect(transformer[relation]).to eql([
             { 'name' => 'Jane',
               'tasks' => [{ title: 'Task One' }, { title: 'Task Two' }] },
             { 'name' => 'Joe',
@@ -454,7 +454,7 @@ RSpec.describe ROM::Processor::Transproc do
         end
 
         it 'returns grouped tuples with all keys renamed' do
-          expect(transproc[relation]).to eql([
+          expect(transformer[relation]).to eql([
             { name: 'Jane',
               tasks: [{ title: 'Task One' }, { title: 'Task Two' }] },
             { name: 'Joe',
@@ -484,7 +484,7 @@ RSpec.describe ROM::Processor::Transproc do
       end
 
       it 'returns deeply grouped tuples' do
-        expect(transproc[relation]).to eql([
+        expect(transformer[relation]).to eql([
           { name: 'Jane',
             tasks: [
               { title: 'Task One', tags: [{ tag: 'red' }, { tag: 'green' }] }
