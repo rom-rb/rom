@@ -11,6 +11,7 @@ module ROM
     module PipeRegistry
       extend Transproc::Registry
 
+      import Transproc::Coercions
       import Transproc::HashTransformations
 
       def self.add_timestamps(data)
