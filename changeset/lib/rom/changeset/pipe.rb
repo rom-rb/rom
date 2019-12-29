@@ -4,26 +4,10 @@ require 'transproc/all'
 require 'transproc/registry'
 require 'transproc/transformer'
 
+require 'rom/changeset/pipe_registry'
+
 module ROM
   class Changeset
-    # Transproc Registry useful for pipe
-    #
-    # @api private
-    module PipeRegistry
-      extend Transproc::Registry
-
-      import Transproc::HashTransformations
-
-      def self.add_timestamps(data)
-        now = Time.now
-        Hash(created_at: now, updated_at: now).merge(data)
-      end
-
-      def self.touch(data)
-        Hash(updated_at: Time.now).merge(data)
-      end
-    end
-
     # Composable data transformation pipe used by default in changesets
     #
     # @api private
