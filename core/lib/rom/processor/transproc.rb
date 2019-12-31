@@ -24,7 +24,8 @@ module ROM
         import ::Transproc::HashTransformations
         import ::Transproc::ClassTransformations
         import ::Transproc::ProcTransformations
-        INVALID_INJECT_UNION_VALUE = "%s attribute: block is required for :from with union value.".freeze
+
+        INVALID_INJECT_UNION_VALUE = '%s attribute: block is required for :from with union value.'
 
         def self.identity(tuple)
           tuple
@@ -39,7 +40,7 @@ module ROM
         end
 
         def self.inject_union_value(tuple, name, keys, coercer)
-          raise ROM::MapperMisconfiguredError, INVALID_INJECT_UNION_VALUE % [name] if !coercer
+          raise ROM::MapperMisconfiguredError, INVALID_INJECT_UNION_VALUE % [name] unless coercer
 
           values = tuple.values_at(*keys)
           result = coercer.call(*values)
@@ -315,22 +316,22 @@ module ROM
       #
       # @api private
       def visit_unfold(attribute, preprocess = false)
-        if preprocess
-          name = attribute.name
-          header = attribute.header
-          keys = attribute.pop_keys
-          key = keys.first
+        return unless preprocess
 
-          others = header.postprocessed
+        name = attribute.name
+        header = attribute.header
+        keys = attribute.pop_keys
+        key = keys.first
 
-          compose do |ops|
-            ops << others.map { |attr|
-              t(:map_array, t(:map_value, name, visit(attr, true)))
-            }
-            ops << t(:map_array, t(:map_value, name, t(:insert_key, key)))
-            ops << t(:map_array, t(:reject_keys, [key] - [name]))
-            ops << t(:ungroup, name, [key])
-          end
+        others = header.postprocessed
+
+        compose do |ops|
+          ops << others.map { |attr|
+            t(:map_array, t(:map_value, name, visit(attr, true)))
+          }
+          ops << t(:map_array, t(:map_value, name, t(:insert_key, key)))
+          ops << t(:map_array, t(:reject_keys, [key] - [name]))
+          ops << t(:ungroup, name, [key])
         end
       end
 
