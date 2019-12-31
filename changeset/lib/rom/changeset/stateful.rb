@@ -59,7 +59,7 @@ module ROM
       # @api public
       def self.map(**options, &block)
         if block.parameters.empty?
-          pipes << Class.new(Pipe, &block).new(**options)
+          pipes << Class.new(Pipe).define!(&block).new(**options)
         else
           pipes << Pipe.new(block, **options)
         end
