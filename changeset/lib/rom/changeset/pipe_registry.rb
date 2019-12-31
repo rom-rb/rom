@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'transproc/all'
-require 'transproc/registry'
+require 'dry/transformer/all'
+require 'dry/transformer/registry'
 
 module ROM
   class Changeset
@@ -9,10 +9,10 @@ module ROM
     #
     # @api private
     module PipeRegistry
-      extend Transproc::Registry
+      extend Dry::Transformer::Registry
 
-      import Transproc::Coercions
-      import Transproc::HashTransformations
+      import Dry::Transformer::Coercions
+      import Dry::Transformer::HashTransformations
 
       def self.add_timestamps(data)
         now = Time.now

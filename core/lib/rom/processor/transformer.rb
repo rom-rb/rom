@@ -1,34 +1,32 @@
 # frozen_string_literal: true
 
-require 'transproc/all'
+require 'dry/transformer/all'
 
 require 'rom/processor'
+require 'rom/processor/composer'
 
 module ROM
   class Processor
-    # Data mapping transformer builder using Transproc
+    # Data mapping transformer builder using dry-transformer
     #
-    # This builds a transproc function that is used to map a whole relation
+    # This builds a transformer object that is used to map a whole relation
     #
-    # @see https://github.com/solnic/transproc too
+    # @see https://github.com/dry-rb/dry-transformer
     #
     # @private
-    class Transproc < Processor
-      include ::Transproc::Composer
+    class Transformer < Processor
+      include Composer
 
       module Functions
-        extend ::Transproc::Registry
+        extend Dry::Transformer::Registry
 
-        import ::Transproc::Coercions
-        import ::Transproc::ArrayTransformations
-        import ::Transproc::HashTransformations
-        import ::Transproc::ClassTransformations
-        import ::Transproc::ProcTransformations
-        INVALID_INJECT_UNION_VALUE = "%s attribute: block is required for :from with union value.".freeze
+        import Dry::Transformer::Coercions
+        import Dry::Transformer::ArrayTransformations
+        import Dry::Transformer::HashTransformations
+        import Dry::Transformer::ClassTransformations
+        import Dry::Transformer::ProcTransformations
 
-        def self.identity(tuple)
-          tuple
-        end
+        INVALID_INJECT_UNION_VALUE = '%s attribute: block is required for :from with union value.'
 
         def self.get(arr, idx)
           arr[idx]
@@ -39,7 +37,7 @@ module ROM
         end
 
         def self.inject_union_value(tuple, name, keys, coercer)
-          raise ROM::MapperMisconfiguredError, INVALID_INJECT_UNION_VALUE % [name] if !coercer
+          raise ROM::MapperMisconfiguredError, INVALID_INJECT_UNION_VALUE % [name] unless coercer
 
           values = tuple.values_at(*keys)
           result = coercer.call(*values)
@@ -73,15 +71,15 @@ module ROM
       # @api private
       attr_reader :row_proc
 
-      # Build a transproc function from the header
+      # Build a transformer object from the header
       #
       # @param [ROM::Header] header
       #
-      # @return [Transproc::Function]
+      # @return [Dry::Transformer::Pipe]
       #
       # @api private
       def self.build(mapper, header)
-        new(mapper, header).to_transproc
+        new(mapper, header).call
       end
 
       # @api private
@@ -93,12 +91,12 @@ module ROM
         initialize_row_proc
       end
 
-      # Coerce mapper header to a transproc data mapping function
+      # Coerce mapper header to a transformer object
       #
-      # @return [Transproc::Function]
+      # @return [Dry::Transformer::Pipe]
       #
       # @api private
-      def to_transproc
+      def call
         compose(t(:identity)) do |ops|
           combined = header.combined
           ops << t(:combine, combined.map(&method(:combined_args))) if combined.any?
@@ -315,22 +313,22 @@ module ROM
       #
       # @api private
       def visit_unfold(attribute, preprocess = false)
-        if preprocess
-          name = attribute.name
-          header = attribute.header
-          keys = attribute.pop_keys
-          key = keys.first
+        return unless preprocess
 
-          others = header.postprocessed
+        name = attribute.name
+        header = attribute.header
+        keys = attribute.pop_keys
+        key = keys.first
 
-          compose do |ops|
-            ops << others.map { |attr|
-              t(:map_array, t(:map_value, name, visit(attr, true)))
-            }
-            ops << t(:map_array, t(:map_value, name, t(:insert_key, key)))
-            ops << t(:map_array, t(:reject_keys, [key] - [name]))
-            ops << t(:ungroup, name, [key])
-          end
+        others = header.postprocessed
+
+        compose do |ops|
+          ops << others.map { |attr|
+            t(:map_array, t(:map_value, name, visit(attr, true)))
+          }
+          ops << t(:map_array, t(:map_value, name, t(:insert_key, key)))
+          ops << t(:map_array, t(:reject_keys, [key] - [name]))
+          ops << t(:ungroup, name, [key])
         end
       end
 

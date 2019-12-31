@@ -10,7 +10,7 @@ require 'rom/plugin'
 require 'rom/schema_plugin'
 require 'rom/relation'
 require 'rom/mapper'
-require 'rom/processor/transproc'
+require 'rom/processor/transformer'
 require 'rom/commands'
 
 # rom Global

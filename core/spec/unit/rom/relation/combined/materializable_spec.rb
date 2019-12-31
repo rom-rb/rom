@@ -3,7 +3,7 @@ RSpec.describe ROM::Relation::Combined do
   include_context 'users and tasks'
 
   def t(*args)
-    ROM::Processor::Transproc::Functions[*args]
+    ROM::Processor::Transformer::Functions[*args]
   end
 
   let(:users) do

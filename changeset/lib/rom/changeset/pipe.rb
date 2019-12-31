@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'transproc/transformer'
-
 require 'rom/changeset/pipe_registry'
 
 module ROM
@@ -9,7 +7,7 @@ module ROM
     # Composable data transformation pipe used by default in changesets
     #
     # @api private
-    class Pipe < Transproc::Transformer[PipeRegistry]
+    class Pipe < Dry::Transformer[PipeRegistry]
       extend Initializer
 
       define!(&:identity)
