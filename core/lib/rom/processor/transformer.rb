@@ -28,10 +28,6 @@ module ROM
 
         INVALID_INJECT_UNION_VALUE = '%s attribute: block is required for :from with union value.'
 
-        def self.identity(tuple)
-          tuple
-        end
-
         def self.get(arr, idx)
           arr[idx]
         end
