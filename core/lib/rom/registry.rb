@@ -66,7 +66,7 @@ module ROM
     end
 
     # @api private
-    def map()
+    def map
       new_elements = elements.each_with_object({}) do |(name, element), h|
         h[name] = yield(element)
       end
