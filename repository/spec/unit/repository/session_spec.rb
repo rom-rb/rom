@@ -221,7 +221,7 @@ RSpec.describe ROM::Repository, '#session' do
       end
 
       it 'saves data in transactions' do
-        repo.send(:transaction) do |t|
+        repo.send(:transaction) do |_t|
           repo.session { |s| s.add(user_changeset) }
           repo.session { |s| s.add(posts_changeset.associate(user, :author)) }
         end
@@ -241,7 +241,7 @@ RSpec.describe ROM::Repository, '#session' do
 
       it 'rolls back transaction' do
         expect {
-          repo.send(:transaction) do |t|
+          repo.send(:transaction) do |_t|
             repo.session { |s| s.add(user_changeset) }
             repo.session { |s| s.add(posts_changeset.associate(user, :author)) }
           end

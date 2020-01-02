@@ -265,7 +265,7 @@ POST_SEED = 3000.times.map { |i|
 }
 
 USER_POST_SEED = POST_SEED.map { |post|
-  3.times.map do |i|
+  3.times.map do |_i|
     { post_id: post[:id], user_id: USER_SEED.pluck(:id).sample }
   end
 }.flatten

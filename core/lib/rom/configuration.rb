@@ -100,7 +100,7 @@ module ROM
 
     # @api private
     def adapter_for_gateway(gateway)
-      ROM.adapters.select do |key, value|
+      ROM.adapters.select do |_key, value|
         value.const_defined?(:Gateway) && gateway.kind_of?(value.const_get(:Gateway))
       end.keys.first
     end
