@@ -10,6 +10,9 @@ Style/StringLiterals:
   Enabled: true
   EnforcedStyle: single_quotes
 
+Style/ParallelAssignment:
+  Enabled: false
+
 Style/Alias:
   Enabled: false
 
