@@ -483,10 +483,10 @@ module ROM
 
     # @api private
     def initialize_primary_key_names
-      unless primary_key.empty?
-        set!(:primary_key_name, primary_key[0].name)
-        set!(:primary_key_names, primary_key.map(&:name))
-      end
+      return if primary_key.empty?
+
+      set!(:primary_key_name, primary_key[0].name)
+      set!(:primary_key_names, primary_key.map(&:name))
     end
 
     memoize :count_index, :name_index, :source_index, :to_ast, :to_input_hash, :to_output_hash
