@@ -120,7 +120,7 @@ module ROM
       def __compare__(a, b, nils_first)
         return a <=> b unless a.nil? ^ b.nil?
 
-        (nils_first ^ b.nil?) ? -1 : 1
+        nils_first ^ b.nil? ? -1 : 1
       end
     end
   end
