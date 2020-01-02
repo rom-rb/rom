@@ -22,7 +22,9 @@ def benchmark(title)
     x.config(suite: GCSuite.new)
     def x.verify(*); end
 
-    def x.prepare(*); yield; end
+    def x.prepare(*); 
+      yield; 
+    end
     yield x
     x.compare!
   end
