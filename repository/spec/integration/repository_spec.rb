@@ -240,7 +240,7 @@ RSpec.describe 'ROM repository' do
         user = repo.users
           .inner_join(:posts, author_id: :id)
           .select_group { [id.qualified, name.qualified] }
-          .select_append { integer::count(:posts).as(:post_count) }
+          .select_append { integer.count(:posts).as(:post_count) }
           .having { count(id.qualified) >= 1 }
           .first
 
