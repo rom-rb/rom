@@ -92,7 +92,7 @@ RSpec.describe ROM::Relation, '#to_ast' do
             :users,
             [
               users_schema[:id].to_read_ast,
-              users_schema[:name].to_read_ast,
+              users_schema[:name].to_read_ast
             ],
             { dataset: :users, alias: nil, model: false, struct_namespace: ROM::Struct }
           ]]
