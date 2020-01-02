@@ -26,7 +26,7 @@ RSpec.describe ROM::Relation::Combined, '#map_with' do
   let(:mapper_registry) { ROM::MapperRegistry.build(mappers) }
 
   let(:mappers) do
-    { task_list: -> users {
+    { task_list: lambda { |users|
                    users.map do |u|
                      h = u.merge(task_list: u[:tasks].map { |t| t[:title] })
                      h.delete(:tasks)
