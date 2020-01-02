@@ -262,7 +262,7 @@ module ROM
         adapter_ns = ROM.adapters[adapter]
 
         compiler =
-          if adapter_ns && adapter_ns.const_defined?(:MapperCompiler)
+          if adapter_ns&.const_defined?(:MapperCompiler)
             adapter_ns.const_get(:MapperCompiler)
           else
             MapperCompiler
