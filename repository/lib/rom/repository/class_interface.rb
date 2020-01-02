@@ -105,7 +105,7 @@ module ROM
           @commands.each do |spec|
             type, *view = Array(spec).flatten
 
-            if view.size > 0
+            if !view.empty?
               define_restricted_command_method(type, view, mapper: mapper, use: use, plugins_options: plugins_options)
             else
               define_command_method(type, mapper: mapper, use: use, plugins_options: plugins_options)

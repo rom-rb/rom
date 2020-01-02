@@ -157,7 +157,7 @@ module ROM
             default_mapping
           end
 
-        if other.size > 0
+        if !other.empty?
           [mapping, [type, other]]
         else
           [mapping, type]
