@@ -132,7 +132,7 @@ RSpec.describe ROM::Relation do
 
     it 'raises when relation is curried and arity does not match' do
       expect { users_relation.by_name.first }.to raise_error(
-        ArgumentError, "#{users_relation.class.to_s}#by_name arity is 1 (0 args given)"
+        ArgumentError, "#{users_relation.class}#by_name arity is 1 (0 args given)"
       )
     end
 
@@ -162,7 +162,7 @@ RSpec.describe ROM::Relation do
 
     it 'raises when relation is curried and arity does not match' do
       expect { users_relation.by_name.each {} }.to raise_error(
-        ArgumentError, "#{users_relation.class.to_s}#by_name arity is 1 (0 args given)"
+        ArgumentError, "#{users_relation.class}#by_name arity is 1 (0 args given)"
       )
     end
 
@@ -181,7 +181,7 @@ RSpec.describe ROM::Relation do
 
     it 'raises when relation is curried and arity does not match' do
       expect { users_relation.by_name.to_ary }.to raise_error(
-        ArgumentError, "#{users_relation.class.to_s}#by_name arity is 1 (0 args given)"
+        ArgumentError, "#{users_relation.class}#by_name arity is 1 (0 args given)"
       )
     end
 
