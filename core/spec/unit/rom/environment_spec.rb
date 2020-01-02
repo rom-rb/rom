@@ -75,18 +75,18 @@ RSpec.describe ROM::Environment do
     end
 
     context 'as a hash' do
-      let(:params) { [foo: [:test, "foo"], bar: [:test, ["bar"]]] }
+      let(:params) { [foo: [:test, 'foo'], bar: [:test, ['bar']]] }
 
       it 'configures the gateway instance' do
-        expect(gateways.values.map(&:settings)).to match_array(["foo", "bar"])
+        expect(gateways.values.map(&:settings)).to match_array(['foo', 'bar'])
       end
     end
 
     context 'as flat args' do
-      let(:params) { [:test, "foo"] }
+      let(:params) { [:test, 'foo'] }
 
       it 'configures the gateway instance' do
-        expect(gateways.values.map(&:settings)).to match_array(["foo"])
+        expect(gateways.values.map(&:settings)).to match_array(['foo'])
       end
     end
   end

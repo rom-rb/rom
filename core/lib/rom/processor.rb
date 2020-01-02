@@ -24,7 +24,7 @@ module ROM
     #
     # @api private
     def self.build
-      raise NotImplementedError, "+build+ must be implemented"
+      raise NotImplementedError, '+build+ must be implemented'
     end
   end
 end

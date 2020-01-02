@@ -16,7 +16,7 @@ RSpec.describe 'Setting up rom suite' do
     end
   end
 
-  it "works" do
+  it 'works' do
     expect(rom.relations[:users]).to be_instance_of(Test::Users)
   end
 

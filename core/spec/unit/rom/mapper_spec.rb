@@ -68,8 +68,8 @@ RSpec.describe ROM::Mapper do
     end
   end
 
-  describe "#each" do
-    it "yields all mapped objects" do
+  describe '#each' do
+    it 'yields all mapped objects' do
       result = []
 
       mapper.call(relation).each do |tuple|

@@ -25,7 +25,7 @@ RSpec.describe ROM::Gateway do
 
     it 'raises an exception if the type is not supported' do
       expect {
-        ROM::Gateway.setup(:bogus, "memory://test")
+        ROM::Gateway.setup(:bogus, 'memory://test')
       }.to raise_error(ROM::AdapterLoadError, /bogus/)
     end
 
@@ -100,7 +100,7 @@ RSpec.describe ROM::Gateway do
     end
 
     it 'accepts parameters' do
-      params = [5, "mutations", "are", "nice"]
+      params = [5, 'mutations', 'are', 'nice']
 
       expect { gateway.use_logger(params) }.to_not raise_error
     end
@@ -117,7 +117,7 @@ RSpec.describe ROM::Gateway do
     end
   end
 
-  describe "#adapter" do
+  describe '#adapter' do
     before { Test::CustomGateway = Class.new(ROM::Gateway) }
 
     let(:gateway) { Test::CustomGateway.new }

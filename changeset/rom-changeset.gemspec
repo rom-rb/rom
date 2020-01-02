@@ -9,7 +9,7 @@ Gem::Specification.new do |gem|
   gem.homepage      = 'http://rom-rb.org'
   gem.require_paths = ['lib']
   gem.version       = ROM::Changeset::VERSION.dup
-  gem.files         = Dir["CHANGELOG.md", "LICENSE", "README.md", "lib/**/*"]
+  gem.files         = Dir['CHANGELOG.md', 'LICENSE', 'README.md', 'lib/**/*']
   gem.license       = 'MIT'
   gem.metadata      = {
     'source_code_uri' => 'https://github.com/rom-rb/rom/tree/master/changeset',

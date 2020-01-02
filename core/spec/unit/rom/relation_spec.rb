@@ -144,8 +144,8 @@ RSpec.describe ROM::Relation do
     end
   end
 
-  describe "#each" do
-    it "yields all objects" do
+  describe '#each' do
+    it 'yields all objects' do
       result = []
 
       relation.each do |user|
@@ -155,25 +155,25 @@ RSpec.describe ROM::Relation do
       expect(result).to eql([jane, joe])
     end
 
-    it "returns an enumerator if block is not provided" do
+    it 'returns an enumerator if block is not provided' do
       expect(relation.each).to be_instance_of(Enumerator)
     end
   end
 
-  describe "#to_a" do
-    it "materializes relation to an array" do
+  describe '#to_a' do
+    it 'materializes relation to an array' do
       expect(relation.to_a).to eql([jane, joe])
     end
   end
 
-  describe "#with" do
-    it "returns a new instance with the original dataset and given custom options" do
+  describe '#with' do
+    it 'returns a new instance with the original dataset and given custom options' do
       relation = Class.new(ROM::Relation) {
         schema(:users) {}
         option :custom
       }.new([], custom: true)
 
-      custom_opts = { mappers: "Custom Mapper Registry" }
+      custom_opts = { mappers: 'Custom Mapper Registry' }
       new_relation = relation.with(custom_opts).with(custom: true)
 
       expect(new_relation.dataset).to be(relation.dataset)

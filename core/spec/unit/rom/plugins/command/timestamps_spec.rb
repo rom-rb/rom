@@ -120,8 +120,8 @@ RSpec.describe ROM::Plugins::Command::Timestamps do
     let(:command) { :create }
   end
 
-  it "sets timestamps on multi-tuple inputs" do
-    input = [{ text: "note one" }, { text: "note two" }]
+  it 'sets timestamps on multi-tuple inputs' do
+    input = [{ text: 'note one' }, { text: 'note two' }]
 
     results = users.create_many.call(input)
 
@@ -132,7 +132,7 @@ RSpec.describe ROM::Plugins::Command::Timestamps do
     end
   end
 
-  it "only updates specified timestamps" do
+  it 'only updates specified timestamps' do
     initial = users.create.call(name: 'Piotr', email: 'piotr@solnic.eu')
     initial_updated_at = initial[:updated_at]
     sleep 1 # Unfortunate, but unless I start injecting clocks into the
@@ -142,7 +142,7 @@ RSpec.describe ROM::Plugins::Command::Timestamps do
     expect(updated[:updated_at]).not_to eq initial_updated_at
   end
 
-  it "allows overriding timestamps" do
+  it 'allows overriding timestamps' do
     tomorrow = (Time.now + (60 * 60 * 24))
 
     users.create.call(name: 'Piotr', email: 'piotr@solnic.eu')
@@ -151,7 +151,7 @@ RSpec.describe ROM::Plugins::Command::Timestamps do
     expect(updated[:updated_at].iso8601).to eql(tomorrow.iso8601)
   end
 
-  it "works with chained commands" do
+  it 'works with chained commands' do
     create_user = tasks.create.curry(name: 'ROM-RB', title: 'Work on OSS', priority: 1)
     create_note = users.create_with_task.curry(name: 'Piotr')
 

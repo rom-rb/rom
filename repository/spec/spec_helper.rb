@@ -40,7 +40,7 @@ module Test
   end
 end
 
-base_db_uri = ENV.fetch("BASE_DB_URI", "localhost/rom_repository")
+base_db_uri = ENV.fetch('BASE_DB_URI', 'localhost/rom_repository')
 
 DB_URI = if defined? JRUBY_VERSION
            "jdbc:postgresql://#{base_db_uri}"

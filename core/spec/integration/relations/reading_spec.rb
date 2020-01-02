@@ -68,16 +68,16 @@ RSpec.describe 'Reading relations' do
     user = container.relations[:users].sorted.map_with(:users).first
 
     expect(user).to eql(
-      Test::User.new(name: "Jane", email: "jane@doe.org")
+      Test::User.new(name: 'Jane', email: 'jane@doe.org')
     )
 
     user = container.relations[:users].with_tasks.sorted.map_with(:with_tasks).first
 
     expect(user).to eql(
       Test::UserWithTasks.new(
-        name: "Jane",
-        email: "jane@doe.org",
-        tasks: [{ title: "be cool", priority: 2 }]
+        name: 'Jane',
+        email: 'jane@doe.org',
+        tasks: [{ title: 'be cool', priority: 2 }]
       )
     )
   end
@@ -106,8 +106,8 @@ RSpec.describe 'Reading relations' do
     user = container.relations[:users].sorted.with_task.map_with(:with_task).first
 
     expect(user).to eql(
-      Test::UserWithTask.new(name: "Jane", email: "jane@doe.org",
-                             task: { title: "be cool", priority: 2 })
+      Test::UserWithTask.new(name: 'Jane', email: 'jane@doe.org',
+                             task: { title: 'be cool', priority: 2 })
     )
   end
 
@@ -116,9 +116,9 @@ RSpec.describe 'Reading relations' do
       define(:users)
     end
 
-    user = container.relations[:users].by_name("Jane").map_with(:users).first
+    user = container.relations[:users].by_name('Jane').map_with(:users).first
 
-    expect(user).to eql(name: "Jane", email: "jane@doe.org")
+    expect(user).to eql(name: 'Jane', email: 'jane@doe.org')
   end
 
   it 'allows cherry-picking of a mapper' do
@@ -136,6 +136,6 @@ RSpec.describe 'Reading relations' do
 
     user = container.relations[:users].map_with(:prefixer).first
 
-    expect(user).to eql(user_name: 'Joe', user_email: "joe@doe.org")
+    expect(user).to eql(user_name: 'Joe', user_email: 'joe@doe.org')
   end
 end

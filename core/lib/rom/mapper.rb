@@ -54,7 +54,7 @@ module ROM
       return [header] if steps.empty?
       return steps.map(&:header) if attributes.empty?
 
-      raise(MapperMisconfiguredError, "cannot mix outer attributes and steps")
+      raise(MapperMisconfiguredError, 'cannot mix outer attributes and steps')
     end
 
     # Build a mapper using provided processor type

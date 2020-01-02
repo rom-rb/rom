@@ -148,7 +148,7 @@ RSpec.describe ROM::Relation, '.schema' do
 
     schema = Test::Posts.schema_proc.call
     json_payload = '{"foo":"bar"}'
-    hash_payload = { "foo" => "bar" }
+    hash_payload = { 'foo' => 'bar' }
 
     expect(schema[:payload][hash_payload]).to eq(json_payload)
     expect(schema[:payload].meta[:read][json_payload]).to eq(hash_payload)
@@ -163,7 +163,7 @@ RSpec.describe ROM::Relation, '.schema' do
 
     schema = Test::Posts.schema_proc.call
     json_payload = '{"foo":"bar"}'
-    hash_payload = { foo: "bar" }
+    hash_payload = { foo: 'bar' }
 
     expect(schema[:payload][hash_payload]).to eq(json_payload)
     expect(schema[:payload].meta[:read][json_payload]).to eq(hash_payload)
@@ -178,7 +178,7 @@ RSpec.describe ROM::Relation, '.schema' do
 
     schema = Test::Posts.schema_proc.call
     json_payload = '{"foo":"bar"}'
-    hash_payload = { "foo" => "bar" }
+    hash_payload = { 'foo' => 'bar' }
 
     expect(schema[:payload][hash_payload]).to eq(json_payload)
     expect(schema[:payload].meta[:read][json_payload]).to eq(hash_payload)
@@ -193,7 +193,7 @@ RSpec.describe ROM::Relation, '.schema' do
 
     schema = Test::Posts.schema_proc.call
     json_payload = '{"foo":"bar"}'
-    hash_payload = { "foo" => "bar" }
+    hash_payload = { 'foo' => 'bar' }
 
     expect(schema[:payload][json_payload]).to eq(hash_payload)
   end
@@ -220,7 +220,7 @@ RSpec.describe ROM::Relation, '.schema' do
 
     schema = Test::Posts.schema_proc.call
     json_payload = '{"foo":"bar"}'
-    hash_payload = { foo: "bar" }
+    hash_payload = { foo: 'bar' }
 
     expect(schema[:payload][json_payload]).to eq(hash_payload)
   end
@@ -234,7 +234,7 @@ RSpec.describe ROM::Relation, '.schema' do
 
     schema = Test::Posts.schema_proc.call
     json_payload = '{"foo":"bar"}'
-    hash_payload = { "foo" => "bar" }
+    hash_payload = { 'foo' => 'bar' }
 
     expect(schema[:payload][hash_payload]).to eq(json_payload)
   end
@@ -269,7 +269,7 @@ RSpec.describe ROM::Relation, '.schema' do
     end
 
     expect { Test::Users.schema(:test) {} }
-      .to raise_error(ROM::MissingSchemaClassError, "Test::Users relation is missing schema_class")
+      .to raise_error(ROM::MissingSchemaClassError, 'Test::Users relation is missing schema_class')
   end
 
   describe '#schema' do
