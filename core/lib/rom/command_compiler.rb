@@ -199,9 +199,7 @@ module ROM
           klass.public_send(name, value)
         end
 
-        if rel_meta[:combine_type]
-          setup_associates(klass, relation, rel_meta, parent_relation)
-        end
+        setup_associates(klass, relation, rel_meta, parent_relation) if rel_meta[:combine_type]
 
         plugins.each do |plugin|
           plugin_options = plugins_options.fetch(plugin) { EMPTY_HASH }
