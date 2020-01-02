@@ -31,9 +31,9 @@ module ROM
       :slice, :slice!, :sort!, :uniq, :uniq!, :unshift, :values_at
     )
 
-    [
-      :map!, :combination, :cycle, :delete_if, :keep_if, :permutation, :reject!,
-      :select!, :sort_by!
+    %i[
+      map! combination cycle delete_if keep_if permutation reject!
+      select! sort_by!
     ].each do |method|
       class_eval <<-RUBY, __FILE__, __LINE__ + 1
         def #{method}(*args, &block)

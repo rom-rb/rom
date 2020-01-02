@@ -87,7 +87,7 @@ RSpec.describe ROM::Processor::Transproc do
   context 'key from existing keys' do
     let(:attributes) do
       coercer = ->(a, b) { b + a }
-      [[:c, { from: [:a, :b], coercer: coercer }]]
+      [[:c, { from: %i[a b], coercer: coercer }]]
     end
 
     let(:relation) do

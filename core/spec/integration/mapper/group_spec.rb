@@ -40,7 +40,7 @@ RSpec.describe 'Mapper definition DSL' do
           attribute :name
           attribute :email
 
-          group tasks: [:title, :priority]
+          group tasks: %i[title priority]
         end
       end
 
