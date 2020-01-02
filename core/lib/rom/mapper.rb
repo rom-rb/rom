@@ -16,7 +16,7 @@ module ROM
 
     inherit_header true
     reject_keys false
-    prefix_separator '_'.freeze
+    prefix_separator '_'
 
     # @return [Object] transformers object built by a processor
     #
