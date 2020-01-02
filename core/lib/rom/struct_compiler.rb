@@ -85,7 +85,7 @@ module ROM
 
     # @api private
     def visit_constrained(node)
-      definition, _ = node
+      definition, = node
 
       visit(definition)
     end
