@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.shared_context 'mappers' do
   let(:user_mappers) { users.mappers[:user] }
   let(:task_mappers) { tasks.mappers[:task] }

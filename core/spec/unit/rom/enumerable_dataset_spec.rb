@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rom/enumerable_dataset'
 
 RSpec.describe ROM::EnumerableDataset do

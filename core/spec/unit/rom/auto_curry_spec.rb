@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rom/auto_curry'
 
 RSpec.describe ROM::AutoCurry do

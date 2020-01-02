@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rom/associations/one_to_many'
 
 RSpec.describe ROM::Associations::OneToMany do

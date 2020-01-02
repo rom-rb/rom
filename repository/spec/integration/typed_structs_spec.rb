@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe 'ROM repository with typed structs' do
   subject(:repo) do
     Class.new(ROM::Repository[:books]) { commands :create }.new(rom)

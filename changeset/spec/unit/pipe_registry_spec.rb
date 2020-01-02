@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe ROM::Changeset::PipeRegistry do
   describe '.add_timestamps' do
     context 'input has no timestamps' do

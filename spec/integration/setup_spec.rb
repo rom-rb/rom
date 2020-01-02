@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rom/memory'
 
 RSpec.describe 'Setting up rom suite' do

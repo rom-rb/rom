@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rom/setup'
 require 'rom/support/notifications'
 

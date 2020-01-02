@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe ROM::Changeset, '.map' do
   context 'single mapping with transaction DSL' do
     subject(:changeset) do

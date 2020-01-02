@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.shared_context 'structs' do
   let(:user_struct) do
     repo.users.mapper.model

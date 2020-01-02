@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.shared_context 'database setup' do
   let(:configuration) { ROM::Configuration.new(:sql, DB_URI) }
 

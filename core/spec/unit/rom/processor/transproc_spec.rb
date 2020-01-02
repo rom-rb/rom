@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe ROM::Processor::Transproc do
   subject(:transproc) { ROM::Processor::Transproc.build(binding, header) }
 

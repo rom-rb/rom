@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rom/relation/name'
 
 RSpec.describe ROM::Relation::Name do

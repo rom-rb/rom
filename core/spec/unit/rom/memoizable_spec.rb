@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rom/support/memoizable'
 
 RSpec.describe ROM::Memoizable, '.memoize' do

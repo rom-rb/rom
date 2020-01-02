@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rom/memory'
 
 RSpec.describe ROM::Relation do

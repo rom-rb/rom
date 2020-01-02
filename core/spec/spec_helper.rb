@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'pathname'
 
 SPEC_ROOT = root = Pathname(__FILE__).dirname

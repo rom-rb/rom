@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe ROM::Changeset, '#associate' do
   include_context 'database setup'
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe ROM::Plugins::Schema::Timestamps do
   let(:relation) { ROM::Relation::Name[:users] }
 

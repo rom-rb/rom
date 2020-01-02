@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'ostruct'
 
 RSpec.describe ROM::Changeset do

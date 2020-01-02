@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe ROM::MapperCompiler, '#call' do
   subject(:mapper_compiler) do
     Class.new(ROM::MapperCompiler) do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 shared_examples_for 'a command' do
   describe '#name' do
     it 'returns relation name' do

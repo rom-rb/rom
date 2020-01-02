@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.shared_context 'relations' do
   let(:users) { rom.relations[:users].with(auto_struct: true) }
   let(:tasks) { rom.relations[:tasks].with(auto_struct: true) }
