@@ -118,7 +118,7 @@ RSpec.describe ROM::Processor::Transformer do
     end
 
     it 'honors the copy_keys option' do
-      options.merge!({ copy_keys: true })
+      options.merge!(copy_keys: true)
       expect(transformer[relation]).to eql(copy_keys_expected_result)
     end
   end
