@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require File.expand_path('../lib/rom/core/version', __FILE__)
+require File.expand_path('lib/rom/core/version', __dir__)
 
 Gem::Specification.new do |gem|
   gem.name          = 'rom-core'
