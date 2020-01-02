@@ -208,7 +208,7 @@ RSpec.describe ROM::Repository, '.command' do
 
       repo.books.insert(title: 'John Doe', created_at: Time.now - 3600)
 
-      pending "views with default args are not supported yet"
+      pending 'views with default args are not supported yet'
 
       repo.delete(Time.now)
 

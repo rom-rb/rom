@@ -189,7 +189,7 @@ module ROM
       # @api public
       def view(*args, &block)
         if args.size == 1 && block.arity > 0
-          raise ArgumentError, "schema attribute names must be provided as the second argument"
+          raise ArgumentError, 'schema attribute names must be provided as the second argument'
         end
 
         name, new_schema_fn, relation_block =

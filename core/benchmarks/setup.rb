@@ -42,7 +42,7 @@ def tasks
 end
 
 def hr
-  puts "*" * 80
+  puts '*' * 80
 end
 
 def puts(*)
@@ -141,7 +141,7 @@ else
   ActiveRecord::Base.establish_connection(DATABASE_URL)
 end
 
-ActiveRecord::Base.logger = Logger.new("./log/bench_ar.log")
+ActiveRecord::Base.logger = Logger.new('./log/bench_ar.log')
 
 class ARUser < ActiveRecord::Base
   self.table_name = :users

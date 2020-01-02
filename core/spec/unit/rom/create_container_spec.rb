@@ -31,7 +31,7 @@ RSpec.describe ROM::CreateContainer, '#finalize' do
       expect(container.relations.apples).to_not eq(container.relations.oranges)
     end
 
-    it "raises an error when registering relations with the same `name`" do
+    it 'raises an error when registering relations with the same `name`' do
       configuration
 
       users = Class.new(ROM::Relation[:memory]) do
@@ -50,7 +50,7 @@ RSpec.describe ROM::CreateContainer, '#finalize' do
       )
     end
 
-    it "raises an error when registering same mapper twice for the same relation" do
+    it 'raises an error when registering same mapper twice for the same relation' do
       configuration
 
       users_mapper = Class.new(ROM::Mapper) do

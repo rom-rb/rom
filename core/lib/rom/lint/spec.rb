@@ -3,7 +3,7 @@
 require 'rom/lint/gateway'
 require 'rom/lint/enumerable_dataset'
 
-RSpec.shared_examples "a rom gateway" do
+RSpec.shared_examples 'a rom gateway' do
   ROM::Lint::Gateway.each_lint do |name, linter|
     it name do
       result = linter.new(identifier, gateway, uri).lint(name)
@@ -12,7 +12,7 @@ RSpec.shared_examples "a rom gateway" do
   end
 end
 
-RSpec.shared_examples "a rom enumerable dataset" do
+RSpec.shared_examples 'a rom enumerable dataset' do
   ROM::Lint::EnumerableDataset.each_lint do |name, linter|
     it name do
       result = linter.new(dataset, data).lint(name)

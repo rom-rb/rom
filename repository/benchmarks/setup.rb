@@ -121,7 +121,7 @@ USER_SEED = COUNT.times.map { |i|
 }
 
 def hr
-  "*" * 80
+  '*' * 80
 end
 
 def rom

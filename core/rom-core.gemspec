@@ -18,7 +18,7 @@ Gem::Specification.new do |gem|
     'bug_tracker_uri' => 'https://github.com/rom-rb/rom/issues',
   }
 
-  gem.required_ruby_version = ">= 2.4.0"
+  gem.required_ruby_version = '>= 2.4.0'
 
   gem.add_runtime_dependency 'concurrent-ruby', '~> 1.1'
   gem.add_runtime_dependency 'dry-core', '~> 0.4'

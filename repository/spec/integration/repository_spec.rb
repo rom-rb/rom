@@ -19,13 +19,13 @@ RSpec.describe 'ROM repository' do
   it 'loads a combine relation with one parent' do
     task = repo.tasks.combine(:user).by_pk(2).first.to_h
 
-    expect(task).to eql(id: 2, user_id: 1, title: "Jane Task", user: { id: 1, name: "Jane" })
+    expect(task).to eql(id: 2, user_id: 1, title: 'Jane Task', user: { id: 1, name: 'Jane' })
   end
 
   it 'loads belongs_to with an alias' do
     task = repo.tasks.combine(:assignee).by_pk(1).first.to_h
 
-    expect(task).to eql(id: 1, user_id: 2, title: "Joe Task", assignee: { id: 2, name: "Joe" })
+    expect(task).to eql(id: 1, user_id: 2, title: 'Joe Task', assignee: { id: 2, name: 'Joe' })
   end
 
   it 'loads a combined relation with many children' do
@@ -33,8 +33,8 @@ RSpec.describe 'ROM repository' do
 
     expect(users).to eql(
       [
-        { id: 1, name: "Jane", tasks: [{ id: 2, user_id: 1, title: "Jane Task" }] },
-        { id: 2, name: "Joe", tasks: [{ id: 1, user_id: 2, title: "Joe Task" }] }
+        { id: 1, name: 'Jane', tasks: [{ id: 2, user_id: 1, title: 'Jane Task' }] },
+        { id: 2, name: 'Joe', tasks: [{ id: 1, user_id: 2, title: 'Joe Task' }] }
       ]
     )
   end
