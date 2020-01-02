@@ -13,8 +13,7 @@ RSpec.describe ROM::AutoCurry do
         self
       end
 
-      def initialize(*)
-      end
+      def initialize(*); end
 
       def arity_0
         0
@@ -36,13 +35,11 @@ RSpec.describe ROM::AutoCurry do
         yield(arg)
       end
 
-      def repeated(x)
-      end
+      def repeated(x); end
 
       undef repeated
 
-      def repeated(x)
-      end
+      def repeated(x); end
 
       protected
 
