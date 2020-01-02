@@ -84,7 +84,7 @@ class Verifier
 
   def report(name)
     result = yield
-    @verify.call(result) or raise "Expectation failed: #{name}"
+    @verify.call(result) || raise("Expectation failed: #{name}")
   end
 
   def verify(&block)
