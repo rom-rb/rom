@@ -12,8 +12,8 @@ COMPONENTS.each do |component|
   gem "rom-#{component}", path: Pathname(__dir__).join(component).realpath
 end
 
-if ENV['USE_TRANSPROC_MASTER'].eql?('true')
-  gem 'transproc', github: 'solnic/transproc', branch: 'master'
+if ENV['USE_DRY_TRANSFORMER_MASTER'].eql?('true')
+  gem 'dry-transformer', github: 'dry-rb/dry-transformer', branch: 'master'
 end
 
 group :sql do

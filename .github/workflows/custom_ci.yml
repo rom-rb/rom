@@ -22,8 +22,8 @@ jobs:
         runtime_deps:
           - "rom-sql-latest"
           - "rom-sql-master"
-          - "transproc-latest"
-          - "transproc-master"
+          - "dry-transformer-latest"
+          - "dry-transformer-master"
         include:
           - ruby: "2.6.x"
             coverage: "true"
@@ -31,10 +31,10 @@ jobs:
             use_rom_sql_master: "false"
           - runtime_deps: "rom-sql-master"
             use_rom_sql_master: "true"
-          - runtime_deps: "transproc-latest"
-            use_transproc_master: "false"
-          - runtime_deps: "transproc-master"
-            use_transproc_master: "true"
+          - runtime_deps: "dry-transformer-latest"
+            use_dry_transformer_master: "false"
+          - runtime_deps: "dry-transformer-master"
+            use_dry_transformer_master: "true"
     steps:
       - uses: actions/checkout@v1
       - name: Install dependencies
@@ -52,12 +52,12 @@ jobs:
         run: gem install bundler
       - name: Bundle
         env:
-          USE_TRANSPROC_MASTER: ${{matrix.use_transproc_master}}
+          USE_DRY_TRANSFORMER_MASTER: ${{matrix.use_dry_transformer_master}}
           USE_ROM_SQL_MASTER: ${{matrix.use_rom_sql_master}}
         run: bin/bundle
       - name: Run all tests
         env:
-          USE_TRANSPROC_MASTER: ${{matrix.use_transproc_master}}
+          USE_DRY_TRANSFORMER_MASTER: ${{matrix.use_dry_transformer_master}}
           USE_ROM_SQL_MASTER: ${{matrix.use_rom_sql_master}}
           COVERAGE: ${{matrix.coverage}}
           CODACY_RUN_LOCAL: ${{matrix.coverage}}
