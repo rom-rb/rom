@@ -156,7 +156,7 @@ module ROM
     # @!attribute [r] output_schema
     #   @return [Object#[]] tuple processing function, uses schema or defaults to NOOP_OUTPUT_SCHEMA
     #   @api private
-    option :output_schema, default: -> {
+    option :output_schema, default: lambda {
       schema.any?(&:read?) ? schema.to_output_hash : NOOP_OUTPUT_SCHEMA
     }
 
