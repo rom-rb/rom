@@ -73,9 +73,9 @@ module ROM
       k.required(false)
     end
 
-    HASH_SCHEMA = Types::Coercible::Hash.
-                    schema(EMPTY_HASH).
-                    with_type_transform(type_transformation)
+    HASH_SCHEMA = Types::Coercible::Hash
+      .schema(EMPTY_HASH)
+      .with_type_transform(type_transformation)
 
     extend Initializer
 
@@ -363,7 +363,7 @@ module ROM
     #
     # @api public
     def key?(name)
-      ! attributes.detect { |attr| attr.name == name }.nil?
+      !attributes.detect { |attr| attr.name == name }.nil?
     end
 
     # Return if a schema is canonical
@@ -382,6 +382,7 @@ module ROM
     # @api private
     def finalize!(**opts)
       return self if frozen?
+
       freeze
     end
 
@@ -453,7 +454,7 @@ module ROM
 
     # @api private
     def set!(key, value)
-      instance_variable_set("@#{ key }", value)
+      instance_variable_set("@#{key}", value)
       options[key] = value
     end
 
@@ -471,10 +472,10 @@ module ROM
 
     # @api private
     def source_index
-      select(&:source).
-        group_by(&:source).
-        map { |src, grp| [src.to_sym, grp.map { |attr| [attr.name, attr] }.to_h] }.
-        to_h
+      select(&:source)
+        .group_by(&:source)
+        .map { |src, grp| [src.to_sym, grp.map { |attr| [attr.name, attr] }.to_h] }
+        .to_h
     end
 
     # @api private

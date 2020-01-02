@@ -82,9 +82,9 @@ tags = rom.relations[:tags]
 
 book = rom.relations[:books].changeset(:create, title: 'Hello World')
 
-tags = rom.relations[:tags].
-         changeset(:create, [{ name: 'red' }, { name: 'green' }]).
-         with(command_type: :fetch_or_create)
+tags = rom.relations[:tags]
+  .changeset(:create, [{ name: 'red' }, { name: 'green' }])
+  .with(command_type: :fetch_or_create)
 
 # return tags associated with the book
 books.transaction do

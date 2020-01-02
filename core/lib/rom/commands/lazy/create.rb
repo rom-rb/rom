@@ -26,7 +26,7 @@ module ROM
             end.reduce(:concat)
           else
             input = evaluator.call(first)
-            command.call(input, *args[1..size-1])
+            command.call(input, *args[1..size - 1])
           end
         end
       end

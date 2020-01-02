@@ -16,10 +16,10 @@ RSpec.describe 'Mappers / Attributes value' do
         'John'
       end
       attribute :age do
-        9+9
+        9 + 9
       end
       attribute :weight do |t|
-        t+15
+        t + 15
       end
     end
 

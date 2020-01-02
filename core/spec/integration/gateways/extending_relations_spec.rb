@@ -9,7 +9,7 @@ RSpec.describe 'Gateways / Extending Relations' do
     module ROM
       module Memory
         class Relation < ROM::Relation
-          schema(:users) { }
+          schema(:users) {}
 
           def self.freaking_awesome?
             true
@@ -53,7 +53,7 @@ RSpec.describe 'Gateways / Extending Relations' do
   context 'using class definition' do
     it_behaves_like 'extended relation' do
       before do
-        configuration.register_relation(Class.new(ROM::Relation[:memory]) { schema(:users) { } })
+        configuration.register_relation(Class.new(ROM::Relation[:memory]) { schema(:users) {} })
       end
     end
   end

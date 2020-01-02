@@ -71,7 +71,6 @@ RSpec.shared_context 'plugins' do
         end
 
         module InstanceInterface
-
           def reverse?
             self.class.reverse
           end

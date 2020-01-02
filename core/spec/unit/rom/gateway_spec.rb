@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 RSpec.describe ROM::Gateway do
-
   subject(:gateway) { Class.new(ROM::Gateway).new }
 
   describe '.setup' do
@@ -134,5 +133,4 @@ RSpec.describe ROM::Gateway do
       )
     end
   end # describe #adapter
-
 end

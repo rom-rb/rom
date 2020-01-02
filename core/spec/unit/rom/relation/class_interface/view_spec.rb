@@ -29,8 +29,8 @@ RSpec.describe ROM::Relation, '.view' do
   it 'raises an error when attributes are not provided' do
     klass = Class.new(ROM::Relation[:memory])
 
-    expect { klass.view(:broken) { |r| r } }.
-      to raise_error(ArgumentError, 'schema attribute names must be provided as the second argument')
+    expect { klass.view(:broken) { |r| r } }
+      .to raise_error(ArgumentError, 'schema attribute names must be provided as the second argument')
   end
 
   shared_context 'relation with views' do

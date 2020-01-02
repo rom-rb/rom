@@ -51,8 +51,8 @@ RSpec.describe ROM::AutoCurry do
   end
 
   it 'registers auto-curried methods' do
-    expect(object.class.auto_curried_methods).
-      to eql(%i[arity_1 arity_2 arity_many yielding_block repeated].to_set)
+    expect(object.class.auto_curried_methods)
+      .to eql(%i[arity_1 arity_2 arity_many yielding_block repeated].to_set)
   end
 
   it 'auto-curries method with arity == 0' do

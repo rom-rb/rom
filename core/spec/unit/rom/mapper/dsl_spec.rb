@@ -229,7 +229,7 @@ RSpec.describe ROM::Mapper do
   end
 
   describe '#wrap' do
-    let(:attributes) { [[:city, type: :hash,  wrap: true, header: [[:name]]]] }
+    let(:attributes) { [[:city, type: :hash, wrap: true, header: [[:name]]]] }
 
     it 'adds an wrapped hash attribute using a block to define attributes' do
       mapper.wrap :city do
@@ -300,14 +300,14 @@ RSpec.describe ROM::Mapper do
         [
           [:name, from: :user_name],
           [:address, from: :user_address, type: :hash, header: [
-            [:city, from: :user_city]]
-          ],
+            [:city, from: :user_city]
+          ]],
           [:contact, type: :hash, wrap: true, header: [
-            [:mobile, from: :user_mobile]]
-          ],
+            [:mobile, from: :user_mobile]
+          ]],
           [:tasks, type: :array, group: true, header: [
-            [:title, from: :user_title]]
-          ]
+            [:title, from: :user_title]
+          ]]
         ]
       end
 
@@ -337,15 +337,15 @@ RSpec.describe ROM::Mapper do
           [:birthday, from: :user_birthday, type: :hash, header: [
             [:year, from: :bd_year],
             [:month, from: :bd_month],
-            [:day, from: :bd_day]]
-          ],
+            [:day, from: :bd_day]
+          ]],
           [:address, from: :user_address, type: :hash, header: [[:city]]],
           [:contact, type: :hash, wrap: true, header: [
-            [:mobile, from: :contact_mobile]]
-          ],
+            [:mobile, from: :contact_mobile]
+          ]],
           [:tasks, type: :array, group: true, header: [
-            [:title, from: :task_title]]
-          ]
+            [:title, from: :task_title]
+          ]]
         ]
       end
 

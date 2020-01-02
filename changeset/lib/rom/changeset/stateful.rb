@@ -93,6 +93,7 @@ module ROM
       # @api private
       def self.inherited(klass)
         return if klass == ROM::Changeset
+
         super
         klass.instance_variable_set(:@__pipes__, pipes.dup)
       end

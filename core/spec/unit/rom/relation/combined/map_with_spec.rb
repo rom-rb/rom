@@ -25,20 +25,19 @@ RSpec.describe ROM::Relation::Combined, '#map_with' do
 
   let(:mappers) do
     { task_list: -> users {
-        users.map do |u|
-          h = u.merge(task_list: u[:tasks].map { |t| t[:title] })
-          h.delete(:tasks)
-          h
-        end
-      }
-    }
+                   users.map do |u|
+                     h = u.merge(task_list: u[:tasks].map { |t| t[:title] })
+                     h.delete(:tasks)
+                     h
+                   end
+                 } }
   end
 
   it 'returns a new graph with custom model' do
     expect(relation.map_with(:task_list).to_a)
       .to eql([
-                { id: 1, name: 'Jane', task_list: ["Jane's Task"]},
-                { id: 2, name: 'John', task_list: ["John's Task"]}
-              ])
+        { id: 1, name: 'Jane', task_list: ["Jane's Task"] },
+        { id: 2, name: 'John', task_list: ["John's Task"] }
+      ])
   end
 end

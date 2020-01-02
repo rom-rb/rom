@@ -88,9 +88,9 @@ RSpec.describe 'Using changesets' do
     end
 
     it 'preprocesses data using custom block' do
-      changeset = books.
-                    changeset(:create, title: "rom-rb is awesome").
-                    map { |tuple| tuple.merge(created_at: Time.now) }
+      changeset = books
+        .changeset(:create, title: "rom-rb is awesome")
+        .map { |tuple| tuple.merge(created_at: Time.now) }
 
       command = books.command(:create)
       result = command.(changeset)
@@ -101,9 +101,9 @@ RSpec.describe 'Using changesets' do
     end
 
     it 'preprocesses data using built-in steps and custom block' do
-      changeset = books.
-                    changeset(:create, title: "rom-rb is awesome").
-                    extend(:touch) { |tuple| tuple.merge(created_at: Time.now) }
+      changeset = books
+        .changeset(:create, title: "rom-rb is awesome")
+        .extend(:touch) { |tuple| tuple.merge(created_at: Time.now) }
 
       command = books.command(:create)
       result = command.(changeset)
@@ -132,9 +132,9 @@ RSpec.describe 'Using changesets' do
         expect(result[:id]).not_to be(nil)
         expect(result[:name]).not_to eql('Jane Doe')
         expect(result[:posts].size).to be(2)
-        
+
         post_1, post_2 = result[:posts]
-        
+
         expect(post_1).to include(data[:posts][0])
         expect(post_2).to include(data[:posts][1])
       end
@@ -145,9 +145,9 @@ RSpec.describe 'Using changesets' do
     it 'can be passed to a command' do
       book = books.command(:create).call(title: 'rom-rb is awesome')
 
-      changeset = books.by_pk(book.id).
-                    changeset(:update, title: 'rom-rb is awesome for real').
-                    extend(:touch)
+      changeset = books.by_pk(book.id)
+        .changeset(:update, title: 'rom-rb is awesome for real')
+        .extend(:touch)
 
       expect(changeset.diff).to eql(title: 'rom-rb is awesome for real')
 
@@ -157,7 +157,6 @@ RSpec.describe 'Using changesets' do
       expect(result.title).to eql('rom-rb is awesome for real')
       expect(result.updated_at).to be_instance_of(Time)
     end
-
 
     it 'works with command plugins' do
       configuration.commands(:books) do
@@ -179,14 +178,13 @@ RSpec.describe 'Using changesets' do
       expect(result.updated_at).to be_instance_of(Time)
     end
 
-
     it 'skips update execution with no diff' do
       book = books.command(:create).call(title: 'rom-rb is awesome')
 
-      changeset = books.
-                    by_pk(book.id).
-                    changeset(:update, title: 'rom-rb is awesome').
-                    extend(:touch)
+      changeset = books
+        .by_pk(book.id)
+        .changeset(:update, title: 'rom-rb is awesome')
+        .extend(:touch)
 
       expect(changeset).to_not be_diff
 

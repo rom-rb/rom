@@ -45,7 +45,7 @@ module ROM
       #
       # @api public
       def diff?
-        ! diff.empty?
+        !diff.empty?
       end
 
       # Return if there's no diff between the original and changeset data

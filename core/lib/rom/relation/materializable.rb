@@ -23,6 +23,7 @@ module ROM
       # @api public
       def each
         return to_enum unless block_given?
+
         to_a.each { |tuple| yield(tuple) }
       end
 

@@ -102,7 +102,7 @@ RSpec.describe ROM::Processor::Transformer do
 
     let(:copy_keys_expected_result) do
       [
-        { a: 'works', b: 'this', c: 'thisworks'}
+        { a: 'works', b: 'this', c: 'thisworks' }
       ]
     end
 
@@ -488,13 +488,11 @@ RSpec.describe ROM::Processor::Transformer do
           { name: 'Jane',
             tasks: [
               { title: 'Task One', tags: [{ tag: 'red' }, { tag: 'green' }] }
-            ]
-          },
+            ] },
           { name: 'Joe',
             tasks: [
               { title: 'Task One', tags: [{ tag: 'blue' }] }
-            ]
-          }
+            ] }
         ])
       end
     end

@@ -396,7 +396,7 @@ module ROM
     #
     # @api private
     def schema?
-      ! schema.empty?
+      !schema.empty?
     end
 
     # Return a new relation with provided dataset and additional options

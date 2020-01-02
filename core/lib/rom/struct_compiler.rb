@@ -98,9 +98,9 @@ module ROM
 
     # @api private
     def build_class(name, parent, ns, &block)
-      Dry::Core::ClassBuilder.
-        new(name: class_name(name), parent: parent, namespace: ns).
-        call(&block)
+      Dry::Core::ClassBuilder
+        .new(name: class_name(name), parent: parent, namespace: ns)
+        .call(&block)
     end
 
     # @api private

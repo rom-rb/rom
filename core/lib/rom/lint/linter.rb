@@ -27,6 +27,7 @@ module ROM
       # @api public
       def self.each_lint
         return to_enum unless block_given?
+
         lints.each { |lint| yield lint, self }
       end
 

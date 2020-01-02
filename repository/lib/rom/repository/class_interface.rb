@@ -142,8 +142,8 @@ module ROM
           define_method(meth_name) do |*args|
             arity = root.__send__(view_name).arity
 
-            view_args = args[0..arity-1]
-            input = args[arity..args.size-1]
+            view_args = args[0..arity - 1]
+            input = args[arity..args.size - 1]
 
             changeset = input.first
 

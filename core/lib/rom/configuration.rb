@@ -37,8 +37,8 @@ module ROM
     attr_reader :notifications
 
     def_delegators :@setup, :register_relation, :register_command, :register_mapper, :register_plugin,
-                            :command_classes, :mapper_classes,
-                            :auto_registration
+                   :command_classes, :mapper_classes,
+                   :auto_registration
 
     def_delegators :@environment, :gateways, :gateways_map, :configure, :config
 

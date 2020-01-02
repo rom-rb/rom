@@ -75,12 +75,12 @@ RSpec.describe ROM::Changeset, '#associate' do
     end
 
     it 'associates child with multiple parents' do
-      changeset = todos.changeset(:create, title: 'Test 1').
-                    associate(jane, :user).
-                    associate(project)
+      changeset = todos.changeset(:create, title: 'Test 1')
+        .associate(jane, :user)
+        .associate(project)
 
-      expect(changeset.commit.to_h).
-        to include(user_id: jane.id, project_id: project.id, title: 'Test 1')
+      expect(changeset.commit.to_h)
+        .to include(user_id: jane.id, project_id: project.id, title: 'Test 1')
     end
 
     it 'associates multiple children with a parent' do
@@ -107,8 +107,8 @@ RSpec.describe ROM::Changeset, '#associate' do
         end
       end.new
 
-      expect { todos.changeset(:create, title: 'Test 1').associate(other) }.
-        to raise_error(ArgumentError, /can't infer association name for/)
+      expect { todos.changeset(:create, title: 'Test 1').associate(other) }
+        .to raise_error(ArgumentError, /can't infer association name for/)
     end
   end
 
@@ -128,8 +128,8 @@ RSpec.describe ROM::Changeset, '#associate' do
     it 'associates child with parent' do
       changeset = todos.by_pk(todo.id).changeset(:update, title: 'Test 2')
 
-      expect(changeset.associate(jane).commit.to_h).
-        to include(user_id: jane.id, title: 'Test 2')
+      expect(changeset.associate(jane).commit.to_h)
+        .to include(user_id: jane.id, title: 'Test 2')
     end
   end
 end

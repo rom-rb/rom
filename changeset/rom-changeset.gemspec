@@ -12,10 +12,10 @@ Gem::Specification.new do |gem|
   gem.files         = Dir["CHANGELOG.md", "LICENSE", "README.md", "lib/**/*"]
   gem.license       = 'MIT'
   gem.metadata      = {
-    'source_code_uri'   => 'https://github.com/rom-rb/rom/tree/master/changeset',
+    'source_code_uri' => 'https://github.com/rom-rb/rom/tree/master/changeset',
     'documentation_uri' => 'https://api.rom-rb.org/rom/',
-    'mailing_list_uri'  => 'https://discourse.rom-rb.org/',
-    'bug_tracker_uri'   => 'https://github.com/rom-rb/rom/issues',
+    'mailing_list_uri' => 'https://discourse.rom-rb.org/',
+    'bug_tracker_uri' => 'https://github.com/rom-rb/rom/issues',
   }
 
   gem.add_runtime_dependency 'dry-core', '~> 0.4'

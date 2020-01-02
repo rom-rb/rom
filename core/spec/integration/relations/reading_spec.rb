@@ -26,7 +26,6 @@ RSpec.describe 'Reading relations' do
     end
   end
 
-
   it 'exposes a relation reader' do
     configuration.mappers do
       define(:users) do
@@ -78,7 +77,8 @@ RSpec.describe 'Reading relations' do
       Test::UserWithTasks.new(
         name: "Jane",
         email: "jane@doe.org",
-        tasks: [{ title: "be cool", priority: 2 }])
+        tasks: [{ title: "be cool", priority: 2 }]
+      )
     )
   end
 

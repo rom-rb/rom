@@ -79,7 +79,7 @@ module ROM
       def attribute(name, options = EMPTY_HASH, &block)
         with_attr_options(name, options) do |attr_options|
           raise ArgumentError,
-            "can't specify type and block at the same time" if options[:type] && block
+                "can't specify type and block at the same time" if options[:type] && block
           attr_options[:coercer] = block if block
           add_attribute(name, attr_options)
         end
