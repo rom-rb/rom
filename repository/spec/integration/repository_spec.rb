@@ -33,8 +33,8 @@ RSpec.describe 'ROM repository' do
 
     expect(users).to eql(
       [
-        { :id => 1, :name => "Jane", :tasks => [{ :id => 2, :user_id => 1, :title => "Jane Task" }] },
-        { :id => 2, :name => "Joe", :tasks => [{ :id => 1, :user_id => 2, :title => "Joe Task" }] }
+        { id: 1, name: "Jane", tasks: [{ id: 2, user_id: 1, title: "Jane Task" }] },
+        { id: 2, name: "Joe", tasks: [{ id: 1, user_id: 2, title: "Joe Task" }] }
       ]
     )
   end
