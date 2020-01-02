@@ -31,7 +31,7 @@ module ROM
             input = evaluator.call(first)
 
             if input.is_a?(Array)
-              input.map.with_index do |item, index|
+              input.map.with_index do |item, _index|
                 command_proc[command, last, item].call(item, *args[1..size - 1])
               end
             else
