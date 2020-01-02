@@ -49,11 +49,7 @@ module ROM
         #
         # @api private
         def base_relation
-          if superclass.relation
-            superclass.relation
-          else
-            relation
-          end
+          superclass.relation || relation
         end
 
         # Return header of the mapper
