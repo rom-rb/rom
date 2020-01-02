@@ -16,7 +16,7 @@ Warning.ignore(/mysql2/)
 Warning.ignore(/rspec-core/)
 Warning.ignore(/__FILE__/)
 Warning.ignore(/__LINE__/)
-Warning.process { |w| raise RuntimeError, w } if ENV['FAIL_ON_WARNINGS'].eql?('true')
+Warning.process { |w| raise w } if ENV['FAIL_ON_WARNINGS'].eql?('true')
 
 begin
   require 'pry'
