@@ -8,8 +8,8 @@ module ROM
   #
   # @private
   module DataProxy
-    NON_FORWARDABLE = [
-      :each, :to_a, :to_ary, :kind_of?, :instance_of?, :is_a?
+    NON_FORWARDABLE = %i[
+      each to_a to_ary kind_of? instance_of? is_a?
     ].freeze
 
     # Wrapped data array

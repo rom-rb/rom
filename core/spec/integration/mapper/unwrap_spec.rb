@@ -38,7 +38,7 @@ RSpec.describe 'Mapper definition DSL' do
           attribute :title
           attribute :priority
 
-          unwrap user: [:email, :name]
+          unwrap user: %i[email name]
         end
       end
 

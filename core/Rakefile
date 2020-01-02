@@ -16,10 +16,10 @@ end
 
 if RUBY_ENGINE != 'ruby'
   desc 'Run CI tasks'
-  task ci: [:spec, :lint]
+  task ci: %i[spec lint]
 else
   desc 'Run CI tasks'
-  task ci: [:spec, :lint, :"spec:isolation"]
+  task ci: %i[spec lint spec:isolation]
 end
 
 Rake::TestTask.new(:lint) do |test|

@@ -58,7 +58,7 @@ RSpec.describe 'Reading relations' do
       define(:with_tasks, parent: :users) do
         model name: 'Test::UserWithTasks'
 
-        group tasks: [:title, :priority]
+        group tasks: %i[title priority]
       end
     end
 
@@ -96,7 +96,7 @@ RSpec.describe 'Reading relations' do
       define(:with_task, parent: :users) do
         model name: 'Test::UserWithTask'
 
-        wrap task: [:title, :priority]
+        wrap task: %i[title priority]
       end
     end
 

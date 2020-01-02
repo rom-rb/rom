@@ -47,7 +47,7 @@ RSpec.describe ROM::Environment do
 
     it 'configures the gateways hash' do
       expect(gateways).to be_kind_of(Hash)
-      expect(gateways.keys).to eq([:foo, :default])
+      expect(gateways.keys).to eq(%i[foo default])
       expect(gateways[:default]).to be_kind_of(ROM::Memory::Gateway)
       expect(gateways[:foo]).to be_kind_of(ROM::Memory::Gateway)
       expect(gateways[:default]).not_to be(gateways[:foo])
@@ -55,7 +55,7 @@ RSpec.describe ROM::Environment do
 
     it 'configures the gateways_map hash' do
       expect(gateways_map).to be_kind_of(Hash)
-      expect(gateways_map.values).to eq([:foo, :default])
+      expect(gateways_map.values).to eq(%i[foo default])
       expect(gateways_map.keys.map(&:class)).to eq([ROM::Memory::Gateway, ROM::Memory::Gateway])
       expect(gateways_map.keys).to match_array(gateways.values)
     end

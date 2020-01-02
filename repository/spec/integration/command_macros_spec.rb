@@ -97,7 +97,7 @@ RSpec.describe ROM::Repository, '.command' do
 
   it 'allows defining a single command with multiple views' do
     repo = Class.new(ROM::Repository[:users]) do
-      commands :create, update: [:by_pk, :by_name]
+      commands :create, update: %i[by_pk by_name]
     end.new(rom)
 
     user = repo.create(name: 'Jane')

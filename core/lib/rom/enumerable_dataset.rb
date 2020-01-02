@@ -55,9 +55,9 @@ module ROM
 
     forward :take
 
-    [
-      :chunk, :collect, :collect_concat, :drop_while, :find_all, :flat_map,
-      :grep, :map, :reject, :select, :sort, :sort_by, :take_while
+    %i[
+      chunk collect collect_concat drop_while find_all flat_map
+      grep map reject select sort sort_by take_while
     ].each do |method|
       class_eval <<-RUBY, __FILE__, __LINE__ + 1
         def #{method}(*args, &block)

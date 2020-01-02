@@ -21,7 +21,7 @@ migration = conf.gateways[:default].migration do
     create_table?(:taggings) do
       foreign_key :tag_id, :tags, null: false
       foreign_key :book_id, :books, null: false
-      primary_key [:tag_id, :book_id]
+      primary_key %i[tag_id book_id]
     end
   end
 end
