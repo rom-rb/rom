@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe ROM::Repository, '#inspect' do
   subject(:repo) do
     Class.new(ROM::Repository) do

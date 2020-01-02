@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe 'Using changesets' do
   include_context 'database'
   include_context 'relations'

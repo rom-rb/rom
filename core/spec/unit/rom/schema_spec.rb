@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe ROM::Schema do
   describe '#to_h' do
     it 'returns hash with attributes' do

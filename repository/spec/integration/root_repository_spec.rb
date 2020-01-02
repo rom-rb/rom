@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe ROM::Repository::Root do
   subject(:repo) do
     klass.new(rom)

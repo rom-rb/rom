@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'setup'
 
 benchmark('creating a user') do |x|

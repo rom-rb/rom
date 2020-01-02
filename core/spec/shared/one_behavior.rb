@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 shared_examples_for 'a relation that returns one tuple' do
   describe '#one' do
     it 'returns first tuple' do

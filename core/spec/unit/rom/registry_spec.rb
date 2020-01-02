@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rom/registry'
 
 RSpec.shared_examples_for 'registry fetch' do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'dry/struct'
 
 RSpec.describe 'Configuring ROM' do

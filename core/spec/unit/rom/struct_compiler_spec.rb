@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rom/struct_compiler'
 
 RSpec.describe ROM::StructCompiler, '#call' do

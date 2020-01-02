@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.shared_context 'users and tasks' do
   before do
     users_dataset.insert(name: 'Joe', email: 'joe@doe.org')

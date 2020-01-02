@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.shared_context 'plugins' do
   before do
     module Test

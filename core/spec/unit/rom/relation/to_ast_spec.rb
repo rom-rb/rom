@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rom/relation'
 
 RSpec.describe ROM::Relation, '#to_ast' do

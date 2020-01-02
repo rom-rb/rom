@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rom/repository'
 
 RSpec.describe ROM::Repository, '.[]' do

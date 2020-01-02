@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe ROM::Processor::Transformer do
   subject(:transformer) { ROM::Processor::Transformer.build(binding, header) }
 

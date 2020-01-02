@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe ROM::Relation, '#combine_with' do
   include_context 'gateway only'
   include_context 'users and tasks'

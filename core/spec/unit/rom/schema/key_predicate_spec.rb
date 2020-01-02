@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rom/schema'
 
 RSpec.describe ROM::Schema, '#key?' do

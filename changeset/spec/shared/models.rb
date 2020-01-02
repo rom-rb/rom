@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.shared_context 'models' do
   let(:user_model) { Test::Models::User }
   let(:task_model) { Test::Models::Task }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.shared_context('repo') do
   include_context 'models'
   include_context 'mappers'

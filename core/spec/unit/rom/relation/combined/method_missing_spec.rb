@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe ROM::Relation::Combined, '#method_missing' do
   subject(:relation) do
     ROM::Relation::Combined.new(users, [tasks])

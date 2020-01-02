@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Finds leaking constants created during ROM specs
 module ConstantLeakFinder
   def self.find(example)
