@@ -12,7 +12,7 @@ RSpec.describe ROM::Memoizable, '.memoize' do
       end
       memoize :foo
 
-      def bar(arg)
+      def bar(_arg)
         { a: '1', b: '2' }
       end
       memoize :bar

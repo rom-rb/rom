@@ -15,7 +15,7 @@ RSpec.describe ROM::Relation::Combined do
     Class.new(ROM::Relation) do
       auto_map false
 
-      def call(users)
+      def call(_users)
         ROM::Relation::Loaded.new(self)
       end
     end.new([])

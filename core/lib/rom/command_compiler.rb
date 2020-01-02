@@ -169,7 +169,7 @@ module ROM
     end
 
     # @api private
-    def visit_attribute(*args)
+    def visit_attribute(*_args)
       nil
     end
 
@@ -234,7 +234,7 @@ module ROM
     # @param [Relation] relation The relation for the command
     #
     # @api private
-    def setup_associates(klass, relation, meta, parent_relation)
+    def setup_associates(klass, relation, _meta, parent_relation)
       assoc_name =
         if relation.associations.key?(parent_relation)
           parent_relation

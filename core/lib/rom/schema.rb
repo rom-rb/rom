@@ -378,7 +378,7 @@ module ROM
     # @return [self]
     #
     # @api private
-    def finalize!(**opts)
+    def finalize!(**_opts)
       return self if frozen?
 
       freeze

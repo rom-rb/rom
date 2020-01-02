@@ -17,7 +17,7 @@ RSpec.describe ROM::Relation::Combined, '#map_with' do
         new(dataset.select { |t| users.pluck(:id).include?(t[:user_id]) })
       end
 
-      def to_node(name, type:, keys:)
+      def to_node(_name, type:, keys:)
         with(meta: { combine_name: :tasks, combine_type: type, keys: keys })
       end
     end.new([{ user_id: 2, title: "John's Task" }, { user_id: 1, title: "Jane's Task" }])
