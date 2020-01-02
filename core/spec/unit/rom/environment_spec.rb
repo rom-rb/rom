@@ -80,7 +80,7 @@ RSpec.describe ROM::Environment do
       let(:params) { [foo: [:test, 'foo'], bar: [:test, ['bar']]] }
 
       it 'configures the gateway instance' do
-        expect(gateways.values.map(&:settings)).to match_array(['foo', 'bar'])
+        expect(gateways.values.map(&:settings)).to match_array(%w[foo bar])
       end
     end
 

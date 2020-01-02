@@ -8,7 +8,7 @@ RSpec.describe ROM::Memoizable, '.memoize' do
       include ROM::Memoizable
 
       def foo
-        ['a', 'ab', 'abc'].max
+        %w[a ab abc].max
       end
       memoize :foo
 
