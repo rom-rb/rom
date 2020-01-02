@@ -483,7 +483,7 @@ module ROM
 
     # @api private
     def initialize_primary_key_names
-      if !primary_key.empty?
+      unless primary_key.empty?
         set!(:primary_key_name, primary_key[0].name)
         set!(:primary_key_names, primary_key.map(&:name))
       end
