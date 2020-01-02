@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe 'Mapper definition DSL' do
@@ -35,7 +37,7 @@ RSpec.describe 'Mapper definition DSL' do
     end
 
     it 'defines header with attributes' do
-      expect(header.keys).to eql([:name, :email])
+      expect(header.keys).to eql(%i[name email])
     end
   end
 
@@ -85,7 +87,7 @@ RSpec.describe 'Mapper definition DSL' do
     end
 
     it 'inherits the attributes from the parent by default' do
-      expect(header.keys).to eql([:name, :email])
+      expect(header.keys).to eql(%i[name email])
     end
 
     it 'excludes an inherited attribute when requested' do

@@ -157,7 +157,7 @@ module ROM
             default_mapping
           end
 
-        if other.size > 0
+        if !other.empty?
           [mapping, [type, other]]
         else
           [mapping, type]
@@ -169,7 +169,7 @@ module ROM
     end
 
     # @api private
-    def visit_attribute(*args)
+    def visit_attribute(*_args)
       nil
     end
 
@@ -199,9 +199,7 @@ module ROM
           klass.public_send(name, value)
         end
 
-        if rel_meta[:combine_type]
-          setup_associates(klass, relation, rel_meta, parent_relation)
-        end
+        setup_associates(klass, relation, rel_meta, parent_relation) if rel_meta[:combine_type]
 
         plugins.each do |plugin|
           plugin_options = plugins_options.fetch(plugin) { EMPTY_HASH }
@@ -236,7 +234,7 @@ module ROM
     # @param [Relation] relation The relation for the command
     #
     # @api private
-    def setup_associates(klass, relation, meta, parent_relation)
+    def setup_associates(klass, relation, _meta, parent_relation)
       assoc_name =
         if relation.associations.key?(parent_relation)
           parent_relation

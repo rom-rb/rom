@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.shared_context 'models' do
   let(:user_model) { Test::Models::User }
   let(:task_model) { Test::Models::Task }
@@ -12,7 +14,8 @@ RSpec.shared_context 'models' do
           attr_reader :id, :name
 
           def initialize(attrs)
-            @id, @name = attrs[:id], attrs[:name]
+            @id = attrs[:id]
+            @name = attrs[:name]
           end
         end
 
@@ -22,7 +25,9 @@ RSpec.shared_context 'models' do
           attr_reader :id, :user_id, :title
 
           def initialize(attrs)
-            @id, @name, @title = attrs[:id], attrs[:name], attrs[:title]
+            @id = attrs[:id]
+            @name = attrs[:name]
+            @title = attrs[:title]
           end
         end
 
@@ -32,7 +37,9 @@ RSpec.shared_context 'models' do
           attr_reader :id, :task_id, :name
 
           def initialize(attrs)
-            @id, @task_id, @name = attrs[:id], attrs[:task_id], attrs[:name]
+            @id = attrs[:id]
+            @task_id = attrs[:task_id]
+            @name = attrs[:name]
           end
         end
       end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe 'Commands' do
@@ -39,7 +41,7 @@ RSpec.describe 'Commands' do
       configuration.notifications.subscribe('configuration.commands.class.before_build') do |event|
         payload = event.to_h
         command = payload.fetch(:command)
-        %i(adapter gateway dataset).each { |expected_key| payload.fetch(expected_key) }
+        %i[adapter gateway dataset].each { |expected_key| payload.fetch(expected_key) }
 
         command.class_eval do
           def super_command?

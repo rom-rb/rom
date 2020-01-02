@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe ROM::Mapper do
   let(:mapper_klass) do
     Class.new(ROM::Mapper).tap do |mapper_klass|
@@ -33,7 +35,7 @@ RSpec.describe ROM::Mapper do
       let(:mapper_body) do
         proc do
           copy_keys true
-          attribute([:key2, :key3], from: :key)
+          attribute(%i[key2 key3], from: :key)
         end
       end
 

@@ -106,7 +106,7 @@ module ROM
       #
       # @api private
       def inspect
-        "#{self.class.name}(#{to_s})"
+        "#{self.class.name}(#{self})"
       end
     end
   end

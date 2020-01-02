@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 require 'ostruct'
 
 RSpec.describe ROM::Changeset do
-  let(:jane) { { id: 2, name: "Jane" } }
+  let(:jane) { { id: 2, name: 'Jane' } }
   let(:relation) { double(ROM::Relation, name: :users) }
 
   describe '.[]' do
@@ -28,9 +30,9 @@ RSpec.describe ROM::Changeset do
     it 'returns a hash with changes' do
       expect(relation).to receive(:one).and_return(jane)
 
-      changeset = ROM::Changeset::Update.new(relation, __data__: { name: "Jane Doe" })
+      changeset = ROM::Changeset::Update.new(relation, __data__: { name: 'Jane Doe' })
 
-      expect(changeset.diff).to eql(name: "Jane Doe")
+      expect(changeset.diff).to eql(name: 'Jane Doe')
     end
 
     it 'does not consider keys that are not present on the original tuple' do
@@ -46,7 +48,7 @@ RSpec.describe ROM::Changeset do
     it 'returns true when data differs from the original tuple' do
       expect(relation).to receive(:one).and_return(jane)
 
-      changeset = ROM::Changeset::Update.new(relation).data(name: "Jane Doe")
+      changeset = ROM::Changeset::Update.new(relation).data(name: 'Jane Doe')
 
       expect(changeset).to be_diff
     end
@@ -70,7 +72,7 @@ RSpec.describe ROM::Changeset do
     it 'uses piped data for diff' do
       expect(relation).to receive(:one).and_return(jane)
 
-      changeset = ROM::Changeset::Update.new(relation).data(name: "Jane").map { |t| { name: t[:name].upcase } }
+      changeset = ROM::Changeset::Update.new(relation).data(name: 'Jane').map { |t| { name: t[:name].upcase } }
 
       expect(changeset).to be_diff
     end
@@ -80,7 +82,7 @@ RSpec.describe ROM::Changeset do
     it 'returns true when data are equal to the original tuple' do
       expect(relation).to receive(:one).and_return(jane)
 
-      changeset = ROM::Changeset::Update.new(relation, __data__: { name: "Jane" })
+      changeset = ROM::Changeset::Update.new(relation, __data__: { name: 'Jane' })
 
       expect(changeset).to be_clean
     end
@@ -88,7 +90,7 @@ RSpec.describe ROM::Changeset do
     it 'returns false when data differs from the original tuple' do
       expect(relation).to receive(:one).and_return(jane)
 
-      changeset = ROM::Changeset::Update.new(relation, __data__: { name: "Jane Doe" })
+      changeset = ROM::Changeset::Update.new(relation, __data__: { name: 'Jane Doe' })
 
       expect(changeset).to_not be_clean
     end
@@ -169,8 +171,8 @@ RSpec.describe ROM::Changeset do
       subject(:changeset) { ROM::Changeset::Create.new(relation).data(name: 'Jane') }
 
       specify do
-        expect(changeset.inspect).
-          to eql('#<ROM::Changeset::Create relation=:users data={:name=>"Jane"}>')
+        expect(changeset.inspect)
+          .to eql('#<ROM::Changeset::Create relation=:users data={:name=>"Jane"}>')
       end
     end
 
@@ -178,8 +180,8 @@ RSpec.describe ROM::Changeset do
       subject(:changeset) { ROM::Changeset::Delete.new(relation) }
 
       specify do
-        expect(changeset.inspect).
-          to eql('#<ROM::Changeset::Delete relation=:users>')
+        expect(changeset.inspect)
+          .to eql('#<ROM::Changeset::Delete relation=:users>')
       end
     end
   end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rom/auto_curry'
 
 RSpec.describe ROM::AutoCurry do
@@ -11,8 +13,7 @@ RSpec.describe ROM::AutoCurry do
         self
       end
 
-      def initialize(*)
-      end
+      def initialize(*); end
 
       def arity_0
         0
@@ -34,13 +35,11 @@ RSpec.describe ROM::AutoCurry do
         yield(arg)
       end
 
-      def repeated(x)
-      end
+      def repeated(x); end
 
       undef repeated
 
-      def repeated(x)
-      end
+      def repeated(x); end
 
       protected
 
@@ -51,8 +50,8 @@ RSpec.describe ROM::AutoCurry do
   end
 
   it 'registers auto-curried methods' do
-    expect(object.class.auto_curried_methods).
-      to eql(%i[arity_1 arity_2 arity_many yielding_block repeated].to_set)
+    expect(object.class.auto_curried_methods)
+      .to eql(%i[arity_1 arity_2 arity_many yielding_block repeated].to_set)
   end
 
   it 'auto-curries method with arity == 0' do

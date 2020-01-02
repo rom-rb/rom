@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'rom/lint/spec'
 
@@ -14,7 +16,7 @@ RSpec.describe ROM::Memory::Dataset do
     ]
   end
 
-  it_behaves_like "a rom enumerable dataset"
+  it_behaves_like 'a rom enumerable dataset'
 
   describe 'subclassing' do
     it 'supports options' do

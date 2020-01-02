@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe ROM::Relation, '#combine_with' do
   include_context 'gateway only'
   include_context 'users and tasks'
@@ -8,7 +10,7 @@ RSpec.describe ROM::Relation, '#combine_with' do
     Class.new(ROM::Memory::Relation) do
       auto_map false
 
-      schema(:users) { }
+      schema(:users) {}
 
       def by_name(name)
         restrict(name: name)
@@ -20,7 +22,7 @@ RSpec.describe ROM::Relation, '#combine_with' do
     Class.new(ROM::Memory::Relation) do
       auto_map false
 
-      schema(:tasks) { }
+      schema(:tasks) {}
 
       def for_users(users)
         names = users.map { |user| user[:name] }
@@ -33,7 +35,7 @@ RSpec.describe ROM::Relation, '#combine_with' do
     Class.new(ROM::Memory::Relation) do
       auto_map false
 
-      schema(:tags) { }
+      schema(:tags) {}
 
       attr_accessor :tasks
       forward :map

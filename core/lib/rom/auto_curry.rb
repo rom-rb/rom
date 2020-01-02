@@ -8,6 +8,7 @@ module ROM
     def self.extended(klass)
       klass.define_singleton_method(:method_added) do |name|
         return if auto_curry_busy?
+
         auto_curry_guard { auto_curry(name) }
         super(name)
       end

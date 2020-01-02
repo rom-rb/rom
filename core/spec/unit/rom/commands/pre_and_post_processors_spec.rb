@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rom/command'
 require 'rom/memory'
 
@@ -12,14 +14,11 @@ RSpec.describe ROM::Commands::Create[:memory], 'before/after hooks' do
         before :init
         before :normalize
 
-        def init(*)
-        end
+        def init(*); end
 
-        def normalize(*)
-        end
+        def normalize(*); end
 
-        def prepare(*)
-        end
+        def prepare(*); end
       end.build(relation)
     end
 
@@ -34,14 +33,11 @@ RSpec.describe ROM::Commands::Create[:memory], 'before/after hooks' do
         after :finalize
         after :filter
 
-        def finalize(*)
-        end
+        def finalize(*); end
 
-        def filter(*)
-        end
+        def filter(*); end
 
-        def prepare(*)
-        end
+        def prepare(*); end
       end.build(relation)
     end
 

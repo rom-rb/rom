@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rom/relation/combined'
 
 RSpec.describe ROM::Relation::Combined, '#map_to' do

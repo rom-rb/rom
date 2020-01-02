@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'dry-struct'
 
@@ -9,7 +11,7 @@ RSpec.describe 'Commands / Update' do
 
   before do
     configuration.relation(:users) do
-      schema(:users) { }
+      schema(:users) {}
 
       def all(criteria)
         restrict(criteria)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'ostruct'
 require 'rom/relation'
 
@@ -14,7 +16,7 @@ RSpec.describe ROM::Relation, '#map_to' do
   let(:mapper_registry) { ROM::MapperRegistry.build(mappers) }
 
   let(:dataset) do
-    [{ id: 1, name: 'Jane' }, {id: 2, name: 'Joe' }]
+    [{ id: 1, name: 'Jane' }, { id: 2, name: 'Joe' }]
   end
 
   context 'without custom mappers' do

@@ -54,7 +54,7 @@ module ROM
         private
 
         # @api private
-        def notification_payload(relation)
+        def notification_payload(_relation)
           EMPTY_HASH
         end
       end

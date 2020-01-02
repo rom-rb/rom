@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe 'Repository with additional dependencies injected' do
   let(:configuration) {
     ROM::Configuration.new(default: [:sql, DB_URI], memory: [:memory])

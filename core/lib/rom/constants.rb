@@ -14,7 +14,7 @@ module ROM
     def initialize(adapter, component)
       super(
         "Failed to find #{component} class for #{adapter} adapter. " \
-        "Make sure ROM setup was started and the adapter identifier is correct."
+        'Make sure ROM setup was started and the adapter identifier is correct.'
       )
     end
   end

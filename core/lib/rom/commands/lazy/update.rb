@@ -31,12 +31,12 @@ module ROM
             input = evaluator.call(first)
 
             if input.is_a?(Array)
-              input.map.with_index do |item, index|
-                command_proc[command, last, item].call(item,  *args[1..size-1])
+              input.map.with_index do |item, _index|
+                command_proc[command, last, item].call(item, *args[1..size - 1])
               end
             else
               command_proc[command, *(size > 1 ? [last, input] : [input])]
-                .call(input, *args[1..size-1])
+                .call(input, *args[1..size - 1])
             end
           end
         end

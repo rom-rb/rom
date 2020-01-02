@@ -50,10 +50,11 @@ module ROM
       # @api private
       def build_class
         return klass if klass
+
         included_attrs = attributes.reject do |_name, opts|
           opts && opts[:exclude]
         end
-        builder.call(included_attrs.map(&:first)) if builder
+        builder&.call(included_attrs.map(&:first))
       end
     end
   end

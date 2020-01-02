@@ -1,3 +1,5 @@
-COMPONENTS = %w(core changeset)
+# frozen_string_literal: true
+
+COMPONENTS = %w[core changeset].freeze
 
 eval_gemfile '../Gemfile'

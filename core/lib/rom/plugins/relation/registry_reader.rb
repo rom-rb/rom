@@ -26,6 +26,7 @@ module ROM
         def included(klass)
           super
           return if klass.instance_methods.include?(:__registry__)
+
           klass.option :__registry__, default: -> { EMPTY_REGISTRY }
         end
 

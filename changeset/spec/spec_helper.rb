@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'pathname'
 
 SPEC_ROOT = Pathname(__FILE__).dirname
@@ -14,7 +16,7 @@ Warning.ignore(/mysql2/)
 Warning.ignore(/rspec-core/)
 Warning.ignore(/__FILE__/)
 Warning.ignore(/__LINE__/)
-Warning.process { |w| raise RuntimeError, w } if ENV['FAIL_ON_WARNINGS'].eql?('true')
+Warning.process { |w| raise w } if ENV['FAIL_ON_WARNINGS'].eql?('true')
 
 begin
   require 'pry'
@@ -45,7 +47,7 @@ module Test
   end
 end
 
-base_db_uri = ENV.fetch("BASE_DB_URI", "localhost/rom_repository")
+base_db_uri = ENV.fetch('BASE_DB_URI', 'localhost/rom_repository')
 
 DB_URI = if defined? JRUBY_VERSION
            "jdbc:postgresql://#{base_db_uri}"

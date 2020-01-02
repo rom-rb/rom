@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'bundler'
 
 Bundler.require
@@ -42,7 +44,7 @@ def tasks
 end
 
 def hr
-  puts "*" * 80
+  puts '*' * 80
 end
 
 def puts(*)
@@ -82,7 +84,7 @@ class Verifier
 
   def report(name)
     result = yield
-    @verify.call(result) or raise "Expectation failed: #{name}"
+    @verify.call(result) || raise("Expectation failed: #{name}")
   end
 
   def verify(&block)
@@ -141,7 +143,7 @@ else
   ActiveRecord::Base.establish_connection(DATABASE_URL)
 end
 
-ActiveRecord::Base.logger = Logger.new("./log/bench_ar.log")
+ActiveRecord::Base.logger = Logger.new('./log/bench_ar.log')
 
 class ARUser < ActiveRecord::Base
   self.table_name = :users
@@ -246,10 +248,10 @@ VERIFY = ENV.fetch('VERIFY') { false }
 COUNT = ENV.fetch('COUNT', 1000).to_i
 
 USER_SEED = COUNT.times.map { |i|
-  { id:    i + 1,
-    name:  "User #{i + 1}",
+  { id: i + 1,
+    name: "User #{i + 1}",
     email: "email_#{i}@domain.com",
-    age:   i*10 }
+    age: i * 10 }
 }
 
 TASK_SEED = USER_SEED.map { |user|
@@ -263,7 +265,7 @@ POST_SEED = 3000.times.map { |i|
 }
 
 USER_POST_SEED = POST_SEED.map { |post|
-  3.times.map do |i|
+  3.times.map do |_i|
     { post_id: post[:id], user_id: USER_SEED.pluck(:id).sample }
   end
 }.flatten

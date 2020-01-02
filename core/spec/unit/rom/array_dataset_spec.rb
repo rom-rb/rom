@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rom/array_dataset'
 
 RSpec.describe ROM::ArrayDataset do
@@ -6,7 +8,7 @@ RSpec.describe ROM::ArrayDataset do
       include ROM::ArrayDataset
 
       def self.row_proc
-        -> i { i.each_with_object({}) { |(k,v),h| h[k.to_sym] = v } }
+        -> i { i.each_with_object({}) { |(k, v), h| h[k.to_sym] = v } }
       end
     end
   end

@@ -340,7 +340,7 @@ module ROM
     #
     # @api private
     def read?
-      ! meta[:read].nil?
+      !meta[:read].nil?
     end
 
     # Return read type

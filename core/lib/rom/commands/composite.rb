@@ -18,7 +18,7 @@ module ROM
       def call(*args)
         response = left.call(*args)
 
-        if response.nil? || (many? && response.size == 0)
+        if response.nil? || (many? && response.empty?)
           return one? ? nil : EMPTY_ARRAY
         end
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'rom/memory'
 
@@ -12,7 +14,7 @@ RSpec.describe 'Setting up ROM with multiple environments' do
   let(:container) do
     {
       one: ROM.container(configuration[:one]),
-      two: ROM.container(configuration[:two]),
+      two: ROM.container(configuration[:two])
     }
   end
 
@@ -20,7 +22,7 @@ RSpec.describe 'Setting up ROM with multiple environments' do
     before do
       module Test
         class Users < ROM::Relation[:memory]
-          schema(:users) { }
+          schema(:users) {}
         end
 
         class CreateUser < ROM::Commands::Create[:memory]
@@ -81,7 +83,7 @@ RSpec.describe 'Setting up ROM with multiple environments' do
           end
         end
 
-        class Tasks  < ROM::Relation[:memory]
+        class Tasks < ROM::Relation[:memory]
           schema(:tasks) do
             attribute :id, ROM::Types::Integer
             attribute :title, ROM::Types::String

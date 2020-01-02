@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rom/relation'
 
 RSpec.describe ROM::Relation, '#to_ast' do
@@ -61,9 +63,9 @@ RSpec.describe ROM::Relation, '#to_ast' do
           [:relation, [
             :tasks,
             [
-                tasks.schema[:id].to_read_ast,
-                tasks.schema[:user_id].to_read_ast,
-                tasks.schema[:title].to_read_ast
+              tasks.schema[:id].to_read_ast,
+              tasks.schema[:user_id].to_read_ast,
+              tasks.schema[:title].to_read_ast
             ],
             { dataset: :tasks, alias: nil, model: false, struct_namespace: ROM::Struct }
           ]]
@@ -89,8 +91,8 @@ RSpec.describe ROM::Relation, '#to_ast' do
           [:relation, [
             :users,
             [
-                users_schema[:id].to_read_ast,
-                users_schema[:name].to_read_ast,
+              users_schema[:id].to_read_ast,
+              users_schema[:name].to_read_ast
             ],
             { dataset: :users, alias: nil, model: false, struct_namespace: ROM::Struct }
           ]]

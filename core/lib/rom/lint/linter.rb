@@ -27,6 +27,7 @@ module ROM
       # @api public
       def self.each_lint
         return to_enum unless block_given?
+
         lints.each { |lint| yield lint, self }
       end
 
@@ -67,14 +68,12 @@ module ROM
       # Hook method executed before each lint method run
       #
       # @api private
-      def before_lint
-      end
+      def before_lint; end
 
       # Hook method executed after each lint method run
       #
       # @api private
-      def after_lint
-      end
+      def after_lint; end
     end
   end
 end

@@ -3,7 +3,7 @@
 module ROM
   # @api private
   module Memoizable
-    MEMOIZED_HASH = {}
+    MEMOIZED_HASH = {}.freeze
 
     module ClassInterface
       # @api private
@@ -45,7 +45,7 @@ module ROM
         names.each do |name|
           meth = klass.instance_method(name)
 
-          if meth.parameters.size > 0
+          if !meth.parameters.empty?
             define_method(name) do |*args|
               __memoized__[:"#{name}_#{args.hash}"] ||= super(*args)
             end

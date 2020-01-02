@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require 'rom/struct_compiler'
 
 RSpec.describe ROM::StructCompiler, '#call' do
   subject(:struct_compiler) { ROM::StructCompiler.new }
 
-  def attr_ast(name, type, **opts)
+  def attr_ast(name, type, **_opts)
     [name, ROM::Types.const_get(type).to_ast, alias: false, wrapped: false]
   end
 
@@ -50,9 +52,9 @@ RSpec.describe ROM::StructCompiler, '#call' do
     context 'with reserved keywords as attribute names' do
       let(:input) do
         [:users, [[:attribute, attr_ast(:id, :Integer)],
-                    [:attribute, attr_ast(:name, :String)],
-                    [:attribute, attr_ast(:alias, :String)],
-                    [:attribute, attr_ast(:until, :Time)]]]
+                  [:attribute, attr_ast(:name, :String)],
+                  [:attribute, attr_ast(:alias, :String)],
+                  [:attribute, attr_ast(:until, :Time)]]]
       end
 
       it 'allows to build a struct class without complaining' do
@@ -107,7 +109,7 @@ RSpec.describe ROM::StructCompiler, '#call' do
       expect(struct.name).to eql('Test::Custom::User')
       user = struct.new(id: 1, name: 'Jane')
 
-      expect(user.inspect).to eql(%q{#<Test::Custom::User id=1 name="Jane">})
+      expect(user.inspect).to eql('#<Test::Custom::User id=1 name="Jane">')
     end
 
     it 'uses the existing class as a parent' do

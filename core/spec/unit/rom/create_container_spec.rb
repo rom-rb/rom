@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe ROM::CreateContainer, '#finalize' do
@@ -8,7 +10,7 @@ RSpec.describe ROM::CreateContainer, '#finalize' do
       configuration
 
       apples = Class.new(ROM::Relation[:memory]) do
-        schema(:fruits, as: :apples) { }
+        schema(:fruits, as: :apples) {}
 
         def apple?
           true
@@ -16,7 +18,7 @@ RSpec.describe ROM::CreateContainer, '#finalize' do
       end
 
       oranges = Class.new(ROM::Relation[:memory]) do
-        schema(:fruits, as: :oranges) { }
+        schema(:fruits, as: :oranges) {}
 
         def orange?
           true
@@ -31,26 +33,26 @@ RSpec.describe ROM::CreateContainer, '#finalize' do
       expect(container.relations.apples).to_not eq(container.relations.oranges)
     end
 
-    it "raises an error when registering relations with the same `name`" do
+    it 'raises an error when registering relations with the same `name`' do
       configuration
 
       users = Class.new(ROM::Relation[:memory]) do
-        schema(:guests, as: :users) { }
+        schema(:guests, as: :users) {}
       end
 
       users2 = Class.new(ROM::Relation[:memory]) do
-        schema(:admins, as: :users) { }
+        schema(:admins, as: :users) {}
       end
 
       configuration.register_relation(users)
       configuration.register_relation(users2)
 
       expect { container }.to raise_error(
-                                ROM::RelationAlreadyDefinedError, /name :users/
-                              )
+        ROM::RelationAlreadyDefinedError, /name :users/
+      )
     end
 
-    it "raises an error when registering same mapper twice for the same relation" do
+    it 'raises an error when registering same mapper twice for the same relation' do
       configuration
 
       users_mapper = Class.new(ROM::Mapper) do
@@ -67,8 +69,8 @@ RSpec.describe ROM::CreateContainer, '#finalize' do
       configuration.register_mapper(users_mapper_2)
 
       expect { container }.to raise_error(
-                                ROM::MapperAlreadyDefinedError, /register_as :users/
-                              )
+        ROM::MapperAlreadyDefinedError, /register_as :users/
+      )
     end
 
     it "doesn't raise an error when registering same mapper twice for different relation" do

@@ -154,7 +154,7 @@ module ROM
     # @!visibility private
     #
     # @api public
-    def session(&block)
+    def session
       session = Session.new(self)
       yield(session)
       transaction { session.commit! }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe ROM::Processor::Transformer do
   subject(:transformer) { ROM::Processor::Transformer.build(binding, header) }
 
@@ -85,7 +87,7 @@ RSpec.describe ROM::Processor::Transformer do
   context 'key from existing keys' do
     let(:attributes) do
       coercer = ->(a, b) { b + a }
-      [[:c, { from: [:a, :b], coercer: coercer }]]
+      [[:c, { from: %i[a b], coercer: coercer }]]
     end
 
     let(:relation) do
@@ -102,7 +104,7 @@ RSpec.describe ROM::Processor::Transformer do
 
     let(:copy_keys_expected_result) do
       [
-        { a: 'works', b: 'this', c: 'thisworks'}
+        { a: 'works', b: 'this', c: 'thisworks' }
       ]
     end
 
@@ -116,7 +118,7 @@ RSpec.describe ROM::Processor::Transformer do
     end
 
     it 'honors the copy_keys option' do
-      options.merge!({ copy_keys: true })
+      options.merge!(copy_keys: true)
       expect(transformer[relation]).to eql(copy_keys_expected_result)
     end
   end
@@ -488,13 +490,11 @@ RSpec.describe ROM::Processor::Transformer do
           { name: 'Jane',
             tasks: [
               { title: 'Task One', tags: [{ tag: 'red' }, { tag: 'green' }] }
-            ]
-          },
+            ] },
           { name: 'Joe',
             tasks: [
               { title: 'Task One', tags: [{ tag: 'blue' }] }
-            ]
-          }
+            ] }
         ])
       end
     end
