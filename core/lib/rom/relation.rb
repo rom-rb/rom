@@ -473,7 +473,7 @@ module ROM
 
     # @api private
     def attr_ast
-      schema.map { |t| t.to_read_ast }
+      schema.map(&:to_read_ast)
     end
 
     # @api private
