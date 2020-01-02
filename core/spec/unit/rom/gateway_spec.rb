@@ -16,7 +16,7 @@ RSpec.describe ROM::Gateway do
       allow(ROM::Gateway).to receive(:class_from_symbol)
         .with(:wormhole).and_return(gateway_class)
 
-      args = %w(hello world)
+      args = %w[hello world]
       gateway = ROM::Gateway.setup(:wormhole, *args)
 
       expect(gateway).to be_instance_of(gateway_class)

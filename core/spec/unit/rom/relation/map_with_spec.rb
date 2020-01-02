@@ -30,7 +30,7 @@ RSpec.describe ROM::Relation, '#map_with' do
     end
 
     it 'sends the relation through custom mappers' do
-      expect(relation.map_with(:name_list, :upcase_names).to_a).to match_array(%w(JANE JOE))
+      expect(relation.map_with(:name_list, :upcase_names).to_a).to match_array(%w[JANE JOE])
     end
 
     it 'does not use the default mapper' do
@@ -48,7 +48,7 @@ RSpec.describe ROM::Relation, '#map_with' do
     end
 
     it 'sends the relation through custom mappers' do
-      expect(relation.map_with(:name_list).to_a).to match_array(%w(Jane Joe))
+      expect(relation.map_with(:name_list).to_a).to match_array(%w[Jane Joe])
     end
   end
 end

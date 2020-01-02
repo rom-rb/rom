@@ -9,7 +9,7 @@ RSpec.describe ROM::Setup, '#auto_registration' do
   let(:notifications) { instance_double(ROM::Notifications::EventBus) }
 
   after do
-    %i(Persistence Users CreateUser UserList My).each do |const|
+    %i[Persistence Users CreateUser UserList My].each do |const|
       Object.send(:remove_const, const) if Object.const_defined?(const)
     end
 

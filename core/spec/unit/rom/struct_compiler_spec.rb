@@ -107,7 +107,7 @@ RSpec.describe ROM::StructCompiler, '#call' do
       expect(struct.name).to eql('Test::Custom::User')
       user = struct.new(id: 1, name: 'Jane')
 
-      expect(user.inspect).to eql(%q{#<Test::Custom::User id=1 name="Jane">})
+      expect(user.inspect).to eql(%q(#<Test::Custom::User id=1 name="Jane">))
     end
 
     it 'uses the existing class as a parent' do

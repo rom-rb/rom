@@ -56,7 +56,7 @@ RSpec.describe 'ROM repository' do
 
     expect(jane.posts.size).to be(1)
     expect(jane.posts.map(&:title)).to eql(['Hello From Jane'])
-    expect(jane.posts.flat_map(&:labels).flat_map(&:name)).to eql(%w(red blue))
+    expect(jane.posts.flat_map(&:labels).flat_map(&:name)).to eql(%w[red blue])
   end
 
   it 'loads a wrapped relation' do
@@ -184,7 +184,7 @@ RSpec.describe 'ROM repository' do
 
     expect(post.title).to eql('Hello From Jane')
     expect(post.labels.size).to be(2)
-    expect(post.labels.map(&:name)).to eql(%w(red blue))
+    expect(post.labels.map(&:name)).to eql(%w[red blue])
   end
 
   it 'loads aggregate through many-to-many association' do
@@ -192,7 +192,7 @@ RSpec.describe 'ROM repository' do
 
     expect(post.title).to eql('Hello From Jane')
     expect(post.labels.size).to be(2)
-    expect(post.labels.map(&:name)).to eql(%w(red blue))
+    expect(post.labels.map(&:name)).to eql(%w[red blue])
   end
 
   it 'loads multiple child relations' do

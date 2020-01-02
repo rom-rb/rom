@@ -43,7 +43,7 @@ RSpec.describe ROM::Relation::Composite do
 
       expect(loaded.source).to eql(users_relation)
 
-      expect(loaded).to match_array(%w(JANE JOE))
+      expect(loaded).to match_array(%w[JANE JOE])
     end
 
     it 'sends a relation through another relation' do
@@ -80,11 +80,11 @@ RSpec.describe ROM::Relation::Composite do
       relation.each do |object|
         result << object
       end
-      expect(result).to match_array(%w(JANE JOE))
+      expect(result).to match_array(%w[JANE JOE])
     end
 
     it 'returns enumerator if block is not provided' do
-      expect(relation.each.to_a).to match_array(%w(JANE JOE))
+      expect(relation.each.to_a).to match_array(%w[JANE JOE])
     end
   end
 
@@ -100,7 +100,7 @@ RSpec.describe ROM::Relation::Composite do
     it 'proxies Kernel methods' do
       relation = (users_relation >> name_list >> upcaser).__send__(:select, :name)
 
-      expect(relation.call).to match_array(%w(JANE JOE))
+      expect(relation.call).to match_array(%w[JANE JOE])
     end
   end
 end

@@ -24,7 +24,7 @@ RSpec.describe ROM::Plugins::Command::Timestamps do
     configuration.commands(:users) do
       define :create_with_timestamps_options, type: :create do
         result :one
-        use :timestamps, timestamps: %i(created_at updated_at)
+        use :timestamps, timestamps: %i[created_at updated_at]
       end
 
       define :create_with_datestamps_options, type: :create do
@@ -34,7 +34,7 @@ RSpec.describe ROM::Plugins::Command::Timestamps do
 
       define :create_with_both_options, type: :create do
         result :one
-        use :timestamps, timestamps: %i(created_at updated_at), datestamps: :written
+        use :timestamps, timestamps: %i[created_at updated_at], datestamps: :written
       end
 
       define :create do

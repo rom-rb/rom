@@ -151,7 +151,7 @@ RSpec.describe ROM::Repository, '.command' do
 
     it 'allows to pass options to plugins' do
       repo = Class.new(ROM::Repository[:users]) do
-        commands :create, update: :by_pk, use: %i(modify_name timestamps), plugins_options: { modify_name: { reverse: true } }
+        commands :create, update: :by_pk, use: %i[modify_name timestamps], plugins_options: { modify_name: { reverse: true } }
       end.new(rom)
 
       user = repo.create(name: 'Jane')
@@ -160,7 +160,7 @@ RSpec.describe ROM::Repository, '.command' do
 
     it 'allows to use several plugins' do
       repo = Class.new(ROM::Repository[:users]) do
-        commands :create, use: %i(upcase_name timestamps)
+        commands :create, use: %i[upcase_name timestamps]
       end.new(rom)
 
       user = repo.create(name: 'Jane')
