@@ -370,7 +370,7 @@ module ROM
     #
     # @api public
     def canonical?
-      self.equal?(canonical)
+      equal?(canonical)
     end
 
     # Finalize a schema
