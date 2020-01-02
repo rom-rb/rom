@@ -68,14 +68,12 @@ module ROM
       # Hook method executed before each lint method run
       #
       # @api private
-      def before_lint
-      end
+      def before_lint; end
 
       # Hook method executed after each lint method run
       #
       # @api private
-      def after_lint
-      end
+      def after_lint; end
     end
   end
 end
