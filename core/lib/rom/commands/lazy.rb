@@ -44,7 +44,7 @@ module ROM
       # @return [Array,Hash]
       #
       # @api public
-      def call(*args)
+      def call(*_args)
         raise NotImplementedError
       end
 

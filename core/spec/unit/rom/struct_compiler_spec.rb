@@ -5,7 +5,7 @@ require 'rom/struct_compiler'
 RSpec.describe ROM::StructCompiler, '#call' do
   subject(:struct_compiler) { ROM::StructCompiler.new }
 
-  def attr_ast(name, type, **opts)
+  def attr_ast(name, type, **_opts)
     [name, ROM::Types.const_get(type).to_ast, alias: false, wrapped: false]
   end
 

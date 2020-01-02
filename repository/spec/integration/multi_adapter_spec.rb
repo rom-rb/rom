@@ -33,7 +33,7 @@ RSpec.describe 'Repository with multi-adapters configuration' do
           end
         end
 
-        def for_tasks(assoc, tasks)
+        def for_tasks(_assoc, tasks)
           where(id: tasks.pluck(:user_id))
         end
       end
@@ -50,7 +50,7 @@ RSpec.describe 'Repository with multi-adapters configuration' do
           end
         end
 
-        def for_users(assoc, users)
+        def for_users(_assoc, users)
           restrict(user_id: users.pluck(:id))
         end
       end
