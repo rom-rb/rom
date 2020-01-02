@@ -17,7 +17,7 @@ Gem::Specification.new do |gem|
     'source_code_uri' => 'https://github.com/rom-rb/rom/tree/master/core',
     'documentation_uri' => 'https://api.rom-rb.org/rom/',
     'mailing_list_uri' => 'https://discourse.rom-rb.org/',
-    'bug_tracker_uri' => 'https://github.com/rom-rb/rom/issues',
+    'bug_tracker_uri' => 'https://github.com/rom-rb/rom/issues'
   }
 
   gem.required_ruby_version = '>= 2.4.0'
