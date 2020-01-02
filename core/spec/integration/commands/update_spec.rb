@@ -9,7 +9,7 @@ RSpec.describe 'Commands / Update' do
 
   before do
     configuration.relation(:users) do
-      schema(:users) { }
+      schema(:users) {}
 
       def all(criteria)
         restrict(criteria)

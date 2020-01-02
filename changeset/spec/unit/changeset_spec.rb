@@ -169,8 +169,8 @@ RSpec.describe ROM::Changeset do
       subject(:changeset) { ROM::Changeset::Create.new(relation).data(name: 'Jane') }
 
       specify do
-        expect(changeset.inspect).
-          to eql('#<ROM::Changeset::Create relation=:users data={:name=>"Jane"}>')
+        expect(changeset.inspect)
+          .to eql('#<ROM::Changeset::Create relation=:users data={:name=>"Jane"}>')
       end
     end
 
@@ -178,8 +178,8 @@ RSpec.describe ROM::Changeset do
       subject(:changeset) { ROM::Changeset::Delete.new(relation) }
 
       specify do
-        expect(changeset.inspect).
-          to eql('#<ROM::Changeset::Delete relation=:users>')
+        expect(changeset.inspect)
+          .to eql('#<ROM::Changeset::Delete relation=:users>')
       end
     end
   end

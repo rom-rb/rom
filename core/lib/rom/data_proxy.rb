@@ -46,6 +46,7 @@ module ROM
     # @api private
     def each
       return to_enum unless block_given?
+
       data.each { |tuple| yield(row_proc[tuple]) }
     end
 

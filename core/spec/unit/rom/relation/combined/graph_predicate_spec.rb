@@ -1,6 +1,6 @@
 RSpec.describe ROM::Relation::Combined do
   subject(:relation) do
-    ROM::Relation::Combined.new(users, []) 
+    ROM::Relation::Combined.new(users, [])
   end
 
   let(:users) do

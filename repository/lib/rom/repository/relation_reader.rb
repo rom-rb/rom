@@ -13,10 +13,10 @@ module ROM
       module InstanceMethods
         # @api private
         def set_relation(name)
-          container.
-            relations[name].
-            with(auto_struct: auto_struct).
-            struct_namespace(struct_namespace)
+          container
+            .relations[name]
+            .with(auto_struct: auto_struct)
+            .struct_namespace(struct_namespace)
         end
       end
 

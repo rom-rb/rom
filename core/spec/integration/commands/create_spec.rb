@@ -66,8 +66,8 @@ RSpec.describe 'Commands / Create' do
   end
 
   it 'inserts user and associated task when things go well' do
-    result = users.create.curry(name: 'Piotr', email: 'piotr@solnic.eu').
-              >> tasks.create.curry(title: 'Finish command-api')
+    result = users.create.curry(name: 'Piotr', email: 'piotr@solnic.eu')
+              .>> tasks.create.curry(title: 'Finish command-api')
 
     expect(result.call).to eql(name: 'Piotr', title: 'Finish command-api')
   end

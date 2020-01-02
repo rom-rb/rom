@@ -35,7 +35,6 @@ module ROM
       end
     end
 
-
     # @api private
     def normalize_gateway_args(*args)
       args.first.is_a?(Hash) ? args.first : { default: args }

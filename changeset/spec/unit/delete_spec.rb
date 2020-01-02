@@ -85,9 +85,9 @@ RSpec.describe ROM::Changeset::Delete do
     expect {
       users.changeset(:not_here)
     }.to raise_error(
-           ArgumentError,
-           '+:not_here+ is not a valid changeset type. Must be one of: [:create, :update, :delete]'
-         )
+      ArgumentError,
+      '+:not_here+ is not a valid changeset type. Must be one of: [:create, :update, :delete]'
+    )
   end
 
   it 'raises ArgumentError when unknown class was used' do
@@ -97,7 +97,7 @@ RSpec.describe ROM::Changeset::Delete do
       end
     }
 
-    expect { users.changeset(klass) }.
-      to raise_error(ArgumentError, /SomeClass/)
+    expect { users.changeset(klass) }
+      .to raise_error(ArgumentError, /SomeClass/)
   end
 end

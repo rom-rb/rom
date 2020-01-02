@@ -32,10 +32,11 @@ RSpec.describe 'ROM repository' do
     users = repo.users.combine(:tasks).to_a.map(&:to_h)
 
     expect(users).to eql(
-                       [
-                         {:id=>1, :name=>"Jane", :tasks=>[{:id=>2, :user_id=>1, :title=>"Jane Task"}]},
-                         {:id=>2, :name=>"Joe", :tasks=>[{:id=>1, :user_id=>2, :title=>"Joe Task"}]}]
-                     )
+      [
+        { :id => 1, :name => "Jane", :tasks => [{ :id => 2, :user_id => 1, :title => "Jane Task" }] },
+        { :id => 2, :name => "Joe", :tasks => [{ :id => 1, :user_id => 2, :title => "Joe Task" }] }
+      ]
+    )
   end
 
   it 'loads nested combined relations' do
@@ -234,12 +235,12 @@ RSpec.describe 'ROM repository' do
   describe 'projecting virtual attributes' do
     shared_context 'auto-mapping' do
       it 'loads auto-mapped structs' do
-        user = repo.users.
-                 inner_join(:posts, author_id: :id).
-                 select_group { [id.qualified, name.qualified] }.
-                 select_append { integer::count(:posts).as(:post_count) }.
-                 having { count(id.qualified) >= 1 }.
-                 first
+        user = repo.users
+          .inner_join(:posts, author_id: :id)
+          .select_group { [id.qualified, name.qualified] }
+          .select_append { integer::count(:posts).as(:post_count) }
+          .having { count(id.qualified) >= 1 }
+          .first
 
         expect(user.id).to be(1)
         expect(user.name).to eql('Jane')
@@ -312,8 +313,8 @@ RSpec.describe 'ROM repository' do
         end
 
         it 'returns a nested hash for an aggregate' do
-          expect(repo.root.combine(:posts).limit(1).one).
-            to eql(id: 1, name: 'Jane', posts: [{ id: 1, author_id: 1, title: 'Hello From Jane', body: 'Jane Post'}])
+          expect(repo.root.combine(:posts).limit(1).one)
+            .to eql(id: 1, name: 'Jane', posts: [{ id: 1, author_id: 1, title: 'Hello From Jane', body: 'Jane Post' }])
         end
       end
     end
@@ -359,10 +360,10 @@ RSpec.describe 'ROM repository' do
     it 'auto-maps and applies a custom mapper' do
       jane = repo.users.combine(:posts).map_with(:embed_address, auto_struct: false).to_a.first
 
-      expect(jane).
-        to eql(id:1, name: 'Jane', mapped: true, posts: [
-                 { id: 1, author_id: 1, title: 'Hello From Jane', body: 'Jane Post' }
-               ])
+      expect(jane)
+        .to eql(id: 1, name: 'Jane', mapped: true, posts: [
+          { id: 1, author_id: 1, title: 'Hello From Jane', body: 'Jane Post' }
+        ])
     end
 
     it 'applies a custom mapper inside #node' do
@@ -372,10 +373,10 @@ RSpec.describe 'ROM repository' do
 
       expect(jane).to be_a ROM::Struct
 
-      expect(jane.to_h).
-        to eql(id:1, name: 'Jane', posts: [
-                 { id: 1, author_id: 1, title: 'HELLO FROM JANE', body: 'Jane Post' }
-               ])
+      expect(jane.to_h)
+        .to eql(id: 1, name: 'Jane', posts: [
+          { id: 1, author_id: 1, title: 'HELLO FROM JANE', body: 'Jane Post' }
+        ])
     end
   end
 
@@ -385,11 +386,11 @@ RSpec.describe 'ROM repository' do
     end
 
     it 'uses provided model for the member type' do
-      jane = repo.users.
-               combine(:posts).
-               node(:posts) { |posts| posts.map_to(Test::Post) }.
-               where(name: 'Jane').
-               one
+      jane = repo.users
+        .combine(:posts)
+        .node(:posts) { |posts| posts.map_to(Test::Post) }
+        .where(name: 'Jane')
+        .one
 
       expect(jane.name).to eql('Jane')
       expect(jane.posts.size).to be(1)

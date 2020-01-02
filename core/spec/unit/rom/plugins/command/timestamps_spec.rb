@@ -75,7 +75,7 @@ RSpec.describe ROM::Plugins::Command::Timestamps do
   end
 
   shared_examples_for 'a command setting timestamps' do
-    let(:user_command)  { users.public_send(command)  }
+    let(:user_command) { users.public_send(command) }
     let(:result) { user_command.call(name: 'Piotr', email: 'piotr@solnic.eu') }
 
     it 'applies timestamps by default' do
@@ -88,7 +88,7 @@ RSpec.describe ROM::Plugins::Command::Timestamps do
   end
 
   shared_examples_for 'a command setting datestamp' do
-    let(:user_command)  { users.public_send(command)  }
+    let(:user_command) { users.public_send(command) }
     let(:result) { user_command.call(name: 'Piotr', email: 'piotr@solnic.eu') }
 
     it 'applies datestamps by default' do
@@ -121,7 +121,7 @@ RSpec.describe ROM::Plugins::Command::Timestamps do
   end
 
   it "sets timestamps on multi-tuple inputs" do
-    input = [{text: "note one"}, {text: "note two"}]
+    input = [{ text: "note one" }, { text: "note two" }]
 
     results = users.create_many.call(input)
 
@@ -135,8 +135,8 @@ RSpec.describe ROM::Plugins::Command::Timestamps do
   it "only updates specified timestamps" do
     initial = users.create.call(name: 'Piotr', email: 'piotr@solnic.eu')
     initial_updated_at = initial[:updated_at]
-    sleep 1  # Unfortunate, but unless I start injecting clocks into the
-             # command, this is needed to make sure the time actually changes
+    sleep 1 # Unfortunate, but unless I start injecting clocks into the
+    # command, this is needed to make sure the time actually changes
     updated = users.update.call(name: 'Piotr Updated').first
     expect(updated[:created_at]).to eq initial[:created_at]
     expect(updated[:updated_at]).not_to eq initial_updated_at

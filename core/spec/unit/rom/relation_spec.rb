@@ -4,7 +4,7 @@ RSpec.describe ROM::Relation do
   subject(:relation) do
     Class.new(ROM::Relation) do
       adapter :test
-      schema(:users) { }
+      schema(:users) {}
     end.new(dataset)
   end
 
@@ -38,7 +38,7 @@ RSpec.describe ROM::Relation do
     end
 
     it 'returns relation subclass from the registered adapter' do
-      subclass = Class.new(ROM::Relation[:test]) { schema(:test) { } }
+      subclass = Class.new(ROM::Relation[:test]) { schema(:test) {} }
 
       relation = subclass.new([])
 
@@ -52,7 +52,7 @@ RSpec.describe ROM::Relation do
         before do
           module Test::Test
             class SuperRelation < ROM::Relation[:memory]
-              schema { }
+              schema {}
             end
           end
         end
@@ -67,7 +67,7 @@ RSpec.describe ROM::Relation do
       context 'with Relation without module' do
         before do
           class Test::SuperRelation < ROM::Relation[:memory]
-            schema { }
+            schema {}
           end
         end
 
@@ -81,11 +81,11 @@ RSpec.describe ROM::Relation do
       context 'with a descendant relation' do
         before do
           class Test::SuperRelation < ROM::Relation[:memory]
-            schema { }
+            schema {}
           end
 
           class Test::DescendantRelation < Test::SuperRelation
-            schema { }
+            schema {}
           end
         end
 
@@ -101,7 +101,7 @@ RSpec.describe ROM::Relation do
       before do
         module Test::TestAdapter
           class Relation < ROM::Relation[:memory]
-            schema(:foo_bar) { }
+            schema(:foo_bar) {}
           end
         end
       end
@@ -117,7 +117,7 @@ RSpec.describe ROM::Relation do
       let(:relation_name_symbol) do
         module Test
           class Relations < ROM::Relation[:memory]
-            schema(:relations) { }
+            schema(:relations) {}
           end
         end
       end
@@ -125,7 +125,7 @@ RSpec.describe ROM::Relation do
       let(:relation_name_string) do
         module Test
           class Relations < ROM::Relation[:memory]
-            schema('relations') { }
+            schema('relations') {}
           end
         end
       end
@@ -169,7 +169,7 @@ RSpec.describe ROM::Relation do
   describe "#with" do
     it "returns a new instance with the original dataset and given custom options" do
       relation = Class.new(ROM::Relation) {
-        schema(:users) { }
+        schema(:users) {}
         option :custom
       }.new([], custom: true)
 
@@ -200,7 +200,7 @@ RSpec.describe ROM::Relation do
 
     it 'returns false when curried' do
       relation = Class.new(ROM::Relation[:memory]) do
-        schema(:users) { }
+        schema(:users) {}
 
         def by_name(*)
           self
@@ -214,7 +214,7 @@ RSpec.describe ROM::Relation do
   describe '#schema' do
     it 'returns an empty schema by default' do
       relation = Class.new(ROM::Relation) {
-        schema(:test_some_relation) { }
+        schema(:test_some_relation) {}
       }.new([])
 
       expect(relation.schema).to be_empty

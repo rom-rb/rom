@@ -14,10 +14,10 @@ module ROM
 
         check_duplicate_registered_mappers
 
-        @registry_hash = [@mapper_classes.map(&:base_relation) + @mapper_objects.keys].
-                           flatten.
-                           uniq.
-                           each_with_object({}) { |n, h| h[n] = {} }
+        @registry_hash = [@mapper_classes.map(&:base_relation) + @mapper_objects.keys]
+          .flatten
+          .uniq
+          .each_with_object({}) { |n, h| h[n] = {} }
       end
 
       # @api private
@@ -40,8 +40,9 @@ module ROM
       private
 
       def check_duplicate_registered_mappers
-        mapper_relation_register = mapper_classes.map {|mapper_class| [mapper_class.relation, mapper_class.register_as].compact }
+        mapper_relation_register = mapper_classes.map { |mapper_class| [mapper_class.relation, mapper_class.register_as].compact }
         return if mapper_relation_register.uniq.count == mapper_classes.count
+
         mapper_relation_register.select { |relation_register_as| mapper_relation_register.count(relation_register_as) > 1 }
           .uniq
           .each do |duplicated_mappers|
@@ -52,9 +53,9 @@ module ROM
       end
 
       def build_mappers(relation_name)
-        mapper_classes.
-          select { |klass| klass.base_relation == relation_name }.
-          each_with_object({}) { |klass, h| h[klass.register_as || klass.relation] = klass.build  }
+        mapper_classes
+          .select { |klass| klass.base_relation == relation_name }
+          .each_with_object({}) { |klass, h| h[klass.register_as || klass.relation] = klass.build }
       end
     end
   end

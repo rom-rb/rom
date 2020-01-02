@@ -288,7 +288,7 @@ module ROM
               apply_hooks(after_hooks, result)
             end
           else
-            apply_hooks(after_hooks, result, *args[1..args.size-1])
+            apply_hooks(after_hooks, result, *args[1..args.size - 1])
           end
         else
           execute(*(curry_args + args), &block)

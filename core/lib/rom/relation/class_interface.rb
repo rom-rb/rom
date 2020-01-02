@@ -134,6 +134,7 @@ module ROM
       #   @return [Name] Qualified relation name
       def relation_name
         raise MissingSchemaError.new(self) unless defined?(@relation_name)
+
         @relation_name
       end
 

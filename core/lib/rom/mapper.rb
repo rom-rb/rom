@@ -12,7 +12,7 @@ module ROM
     include Dry::Equalizer(:transformers, :header)
 
     defines :relation, :register_as, :symbolize_keys, :copy_keys,
-      :prefix, :prefix_separator, :inherit_header, :reject_keys
+            :prefix, :prefix_separator, :inherit_header, :reject_keys
 
     inherit_header true
     reject_keys false
@@ -53,6 +53,7 @@ module ROM
     def self.headers(header)
       return [header] if steps.empty?
       return steps.map(&:header) if attributes.empty?
+
       raise(MapperMisconfiguredError, "cannot mix outer attributes and steps")
     end
 

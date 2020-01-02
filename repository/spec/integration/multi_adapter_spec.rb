@@ -1,4 +1,5 @@
 # coding: utf-8
+
 RSpec.describe 'Repository with multi-adapters configuration' do
   let(:configuration) {
     ROM::Configuration.new(default: [:sql, DB_URI], memory: [:memory])

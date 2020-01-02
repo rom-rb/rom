@@ -35,9 +35,9 @@ RSpec.describe 'Using in-memory gateways for cross-gateway access' do
     gateways[:right][:tasks] << { user_id: 1, title: 'Have fun' }
     gateways[:right][:tasks] << { user_id: 2, title: 'Have fun' }
 
-    user_and_tasks = container.relations[:users_and_tasks].
-                       by_user('Jane').
-                       map_with(:users_and_tasks)
+    user_and_tasks = container.relations[:users_and_tasks]
+      .by_user('Jane')
+      .map_with(:users_and_tasks)
 
     expect(user_and_tasks).to match_array([
       { user_id: 2, name: 'Jane', tasks: [{ title: 'Have fun' }] }

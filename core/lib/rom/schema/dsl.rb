@@ -79,7 +79,7 @@ module ROM
       def attribute(name, type_or_options, options = EMPTY_HASH)
         if attributes.key?(name)
           ::Kernel.raise ::ROM::AttributeAlreadyDefinedError,
-                         "Attribute #{ name.inspect } already defined"
+                         "Attribute #{name.inspect} already defined"
         end
 
         attributes[name] = build_attribute_info(name, type_or_options, options)

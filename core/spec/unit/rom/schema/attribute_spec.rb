@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rom/attribute'
 
 RSpec.describe ROM::Attribute do

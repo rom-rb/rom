@@ -20,12 +20,12 @@ RSpec.describe ROM::Schema do
       }
       schema = ROM::Schema.define(:name, attributes: attrs.values)
 
-      expect(schema.to_ast).
-        to eql([:schema, [
-                  :name,
-                  [[:attribute, [:id, [:nominal, [Integer, {}]], alias: nil]],
-                   [:attribute, [:name, [:nominal, [String, {}]], alias: nil]]]
-                ]])
+      expect(schema.to_ast)
+        .to eql([:schema, [
+          :name,
+          [[:attribute, [:id, [:nominal, [Integer, {}]], alias: nil]],
+           [:attribute, [:name, [:nominal, [String, {}]], alias: nil]]]
+        ]])
     end
   end
 

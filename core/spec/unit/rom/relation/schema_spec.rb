@@ -52,8 +52,8 @@ RSpec.describe ROM::Relation, '.schema' do
 
     schema = Test::Users.schema_proc.call
 
-    expect(schema.to_output_hash).
-      to eql(ROM::Schema::HASH_SCHEMA.schema(id: schema[:id].type, date: schema[:date].meta[:read]))
+    expect(schema.to_output_hash)
+      .to eql(ROM::Schema::HASH_SCHEMA.schema(id: schema[:id].type, date: schema[:date].meta[:read]))
   end
 
   it 'allows setting composite primary key using `primary_key` macro' do
@@ -268,8 +268,8 @@ RSpec.describe ROM::Relation, '.schema' do
       schema_class nil
     end
 
-    expect { Test::Users.schema(:test) { } }.
-      to raise_error(ROM::MissingSchemaClassError, "Test::Users relation is missing schema_class")
+    expect { Test::Users.schema(:test) {} }
+      .to raise_error(ROM::MissingSchemaClassError, "Test::Users relation is missing schema_class")
   end
 
   describe '#schema' do
@@ -308,7 +308,8 @@ RSpec.describe ROM::Relation, '.schema' do
         schema[:admin]
       ).to eql(ROM::Attribute.new(
                  ROM::Types::Bool.meta(source: ROM::Relation::Name[:test_users]),
-                 name: :admin))
+                 name: :admin
+               ))
     end
 
     it 'raises an error on double definition' do
@@ -339,12 +340,13 @@ RSpec.describe ROM::Relation, '.schema' do
 
       schema = Test::Users.schema_proc.call
 
-      expect(schema[:name].type).
-        to eql(
-             to_s_on_read.optional.meta(
-               source: ROM::Relation::Name[:rom_memory_relation],
-               read: to_s.optional
-             ))
+      expect(schema[:name].type)
+        .to eql(
+          to_s_on_read.optional.meta(
+            source: ROM::Relation::Name[:rom_memory_relation],
+            read: to_s.optional
+          )
+        )
     end
   end
 
@@ -358,8 +360,8 @@ RSpec.describe ROM::Relation, '.schema' do
         end
       end
 
-      expect(Test::Users.schema_proc.call.finalize_attributes!).
-        to eql(Test::Users.schema_proc.call.finalize_attributes!)
+      expect(Test::Users.schema_proc.call.finalize_attributes!)
+        .to eql(Test::Users.schema_proc.call.finalize_attributes!)
     end
   end
 
