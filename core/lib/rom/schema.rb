@@ -229,9 +229,7 @@ module ROM
           source_index[src][key]
         end
 
-      unless attr
-        raise(KeyError, "#{key.inspect} attribute doesn't exist in #{src} schema")
-      end
+      raise(KeyError, "#{key.inspect} attribute doesn't exist in #{src} schema") unless attr
 
       attr
     end

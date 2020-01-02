@@ -370,9 +370,7 @@ module ROM
           attr_options[:from] = attr_options[:from].to_sym if name.is_a? Symbol
         end
 
-        if symbolize_keys
-          attr_options.update(from: attr_options.fetch(:from) { name }.to_s)
-        end
+        attr_options.update(from: attr_options.fetch(:from) { name }.to_s) if symbolize_keys
 
         yield(attr_options)
       end

@@ -12,9 +12,7 @@ module ROM
     def initialize(*)
       super
       elements.values.each do |assoc|
-        if assoc.aliased? && !key?(assoc.name)
-          elements[assoc.name] = assoc
-        end
+        elements[assoc.name] = assoc if assoc.aliased? && !key?(assoc.name)
       end
     end
     ruby2_keywords(:initialize) if respond_to?(:ruby2_keywords, true)
