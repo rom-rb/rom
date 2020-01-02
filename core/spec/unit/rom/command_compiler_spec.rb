@@ -25,7 +25,7 @@ RSpec.describe 'ROM::CommandCompiler' do
      [[:attribute,
        [:id, [:nominal, [Integer, {}]], primary_key: true]],
       [:attribute,
-       [:name, [:nominal, [String, {}]], { :source => :users }]]],
+       [:name, [:nominal, [String, {}]], { source: :users }]]],
      dataset: :users]
   end
 
