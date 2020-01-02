@@ -67,7 +67,7 @@ RSpec.describe ROM::Environment do
         class Gateway < ROM::Gateway
           attr_reader :settings
 
-          def initialize settings = {}
+          def initialize(settings = {})
             @settings = settings
           end
         end
@@ -99,7 +99,7 @@ RSpec.describe ROM::Environment do
         class Gateway < ROM::Gateway
           attr_reader :settings
 
-          def initialize settings = {}
+          def initialize(settings = {})
             @settings = settings
           end
         end
