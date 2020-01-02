@@ -13,7 +13,7 @@ module ROM
 
       PathnameType = Types.Instance(Pathname)
 
-      EXTENSION_REGEX = /\.rb\z/
+      EXTENSION_REGEX = /\.rb\z/.freeze
 
       # @!attribute [r] file
       #   @return [String] Name of a component file

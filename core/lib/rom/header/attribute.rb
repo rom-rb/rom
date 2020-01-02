@@ -185,6 +185,6 @@ module ROM
       hash: Hash,
       array: Array,
       exclude: Exclude
-    }
+    }.freeze
   end
 end
