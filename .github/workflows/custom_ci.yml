@@ -61,6 +61,7 @@ jobs:
           USE_ROM_SQL_MASTER: ${{matrix.use_rom_sql_master}}
           COVERAGE: ${{matrix.coverage}}
           CODACY_RUN_LOCAL: ${{matrix.coverage}}
+          CODACY_PROJECT_TOKEN: ${{secrets.CODACY_PROJECT_TOKEN}}
           BUNDLE_GEMFILE: ${{matrix.gemfile}}
           BASE_DB_URI: localhost/rom_repository
         run: bundle exec rake spec
