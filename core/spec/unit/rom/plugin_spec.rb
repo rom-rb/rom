@@ -175,7 +175,7 @@ RSpec.describe 'ROM::PluginRegistry' do
       use :datestamps
     }.call
 
-    expect(users.to_h.keys).to eql %i(id name created_at updated_at)
+    expect(users.to_h.keys).to eql %i[id name created_at updated_at]
   end
 
   it 'applies extensions to schema DSL' do

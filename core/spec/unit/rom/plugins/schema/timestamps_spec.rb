@@ -22,7 +22,7 @@ RSpec.describe ROM::Plugins::Schema::Timestamps do
     schema_dsl.use :timestamps
     schema_dsl.timestamps :created_on, :updated_on
 
-    expect(schema.to_h.keys).to eql(%i(created_on updated_on))
+    expect(schema.to_h.keys).to eql(%i[created_on updated_on])
   end
 
   it 'supports custom types' do
@@ -36,8 +36,8 @@ RSpec.describe ROM::Plugins::Schema::Timestamps do
   end
 
   it 'supports custom names with options' do
-    schema_dsl.use :timestamps, attributes: %i(created_on updated_on)
+    schema_dsl.use :timestamps, attributes: %i[created_on updated_on]
 
-    expect(schema.to_h.keys).to eql(%i(created_on updated_on))
+    expect(schema.to_h.keys).to eql(%i[created_on updated_on])
   end
 end

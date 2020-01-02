@@ -12,7 +12,7 @@ module ROM
     #
     # @api public
     class DSL < BasicObject
-      KERNEL_METHODS = %i(extend method).freeze
+      KERNEL_METHODS = %i[extend method].freeze
       KERNEL_METHODS.each { |m| define_method(m, ::Kernel.instance_method(m)) }
 
       extend Initializer

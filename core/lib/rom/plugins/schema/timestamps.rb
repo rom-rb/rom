@@ -23,7 +23,7 @@ module ROM
       #
       # @api public
       module Timestamps
-        DEFAULT_TIMESTAMPS = %i(created_at updated_at).freeze
+        DEFAULT_TIMESTAMPS = %i[created_at updated_at].freeze
 
         # @api private
         def self.apply(schema, type: Types::Time, attributes: DEFAULT_TIMESTAMPS)
