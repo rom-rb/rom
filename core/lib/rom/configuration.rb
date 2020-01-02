@@ -54,7 +54,7 @@ module ROM
       @notifications = Notifications.event_bus(:configuration)
       @setup = Setup.new(notifications)
 
-      block.call(self) if block
+      block&.call(self)
     end
 
     # Apply a plugin to the configuration
