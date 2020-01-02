@@ -20,14 +20,10 @@ run('Loading ALL user objects') do |x|
     users.size == COUNT
   end
   x.report('AR') do
-    ARUser.all.to_a.each do |u|
-      u.name
-    end
+    ARUser.all.to_a.each(&:name)
   end
   x.report('ROM') do
-    users.to_a.each do |u|
-      u.name
-    end
+    users.to_a.each(&:name)
   end
 
   x.report('ROM (auto_struct: false)') do
