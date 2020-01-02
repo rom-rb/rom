@@ -63,7 +63,7 @@ module ROM
       #
       # @api public
       def project(*names)
-        map { |tuple| tuple.reject { |key| !names.include?(key) } }
+        map { |tuple| tuple.select { |key| names.include?(key) } }
       end
 
       # Sort a dataset
