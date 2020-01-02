@@ -77,12 +77,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        image: ["jruby:9.2.9", "ruby:rc"]
+        image: ["jruby:9.2.9", "ruby:2.7"]
         include:
           - image: "jruby:9.2.9"
             fail_on_warnings: "false"
             use_rom_sql_master: "false"
-          - image: "ruby:rc"
+          - image: "ruby:2.7"
             fail_on_warnings: "true"
             use_rom_sql_master: "true"
 
