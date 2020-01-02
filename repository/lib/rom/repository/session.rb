@@ -32,7 +32,7 @@ module ROM
       @status = :success
 
       self
-    rescue => e
+    rescue StandardError => e
       @status = :failure
       raise e
     ensure
