@@ -18,7 +18,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby: ["2.4.9", "2.5.7", "2.6.5", "2.7.0", "jruby"]
+        ruby:
+          - "2.7.0"
+          - "2.6.5"
+          - "2.5.7"
+          - "2.4.9"
+          - "jruby"
         runtime_deps:
           - "rom-sql-latest"
           - "rom-sql-master"
