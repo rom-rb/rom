@@ -19,10 +19,10 @@ jobs:
       fail-fast: false
       matrix:
         ruby:
-          - "2.7.0"
-          - "2.6.5"
-          - "2.5.7"
-          - "2.4.9"
+          - "2.7"
+          - "2.6"
+          - "2.5"
+          - "2.4"
           - "jruby"
         runtime_deps:
           - "rom-sql-latest"
@@ -30,7 +30,7 @@ jobs:
           - "dry-transformer-latest"
           - "dry-transformer-master"
         include:
-          - ruby: "2.6.5"
+          - ruby: "2.6"
             coverage: "true"
           - runtime_deps: "rom-sql-latest"
             use_rom_sql_master: "false"
