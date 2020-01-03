@@ -27,13 +27,17 @@ jobs:
         include:
           - ruby: "2.6.x"
             coverage: "true"
-          - runtime_deps: "rom-sql-latest"
+          - ruby: "2.6.5"
+            runtime_deps: "rom-sql-latest"
             use_rom_sql_master: "false"
-          - runtime_deps: "rom-sql-master"
+          - ruby: "2.6.5"
+            runtime_deps: "rom-sql-master"
             use_rom_sql_master: "true"
-          - runtime_deps: "dry-transformer-latest"
+          - ruby: "2.6.5"
+            runtime_deps: "dry-transformer-latest"
             use_dry_transformer_master: "false"
-          - runtime_deps: "dry-transformer-master"
+          - ruby: "2.6.5"
+            runtime_deps: "dry-transformer-master"
             use_dry_transformer_master: "true"
     steps:
       - uses: actions/checkout@v1
