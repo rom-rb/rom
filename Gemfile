@@ -18,10 +18,10 @@ end
 
 group :sql do
   gem 'sequel', '~> 5.0'
-  gem 'sqlite3', platforms: :mri
+  gem 'sqlite3', platforms: :ruby
   gem 'jdbc-sqlite3', platforms: :jruby
   gem 'jdbc-postgres', platforms: :jruby
-  gem 'pg', platforms: :mri
+  gem 'pg', platforms: :ruby
   gem 'dry-monitor'
 
   if ENV['USE_ROM_SQL_MASTER'].eql?('true')
@@ -34,12 +34,12 @@ end
 group :test do
   gem 'rspec', '~> 3.6'
   gem 'codacy-coverage', require: false
-  gem 'simplecov', platforms: :mri
+  gem 'simplecov', platforms: :ruby
   gem 'warning'
 end
 
 group :docs do
-  platform :mri do
+  platform :ruby do
     gem 'redcarpet'
     gem 'yard'
     gem 'yard-junk'
@@ -48,11 +48,11 @@ end
 
 group :tools do
   gem 'pry'
-  gem 'pry-byebug', platforms: :mri
+  gem 'pry-byebug', platforms: :ruby
 end
 
 group :benchmarks do
-  gem 'hotch', platforms: :mri
+  gem 'hotch', platforms: :ruby
   gem 'benchmark-ips'
   gem 'activerecord', '~> 5.0'
 end
