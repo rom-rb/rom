@@ -25,7 +25,7 @@ jobs:
           - "transproc-latest"
           - "transproc-master"
         include:
-          - ruby: "2.6.x"
+          - ruby: "2.6.5"
             coverage: "true"
           - runtime_deps: "rom-sql-latest"
             use_rom_sql_master: "false"
