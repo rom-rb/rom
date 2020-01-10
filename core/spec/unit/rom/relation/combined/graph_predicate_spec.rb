@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 RSpec.describe ROM::Relation::Combined do
   subject(:relation) do
-    ROM::Relation::Combined.new(users, []) 
+    ROM::Relation::Combined.new(users, [])
   end
 
   let(:users) do
     Class.new(ROM::Relation) do
-      def by_name(name)
+      def by_name(_name)
         self
       end
     end.new([])

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe ROM::Relation, '.dataset' do
@@ -5,7 +7,7 @@ RSpec.describe ROM::Relation, '.dataset' do
 
   it 'injects configured dataset when block was provided' do
     configuration.relation(:users) do
-      dataset do |klass|
+      dataset do |_klass|
         insert(id: 2, name: 'Joe')
         insert(id: 1, name: 'Jane')
 

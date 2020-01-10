@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'rom/memory'
 
@@ -27,8 +29,8 @@ RSpec.describe 'Gateways / Setting logger' do
       config.gateways[:default].use_logger(logger)
     end
 
-    container.gateways[:default].logger.info("test")
+    container.gateways[:default].logger.info('test')
 
-    expect(logger.messages).to eql(["test"])
+    expect(logger.messages).to eql(['test'])
   end
 end

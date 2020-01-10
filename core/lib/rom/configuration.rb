@@ -37,8 +37,8 @@ module ROM
     attr_reader :notifications
 
     def_delegators :@setup, :register_relation, :register_command, :register_mapper, :register_plugin,
-                            :command_classes, :mapper_classes,
-                            :auto_registration
+                   :command_classes, :mapper_classes,
+                   :auto_registration
 
     def_delegators :@environment, :gateways, :gateways_map, :configure, :config
 
@@ -54,7 +54,7 @@ module ROM
       @notifications = Notifications.event_bus(:configuration)
       @setup = Setup.new(notifications)
 
-      block.call(self) if block
+      block&.call(self)
     end
 
     # Apply a plugin to the configuration
@@ -100,8 +100,8 @@ module ROM
 
     # @api private
     def adapter_for_gateway(gateway)
-      ROM.adapters.select do |key, value|
-        value.const_defined?(:Gateway) && gateway.kind_of?(value.const_get(:Gateway))
+      ROM.adapters.select do |_key, value|
+        value.const_defined?(:Gateway) && gateway.is_a?(value.const_get(:Gateway))
       end.keys.first
     end
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe 'Relation registration DSL' do
@@ -23,23 +25,23 @@ RSpec.describe 'Relation registration DSL' do
 
     tasks = container.relations.tasks
 
-    expect(tasks.class.name).to eql("ROM::Relation[Tasks]")
-    expect(tasks.high_priority.inspect).to include("#<ROM::Relation[Tasks]")
+    expect(tasks.class.name).to eql('ROM::Relation[Tasks]')
+    expect(tasks.high_priority.inspect).to include('#<ROM::Relation[Tasks]')
 
-    expect(tasks.high_priority.by_title("be nice")).to match_array(
-      [name: "Joe", title: "be nice", priority: 1]
+    expect(tasks.high_priority.by_title('be nice')).to match_array(
+      [name: 'Joe', title: 'be nice', priority: 1]
     )
 
-    expect(tasks.by_title("be cool")).to match_array(
-      [name: "Jane", title: "be cool", priority: 2]
+    expect(tasks.by_title('be cool')).to match_array(
+      [name: 'Jane', title: 'be cool', priority: 2]
     )
 
     users = container.relations.users
 
     expect(users.with_tasks).to match_array(
-      [{ name: "Joe", email: "joe@doe.org", title: "be nice", priority: 1 },
-       { name: "Joe", email: "joe@doe.org", title: "sleep well", priority: 2 },
-       { name: "Jane", email: "jane@doe.org", title: "be cool", priority: 2 }]
+      [{ name: 'Joe', email: 'joe@doe.org', title: 'be nice', priority: 1 },
+       { name: 'Joe', email: 'joe@doe.org', title: 'sleep well', priority: 2 },
+       { name: 'Jane', email: 'jane@doe.org', title: 'be cool', priority: 2 }]
     )
   end
 end

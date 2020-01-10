@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.shared_context 'relations' do
   let(:users) { rom.relations[:users] }
   let(:tasks) { rom.relations[:tasks] }
@@ -20,7 +22,7 @@ RSpec.shared_context 'relations' do
         end
       end
 
-      def expired(expiration_time=Time.now)
+      def expired(expiration_time = Time.now)
         where { created_at < expiration_time }
       end
 

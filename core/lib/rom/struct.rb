@@ -102,7 +102,7 @@ module ROM
     def method_missing(*)
       super
     rescue NameError => error
-      raise MissingAttribute.new { "#{ error.message } (attribute not loaded?)" }
+      raise MissingAttribute.new { "#{error.message} (attribute not loaded?)" }
     end
   end
 end

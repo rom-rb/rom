@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rom/cache'
 
 RSpec.describe ROM::Cache do

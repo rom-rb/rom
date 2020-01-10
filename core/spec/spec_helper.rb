@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'pathname'
 
 SPEC_ROOT = root = Pathname(__FILE__).dirname
@@ -11,7 +13,7 @@ require 'warning'
 
 Warning.ignore(/__FILE__/)
 Warning.ignore(/__LINE__/)
-Warning.process { |w| raise RuntimeError, w } if ENV['FAIL_ON_WARNINGS'].eql?('true')
+Warning.process { |w| raise w } if ENV['FAIL_ON_WARNINGS'].eql?('true')
 
 require 'dry/core/deprecations'
 Dry::Core::Deprecations.set_logger!(SPEC_ROOT.join('../log/deprecations.log'))

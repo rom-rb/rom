@@ -1,27 +1,29 @@
-require "bundler/gem_tasks"
-require "rspec/core/rake_task"
-require "rake/testtask"
+# frozen_string_literal: true
+
+require 'bundler/gem_tasks'
+require 'rspec/core/rake_task'
+require 'rake/testtask'
 
 RSpec::Core::RakeTask.new(:spec)
 task default: [:ci]
 
 desc 'Run specs in isolation'
 task :"spec:isolation" do
-  FileList["spec/**/*_spec.rb"].each do |spec|
+  FileList['spec/**/*_spec.rb'].each do |spec|
     sh "COVERAGE=false bundle exec rspec #{spec}"
   end
 end
 
 if RUBY_ENGINE != 'ruby'
-  desc "Run CI tasks"
-  task ci: [:spec, :lint]
+  desc 'Run CI tasks'
+  task ci: %i[spec lint]
 else
-  desc "Run CI tasks"
-  task ci: [:spec, :lint, :"spec:isolation"]
+  desc 'Run CI tasks'
+  task ci: %i[spec lint spec:isolation]
 end
 
 Rake::TestTask.new(:lint) do |test|
-  test.description = "Run adapter lint tests against memory adapter"
+  test.description = 'Run adapter lint tests against memory adapter'
   test.test_files = FileList.new('spec/test/*_test.rb')
   test.libs << 'test'
   test.verbose = true

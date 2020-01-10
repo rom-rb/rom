@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 USER_SEED = COUNT.times.map { |i|
-  { id:    i + 1,
-    name:  "User #{i + 1}",
+  { id: i + 1,
+    name: "User #{i + 1}",
     email: "email_#{i}@domain.com",
-    age:   i*10 }
+    age: i * 10 }
 }
 
 TASK_SEED = USER_SEED.map { |user|

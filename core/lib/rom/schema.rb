@@ -73,9 +73,9 @@ module ROM
       k.required(false)
     end
 
-    HASH_SCHEMA = Types::Coercible::Hash.
-                    schema(EMPTY_HASH).
-                    with_type_transform(type_transformation)
+    HASH_SCHEMA = Types::Coercible::Hash
+      .schema(EMPTY_HASH)
+      .with_type_transform(type_transformation)
 
     extend Initializer
 
@@ -201,7 +201,7 @@ module ROM
     #
     # @api public
     def empty?
-      attributes.size == 0
+      attributes.empty?
     end
 
     # Coerce schema into a <AttributeName=>Attribute> Hash
@@ -229,9 +229,7 @@ module ROM
           source_index[src][key]
         end
 
-      unless attr
-        raise(KeyError, "#{key.inspect} attribute doesn't exist in #{src} schema")
-      end
+      raise(KeyError, "#{key.inspect} attribute doesn't exist in #{src} schema") unless attr
 
       attr
     end
@@ -363,7 +361,7 @@ module ROM
     #
     # @api public
     def key?(name)
-      ! attributes.detect { |attr| attr.name == name }.nil?
+      !attributes.detect { |attr| attr.name == name }.nil?
     end
 
     # Return if a schema is canonical
@@ -372,7 +370,7 @@ module ROM
     #
     # @api public
     def canonical?
-      self.equal?(canonical)
+      equal?(canonical)
     end
 
     # Finalize a schema
@@ -380,8 +378,9 @@ module ROM
     # @return [self]
     #
     # @api private
-    def finalize!(**opts)
+    def finalize!(**_opts)
       return self if frozen?
+
       freeze
     end
 
@@ -453,7 +452,7 @@ module ROM
 
     # @api private
     def set!(key, value)
-      instance_variable_set("@#{ key }", value)
+      instance_variable_set("@#{key}", value)
       options[key] = value
     end
 
@@ -471,10 +470,10 @@ module ROM
 
     # @api private
     def source_index
-      select(&:source).
-        group_by(&:source).
-        map { |src, grp| [src.to_sym, grp.map { |attr| [attr.name, attr] }.to_h] }.
-        to_h
+      select(&:source)
+        .group_by(&:source)
+        .map { |src, grp| [src.to_sym, grp.map { |attr| [attr.name, attr] }.to_h] }
+        .to_h
     end
 
     # @api private
@@ -484,10 +483,10 @@ module ROM
 
     # @api private
     def initialize_primary_key_names
-      if primary_key.size > 0
-        set!(:primary_key_name, primary_key[0].name)
-        set!(:primary_key_names, primary_key.map(&:name))
-      end
+      return if primary_key.empty?
+
+      set!(:primary_key_name, primary_key[0].name)
+      set!(:primary_key_names, primary_key.map(&:name))
     end
 
     memoize :count_index, :name_index, :source_index, :to_ast, :to_input_hash, :to_output_hash

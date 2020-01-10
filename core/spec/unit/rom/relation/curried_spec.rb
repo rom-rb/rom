@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe ROM::Relation::Curried do
@@ -32,8 +34,8 @@ RSpec.describe ROM::Relation::Curried do
     end
 
     it 'materializes a relation view with arity -1' do
-      expect(relation.by_names('Jane', 'Joe').to_a).
-        to eql([{ name: 'Joe', email: 'joe@doe.org' }, { name: 'Jane', email: 'jane@doe.org' }])
+      expect(relation.by_names('Jane', 'Joe').to_a)
+        .to eql([{ name: 'Joe', email: 'joe@doe.org' }, { name: 'Jane', email: 'jane@doe.org' }])
 
       expect(relation.by_names).to eql([])
     end
@@ -43,10 +45,11 @@ RSpec.describe ROM::Relation::Curried do
     end
 
     it 'raises argument error if no arguments were provided' do
-      expect { relation.by_name.() }.
-        to raise_error(
-             ArgumentError,
-             "curried #{users_relation.class}#by_name relation was called without any arguments")
+      expect { relation.by_name.() }
+        .to raise_error(
+          ArgumentError,
+          "curried #{users_relation.class}#by_name relation was called without any arguments"
+        )
     end
 
     it 'returns self when has curried args and no additional args were provided' do

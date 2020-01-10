@@ -76,9 +76,7 @@ module ROM
       def check_all_attributes_defined(schema, all_known, not_inferred)
         not_defined = not_inferred - all_known.map(&:name)
 
-        if not_defined.size > 0
-          raise MissingAttributesError.new(schema.name, not_defined)
-        end
+        raise MissingAttributesError.new(schema.name, not_defined) unless not_defined.empty?
       end
 
       # @api private

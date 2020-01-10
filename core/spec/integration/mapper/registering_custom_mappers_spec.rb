@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe 'Registering Custom Mappers' do
@@ -7,7 +9,7 @@ RSpec.describe 'Registering Custom Mappers' do
   it 'allows registering arbitrary objects as mappers' do
     model = Struct.new(:name, :email)
 
-    mapper = -> users {
+    mapper = lambda { |users|
       users.map { |tuple| model.new(*tuple.values_at(:name, :email)) }
     }
 

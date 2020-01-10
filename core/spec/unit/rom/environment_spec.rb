@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe ROM::Environment do
@@ -45,7 +47,7 @@ RSpec.describe ROM::Environment do
 
     it 'configures the gateways hash' do
       expect(gateways).to be_kind_of(Hash)
-      expect(gateways.keys).to eq([:foo, :default])
+      expect(gateways.keys).to eq(%i[foo default])
       expect(gateways[:default]).to be_kind_of(ROM::Memory::Gateway)
       expect(gateways[:foo]).to be_kind_of(ROM::Memory::Gateway)
       expect(gateways[:default]).not_to be(gateways[:foo])
@@ -53,7 +55,7 @@ RSpec.describe ROM::Environment do
 
     it 'configures the gateways_map hash' do
       expect(gateways_map).to be_kind_of(Hash)
-      expect(gateways_map.values).to eq([:foo, :default])
+      expect(gateways_map.values).to eq(%i[foo default])
       expect(gateways_map.keys.map(&:class)).to eq([ROM::Memory::Gateway, ROM::Memory::Gateway])
       expect(gateways_map.keys).to match_array(gateways.values)
     end
@@ -65,7 +67,7 @@ RSpec.describe ROM::Environment do
         class Gateway < ROM::Gateway
           attr_reader :settings
 
-          def initialize settings = {}
+          def initialize(settings = {})
             @settings = settings
           end
         end
@@ -75,18 +77,18 @@ RSpec.describe ROM::Environment do
     end
 
     context 'as a hash' do
-      let(:params) { [foo: [:test, "foo"], bar: [:test, ["bar"]]] }
+      let(:params) { [foo: [:test, 'foo'], bar: [:test, ['bar']]] }
 
       it 'configures the gateway instance' do
-        expect(gateways.values.map(&:settings)).to match_array(["foo", "bar"])
+        expect(gateways.values.map(&:settings)).to match_array(%w[foo bar])
       end
     end
 
     context 'as flat args' do
-      let(:params) { [:test, "foo"] }
+      let(:params) { [:test, 'foo'] }
 
       it 'configures the gateway instance' do
-        expect(gateways.values.map(&:settings)).to match_array(["foo"])
+        expect(gateways.values.map(&:settings)).to match_array(['foo'])
       end
     end
   end
@@ -97,7 +99,7 @@ RSpec.describe ROM::Environment do
         class Gateway < ROM::Gateway
           attr_reader :settings
 
-          def initialize settings = {}
+          def initialize(settings = {})
             @settings = settings
           end
         end

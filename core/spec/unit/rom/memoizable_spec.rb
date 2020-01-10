@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rom/support/memoizable'
 
 RSpec.describe ROM::Memoizable, '.memoize' do
@@ -6,11 +8,11 @@ RSpec.describe ROM::Memoizable, '.memoize' do
       include ROM::Memoizable
 
       def foo
-        ['a', 'ab', 'abc'].max
+        %w[a ab abc].max
       end
       memoize :foo
 
-      def bar(arg)
+      def bar(_arg)
         { a: '1', b: '2' }
       end
       memoize :bar

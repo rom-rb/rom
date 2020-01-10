@@ -1,4 +1,6 @@
-RSpec.shared_examples_for "an enumerable dataset" do
+# frozen_string_literal: true
+
+RSpec.shared_examples_for 'an enumerable dataset' do
   subject(:dataset) { klass.new(data) }
 
   let(:data) do

@@ -63,7 +63,7 @@ module ROM
       #
       # @api public
       def project(*names)
-        map { |tuple| tuple.reject { |key| !names.include?(key) } }
+        map { |tuple| tuple.select { |key| names.include?(key) } }
       end
 
       # Sort a dataset
@@ -119,7 +119,8 @@ module ROM
       # @api private
       def __compare__(a, b, nils_first)
         return a <=> b unless a.nil? ^ b.nil?
-        (nils_first ^ b.nil?) ? -1 : 1
+
+        nils_first ^ b.nil? ? -1 : 1
       end
     end
   end

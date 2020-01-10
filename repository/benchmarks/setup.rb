@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'bundler'
 
 Bundler.require
@@ -9,9 +11,7 @@ require 'rom-repository'
 require 'active_record'
 require 'logger'
 require 'hotch'
-
 begin; require 'byebug'; rescue LoadError; end
-
 require_relative 'gc_suite'
 
 def benchmark(title)
@@ -21,7 +21,10 @@ def benchmark(title)
   Benchmark.ips do |x|
     x.config(suite: GCSuite.new)
     def x.verify(*); end
-    def x.prepare(*); yield; end
+
+    def x.prepare(*) 
+      yield 
+    end
     yield x
     x.compare!
   end
@@ -115,14 +118,14 @@ ROM_ENV = ROM.container(setup)
 COUNT = ENV.fetch('COUNT', 1000).to_i
 
 USER_SEED = COUNT.times.map { |i|
-  { id:    i + 1,
-    name:  "User #{i + 1}",
+  { id: i + 1,
+    name: "User #{i + 1}",
     email: "email_#{i}@domain.com",
-    age:   i*10 }
+    age: i * 10 }
 }
 
 def hr
-  "*"*80
+  '*' * 80
 end
 
 def rom

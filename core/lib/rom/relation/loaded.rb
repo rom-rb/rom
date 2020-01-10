@@ -47,6 +47,7 @@ module ROM
       # @api public
       def each
         return to_enum unless block_given?
+
         collection.each { |tuple| yield(tuple) }
       end
 

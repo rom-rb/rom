@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe ROM::Commands::Lazy do
@@ -102,7 +104,7 @@ RSpec.describe ROM::Commands::Lazy do
             name: 'Joe',
             tasks: [{ title: 'Joe Task One' }]
           }
-        ]}
+        ] }
       end
 
       it 'evaluates the input and calls command' do
@@ -119,7 +121,8 @@ RSpec.describe ROM::Commands::Lazy do
     context 'with an update command' do
       subject(:command) do
         ROM::Commands::Lazy[update_user].new(
-          update_user, evaluator, -> cmd, user { cmd.by_name(user[:name]) })
+          update_user, evaluator, -> cmd, user { cmd.by_name(user[:name]) }
+        )
       end
 
       before do
@@ -224,7 +227,7 @@ RSpec.describe ROM::Commands::Lazy do
             name: 'Joe',
             tasks: [{ title: 'Joe Task One', priority: 1 }]
           }
-        ]}
+        ] }
       end
 
       before do

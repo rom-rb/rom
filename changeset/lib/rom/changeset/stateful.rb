@@ -87,12 +87,13 @@ module ROM
       #
       # @return [Pipe]
       def self.default_pipe(context)
-        pipes.size > 0 ? pipes.map { |p| p.bind(context) }.reduce(:>>) : EMPTY_PIPE
+        !pipes.empty? ? pipes.map { |p| p.bind(context) }.reduce(:>>) : EMPTY_PIPE
       end
 
       # @api private
       def self.inherited(klass)
         return if klass == ROM::Changeset
+
         super
         klass.instance_variable_set(:@__pipes__, pipes.dup)
       end
@@ -149,7 +150,7 @@ module ROM
       # @api public
       def extend(*steps, **options, &block)
         if block
-          if steps.size > 0
+          if !steps.empty?
             extend(*steps, **options).extend(**options, &block)
           else
             with(pipe: pipe.compose(Pipe.new(block).bind(self), **options))

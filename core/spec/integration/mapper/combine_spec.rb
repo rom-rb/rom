@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe 'Mapper definition DSL' do
@@ -9,7 +11,7 @@ RSpec.describe 'Mapper definition DSL' do
       configuration.relation(:tasks) do
         auto_map false
 
-        schema(:tasks) { }
+        schema(:tasks) {}
 
         def for_users(users)
           names = users.map { |user| user[:name] }
@@ -24,7 +26,7 @@ RSpec.describe 'Mapper definition DSL' do
       configuration.relation(:users) do
         auto_map false
 
-        schema(:users) { }
+        schema(:users) {}
 
         def addresses(_users)
           [{ city: 'NYC', user: 'Jane' }, { city: 'Boston', user: 'Joe' }]

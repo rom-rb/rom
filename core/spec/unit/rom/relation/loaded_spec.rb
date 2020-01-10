@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe ROM::Relation::Loaded do
@@ -36,14 +38,14 @@ RSpec.describe ROM::Relation::Loaded do
 
   describe '#pluck' do
     it 'returns a list of values under provided key' do
-      expect(users.pluck(:email)).to eql(%w(joe@doe.org jane@doe.org))
+      expect(users.pluck(:email)).to eql(%w[joe@doe.org jane@doe.org])
     end
   end
 
   describe '#primary_keys' do
     it 'returns a list of primary key values' do
       expect(users.source).to receive(:primary_key).and_return(:name)
-      expect(users.primary_keys).to eql(%w(Joe Jane))
+      expect(users.primary_keys).to eql(%w[Joe Jane])
     end
   end
 

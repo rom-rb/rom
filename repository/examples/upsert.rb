@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rom'
 require 'rom/repository'
 require 'rom/changeset'
@@ -19,7 +21,7 @@ migration = conf.gateways[:default].migration do
     create_table?(:taggings) do
       foreign_key :tag_id, :tags, null: false
       foreign_key :book_id, :books, null: false
-      primary_key [:tag_id, :book_id]
+      primary_key %i[tag_id book_id]
     end
   end
 end
@@ -82,9 +84,9 @@ tags = rom.relations[:tags]
 
 book = rom.relations[:books].changeset(:create, title: 'Hello World')
 
-tags = rom.relations[:tags].
-         changeset(:create, [{ name: 'red' }, { name: 'green' }]).
-         with(command_type: :fetch_or_create)
+tags = rom.relations[:tags]
+  .changeset(:create, [{ name: 'red' }, { name: 'green' }])
+  .with(command_type: :fetch_or_create)
 
 # return tags associated with the book
 books.transaction do

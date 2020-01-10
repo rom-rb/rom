@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe 'ROM::CommandCompiler' do
@@ -16,17 +18,16 @@ RSpec.describe 'ROM::CommandCompiler' do
     ROM::CommandCompiler.new(gateways, relations, registry, notifications)
   end
 
-
   let(:gateways) { { default: gateway } }
   let(:relations) { { users: users } }
-  let(:registry) {  }
+  let(:registry) {}
   let(:notifications) { double(trigger: nil) }
   let(:users_ast) do
     [:users,
      [[:attribute,
        [:id, [:nominal, [Integer, {}]], primary_key: true]],
       [:attribute,
-       [:name, [:nominal, [String, {}]], {:source=>:users}]]],
+       [:name, [:nominal, [String, {}]], { source: :users }]]],
      dataset: :users]
   end
 

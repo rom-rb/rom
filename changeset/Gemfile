@@ -1,3 +1,5 @@
-COMPONENTS = %w(core repository)
+# frozen_string_literal: true
+
+COMPONENTS = %w[core repository].freeze
 
 eval_gemfile '../Gemfile'

@@ -156,7 +156,7 @@ module ROM
     # @!attribute [r] output_schema
     #   @return [Object#[]] tuple processing function, uses schema or defaults to NOOP_OUTPUT_SCHEMA
     #   @api private
-    option :output_schema, default: -> {
+    option :output_schema, default: lambda {
       schema.any?(&:read?) ? schema.to_output_hash : NOOP_OUTPUT_SCHEMA
     }
 
@@ -396,7 +396,7 @@ module ROM
     #
     # @api private
     def schema?
-      ! schema.empty?
+      !schema.empty?
     end
 
     # Return a new relation with provided dataset and additional options
@@ -473,7 +473,7 @@ module ROM
 
     # @api private
     def attr_ast
-      schema.map { |t| t.to_read_ast }
+      schema.map(&:to_read_ast)
     end
 
     # @api private

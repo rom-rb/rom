@@ -164,7 +164,7 @@ module ROM
       #
       # @api public
       def before(*hooks)
-        if hooks.size > 0
+        if !hooks.empty?
           set_hooks(:before, hooks)
         else
           @before
@@ -209,7 +209,7 @@ module ROM
       #
       # @api public
       def after(*hooks)
-        if hooks.size > 0
+        if !hooks.empty?
           set_hooks(:after, hooks)
         else
           @after

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe 'Mapper definition DSL' do
@@ -28,7 +30,7 @@ RSpec.describe 'Mapper definition DSL' do
     it 'groups all attributes and folds the first key' do
       configuration.mappers do
         define(:users) do
-          fold tasks: [:title, :priority]
+          fold tasks: %i[title priority]
         end
       end
 
@@ -41,7 +43,7 @@ RSpec.describe 'Mapper definition DSL' do
     it 'is sensitive to the order of keys' do
       configuration.mappers do
         define(:users) do
-          fold priorities: [:priority, :title]
+          fold priorities: %i[priority title]
         end
       end
 

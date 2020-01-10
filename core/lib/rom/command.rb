@@ -280,7 +280,7 @@ module ROM
           result = prepared ? execute(prepared, &block) : execute(&block)
 
           if curried?
-            if args.size > 0
+            if !args.empty?
               apply_hooks(after_hooks, result, *args)
             elsif curry_args.size > 1
               apply_hooks(after_hooks, result, curry_args[1])
@@ -288,7 +288,7 @@ module ROM
               apply_hooks(after_hooks, result)
             end
           else
-            apply_hooks(after_hooks, result, *args[1..args.size-1])
+            apply_hooks(after_hooks, result, *args[1..args.size - 1])
           end
         else
           execute(*(curry_args + args), &block)
@@ -335,7 +335,7 @@ module ROM
     #
     # @api public
     def curried?
-      curry_args.size > 0
+      !curry_args.empty?
     end
 
     # Return a new command with appended before hooks
@@ -393,7 +393,7 @@ module ROM
     #
     # @api private
     def hooks?
-      before_hooks.size > 0 || after_hooks.size > 0
+      !before_hooks.empty? || !after_hooks.empty?
     end
 
     # Check if this command is lazy

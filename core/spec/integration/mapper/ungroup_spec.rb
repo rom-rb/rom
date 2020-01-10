@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe 'Mapper definition DSL' do
@@ -45,7 +47,7 @@ RSpec.describe 'Mapper definition DSL' do
 
     it 'removes group when all attributes extracted' do
       configuration.mappers do
-        define(:users) { ungroup emails: [:address, :type, :foo] }
+        define(:users) { ungroup emails: %i[address type foo] }
       end
 
       expect(mapped_users).to eql [

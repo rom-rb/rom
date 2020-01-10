@@ -45,9 +45,12 @@ module ROM
         compiler = CommandCompiler.new(@gateways, @relations, registry, notifications)
 
         @relations.each do |(name, relation)|
-          commands.
-            select { |c| c.relation.name == relation.name }.
-            each { |c| relation.commands.elements[c.class.register_as || c.class.default_name] = c }
+          rel_commands = commands.select { |c| c.relation.name == relation.name }
+
+          rel_commands.each do |command|
+            identifier = command.class.register_as || command.class.default_name
+            relation.commands.elements[identifier] = command
+          end
 
           relation.commands.set_compiler(compiler)
           relation.commands.set_mappers(relation.mappers)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rom/relation/combined'
 
 RSpec.describe ROM::Relation::Combined, '#command' do
@@ -14,9 +16,10 @@ RSpec.describe ROM::Relation::Combined, '#command' do
   end
 
   it 'raises when type is not :create' do
-    expect { relation.command(:update) }.
-      to raise_error(
-           NotImplementedError,
-           "ROM::Relation::Combined#command doesn't work with :update command type yet")
+    expect { relation.command(:update) }
+      .to raise_error(
+        NotImplementedError,
+        "ROM::Relation::Combined#command doesn't work with :update command type yet"
+      )
   end
 end

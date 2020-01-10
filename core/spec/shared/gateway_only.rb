@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.shared_context 'gateway only' do
   let(:gateway) { ROM::Memory::Gateway.new }
 

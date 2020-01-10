@@ -72,7 +72,7 @@ module ROM
           value =
             begin
               if index
-                tuple_path[0..tuple_path.size-2]
+                tuple_path[0..tuple_path.size - 2]
                   .reduce(input) { |a, e| a.fetch(e) }
                   .at(index)[tuple_path.last]
               else

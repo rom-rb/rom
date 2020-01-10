@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rom/setup'
 require 'rom/support/notifications'
 
@@ -9,7 +11,7 @@ RSpec.describe ROM::Setup, '#auto_registration' do
   let(:notifications) { instance_double(ROM::Notifications::EventBus) }
 
   after do
-    %i(Persistence Users CreateUser UserList My).each do |const|
+    %i[Persistence Users CreateUser UserList My].each do |const|
       Object.send(:remove_const, const) if Object.const_defined?(const)
     end
 
@@ -132,7 +134,7 @@ RSpec.describe ROM::Setup, '#auto_registration' do
 
     describe 'custom namespace' do
       context 'when namespace has subnamespace' do
-         before do
+        before do
           setup.auto_registration(
             SPEC_ROOT.join('fixtures/custom_namespace'),
             component_dirs: {
@@ -179,7 +181,7 @@ RSpec.describe ROM::Setup, '#auto_registration' do
       end
 
       context 'when namespace has wrong subnamespace' do
-         subject(:registration) do
+        subject(:registration) do
           setup.auto_registration(
             SPEC_ROOT.join('fixtures/wrong'),
             component_dirs: {

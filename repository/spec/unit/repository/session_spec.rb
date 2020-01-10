@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rom-changeset'
 
 RSpec.describe ROM::Repository, '#session' do
@@ -127,9 +129,9 @@ RSpec.describe ROM::Repository, '#session' do
     end
 
     let(:posts_changeset) do
-      posts.
-        changeset(:create, posts_data).
-        associate(labels_changeset, :posts)
+      posts
+        .changeset(:create, posts_data)
+        .associate(labels_changeset, :posts)
     end
 
     let(:labels_changeset) do
@@ -137,9 +139,9 @@ RSpec.describe ROM::Repository, '#session' do
     end
 
     let(:user_changeset) do
-      users.
-        changeset(:create, name: 'Jane').
-        associate(posts_changeset, :author)
+      users
+        .changeset(:create, name: 'Jane')
+        .associate(posts_changeset, :author)
     end
 
     it 'saves data in a transaction' do
@@ -178,9 +180,9 @@ RSpec.describe ROM::Repository, '#session' do
 
   describe 'creating new posts for existing user' do
     let(:posts_changeset) do
-      posts.
-        changeset(:create, [{ title: 'Post 1' }, { title: 'Post 2' }]).
-        associate(user, :author)
+      posts
+        .changeset(:create, [{ title: 'Post 1' }, { title: 'Post 2' }])
+        .associate(user, :author)
     end
 
     let(:user) do
@@ -219,7 +221,7 @@ RSpec.describe ROM::Repository, '#session' do
       end
 
       it 'saves data in transactions' do
-        repo.send(:transaction) do |t|
+        repo.send(:transaction) do |_t|
           repo.session { |s| s.add(user_changeset) }
           repo.session { |s| s.add(posts_changeset.associate(user, :author)) }
         end
@@ -239,7 +241,7 @@ RSpec.describe ROM::Repository, '#session' do
 
       it 'rolls back transaction' do
         expect {
-          repo.send(:transaction) do |t|
+          repo.send(:transaction) do |_t|
             repo.session { |s| s.add(user_changeset) }
             repo.session { |s| s.add(posts_changeset.associate(user, :author)) }
           end

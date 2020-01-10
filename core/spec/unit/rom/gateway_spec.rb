@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe ROM::Gateway do
-
   subject(:gateway) { Class.new(ROM::Gateway).new }
 
   describe '.setup' do
@@ -17,7 +18,7 @@ RSpec.describe ROM::Gateway do
       allow(ROM::Gateway).to receive(:class_from_symbol)
         .with(:wormhole).and_return(gateway_class)
 
-      args = %w(hello world)
+      args = %w[hello world]
       gateway = ROM::Gateway.setup(:wormhole, *args)
 
       expect(gateway).to be_instance_of(gateway_class)
@@ -26,7 +27,7 @@ RSpec.describe ROM::Gateway do
 
     it 'raises an exception if the type is not supported' do
       expect {
-        ROM::Gateway.setup(:bogus, "memory://test")
+        ROM::Gateway.setup(:bogus, 'memory://test')
       }.to raise_error(ROM::AdapterLoadError, /bogus/)
     end
 
@@ -101,7 +102,7 @@ RSpec.describe ROM::Gateway do
     end
 
     it 'accepts parameters' do
-      params = [5, "mutations", "are", "nice"]
+      params = [5, 'mutations', 'are', 'nice']
 
       expect { gateway.use_logger(params) }.to_not raise_error
     end
@@ -118,7 +119,7 @@ RSpec.describe ROM::Gateway do
     end
   end
 
-  describe "#adapter" do
+  describe '#adapter' do
     before { Test::CustomGateway = Class.new(ROM::Gateway) }
 
     let(:gateway) { Test::CustomGateway.new }
@@ -134,5 +135,4 @@ RSpec.describe ROM::Gateway do
       )
     end
   end # describe #adapter
-
 end

@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'rom/registry'
 
 RSpec.shared_examples_for 'registry fetch' do
   it 'raises an ArgumentError when nil is used as a key' do
     expect {
       registry.public_send(fetch_method, nil)
-    }.to raise_error(ArgumentError, "key cannot be nil")
+    }.to raise_error(ArgumentError, 'key cannot be nil')
   end
 
   it 'returns registered element identified by name' do

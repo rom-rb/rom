@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rom-changeset'
 
 RSpec.describe ROM::Repository, '#transaction' do
@@ -34,10 +36,10 @@ RSpec.describe ROM::Repository, '#transaction' do
     task = task_repo.create(title: 'Jane Task', user_id: jane.id)
 
     task = task_repo.transaction do
-      task_changeset = tasks.by_pk(task.id).
-                         changeset(:update, title: 'John Task').
-                         associate(john, :user).
-                         commit
+      task_changeset = tasks.by_pk(task.id)
+        .changeset(:update, title: 'John Task')
+        .associate(john, :user)
+        .commit
 
       task_repo.update(task_changeset)
     end

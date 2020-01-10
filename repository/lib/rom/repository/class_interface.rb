@@ -105,7 +105,7 @@ module ROM
           @commands.each do |spec|
             type, *view = Array(spec).flatten
 
-            if view.size > 0
+            if !view.empty?
               define_restricted_command_method(type, view, mapper: mapper, use: use, plugins_options: plugins_options)
             else
               define_command_method(type, mapper: mapper, use: use, plugins_options: plugins_options)
@@ -142,8 +142,8 @@ module ROM
           define_method(meth_name) do |*args|
             arity = root.__send__(view_name).arity
 
-            view_args = args[0..arity-1]
-            input = args[arity..args.size-1]
+            view_args = args[0..arity - 1]
+            input = args[arity..args.size - 1]
 
             changeset = input.first
 

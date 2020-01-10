@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rom/memory'
 
 RSpec.shared_context 'no container' do

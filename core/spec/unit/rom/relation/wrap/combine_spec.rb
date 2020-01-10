@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rom/relation/wrap'
 
 RSpec.describe ROM::Relation::Wrap, '#combine' do

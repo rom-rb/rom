@@ -95,12 +95,12 @@ module ROM
         if defined?(@schema) && !block && !infer
           @schema
         elsif block || infer
-          raise MissingSchemaClassError.new(self) unless schema_class
+          raise MissingSchemaClassError, self unless schema_class
 
           ds_name = dataset || schema_opts.fetch(:dataset, default_name.dataset)
           relation = as || schema_opts.fetch(:relation, ds_name)
 
-          raise InvalidRelationName.new(relation) if invalid_relation_name?(relation)
+          raise InvalidRelationName, relation if invalid_relation_name?(relation)
 
           @relation_name = Name[relation, ds_name]
 
@@ -133,7 +133,8 @@ module ROM
       # @!attribute [r] relation_name
       #   @return [Name] Qualified relation name
       def relation_name
-        raise MissingSchemaError.new(self) unless defined?(@relation_name)
+        raise MissingSchemaError, self unless defined?(@relation_name)
+
         @relation_name
       end
 
@@ -188,7 +189,7 @@ module ROM
       # @api public
       def view(*args, &block)
         if args.size == 1 && block.arity > 0
-          raise ArgumentError, "schema attribute names must be provided as the second argument"
+          raise ArgumentError, 'schema attribute names must be provided as the second argument'
         end
 
         name, new_schema_fn, relation_block =
@@ -261,7 +262,7 @@ module ROM
         adapter_ns = ROM.adapters[adapter]
 
         compiler =
-          if adapter_ns && adapter_ns.const_defined?(:MapperCompiler)
+          if adapter_ns&.const_defined?(:MapperCompiler)
             adapter_ns.const_get(:MapperCompiler)
           else
             MapperCompiler

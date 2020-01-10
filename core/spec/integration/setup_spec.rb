@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'dry/struct'
 
 RSpec.describe 'Configuring ROM' do
@@ -90,7 +92,7 @@ RSpec.describe 'Configuring ROM' do
   describe 'broken relation class' do
     before do
       class Test::BrokenRelation < ROM::Relation
-        schema(:users) { }
+        schema(:users) {}
       end
     end
 

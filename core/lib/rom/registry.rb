@@ -66,7 +66,7 @@ module ROM
     end
 
     # @api private
-    def map(&block)
+    def map
       new_elements = elements.each_with_object({}) do |(name, element), h|
         h[name] = yield(element)
       end
@@ -76,6 +76,7 @@ module ROM
     # @api private
     def each
       return to_enum unless block_given?
+
       elements.each { |element| yield(element) }
     end
 
@@ -86,7 +87,7 @@ module ROM
 
     # @api private
     def fetch(key)
-      raise ArgumentError.new('key cannot be nil') if key.nil?
+      raise ArgumentError, 'key cannot be nil' if key.nil?
 
       elements.fetch(key.to_sym) do
         return yield if block_given?

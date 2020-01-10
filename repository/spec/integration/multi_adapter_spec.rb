@@ -1,4 +1,5 @@
-# coding: utf-8
+# frozen_string_literal: true
+
 RSpec.describe 'Repository with multi-adapters configuration' do
   let(:configuration) {
     ROM::Configuration.new(default: [:sql, DB_URI], memory: [:memory])
@@ -14,8 +15,8 @@ RSpec.describe 'Repository with multi-adapters configuration' do
   let(:repo) { Test::Repository.new(rom) }
 
   before do
-    [:tags, :tasks, :books, :posts_labels, :posts, :users, :labels,
-     :reactions, :messages].each { |table| sql_conn.drop_table?(table) }
+    %i[tags tasks books posts_labels posts users labels
+     reactions messages].each { |table| sql_conn.drop_table?(table) }
 
     sql_conn.create_table :users do
       primary_key :id
@@ -32,7 +33,7 @@ RSpec.describe 'Repository with multi-adapters configuration' do
           end
         end
 
-        def for_tasks(assoc, tasks)
+        def for_tasks(_assoc, tasks)
           where(id: tasks.pluck(:user_id))
         end
       end
@@ -49,7 +50,7 @@ RSpec.describe 'Repository with multi-adapters configuration' do
           end
         end
 
-        def for_users(assoc, users)
+        def for_users(_assoc, users)
           restrict(user_id: users.pluck(:id))
         end
       end
