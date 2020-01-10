@@ -80,7 +80,7 @@ Naming/PredicateName:
 
 Naming/FileName:
   Exclude:
-    - "lib/dry-*.rb"
+    - "lib/*-*.rb"
 
 Style/SymbolArray:
   Exclude:
