@@ -11,7 +11,8 @@ Style/StringLiterals:
   EnforcedStyle: single_quotes
 
 Style/Alias:
-  Enabled: false
+  Enabled: true
+  EnforcedStyle: prefer_alias_method
 
 Style/LambdaCall:
   Enabled: false
@@ -76,7 +77,7 @@ Naming/PredicateName:
 
 Naming/FileName:
   Exclude:
-    - "lib/rom-*.rb"
+    - "lib/dry-*.rb"
 
 Style/SymbolArray:
   Exclude:
@@ -86,4 +87,13 @@ Style/ConditionalAssignment:
   Enabled: false
 
 Naming/MethodName:
+  Enabled: false
+
+Style/AsciiComments:
+  Enabled: false
+
+Style/DateTime:
+  Enabled: false
+
+Style/IfUnlessModifier:
   Enabled: false
