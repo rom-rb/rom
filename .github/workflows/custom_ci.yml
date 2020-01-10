@@ -13,19 +13,24 @@ on:
       - master
 
 jobs:
-  tests-mri:
+  tests:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        ruby: ["2.6.x", "2.5.x", "2.4.x"]
+        ruby:
+          - "2.7"
+          - "2.6"
+          - "2.5"
+          - "2.4"
+          - "jruby"
         runtime_deps:
           - "rom-sql-latest"
           - "rom-sql-master"
           - "transproc-latest"
           - "transproc-master"
         include:
-          - ruby: "2.6.x"
+          - ruby: "2.6"
             coverage: "true"
           - runtime_deps: "rom-sql-latest"
             use_rom_sql_master: "false"
@@ -45,7 +50,7 @@ jobs:
           postgresql db: rom_repository
           postgresql user: runner
       - name: Set up Ruby
-        uses: actions/setup-ruby@v1
+        uses: eregon/use-ruby-action@master
         with:
           ruby-version: ${{matrix.ruby}}
       - name: Install bundler
@@ -70,45 +75,3 @@ jobs:
         env:
           CODACY_PROJECT_TOKEN: ${{secrets.CODACY_PROJECT_TOKEN}}
         run: codacy_final_reporter
-
-  tests-others:
-    runs-on: ubuntu-latest
-    container:
-      image: ${{matrix.image}}
-    strategy:
-      fail-fast: false
-      matrix:
-        image: ["jruby:9.2.9", "ruby:2.7"]
-        include:
-          - image: "jruby:9.2.9"
-            fail_on_warnings: "false"
-            use_rom_sql_master: "false"
-          - image: "ruby:2.7"
-            fail_on_warnings: "true"
-            use_rom_sql_master: "true"
-
-    services:
-      postgres_db:
-        image: postgres:10.8
-        env:
-          POSTGRES_USER: root
-          POSTGRES_PASSWORD: ""
-          POSTGRES_DB: rom_repository
-        ports:
-          - 5432:5432
-        # needed because the postgres container does not provide a healthcheck
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-    steps:
-      - uses: actions/checkout@v1
-      - name: Install bundler
-        run: gem install bundler
-      - name: Bundle
-        run: bin/bundle
-        env:
-          USE_ROM_SQL_MASTER: ${{matrix.use_rom_sql_master}}
-      - name: Run all tests
-        run: bundle exec rake spec
-        env:
-          BASE_DB_URI: postgres_db/rom_repository
-          FAIL_ON_WARNINGS: ${{matrix.fail_on_warnings}}
-          USE_ROM_SQL_MASTER: ${{matrix.use_rom_sql_master}}
