@@ -1,8 +1,8 @@
-# 5.2.0
+# 5.2.0 2020-01-11
 
 This release contains keyword fixes reported by Ruby 2.7.
 
-[Compare v5.1.2...release-5.2](https://github.com/rom-rb/rom/compare/v5.1.2...release-5.2)
+[Compare v5.1.2...v5.2.0](https://github.com/rom-rb/rom/compare/v5.1.2...v5.2.0)
 
 # 5.1.2 2019-08-17
 
