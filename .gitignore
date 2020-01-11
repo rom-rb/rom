@@ -17,6 +17,7 @@ log/*
 **/log/*
 
 .idea/
+.vscode/
 
 # YARD artifacts
 .yardoc
