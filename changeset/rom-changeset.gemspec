@@ -22,7 +22,7 @@ Gem::Specification.new do |gem|
 
   gem.add_runtime_dependency 'dry-core', '~> 0.4'
   gem.add_runtime_dependency 'dry-transformer', '~> 0.1'
-  gem.add_runtime_dependency 'rom-core', '~> 5.1', '>= 5.1.2'
+  gem.add_runtime_dependency 'rom-core', '~> 5.2'
 
   gem.add_development_dependency 'rake', '~> 11.2'
   gem.add_development_dependency 'rspec', '~> 3.5'
