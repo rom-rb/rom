@@ -40,6 +40,13 @@ jobs:
             use_dry_transformer_master: "false"
           - runtime_deps: "dry-transformer-master"
             use_dry_transformer_master: "true"
+    env:
+      COVERAGE: ${{matrix.coverage}}
+      BASE_DB_URI: localhost/rom_repository
+      USE_DRY_TRANSFORMER_MASTER: ${{matrix.use_dry_transformer_master}}
+      USE_ROM_SQL_MASTER: ${{matrix.use_rom_sql_master}}
+      CODACY_RUN_LOCAL: ${{matrix.coverage}}
+      CODACY_PROJECT_TOKEN: ${{secrets.CODACY_PROJECT_TOKEN}}
     steps:
       - uses: actions/checkout@v1
       - name: Install dependencies
@@ -56,22 +63,9 @@ jobs:
       - name: Install bundler
         run: gem install bundler
       - name: Bundle
-        env:
-          USE_DRY_TRANSFORMER_MASTER: ${{matrix.use_dry_transformer_master}}
-          USE_ROM_SQL_MASTER: ${{matrix.use_rom_sql_master}}
         run: bin/bundle
       - name: Run all tests
-        env:
-          USE_DRY_TRANSFORMER_MASTER: ${{matrix.use_dry_transformer_master}}
-          USE_ROM_SQL_MASTER: ${{matrix.use_rom_sql_master}}
-          COVERAGE: ${{matrix.coverage}}
-          CODACY_RUN_LOCAL: ${{matrix.coverage}}
-          CODACY_PROJECT_TOKEN: ${{secrets.CODACY_PROJECT_TOKEN}}
-          BUNDLE_GEMFILE: ${{matrix.gemfile}}
-          BASE_DB_URI: localhost/rom_repository
         run: bundle exec rake spec
       - name: Send coverage results
         if: "matrix.coverage == 'true'"
-        env:
-          CODACY_PROJECT_TOKEN: ${{secrets.CODACY_PROJECT_TOKEN}}
         run: codacy_final_reporter
