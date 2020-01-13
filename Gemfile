@@ -1,8 +1,8 @@
 source 'https://rubygems.org'
 
-git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
-
 gemspec
+
+eval_gemfile 'Gemfile.devtools'
 
 unless defined?(COMPONENTS)
   COMPONENTS = %w(core repository changeset)
@@ -33,9 +33,6 @@ end
 
 group :test do
   gem 'rspec', '~> 3.6'
-  gem 'codacy-coverage', require: false
-  gem 'simplecov', platforms: :ruby
-  gem 'warning'
 end
 
 group :docs do
