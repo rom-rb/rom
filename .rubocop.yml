@@ -3,12 +3,29 @@
 AllCops:
   TargetRubyVersion: 2.4
 
-Style/EachWithObject:
-  Enabled: false
-
 Style/StringLiterals:
   Enabled: true
   EnforcedStyle: single_quotes
+
+Style/AccessModifierDeclarations:
+  Enabled: false
+
+Style/BlockDelimiters:
+  Enabled: false
+
+Style/SymbolArray:
+  Exclude:
+    - "spec/**/*_spec.rb"
+
+Style/ConditionalAssignment:
+  Enabled: false
+
+Style/ClassAndModuleChildren:
+  Exclude:
+    - "spec/**/*_spec.rb"
+
+Style/EachWithObject:
+  Enabled: false
 
 Style/ParallelAssignment:
   Enabled: false
@@ -29,12 +46,47 @@ Style/FormatString:
 Style/Documentation:
   Enabled: false
 
+Style/AsciiComments:
+  Enabled: false
+
+Style/DateTime:
+  Enabled: false
+
+Style/IfUnlessModifier:
+  Enabled: false
+
+Style/EachWithObject:
+  Enabled: false
+
+Lint/HandleExceptions:
+  Exclude:
+    - "spec/spec_helper.rb"
+
+Lint/BooleanSymbol:
+  Enabled: false
+
 Layout/SpaceInLambdaLiteral:
   Enabled: false
 
 Layout/MultilineMethodCallIndentation:
   Enabled: true
   EnforcedStyle: indented
+
+Layout/IndentFirstArrayElement:
+  EnforcedStyle: consistent
+
+Naming/PredicateName:
+  Enabled: false
+
+Naming/FileName:
+  Exclude:
+    - "lib/dry-*.rb"
+
+Naming/MethodName:
+  Enabled: false
+
+Naming/MemoizedInstanceVariableName:
+  Enabled: false
 
 Metrics/LineLength:
   Max: 100
@@ -49,54 +101,8 @@ Metrics/BlockLength:
   Enabled: false
 
 Metrics/AbcSize:
-  Max: 20
+  Max: 25
 
 Metrics/CyclomaticComplexity:
   Enabled: true
-  Max: 10
-
-Lint/BooleanSymbol:
-  Enabled: false
-
-Style/AccessModifierDeclarations:
-  Enabled: false
-
-Style/BlockDelimiters:
-  Enabled: false
-
-Layout/IndentFirstArrayElement:
-  EnforcedStyle: consistent
-
-Style/ClassAndModuleChildren:
-  Exclude:
-    - "spec/**/*_spec.rb"
-
-Lint/HandleExceptions:
-  Exclude:
-    - "spec/spec_helper.rb"
-
-Naming/PredicateName:
-  Enabled: false
-
-Naming/FileName:
-  Exclude:
-    - "lib/*-*.rb"
-
-Style/SymbolArray:
-  Exclude:
-    - "spec/**/*_spec.rb"
-
-Style/ConditionalAssignment:
-  Enabled: false
-
-Naming/MethodName:
-  Enabled: false
-
-Style/AsciiComments:
-  Enabled: false
-
-Style/DateTime:
-  Enabled: false
-
-Style/IfUnlessModifier:
-  Enabled: false
+  Max: 12

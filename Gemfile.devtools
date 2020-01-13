@@ -1,0 +1,16 @@
+# this file is managed by rom-rb/devtools project
+
+git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
+
+gem "ossy", github: "solnic/ossy", branch: "master", platforms: :ruby
+
+group :test do
+  gem 'codacy-coverage', require: false, platforms: :ruby
+  gem 'simplecov', require: false, platforms: :ruby
+  gem 'warning'
+end
+
+group :tools do
+  # this is the same version that we use on codacy
+  gem 'rubocop', '0.71.0'
+end

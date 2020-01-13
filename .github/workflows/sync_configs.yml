@@ -4,26 +4,69 @@ name: sync_configs
 
 on:
   repository_dispatch:
+  push:
+    paths:
+      - project.yml
 
 jobs:
   sync-configs:
     runs-on: ubuntu-latest
-    if: github.event.action == 'sync_configs'
+    if: github.event_name != 'repository_dispatch' || github.event.action == 'sync_configs'
+    env:
+      GITHUB_LOGIN: rom-bot
+      GITHUB_TOKEN: ${{ secrets.GH_PAT }}
     steps:
       - uses: actions/checkout@v1
-      - name: Update configuration files from devtools
-        env:
-          GITHUB_LOGIN: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+      - name: Set up Ruby
+        uses: eregon/use-ruby-action@master
+        with:
+          ruby-version: 2.6
+      - name: Install latest bundler
         run: |
-          git clone https://github.com/rom-rb/devtools.git tmp/devtools
+          gem install bundler
+          bundle config set without 'test tools benchmarks docs'
+      - name: Install dependencies
+        run: bundle install --jobs 4 --retry 3
+      - name: Symlink ossy
+        run: ln -sf "$(bundle info ossy --path)/bin/ossy" bin/ossy
+      - name: Clone devtools
+        run: git clone https://github.com/rom-rb/devtools.git tmp/devtools
+      - name: Compile file templates
+        run: |
+          if [ -f "project.yml" ]; then
+            for t in `ls tmp/devtools/templates`
+            do
+              bin/ossy t c tmp/devtools/templates/$t $(basename $t .erb) project.yml
+            done
+            mv gemspec `echo ${{ github.repository }} | cut -d / -f 2`.gemspec
+          fi
+      - name: Update workflow files from devtools
+        run: |
+          for f in `ls tmp/devtools/workflows/*.yml`
+          do
+            n="$(basename $f)";
+            c=".github/workflows/custom/$n";
 
-          rsync -av tmp/devtools/shared/ .
-
+            if [ -f $c ]; then
+              bin/ossy c m $f $c .github/workflows/$n
+            else
+              cp -v $f .github/workflows
+            fi
+          done
+      - name: Update configuration files from devtools
+        run: |
+          if [ -f ".github/workflows/custom_ci.yml" ]; then
+            rsync -arv --exclude '.github/workflows/ci.yml' tmp/devtools/shared/ . ;
+          else
+            rsync -arv tmp/devtools/shared/ . ;
+          fi
+      - name: Commit changes
+        run: |
+          rm bin/ossy
           git config --local user.email "rom-bot@rom-rb.org"
           git config --local user.name "rom-bot"
           git add -A
-          git commit -m "[devtools] config sync" || echo "nothing changed"
+          git commit -m "[devtools] sync configs" || echo "nothing changed"
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
