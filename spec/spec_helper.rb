@@ -12,7 +12,7 @@ end
 require 'rom/core'
 
 Dir[root.join('support/*.rb').to_s].each do |f|
-  require f
+  require f unless f.include?('coverage')
 end
 
 Dir[root.join('shared/*.rb').to_s].each do |f|
