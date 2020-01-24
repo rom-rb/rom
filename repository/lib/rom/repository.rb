@@ -132,9 +132,22 @@ module ROM
     #   user
     #   # nil
     #
+    # @example with automatic savepoints
+    #   user = transaction(auto_savepoint: true) do
+    #     create(changeset(name: 'Jane'))
+    #
+    #     transaction do |t|
+    #       update(changeset(name: 'John'))
+    #       t.rollback!
+    #     end
+    #   end
+    #
+    #   user
+    #   # => #<ROM::Struct::User id=1 name="Jane">
+    #
     # @api public
-    def transaction(&block)
-      container.gateways[:default].transaction(&block)
+    def transaction(*args, &block)
+      container.gateways[:default].transaction(*args, &block)
     end
 
     # Return a string representation of a repository object
