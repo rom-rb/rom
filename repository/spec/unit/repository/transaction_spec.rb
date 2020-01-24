@@ -4,7 +4,7 @@ require 'rom-changeset'
 
 RSpec.describe ROM::Repository, '#transaction' do
   let(:user_repo) do
-    Class.new(ROM::Repository[:users]) { commands :create }.new(rom)
+    Class.new(ROM::Repository[:users]) { commands :create, update: :by_pk }.new(rom)
   end
 
   let(:task_repo) do
@@ -46,5 +46,16 @@ RSpec.describe ROM::Repository, '#transaction' do
 
     expect(task.user_id).to be(john.id)
     expect(task.title).to eql('John Task')
+  end
+
+  it 'allows for transaction options' do
+    user = user_repo.create(name: 'John')
+
+    user_repo.transaction do
+      user_repo.update(user.id, name: 'Jane')
+      user_repo.transaction(savepoint: true) { raise Sequel::Rollback }
+    end
+
+    expect(users.by_pk(user.id).one).to include(name: 'Jane')
   end
 end
