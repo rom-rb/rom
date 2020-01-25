@@ -35,6 +35,8 @@ namespace :spec do
   end
 end
 
+task default: :spec
+
 begin
   require 'yard-junk/rake'
   YardJunk::Rake.define_task(:text)
