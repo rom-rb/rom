@@ -22,7 +22,7 @@ Other requirements:
 2) Follow the style conventions of the surrounding code. In most cases, this is standard ruby style.
 3) Add API documentation if it's a new feature
 4) Update API documentation if it changes an existing feature
-5) Bonus points for sending a PR to [github.com/rom-rb/rom-rb.org](github.com/rom-rb/rom-rb.org) which updates user documentation and guides
+5) Bonus points for sending a PR which updates user documentation in the `docsite` directory
 
 # Asking for help
 

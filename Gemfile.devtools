@@ -2,12 +2,10 @@
 
 git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 
-gem "ossy", github: "solnic/ossy", branch: "master", platforms: :ruby
-
 group :test do
   gem 'codacy-coverage', require: false, platforms: :ruby
   gem 'simplecov', require: false, platforms: :ruby
-  gem 'warning'
+  gem 'warning' if RUBY_VERSION >= '2.4.0'
 end
 
 group :tools do
