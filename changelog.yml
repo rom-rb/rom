@@ -1,4 +1,11 @@
 ---
+- version: unreleased
+  summary: 
+  date: 
+  fixed: 
+  added:
+  - "`Repository#transaction` accepts transaction options now (@ianks)"
+  changed: 
 - version: 5.2.1
   date: '2020-01-11'
   summary: This release contains keyword fixes reported by Ruby 2.7.
