@@ -1,3 +1,13 @@
+## unreleased 
+
+
+### Added
+
+- `Repository#transaction` accepts transaction options now (@ianks)
+
+
+[Compare v5.2.1...master](https://github.com/rom-rb/rom/compare/v5.2.1...master)
+
 ## 5.2.1 2020-01-11
 
 This release contains keyword fixes reported by Ruby 2.7.
