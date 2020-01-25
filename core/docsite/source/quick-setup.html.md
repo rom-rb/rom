@@ -8,7 +8,7 @@ This guide explains how to quickly configure ROM using setup DSL, which is suita
 ^INFO
 #### ROM & frameworks
 
-If you want to use ROM with a framework, see specific instructions in the getting started section.
+If you want to use ROM with a framework, see specific instructions in the documentation for that framework.
 
 #### Configuration
 
