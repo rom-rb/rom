@@ -5,11 +5,11 @@ name: Update docs on rom-rb.org
 on:
   push:
     paths:
-      - docsite/**
-      - .github/workflows/docsite.yml
+      - "docsite/**"
+      - "*/docsite/**"
+      - ".github/workflows/docsite.yml"
     branches:
       - master
-      - release-**
     tags:
 
 jobs:
