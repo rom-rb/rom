@@ -1,73 +1,53 @@
 # this file is managed by rom-rb/devtools project
 
-name: sync_configs
+name: Sync files
 
 on:
   repository_dispatch:
   push:
-    paths:
-      - project.yml
+    branches:
+      - "master"
 
 jobs:
   sync-configs:
     runs-on: ubuntu-latest
-    if: github.event_name != 'repository_dispatch' || github.event.action == 'sync_configs'
+    if: (github.event_name == 'repository_dispatch' && github.event.action == 'sync_configs') || github.event_name != 'repository_dispatch'
     env:
       GITHUB_LOGIN: rom-bot
       GITHUB_TOKEN: ${{ secrets.GH_PAT }}
     steps:
-      - uses: actions/checkout@v1
+      - name: Checkout ${{github.repository}}
+        uses: actions/checkout@v1
+      - name: Checkout devtools
+        uses: actions/checkout@v2
+        with:
+          repository: rom-rb/devtools
+          path: tmp/devtools
+      - name: Setup git user
+        run: |
+          git config --local user.email "rom-bot@rom-rb.org"
+          git config --local user.name "rom-bot"
       - name: Set up Ruby
         uses: eregon/use-ruby-action@master
         with:
           ruby-version: 2.6
-      - name: Install latest bundler
-        run: |
-          gem install bundler
-          bundle config set without 'test tools benchmarks docs'
       - name: Install dependencies
-        run: bundle install --jobs 4 --retry 3
-      - name: Symlink ossy
-        run: ln -sf "$(bundle info ossy --path)/bin/ossy" bin/ossy
-      - name: Clone devtools
-        run: git clone https://github.com/rom-rb/devtools.git tmp/devtools
+        run: gem install ossy --no-document
       - name: Compile file templates
-        run: |
-          if [ -f "project.yml" ]; then
-            for t in `ls tmp/devtools/templates`
-            do
-              bin/ossy t c tmp/devtools/templates/$t $(basename $t .erb) project.yml
-            done
-            mv gemspec `echo ${{ github.repository }} | cut -d / -f 2`.gemspec
-          fi
+        run: tmp/devtools/bin/compile-templates $GITHUB_REPOSITORY
       - name: Update workflow files from devtools
-        run: |
-          for f in `ls tmp/devtools/workflows/*.yml`
-          do
-            n="$(basename $f)";
-            c=".github/workflows/custom/$n";
-
-            if [ -f $c ]; then
-              bin/ossy c m $f $c .github/workflows/$n
-            else
-              cp -v $f .github/workflows
-            fi
-          done
+        run: tmp/devtools/bin/sync-workflows
       - name: Update configuration files from devtools
+        run: tmp/devtools/bin/sync-shared-files
+      - name: Update changelog.yml from commit
+        run: tmp/devtools/bin/update-changelog-from-commit $GITHUB_SHA
+      - name: Compile CHANGELOG.md
+        run: tmp/devtools/bin/compile-changelog
+      - name: Commit
         run: |
-          if [ -f ".github/workflows/custom_ci.yml" ]; then
-            rsync -arv --exclude '.github/workflows/ci.yml' tmp/devtools/shared/ . ;
-          else
-            rsync -arv tmp/devtools/shared/ . ;
-          fi
-      - name: Commit changes
-        run: |
-          rm bin/ossy
-          git config --local user.email "rom-bot@rom-rb.org"
-          git config --local user.name "rom-bot"
           git add -A
-          git commit -m "[devtools] sync configs" || echo "nothing changed"
+          git commit -m "[devtools] sync" || echo "nothing to commit"
       - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GH_PAT }}
+        run: |
+          git pull --rebase origin master
+          git push https://rom-bot:${{secrets.GH_PAT}}@github.com/${{github.repository}}.git HEAD:master

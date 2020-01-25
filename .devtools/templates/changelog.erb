@@ -1,0 +1,40 @@
+<% releases.each_with_index do |r, idx| %>
+## <%= r.version %> <%= r.date %>
+
+<% if r.summary %>
+<%= r.summary %>
+
+<% end %>
+
+<% if r.added? %>
+### Added
+
+<% r.added.each do |log| %>
+- <%= log %>
+<% end %>
+
+<% end %>
+<% if r.fixed? %>
+### Fixed
+
+<% r.fixed.each do |log| %>
+- <%= log %>
+<% end %>
+
+<% end %>
+<% if r.changed? %>
+### Changed
+
+<% r.changed.each do |log| %>
+- <%= log %>
+<% end %>
+<% end %>
+<% curr_ver = r.date ? "v#{r.version}" : 'master' %>
+<% prev_rel = releases[idx + 1] %>
+<% if prev_rel %>
+<% ver_range = "v#{prev_rel.version}...#{curr_ver}" %>
+
+[Compare <%=ver_range%>](https://github.com/rom-rb/<%= project.name %>/compare/<%=ver_range%>)
+<% end %>
+
+<% end %>
