@@ -46,8 +46,7 @@ Typically though, custom mappers will be used in more complex cases, when the un
 require 'rom/transformer'
 
 class MyMapper < ROM::Transformer
-  relation :users
-  register_as :my_mapper
+  relation :users, as: :my_mapper
 
   map_array do
     # define custom transformations here
