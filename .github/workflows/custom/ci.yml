@@ -1,5 +1,15 @@
 jobs:
   tests:
+    services:
+      db:
+        image: postgres:10.8
+        env:
+          POSTGRES_USER: runner
+          POSTGRES_PASSWORD: ""
+          POSTGRES_DB: rom_repository
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     strategy:
       matrix:
         ruby:
