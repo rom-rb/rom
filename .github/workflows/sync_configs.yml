@@ -28,7 +28,7 @@ jobs:
           git config --local user.email "rom-bot@rom-rb.org"
           git config --local user.name "rom-bot"
       - name: Set up Ruby
-        uses: eregon/use-ruby-action@master
+        uses: ruby/setup-ruby@v1
         with:
           ruby-version: 2.6
       - name: Install dependencies
