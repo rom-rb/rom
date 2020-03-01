@@ -22,19 +22,20 @@ module ROM
           #
           # @api public
           def build(relation, **options)
-            if options.key?(:input) || !relation.schema?
-              super
-            else
-              default_input = options.fetch(:input, input)
+            if relation.schema?
+              input = options.fetch(:input, self.input)
+              relation_input = relation.input_schema
 
               input_handler =
-                if default_input != Hash
-                  -> tuple { relation.input_schema[input[tuple]] }
+                if input.equal?(ROM::Command.input)
+                  relation_input
                 else
-                  relation.input_schema
+                  -> tuple { relation_input[input[tuple]] }
                 end
 
               super(relation, **options, input: input_handler)
+            else
+              super
             end
           end
         end
