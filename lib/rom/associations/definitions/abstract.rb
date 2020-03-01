@@ -7,6 +7,7 @@ require "rom/types"
 require "rom/initializer"
 require "rom/relation/name"
 require "rom/associations/through_identifier"
+require "rom/support/inflector"
 
 module ROM
   module Associations
@@ -94,7 +95,12 @@ module ROM
           through = options[:through]
 
           if through
-            options[:through] = ThroughIdentifier[through, target.relation, options[:assoc]]
+            options[:through] = ThroughIdentifier[
+              through,
+              target.relation,
+              options[:assoc],
+              inflector: options.fetch(:inflector, Inflector)
+            ]
           end
 
           options[:name] = target.relation

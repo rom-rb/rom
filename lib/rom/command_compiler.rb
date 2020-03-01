@@ -66,6 +66,11 @@ module ROM
     #   @return [Cache] local cache instance
     option :cache, default: -> { Cache.new }
 
+    # @!attribute [r] inflector
+    #   @return [Dry::Inflector] String inflector
+    #   @api private
+    option :inflector, default: -> { Inflector }
+
     # Return a specific command type for a given adapter and relation AST
     #
     # This class holds its own registry where all generated commands are being
@@ -102,7 +107,8 @@ module ROM
         command = ROM::Commands::Graph.build(registry, graph_opts)
 
         if command.graph?
-          CommandProxy.new(command)
+          root = inflector.singularize(command.name.relation).to_sym
+          CommandProxy.new(command, root)
         elsif command.lazy?
           command.unwrap
         else
@@ -114,7 +120,7 @@ module ROM
 
     # @api private
     def type
-      @_type ||= Commands.const_get(Inflector.classify(id))[adapter]
+      @_type ||= Commands.const_get(inflector.classify(id))[adapter]
     rescue NameError
       nil
     end
@@ -139,7 +145,7 @@ module ROM
           if meta[:combine_type] == :many
             name
           else
-            {Inflector.singularize(name).to_sym => name}
+            {inflector.singularize(name).to_sym => name}
           end
 
         mapping =
@@ -190,7 +196,7 @@ module ROM
     def register_command(rel_name, type, rel_meta, parent_relation = nil)
       relation = relations[rel_name]
 
-      type.create_class(rel_name, type) do |klass|
+      type.create_class(rel_name, type, inflector: inflector) do |klass|
         klass.result(rel_meta.fetch(:combine_type, result))
 
         meta.each do |name, value|
@@ -237,7 +243,7 @@ module ROM
         if relation.associations.key?(parent_relation)
           parent_relation
         else
-          singular_name = Inflector.singularize(parent_relation).to_sym
+          singular_name = inflector.singularize(parent_relation).to_sym
           singular_name if relation.associations.key?(singular_name)
         end
 

@@ -80,4 +80,16 @@ RSpec.describe ROM::Configuration do
       expect(conf.relation_classes(:custom)).to eql([rel_custom])
     end
   end
+
+  describe "setting inflector" do
+    example "is supported" do
+      inflector = double(:inflector)
+
+      configuration = ROM::Configuration.new(:memory, "something") do |conf|
+        conf.inflector = inflector
+      end
+
+      expect(configuration.inflector).to be(inflector)
+    end
+  end
 end

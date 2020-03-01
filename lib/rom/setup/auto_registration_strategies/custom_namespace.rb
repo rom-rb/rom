@@ -25,7 +25,7 @@ module ROM
       #
       # @api private
       def call
-        parts = path_arr.map { |part| Inflector.camelize(part) }
+        parts = path_arr.map { |part| inflector.camelize(part) }
         potential = parts.map.with_index do |_, i|
           parts[(i - parts.size)..parts.size]
         end
@@ -66,7 +66,7 @@ module ROM
 
       # @api private
       def ns_const
-        @namespace_constant ||= Inflector.constantize(namespace)
+        @namespace_constant ||= inflector.constantize(namespace)
       end
 
       # @api private

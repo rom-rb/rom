@@ -11,7 +11,7 @@ RSpec.describe ROM::Setup, "#auto_registration" do
   let(:notifications) { instance_double(ROM::Notifications::EventBus) }
 
   after do
-    %i[Persistence Users CreateUser UserList My].each do |const|
+    %i[Persistence Users CreateUser UserList My XMLSpace].each do |const|
       Object.send(:remove_const, const) if Object.const_defined?(const)
     end
 
@@ -234,6 +234,44 @@ RSpec.describe ROM::Setup, "#auto_registration" do
         describe "#mappers" do
           it "loads files and returns constants" do
             expect(setup.mapper_classes).to eql([My::Namespace::UserList])
+          end
+        end
+      end
+
+      context "when custom inflector" do
+        let(:inflector) do
+          Dry::Inflector.new do |i|
+            i.acronym("XML")
+          end
+        end
+
+        before do
+          setup.inflector = inflector
+          setup.auto_registration(
+            SPEC_ROOT.join("fixtures/xml_space"),
+            component_dirs: {
+              relations: :xml_relations,
+              mappers: :xml_mappers,
+              commands: :xml_commands
+            }
+          )
+        end
+
+        describe "#relations" do
+          it "loads files and returns constants" do
+            expect(setup.relation_classes).to eql([XMLSpace::XMLRelations::Customers])
+          end
+        end
+
+        describe "#commands" do
+          it "loads files and returns constants" do
+            expect(setup.command_classes).to eql([XMLSpace::XMLCommands::CreateCustomer])
+          end
+        end
+
+        describe "#mappers" do
+          it "loads files and returns constants" do
+            expect(setup.mapper_classes).to eql([XMLSpace::XMLMappers::CustomerList])
           end
         end
       end

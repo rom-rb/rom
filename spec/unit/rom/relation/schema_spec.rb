@@ -306,12 +306,12 @@ RSpec.describe ROM::Relation, ".schema" do
 
       schema = Test::Users.schema_proc.call
 
-      expect(
-        schema[:admin]
-      ).to eql(ROM::Attribute.new(
-                 ROM::Types::Bool.meta(source: ROM::Relation::Name[:test_users]),
-                 name: :admin
-               ))
+      expect(schema[:admin]).to eql(
+        ROM::Attribute.new(
+          ROM::Types::Bool.meta(source: ROM::Relation::Name[:test_users]),
+          name: :admin
+        )
+      )
     end
 
     it "raises an error on double definition" do
@@ -362,8 +362,36 @@ RSpec.describe ROM::Relation, ".schema" do
         end
       end
 
-      expect(Test::Users.schema_proc.call.finalize_attributes!)
-        .to eql(Test::Users.schema_proc.call.finalize_attributes!)
+      expect(Test::Users.schema_proc.call.finalize_attributes!).to eql(
+        Test::Users.schema_proc.call.finalize_attributes!
+      )
+    end
+
+    context "custom inflector" do
+      let(:inflector) do
+        Dry::Inflector.new do |i|
+          i.plural("article", "posts")
+        end
+      end
+
+      it "accepts a custom inflector" do
+        class Test::Users < ROM::Relation[:memory]
+          schema do
+            attribute :id, Types::Integer.meta(primary_key: true)
+            attribute :name, Types::String
+            attribute :admin, Types::Bool
+
+            associations do
+              has_one :article
+            end
+          end
+        end
+
+        schema = Test::Users.schema_proc.(inflector: inflector)
+        association = schema.associations[:article]
+
+        expect(association.target.relation).to eql(:posts)
+      end
     end
   end
 

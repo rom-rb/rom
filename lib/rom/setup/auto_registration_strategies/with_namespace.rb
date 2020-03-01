@@ -20,7 +20,7 @@ module ROM
       #
       # @api private
       def call
-        Inflector.camelize(
+        inflector.camelize(
           file.sub(%r{^#{directory.dirname}/}, "").sub(EXTENSION_REGEX, "")
         )
       end

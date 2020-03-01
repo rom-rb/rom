@@ -16,13 +16,13 @@ module ROM
       attr_reader :assoc_name
 
       # @api private
-      def self.[](source, target, assoc_name = nil)
-        new(source, target, assoc_name || default_assoc_name(target))
+      def self.[](source, target, assoc_name = nil, inflector: Inflector)
+        new(source, target, assoc_name || default_assoc_name(target, inflector: inflector))
       end
 
       # @api private
-      def self.default_assoc_name(relation)
-        Inflector.singularize(relation).to_sym
+      def self.default_assoc_name(relation, inflector:)
+        inflector.singularize(relation).to_sym
       end
 
       # @api private

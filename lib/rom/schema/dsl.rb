@@ -5,6 +5,7 @@ require "dry/equalizer"
 require "rom/types"
 require "rom/attribute"
 require "rom/schema/associations_dsl"
+require "rom/support/inflector"
 
 module ROM
   class Schema
@@ -55,6 +56,11 @@ module ROM
       # @!attribute [r] associations_dsl
       #   @return [AssociationDSL] Associations defined within a block
       attr_reader :associations_dsl
+
+      # @!attribute [r] inflector
+      #   @return [Dry::Inflector] String inflector
+      #   @api private
+      attr_reader :inflector
 
       # @api private
       def initialize(*, &block)
@@ -115,7 +121,7 @@ module ROM
       #
       # @api public
       def associations(&block)
-        @associations_dsl = AssociationsDSL.new(relation, &block)
+        @associations_dsl = AssociationsDSL.new(relation, inflector, &block)
       end
 
       # Builds a representation of the information needed to create an
@@ -181,7 +187,9 @@ module ROM
       end
 
       # @api private
-      def call(&block)
+      def call(inflector: Inflector, &block)
+        @inflector = inflector
+
         instance_exec(&block) if block
         instance_exec(&definition) if definition
 
@@ -205,7 +213,12 @@ module ROM
       #
       # @api private
       def opts
-        opts = {attributes: attributes.values, inferrer: inferrer, attr_class: attr_class}
+        opts = {
+          attributes: attributes.values,
+          inferrer: inferrer,
+          attr_class: attr_class,
+          inflector: Inflector
+        }
 
         if associations_dsl
           {**opts, associations: associations_dsl.call}

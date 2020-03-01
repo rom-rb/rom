@@ -15,7 +15,8 @@ module ROM
       #
       # @api private
       def self.build_class(name, options = EMPTY_HASH)
-        class_name = "ROM::Relation[#{Inflector.camelize(name)}]"
+        inflector = options.fetch(:inflector) { Inflector }
+        class_name = "ROM::Relation[#{inflector.camelize(name)}]"
         adapter = options.fetch(:adapter)
 
         Dry::Core::ClassBuilder.new(name: class_name, parent: ROM::Relation[adapter]).call do |klass|
