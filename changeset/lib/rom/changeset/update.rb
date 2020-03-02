@@ -65,7 +65,7 @@ module ROM
       def diff
         @diff ||=
           begin
-            source = Hash(original)
+            source = original.to_h
             data = pipe.for_diff(__data__)
             data_tuple = data.to_a
             data_keys = data.keys & source.keys
