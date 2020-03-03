@@ -1,0 +1,48 @@
+jobs:
+  tests:
+    services:
+      db:
+        image: postgres:10.8
+        env:
+          POSTGRES_USER: runner
+          POSTGRES_PASSWORD: ""
+          POSTGRES_DB: rom_repository
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+    strategy:
+      matrix:
+        ruby:
+          - "2.7"
+          - "2.6"
+          - "2.5"
+          - "2.4"
+          - "jruby"
+        runtime_deps:
+          - "rom-sql-latest"
+          - "rom-sql-master"
+          - "dry-transformer-latest"
+          - "dry-transformer-master"
+        include:
+          - ruby: "2.6"
+            coverage: "true"
+          - runtime_deps: "rom-sql-latest"
+            use_rom_sql_master: "false"
+          - runtime_deps: "rom-sql-master"
+            use_rom_sql_master: "true"
+          - runtime_deps: "dry-transformer-latest"
+            use_dry_transformer_master: "false"
+          - runtime_deps: "dry-transformer-master"
+            use_dry_transformer_master: "true"
+    env:
+      COVERAGE: ${{matrix.coverage}}
+      BASE_DB_URI: localhost/rom_repository
+      USE_DRY_TRANSFORMER_MASTER: ${{matrix.use_dry_transformer_master}}
+      USE_ROM_SQL_MASTER: ${{matrix.use_rom_sql_master}}
+      CODACY_RUN_LOCAL: ${{matrix.coverage}}
+      CODACY_PROJECT_TOKEN: ${{secrets.CODACY_PROJECT_TOKEN}}
+      APT_DEPS: "libpq-dev libsqlite3-dev"
+    steps:
+      - name: Send coverage results
+        if: "matrix.coverage == 'true'"
+        run: codacy_final_reporter
