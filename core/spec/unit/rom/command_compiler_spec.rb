@@ -7,11 +7,11 @@ RSpec.describe 'ROM::CommandCompiler' do
   include_context 'users and tasks'
 
   let(:users) do
-    Class.new(ROM::Memory::Relation) do
+    Class.new(ROM::Memory::Relation) {
       def by_id(id)
         restrict(id: id)
       end
-    end.new(users_dataset)
+    }.new(users_dataset)
   end
 
   subject(:compiler) do
@@ -40,24 +40,44 @@ RSpec.describe 'ROM::CommandCompiler' do
       ROM::CommandCompiler.new(gateways, relations, registry, notifications)
     end
 
+    let(:options) { {} }
+
+    let(:args) { [:create, :memory, [:relation, users_ast], [], {}, options] }
+
+    let(:command) { compiler[*args] }
+
     it 'builds commands using ast' do
-      command = compiler[:create, :memory, [:relation, users_ast], [], {}, {}]
       expect(command).to be_a(ROM::Memory::Commands::Create)
     end
 
-    it 'builds commands using custom options' do
-      input = -> t { t }
-      command = compiler[:create, :memory, [:relation, users_ast], [], {}, input: input]
-      expect(command).to be_a(ROM::Memory::Commands::Create)
-      expect(command.input).to be(input)
+    context 'options' do
+      let(:input) { -> t { t } }
+
+      let(:options) { { input: input } }
+
+      it 'builds commands using custom options' do
+        expect(command.input).to be(input)
+      end
     end
 
     it "doesn't use a global cache" do
-      args = [:create, :memory, [:relation, users_ast], [], {}, {}]
-      command = compiler[*args]
-      second_command = second_compiler[*args]
+      expect(command).not_to be(second_compiler[*args])
+    end
 
-      expect(command).not_to be(second_command)
+    describe 'setting input from relation' do
+      let(:name) do
+        ROM::Attribute.new(ROM::Types::String.constructor { |v| "relation[#{v}]" }, name: :name)
+      end
+
+      let(:users) do
+        users = super()
+        schema = users.schema.append(name)
+        users.with(schema: schema)
+      end
+
+      it 'uses input schema from relation and does it once' do
+        expect(command.input[{ id: 1, name: 'John' }][:name]).to eql("relation[John]")
+      end
     end
   end
 end

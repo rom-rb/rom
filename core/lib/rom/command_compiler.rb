@@ -193,8 +193,6 @@ module ROM
       type.create_class(rel_name, type) do |klass|
         klass.result(rel_meta.fetch(:combine_type, result))
 
-        klass.input(meta.fetch(:input, relation.input_schema))
-
         meta.each do |name, value|
           klass.public_send(name, value)
         end
