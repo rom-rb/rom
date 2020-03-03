@@ -1,12 +1,16 @@
-## unreleased 
+## 5.2.2 2020-02-03
 
 
 ### Added
 
-- `Repository#transaction` accepts transaction options now (@ianks)
+- [rom-repository] `Repository#transaction` accepts transaction options now (@ianks)
+
+### Fixed
+
+- [rom-core] Constructor types were fired twice when writing data (@flash-gordon)
 
 
-[Compare v5.2.1...master](https://github.com/rom-rb/rom/compare/v5.2.1...master)
+[Compare v5.2.1...v5.2.2](https://github.com/rom-rb/rom/compare/v5.2.1...v5.2.2)
 
 ## 5.2.1 2020-01-11
 
