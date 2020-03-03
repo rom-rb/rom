@@ -1,11 +1,12 @@
 ---
-- version: unreleased
-  summary: 
-  date: 
-  fixed: 
+- version: 5.2.2
+  summary:
+  date: '2020-02-03'
+  fixed:
+  - "[rom-core] Constructor types were fired twice when writing data (@flash-gordon)"
   added:
-  - "`Repository#transaction` accepts transaction options now (@ianks)"
-  changed: 
+  - "[rom-repository] `Repository#transaction` accepts transaction options now (@ianks)"
+  changed:
 - version: 5.2.1
   date: '2020-01-11'
   summary: This release contains keyword fixes reported by Ruby 2.7.
