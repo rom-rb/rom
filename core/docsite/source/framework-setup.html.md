@@ -55,14 +55,14 @@ ROM provides `auto_registration` as a convenience method for automatically `requ
 By default, auto-registration assumes that the directory structure reflects your module/class organization, for example:
 
 ``` ruby
-# lib/relations/users.rb
-module Relations
-  class Users < ROM::Relation[:memory]
-    schema(infer: true)
+# lib/persistence/relations/users.rb
+module Persistence
+  module Relations
+    class Users < ROM::Relation[:memory]
+      schema(infer: true)
+    end
   end
 end
-
-# lib/relations
 ```
 
 Then to set up auto-registration simply provide the root path to your components directory:
@@ -91,8 +91,9 @@ container = ROM.container(configuration)
 
 ```
 
+^INFO
 In this scenario the [Dataset](/learn/introduction/glossary#dataset) name will need to be set explicitly otherwise the fully qualified relation name will be used, in this case `:persistence_relations_users`.
-
+^
 
 #### Explicit namespace name
 
@@ -121,6 +122,7 @@ Keep in mind with this namespace strategy, each component must be located under 
 
 ```ruby
 # Commands
+#
 # lib/commands/update_user_command.rb
 module Persistence
   module Commands
@@ -134,6 +136,7 @@ module Persistence
 end
 
 # Mappers
+#
 # lib/mappers/user_mapper.rb
 module Persistence
   module Mappers
