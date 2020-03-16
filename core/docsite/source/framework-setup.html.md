@@ -54,27 +54,6 @@ ROM provides `auto_registration` as a convenience method for automatically `requ
 
 By default, auto-registration assumes that the directory structure reflects your module/class organization, for example:
 
-``` ruby
-# lib/persistence/relations/users.rb
-module Persistence
-  module Relations
-    class Users < ROM::Relation[:memory]
-      schema(infer: true)
-    end
-  end
-end
-```
-
-Then to set up auto-registration simply provide the root path to your components directory:
-
-```ruby
-configuration = ROM::Configuration.new(:memory)
-configuration.auto_registration('/path/to/lib')
-container = ROM.container(configuration)
-```
-
-In special cases where the components are located deeper in the file structure all you have to do is provide the path to the outer most module and the rest will be inferred from the directory structure:
-
 ```ruby
 # lib/persistence/relations/users.rb
 module Persistence
@@ -88,7 +67,6 @@ end
 configuration = ROM::Configuration.new(:memory)
 configuration.auto_registration('root_dir/lib/persistence/')
 container = ROM.container(configuration)
-
 ```
 
 ^INFO
@@ -104,7 +82,7 @@ If your directory structure doesn't reflect module/class organization but you do
 module Persistence
   module Relations
     class Users < ROM::Relation[:sql]
-      schema(infer: true)
+      schema(:users, infer: true)
     end
   end
 end
