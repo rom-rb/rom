@@ -1,12 +1,15 @@
 ---
 - version: 5.2.2
-  summary:
+  summary: 
   date: '2020-02-03'
   fixed:
   - "[rom-core] Constructor types were fired twice when writing data (@flash-gordon)"
+  - "[changeset] fixed a regression where a map function in `Update` changesets was
+    not evaluated in the context of a changeset object (fixed via #592) (@timriley
+    + @solnic)"
   added:
   - "[rom-repository] `Repository#transaction` accepts transaction options now (@ianks)"
-  changed:
+  changed: 
 - version: 5.2.1
   date: '2020-01-11'
   summary: This release contains keyword fixes reported by Ruby 2.7.
