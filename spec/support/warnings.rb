@@ -2,8 +2,9 @@
 
 # this file is managed by rom-rb/devtools project
 
-require 'warning'
+require "warning"
 
 Warning.ignore(%r{rspec/core})
+Warning.ignore(%r{rspec/mocks})
 Warning.ignore(/codacy/)
 Warning[:experimental] = false if Warning.respond_to?(:[])

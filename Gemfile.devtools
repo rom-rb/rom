@@ -1,14 +1,19 @@
+# frozen_string_literal: true
+
 # this file is managed by rom-rb/devtools project
 
 git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 
 group :test do
-  gem 'codacy-coverage', require: false, platforms: :ruby
-  gem 'simplecov', require: false, platforms: :ruby
-  gem 'warning' if RUBY_VERSION >= '2.4.0'
+  # 0.18.x breaks codacy result parser
+  gem "simplecov", "0.17.1", require: false, platforms: :ruby
+
+  gem "codacy-coverage", require: false, platforms: :ruby
+
+  gem "warning" if RUBY_VERSION >= "2.4.0"
 end
 
 group :tools do
   # this is the same version that we use on codacy
-  gem 'rubocop', '0.71.0'
+  gem "rubocop", "0.71.0"
 end

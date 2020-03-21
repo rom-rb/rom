@@ -1,10 +1,11 @@
 ---
-name: Tests
+name: ci
 'on':
   push:
     paths:
     - ".github/workflows/ci.yml"
     - lib/**
+    - "*.gemspec"
     - spec/**
     - Rakefile
     - Gemfile
@@ -54,7 +55,7 @@ jobs:
       APT_DEPS: libpq-dev libsqlite3-dev
     steps:
     - uses: actions/checkout@v1
-    - name: Install dependencies
+    - name: Install package dependencies
       run: "[ -e $APT_DEPS ] || sudo apt-get install -y --no-install-recommends $APT_DEPS"
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
@@ -91,6 +92,8 @@ jobs:
       GITHUB_TOKEN: "${{secrets.GH_PAT}}"
     steps:
     - uses: actions/checkout@v1
+    - name: Install package dependencies
+      run: "[ -e $APT_DEPS ] || sudo apt-get install -y --no-install-recommends $APT_DEPS"
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:

@@ -2,68 +2,11 @@
 
 AllCops:
   TargetRubyVersion: 2.4
-
-Style/StringLiterals:
-  Enabled: true
-  EnforcedStyle: single_quotes
-
-Style/AccessModifierDeclarations:
-  Enabled: false
-
-Style/BlockDelimiters:
-  Enabled: false
-
-Style/SymbolArray:
   Exclude:
-    - "spec/**/*_spec.rb"
-
-Style/ConditionalAssignment:
-  Enabled: false
-
-Style/ClassAndModuleChildren:
-  Exclude:
-    - "spec/**/*_spec.rb"
-
-Style/EachWithObject:
-  Enabled: false
-
-Style/ParallelAssignment:
-  Enabled: false
-
-Style/Alias:
-  Enabled: true
-  EnforcedStyle: prefer_alias_method
-
-Style/LambdaCall:
-  Enabled: false
-
-Style/StabbyLambdaParentheses:
-  Enabled: false
-
-Style/FormatString:
-  Enabled: false
-
-Style/Documentation:
-  Enabled: false
-
-Style/AsciiComments:
-  Enabled: false
-
-Style/DateTime:
-  Enabled: false
-
-Style/IfUnlessModifier:
-  Enabled: false
-
-Style/EachWithObject:
-  Enabled: false
-
-Lint/HandleExceptions:
-  Exclude:
-    - "spec/spec_helper.rb"
-
-Lint/BooleanSymbol:
-  Enabled: false
+    - spec/support/coverage.rb
+    - spec/support/warnings.rb
+    - Gemfile.devtools
+    - "*.gemspec"
 
 Layout/SpaceInLambdaLiteral:
   Enabled: false
@@ -75,12 +18,24 @@ Layout/MultilineMethodCallIndentation:
 Layout/IndentFirstArrayElement:
   EnforcedStyle: consistent
 
+Layout/SpaceInsideHashLiteralBraces:
+  Enabled: true
+  EnforcedStyle: no_space
+  EnforcedStyleForEmptyBraces: no_space
+
+Lint/HandleExceptions:
+  Exclude:
+    - "spec/spec_helper.rb"
+
+Lint/BooleanSymbol:
+  Enabled: false
+
 Naming/PredicateName:
   Enabled: false
 
 Naming/FileName:
   Exclude:
-    - "lib/dry-*.rb"
+    - "lib/*-*.rb"
 
 Naming/MethodName:
   Enabled: false
@@ -90,6 +45,8 @@ Naming/MemoizedInstanceVariableName:
 
 Metrics/LineLength:
   Max: 100
+  Exclude:
+    - "spec/**/*_spec.rb"
 
 Metrics/MethodLength:
   Enabled: false
@@ -106,3 +63,66 @@ Metrics/AbcSize:
 Metrics/CyclomaticComplexity:
   Enabled: true
   Max: 12
+
+Style/AccessModifierDeclarations:
+  Enabled: false
+
+Style/Alias:
+  Enabled: true
+  EnforcedStyle: prefer_alias_method
+
+Style/AsciiComments:
+  Enabled: false
+
+Style/BlockDelimiters:
+  Enabled: false
+
+Style/ClassAndModuleChildren:
+  Exclude:
+    - "spec/**/*_spec.rb"
+
+Style/ConditionalAssignment:
+  Enabled: false
+
+Style/DateTime:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Style/EachWithObject:
+  Enabled: false
+
+Style/FormatString:
+  Enabled: false
+
+Style/GuardClause:
+  Enabled: false
+
+Style/IfUnlessModifier:
+  Enabled: false
+
+Style/LambdaCall:
+  Enabled: false
+
+Style/ParallelAssignment:
+  Enabled: false
+
+Style/StabbyLambdaParentheses:
+  Enabled: false
+
+Style/StringLiterals:
+  Enabled: true
+  EnforcedStyle: double_quotes
+  ConsistentQuotesInMultiline: false
+
+Style/StringLiteralsInInterpolation:
+  Enabled: true
+  EnforcedStyle: double_quotes
+
+Style/SymbolArray:
+  Exclude:
+    - "spec/**/*_spec.rb"
+
+Style/TrailingUnderscoreVariable:
+  Enabled: false
