@@ -43,7 +43,10 @@ module ROM
 
       def bind(context)
         if processor.is_a?(Proc)
-          new(self.class[-> *args { context.instance_exec(*args, &processor) }])
+          bound_processor = self[-> *args { context.instance_exec(*args, &processor) }]
+          bound_diff_processor = self[-> *args { context.instance_exec(*args, &diff_processor) }]
+
+          new(bound_processor, diff_processor: bound_diff_processor)
         else
           self
         end

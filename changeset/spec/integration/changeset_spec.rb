@@ -116,6 +116,32 @@ RSpec.describe 'Using changesets' do
       expect(result.updated_at).to be_instance_of(Time)
     end
 
+    it 'preprocesses data using map blocks in a custom class' do
+      changeset_class = Class.new(ROM::Changeset::Create) do
+        map do |tuple|
+          extend_tuple(tuple)
+        end
+
+        private
+
+        def extend_tuple(tuple)
+          tuple.merge(title: tuple[:title] + ", yes really")
+        end
+      end
+
+      changeset = books.changeset(changeset_class, title: 'rom-rb is awesome')
+      command = books.command(:create)
+      result = command.(changeset)
+
+      expect(result.id).to_not be(nil)
+      expect(result.title).to eql('rom-rb is awesome, yes really')
+
+      result = books.changeset(changeset_class, title: 'rom-rb is awesome').commit
+
+      expect(result.id).to_not be(nil)
+      expect(result.title).to eql('rom-rb is awesome, yes really')
+    end
+
     it 'preserves relation mappers with create' do
       changeset = users.map_with(:user).changeset(:create, name: 'Joe Dane')
 
@@ -158,6 +184,29 @@ RSpec.describe 'Using changesets' do
       expect(result.id).to be(book.id)
       expect(result.title).to eql('rom-rb is awesome for real')
       expect(result.updated_at).to be_instance_of(Time)
+    end
+
+    it 'preprocesses data using map blocks in a custom class' do
+      book = books.command(:create).call(title: 'rom-rb is awesome')
+
+      changeset_class = Class.new(ROM::Changeset::Update) do
+        map do |tuple|
+          extend_tuple(tuple)
+        end
+
+        private
+
+        def extend_tuple(tuple)
+          tuple.merge(title: tuple[:title] + ', yes really')
+        end
+      end
+
+      result = books.by_pk(book.id)
+        .changeset(changeset_class, title: 'rom-rb is awesome for real')
+        .commit
+
+      expect(result.id).to be(book.id)
+      expect(result.title).to eql('rom-rb is awesome for real, yes really')
     end
 
     it 'works with command plugins' do
