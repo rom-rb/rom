@@ -8,6 +8,7 @@
 ### Fixed
 
 - [rom-core] Constructor types were fired twice when writing data (@flash-gordon)
+- [changeset] fixed a regression where a map function in `Update` changesets was not evaluated in the context of a changeset object (fixed via #592) (@timriley + @solnic)
 
 
 [Compare v5.2.1...v5.2.2](https://github.com/rom-rb/rom/compare/v5.2.1...v5.2.2)
