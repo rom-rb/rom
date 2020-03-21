@@ -15,7 +15,7 @@ name: ci
   pull_request:
     branches:
     - master
-  create: 
+  create:
 jobs:
   tests:
     runs-on: ubuntu-latest
@@ -28,6 +28,7 @@ jobs:
         - '2.5'
         - '2.4'
         - jruby
+        - truffleruby
         include:
         - ruby: '2.6'
           coverage: 'true'
