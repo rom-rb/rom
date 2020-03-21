@@ -1,3 +1,13 @@
+## unreleased 
+
+
+### Fixed
+
+- [changeset] fixed a regression where a map function in `Update` changesets was not evaluated in the context of a changeset object (fixed via #592) (@timriley + @solnic)
+
+
+[Compare v5.2.2...master](https://github.com/rom-rb/rom/compare/v5.2.2...master)
+
 ## 5.2.2 2020-02-03
 
 
