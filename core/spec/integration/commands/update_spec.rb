@@ -11,7 +11,10 @@ RSpec.describe 'Commands / Update' do
 
   before do
     configuration.relation(:users) do
-      schema(:users) {}
+      schema(:users) do
+        attribute :name, ROM::Types::String
+        attribute :email, ROM::Types::String
+      end
 
       def all(criteria)
         restrict(criteria)
@@ -30,8 +33,7 @@ RSpec.describe 'Commands / Update' do
   it 'update tuples' do
     result = users.update.all(name: 'Jane').call(email: 'jane.doe@test.com')
 
-    expect(result)
-      .to match_array([{ name: 'Jane', email: 'jane.doe@test.com' }])
+    expect(result).to eql([{ name: 'Jane', email: 'jane.doe@test.com' }])
   end
 
   describe '"result" option' do
@@ -79,6 +81,20 @@ RSpec.describe 'Commands / Update' do
       result = command[attributes]
 
       expect(result).to eql([user_model.new(attributes)])
+    end
+  end
+
+  context 'custom input' do
+    it "doesn't duplicate input schema when command chained" do
+      input = ROM::Types::Hash.constructor(&:itself)
+
+      configuration.commands(:users) do
+        define(:update_one, input: input, type: :update)
+      end
+
+      relation = container.relations[:users]
+
+      expect(users.update_one.new(relation).input).to be(users.update_one.input)
     end
   end
 end
