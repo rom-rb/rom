@@ -26,7 +26,7 @@ to SQL, you can compose data from different sources.
 
 ### Example relation class
 
-Let's say we have `:users` table in an SQL database, here's how you would define
+Let's say we have a `:users` table in a SQL database, here's how you would define
 a relation class for it:
 
 ``` ruby
@@ -35,11 +35,11 @@ class Users < ROM::Relation[:sql]
 end
 ```
 
-Notice two things:
+Notice a few things:
 
-- `ROM::Relation[:sql]` uses `:sql` identifier to resolve relation type for `rom-sql`
+- `ROM::Relation[:sql]` uses `:sql` identifier to resolve a relation type for the `rom-sql`
   adapter
-- `Users` class name is used by default to infer `dataset` name and set it to `:users`
+- `Users` class name is used by default to infer the `dataset` name and set it to `:users`
 - `schema` is configured to be inferred from the database schema, and it will include
   attributes based on all table columns
 
