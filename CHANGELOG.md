@@ -1,12 +1,13 @@
-## unreleased 
+## 5.2.3 2020-05-07
 
 
 ### Fixed
 
-- [changeset] fixed a regression where a map function in `Update` changesets was not evaluated in the context of a changeset object (fixed via #592) (@timriley + @solnic)
+- [rom-core] Constructor types were fired twice when updating data (@flash-gordon)
+- [rom-changeset] fixed a regression where a map function in `Update` changesets was not evaluated in the context of a changeset object (fixed via #592) (@timriley + @solnic)
 
 
-[Compare v5.2.2...master](https://github.com/rom-rb/rom/compare/v5.2.2...master)
+[Compare v5.2.2...v5.2.3](https://github.com/rom-rb/rom/compare/v5.2.2...v5.2.3)
 
 ## 5.2.2 2020-02-03
 
@@ -18,7 +19,6 @@
 ### Fixed
 
 - [rom-core] Constructor types were fired twice when writing data (@flash-gordon)
-- [changeset] fixed a regression where a map function in `Update` changesets was not evaluated in the context of a changeset object (fixed via #592) (@timriley + @solnic)
 
 
 [Compare v5.2.1...v5.2.2](https://github.com/rom-rb/rom/compare/v5.2.1...v5.2.2)
