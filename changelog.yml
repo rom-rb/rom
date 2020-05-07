@@ -1,9 +1,10 @@
 ---
-- version: unreleased
+- version: 5.2.3
   summary:
-  date:
+  date: '2020-05-07'
   fixed:
-  - "[changeset] fixed a regression where a map function in `Update` changesets was
+  - "[rom-core] Constructor types were fired twice when updating data (@flash-gordon)"
+  - "[rom-changeset] fixed a regression where a map function in `Update` changesets was
     not evaluated in the context of a changeset object (fixed via #592) (@timriley
     + @solnic)"
 - version: 5.2.2
@@ -11,9 +12,6 @@
   date: '2020-02-03'
   fixed:
   - "[rom-core] Constructor types were fired twice when writing data (@flash-gordon)"
-  - "[changeset] fixed a regression where a map function in `Update` changesets was
-    not evaluated in the context of a changeset object (fixed via #592) (@timriley
-    + @solnic)"
   added:
   - "[rom-repository] `Repository#transaction` accepts transaction options now (@ianks)"
   changed:
