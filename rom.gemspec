@@ -19,7 +19,7 @@ Gem::Specification.new do |gem|
 
   gem.add_runtime_dependency 'rom-core', '~> 5.2', '>= 5.2.3'
   gem.add_runtime_dependency 'rom-repository', '~> 5.2', '>= 5.2.2'
-  gem.add_runtime_dependency 'rom-changeset', '~> 5.2', '>= 5.2.1'
+  gem.add_runtime_dependency 'rom-changeset', '~> 5.2', '>= 5.2.3'
 
   gem.add_development_dependency 'rake', '~> 13.0'
   gem.add_development_dependency 'rspec', '~> 3.5'
