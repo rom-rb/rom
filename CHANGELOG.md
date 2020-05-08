@@ -1,3 +1,13 @@
+## 5.2.4 2020-05-08
+
+
+### Fixed
+
+- [rom] Bumped rom-changeset version (@flash-gordon)
+
+
+[Compare v5.2.3...v5.2.4](https://github.com/rom-rb/rom/compare/v5.2.3...v5.2.4)
+
 ## 5.2.3 2020-05-07
 
 
