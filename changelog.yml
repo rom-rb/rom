@@ -1,4 +1,9 @@
 ---
+- version: 5.2.4
+  summary:
+  date: '2020-05-08'
+  fixed:
+  - "[rom] Bumped rom-changeset version (@flash-gordon)"
 - version: 5.2.3
   summary:
   date: '2020-05-07'
