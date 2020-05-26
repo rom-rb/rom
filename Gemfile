@@ -5,7 +5,7 @@ gemspec
 eval_gemfile 'Gemfile.devtools'
 
 unless defined?(COMPONENTS)
-  COMPONENTS = %w(core repository changeset)
+  COMPONENTS = %w(repository changeset)
 end
 
 COMPONENTS.each do |component|

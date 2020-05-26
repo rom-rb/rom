@@ -47,7 +47,7 @@ RSpec.describe 'Commands' do
           def super_command?
             true
           end
-        end
+        end unless command.instance_methods.include?(:super_command?)
       end
     end
 
