@@ -11,7 +11,7 @@ RSpec.describe ROM::Repository, '#transaction' do
     Class.new(ROM::Repository[:tasks]) { commands :create, :update }.new(rom)
   end
 
-  include_context 'database'
+  include_context 'repository / database'
   include_context 'relations'
 
   it 'creating user with tasks' do

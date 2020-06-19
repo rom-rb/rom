@@ -1,13 +1,7 @@
 # frozen_string_literal: true
 
-# frozen_string_literals: true
-
-require_relative '../shared/database'
-require_relative '../shared/relations'
-require_relative '../shared/seeds'
-
 RSpec.describe ROM::Relation, '#combine' do
-  include_context 'database'
+  include_context 'repository / database'
   include_context 'relations'
   include_context 'seeds'
 

@@ -9,7 +9,7 @@ RSpec.describe ROM::Repository, '#inspect' do
     end.new(rom)
   end
 
-  include_context 'database'
+  include_context 'repository / database'
   include_context 'relations'
 
   specify do

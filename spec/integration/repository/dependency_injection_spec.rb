@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe 'Repository with additional dependencies injected' do
+  include_context "repository / db_uri"
+
   let(:configuration) {
-    ROM::Configuration.new(default: [:sql, DB_URI], memory: [:memory])
+    ROM::Configuration.new(default: [:sql, db_uri], memory: [:memory])
   }
 
   let(:rom) { ROM.container(configuration) }

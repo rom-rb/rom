@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe 'repository plugin' do
-  include_context 'database'
+  include_context 'repository / database'
   include_context 'relations'
   include_context 'seeds'
   include_context 'repo'

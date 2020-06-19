@@ -1,19 +1,41 @@
 # frozen_string_literal: true
 
-RSpec.shared_context 'database setup' do
-  let(:configuration) { ROM::Configuration.new(:sql, DB_URI) }
+RSpec.shared_context 'repository / db_uri' do
+  let(:base_db_uri) do
+    ENV.fetch('BASE_DB_URI', 'postgres@localhost/rom')
+  end
 
-  let(:conn) { configuration.gateways[:default].connection }
-
-  let(:rom) { ROM.container(configuration) }
-
-  before do
-    conn.loggers << LOGGER
+  let(:db_uri) do
+    defined?(JRUBY_VERSION) ? "jdbc:postgresql://#{base_db_uri}" : "postgres://#{base_db_uri}"
   end
 end
 
-RSpec.shared_context 'database' do
-  include_context 'database setup'
+RSpec.shared_context 'repository / database setup' do
+  include_context 'repository / db_uri'
+
+  let(:configuration) do
+    ROM::Configuration.new(:sql, db_uri)
+  end
+
+  let(:conn) do
+    configuration.gateways[:default].connection
+  end
+
+  let(:rom) do
+    ROM.container(configuration)
+  end
+
+  let(:logger) do
+    Logger.new(File.open('./log/test.log', 'a'))
+  end
+
+  before do
+    conn.loggers << logger
+  end
+end
+
+RSpec.shared_context 'repository / database' do
+  include_context 'repository / database setup'
 
   before do
     %i[tags tasks books posts_labels posts users labels

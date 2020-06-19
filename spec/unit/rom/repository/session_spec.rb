@@ -7,7 +7,7 @@ RSpec.describe ROM::Repository, '#session' do
     Class.new(ROM::Repository).new(rom)
   end
 
-  include_context 'database'
+  include_context 'repository / database'
   include_context 'relations'
 
   describe 'with :create command' do

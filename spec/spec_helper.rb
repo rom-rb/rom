@@ -11,6 +11,9 @@ end
 
 require 'warning'
 
+Warning.ignore(/sequel/)
+Warning.ignore(/mysql2/)
+Warning.ignore(/rspec-core/)
 Warning.ignore(/__FILE__/)
 Warning.ignore(/__LINE__/)
 Warning.process { |w| raise w } if ENV['FAIL_ON_WARNINGS'].eql?('true')
@@ -20,11 +23,11 @@ Dry::Core::Deprecations.set_logger!(SPEC_ROOT.join('../log/deprecations.log'))
 
 require 'rom/core'
 
-Dir[root.join('support/*.rb').to_s].each do |f|
+Dir[root.join('support/**/*.rb').to_s].each do |f|
   require f unless f.include?('coverage')
 end
 
-Dir[root.join('shared/*.rb').to_s].each do |f|
+Dir[root.join('shared/**/*.rb').to_s].each do |f|
   require f
 end
 
@@ -61,4 +64,5 @@ RSpec.configure do |config|
   config.reporter.extend(SpecProfiler) if ENV['PROFILE'] == 'true'
 
   config.include(SchemaHelpers)
+  config.include(MapperRegistry)
 end

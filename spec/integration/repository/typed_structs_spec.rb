@@ -5,7 +5,7 @@ RSpec.describe 'ROM repository with typed structs' do
     Class.new(ROM::Repository[:books]) { commands :create }.new(rom)
   end
 
-  include_context 'database'
+  include_context 'repository / database'
   include_context 'seeds'
 
   context 'typed projections' do

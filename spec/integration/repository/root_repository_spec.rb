@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "rom/repository"
+
 RSpec.describe ROM::Repository::Root do
   subject(:repo) do
     klass.new(rom)
@@ -9,7 +11,7 @@ RSpec.describe ROM::Repository::Root do
     Class.new(ROM::Repository[:users])
   end
 
-  include_context 'database'
+  include_context 'repository / database'
   include_context 'relations'
 
   describe '.[]' do

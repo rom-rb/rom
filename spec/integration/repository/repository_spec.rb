@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe 'ROM repository' do
-  include_context 'database'
+  include_context 'repository / database'
   include_context 'relations'
   include_context 'repo'
   include_context 'structs'
@@ -300,6 +300,8 @@ RSpec.describe 'ROM repository' do
     before { conn.create_table(:dummy) unless conn.table_exists?(:dummy) }
 
     it 'does not fail with a weird error when a relation does not have attributes' do
+      pending 'with latest sequel this does raise a meaningful error, this spec/behavior should be removed'
+
       configuration.relation(:dummy) { schema(infer: true) }
 
       repo = Class.new(ROM::Repository[:dummy]).new(rom)

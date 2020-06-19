@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.shared_context 'plugins' do
+RSpec.shared_context 'repository / plugins' do
   before do
     module Test
       class WrappingInput
@@ -90,7 +90,7 @@ RSpec.shared_context 'plugins' do
 
     ROM.plugins do
       adapter :sql do
-        register :timestamps, Test::Timestamps, type: :command
+        register :repo_timestamps, Test::Timestamps, type: :command
         register :upcase_name, Test::UpcaseName, type: :command
         register :modify_name, Test::ModifyName, type: :command
       end
