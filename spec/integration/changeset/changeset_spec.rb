@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe 'Using changesets' do
-  include_context 'database'
-  include_context 'relations'
+  include_context 'changeset / database'
+  include_context 'changeset / relations'
 
   before do
     module Test

@@ -4,14 +4,6 @@ gemspec
 
 eval_gemfile 'Gemfile.devtools'
 
-unless defined?(COMPONENTS)
-  COMPONENTS = %w(changeset)
-end
-
-COMPONENTS.each do |component|
-  gem "rom-#{component}", path: Pathname(__dir__).join(component).realpath
-end
-
 if ENV['USE_DRY_TRANSFORMER_MASTER'].eql?('true')
   gem 'dry-transformer', github: 'dry-rb/dry-transformer', branch: 'master'
 end

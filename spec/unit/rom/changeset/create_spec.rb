@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe ROM::Changeset::Create do
-  include_context 'database'
-  include_context 'relations'
+  include_context 'changeset / database'
+  include_context 'changeset / relations'
 
   context 'with a hash' do
     let(:changeset) do

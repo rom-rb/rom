@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.shared_context 'seeds' do
+RSpec.shared_context 'changeset / seeds' do
   before do
     jane_id = conn[:users].insert name: 'Jane'
     joe_id = conn[:users].insert name: 'Joe'

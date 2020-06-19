@@ -11,8 +11,8 @@ RSpec.describe 'changeset plugin' do
     end
   end
 
-  include_context 'database'
-  include_context 'relations'
+  include_context 'changeset / database'
+  include_context 'changeset / relations'
 
   before do
     module Test

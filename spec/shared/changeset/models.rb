@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.shared_context 'models' do
+RSpec.shared_context 'changeset / models' do
   let(:user_model) { Test::Models::User }
   let(:task_model) { Test::Models::Task }
   let(:tag_model) { Test::Models::Tag }

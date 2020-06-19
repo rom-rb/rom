@@ -1,7 +1,0 @@
---query '@api.text != "private"'
---embed-mixins
--o ../doc/rom-repository
--r README.md
---markup-provider=redcarpet
---markup=markdown
---files CHANGELOG.md

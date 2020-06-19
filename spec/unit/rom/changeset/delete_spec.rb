@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe ROM::Changeset::Delete do
-  include_context 'database'
-  include_context 'relations'
+  include_context 'changeset / database'
+  include_context 'changeset / relations'
 
   describe ROM::Changeset::Delete do
     let(:changeset) do

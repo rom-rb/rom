@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe ROM::Changeset::Update do
-  include_context 'database'
-  include_context 'relations'
+  include_context 'changeset / database'
+  include_context 'changeset / relations'
 
   subject(:changeset) do
     users.by_pk(jane[:id]).changeset(:update, data)

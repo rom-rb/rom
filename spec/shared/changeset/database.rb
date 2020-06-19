@@ -1,11 +1,29 @@
 # frozen_string_literal: true
 
-RSpec.shared_context 'database setup' do
-  let(:configuration) { ROM::Configuration.new(:sql, DB_URI) }
+require "sequel"
+
+RSpec.shared_context 'changeset / db_uri' do
+  let(:base_db_uri) do
+    ENV.fetch('BASE_DB_URI', 'postgres@localhost/rom')
+  end
+
+  let(:db_uri) do
+    defined?(JRUBY_VERSION) ? "jdbc:postgresql://#{base_db_uri}" : "postgres://#{base_db_uri}"
+  end
+end
+
+RSpec.shared_context 'changeset / database setup' do
+  include_context 'changeset / db_uri'
+
+  let(:configuration) { ROM::Configuration.new(:sql, db_uri) }
 
   let(:conn) { configuration.gateways[:default].connection }
 
   let(:rom) { ROM.container(configuration) }
+
+  let(:logger) do
+    Logger.new(File.open('./log/test.log', 'a'))
+  end
 
   before :all do
     Sequel.database_timezone = :utc
@@ -13,12 +31,12 @@ RSpec.shared_context 'database setup' do
   end
 
   before do
-    conn.loggers << LOGGER
+    conn.loggers << logger
   end
 end
 
-RSpec.shared_context 'database' do
-  include_context 'database setup'
+RSpec.shared_context 'changeset / database' do
+  include_context 'changeset / database setup'
 
   before do
     %i[tags tasks books posts_labels posts users labels

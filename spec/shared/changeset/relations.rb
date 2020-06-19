@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.shared_context 'relations' do
+RSpec.shared_context 'changeset / relations' do
   let(:users) { rom.relations[:users].with(auto_struct: true) }
   let(:tasks) { rom.relations[:tasks].with(auto_struct: true) }
   let(:tags) { rom.relations[:tags].with(auto_struct: true) }

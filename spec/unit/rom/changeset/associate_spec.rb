@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe ROM::Changeset, '#associate' do
-  include_context 'database setup'
+  include_context 'changeset / database setup'
 
   let(:people) do
     rom.relations[:people].with(auto_struct: true)
