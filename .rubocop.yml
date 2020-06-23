@@ -8,6 +8,9 @@ AllCops:
     - Gemfile.devtools
     - "*.gemspec"
 
+Layout/SpaceAroundMethodCallOperator:
+  Enabled: false
+
 Layout/SpaceInLambdaLiteral:
   Enabled: false
 
@@ -15,7 +18,7 @@ Layout/MultilineMethodCallIndentation:
   Enabled: true
   EnforcedStyle: indented
 
-Layout/IndentFirstArrayElement:
+Layout/FirstArrayElementIndentation:
   EnforcedStyle: consistent
 
 Layout/SpaceInsideHashLiteralBraces:
@@ -23,12 +26,23 @@ Layout/SpaceInsideHashLiteralBraces:
   EnforcedStyle: no_space
   EnforcedStyleForEmptyBraces: no_space
 
-Lint/HandleExceptions:
+Layout/LineLength:
+  Max: 100
   Exclude:
-    - "spec/spec_helper.rb"
+    - "spec/**/*_spec.rb"
 
 Lint/BooleanSymbol:
   Enabled: false
+
+Lint/RaiseException:
+  Enabled: false
+
+Lint/StructNewOverride:
+  Enabled: false
+
+Lint/SuppressedException:
+  Exclude:
+    - "spec/spec_helper.rb"
 
 Naming/PredicateName:
   Enabled: false
@@ -42,11 +56,6 @@ Naming/MethodName:
 
 Naming/MemoizedInstanceVariableName:
   Enabled: false
-
-Metrics/LineLength:
-  Max: 100
-  Exclude:
-    - "spec/**/*_spec.rb"
 
 Metrics/MethodLength:
   Enabled: false
@@ -63,6 +72,18 @@ Metrics/AbcSize:
 Metrics/CyclomaticComplexity:
   Enabled: true
   Max: 12
+
+Style/ExponentialNotation:
+  Enabled: false
+
+Style/HashEachMethods:
+  Enabled: false
+
+Style/HashTransformKeys:
+  Enabled: false
+
+Style/HashTransformValues:
+  Enabled: false
 
 Style/AccessModifierDeclarations:
   Enabled: false
