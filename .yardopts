@@ -6,7 +6,4 @@
 --markup-provider=redcarpet
 --markup=markdown
 --plugin junk
-core/lib/**/*.rb
-changeset/lib/**/*.rb
-mapper/lib/**/*.rb
-repository/lib/**/*.rb
+lib/**/*.rb
