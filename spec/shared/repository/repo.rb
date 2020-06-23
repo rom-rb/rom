@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-RSpec.shared_context('repo') do
-  include_context 'models'
-  include_context 'mappers'
+RSpec.shared_context("repo") do
+  include_context "models"
+  include_context "mappers"
 
   let(:repo) { repo_class.new(rom) }
 

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'rom/support/configurable'
-require 'rom/gateway'
+require "rom/support/configurable"
+require "rom/gateway"
 
 module ROM
   # Core gateway configuration interface
@@ -37,7 +37,7 @@ module ROM
 
     # @api private
     def normalize_gateway_args(*args)
-      args.first.is_a?(Hash) ? args.first : { default: args }
+      args.first.is_a?(Hash) ? args.first : {default: args}
     end
 
     # Build gateways using the setup interface

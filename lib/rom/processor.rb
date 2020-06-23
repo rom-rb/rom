@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'rom/mapper'
+require "rom/mapper"
 
 module ROM
   # Abstract processor class
@@ -24,7 +24,7 @@ module ROM
     #
     # @api private
     def self.build
-      raise NotImplementedError, '+build+ must be implemented'
+      raise NotImplementedError, "+build+ must be implemented"
     end
   end
 end

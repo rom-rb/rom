@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'rom/plugin'
+require "rom/plugin"
 
 module ROM
   # @api private

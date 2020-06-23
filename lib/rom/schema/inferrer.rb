@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'dry/core/class_attributes'
+require "dry/core/class_attributes"
 
 module ROM
   class Schema
@@ -30,7 +30,7 @@ module ROM
         def initialize(name, attributes)
           super(
             "Following attributes in #{Relation::Name[name].relation.inspect} schema cannot "\
-            "be inferred and have to be defined explicitly: #{attributes.map(&:inspect).join(', ')}"
+            "be inferred and have to be defined explicitly: #{attributes.map(&:inspect).join(", ")}"
           )
         end
       end
@@ -69,7 +69,7 @@ module ROM
 
         check_all_attributes_defined(schema, attributes, missing)
 
-        { attributes: attributes }
+        {attributes: attributes}
       end
 
       # @api private

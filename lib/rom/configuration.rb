@@ -1,24 +1,24 @@
 # frozen_string_literal: true
 
-require 'forwardable'
+require "forwardable"
 
-require 'rom/environment'
-require 'rom/setup'
-require 'rom/configuration_dsl'
-require 'rom/support/notifications'
+require "rom/environment"
+require "rom/setup"
+require "rom/configuration_dsl"
+require "rom/support/notifications"
 
 module ROM
   class Configuration
     extend Forwardable
     extend Notifications
 
-    register_event('configuration.relations.class.ready')
-    register_event('configuration.relations.object.registered')
-    register_event('configuration.relations.registry.created')
-    register_event('configuration.relations.schema.allocated')
-    register_event('configuration.relations.schema.set')
-    register_event('configuration.relations.dataset.allocated')
-    register_event('configuration.commands.class.before_build')
+    register_event("configuration.relations.class.ready")
+    register_event("configuration.relations.object.registered")
+    register_event("configuration.relations.registry.created")
+    register_event("configuration.relations.schema.allocated")
+    register_event("configuration.relations.schema.set")
+    register_event("configuration.relations.dataset.allocated")
+    register_event("configuration.commands.class.before_build")
 
     include ROM::ConfigurationDSL
 

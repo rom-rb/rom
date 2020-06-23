@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require 'dry/transformer/all'
+require "dry/transformer/all"
 
-require 'rom/processor'
-require 'rom/processor/composer'
+require "rom/processor"
+require "rom/processor/composer"
 
 module ROM
   class Processor
@@ -26,7 +26,7 @@ module ROM
         import Dry::Transformer::ClassTransformations
         import Dry::Transformer::ProcTransformations
 
-        INVALID_INJECT_UNION_VALUE = '%s attribute: block is required for :from with union value.'
+        INVALID_INJECT_UNION_VALUE = "%s attribute: block is required for :from with union value."
 
         def self.get(arr, idx)
           arr[idx]
@@ -117,7 +117,7 @@ module ROM
       #
       # @api private
       def visit(attribute, *args)
-        type = attribute.class.name.split('::').last.downcase
+        type = attribute.class.name.split("::").last.downcase
         send("visit_#{type}", attribute, *args)
       end
 

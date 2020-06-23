@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
+require "spec_helper"
 
-RSpec.describe 'Registering Custom Mappers' do
-  include_context 'container'
-  include_context 'users and tasks'
+RSpec.describe "Registering Custom Mappers" do
+  include_context "container"
+  include_context "users and tasks"
 
-  it 'allows registering arbitrary objects as mappers' do
+  it "allows registering arbitrary objects as mappers" do
     model = Struct.new(:name, :email)
 
     mapper = lambda { |users|
@@ -23,8 +23,8 @@ RSpec.describe 'Registering Custom Mappers' do
       register(:users, entity: mapper)
     end
 
-    users = container.relations[:users].by_name('Jane').map_with(:entity)
+    users = container.relations[:users].by_name("Jane").map_with(:entity)
 
-    expect(users).to match_array([model.new('Jane', 'jane@doe.org')])
+    expect(users).to match_array([model.new("Jane", "jane@doe.org")])
   end
 end

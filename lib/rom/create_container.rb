@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require 'rom/configuration'
-require 'rom/environment'
-require 'rom/setup'
-require 'rom/setup/finalize'
+require "rom/configuration"
+require "rom/environment"
+require "rom/setup"
+require "rom/setup/finalize"
 
 module ROM
   # @api private

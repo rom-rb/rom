@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
-require 'dry/core/class_attributes'
+require "dry/core/class_attributes"
 
-require 'rom/types'
-require 'rom/initializer'
-require 'rom/pipeline'
+require "rom/types"
+require "rom/initializer"
+require "rom/pipeline"
 
-require 'rom/commands/class_interface'
-require 'rom/commands/composite'
-require 'rom/commands/graph'
-require 'rom/commands/lazy'
+require "rom/commands/class_interface"
+require "rom/commands/composite"
+require "rom/commands/graph"
+require "rom/commands/lazy"
 
 module ROM
   # Abstract command class

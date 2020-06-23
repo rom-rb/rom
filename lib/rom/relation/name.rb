@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'dry/equalizer'
-require 'concurrent/map'
+require "dry/equalizer"
+require "concurrent/map"
 
 module ROM
   class Relation

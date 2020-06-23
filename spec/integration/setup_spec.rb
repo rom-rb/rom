@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'rom/memory'
+require "rom/memory"
 
-RSpec.describe 'Setting up rom suite' do
+RSpec.describe "Setting up rom suite" do
   subject(:rom) do
     ROM.container(:memory) do |config|
       config.register_relation(Test::Users)
@@ -18,11 +18,11 @@ RSpec.describe 'Setting up rom suite' do
     end
   end
 
-  it 'works' do
+  it "works" do
     expect(rom.relations[:users]).to be_instance_of(Test::Users)
   end
 
-  describe 'configuring plugins for schemas' do
+  describe "configuring plugins for schemas" do
     after do
       ROM.plugin_registry[:schema]
         .adapter(:default)
@@ -35,7 +35,7 @@ RSpec.describe 'Setting up rom suite' do
 
     subject(:schema) { container.relations[:users].schema }
 
-    it 'allows setting timestamps in all schemas' do
+    it "allows setting timestamps in all schemas" do
       configuration.plugin(:memory, schemas: :timestamps)
 
       configuration.relation(:users)
@@ -43,7 +43,7 @@ RSpec.describe 'Setting up rom suite' do
       expect(schema.to_h.keys).to eql(%i[created_at updated_at])
     end
 
-    it 'extends schema dsl' do
+    it "extends schema dsl" do
       configuration.plugin(:memory, schemas: :timestamps)
 
       configuration.relation(:users) do
@@ -55,7 +55,7 @@ RSpec.describe 'Setting up rom suite' do
       expect(schema.to_h.keys).to eql(%i[created_on updated_on])
     end
 
-    it 'accepts options' do
+    it "accepts options" do
       configuration.plugin(:memory, schemas: :timestamps) do |p|
         p.attributes = %i[created_on updated_on]
       end

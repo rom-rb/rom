@@ -1,32 +1,32 @@
 # frozen_string_literal: true
 
-require 'dry/equalizer'
-require 'dry/core/constants'
+require "dry/equalizer"
+require "dry/core/constants"
 
-require 'rom/constants'
+require "rom/constants"
 
 # core parts
-require 'rom/plugin'
-require 'rom/schema_plugin'
-require 'rom/relation'
-require 'rom/mapper'
-require 'rom/processor/transformer'
-require 'rom/commands'
+require "rom/plugin"
+require "rom/schema_plugin"
+require "rom/relation"
+require "rom/mapper"
+require "rom/processor/transformer"
+require "rom/commands"
 
 # rom Global
-require 'rom/global'
+require "rom/global"
 
 # rom configurations
-require 'rom/configuration'
+require "rom/configuration"
 
 # container with registries
-require 'rom/container'
+require "rom/container"
 
 # container factory
-require 'rom/create_container'
+require "rom/create_container"
 
 # register known plugin types
-require 'rom/schema_plugin'
+require "rom/schema_plugin"
 
 ROM::Plugins.register(:command)
 ROM::Plugins.register(:mapper)
@@ -35,11 +35,11 @@ ROM::Plugins.register(:schema, plugin_type: ROM::SchemaPlugin)
 ROM::Plugins.register(:configuration, adapter: false)
 
 # register core plugins
-require 'rom/plugins/relation/registry_reader'
-require 'rom/plugins/relation/instrumentation'
-require 'rom/plugins/command/schema'
-require 'rom/plugins/command/timestamps'
-require 'rom/plugins/schema/timestamps'
+require "rom/plugins/relation/registry_reader"
+require "rom/plugins/relation/instrumentation"
+require "rom/plugins/command/schema"
+require "rom/plugins/command/timestamps"
+require "rom/plugins/schema/timestamps"
 
 module ROM
   extend Global

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'rom/support/inflector'
+require "rom/support/inflector"
 
 module ROM
   # TODO: look into making command graphs work without the root key in the input

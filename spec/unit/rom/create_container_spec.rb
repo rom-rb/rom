@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
+require "spec_helper"
 
-RSpec.describe ROM::CreateContainer, '#finalize' do
-  describe '#finalize' do
-    include_context 'container'
+RSpec.describe ROM::CreateContainer, "#finalize" do
+  describe "#finalize" do
+    include_context "container"
 
-    it 'can register multiple relations with same dataset' do
+    it "can register multiple relations with same dataset" do
       configuration
 
       apples = Class.new(ROM::Relation[:memory]) do
@@ -33,7 +33,7 @@ RSpec.describe ROM::CreateContainer, '#finalize' do
       expect(container.relations.apples).to_not eq(container.relations.oranges)
     end
 
-    it 'raises an error when registering relations with the same `name`' do
+    it "raises an error when registering relations with the same `name`" do
       configuration
 
       users = Class.new(ROM::Relation[:memory]) do
@@ -52,7 +52,7 @@ RSpec.describe ROM::CreateContainer, '#finalize' do
       )
     end
 
-    it 'raises an error when registering same mapper twice for the same relation' do
+    it "raises an error when registering same mapper twice for the same relation" do
       configuration
 
       users_mapper = Class.new(ROM::Mapper) do
@@ -111,23 +111,23 @@ RSpec.describe ROM::CreateContainer, '#finalize' do
     end
   end
 
-  context 'empty setup' do
+  context "empty setup" do
     let(:configuration) { ROM::Configuration.new({}) }
     let(:container) { ROM.container(configuration) }
 
-    it 'builds empty gateways' do
+    it "builds empty gateways" do
       expect(container.gateways).to eql({})
     end
 
-    it 'builds empty relations' do
+    it "builds empty relations" do
       expect(container.relations).to eql(ROM::RelationRegistry.new)
     end
 
-    it 'builds empty mappers' do
+    it "builds empty mappers" do
       expect(container.mappers).to eql(ROM::Registry.new)
     end
 
-    it 'builds empty commands' do
+    it "builds empty commands" do
       expect(container.commands).to eql(ROM::Registry.build)
     end
   end

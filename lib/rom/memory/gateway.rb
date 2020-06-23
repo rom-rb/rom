@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'rom/gateway'
-require 'rom/memory/storage'
-require 'rom/memory/commands'
+require "rom/gateway"
+require "rom/memory/storage"
+require "rom/memory/commands"
 
 module ROM
   module Memory

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'dry/core/class_builder'
+require "dry/core/class_builder"
 
 module ROM
   class Mapper

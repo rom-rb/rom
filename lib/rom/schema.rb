@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-require 'dry/equalizer'
+require "dry/equalizer"
 
-require 'rom/constants'
-require 'rom/attribute'
-require 'rom/schema/dsl'
-require 'rom/schema/inferrer'
-require 'rom/association_set'
-require 'rom/support/notifications'
-require 'rom/support/memoizable'
+require "rom/constants"
+require "rom/attribute"
+require "rom/schema/dsl"
+require "rom/schema/inferrer"
+require "rom/association_set"
+require "rom/support/notifications"
+require "rom/support/memoizable"
 
 module ROM
   # Relation schema
@@ -38,7 +38,7 @@ module ROM
 
     extend Notifications::Listener
 
-    subscribe('configuration.relations.registry.created') do |event|
+    subscribe("configuration.relations.registry.created") do |event|
       registry = event[:registry]
 
       registry.each do |_, relation|
@@ -49,7 +49,7 @@ module ROM
       end
     end
 
-    subscribe('configuration.relations.schema.allocated') do |event|
+    subscribe("configuration.relations.schema.allocated") do |event|
       schema = event[:schema]
       registry = event[:registry]
       gateway = event[:gateway]

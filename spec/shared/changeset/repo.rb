@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-RSpec.shared_context 'changeset / repo' do
-  include_context 'changeset / models'
-  include_context 'changeset / mappers'
+RSpec.shared_context "changeset / repo" do
+  include_context "changeset / models"
+  include_context "changeset / mappers"
 
   let(:repo) { repo_class.new(rom) }
 
@@ -21,11 +21,11 @@ RSpec.shared_context 'changeset / repo' do
       end
 
       def users_with_tasks
-        aggregate(many: { all_tasks: tasks.for_users })
+        aggregate(many: {all_tasks: tasks.for_users})
       end
 
       def users_with_tasks_and_tags
-        aggregate(many: { all_tasks: tasks_with_tags(tasks.for_users) })
+        aggregate(many: {all_tasks: tasks_with_tags(tasks.for_users)})
       end
 
       def users_with_task
@@ -57,7 +57,7 @@ RSpec.shared_context 'changeset / repo' do
       end
 
       def task_with_owner
-        tasks.find(id: 2).combine_parents(one: { owner: users })
+        tasks.find(id: 2).combine_parents(one: {owner: users})
       end
 
       def tasks_with_tags(tasks = self.tasks)
@@ -73,7 +73,7 @@ RSpec.shared_context 'changeset / repo' do
   let(:comments_repo) do
     Class.new(ROM::Repository[:comments]) do
       def comments_with_likes
-        aggregate(many: { likes: likes })
+        aggregate(many: {likes: likes})
       end
 
       def comments_with_emotions

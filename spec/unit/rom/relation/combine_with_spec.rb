@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-RSpec.describe ROM::Relation, '#combine_with' do
-  include_context 'gateway only'
-  include_context 'users and tasks'
+RSpec.describe ROM::Relation, "#combine_with" do
+  include_context "gateway only"
+  include_context "users and tasks"
 
   let(:tags_dataset) { gateway.dataset(:tags) }
 
@@ -58,8 +58,8 @@ RSpec.describe ROM::Relation, '#combine_with' do
   end
 
   before do
-    tags_dataset.insert(task: 'be cool', name: 'red')
-    tags_dataset.insert(task: 'be cool', name: 'green')
+    tags_dataset.insert(task: "be cool", name: "red")
+    tags_dataset.insert(task: "be cool", name: "green")
   end
 
   let(:map_users) {
@@ -103,22 +103,22 @@ RSpec.describe ROM::Relation, '#combine_with' do
     }
   }
 
-  it 'supports more than one eagerly-loaded relation' do
+  it "supports more than one eagerly-loaded relation" do
     expected = [
       {
-        name: 'Jane',
-        email: 'jane@doe.org',
+        name: "Jane",
+        email: "jane@doe.org",
         tasks: [
-          { name: 'Jane', title: 'be cool', priority: 2 }
+          {name: "Jane", title: "be cool", priority: 2}
         ],
         tags: [
-          { task: 'be cool', name: 'red', user: 'Jane' },
-          { task: 'be cool', name: 'green', user: 'Jane' }
+          {task: "be cool", name: "red", user: "Jane"},
+          {task: "be cool", name: "green", user: "Jane"}
         ]
       }
     ]
 
-    user_with_tasks_and_tags = users_relation.by_name('Jane')
+    user_with_tasks_and_tags = users_relation.by_name("Jane")
       .combine_with(tasks_relation.for_users, tags_relation.for_users)
 
     result = user_with_tasks_and_tags >> map_user_with_tasks_and_tags
@@ -126,22 +126,22 @@ RSpec.describe ROM::Relation, '#combine_with' do
     expect(result.to_a).to eql(expected)
   end
 
-  it 'supports more than one eagerly-loaded relation via chaining' do
+  it "supports more than one eagerly-loaded relation via chaining" do
     expected = [
       {
-        name: 'Jane',
-        email: 'jane@doe.org',
+        name: "Jane",
+        email: "jane@doe.org",
         tasks: [
-          { name: 'Jane', title: 'be cool', priority: 2 }
+          {name: "Jane", title: "be cool", priority: 2}
         ],
         tags: [
-          { task: 'be cool', name: 'red', user: 'Jane' },
-          { task: 'be cool', name: 'green', user: 'Jane' }
+          {task: "be cool", name: "red", user: "Jane"},
+          {task: "be cool", name: "green", user: "Jane"}
         ]
       }
     ]
 
-    user_with_tasks_and_tags = users_relation.by_name('Jane')
+    user_with_tasks_and_tags = users_relation.by_name("Jane")
       .combine_with(tasks_relation.for_users).combine_with(tags_relation.for_users)
 
     result = user_with_tasks_and_tags >> map_user_with_tasks_and_tags
@@ -149,19 +149,19 @@ RSpec.describe ROM::Relation, '#combine_with' do
     expect(result).to match_array(expected)
   end
 
-  it 'supports nested eager-loading' do
+  it "supports nested eager-loading" do
     expected = [
       {
-        name: 'Jane', email: 'jane@doe.org', tasks: [
-          { name: 'Jane', title: 'be cool', priority: 2, tags: [
-            { task: 'be cool', name: 'red' },
-            { task: 'be cool', name: 'green' }
-          ] }
+        name: "Jane", email: "jane@doe.org", tasks: [
+          {name: "Jane", title: "be cool", priority: 2, tags: [
+            {task: "be cool", name: "red"},
+            {task: "be cool", name: "green"}
+          ]}
         ]
       }
     ]
 
-    user_with_tasks = users_relation.by_name('Jane')
+    user_with_tasks = users_relation.by_name("Jane")
       .combine_with(tasks_relation.for_users.combine_with(tags_relation.for_tasks))
 
     result = user_with_tasks >> map_user_with_tasks

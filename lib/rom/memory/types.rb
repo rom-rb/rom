@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'rom/types'
+require "rom/types"
 
 module ROM
   module Memory

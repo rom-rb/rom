@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'concurrent/map'
-require 'rom/registry'
-require 'rom/plugins'
+require "concurrent/map"
+require "rom/registry"
+require "rom/plugins"
 
 module ROM
   # Stores all registered plugins

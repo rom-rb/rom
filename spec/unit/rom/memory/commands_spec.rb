@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
-require 'rom/memory'
+require "spec_helper"
+require "rom/memory"
 
 RSpec.describe ROM::Memory::Commands do
   let(:relation) do
@@ -13,32 +13,32 @@ RSpec.describe ROM::Memory::Commands do
     end.new(ROM::Memory::Dataset.new([]))
   end
 
-  describe 'Create' do
+  describe "Create" do
     subject(:command) { ROM::Commands::Create[:memory].build(relation) }
 
-    describe '#call' do
-      it 'uses default input handler' do
-        result = command.call([id: 1, name: 'Jane', haha: 'oops'])
+    describe "#call" do
+      it "uses default input handler" do
+        result = command.call([id: 1, name: "Jane", haha: "oops"])
 
-        expect(result).to eql([{ id: 1, name: 'Jane' }])
+        expect(result).to eql([{id: 1, name: "Jane"}])
       end
     end
   end
 
-  describe 'Update' do
+  describe "Update" do
     subject(:command) { ROM::Commands::Update[:memory].build(relation) }
 
     before do
-      relation.insert(id: 1, name: 'Jane')
+      relation.insert(id: 1, name: "Jane")
     end
 
-    describe '#call' do
-      it 'uses default input handler' do
+    describe "#call" do
+      it "uses default input handler" do
         result = command
           .new(relation.restrict(id: 1))
-          .call(name: 'Jane Doe', haha: 'oops')
+          .call(name: "Jane Doe", haha: "oops")
 
-        expect(result).to eql([{ id: 1, name: 'Jane Doe' }])
+        expect(result).to eql([{id: 1, name: "Jane Doe"}])
       end
     end
   end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'dry/transformer/all'
-require 'dry/transformer/registry'
+require "dry/transformer/all"
+require "dry/transformer/registry"
 
 module ROM
   class Changeset

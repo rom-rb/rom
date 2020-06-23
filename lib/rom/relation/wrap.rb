@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'rom/relation/graph'
-require 'rom/relation/combined'
+require "rom/relation/graph"
+require "rom/relation/combined"
 
 module ROM
   class Relation

@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
 USER_SEED = COUNT.times.map { |i|
-  { id: i + 1,
-    name: "User #{i + 1}",
-    email: "email_#{i}@domain.com",
-    age: i * 10 }
+  {id: i + 1,
+   name: "User #{i + 1}",
+   email: "email_#{i}@domain.com",
+   age: i * 10}
 }
 
 TASK_SEED = USER_SEED.map { |user|
   3.times.map do |i|
-    { user_id: user[:id], title: "Task #{i + 1}" }
+    {user_id: user[:id], title: "Task #{i + 1}"}
   end
 }.flatten
 

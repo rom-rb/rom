@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'rom/relation/graph'
+require "rom/relation/graph"
 
 module ROM
   class Changeset

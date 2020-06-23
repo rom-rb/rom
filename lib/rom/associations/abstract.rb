@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-require 'dry/core/constants'
-require 'dry/core/class_attributes'
+require "dry/core/constants"
+require "dry/core/class_attributes"
 
-require 'rom/types'
-require 'rom/initializer'
-require 'rom/support/memoizable'
+require "rom/types"
+require "rom/initializer"
+require "rom/support/memoizable"
 
 module ROM
   module Associations
@@ -143,7 +143,7 @@ module ROM
       #
       # @api public
       def combine_keys
-        definition.combine_keys || { source_key => target_key }
+        definition.combine_keys || {source_key => target_key}
       end
 
       # Return names of source PKs and target FKs
@@ -163,7 +163,7 @@ module ROM
       def node
         target.with(
           name: target.name.as(key),
-          meta: { keys: combine_keys, combine_type: result, combine_name: key }
+          meta: {keys: combine_keys, combine_type: result, combine_name: key}
         )
       end
 
@@ -176,7 +176,7 @@ module ROM
         target.with(
           name: target.name.as(key),
           schema: target.schema.wrap,
-          meta: { wrap: true, combine_name: key }
+          meta: {wrap: true, combine_name: key}
         )
       end
 

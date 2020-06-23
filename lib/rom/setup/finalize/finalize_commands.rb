@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'rom/registry'
-require 'rom/command_compiler'
-require 'rom/command_registry'
+require "rom/registry"
+require "rom/command_compiler"
+require "rom/command_registry"
 
 module ROM
   class Finalize
@@ -32,7 +32,7 @@ module ROM
           gateway = @gateways[relation.gateway]
 
           notifications.trigger(
-            'configuration.commands.class.before_build',
+            "configuration.commands.class.before_build",
             command: klass, gateway: gateway, dataset: relation.dataset, adapter: relation.adapter
           )
 

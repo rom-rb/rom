@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'rom/initializer'
+require "rom/initializer"
 
 module ROM
   class Changeset
@@ -94,7 +94,7 @@ module ROM
           when Associated
             a >> other.command.with_association(assoc)
           when Array
-            raise NotImplementedError, 'Changeset::Associate does not support arrays yet'
+            raise NotImplementedError, "Changeset::Associate does not support arrays yet"
           else
             a.with_association(assoc, parent: other)
           end

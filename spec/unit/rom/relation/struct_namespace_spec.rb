@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require 'rom/relation'
+require "rom/relation"
 
-RSpec.describe ROM::Relation, '#struct_namespace' do
+RSpec.describe ROM::Relation, "#struct_namespace" do
   let(:dataset) do
-    [{ id: 1, name: 'Jane' }]
+    [{id: 1, name: "Jane"}]
   end
 
   before do
@@ -31,7 +31,7 @@ RSpec.describe ROM::Relation, '#struct_namespace' do
     end
   end
 
-  context 'setting at runtime' do
+  context "setting at runtime" do
     subject(:relation) do
       Class.new(ROM::Relation) do
         schema(:users) do
@@ -41,19 +41,19 @@ RSpec.describe ROM::Relation, '#struct_namespace' do
       end.new(dataset, auto_struct: true)
     end
 
-    it 'returns a new relation configured for the provided struct namespace' do
+    it "returns a new relation configured for the provided struct namespace" do
       users = relation.struct_namespace(Test::Entities)
 
       expect(users.first).to be_my_user
     end
 
-    it 'returns a new relation configured for the provided struct namespace and aliased relation' do
+    it "returns a new relation configured for the provided struct namespace and aliased relation" do
       users = relation.as(:admins).struct_namespace(Test::Entities)
 
       expect(users.first).to be_admin
     end
 
-    it 'allows switching namespaces at runtime' do
+    it "allows switching namespaces at runtime" do
       entities = relation.struct_namespace(Test::Entities)
       models = relation.struct_namespace(Test::Models)
 
@@ -62,7 +62,7 @@ RSpec.describe ROM::Relation, '#struct_namespace' do
     end
   end
 
-  context 'using default setting' do
+  context "using default setting" do
     subject(:relation) do
       Class.new(ROM::Relation) do
         struct_namespace Test::Entities
@@ -74,11 +74,11 @@ RSpec.describe ROM::Relation, '#struct_namespace' do
       end.new(dataset, auto_struct: true)
     end
 
-    it 'returns a new relation configured for the provided struct namespace' do
+    it "returns a new relation configured for the provided struct namespace" do
       expect(relation.first).to be_my_user
     end
 
-    context 'using inheritance' do
+    context "using inheritance" do
       let(:admins) do
         Class.new(relation.class) do
           schema(:users, as: :admins) do
@@ -88,7 +88,7 @@ RSpec.describe ROM::Relation, '#struct_namespace' do
         end.new(dataset, auto_struct: true)
       end
 
-      it 'inherits struct namespace and uses custom alias' do
+      it "inherits struct namespace and uses custom alias" do
         expect(admins.first).to be_admin
       end
     end

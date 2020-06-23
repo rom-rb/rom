@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'rom/pipeline'
+require "rom/pipeline"
 
 module ROM
   module Commands

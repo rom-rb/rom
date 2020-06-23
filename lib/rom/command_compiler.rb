@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require 'rom/support/inflector'
+require "rom/support/inflector"
 
-require 'rom/initializer'
-require 'rom/commands'
-require 'rom/command_proxy'
+require "rom/initializer"
+require "rom/commands"
+require "rom/command_proxy"
 
 module ROM
   # Builds commands for relations.
@@ -139,7 +139,7 @@ module ROM
           if meta[:combine_type] == :many
             name
           else
-            { Inflector.singularize(name).to_sym => name }
+            {Inflector.singularize(name).to_sym => name}
           end
 
         mapping =
@@ -149,7 +149,7 @@ module ROM
             assoc = associations[meta[:combine_name]]
 
             if assoc
-              { assoc.key => assoc.target.name.to_sym }
+              {assoc.key => assoc.target.name.to_sym}
             else
               default_mapping
             end
@@ -207,7 +207,7 @@ module ROM
         gateway = gateways[relation.gateway]
 
         notifications.trigger(
-          'configuration.commands.class.before_build',
+          "configuration.commands.class.before_build",
           command: klass, gateway: gateway, dataset: relation.dataset, adapter: adapter
         )
 

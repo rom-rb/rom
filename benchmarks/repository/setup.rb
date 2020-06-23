@@ -1,18 +1,18 @@
 # frozen_string_literal: true
 
-require 'bundler'
+require "bundler"
 
 Bundler.require
 
-require 'benchmark/ips'
-require 'sequel'
-require 'rom-sql'
-require 'rom-repository'
-require 'active_record'
-require 'logger'
-require 'hotch'
-begin; require 'byebug'; rescue LoadError; end
-require_relative 'gc_suite'
+require "benchmark/ips"
+require "sequel"
+require "rom-sql"
+require "rom-repository"
+require "active_record"
+require "logger"
+require "hotch"
+begin; require "byebug"; rescue LoadError; end
+require_relative "gc_suite"
 
 def benchmark(title)
   puts "\n"
@@ -22,8 +22,8 @@ def benchmark(title)
     x.config(suite: GCSuite.new)
     def x.verify(*); end
 
-    def x.prepare(*) 
-      yield 
+    def x.prepare(*)
+      yield
     end
     yield x
     x.compare!
@@ -31,7 +31,7 @@ def benchmark(title)
   hr
 end
 
-DATABASE_URL = ENV.fetch('DATABASE_URL', 'postgres://localhost/rom_repository_bench')
+DATABASE_URL = ENV.fetch("DATABASE_URL", "postgres://localhost/rom_repository_bench")
 
 setup = ROM::Configuration.new(:sql, DATABASE_URL)
 
@@ -115,17 +115,17 @@ end
 
 ROM_ENV = ROM.container(setup)
 
-COUNT = ENV.fetch('COUNT', 1000).to_i
+COUNT = ENV.fetch("COUNT", 1000).to_i
 
 USER_SEED = COUNT.times.map { |i|
-  { id: i + 1,
-    name: "User #{i + 1}",
-    email: "email_#{i}@domain.com",
-    age: i * 10 }
+  {id: i + 1,
+   name: "User #{i + 1}",
+   email: "email_#{i}@domain.com",
+   age: i * 10}
 }
 
 def hr
-  '*' * 80
+  "*" * 80
 end
 
 def rom

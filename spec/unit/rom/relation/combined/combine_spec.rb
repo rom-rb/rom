@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'rom/relation/combined'
+require "rom/relation/combined"
 
-RSpec.describe ROM::Relation::Combined, '#combine' do
+RSpec.describe ROM::Relation::Combined, "#combine" do
   subject(:relation) do
     ROM::Relation::Combined.new(users, [tasks])
   end
@@ -23,7 +23,7 @@ RSpec.describe ROM::Relation::Combined, '#combine' do
     ROM::Relation.new([], name: ROM::Relation::Name[:tags])
   end
 
-  it 'returns another combined relation with nodes appended' do
+  it "returns another combined relation with nodes appended" do
     expect(relation.root).to receive(:nodes).with(posts, tags).and_return([posts, tags])
 
     new_relation = relation.combine(posts, tags)

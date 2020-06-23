@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'dry/equalizer'
+require "dry/equalizer"
 
 module ROM
   class Header
@@ -93,7 +93,7 @@ module ROM
       #
       # @api private
       def mapping
-        { key => name }
+        {key => name}
       end
 
       def union?

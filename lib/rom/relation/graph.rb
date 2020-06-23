@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-require 'dry/equalizer'
+require "dry/equalizer"
 
-require 'rom/initializer'
+require "rom/initializer"
 
-require 'rom/relation/loaded'
-require 'rom/relation/composite'
-require 'rom/relation/materializable'
-require 'rom/pipeline'
-require 'rom/support/memoizable'
+require "rom/relation/loaded"
+require "rom/relation/composite"
+require "rom/relation/materializable"
+require "rom/pipeline"
+require "rom/support/memoizable"
 
 module ROM
   class Relation

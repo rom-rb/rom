@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'set'
+require "set"
 
 module ROM
   module Plugins
@@ -117,7 +117,7 @@ module ROM
           def timestamps(*names)
             timestamp_columns timestamp_columns.merge(names)
           end
-          alias timestamp timestamps
+          alias_method :timestamp, :timestamps
 
           # Set up attributes to datestamp when the command is called
           #
@@ -139,7 +139,7 @@ module ROM
           def datestamps(*names)
             datestamp_columns datestamp_columns.merge(names)
           end
-          alias datestamp datestamps
+          alias_method :datestamp, :datestamps
         end
       end
     end

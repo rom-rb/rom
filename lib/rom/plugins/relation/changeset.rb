@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require 'rom/support/notifications'
+require "rom/support/notifications"
 
-require 'rom/changeset/create'
-require 'rom/changeset/update'
-require 'rom/changeset/delete'
+require "rom/changeset/create"
+require "rom/changeset/update"
+require "rom/changeset/delete"
 
-require 'rom/changeset/extensions/relation'
+require "rom/changeset/extensions/relation"
 
 module ROM
   module Plugins
@@ -23,7 +23,7 @@ module ROM
 
         extend Notifications::Listener
 
-        subscribe('configuration.relations.class.ready') do |event|
+        subscribe("configuration.relations.class.ready") do |event|
           event[:relation].include(InstanceMethods)
         end
 

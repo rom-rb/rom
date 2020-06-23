@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
-require 'rom/memory/storage'
+require "spec_helper"
+require "rom/memory/storage"
 
 RSpec.describe ROM::Memory::Storage do
-  describe 'thread safe' do
+  describe "thread safe" do
     let(:threads) { 4 }
     let(:operations) { 5000 }
 
-    describe 'data' do
-      it 'create datasets properly' do
+    describe "data" do
+      it "create datasets properly" do
         storage = ROM::Memory::Storage.new
 
         threaded_operations do |thread, operation|
@@ -21,8 +21,8 @@ RSpec.describe ROM::Memory::Storage do
       end
     end
 
-    describe 'dataset' do
-      it 'inserts data in proper order' do
+    describe "dataset" do
+      it "inserts data in proper order" do
         storage = ROM::Memory::Storage.new
         dataset = storage.create_dataset(:ary)
 

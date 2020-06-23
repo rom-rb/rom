@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'rom/configuration_dsl/command'
+require "rom/configuration_dsl/command"
 
 module ROM
   module ConfigurationDSL
@@ -29,7 +29,7 @@ module ROM
       # @api public
       def define(name, options = EMPTY_HASH, &block)
         @command_classes << Command.build_class(
-          name, relation, { adapter: adapter }.merge(options), &block
+          name, relation, {adapter: adapter}.merge(options), &block
         )
       end
     end

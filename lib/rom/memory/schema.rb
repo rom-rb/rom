@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'rom/schema'
-require 'rom/memory/associations'
+require "rom/schema"
+require "rom/memory/associations"
 
 module ROM
   module Memory

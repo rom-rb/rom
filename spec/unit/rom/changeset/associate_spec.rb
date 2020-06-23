@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-RSpec.describe ROM::Changeset, '#associate' do
-  include_context 'changeset / database setup'
+RSpec.describe ROM::Changeset, "#associate" do
+  include_context "changeset / database setup"
 
   let(:people) do
     rom.relations[:people].with(auto_struct: true)
@@ -61,77 +61,77 @@ RSpec.describe ROM::Changeset, '#associate' do
     end
   end
 
-  context 'with Create' do
+  context "with Create" do
     let(:jane) do
-      people.command(:create).call(name: 'Jane')
+      people.command(:create).call(name: "Jane")
     end
 
     let(:project) do
-      projects.command(:create).call(name: 'rom-rb')
+      projects.command(:create).call(name: "rom-rb")
     end
 
-    it 'associates child with parent' do
-      changeset = todos.changeset(:create, title: 'Test 1').associate(jane)
+    it "associates child with parent" do
+      changeset = todos.changeset(:create, title: "Test 1").associate(jane)
 
-      expect(changeset.commit.to_h).to include(user_id: jane.id, title: 'Test 1')
+      expect(changeset.commit.to_h).to include(user_id: jane.id, title: "Test 1")
     end
 
-    it 'associates child with multiple parents' do
-      changeset = todos.changeset(:create, title: 'Test 1')
+    it "associates child with multiple parents" do
+      changeset = todos.changeset(:create, title: "Test 1")
         .associate(jane, :user)
         .associate(project)
 
       expect(changeset.commit.to_h)
-        .to include(user_id: jane.id, project_id: project.id, title: 'Test 1')
+        .to include(user_id: jane.id, project_id: project.id, title: "Test 1")
     end
 
-    it 'associates multiple children with a parent' do
-      pending 'This is not implemented yet'
+    it "associates multiple children with a parent" do
+      pending "This is not implemented yet"
 
       project_todos = [
-        { user_id: jane.id, title: 'Test 1' },
-        { user_id: jane.id, title: 'Test 2' }
+        {user_id: jane.id, title: "Test 1"},
+        {user_id: jane.id, title: "Test 2"}
       ]
 
-      changeset = projects.changeset(:create, name: 'rom-rb')
+      changeset = projects.changeset(:create, name: "rom-rb")
         .associate(project_todos, :project)
 
       result = changeset.commit
 
-      expect(result).to include(name: 'rom-rb')
+      expect(result).to include(name: "rom-rb")
       expect(result[:todos].size).to be(2)
     end
 
-    it 'raises when assoc name cannot be inferred' do
+    it "raises when assoc name cannot be inferred" do
       other = Class.new do
         def self.schema
           []
         end
       end.new
 
-      expect { todos.changeset(:create, title: 'Test 1').associate(other) }
+      expect { todos.changeset(:create, title: "Test 1").associate(other) }
         .to raise_error(ArgumentError, /can't infer association name for/)
     end
   end
 
-  context 'with Update' do
+  context "with Update" do
     let!(:john) do
-      people.command(:create).call(name: 'John')
+      people.command(:create).call(name: "John")
     end
 
     let!(:jane) do
-      people.command(:create).call(name: 'Jane')
+      people.command(:create).call(name: "Jane")
     end
 
     let!(:todo) do
-      todos.command(:create).call(title: 'Test 1', user_id: john.id)
+      todos.command(:create).call(title: "Test 1", user_id: john.id)
     end
 
-    it 'associates child with parent' do
-      changeset = todos.by_pk(todo.id).changeset(:update, title: 'Test 2')
+    it "associates child with parent" do
+      changeset = todos.by_pk(todo.id).changeset(:update, title: "Test 2")
 
       expect(changeset.associate(jane).commit.to_h)
-        .to include(user_id: jane.id, title: 'Test 2')
+        .to include(user_id: jane.id, title: "Test 2")
     end
   end
 end

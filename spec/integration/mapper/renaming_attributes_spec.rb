@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
+require "spec_helper"
 
-RSpec.describe 'Mappers / Renaming attributes' do
-  include_context 'container'
+RSpec.describe "Mappers / Renaming attributes" do
+  include_context "container"
 
   before do
     configuration.relation(:addresses)
@@ -19,10 +19,10 @@ RSpec.describe 'Mappers / Renaming attributes' do
     end
   end
 
-  it 'maps renamed attributes for a base relation' do
+  it "maps renamed attributes for a base relation" do
     configuration.mappers do
       define(:users) do
-        model name: 'Test::User'
+        model name: "Test::User"
 
         attribute :id, from: :_id
         attribute :name, from: :user_name
@@ -33,24 +33,24 @@ RSpec.describe 'Mappers / Renaming attributes' do
 
     Test::User.send(:include, Dry::Equalizer(:id, :name))
 
-    container.relations.users << { _id: 123, user_name: 'Jane' }
+    container.relations.users << {_id: 123, user_name: "Jane"}
 
     jane = container.relations[:users].map_with(:users).first
 
-    expect(jane).to eql(Test::User.new(id: 123, name: 'Jane'))
+    expect(jane).to eql(Test::User.new(id: 123, name: "Jane"))
   end
 
-  it 'maps renamed attributes for a wrapped relation' do
+  it "maps renamed attributes for a wrapped relation" do
     configuration.mappers do
       define(:users) do
-        model name: 'Test::User'
+        model name: "Test::User"
 
         attribute :id, from: :_id
         attribute :name, from: :user_name
       end
 
       define(:with_address, parent: :users) do
-        model name: 'Test::UserWithAddress'
+        model name: "Test::UserWithAddress"
 
         attribute :id, from: :_id
         attribute :name, from: :user_name
@@ -66,30 +66,30 @@ RSpec.describe 'Mappers / Renaming attributes' do
 
     Test::UserWithAddress.send(:include, Dry::Equalizer(:id, :name, :address))
 
-    container.relations.users << { _id: 123, user_name: 'Jane' }
+    container.relations.users << {_id: 123, user_name: "Jane"}
 
     container.relations.addresses <<
-      { _id: 123, address_id: 321, address_street: 'Street 1' }
+      {_id: 123, address_id: 321, address_street: "Street 1"}
 
     jane = container.relations[:users].with_address.map_with(:with_address).first
 
     expect(jane).to eql(
-      Test::UserWithAddress.new(id: 123, name: 'Jane',
-                                address: { id: 321, street: 'Street 1' })
+      Test::UserWithAddress.new(id: 123, name: "Jane",
+                                address: {id: 321, street: "Street 1"})
     )
   end
 
-  it 'maps renamed attributes for a grouped relation' do
+  it "maps renamed attributes for a grouped relation" do
     configuration.mappers do
       define(:users) do
-        model name: 'Test::User'
+        model name: "Test::User"
 
         attribute :id, from: :_id
         attribute :name, from: :user_name
       end
 
       define(:with_addresses, parent: :users) do
-        model name: 'Test::UserWithAddresses'
+        model name: "Test::UserWithAddresses"
 
         attribute :id, from: :_id
         attribute :name, from: :user_name
@@ -105,21 +105,21 @@ RSpec.describe 'Mappers / Renaming attributes' do
 
     Test::UserWithAddresses.send(:include, Dry::Equalizer(:id, :name, :addresses))
 
-    container.relations.users << { _id: 123, user_name: 'Jane' }
+    container.relations.users << {_id: 123, user_name: "Jane"}
 
     container.relations.addresses <<
-      { _id: 123, address_id: 321, address_street: 'Street 1' }
+      {_id: 123, address_id: 321, address_street: "Street 1"}
     container.relations.addresses <<
-      { _id: 123, address_id: 654, address_street: 'Street 2' }
+      {_id: 123, address_id: 654, address_street: "Street 2"}
 
     jane = container.relations[:users].with_addresses.map_with(:with_addresses).first
 
     expect(jane).to eql(
       Test::UserWithAddresses.new(
         id: 123,
-        name: 'Jane',
-        addresses: [{ id: 321, street: 'Street 1' },
-                    { id: 654, street: 'Street 2' }]
+        name: "Jane",
+        addresses: [{id: 321, street: "Street 1"},
+                    {id: 654, street: "Street 2"}]
       )
     )
   end

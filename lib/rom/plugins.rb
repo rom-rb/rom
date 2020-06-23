@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'dry/container'
-require 'rom/plugin'
+require "dry/container"
+require "rom/plugin"
 
 module ROM
   # Registry of all known plugin types (command, relation, mapper, etc)

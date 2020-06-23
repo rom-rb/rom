@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'rom/associations/many_to_many'
+require "rom/associations/many_to_many"
 
 module ROM
   module Associations

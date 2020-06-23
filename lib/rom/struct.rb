@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'dry/struct'
+require "dry/struct"
 
 module ROM
   # Simple data-struct class
@@ -101,8 +101,8 @@ module ROM
 
     def method_missing(*)
       super
-    rescue NameError => error
-      raise MissingAttribute.new { "#{error.message} (attribute not loaded?)" }
+    rescue NameError => e
+      raise MissingAttribute.new { "#{e.message} (attribute not loaded?)" }
     end
   end
 end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'rom/changeset/pipe_registry'
+require "rom/changeset/pipe_registry"
 
 module ROM
   class Changeset

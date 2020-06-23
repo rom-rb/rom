@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'rom/relation'
+require "rom/relation"
 
-RSpec.describe ROM::Relation, '#eager_load' do
+RSpec.describe ROM::Relation, "#eager_load" do
   let(:users) do
     ROM::Relation.new([], name: ROM::Relation::Name[:users])
   end
@@ -11,7 +11,7 @@ RSpec.describe ROM::Relation, '#eager_load' do
     ROM::Relation.new([], name: ROM::Relation::Name[:tasks])
   end
   let(:users_assocs_set) do
-    { tasks: tasks_assoc }
+    {tasks: tasks_assoc}
   end
 
   let(:tasks_assoc) do
@@ -22,10 +22,10 @@ RSpec.describe ROM::Relation, '#eager_load' do
     allow(users.schema).to receive(:associations).and_return(users_assocs_set)
   end
 
-  context 'when assocs is not set to override default view' do
+  context "when assocs is not set to override default view" do
     let(:override) { false }
 
-    it 'returns an curried relation for eager loading' do
+    it "returns an curried relation for eager loading" do
       expect(tasks_assoc).to receive(:prepare).with(users).and_return(tasks)
 
       relation = users.eager_load(tasks_assoc)
@@ -35,10 +35,10 @@ RSpec.describe ROM::Relation, '#eager_load' do
     end
   end
 
-  context 'when assocs is set to override default view' do
+  context "when assocs is set to override default view" do
     let(:override) { true }
 
-    it 'returns an curried relation for eager loading' do
+    it "returns an curried relation for eager loading" do
       expect(tasks_assoc).to receive(:prepare).with(users).and_return(tasks)
       expect(tasks).to receive(:call).with(tasks_assoc).and_return(tasks)
 

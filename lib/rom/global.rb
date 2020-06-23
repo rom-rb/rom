@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'rom/plugin_registry'
-require 'rom/global/plugin_dsl'
+require "rom/plugin_registry"
+require "rom/global/plugin_dsl"
 
 module ROM
   # Globally accessible public interface exposed via ROM module
@@ -14,8 +14,8 @@ module ROM
     def self.extended(rom)
       super
 
-      rom.instance_variable_set('@adapters', {})
-      rom.instance_variable_set('@plugin_registry', PluginRegistry.new)
+      rom.instance_variable_set("@adapters", {})
+      rom.instance_variable_set("@plugin_registry", PluginRegistry.new)
     end
 
     # An internal adapter identifier => adapter module map used by setup

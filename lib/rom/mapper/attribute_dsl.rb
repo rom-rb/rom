@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'rom/header'
-require 'rom/mapper/model_dsl'
+require "rom/header"
+require "rom/mapper/model_dsl"
 
 module ROM
   class Mapper
@@ -88,7 +88,7 @@ module ROM
       end
 
       def exclude(name)
-        attributes << [name, { exclude: true }]
+        attributes << [name, {exclude: true}]
       end
 
       # Perform transformations sequentially
@@ -134,7 +134,7 @@ module ROM
           mapper = options[:mapper]
 
           if mapper
-            embedded_options = { type: :array }.update(options)
+            embedded_options = {type: :array}.update(options)
             attributes_from_mapper(
               mapper, name, embedded_options.update(attr_options)
             )
@@ -142,7 +142,7 @@ module ROM
             dsl = new(options, &block)
             attr_options.update(options)
             add_attribute(
-              name, { header: dsl.header, type: :array }.update(attr_options)
+              name, {header: dsl.header, type: :array}.update(attr_options)
             )
           end
         end
@@ -168,10 +168,10 @@ module ROM
       #
       # @api public
       def wrap(*args, &block)
-        ensure_mapper_configuration('wrap', args, block_given?)
+        ensure_mapper_configuration("wrap", args, block_given?)
 
         with_name_or_options(*args) do |name, options, mapper|
-          wrap_options = { type: :hash, wrap: true }.update(options)
+          wrap_options = {type: :hash, wrap: true}.update(options)
 
           if mapper
             attributes_from_mapper(mapper, name, wrap_options)
@@ -202,7 +202,7 @@ module ROM
       # @api public
       def unwrap(*args, &block)
         with_name_or_options(*args) do |name, options, mapper|
-          unwrap_options = { type: :hash, unwrap: true }.update(options)
+          unwrap_options = {type: :hash, unwrap: true}.update(options)
 
           if mapper
             attributes_from_mapper(mapper, name, unwrap_options)
@@ -230,10 +230,10 @@ module ROM
       #
       # @api public
       def group(*args, &block)
-        ensure_mapper_configuration('group', args, block_given?)
+        ensure_mapper_configuration("group", args, block_given?)
 
         with_name_or_options(*args) do |name, options, mapper|
-          group_options = { type: :array, group: true }.update(options)
+          group_options = {type: :array, group: true}.update(options)
 
           if mapper
             attributes_from_mapper(mapper, name, group_options)
@@ -256,7 +256,7 @@ module ROM
       # @api public
       def ungroup(*args, &block)
         with_name_or_options(*args) do |name, options, *|
-          ungroup_options = { type: :array, ungroup: true }.update(options)
+          ungroup_options = {type: :array, ungroup: true}.update(options)
           dsl(name, ungroup_options, &block)
         end
       end
@@ -276,7 +276,7 @@ module ROM
       # @api public
       def fold(*args, &block)
         with_name_or_options(*args) do |name, *|
-          fold_options = { type: :array, fold: true }
+          fold_options = {type: :array, fold: true}
           dsl(name, fold_options, &block)
         end
       end
@@ -435,7 +435,7 @@ module ROM
       # @api private
       def attributes_from_mapper(mapper, name, options)
         if mapper.is_a?(Class)
-          add_attribute(name, { header: mapper.header }.update(options))
+          add_attribute(name, {header: mapper.header}.update(options))
         else
           raise(
             ArgumentError, ":mapper must be a class #{mapper.inspect}"

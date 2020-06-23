@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'rom/support/inflector'
-require 'dry/core/class_builder'
+require "rom/support/inflector"
+require "dry/core/class_builder"
 
 module ROM
   module ConfigurationDSL
@@ -32,11 +32,11 @@ module ROM
       #
       # @api private
       def self.generate_class_name(adapter, command_type, relation)
-        pieces = ['ROM']
+        pieces = ["ROM"]
         pieces << Inflector.classify(adapter)
-        pieces << 'Commands'
+        pieces << "Commands"
         pieces << "#{command_type}[#{Inflector.classify(relation)}s]"
-        pieces.join('::')
+        pieces.join("::")
       end
     end
   end

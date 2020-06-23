@@ -1,28 +1,28 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
-require 'dry-struct'
+require "spec_helper"
+require "dry-struct"
 
 RSpec.describe ROM::Commands::Graph do
-  shared_examples_for 'a persisted graph' do
-    it 'returns nested results' do
+  shared_examples_for "a persisted graph" do
+    it "returns nested results" do
       expect(command.call).to match_array([
         # parent users
         [
-          { name: 'Jane' }
+          {name: "Jane"}
         ],
         [
           [
             # user tasks
             [
-              { title: 'One', user: 'Jane' }
+              {title: "One", user: "Jane"}
             ],
             [
               # task tags
               [
-                { name: 'red', task: 'One' },
-                { name: 'green', task: 'One' },
-                { name: 'blue', task: 'One' }
+                {name: "red", task: "One"},
+                {name: "green", task: "One"},
+                {name: "blue", task: "One"}
               ]
             ]
           ]
@@ -30,28 +30,28 @@ RSpec.describe ROM::Commands::Graph do
       ])
     end
 
-    context 'persisted relations' do
+    context "persisted relations" do
       before { command.call }
 
-      it 'inserts root' do
-        expect(container.relations[:users]).to match_array([{ name: 'Jane' }])
+      it "inserts root" do
+        expect(container.relations[:users]).to match_array([{name: "Jane"}])
       end
 
-      it 'inserts root nodes' do
-        expect(container.relations[:tasks]).to match_array([{ user: 'Jane', title: 'One' }])
+      it "inserts root nodes" do
+        expect(container.relations[:tasks]).to match_array([{user: "Jane", title: "One"}])
       end
 
-      it 'inserts nested graph nodes' do
+      it "inserts nested graph nodes" do
         expect(container.relations[:tags]).to match_array([
-          { name: 'red', task: 'One' },
-          { name: 'green', task: 'One' },
-          { name: 'blue', task: 'One' }
+          {name: "red", task: "One"},
+          {name: "green", task: "One"},
+          {name: "blue", task: "One"}
         ])
       end
     end
   end
 
-  include_context 'container'
+  include_context "container"
 
   let(:create_user) { container.commands[:users].create }
   let(:create_task) { container.commands[:tasks].create }
@@ -59,9 +59,9 @@ RSpec.describe ROM::Commands::Graph do
   let(:create_many_tasks) { container.commands[:tasks].create_many }
   let(:create_many_tags) { container.commands[:tags].create_many }
 
-  let(:user) { { name: 'Jane' } }
-  let(:task) { { title: 'One' } }
-  let(:tags) { [{ name: 'red' }, { name: 'green' }, { name: 'blue' }] }
+  let(:user) { {name: "Jane"} }
+  let(:task) { {title: "One"} }
+  let(:tags) { [{name: "red"}, {name: "green"}, {name: "blue"}] }
 
   before do
     configuration.relation(:users)
@@ -108,9 +108,9 @@ RSpec.describe ROM::Commands::Graph do
     end
   end
 
-  describe '#call' do
-    context 'when result is :one in root and its direct children' do
-      it_behaves_like 'a persisted graph' do
+  describe "#call" do
+    context "when result is :one in root and its direct children" do
+      it_behaves_like "a persisted graph" do
         subject(:command) do
           create_user.curry(user)
             .combine(create_task.curry(task)
@@ -119,8 +119,8 @@ RSpec.describe ROM::Commands::Graph do
       end
     end
 
-    context 'when result is :many for root direct children' do
-      it_behaves_like 'a persisted graph' do
+    context "when result is :many for root direct children" do
+      it_behaves_like "a persisted graph" do
         subject(:command) do
           create_user.curry(user)
             .combine(create_many_tasks.curry([task])
@@ -130,7 +130,7 @@ RSpec.describe ROM::Commands::Graph do
     end
   end
 
-  describe 'pipeline' do
+  describe "pipeline" do
     subject(:command) do
       container.commands[:users].map_with(:entity).create.curry(user)
         .combine(create_task.curry(task)
@@ -161,12 +161,12 @@ RSpec.describe ROM::Commands::Graph do
 
         attribute :name
 
-        combine :task, on: { name: :user }, type: :hash do
+        combine :task, on: {name: :user}, type: :hash do
           model Test::Task
 
           attribute :title
 
-          combine :tags, on: { title: :task } do
+          combine :tags, on: {title: :task} do
             model Test::Tag
             attribute :name
           end
@@ -175,16 +175,16 @@ RSpec.describe ROM::Commands::Graph do
       configuration.register_mapper(Test::UserMapper)
     end
 
-    it 'sends data through the pipeline' do
+    it "sends data through the pipeline" do
       expect(command.call).to eql(
         Test::User.new(
-          name: 'Jane',
+          name: "Jane",
           task: Test::Task.new(
-            title: 'One',
+            title: "One",
             tags: [
-              Test::Tag.new(name: 'red'),
-              Test::Tag.new(name: 'green'),
-              Test::Tag.new(name: 'blue')
+              Test::Tag.new(name: "red"),
+              Test::Tag.new(name: "green"),
+              Test::Tag.new(name: "blue")
             ]
           )
         )

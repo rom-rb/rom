@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
-require 'dry-struct'
+require "spec_helper"
+require "dry-struct"
 
-RSpec.describe 'Commands / Update' do
-  include_context 'container'
-  include_context 'users and tasks'
+RSpec.describe "Commands / Update" do
+  include_context "container"
+  include_context "users and tasks"
 
   subject(:users) { container.commands.users }
 
@@ -30,26 +30,26 @@ RSpec.describe 'Commands / Update' do
     end
   end
 
-  it 'update tuples' do
-    result = users.update.all(name: 'Jane').call(email: 'jane.doe@test.com')
+  it "update tuples" do
+    result = users.update.all(name: "Jane").call(email: "jane.doe@test.com")
 
-    expect(result).to eql([{ name: 'Jane', email: 'jane.doe@test.com' }])
+    expect(result).to eql([{name: "Jane", email: "jane.doe@test.com"}])
   end
 
   describe '"result" option' do
-    it 'returns a single tuple when set to :one' do
+    it "returns a single tuple when set to :one" do
       configuration.commands(:users) do
         define(:update_one, type: :update) do
           result :one
         end
       end
 
-      result = users.update_one.by_name('Jane').call(email: 'jane.doe@test.com')
+      result = users.update_one.by_name("Jane").call(email: "jane.doe@test.com")
 
-      expect(result).to eql(name: 'Jane', email: 'jane.doe@test.com')
+      expect(result).to eql(name: "Jane", email: "jane.doe@test.com")
     end
 
-    it 'allows only valid result types' do
+    it "allows only valid result types" do
       expect {
         configuration.commands(:users) do
           define(:create_one, type: :create) do
@@ -61,8 +61,8 @@ RSpec.describe 'Commands / Update' do
     end
   end
 
-  describe 'piping results through mappers' do
-    it 'allows scoping to a virtual relation' do
+  describe "piping results through mappers" do
+    it "allows scoping to a virtual relation" do
       user_model = Class.new(Dry::Struct) {
         attribute :name, Types::String
         attribute :email, Types::String
@@ -75,16 +75,16 @@ RSpec.describe 'Commands / Update' do
         end
       end
 
-      command = container.commands[:users].map_with(:entity).update.by_name('Jane')
+      command = container.commands[:users].map_with(:entity).update.by_name("Jane")
 
-      attributes = { name: 'Jane Doe', email: 'jane@doe.org' }
+      attributes = {name: "Jane Doe", email: "jane@doe.org"}
       result = command[attributes]
 
       expect(result).to eql([user_model.new(attributes)])
     end
   end
 
-  context 'custom input' do
+  context "custom input" do
     it "doesn't duplicate input schema when command chained" do
       input = ROM::Types::Hash.constructor(&:itself)
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'rom/associations/many_to_one'
+require "rom/associations/many_to_one"
 
 module ROM
   module Memory

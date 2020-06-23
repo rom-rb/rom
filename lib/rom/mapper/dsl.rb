@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'dry/core/class_attributes'
-require 'rom/mapper/attribute_dsl'
+require "dry/core/class_attributes"
+require "rom/mapper/attribute_dsl"
 
 module ROM
   class Mapper
@@ -25,9 +25,9 @@ module ROM
         def inherited(klass)
           super
 
-          klass.instance_variable_set('@attributes', nil)
-          klass.instance_variable_set('@header', nil)
-          klass.instance_variable_set('@dsl', nil)
+          klass.instance_variable_set("@attributes", nil)
+          klass.instance_variable_set("@header", nil)
+          klass.instance_variable_set("@dsl", nil)
         end
 
         # include a registered plugin in this mapper
@@ -76,11 +76,11 @@ module ROM
         #
         # @api private
         def options
-          { copy_keys: copy_keys,
-            prefix: prefix,
-            prefix_separator: prefix_separator,
-            symbolize_keys: symbolize_keys,
-            reject_keys: reject_keys }
+          {copy_keys: copy_keys,
+           prefix: prefix,
+           prefix_separator: prefix_separator,
+           symbolize_keys: symbolize_keys,
+           reject_keys: reject_keys}
         end
 
         # Return default attributes that might have been inherited from the

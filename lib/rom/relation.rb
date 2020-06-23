@@ -1,30 +1,30 @@
 # frozen_string_literal: true
 
-require 'dry/core/class_attributes'
+require "dry/core/class_attributes"
 
-require 'rom/struct'
-require 'rom/constants'
-require 'rom/initializer'
-require 'rom/support/memoizable'
+require "rom/struct"
+require "rom/constants"
+require "rom/initializer"
+require "rom/support/memoizable"
 
-require 'rom/relation/class_interface'
+require "rom/relation/class_interface"
 
-require 'rom/auto_curry'
-require 'rom/pipeline'
-require 'rom/mapper_registry'
-require 'rom/command_registry'
+require "rom/auto_curry"
+require "rom/pipeline"
+require "rom/mapper_registry"
+require "rom/command_registry"
 
-require 'rom/relation/loaded'
-require 'rom/relation/curried'
-require 'rom/relation/commands'
-require 'rom/relation/composite'
-require 'rom/relation/combined'
-require 'rom/relation/wrap'
-require 'rom/relation/materializable'
-require 'rom/association_set'
+require "rom/relation/loaded"
+require "rom/relation/curried"
+require "rom/relation/commands"
+require "rom/relation/composite"
+require "rom/relation/combined"
+require "rom/relation/wrap"
+require "rom/relation/materializable"
+require "rom/association_set"
 
-require 'rom/types'
-require 'rom/schema'
+require "rom/types"
+require "rom/schema"
 
 module ROM
   # Base relation class
@@ -539,7 +539,7 @@ module ROM
     #
     # @api public
     def map_to(klass, **opts)
-      with(opts.merge(auto_map: false, auto_struct: true, meta: { model: klass }))
+      with(opts.merge(auto_map: false, auto_struct: true, meta: {model: klass}))
     end
 
     # Return a new relation with an aliased name

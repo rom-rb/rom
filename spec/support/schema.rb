@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'dry/types'
-require 'rom/support/inflector'
+require "dry/types"
+require "rom/support/inflector"
 
 module SchemaHelpers
   def define_schema(source, attrs)
@@ -10,7 +10,7 @@ module SchemaHelpers
       attributes: attrs.map do |name, id|
         {
           type: define_type(id, source: source),
-          options: { name: name }
+          options: {name: name}
         }
       end
     )

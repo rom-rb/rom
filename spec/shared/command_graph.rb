@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-RSpec.shared_context 'command graph' do
-  include_context 'container'
+RSpec.shared_context "command graph" do
+  include_context "container"
 
   before do
     configuration.relation :users do

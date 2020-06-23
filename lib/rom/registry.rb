@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require 'dry/equalizer'
-require 'dry/core/cache'
-require 'dry/core/class_builder'
+require "dry/equalizer"
+require "dry/core/cache"
+require "dry/core/class_builder"
 
-require 'rom/initializer'
-require 'rom/cache'
-require 'rom/constants'
+require "rom/initializer"
+require "rom/cache"
+require "rom/constants"
 
 module ROM
   # @api private
@@ -87,7 +87,7 @@ module ROM
 
     # @api private
     def fetch(key)
-      raise ArgumentError, 'key cannot be nil' if key.nil?
+      raise ArgumentError, "key cannot be nil" if key.nil?
 
       elements.fetch(key.to_sym) do
         return yield if block_given?

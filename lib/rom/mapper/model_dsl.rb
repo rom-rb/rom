@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'rom/model_builder'
+require "rom/model_builder"
 
 module ROM
   class Mapper

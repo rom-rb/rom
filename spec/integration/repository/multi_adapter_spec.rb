@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe 'Repository with multi-adapters configuration' do
+RSpec.describe "Repository with multi-adapters configuration" do
   include_context "repository / db_uri"
 
   let(:configuration) {
@@ -18,7 +18,7 @@ RSpec.describe 'Repository with multi-adapters configuration' do
 
   before do
     %i[tags tasks books posts_labels posts users labels
-     reactions messages].each { |table| sql_conn.drop_table?(table) }
+       reactions messages].each { |table| sql_conn.drop_table?(table) }
 
     sql_conn.create_table :users do
       primary_key :id
@@ -71,21 +71,21 @@ RSpec.describe 'Repository with multi-adapters configuration' do
     configuration.register_relation(Test::Users)
     configuration.register_relation(Test::Tasks)
 
-    user_id = configuration.gateways[:default].dataset(:users).insert(name: 'Jane')
-    configuration.gateways[:memory].dataset(:tasks).insert(user_id: user_id, title: 'Jane Task')
+    user_id = configuration.gateways[:default].dataset(:users).insert(name: "Jane")
+    configuration.gateways[:memory].dataset(:tasks).insert(user_id: user_id, title: "Jane Task")
   end
 
-  specify 'ᕕ⁞ ᵒ̌ 〜 ᵒ̌ ⁞ᕗ' do
+  specify "ᕕ⁞ ᵒ̌ 〜 ᵒ̌ ⁞ᕗ" do
     user = repo.users_with_tasks(users.last[:id]).first
 
-    expect(user.name).to eql('Jane')
+    expect(user.name).to eql("Jane")
 
     expect(user.tasks[0].user_id).to eql(user.id)
-    expect(user.tasks[0].title).to eql('Jane Task')
+    expect(user.tasks[0].title).to eql("Jane Task")
 
     task = repo.tasks_with_users(tasks.first[:id]).first
 
-    expect(task.title).to eql('Jane Task')
-    expect(task.user.name).to eql('Jane')
+    expect(task.title).to eql("Jane Task")
+    expect(task.user.name).to eql("Jane")
   end
 end

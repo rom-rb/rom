@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'dry/equalizer'
+require "dry/equalizer"
 
-require 'rom/constants'
+require "rom/constants"
 
 module ROM
   # Notification subsystem

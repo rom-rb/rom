@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'rom/registry'
+require "rom/registry"
 
 module ROM
   class Finalize

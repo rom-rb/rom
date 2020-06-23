@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'rom/types'
-require 'rom/associations/definitions/abstract'
+require "rom/types"
+require "rom/associations/definitions/abstract"
 
 module ROM
   module Associations

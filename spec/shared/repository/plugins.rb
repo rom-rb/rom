@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.shared_context 'repository / plugins' do
+RSpec.shared_context "repository / plugins" do
   before do
     module Test
       class WrappingInput

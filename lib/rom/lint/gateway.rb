@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'rom/lint/linter'
+require "rom/lint/linter"
 
 module ROM
   module Lint

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'rom/array_dataset'
+require "rom/array_dataset"
 
 module ROM
   module Memory

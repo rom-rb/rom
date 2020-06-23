@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'dry/equalizer'
+require "dry/equalizer"
 
 module ROM
   class Relation
@@ -61,7 +61,7 @@ module ROM
         if collection.count > 1
           raise(
             TupleCountMismatchError,
-            'The relation consists of more than one tuple'
+            "The relation consists of more than one tuple"
           )
         else
           collection.first
@@ -77,7 +77,7 @@ module ROM
       def one!
         one || raise(
           TupleCountMismatchError,
-          'The relation does not contain any tuples'
+          "The relation does not contain any tuples"
         )
       end
 

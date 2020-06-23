@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'rom/schema'
+require "rom/schema"
 
-RSpec.describe ROM::Schema, '#rename' do
+RSpec.describe ROM::Schema, "#rename" do
   subject(:schema) do
     define_schema(
       :users,
@@ -14,7 +14,7 @@ RSpec.describe ROM::Schema, '#rename' do
     schema.rename(user_id: :id, user_name: :name)
   end
 
-  it 'returns projected schema with renamed attributes' do
+  it "returns projected schema with renamed attributes" do
     expect(renamed.map(&:name)).to eql(%i[user_id user_name user_email])
     expect(renamed.map(&:alias)).to eql([:id, :name, nil])
     expect(renamed.all?(&:aliased?)).to be(false)

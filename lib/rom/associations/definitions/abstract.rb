@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require 'dry/core/class_attributes'
+require "dry/core/class_attributes"
 
-require 'rom/constants'
-require 'rom/types'
-require 'rom/initializer'
-require 'rom/relation/name'
-require 'rom/associations/through_identifier'
+require "rom/constants"
+require "rom/types"
+require "rom/initializer"
+require "rom/relation/name"
+require "rom/associations/through_identifier"
 
 module ROM
   module Associations

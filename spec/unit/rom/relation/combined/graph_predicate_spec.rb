@@ -13,12 +13,12 @@ RSpec.describe ROM::Relation::Combined do
     end.new([])
   end
 
-  describe '#graph?' do
-    it 'returns true' do
+  describe "#graph?" do
+    it "returns true" do
       expect(relation).to be_graph
     end
 
-    it 'returns true when curried' do
+    it "returns true when curried" do
       expect(relation.by_name).to be_graph
     end
   end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'rom/registry'
+require "rom/registry"
 
 module ROM
   # Association set contains a registry with associations defined

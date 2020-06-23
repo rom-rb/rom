@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'dry/core/class_builder'
-require 'rom/support/inflector'
+require "dry/core/class_builder"
+require "rom/support/inflector"
 
 module ROM
   # Base command class with factory class-level interface and setup-related logic
@@ -246,7 +246,7 @@ module ROM
       #
       # @api private
       def options
-        { input: input, result: result, before: before, after: after }
+        {input: input, result: result, before: before, after: after}
       end
 
       # @api private

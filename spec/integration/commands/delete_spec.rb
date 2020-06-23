@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
+require "spec_helper"
 
-RSpec.describe 'Commands / Delete' do
-  include_context 'container'
-  include_context 'users and tasks'
+RSpec.describe "Commands / Delete" do
+  include_context "container"
+  include_context "users and tasks"
 
   subject(:users) { container.commands.users }
 
@@ -16,7 +16,7 @@ RSpec.describe 'Commands / Delete' do
     end
   end
 
-  it 'deletes all tuples when there is no restriction' do
+  it "deletes all tuples when there is no restriction" do
     configuration.commands(:users) do
       define(:delete)
     end
@@ -24,46 +24,46 @@ RSpec.describe 'Commands / Delete' do
     result = users.delete.call
 
     expect(result).to match_array([
-      { name: 'Jane', email: 'jane@doe.org' },
-      { name: 'Joe', email: 'joe@doe.org' }
+      {name: "Jane", email: "jane@doe.org"},
+      {name: "Joe", email: "joe@doe.org"}
     ])
 
     expect(container.relations[:users]).to match_array([])
   end
 
-  it 'deletes tuples matching restriction' do
+  it "deletes tuples matching restriction" do
     configuration.commands(:users) do
       define(:delete)
     end
 
-    result = users.delete.by_name('Joe').call
+    result = users.delete.by_name("Joe").call
 
-    expect(result).to match_array([{ name: 'Joe', email: 'joe@doe.org' }])
+    expect(result).to match_array([{name: "Joe", email: "joe@doe.org"}])
 
     expect(container.relations[:users]).to match_array([
-      { name: 'Jane', email: 'jane@doe.org' }
+      {name: "Jane", email: "jane@doe.org"}
     ])
   end
 
-  it 'returns untouched relation if there are no tuples to delete' do
+  it "returns untouched relation if there are no tuples to delete" do
     configuration.commands(:users) do
       define(:delete)
     end
 
-    result = users.delete.by_name('Not here').call
+    result = users.delete.by_name("Not here").call
 
     expect(result).to match_array([])
   end
 
-  it 'returns deleted tuple when result is set to :one' do
+  it "returns deleted tuple when result is set to :one" do
     configuration.commands(:users) do
       define(:delete_one, type: :delete) do
         result :one
       end
     end
 
-    result = users.delete_one.by_name('Jane').call
+    result = users.delete_one.by_name("Jane").call
 
-    expect(result).to eql(name: 'Jane', email: 'jane@doe.org')
+    expect(result).to eql(name: "Jane", email: "jane@doe.org")
   end
 end

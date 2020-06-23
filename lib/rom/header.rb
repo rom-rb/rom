@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'rom/header/attribute'
+require "rom/header/attribute"
 
 module ROM
   # Header provides information about data mapping of a specific relation

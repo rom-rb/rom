@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'rom/lint/gateway'
-require 'rom/lint/enumerable_dataset'
+require "rom/lint/gateway"
+require "rom/lint/enumerable_dataset"
 
 module ROM
   module Lint
@@ -16,8 +16,8 @@ module ROM
         define_method "test_#{name}" do
           begin
             instance_eval(&block)
-          rescue ROM::Lint::Linter::Failure => f
-            raise Minitest::Assertion, f.message
+          rescue ROM::Lint::Linter::Failure => e
+            raise Minitest::Assertion, e.message
           end
         end
       end

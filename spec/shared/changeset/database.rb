@@ -2,9 +2,9 @@
 
 require "sequel"
 
-RSpec.shared_context 'changeset / db_uri' do
+RSpec.shared_context "changeset / db_uri" do
   let(:base_db_uri) do
-    ENV.fetch('BASE_DB_URI', 'postgres@localhost/rom')
+    ENV.fetch("BASE_DB_URI", "postgres@localhost/rom")
   end
 
   let(:db_uri) do
@@ -12,8 +12,8 @@ RSpec.shared_context 'changeset / db_uri' do
   end
 end
 
-RSpec.shared_context 'changeset / database setup' do
-  include_context 'changeset / db_uri'
+RSpec.shared_context "changeset / database setup" do
+  include_context "changeset / db_uri"
 
   let(:configuration) { ROM::Configuration.new(:sql, db_uri) }
 
@@ -22,7 +22,7 @@ RSpec.shared_context 'changeset / database setup' do
   let(:rom) { ROM.container(configuration) }
 
   let(:logger) do
-    Logger.new(File.open('./log/test.log', 'a'))
+    Logger.new(File.open("./log/test.log", "a"))
   end
 
   before :all do
@@ -35,12 +35,12 @@ RSpec.shared_context 'changeset / database setup' do
   end
 end
 
-RSpec.shared_context 'changeset / database' do
-  include_context 'changeset / database setup'
+RSpec.shared_context "changeset / database" do
+  include_context "changeset / database setup"
 
   before do
     %i[tags tasks books posts_labels posts users labels
-     reactions messages].each { |table| conn.drop_table?(table) }
+       reactions messages].each { |table| conn.drop_table?(table) }
 
     conn.create_table :users do
       primary_key :id

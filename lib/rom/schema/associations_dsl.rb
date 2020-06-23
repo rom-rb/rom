@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'rom/support/inflector'
+require "rom/support/inflector"
 
-require 'rom/associations/definitions'
+require "rom/associations/definitions"
 
 module ROM
   class Schema

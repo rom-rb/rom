@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
+require "spec_helper"
 
-RSpec.describe 'Mapper definition DSL' do
-  include_context 'container'
-  include_context 'users and tasks'
+RSpec.describe "Mapper definition DSL" do
+  include_context "container"
+  include_context "users and tasks"
 
-  describe 'combine' do
+  describe "combine" do
     before do
       configuration.relation(:tasks) do
         auto_map false
@@ -19,7 +19,7 @@ RSpec.describe 'Mapper definition DSL' do
         end
 
         def tags(_tasks)
-          [{ name: 'blue', task: 'be cool' }]
+          [{name: "blue", task: "be cool"}]
         end
       end
 
@@ -29,11 +29,11 @@ RSpec.describe 'Mapper definition DSL' do
         schema(:users) {}
 
         def addresses(_users)
-          [{ city: 'NYC', user: 'Jane' }, { city: 'Boston', user: 'Joe' }]
+          [{city: "NYC", user: "Jane"}, {city: "Boston", user: "Joe"}]
         end
 
         def books(_users)
-          [{ title: 'Book One', user: 'Jane' }, { title: 'Book Two', user: 'Joe' }]
+          [{title: "Book One", user: "Jane"}, {title: "Book Two", user: "Joe"}]
         end
       end
 
@@ -41,13 +41,13 @@ RSpec.describe 'Mapper definition DSL' do
         define(:users) do
           register_as :entity
 
-          model name: 'Test::User'
+          model name: "Test::User"
 
           attribute :name
           attribute :email
 
-          combine :tasks, on: { name: :name } do
-            model name: 'Test::Task'
+          combine :tasks, on: {name: :name} do
+            model name: "Test::Task"
 
             attribute :title
 
@@ -56,20 +56,20 @@ RSpec.describe 'Mapper definition DSL' do
               attribute :priority
             end
 
-            combine :tags, on: { title: :task } do
-              model name: 'Test::Tag'
+            combine :tags, on: {title: :task} do
+              model name: "Test::Tag"
 
               attribute :name
             end
           end
 
-          combine :address, on: { name: :user }, type: :hash do
-            model name: 'Test::Address'
+          combine :address, on: {name: :user}, type: :hash do
+            model name: "Test::Address"
 
             attribute :city
           end
 
-          combine :book, on: { name: :user }, type: :hash
+          combine :book, on: {name: :user}, type: :hash
         end
       end
     end
@@ -79,36 +79,36 @@ RSpec.describe 'Mapper definition DSL' do
 
     let(:joe) {
       Test::User.new(
-        name: 'Joe',
-        email: 'joe@doe.org',
+        name: "Joe",
+        email: "joe@doe.org",
         tasks: [
-          Test::Task.new(title: 'be nice', meta: { user: 'Joe', priority: 1 },
+          Test::Task.new(title: "be nice", meta: {user: "Joe", priority: 1},
                          tags: []),
-          Test::Task.new(title: 'sleep well', meta: { user: 'Joe', priority: 2 },
+          Test::Task.new(title: "sleep well", meta: {user: "Joe", priority: 2},
                          tags: [])
         ],
-        address: Test::Address.new(city: 'Boston'),
-        book: { title: 'Book Two', user: 'Joe' }
+        address: Test::Address.new(city: "Boston"),
+        book: {title: "Book Two", user: "Joe"}
       )
     }
 
     let(:jane) {
       Test::User.new(
-        name: 'Jane',
-        email: 'jane@doe.org',
+        name: "Jane",
+        email: "jane@doe.org",
         tasks: [
           Test::Task.new(
-            title: 'be cool',
-            meta: { user: 'Jane', priority: 2 },
-            tags: [Test::Tag.new(name: 'blue')]
+            title: "be cool",
+            meta: {user: "Jane", priority: 2},
+            tags: [Test::Tag.new(name: "blue")]
           )
         ],
-        address: Test::Address.new(city: 'NYC'),
-        book: { title: 'Book One', user: 'Jane' }
+        address: Test::Address.new(city: "NYC"),
+        book: {title: "Book One", user: "Jane"}
       )
     }
 
-    it 'works' do
+    it "works" do
       container
 
       Test::User.send(:include, Dry::Equalizer(:name, :email, :tasks, :address, :book))

@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-require 'set'
+require "set"
 
-require 'rom/support/inflector'
+require "rom/support/inflector"
 
-require 'rom/constants'
-require 'rom/relation/name'
-require 'rom/relation/view_dsl'
-require 'rom/schema'
-require 'rom/support/notifications'
+require "rom/constants"
+require "rom/relation/name"
+require "rom/relation/view_dsl"
+require "rom/schema"
+require "rom/support/notifications"
 
 module ROM
   class Relation
@@ -18,7 +18,7 @@ module ROM
     module ClassInterface
       extend Notifications::Listener
 
-      subscribe('configuration.relations.object.registered') do |event|
+      subscribe("configuration.relations.object.registered") do |event|
         relation = event[:relation]
         registry = event[:registry]
 
@@ -189,7 +189,7 @@ module ROM
       # @api public
       def view(*args, &block)
         if args.size == 1 && block.arity > 0
-          raise ArgumentError, 'schema attribute names must be provided as the second argument'
+          raise ArgumentError, "schema attribute names must be provided as the second argument"
         end
 
         name, new_schema_fn, relation_block =
@@ -295,7 +295,7 @@ module ROM
       #
       # @api private
       def default_name
-        Name[Inflector.underscore(name).tr('/', '_').to_sym]
+        Name[Inflector.underscore(name).tr("/", "_").to_sym]
       end
 
       # @api private
