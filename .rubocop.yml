@@ -43,7 +43,6 @@ Lint/StructNewOverride:
 Lint/SuppressedException:
   Exclude:
     - "spec/spec_helper.rb"
-    - "Rakefile"
 
 Naming/PredicateName:
   Enabled: false
