@@ -1,4 +1,8 @@
 ---
+- version: unreleased
+  date:
+  changed:
+    - "`rom-core`, `rom-changeset` and `rom-repository` have been merged into `rom` gem (@solnic)"
 - version: 5.2.4
   summary:
   date: '2020-05-08'
