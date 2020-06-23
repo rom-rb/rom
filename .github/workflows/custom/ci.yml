@@ -19,17 +19,11 @@ jobs:
           - "2.4"
           - "jruby"
         runtime_deps:
-          - "rom-sql-latest"
-          - "rom-sql-master"
           - "dry-transformer-latest"
           - "dry-transformer-master"
         include:
           - ruby: "2.6"
             coverage: "true"
-          - runtime_deps: "rom-sql-latest"
-            use_rom_sql_master: "false"
-          - runtime_deps: "rom-sql-master"
-            use_rom_sql_master: "true"
           - runtime_deps: "dry-transformer-latest"
             use_dry_transformer_master: "false"
           - runtime_deps: "dry-transformer-master"
