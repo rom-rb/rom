@@ -31,7 +31,7 @@ RSpec.describe 'changeset plugin' do
   it 'extends changeset with the functionality provided by the plugin' do
     book = changeset.commit
 
-    expect(book.created_at).to be_within(0.25).of(Time.now)
-    expect(book.updated_at).to be_within(0.25).of(Time.now)
+    expect(book.created_at).to be_within(0.5).of(Time.now)
+    expect(book.updated_at).to be_within(0.5).of(Time.now)
   end
 end
