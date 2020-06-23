@@ -1,23 +1,23 @@
 # frozen_string_literal: true
 
-require 'bundler'
+require "bundler"
 
 Bundler.require
 
-require 'benchmark/ips'
-require 'rom-sql'
-require 'rom-repository'
-require 'active_record'
-require 'logger'
+require "benchmark/ips"
+require "rom-sql"
+require "rom-repository"
+require "active_record"
+require "logger"
 
 begin
-  require 'byebug'
+  require "byebug"
 rescue LoadError
 end
 
-require_relative 'gc_suite'
+require_relative "gc_suite"
 
-SEED = ENV['SEED'] == 'true'
+SEED = ENV["SEED"] == "true"
 
 def rom
   ROM_ENV
@@ -44,7 +44,7 @@ def tasks
 end
 
 def hr
-  puts '*' * 80
+  puts "*" * 80
 end
 
 def puts(*)
@@ -92,11 +92,11 @@ class Verifier
   end
 end
 
-DATABASE_URL = ENV.fetch('DATABASE_URL', RUBY_ENGINE == 'jruby' ? 'jdbc:postgresql://localhost/rom' : 'postgres://localhost/rom')
+DATABASE_URL = ENV.fetch("DATABASE_URL", RUBY_ENGINE == "jruby" ? "jdbc:postgresql://localhost/rom" : "postgres://localhost/rom")
 
 setup = ROM::Configuration.new(:sql, DATABASE_URL)
 
-setup.default.use_logger(Logger.new('./log/bench_rom.log'))
+setup.default.use_logger(Logger.new("./log/bench_rom.log"))
 conn = setup.default.connection
 
 if SEED
@@ -137,17 +137,17 @@ if SEED
   end
 end
 
-if RUBY_ENGINE == 'jruby'
-  ActiveRecord::Base.establish_connection(url: DATABASE_URL, adapter: 'postgresql')
+if RUBY_ENGINE == "jruby"
+  ActiveRecord::Base.establish_connection(url: DATABASE_URL, adapter: "postgresql")
 else
   ActiveRecord::Base.establish_connection(DATABASE_URL)
 end
 
-ActiveRecord::Base.logger = Logger.new('./log/bench_ar.log')
+ActiveRecord::Base.logger = Logger.new("./log/bench_ar.log")
 
 class ARUser < ActiveRecord::Base
   self.table_name = :users
-  has_many :tasks, class_name: 'ARTask', foreign_key: :user_id
+  has_many :tasks, class_name: "ARTask", foreign_key: :user_id
 
   def self.by_name(name)
     select(:id, :name, :email, :age).where(name: name).order(:id)
@@ -156,8 +156,8 @@ end
 
 class ARTask < ActiveRecord::Base
   self.table_name = :tasks
-  belongs_to :user, class_name: 'ARUser', foreign_key: :user_id
-  has_many :tags, class_name: 'ARTag', foreign_key: :task_id
+  belongs_to :user, class_name: "ARUser", foreign_key: :user_id
+  has_many :tags, class_name: "ARTag", foreign_key: :task_id
 
   def self.by_title(title)
     select(:id, :user_id, :title).where(title: title).order(:id)
@@ -166,19 +166,19 @@ end
 
 class ARTag < ActiveRecord::Base
   self.table_name = :tags
-  belongs_to :task, class_name: 'ARTask', foreign_key: :task_id
+  belongs_to :task, class_name: "ARTask", foreign_key: :task_id
 end
 
 class ARPost < ActiveRecord::Base
   self.table_name = :posts
-  has_many :users_posts, class_name: 'ARUserPost', foreign_key: 'post_id'
-  has_many :users, through: :users_posts, class_name: 'ARUser', foreign_key: 'user_id'
+  has_many :users_posts, class_name: "ARUserPost", foreign_key: "post_id"
+  has_many :users, through: :users_posts, class_name: "ARUser", foreign_key: "user_id"
 end
 
 class ARUserPost < ActiveRecord::Base
   self.table_name = :users_posts
-  belongs_to :user, class_name: 'ARUser', foreign_key: 'user_id'
-  belongs_to :post, class_name: 'ARPost', foreign_key: 'post_id'
+  belongs_to :user, class_name: "ARUser", foreign_key: "user_id"
+  belongs_to :post, class_name: "ARPost", foreign_key: "post_id"
 end
 
 module Relations
@@ -244,29 +244,29 @@ setup.register_relation(Relations::UsersPosts)
 
 ROM_ENV = ROM.container(setup)
 
-VERIFY = ENV.fetch('VERIFY') { false }
-COUNT = ENV.fetch('COUNT', 1000).to_i
+VERIFY = ENV.fetch("VERIFY") { false }
+COUNT = ENV.fetch("COUNT", 1000).to_i
 
 USER_SEED = COUNT.times.map { |i|
-  { id: i + 1,
-    name: "User #{i + 1}",
-    email: "email_#{i}@domain.com",
-    age: i * 10 }
+  {id: i + 1,
+   name: "User #{i + 1}",
+   email: "email_#{i}@domain.com",
+   age: i * 10}
 }
 
 TASK_SEED = USER_SEED.map { |user|
   3.times.map do |i|
-    { user_id: user[:id], title: "Task #{i + 1}" }
+    {user_id: user[:id], title: "Task #{i + 1}"}
   end
 }.flatten
 
 POST_SEED = 3000.times.map { |i|
-  { id: i + 1, title: "Post #{i + 1}" }
+  {id: i + 1, title: "Post #{i + 1}"}
 }
 
 USER_POST_SEED = POST_SEED.map { |post|
   3.times.map do |_i|
-    { post_id: post[:id], user_id: USER_SEED.pluck(:id).sample }
+    {post_id: post[:id], user_id: USER_SEED.pluck(:id).sample}
   end
 }.flatten
 

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require_relative './setup'
-require_relative './seed'
-require 'hotch'
+require_relative "./setup"
+require_relative "./seed"
+require "hotch"
 
 Hotch() do
   COUNT.times do |i|

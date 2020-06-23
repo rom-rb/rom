@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative 'setup'
-require 'hotch'
+require_relative "setup"
+require "hotch"
 
 rel = tasks.limit(100).wrap(:user)
 
