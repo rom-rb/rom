@@ -76,9 +76,6 @@ jobs:
       with:
         project-token: "${{secrets.CODACY_PROJECT_TOKEN}}"
         coverage-reports: coverage/coverage.xml
-    - name: Send coverage results
-      if: matrix.coverage == 'true'
-      run: codacy_final_reporter
     services:
       db:
         image: postgres:10.8
