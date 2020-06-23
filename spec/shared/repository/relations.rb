@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.shared_context 'relations' do
+RSpec.shared_context "relations" do
   let(:users) { rom.relations[:users] }
   let(:tasks) { rom.relations[:tasks] }
   let(:tags) { rom.relations[:tags] }

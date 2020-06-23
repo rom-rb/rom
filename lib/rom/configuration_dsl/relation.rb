@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'dry/core/class_builder'
-require 'rom/support/inflector'
+require "dry/core/class_builder"
+require "rom/support/inflector"
 
 module ROM
   module ConfigurationDSL

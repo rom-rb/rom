@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'rom/relation'
+require "rom/relation"
 
-RSpec.describe ROM::Relation, '#call' do
+RSpec.describe ROM::Relation, "#call" do
   subject(:relation) do
     relation_class.new(data, **options)
   end
@@ -11,7 +11,7 @@ RSpec.describe ROM::Relation, '#call' do
     {}
   end
 
-  context 'without read types in schema' do
+  context "without read types in schema" do
     let(:relation_class) do
       Class.new(ROM::Relation[:memory]) do
         schema do
@@ -22,20 +22,20 @@ RSpec.describe ROM::Relation, '#call' do
     end
 
     let(:data) do
-      ROM::Memory::Dataset.new([{ id: '1', name: 'Jane' }, { id: '2', name: 'John' }])
+      ROM::Memory::Dataset.new([{id: "1", name: "Jane"}, {id: "2", name: "John"}])
     end
 
-    it 'has noop output_schema' do
+    it "has noop output_schema" do
       expect(relation.output_schema).to be(ROM::Relation::NOOP_OUTPUT_SCHEMA)
     end
 
-    it 'returns loaded relation with data' do
+    it "returns loaded relation with data" do
       expect(relation.call.collection)
         .to eql(data.to_a)
     end
   end
 
-  context 'with read types in schema' do
+  context "with read types in schema" do
     let(:relation_class) do
       Class.new(ROM::Relation[:memory]) do
         schema do
@@ -46,16 +46,16 @@ RSpec.describe ROM::Relation, '#call' do
     end
 
     let(:data) do
-      [{ id: '1', name: 'Jane' }, { id: '2', name: 'John' }]
+      [{id: "1", name: "Jane"}, {id: "2", name: "John"}]
     end
 
-    it 'returns loaded relation with coerced data' do
+    it "returns loaded relation with coerced data" do
       expect(relation.call.collection)
-        .to eql([{ id: 1, name: 'Jane' }, { id: 2, name: 'John' }])
+        .to eql([{id: 1, name: "Jane"}, {id: 2, name: "John"}])
     end
   end
 
-  describe 'auto-struct' do
+  describe "auto-struct" do
     let(:relation_class) do
       Class.new(ROM::Relation[:memory]) do
         schema(:users) do
@@ -66,31 +66,31 @@ RSpec.describe ROM::Relation, '#call' do
     end
 
     let(:options) do
-      { auto_struct: true }
+      {auto_struct: true}
     end
 
     let(:data) do
-      ROM::Memory::Dataset.new([{ id: 1, name: 'Jane' }, { id: 2, name: 'John' }])
+      ROM::Memory::Dataset.new([{id: 1, name: "Jane"}, {id: 2, name: "John"}])
     end
 
-    it 'automatically maps to structs' do
+    it "automatically maps to structs" do
       result = relation.call.to_a
 
       expect(result[0].id).to be(1)
-      expect(result[0].name).to eql('Jane')
+      expect(result[0].name).to eql("Jane")
 
       expect(result[1].id).to be(2)
-      expect(result[1].name).to eql('John')
+      expect(result[1].name).to eql("John")
     end
 
-    it 'supports aliasing' do
+    it "supports aliasing" do
       result = relation.rename(id: :user_id, name: :user_name).call.to_a
 
       expect(result[0].user_id).to be(1)
-      expect(result[0].user_name).to eql('Jane')
+      expect(result[0].user_name).to eql("Jane")
 
       expect(result[1].user_id).to be(2)
-      expect(result[1].user_name).to eql('John')
+      expect(result[1].user_name).to eql("John")
     end
   end
 end

@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
+require "spec_helper"
 
-RSpec.describe 'ROM::CommandRegistry' do
-  include_context 'container'
+RSpec.describe "ROM::CommandRegistry" do
+  include_context "container"
 
   let(:users) { container.commands[:users] }
 
@@ -16,15 +16,15 @@ RSpec.describe 'ROM::CommandRegistry' do
     end)
   end
 
-  describe '#[]' do
-    it 'fetches a command from the registry' do
+  describe "#[]" do
+    it "fetches a command from the registry" do
       expect(users[:create]).to be_a(ROM::Commands::Create[:memory])
     end
 
-    it 'throws an error when the command is not found' do
+    it "throws an error when the command is not found" do
       expect { users[:not_found] }.to raise_error(
         ROM::CommandNotFoundError,
-        'There is no :not_found command for :users relation'
+        "There is no :not_found command for :users relation"
       )
     end
   end

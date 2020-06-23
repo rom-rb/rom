@@ -1,21 +1,21 @@
 # frozen_string_literal: true
 
-RSpec.describe 'changeset plugin' do
+RSpec.describe "changeset plugin" do
   subject(:changeset) do
-    books.changeset(changeset_class).data(title: 'Hello World')
+    books.changeset(changeset_class).data(title: "Hello World")
   end
 
   let(:changeset_class) do
     Class.new(ROM::Changeset::Create) do
       command_options input: -> tuple { tuple.merge(updated_at: Time.now) }
-      command_plugins timestamps: { timestamps: [:created_at] }
+      command_plugins timestamps: {timestamps: [:created_at]}
     end
   end
 
-  include_context 'changeset / database'
-  include_context 'changeset / relations'
+  include_context "changeset / database"
+  include_context "changeset / relations"
 
-  it 'extends the command with the provided command options' do
+  it "extends the command with the provided command options" do
     book = changeset.commit
 
     expect(book.created_at).to be_within(0.25).of(Time.now)

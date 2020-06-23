@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'rom/mapper_compiler'
+require "rom/mapper_compiler"
 
 module ROM
   module Memory

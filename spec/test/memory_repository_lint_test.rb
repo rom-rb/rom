@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require 'rom/core'
-require 'rom/memory'
-require 'rom/lint/test'
+require "rom/core"
+require "rom/memory"
+require "rom/lint/test"
 
-require 'minitest/autorun'
+require "minitest/autorun"
 
 class MemoryRepositoryLintTest < Minitest::Test
   include ROM::Lint::TestGateway
@@ -23,7 +23,7 @@ class MemoryDatasetLintTest < Minitest::Test
   include ROM::Lint::TestEnumerableDataset
 
   def setup
-    @data = [{ name: 'Jane', age: 24 }, { name: 'Joe', age: 25 }]
+    @data = [{name: "Jane", age: 24}, {name: "Joe", age: 25}]
     @dataset = ROM::Memory::Dataset.new(@data)
   end
 end

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'dry/core/cache'
+require "dry/core/cache"
 
-require 'rom/repository/relation_reader'
+require "rom/repository/relation_reader"
 
 module ROM
   class Repository

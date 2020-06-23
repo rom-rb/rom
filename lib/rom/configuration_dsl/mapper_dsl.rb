@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'rom/mapper/builder'
+require "rom/mapper/builder"
 
 module ROM
   module ConfigurationDSL

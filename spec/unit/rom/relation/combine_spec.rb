@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'rom/relation'
+require "rom/relation"
 
-RSpec.describe ROM::Relation, '#combine' do
+RSpec.describe ROM::Relation, "#combine" do
   let(:users) do
     ROM::Relation.new([], name: ROM::Relation::Name[:users])
   end
@@ -24,15 +24,15 @@ RSpec.describe ROM::Relation, '#combine' do
   end
 
   let(:users_assocs_set) do
-    { tasks: tasks_assoc, posts: posts_assoc }
+    {tasks: tasks_assoc, posts: posts_assoc}
   end
 
   let(:tasks_assocs_set) do
-    { tags: tags_assoc }
+    {tags: tags_assoc}
   end
 
   let(:posts_assocs_set) do
-    { comments: comments_assoc }
+    {comments: comments_assoc}
   end
 
   let(:tasks_assoc) do
@@ -57,8 +57,8 @@ RSpec.describe ROM::Relation, '#combine' do
     allow(posts.schema).to receive(:associations).and_return(posts_assocs_set)
   end
 
-  context 'with a list of assoc names' do
-    it 'returns a combined relation' do
+  context "with a list of assoc names" do
+    it "returns a combined relation" do
       tasks_node = double(:tasks_node)
 
       expect(tasks_assoc).to receive(:node).and_return(tasks_node)
@@ -70,7 +70,7 @@ RSpec.describe ROM::Relation, '#combine' do
       expect(relation.nodes).to eql([tasks])
     end
 
-    it 'allows combining the same assoc multiple times' do
+    it "allows combining the same assoc multiple times" do
       tasks_node = double(:tasks_node)
 
       expect(tasks_assoc).to receive(:node).and_return(tasks_node)
@@ -83,8 +83,8 @@ RSpec.describe ROM::Relation, '#combine' do
     end
   end
 
-  context 'with a hash with nested assocs' do
-    it 'returns a combined relation' do
+  context "with a hash with nested assocs" do
+    it "returns a combined relation" do
       tasks_node = double(:tasks_node)
       tags_node = double(:tags_node)
 
@@ -101,8 +101,8 @@ RSpec.describe ROM::Relation, '#combine' do
     end
   end
 
-  context 'with a hash with nested assocs as an array' do
-    it 'returns a combined relation' do
+  context "with a hash with nested assocs as an array" do
+    it "returns a combined relation" do
       tasks_node = double(:tasks_node)
       tags_node = double(:tags_node)
 
@@ -119,8 +119,8 @@ RSpec.describe ROM::Relation, '#combine' do
     end
   end
 
-  context 'with a hash with two keys' do
-    it 'returns a combined relation' do
+  context "with a hash with two keys" do
+    it "returns a combined relation" do
       tasks_node = double(:tasks_node)
       tags_node = double(:tags_node)
       posts_node = double(:posts_node)

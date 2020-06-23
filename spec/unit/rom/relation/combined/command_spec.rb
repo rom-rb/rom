@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'rom/relation/combined'
+require "rom/relation/combined"
 
-RSpec.describe ROM::Relation::Combined, '#command' do
+RSpec.describe ROM::Relation::Combined, "#command" do
   subject(:relation) do
     ROM::Relation::Combined.new(users, [tasks])
   end
@@ -15,7 +15,7 @@ RSpec.describe ROM::Relation::Combined, '#command' do
     ROM::Relation.new([])
   end
 
-  it 'raises when type is not :create' do
+  it "raises when type is not :create" do
     expect { relation.command(:update) }
       .to raise_error(
         NotImplementedError,

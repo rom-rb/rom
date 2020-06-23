@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
+require "spec_helper"
 
-RSpec.describe 'Mapper definition DSL' do
-  include_context 'container'
-  include_context 'users and tasks'
+RSpec.describe "Mapper definition DSL" do
+  include_context "container"
+  include_context "users and tasks"
 
   let(:header) { mapper.header }
 
-  describe 'wrapped relation mapper' do
+  describe "wrapped relation mapper" do
     before do
       configuration.relation(:tasks) do
         def with_user
@@ -20,7 +20,7 @@ RSpec.describe 'Mapper definition DSL' do
 
       configuration.mappers do
         define(:tasks) do
-          model name: 'Test::Task'
+          model name: "Test::Task"
 
           attribute :title
           attribute :priority
@@ -28,10 +28,10 @@ RSpec.describe 'Mapper definition DSL' do
       end
     end
 
-    it 'allows defining wrapped attributes via options hash' do
+    it "allows defining wrapped attributes via options hash" do
       configuration.mappers do
         define(:with_user, parent: :tasks) do
-          model name: 'Test::TaskWithUser'
+          model name: "Test::TaskWithUser"
 
           attribute :title
           attribute :priority
@@ -48,17 +48,17 @@ RSpec.describe 'Mapper definition DSL' do
 
       expect(jane).to eql(
         Test::TaskWithUser.new(
-          title: 'be cool',
+          title: "be cool",
           priority: 2,
-          user: { email: 'jane@doe.org' }
+          user: {email: "jane@doe.org"}
         )
       )
     end
 
-    it 'allows defining wrapped attributes via options block' do
+    it "allows defining wrapped attributes via options block" do
       configuration.mappers do
         define(:with_user, parent: :tasks) do
-          model name: 'Test::TaskWithUser'
+          model name: "Test::TaskWithUser"
 
           attribute :title
           attribute :priority
@@ -77,27 +77,27 @@ RSpec.describe 'Mapper definition DSL' do
 
       expect(jane).to eql(
         Test::TaskWithUser.new(
-          title: 'be cool',
+          title: "be cool",
           priority: 2,
-          user: { email: 'jane@doe.org' }
+          user: {email: "jane@doe.org"}
         )
       )
     end
 
-    it 'allows defining nested wrapped attributes via a block' do
+    it "allows defining nested wrapped attributes via a block" do
       configuration.mappers do
         define(:with_user, parent: :tasks, inherit_header: false) do
-          model name: 'Test::TaskWithUser'
+          model name: "Test::TaskWithUser"
 
           attribute :title
           attribute :priority
 
           wrap :user do
-            model name: 'Test::TaskUser'
+            model name: "Test::TaskUser"
             attribute :name
 
             wrap :contact do
-              model name: 'Test::Contact'
+              model name: "Test::Contact"
               attribute :email
             end
           end
@@ -114,25 +114,25 @@ RSpec.describe 'Mapper definition DSL' do
 
       expect(jane).to eql(
         Test::TaskWithUser.new(
-          title: 'be cool',
+          title: "be cool",
           priority: 2,
           user: Test::TaskUser.new(
-            name: 'Jane', contact: Test::Contact.new(email: 'jane@doe.org')
+            name: "Jane", contact: Test::Contact.new(email: "jane@doe.org")
           )
         )
       )
     end
 
-    it 'allows defining wrapped attributes mapped to a model' do
+    it "allows defining wrapped attributes mapped to a model" do
       configuration.mappers do
         define(:with_user, parent: :tasks) do
-          model name: 'Test::TaskWithUser'
+          model name: "Test::TaskWithUser"
 
           attribute :title
           attribute :priority
 
           wrap :user do
-            model name: 'Test::User'
+            model name: "Test::User"
             attribute :email
           end
         end
@@ -147,9 +147,9 @@ RSpec.describe 'Mapper definition DSL' do
 
       expect(jane).to eql(
         Test::TaskWithUser.new(
-          title: 'be cool',
+          title: "be cool",
           priority: 2,
-          user: Test::User.new(email: 'jane@doe.org')
+          user: Test::User.new(email: "jane@doe.org")
         )
       )
     end

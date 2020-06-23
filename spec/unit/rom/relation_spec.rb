@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'rom/memory'
+require "rom/memory"
 
 RSpec.describe ROM::Relation do
   subject(:relation) do
@@ -12,10 +12,10 @@ RSpec.describe ROM::Relation do
 
   let(:dataset) { ROM::Memory::Dataset.new([jane, joe]) }
 
-  let(:jane) { { id: 1, name: 'Jane' } }
-  let(:joe) { { id: 2, name: 'Joe' } }
+  let(:jane) { {id: 1, name: "Jane"} }
+  let(:joe) { {id: 2, name: "Joe"} }
 
-  describe '.[]' do
+  describe ".[]" do
     before do
       module Test::TestAdapter
         class Relation < ROM::Relation
@@ -39,7 +39,7 @@ RSpec.describe ROM::Relation do
       ROM.register_adapter(:broken, Test::BrokenAdapter)
     end
 
-    it 'returns relation subclass from the registered adapter' do
+    it "returns relation subclass from the registered adapter" do
       subclass = Class.new(ROM::Relation[:test]) { schema(:test) {} }
 
       relation = subclass.new([])
@@ -48,9 +48,9 @@ RSpec.describe ROM::Relation do
     end
   end
 
-  describe '#name' do
-    context 'missing dataset' do
-      context 'with Relation inside module' do
+  describe "#name" do
+    context "missing dataset" do
+      context "with Relation inside module" do
         before do
           module Test::Test
             class SuperRelation < ROM::Relation[:memory]
@@ -59,28 +59,28 @@ RSpec.describe ROM::Relation do
           end
         end
 
-        it 'returns name based on module and class' do
+        it "returns name based on module and class" do
           relation = Test::Test::SuperRelation.new([])
 
           expect(relation.name).to eql(ROM::Relation::Name[:test_test_super_relation])
         end
       end
 
-      context 'with Relation without module' do
+      context "with Relation without module" do
         before do
           class Test::SuperRelation < ROM::Relation[:memory]
             schema {}
           end
         end
 
-        it 'returns name based only on class' do
+        it "returns name based only on class" do
           relation = Test::SuperRelation.new([])
 
           expect(relation.name).to eql(ROM::Relation::Name[:test_super_relation])
         end
       end
 
-      context 'with a descendant relation' do
+      context "with a descendant relation" do
         before do
           class Test::SuperRelation < ROM::Relation[:memory]
             schema {}
@@ -91,7 +91,7 @@ RSpec.describe ROM::Relation do
           end
         end
 
-        it 'sets custom relation schema' do
+        it "sets custom relation schema" do
           relation = Test::DescendantRelation.new([])
 
           expect(relation.name).to eql(ROM::Relation::Name[:test_descendant_relation])
@@ -99,7 +99,7 @@ RSpec.describe ROM::Relation do
       end
     end
 
-    context 'manualy set dataset' do
+    context "manualy set dataset" do
       before do
         module Test::TestAdapter
           class Relation < ROM::Relation[:memory]
@@ -108,14 +108,14 @@ RSpec.describe ROM::Relation do
         end
       end
 
-      it 'returns name based on dataset' do
+      it "returns name based on dataset" do
         relation = Test::TestAdapter::Relation.new([])
 
         expect(relation.name).to eql(ROM::Relation::Name[:foo_bar])
       end
     end
 
-    context 'invalid names' do
+    context "invalid names" do
       let(:relation_name_symbol) do
         module Test
           class Relations < ROM::Relation[:memory]
@@ -127,18 +127,18 @@ RSpec.describe ROM::Relation do
       let(:relation_name_string) do
         module Test
           class Relations < ROM::Relation[:memory]
-            schema('relations') {}
+            schema("relations") {}
           end
         end
       end
 
-      it 'raises an exception when is symbol' do
+      it "raises an exception when is symbol" do
         expect {
           relation_name_symbol
         }.to raise_error(ROM::InvalidRelationName)
       end
 
-      it 'raises an exception when is string' do
+      it "raises an exception when is string" do
         expect {
           relation_name_string
         }.to raise_error(ROM::InvalidRelationName)
@@ -146,8 +146,8 @@ RSpec.describe ROM::Relation do
     end
   end
 
-  describe '#each' do
-    it 'yields all objects' do
+  describe "#each" do
+    it "yields all objects" do
       result = []
 
       relation.each do |user|
@@ -157,25 +157,25 @@ RSpec.describe ROM::Relation do
       expect(result).to eql([jane, joe])
     end
 
-    it 'returns an enumerator if block is not provided' do
+    it "returns an enumerator if block is not provided" do
       expect(relation.each).to be_instance_of(Enumerator)
     end
   end
 
-  describe '#to_a' do
-    it 'materializes relation to an array' do
+  describe "#to_a" do
+    it "materializes relation to an array" do
       expect(relation.to_a).to eql([jane, joe])
     end
   end
 
-  describe '#with' do
-    it 'returns a new instance with the original dataset and given custom options' do
+  describe "#with" do
+    it "returns a new instance with the original dataset and given custom options" do
       relation = Class.new(ROM::Relation) {
         schema(:users) {}
         option :custom
       }.new([], custom: true)
 
-      custom_opts = { mappers: 'Custom Mapper Registry' }
+      custom_opts = {mappers: "Custom Mapper Registry"}
       new_relation = relation.with(custom_opts).with(custom: true)
 
       expect(new_relation.dataset).to be(relation.dataset)
@@ -183,24 +183,24 @@ RSpec.describe ROM::Relation do
     end
   end
 
-  describe '#wrap?' do
-    it 'returns false' do
+  describe "#wrap?" do
+    it "returns false" do
       expect(relation).to_not be_wrap
     end
   end
 
-  describe '#adapter' do
-    it 'returns adapter set on the class' do
+  describe "#adapter" do
+    it "returns adapter set on the class" do
       expect(relation.adapter).to be(:test)
     end
   end
 
-  describe '#graph?' do
-    it 'returns false' do
+  describe "#graph?" do
+    it "returns false" do
       expect(relation.graph?).to be(false)
     end
 
-    it 'returns false when curried' do
+    it "returns false when curried" do
       relation = Class.new(ROM::Relation[:memory]) do
         schema(:users) {}
 
@@ -213,8 +213,8 @@ RSpec.describe ROM::Relation do
     end
   end
 
-  describe '#schema' do
-    it 'returns an empty schema by default' do
+  describe "#schema" do
+    it "returns an empty schema by default" do
       relation = Class.new(ROM::Relation) {
         schema(:test_some_relation) {}
       }.new([])
@@ -225,7 +225,7 @@ RSpec.describe ROM::Relation do
       expect(relation.schema?).to be(false)
     end
 
-    context 'when relation has custom attribute class' do
+    context "when relation has custom attribute class" do
       before do
         module Test
           class Attribute < ROM::Attribute; end
@@ -235,7 +235,7 @@ RSpec.describe ROM::Relation do
         end
       end
 
-      it 'define schema with attribute class' do
+      it "define schema with attribute class" do
         relation = Class.new(Test::Relation) do
           schema(:test_some_relation) {}
         end.new([])
@@ -245,50 +245,50 @@ RSpec.describe ROM::Relation do
     end
   end
 
-  describe '#input_schema' do
-    it 'returns a schema hash type' do
+  describe "#input_schema" do
+    it "returns a schema hash type" do
       relation = Class.new(ROM::Relation[:memory]) do
         schema { attribute :id, ROM::Types::Coercible::Integer }
       end.new([])
 
-      expect(relation.input_schema[id: '1']).to eql(id: 1)
+      expect(relation.input_schema[id: "1"]).to eql(id: 1)
     end
 
-    it 'returns a default input schema' do
+    it "returns a default input schema" do
       relation = Class.new(ROM::Relation[:memory]) do
         schema(:users) {
           attribute :id, ROM::Types::String
         }
       end.new([])
 
-      tuple = { id: '1' }
+      tuple = {id: "1"}
 
-      expect(relation.input_schema[tuple]).to eql(id: '1')
+      expect(relation.input_schema[tuple]).to eql(id: "1")
     end
   end
 
-  describe '#auto_map?' do
-    it 'returns true by default' do
+  describe "#auto_map?" do
+    it "returns true by default" do
       relation = ROM::Relation.new([])
 
       expect(relation).to be_auto_map
     end
 
-    it 'returns false when auto_map is disabled' do
+    it "returns false when auto_map is disabled" do
       relation = ROM::Relation.new([], auto_map: false)
 
       expect(relation).not_to be_auto_map
     end
   end
 
-  describe '#auto_struct?' do
-    it 'returns false by default' do
+  describe "#auto_struct?" do
+    it "returns false by default" do
       relation = ROM::Relation.new([])
 
       expect(relation).not_to be_auto_struct
     end
 
-    it 'returns true when auto_struct is enabled' do
+    it "returns true when auto_struct is enabled" do
       relation = ROM::Relation.new([], auto_struct: true)
 
       expect(relation).to be_auto_struct

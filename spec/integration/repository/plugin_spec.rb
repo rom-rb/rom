@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-RSpec.describe 'repository plugin' do
-  include_context 'repository / database'
-  include_context 'relations'
-  include_context 'seeds'
-  include_context 'repo'
+RSpec.describe "repository plugin" do
+  include_context "repository / database"
+  include_context "relations"
+  include_context "seeds"
+  include_context "repo"
 
   let(:nullify_plugin) do
     Module.new do
@@ -30,7 +30,7 @@ RSpec.describe 'repository plugin' do
     Class.new(repo_class) { use :nullify_datasets }.new(rom)
   end
 
-  it 'always returns empty result set' do
+  it "always returns empty result set" do
     expect(user_repo.all_users.to_a).to eql([])
   end
 end

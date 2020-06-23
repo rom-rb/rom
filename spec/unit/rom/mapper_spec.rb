@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'dry/equalizer'
-require 'ostruct'
+require "dry/equalizer"
+require "ostruct"
 
 RSpec.describe ROM::Mapper do
   subject(:mapper) { mapper_class.build }
@@ -17,18 +17,18 @@ RSpec.describe ROM::Mapper do
   end
 
   let(:relation) do
-    [{ id: 1, name: 'Jane' }, { id: 2, name: 'Joe' }]
+    [{id: 1, name: "Jane"}, {id: 2, name: "Joe"}]
   end
 
   let(:user_model) do
     Class.new(OpenStruct) { include Dry::Equalizer(:id, :name) }
   end
 
-  let(:jane) { user_model.new(id: 1, name: 'Jane') }
-  let(:joe) { user_model.new(id: 2, name: 'Joe') }
+  let(:jane) { user_model.new(id: 1, name: "Jane") }
+  let(:joe) { user_model.new(id: 2, name: "Joe") }
 
-  describe '.registry' do
-    it 'builds mapper class registry for base and virtual relations' do
+  describe ".registry" do
+    it "builds mapper class registry for base and virtual relations" do
       users = Class.new(ROM::Mapper) { relation(:users) }
       entity = Class.new(ROM::Mapper) do
         relation(:users)
@@ -52,8 +52,8 @@ RSpec.describe ROM::Mapper do
     end
   end
 
-  describe '.relation' do
-    it 'inherits from parent' do
+  describe ".relation" do
+    it "inherits from parent" do
       base = Class.new(ROM::Mapper) { relation(:users) }
       virt = Class.new(base)
 
@@ -61,7 +61,7 @@ RSpec.describe ROM::Mapper do
       expect(virt.base_relation).to be(:users)
     end
 
-    it 'allows overriding' do
+    it "allows overriding" do
       base = Class.new(ROM::Mapper) { relation(:users) }
       virt = Class.new(base) { relation(:active) }
 
@@ -70,8 +70,8 @@ RSpec.describe ROM::Mapper do
     end
   end
 
-  describe '#each' do
-    it 'yields all mapped objects' do
+  describe "#each" do
+    it "yields all mapped objects" do
       result = []
 
       mapper.call(relation).each do |tuple|

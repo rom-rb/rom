@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'rom/constants'
-require 'rom/mapper/dsl'
+require "rom/constants"
+require "rom/mapper/dsl"
 
 module ROM
   # Mapper is a simple object that uses transformers to load relations
@@ -16,7 +16,7 @@ module ROM
 
     inherit_header true
     reject_keys false
-    prefix_separator '_'
+    prefix_separator "_"
 
     # @return [Object] transformers object built by a processor
     #
@@ -41,7 +41,7 @@ module ROM
     #
     # @api private
     def self.register_processor(processor)
-      name = processor.name.split('::').last.downcase.to_sym
+      name = processor.name.split("::").last.downcase.to_sym
       processors.update(name => processor)
     end
 
@@ -54,7 +54,7 @@ module ROM
       return [header] if steps.empty?
       return steps.map(&:header) if attributes.empty?
 
-      raise(MapperMisconfiguredError, 'cannot mix outer attributes and steps')
+      raise(MapperMisconfiguredError, "cannot mix outer attributes and steps")
     end
 
     # Build a mapper using provided processor type

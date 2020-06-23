@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require 'concurrent/hash'
-require 'concurrent/array'
+require "concurrent/hash"
+require "concurrent/array"
 
-require 'rom/memory/dataset'
+require "rom/memory/dataset"
 
 module ROM
   module Memory

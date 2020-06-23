@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require 'dry/core/class_attributes'
-require 'dry/transformer'
+require "dry/core/class_attributes"
+require "dry/transformer"
 
-require 'rom/processor/transformer'
+require "rom/processor/transformer"
 
 module ROM
   # Transformer is a data mapper which uses `Dry::Transformer`'s DSL to define transformations.

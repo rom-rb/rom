@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require 'dry/core/class_attributes'
+require "dry/core/class_attributes"
 
-require 'rom/transaction'
-require 'rom/support/notifications'
+require "rom/transaction"
+require "rom/support/notifications"
 
 module ROM
   # Abstract gateway class
@@ -83,7 +83,7 @@ module ROM
     def self.setup(gateway_or_scheme, *args)
       case gateway_or_scheme
       when String
-        raise ArgumentError, <<-STRING.gsub(/^ {10}/, '')
+        raise ArgumentError, <<-STRING.gsub(/^ {10}/, "")
           URIs without an explicit scheme are not supported anymore.
           See https://github.com/rom-rb/rom/blob/master/CHANGELOG.md
         STRING

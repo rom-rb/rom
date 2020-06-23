@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
-require 'rom/memory'
+require "spec_helper"
+require "rom/memory"
 
-RSpec.describe 'Gateways / Extending Relations' do
-  include_context 'container'
-  include_context 'users and tasks'
+RSpec.describe "Gateways / Extending Relations" do
+  include_context "container"
+  include_context "users and tasks"
 
   before do
     module ROM
@@ -34,26 +34,26 @@ RSpec.describe 'Gateways / Extending Relations' do
     end
   end
 
-  shared_examples_for 'extended relation' do
-    it 'can extend relation class' do
+  shared_examples_for "extended relation" do
+    it "can extend relation class" do
       expect(container.relations.users.class).to be_freaking_awesome
     end
 
-    it 'can extend relation instance' do
+    it "can extend relation instance" do
       expect(container.relations.users).to be_freaking_cool
     end
   end
 
-  context 'using DSL' do
-    it_behaves_like 'extended relation' do
+  context "using DSL" do
+    it_behaves_like "extended relation" do
       before do
         configuration.relation(:users)
       end
     end
   end
 
-  context 'using class definition' do
-    it_behaves_like 'extended relation' do
+  context "using class definition" do
+    it_behaves_like "extended relation" do
       before do
         configuration.register_relation(Class.new(ROM::Relation[:memory]) { schema(:users) {} })
       end

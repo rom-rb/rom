@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'rom/auto_curry'
+require "rom/auto_curry"
 
 RSpec.describe ROM::AutoCurry do
   subject(:object) { klass.new }
@@ -49,31 +49,31 @@ RSpec.describe ROM::AutoCurry do
     end
   end
 
-  it 'registers auto-curried methods' do
+  it "registers auto-curried methods" do
     expect(object.class.auto_curried_methods)
       .to eql(%i[arity_1 arity_2 arity_many yielding_block repeated].to_set)
   end
 
-  it 'auto-curries method with arity == 0' do
+  it "auto-curries method with arity == 0" do
     expect(object.arity_0).to be(0)
   end
 
-  it 'auto-curries method with arity == 1' do
+  it "auto-curries method with arity == 1" do
     expect(object.arity_1).to be_instance_of(klass)
     expect(object.arity_1(1)).to be(1)
   end
 
-  it 'auto-curries method with arity > 0' do
+  it "auto-curries method with arity > 0" do
     expect(object.arity_2).to be_instance_of(klass)
     expect(object.arity_2(1, 2)).to eql([1, 2])
   end
 
-  it 'auto-curries method with arity < 0' do
+  it "auto-curries method with arity < 0" do
     expect(object.arity_many).to eql([])
     expect(object.arity_many(1, 2)).to eql([1, 2])
   end
 
-  it 'yields block' do
+  it "yields block" do
     expect(object.yielding_block(1) { |arg| [arg, 2] }).to eql([1, 2])
   end
 end

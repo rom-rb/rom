@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
-require 'rom/memory'
+require "spec_helper"
+require "rom/memory"
 
-RSpec.describe 'Setting up ROM with multiple environments' do
+RSpec.describe "Setting up ROM with multiple environments" do
   let(:configuration) do
     {
       one: ROM::Configuration.new(:memory),
@@ -18,7 +18,7 @@ RSpec.describe 'Setting up ROM with multiple environments' do
     }
   end
 
-  context 'without :auto_registration plugin' do
+  context "without :auto_registration plugin" do
     before do
       module Test
         class Users < ROM::Relation[:memory]
@@ -38,7 +38,7 @@ RSpec.describe 'Setting up ROM with multiple environments' do
       end
     end
 
-    it 'registers items independently of other environments' do
+    it "registers items independently of other environments" do
       configuration[:one].register_relation(Test::Users)
       configuration[:one].register_command(Test::CreateUser)
       configuration[:one].register_mapper(Test::UserMapper)
@@ -58,7 +58,7 @@ RSpec.describe 'Setting up ROM with multiple environments' do
       )
     end
 
-    it 'allows use of the same identifiers in different environments' do
+    it "allows use of the same identifiers in different environments" do
       configuration[:one].register_relation(Test::Users)
       configuration[:one].register_command(Test::CreateUser)
       configuration[:one].register_mapper(Test::UserMapper)
@@ -69,7 +69,7 @@ RSpec.describe 'Setting up ROM with multiple environments' do
     end
   end
 
-  context 'with associations' do
+  context "with associations" do
     before do
       module Test
         class Users < ROM::Relation[:memory]
@@ -97,7 +97,7 @@ RSpec.describe 'Setting up ROM with multiple environments' do
       end
     end
 
-    it 'separates associations between different configurations' do
+    it "separates associations between different configurations" do
       configuration[:one].register_relation(Test::Users)
       configuration[:one].register_relation(Test::Tasks)
 

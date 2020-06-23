@@ -1,14 +1,13 @@
 # frozen_string_literal: true
 
-require 'dry-types'
-require 'json'
+require "dry-types"
+require "json"
 
 module ROM
   # Default namespace with built-in attribute types
   #
   # @api public
   #
-  # rubocop:disable Naming/MethodName
   module Types
     include Dry::Types(default: :nominal)
 
@@ -74,5 +73,4 @@ module ROM
     Coercible::JSONHash = Coercible.JSONHash
     Coercible::HashJSON = Coercible.HashJSON
   end
-  # rubocop:enable Naming/MethodName
 end

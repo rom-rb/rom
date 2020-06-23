@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require 'dry/equalizer'
+require "dry/equalizer"
 
-require 'rom/types'
-require 'rom/attribute'
-require 'rom/schema/associations_dsl'
+require "rom/types"
+require "rom/attribute"
+require "rom/schema/associations_dsl"
 
 module ROM
   class Schema
@@ -205,10 +205,10 @@ module ROM
       #
       # @api private
       def opts
-        opts = { attributes: attributes.values, inferrer: inferrer, attr_class: attr_class }
+        opts = {attributes: attributes.values, inferrer: inferrer, attr_class: attr_class}
 
         if associations_dsl
-          { **opts, associations: associations_dsl.call }
+          {**opts, associations: associations_dsl.call}
         else
           opts
         end

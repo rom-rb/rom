@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require 'pathname'
+require "pathname"
 
-require 'rom/support/inflector'
-require 'rom/types'
-require 'rom/setup/auto_registration_strategies/base'
+require "rom/support/inflector"
+require "rom/types"
+require "rom/setup/auto_registration_strategies/base"
 
 module ROM
   module AutoRegistrationStrategies
@@ -25,7 +25,7 @@ module ROM
       # @api private
       def call
         Inflector.camelize(
-          file.sub(%r{^#{directory}/#{entity}/}, '').sub(EXTENSION_REGEX, '')
+          file.sub(%r{^#{directory}/#{entity}/}, "").sub(EXTENSION_REGEX, "")
         )
       end
     end

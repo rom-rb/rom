@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-require 'pathname'
+require "pathname"
 
-require 'rom/support/inflector'
+require "rom/support/inflector"
 
-require 'rom/types'
-require 'rom/initializer'
-require 'rom/setup/auto_registration_strategies/no_namespace'
-require 'rom/setup/auto_registration_strategies/with_namespace'
-require 'rom/setup/auto_registration_strategies/custom_namespace'
+require "rom/types"
+require "rom/initializer"
+require "rom/setup/auto_registration_strategies/no_namespace"
+require "rom/setup/auto_registration_strategies/with_namespace"
+require "rom/setup/auto_registration_strategies/custom_namespace"
 
 module ROM
   # AutoRegistration is used to load component files automatically from the provided directory path

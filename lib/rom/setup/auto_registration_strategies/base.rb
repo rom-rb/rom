@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'rom/types'
-require 'rom/initializer'
+require "rom/types"
+require "rom/initializer"
 
 module ROM
   module AutoRegistrationStrategies

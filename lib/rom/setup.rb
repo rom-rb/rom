@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'rom/setup/auto_registration'
+require "rom/setup/auto_registration"
 
 module ROM
   # Setup objects collect component classes during setup/finalization process

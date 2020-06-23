@@ -1,26 +1,26 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
+require "spec_helper"
 
-RSpec.describe 'Mappers / Symbolizing atributes' do
-  include_context 'container'
+RSpec.describe "Mappers / Symbolizing atributes" do
+  include_context "container"
 
   before do
     configuration.relation(:users)
     configuration.relation(:tasks)
   end
 
-  it 'automatically maps all attributes using top-level settings' do
+  it "automatically maps all attributes using top-level settings" do
     module Test
       class UserMapper < ROM::Mapper
         relation :users
 
         symbolize_keys true
-        prefix 'user'
+        prefix "user"
 
         attribute :id
 
-        wrap :details, prefix: 'first' do
+        wrap :details, prefix: "first" do
           attribute :name
         end
 
@@ -33,19 +33,19 @@ RSpec.describe 'Mappers / Symbolizing atributes' do
     configuration.register_mapper(Test::UserMapper)
 
     container.relations.users << {
-      'user_id' => 123,
-      'first_name' => 'Jane',
-      'email' => 'jane@doe.org'
+      "user_id" => 123,
+      "first_name" => "Jane",
+      "email" => "jane@doe.org"
     }
 
     jane = container.relations[:users].map_with(:users).first
 
     expect(jane).to eql(
-      id: 123, details: { name: 'Jane' }, contact: { email: 'jane@doe.org' }
+      id: 123, details: {name: "Jane"}, contact: {email: "jane@doe.org"}
     )
   end
 
-  it 'automatically maps all attributes using settings for wrap block' do
+  it "automatically maps all attributes using settings for wrap block" do
     module Test
       class TaskMapper < ROM::Mapper
         relation :tasks
@@ -53,7 +53,7 @@ RSpec.describe 'Mappers / Symbolizing atributes' do
 
         attribute :title
 
-        wrap :details, prefix: 'task' do
+        wrap :details, prefix: "task" do
           attribute :priority
           attribute :description
         end
@@ -63,16 +63,16 @@ RSpec.describe 'Mappers / Symbolizing atributes' do
     configuration.register_mapper(Test::TaskMapper)
 
     container.relations.tasks << {
-      'title' => 'Task One',
-      'task_priority' => 1,
-      'task_description' => 'It is a task'
+      "title" => "Task One",
+      "task_priority" => 1,
+      "task_description" => "It is a task"
     }
 
     task = container.relations[:tasks].map_with(:tasks).first
 
     expect(task).to eql(
-      title: 'Task One',
-      details: { priority: 1, description: 'It is a task' }
+      title: "Task One",
+      details: {priority: 1, description: "It is a task"}
     )
   end
 end

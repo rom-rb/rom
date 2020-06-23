@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ROM::Relation::Combined, '#method_missing' do
+RSpec.describe ROM::Relation::Combined, "#method_missing" do
   subject(:relation) do
     ROM::Relation::Combined.new(users, [tasks])
   end
@@ -21,9 +21,9 @@ RSpec.describe ROM::Relation::Combined, '#method_missing' do
     Class.new(ROM::Relation).new([], name: ROM::Relation::Name[:posts])
   end
 
-  describe 'forwards to the root' do
-    context 'when return value is another combined relation' do
-      it 'merges nodes' do
+  describe "forwards to the root" do
+    context "when return value is another combined relation" do
+      it "merges nodes" do
         result = relation.add_node(posts)
 
         expect(result).to be_instance_of(ROM::Relation::Combined)

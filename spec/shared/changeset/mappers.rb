@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.shared_context 'changeset / mappers' do
+RSpec.shared_context "changeset / mappers" do
   let(:user_mappers) { users.mappers[:user] }
   let(:task_mappers) { tasks.mappers[:task] }
   let(:tag_mappers) { tags.mappers[:tag] }

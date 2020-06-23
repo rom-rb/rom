@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'rom/initializer'
-require 'rom/data_proxy'
+require "rom/initializer"
+require "rom/data_proxy"
 
 module ROM
   # A helper module that adds data-proxy behavior to an enumerable object

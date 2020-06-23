@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe ROM::Relation::Combined do
-  include_context 'gateway only'
-  include_context 'users and tasks'
+  include_context "gateway only"
+  include_context "users and tasks"
 
   def t(*args)
     ROM::Processor::Transformer::Functions[*args]
@@ -32,13 +32,13 @@ RSpec.describe ROM::Relation::Combined do
     end.new(tasks_dataset)
   end
 
-  it_behaves_like 'materializable relation' do
+  it_behaves_like "materializable relation" do
     let(:mapper) do
       t(:combine, [[:tasks, name: :name]])
     end
 
     let(:relation) do
-      ROM::Relation::Combined.new(users.by_name('Jane'), [tasks.for_users]) >> mapper
+      ROM::Relation::Combined.new(users.by_name("Jane"), [tasks.for_users]) >> mapper
     end
   end
 end

@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe ROM::Container do
-  include_context 'container'
-  include_context 'users and tasks'
+  include_context "container"
+  include_context "users and tasks"
 
   before do
     users = Class.new(ROM::Relation[:memory]) do
@@ -54,14 +54,14 @@ RSpec.describe ROM::Container do
     configuration.register_mapper(users_mapper, name_list)
   end
 
-  describe '#mappers' do
-    it 'returns mappers for all relations' do
+  describe "#mappers" do
+    it "returns mappers for all relations" do
       expect(container.mappers.users[:name_list]).to_not be(nil)
     end
   end
 
-  describe '#disconnect' do
-    it 'does not break' do
+  describe "#disconnect" do
+    it "does not break" do
       container.disconnect
     end
   end

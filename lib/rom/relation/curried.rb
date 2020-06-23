@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require 'dry/equalizer'
+require "dry/equalizer"
 
-require 'rom/types'
-require 'rom/initializer'
-require 'rom/pipeline'
-require 'rom/relation/name'
-require 'rom/relation/materializable'
+require "rom/types"
+require "rom/initializer"
+require "rom/pipeline"
+require "rom/relation/name"
+require "rom/relation/materializable"
 
 module ROM
   class Relation

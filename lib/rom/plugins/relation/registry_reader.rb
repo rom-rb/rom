@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'rom/constants'
+require "rom/constants"
 
 module ROM
   module Plugins

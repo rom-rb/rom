@@ -21,8 +21,8 @@ RSpec.describe ROM::Relation::Combined do
     end.new([])
   end
 
-  describe '#call' do
-    it 'materializes relations' do
+  describe "#call" do
+    it "materializes relations" do
       result = relation.call
 
       expect(result).to be_instance_of(ROM::Relation::Loaded)

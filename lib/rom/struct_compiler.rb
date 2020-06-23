@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
-require 'rom/support/inflector'
-require 'dry/core/class_builder'
-require 'dry/types/compiler'
+require "rom/support/inflector"
+require "dry/core/class_builder"
+require "dry/types/compiler"
 
-require 'rom/initializer'
-require 'rom/types'
-require 'rom/cache'
-require 'rom/struct'
-require 'rom/open_struct'
-require 'rom/attribute'
+require "rom/initializer"
+require "rom/types"
+require "rom/cache"
+require "rom/struct"
+require "rom/open_struct"
+require "rom/attribute"
 
 module ROM
   # @api private

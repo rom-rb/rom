@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require 'dry/core/class_attributes'
+require "dry/core/class_attributes"
 
-require 'rom/constants'
-require 'rom/initializer'
-require 'rom/mapper'
-require 'rom/struct'
-require 'rom/struct_compiler'
-require 'rom/cache'
+require "rom/constants"
+require "rom/initializer"
+require "rom/mapper"
+require "rom/struct"
+require "rom/struct_compiler"
+require "rom/cache"
 
 module ROM
   # @api private

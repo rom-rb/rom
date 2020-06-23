@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
+require "spec_helper"
 
-RSpec.describe 'ROM::PluginRegistry' do
-  include_context 'container'
+RSpec.describe "ROM::PluginRegistry" do
+  include_context "container"
 
   before do
     Test::ConfigurationPlugin = Module.new
@@ -11,7 +11,7 @@ RSpec.describe 'ROM::PluginRegistry' do
     Test::MapperPlugin      = Module.new
     Test::RelationPlugin    = Module.new do
       def plugged_in
-        'a relation'
+        "a relation"
       end
     end
     Test::SchemaPlugin = Module.new do
@@ -44,25 +44,25 @@ RSpec.describe 'ROM::PluginRegistry' do
   around do |example|
     orig_plugins = ROM.plugin_registry
     example.run
-    ROM.instance_variable_set('@plugin_registry', orig_plugins)
+    ROM.instance_variable_set("@plugin_registry", orig_plugins)
   end
 
-  it 'makes configuration plugins available' do
+  it "makes configuration plugins available" do
     expect(ROM.plugin_registry[:configuration].fetch(:registration).mod)
       .to eq Test::ConfigurationPlugin
   end
 
-  it 'includes relation plugins' do
+  it "includes relation plugins" do
     users = Class.new(ROM::Relation[:memory]) do
       schema(:users) {}
       use :pager
     end
     configuration.register_relation(users)
 
-    expect(container.relations[:users].plugged_in).to eq 'a relation'
+    expect(container.relations[:users].plugged_in).to eq "a relation"
   end
 
-  it 'makes command plugins available' do
+  it "makes command plugins available" do
     users = Class.new(ROM::Relation[:memory]) do
       schema(:users) {}
     end
@@ -79,7 +79,7 @@ RSpec.describe 'ROM::PluginRegistry' do
     expect(container.commands[:users].create).to be_kind_of Test::CommandPlugin
   end
 
-  it 'includes plugins in mappers' do
+  it "includes plugins in mappers" do
     users = Class.new(ROM::Relation[:memory]) do
       schema(:users) {}
     end
@@ -95,7 +95,7 @@ RSpec.describe 'ROM::PluginRegistry' do
     expect(container.mappers[:users][:translator]).to be_kind_of Test::MapperPlugin
   end
 
-  it 'restricts plugins to defined type' do
+  it "restricts plugins to defined type" do
     expect {
       configuration.relation(:users) do
         use :publisher
@@ -103,7 +103,7 @@ RSpec.describe 'ROM::PluginRegistry' do
     }.to raise_error ROM::UnknownPluginError
   end
 
-  it 'allows definition of adapter restricted plugins' do
+  it "allows definition of adapter restricted plugins" do
     Test::LazyPlugin = Module.new do
       def lazy?
         true
@@ -125,7 +125,7 @@ RSpec.describe 'ROM::PluginRegistry' do
     expect(container.relations[:users]).to be_lazy
   end
 
-  it 'respects adapter restrictions' do
+  it "respects adapter restrictions" do
     Test::LazyPlugin = Module.new
     Test::LazyMemoryPlugin = Module.new
     Test::LazySQLPlugin = Module.new
@@ -167,7 +167,7 @@ RSpec.describe 'ROM::PluginRegistry' do
     expect(container.commands[:users].update).to be_kind_of Test::LazyMemoryPlugin
   end
 
-  it 'applies plugins to schemas' do
+  it "applies plugins to schemas" do
     rel_name = ROM::Relation::Name[:users]
 
     users = ROM::Schema::DSL.new(rel_name) {
@@ -180,7 +180,7 @@ RSpec.describe 'ROM::PluginRegistry' do
     expect(users.to_h.keys).to eql %i[id name created_at updated_at]
   end
 
-  it 'applies extensions to schema DSL' do
+  it "applies extensions to schema DSL" do
     rel_name = ROM::Relation::Name[:users]
 
     users = ROM::Schema::DSL.new(rel_name) {

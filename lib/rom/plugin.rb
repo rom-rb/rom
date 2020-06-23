@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'rom/initializer'
-require 'rom/constants'
-require 'rom/support/configurable'
+require "rom/initializer"
+require "rom/constants"
+require "rom/support/configurable"
 
 module ROM
   # Plugin is a simple object used to store plugin configurations

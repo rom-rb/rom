@@ -17,8 +17,8 @@ RSpec.describe ROM::Relation::Combined do
     ROM::Relation.new([])
   end
 
-  describe '#with_nodes' do
-    it 'returns a new graph with new nodes' do
+  describe "#with_nodes" do
+    it "returns a new graph with new nodes" do
       new_graph = relation.with_nodes([posts])
 
       expect(new_graph.nodes[0]).to eql(posts)

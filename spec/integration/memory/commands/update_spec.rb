@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
+require "spec_helper"
 
-require 'rom/memory'
+require "rom/memory"
 
 RSpec.describe ROM::Memory::Commands::Update do
-  include_context 'container'
-  include_context 'users and tasks'
+  include_context "container"
+  include_context "users and tasks"
 
   before do
     configuration.relation(:users) do
@@ -21,5 +21,5 @@ RSpec.describe ROM::Memory::Commands::Update do
 
   subject(:command) { container.commands[:users].update }
 
-  it_behaves_like 'a command'
+  it_behaves_like "a command"
 end

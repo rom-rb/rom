@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'rom/memory/types'
-require 'rom/memory/schema'
+require "rom/memory/types"
+require "rom/memory/schema"
 
 module ROM
   module Memory

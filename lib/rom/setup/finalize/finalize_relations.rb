@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'rom/constants'
-require 'rom/relation_registry'
-require 'rom/mapper_registry'
+require "rom/constants"
+require "rom/relation_registry"
+require "rom/mapper_registry"
 
 module ROM
   class Finalize
@@ -45,21 +45,21 @@ module ROM
 
             klass.use(:registry_reader, relations: relation_names)
 
-            notifications.trigger('configuration.relations.class.ready', relation: klass, adapter: klass.adapter)
+            notifications.trigger("configuration.relations.class.ready", relation: klass, adapter: klass.adapter)
 
             relations[key] = build_relation(klass, registry)
           end
 
           registry.each do |_, relation|
             notifications.trigger(
-              'configuration.relations.object.registered',
+              "configuration.relations.object.registered",
               relation: relation, registry: registry
             )
           end
         end
 
         notifications.trigger(
-          'configuration.relations.registry.created', registry: relation_registry
+          "configuration.relations.registry.created", registry: relation_registry
         )
 
         relation_registry
@@ -82,7 +82,7 @@ module ROM
         klass.set_schema!(schema) if klass.schema.nil?
 
         notifications.trigger(
-          'configuration.relations.schema.allocated',
+          "configuration.relations.schema.allocated",
           schema: schema, gateway: gateway, registry: registry
         )
 
@@ -91,7 +91,7 @@ module ROM
         end
 
         notifications.trigger(
-          'configuration.relations.schema.set',
+          "configuration.relations.schema.set",
           schema: schema, relation: klass, registry: registry, adapter: klass.adapter
         )
 
@@ -99,11 +99,11 @@ module ROM
         dataset = gateway.dataset(schema.name.dataset).instance_exec(klass, &klass.dataset)
 
         notifications.trigger(
-          'configuration.relations.dataset.allocated',
+          "configuration.relations.dataset.allocated",
           dataset: dataset, relation: klass, adapter: klass.adapter
         )
 
-        options = { __registry__: registry, mappers: mapper_registry(rel_key, klass), schema: schema, **plugin_options }
+        options = {__registry__: registry, mappers: mapper_registry(rel_key, klass), schema: schema, **plugin_options}
 
         klass.new(dataset, **options)
       end

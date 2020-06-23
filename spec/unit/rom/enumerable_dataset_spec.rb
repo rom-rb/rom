@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'rom/enumerable_dataset'
+require "rom/enumerable_dataset"
 
 RSpec.describe ROM::EnumerableDataset do
   let(:klass) do
@@ -13,5 +13,5 @@ RSpec.describe ROM::EnumerableDataset do
     end
   end
 
-  it_behaves_like 'an enumerable dataset'
+  it_behaves_like "an enumerable dataset"
 end

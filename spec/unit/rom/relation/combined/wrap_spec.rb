@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'rom/relation/combined'
+require "rom/relation/combined"
 
-RSpec.describe ROM::Relation::Combined, '#wrap' do
+RSpec.describe ROM::Relation::Combined, "#wrap" do
   subject(:relation) do
     ROM::Relation::Combined.new(users, [tasks])
   end
@@ -19,7 +19,7 @@ RSpec.describe ROM::Relation::Combined, '#wrap' do
     ROM::Relation.new([])
   end
 
-  it 'returns a new graph with new root as a wrap relation' do
+  it "returns a new graph with new root as a wrap relation" do
     posts_assoc = double(:posts_assoc)
     allow(users.schema).to receive(:associations).and_return(posts: posts_assoc)
 

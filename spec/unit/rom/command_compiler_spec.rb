@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
+require "spec_helper"
 
-RSpec.describe 'ROM::CommandCompiler' do
-  include_context 'gateway only'
-  include_context 'users and tasks'
+RSpec.describe "ROM::CommandCompiler" do
+  include_context "gateway only"
+  include_context "users and tasks"
 
   let(:users) do
     Class.new(ROM::Memory::Relation) {
@@ -18,8 +18,8 @@ RSpec.describe 'ROM::CommandCompiler' do
     ROM::CommandCompiler.new(gateways, relations, registry, notifications)
   end
 
-  let(:gateways) { { default: gateway } }
-  let(:relations) { { users: users } }
+  let(:gateways) { {default: gateway} }
+  let(:relations) { {users: users} }
   let(:registry) {}
   let(:notifications) { double(trigger: nil) }
   let(:users_ast) do
@@ -27,7 +27,7 @@ RSpec.describe 'ROM::CommandCompiler' do
      [[:attribute,
        [:id, [:nominal, [Integer, {}]], primary_key: true]],
       [:attribute,
-       [:name, [:nominal, [String, {}]], { source: :users }]]],
+       [:name, [:nominal, [String, {}]], {source: :users}]]],
      dataset: :users]
   end
 
@@ -35,7 +35,7 @@ RSpec.describe 'ROM::CommandCompiler' do
     Class.new(ROM::Commands::Create[:memory])
   end
 
-  describe '#[]' do
+  describe "#[]" do
     let(:second_compiler) do
       ROM::CommandCompiler.new(gateways, relations, registry, notifications)
     end
@@ -46,16 +46,16 @@ RSpec.describe 'ROM::CommandCompiler' do
 
     let(:command) { compiler[*args] }
 
-    it 'builds commands using ast' do
+    it "builds commands using ast" do
       expect(command).to be_a(ROM::Memory::Commands::Create)
     end
 
-    context 'options' do
+    context "options" do
       let(:input) { -> t { t } }
 
-      let(:options) { { input: input } }
+      let(:options) { {input: input} }
 
-      it 'builds commands using custom options' do
+      it "builds commands using custom options" do
         expect(command.input).to be(input)
       end
     end
@@ -64,7 +64,7 @@ RSpec.describe 'ROM::CommandCompiler' do
       expect(command).not_to be(second_compiler[*args])
     end
 
-    describe 'setting input from relation' do
+    describe "setting input from relation" do
       let(:name) do
         ROM::Attribute.new(ROM::Types::String.constructor { |v| "relation[#{v}]" }, name: :name)
       end
@@ -75,8 +75,8 @@ RSpec.describe 'ROM::CommandCompiler' do
         users.with(schema: schema)
       end
 
-      it 'uses input schema from relation and does it once' do
-        expect(command.input[{ id: 1, name: 'John' }][:name]).to eql("relation[John]")
+      it "uses input schema from relation and does it once" do
+        expect(command.input[{id: 1, name: "John"}][:name]).to eql("relation[John]")
       end
     end
   end

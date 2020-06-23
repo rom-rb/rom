@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require 'rom/core'
-require 'rom/memory'
+require "rom/core"
+require "rom/memory"
 
-RSpec.describe ROM::Relation, '.view' do
+RSpec.describe ROM::Relation, ".view" do
   subject(:relation) { relation_class.new(ROM::Memory::Dataset.new([])) }
 
   let(:registry) do
-    { tasks: tasks }
+    {tasks: tasks}
   end
 
   let(:tasks) do
@@ -18,7 +18,7 @@ RSpec.describe ROM::Relation, '.view' do
     end.new([])
   end
 
-  it 'returns view method name' do
+  it "returns view method name" do
     klass = Class.new(ROM::Relation[:memory]) {
       schema { attribute :id, ROM::Types::Integer }
     }
@@ -28,53 +28,53 @@ RSpec.describe ROM::Relation, '.view' do
     expect(name).to be(:by_id)
   end
 
-  it 'raises an error when attributes are not provided' do
+  it "raises an error when attributes are not provided" do
     klass = Class.new(ROM::Relation[:memory])
 
     expect { klass.view(:broken) { |r| r } }
-      .to raise_error(ArgumentError, 'schema attribute names must be provided as the second argument')
+      .to raise_error(ArgumentError, "schema attribute names must be provided as the second argument")
   end
 
-  shared_context 'relation with views' do
+  shared_context "relation with views" do
     before do
-      relation << { id: 1, name: 'Joe' }
-      relation << { id: 2, name: 'Jane' }
+      relation << {id: 1, name: "Joe"}
+      relation << {id: 2, name: "Jane"}
     end
 
-    it 'appends foreign attributes' do
+    it "appends foreign attributes" do
       expect(relation.schemas[:foreign_attributes].map(&:name)).to eql(%i[id name title])
     end
 
-    it 'uses projected schema for view schema' do
+    it "uses projected schema for view schema" do
       expect(relation.schemas[:names].map(&:name)).to eql(%i[name])
     end
 
-    it 'auto-projects the relation via schema' do
-      new_rel = relation_class.new([{ name: 'Jane' }, { name: 'Joe' }])
+    it "auto-projects the relation via schema" do
+      new_rel = relation_class.new([{name: "Jane"}, {name: "Joe"}])
       names_schema = relation_class.schemas[:names]
 
       expect(names_schema).to receive(:call).with(relation).and_return(new_rel)
       expect(relation.names).to eql(new_rel)
     end
 
-    it 'auto-projects a restricted relation via schema' do
-      new_rel = relation_class.new([{ id: 2 }])
+    it "auto-projects a restricted relation via schema" do
+      new_rel = relation_class.new([{id: 2}])
       ids_schema = relation_class.schemas[:ids_for_names]
 
-      expect(ids_schema).to receive(:call).with(relation.restrict(name: ['Jane'])).and_return(new_rel)
-      expect(relation.ids_for_names(['Jane'])).to eql(new_rel)
+      expect(ids_schema).to receive(:call).with(relation.restrict(name: ["Jane"])).and_return(new_rel)
+      expect(relation.ids_for_names(["Jane"])).to eql(new_rel)
     end
   end
 
-  context 'with an explicit schema' do
+  context "with an explicit schema" do
     before do
       # this is normally called automatically during setup
       ROM::Notifications.trigger(
-        'configuration.relations.object.registered', relation: relation, registry: registry
+        "configuration.relations.object.registered", relation: relation, registry: registry
       )
     end
 
-    include_context 'relation with views' do
+    include_context "relation with views" do
       let(:relation_class) do
         Class.new(ROM::Memory::Relation) do
           schema(:users) do
@@ -116,18 +116,18 @@ RSpec.describe ROM::Relation, '.view' do
     end
   end
 
-  context 'with an inferred schema' do
+  context "with an inferred schema" do
     before do
       # this is normally called automatically during setup
       schema = relation_class.schema_proc.call.finalize_attributes!
       relation_class.set_schema!(schema)
 
       ROM::Notifications.trigger(
-        'configuration.relations.object.registered', relation: relation, registry: registry
+        "configuration.relations.object.registered", relation: relation, registry: registry
       )
     end
 
-    include_context 'relation with views' do
+    include_context "relation with views" do
       let(:relation_class) do
         attributes_inferrer = proc {
           [[define_attribute(:Integer, name: :id), define_attribute(:String, name: :name)],

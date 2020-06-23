@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-RSpec.describe 'changeset plugin' do
+RSpec.describe "changeset plugin" do
   subject(:changeset) do
-    books.changeset(changeset_class).data(title: 'Hello World')
+    books.changeset(changeset_class).data(title: "Hello World")
   end
 
   let(:changeset_class) do
@@ -11,8 +11,8 @@ RSpec.describe 'changeset plugin' do
     end
   end
 
-  include_context 'changeset / database'
-  include_context 'changeset / relations'
+  include_context "changeset / database"
+  include_context "changeset / relations"
 
   before do
     module Test
@@ -28,7 +28,7 @@ RSpec.describe 'changeset plugin' do
     end
   end
 
-  it 'extends changeset with the functionality provided by the plugin' do
+  it "extends changeset with the functionality provided by the plugin" do
     book = changeset.commit
 
     expect(book.created_at).to be_within(0.5).of(Time.now)

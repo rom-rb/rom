@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'rom/support/inflector'
+require "rom/support/inflector"
 
 module ROM
   # Model builders can be used to build model classes for mappers
@@ -50,13 +50,13 @@ module ROM
       @name = options[:name]
 
       if name
-        parts = name.split('::')
+        parts = name.split("::")
 
         @const_name = parts.pop
 
         @namespace =
           if parts.any?
-            Inflector.constantize(parts.join('::'))
+            Inflector.constantize(parts.join("::"))
           else
             Object
           end

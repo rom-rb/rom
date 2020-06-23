@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'rom/core'
-require 'rom/memory'
+require "rom/core"
+require "rom/memory"
 
 RSpec.describe ROM::Plugins::Relation::Instrumentation do
   before do
@@ -32,13 +32,13 @@ RSpec.describe ROM::Plugins::Relation::Instrumentation do
 
   let(:notifications) { spy(:notifications) }
 
-  it 'uses notifications API when materializing a relation' do
+  it "uses notifications API when materializing a relation" do
     relation.to_a
 
     expect(notifications).to have_received(:instrument).with(:memory, name: :users)
   end
 
-  it 'instruments custom methods' do
+  it "instruments custom methods" do
     relation.all
 
     expect(notifications).to have_received(:instrument).with(:memory, name: :users)

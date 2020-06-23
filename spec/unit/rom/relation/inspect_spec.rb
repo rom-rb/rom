@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require 'rom/relation'
+require "rom/relation"
 
-RSpec.describe ROM::Memory::Relation, '#inspect' do
+RSpec.describe ROM::Memory::Relation, "#inspect" do
   subject(:relation) do
     Class.new(ROM::Relation[:memory]) do
       def self.name
-        'Users'
+        "Users"
       end
     end.new([], name: ROM::Relation::Name[:users])
   end

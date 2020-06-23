@@ -69,7 +69,7 @@ module ROM
         return settings.fetch(meth, nil) if frozen?
 
         name = meth.to_s
-        key = name.gsub(WRITER_REGEXP, '').to_sym
+        key = name.gsub(WRITER_REGEXP, "").to_sym
 
         if writer?(name)
           settings[key] = args.first

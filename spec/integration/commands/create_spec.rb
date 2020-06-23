@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
-require 'dry-struct'
+require "spec_helper"
+require "dry-struct"
 
-RSpec.describe 'Commands / Create' do
-  include_context 'container'
-  include_context 'users and tasks'
+RSpec.describe "Commands / Create" do
+  include_context "container"
+  include_context "users and tasks"
 
   let(:users) { container.commands.users }
   let(:tasks) { container.commands.tasks }
@@ -61,35 +61,35 @@ RSpec.describe 'Commands / Create' do
     configuration.register_mapper(Test::UserMapper, Test::TaskMapper)
   end
 
-  it 'inserts user on successful validation' do
-    result = users.create.call(name: 'Piotr', email: 'piotr@solnic.eu')
+  it "inserts user on successful validation" do
+    result = users.create.call(name: "Piotr", email: "piotr@solnic.eu")
 
-    expect(result).to eql(name: 'Piotr', email: 'piotr@solnic.eu')
+    expect(result).to eql(name: "Piotr", email: "piotr@solnic.eu")
   end
 
-  it 'inserts user and associated task when things go well' do
-    result = users.create.curry(name: 'Piotr', email: 'piotr@solnic.eu')
-              .>> tasks.create.curry(title: 'Finish command-api')
+  it "inserts user and associated task when things go well" do
+    result = users.create.curry(name: "Piotr", email: "piotr@solnic.eu")
+              .>> tasks.create.curry(title: "Finish command-api")
 
-    expect(result.call).to eql(name: 'Piotr', title: 'Finish command-api')
+    expect(result.call).to eql(name: "Piotr", title: "Finish command-api")
   end
 
   describe '"result" option' do
-    it 'returns a single tuple when set to :one' do
+    it "returns a single tuple when set to :one" do
       configuration.commands(:users) do
         define(:create_one, type: :create) do
           result :one
         end
       end
 
-      tuple = { name: 'Piotr', email: 'piotr@solnic.eu' }
+      tuple = {name: "Piotr", email: "piotr@solnic.eu"}
 
       result = users.create_one.call(tuple)
 
       expect(result).to eql(tuple)
     end
 
-    it 'allows only valid result types' do
+    it "allows only valid result types" do
       expect {
         configuration.commands(:users) do
           define(:create_one, type: :create) do
@@ -101,19 +101,19 @@ RSpec.describe 'Commands / Create' do
     end
   end
 
-  describe 'sending result through a mapper' do
+  describe "sending result through a mapper" do
     let(:attributes) do
-      { name: 'Jane', email: 'jane@doe.org' }
+      {name: "Jane", email: "jane@doe.org"}
     end
 
-    it 'uses registered mapper to process the result for :one result' do
+    it "uses registered mapper to process the result for :one result" do
       command = container.commands[:users].map_with(:user_entity).create
       result = command[attributes]
 
       expect(result).to eql(Test::User.new(attributes))
     end
 
-    it 'with two composed commands respects the :result option' do
+    it "with two composed commands respects the :result option" do
       mapper_input = nil
 
       mapper = proc do |tuples|
@@ -121,24 +121,24 @@ RSpec.describe 'Commands / Create' do
       end
 
       left = container.commands[:users].map_with(:user_entity).create.curry(
-        name: 'Jane', email: 'jane@doe.org'
+        name: "Jane", email: "jane@doe.org"
       )
 
       right = container.commands[:tasks].map_with(:task_entity).create.curry(
-        title: 'Jane task'
+        title: "Jane task"
       )
 
       command = left >> right >> mapper
 
       result = command.call
 
-      task = Test::Task.new(name: 'Jane', title: 'Jane task')
+      task = Test::Task.new(name: "Jane", title: "Jane task")
 
       expect(mapper_input).to eql([task])
       expect(result).to eql(task)
     end
 
-    it 'uses registered mapper to process the result for :many results' do
+    it "uses registered mapper to process the result for :many results" do
       configuration.commands(:users) do
         define(:create_many, type: :create)
       end

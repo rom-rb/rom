@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require 'dry/core/class_attributes'
-require 'dry/core/cache'
+require "dry/core/class_attributes"
+require "dry/core/cache"
 
-require 'rom/constants'
-require 'rom/initializer'
+require "rom/constants"
+require "rom/initializer"
 
 module ROM
   # Abstract Changeset class
@@ -175,13 +175,13 @@ module ROM
   end
 end
 
-require 'rom/changeset/stateful'
-require 'rom/changeset/associated'
+require "rom/changeset/stateful"
+require "rom/changeset/associated"
 
-require 'rom/changeset/create'
-require 'rom/changeset/update'
-require 'rom/changeset/delete'
+require "rom/changeset/create"
+require "rom/changeset/update"
+require "rom/changeset/delete"
 
-require 'rom/plugins'
+require "rom/plugins"
 
 ROM::Plugins.register(:changeset, adapter: false)

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'rom/memory'
+require "rom/memory"
 
-RSpec.describe ROM::Memory::Relation, '.inherited' do
+RSpec.describe ROM::Memory::Relation, ".inherited" do
   subject(:relation) do
     Class.new(ROM::Relation[:test]) do
       schema(:users) do
@@ -27,7 +27,7 @@ RSpec.describe ROM::Memory::Relation, '.inherited' do
     ROM.adapters.delete(:test)
   end
 
-  it 'extends subclass with core methods' do
+  it "extends subclass with core methods" do
     expect(relation.name.to_sym).to be(:users)
     expect(relation.schema.map(&:name)).to eql(%i[name])
   end

@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require 'concurrent/map'
+require "concurrent/map"
 
-require 'rom/constants'
-require 'rom/registry'
+require "rom/constants"
+require "rom/registry"
 
 module ROM
   # Specialized registry class for commands

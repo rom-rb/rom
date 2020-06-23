@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require 'rom/attribute'
+require "rom/attribute"
 
 RSpec.describe ROM::Attribute do
-  describe '#inspect' do
-    context 'with a primitive definition' do
+  describe "#inspect" do
+    context "with a primitive definition" do
       subject(:attr) do
         ROM::Attribute.new(ROM::Types::Integer, name: :id).meta(primary_key: true)
       end
@@ -12,11 +12,11 @@ RSpec.describe ROM::Attribute do
       specify do
         expect(
           attr.inspect
-        ).to eql('#<ROM::Attribute[Integer] name=:id primary_key=true alias=nil>')
+        ).to eql("#<ROM::Attribute[Integer] name=:id primary_key=true alias=nil>")
       end
     end
 
-    context 'with a sum' do
+    context "with a sum" do
       subject(:attr) do
         ROM::Attribute.new(ROM::Types::Bool, name: :admin)
       end
@@ -24,11 +24,11 @@ RSpec.describe ROM::Attribute do
       specify do
         expect(
           attr.inspect
-        ).to eql('#<ROM::Attribute[TrueClass | FalseClass] name=:admin alias=nil>')
+        ).to eql("#<ROM::Attribute[TrueClass | FalseClass] name=:admin alias=nil>")
       end
     end
 
-    context 'with an option' do
+    context "with an option" do
       subject(:attr) do
         ROM::Attribute.new(ROM::Types::Bool, name: :admin, alias: :adm)
       end
@@ -36,12 +36,12 @@ RSpec.describe ROM::Attribute do
       specify do
         expect(
           attr.inspect
-        ).to eql('#<ROM::Attribute[TrueClass | FalseClass] name=:admin alias=:adm>')
+        ).to eql("#<ROM::Attribute[TrueClass | FalseClass] name=:admin alias=:adm>")
       end
     end
   end
 
-  describe '#aliased' do
+  describe "#aliased" do
     subject(:attr) do
       ROM::Attribute.new(ROM::Types::String, name: :user_name)
     end
@@ -51,7 +51,7 @@ RSpec.describe ROM::Attribute do
     end
   end
 
-  describe '#method_missing' do
+  describe "#method_missing" do
     subject(:attr) do
       ROM::Attribute.new(ROM::Types::Integer, name: :id).meta(primary_key: true)
     end

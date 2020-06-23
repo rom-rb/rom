@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'rom/types'
-require 'rom/associations/abstract'
+require "rom/types"
+require "rom/associations/abstract"
 
 module ROM
   module Associations
@@ -72,7 +72,7 @@ module ROM
           parent.map { |p| associate(children, p) }.flatten(1)
         else
           children.map { |tuple|
-            { sfk => tuple.fetch(spk), tfk => parent.fetch(tpk) }
+            {sfk => tuple.fetch(spk), tfk => parent.fetch(tpk)}
           }
         end
       end

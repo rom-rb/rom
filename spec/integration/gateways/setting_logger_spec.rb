@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
-require 'rom/memory'
+require "spec_helper"
+require "rom/memory"
 
-require 'logger'
+require "logger"
 
-RSpec.describe 'Gateways / Setting logger' do
+RSpec.describe "Gateways / Setting logger" do
   let(:logger_class) do
     Class.new do
       attr_reader :messages
@@ -24,13 +24,13 @@ RSpec.describe 'Gateways / Setting logger' do
     logger_class.new
   end
 
-  it 'sets up a logger for a given gateway' do
+  it "sets up a logger for a given gateway" do
     container = ROM.container(:memory) do |config|
       config.gateways[:default].use_logger(logger)
     end
 
-    container.gateways[:default].logger.info('test')
+    container.gateways[:default].logger.info("test")
 
-    expect(logger.messages).to eql(['test'])
+    expect(logger.messages).to eql(["test"])
   end
 end

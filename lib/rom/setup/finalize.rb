@@ -1,19 +1,19 @@
 # frozen_string_literal: true
 
-require 'rom/relation'
-require 'rom/command'
+require "rom/relation"
+require "rom/command"
 
-require 'rom/registry'
-require 'rom/command_registry'
-require 'rom/mapper_registry'
+require "rom/registry"
+require "rom/command_registry"
+require "rom/mapper_registry"
 
-require 'rom/container'
-require 'rom/setup/finalize/finalize_commands'
-require 'rom/setup/finalize/finalize_relations'
-require 'rom/setup/finalize/finalize_mappers'
+require "rom/container"
+require "rom/setup/finalize/finalize_commands"
+require "rom/setup/finalize/finalize_relations"
+require "rom/setup/finalize/finalize_mappers"
 
 # temporary
-require 'rom/configuration_dsl/relation'
+require "rom/configuration_dsl/relation"
 
 module ROM
   # This giant builds an container using defined classes for core parts of ROM

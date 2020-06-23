@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
+require "spec_helper"
 
-RSpec.describe 'Mapper definition DSL' do
-  include_context 'container'
-  include_context 'users and tasks'
+RSpec.describe "Mapper definition DSL" do
+  include_context "container"
+  include_context "users and tasks"
 
   let(:header) { mapper.header }
 
-  describe 'unwrapping relation mapper' do
+  describe "unwrapping relation mapper" do
     before do
       configuration.relation(:tasks) do
         def with_user
@@ -24,7 +24,7 @@ RSpec.describe 'Mapper definition DSL' do
 
       configuration.mappers do
         define(:tasks) do
-          model name: 'Test::Task'
+          model name: "Test::Task"
 
           attribute :title
           attribute :priority
@@ -32,7 +32,7 @@ RSpec.describe 'Mapper definition DSL' do
       end
     end
 
-    it 'unwraps nested attributes via options hash' do
+    it "unwraps nested attributes via options hash" do
       configuration.mappers do
         define(:with_user, parent: :tasks) do
           attribute :title
@@ -44,13 +44,13 @@ RSpec.describe 'Mapper definition DSL' do
 
       result = container.relations[:tasks].with_user.map_with(:with_user).to_a.last
 
-      expect(result).to eql(title: 'be cool',
+      expect(result).to eql(title: "be cool",
                             priority: 2,
-                            name: 'Jane',
-                            email: 'jane@doe.org')
+                            name: "Jane",
+                            email: "jane@doe.org")
     end
 
-    it 'unwraps nested attributes via options block' do
+    it "unwraps nested attributes via options block" do
       configuration.mappers do
         define(:with_user, parent: :tasks) do
           attribute :title
@@ -65,13 +65,13 @@ RSpec.describe 'Mapper definition DSL' do
 
       result = container.relations[:tasks].with_user.map_with(:with_user).to_a.last
 
-      expect(result).to eql(title: 'be cool',
+      expect(result).to eql(title: "be cool",
                             priority: 2,
-                            name: 'Jane',
-                            user_email: 'jane@doe.org')
+                            name: "Jane",
+                            user_email: "jane@doe.org")
     end
 
-    it 'unwraps specified attributes via options block' do
+    it "unwraps specified attributes via options block" do
       configuration.mappers do
         define(:with_user, parent: :tasks) do
           attribute :title
@@ -85,11 +85,11 @@ RSpec.describe 'Mapper definition DSL' do
 
       result = container.relations[:tasks].with_user.map_with(:with_user).to_a.last
 
-      expect(result).to eql(title: 'be cool',
+      expect(result).to eql(title: "be cool",
                             priority: 2,
-                            name: 'Jane',
-                            task_user_name: 'Jane',
-                            contact: { email: 'jane@doe.org' })
+                            name: "Jane",
+                            task_user_name: "Jane",
+                            contact: {email: "jane@doe.org"})
     end
   end
 end

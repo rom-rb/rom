@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require 'rom/command'
-require 'rom/plugins/command/timestamps'
+require "rom/command"
+require "rom/plugins/command/timestamps"
 
 RSpec.describe ROM::Plugins::Command::Timestamps do
-  include_context 'container'
+  include_context "container"
 
   let(:users) { container.commands.users }
   let(:tasks) { container.commands.tasks }
@@ -76,11 +76,11 @@ RSpec.describe ROM::Plugins::Command::Timestamps do
     end
   end
 
-  shared_examples_for 'a command setting timestamps' do
+  shared_examples_for "a command setting timestamps" do
     let(:user_command) { users.public_send(command) }
-    let(:result) { user_command.call(name: 'Piotr', email: 'piotr@solnic.eu') }
+    let(:result) { user_command.call(name: "Piotr", email: "piotr@solnic.eu") }
 
-    it 'applies timestamps by default' do
+    it "applies timestamps by default" do
       created = DateTime.parse(result[:created_at].to_s)
       updated = DateTime.parse(result[:updated_at].to_s)
 
@@ -89,41 +89,41 @@ RSpec.describe ROM::Plugins::Command::Timestamps do
     end
   end
 
-  shared_examples_for 'a command setting datestamp' do
+  shared_examples_for "a command setting datestamp" do
     let(:user_command) { users.public_send(command) }
-    let(:result) { user_command.call(name: 'Piotr', email: 'piotr@solnic.eu') }
+    let(:result) { user_command.call(name: "Piotr", email: "piotr@solnic.eu") }
 
-    it 'applies datestamps by default' do
+    it "applies datestamps by default" do
       expect(Date.parse(result[:written].to_s)).to eq Date.today
     end
   end
 
-  it_behaves_like 'a command setting timestamps' do
+  it_behaves_like "a command setting timestamps" do
     let(:command) { :create_with_timestamps_options }
   end
 
-  it_behaves_like 'a command setting datestamp' do
+  it_behaves_like "a command setting datestamp" do
     let(:command) { :create_with_datestamps_options }
   end
 
-  it_behaves_like 'a command setting timestamps' do
+  it_behaves_like "a command setting timestamps" do
     let(:command) { :create_with_both_options }
   end
 
-  it_behaves_like 'a command setting datestamp' do
+  it_behaves_like "a command setting datestamp" do
     let(:command) { :create_with_both_options }
   end
 
-  it_behaves_like 'a command setting timestamps' do
+  it_behaves_like "a command setting timestamps" do
     let(:command) { :create }
   end
 
-  it_behaves_like 'a command setting datestamp' do
+  it_behaves_like "a command setting datestamp" do
     let(:command) { :create }
   end
 
-  it 'sets timestamps on multi-tuple inputs' do
-    input = [{ text: 'note one' }, { text: 'note two' }]
+  it "sets timestamps on multi-tuple inputs" do
+    input = [{text: "note one"}, {text: "note two"}]
 
     results = users.create_many.call(input)
 
@@ -134,28 +134,28 @@ RSpec.describe ROM::Plugins::Command::Timestamps do
     end
   end
 
-  it 'only updates specified timestamps' do
-    initial = users.create.call(name: 'Piotr', email: 'piotr@solnic.eu')
+  it "only updates specified timestamps" do
+    initial = users.create.call(name: "Piotr", email: "piotr@solnic.eu")
     initial_updated_at = initial[:updated_at]
     sleep 1 # Unfortunate, but unless I start injecting clocks into the
     # command, this is needed to make sure the time actually changes
-    updated = users.update.call(name: 'Piotr Updated').first
+    updated = users.update.call(name: "Piotr Updated").first
     expect(updated[:created_at]).to eq initial[:created_at]
     expect(updated[:updated_at]).not_to eq initial_updated_at
   end
 
-  it 'allows overriding timestamps' do
+  it "allows overriding timestamps" do
     tomorrow = (Time.now + (60 * 60 * 24))
 
-    users.create.call(name: 'Piotr', email: 'piotr@solnic.eu')
-    updated = users.update.call(name: 'Piotr Updated', updated_at: tomorrow).first
+    users.create.call(name: "Piotr", email: "piotr@solnic.eu")
+    updated = users.update.call(name: "Piotr Updated", updated_at: tomorrow).first
 
     expect(updated[:updated_at].iso8601).to eql(tomorrow.iso8601)
   end
 
-  it 'works with chained commands' do
-    create_user = tasks.create.curry(name: 'ROM-RB', title: 'Work on OSS', priority: 1)
-    create_note = users.create_with_task.curry(name: 'Piotr')
+  it "works with chained commands" do
+    create_user = tasks.create.curry(name: "ROM-RB", title: "Work on OSS", priority: 1)
+    create_note = users.create_with_task.curry(name: "Piotr")
 
     command = create_user >> create_note
 

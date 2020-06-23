@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'rom/changeset/pipe'
+require "rom/changeset/pipe"
 
 module ROM
   class Changeset
@@ -223,7 +223,7 @@ module ROM
       #
       # @api public
       def associate(other, name = Associated.infer_assoc_name(other))
-        Associated.new(self, associations: { name => other })
+        Associated.new(self, associations: {name => other})
       end
 
       # Return command result type

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'rom/commands'
+require "rom/commands"
 
 module ROM
   module Memory

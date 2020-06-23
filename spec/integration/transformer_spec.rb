@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'rom'
-require 'rom/transformer'
+require "rom"
+require "rom/transformer"
 
 RSpec.describe ROM::Transformer do
   subject(:relation) do
@@ -37,10 +37,10 @@ RSpec.describe ROM::Transformer do
     end
   end
 
-  it 'works with rom container' do
-    relation.insert(user_id: 1, name: 'Jane')
+  it "works with rom container" do
+    relation.insert(user_id: 1, name: "Jane")
 
-    expect(relation.map_with(:default).to_a).to eql([id: 1, name: 'Jane'])
-    expect(relation.map_with(:json).to_a).to eql(['id' => 1, 'name' => 'Jane'])
+    expect(relation.map_with(:default).to_a).to eql([id: 1, name: "Jane"])
+    expect(relation.map_with(:json).to_a).to eql(["id" => 1, "name" => "Jane"])
   end
 end

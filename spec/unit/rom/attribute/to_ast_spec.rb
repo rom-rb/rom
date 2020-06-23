@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require 'rom/types'
-require 'rom/attribute'
+require "rom/types"
+require "rom/attribute"
 
-RSpec.describe ROM::Attribute, '#to_ast' do
+RSpec.describe ROM::Attribute, "#to_ast" do
   subject(:attribute) { ROM::Attribute.new(ROM::Types::Integer, name: :id) }
 
   types = [
@@ -22,7 +22,7 @@ RSpec.describe ROM::Attribute, '#to_ast' do
     end
   end
 
-  example 'wrapped type' do
+  example "wrapped type" do
     expect(attribute.wrapped(:users).to_ast)
       .to eql([:attribute, [:id, ROM::Types::Integer.to_ast,
                             wrapped: true, alias: :users_id]])

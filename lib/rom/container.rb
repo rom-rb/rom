@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'dry/container'
+require "dry/container"
 
-require 'rom/cache'
+require "rom/cache"
 
 module ROM
   # ROM container is an isolated environment with no global state where all

@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require 'dry/equalizer'
+require "dry/equalizer"
 
-require 'rom/initializer'
-require 'rom/support/memoizable'
-require 'rom/types'
+require "rom/initializer"
+require "rom/support/memoizable"
+require "rom/types"
 
 module ROM
   # Schema attributes provide meta information about types and an API
@@ -318,7 +318,7 @@ module ROM
     def inspect
       opts = options.reject { |k| %i[type name].include?(k) }
       meta_and_opts = meta.merge(opts).map { |k, v| "#{k}=#{v.inspect}" }
-      %(#<#{self.class}[#{type.name}] name=#{name.inspect} #{meta_and_opts.join(' ')}>)
+      %(#<#{self.class}[#{type.name}] name=#{name.inspect} #{meta_and_opts.join(" ")}>)
     end
     alias_method :pretty_inspect, :inspect
 

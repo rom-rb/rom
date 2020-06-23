@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'rom/initializer'
-require 'rom/pipeline'
-require 'rom/commands/graph/class_interface'
+require "rom/initializer"
+require "rom/pipeline"
+require "rom/commands/graph/class_interface"
 
 module ROM
   module Commands

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'rom/relation/loaded'
-require 'rom/relation/materializable'
-require 'rom/pipeline'
+require "rom/relation/loaded"
+require "rom/relation/materializable"
+require "rom/pipeline"
 
 module ROM
   class Relation

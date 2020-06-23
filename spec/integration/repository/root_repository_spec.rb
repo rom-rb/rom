@@ -11,11 +11,11 @@ RSpec.describe ROM::Repository::Root do
     Class.new(ROM::Repository[:users])
   end
 
-  include_context 'repository / database'
-  include_context 'relations'
+  include_context "repository / database"
+  include_context "relations"
 
-  describe '.[]' do
-    it 'creates a pre-configured root repo class' do
+  describe ".[]" do
+    it "creates a pre-configured root repo class" do
       klass = ROM::Repository[:users]
 
       expect(klass.root).to be(:users)
@@ -27,22 +27,22 @@ RSpec.describe ROM::Repository::Root do
     end
   end
 
-  describe 'inheritance' do
-    it 'inherits root and relations' do
+  describe "inheritance" do
+    it "inherits root and relations" do
       klass = Class.new(repo.class)
 
       expect(klass.root).to be(:users)
     end
 
-    it 'creates base root class' do
+    it "creates base root class" do
       klass = Class.new(ROM::Repository)[:users]
 
       expect(klass.root).to be(:users)
     end
   end
 
-  describe 'overriding reader' do
-    it 'works with super' do
+  describe "overriding reader" do
+    it "works with super" do
       klass.class_eval do
         def users
           super.limit(10)
@@ -53,8 +53,8 @@ RSpec.describe ROM::Repository::Root do
     end
   end
 
-  describe '#root' do
-    it 'returns configured root relation' do
+  describe "#root" do
+    it "returns configured root relation" do
       expect(repo.root.dataset).to be(rom.relations[:users].dataset)
     end
   end

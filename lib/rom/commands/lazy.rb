@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'rom/commands/composite'
-require 'rom/commands/graph'
+require "rom/commands/composite"
+require "rom/commands/graph"
 
 module ROM
   module Commands
@@ -101,6 +101,6 @@ module ROM
   end
 end
 
-require 'rom/commands/lazy/create'
-require 'rom/commands/lazy/update'
-require 'rom/commands/lazy/delete'
+require "rom/commands/lazy/create"
+require "rom/commands/lazy/update"
+require "rom/commands/lazy/delete"
