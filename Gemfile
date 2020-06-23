@@ -9,19 +9,16 @@ if ENV['USE_DRY_TRANSFORMER_MASTER'].eql?('true')
 end
 
 group :sql do
-  gem 'sequel', '~> 5.0'
+  gem 'rom-sql', github: 'rom-rb/rom-sql', branch: 'master'
+  # TODO: >= 5.32.0 breaks mysql schema inference in some cases
+  gem 'sequel', '5.31.0'
   gem 'sqlite3', platforms: :ruby
   gem 'jdbc-sqlite3', platforms: :jruby
   gem 'jdbc-postgres', platforms: :jruby
   gem 'pg', platforms: :ruby
   gem 'dry-monitor'
-
-  if ENV['USE_ROM_SQL_MASTER'].eql?('true')
-    gem 'rom-sql', github: 'rom-rb/rom-sql', branch: 'master'
-  else
-    gem 'rom-sql', '~> 3.0'
-  end
 end
+
 
 group :test do
   gem 'rspec', '~> 3.6'
