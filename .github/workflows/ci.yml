@@ -46,13 +46,13 @@ jobs:
         - dry-transformer-latest
         - dry-transformer-master
     env:
-      CLASSPATH: ''
       COVERAGE: "${{matrix.coverage}}"
-      CODACY_RUN_LOCAL: "${{matrix.coverage}}"
-      CODACY_PROJECT_TOKEN: "${{secrets.CODACY_PROJECT_TOKEN}}"
+      COVERAGE_TOKEN: "${{secrets.CODACY_PROJECT_TOKEN}}"
       BASE_DB_URI: localhost/rom_repository
       USE_DRY_TRANSFORMER_MASTER: "${{matrix.use_dry_transformer_master}}"
       USE_ROM_SQL_MASTER: "${{matrix.use_rom_sql_master}}"
+      CODACY_RUN_LOCAL: "${{matrix.coverage}}"
+      CODACY_PROJECT_TOKEN: "${{secrets.CODACY_PROJECT_TOKEN}}"
       APT_DEPS: libpq-dev libsqlite3-dev
     steps:
     - uses: actions/checkout@v1
@@ -70,6 +70,12 @@ jobs:
       run: bundle install --jobs 4 --retry 3
     - name: Run all tests
       run: bundle exec rake
+    - name: Run codacy-coverage-reporter
+      uses: codacy/codacy-coverage-reporter-action@master
+      if: env.COVERAGE == 'true' && env.COVERAGE_TOKEN != ''
+      with:
+        project-token: "${{secrets.CODACY_PROJECT_TOKEN}}"
+        coverage-reports: coverage/coverage.xml
     - name: Send coverage results
       if: matrix.coverage == 'true'
       run: codacy_final_reporter

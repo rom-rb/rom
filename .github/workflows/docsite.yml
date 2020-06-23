@@ -1,6 +1,6 @@
 # this file is managed by rom-rb/devtools project
 
-name: Update docs on rom-rb.org
+name: docsite
 
 on:
   push:
