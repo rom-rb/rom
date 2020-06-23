@@ -4,10 +4,7 @@ require 'pathname'
 
 SPEC_ROOT = root = Pathname(__FILE__).dirname
 
-if ENV['COVERAGE'] == 'true'
-  require 'codacy-coverage'
-  Codacy::Reporter.start(partial: true)
-end
+require_relative 'support/coverage' if ENV['COVERAGE'] == 'true'
 
 require 'warning'
 
