@@ -42,7 +42,3 @@ jobs:
       CODACY_RUN_LOCAL: ${{matrix.coverage}}
       CODACY_PROJECT_TOKEN: ${{secrets.CODACY_PROJECT_TOKEN}}
       APT_DEPS: "libpq-dev libsqlite3-dev"
-    steps:
-      - name: Send coverage results
-        if: "matrix.coverage == 'true'"
-        run: codacy_final_reporter
