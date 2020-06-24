@@ -13,7 +13,7 @@ require "dry/monitor/logger"
 require "dry/monitor/notifications"
 require "dry/monitor/sql/logger"
 
-config = ROM::Configuration.new(:sql, "postgres://localhost/rom_console")
+config = ROM::Configuration.new(:sql, "postgres://postgres@localhost/rom_console")
 notifications = Dry::Monitor::Notifications.new(:console)
 
 config.plugin :sql, relations: :instrumentation do |plugin_config|
