@@ -124,8 +124,7 @@ Style/IfUnlessModifier:
   Enabled: false
 
 Style/Lambda:
-  Enabled: true
-  EnforcedStyle: lambda
+  Enabled: false
 
 Style/LambdaCall:
   Enabled: false
