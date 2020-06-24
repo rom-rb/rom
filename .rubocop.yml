@@ -123,6 +123,10 @@ Style/GuardClause:
 Style/IfUnlessModifier:
   Enabled: false
 
+Style/Lambda:
+  Enabled: true
+  EnforcedStyle: lambda
+
 Style/LambdaCall:
   Enabled: false
 
