@@ -9,6 +9,8 @@ module ROM
     class FinalizeCommands
       attr_reader :notifications
 
+      attr_reader :inflector
+
       # Build command registry hash for provided relations
       #
       # @param [RelationRegistry] relations registry
@@ -16,11 +18,12 @@ module ROM
       # @param [Array] command_classes a list of command subclasses
       #
       # @api private
-      def initialize(relations, gateways, command_classes, notifications)
+      def initialize(relations, gateways, command_classes, **options)
         @relations = relations
         @gateways = gateways
         @command_classes = command_classes
-        @notifications = notifications
+        @inflector = options.fetch(:inflector, Inflector)
+        @notifications = options.fetch(:notifications)
       end
 
       # @return [Hash]
@@ -42,7 +45,13 @@ module ROM
         end
 
         registry = Registry.new
-        compiler = CommandCompiler.new(@gateways, @relations, registry, notifications)
+        compiler = CommandCompiler.new(
+          @gateways,
+          @relations,
+          registry,
+          notifications,
+          inflector: inflector
+        )
 
         @relations.each do |(name, relation)|
           rel_commands = commands.select { |c| c.relation.name == relation.name }

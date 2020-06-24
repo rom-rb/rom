@@ -34,7 +34,8 @@ module ROM
         mappers: setup.mapper_classes,
         plugins: setup.plugins,
         notifications: setup.notifications,
-        config: environment.config.dup.freeze
+        config: environment.config.dup.freeze,
+        inflector: setup.inflector
       )
 
       finalize.run!

@@ -2,6 +2,7 @@
 
 require "rom/types"
 require "rom/initializer"
+require "rom/support/inflector"
 
 module ROM
   module AutoRegistrationStrategies
@@ -18,6 +19,11 @@ module ROM
       # @!attribute [r] file
       #   @return [String] Name of a component file
       option :file, type: Types::Strict::String
+
+      # @!attribute [r] inflector
+      #   @return [Dry::Inflector] String inflector
+      #   @api private
+      option :inflector, reader: true, default: -> { Inflector }
     end
   end
 end

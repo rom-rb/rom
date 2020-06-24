@@ -24,7 +24,7 @@ module ROM
       #
       # @api private
       def call
-        Inflector.camelize(
+        inflector.camelize(
           file.sub(%r{^#{directory}/#{entity}/}, "").sub(EXTENSION_REGEX, "")
         )
       end

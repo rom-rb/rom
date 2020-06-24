@@ -104,14 +104,14 @@ module ROM
 
           @relation_name = Name[relation, ds_name]
 
-          @schema_proc = proc do |*args, &inner_block|
+          @schema_proc = proc do |**kwargs, &inner_block|
             schema_dsl.new(
               relation_name,
               schema_class: schema_class,
               attr_class: schema_attr_class,
               inferrer: schema_inferrer.with(enabled: infer),
               &block
-            ).call(*args, &inner_block)
+            ).call(**kwargs, &inner_block)
           end
         end
       end
@@ -294,15 +294,15 @@ module ROM
       # @return [Name]
       #
       # @api private
-      def default_name
-        Name[Inflector.underscore(name).tr("/", "_").to_sym]
+      def default_name(inflector = Inflector)
+        Name[inflector.underscore(name).tr("/", "_").to_sym]
       end
 
       # @api private
-      def default_schema(klass = self)
+      def default_schema(klass = self, inflector: Inflector)
         klass.schema ||
           if klass.schema_proc
-            klass.set_schema!(klass.schema_proc.call)
+            klass.set_schema!(klass.schema_proc.(inflector: inflector))
           else
             klass.schema_class.define(klass.default_name)
           end

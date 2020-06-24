@@ -85,9 +85,9 @@ module ROM
       # @return [Class, Object]
       #
       # @api public
-      def create_class(name, type, &block)
+      def create_class(name, type, inflector: Inflector, &block)
         klass = Dry::Core::ClassBuilder
-          .new(name: "#{Inflector.classify(type)}[:#{name}]", parent: type)
+          .new(name: "#{inflector.classify(type)}[:#{name}]", parent: type)
           .call
 
         if block

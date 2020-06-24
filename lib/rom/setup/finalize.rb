@@ -22,13 +22,14 @@ module ROM
   #
   # @private
   class Finalize
-    attr_reader :gateways, :repo_adapter,
+    attr_reader :gateways, :repo_adapter, :inflector,
                 :relation_classes, :mapper_classes, :mapper_objects,
                 :command_classes, :plugins, :config, :notifications
 
     # @api private
     def initialize(options)
       @gateways = options.fetch(:gateways)
+      @inflector = options.fetch(:inflector)
 
       @relation_classes = options.fetch(:relation_classes)
       @command_classes = options.fetch(:command_classes)
@@ -84,7 +85,8 @@ module ROM
         relation_classes,
         mappers: mappers,
         plugins: global_plugins,
-        notifications: notifications
+        notifications: notifications,
+        inflector: inflector
       ).run!
     end
 
@@ -99,7 +101,13 @@ module ROM
     #
     # @api private
     def load_commands(relations)
-      FinalizeCommands.new(relations, gateways, command_classes, notifications).run!
+      FinalizeCommands.new(
+        relations,
+        gateways,
+        command_classes,
+        notifications: notifications,
+        inflector: inflector
+      ).run!
     end
   end
 end

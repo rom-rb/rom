@@ -17,7 +17,10 @@ module ROM
     extend Initializer
 
     param :registry, default: -> { Dry::Types }
+
     option :cache, default: -> { Cache.new }
+
+    option :inflector, reader: true, default: -> { Inflector }
 
     # @api private
     def initialize(*)
@@ -105,7 +108,7 @@ module ROM
 
     # @api private
     def class_name(name)
-      Inflector.classify(name)
+      inflector.classify(name)
     end
   end
 end

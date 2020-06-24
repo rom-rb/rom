@@ -6,6 +6,7 @@ require "rom/environment"
 require "rom/setup"
 require "rom/configuration_dsl"
 require "rom/support/notifications"
+require "rom/support/inflector"
 
 module ROM
   class Configuration
@@ -38,7 +39,7 @@ module ROM
 
     def_delegators :@setup, :register_relation, :register_command, :register_mapper, :register_plugin,
                    :command_classes, :mapper_classes,
-                   :auto_registration
+                   :auto_registration, :inflector, :inflector=
 
     def_delegators :@environment, :gateways, :gateways_map, :configure, :config
 

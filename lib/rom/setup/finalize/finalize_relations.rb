@@ -3,11 +3,14 @@
 require "rom/constants"
 require "rom/relation_registry"
 require "rom/mapper_registry"
+require "rom/support/inflector"
 
 module ROM
   class Finalize
     class FinalizeRelations
       attr_reader :notifications
+
+      attr_reader :inflector
 
       # Build relation registry of specified descendant classes
       #
@@ -17,12 +20,13 @@ module ROM
       # @param [Array] relation_classes a list of relation descendants
       #
       # @api private
-      def initialize(gateways, relation_classes, notifications:, mappers: nil, plugins: EMPTY_ARRAY)
+      def initialize(gateways, relation_classes, **options)
         @gateways = gateways
         @relation_classes = relation_classes
-        @mappers = mappers
-        @plugins = plugins
-        @notifications = notifications
+        @inflector = options.fetch(:inflector, Inflector)
+        @mappers = options.fetch(:mappers, nil)
+        @plugins = options.fetch(:plugins, EMPTY_ARRAY)
+        @notifications = options.fetch(:notifications)
       end
 
       # @return [Hash]
@@ -103,7 +107,13 @@ module ROM
           dataset: dataset, relation: klass, adapter: klass.adapter
         )
 
-        options = {__registry__: registry, mappers: mapper_registry(rel_key, klass), schema: schema, **plugin_options}
+        options = {
+          __registry__: registry,
+          mappers: mapper_registry(rel_key, klass),
+          schema: schema,
+          inflector: inflector,
+          **plugin_options
+        }
 
         klass.new(dataset, **options)
       end

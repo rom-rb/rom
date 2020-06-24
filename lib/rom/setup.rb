@@ -29,12 +29,16 @@ module ROM
     attr_reader :notifications
 
     # @api private
+    attr_accessor :inflector
+
+    # @api private
     def initialize(notifications)
       @relation_classes = []
       @command_classes = []
       @mapper_classes = []
       @plugins = []
       @notifications = notifications
+      @inflector = Inflector
     end
 
     # Enable auto-registration for a given setup object
@@ -47,7 +51,7 @@ module ROM
     #
     # @api public
     def auto_registration(directory, **options)
-      auto_registration = AutoRegistration.new(directory, **options)
+      auto_registration = AutoRegistration.new(directory, inflector: inflector, **options)
       auto_registration.relations.map { |r| register_relation(r) }
       auto_registration.commands.map { |r| register_command(r) }
       auto_registration.mappers.map { |r| register_mapper(r) }
@@ -58,21 +62,21 @@ module ROM
     #
     # @api private
     def register_relation(*klasses)
-      klasses.reduce(@relation_classes, :<<)
+      @relation_classes.concat(klasses)
     end
 
     # Mapper sub-classes are being registered with this method during setup
     #
     # @api private
     def register_mapper(*klasses)
-      klasses.reduce(@mapper_classes, :<<)
+      @mapper_classes.concat(klasses)
     end
 
     # Command sub-classes are being registered with this method during setup
     #
     # @api private
     def register_command(*klasses)
-      klasses.reduce(@command_classes, :<<)
+      @command_classes.concat(klasses)
     end
 
     # @api private

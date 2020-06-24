@@ -21,6 +21,8 @@ module ROM
 
     PathnameType = Types.Constructor(Pathname, &Kernel.method(:Pathname))
 
+    InflectorType = Types.Strict(Dry::Inflector)
+
     DEFAULT_MAPPING = {
       relations: :relations,
       mappers: :mappers,
@@ -50,6 +52,11 @@ module ROM
         }
       ]
     }
+
+    # @!attribute [r] inflector
+    #   @return [Dry::Inflector] String inflector
+    #   @api private
+    option :inflector, type: InflectorType, default: -> { Inflector }
 
     # Load relation files
     #
@@ -84,19 +91,25 @@ module ROM
           case namespace
           when String
             AutoRegistrationStrategies::CustomNamespace.new(
-              namespace: namespace, file: file, directory: directory
+              namespace: namespace,
+              file: file,
+              directory: directory,
+              inflector: inflector
             ).call
           when TrueClass
             AutoRegistrationStrategies::WithNamespace.new(
-              file: file, directory: directory
+              file: file, directory: directory, inflector: inflector
             ).call
           when FalseClass
             AutoRegistrationStrategies::NoNamespace.new(
-              file: file, directory: directory, entity: component_dirs.fetch(entity)
+              file: file,
+              directory: directory,
+              entity: component_dirs.fetch(entity),
+              inflector: inflector
             ).call
           end
 
-        Inflector.constantize(klass_name)
+        inflector.constantize(klass_name)
       end
     end
   end
