@@ -1,29 +1,38 @@
 ---
 - version: unreleased
-  date:
-  changed:
-    - "`rom-core`, `rom-changeset` and `rom-repository` have been merged into `rom` gem (@solnic)"
+  summary: 
+  date: 
+  fixed: 
+  added: &2
+  - 'You can now configure a custom inflector via `ROM::Configuration` (PR #591) (@flash-gordon)'
+  changed: &1
+  - "`rom-core`, `rom-changeset` and `rom-repository` have been merged into `rom`
+    gem (@solnic)"
+- version: unreleased
+  date: 
+  changed: *1
+  added: *2
 - version: 5.2.4
-  summary:
+  summary: 
   date: '2020-05-08'
   fixed:
   - "[rom] Bumped rom-changeset version (@flash-gordon)"
 - version: 5.2.3
-  summary:
+  summary: 
   date: '2020-05-07'
   fixed:
   - "[rom-core] Constructor types were fired twice when updating data (@flash-gordon)"
-  - "[rom-changeset] fixed a regression where a map function in `Update` changesets was
-    not evaluated in the context of a changeset object (fixed via #592) (@timriley
+  - "[rom-changeset] fixed a regression where a map function in `Update` changesets
+    was not evaluated in the context of a changeset object (fixed via #592) (@timriley
     + @solnic)"
 - version: 5.2.2
-  summary:
+  summary: 
   date: '2020-02-03'
   fixed:
   - "[rom-core] Constructor types were fired twice when writing data (@flash-gordon)"
   added:
   - "[rom-repository] `Repository#transaction` accepts transaction options now (@ianks)"
-  changed:
+  changed: 
 - version: 5.2.1
   date: '2020-01-11'
   summary: This release contains keyword fixes reported by Ruby 2.7.
