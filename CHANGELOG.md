@@ -9,19 +9,6 @@
 
 - `rom-core`, `rom-changeset` and `rom-repository` have been merged into `rom` gem (@solnic)
 
-[Compare vunreleased...master](https://github.com/rom-rb/rom/compare/vunreleased...master)
-
-## unreleased 
-
-
-### Added
-
-- You can now configure a custom inflector via `ROM::Configuration` (PR #591) (@flash-gordon)
-
-### Changed
-
-- `rom-core`, `rom-changeset` and `rom-repository` have been merged into `rom` gem (@solnic)
-
 [Compare v5.2.4...master](https://github.com/rom-rb/rom/compare/v5.2.4...master)
 
 ## 5.2.4 2020-05-08
