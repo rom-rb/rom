@@ -15,7 +15,7 @@ name: ci
   pull_request:
     branches:
     - master
-  create:
+  create: 
 jobs:
   tests:
     runs-on: ubuntu-latest
@@ -42,7 +42,7 @@ jobs:
     env:
       COVERAGE: "${{matrix.coverage}}"
       COVERAGE_TOKEN: "${{secrets.CODACY_PROJECT_TOKEN}}"
-      BASE_DB_URI: localhost/rom
+      BASE_DB_URI: localhost/rom_repository
       USE_DRY_TRANSFORMER_MASTER: "${{matrix.use_dry_transformer_master}}"
       USE_ROM_SQL_MASTER: "${{matrix.use_rom_sql_master}}"
       CODACY_RUN_LOCAL: "${{matrix.coverage}}"
@@ -76,7 +76,7 @@ jobs:
         env:
           POSTGRES_USER: runner
           POSTGRES_PASSWORD: ''
-          POSTGRES_DB: rom
+          POSTGRES_DB: rom_repository
         ports:
         - 5432:5432
         options: "--health-cmd pg_isready --health-interval 10s --health-timeout 5s
