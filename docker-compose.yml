@@ -12,7 +12,7 @@ services:
     build: .
     command: ./docker_start.sh
     environment:
-      BASE_DB_URI: postgres@db/rom_repository
+      BASE_DB_URI: postgres@db/rom
     volumes:
       - .:/opt/rom
       - bundle_box:/opt/bundle_box
