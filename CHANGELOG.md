@@ -8,6 +8,7 @@
 ### Changed
 
 - `rom-core`, `rom-changeset` and `rom-repository` have been merged into `rom` gem (@solnic)
+- `Schema#[]` and `Relation#[]` now raise an error if a given attribute is not unique (issue #529 fixed via #543) (@waiting-for-dev)
 
 [Compare v5.2.4...master](https://github.com/rom-rb/rom/compare/v5.2.4...master)
 
