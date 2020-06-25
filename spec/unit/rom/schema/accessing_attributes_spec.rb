@@ -36,10 +36,6 @@ RSpec.describe ROM::Schema, "#[]" do
       define_schema(:tasks, id: :Integer, title: :String)
     end
 
-    it "returns an attribute identified by its canonical name" do
-      expect(schema[:id]).to eql(define_attribute(:Integer, {name: :id}, source: :users))
-    end
-
     it "returns an attribute identified by its canonical name when its unique" do
       expect(schema[:title]).to eql(define_attribute(:String, {name: :title}, source: :tasks))
     end
@@ -51,6 +47,10 @@ RSpec.describe ROM::Schema, "#[]" do
     it "raises KeyError when attribute is not found" do
       expect { schema[:not_here] }.to raise_error(KeyError, /not_here/)
       expect { schema[:not_here, :tasks] }.to raise_error(KeyError, /not_here/)
+    end
+
+    it "raises KeyError when attribute name is not unique" do
+      expect { schema[:id] }.to raise_error(KeyError, /id/)
     end
   end
 end
