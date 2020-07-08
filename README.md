@@ -26,8 +26,8 @@ Main rom gem provides following components:
 
 Learn more:
 
-* [Introduction](https://rom-rb.org/learn/introduction)
-* [Quick Start](https://rom-rb.org/learn/repository/5.2/quick-start/)
+* [Introduction](http://rom-rb.org/learn/introduction)
+* [Quick Start](http://rom-rb.org/learn/repositories/quick-start)
 
 ## Backers
 
