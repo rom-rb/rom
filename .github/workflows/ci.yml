@@ -1,6 +1,6 @@
 ---
 name: ci
-'on':
+"on":
   push:
     paths:
     - ".github/workflows/ci.yml"
@@ -15,7 +15,7 @@ name: ci
   pull_request:
     branches:
     - master
-  create: 
+  create:
 jobs:
   tests:
     runs-on: ubuntu-latest
@@ -24,26 +24,30 @@ jobs:
       matrix:
         ruby:
         - 2.7.0
-        - '2.6'
-        - '2.5'
-        - '2.4'
+        - "2.6"
+        - "2.5"
+        - "2.4"
         - jruby
         - truffleruby
         include:
-        - ruby: '2.6'
-          coverage: 'true'
+        - ruby: "2.6"
+          coverage: "true"
         - runtime_deps: dry-transformer-latest
-          use_dry_transformer_master: 'false'
+          use_dry_transformer_master: "false"
         - runtime_deps: dry-transformer-master
-          use_dry_transformer_master: 'true'
+          use_dry_transformer_master: "true"
+        - runtime_deps: dry-initializer-master
+          use_dry_initializer_master: "true"
         runtime_deps:
         - dry-transformer-latest
         - dry-transformer-master
+        - dry-initializer-master
     env:
       COVERAGE: "${{matrix.coverage}}"
       COVERAGE_TOKEN: "${{secrets.CODACY_PROJECT_TOKEN}}"
       BASE_DB_URI: localhost/rom_repository
       USE_DRY_TRANSFORMER_MASTER: "${{matrix.use_dry_transformer_master}}"
+      USE_DRY_INITIALIZER_MASTER: "${{matrix.use_dry_initializer_master}}"
       USE_ROM_SQL_MASTER: "${{matrix.use_rom_sql_master}}"
       CODACY_RUN_LOCAL: "${{matrix.coverage}}"
       CODACY_PROJECT_TOKEN: "${{secrets.CODACY_PROJECT_TOKEN}}"
@@ -75,7 +79,7 @@ jobs:
         image: postgres:10.8
         env:
           POSTGRES_USER: runner
-          POSTGRES_PASSWORD: ''
+          POSTGRES_PASSWORD: ""
           POSTGRES_DB: rom_repository
         ports:
         - 5432:5432
