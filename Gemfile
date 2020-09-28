@@ -8,6 +8,10 @@ if ENV["USE_DRY_TRANSFORMER_MASTER"].eql?("true")
   gem "dry-transformer", github: "dry-rb/dry-transformer", branch: "master"
 end
 
+if ENV["USE_DRY_INITIALIZER_MASTER"].eql?("true")
+  gem "dry-initializer", github: "dry-rb/dry-initializer", branch: "master"
+end
+
 group :sql do
   gem "rom-sql", github: "rom-rb/rom-sql", branch: "master"
   # TODO: >= 5.32.0 breaks mysql schema inference in some cases
