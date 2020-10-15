@@ -26,7 +26,7 @@ ROM.container(:sql, 'sqlite::memory') do |config|
 end
 
 # You can provide additional connection options too
-ROM.container(:sql, 'postgres://localhost/my_db', extensions: [:pg_json]) do |config|
+ROM.container(:sql, 'postgres://localhost/my_db', extensions: [:pg_json, :pg_timestamptz]) do |config|
   # define relations and commands here...
 end
 
