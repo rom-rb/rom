@@ -20,6 +20,7 @@ Dry::Core::Deprecations.set_logger!(SPEC_ROOT.join("../log/deprecations.log"))
 
 require "rom/core"
 require "rom-changeset"
+require "byebug"
 
 Dir[root.join("support/**/*.rb").to_s].each do |f|
   require f unless f.include?("coverage")

@@ -142,7 +142,7 @@ RSpec.describe ROM::Commands::Lazy do
         ROM::Commands::Lazy[update_task].new(
           update_task,
           evaluator,
-          -> cmd, user, task { cmd.by_user(user[:name]).by_title(task[:title]) }
+          -> cmd, user, task { relation.by_user(user[:name]).by_title(task[:title]).command(:update) }
         )
       end
 

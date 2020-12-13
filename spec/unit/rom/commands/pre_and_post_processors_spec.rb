@@ -4,8 +4,8 @@ require "rom/command"
 require "rom/memory"
 
 RSpec.describe ROM::Commands::Create[:memory], "before/after hooks" do
-  let(:relation) do
-    spy(:relation)
+  let(:dataset) do
+    spy(:dataset)
   end
 
   describe "#before" do
@@ -19,7 +19,7 @@ RSpec.describe ROM::Commands::Create[:memory], "before/after hooks" do
         def normalize(*); end
 
         def prepare(*); end
-      end.build(relation)
+      end.build(dataset)
     end
 
     it "returns a new command with configured before hooks" do
@@ -38,7 +38,7 @@ RSpec.describe ROM::Commands::Create[:memory], "before/after hooks" do
         def filter(*); end
 
         def prepare(*); end
-      end.build(relation)
+      end.build(dataset)
     end
 
     it "returns a new command with configured after hooks" do
@@ -62,7 +62,7 @@ RSpec.describe ROM::Commands::Create[:memory], "before/after hooks" do
 
         def execute(tuples)
           input = tuples.map.with_index { |tuple, idx| tuple.merge(id: idx + 1) }
-          relation.insert(input)
+          dataset.insert(input)
           input
         end
 
@@ -73,7 +73,7 @@ RSpec.describe ROM::Commands::Create[:memory], "before/after hooks" do
         def finalize(tuples)
           tuples.map { |tuple| tuple.merge(finalized: true) }
         end
-      end.build(relation)
+      end.build(dataset)
     end
 
     let(:tuples) do
@@ -93,7 +93,7 @@ RSpec.describe ROM::Commands::Create[:memory], "before/after hooks" do
 
       expect(command.call(tuples)).to eql(result)
 
-      expect(relation).to have_received(:insert).with(insert_tuples)
+      expect(dataset).to have_received(:insert).with(insert_tuples)
     end
   end
 
@@ -106,7 +106,7 @@ RSpec.describe ROM::Commands::Create[:memory], "before/after hooks" do
 
         def execute(tuples)
           input = tuples.map.with_index { |tuple, idx| tuple.merge(id: idx + 1) }
-          relation.insert(input)
+          dataset.insert(input)
           input
         end
 
@@ -117,15 +117,15 @@ RSpec.describe ROM::Commands::Create[:memory], "before/after hooks" do
         def finalize(tuples, *)
           tuples.map { |tuple| tuple.merge(finalized: true) }
         end
-      end.build(relation)
+      end.build(dataset)
     end
 
     let(:tuples) do
       [{email: "user-1@test.com"}, {email: "user-2@test.com"}]
     end
 
-    let(:relation) do
-      spy(:relation)
+    let(:dataset) do
+      spy(:dataset)
     end
 
     it "applies before/after hooks" do
@@ -141,7 +141,7 @@ RSpec.describe ROM::Commands::Create[:memory], "before/after hooks" do
 
       expect(command.curry(tuples).call("User")).to eql(result)
 
-      expect(relation).to have_received(:insert).with(insert_tuples)
+      expect(dataset).to have_received(:insert).with(insert_tuples)
     end
   end
 
@@ -154,7 +154,7 @@ RSpec.describe ROM::Commands::Create[:memory], "before/after hooks" do
 
         def execute(tuples)
           input = tuples.map.with_index { |tuple, idx| tuple.merge(id: idx + 1) }
-          relation.insert(input)
+          dataset.insert(input)
           input
         end
 
@@ -165,15 +165,15 @@ RSpec.describe ROM::Commands::Create[:memory], "before/after hooks" do
         def finalize(tuples, *)
           tuples.map { |tuple| tuple.merge(finalized: true) }
         end
-      end.build(relation)
+      end.build(dataset)
     end
 
     let(:tuples) do
       [{email: "user-1@test.com"}, {email: "user-2@test.com"}]
     end
 
-    let(:relation) do
-      spy(:relation)
+    let(:dataset) do
+      spy(:dataset)
     end
 
     it "applies before/after hooks" do
@@ -189,7 +189,7 @@ RSpec.describe ROM::Commands::Create[:memory], "before/after hooks" do
 
       expect(command.curry(tuples, "User").call).to eql(result)
 
-      expect(relation).to have_received(:insert).with(insert_tuples)
+      expect(dataset).to have_received(:insert).with(insert_tuples)
     end
   end
 
@@ -202,7 +202,7 @@ RSpec.describe ROM::Commands::Create[:memory], "before/after hooks" do
 
         def execute(tuples)
           input = tuples.map.with_index { |tuple, idx| tuple.merge(id: idx + 1) }
-          relation.insert(input)
+          dataset.insert(input)
           input
         end
 
@@ -213,15 +213,15 @@ RSpec.describe ROM::Commands::Create[:memory], "before/after hooks" do
         def finalize(tuples, opts)
           tuples.map { |tuple| tuple.merge(opts) }
         end
-      end.build(relation)
+      end.build(dataset)
     end
 
     let(:tuples) do
       [{name: "Jane"}, {name: "Joe"}]
     end
 
-    let(:relation) do
-      spy(:relation)
+    let(:dataset) do
+      spy(:dataset)
     end
 
     it "applies before/after hooks" do
@@ -237,7 +237,7 @@ RSpec.describe ROM::Commands::Create[:memory], "before/after hooks" do
 
       expect(command.call(tuples)).to eql(result)
 
-      expect(relation).to have_received(:insert).with(insert_tuples)
+      expect(dataset).to have_received(:insert).with(insert_tuples)
     end
   end
 
@@ -250,7 +250,7 @@ RSpec.describe ROM::Commands::Create[:memory], "before/after hooks" do
 
         def execute(tuples)
           input = tuples.map.with_index { |tuple, idx| tuple.merge(id: idx + 1) }
-          relation.insert(input)
+          dataset.insert(input)
           input
         end
 
@@ -261,15 +261,15 @@ RSpec.describe ROM::Commands::Create[:memory], "before/after hooks" do
         def finalize(tuples, parent, opts)
           tuples.map { |tuple| tuple.merge(opts).merge(user_id: parent[:id]) }
         end
-      end.build(relation)
+      end.build(dataset)
     end
 
     let(:tuples) do
       [{name: "Jane"}, {name: "Joe"}]
     end
 
-    let(:relation) do
-      spy(:relation)
+    let(:dataset) do
+      spy(:dataset)
     end
 
     it "applies before/after hooks" do
@@ -285,7 +285,7 @@ RSpec.describe ROM::Commands::Create[:memory], "before/after hooks" do
 
       expect(command.curry(tuples).call(id: 1)).to eql(result)
 
-      expect(relation).to have_received(:insert).with(insert_tuples)
+      expect(dataset).to have_received(:insert).with(insert_tuples)
     end
   end
 
@@ -298,7 +298,7 @@ RSpec.describe ROM::Commands::Create[:memory], "before/after hooks" do
 
         def execute(tuples)
           input = tuples.map.with_index { |tuple, idx| tuple.merge(id: idx + 1) }
-          relation.insert(input)
+          dataset.insert(input)
           input
         end
 
@@ -309,15 +309,15 @@ RSpec.describe ROM::Commands::Create[:memory], "before/after hooks" do
         def finalize(tuples, parent, opts)
           tuples.map { |tuple| tuple.merge(opts).merge(user_id: parent[:id]) }
         end
-      end.build(relation)
+      end.build(dataset)
     end
 
     let(:tuples) do
       [{name: "Jane"}, {name: "Joe"}]
     end
 
-    let(:relation) do
-      spy(:relation)
+    let(:dataset) do
+      spy(:dataset)
     end
 
     it "applies before/after hooks" do
@@ -333,7 +333,7 @@ RSpec.describe ROM::Commands::Create[:memory], "before/after hooks" do
 
       expect(command.call(tuples, id: 1)).to eql(result)
 
-      expect(relation).to have_received(:insert).with(insert_tuples)
+      expect(dataset).to have_received(:insert).with(insert_tuples)
     end
   end
 end

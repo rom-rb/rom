@@ -54,11 +54,7 @@ module ROM
             base_command
           end
 
-        if command.restrictible?
-          command.new(self)
-        else
-          command
-        end
+        command.new(dataset)
       end
     end
   end

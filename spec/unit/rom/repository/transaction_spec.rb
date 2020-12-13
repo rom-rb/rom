@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-require "rom-repository"
-require "rom-changeset"
+require "rom"
 
 RSpec.describe ROM::Repository, "#transaction" do
   let(:user_repo) do

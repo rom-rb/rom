@@ -13,8 +13,12 @@ RSpec.describe ROM::Memory::Commands do
     end.new(ROM::Memory::Dataset.new([]))
   end
 
+  let(:options) do
+    { input: relation.input_schema }
+  end
+
   describe "Create" do
-    subject(:command) { ROM::Commands::Create[:memory].build(relation) }
+    subject(:command) { ROM::Commands::Create[:memory].build(relation, options) }
 
     describe "#call" do
       it "uses default input handler" do
@@ -26,7 +30,7 @@ RSpec.describe ROM::Memory::Commands do
   end
 
   describe "Update" do
-    subject(:command) { ROM::Commands::Update[:memory].build(relation) }
+    subject(:command) { ROM::Commands::Update[:memory].build(relation, options) }
 
     before do
       relation.insert(id: 1, name: "Jane")

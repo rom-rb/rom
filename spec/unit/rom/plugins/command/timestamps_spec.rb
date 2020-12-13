@@ -11,17 +11,8 @@ RSpec.describe ROM::Plugins::Command::Timestamps do
   let(:time) { DateTime.now }
 
   before do
-    configuration.relation :users do
-      def by_name(name)
-        restrict(name: name)
-      end
-    end
-
-    configuration.relation :tasks do
-      def by_priority(priority)
-        restrict(priority: priority)
-      end
-    end
+    configuration.relation :users
+    configuration.relation :tasks
 
     configuration.commands(:users) do
       define :create_with_timestamps_options, type: :create do
@@ -63,6 +54,7 @@ RSpec.describe ROM::Plugins::Command::Timestamps do
         timestamp :updated_at, :created_at
 
         before :assign_task
+
         def assign_task(tuple, task)
           tuple.merge(task_id: task[:id])
         end

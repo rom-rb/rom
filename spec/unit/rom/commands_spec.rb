@@ -6,14 +6,6 @@ RSpec.describe "Commands" do
   include_context "gateway only"
   include_context "users and tasks"
 
-  let(:users_relation) do
-    Class.new(ROM::Memory::Relation) do
-      def by_id(id)
-        restrict(id: id)
-      end
-    end.new(users_dataset)
-  end
-
   describe ".build_class" do
     it "creates a command class constant" do
       klass = ROM::ConfigurationDSL::Command.build_class(:create, :users, adapter: :memory) {
@@ -25,7 +17,7 @@ RSpec.describe "Commands" do
       expect(klass.name).to eql("ROM::Memory::Commands::Create[Users]")
       expect(klass.register_as).to eql(:create)
 
-      command = klass.build(users_relation)
+      command = klass.build(users_dataset)
 
       expect(command).to be_a(ROM::Memory::Commands::Create)
       expect(command).to be_super
@@ -56,7 +48,7 @@ RSpec.describe "Commands" do
         relation :users
       end
 
-      command = klass.build(users_relation)
+      command = klass.build(users_dataset)
 
       expect(command).to be_kind_of(ROM::Memory::Commands::Create)
     end
@@ -66,7 +58,7 @@ RSpec.describe "Commands" do
         relation :users
       end
 
-      command = klass.build(users_relation)
+      command = klass.build(users_dataset)
 
       expect(command).to be_kind_of(ROM::Memory::Commands::Update)
     end
@@ -76,16 +68,16 @@ RSpec.describe "Commands" do
         relation :users
       end
 
-      command = klass.build(users_relation)
+      command = klass.build(users_dataset)
 
       expect(command).to be_kind_of(ROM::Memory::Commands::Delete)
     end
   end
 
   describe "#>>" do
-    let(:users) { double("users", schema: nil) }
-    let(:tasks) { double("tasks", schema: nil) }
-    let(:logs) { double("logs", schema: nil) }
+    let(:users) { double("users", schema: nil, dataset: []) }
+    let(:tasks) { double("tasks", schema: nil, dataset: []) }
+    let(:logs) { double("logs", schema: nil, dataset: []) }
 
     it "composes two commands" do
       user_input = {name: "Jane"}
@@ -96,7 +88,7 @@ RSpec.describe "Commands" do
 
       create_user = Class.new(ROM::Commands::Create) {
         def execute(user_input)
-          relation.insert(user_input)
+          dataset.insert(user_input)
         end
       }.build(users)
 
@@ -108,7 +100,7 @@ RSpec.describe "Commands" do
         end
 
         def execute(task_input)
-          relation.insert(task_input)
+          dataset.insert(task_input)
         end
       }.build(tasks)
 
@@ -116,7 +108,7 @@ RSpec.describe "Commands" do
         result :one
 
         def execute(task_tuple)
-          relation << task_tuple
+          dataset << task_tuple
         end
       }.build(logs)
 
@@ -137,7 +129,7 @@ RSpec.describe "Commands" do
 
       create_user = Class.new(ROM::Commands::Create) {
         def execute(user_input)
-          relation.insert(user_input)
+          dataset.insert(user_input)
         end
       }.build(users)
 

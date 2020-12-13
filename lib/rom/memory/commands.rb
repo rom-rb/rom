@@ -13,13 +13,12 @@ module ROM
       # @api public
       class Create < ROM::Commands::Create
         adapter :memory
-        use :schema
 
         # @see ROM::Commands::Create#execute
         def execute(tuples)
           Array([tuples]).flatten.map { |tuple|
             attributes = input[tuple]
-            relation.insert(attributes.to_h)
+            dataset.insert(attributes.to_h)
             attributes
           }.to_a
         end
@@ -30,12 +29,11 @@ module ROM
       # @api public
       class Update < ROM::Commands::Update
         adapter :memory
-        use :schema
 
         # @see ROM::Commands::Update#execute
         def execute(params)
           attributes = input[params]
-          relation.map { |tuple| tuple.update(attributes.to_h) }
+          dataset.map { |tuple| tuple.update(attributes.to_h) }
         end
       end
 
@@ -47,7 +45,7 @@ module ROM
 
         # @see ROM::Commands::Delete#execute
         def execute
-          relation.to_a.map do |tuple|
+          dataset.to_a.map do |tuple|
             source.delete(tuple)
             tuple
           end

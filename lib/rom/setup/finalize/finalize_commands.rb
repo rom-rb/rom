@@ -39,9 +39,12 @@ module ROM
             command: klass, gateway: gateway, dataset: relation.dataset, adapter: relation.adapter
           )
 
-          klass.extend_for_relation(relation) if klass.restrictable
-
-          klass.build(relation)
+          klass.build(
+            relation.dataset,
+            input: relation.input_schema,
+            name: relation.name,
+            gateway: relation.gateway
+          )
         end
 
         registry = Registry.new
@@ -54,7 +57,7 @@ module ROM
         )
 
         @relations.each do |(name, relation)|
-          rel_commands = commands.select { |c| c.relation.name == relation.name }
+          rel_commands = commands.select { |c| c.dataset.eql?(relation.dataset) }
 
           rel_commands.each do |command|
             identifier = command.class.register_as || command.class.default_name

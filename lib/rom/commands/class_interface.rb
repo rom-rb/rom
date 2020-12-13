@@ -71,8 +71,8 @@ module ROM
       # @return [Command]
       #
       # @api public
-      def build(relation, **options)
-        new(relation, **self.options, **options)
+      def build(dataset, **options)
+        new(dataset, **self.options, **options)
       end
 
       # Create a command class with a specific type

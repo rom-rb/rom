@@ -194,18 +194,22 @@ module ROM
 
     # @!attribute [r] relation
     #   @return [Relation] Command's relation
-    param :relation
+    param :dataset
 
     CommandType = Types::Strict::Symbol.enum(:create, :update, :delete)
     Result = Types::Strict::Symbol.enum(:one, :many)
+
+    # @!attribute [r] schema
+    #   @return [Schema] Relation's schema
+    option :schema, optional: true
 
     # @!attribute [r] type
     #   @return [Symbol] The command type, one of :create, :update or :delete
     option :type, type: CommandType, optional: true
 
     # @!attribute [r] source
-    #   @return [Relation] The source relation
-    option :source, default: -> { relation }
+    #   @return [Dataset] The source dataset
+    option :source, default: -> { dataset }
 
     # @!attribute [r] result
     #   @return [Symbol] Result type, either :one or :many
@@ -227,26 +231,18 @@ module ROM
     #   @return [Array<Hash>] An array with after hooks configuration
     option :after, Types::Coercible::Array, reader: false, default: -> { self.class.after }
 
+    # !@attribute :name
+    # @return [ROM::Relation::Name] Return name of this command's relation
+    # @api public
+    option :name, optional: true
+
+    # !@attribute :gateway
+    # @return [Symbol] Return gateway of this command's relation
+    # @api public
+    option :gateway, optional: true
+
     input Hash
     result :many
-
-    # Return name of this command's relation
-    #
-    # @return [ROM::Relation::Name]
-    #
-    # @api public
-    def name
-      relation.name
-    end
-
-    # Return gateway of this command's relation
-    #
-    # @return [Symbol]
-    #
-    # @api public
-    def gateway
-      relation.gateway
-    end
 
     # Execute the command
     #
@@ -314,7 +310,7 @@ module ROM
       if curry_args.empty? && args.first.is_a?(Graph::InputEvaluator)
         Lazy[self].new(self, *args)
       else
-        self.class.build(relation, **options, curry_args: args)
+        self.class.build(dataset, **options, curry_args: args)
       end
     end
 
@@ -346,7 +342,7 @@ module ROM
     #
     # @api public
     def before(*hooks)
-      self.class.new(relation, **options, before: before_hooks + hooks)
+      self.class.new(dataset, **options, before: before_hooks + hooks)
     end
 
     # Return a new command with appended after hooks
@@ -357,7 +353,7 @@ module ROM
     #
     # @api public
     def after(*hooks)
-      self.class.new(relation, **options, after: after_hooks + hooks)
+      self.class.new(dataset, **options, after: after_hooks + hooks)
     end
 
     # List of before hooks
@@ -378,15 +374,15 @@ module ROM
       options[:after]
     end
 
-    # Return a new command with other source relation
+    # Return a new command with other source dataset
     #
-    # This can be used to restrict command with a specific relation
+    # This can be used to restrict command with a specific dataset
     #
     # @return [Command]
     #
     # @api public
-    def new(new_relation)
-      self.class.build(new_relation, **options, source: relation)
+    def new(new_dataset)
+      self.class.build(new_dataset, **options, source: dataset)
     end
 
     # Check if this command has any hooks
@@ -432,22 +428,13 @@ module ROM
       result.equal?(:many)
     end
 
-    # Check if this command is restrictible through relation
-    #
-    # @return [TrueClass,FalseClass]
-    #
-    # @api private
-    def restrictible?
-      self.class.restrictable.equal?(true)
-    end
-
     # Yields tuples for insertion or return an enumerator
     #
     # @api private
     def map_input_tuples(tuples, &mapper)
       return enum_for(:with_input_tuples, tuples) unless mapper
 
-      if tuples.respond_to? :merge
+      if tuples.respond_to?(:merge)
         mapper[tuples]
       else
         tuples.map(&mapper)

@@ -217,9 +217,9 @@ module ROM
           command: klass, gateway: gateway, dataset: relation.dataset, adapter: adapter
         )
 
-        klass.extend_for_relation(relation) if klass.restrictable
+        command_input = meta[:input] || relation.input_schema
 
-        registry[rel_name][type] = klass.build(relation)
+        registry[rel_name][type] = klass.build(relation.dataset, input: command_input)
       end
     end
 
