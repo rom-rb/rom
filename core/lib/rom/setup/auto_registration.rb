@@ -78,7 +78,7 @@ module ROM
     #
     # @api private
     def load_entities(entity)
-      Dir[globs[entity]].map do |file|
+      Dir[globs[entity]].sort.map do |file|
         require file
         klass_name =
           case namespace
