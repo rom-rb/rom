@@ -23,11 +23,12 @@ jobs:
       fail-fast: false
       matrix:
         ruby:
-        - 2.7.0
+        - '2.7'
         - '2.6'
         - '2.5'
-        - '2.4'
         - jruby
+        - 2.7.0
+        - '2.4'
         - truffleruby
         include:
         - ruby: '2.6'
