@@ -1,10 +1,11 @@
 # this file is managed by rom-rb/devtools project
 
 AllCops:
-  TargetRubyVersion: 2.4
+  TargetRubyVersion: 2.7
   Exclude:
     - spec/support/coverage.rb
     - spec/support/warnings.rb
+    - spec/support/rspec_options.rb
     - Gemfile.devtools
     - "*.gemspec"
 
@@ -149,4 +150,7 @@ Style/SymbolArray:
     - "spec/**/*_spec.rb"
 
 Style/TrailingUnderscoreVariable:
+  Enabled: false
+
+Style/MultipleComparison:
   Enabled: false

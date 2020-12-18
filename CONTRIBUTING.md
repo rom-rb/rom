@@ -6,7 +6,7 @@ If you found a bug, report an issue and describe what's the expected behavior ve
 
 ## Reporting feature requests
 
-Report a feature request **only after discussing it first on [discourse.rom-rb.org](https://discourse.rom-rb.org)** where it was accepted. Please provide a concise description of the feature, don't link to a discussion thread, and instead summarize what was discussed.
+Report a feature request **only after discussing it first on [discourse.rom-rb.org](https://discourse.rom-rb.org)** where it was accepted. Please provide a concise description of the feature.
 
 ## Reporting questions, support requests, ideas, concerns etc.
 
@@ -26,4 +26,4 @@ Other requirements:
 
 # Asking for help
 
-If these guidelines aren't helpful, and you're stuck, please post a message on [discourse.rom-rb.org](https://discourse.rom-rb.org) or join [our chat](https://rom-rb.zulipchat.com).
+If these guidelines aren't helpful, and you're stuck, please post a message on [discourse.rom-rb.org](https://discourse.rom-rb.org).
