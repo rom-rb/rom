@@ -29,8 +29,6 @@ jobs:
         - '2.6'
         - '2.5'
         - jruby
-        - 2.7.0
-        - '2.4'
         - truffleruby
         include:
         - ruby: '2.7'
