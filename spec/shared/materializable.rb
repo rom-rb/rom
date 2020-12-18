@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-shared_examples_for "materializable relation" do
+RSpec.shared_examples_for "materializable relation" do
   describe "#each" do
     it "yields objects" do
       count = relation.to_a.size

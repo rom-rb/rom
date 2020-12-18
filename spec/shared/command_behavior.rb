@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-shared_examples_for "a command" do
+RSpec.shared_examples_for "a command" do
   describe "#name" do
     it "returns relation name" do
       expect(command.name).to eql(command.relation.name)
