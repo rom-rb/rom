@@ -24,14 +24,15 @@ jobs:
       fail-fast: false
       matrix:
         ruby:
-        - head
+        - '3.0'
         - '2.7'
         - '2.6'
         - '2.5'
         - jruby
+        - head
         - truffleruby
         include:
-        - ruby: '2.7'
+        - ruby: '3.0'
           coverage: 'true'
         - ruby: '2.6'
           coverage: 'true'
