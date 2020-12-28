@@ -37,12 +37,6 @@ module ROM
       end
 
       # @api private
-      def freeze
-        settings.each_value(&:freeze)
-        super
-      end
-
-      # @api private
       def respond_to_missing?(_name, _include_private = false)
         true
       end
