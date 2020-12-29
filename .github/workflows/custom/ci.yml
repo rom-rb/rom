@@ -22,12 +22,8 @@ jobs:
         include:
           - ruby: "3.0"
             coverage: "true"
-          - ruby: "3.0"
-            runtime_deps: "dry-transformer-latest"
-            use_dry_transformer_master: "false"
-          - ruby: "3.0"
-            runtime_deps: "dry-transformer-master"
             use_dry_transformer_master: "true"
+            use_use_rom_sql_master: "true"
     env:
       COVERAGE: ${{matrix.coverage}}
       BASE_DB_URI: localhost/rom_repository
