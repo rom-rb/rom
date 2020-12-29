@@ -16,7 +16,7 @@ name: ci
   pull_request:
     branches:
     - master
-  create:
+  create: 
 jobs:
   tests:
     runs-on: ubuntu-latest
@@ -39,9 +39,6 @@ jobs:
         - ruby: '3.0'
           runtime_deps: dry-transformer-master
           use_dry_transformer_master: 'true'
-        runtime_deps:
-        - dry-transformer-latest
-        - dry-transformer-master
     env:
       COVERAGE: "${{matrix.coverage}}"
       COVERAGE_TOKEN: "${{secrets.CODACY_PROJECT_TOKEN}}"
