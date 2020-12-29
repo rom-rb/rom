@@ -29,12 +29,9 @@ jobs:
         - '2.6'
         - '2.5'
         - jruby
-        - head
         - truffleruby
         include:
         - ruby: '3.0'
-          coverage: 'true'
-        - ruby: '2.6'
           coverage: 'true'
         - runtime_deps: dry-transformer-latest
           use_dry_transformer_master: 'false'
