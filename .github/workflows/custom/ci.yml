@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         ruby:
-          - "head"
+          - "3.0"
           - "2.7"
           - "2.6"
           - "2.5"
@@ -23,7 +23,7 @@ jobs:
           - "dry-transformer-latest"
           - "dry-transformer-master"
         include:
-          - ruby: "2.6"
+          - ruby: "3.0"
             coverage: "true"
           - runtime_deps: "dry-transformer-latest"
             use_dry_transformer_master: "false"
