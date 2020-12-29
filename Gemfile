@@ -12,14 +12,17 @@ if ENV["USE_DRY_INITIALIZER_MASTER"].eql?("true")
   gem "dry-initializer", github: "dry-rb/dry-initializer", branch: "master"
 end
 
-group :sql do
+if ENV["USE_ROM_SQL_MASTER"].eql?("true")
   gem "rom-sql", github: "rom-rb/rom-sql", branch: "master"
-  # TODO: >= 5.32.0 breaks mysql schema inference in some cases
+else
+  gem "rom-sql", "~> 3.3", ">= 3.3.1"
+end
+
+group :sql do
   gem "dry-monitor"
   gem "jdbc-postgres", platforms: :jruby
   gem "jdbc-sqlite3", platforms: :jruby
   gem "pg", platforms: :ruby
-  gem "sequel", "5.31.0"
   gem "sqlite3", platforms: :ruby
 end
 

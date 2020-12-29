@@ -63,4 +63,8 @@ RSpec.configure do |config|
 
   config.include(SchemaHelpers)
   config.include(MapperRegistry)
+
+  config.after do
+    gateway.disconnect if respond_to?(:gateway) && gateway.respond_to?(:disconnect)
+  end
 end
