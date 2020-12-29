@@ -25,9 +25,11 @@ jobs:
         include:
           - ruby: "3.0"
             coverage: "true"
-          - runtime_deps: "dry-transformer-latest"
+          - ruby: "3.0"
+            runtime_deps: "dry-transformer-latest"
             use_dry_transformer_master: "false"
-          - runtime_deps: "dry-transformer-master"
+          - ruby: "3.0"
+            runtime_deps: "dry-transformer-master"
             use_dry_transformer_master: "true"
     env:
       COVERAGE: ${{matrix.coverage}}
