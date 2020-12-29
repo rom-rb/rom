@@ -19,9 +19,6 @@ jobs:
           - "2.5"
           - "jruby"
           - "truffleruby"
-        runtime_deps:
-          - "dry-transformer-latest"
-          - "dry-transformer-master"
         include:
           - ruby: "3.0"
             coverage: "true"
