@@ -1,10 +1,12 @@
 ---
-name: Tests
+name: ci
 'on':
   push:
     paths:
     - ".github/workflows/ci.yml"
+    - ".github/workflows/custom/ci.yml"
     - lib/**
+    - "*.gemspec"
     - spec/**
     - Rakefile
     - Gemfile
@@ -14,7 +16,7 @@ name: Tests
   pull_request:
     branches:
     - master
-  create:
+  create: 
 jobs:
   tests:
     runs-on: ubuntu-latest
@@ -22,39 +24,31 @@ jobs:
       fail-fast: false
       matrix:
         ruby:
+        - '3.0'
         - '2.7'
         - '2.6'
         - '2.5'
-        - '2.4'
         - jruby
+        - truffleruby
         include:
-        - ruby: '2.6'
+        - ruby: '3.0'
           coverage: 'true'
-        - runtime_deps: rom-sql-latest
-          use_rom_sql_master: 'false'
-        - runtime_deps: rom-sql-master
-          use_rom_sql_master: 'true'
-        - runtime_deps: dry-transformer-latest
-          use_dry_transformer_master: 'false'
-        - runtime_deps: dry-transformer-master
+        - ruby: '3.0'
+          coverage: 'true'
           use_dry_transformer_master: 'true'
-        runtime_deps:
-        - rom-sql-latest
-        - rom-sql-master
-        - dry-transformer-latest
-        - dry-transformer-master
+          use_use_rom_sql_master: 'true'
     env:
-      CLASSPATH: ''
       COVERAGE: "${{matrix.coverage}}"
-      CODACY_RUN_LOCAL: "${{matrix.coverage}}"
-      CODACY_PROJECT_TOKEN: "${{secrets.CODACY_PROJECT_TOKEN}}"
+      COVERAGE_TOKEN: "${{secrets.CODACY_PROJECT_TOKEN}}"
       BASE_DB_URI: localhost/rom_repository
       USE_DRY_TRANSFORMER_MASTER: "${{matrix.use_dry_transformer_master}}"
       USE_ROM_SQL_MASTER: "${{matrix.use_rom_sql_master}}"
+      CODACY_RUN_LOCAL: "${{matrix.coverage}}"
+      CODACY_PROJECT_TOKEN: "${{secrets.CODACY_PROJECT_TOKEN}}"
       APT_DEPS: libpq-dev libsqlite3-dev
     steps:
     - uses: actions/checkout@v1
-    - name: Install dependencies
+    - name: Install package dependencies
       run: "[ -e $APT_DEPS ] || sudo apt-get install -y --no-install-recommends $APT_DEPS"
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
@@ -68,9 +62,12 @@ jobs:
       run: bundle install --jobs 4 --retry 3
     - name: Run all tests
       run: bundle exec rake
-    - name: Send coverage results
-      if: matrix.coverage == 'true'
-      run: codacy_final_reporter
+    - name: Run codacy-coverage-reporter
+      uses: codacy/codacy-coverage-reporter-action@master
+      if: env.COVERAGE == 'true' && env.COVERAGE_TOKEN != ''
+      with:
+        project-token: "${{secrets.CODACY_PROJECT_TOKEN}}"
+        coverage-reports: coverage/coverage.xml
     services:
       db:
         image: postgres:10.8
@@ -91,6 +88,8 @@ jobs:
       GITHUB_TOKEN: "${{secrets.GH_PAT}}"
     steps:
     - uses: actions/checkout@v1
+    - name: Install package dependencies
+      run: "[ -e $APT_DEPS ] || sudo apt-get install -y --no-install-recommends $APT_DEPS"
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
