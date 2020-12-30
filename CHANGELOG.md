@@ -1,3 +1,24 @@
+## 5.2.4 2020-05-08
+
+### Changed
+
+- [rom] Dependency on `rom-changeset` was bumped to `>= 5.2.3` (@flash-gordon)
+
+[Compare v5.2.3...v5.2.4](https://github.com/rom-rb/rom/compare/v5.2.3...v5.2.4)
+
+## 5.2.3 2020-05-07
+
+### Fixed
+
+- [rom-core] Fix duplicated input processing in update commands (see #594) (@flash-gordon)
+- [rom-changeset] fix binding mapping functions in `Update` changesets (@timriley & @flash-gordon)
+
+### Changed
+
+- [rom] Dependency on `rom-core` was bumped to `>= 5.2.3` (@solnic)
+
+[Compare v5.2.2...v5.2.3](https://github.com/rom-rb/rom/compare/v5.2.2...v5.2.3)
+
 ## 5.2.2 2020-02-03
 
 
