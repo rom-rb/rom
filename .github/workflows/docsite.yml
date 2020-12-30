@@ -16,19 +16,47 @@ jobs:
   update-docs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - run: |
+          git fetch --no-tags --prune --depth=1 origin +refs/heads/*:refs/remotes/origin/*
       - name: Set up Ruby
         uses: actions/setup-ruby@v1
         with:
           ruby-version: "2.6.x"
-      - name: Install dependencies
+      - name: Set up git user
         run: |
-          gem install bundler
-          bundle install --jobs 4 --retry 3 --without benchmarks sql
-      - name: Symlink ossy
-        run: mkdir -p bin && ln -sf "$(bundle show ossy)/bin/ossy" bin/ossy
+          git config --local user.email "rom-bot@rom-rb.org"
+          git config --local user.name "rom-bot"
+      - name: Install dependencies
+        run: gem install ossy --no-document
+      - name: Update release branches
+        run: |
+          branches=`git log --format=%B -n 1 $GITHUB_SHA | grep "docsite:release-" || echo "nothing"`
+
+          if [[ ! $branches -eq "nothing" ]]; then
+            for b in $branches
+            do
+              name=`echo $b | ruby -e 'puts gets[/:(.+)/, 1].gsub(/\s+/, "")'`
+
+              echo "merging $GITHUB_SHA to $name"
+
+              git checkout -b $name --track origin/$name
+
+              echo `git log -n 1`
+
+              git cherry-pick $GITHUB_SHA -m 1
+            done
+
+            git push --all "https://rom-bot:${{secrets.GH_PAT}}@github.com/$GITHUB_REPOSITORY.git"
+
+            git checkout master
+          else
+            echo "no need to update branches"
+          fi
       - name: Trigger rom-rb.org deploy
         env:
           GITHUB_LOGIN: rom-bot
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
-        run: bin/ossy github workflow rom-rb/rom-rb.org ci
+          GITHUB_TOKEN: ${{secrets.GH_PAT}}
+        run: ossy github workflow rom-rb/rom-rb.org ci

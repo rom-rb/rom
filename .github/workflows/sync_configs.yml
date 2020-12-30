@@ -1,6 +1,6 @@
 # this file is managed by rom-rb/devtools project
 
-name: Sync files
+name: sync
 
 on:
   repository_dispatch:
@@ -9,7 +9,7 @@ on:
       - "master"
 
 jobs:
-  sync-configs:
+  main:
     runs-on: ubuntu-latest
     if: (github.event_name == 'repository_dispatch' && github.event.action == 'sync_configs') || github.event_name != 'repository_dispatch'
     env:
@@ -34,7 +34,7 @@ jobs:
       - name: Install dependencies
         run: gem install ossy --no-document
       - name: Compile file templates
-        run: tmp/devtools/bin/compile-templates $GITHUB_REPOSITORY
+        run: tmp/devtools/bin/compile-templates
       - name: Update workflow files from devtools
         run: tmp/devtools/bin/sync-workflows
       - name: Update configuration files from devtools
