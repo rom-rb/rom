@@ -1,3 +1,16 @@
+## 5.2.5 2020-12-30
+
+### Fixed
+
+- [rom-core] auto-registration sorts files now which fixes some (rare) issues with file loading (@v-kolesnikov)
+- [rom-core] configuration values are no longer being frozen during finalization of the setup (@v-kolesnikov)
+
+### Changed
+
+- [rom] Dependency on `rom-core` was bumped to `>= 5.2.4` (@solnic)
+
+[Compare v5.2.4...v5.2.5](https://github.com/rom-rb/rom/compare/v5.2.4...v5.2.5)
+
 ## 5.2.4 2020-05-08
 
 ### Changed
