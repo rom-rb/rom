@@ -20,7 +20,7 @@ jobs:
           - "jruby"
           - "truffleruby"
         include:
-          - ruby: "3.0"
+          - ruby: "2.7"
             coverage: "true"
             use_transproc_master: "true"
             use_use_rom_sql_master: "true"
