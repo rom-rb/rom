@@ -100,4 +100,4 @@ jobs:
     - name: Trigger release workflow
       run: |
         tag=$(echo $GITHUB_REF | cut -d / -f 3)
-        ossy gh w rom-rb/devtools release --payload "{\"tag\":\"$tag\",\"tag_creator\":\"$GITHUB_ACTOR\",\"repo\":\"$GITHUB_REPOSITORY\"}"
+        ossy gh w rom-rb/devtools release --payload "{\"tag\":\"$tag\",\"sha\":\"${{github.sha}}\",\"tag_creator\":\"$GITHUB_ACTOR\",\"repo\":\"$GITHUB_REPOSITORY\",\"repo_name\":\"${{github.event.repository.name}}\"}"
