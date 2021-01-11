@@ -13,7 +13,7 @@ if ENV["USE_DRY_INITIALIZER_MASTER"].eql?("true")
 end
 
 if ENV["USE_ROM_SQL_MASTER"].eql?("true")
-  gem "rom-sql", github: "rom-rb/rom-sql", branch: "master"
+  gem "rom-sql", github: "rom-rb/rom-sql", branch: "transaction-options"
 else
   gem "rom-sql", "~> 3.3", ">= 3.3.1"
 end

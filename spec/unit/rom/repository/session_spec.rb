@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "rom-repository"
 require "rom-changeset"
 
 RSpec.describe ROM::Repository, "#session" do

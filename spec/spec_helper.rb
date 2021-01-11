@@ -29,6 +29,11 @@ Dir[root.join("shared/**/*.rb").to_s].each do |f|
   require f
 end
 
+begin
+  require "pry-byebug"
+rescue LoadError
+end
+
 module SpecProfiler
   def report(*)
     require "hotch"
