@@ -7,7 +7,7 @@ module ROM
     Rollback = Class.new(StandardError)
 
     # @api private
-    def run(_opts = EMPTY_HASH)
+    def run(**)
       yield(self)
     rescue Rollback
       # noop
