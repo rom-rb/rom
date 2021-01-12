@@ -49,6 +49,9 @@ module ROM
 
         if identifier.is_a?(Gateway)
           gateway = identifier
+        elsif RUBY_VERSION >= "3.0"
+          kwargs = args.last.is_a?(Hash) ? args.pop : {}
+          gateway = Gateway.setup(identifier, *args.flatten, **kwargs)
         else
           gateway = Gateway.setup(identifier, *args.flatten)
         end
