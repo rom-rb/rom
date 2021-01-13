@@ -12,7 +12,7 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     strategy:
       matrix:
-        use_use_rom_sql_master:
+        use_rom_sql_master:
           - 'true'
         ruby:
           - "3.0"
