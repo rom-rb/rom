@@ -36,7 +36,7 @@ jobs:
         - ruby: '3.0'
           coverage: 'true'
           use_dry_transformer_master: 'true'
-        use_use_rom_sql_master:
+        use_rom_sql_master:
         - 'true'
     env:
       COVERAGE: "${{matrix.coverage}}"
