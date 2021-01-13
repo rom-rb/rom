@@ -1,10 +1,12 @@
 ---
 - version: unreleased
-  summary: 
-  date: 
-  fixed: 
+  summary:
+  date:
+  fixed:
   added:
   - 'You can now configure a custom inflector via `ROM::Configuration` (PR #591) (@flash-gordon)'
+  - '.transaction' methods now accept keyword arguments. `Repository#transaction` accepts gateway to
+    use. `Repository::Root#transaction` uses a gateway of the root relation by default (#620 closed by #621) (@flash-gordon).
   changed:
   - "`rom-core`, `rom-changeset` and `rom-repository` have been merged into `rom`
     gem (@solnic)"
@@ -13,12 +15,12 @@
   - 'Configuration values are no longer being frozen during setup process (issue #616
     fixed via #617) (@v-kolesnikov)'
 - version: 5.2.4
-  summary: 
+  summary:
   date: '2020-05-08'
   fixed:
   - "[rom] Bumped rom-changeset version (@flash-gordon)"
 - version: 5.2.3
-  summary: 
+  summary:
   date: '2020-05-07'
   fixed:
   - "[rom-core] Constructor types were fired twice when updating data (@flash-gordon)"
@@ -26,13 +28,13 @@
     was not evaluated in the context of a changeset object (fixed via #592) (@timriley
     + @solnic)"
 - version: 5.2.2
-  summary: 
+  summary:
   date: '2020-02-03'
   fixed:
   - "[rom-core] Constructor types were fired twice when writing data (@flash-gordon)"
   added:
   - "[rom-repository] `Repository#transaction` accepts transaction options now (@ianks)"
-  changed: 
+  changed:
 - version: 5.2.1
   date: '2020-01-11'
   summary: This release contains keyword fixes reported by Ruby 2.7.
