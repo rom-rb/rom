@@ -51,7 +51,7 @@ module ROM
       #
       # @api public
       def relation(&block)
-        @relation_block = lambda(&block)
+        @relation_block = block
       end
 
       # Return procs captured by the DSL
