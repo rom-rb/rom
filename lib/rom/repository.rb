@@ -115,6 +115,8 @@ module ROM
     ruby2_keywords(:initialize) if respond_to?(:ruby2_keywords, true)
 
     # Open a database transaction
+    # @option gateway [Symbol] gateway key. For Repository::Root descendants
+    #                                       it's taken from the root relation
     #
     # @example commited transaction
     #   user = transaction do |t|
@@ -147,8 +149,8 @@ module ROM
     #   # => #<ROM::Struct::User id=1 name="Jane">
     #
     # @api public
-    def transaction(*args, &block)
-      container.gateways[:default].transaction(*args, &block)
+    def transaction(gateway: :default, **opts, &block)
+      container.gateways[gateway].transaction(**opts, &block)
     end
 
     # Return a string representation of a repository object

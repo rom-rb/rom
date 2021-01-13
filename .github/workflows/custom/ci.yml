@@ -12,6 +12,8 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     strategy:
       matrix:
+        use_use_rom_sql_master:
+          - 'true'
         ruby:
           - "3.0"
           - "2.7"
@@ -23,7 +25,6 @@ jobs:
           - ruby: "3.0"
             coverage: "true"
             use_dry_transformer_master: "true"
-            use_use_rom_sql_master: "true"
     env:
       COVERAGE: ${{matrix.coverage}}
       BASE_DB_URI: localhost/rom_repository

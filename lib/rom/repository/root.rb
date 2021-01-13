@@ -63,6 +63,13 @@ module ROM
         @root = set_relation(self.class.root)
       end
       ruby2_keywords(:initialize) if respond_to?(:ruby2_keywords, true)
+
+      # @see ROM::Repository#transaction
+      #
+      # @api public
+      def transaction(gateway: root.gateway, **opts, &block)
+        super
+      end
     end
   end
 end

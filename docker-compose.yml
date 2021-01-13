@@ -21,4 +21,3 @@ services:
 
 volumes:
   bundle_box:
-
