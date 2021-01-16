@@ -102,6 +102,10 @@ module ROM
       end
     end
 
+    class << self
+      ruby2_keywords(:setup) if respond_to?(:ruby2_keywords, true)
+    end
+
     # Get gateway subclass for a specific adapter
     #
     # @param [Symbol] type Adapter identifier
