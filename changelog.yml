@@ -3,6 +3,7 @@
   summary:
   date:
   fixed:
+  - "Setup works under MRI 3.0.0 (issue #622 fixed via #623) (@v-kolesnikov)"
   added:
   - 'You can now configure a custom inflector via `ROM::Configuration` (PR #591) (@flash-gordon)'
   - '.transaction' methods now accept keyword arguments. `Repository#transaction` accepts gateway to
