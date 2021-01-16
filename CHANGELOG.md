@@ -1,3 +1,15 @@
+## 5.2.6 2021-01-16
+
+### Changed
+
+- [rom] Dependency on `rom-core` was bumped to `>= 5.2.5` (@solnic)
+
+### Fixed
+
+- [rom-core] Setup works under MRI 3.0.0 (issue #622 fixed via #623) (@v-kolesnikov)
+
+[Compare v5.2.5...v5.2.6](https://github.com/rom-rb/rom/compare/v5.2.5...v5.2.6)
+
 ## 5.2.5 2020-12-30
 
 ### Fixed
