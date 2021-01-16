@@ -6,6 +6,11 @@
 ### Added
 
 - You can now configure a custom inflector via `ROM::Configuration` (PR #591) (@flash-gordon)
+- .transaction methods now accept keyword arguments. `Repository#transaction` accepts gateway to use. `Repository::Root#transaction` uses a gateway of the root relation by default (#620 closed by #621) (@flash-gordon)
+
+### Fixed
+
+- Setup works under MRI 3.0.0 (issue #622 fixed via #623) (@v-kolesnikov)
 
 ### Changed
 
