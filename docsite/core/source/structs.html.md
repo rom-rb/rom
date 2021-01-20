@@ -40,7 +40,7 @@ users.by_pk(1).combine(:tasks).one
 ```
 
 ^WARNING
-This feature is **enabled by default in repositories**.
+This feature is **enabled by default in repositories**. You can disable it by calling `auto_struct(false)` in the repository class.
 ^
 
 ## Auto-struct with custom classes
