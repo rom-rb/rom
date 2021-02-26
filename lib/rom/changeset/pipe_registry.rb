@@ -5,7 +5,7 @@ require "dry/transformer/registry"
 
 module ROM
   class Changeset
-    # Transproc Registry useful for pipe
+    # Dry::Transformer Registry useful for pipe
     #
     # @api private
     module PipeRegistry

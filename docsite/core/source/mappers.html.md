@@ -60,7 +60,7 @@ With a custom mapper configured, you can use `Relation#map_with` interface to se
 users.map_with(:my_mapper).to_a
 ```
 
-`ROM::Transformer` is powered by [transproc](https://github.com/solnic/transproc#transformer).
+`ROM::Transformer` is powered by [dry-transformer](https://dry-rb.org/gems/dry-transformer).
 
 ## Learn more
 

@@ -355,7 +355,7 @@ module ROM
 
       # Build row_proc
       #
-      # This transproc function is applied to each row in a dataset
+      # This dry-transformer function is applied to each row in a dataset
       #
       # @api private
       def initialize_row_proc
