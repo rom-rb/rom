@@ -6,7 +6,7 @@ title: Mapping
 
 Changesets have an extendible data-pipe mechanism available via `Changeset.map` (for preconfigured mapping) and `Changeset#map` (for on-demand run-time mapping).
 
-Changeset mappings support all transformation functions from [transproc](https://github.com/solnic/transproc) project, and in addition to that we have:
+Changeset mappings support all transformation functions from [dry-transformer](https://dry-rb.org/gems/dry-transformer) project, and in addition to that we have:
 
 * `:add_timestamps`–sets `created_at` and `updated_at` timestamps (don't forget to add those fields to the table in case of using `rom-sql`)
 * `:touch`–sets `updated_at` timestamp
