@@ -7,7 +7,7 @@ Mappers are used to process relation data, this may involve merging results from
 
 ## Default relation mappers
 
-Relations are configured to map automatically to plain hashes by default. When you're using relations via repostories, they are configured to map to `ROM::Struct` by default, and you can define custom struct namespace, if you want your own objects to be instantiated instead.
+Relations are configured to map automatically to plain hashes by default. When you're using relations via repositories, they are configured to map to `ROM::Struct` by default, and you can define custom struct namespace, if you want your own objects to be instantiated instead.
 
 Here's how default mapping looks like, assuming you have a users relation available:
 
