@@ -85,7 +85,7 @@ class Users < ROM::Relation[:sql]
   end
 
   # rom-sql by default provides a relation view called 'by_pk(id)'
-  # which does the same thing as this however for clarities sake
+  # which does the same thing as this however for clarity's sake
   # we've included this relation view
   def by_id(id)
     where(id: id)
