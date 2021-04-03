@@ -2,6 +2,8 @@
 
 # this file is managed by rom-rb/devtools project
 
+gem "rake", ">= 12.3.3"
+
 git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 
 group :test do
@@ -14,5 +16,5 @@ end
 
 group :tools do
   # this is the same version that we use on codacy
-  gem "rubocop", "0.82.0"
+  gem "rubocop", "1.12.0"
 end
