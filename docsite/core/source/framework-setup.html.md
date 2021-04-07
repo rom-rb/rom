@@ -128,6 +128,27 @@ module Persistence
 end
 ```
 
+If your components are under a nested namespace like `MyApp::Persistence`, you can send your nested namespace as the `namespace` argument to `#auto_registration`, like so:
+
+``` ruby
+# lib/relations/users.rb
+module MyApp
+  module Persistence
+    module Relations
+      class Users < ROM::Relation[:sql]
+        schema(:users, infer: true)
+      end
+    end
+  end
+end
+```
+
+Then, auto-registration can be achieved with
+
+```ruby
+configuration.auto_registration('/path/to/lib', namespace: 'MyApp::Persistence')
+```
+
 #### Turning namespace off
 
 If you keep all components under `{path}/(relations|commands|mappers)` directories and don't namespace them, then you can simply turn namespacing off:
