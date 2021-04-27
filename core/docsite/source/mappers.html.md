@@ -54,21 +54,16 @@ class UserMapper < ROM::Transformer
     create_instance
     # Any other functions you need.
   end
-
+  
   # Find the model class for the row based on the content of its role
   # field, then add it to the row's data for next function to use it.
   def resolve_model(row)
-    model_for = ->(row) do
-      Object.const_get(Dry::Inflector.new.camelize(row[:role]))
-    end
-
-    row.to_h.merge(model: model_for.(row))
+    [Inflector.classify(row[:role]), row]
   end
-
+  
   # Use the model class name in the row and the rest of its data
   # to create an instance of that model.
-  def create_instance(row)
-    model = row.delete(:model)
+  def create_instance(model, row)
     model.new(row)
   end
 end
