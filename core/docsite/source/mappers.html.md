@@ -45,14 +45,31 @@ Typically though, custom mappers will be used in more complex cases, when the un
 ``` ruby
 require 'rom/transformer'
 
-class MyMapper < ROM::Transformer
-  relation :users, as: :my_mapper
+class UserMapper < ROM::Transformer
+  relation :users, as: :users_mapper
 
-  map_array do
-    # define custom transformations here
+  # Each function in the pipeline is called in order and the row is sent as an argument.
+  map do
+    resolve_model
+    create_instance
+    # Any other functions you need.
+  end
+  
+  # Find the model class for the row based on the content of its role
+  # field, then add it to the row's data for next function to use it.
+  def resolve_model(row)
+    [Inflector.classify(row[:role]), row]
+  end
+  
+  # Use the model class name in the row and the rest of its data
+  # to create an instance of that model.
+  def create_instance(model, row)
+    model.new(row)
   end
 end
+
 ```
+The result of the pipeline in the mapper above will be an instance of the right model class for the given `users` relation row, according to its `:role` field.
 
 With a custom mapper configured, you can use `Relation#map_with` interface to send relation data through your mapper:
 
