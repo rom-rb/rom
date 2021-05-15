@@ -20,9 +20,9 @@ the full power of your database.
 
 Main rom gem provides following components:
 
-* [core](https://github.com/rom-rb/rom/blob/master/core/README.md) - Core and Adapter APIs
-* [changeset](https://github.com/rom-rb/rom/blob/master/changeset/README.md) - Changeset objects integrated with rom-core
-* [repository](https://github.com/rom-rb/rom/blob/master/repository/README.md) - Additional repository abstraction integrated with rom-core
+* [core](https://github.com/rom-rb/rom/blob/master/docsite/core/source/index.html.md) - Core and Adapter APIs
+* [changeset](https://github.com/rom-rb/rom/blob/master/docsite/changeset/source/index.html.md) - Changeset objects integrated with rom-core
+* [repository](https://github.com/rom-rb/rom/blob/master/docsite/repository/source/index.html.md) - Additional repository abstraction integrated with rom-core
 
 Learn more:
 
