@@ -1,3 +1,10 @@
 sources:
-  - action-hero/workflows
-
+  - repo: rom-rb/template-gem
+    sync:
+      - "!README.md"
+      - "*"
+      - ".github/*"
+      - "spec/*"
+  - repo: action-hero/workflows
+    sync:
+      - ".github/workflows/*.yml"
