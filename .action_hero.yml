@@ -1,10 +1,16 @@
+# This is customized for now because we need to maintain its own README.md and ci.yml here
+
 sources:
   - repo: rom-rb/template-gem
     sync:
+      - "!config.yml"
+      - "!.github/workflows/ci.yml"
       - "!README.md"
-      - "*"
-      - ".github/*"
+      - "config.yml:.action_hero.yml"
+      - ".devtools/templates/*.sync:${{dir}}/${{name}}"
+      - ".github/**/*.*"
       - "spec/*"
+      - "*"
   - repo: action-hero/workflows
     sync:
       - ".github/workflows/*.yml"
