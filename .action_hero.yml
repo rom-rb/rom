@@ -1,15 +1,15 @@
-# This is customized for now because we need to maintain its own README.md and ci.yml here
+# This is a config that other rom-rb repositories use
 
 sources:
   - repo: rom-rb/template-gem
     sync:
-      - "!config.yml"
-      - "!.github/workflows/ci.yml"
-      - "!README.md"
-      - "config.yml:.action_hero.yml"
+      - "!.github/workflows/ci.yml.erb"
+      - "!README.md.erb"
+      - ".action_hero.yml.erb"
       - ".devtools/templates/*.sync:${{dir}}/${{name}}"
       - ".github/**/*.*"
       - "spec/*"
+      - ".*"
       - "*"
   - repo: action-hero/workflows
     sync:
