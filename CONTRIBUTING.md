@@ -10,7 +10,7 @@ Report a feature request **only after discussing it first on [discourse.rom-rb.o
 
 ## Reporting questions, support requests, ideas, concerns etc.
 
-**PLEASE DON'T** - use [discourse.rom-rb.org](http://discourse.rom-rb.org) instead.
+**PLEASE DON'T** - use [discourse.rom-rb.org](https://discourse.rom-rb.org) instead.
 
 # Pull Request Guidelines
 
