@@ -1,0 +1,16 @@
+name: "Action Hero / RuboCop"
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+jobs:
+  Run:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Clone
+      uses: actions/checkout@v2
+    - name: Get git diff
+      uses: technote-space/get-diff-action@v4
+    - name: Run against changed files
+      if: env.GIT_DIFF
+      uses: action-hero/actions/rubocop@main
