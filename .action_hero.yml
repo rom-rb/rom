@@ -1,10 +1,9 @@
-# This is a config that other rom-rb repositories use
+# This is a config synced from rom-rb/template-gem repo
 
 sources:
   - repo: rom-rb/template-gem
     sync:
       - "!.github/workflows/ci.yml.erb"
-      - "!README.md.erb"
       - ".action_hero.yml.erb"
       - ".devtools/templates/*.sync:${{dir}}/${{name}}"
       - ".github/**/*.*"
