@@ -7,9 +7,15 @@ sources:
       - ".action_hero.yml.erb"
       - ".devtools/templates/*.sync:${{dir}}/${{name}}"
       - ".github/**/*.*"
-      - "spec/*"
-      - ".*"
-      - "*"
+      - "spec/support/*"
+      - "CODE_OF_CONDUCT.md"
+      - "CONTRIBUTING.md"
+      - "CODEOWNERS"
+      - "LICENSE.erb"
+      - "README.erb"
+      - "Gemfile.devtools"
+      - ".rspec"
+      - ".rubocop.yml"
   - repo: action-hero/workflows
     sync:
       - ".github/workflows/*.yml"
