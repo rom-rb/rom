@@ -132,6 +132,14 @@ RSpec.describe ROM::Relation do
         end
       end
 
+      let(:relation_name_schema) do
+        module Test
+          class Relations < ROM::Relation[:memory]
+            schema(:schema) {}
+          end
+        end
+      end
+
       it "raises an exception when is symbol" do
         expect {
           relation_name_symbol
@@ -141,6 +149,12 @@ RSpec.describe ROM::Relation do
       it "raises an exception when is string" do
         expect {
           relation_name_string
+        }.to raise_error(ROM::InvalidRelationName)
+      end
+
+      it "raises an exception when schema name is schema" do
+        expect {
+          relation_name_schema
         }.to raise_error(ROM::InvalidRelationName)
       end
     end

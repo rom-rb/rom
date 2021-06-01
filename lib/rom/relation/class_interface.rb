@@ -32,7 +32,7 @@ module ROM
 
       DEFAULT_DATASET_PROC = -> * { self }.freeze
       INVALID_RELATIONS_NAMES = [
-        :relations
+        :relations, :schema
       ].freeze
 
       # Return adapter-specific relation subclass
