@@ -4,13 +4,18 @@ on:
   pull_request:
   workflow_dispatch:
 jobs:
-  diff:
+  run:
     runs-on: ubuntu-latest
-    name: Check diff
+    name: ${{ matrix.type }}
+    strategy:
+      fail-fast: false
+      matrix:
+        type: ["Style", "Layout", "Naming", "Lint", "Metrics", "Security"]
     steps:
     - name: Clone
       uses: actions/checkout@v2
     - name: Get git diff
+      id: get_diff
       uses: technote-space/get-diff-action@v4
       with:
         PATTERNS: |
@@ -18,37 +23,9 @@ jobs:
           **/*.rake
           Gemfile
           Rakefile
-    - name: Store
-      run: echo $GIT_DIFF > diff.txt
-    - name: Upload
-      uses: actions/upload-artifact@v2
-      with:
-        name: diff
-        path: diff.txt
-  run:
-    runs-on: ubuntu-latest
-    needs: diff
-    name: ${{ matrix.type }}
-    strategy:
-      fail-fast: false
-      matrix:
-        type: ["Style", "Layout", "Naming", "Lint", "Metrics", "Security"]
-    steps:
-    - name: Download the diff artifact
-      uses: actions/download-artifact@v2
-      with:
-        name: diff
-        path: /tmp
-    - name: Set diff
-      id: diff
-      run: echo "::set-output name=files::$(cat /tmp/diff.txt)"
-    - name: Clone
-      uses: actions/checkout@v2
-      if: steps.diff.outputs.files != ''
     - name: Check ${{ matrix.type }}
-      if: steps.diff.outputs.files != ''
       uses: action-hero/actions/rubocop@main
-      env:
-        GIT_DIFF: ${{ steps.diff.outputs.files }}
+      if: ${{ env.GIT_DIFF != '' }}
       with:
+        diff: ${{ env.GIT_DIFF }}
         type: ${{ matrix.type }}
