@@ -1,7 +1,8 @@
-# this file is managed by rom-rb/devtools project
+# This is a config synced from rom-rb/template-gem repo
 
 AllCops:
-  TargetRubyVersion: 2.7
+  TargetRubyVersion: 2.5
+  NewCops: enable
   Exclude:
     - spec/support/coverage.rb
     - spec/support/warnings.rb
@@ -32,8 +33,18 @@ Layout/LineLength:
   Exclude:
     - "spec/**/*_spec.rb"
 
+Lint/AmbiguousBlockAssociation:
+  Enabled: true
+  # because 'expect { foo }.to change { bar }' is fine
+  Exclude:
+    - "spec/**/*.rb"
+
 Lint/BooleanSymbol:
   Enabled: false
+
+Lint/ConstantDefinitionInBlock:
+  Exclude:
+    - "spec/**/*_spec.rb"
 
 Lint/RaiseException:
   Enabled: false
@@ -54,6 +65,11 @@ Naming/FileName:
 
 Naming/MethodName:
   Enabled: false
+
+Naming/MethodParameterName:
+  Enabled: true
+  Exclude:
+    - "spec/**/*.rb"
 
 Naming/MemoizedInstanceVariableName:
   Enabled: false
