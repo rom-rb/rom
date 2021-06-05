@@ -1,5 +1,17 @@
-version: '2'
+version: '3'
+
 services:
+  rom:
+    build:
+      context: .
+    env_file: .env
+    entrypoint: /bin/bash -c '(bundle check || bundle) && tail -f Gemfile'
+    volumes:
+      - .:/usr/local/src/rom
+      - bundle:/usr/local/bundle
+    depends_on: [db]
+    links: [db]
+
   db:
     image: postgres:latest
     ports:
@@ -8,16 +20,5 @@ services:
       POSTGRES_DB: rom
       POSTGRES_HOST_AUTH_METHOD: trust
 
-  app:
-    build: .
-    command: ./docker_start.sh
-    environment:
-      BASE_DB_URI: postgres@db/rom
-    volumes:
-      - .:/opt/rom
-      - bundle_box:/opt/bundle_box
-    links:
-      - db
-
 volumes:
-  bundle_box:
+  bundle:
