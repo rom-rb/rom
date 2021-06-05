@@ -5,7 +5,6 @@ on:
   push:
     paths:
     - ".github/workflows/ci.yml"
-    - ".github/workflows/custom/ci.yml"
     - lib/**
     - "*.gemspec"
     - spec/**
@@ -35,11 +34,8 @@ jobs:
         include:
         - ruby: '3.0'
           coverage: 'true'
-        - ruby: '3.0'
-          coverage: 'true'
           use_dry_transformer_master: 'true'
-        use_rom_sql_master:
-        - 'true'
+          use_rom_sql_master: 'true'
     env:
       COVERAGE: "${{matrix.coverage}}"
       COVERAGE_TOKEN: "${{secrets.CODACY_PROJECT_TOKEN}}"
