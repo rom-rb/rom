@@ -1,6 +1,7 @@
 ---
 name: ci
-'on':
+
+on:
   push:
     paths:
     - ".github/workflows/ci.yml"
@@ -16,7 +17,8 @@ name: ci
   pull_request:
     branches:
     - master
-  create: 
+  create:
+
 jobs:
   tests:
     runs-on: ubuntu-latest
@@ -47,6 +49,17 @@ jobs:
       CODACY_RUN_LOCAL: "${{matrix.coverage}}"
       CODACY_PROJECT_TOKEN: "${{secrets.CODACY_PROJECT_TOKEN}}"
       APT_DEPS: libpq-dev libsqlite3-dev
+    services:
+      db:
+        image: postgres:10.8
+        env:
+          POSTGRES_USER: runner
+          POSTGRES_PASSWORD: ''
+          POSTGRES_DB: rom_repository
+        ports:
+        - 5432:5432
+        options: "--health-cmd pg_isready --health-interval 10s --health-timeout 5s
+          --health-retries 5"
     steps:
     - name: Checkout
       uses: actions/checkout@v1
@@ -70,35 +83,3 @@ jobs:
       with:
         project-token: "${{secrets.CODACY_PROJECT_TOKEN}}"
         coverage-reports: coverage/coverage.xml
-    services:
-      db:
-        image: postgres:10.8
-        env:
-          POSTGRES_USER: runner
-          POSTGRES_PASSWORD: ''
-          POSTGRES_DB: rom_repository
-        ports:
-        - 5432:5432
-        options: "--health-cmd pg_isready --health-interval 10s --health-timeout 5s
-          --health-retries 5"
-  release:
-    runs-on: ubuntu-latest
-    if: contains(github.ref, 'tags') && github.event_name == 'create'
-    needs: tests
-    env:
-      GITHUB_LOGIN: rom-bot
-      GITHUB_TOKEN: "${{secrets.GH_PAT}}"
-    steps:
-    - uses: actions/checkout@v1
-    - name: Install package dependencies
-      run: "[ -e $APT_DEPS ] || sudo apt-get install -y --no-install-recommends $APT_DEPS"
-    - name: Set up Ruby
-      uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: 2.6
-    - name: Install dependencies
-      run: gem install ossy --no-document
-    - name: Trigger release workflow
-      run: |
-        tag=$(echo $GITHUB_REF | cut -d / -f 3)
-        ossy gh w rom-rb/devtools release --payload "{\"tag\":\"$tag\",\"sha\":\"${{github.sha}}\",\"tag_creator\":\"$GITHUB_ACTOR\",\"repo\":\"$GITHUB_REPOSITORY\",\"repo_name\":\"${{github.event.repository.name}}\"}"
