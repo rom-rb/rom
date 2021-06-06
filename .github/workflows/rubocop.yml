@@ -1,6 +1,12 @@
 name: "RuboCop"
 on:
   push:
+    paths:
+      - "**/*.rb"
+      - "**/*.rake"
+      - "Rakefile"
+      - "Gemfile*"
+      - ".rubocop.yml"
   pull_request:
   workflow_dispatch:
 jobs:
