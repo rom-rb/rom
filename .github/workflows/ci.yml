@@ -67,10 +67,6 @@ jobs:
       with:
         ruby-version: "${{matrix.ruby}}"
         bundler-cache: true
-    - name: Configure bundler
-      run: bundle config set without 'tools benchmarks docs'
-    - name: Bundle install
-      run: bundle install --jobs 4 --retry 3
     - name: Run all tests
       run: bundle exec rake
     - name: Run codacy-coverage-reporter
