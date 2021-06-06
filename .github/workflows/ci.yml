@@ -66,10 +66,9 @@ jobs:
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: "${{matrix.ruby}}"
-    - name: Install latest bundler
-      run: |
-        gem install bundler --no-document
-        bundle config set without 'tools benchmarks docs'
+        bundler-cache: true
+    - name: Configure bundler
+      run: bundle config set without 'tools benchmarks docs'
     - name: Bundle install
       run: bundle install --jobs 4 --retry 3
     - name: Run all tests
