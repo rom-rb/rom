@@ -1,17 +1,18 @@
 # This file is synced from rom-rb/template-gem repo
 
-name: sync
+name: Changelog
 
 on:
-  repository_dispatch:
   push:
+    paths:
+      - "changelog.yml"
     branches:
       - "master"
 
 jobs:
-  main:
+  sync:
     runs-on: ubuntu-latest
-    if: (github.event_name == 'repository_dispatch' && github.event.action == 'sync_configs') || github.event_name != 'repository_dispatch'
+    name: Update
     env:
       GITHUB_LOGIN: rom-bot
       GITHUB_TOKEN: ${{ secrets.GH_PAT }}
@@ -40,7 +41,7 @@ jobs:
       - name: Commit
         run: |
           git add -A
-          git commit -m "[devtools] sync" || echo "nothing to commit"
+          git commit -m "Update CHANGELOG.md" || echo "nothing to commit"
       - name: Push changes
         run: |
           git pull --rebase origin master
