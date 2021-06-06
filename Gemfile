@@ -16,8 +16,10 @@ end
 
 gem "rom-sql", github: "rom-rb/rom-sql", branch: "master"
 
+gem "dry-monitor", github: "dry-rb/dry-monitor", branch: "master"
+gem "dry-events", github: "dry-rb/dry-events", branch: "master"
+
 group :sql do
-  gem "dry-monitor"
   gem "jdbc-postgres", platforms: :jruby
   gem "jdbc-sqlite3", platforms: :jruby
   gem "pg", platforms: :ruby

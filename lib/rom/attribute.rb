@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "dry/equalizer"
+require "dry/core/equalizer"
 
 require "rom/initializer"
 require "rom/support/memoizable"

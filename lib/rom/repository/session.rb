@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "dry/equalizer"
+require "dry/core/equalizer"
 
 module ROM
   # TODO: finish this in 1.1.0
