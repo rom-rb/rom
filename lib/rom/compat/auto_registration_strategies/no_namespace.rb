@@ -3,25 +3,29 @@
 require "pathname"
 
 require "rom/support/inflector"
-require "rom/setup/auto_registration_strategies/base"
+require "rom/types"
+require_relative "base"
 
 module ROM
   module AutoRegistrationStrategies
-    # WithNamespace strategy assumes components are defined within a namespace
-    # that matches top-level directory name.
+    # NoNamespace strategy assumes components are not defined within a namespace
     #
     # @api private
-    class WithNamespace < Base
+    class NoNamespace < Base
       # @!attribute [r] directory
       #   @return [Pathname] The path to dir with components
       option :directory, type: PathnameType
+
+      # @!attribute [r] entity
+      #   @return [Symbol] Component identifier
+      option :entity, type: Types::Strict::Symbol
 
       # Load components
       #
       # @api private
       def call
         inflector.camelize(
-          file.sub(%r{^#{directory.dirname}/}, "").sub(EXTENSION_REGEX, "")
+          file.sub(%r{^#{directory}/#{entity}/}, "").sub(EXTENSION_REGEX, "")
         )
       end
     end
