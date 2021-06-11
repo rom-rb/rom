@@ -90,6 +90,9 @@ Metrics/CyclomaticComplexity:
   Enabled: true
   Max: 12
 
+Style/AccessorGrouping:
+  Enabled: false
+
 Style/ExponentialNotation:
   Enabled: false
 
