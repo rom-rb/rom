@@ -1,14 +1,22 @@
 name: "RuboCop"
 on:
   push:
-    branches: [main, master]
+    branches:
+      - "main"
+      - "master"
     paths:
       - "**/*.rb"
       - "**/*.rake"
       - "Rakefile"
       - "Gemfile*"
       - ".rubocop.yml"
-  pull_request: [opened, synchronize]
+  pull_request:
+    branches:
+      - "main"
+      - "master"
+    types:
+      - "opened"
+      - "synchronize"
   workflow_dispatch:
 jobs:
   run:
