@@ -22,9 +22,7 @@ module ROM
 
     InflectorType = Types.Interface(:camelize)
 
-    ComponentDirs = Types::Strict::Hash.constructor { |hash|
-      hash.map { |key, value| [key, value.to_s] }.to_h
-    }
+    ComponentDirs = Types::Strict::Hash.constructor { |hash| hash.transform_values(&:to_s) }
 
     DEFAULT_MAPPING = {
       relations: "relations",
