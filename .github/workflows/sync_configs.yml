@@ -16,7 +16,7 @@ on:
 jobs:
   sync:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true || github.event_name == 'push'
     name: Update
     env:
       GITHUB_LOGIN: rom-bot
