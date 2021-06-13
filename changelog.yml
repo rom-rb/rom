@@ -7,13 +7,15 @@
   added:
   - 'You can now configure a custom inflector via `ROM::Configuration` (PR #591) (@flash-gordon)'
   - '.transaction methods now accept keyword arguments. `Repository#transaction` accepts gateway to use. `Repository::Root#transaction` uses a gateway of the root relation by default (#620 closed by #621) (@flash-gordon)'
+  - 'Backward-compatibility extension that you can load via `require "rom/compat"` (via #634 refs #607) (@solnic)'
   changed:
-  - "`rom-core`, `rom-changeset` and `rom-repository` have been merged into `rom`
-    gem (@solnic)"
+  - '`rom-core`, `rom-changeset` and `rom-repository` have been merged into `rom` gem (@solnic)'
   - "`Schema#[]` and `Relation#[]` now raise an error if a given attribute is not
     unique (issue #529 fixed via #543) (@waiting-for-dev)"
   - 'Configuration values are no longer being frozen during setup process (issue #616
     fixed via #617) (@v-kolesnikov)'
+  - '[BREAKING] `Setup#auto_registration` was renamed to `Setup#auto_register`. You can restore the original method via rom/compat extension (via #634 refs #607) (@solnic)'
+  - '[internal] auto registration is now powered by Zeitwerk (via #634 refs #607) (@solnic)'
 - version: 5.2.4
   summary:
   date: '2020-05-08'
