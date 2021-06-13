@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "rom/repository"
+
 RSpec.describe "ROM repository" do
   include_context "repository / database"
   include_context "relations"

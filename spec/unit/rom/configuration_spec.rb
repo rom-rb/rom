@@ -67,8 +67,8 @@ RSpec.describe ROM::Configuration do
       default_gw = conf.gateways[:default]
       custom_gw = conf.gateways[:custom]
 
-      rel_default = Class.new(ROM::Relation[:memory])
-      rel_custom = Class.new(ROM::Relation[:memory]) { gateway :custom }
+      rel_default = Class.new(ROM::Relation[:memory]) { schema(:users) {} }
+      rel_custom = Class.new(ROM::Relation[:memory]) { gateway :custom; schema(:others) {} }
 
       conf.register_relation(rel_default)
       conf.register_relation(rel_custom)

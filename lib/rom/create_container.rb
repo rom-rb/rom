@@ -1,44 +1,45 @@
 # frozen_string_literal: true
 
+require "dry/effects"
+
 require "rom/configuration"
-require "rom/environment"
-require "rom/setup"
 require "rom/setup/finalize"
 
 module ROM
   # @api private
   class CreateContainer
+    include Dry::Effects::Handler.Reader(:configuration)
+
     # @api private
     attr_reader :container
 
     # @api private
-    def initialize(environment, setup)
-      @container = finalize(environment, setup)
+    attr_reader :configuration
+
+    # @api private
+    attr_reader :notifications
+
+    # @api private
+    def initialize(configuration)
+      @configuration = configuration
+      @container = finalize
     end
 
     private
 
     # @api private
-    def finalize(environment, setup)
-      environment.configure do |config|
-        environment.gateways.each_key do |key|
+    def finalize
+      configuration.configure do |config|
+        configuration.gateways.each_key do |key|
           gateway_config = config.gateways[key]
           gateway_config.infer_relations = true unless gateway_config.key?(:infer_relations)
         end
       end
 
-      finalize = Finalize.new(
-        gateways: environment.gateways,
-        relation_classes: setup.relation_classes,
-        command_classes: setup.command_classes,
-        mappers: setup.mapper_classes,
-        plugins: setup.plugins,
-        notifications: setup.notifications,
-        config: environment.config.dup.freeze,
-        inflector: setup.inflector
-      )
-
-      finalize.run!
+      with_configuration(configuration) do
+        finalize = Finalize.new(configuration)
+        finalize.run!
+      end
     end
   end
 
@@ -46,20 +47,15 @@ module ROM
   class InlineCreateContainer < CreateContainer
     # @api private
     def initialize(*args, &block)
-      case args.first
-      when Configuration
-        environment = args.first.environment
-        setup = args.first.setup
-      when Environment
-        environment = args.first
-        setup = args[1]
-      else
-        configuration = Configuration.new(*args, &block)
-        environment = configuration.environment
-        setup = configuration.setup
-      end
+      configuration =
+        case args.first
+        when Configuration
+          configuration = args.first
+        else
+          configuration = Configuration.new(*args, &block)
+        end
 
-      super(environment, setup)
+      super(configuration)
     end
   end
 

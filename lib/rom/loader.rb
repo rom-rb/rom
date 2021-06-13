@@ -32,7 +32,7 @@ module ROM
 
     # @!attribute [r] directory
     #   @return [Pathname] The root path
-    param :root_directory, type: PathnameType
+    param :root_directory, type: PathnameType.optional
 
     # @!attribute [r] namespace
     #   @return [Boolean,String]
@@ -49,44 +49,18 @@ module ROM
     #   @api private
     option :inflector, type: InflectorType, default: -> { Inflector }
 
-    # @!attribute [r] loaded_constants
-    #   @return [Dry::Inflector] String inflector
+    # @!attribute [r] components
+    #   @return [ROM::Components]
     #   @api private
-    option :inflector, type: InflectorType, default: -> { Inflector }
-
-    option :loaded_constants, default: -> { {relations: [], commands: [], mappers: []} }
+    option :components
 
     # Load components
     #
     # @api private
-    def constants(component_type)
-      unless @loaded
-        setup and backend.eager_load
-        @loaded = true
-      end
-
-      loaded_constants.fetch(component_type)
-    end
-
-    # Load relation files
-    #
-    # @api private
-    def relations
-      constants(__method__)
-    end
-
-    # Load command files
-    #
-    # @api private
-    def commands
-      constants(__method__)
-    end
-
-    # Load mapper files
-    #
-    # @api private
-    def mappers
-      constants(__method__)
+    def call
+      return if @loaded || root_directory.nil?
+      setup and backend.eager_load
+      @loaded = true
     end
 
     private
@@ -120,7 +94,7 @@ module ROM
 
       backend.on_load do |_, const, path|
         if (type = path_to_component_type(path))
-          loaded_constants[type] << const
+          components.add(type, constant: const)
         end
       end
 

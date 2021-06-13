@@ -1,16 +1,7 @@
 # frozen_string_literal: true
 
-require "rom/relation"
-require "rom/command"
-
-require "rom/registry"
-require "rom/command_registry"
-require "rom/mapper_registry"
-
+require "rom/command_compiler"
 require "rom/container"
-require "rom/setup/finalize/finalize_commands"
-require "rom/setup/finalize/finalize_relations"
-require "rom/setup/finalize/finalize_mappers"
 
 # temporary
 require "rom/configuration_dsl/relation"
@@ -22,35 +13,15 @@ module ROM
   #
   # @private
   class Finalize
-    attr_reader :gateways, :repo_adapter, :inflector,
-                :relation_classes, :mapper_classes, :mapper_objects,
-                :command_classes, :plugins, :config, :notifications
+    attr_reader :configuration, :components, :notifications
 
     # @api private
-    def initialize(options)
-      @gateways = options.fetch(:gateways)
-      @inflector = options.fetch(:inflector)
+    def initialize(configuration)
+      # Ensure components are loaded through auto-registration
+      @configuration = configuration.finalize
 
-      @relation_classes = options.fetch(:relation_classes)
-      @command_classes = options.fetch(:command_classes)
-
-      mappers = options.fetch(:mappers, [])
-      @mapper_classes = mappers.select { |mapper| mapper.is_a?(Class) }
-      @mapper_objects = (mappers - @mapper_classes).reduce(:merge) || {}
-
-      @config = options.fetch(:config)
-      @notifications = options.fetch(:notifications)
-
-      @plugins = options.fetch(:plugins)
-    end
-
-    # Return adapter identifier for a given gateway object
-    #
-    # @return [Symbol]
-    #
-    # @api private
-    def adapter_for(gateway)
-      gateways[gateway].adapter
+      @notifications = configuration.notifications
+      @components = configuration.components
     end
 
     # Run the finalization process
@@ -61,53 +32,40 @@ module ROM
     #
     # @api private
     def run!
-      mappers = load_mappers
-      relations = load_relations(mappers)
-      commands = load_commands(relations)
+      load_relations
 
-      container = Container.new(gateways, relations, mappers, commands)
+      container = Container.new(
+        configuration.gateways,
+        relations,
+        relations.to_mapper_registry,
+        relations.to_command_registry
+      )
+
       container.freeze
       container
     end
 
+    # @api private
+    def relations
+      configuration.relations
+    end
+
     private
 
-    # Build entire relation registry from all known relation subclasses
-    #
-    # This includes both classes created via DSL and explicit definitions
+    # Add relations to the registry
     #
     # @api private
-    def load_relations(mappers)
-      global_plugins = plugins.select { |p| p.type == :relation || p.type == :schema }
+    def load_relations
+      components.relations.each do |component|
+        relation = relations.add(component.key, component.build)
 
-      FinalizeRelations.new(
-        gateways,
-        relation_classes,
-        mappers: mappers,
-        plugins: global_plugins,
-        notifications: notifications,
-        inflector: inflector
-      ).run!
-    end
+        notifications.trigger(
+          "configuration.relations.object.registered",
+          relation: relation, registry: relations
+        )
+      end
 
-    # @api private
-    def load_mappers
-      FinalizeMappers.new(mapper_classes, mapper_objects).run!
-    end
-
-    # Build entire command registries
-    #
-    # This includes both classes created via DSL and explicit definitions
-    #
-    # @api private
-    def load_commands(relations)
-      FinalizeCommands.new(
-        relations,
-        gateways,
-        command_classes,
-        notifications: notifications,
-        inflector: inflector
-      ).run!
+      notifications.trigger("configuration.relations.registry.created", registry: relations)
     end
   end
 end

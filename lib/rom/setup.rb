@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "rom/loader"
+require "rom/components"
 
 module ROM
   # Setup objects collect component classes during setup/finalization process
@@ -11,20 +12,17 @@ module ROM
     attr_reader :plugins
 
     # @api private
-    attr_reader :notifications
-
-    # @api private
     attr_accessor :inflector
 
     # @api private
     attr_reader :components
 
     # @api private
-    def initialize(notifications)
+    def initialize(components: Components::Registry.new, auto_register: EMPTY_HASH)
       @plugins = []
-      @notifications = notifications
       @inflector = Inflector
-      @components = {relations: [], commands: [], mappers: []}
+      @components = components
+      @auto_register = auto_register.merge(root_directory: nil, components: components)
     end
 
     # Enable auto-registration for a given setup object
@@ -36,44 +34,45 @@ module ROM
     # @return [Setup]
     #
     # @api public
-    def auto_register(directory, **options)
-      @auto_register ||= [directory, {**options}]
+    def auto_register(directory, options = {})
+      @auto_register.update(options).update(root_directory: directory)
+      self
     end
 
     # Relation sub-classes are being registered with this method during setup
     #
     # @api private
     def register_relation(*klasses)
-      components[:relations].concat(klasses)
+      klasses.each { |klass| components.add(:relations, constant: klass) }
+      components.relations
     end
 
     # Mapper sub-classes are being registered with this method during setup
     #
     # @api private
     def register_mapper(*klasses)
-      components[:mappers].concat(klasses)
+      klasses.each do |klass|
+        components.add(:mappers, constant: klass)
+      end
+      components[:mappers]
     end
 
     # Command sub-classes are being registered with this method during setup
     #
     # @api private
     def register_command(*klasses)
-      components[:commands].concat(klasses)
+      klasses.each do |klass|
+        components.add(:commands, constant: klass)
+      end
+
+      components.commands
     end
 
     # @api private
-    def relation_classes
-      @relation_classes ||= components[:relations].concat(loader&.relations || [])
-    end
-
-    # @api private
-    def command_classes
-      @command_classes ||= components[:commands].concat(loader&.commands || [])
-    end
-
-    # @api private
-    def mapper_classes
-      @mapper_classes ||= components[:mappers].concat(loader&.mappers || [])
+    def finalize
+      loader.()
+      freeze
+      self
     end
 
     # @api private
@@ -85,7 +84,7 @@ module ROM
 
     # @api private
     def loader
-      @loader ||= Loader.new(@auto_register[0], **(@auto_register[1] || {})) if @auto_register
+      @loader ||= Loader.new(@auto_register.fetch(:root_directory), **@auto_register)
     end
   end
 end

@@ -8,17 +8,12 @@ module ROM
     #
     # @private
     class MapperDSL
-      attr_reader :configuration, :mapper_classes, :defined_mappers
+      attr_reader :configuration
 
       # @api private
-      def initialize(configuration, mapper_classes, block)
+      def initialize(configuration, &block)
         @configuration = configuration
-        @mapper_classes = mapper_classes
-        @defined_mappers = []
-
         instance_exec(&block)
-
-        @mapper_classes = @defined_mappers
       end
 
       # Define a mapper class
@@ -30,7 +25,14 @@ module ROM
       #
       # @api public
       def define(name, options = EMPTY_HASH, &block)
-        @defined_mappers << Mapper::Builder.build_class(name, (@mapper_classes + @defined_mappers), options, &block)
+        constant = Mapper::Builder.build_class(
+          name, configuration.components.mappers, options, &block
+        )
+
+        configuration.components.add(
+          :mappers, key: constant.register_as, base_relation: constant.base_relation, constant: constant
+        )
+
         self
       end
 
@@ -38,7 +40,9 @@ module ROM
       #
       # @api public
       def register(relation, mappers)
-        configuration.register_mapper(relation => mappers)
+        mappers.each do |name, mapper|
+          configuration.components.add(:mappers, key: name, base_relation: relation, object: mapper)
+        end
       end
     end
   end

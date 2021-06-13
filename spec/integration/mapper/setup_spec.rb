@@ -19,7 +19,6 @@ RSpec.describe "Mapper Setup" do
   end
 
   it "accessible through register_as with the same name as use in the define method" do
-    expected_result = %i[users_mapper tags_mapper]
-    expect(configuration.mapper_classes.map(&:register_as)).to eq expected_result
+    expect(configuration.components.mappers.map(&:key)).to eql(%i[users_mapper tags_mapper])
   end
 end

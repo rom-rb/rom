@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "rom/repository"
+
 RSpec.describe "ROM repository with typed structs" do
   subject(:repo) do
     Class.new(ROM::Repository[:books]) { commands :create }.new(rom)
@@ -14,8 +16,13 @@ RSpec.describe "ROM repository with typed structs" do
         schema(:books, infer: true)
 
         view(:index) do
-          schema { project(:id, :title, :created_at) }
-          relation { order(:title) }
+          schema do
+            project(:id, :title, :created_at)
+          end
+
+          relation do
+            order(:title)
+          end
         end
       end
 

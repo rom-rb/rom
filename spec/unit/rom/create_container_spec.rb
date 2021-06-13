@@ -44,11 +44,8 @@ RSpec.describe ROM::CreateContainer, "#finalize" do
         schema(:admins, as: :users) {}
       end
 
-      configuration.register_relation(users)
-      configuration.register_relation(users2)
-
-      expect { container }.to raise_error(
-        ROM::RelationAlreadyDefinedError, /name :users/
+      expect { configuration.register_relation(users, users2) }.to raise_error(
+        ROM::RelationAlreadyDefinedError, /\+users\+ is already defined/
       )
     end
 
@@ -66,10 +63,9 @@ RSpec.describe ROM::CreateContainer, "#finalize" do
       end
 
       configuration.register_mapper(users_mapper)
-      configuration.register_mapper(users_mapper_2)
 
-      expect { container }.to raise_error(
-        ROM::MapperAlreadyDefinedError, /register_as :users/
+      expect { configuration.register_mapper(users_mapper_2) }.to raise_error(
+        ROM::MapperAlreadyDefinedError, /\+users\.users\+ is already defined/
       )
     end
 
