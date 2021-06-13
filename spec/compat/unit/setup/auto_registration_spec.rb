@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-require "rom/setup"
-require "rom/support/notifications"
+require "rom/compat"
 
 RSpec.describe ROM::Setup, "#auto_registration" do
   let!(:loaded_features) { $LOADED_FEATURES.dup }
@@ -21,7 +20,7 @@ RSpec.describe ROM::Setup, "#auto_registration" do
   context "with default component_dirs" do
     context "with namespace turned on" do
       before do
-        setup.auto_registration(SPEC_ROOT.join("fixtures/lib/persistence").to_s)
+        setup.auto_registration(SPEC_ROOT.join("compat/fixtures/lib/persistence").to_s)
       end
 
       describe "#relations" do
@@ -45,7 +44,7 @@ RSpec.describe ROM::Setup, "#auto_registration" do
 
     context "with namespace turned off" do
       before do
-        setup.auto_registration(SPEC_ROOT.join("fixtures/app"), namespace: false)
+        setup.auto_registration(SPEC_ROOT.join("compat/fixtures/app"), namespace: false)
       end
 
       describe "#relations" do
@@ -72,7 +71,7 @@ RSpec.describe ROM::Setup, "#auto_registration" do
     context "with namespace turned on" do
       before do
         setup.auto_registration(
-          SPEC_ROOT.join("fixtures/lib/persistence").to_s,
+          SPEC_ROOT.join("compat/fixtures/lib/persistence").to_s,
           component_dirs: {
             relations: :my_relations,
             mappers: :my_mappers,
@@ -103,7 +102,7 @@ RSpec.describe ROM::Setup, "#auto_registration" do
     context "with namespace turned off" do
       before do
         setup.auto_registration(
-          SPEC_ROOT.join("fixtures/app"),
+          SPEC_ROOT.join("compat/fixtures/app"),
           component_dirs: {
             relations: :my_relations,
             mappers: :my_mappers,
@@ -136,7 +135,7 @@ RSpec.describe ROM::Setup, "#auto_registration" do
       context "when namespace has subnamespace" do
         before do
           setup.auto_registration(
-            SPEC_ROOT.join("fixtures/custom_namespace"),
+            SPEC_ROOT.join("compat/fixtures/custom_namespace"),
             component_dirs: {
               relations: :relations,
               mappers: :mappers,
@@ -183,7 +182,7 @@ RSpec.describe ROM::Setup, "#auto_registration" do
       context "when namespace has wrong subnamespace" do
         subject(:registration) do
           setup.auto_registration(
-            SPEC_ROOT.join("fixtures/wrong"),
+            SPEC_ROOT.join("compat/fixtures/wrong"),
             component_dirs: {
               relations: :relations,
               mappers: :mappers,
@@ -209,7 +208,7 @@ RSpec.describe ROM::Setup, "#auto_registration" do
       context "when namespace does not implement subnamespace" do
         before do
           setup.auto_registration(
-            SPEC_ROOT.join("fixtures/custom"),
+            SPEC_ROOT.join("compat/fixtures/custom"),
             component_dirs: {
               relations: :relations,
               mappers: :mappers,
@@ -248,7 +247,7 @@ RSpec.describe ROM::Setup, "#auto_registration" do
         before do
           setup.inflector = inflector
           setup.auto_registration(
-            SPEC_ROOT.join("fixtures/xml_space"),
+            SPEC_ROOT.join("compat/fixtures/xml_space"),
             component_dirs: {
               relations: :xml_relations,
               mappers: :xml_mappers,

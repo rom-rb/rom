@@ -19,6 +19,8 @@ gem "rom-sql", github: "rom-rb/rom-sql", branch: "master"
 gem "dry-monitor", github: "dry-rb/dry-monitor", branch: "master"
 gem "dry-events", github: "dry-rb/dry-events", branch: "master"
 
+gem "zeitwerk", github: "fxn/zeitwerk", branch: "main"
+
 group :sql do
   gem "jdbc-postgres", platforms: :jruby
   gem "jdbc-sqlite3", platforms: :jruby

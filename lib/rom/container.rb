@@ -74,7 +74,7 @@ module ROM
   #
   # @example multi-step setup with auto-registration
   #   config = ROM::Configuration.new(:sql, 'sqlite::memory')
-  #   config.auto_registration('./persistence', namespace: false)
+  #   config.auto_register('./persistence', namespace: false)
   #
   #   config.default.create_table :users do
   #     primary_key :id

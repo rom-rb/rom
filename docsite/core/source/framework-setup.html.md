@@ -65,7 +65,7 @@ module Persistence
 end
 
 configuration = ROM::Configuration.new(:memory)
-configuration.auto_registration('root_dir/lib/persistence/')
+configuration.auto_register('root_dir/lib/persistence/')
 container = ROM.container(configuration)
 ```
 
@@ -92,7 +92,7 @@ Notice that the directory structure is different from our module structure. Sinc
 
 ```ruby
 configuration = ROM::Configuration.new(:memory)
-configuration.auto_registration('/path/to/lib', namespace: 'Persistence')
+configuration.auto_register('/path/to/lib', namespace: 'Persistence')
 container = ROM.container(configuration)
 ```
 
@@ -146,7 +146,7 @@ end
 Then, auto-registration can be achieved with
 
 ```ruby
-configuration.auto_registration('/path/to/lib', namespace: 'MyApp::Persistence')
+configuration.auto_register('/path/to/lib', namespace: 'MyApp::Persistence')
 ```
 
 #### Turning namespace off
@@ -162,7 +162,7 @@ end
 
 ```ruby
 configuration = ROM::Configuration.new(:memory)
-configuration.auto_registration('/path/to/lib', namespace: false)
+configuration.auto_register('/path/to/lib', namespace: false)
 container = ROM.container(configuration)
 ```
 

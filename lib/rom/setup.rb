@@ -1,27 +1,12 @@
 # frozen_string_literal: true
 
-require "rom/setup/auto_registration"
+require "rom/loader"
 
 module ROM
   # Setup objects collect component classes during setup/finalization process
   #
   # @api public
   class Setup
-    # @return [Array] registered relation subclasses
-    #
-    # @api private
-    attr_reader :relation_classes
-
-    # @return [Array] registered mapper subclasses
-    #
-    # @api private
-    attr_reader :mapper_classes
-
-    # @return [Array] registered command subclasses
-    #
-    # @api private
-    attr_reader :command_classes
-
     # @api private
     attr_reader :plugins
 
@@ -32,56 +17,75 @@ module ROM
     attr_accessor :inflector
 
     # @api private
+    attr_reader :components
+
+    # @api private
     def initialize(notifications)
-      @relation_classes = []
-      @command_classes = []
-      @mapper_classes = []
       @plugins = []
       @notifications = notifications
       @inflector = Inflector
+      @components = {relations: [], commands: [], mappers: []}
     end
 
     # Enable auto-registration for a given setup object
     #
     # @param [String, Pathname] directory The root path to components
     # @param [Hash] options
-    # @option options [Boolean, String] :namespace Enable/disable namespace or provide a custom namespace name
+    # @option options [Boolean] :namespace Toggle root namespace
     #
     # @return [Setup]
     #
     # @api public
-    def auto_registration(directory, **options)
-      auto_registration = AutoRegistration.new(directory, inflector: inflector, **options)
-      auto_registration.relations.map { |r| register_relation(r) }
-      auto_registration.commands.map { |r| register_command(r) }
-      auto_registration.mappers.map { |r| register_mapper(r) }
-      self
+    def auto_register(directory, **options)
+      @auto_register ||= [directory, {**options}]
     end
 
     # Relation sub-classes are being registered with this method during setup
     #
     # @api private
     def register_relation(*klasses)
-      @relation_classes.concat(klasses)
+      components[:relations].concat(klasses)
     end
 
     # Mapper sub-classes are being registered with this method during setup
     #
     # @api private
     def register_mapper(*klasses)
-      @mapper_classes.concat(klasses)
+      components[:mappers].concat(klasses)
     end
 
     # Command sub-classes are being registered with this method during setup
     #
     # @api private
     def register_command(*klasses)
-      @command_classes.concat(klasses)
+      components[:commands].concat(klasses)
+    end
+
+    # @api private
+    def relation_classes
+      @relation_classes ||= components[:relations].concat(loader&.relations || [])
+    end
+
+    # @api private
+    def command_classes
+      @command_classes ||= components[:commands].concat(loader&.commands || [])
+    end
+
+    # @api private
+    def mapper_classes
+      @mapper_classes ||= components[:mappers].concat(loader&.mappers || [])
     end
 
     # @api private
     def register_plugin(plugin)
       plugins << plugin
+    end
+
+    private
+
+    # @api private
+    def loader
+      @loader ||= Loader.new(@auto_register[0], **(@auto_register[1] || {})) if @auto_register
     end
   end
 end

@@ -20,6 +20,7 @@ Gem::Specification.new do |gem|
   gem.required_ruby_version = '>= 2.4.0'
 
   gem.add_runtime_dependency 'concurrent-ruby', '~> 1.1'
+  gem.add_runtime_dependency 'zeitwerk'
   gem.add_runtime_dependency 'dry-core', '~> 0.6', '>= 0.6'
   gem.add_runtime_dependency 'dry-inflector', '~> 0.1'
   gem.add_runtime_dependency 'dry-container', '~> 0.7'

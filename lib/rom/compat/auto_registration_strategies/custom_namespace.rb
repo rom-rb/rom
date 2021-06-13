@@ -4,7 +4,8 @@ require "pathname"
 
 require "rom/support/inflector"
 require "rom/types"
-require "rom/setup/auto_registration_strategies/base"
+
+require_relative "base"
 
 module ROM
   module AutoRegistrationStrategies
