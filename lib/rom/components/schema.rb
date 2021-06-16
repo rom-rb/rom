@@ -22,7 +22,7 @@ module ROM
       def build
         plugins = self.plugins
 
-        schema = proc.call do |*args|
+        schema = proc.call do
           # This is evaluated using Schema::DSL where app_plugin is defined
           plugins.each { |plugin| app_plugin(plugin) }
         end
