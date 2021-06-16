@@ -1,13 +1,20 @@
 # frozen_string_literal: true
 
+require "dry/effects"
+
 require "rom/plugin_registry"
 require "rom/global/plugin_dsl"
+require "rom/configuration"
+require "rom/setup/finalize"
+
 
 module ROM
   # Globally accessible public interface exposed via ROM module
   #
   # @api public
   module Global
+    include Dry::Effects::Handler.Reader(:configuration)
+
     # Set base global registries in ROM constant
     #
     # @api private
@@ -31,6 +38,29 @@ module ROM
     #
     # @api private
     attr_reader :plugin_registry
+
+    # @api public
+    def container(*args, &block)
+      configuration =
+        case args.first
+        when Configuration
+          args.first
+        else
+          Configuration.new(*args, &block)
+        end
+
+      configuration.configure do |config|
+        configuration.gateways.each_key do |key|
+          gateway_config = config.gateways[key]
+          gateway_config.infer_relations = true unless gateway_config.key?(:infer_relations)
+        end
+      end
+
+      with_configuration(configuration) do
+        finalize = Finalize.new(configuration)
+        finalize.run!
+      end
+    end
 
     # Global plugin setup DSL
     #

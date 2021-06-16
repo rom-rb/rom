@@ -2,8 +2,8 @@
 
 require "spec_helper"
 
-RSpec.describe ROM::CreateContainer, "#finalize" do
-  describe "#finalize" do
+RSpec.describe ROM::Global, "#container" do
+  context "with configuration" do
     include_context "container"
 
     it "can register multiple relations with same dataset" do

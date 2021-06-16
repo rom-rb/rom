@@ -16,14 +16,8 @@ require "rom/commands"
 # rom Global
 require "rom/global"
 
-# rom configurations
-require "rom/configuration"
-
 # container with registries
 require "rom/container"
-
-# container factory
-require "rom/create_container"
 
 # register known plugin types
 require "rom/schema_plugin"
