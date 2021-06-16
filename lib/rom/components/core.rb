@@ -64,6 +64,13 @@ module ROM
       end
 
       # @api public
+      def adapter
+        relation.adapter or raise(
+          MissingAdapterIdentifierError, "+#{constant}+ is missing the adapter identifier"
+        )
+      end
+
+      # @api public
       def apply_plugins
         plugins.each do |plugin|
           plugin.apply_to(constant)

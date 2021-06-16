@@ -17,20 +17,10 @@ module ROM
       }
       alias_method :id, :key
 
-      # @api public
-      def adapter
-        constant.adapter
-      end
-
       # @return [ROM::Relation]
       #
       # @api public
       def build
-        unless adapter
-          raise MissingAdapterIdentifierError,
-                "Relation class +#{constant}+ is missing the adapter identifier"
-        end
-
         relation_names = components.relations.map(&:key)
 
         # TODO: this should become a built-in feature, no neeed to use a plugin

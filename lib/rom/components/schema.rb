@@ -49,11 +49,6 @@ module ROM
       def call(**opts)
         proc.call(**opts)
       end
-
-      # @api private
-      def adapter
-        relation.adapter
-      end
     end
   end
 end

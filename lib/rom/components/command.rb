@@ -23,7 +23,7 @@ module ROM
           command: constant,
           gateway: gateways[relation.gateway],
           dataset: relation.dataset,
-          adapter: relation.adapter
+          adapter: adapter
         )
 
         constant.extend_for_relation(relation) if constant.restrictable
