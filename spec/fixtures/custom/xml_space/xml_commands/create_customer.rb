@@ -2,7 +2,8 @@
 
 module XMLSpace
   module XMLCommands
-    class CreateCustomer
+    class CreateCustomer < ROM::Memory::Commands::Create
+      relation :customers
     end
   end
 end

@@ -94,7 +94,11 @@ module ROM
 
       backend.on_load do |_, const, path|
         if (type = path_to_component_type(path))
-          components.add(type, constant: const)
+          begin
+            components.add(type, constant: const)
+          rescue => e
+            raise "Failed to load #{const} from #{path}: #{e.message}"
+          end
         end
       end
 

@@ -2,7 +2,8 @@
 
 module XMLSpace
   module XMLMappers
-    class CustomerList
+    class CustomerList < ROM::Transformer
+      relation :customers
     end
   end
 end

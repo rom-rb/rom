@@ -57,15 +57,6 @@ module ROM
       def add(type, **options)
         component = handlers.fetch(type).new(**options)
 
-        if component.respond_to?(:id) && store[type].map(&:id).include?(component.id)
-          case type
-          when :mappers
-            raise MapperAlreadyDefinedError, "+#{component.id}+ is already defined"
-          when :relations
-            raise RelationAlreadyDefinedError, "+#{component.id}+ is already defined"
-          end
-        end
-
         # TODO: this needs a nicer abstraction
         # TODO: respond_to? is only needed because auto_register specs use POROs :(
         update(component.constant.components) if component.constant.respond_to?(:components)
@@ -76,7 +67,11 @@ module ROM
       end
 
       CORE_TYPES.each do |type|
-        define_method(type) { self[type] }
+        define_method(type) do |**opts|
+          all = self[type]
+          return all if opts.empty?
+          all.select { |el| opts.all? { |key, value| el.public_send(key).eql?(value) } }
+        end
       end
     end
   end

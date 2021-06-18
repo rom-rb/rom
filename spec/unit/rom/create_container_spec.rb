@@ -44,13 +44,19 @@ RSpec.describe ROM::Global, "#container" do
         schema(:admins, as: :users) {}
       end
 
-      expect { configuration.register_relation(users, users2) }.to raise_error(
+      configuration.register_relation(users, users2)
+
+      expect { container }.to raise_error(
         ROM::RelationAlreadyDefinedError, /\+users\+ is already defined/
       )
     end
 
     it "raises an error when registering same mapper twice for the same relation" do
       configuration
+
+      users = Class.new(ROM::Relation[:memory]) do
+        schema(:users) {}
+      end
 
       users_mapper = Class.new(ROM::Mapper) do
         register_as :users
@@ -62,10 +68,11 @@ RSpec.describe ROM::Global, "#container" do
         relation :users
       end
 
-      configuration.register_mapper(users_mapper)
+      configuration.register_relation(users)
+      configuration.register_mapper(users_mapper, users_mapper_2)
 
-      expect { configuration.register_mapper(users_mapper_2) }.to raise_error(
-        ROM::MapperAlreadyDefinedError, /\+users\.users\+ is already defined/
+      expect { container }.to raise_error(
+        ROM::MapperAlreadyDefinedError, /\+users\+ is already defined/
       )
     end
 

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "rom/setup"
+require "rom/transformer"
 
 RSpec.describe ROM::Setup, "#auto_register" do
   subject(:setup) { ROM::Setup.new }

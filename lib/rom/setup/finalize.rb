@@ -57,7 +57,7 @@ module ROM
     # @api private
     def load_relations
       components.relations.each do |component|
-        relation = relations.add(component.key, component.build)
+        relation = relations.add(component.id, component.build)
 
         notifications.trigger(
           "configuration.relations.object.registered",

@@ -3,7 +3,8 @@
 module My
   module NewNamespace
     module Foo
-      class CustomerList
+      class CustomerList < ROM::Transformer
+        relation :customers
       end
     end
   end

@@ -62,7 +62,9 @@ RSpec.describe "Commands" do
     end
 
     it "applies to generated classes" do
-      klass = ROM::ConfigurationDSL::Command.build_class(:create, :users, adapter: :memory)
+      klass = ROM::ConfigurationDSL::Command.build_class(
+        :create_super, :users, type: :create, adapter: :memory
+      )
       configuration.register_command(klass)
       container
       command = klass.build(users_relation)

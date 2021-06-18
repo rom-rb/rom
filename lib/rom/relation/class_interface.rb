@@ -107,6 +107,7 @@ module ROM
 
           raise InvalidRelationName, relation if invalid_relation_name?(relation)
 
+          # TODO: such legacy very wow - this should be removed eventually
           @relation_name = Name[relation, ds_name]
 
           schema_proc = proc do |**kwargs, &inner_block|

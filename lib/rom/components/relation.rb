@@ -8,23 +8,30 @@ module ROM
     class Relation < Core
       id :relation
 
-      # @!attribute [r] key
-      #   @return [Symbol] The relation identifier
-      #   @api public
-      option :key, type: Types.Instance(Symbol), default: -> {
-        # TODO: another workaround for auto_register specs not using actual rom classes
-        constant.respond_to?(:relation_name) ? constant.relation_name.to_sym : constant.name.to_sym
-      }
-      alias_method :id, :key
+      # Registry id
+      #
+      # @return [Symbol]
+      #
+      # @api public
+      def id
+        constant.relation_name.to_sym
+      end
+
+      # Default container key
+      #
+      # @return [String]
+      #
+      # @api public
+      def key
+        "relations.#{id}"
+      end
 
       # @return [ROM::Relation]
       #
       # @api public
       def build
-        relation_names = components.relations.map(&:key)
-
         # TODO: this should become a built-in feature, no neeed to use a plugin
-        constant.use(:registry_reader, relations: relation_names)
+        constant.use(:registry_reader, relations: components.relations.map(&:id).uniq)
 
         trigger("relations.class.ready", relation: constant, adapter: adapter)
 
@@ -59,31 +66,29 @@ module ROM
 
       # @api private
       def finalize_schema
-        components.schemas
-          .select { |schema| schema.relation == constant }
-          .last # TODO: relation DSL auto-defines an empty schema so this is a workaround
-          .build
+        # TODO: relation DSL auto-defines an empty schema so this is a workaround
+        components.schemas(relation: constant).last.build
       end
 
       # @api private
       def finalize_mappers
-        mappers = components[:mappers]
-          .map { |mapper| [mapper.key, mapper.build] if mapper.base_relation == key }
-          .compact
-          .to_h
+        mappers = components.mappers(relation_id: id)
 
-        constant.mapper_registry(cache: configuration.cache).merge(mappers)
+        registry = constant.mapper_registry(cache: configuration.cache)
+
+        mappers.each do |mapper|
+          registry.add(mapper.id, mapper.build)
+        end
+
+        registry
       end
 
       # @api private
       def finalize_commands(relation)
-        commands = components.commands
-          .select { |command| command.relation_name == constant.relation_name.relation }
-          .map { |command| command.build(relation: relation) }
+        commands = components.commands(relation_id: id)
 
         commands.each do |command|
-          identifier = command.class.register_as || command.class.default_name
-          relation.commands.elements[identifier] = command
+          relation.commands.add(command.id, command.build(relation: relation))
         end
 
         command_compiler.commands.elements[constant.relation_name.relation] = relation.commands

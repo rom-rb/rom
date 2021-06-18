@@ -3,7 +3,7 @@
 module My
   module NewNamespace
     module Foo
-      class Customers
+      class Customers < ROM::Relation[:memory]
       end
     end
   end

@@ -2,7 +2,7 @@
 
 module Test
   module Relations
-    class Users
+    class Users < ROM::Relation[:memory]
     end
   end
 end

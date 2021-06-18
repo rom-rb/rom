@@ -8,31 +8,46 @@ module ROM
     class Mapper < Core
       id :mapper
 
-      # @!attribute [r] key
-      #   @return [Symbol] The mapper identifier
+      # @!attribute [r] id
+      #   @return [Symbol] Registry key
       #   @api public
-      option :key, type: Types.Instance(Symbol), default: -> {
-        # TODO: another workaround for auto_register specs not using actual rom classes
-        constant.respond_to?(:register_as) ?
-          (constant.register_as || constant.relation) : constant.name.to_sym
-      }
+      option :id, type: Types.Instance(Symbol), optional: true, reader: false
 
       # @!attribute [r] base_relation
       #   @return [Symbol] The base relation identifier
       #   @api public
-      option :base_relation, type: Types.Instance(Symbol), default: -> {
-        # TODO: another workaround for auto_register specs not using actual rom classes
-        constant.respond_to?(:base_relation) ? constant.base_relation : constant.name.to_sym
-      }
+      option :base_relation, type: Types.Instance(Symbol), optional: true, reader: false
 
       # @!attribute [r] object
-      #   @return [Class] Pre-initialize object that should be used instead of the constant
+      #   @return [Class] Pre-initialized object that should be used instead of the constant
       #   @api public
       option :object, optional: true
 
+      # Relation registry id
+      #
+      # @return [Symbol]
+      #
+      # @api public
+      def relation_id
+        options[:base_relation] || constant.base_relation
+      end
+
+      # Registry key
+      #
+      # @return [Symbol]
+      #
       # @api public
       def id
-        "#{base_relation}.#{key}"
+        options[:id] || constant.id
+      end
+
+      # Default container key
+      #
+      # @return [String]
+      #
+      # @api public
+      def key
+        "mappers.#{relation_id}.#{id}"
       end
 
       # @api public

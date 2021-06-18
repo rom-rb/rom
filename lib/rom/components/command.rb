@@ -8,13 +8,21 @@ module ROM
     class Command < Core
       id :command
 
-      # @!attribute [r] relation_name
-      #   @return [Symbol] The relation identifier
-      #   @api public
-      option :relation_name, type: Types.Instance(Symbol), default: -> {
-        # TODO: another workaround for auto_register specs not using actual rom classes
-        constant.respond_to?(:relation) ? constant.relation : constant.name.to_sym
-      }
+      # Registry id
+      #
+      # @return [Symbol]
+      #
+      # @api public
+      def id
+        constant.register_as || constant.default_name
+      end
+
+      # @return [Symbol]
+      #
+      # @api public
+      def relation_id
+        constant.relation
+      end
 
       # @api public
       def build(relation:)

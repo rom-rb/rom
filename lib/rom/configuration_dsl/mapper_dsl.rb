@@ -29,19 +29,20 @@ module ROM
           name, configuration.components.mappers, options, &block
         )
 
-        configuration.components.add(
-          :mappers, key: constant.register_as, base_relation: constant.base_relation, constant: constant
-        )
-
-        self
+        configuration.components.add(:mappers, constant: constant)
       end
 
-      # TODO
+      # Register any object as a mapper for a given relation
+      #
+      # @param [Symbol] relation The relation registry id
+      # @param [Hash<Symbol, Object>] mappers A hash with mapper objects
+      #
+      # @return [Array<Components::Mapper>]
       #
       # @api public
       def register(relation, mappers)
-        mappers.each do |name, mapper|
-          configuration.components.add(:mappers, key: name, base_relation: relation, object: mapper)
+        mappers.map do |id, mapper|
+          configuration.components.add(:mappers, id: id, base_relation: relation, object: mapper)
         end
       end
     end

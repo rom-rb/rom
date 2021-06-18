@@ -23,6 +23,8 @@ module ROM
 
     # @api private
     def add(key, relation)
+      raise RelationAlreadyDefinedError, "+#{key}+ is already defined" if key?(key)
+
       elements[key] = relation
     end
   end

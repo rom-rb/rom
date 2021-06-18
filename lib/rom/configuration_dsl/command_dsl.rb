@@ -29,7 +29,7 @@ module ROM
       # @api public
       def define(name, options = EMPTY_HASH, &block)
         constant = Command.build_class(name, relation, {adapter: adapter}.merge(options), &block)
-        configuration.components.add(:commands, constant: constant, key: name, relation: relation)
+        configuration.components.add(:commands, constant: constant)
       end
     end
   end

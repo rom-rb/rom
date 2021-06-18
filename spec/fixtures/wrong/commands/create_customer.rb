@@ -3,7 +3,8 @@
 module My
   module NewNamespace
     module Foo
-      class CreateCustomer
+      class CreateCustomer < ROM::Memory::Commands::Create
+        relation :users
       end
     end
   end

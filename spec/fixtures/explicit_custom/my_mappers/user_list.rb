@@ -2,7 +2,8 @@
 
 module Test
   module MyMappers
-    class UserList
+    class UserList < ROM::Transformer
+      relation :users
     end
   end
 end
