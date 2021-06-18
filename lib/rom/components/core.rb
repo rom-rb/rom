@@ -91,9 +91,14 @@ module ROM
 
       # @api private
       def gateway
-        gateways.fetch(relation.gateway) do
-          raise "+#{constant}+ gateway not found #{constant.gateway.inspect}"
+        gateways.fetch(gateway_name) do
+          raise "+#{gateway_name.inspect}+ gateway not found for #{constant}"
         end
+      end
+
+      # @api private
+      def gateway_name
+        relation.gateway
       end
     end
   end
