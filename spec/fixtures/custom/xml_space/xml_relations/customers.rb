@@ -2,7 +2,7 @@
 
 module XMLSpace
   module XMLRelations
-    class Customers
+    class Customers < ROM::Relation[:memory]
     end
   end
 end

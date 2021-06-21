@@ -2,7 +2,7 @@
 
 module Persistence
   module MyCommands
-    class CreateUser
+    class CreateUser < ROM::Memory::Commands::Create
     end
   end
 end

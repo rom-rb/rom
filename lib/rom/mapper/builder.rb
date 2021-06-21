@@ -21,7 +21,7 @@ module ROM
 
         parent_class =
           if parent
-            mapper_registry.detect { |klass| klass.relation == parent }
+            mapper_registry.detect { |klass| klass.relation_id == parent }.constant
           else
             ROM::Mapper
           end

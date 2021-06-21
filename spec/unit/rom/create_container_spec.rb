@@ -2,8 +2,8 @@
 
 require "spec_helper"
 
-RSpec.describe ROM::CreateContainer, "#finalize" do
-  describe "#finalize" do
+RSpec.describe ROM::Global, "#container" do
+  context "with configuration" do
     include_context "container"
 
     it "can register multiple relations with same dataset" do
@@ -44,16 +44,19 @@ RSpec.describe ROM::CreateContainer, "#finalize" do
         schema(:admins, as: :users) {}
       end
 
-      configuration.register_relation(users)
-      configuration.register_relation(users2)
+      configuration.register_relation(users, users2)
 
       expect { container }.to raise_error(
-        ROM::RelationAlreadyDefinedError, /name :users/
+        ROM::RelationAlreadyDefinedError, /\+users\+ is already defined/
       )
     end
 
     it "raises an error when registering same mapper twice for the same relation" do
       configuration
+
+      users = Class.new(ROM::Relation[:memory]) do
+        schema(:users) {}
+      end
 
       users_mapper = Class.new(ROM::Mapper) do
         register_as :users
@@ -65,11 +68,11 @@ RSpec.describe ROM::CreateContainer, "#finalize" do
         relation :users
       end
 
-      configuration.register_mapper(users_mapper)
-      configuration.register_mapper(users_mapper_2)
+      configuration.register_relation(users)
+      configuration.register_mapper(users_mapper, users_mapper_2)
 
       expect { container }.to raise_error(
-        ROM::MapperAlreadyDefinedError, /register_as :users/
+        ROM::MapperAlreadyDefinedError, /\+users\+ is already defined/
       )
     end
 

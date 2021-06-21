@@ -21,10 +21,25 @@ module ROM
     # @api public
     def auto_registration(directory, **options)
       auto_registration = AutoRegistration.new(directory, inflector: inflector, **options)
-      auto_registration.relations.map { |r| register_relation(r) }
-      auto_registration.commands.map { |r| register_command(r) }
-      auto_registration.mappers.map { |r| register_mapper(r) }
+      auto_registration.relations.each { |r| register_relation(r) }
+      auto_registration.commands.each { |r| register_command(r) }
+      auto_registration.mappers.each { |r| register_mapper(r) }
       self
+    end
+
+    # @api public
+    def relation_classes
+      components.relations.map(&:constant)
+    end
+
+    # @api public
+    def command_classes
+      components.commands.map(&:constant)
+    end
+
+    # @api public
+    def mapper_classes
+      components.mappers.map(&:constant)
     end
   end
 end

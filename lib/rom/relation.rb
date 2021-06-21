@@ -192,7 +192,7 @@ module ROM
     # @!attribute [r] commands
     #   @return [CommandRegistry] Command registry
     #   @api private
-    option :commands, default: -> { CommandRegistry.new({}, relation_name: name.relation) }
+    option :commands, default: -> { self.class.command_registry(name) }
 
     # @!attribute [r] meta
     #   @return [Hash] Meta data stored in a hash

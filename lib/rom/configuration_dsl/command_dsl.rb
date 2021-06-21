@@ -8,13 +8,13 @@ module ROM
     #
     # @private
     class CommandDSL
-      attr_reader :relation, :adapter, :command_classes
+      attr_reader :configuration, :relation, :adapter
 
       # @api private
-      def initialize(relation, adapter = nil, &block)
+      def initialize(configuration, relation:, adapter: nil, &block)
+        @configuration = configuration
         @relation = relation
         @adapter = adapter
-        @command_classes = []
         instance_exec(&block)
       end
 
@@ -28,9 +28,8 @@ module ROM
       #
       # @api public
       def define(name, options = EMPTY_HASH, &block)
-        @command_classes << Command.build_class(
-          name, relation, {adapter: adapter}.merge(options), &block
-        )
+        constant = Command.build_class(name, relation, {adapter: adapter}.merge(options), &block)
+        configuration.components.add(:commands, constant: constant)
       end
     end
   end

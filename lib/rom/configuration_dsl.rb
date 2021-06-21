@@ -48,15 +48,15 @@ module ROM
     #   end
     #
     # @api public
-    def commands(name, &block)
-      register_command(*CommandDSL.new(name, default_adapter, &block).command_classes)
+    def commands(relation, &block)
+      CommandDSL.new(self, relation: relation, adapter: default_adapter, &block)
     end
 
     # Mapper definition DSL
     #
     # @api public
     def mappers(&block)
-      register_mapper(*MapperDSL.new(self, mapper_classes, block).mapper_classes)
+      MapperDSL.new(self, &block)
     end
 
     # Configures a plugin for a specific adapter to be enabled for all relations

@@ -8,17 +8,12 @@ module ROM
     #
     # @private
     class MapperDSL
-      attr_reader :configuration, :mapper_classes, :defined_mappers
+      attr_reader :configuration
 
       # @api private
-      def initialize(configuration, mapper_classes, block)
+      def initialize(configuration, &block)
         @configuration = configuration
-        @mapper_classes = mapper_classes
-        @defined_mappers = []
-
         instance_exec(&block)
-
-        @mapper_classes = @defined_mappers
       end
 
       # Define a mapper class
@@ -30,15 +25,25 @@ module ROM
       #
       # @api public
       def define(name, options = EMPTY_HASH, &block)
-        @defined_mappers << Mapper::Builder.build_class(name, (@mapper_classes + @defined_mappers), options, &block)
-        self
+        constant = Mapper::Builder.build_class(
+          name, configuration.components.mappers, options, &block
+        )
+
+        configuration.components.add(:mappers, constant: constant)
       end
 
-      # TODO
+      # Register any object as a mapper for a given relation
+      #
+      # @param [Symbol] relation The relation registry id
+      # @param [Hash<Symbol, Object>] mappers A hash with mapper objects
+      #
+      # @return [Array<Components::Mapper>]
       #
       # @api public
       def register(relation, mappers)
-        configuration.register_mapper(relation => mappers)
+        mappers.map do |id, mapper|
+          configuration.components.add(:mappers, id: id, base_relation: relation, object: mapper)
+        end
       end
     end
   end

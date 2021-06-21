@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "rom/constants"
+require "rom/support/component"
 require "rom/mapper/dsl"
 
 module ROM
@@ -8,6 +9,8 @@ module ROM
   #
   # @private
   class Mapper
+    extend Component
+
     include DSL
     include Dry::Equalizer(:transformers, :header)
 

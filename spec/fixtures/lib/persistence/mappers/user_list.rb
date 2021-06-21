@@ -2,7 +2,8 @@
 
 module Persistence
   module Mappers
-    class UserList
+    class UserList < ROM::Transformer
+      relation :users
     end
   end
 end

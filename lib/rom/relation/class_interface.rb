@@ -2,9 +2,12 @@
 
 require "set"
 
+require "dry/effects"
+
 require "rom/support/inflector"
 
 require "rom/constants"
+require "rom/components"
 require "rom/relation/name"
 require "rom/relation/view_dsl"
 require "rom/schema"
@@ -17,6 +20,8 @@ module ROM
     # @api public
     module ClassInterface
       extend Notifications::Listener
+
+      include Components
 
       subscribe("configuration.relations.object.registered") do |event|
         relation = event[:relation]
@@ -102,9 +107,10 @@ module ROM
 
           raise InvalidRelationName, relation if invalid_relation_name?(relation)
 
+          # TODO: such legacy very wow - this should be removed eventually
           @relation_name = Name[relation, ds_name]
 
-          @schema_proc = proc do |**kwargs, &inner_block|
+          schema_proc = proc do |**kwargs, &inner_block|
             schema_dsl.new(
               relation_name,
               schema_class: schema_class,
@@ -113,8 +119,14 @@ module ROM
               &block
             ).call(**kwargs, &inner_block)
           end
+
+          # TODO: remove this eventually. Schemas are now evaluated using components
+          #       during finalization, storing schema_proc is no longer needed
+          @schema_proc = components.add(:schemas, proc: schema_proc, relation: self)
         end
       end
+      # @api private
+      attr_reader :schema_proc
 
       # Assign a schema to a relation class
       #
@@ -126,9 +138,6 @@ module ROM
       def set_schema!(schema)
         @schema = schema
       end
-
-      # @api private
-      attr_reader :schema_proc
 
       # @!attribute [r] relation_name
       #   @return [Name] Qualified relation name
@@ -272,6 +281,11 @@ module ROM
       end
 
       # @api private
+      def command_registry(name)
+        CommandRegistry.new({}, relation_name: name)
+      end
+
+      # @api private
       def curried
         Curried
       end
@@ -301,8 +315,8 @@ module ROM
       # @api private
       def default_schema(klass = self, inflector: Inflector)
         klass.schema ||
-          if klass.schema_proc
-            klass.set_schema!(klass.schema_proc.(inflector: inflector))
+          if (schema_comp = klass.components.schemas.detect { |c| c.relation == klass })
+            klass.set_schema!(schema_comp.(inflector: inflector))
           else
             klass.schema_class.define(klass.default_name)
           end

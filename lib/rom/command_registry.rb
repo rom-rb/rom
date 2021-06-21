@@ -100,6 +100,13 @@ module ROM
       options[:mappers] = @mappers = mappers
     end
 
+    # @api private
+    def add(key, command)
+      raise CommandAlreadyDefinedError, "+#{key}+ is already defined" if key?(key)
+
+      elements[key] = command
+    end
+
     private
 
     # Allow checking if a certain command is available using dot-notation

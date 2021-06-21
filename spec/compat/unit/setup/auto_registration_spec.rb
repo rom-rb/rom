@@ -3,11 +3,9 @@
 require "rom/compat"
 
 RSpec.describe ROM::Setup, "#auto_registration" do
+  subject(:setup) { ROM::Setup.new }
+
   let!(:loaded_features) { $LOADED_FEATURES.dup }
-
-  subject(:setup) { ROM::Setup.new(notifications) }
-
-  let(:notifications) { instance_double(ROM::Notifications::EventBus) }
 
   after do
     %i[Persistence Users CreateUser UserList My XMLSpace].each do |const|

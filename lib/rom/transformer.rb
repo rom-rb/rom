@@ -3,6 +3,7 @@
 require "dry/core/class_attributes"
 require "dry/transformer"
 
+require "rom/support/component"
 require "rom/processor/transformer"
 
 module ROM
@@ -11,6 +12,7 @@ module ROM
   # @api public
   class Transformer < Dry::Transformer[Processor::Transformer::Functions]
     extend Dry::Core::ClassAttributes
+    extend Component
 
     # @!method self.register_as
     #  Get or set registration name

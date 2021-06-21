@@ -27,5 +27,12 @@ module ROM
         cache.fetch_or_store(args.hash) { compiler.(*args) }
       end
     end
+
+    # @api private
+    def add(key, mapper)
+      raise MapperAlreadyDefinedError, "+#{key}+ is already defined" if key?(key)
+
+      elements[key] = mapper
+    end
   end
 end

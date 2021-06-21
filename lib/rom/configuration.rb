@@ -2,11 +2,12 @@
 
 require "forwardable"
 
+require "rom/support/notifications"
 require "rom/environment"
 require "rom/setup"
 require "rom/configuration_dsl"
-require "rom/support/notifications"
 require "rom/support/inflector"
+require "rom/relation_registry"
 
 module ROM
   class Configuration
@@ -37,9 +38,17 @@ module ROM
     #   @return [Notifications] Notification bus instance
     attr_reader :notifications
 
-    def_delegators :@setup, :register_relation, :register_command, :register_mapper, :register_plugin,
-                   :command_classes, :mapper_classes,
-                   :auto_registration, :inflector, :inflector=
+    # @!attribute [r] cache
+    #   @return [Notifications] Cache
+    attr_reader :cache
+
+    # @!attribute [r] relations
+    #   @return [ROM::RelationRegistry] relations
+    attr_reader :relations
+
+    def_delegators :@setup, :register_relation, :register_command,
+      :register_mapper, :register_plugin, :auto_registration,
+      :inflector, :inflector=, :components, :plugins
 
     def_delegators :@environment, :gateways, :gateways_map, :configure, :config
 
@@ -52,10 +61,30 @@ module ROM
     # @api private
     def initialize(*args, &block)
       @environment = Environment.new(*args)
+      @setup = Setup.new
       @notifications = Notifications.event_bus(:configuration)
-      @setup = Setup.new(notifications)
+      @cache = Cache.new
+
+      @relations = RelationRegistry.build
 
       block&.call(self)
+    end
+
+    # @api private
+    def finalize
+      setup.finalize
+      self
+    end
+
+    # @api private
+    def command_compiler
+      @command_compiler ||= CommandCompiler.new(
+        gateways,
+        relations,
+        Registry.new,
+        notifications,
+        inflector: inflector
+      )
     end
 
     # Apply a plugin to the configuration
@@ -108,12 +137,12 @@ module ROM
 
     # @api private
     def relation_classes(gateway = nil)
-      if gateway
-        gw_name = gateway.is_a?(Symbol) ? gateway : gateways_map[gateway]
-        setup.relation_classes.select { |rel| rel.gateway == gw_name }
-      else
-        setup.relation_classes
-      end
+      classes = setup.components.relations.map(&:constant)
+
+      return classes unless gateway
+
+      gw_name = gateway.is_a?(Symbol) ? gateway : gateways_map[gateway]
+      classes.select { |rel| rel.gateway == gw_name }
     end
 
     # @api private
