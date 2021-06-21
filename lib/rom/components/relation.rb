@@ -92,15 +92,16 @@ module ROM
       # @api private
       def finalize_commands(relation)
         commands = components.commands(relation_id: id)
+        registry = relation.commands
 
         commands.each do |command|
-          relation.commands.add(command.id, command.build(relation: relation))
+          registry.add(command.id, command.build(relation: relation))
         end
 
-        command_compiler.commands.elements[constant.relation_name.relation] = relation.commands
+        command_compiler.commands.elements[id] = relation.commands
 
-        relation.commands.set_compiler(command_compiler)
-        relation.commands.set_mappers(relation.mappers)
+        registry.set_compiler(command_compiler)
+        registry.set_mappers(relation.mappers)
       end
     end
   end
