@@ -2,6 +2,7 @@
 
 require "dry/effects"
 require "dry/core/class_attributes"
+require "dry/core/memoizable"
 
 require "rom/constants"
 require "rom/initializer"
@@ -16,6 +17,7 @@ module ROM
       extend Initializer
       extend Dry::Core::ClassAttributes
 
+      include Dry::Core::Memoizable
       include Dry::Effects.Reader(:configuration)
 
       defines :id
@@ -78,12 +80,12 @@ module ROM
       end
 
       # @api public
-      def plugins
+      memoize def plugins
         configuration.plugins.select { |plugin| plugin.type == self.class.id }
       end
 
       # @api public
-      def plugin_options
+      memoize def plugin_options
         plugins.map(&:config).map(&:to_hash).reduce(:merge) || EMPTY_HASH
       end
 
