@@ -13,7 +13,7 @@ module ROM
 
       def new(*)
         obj = super
-        obj.instance_variable_set(:'@__memoized__', MEMOIZED_HASH.dup)
+        obj.instance_variable_set(:@__memoized__, MEMOIZED_HASH.dup)
         obj
       end
       ruby2_keywords(:new) if respond_to?(:ruby2_keywords, true)
@@ -45,13 +45,13 @@ module ROM
         names.each do |name|
           meth = klass.instance_method(name)
 
-          if !meth.parameters.empty?
-            define_method(name) do |*args|
-              __memoized__[:"#{name}_#{args.hash}"] ||= super(*args)
-            end
-          else
+          if meth.parameters.empty?
             define_method(name) do
               __memoized__[name] ||= super()
+            end
+          else
+            define_method(name) do |*args|
+              __memoized__[:"#{name}_#{args.hash}"] ||= super(*args)
             end
           end
         end

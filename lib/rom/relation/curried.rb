@@ -52,7 +52,8 @@ module ROM
         all_args = curry_args + args
 
         if all_args.empty?
-          raise ArgumentError, "curried #{relation.class}##{view} relation was called without any arguments"
+          raise ArgumentError,
+                "curried #{relation.class}##{view} relation was called without any arguments"
         end
 
         if args.empty?

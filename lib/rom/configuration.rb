@@ -47,8 +47,8 @@ module ROM
     attr_reader :relations
 
     def_delegators :@setup, :register_relation, :register_command,
-      :register_mapper, :register_plugin, :auto_registration,
-      :inflector, :inflector=, :components, :plugins
+                   :register_mapper, :register_plugin, :auto_registration,
+                   :inflector, :inflector=, :components, :plugins
 
     def_delegators :@environment, :gateways, :gateways_map, :configure, :config
 

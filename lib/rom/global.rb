@@ -7,7 +7,6 @@ require "rom/global/plugin_dsl"
 require "rom/configuration"
 require "rom/setup/finalize"
 
-
 module ROM
   # Globally accessible public interface exposed via ROM module
   #

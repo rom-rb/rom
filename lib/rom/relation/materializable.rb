@@ -21,10 +21,10 @@ module ROM
       # @yield [Hash,Object]
       #
       # @api public
-      def each
+      def each(&block)
         return to_enum unless block_given?
 
-        to_a.each { |tuple| yield(tuple) }
+        to_a.each(&block)
       end
 
       # Delegate to loaded relation and return one object

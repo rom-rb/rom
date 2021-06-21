@@ -19,7 +19,8 @@ module ROM
         class_name = "ROM::Relation[#{inflector.camelize(name)}]"
         adapter = options.fetch(:adapter)
 
-        Dry::Core::ClassBuilder.new(name: class_name, parent: ROM::Relation[adapter]).call do |klass|
+        Dry::Core::ClassBuilder.new(name: class_name,
+                                    parent: ROM::Relation[adapter]).call do |klass|
           klass.gateway(options.fetch(:gateway, :default))
           klass.schema(name) {}
         end

@@ -87,7 +87,7 @@ module ROM
       #
       # @return [Pipe]
       def self.default_pipe(context)
-        !pipes.empty? ? pipes.map { |p| p.bind(context) }.reduce(:>>) : EMPTY_PIPE
+        pipes.empty? ? EMPTY_PIPE : pipes.map { |p| p.bind(context) }.reduce(:>>)
       end
 
       # @api private
@@ -150,10 +150,10 @@ module ROM
       # @api public
       def extend(*steps, **options, &block)
         if block
-          if !steps.empty?
-            extend(*steps, **options).extend(**options, &block)
-          else
+          if steps.empty?
             with(pipe: pipe.compose(Pipe.new(block).bind(self), **options))
+          else
+            extend(*steps, **options).extend(**options, &block)
           end
         else
           with(pipe: steps.reduce(pipe.with(**options)) { |a, e| a.compose(pipe[e], **options) })

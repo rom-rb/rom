@@ -74,10 +74,10 @@ module ROM
     end
 
     # @api private
-    def each
+    def each(&block)
       return to_enum unless block_given?
 
-      elements.each { |element| yield(element) }
+      elements.each(&block)
     end
 
     # @api private

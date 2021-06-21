@@ -47,11 +47,9 @@ module ROM
     # @!attribute [r] globs
     #   @return [Hash] File globbing functions for each component dir
     option :globs, default: lambda {
-      Hash[
-        component_dirs.map { |component, path|
-          [component, directory.join("#{path}/**/*.rb")]
-        }
-      ]
+      component_dirs.map { |component, path|
+        [component, directory.join("#{path}/**/*.rb")]
+      }.to_h
     }
 
     # @!attribute [r] inflector

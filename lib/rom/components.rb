@@ -70,6 +70,7 @@ module ROM
         define_method(type) do |**opts|
           all = self[type]
           return all if opts.empty?
+
           all.select { |el| opts.all? { |key, value| el.public_send(key).eql?(value) } }
         end
       end

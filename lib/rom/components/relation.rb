@@ -41,7 +41,8 @@ module ROM
 
         apply_plugins
 
-        trigger("relations.dataset.allocated", dataset: dataset, relation: constant, adapter: adapter)
+        trigger("relations.dataset.allocated", dataset: dataset, relation: constant,
+                                               adapter: adapter)
 
         relation = constant.new(dataset, **relation_options(schema))
 
@@ -74,11 +75,11 @@ module ROM
 
       # @api private
       def relation_options(schema)
-        { __registry__: relations,
-          mappers: mappers,
-          schema: schema,
-          inflector: configuration.inflector,
-          **plugin_options }
+        {__registry__: relations,
+         mappers: mappers,
+         schema: schema,
+         inflector: configuration.inflector,
+         **plugin_options}
       end
 
       # @api private

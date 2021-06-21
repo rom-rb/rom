@@ -48,7 +48,8 @@ module ROM
         #
         # @api public
         def instrument(&block)
-          notifications.instrument(self.class.adapter, name: name.relation, **notification_payload(self), &block)
+          notifications.instrument(self.class.adapter,
+                                   name: name.relation, **notification_payload(self), &block)
         end
 
         private

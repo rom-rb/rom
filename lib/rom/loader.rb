@@ -59,6 +59,7 @@ module ROM
     # @api private
     def call
       return if @loaded || root_directory.nil?
+
       setup and backend.eager_load
       @loaded = true
     end
@@ -96,7 +97,7 @@ module ROM
         if (type = path_to_component_type(path))
           begin
             components.add(type, constant: const)
-          rescue => e
+          rescue StandardError => e
             raise "Failed to load #{const} from #{path}: #{e.message}"
           end
         end

@@ -14,11 +14,9 @@ module ROM
       # @api private
       def define_test_method(name, &block)
         define_method "test_#{name}" do
-          begin
-            instance_eval(&block)
-          rescue ROM::Lint::Linter::Failure => e
-            raise Minitest::Assertion, e.message
-          end
+          instance_eval(&block)
+        rescue ROM::Lint::Linter::Failure => e
+          raise Minitest::Assertion, e.message
         end
       end
     end

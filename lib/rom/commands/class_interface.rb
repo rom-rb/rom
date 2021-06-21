@@ -14,8 +14,8 @@ module ROM
       # @api private
       def inherited(klass)
         super
-        klass.instance_variable_set(:'@before', before.dup)
-        klass.instance_variable_set(:'@after', after.dup)
+        klass.instance_variable_set(:@before, before.dup)
+        klass.instance_variable_set(:@after, after.dup)
       end
 
       # Sets up the base class
@@ -164,10 +164,10 @@ module ROM
       #
       # @api public
       def before(*hooks)
-        if !hooks.empty?
-          set_hooks(:before, hooks)
-        else
+        if hooks.empty?
           @before
+        else
+          set_hooks(:before, hooks)
         end
       end
 
@@ -209,10 +209,10 @@ module ROM
       #
       # @api public
       def after(*hooks)
-        if !hooks.empty?
-          set_hooks(:after, hooks)
-        else
+        if hooks.empty?
           @after
+        else
+          set_hooks(:after, hooks)
         end
       end
 

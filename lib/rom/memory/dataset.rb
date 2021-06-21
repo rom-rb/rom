@@ -41,8 +41,8 @@ module ROM
       # @return [Dataset]
       #
       # @api public
-      def restrict(criteria = nil)
-        return find_all { |tuple| yield(tuple) } unless criteria
+      def restrict(criteria = nil, &block)
+        return find_all(&block) unless criteria
 
         find_all do |tuple|
           criteria.all? do |k, v|

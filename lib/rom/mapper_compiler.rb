@@ -64,9 +64,9 @@ module ROM
         type = meta_options[:combine_type] == :many ? :array : :hash
         keys = meta_options.fetch(:keys)
 
-        [name, combine: true, type: type, keys: keys, header: Header.coerce(*options)]
+        [name, {combine: true, type: type, keys: keys, header: Header.coerce(*options)}]
       elsif meta_options[:wrap]
-        [name, wrap: true, type: :hash, header: Header.coerce(*options)]
+        [name, {wrap: true, type: :hash, header: Header.coerce(*options)}]
       else
         options
       end
@@ -76,7 +76,7 @@ module ROM
       name, _, meta_options = node
 
       if meta_options[:alias]
-        [meta_options[:alias], from: name]
+        [meta_options[:alias], {from: name}]
       else
         [name]
       end

@@ -77,7 +77,7 @@ module ROM
         def self.new(source, target, **opts)
           source_name = Relation::Name[source]
           target_name = resolve_target_name(target, opts)
-          options = process_options(target_name, Hash[opts])
+          options = process_options(target_name, opts.to_h)
 
           super(source_name, target_name, **options)
         end

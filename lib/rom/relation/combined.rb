@@ -144,7 +144,8 @@ module ROM
         if type == :create
           super
         else
-          raise NotImplementedError, "#{self.class}#command doesn't work with #{type.inspect} command type yet"
+          raise NotImplementedError,
+                "#{self.class}#command doesn't work with #{type.inspect} command type yet"
         end
       end
 

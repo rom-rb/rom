@@ -163,10 +163,10 @@ module ROM
             default_mapping
           end
 
-        if !other.empty?
-          [mapping, [type, other]]
-        else
+        if other.empty?
           [mapping, type]
+        else
+          [mapping, [type, other]]
         end
       else
         registry[name][id] = commands[name][id]

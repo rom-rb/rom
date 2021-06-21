@@ -226,11 +226,11 @@ module ROM
     # @return [Enumerator] if block is not provided
     #
     # @api public
-    def each
+    def each(&block)
       return to_enum unless block_given?
 
       if auto_map?
-        mapper.(dataset.map { |tuple| output_schema[tuple] }).each { |struct| yield(struct) }
+        mapper.(dataset.map { |tuple| output_schema[tuple] }).each(&block)
       else
         dataset.each { |tuple| yield(output_schema[tuple]) }
       end
@@ -488,7 +488,8 @@ module ROM
 
     # @api private
     def meta_ast
-      meta = self.meta.merge(dataset: name.dataset, alias: name.aliaz, struct_namespace: options[:struct_namespace])
+      meta = self.meta.merge(dataset: name.dataset, alias: name.aliaz,
+                             struct_namespace: options[:struct_namespace])
       meta[:model] = false unless auto_struct? || meta[:model]
       meta
     end
