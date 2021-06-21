@@ -35,28 +35,16 @@ module ROM
 
         trigger("relations.class.ready", relation: constant, adapter: adapter)
 
+        # schema must be established prior applying plugins because they may
+        # depend on the schema
         schema = finalize_schema
 
         apply_plugins
 
-        dataset = gateway.dataset(schema.name.dataset).instance_exec(constant, &constant.dataset)
-
         trigger("relations.dataset.allocated", dataset: dataset, relation: constant, adapter: adapter)
 
-        # TODO: this will be removed once mapper registry is lazy-by-default
-        mappers = finalize_mappers
+        relation = constant.new(dataset, **relation_options(schema))
 
-        options = {
-          __registry__: relations,
-          mappers: mappers,
-          schema: schema,
-          inflector: configuration.inflector,
-          **plugin_options
-        }
-
-        relation = constant.new(dataset, **options)
-
-        # TODO: this will be removed once command registry is lazy-by-default
         finalize_commands(relation)
 
         relation
@@ -65,13 +53,14 @@ module ROM
       private
 
       # @api private
-      def finalize_schema
-        # TODO: relation DSL auto-defines an empty schema so this is a workaround
-        components.schemas(relation: constant).last.build
+      memoize def dataset
+        gateway.dataset(constant.relation_name.dataset).instance_exec(constant, &constant.dataset)
       end
 
+      # TODO: this will be removed once mapper registry is lazy-by-default
+      #
       # @api private
-      def finalize_mappers
+      memoize def mappers
         mappers = components.mappers(relation_id: id)
 
         registry = constant.mapper_registry(cache: configuration.cache)
@@ -83,6 +72,23 @@ module ROM
         registry
       end
 
+      # @api private
+      def relation_options(schema)
+        { __registry__: relations,
+          mappers: mappers,
+          schema: schema,
+          inflector: configuration.inflector,
+          **plugin_options }
+      end
+
+      # @api private
+      def finalize_schema
+        # TODO: relation DSL auto-defines an empty schema so this is a workaround
+        components.schemas(relation: constant).last.build
+      end
+
+      # TODO: this will be removed once command registry is lazy-by-default
+      #
       # @api private
       def finalize_commands(relation)
         commands = components.commands(relation_id: id)
