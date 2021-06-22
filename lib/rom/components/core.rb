@@ -80,12 +80,12 @@ module ROM
       end
 
       # @api public
-      memoize def plugins
+      def plugins
         configuration.plugins.select { |plugin| plugin.type == self.class.id }
       end
 
       # @api public
-      memoize def plugin_options
+      def plugin_options
         plugins.map(&:config).map(&:to_hash).reduce(:merge) || EMPTY_HASH
       end
 

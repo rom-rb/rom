@@ -3,10 +3,11 @@
 require "forwardable"
 
 require "rom/support/notifications"
-require "rom/environment"
 require "rom/setup"
 require "rom/configuration_dsl"
+require "rom/support/configurable"
 require "rom/support/inflector"
+require "rom/gateway_registry"
 require "rom/relation_registry"
 
 module ROM
@@ -23,12 +24,13 @@ module ROM
     register_event("configuration.commands.class.before_build")
 
     include ROM::ConfigurationDSL
+    include Configurable
 
     NoDefaultAdapterError = Class.new(StandardError)
 
-    # @!attribute [r] environment
-    #   @return [Environment] Environment object with gateways
-    attr_reader :environment
+    # @!attribute [r] gateways
+    #   @return [GatewayRegistry] Configured runtime gateways
+    attr_reader :gateways
 
     # @!attribute [r] setup
     #   @return [Setup] Setup object which collects component classes and plugins
@@ -50,41 +52,55 @@ module ROM
                    :register_mapper, :register_plugin, :auto_register,
                    :inflector, :inflector=, :components, :plugins
 
-    def_delegators :@environment, :gateways, :gateways_map, :configure, :config
-
     # Initialize a new configuration
-    #
-    # @see Environment#initialize
     #
     # @return [Configuration]
     #
     # @api private
     def initialize(*args, &block)
-      @environment = Environment.new(*args)
-      @setup = Setup.new
       @notifications = Notifications.event_bus(:configuration)
+
+      @setup = Setup.new
       @cache = Cache.new
 
-      @relations = RelationRegistry.build
+      config.gateways = Config.new
+      @gateways = GatewayRegistry.new({}, cache: cache, config: config.gateways)
 
-      block&.call(self)
+      configure(*args, &block)
+
+      @relations = RelationRegistry.build
+    end
+
+    # @api public
+    def configure(*args)
+      unless args.empty?
+        gateways_config = args.first.is_a?(Hash) ? args.first : {default: args}
+
+        gateways_config.each do |name, value|
+          args = Array(value)
+
+          adapter, *rest = args
+
+          if rest.size > 1 && rest.last.is_a?(Hash)
+            load_config(config.gateways[name], {adapter: adapter, args: rest[0..-1], **rest.last})
+          else
+            options = rest.first.is_a?(Hash) ? rest.first : {args: rest.flatten(1)}
+            load_config(config.gateways[name], {adapter: adapter, **options})
+          end
+        end
+      end
+
+      load_gateways
+
+      yield(self) if block_given?
+
+      self
     end
 
     # @api private
     def finalize
       setup.finalize
       self
-    end
-
-    # @api private
-    def command_compiler
-      @command_compiler ||= CommandCompiler.new(
-        gateways,
-        relations,
-        Registry.new,
-        notifications,
-        inflector: inflector
-      )
     end
 
     # Apply a plugin to the configuration
@@ -96,10 +112,9 @@ module ROM
     #
     # @api public
     def use(plugin, options = {})
-      if plugin.is_a?(Array)
-        plugin.each { |p| use(p) }
-      elsif plugin.is_a?(Hash)
-        plugin.to_a.each { |p| use(*p) }
+      case plugin
+      when Array then plugin.each { |p| use(p) }
+      when Hash then plugin.to_a.each { |p| use(*p) }
       else
         ROM.plugin_registry[:configuration].fetch(plugin).apply_to(self, options)
       end
@@ -116,16 +131,14 @@ module ROM
       gateways.fetch(name)
     end
 
-    # Hook for respond_to? used internally
-    #
     # @api private
-    def respond_to?(name, include_all = false)
-      gateways.key?(name) || super
+    def default_gateway
+      @default_gateway ||= gateways[:default] if gateways.key?(:default)
     end
 
     # @api private
-    def default_gateway
-      @default_gateway ||= gateways[:default]
+    def default_adapter
+      @default_adapter ||= adapter_for_gateway(default_gateway) || ROM.adapters.keys.first
     end
 
     # @api private
@@ -136,21 +149,50 @@ module ROM
     end
 
     # @api private
-    def relation_classes(gateway = nil)
-      classes = setup.components.relations.map(&:constant)
-
-      return classes unless gateway
-
-      gw_name = gateway.is_a?(Symbol) ? gateway : gateways_map[gateway]
-      classes.select { |rel| rel.gateway == gw_name }
+    def command_compiler
+      @command_compiler ||= CommandCompiler.new(
+        gateways,
+        relations,
+        Registry.new,
+        notifications,
+        inflector: inflector
+      )
     end
 
     # @api private
-    def default_adapter
-      @default_adapter ||= adapter_for_gateway(default_gateway) || ROM.adapters.keys.first
+    def respond_to_missing?(name, include_all = false)
+      gateways.key?(name) || super
     end
 
     private
+
+    # @api private
+    def load_gateways
+      config.gateways.each do |name, gateway_config|
+        gateway =
+          if gateway_config.adapter.is_a?(Gateway)
+            gateway_config.adapter
+          else
+            Gateway.setup(gateway_config.adapter, gateway_config)
+          end
+
+        # TODO: this is here to keep backward compatibility
+        gateway.instance_variable_set(:"@name", name)
+
+        gateways.add(name, gateway)
+      end
+    end
+
+    # @api private
+    def load_config(config, hash)
+      hash.each do |key, value|
+        if value.is_a?(Hash)
+          load_config(config[key], value)
+        else
+          config.send("#{key}=", value)
+        end
+      end
+    end
 
     # Returns gateway if method is a name of a registered gateway
     #

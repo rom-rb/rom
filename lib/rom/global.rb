@@ -48,11 +48,10 @@ module ROM
           Configuration.new(*args, &block)
         end
 
-      configuration.configure do |config|
-        configuration.gateways.each_key do |key|
-          gateway_config = config.gateways[key]
-          gateway_config.infer_relations = true unless gateway_config.key?(:infer_relations)
-        end
+      # TODO: this is super-legacy and should be removed
+      configuration.gateways.each_value do |gateway|
+        gateway_config = configuration.config.gateways[gateway.name]
+        gateway_config.infer_relations = true unless gateway_config.key?(:infer_relations)
       end
 
       with_configuration(configuration) do

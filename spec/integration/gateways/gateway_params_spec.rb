@@ -3,7 +3,7 @@
 RSpec.describe "Gateways / keyword arguments" do
   before do
     @adapter = Module.new
-    class @adapter::Gateway
+    class @adapter::Gateway < ROM::Gateway
       extend ROM::Initializer
 
       param :param
@@ -14,15 +14,16 @@ RSpec.describe "Gateways / keyword arguments" do
 
   specify do
     gw = @adapter::Gateway.new(:param, option: :option)
-    expect(gw.param).to eq :param
-    expect(gw.option).to eq :option
+    expect(gw.param).to eql(:param)
+    expect(gw.option).to eql(:option)
   end
 
   specify do
     conf = ROM::Configuration.new(:my_adapter, :param, option: :option)
     container = ROM.container(conf)
     gw = container.gateways[:default]
-    expect(gw.param).to eq :param
-    expect(gw.option).to eq :option
+
+    expect(gw.param).to eql(:param)
+    expect(gw.option).to eql(:option)
   end
 end
