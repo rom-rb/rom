@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require "rom/setup"
+require "rom/configuration"
 require "rom/transformer"
 
-RSpec.describe ROM::Setup, "#auto_register" do
-  subject(:setup) { ROM::Setup.new }
+RSpec.describe ROM::Configuration, "#auto_register" do
+  subject(:setup) { ROM::Configuration.new }
 
   around do |example|
     example.run

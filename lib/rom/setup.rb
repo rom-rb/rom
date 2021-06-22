@@ -6,7 +6,7 @@ require "rom/components"
 module ROM
   # Setup objects collect component classes during setup/finalization process
   #
-  # @api public
+  # @api private
   class Setup
     # @api private
     attr_reader :plugins
