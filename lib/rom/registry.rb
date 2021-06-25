@@ -81,6 +81,26 @@ module ROM
     end
 
     # @api private
+    def each_key(&block)
+      elements.each_key(&block)
+    end
+
+    # @api private
+    def each_value(&block)
+      elements.each_value(&block)
+    end
+
+    # @api private
+    def keys
+      elements.keys
+    end
+
+    # @api private
+    def values
+      elements.values
+    end
+
+    # @api private
     def key?(name)
       !name.nil? && elements.key?(name.to_sym)
     end

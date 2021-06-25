@@ -7,6 +7,8 @@ module ROM
   # @api private
   module Configurable
     class Config
+      include Enumerable
+
       WRITER_REGEXP = /=$/.freeze
 
       # @!attribute [r] settings
@@ -16,6 +18,16 @@ module ROM
       # @api private
       def initialize(settings = {})
         @settings = settings
+      end
+
+      # @api public
+      def each(&block)
+        settings.each(&block)
+      end
+
+      # @api public
+      def each_key(&block)
+        settings.each_key(&block)
       end
 
       # Return a setting
@@ -32,6 +44,13 @@ module ROM
         settings.key?(name)
       end
 
+      # @api private
+      def freeze
+        settings.freeze
+        super
+      end
+
+      # @api private
       def to_hash
         settings
       end

@@ -119,7 +119,7 @@ RSpec.describe ROM::Global, "#container" do
     let(:container) { ROM.container(configuration) }
 
     it "builds empty gateways" do
-      expect(container.gateways).to eql({})
+      expect(container.gateways.keys).to be_empty
     end
 
     it "builds empty relations" do

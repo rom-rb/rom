@@ -34,6 +34,10 @@ module ROM
     #    @param [Symbol] adapter The adapter identifier
     defines :adapter
 
+    # @!attribute [r] config
+    #   @return [Configurable::Config] Gateway's configuration identifier
+    attr_reader :config
+
     # @!attribute [r] connection
     #   @return [Object] The gateway's connection object (type varies across adapters)
     attr_reader :connection
@@ -81,25 +85,42 @@ module ROM
     #
     # @api public
     def self.setup(gateway_or_scheme, *args)
-      case gateway_or_scheme
-      when String
-        raise ArgumentError, <<-STRING.gsub(/^ {10}/, "")
-          URIs without an explicit scheme are not supported anymore.
-          See https://github.com/rom-rb/rom/blob/master/CHANGELOG.md
-        STRING
-      when Symbol
-        klass = class_from_symbol(gateway_or_scheme)
+      gateway =
+        case gateway_or_scheme
+        when Gateway
+          unless args.empty?
+            raise ArgumentError, "Can't accept arguments when passing an instance"
+          end
 
-        if klass.instance_method(:initialize).arity.zero?
-          klass.new
+          gateway_or_scheme
+        when String
+          raise ArgumentError, <<-STRING.gsub(/^ {10}/, "")
+            URIs without an explicit scheme are not supported anymore.
+            See https://github.com/rom-rb/rom/blob/master/CHANGELOG.md
+          STRING
+        when Symbol
+          klass = class_from_symbol(gateway_or_scheme)
+
+          if klass.instance_method(:initialize).arity.zero?
+            klass.new
+          else
+            if args.size.equal?(1) && args.first.is_a?(Configurable::Config)
+              if args.first.respond_to?(:args)
+                setup(gateway_or_scheme, *args.first.args)
+              else
+                klass.new(**config)
+              end
+            elsif args.size.equal?(2) && args.last.is_a?(Hash)
+              klass.new(*args[0..-1], **args.last)
+            else
+              klass.new(*args)
+            end
+          end
         else
-          klass.new(*args)
+          gateway_or_scheme
         end
-      else
-        raise ArgumentError, "Can't accept arguments when passing an instance" unless args.empty?
 
-        gateway_or_scheme
-      end
+      gateway
     end
 
     class << self
@@ -125,6 +146,15 @@ module ROM
       end
 
       adapter.const_get(:Gateway)
+    end
+
+    # Configured gateway name used in the registry
+    #
+    # @return [Symbol]
+    #
+    # @api public
+    def name
+      config.name
     end
 
     # Returns the adapter, defined for the class

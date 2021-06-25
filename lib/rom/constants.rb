@@ -20,6 +20,7 @@ module ROM
   end
 
   EnvAlreadyFinalizedError = Class.new(StandardError)
+  GatewayAlreadyDefinedError = Class.new(StandardError)
   RelationAlreadyDefinedError = Class.new(StandardError)
   CommandAlreadyDefinedError = Class.new(StandardError)
   MapperAlreadyDefinedError = Class.new(StandardError)

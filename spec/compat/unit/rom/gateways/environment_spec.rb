@@ -2,20 +2,15 @@
 
 require "spec_helper"
 
-RSpec.describe ROM::Environment do
-  let(:environment) { ROM::Environment.new(*params) }
+RSpec.describe ROM::Configuration do
+  subject(:config) { ROM::Configuration.new(*params) }
+
+  let(:gateways) { config.gateways }
+  let(:gateways_map) { config.gateways_map }
   let(:params) { [] }
-  let(:gateways) { environment.gateways }
-  let(:gateways_map) { environment.gateways_map }
 
   context "with an adapter identifier" do
     let(:params) { [:memory] }
-
-    it "configures the gateways hash" do
-      expect(gateways).to be_kind_of(Hash)
-      expect(gateways.keys).to eql([:default])
-      expect(gateways[:default]).to be_kind_of(ROM::Memory::Gateway)
-    end
 
     it "configures the gateways_map hash" do
       expect(gateways_map).to be_kind_of(Hash)
@@ -28,12 +23,6 @@ RSpec.describe ROM::Environment do
   context "with a hash" do
     let(:params) { [default: :memory] }
 
-    it "configures the gateways hash" do
-      expect(gateways).to be_kind_of(Hash)
-      expect(gateways.keys).to eql([:default])
-      expect(gateways[:default]).to be_kind_of(ROM::Memory::Gateway)
-    end
-
     it "configures the gateways_map hash" do
       expect(gateways_map).to be_kind_of(Hash)
       expect(gateways_map.values).to eql([:default])
@@ -44,14 +33,6 @@ RSpec.describe ROM::Environment do
 
   context "with multiple gateways" do
     let(:params) { [foo: :memory, default: :memory] }
-
-    it "configures the gateways hash" do
-      expect(gateways).to be_kind_of(Hash)
-      expect(gateways.keys).to eq(%i[foo default])
-      expect(gateways[:default]).to be_kind_of(ROM::Memory::Gateway)
-      expect(gateways[:foo]).to be_kind_of(ROM::Memory::Gateway)
-      expect(gateways[:default]).not_to be(gateways[:foo])
-    end
 
     it "configures the gateways_map hash" do
       expect(gateways_map).to be_kind_of(Hash)
@@ -112,14 +93,8 @@ RSpec.describe ROM::Environment do
     let(:params) { [gateway] }
 
     it "configures the gateways hash" do
-      expect(gateways).to be_kind_of(Hash)
-      expect(gateways.keys).to eq([:default])
+      expect(gateways.keys).to eql([:default])
       expect(gateways[:default]).to be(gateway)
-    end
-
-    it "configures the gateways_map hash" do
-      expect(gateways_map).to be_kind_of(Hash)
-      expect(gateways_map[gateway]).to be(:default)
     end
   end
 end
