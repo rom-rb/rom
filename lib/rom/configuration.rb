@@ -72,9 +72,17 @@ module ROM
         end
       end
 
-      setup.load_gateways
+      # Load adapters explicitly here to ensure their plugins are present already
+      # while setup loads components and then triggers finalization
+      setup.load_adapters
 
       yield(self) if block_given?
+
+      # No more changes allowed
+      config.freeze
+
+      # Load gateways after yielding config because gateways *need finalized config*
+      setup.load_gateways
 
       self
     end

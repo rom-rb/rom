@@ -45,7 +45,9 @@ module ROM
       @config = config
       @inflector = Inflector
       @components = components
-      @gateways = GatewayRegistry.new({}, cache: cache, config: config)
+      @gateways = GatewayRegistry.new(
+        {}, cache: cache, config: config, resolver: method(:load_gateway)
+      )
       @relations = RelationRegistry.build
       @auto_register = auto_register.merge(root_directory: nil, components: components)
     end
@@ -106,21 +108,41 @@ module ROM
     end
 
     # @api private
-    def load_gateways
-      config.each do |name, gateway_config|
-        gateway =
-          if gateway_config.adapter.is_a?(Gateway)
-            gateway_config.adapter
-          else
-            Gateway.setup(gateway_config.adapter, gateway_config)
-          end
-
-        # TODO: this is here to keep backward compatibility
-        gateway_config.name = name
-        gateway.instance_variable_set(:"@config", gateway_config)
-
-        gateways.add(name, gateway)
+    def load_adapters
+      config.each { |_, gateway_config| gateway_config.adapter }.uniq.each do |adapter|
+        begin
+          Gateway.class_from_symbol(adapter)
+        rescue AdapterLoadError
+          # TODO: we probably want to remove this. It's perfectly fine to have an adapter
+          #       defined in another location. Auto-require was done for convenience but
+          #       making it mandatory to have that file seems odd now.
+        end
       end
+    end
+
+    # @api private
+    def load_gateways
+      config.each_key do |name|
+        load_gateway(name) unless gateways.key?(name)
+      end
+    end
+
+    # @api private
+    def load_gateway(name)
+      gateway_config = config[name]
+
+      gateway =
+        if gateway_config.adapter.is_a?(Gateway)
+          gateway_config.adapter
+        else
+          Gateway.setup(gateway_config.adapter, gateway_config)
+        end
+
+      # TODO: this is here to keep backward compatibility
+      gateway_config.name = name
+      gateway.instance_variable_set(:"@config", gateway_config)
+
+      gateways.add(name, gateway)
     end
 
     private

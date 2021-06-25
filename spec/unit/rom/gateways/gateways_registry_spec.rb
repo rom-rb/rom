@@ -3,8 +3,9 @@
 require "spec_helper"
 
 RSpec.describe ROM::Configuration do
-  subject(:config) { ROM::Configuration.new(*params) }
+  subject(:config) { ROM::Configuration.new(*params, &block) }
 
+  let(:block) { proc {} }
   let(:gateways) { config.gateways }
 
   context "with an adapter identifier" do
@@ -14,6 +15,22 @@ RSpec.describe ROM::Configuration do
       expect(gateways.keys).to eql([:default])
       expect(gateways[:default]).to be_kind_of(ROM::Memory::Gateway)
       expect(gateways[:default].config.name).to be(:default)
+    end
+  end
+
+  context "with a block" do
+    let(:params) { [:memory] }
+
+    let(:block) do
+      proc do |config|
+        # TODO: ugh
+        config.config.gateways.default.my_setting = "test"
+      end
+    end
+
+    it "sets gateway's custom config" do
+      expect(gateways[:default].config.name).to eql(:default)
+      expect(gateways[:default].config.my_setting).to eql("test")
     end
   end
 

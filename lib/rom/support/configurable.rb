@@ -25,6 +25,11 @@ module ROM
         settings.each(&block)
       end
 
+      # @api public
+      def each_key(&block)
+        settings.each_key(&block)
+      end
+
       # Return a setting
       #
       # @return [Mixed]
@@ -37,6 +42,12 @@ module ROM
       # @api private
       def key?(name)
         settings.key?(name)
+      end
+
+      # @api private
+      def freeze
+        settings.freeze
+        super
       end
 
       # @api private
