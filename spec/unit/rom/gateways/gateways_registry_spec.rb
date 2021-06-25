@@ -13,6 +13,16 @@ RSpec.describe ROM::Configuration do
     it "configures the gateways hash" do
       expect(gateways.keys).to eql([:default])
       expect(gateways[:default]).to be_kind_of(ROM::Memory::Gateway)
+      expect(gateways[:default].config.name).to be(:default)
+    end
+  end
+
+  context "with custom adapter settings" do
+    let(:params) { [:memory, my_setting: "test"] }
+
+    it "sets gateway's custom config" do
+      expect(gateways[:default].config.name).to eql(:default)
+      expect(gateways[:default].config.my_setting).to eql("test")
     end
   end
 

@@ -34,9 +34,9 @@ module ROM
     #    @param [Symbol] adapter The adapter identifier
     defines :adapter
 
-    # @!attribute [r] name
-    #   @return [Object] Gateway's registry identifier
-    attr_reader :name
+    # @!attribute [r] config
+    #   @return [Configurable::Config] Gateway's configuration identifier
+    attr_reader :config
 
     # @!attribute [r] connection
     #   @return [Object] The gateway's connection object (type varies across adapters)
@@ -146,6 +146,15 @@ module ROM
       end
 
       adapter.const_get(:Gateway)
+    end
+
+    # Configured gateway name used in the registry
+    #
+    # @return [Symbol]
+    #
+    # @api public
+    def name
+      config.name
     end
 
     # Returns the adapter, defined for the class

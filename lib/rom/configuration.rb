@@ -177,7 +177,8 @@ module ROM
           end
 
         # TODO: this is here to keep backward compatibility
-        gateway.instance_variable_set(:"@name", name)
+        gateway_config.name = name
+        gateway.instance_variable_set(:"@config", gateway_config)
 
         gateways.add(name, gateway)
       end
