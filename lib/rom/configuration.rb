@@ -53,29 +53,20 @@ module ROM
       configure(*args, &block)
     end
 
-    # @api public
+    # This is called internally when you pass a block to ROM.container
+    #
+    # @api private
     def configure(*args)
-      unless args.empty?
-        gateways_config = args.first.is_a?(Hash) ? args.first : {default: args}
-
-        gateways_config.each do |name, value|
-          args = Array(value)
-
-          adapter, *rest = args
-
-          if rest.size > 1 && rest.last.is_a?(Hash)
-            load_config(config.gateways[name], {adapter: adapter, args: rest[0..-1], **rest.last})
-          else
-            options = rest.first.is_a?(Hash) ? rest.first : {args: rest.flatten(1)}
-            load_config(config.gateways[name], {adapter: adapter, **options})
-          end
-        end
-      end
+      infer_config(*args) unless args.empty?
 
       # Load adapters explicitly here to ensure their plugins are present already
       # while setup loads components and then triggers finalization
       setup.load_adapters
 
+      # TODO: this is tricky because if you want to tweak the config in the block
+      #       you end up doing `config.config.foo = "bar"` so it would be good
+      #       to yield configuration object + its config or rename this whole class
+      #       because it's a configuration *DSL* that builds up a config object too
       yield(self) if block_given?
 
       # No more changes allowed
@@ -89,8 +80,28 @@ module ROM
 
     # @api private
     def finalize
+      attach_listeners
       setup.finalize
       self
+    end
+
+    # @api private
+    def attach_listeners
+      # Anything can attach globally to certain events, including plugins, so here
+      # we're making sure that only plugins that are enabled in this configuration
+      # will be triggered
+      global_listeners = Notifications.listeners.to_a
+        .reject { |(src, *)| plugin_registry.mods.include?(src) }.to_h
+
+      plugin_listeners = Notifications.listeners.to_a
+        .select { |(src, *)| plugins.map(&:mod).include?(src) }.to_h
+
+      listeners.update(global_listeners).update(plugin_listeners)
+    end
+
+    # @api private
+    def listeners
+      notifications.listeners
     end
 
     # Apply a plugin to the configuration
@@ -155,6 +166,27 @@ module ROM
     end
 
     private
+
+    # This infers config based on arguments passed to either ROM.container
+    # or Configuration.ne
+    #
+    # @api private
+    def infer_config(*args)
+      gateways_config = args.first.is_a?(Hash) ? args.first : {default: args}
+
+      gateways_config.each do |name, value|
+        args = Array(value)
+
+        adapter, *rest = args
+
+        if rest.size > 1 && rest.last.is_a?(Hash)
+          load_config(config.gateways[name], {adapter: adapter, args: rest[0..-1], **rest.last})
+        else
+          options = rest.first.is_a?(Hash) ? rest.first : {args: rest.flatten(1)}
+          load_config(config.gateways[name], {adapter: adapter, **options})
+        end
+      end
+    end
 
     # @api private
     def load_config(config, hash)

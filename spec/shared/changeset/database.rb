@@ -15,7 +15,11 @@ end
 RSpec.shared_context "changeset / database setup" do
   include_context "changeset / db_uri"
 
-  let(:configuration) { ROM::Configuration.new(:sql, db_uri) }
+  let(:configuration) do
+    ROM::Configuration.new(:sql, db_uri) do |config|
+      config.plugin(:sql, relation: :auto_restrictions)
+    end
+  end
 
   let(:conn) { configuration.gateways[:default].connection }
 
