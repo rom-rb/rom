@@ -158,7 +158,7 @@ module ROM
     end
 
     # @api private
-    def visit_attribute(*_args)
+    def visit_attribute(*)
       nil
     end
 
