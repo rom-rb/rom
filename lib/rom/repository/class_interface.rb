@@ -152,7 +152,7 @@ module ROM
             if changeset.respond_to?(:commit)
               changeset.commit
             else
-              root.command(type, **opts).public_send(view_name, *view_args).call(*input)
+              root.public_send(view_name, *view_args).command(type, **opts).(*input)
             end
           end
         end

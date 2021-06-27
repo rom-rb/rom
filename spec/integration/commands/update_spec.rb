@@ -7,7 +7,7 @@ RSpec.describe "Commands / Update" do
   include_context "container"
   include_context "users and tasks"
 
-  subject(:users) { container.commands.users }
+  subject(:users) { container.relations.users }
 
   before do
     configuration.relation(:users) do
@@ -31,7 +31,7 @@ RSpec.describe "Commands / Update" do
   end
 
   it "update tuples" do
-    result = users.update.all(name: "Jane").call(email: "jane.doe@test.com")
+    result = users.all(name: "Jane").command(:update).(email: "jane.doe@test.com")
 
     expect(result).to eql([{name: "Jane", email: "jane.doe@test.com"}])
   end
@@ -44,7 +44,7 @@ RSpec.describe "Commands / Update" do
         end
       end
 
-      result = users.update_one.by_name("Jane").call(email: "jane.doe@test.com")
+      result = users.by_name("Jane").command(:update_one).(email: "jane.doe@test.com")
 
       expect(result).to eql(name: "Jane", email: "jane.doe@test.com")
     end
@@ -75,7 +75,7 @@ RSpec.describe "Commands / Update" do
         end
       end
 
-      command = container.commands[:users].map_with(:entity).update.by_name("Jane")
+      command = users.by_name("Jane").command(:update, mapper: :entity)
 
       attributes = {name: "Jane Doe", email: "jane@doe.org"}
       result = command[attributes]
@@ -94,7 +94,8 @@ RSpec.describe "Commands / Update" do
 
       relation = container.relations[:users]
 
-      expect(users.update_one.new(relation).input).to be(users.update_one.input)
+      expect(relation.commands.update_one.new(relation).input)
+        .to be(relation.commands.update_one.input)
     end
   end
 end

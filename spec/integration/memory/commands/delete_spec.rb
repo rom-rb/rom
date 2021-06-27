@@ -14,6 +14,7 @@ RSpec.describe ROM::Memory::Commands::Delete do
         restrict(id: id)
       end
     end
+
     configuration.commands(:users) do
       define(:delete)
     end

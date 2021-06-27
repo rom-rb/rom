@@ -113,8 +113,6 @@ module ROM
           klass.use(plugin, **plugin_options)
         end
 
-        klass.extend_for_relation(relation) if relation && klass.restrictable
-
         if block
           yield(klass)
         else
@@ -138,17 +136,6 @@ module ROM
       # @api public
       def use(plugin, **options)
         ROM.plugin_registry[:command].fetch(plugin, adapter).apply_to(self, **options)
-      end
-
-      # Extend a command class with relation view methods
-      #
-      # @param [Relation] relation
-      #
-      # @return [Class]
-      #
-      # @api public
-      def extend_for_relation(relation)
-        include(relation_methods_mod(relation.class))
       end
 
       # Set before-execute hooks
@@ -272,25 +259,6 @@ module ROM
       # @api private
       def options
         {input: input, result: result, before: before, after: after}
-      end
-
-      # @api private
-      def relation_methods_mod(relation_class)
-        Module.new do
-          relation_class.view_methods.each do |meth|
-            module_eval <<-RUBY, __FILE__, __LINE__ + 1
-              def #{meth}(*args)
-                response = relation.public_send(:#{meth}, *args)
-
-                if response.is_a?(relation.class)
-                  new(response)
-                else
-                  response
-                end
-              end
-            RUBY
-          end
-        end
       end
     end
   end
