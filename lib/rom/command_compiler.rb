@@ -23,7 +23,7 @@ module ROM
     end
 
     # @api private
-    def self.infer_type(id, adapter, inflector)
+    def self.infer_command_class(id, adapter, inflector)
       class_name = inflector.classify(id)
       Commands.const_get(class_name)[adapter] if Commands.const_defined?(class_name)
     end
@@ -40,9 +40,9 @@ module ROM
     #   @return [Symbol] The command registry identifier
     option :id, optional: true
 
-    # @!attribute [r] type
-    #   @return [Symbol] The command type
-    option :type, optional: true
+    # @!attribute [r] command_class
+    #   @return [Symbol] The command command_class
+    option :command_class, optional: true
 
     # @!attribute [r] registry
     #   @return [Hash] local registry where commands will be stored during compilation
@@ -69,7 +69,7 @@ module ROM
     #   @api private
     option :inflector, default: -> { Inflector }
 
-    # Return a specific command type for a given adapter and relation AST
+    # Return a specific command command_class for a given adapter and relation AST
     #
     # This class holds its own registry where all generated commands are being
     # stored
@@ -79,8 +79,8 @@ module ROM
     # in repositories. It might be worth looking into removing this requirement
     # from rom core Command::Graph API.
     #
-    # @overload [](type, adapter, ast, plugins, meta)
-    #   @param type [Symbol] The type of command
+    # @overload [](id, adapter, ast, plugins, meta)
+    #   @param id [Symbol] The command identifier
     #   @param adapter [Symbol] The adapter identifier
     #   @param ast [Array] The AST representation of a relation
     #   @param plugins [Array<Symbol>] A list of optional command plugins that should be used
@@ -93,11 +93,11 @@ module ROM
       cache.fetch_or_store(args.hash) do
         id, adapter, ast, plugins, plugins_options, meta = args
 
-        type = self.class.infer_type(id, adapter, inflector)
+        command_class = self.class.infer_command_class(id, adapter, inflector)
 
         compiler = with(
           id: id,
-          type: type,
+          command_class: command_class,
           adapter: adapter,
           plugins: Array(plugins),
           plugins_options: plugins_options,
@@ -132,11 +132,11 @@ module ROM
       name, header, meta = node
       other = header.map { |attr| visit(attr, name) }.compact
 
-      if type
-        register_command(name, type, meta, parent_relation)
+      if command_class
+        register_command(name, command_class, meta, parent_relation)
 
         default_mapping =
-          if meta[:combine_type] == :many
+          if meta[:combine_command_class] == :many
             name
           else
             {inflector.singularize(name).to_sym => name}
@@ -158,9 +158,9 @@ module ROM
           end
 
         if other.empty?
-          [mapping, type]
+          [mapping, command_class]
         else
-          [mapping, [type, other]]
+          [mapping, [command_class, other]]
         end
       else
         registry[name][id] = commands[name][id]
@@ -180,17 +180,17 @@ module ROM
     # this compiler.
     #
     # @param [Symbol] rel_name A relation identifier from the container registry
-    # @param [Symbol] type The command type
+    # @param [Symbol] command_class The command command_class
     # @param [Hash] rel_meta Meta information from relation AST
     # @param [Symbol] parent_relation Optional parent relation identifier
     #
     # @return [ROM::Command]
     #
     # @api private
-    def register_command(rel_name, type, rel_meta, parent_relation = nil)
+    def register_command(rel_name, command_class, rel_meta, parent_relation = nil)
       relation = relations[rel_name]
 
-      klass = type.create_class(
+      klass = command_class.create_class(
         rel_name,
         relation: relation,
         meta: meta,
@@ -201,7 +201,7 @@ module ROM
         inflector: inflector
       )
 
-      registry[rel_name][type] = klass.build(relation)
+      registry[rel_name][command_class] = klass.build(relation)
     end
   end
 end
