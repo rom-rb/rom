@@ -34,13 +34,13 @@ RSpec.describe "Commands" do
 
   describe ".create_class" do
     it "builds a class" do
-      klass = ROM::Command.create_class(:create, type: ROM::Memory::Commands::Create)
+      klass = ROM::Command.create_class(type: ROM::Memory::Commands::Create)
 
       expect(klass.name).to eql("ROM::Memory::Commands::Create")
     end
 
     it "builds a class and yields it" do
-      klass = ROM::Command.create_class(:create, type: ROM::Memory::Commands::Create) do |k|
+      klass = ROM::Command.create_class(type: ROM::Memory::Commands::Create) do |k|
         k.result :one
         k
       end

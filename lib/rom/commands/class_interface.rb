@@ -86,15 +86,14 @@ module ROM
       #
       # @api public
       def create_class(
-        name,
         type: self,
         relation: nil,
-        parent_relation: nil,
         meta: {},
         rel_meta: {},
         plugins: [],
         plugins_options: {},
         inflector: Inflector,
+        **opts,
         &block
       )
         klass = Dry::Core::ClassBuilder

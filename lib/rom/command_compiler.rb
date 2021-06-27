@@ -180,7 +180,6 @@ module ROM
       relation = relations[rel_name]
 
       klass = command_class.create_class(
-        rel_name,
         relation: relation,
         meta: meta,
         rel_meta: rel_meta,
