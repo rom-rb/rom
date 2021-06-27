@@ -44,11 +44,7 @@ module ROM
 
     # @!attribute [r] plugins
     #   @return [Array<Symbol>] a list of optional plugins that will be enabled for commands
-    option :plugins, optional: true, default: -> { EMPTY_ARRAY }
-
-    # @!attribute [r] plugins_options
-    #   @return [Hash] a hash of options for the plugins
-    option :plugins_options, optional: true, default: -> { EMPTY_HASH }
+    option :plugins, optional: true, default: -> { EMPTY_HASH }
 
     # @!attribute [r] meta
     #   @return [Array<Symbol>] Meta data for a command
@@ -89,12 +85,15 @@ module ROM
 
         command_class = Command.adapter_namespace(adapter).const_get(inflector.classify(id))
 
+        plugins_with_opts = Array(plugins)
+          .map { |plugin| [plugin, plugins_options.fetch(plugin) { EMPTY_HASH }] }
+          .to_h
+
         compiler = with(
           id: id,
           command_class: command_class,
           adapter: adapter,
-          plugins: Array(plugins),
-          plugins_options: plugins_options,
+          plugins: plugins_with_opts,
           meta: meta
         )
 
@@ -185,7 +184,6 @@ module ROM
         rel_meta: rel_meta,
         parent_relation: parent_relation,
         plugins: plugins,
-        plugins_options: plugins_options,
         inflector: inflector
       )
 

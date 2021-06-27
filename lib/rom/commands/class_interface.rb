@@ -85,19 +85,8 @@ module ROM
       # @return [Class, Object]
       #
       # @api public
-      def create_class(
-        type: self,
-        meta: {},
-        rel_meta: {},
-        plugins: [],
-        plugins_options: {},
-        inflector: Inflector,
-        **opts,
-        &block
-      )
-        klass = Dry::Core::ClassBuilder
-          .new(name: type.name, parent: type)
-          .call
+      def create_class(type: self, meta: {}, rel_meta: {}, plugins: {}, inflector: Inflector, **opts, &block)
+        klass = Dry::Core::ClassBuilder.new(name: type.name, parent: type).call
 
         result = meta.fetch(:result, :one)
         klass.result(rel_meta.fetch(:combine_type, result))
@@ -106,9 +95,8 @@ module ROM
           klass.public_send(name, value)
         end
 
-        plugins.each do |plugin|
-          plugin_options = plugins_options.fetch(plugin) { EMPTY_HASH }
-          klass.use(plugin, **plugin_options)
+        plugins.each do |plugin, options|
+          klass.use(plugin, **options)
         end
 
         if block
