@@ -84,7 +84,7 @@ module ROM
       # @return [Class, Object]
       #
       # @api public
-      def create_class(type: self, meta: {}, rel_meta: {}, plugins: {}, **opts, &block)
+      def create_class(type: self, meta: {}, rel_meta: {}, plugins: {}, **, &block)
         klass = Dry::Core::ClassBuilder.new(name: type.name, parent: type).call
 
         result = meta.fetch(:result, :one)
