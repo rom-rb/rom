@@ -121,7 +121,7 @@ RSpec.describe ROM::Commands::Lazy do
     context "with an update command" do
       subject(:command) do
         ROM::Commands::Lazy[update_user].new(
-          update_user, evaluator, -> cmd, user { cmd.by_name(user[:name]) }
+          update_user, evaluator, -> cmd, user { cmd.relation.by_name(user[:name]).command(:update) }
         )
       end
 
@@ -142,7 +142,7 @@ RSpec.describe ROM::Commands::Lazy do
         ROM::Commands::Lazy[update_task].new(
           update_task,
           evaluator,
-          -> cmd, user, task { cmd.by_user(user[:name]).by_title(task[:title]) }
+          -> cmd, user, task { cmd.relation.by_user(user[:name]).by_title(task[:title]).command(:update) }
         )
       end
 
@@ -172,7 +172,7 @@ RSpec.describe ROM::Commands::Lazy do
         ROM::Commands::Lazy[update_task].new(
           update_task,
           evaluator,
-          -> cmd, user, task { cmd.by_user(user[:name]).by_title(task[:title]) }
+          -> cmd, user, task { cmd.relation.by_user(user[:name]).by_title(task[:title]).command(:update) }
         )
       end
 
@@ -208,7 +208,7 @@ RSpec.describe ROM::Commands::Lazy do
         ROM::Commands::Lazy[update_task].new(
           update_task,
           evaluator,
-          -> cmd, user, task { cmd.by_user(user[:name]).by_title(task[:title]) }
+          -> cmd, user, task { cmd.relation.by_user(user[:name]).by_title(task[:title]).command(:update) }
         )
       end
 
@@ -255,7 +255,7 @@ RSpec.describe ROM::Commands::Lazy do
         ROM::Commands::Lazy[delete_user].new(
           delete_user,
           evaluator,
-          -> cmd, user { cmd.by_name(user[:name]) }
+          -> cmd, user { cmd.relation.by_name(user[:name]).command(:delete) }
         )
       end
 

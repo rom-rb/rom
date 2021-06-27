@@ -22,29 +22,21 @@ module ROM
       Hash.new { |h, k| h[k] = {} }
     end
 
-    # @!attribute [r] gateways
-    #   @return [ROM::Registry] Gateways used for command extensions
-    param :gateways
-
     # @!attribute [r] relations
     #   @return [ROM::RelationRegistry] Relations used with a given compiler
-    param :relations
+    option :relations
 
     # @!attribute [r] commands
     #   @return [ROM::Registry] Command registries with custom commands
-    param :commands
-
-    # @!attribute [r] notifications
-    #   @return [Notifications::EventBus] Configuration notifications event bus
-    param :notifications
+    option :commands, default: -> { Registry.new }
 
     # @!attribute [r] id
-    #   @return [Symbol] The command type registry identifier
+    #   @return [Symbol] The command registry identifier
     option :id, optional: true
 
-    # @!attribute [r] adapter
-    #   @return [Symbol] The adapter identifier ie :sql or :http
-    option :adapter, optional: true
+    # @!attribute [r] command_class
+    #   @return [Symbol] The command command_class
+    option :command_class, optional: true
 
     # @!attribute [r] registry
     #   @return [Hash] local registry where commands will be stored during compilation
@@ -52,11 +44,7 @@ module ROM
 
     # @!attribute [r] plugins
     #   @return [Array<Symbol>] a list of optional plugins that will be enabled for commands
-    option :plugins, optional: true, default: -> { EMPTY_ARRAY }
-
-    # @!attribute [r] plugins_options
-    #   @return [Hash] a hash of options for the plugins
-    option :plugins_options, optional: true, default: -> { EMPTY_HASH }
+    option :plugins, optional: true, default: -> { EMPTY_HASH }
 
     # @!attribute [r] meta
     #   @return [Array<Symbol>] Meta data for a command
@@ -71,7 +59,7 @@ module ROM
     #   @api private
     option :inflector, default: -> { Inflector }
 
-    # Return a specific command type for a given adapter and relation AST
+    # Return a specific command command_class for a given adapter and relation AST
     #
     # This class holds its own registry where all generated commands are being
     # stored
@@ -81,8 +69,8 @@ module ROM
     # in repositories. It might be worth looking into removing this requirement
     # from rom core Command::Graph API.
     #
-    # @overload [](type, adapter, ast, plugins, meta)
-    #   @param type [Symbol] The type of command
+    # @overload [](id, adapter, ast, plugins, meta)
+    #   @param id [Symbol] The command identifier
     #   @param adapter [Symbol] The adapter identifier
     #   @param ast [Array] The AST representation of a relation
     #   @param plugins [Array<Symbol>] A list of optional command plugins that should be used
@@ -93,13 +81,19 @@ module ROM
     # @api private
     def call(*args)
       cache.fetch_or_store(args.hash) do
-        type, adapter, ast, plugins, plugins_options, meta = args
+        id, adapter, ast, plugins, plugins_options, meta = args
+
+        command_class = Command.adapter_namespace(adapter).const_get(inflector.classify(id))
+
+        plugins_with_opts = Array(plugins)
+          .map { |plugin| [plugin, plugins_options.fetch(plugin) { EMPTY_HASH }] }
+          .to_h
 
         compiler = with(
-          id: type,
+          id: id,
+          command_class: command_class,
           adapter: adapter,
-          plugins: Array(plugins),
-          plugins_options: plugins_options,
+          plugins: plugins_with_opts,
           meta: meta
         )
 
@@ -119,13 +113,6 @@ module ROM
     alias_method :[], :call
 
     # @api private
-    def type
-      @_type ||= Commands.const_get(inflector.classify(id))[adapter]
-    rescue NameError
-      nil
-    end
-
-    # @api private
     def visit(ast, *args)
       name, node = ast
       __send__(:"visit_#{name}", node, *args)
@@ -135,47 +122,42 @@ module ROM
 
     # @api private
     def visit_relation(node, parent_relation = nil)
-      name, header, meta = node
+      name, header, rel_meta = node
       other = header.map { |attr| visit(attr, name) }.compact
 
-      if type
-        register_command(name, type, meta, parent_relation)
+      register_command(name, rel_meta, parent_relation)
 
-        default_mapping =
-          if meta[:combine_type] == :many
-            name
-          else
-            {inflector.singularize(name).to_sym => name}
-          end
+      default_mapping =
+        if rel_meta[:combine_command_class] == :many
+          name
+        else
+          {inflector.singularize(name).to_sym => name}
+        end
 
-        mapping =
-          if parent_relation
-            associations = relations[parent_relation].associations
+      mapping =
+        if parent_relation
+          associations = relations[parent_relation].associations
 
-            assoc = associations[meta[:combine_name]]
+          assoc = associations[rel_meta[:combine_name]]
 
-            if assoc
-              {assoc.key => assoc.target.name.to_sym}
-            else
-              default_mapping
-            end
+          if assoc
+            {assoc.key => assoc.target.name.to_sym}
           else
             default_mapping
           end
-
-        if other.empty?
-          [mapping, type]
         else
-          [mapping, [type, other]]
+          default_mapping
         end
+
+      if other.empty?
+        [mapping, command_class]
       else
-        registry[name][id] = commands[name][id]
-        [name, id]
+        [mapping, [command_class, other]]
       end
     end
 
     # @api private
-    def visit_attribute(*_args)
+    def visit_attribute(*)
       nil
     end
 
@@ -186,72 +168,24 @@ module ROM
     # this compiler.
     #
     # @param [Symbol] rel_name A relation identifier from the container registry
-    # @param [Symbol] type The command type
     # @param [Hash] rel_meta Meta information from relation AST
     # @param [Symbol] parent_relation Optional parent relation identifier
     #
     # @return [ROM::Command]
     #
     # @api private
-    def register_command(rel_name, type, rel_meta, parent_relation = nil)
+    def register_command(rel_name, rel_meta, parent_relation = nil)
       relation = relations[rel_name]
 
-      type.create_class(rel_name, type, inflector: inflector) do |klass|
-        klass.result(rel_meta.fetch(:combine_type, result))
+      klass = command_class.create_class(
+        relation: relation,
+        meta: meta,
+        rel_meta: rel_meta,
+        parent_relation: parent_relation,
+        plugins: plugins
+      )
 
-        meta.each do |name, value|
-          klass.public_send(name, value)
-        end
-
-        setup_associates(klass, relation, rel_meta, parent_relation) if rel_meta[:combine_type]
-
-        plugins.each do |plugin|
-          plugin_options = plugins_options.fetch(plugin) { EMPTY_HASH }
-          klass.use(plugin, **plugin_options)
-        end
-
-        gateway = gateways[relation.gateway]
-
-        notifications.trigger(
-          "configuration.commands.class.before_build",
-          command: klass, gateway: gateway, dataset: relation.dataset, adapter: adapter
-        )
-
-        klass.extend_for_relation(relation) if klass.restrictable
-
-        registry[rel_name][type] = klass.build(relation)
-      end
-    end
-
-    # Return default result type
-    #
-    # @return [Symbol]
-    #
-    # @api private
-    def result
-      meta.fetch(:result, :one)
-    end
-
-    # Sets up `associates` plugin for a given command class and relation
-    #
-    # @param [Class] klass The command class
-    # @param [Relation] relation The relation for the command
-    #
-    # @api private
-    def setup_associates(klass, relation, _meta, parent_relation)
-      assoc_name =
-        if relation.associations.key?(parent_relation)
-          parent_relation
-        else
-          singular_name = inflector.singularize(parent_relation).to_sym
-          singular_name if relation.associations.key?(singular_name)
-        end
-
-      if assoc_name
-        klass.associates(assoc_name)
-      else
-        klass.associates(parent_relation)
-      end
+      registry[rel_name][command_class] = klass.build(relation)
     end
   end
 end

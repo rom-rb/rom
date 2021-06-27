@@ -3,6 +3,10 @@
 require "spec_helper"
 
 RSpec.describe "ROM::CommandCompiler" do
+  subject(:compiler) do
+    ROM::CommandCompiler.new(relations: relations)
+  end
+
   include_context "gateway only"
   include_context "users and tasks"
 
@@ -14,14 +18,8 @@ RSpec.describe "ROM::CommandCompiler" do
     }.new(users_dataset)
   end
 
-  subject(:compiler) do
-    ROM::CommandCompiler.new(gateways, relations, registry, notifications)
-  end
-
   let(:gateways) { {default: gateway} }
   let(:relations) { {users: users} }
-  let(:registry) {}
-  let(:notifications) { double(trigger: nil) }
   let(:users_ast) do
     [:users,
      [[:attribute,
@@ -37,7 +35,7 @@ RSpec.describe "ROM::CommandCompiler" do
 
   describe "#[]" do
     let(:second_compiler) do
-      ROM::CommandCompiler.new(gateways, relations, registry, notifications)
+      ROM::CommandCompiler.new(relations: relations)
     end
 
     let(:options) { {} }

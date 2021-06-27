@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "dry/core/class_builder"
-require "rom/support/inflector"
 
 module ROM
   # Base command class with factory class-level interface and setup-related logic
@@ -85,10 +84,19 @@ module ROM
       # @return [Class, Object]
       #
       # @api public
-      def create_class(name, type, inflector: Inflector, &block)
-        klass = Dry::Core::ClassBuilder
-          .new(name: "#{inflector.classify(type)}[:#{name}]", parent: type)
-          .call
+      def create_class(type: self, meta: {}, rel_meta: {}, plugins: {}, **, &block)
+        klass = Dry::Core::ClassBuilder.new(name: type.name, parent: type).call
+
+        result = meta.fetch(:result, :one)
+        klass.result(rel_meta.fetch(:combine_type, result))
+
+        meta.each do |name, value|
+          klass.public_send(name, value)
+        end
+
+        plugins.each do |plugin, options|
+          klass.use(plugin, **options)
+        end
 
         if block
           yield(klass)
@@ -113,17 +121,6 @@ module ROM
       # @api public
       def use(plugin, **options)
         ROM.plugin_registry[:command].fetch(plugin, adapter).apply_to(self, **options)
-      end
-
-      # Extend a command class with relation view methods
-      #
-      # @param [Relation] relation
-      #
-      # @return [Class]
-      #
-      # @api public
-      def extend_for_relation(relation)
-        include(relation_methods_mod(relation.class))
       end
 
       # Set before-execute hooks
@@ -247,25 +244,6 @@ module ROM
       # @api private
       def options
         {input: input, result: result, before: before, after: after}
-      end
-
-      # @api private
-      def relation_methods_mod(relation_class)
-        Module.new do
-          relation_class.view_methods.each do |meth|
-            module_eval <<-RUBY, __FILE__, __LINE__ + 1
-              def #{meth}(*args)
-                response = relation.public_send(:#{meth}, *args)
-
-                if response.is_a?(relation.class)
-                  new(response)
-                else
-                  response
-                end
-              end
-            RUBY
-          end
-        end
       end
     end
   end

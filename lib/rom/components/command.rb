@@ -31,10 +31,9 @@ module ROM
           command: constant,
           gateway: gateways[relation.gateway],
           dataset: relation.dataset,
+          relation: relation,
           adapter: adapter
         )
-
-        constant.extend_for_relation(relation) if constant.restrictable
 
         constant.build(relation)
       end
