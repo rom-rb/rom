@@ -22,6 +22,12 @@ module ROM
       Hash.new { |h, k| h[k] = {} }
     end
 
+    # @api private
+    def self.infer_type(id, adapter, inflector)
+      class_name = inflector.classify(id)
+      Commands.const_get(class_name)[adapter] if Commands.const_defined?(class_name)
+    end
+
     # @!attribute [r] relations
     #   @return [ROM::RelationRegistry] Relations used with a given compiler
     option :relations
@@ -31,12 +37,12 @@ module ROM
     option :commands, default: -> { Registry.new }
 
     # @!attribute [r] id
-    #   @return [Symbol] The command type registry identifier
+    #   @return [Symbol] The command registry identifier
     option :id, optional: true
 
-    # @!attribute [r] adapter
-    #   @return [Symbol] The adapter identifier ie :sql or :http
-    option :adapter, optional: true
+    # @!attribute [r] type
+    #   @return [Symbol] The command type
+    option :type, optional: true
 
     # @!attribute [r] registry
     #   @return [Hash] local registry where commands will be stored during compilation
@@ -85,10 +91,13 @@ module ROM
     # @api private
     def call(*args)
       cache.fetch_or_store(args.hash) do
-        type, adapter, ast, plugins, plugins_options, meta = args
+        id, adapter, ast, plugins, plugins_options, meta = args
+
+        type = self.class.infer_type(id, adapter, inflector)
 
         compiler = with(
-          id: type,
+          id: id,
+          type: type,
           adapter: adapter,
           plugins: Array(plugins),
           plugins_options: plugins_options,
@@ -109,13 +118,6 @@ module ROM
       end
     end
     alias_method :[], :call
-
-    # @api private
-    def type
-      @_type ||= Commands.const_get(inflector.classify(id))[adapter]
-    rescue NameError
-      nil
-    end
 
     # @api private
     def visit(ast, *args)
