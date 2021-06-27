@@ -87,7 +87,6 @@ module ROM
       # @api public
       def create_class(
         type: self,
-        relation: nil,
         meta: {},
         rel_meta: {},
         plugins: [],
