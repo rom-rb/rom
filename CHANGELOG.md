@@ -21,6 +21,7 @@
 - Configuration values are no longer being frozen during setup process (issue #616 fixed via #617) (@v-kolesnikov)
 - [BREAKING] `Setup#auto_registration` was renamed to `Setup#auto_register`. You can restore the original method via rom/compat extension (via #634 refs #607) (@solnic)
 - [internal] auto registration is now powered by Zeitwerk (via #634 refs #607) (@solnic)
+- Plugin event listeners are no longer global which makes it possible to have plugin with different configs in a single process (via #639) (@solnic)
 
 [Compare v5.2.4...master](https://github.com/rom-rb/rom/compare/v5.2.4...master)
 
