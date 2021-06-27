@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "dry/core/class_builder"
-require "rom/support/inflector"
 
 module ROM
   # Base command class with factory class-level interface and setup-related logic
@@ -85,7 +84,7 @@ module ROM
       # @return [Class, Object]
       #
       # @api public
-      def create_class(type: self, meta: {}, rel_meta: {}, plugins: {}, inflector: Inflector, **opts, &block)
+      def create_class(type: self, meta: {}, rel_meta: {}, plugins: {}, **opts, &block)
         klass = Dry::Core::ClassBuilder.new(name: type.name, parent: type).call
 
         result = meta.fetch(:result, :one)

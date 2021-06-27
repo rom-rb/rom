@@ -122,13 +122,13 @@ module ROM
 
     # @api private
     def visit_relation(node, parent_relation = nil)
-      name, header, meta = node
+      name, header, rel_meta = node
       other = header.map { |attr| visit(attr, name) }.compact
 
-      register_command(name, command_class, meta, parent_relation)
+      register_command(name, rel_meta, parent_relation)
 
       default_mapping =
-        if meta[:combine_command_class] == :many
+        if rel_meta[:combine_command_class] == :many
           name
         else
           {inflector.singularize(name).to_sym => name}
@@ -138,7 +138,7 @@ module ROM
         if parent_relation
           associations = relations[parent_relation].associations
 
-          assoc = associations[meta[:combine_name]]
+          assoc = associations[rel_meta[:combine_name]]
 
           if assoc
             {assoc.key => assoc.target.name.to_sym}
@@ -168,14 +168,13 @@ module ROM
     # this compiler.
     #
     # @param [Symbol] rel_name A relation identifier from the container registry
-    # @param [Symbol] command_class The command command_class
     # @param [Hash] rel_meta Meta information from relation AST
     # @param [Symbol] parent_relation Optional parent relation identifier
     #
     # @return [ROM::Command]
     #
     # @api private
-    def register_command(rel_name, command_class, rel_meta, parent_relation = nil)
+    def register_command(rel_name, rel_meta, parent_relation = nil)
       relation = relations[rel_name]
 
       klass = command_class.create_class(
@@ -183,8 +182,7 @@ module ROM
         meta: meta,
         rel_meta: rel_meta,
         parent_relation: parent_relation,
-        plugins: plugins,
-        inflector: inflector
+        plugins: plugins
       )
 
       registry[rel_name][command_class] = klass.build(relation)
