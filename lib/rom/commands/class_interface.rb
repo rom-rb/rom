@@ -85,10 +85,35 @@ module ROM
       # @return [Class, Object]
       #
       # @api public
-      def create_class(name, type, inflector: Inflector, &block)
+      def create_class(
+        name,
+        type: self,
+        relation: nil,
+        parent_relation: nil,
+        meta: {},
+        rel_meta: {},
+        plugins: [],
+        plugins_options: {},
+        inflector: Inflector,
+        &block
+      )
         klass = Dry::Core::ClassBuilder
-          .new(name: "#{inflector.classify(type)}[:#{name}]", parent: type)
+          .new(name: type.name, parent: type)
           .call
+
+        result = meta.fetch(:result, :one)
+        klass.result(rel_meta.fetch(:combine_type, result))
+
+        meta.each do |name, value|
+          klass.public_send(name, value)
+        end
+
+        plugins.each do |plugin|
+          plugin_options = plugins_options.fetch(plugin) { EMPTY_HASH }
+          klass.use(plugin, **plugin_options)
+        end
+
+        klass.extend_for_relation(relation) if relation && klass.restrictable
 
         if block
           yield(klass)

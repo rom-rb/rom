@@ -151,13 +151,7 @@ module ROM
 
     # @api private
     def command_compiler
-      @command_compiler ||= CommandCompiler.new(
-        gateways,
-        relations,
-        Registry.new,
-        notifications,
-        inflector: inflector
-      )
+      @command_compiler ||= CommandCompiler.new(relations: relations, inflector: inflector)
     end
 
     # @api private

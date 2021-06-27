@@ -22,21 +22,13 @@ module ROM
       Hash.new { |h, k| h[k] = {} }
     end
 
-    # @!attribute [r] gateways
-    #   @return [ROM::Registry] Gateways used for command extensions
-    param :gateways
-
     # @!attribute [r] relations
     #   @return [ROM::RelationRegistry] Relations used with a given compiler
-    param :relations
+    option :relations
 
     # @!attribute [r] commands
     #   @return [ROM::Registry] Command registries with custom commands
-    param :commands
-
-    # @!attribute [r] notifications
-    #   @return [Notifications::EventBus] Configuration notifications event bus
-    param :notifications
+    option :commands, default: -> { Registry.new }
 
     # @!attribute [r] id
     #   @return [Symbol] The command type registry identifier
@@ -196,62 +188,18 @@ module ROM
     def register_command(rel_name, type, rel_meta, parent_relation = nil)
       relation = relations[rel_name]
 
-      type.create_class(rel_name, type, inflector: inflector) do |klass|
-        klass.result(rel_meta.fetch(:combine_type, result))
+      klass = type.create_class(
+        rel_name,
+        relation: relation,
+        meta: meta,
+        rel_meta: rel_meta,
+        parent_relation: parent_relation,
+        plugins: plugins,
+        plugins_options: plugins_options,
+        inflector: inflector
+      )
 
-        meta.each do |name, value|
-          klass.public_send(name, value)
-        end
-
-        setup_associates(klass, relation, rel_meta, parent_relation) if rel_meta[:combine_type]
-
-        plugins.each do |plugin|
-          plugin_options = plugins_options.fetch(plugin) { EMPTY_HASH }
-          klass.use(plugin, **plugin_options)
-        end
-
-        gateway = gateways[relation.gateway]
-
-        notifications.trigger(
-          "configuration.commands.class.before_build",
-          command: klass, gateway: gateway, dataset: relation.dataset, adapter: adapter
-        )
-
-        klass.extend_for_relation(relation) if klass.restrictable
-
-        registry[rel_name][type] = klass.build(relation)
-      end
-    end
-
-    # Return default result type
-    #
-    # @return [Symbol]
-    #
-    # @api private
-    def result
-      meta.fetch(:result, :one)
-    end
-
-    # Sets up `associates` plugin for a given command class and relation
-    #
-    # @param [Class] klass The command class
-    # @param [Relation] relation The relation for the command
-    #
-    # @api private
-    def setup_associates(klass, relation, _meta, parent_relation)
-      assoc_name =
-        if relation.associations.key?(parent_relation)
-          parent_relation
-        else
-          singular_name = inflector.singularize(parent_relation).to_sym
-          singular_name if relation.associations.key?(singular_name)
-        end
-
-      if assoc_name
-        klass.associates(assoc_name)
-      else
-        klass.associates(parent_relation)
-      end
+      registry[rel_name][type] = klass.build(relation)
     end
   end
 end
