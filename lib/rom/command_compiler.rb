@@ -22,12 +22,6 @@ module ROM
       Hash.new { |h, k| h[k] = {} }
     end
 
-    # @api private
-    def self.infer_command_class(id, adapter, inflector)
-      class_name = inflector.classify(id)
-      Commands.const_get(class_name)[adapter] if Commands.const_defined?(class_name)
-    end
-
     # @!attribute [r] relations
     #   @return [ROM::RelationRegistry] Relations used with a given compiler
     option :relations
@@ -93,7 +87,7 @@ module ROM
       cache.fetch_or_store(args.hash) do
         id, adapter, ast, plugins, plugins_options, meta = args
 
-        command_class = self.class.infer_command_class(id, adapter, inflector)
+        command_class = Command.adapter_namespace(adapter).const_get(inflector.classify(id))
 
         compiler = with(
           id: id,
@@ -132,39 +126,34 @@ module ROM
       name, header, meta = node
       other = header.map { |attr| visit(attr, name) }.compact
 
-      if command_class
-        register_command(name, command_class, meta, parent_relation)
+      register_command(name, command_class, meta, parent_relation)
 
-        default_mapping =
-          if meta[:combine_command_class] == :many
-            name
-          else
-            {inflector.singularize(name).to_sym => name}
-          end
+      default_mapping =
+        if meta[:combine_command_class] == :many
+          name
+        else
+          {inflector.singularize(name).to_sym => name}
+        end
 
-        mapping =
-          if parent_relation
-            associations = relations[parent_relation].associations
+      mapping =
+        if parent_relation
+          associations = relations[parent_relation].associations
 
-            assoc = associations[meta[:combine_name]]
+          assoc = associations[meta[:combine_name]]
 
-            if assoc
-              {assoc.key => assoc.target.name.to_sym}
-            else
-              default_mapping
-            end
+          if assoc
+            {assoc.key => assoc.target.name.to_sym}
           else
             default_mapping
           end
-
-        if other.empty?
-          [mapping, command_class]
         else
-          [mapping, [command_class, other]]
+          default_mapping
         end
+
+      if other.empty?
+        [mapping, command_class]
       else
-        registry[name][id] = commands[name][id]
-        [name, id]
+        [mapping, [command_class, other]]
       end
     end
 
