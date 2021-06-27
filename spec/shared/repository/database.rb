@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "rom/sql"
 RSpec.shared_context "repository / db_uri" do
   let(:base_db_uri) do
     ENV.fetch("BASE_DB_URI", "postgres@localhost/rom")
@@ -14,7 +15,9 @@ RSpec.shared_context "repository / database setup" do
   include_context "repository / db_uri"
 
   let(:configuration) do
-    ROM::Configuration.new(:sql, db_uri)
+    ROM::Configuration.new(:sql, db_uri) do |config|
+      config.plugin(:sql, relation: :auto_restrictions)
+    end
   end
 
   let(:conn) do

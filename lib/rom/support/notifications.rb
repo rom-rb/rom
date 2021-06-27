@@ -54,7 +54,7 @@ module ROM
       #
       # @api public
       def subscribe(event_id, query = EMPTY_HASH, &block)
-        listeners[event_id] << [block, query]
+        listeners[self] << [event_id, block, query]
         self
       end
 
@@ -67,7 +67,11 @@ module ROM
       def trigger(event_id, payload = EMPTY_HASH)
         event = events[event_id]
 
-        listeners[event.id].each do |(listener, query)|
+        event_listeners = listeners.values.flatten(1).group_by(&:first)
+
+        return unless event_listeners.key?(event_id)
+
+        event_listeners[event_id].each do |(_, listener, query)|
           event.payload(payload).trigger(listener, query)
         end
       end
@@ -178,7 +182,7 @@ module ROM
     #
     # @api public
     def self.event_bus(id)
-      EventBus.new(id, events: events.dup, listeners: listeners.dup)
+      EventBus.new(id, events: events.dup)
     end
 
     # Extension for objects that can listen to events
@@ -193,7 +197,7 @@ module ROM
       #
       # @api public
       def subscribe(event_id, query = EMPTY_HASH, &block)
-        Notifications.listeners[event_id] << [block, query]
+        Notifications.listeners[self] << [event_id, block, query]
       end
     end
 
@@ -224,9 +228,9 @@ module ROM
       # @param [Hash] listeners A hash with listeners
       #
       # @api public
-      def initialize(id, events: EMPTY_HASH, listeners: LISTENERS_HASH.dup)
+      def initialize(id, events: EMPTY_HASH)
         @id = id
-        @listeners = listeners
+        @listeners = LISTENERS_HASH.dup
         @events = events
       end
     end

@@ -13,8 +13,12 @@ module ROM
     attr_reader :types
 
     # @api private
+    attr_reader :mods
+
+    # @api private
     def initialize
       @types = ::Concurrent::Map.new
+      @mods = []
     end
 
     # Register a plugin for future use
@@ -27,6 +31,7 @@ module ROM
     # @option options [Symbol] :adapter (:default) which adapter this plugin
     # applies to. Leave blank for all adapters
     def register(name, mod, options = EMPTY_HASH)
+      mods << mod
       type(options.fetch(:type)).register(name, mod, options)
     end
 

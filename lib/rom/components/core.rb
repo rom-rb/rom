@@ -72,7 +72,7 @@ module ROM
         )
       end
 
-      # @api public
+      # @api private
       def apply_plugins
         plugins.each do |plugin|
           plugin.apply_to(constant)
