@@ -22,6 +22,7 @@
 - [BREAKING] `Setup#auto_registration` was renamed to `Setup#auto_register`. You can restore the original method via rom/compat extension (via #634 refs #607) (@solnic)
 - [internal] auto registration is now powered by Zeitwerk (via #634 refs #607) (@solnic)
 - Plugin event listeners are no longer global which makes it possible to have plugin with different configs in a single process (via #639) (@solnic)
+- [internal] Command compiler is no longer coupled to gateway and notifications (via #640) (@solnic)
 
 [Compare v5.2.4...master](https://github.com/rom-rb/rom/compare/v5.2.4...master)
 
