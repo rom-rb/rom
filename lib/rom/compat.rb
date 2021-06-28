@@ -55,7 +55,7 @@ module ROM
       end
 
       # @api private
-      def create_class(name, relation: nil, **opts, &block)
+      def create_class(relation:, **, &block)
         klass = super
         klass.extend_for_relation(relation) if relation && klass.restrictable
         klass

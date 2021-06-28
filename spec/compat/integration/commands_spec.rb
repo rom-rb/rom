@@ -23,6 +23,17 @@ RSpec.describe "Commands" do
   let(:create) { container.commands[:users][:create] }
   let(:update) { container.commands[:users][:update] }
 
+  describe ".create_class" do
+    it "adds restrictions" do
+      klass = ROM::Command.create_class(
+        type: ROM::Memory::Commands::Update,
+        relation: container.relations.users,
+      )
+
+      expect(klass.instance_methods).to include(:by_id)
+    end
+  end
+
   describe "#method_missing" do
     it "forwards known relation view methods" do
       expect(update.by_id(1).relation).to eql(users_relation.by_id(1))
