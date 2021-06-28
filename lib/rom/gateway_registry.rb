@@ -21,12 +21,13 @@ module ROM
     end
 
     # @api public
-    def [](key)
+    def fetch(key)
       if resolver
-        fetch(key) { resolver[key] }
+        super(key) { resolver[key] }
       else
         super
       end
     end
+    alias_method :[], :fetch
   end
 end

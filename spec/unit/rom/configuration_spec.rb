@@ -25,6 +25,12 @@ RSpec.describe ROM::Configuration do
       expect(configuration.repo).to be(repo)
     end
 
+    it "exposes gateways in the block" do
+      ROM::Configuration.new(:memory) do |config|
+        expect(config.default).to be_a(ROM::Memory::Gateway)
+      end
+    end
+
     it "raises error if gateway is not defined" do
       configuration = ROM::Configuration.new
 
