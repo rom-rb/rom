@@ -62,6 +62,10 @@ module ROM
       end
     end
 
+    class << self
+      prepend(Restrictable)
+    end
+
     # Extend a command class with relation view methods
     #
     # @param [Relation] relation
@@ -92,7 +96,5 @@ module ROM
         end
       end
     end
-
-    Command::ClassInterface.prepend(Restrictable)
   end
 end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require "rom/compat"
 require "spec_helper"
+require "rom/compat"
 
 RSpec.describe "Commands" do
   include_context "container"
