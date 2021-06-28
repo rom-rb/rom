@@ -154,11 +154,6 @@ module ROM
       @command_compiler ||= CommandCompiler.new(relations: relations, inflector: inflector)
     end
 
-    # @api private
-    def respond_to_missing?(name, include_all = false)
-      gateways.key?(name) || super
-    end
-
     private
 
     # This infers config based on arguments passed to either ROM.container
@@ -191,15 +186,6 @@ module ROM
           config.send("#{key}=", value)
         end
       end
-    end
-
-    # Returns gateway if method is a name of a registered gateway
-    #
-    # @return [Gateway]
-    #
-    # @api private
-    def method_missing(name, *)
-      gateways.fetch(name) { super }
     end
   end
 end

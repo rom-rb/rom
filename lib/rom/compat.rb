@@ -25,6 +25,23 @@ module ROM
     def gateways_map
       @gateways_map ||= gateways.to_a.map(&:reverse).to_h
     end
+
+    # @api private
+    def respond_to_missing?(name, include_all = false)
+      gateways.key?(name) || super
+    end
+
+    private
+
+    # Returns gateway if method is a name of a registered gateway
+    #
+    # @return [Gateway]
+    #
+    # @api public
+    # @deprecated
+    def method_missing(name, *)
+      gateways.fetch(name) { super }
+    end
   end
 
   class Command

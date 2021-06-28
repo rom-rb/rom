@@ -9,7 +9,7 @@ RSpec.describe "Mapper definition DSL" do
   before do
     configuration.relation(:lists)
 
-    configuration.default.dataset(:lists).insert(
+    configuration.gateways[:default].dataset(:lists).insert(
       list_id: 1,
       list_tasks: [
         {user: "Jacob", task_id: 1, task_title: "be nice"},

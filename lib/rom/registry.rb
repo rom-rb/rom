@@ -110,7 +110,9 @@ module ROM
       raise ArgumentError, "key cannot be nil" if key.nil?
 
       elements.fetch(key.to_sym) do
-        return yield if block_given?
+        fallback = yield if block_given?
+
+        return fallback if fallback
 
         raise self.class.element_not_found_error.new(key, self)
       end

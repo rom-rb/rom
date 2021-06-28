@@ -21,9 +21,9 @@ module ROM
     end
 
     # @api public
-    def fetch(key)
+    def fetch(key, &block)
       if resolver
-        super(key) { resolver[key] }
+        super(key) { resolver[key] || block&.call }
       else
         super
       end

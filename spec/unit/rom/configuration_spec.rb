@@ -17,36 +17,15 @@ RSpec.describe ROM::Configuration do
     expect(configuration.config.gateways.default.infer_schema).to be(false)
   end
 
-  describe "#method_missing" do
+  describe "#[]" do
     it "returns a gateway if it is defined" do
-      repo = ROM::Gateway.setup(:memory)
-      configuration = ROM::Configuration.new(repo: repo)
+      gateway = ROM::Gateway.setup(:memory)
+      configuration = ROM::Configuration.new(gateway: gateway)
 
-      expect(configuration.repo).to be(repo)
-    end
-
-    it "exposes gateways in the block" do
-      ROM::Configuration.new(:memory) do |config|
-        expect(config.default).to be_a(ROM::Memory::Gateway)
-      end
+      expect(configuration[:gateway]).to be(gateway)
     end
 
     it "raises error if gateway is not defined" do
-      configuration = ROM::Configuration.new
-
-      expect { configuration.not_here }.to raise_error(NoMethodError, /not_here/)
-    end
-  end
-
-  describe "#[]" do
-    it "returns a gateway if it is defined" do
-      repo = ROM::Gateway.setup(:memory)
-      configuration = ROM::Configuration.new(repo: repo)
-
-      expect(configuration[:repo]).to be(repo)
-    end
-
-    it "raises error if repo is not defined" do
       configuration = ROM::Configuration.new({})
 
       expect { configuration[:not_here] }.to raise_error(KeyError, /not_here/)

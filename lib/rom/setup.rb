@@ -131,6 +131,8 @@ module ROM
     def load_gateway(name)
       gateway_config = config[name]
 
+      return unless gateway_config.key?(:adapter)
+
       gateway =
         if gateway_config.adapter.is_a?(Gateway)
           gateway_config.adapter
