@@ -25,6 +25,7 @@
 - Plugin event listeners are no longer global which makes it possible to have plugin with different configs in a single process (via #639) (@solnic)
 - [internal] Command compiler is no longer coupled to gateway and notifications (via #640) (@solnic)
 - Custom commands are now lazily-resolved at runtime, which simplifies and speeds up setup and finalization (via #641) (@solnic)
+- Mappers are now lazy-resolved at runtime which speeds up setup and finalization (via #642) (@solnic)
 
 [Compare v5.2.4...master](https://github.com/rom-rb/rom/compare/v5.2.4...master)
 
