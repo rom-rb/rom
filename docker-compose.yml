@@ -4,7 +4,9 @@ services:
   rom:
     build:
       context: .
-    env_file: .env
+      args:
+        RUBY_VERSION: ${RUBY_VERSION:-3.0}
+    env_file: [.env, .env.local]
     entrypoint: /bin/bash -c '(bundle check || bundle) && tail -f Gemfile'
     volumes:
       - .:/usr/local/src/rom
