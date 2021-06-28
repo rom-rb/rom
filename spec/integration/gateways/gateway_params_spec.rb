@@ -1,29 +1,58 @@
 # frozen_string_literal: true
 
-RSpec.describe "Gateways / keyword arguments" do
-  before do
-    @adapter = Module.new
-    class @adapter::Gateway < ROM::Gateway
-      extend ROM::Initializer
+RSpec.describe ROM, ".container" do
+  let(:conf) do
+    ROM::Configuration.new(:test_adapter, :param, option: :option)
+  end
 
-      param :param
-      option :option
+  let(:container) do
+    ROM.container(conf)
+  end
+
+  let(:gateway) do
+    container.gateways[:default]
+  end
+
+  shared_context "gateway" do
+    it "builds a gateway with the provided configuration" do
+      expect(gateway.param).to eql(:param)
+      expect(gateway.option).to eql(:option)
     end
-    ROM.register_adapter(:my_adapter, @adapter)
   end
 
-  specify do
-    gw = @adapter::Gateway.new(:param, option: :option)
-    expect(gw.param).to eql(:param)
-    expect(gw.option).to eql(:option)
+  before do
+    ROM.register_adapter(:test_adapter, Test)
   end
 
-  specify do
-    conf = ROM::Configuration.new(:my_adapter, :param, option: :option)
-    container = ROM.container(conf)
-    gw = container.gateways[:default]
+  context "kwargs" do
+    before do
+      module Test
+        class Gateway < ROM::Gateway
+          extend ROM::Initializer
 
-    expect(gw.param).to eql(:param)
-    expect(gw.option).to eql(:option)
+          param :param
+          option :option
+        end
+      end
+    end
+
+    include_context "gateway"
+  end
+
+  context "options" do
+    before do
+      module Test
+        class Gateway < ROM::Gateway
+          attr_reader :param, :option
+
+          def initialize(param, options)
+            @param = param
+            @option = options[:option]
+          end
+        end
+      end
+    end
+
+    include_context "gateway"
   end
 end

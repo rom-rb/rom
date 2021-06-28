@@ -110,10 +110,12 @@ module ROM
               else
                 klass.new(**config)
               end
-            elsif args.size.equal?(2) && args.last.is_a?(Hash)
-              klass.new(*args[0..-1], **args.last)
             else
-              klass.new(*args)
+              if args.last.is_a?(Hash)
+                klass.new(*args[0..-2], **args.last)
+              else
+                klass.new(*args)
+              end
             end
           end
         else
