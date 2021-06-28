@@ -34,6 +34,8 @@
     (via #640) (@solnic)"
   - 'Custom commands are now lazily-resolved at runtime, which simplifies and speeds
     up setup and finalization (via #641) (@solnic)'
+  - 'Mappers are now lazy-resolved at runtime which speeds up setup and finalization
+    (via #642) (@solnic)'
 - version: 5.2.4
   summary: 
   date: '2020-05-08'
