@@ -353,7 +353,7 @@ module ROM
     # @return [self]
     #
     # @api private
-    def finalize!(**_opts)
+    def finalize!(*)
       return self if frozen?
 
       freeze
@@ -386,7 +386,7 @@ module ROM
     # @return [self]
     #
     # @api private
-    def finalize_associations!(relations:)
+    def finalize_associations!(*)
       set!(:associations, yield) if associations.any?
       self
     end
