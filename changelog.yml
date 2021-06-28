@@ -1,7 +1,7 @@
 ---
 - version: unreleased
-  summary:
-  date:
+  summary: 
+  date: 
   fixed:
   - 'Setup works under MRI 3.0.0 (issue #622 fixed via #623) (@v-kolesnikov)'
   added:
@@ -24,20 +24,23 @@
   - "[BREAKING] `Setup#auto_registration` was renamed to `Setup#auto_register`. You
     can restore the original method via rom/compat extension (via #634 refs #607)
     (@solnic)"
-  - "[BREAKING] `Configuration#method_missing` no longer resolves gateways by default. This functionality was moved to rom/compat (@solnic)"
+  - "[BREAKING] `Configuration#method_missing` no longer resolves gateways by default.
+    This functionality was moved to rom/compat (@solnic)"
   - "[internal] auto registration is now powered by Zeitwerk (via #634 refs #607)
     (@solnic)"
   - 'Plugin event listeners are no longer global which makes it possible to have plugin
     with different configs in a single process (via #639) (@solnic)'
   - "[internal] Command compiler is no longer coupled to gateway and notifications
     (via #640) (@solnic)"
+  - 'Custom commands are now lazily-resolved at runtime, which simplifies and speeds
+    up setup and finalization (via #641) (@solnic)'
 - version: 5.2.4
-  summary:
+  summary: 
   date: '2020-05-08'
   fixed:
   - "[rom] Bumped rom-changeset version (@flash-gordon)"
 - version: 5.2.3
-  summary:
+  summary: 
   date: '2020-05-07'
   fixed:
   - "[rom-core] Constructor types were fired twice when updating data (@flash-gordon)"
@@ -45,13 +48,13 @@
     was not evaluated in the context of a changeset object (fixed via #592) (@timriley
     + @solnic)"
 - version: 5.2.2
-  summary:
+  summary: 
   date: '2020-02-03'
   fixed:
   - "[rom-core] Constructor types were fired twice when writing data (@flash-gordon)"
   added:
   - "[rom-repository] `Repository#transaction` accepts transaction options now (@ianks)"
-  changed:
+  changed: 
 - version: 5.2.1
   date: '2020-01-11'
   summary: This release contains keyword fixes reported by Ruby 2.7.
