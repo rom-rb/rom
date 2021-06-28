@@ -19,6 +19,11 @@ module ROM
       option :relation, type: Types.Instance(Class)
 
       # @api public
+      def namespace
+        "schemas"
+      end
+
+      # @api public
       def build
         plugins = self.plugins
 
@@ -36,6 +41,8 @@ module ROM
         }
 
         schema.finalize_attributes!(gateway: gateway, relations: relations)
+        schema.finalize_associations!(relations: relations)
+        schema.finalize!
 
         trigger("relations.schema.allocated", payload)
 

@@ -2,11 +2,11 @@
 
 require "forwardable"
 
+require "rom/support/inflector"
 require "rom/support/notifications"
+require "rom/support/configurable"
 require "rom/setup"
 require "rom/configuration_dsl"
-require "rom/support/configurable"
-require "rom/support/inflector"
 
 module ROM
   class Configuration
@@ -34,10 +34,9 @@ module ROM
     #   @return [Notifications] Notification bus instance
     attr_reader :notifications
 
-    def_delegators :@setup, :cache, :relations, :gateways,
+    def_delegators :@setup, :cache, :gateways, :relations,
       :register_relation, :register_command, :register_mapper,
-      :register_plugin, :auto_register, :inflector, :inflector=,
-      :components, :plugins
+      :register_plugin, :auto_register, :components, :plugins
 
     # Initialize a new configuration
     #
@@ -53,11 +52,18 @@ module ROM
       configure(*args, &block)
     end
 
+    # @api public
+    def inflector
+      config.inflector
+    end
+
     # This is called internally when you pass a block to ROM.container
     #
     # @api private
     def configure(*args)
       infer_config(*args) unless args.empty?
+
+      config.inflector = Inflector
 
       # Load adapters explicitly here to ensure their plugins are present already
       # while setup loads components and then triggers finalization
@@ -147,11 +153,6 @@ module ROM
       ROM.adapters.select do |_key, value|
         value.const_defined?(:Gateway) && gateway.is_a?(value.const_get(:Gateway))
       end.keys.first
-    end
-
-    # @api private
-    def command_compiler
-      @command_compiler ||= CommandCompiler.new(relations: relations, inflector: inflector)
     end
 
     private

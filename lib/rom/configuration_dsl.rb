@@ -24,7 +24,7 @@ module ROM
       klass = Relation.build_class(name, klass_opts)
       klass.schema_opts(dataset: name, relation: name)
       klass.class_eval(&block) if block
-      register_relation(klass)
+      register_relation(klass, id: name)
       klass
     end
 

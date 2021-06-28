@@ -7,8 +7,6 @@ RSpec.describe ROM::Global, "#container" do
     include_context "container"
 
     it "can register multiple relations with same dataset" do
-      configuration
-
       apples = Class.new(ROM::Relation[:memory]) do
         schema(:fruits, as: :apples) {}
 
@@ -34,8 +32,6 @@ RSpec.describe ROM::Global, "#container" do
     end
 
     it "raises an error when registering relations with the same `name`" do
-      configuration
-
       users = Class.new(ROM::Relation[:memory]) do
         schema(:guests, as: :users) {}
       end
@@ -44,16 +40,12 @@ RSpec.describe ROM::Global, "#container" do
         schema(:admins, as: :users) {}
       end
 
-      configuration.register_relation(users, users2)
-
-      expect { container }.to raise_error(
+      expect { configuration.register_relation(users, users2) }.to raise_error(
         ROM::RelationAlreadyDefinedError, /\+users\+ is already defined/
       )
     end
 
     it "raises an error when registering same mapper twice for the same relation" do
-      configuration
-
       users = Class.new(ROM::Relation[:memory]) do
         schema(:users) {}
       end
@@ -69,16 +61,13 @@ RSpec.describe ROM::Global, "#container" do
       end
 
       configuration.register_relation(users)
-      configuration.register_mapper(users_mapper, users_mapper_2)
 
-      expect { container }.to raise_error(
+      expect { configuration.register_mapper(users_mapper, users_mapper_2) }.to raise_error(
         ROM::MapperAlreadyDefinedError, /\+users\+ is already defined/
       )
     end
 
     it "doesn't raise an error when registering same mapper twice for different relation" do
-      configuration
-
       users_mapper = Class.new(ROM::Mapper) do
         register_as :users
         relation :users
@@ -96,8 +85,6 @@ RSpec.describe ROM::Global, "#container" do
     end
 
     it "doesn't raise an error when registering same mapper twice for different relation when no relation specify" do
-      configuration
-
       users_mapper = Class.new(ROM::Mapper) do
         register_as :users
         relation :users
@@ -123,15 +110,15 @@ RSpec.describe ROM::Global, "#container" do
     end
 
     it "builds empty relations" do
-      expect(container.relations).to eql(ROM::RelationRegistry.new)
+      expect(container.relations).to be_empty
     end
 
     it "builds empty mappers" do
-      expect(container.mappers).to eql(ROM::Registry.new)
+      expect(container.mappers).to be_empty
     end
 
     it "builds empty commands" do
-      expect(container.commands).to eql(ROM::Registry.build)
+      expect(container.commands).to be_empty
     end
   end
 end

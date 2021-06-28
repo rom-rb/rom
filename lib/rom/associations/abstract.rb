@@ -26,6 +26,14 @@ module ROM
       #   @return [ROM::RelationRegistry] Relation registry
       option :relations, reader: true
 
+      # @!attribute [r] source
+      #   @return [ROM::Relation] The source relation
+      option :source, reader: false, optional: true
+
+      # @!attribute [r] target
+      #   @return [ROM::Relation] The target relation
+      option :target, reader: false, optional: true
+
       # Create an association object
       #
       # @param [Definition] definition The association definition object
@@ -40,14 +48,14 @@ module ROM
       #
       # @api public
       def source
-        relations[definition.source.relation]
+        options[:source] || relations[definition.source.relation]
       end
 
       # @return [ROM::Relation] The target relation
       #
       # @api public
       def target
-        relations[definition.target.relation]
+        options[:target] || relations[definition.target.relation]
       end
 
       # Return if an association has an alias

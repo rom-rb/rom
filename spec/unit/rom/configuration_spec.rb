@@ -26,7 +26,7 @@ RSpec.describe ROM::Configuration do
     end
 
     it "raises error if gateway is not defined" do
-      configuration = ROM::Configuration.new({})
+      configuration = ROM::Configuration.new
 
       expect { configuration[:not_here] }.to raise_error(KeyError, /not_here/)
     end
@@ -43,18 +43,6 @@ RSpec.describe ROM::Configuration do
       expect {
         Class.new(ROM::Commands::Create[:not_here])
       }.to raise_error(ROM::AdapterNotPresentError, /not_here/)
-    end
-  end
-
-  describe "setting inflector" do
-    example "is supported" do
-      inflector = double(:inflector)
-
-      configuration = ROM::Configuration.new(:memory, "something") do |conf|
-        conf.inflector = inflector
-      end
-
-      expect(configuration.inflector).to be(inflector)
     end
   end
 end

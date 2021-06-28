@@ -30,8 +30,6 @@ module ROM
       # @attr_reader [Symbol] root's relation name
       option :name, default: -> { root.name }
 
-      option :mappers, default: -> { MapperRegistry.new }
-
       # Calls root and all nodes with the result from root
       #
       # Graph results are mappable through `combine` operation in mapper DSL

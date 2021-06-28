@@ -35,6 +35,12 @@ module ROM
       # @api private
       attr_reader :handlers
 
+      DUPLICATE_ERRORS = {
+        relations: RelationAlreadyDefinedError,
+        commands: CommandAlreadyDefinedError,
+        mappers: MapperAlreadyDefinedError
+      }.freeze
+
       # @api private
       def initialize(types: CORE_TYPES.dup, handlers: HANDLERS)
         @types = types
@@ -60,6 +66,11 @@ module ROM
         # TODO: this needs a nicer abstraction
         # TODO: respond_to? is only needed because auto_register specs use POROs :(
         update(component.constant.components) if component.constant.respond_to?(:components)
+
+        # TODO: schemas not fully supported yet
+        if type != :schemas && store[type].map(&:key).include?(component.key)
+          raise DUPLICATE_ERRORS[type], "+#{component.id}+ is already defined"
+        end
 
         store[type] << component
 

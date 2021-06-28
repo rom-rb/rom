@@ -122,7 +122,7 @@ module ROM
 
           # TODO: remove this eventually. Schemas are now evaluated using components
           #       during finalization, storing schema_proc is no longer needed
-          @schema_proc = components.add(:schemas, proc: schema_proc, relation: self)
+          @schema_proc = components.add(:schemas, id: relation, proc: schema_proc, relation: self)
         end
       end
       # @api private
@@ -139,12 +139,10 @@ module ROM
         @schema = schema
       end
 
-      # @!attribute [r] relation_name
-      #   @return [Name] Qualified relation name
+      # TODO: this could be deprecated / moved to rom/compat
+      # @return [Name] Qualified relation name
       def relation_name
-        raise MissingSchemaError, self unless defined?(@relation_name)
-
-        @relation_name
+        @relation_name || Name[Inflector.underscore(Inflector.demodulize(name)).to_sym]
       end
 
       # Define a relation view with a specific schema
@@ -260,29 +258,6 @@ module ROM
       # @api public
       def use(plugin, **options)
         ROM.plugin_registry[:relation].fetch(plugin, adapter).apply_to(self, **options)
-      end
-
-      # Build default mapper registry
-      #
-      # @return [MapperRegistry]
-      #
-      # @api private
-      def mapper_registry(opts = EMPTY_HASH)
-        adapter_ns = ROM.adapters[adapter]
-
-        compiler =
-          if adapter_ns&.const_defined?(:MapperCompiler)
-            adapter_ns.const_get(:MapperCompiler)
-          else
-            MapperCompiler
-          end
-
-        MapperRegistry.new({}, compiler: compiler.new(**opts), **opts)
-      end
-
-      # @api private
-      def command_registry(**opts)
-        CommandRegistry.new({}, **opts)
       end
 
       # @api private

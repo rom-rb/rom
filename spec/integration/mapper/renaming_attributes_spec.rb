@@ -29,7 +29,7 @@ RSpec.describe "Mappers / Renaming attributes" do
       end
     end
 
-    container
+    container.mappers[:users][:users]
 
     Test::User.send(:include, Dry::Equalizer(:id, :name))
 
@@ -62,7 +62,8 @@ RSpec.describe "Mappers / Renaming attributes" do
       end
     end
 
-    container
+    container.mappers[:users][:users]
+    container.mappers[:users][:with_address]
 
     Test::UserWithAddress.send(:include, Dry::Equalizer(:id, :name, :address))
 
@@ -101,7 +102,8 @@ RSpec.describe "Mappers / Renaming attributes" do
       end
     end
 
-    container
+    container.mappers[:users][:users]
+    container.mappers[:users][:with_addresses]
 
     Test::UserWithAddresses.send(:include, Dry::Equalizer(:id, :name, :addresses))
 

@@ -14,16 +14,18 @@ module ROM
       #
       # @api public
       def id
-        constant.relation_name.to_sym
+        # TODO: this could go away already
+        options[:id] || constant.relation_name.to_sym
       end
+      alias_method :relation_id, :id
 
-      # Default container key
+      # Registry namespace
       #
       # @return [String]
       #
       # @api public
-      def key
-        "relations.#{id}"
+      def namespace
+        "relations"
       end
 
       # @return [ROM::Relation]
@@ -44,7 +46,11 @@ module ROM
         trigger("relations.dataset.allocated", dataset: dataset, relation: constant,
                                                adapter: adapter)
 
-        constant.new(dataset, **relation_options(schema))
+        relation = constant.new(dataset, **relation_options(schema))
+
+        trigger("relations.object.registered", registry: relations, relation: relation)
+
+        relation
       end
 
       private
@@ -54,26 +60,13 @@ module ROM
         gateway.dataset(constant.relation_name.dataset).instance_exec(constant, &constant.dataset)
       end
 
-      # TODO: this will be removed once mapper registry is lazy-by-default
-      #
-      # @api private
-      memoize def mappers
-        registry = constant.mapper_registry(cache: configuration.cache)
-
-        components.mappers(relation_id: id).each do |component|
-          registry.add(component.id, &component)
-        end
-
-        registry
-      end
-
       # @api private
       def relation_options(schema)
         {__registry__: relations,
-         mappers: mappers,
-         commands: commands(mappers), # TODO: passing mappers shouldn't be needed
          schema: schema,
-         inflector: configuration.inflector,
+         inflector: inflector,
+         mappers: configuration.mappers.new(id, adapter: adapter),
+         commands: configuration.commands.new(id, adapter: adapter),
          **plugin_options}
       end
 
@@ -81,26 +74,6 @@ module ROM
       def finalize_schema
         # TODO: relation DSL auto-defines an empty schema so this is a workaround
         components.schemas(relation: constant).last.build
-      end
-
-      # TODO: this will be removed once command registry is lazy-by-default
-      #
-      # @api private
-      def commands(mappers)
-        registry = constant.command_registry(
-          relation_name: id,
-          cache: configuration.cache,
-          compiler: command_compiler,
-          mappers: mappers
-        )
-
-        command_compiler.commands.elements[id] = registry
-
-        components.commands(relation_id: id).each do |component|
-          registry.add(component.id, &component)
-        end
-
-        registry
       end
     end
   end

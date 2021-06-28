@@ -189,11 +189,12 @@ RSpec.describe ROM::Relation do
         option :custom
       }.new([], custom: true)
 
-      custom_opts = {mappers: "Custom Mapper Registry"}
+      custom_opts = {mappers: {custom: -> r { r }}}
       new_relation = relation.with(custom_opts).with(custom: true)
 
       expect(new_relation.dataset).to be(relation.dataset)
-      expect(new_relation.options).to include(custom_opts.merge(custom: true))
+      expect(new_relation.options).to include(custom: true)
+      expect(new_relation.mappers.custom).to be_a(Proc)
     end
   end
 

@@ -46,26 +46,24 @@ module ROM
   # Exception raised when an element inside a component registry is not found
   class ElementNotFoundError < KeyError
     # @api private
-    def initialize(key, registry)
-      super(set_message(key, registry))
-    end
-
-    # @api private
-    def set_message(key, registry)
-      "#{key.inspect} doesn't exist in #{registry.type} registry"
+    def initialize(key, registry = nil)
+      msg =
+        if registry
+          "#{key.inspect} doesn't exist in #{registry.type} registry"
+        else
+          "#{key} doesn't exist in the registry"
+        end
+      super(msg)
     end
   end
+
+  GatewayMissingError = Class.new(ElementNotFoundError)
 
   RelationMissingError = Class.new(ElementNotFoundError)
 
   MapperMissingError = Class.new(ElementNotFoundError)
 
-  CommandNotFoundError = Class.new(ElementNotFoundError) do
-    # @api private
-    def set_message(key, registry)
-      "There is no :#{key} command for :#{registry.relation_name} relation"
-    end
-  end
+  CommandNotFoundError = Class.new(ElementNotFoundError)
 
   MissingSchemaClassError = Class.new(StandardError) do
     # @api private

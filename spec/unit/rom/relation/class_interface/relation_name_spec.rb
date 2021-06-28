@@ -18,12 +18,13 @@ RSpec.describe ROM::Relation, ".relation_name" do
   end
 
   context "when schema is not defined" do
-    subject(:relation_class) do
-      Class.new(ROM::Relation)
-    end
+    it "returns default name based on the class name" do
+      module Test
+        class Users < ROM::Relation[:memory]
+        end
+      end
 
-    it "raises error" do
-      expect { relation_class.relation_name }.to raise_error(ROM::MissingSchemaError)
+      expect(Test::Users.relation_name.to_sym).to eql(:users)
     end
   end
 end

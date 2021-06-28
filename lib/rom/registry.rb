@@ -96,7 +96,7 @@ module ROM
 
     # @api private
     def keys
-      elements.keys
+      elements.keys + resolvers.keys
     end
 
     # @api private
@@ -116,15 +116,22 @@ module ROM
     end
 
     # @api private
-    def fetch(key)
-      raise ArgumentError, "key cannot be nil" if key.nil?
+    def fetch(name)
+      raise ArgumentError, "key cannot be nil" if name.nil?
 
-      elements.fetch(key.to_sym) do
+      key = name.to_sym
+
+      if resolvers.key?(key)
+        resolve(key)
+        return fetch(key)
+      end
+
+      elements.fetch(key) do
         fallback = yield if block_given?
 
         return fallback if fallback
 
-        raise self.class.element_not_found_error.new(key, self)
+        raise self.class.element_not_found_error.new(name, self)
       end
     end
     alias_method :[], :fetch
@@ -148,8 +155,8 @@ module ROM
     end
 
     # @api private
-    def key?(key)
-      !key.nil? && (elements.key?(key) || resolvers.key?(key))
+    def key?(name)
+      !name.nil? && (elements.key?(name.to_sym) || resolvers.key?(name.to_sym))
     end
 
     # @api private

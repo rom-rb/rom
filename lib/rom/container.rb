@@ -2,7 +2,8 @@
 
 require "dry/container"
 
-require "rom/cache"
+require "rom/runtime/configuration"
+require "rom/runtime/resolver"
 
 module ROM
   # ROM container is an isolated environment with no global state where all
@@ -103,12 +104,17 @@ module ROM
     include Dry::Equalizer(:gateways, :relations, :mappers, :commands)
 
     # @api private
-    def self.new(gateways, relations)
+    def self.new(configuration)
       super().tap do |container|
-        container.register(:gateways, gateways)
-        container.register(:relations, relations)
-        container.register(:mappers, memoize: true) { relations.to_mapper_registry }
-        container.register(:commands, memoize: true) { relations.to_command_registry }
+        runtime_config = Runtime::Configuration.new(
+          configuration: configuration, container: container
+        )
+
+        container.register(:configuration, runtime_config)
+        container.register(:gateways, runtime_config.gateways)
+        container.register(:relations, Runtime::Resolver.new(:relations, configuration: runtime_config))
+        container.register(:mappers, Runtime::Resolver.new(:mappers, configuration: runtime_config))
+        container.register(:commands, Runtime::Resolver.new(:commands, configuration: runtime_config))
       end
     end
 
@@ -160,13 +166,6 @@ module ROM
     # @api public
     def disconnect
       gateways.each_value(&:disconnect)
-    end
-
-    # @api private
-    def finalize
-      mappers.finalize
-      commands.finalize
-      self
     end
   end
 end

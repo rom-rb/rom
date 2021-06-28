@@ -3,6 +3,7 @@
 require "rom/support/inflector"
 
 require "rom/initializer"
+require "rom/runtime/resolver"
 require "rom/commands"
 require "rom/command_proxy"
 
@@ -28,7 +29,7 @@ module ROM
 
     # @!attribute [r] commands
     #   @return [ROM::Registry] Command registries with custom commands
-    option :commands, default: -> { Registry.new }
+    option :commands, default: -> { Runtime::Resolver.new(:commands) }
 
     # @!attribute [r] id
     #   @return [Symbol] The command registry identifier
@@ -83,7 +84,14 @@ module ROM
       cache.fetch_or_store(args.hash) do
         id, adapter, ast, plugins, plugins_options, meta = args
 
-        command_class = Command.adapter_namespace(adapter).const_get(inflector.classify(id))
+        component = commands.configuration.components.commands(id: id).first
+
+        command_class =
+          if component
+            component.constant
+          else
+            Command.adapter_namespace(adapter).const_get(inflector.classify(id))
+          end
 
         plugins_with_opts = Array(plugins)
           .map { |plugin| [plugin, plugins_options.fetch(plugin) { EMPTY_HASH }] }

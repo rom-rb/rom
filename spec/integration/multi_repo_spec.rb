@@ -32,6 +32,9 @@ RSpec.describe "Using in-memory gateways for cross-gateway access" do
       end
     end
 
+    container.relations[:users]
+    container.relations[:tasks]
+
     gateways[:left][:users] << {user_id: 1, name: "Joe"}
     gateways[:left][:users] << {user_id: 2, name: "Jane"}
     gateways[:right][:tasks] << {user_id: 1, title: "Have fun"}
