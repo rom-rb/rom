@@ -21,6 +21,10 @@ module ROM
     #   @return [Hash] Internal hash for storing registry objects
     param :elements
 
+    # @!attribute [r] resolvers
+    #   @return [Hash<Symbol=>Proc>] Item resolvers
+    option :resolvers, optional: true, default: -> { EMPTY_HASH.dup }
+
     # @!attribute [r] cache
     #   @return [Cache] local cache instance
     option :cache, default: -> { Cache.new }
@@ -101,8 +105,14 @@ module ROM
     end
 
     # @api private
-    def key?(name)
-      !name.nil? && elements.key?(name.to_sym)
+    def add(key, element = nil, &block)
+      raise self.class.element_already_defined_error, "+#{key}+ is already defined" if key?(key)
+
+      if element
+        elements[key] = element
+      else
+        resolvers[key] = block
+      end
     end
 
     # @api private
@@ -118,6 +128,29 @@ module ROM
       end
     end
     alias_method :[], :fetch
+
+    # This method handles resolving components at run-time
+    #
+    # @api private
+    def resolve(key)
+      add(key, resolvers.delete(key).())
+    end
+
+    # @api private
+    def finalize
+      resolvers.each_key do |key|
+        resolve(key)
+      end
+
+      each_value { |element| element.finalize if element.respond_to?(:finalize) }
+
+      self
+    end
+
+    # @api private
+    def key?(key)
+      !key.nil? && (elements.key?(key) || resolvers.key?(key))
+    end
 
     # @api private
     def type

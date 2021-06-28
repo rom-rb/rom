@@ -13,8 +13,8 @@ RSpec.describe "Setting up ROM with multiple environments" do
 
   let(:container) do
     {
-      one: ROM.container(configuration[:one]),
-      two: ROM.container(configuration[:two])
+      one: ROM.container(configuration[:one]).finalize,
+      two: ROM.container(configuration[:two]).finalize
     }
   end
 

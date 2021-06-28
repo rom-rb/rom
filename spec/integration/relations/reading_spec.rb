@@ -62,7 +62,8 @@ RSpec.describe "Reading relations" do
       end
     end
 
-    container
+    container.mappers[:users][:users]
+    container.mappers[:users][:with_tasks]
 
     Test::User.send(:include, Dry::Equalizer(:name, :email))
     Test::UserWithTasks.send(:include, Dry::Equalizer(:name, :email, :tasks))
@@ -100,7 +101,8 @@ RSpec.describe "Reading relations" do
       end
     end
 
-    container
+    container.mappers[:users][:users]
+    container.mappers[:users][:with_task]
 
     Test::User.send(:include, Dry::Equalizer(:name, :email))
     Test::UserWithTask.send(:include, Dry::Equalizer(:name, :email, :task))

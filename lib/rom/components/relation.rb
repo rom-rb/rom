@@ -58,12 +58,10 @@ module ROM
       #
       # @api private
       memoize def mappers
-        mappers = components.mappers(relation_id: id)
-
         registry = constant.mapper_registry(cache: configuration.cache)
 
-        mappers.each do |mapper|
-          registry.add(mapper.id, mapper.build)
+        components.mappers(relation_id: id).each do |component|
+          registry.add(component.id, &component)
         end
 
         registry
