@@ -8,6 +8,8 @@ require "rom/constants"
 require "rom/initializer"
 require "rom/types"
 
+require_relative "resolver"
+
 module ROM
   module Components
     # Abstract component class
@@ -34,6 +36,12 @@ module ROM
       def build(**)
         raise NotImplementedError
       end
+
+      # @api public
+      def to_resolver
+        Resolver.new(configuration) { build }
+      end
+      alias_method :to_proc, :to_resolver
 
       # @api public
       def trigger(event, payload)

@@ -96,7 +96,7 @@ RSpec.describe "Commands / Create" do
             result :invalid_type
           end
         end
-        container
+        container.commands[:users][:create_one]
       }.to raise_error(Dry::Types::ConstraintError)
     end
   end

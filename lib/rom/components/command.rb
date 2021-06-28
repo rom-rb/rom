@@ -25,7 +25,9 @@ module ROM
       end
 
       # @api public
-      def build(relation:)
+      def build
+        relation = relations[relation_id]
+
         trigger(
           "commands.class.before_build",
           command: constant,

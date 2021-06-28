@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "concurrent/map"
+require "dry/effects"
 
 require "rom/constants"
 require "rom/registry"
@@ -10,6 +11,8 @@ module ROM
   #
   # @api public
   class CommandRegistry < Registry
+    include Dry::Effects::Handler::Reader(:configuration)
+
     # Internal command registry
     #
     # @return [Registry]
@@ -20,6 +23,10 @@ module ROM
     # @!attribute [r] relation_name
     #   @return [Relation::Name] The name of a relation
     option :relation_name
+
+    # @!attribute [r] resolvers
+    #   @return [Hash<Symbol=>Proc>] Item resolvers
+    option :resolvers, optional: true, default: -> { EMPTY_HASH.dup }
 
     # @!attribute [r] mappers
     #   @return [MapperRegistry] Optional mapper registry
@@ -60,9 +67,16 @@ module ROM
     # @return [Command,Command::Composite]
     #
     # @api public
-    def [](*args)
-      if args.size.equal?(1)
-        command = super
+    def fetch(*args)
+      key = args.first
+
+      if resolvers.key?(key)
+        resolve(key)
+        return fetch(*args)
+      end
+
+      if args.size.eql?(1)
+        command = super(key)
         mapper = options[:mapper]
 
         if mapper
@@ -73,6 +87,15 @@ module ROM
       else
         cache.fetch_or_store(args.hash) { compiler.(*args) }
       end
+    end
+    alias_method :[], :fetch
+
+    # Custom commands are stored during setup as lazy-loadable
+    # This method handles resolving a custom command at runtime
+    #
+    # @api private
+    def resolve(key)
+      add(key, resolvers.delete(key).())
     end
 
     # Specify a mapper that should be used for commands from this registry
@@ -91,40 +114,19 @@ module ROM
     end
 
     # @api private
-    def set_compiler(compiler)
-      options[:compiler] = @compiler = compiler
-    end
-
-    # @api private
-    def set_mappers(mappers)
-      options[:mappers] = @mappers = mappers
-    end
-
-    # @api private
-    def add(key, command)
+    def add(key, command = nil, &block)
       raise CommandAlreadyDefinedError, "+#{key}+ is already defined" if key?(key)
 
-      elements[key] = command
-    end
-
-    private
-
-    # Allow checking if a certain command is available using dot-notation
-    #
-    # @api private
-    def respond_to_missing?(name, include_private = false)
-      key?(name) || super
-    end
-
-    # Allow retrieving commands using dot-notation
-    #
-    # @api private
-    def method_missing(name, *)
-      if key?(name)
-        self[name]
+      if command
+        elements[key] = command
       else
-        super
+        resolvers[key] = block
       end
+    end
+
+    # @api private
+    def key?(key)
+      elements.key?(key) || resolvers.key?(key)
     end
   end
 end
