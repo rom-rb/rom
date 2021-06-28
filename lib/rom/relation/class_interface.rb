@@ -281,8 +281,8 @@ module ROM
       end
 
       # @api private
-      def command_registry(name)
-        CommandRegistry.new({}, relation_name: name)
+      def command_registry(**opts)
+        CommandRegistry.new({}, **opts)
       end
 
       # @api private

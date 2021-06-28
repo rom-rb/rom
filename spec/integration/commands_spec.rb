@@ -36,10 +36,13 @@ RSpec.describe "Commands" do
     end
 
     it "applies to defined classes" do
-      klass = Class.new(ROM::Commands::Create[:memory]) { relation :users }
+      klass = Class.new(ROM::Commands::Create[:memory]) do
+        relation :users
+        register_as :create_super
+      end
+
       configuration.register_command(klass)
-      container
-      command = klass.build(users_relation)
+      command = container.commands[:users][:create_super]
       expect(command).to be_super_command
     end
 
@@ -48,8 +51,7 @@ RSpec.describe "Commands" do
         :create_super, :users, type: :create, adapter: :memory
       )
       configuration.register_command(klass)
-      container
-      command = klass.build(users_relation)
+      command = container.commands[:users][:create_super]
       expect(command).to be_super_command
     end
   end

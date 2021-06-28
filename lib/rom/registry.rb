@@ -119,20 +119,21 @@ module ROM
     end
     alias_method :[], :fetch
 
+    # @api private
     def type
       self.class.name
     end
 
     # @api private
     def respond_to_missing?(name, include_private = false)
-      elements.key?(name) || super
+      key?(name) || super
     end
 
     private
 
     # @api private
     def method_missing(name, *)
-      elements.fetch(name) { super }
+      fetch(name) { super }
     end
   end
 end

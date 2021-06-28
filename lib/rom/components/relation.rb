@@ -44,11 +44,7 @@ module ROM
         trigger("relations.dataset.allocated", dataset: dataset, relation: constant,
                                                adapter: adapter)
 
-        relation = constant.new(dataset, **relation_options(schema))
-
-        finalize_commands(relation)
-
-        relation
+        constant.new(dataset, **relation_options(schema))
       end
 
       private
@@ -77,6 +73,7 @@ module ROM
       def relation_options(schema)
         {__registry__: relations,
          mappers: mappers,
+         commands: commands(mappers), # TODO: passing mappers shouldn't be needed
          schema: schema,
          inflector: configuration.inflector,
          **plugin_options}
@@ -91,18 +88,22 @@ module ROM
       # TODO: this will be removed once command registry is lazy-by-default
       #
       # @api private
-      def finalize_commands(relation)
-        commands = components.commands(relation_id: id)
-        registry = relation.commands
+      def commands(mappers)
+        registry = constant.command_registry(
+          relation_name: id,
+          cache: configuration.cache,
+          compiler: command_compiler,
+          mappers: mappers,
+          configuration: configuration
+        )
 
-        commands.each do |command|
-          registry.add(command.id, command.build(relation: relation))
+        command_compiler.commands.elements[id] = registry
+
+        components.commands(relation_id: id).each do |command|
+          registry.add(command.id) { command.build(relation: relations[id]) }
         end
 
-        command_compiler.commands.elements[id] = relation.commands
-
-        registry.set_compiler(command_compiler)
-        registry.set_mappers(relation.mappers)
+        registry
       end
     end
   end
