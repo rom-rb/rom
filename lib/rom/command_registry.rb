@@ -36,10 +36,6 @@ module ROM
     #   @return [Object#call] Default mapper for processing command results
     option :mapper, optional: true
 
-    # @!attribute [r] configuration
-    #   @return [Configuration] The configuration which initialized registry
-    option :configuration, optional: true
-
     # @!attribute [r] compiler
     #   @return [CommandCompiler] A command compiler instance
     option :compiler, optional: true
@@ -99,7 +95,7 @@ module ROM
     #
     # @api private
     def resolve(key)
-      add(key, with_configuration(configuration) { resolvers.delete(key).() })
+      add(key, resolvers.delete(key).())
     end
 
     # Specify a mapper that should be used for commands from this registry

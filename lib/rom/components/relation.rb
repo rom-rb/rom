@@ -93,14 +93,13 @@ module ROM
           relation_name: id,
           cache: configuration.cache,
           compiler: command_compiler,
-          mappers: mappers,
-          configuration: configuration
+          mappers: mappers
         )
 
         command_compiler.commands.elements[id] = registry
 
-        components.commands(relation_id: id).each do |command|
-          registry.add(command.id) { command.build(relation: relations[id]) }
+        components.commands(relation_id: id).each do |component|
+          registry.add(component.id, &component)
         end
 
         registry
