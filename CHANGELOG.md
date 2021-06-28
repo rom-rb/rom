@@ -20,6 +20,7 @@
 - `Schema#[]` and `Relation#[]` now raise an error if a given attribute is not unique (issue #529 fixed via #543) (@waiting-for-dev)
 - Configuration values are no longer being frozen during setup process (issue #616 fixed via #617) (@v-kolesnikov)
 - [BREAKING] `Setup#auto_registration` was renamed to `Setup#auto_register`. You can restore the original method via rom/compat extension (via #634 refs #607) (@solnic)
+- [BREAKING] `Configuration#method_missing` no longer resolves gateways by default. This functionality was moved to rom/compat (@solnic)
 - [internal] auto registration is now powered by Zeitwerk (via #634 refs #607) (@solnic)
 - Plugin event listeners are no longer global which makes it possible to have plugin with different configs in a single process (via #639) (@solnic)
 - [internal] Command compiler is no longer coupled to gateway and notifications (via #640) (@solnic)
