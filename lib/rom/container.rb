@@ -103,12 +103,12 @@ module ROM
     include Dry::Equalizer(:gateways, :relations, :mappers, :commands)
 
     # @api private
-    def self.new(gateways, relations, mappers, commands)
+    def self.new(gateways, relations)
       super().tap do |container|
         container.register(:gateways, gateways)
-        container.register(:mappers, mappers)
-        container.register(:commands, commands)
         container.register(:relations, relations)
+        container.register(:mappers, memoize: true) { relations.to_mapper_registry }
+        container.register(:commands, memoize: true) { relations.to_command_registry }
       end
     end
 
@@ -160,6 +160,13 @@ module ROM
     # @api public
     def disconnect
       gateways.each_value(&:disconnect)
+    end
+
+    # @api private
+    def finalize
+      mappers.finalize
+      commands.finalize
+      self
     end
   end
 end

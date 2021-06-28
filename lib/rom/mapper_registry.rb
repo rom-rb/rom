@@ -12,27 +12,30 @@ module ROM
       MapperMissingError
     end
 
+    # @api private
+    def self.element_already_defined_error
+      MapperAlreadyDefinedError
+    end
+
     # @!attribute [r] compiler
     #   @return [MapperCompiler] A mapper compiler instance
-    option :compiler, default: lambda {
-      MapperCompiler.new(EMPTY_HASH, cache: cache)
-    }
+    option :compiler, default: -> { MapperCompiler.new(EMPTY_HASH, cache: cache) }
 
     # @see Registry
     # @api public
     def [](*args)
-      if args[0].is_a?(Symbol)
+      key = args.first
+
+      if resolvers.key?(key)
+        resolve(key)
+        return fetch(*args)
+      end
+
+      if key.is_a?(Symbol)
         super
       else
         cache.fetch_or_store(args.hash) { compiler.(*args) }
       end
-    end
-
-    # @api private
-    def add(key, mapper)
-      raise MapperAlreadyDefinedError, "+#{key}+ is already defined" if key?(key)
-
-      elements[key] = mapper
     end
   end
 end

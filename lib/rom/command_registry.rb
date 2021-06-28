@@ -24,10 +24,6 @@ module ROM
     #   @return [Relation::Name] The name of a relation
     option :relation_name
 
-    # @!attribute [r] resolvers
-    #   @return [Hash<Symbol=>Proc>] Item resolvers
-    option :resolvers, optional: true, default: -> { EMPTY_HASH.dup }
-
     # @!attribute [r] mappers
     #   @return [MapperRegistry] Optional mapper registry
     option :mappers, optional: true
@@ -43,6 +39,11 @@ module ROM
     # @api private
     def self.element_not_found_error
       CommandNotFoundError
+    end
+
+    # @api private
+    def self.element_already_defined_error
+      CommandAlreadyDefinedError
     end
 
     # Return a command from the registry
@@ -90,14 +91,6 @@ module ROM
     end
     alias_method :[], :fetch
 
-    # Custom commands are stored during setup as lazy-loadable
-    # This method handles resolving a custom command at runtime
-    #
-    # @api private
-    def resolve(key)
-      add(key, resolvers.delete(key).())
-    end
-
     # Specify a mapper that should be used for commands from this registry
     #
     # @example
@@ -111,22 +104,6 @@ module ROM
     # @api public
     def map_with(mapper_name)
       with(mapper: mappers[mapper_name])
-    end
-
-    # @api private
-    def add(key, command = nil, &block)
-      raise CommandAlreadyDefinedError, "+#{key}+ is already defined" if key?(key)
-
-      if command
-        elements[key] = command
-      else
-        resolvers[key] = block
-      end
-    end
-
-    # @api private
-    def key?(key)
-      elements.key?(key) || resolvers.key?(key)
     end
   end
 end

@@ -34,13 +34,7 @@ module ROM
     def run!
       load_relations
 
-      container = Container.new(
-        configuration.gateways,
-        relations,
-        relations.to_mapper_registry,
-        relations.to_command_registry
-      )
-
+      container = Container.new(configuration.gateways, relations)
       container.freeze
       container
     end

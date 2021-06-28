@@ -56,6 +56,8 @@ module ROM
     end
   end
 
+  RelationMissingError = Class.new(ElementNotFoundError)
+
   MapperMissingError = Class.new(ElementNotFoundError)
 
   CommandNotFoundError = Class.new(ElementNotFoundError) do
