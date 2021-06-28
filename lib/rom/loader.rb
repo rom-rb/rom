@@ -54,12 +54,6 @@ module ROM
     #   @api private
     option :components
 
-    # @api private
-    def initialize(*)
-      super
-      @loaded = false
-    end
-
     # Load components
     #
     # @api private
