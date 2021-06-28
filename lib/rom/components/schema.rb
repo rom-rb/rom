@@ -35,6 +35,8 @@ module ROM
           registry: relations
         }
 
+        schema.finalize_attributes!(gateway: gateway, relations: relations)
+
         trigger("relations.schema.allocated", payload)
 
         # TODO: it would be great if we could remove setting schemas as a class ivar

@@ -65,6 +65,12 @@ module ROM
         )
       end
 
+      # We need to finalize schema's associations here because they need
+      # relations already registered
+      relations.each_value do |relation|
+        relation.schema.finalize_associations!(relations: relations).finalize!
+      end
+
       notifications.trigger("configuration.relations.registry.created", registry: relations)
     end
   end

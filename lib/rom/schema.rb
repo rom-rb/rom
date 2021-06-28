@@ -36,30 +36,6 @@ module ROM
   class Schema
     include Memoizable
 
-    extend Notifications::Listener
-
-    subscribe("configuration.relations.registry.created") do |event|
-      registry = event[:registry]
-
-      registry.each do |_, relation|
-        unless relation.schema.frozen?
-          relation.schema.finalize_associations!(relations: registry)
-          relation.schema.finalize!
-        end
-      end
-    end
-
-    subscribe("configuration.relations.schema.allocated") do |event|
-      schema = event[:schema]
-      registry = event[:registry]
-      gateway = event[:gateway]
-
-      unless schema.frozen?
-        schema.finalize_attributes!(gateway: gateway, relations: registry)
-        schema.set!(:relations, registry)
-      end
-    end
-
     EMPTY_ASSOCIATION_SET = AssociationSet.build(EMPTY_HASH).freeze
 
     DEFAULT_INFERRER = Inferrer.new(enabled: false).freeze
@@ -393,6 +369,8 @@ module ROM
     # @api private
     def finalize_attributes!(gateway: nil, relations: nil)
       inferrer.(self, gateway).each { |key, value| set!(key, value) }
+
+      set!(:relations, relations) if relations
 
       yield if block_given?
 

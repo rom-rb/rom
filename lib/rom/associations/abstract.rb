@@ -26,14 +26,6 @@ module ROM
       #   @return [ROM::RelationRegistry] Relation registry
       option :relations, reader: true
 
-      # @!attribute [r] source
-      #   @return [ROM::SQL::Relation] the source relation
-      option :source, reader: true
-
-      # @!attribute [r] target
-      #   @return [ROM::SQL::Relation::Name] the target relation
-      option :target, reader: true
-
       # Create an association object
       #
       # @param [Definition] definition The association definition object
@@ -41,12 +33,21 @@ module ROM
       #
       # @api public
       def self.new(definition, relations)
-        super(
-          definition,
-          relations: relations,
-          source: relations[definition.source.relation],
-          target: relations[definition.target.relation]
-        )
+        super(definition, relations: relations)
+      end
+
+      # @return [ROM::Relation] The source relation
+      #
+      # @api public
+      def source
+        relations[definition.source.relation]
+      end
+
+      # @return [ROM::Relation] The target relation
+      #
+      # @api public
+      def target
+        relations[definition.target.relation]
       end
 
       # Return if an association has an alias
