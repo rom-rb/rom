@@ -102,7 +102,7 @@ RSpec.describe "Mapper definition DSL" do
         end
       end
 
-      expect { container }.to raise_error ROM::MapperMisconfiguredError
+      expect { container.mappers[:lists][:lists] }.to raise_error ROM::MapperMisconfiguredError
     end
 
     it "cannot succeed attributes" do
@@ -115,7 +115,7 @@ RSpec.describe "Mapper definition DSL" do
         end
       end
 
-      expect { container }.to raise_error ROM::MapperMisconfiguredError
+      expect { container.mappers[:lists][:lists] }.to raise_error ROM::MapperMisconfiguredError
     end
   end
 end

@@ -30,6 +30,25 @@ module ROM
       option :constant, optional: true, type: Types.Interface(:new)
       alias_method :relation, :constant
 
+      # @!attribute [r] id
+      #   @return [Symbol] Local registry id
+      #   @api public
+      option :id, optional: true, reader: false, type: Types::Symbol
+
+      # @!attribute [r] namespace
+      #   @return [String] Registry namespace
+      #   @api public
+      option :namespace, optional: true, reader: false, type: Types::String
+
+      # Default container key
+      #
+      # @return [String]
+      #
+      # @api public
+      def key
+        "#{namespace}.#{id}"
+      end
+
       # This method is meant to return a run-time component instance
       #
       # @api public
@@ -51,6 +70,21 @@ module ROM
       # @api public
       def relations
         configuration.relations
+      end
+
+      # @api public
+      def mapper_registry
+        configuration.mapper_registry
+      end
+
+      # @api public
+      def inflector
+        configuration.inflector
+      end
+
+      # @api public
+      def cache
+        configuration.cache
       end
 
       # @api public

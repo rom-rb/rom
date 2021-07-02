@@ -4,15 +4,8 @@ require "rom/relation"
 
 RSpec.describe ROM::Relation, "#map_with" do
   subject(:relation) do
-    ROM::Relation.new(
-      dataset,
-      name: ROM::Relation::Name[:users],
-      schema: schema,
-      mappers: mapper_registry
-    )
+    ROM::Relation.new(dataset, name: ROM::Relation::Name[:users], schema: schema, mappers: mappers)
   end
-
-  let(:mapper_registry) { ROM::MapperRegistry.build(mappers) }
 
   let(:dataset) do
     [{id: 1, name: "Jane"}, {id: 2, name: "Joe"}]

@@ -22,10 +22,7 @@ RSpec.describe "ROM::CommandRegistry" do
     end
 
     it "throws an error when the command is not found" do
-      expect { users[:not_found] }.to raise_error(
-        ROM::CommandNotFoundError,
-        "There is no :not_found command for :users relation"
-      )
+      expect { users[:not_found] }.to raise_error(ROM::CommandNotFoundError, /not_found/)
     end
   end
 end

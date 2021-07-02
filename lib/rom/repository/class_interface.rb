@@ -55,7 +55,7 @@ module ROM
         container ||= options.fetch(:container)
 
         unless relation_reader
-          relation_reader(RelationReader.new(self, container.relations.elements.keys))
+          relation_reader(RelationReader.new(self, container.relations.ids))
           include(relation_reader)
         end
 

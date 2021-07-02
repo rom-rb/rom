@@ -9,11 +9,10 @@ RSpec.describe ROM::Relation, "#map_to" do
       dataset,
       name: ROM::Relation::Name[:users],
       schema: ROM::Relation.default_schema,
-      mappers: mapper_registry
+      mappers: mappers
     )
   end
 
-  let(:mapper_registry) { ROM::MapperRegistry.build(mappers) }
 
   let(:dataset) do
     [{id: 1, name: "Jane"}, {id: 2, name: "Joe"}]

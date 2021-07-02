@@ -109,7 +109,8 @@ RSpec.describe "Mapper definition DSL" do
     }
 
     it "works" do
-      container
+      container.mappers[:users][:users]
+      container.mappers[:users][:entity]
 
       Test::User.send(:include, Dry::Equalizer(:name, :email, :tasks, :address, :book))
       Test::Task.send(:include, Dry::Equalizer(:title, :meta))

@@ -1,14 +1,89 @@
 # frozen_string_literal: true
 
 require_relative "compat/setup"
+
+require "rom/support/inflector"
 require "rom/command"
 
+require "rom/setup"
+require "rom/configuration"
+
+require "rom/components/relation"
+require "rom/components/command"
+require "rom/components/mapper"
+
 module ROM
+  class Setup
+    attr_accessor :inflector
+  end
+
+  module Components
+    class Relation < Core
+      undef :id
+
+      def id
+        return options[:id] if options[:id]
+
+        if constant.respond_to?(:relation_name)
+          constant.relation_name
+        else
+          Inflector.underscore(constant.name)
+        end.to_sym
+      end
+    end
+
+    class Command < Core
+      undef :id
+      undef :relation_id
+
+      def id
+        return options[:id] if options[:id]
+
+        if constant.respond_to?(:register_as)
+          constant.register_as || constant.default_name
+        else
+          Inflector.underscore(constant.name)
+        end
+      end
+
+      def relation_id
+        constant.relation if constant.respond_to?(:relation)
+      end
+    end
+
+    class Mapper < Core
+      undef :id
+      undef :relation_id
+
+      def id
+        return options[:id] if options[:id]
+
+        if constant.respond_to?(:id)
+          constant.id
+        else
+          Inflector.underscore(constant.name)
+        end
+      end
+
+      def relation_id
+        return options[:base_relation] if options[:base_relation]
+
+        constant.base_relation if constant.respond_to?(:base_relation)
+      end
+    end
+  end
+
   class Configuration
     def_delegators :@setup, :auto_registration
-    def_delegators :@gateways, :gateways_map
 
     alias_method :environment, :gateways
+
+    # @api public
+    # @deprecated
+    def inflector=(inflector)
+      setup.inflector = inflector
+      config.inflector = inflector
+    end
 
     # @api private
     def relation_classes(gateway = nil)

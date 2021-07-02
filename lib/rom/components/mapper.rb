@@ -8,11 +8,6 @@ module ROM
     class Mapper < Core
       id :mapper
 
-      # @!attribute [r] id
-      #   @return [Symbol] Registry key
-      #   @api public
-      option :id, type: Types.Instance(Symbol), optional: true, reader: false
-
       # @!attribute [r] base_relation
       #   @return [Symbol] The base relation identifier
       #   @api public
@@ -32,7 +27,7 @@ module ROM
         options[:base_relation] || constant.base_relation
       end
 
-      # Registry key
+      # Registry id
       #
       # @return [Symbol]
       #
@@ -41,13 +36,13 @@ module ROM
         options[:id] || constant.id
       end
 
-      # Default container key
+      # Registry namespace
       #
       # @return [String]
       #
       # @api public
-      def key
-        "mappers.#{relation_id}.#{id}"
+      def namespace
+        options[:namespace] || "mappers.#{relation_id}"
       end
 
       # @api public

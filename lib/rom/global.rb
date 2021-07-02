@@ -5,7 +5,7 @@ require "dry/effects"
 require "rom/plugin_registry"
 require "rom/global/plugin_dsl"
 require "rom/configuration"
-require "rom/setup/finalize"
+require "rom/configuration_dsl/relation"
 
 module ROM
   # Globally accessible public interface exposed via ROM module
@@ -55,8 +55,7 @@ module ROM
       end
 
       with_configuration(configuration) do
-        finalize = Finalize.new(configuration)
-        finalize.run!
+        Container.new(configuration.finalize)
       end
     end
 

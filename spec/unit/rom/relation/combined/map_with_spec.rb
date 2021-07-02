@@ -8,7 +8,7 @@ RSpec.describe ROM::Relation::Combined, "#map_with" do
   end
 
   let(:users) do
-    ROM::Relation.new([{id: 1, name: "Jane"}, {id: 2, name: "John"}], mappers: mapper_registry)
+    ROM::Relation.new([{id: 1, name: "Jane"}, {id: 2, name: "John"}], mappers: mappers)
   end
 
   let(:tasks) do
@@ -22,8 +22,6 @@ RSpec.describe ROM::Relation::Combined, "#map_with" do
       end
     end.new([{user_id: 2, title: "John's Task"}, {user_id: 1, title: "Jane's Task"}])
   end
-
-  let(:mapper_registry) { ROM::MapperRegistry.build(mappers) }
 
   let(:mappers) do
     {task_list: lambda { |users|

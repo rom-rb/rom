@@ -30,7 +30,7 @@ RSpec.describe "Configuring ROM" do
       expect(tasks).to be_kind_of(ROM::Relation)
       expect(tasks).to respond_to(:users)
       expect(tasks.users).to eql(users)
-      expect(tasks.users.commands).to be_kind_of(ROM::CommandRegistry)
+      expect(tasks.users.commands.namespace).to eql("commands.users")
     end
 
     it "configures rom schema to store relations" do
@@ -44,8 +44,8 @@ RSpec.describe "Configuring ROM" do
   context "without schema" do
     it "builds empty registries if there is no schema" do
       container = ROM.container(:memory)
-      expect(container.relations).to eql(ROM::RelationRegistry.build)
-      expect(container.mappers).to eql(ROM::Registry.build)
+      expect(container.relations).to be_empty
+      expect(container.mappers).to be_empty
     end
   end
 
@@ -99,6 +99,7 @@ RSpec.describe "Configuring ROM" do
     it "raises when a class is missing adapter identifier" do
       expect {
         ROM.container(:memory) { |config| config.register_relation(Test::BrokenRelation) }
+          .relations.users
       }.to raise_error(ROM::MissingAdapterIdentifierError, /Test::BrokenRelation/)
     end
   end

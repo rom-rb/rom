@@ -11,7 +11,7 @@ module ROM
       #
       # @api public
       class RegistryReader < ::Module
-        EMPTY_REGISTRY = RelationRegistry.build(EMPTY_HASH).freeze
+        EMPTY_REGISTRY = EMPTY_HASH
 
         # @api private
         attr_reader :relations

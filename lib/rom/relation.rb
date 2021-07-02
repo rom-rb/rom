@@ -12,8 +12,6 @@ require "rom/relation/class_interface"
 
 require "rom/auto_curry"
 require "rom/pipeline"
-require "rom/mapper_registry"
-require "rom/command_registry"
 
 require "rom/relation/loaded"
 require "rom/relation/curried"
@@ -22,6 +20,7 @@ require "rom/relation/composite"
 require "rom/relation/combined"
 require "rom/relation/wrap"
 require "rom/relation/materializable"
+require "rom/runtime/resolver"
 require "rom/association_set"
 
 require "rom/types"
@@ -187,12 +186,16 @@ module ROM
 
     # @!attribute [r] mappers
     #   @return [MapperRegistry] an optional mapper registry (empty by default)
-    option :mappers, default: -> { self.class.mapper_registry }
+    option :mappers, type: Runtime::Resolver[:mappers], default: -> {
+      Runtime::Resolver.new(:mappers, namespace: name, adapter: adapter)
+    }
 
     # @!attribute [r] commands
     #   @return [CommandRegistry] Command registry
     #   @api private
-    option :commands, default: -> { self.class.command_registry(relation_name: name) }
+    option :commands, default: -> {
+      Runtime::Resolver.new(:commands, namespace: name, adapter: adapter)
+    }
 
     # @!attribute [r] meta
     #   @return [Hash] Meta data stored in a hash

@@ -29,6 +29,8 @@ RSpec.describe "Mappers / Prefixing attributes" do
       user_email: "jane@doe.org"
     }
 
+    container.mappers[:users][:users]
+
     Test::User.send(:include, Dry::Equalizer(:id, :name, :email))
 
     jane = container.relations[:users].map_with(:users).first

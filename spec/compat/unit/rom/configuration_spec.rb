@@ -24,4 +24,16 @@ RSpec.describe ROM::Configuration do
       expect { configuration.not_here }.to raise_error(NoMethodError, /not_here/)
     end
   end
+
+  describe "setting inflector" do
+    example "is supported" do
+      inflector = double(:inflector)
+
+      configuration = ROM::Configuration.new(:memory, "something") do |conf|
+        conf.inflector = inflector
+      end
+
+      expect(configuration.inflector).to be(inflector)
+    end
+  end
 end

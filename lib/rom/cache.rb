@@ -18,9 +18,18 @@ module ROM
       attr_reader :namespace
 
       # @api private
-      def initialize(cache, namespace)
+      attr_reader :parent
+
+      # @api private
+      def initialize(cache, namespace, parent:)
         @cache = cache
-        @namespace = namespace.to_sym
+        @namespace = namespace
+        @parent = parent
+      end
+
+      # @api private
+      def namespaced(namespace)
+        parent.namespaced(namespace)
       end
 
       # @api private
@@ -50,6 +59,7 @@ module ROM
       @namespaced = {}
     end
 
+    # @api private
     def [](key)
       cache[key]
     end
@@ -66,7 +76,7 @@ module ROM
 
     # @api private
     def namespaced(namespace)
-      @namespaced[namespace] ||= Namespaced.new(objects, namespace)
+      @namespaced[namespace] ||= Namespaced.new(objects, namespace, parent: self)
     end
 
     # @api private

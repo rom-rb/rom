@@ -14,6 +14,11 @@ module ROM
     option :resolver, optional: true
 
     # @api private
+    def self.element_not_found_error
+      GatewayMissingError
+    end
+
+    # @api private
     def add(key, gateway)
       raise GatewayAlreadyDefinedError, "+#{key}+ is already defined" if key?(key)
 
@@ -23,11 +28,18 @@ module ROM
     # @api public
     def fetch(key, &block)
       if resolver
-        super(key) { resolver[key] || block&.call }
+        elements.fetch(key) { resolver[key] || block&.call || not_found(key) }
       else
-        super
+        elements.fetch(key) { block&.call || not_found(key) }
       end
     end
     alias_method :[], :fetch
+
+    private
+
+    # @api private
+    def not_found(key)
+      raise(self.class.element_not_found_error.new(key, self))
+    end
   end
 end

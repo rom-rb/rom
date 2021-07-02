@@ -44,7 +44,7 @@ RSpec.describe "Mapper definition DSL" do
         end
       end
 
-      container
+      container.mappers[:users][:with_tasks]
 
       Test::UserWithTasks.send(:include, Dry::Equalizer(:name, :email, :tasks))
 
@@ -74,7 +74,7 @@ RSpec.describe "Mapper definition DSL" do
         end
       end
 
-      container
+      container.mappers[:users][:with_tasks]
 
       Test::UserWithTasks.send(:include, Dry::Equalizer(:name, :email, :tasks))
 
@@ -106,7 +106,7 @@ RSpec.describe "Mapper definition DSL" do
         end
       end
 
-      container
+      container.mappers[:users][:with_tasks]
 
       Test::UserWithTasks.send(:include, Dry::Equalizer(:name, :email, :tasks))
       Test::Task.send(:include, Dry::Equalizer(:title, :priority))
@@ -145,7 +145,7 @@ RSpec.describe "Mapper definition DSL" do
         end
       end
 
-      container
+      container.mappers[:tasks][:with_users]
 
       Test::TaskWithUsers.send(:include, Dry::Equalizer(:title, :priority, :users))
       Test::TaskUser.send(:include, Dry::Equalizer(:name, :contacts))

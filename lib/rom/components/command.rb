@@ -14,7 +14,16 @@ module ROM
       #
       # @api public
       def id
-        constant.register_as || constant.default_name
+        options[:id] || constant.register_as || constant.default_name
+      end
+
+      # Registry namespace
+      #
+      # @return [String]
+      #
+      # @api public
+      def namespace
+        "commands.#{relation_id}"
       end
 
       # @return [Symbol]
@@ -25,7 +34,7 @@ module ROM
       end
 
       # @api public
-      def build
+      def build(**opts)
         relation = relations[relation_id]
 
         trigger(
@@ -37,7 +46,13 @@ module ROM
           adapter: adapter
         )
 
-        constant.build(relation)
+        command = constant.build(relation)
+
+        if (mappers = opts[:map_with])
+          command >> mappers.map { |mapper| relation.mappers[mapper] }.reduce(:>>)
+        else
+          command
+        end
       end
     end
   end

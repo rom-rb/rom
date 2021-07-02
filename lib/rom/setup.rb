@@ -1,31 +1,29 @@
 # frozen_string_literal: true
 
+require "dry/core/memoizable"
+
 require "rom/support/configurable"
 require "rom/loader"
 require "rom/components"
 require "rom/gateway"
+require "rom/command_compiler"
 require "rom/gateway_registry"
-require "rom/relation_registry"
 
 module ROM
   # Setup objects collect component classes during setup/finalization process
   #
   # @api private
   class Setup
-    # @api private
-    attr_reader :plugins
+    include Dry::Core::Memoizable
 
     # @api private
-    attr_accessor :inflector
+    attr_reader :plugins
 
     # @api private
     attr_reader :components
 
     # @api private
     attr_reader :gateways
-
-    # @api private
-    attr_reader :relations
 
     # @api private
     attr_reader :config
@@ -43,12 +41,10 @@ module ROM
       @plugins = []
       @cache = cache
       @config = config
-      @inflector = Inflector
       @components = components
       @gateways = GatewayRegistry.new(
         {}, cache: cache, config: config, resolver: method(:load_gateway)
       )
-      @relations = RelationRegistry.build
       @auto_register = auto_register.merge(root_directory: nil, components: components)
     end
 
@@ -69,8 +65,11 @@ module ROM
     # Relation sub-classes are being registered with this method during setup
     #
     # @api private
-    def register_relation(*klasses)
-      klasses.each { |klass| components.add(:relations, constant: klass) }
+    def register_relation(*klasses, **opts)
+      klasses.each do |klass|
+        components.add(:relations, constant: klass, **opts)
+      end
+
       components.relations
     end
 
@@ -81,6 +80,7 @@ module ROM
       klasses.each do |klass|
         components.add(:mappers, constant: klass)
       end
+
       components[:mappers]
     end
 

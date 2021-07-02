@@ -36,13 +36,11 @@ RSpec.describe "Commands / Delete" do
       define(:delete)
     end
 
-    result = users.delete.relation.by_name("Joe").command(:delete).()
+    cmd = users.delete.relation.by_name("Joe").command(:delete)
+    result = cmd.()
 
-    expect(result).to match_array([{name: "Joe", email: "joe@doe.org"}])
-
-    expect(container.relations[:users]).to match_array([
-      {name: "Jane", email: "jane@doe.org"}
-    ])
+    expect(result).to eql([{name: "Joe", email: "joe@doe.org"}])
+    expect(container.relations[:users].to_a).to eql([{name: "Jane", email: "jane@doe.org"}])
   end
 
   it "returns untouched relation if there are no tuples to delete" do
