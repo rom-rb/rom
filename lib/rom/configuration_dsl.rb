@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "rom/relation/name"
 require "rom/configuration_dsl/relation"
 require "rom/configuration_dsl/command_dsl"
 require "rom/configuration_dsl/mapper_dsl"
@@ -21,10 +22,20 @@ module ROM
     # @api public
     def relation(name, options = EMPTY_HASH, &block)
       klass_opts = {adapter: default_adapter}.merge(options)
+
       klass = Relation.build_class(name, klass_opts)
       klass.schema_opts(dataset: name, relation: name)
-      klass.class_eval(&block) if block
-      register_relation(klass, id: name)
+
+      if block
+        klass.class_eval(&block)
+      end
+
+      if klass.components.schemas.empty?
+        klass.schema(name) {}
+      end
+
+      register_relation(klass, name: klass.components.schemas.first.name)
+
       klass
     end
 

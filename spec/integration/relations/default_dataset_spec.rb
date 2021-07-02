@@ -25,11 +25,11 @@ RSpec.describe ROM::Relation, ".dataset" do
         attribute :name, ROM::Memory::Types::String
       end
 
-      dataset do |rel_klass|
+      dataset do |schema|
         insert(id: 2, name: "Joe")
         insert(id: 1, name: "Jane")
 
-        order(*rel_klass.schema.primary_key.map(&:name))
+        order(*schema.primary_key.map(&:name))
       end
     end
 

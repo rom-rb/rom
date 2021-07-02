@@ -112,9 +112,6 @@ module ROM
 
         container.register(:configuration, runtime_config)
         container.register(:gateways, runtime_config.gateways)
-        container.register(:relations, Runtime::Resolver.new(:relations, configuration: runtime_config))
-        container.register(:mappers, Runtime::Resolver.new(:mappers, configuration: runtime_config))
-        container.register(:commands, Runtime::Resolver.new(:commands, configuration: runtime_config))
       end
     end
 
@@ -133,7 +130,7 @@ module ROM
     #
     # @api public
     def mappers
-      self[:mappers]
+      self[:configuration].mappers
     end
 
     # Return relation registry
@@ -142,7 +139,7 @@ module ROM
     #
     # @api public
     def relations
-      self[:relations]
+      self[:configuration].relations
     end
 
     # Return command registry
@@ -151,7 +148,7 @@ module ROM
     #
     # @api public
     def commands
-      self[:commands]
+      self[:configuration].commands
     end
 
     # Disconnect all gateways

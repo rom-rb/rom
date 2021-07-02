@@ -141,20 +141,21 @@ module ROM
     #   @api private
     option :inflector, reader: true, default: -> { Inflector }
 
-    # @!attribute [r] schema
-    #   @return [Schema] relation schema, defaults to class-level canonical
-    #                    schema (if it was defined) and sets an empty one as
-    #                    the fallback
-    #   @api public
-    option :schema, default: -> {
-      self.class.schema || self.class.default_schema(inflector: inflector)
-    }
-
     # @!attribute [r] name
     #   @return [Object] The relation name
     #   @api public
-    option :name, default: -> {
-      self.class.schema ? self.class.schema.name : self.class.default_name(inflector)
+    option :name, default: -> { self.class.default_name(inflector) }
+
+    # @!attribute [r] schemas
+    #   @return [Runtime::Resolver] Relation schemas
+    option :schemas, type: Runtime::Resolver[:schemas], default: -> {
+      Runtime::Resolver.new(:schemas)._update(self.class.components)
+    }
+
+    # @!attribute [r] schema
+    #   @return [Runtime::Resolver] The canonical schema
+    option :schema, default: -> {
+      schemas.key?(name.dataset) ? schemas[name.dataset] : Schema.new(name)
     }
 
     # @!attribute [r] input_schema
@@ -584,17 +585,6 @@ module ROM
     # @api private
     def gateway
       self.class.gateway
-    end
-
-    # Return all registered relation schemas
-    #
-    # This holds all schemas defined via `view` DSL
-    #
-    # @return [Hash<Symbol=>Schema>]
-    #
-    # @api public
-    def schemas
-      self.class.schemas
     end
 
     # Return a foreign key name for the provided relation name

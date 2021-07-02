@@ -142,7 +142,7 @@ module ROM
 
       # @api private
       def gateway_name
-        relation.gateway
+        options[:gateway] || relation.gateway
       end
     end
   end
