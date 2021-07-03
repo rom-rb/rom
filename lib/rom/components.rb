@@ -5,6 +5,7 @@ require "rom/components/gateway"
 require "rom/components/schema"
 require "rom/components/command"
 require "rom/components/relation"
+require "rom/components/association"
 require "rom/components/mapper"
 
 module ROM
@@ -12,11 +13,12 @@ module ROM
   #
   # @api public
   module Components
-    CORE_TYPES = %i[gateways schemas relations commands mappers].freeze
+    CORE_TYPES = %i[gateways schemas relations associations commands mappers].freeze
 
     HANDLERS = {
       gateways: Gateway,
       relations: Relation,
+      associations: Association,
       commands: Command,
       mappers: Mapper,
       schemas: Schema
@@ -41,6 +43,7 @@ module ROM
         gateways: GatewayAlreadyDefinedError,
         schemas: RelationAlreadyDefinedError,
         relations: RelationAlreadyDefinedError,
+        associations: AssociationAlreadyDefinedError,
         commands: CommandAlreadyDefinedError,
         mappers: MapperAlreadyDefinedError
       }.freeze

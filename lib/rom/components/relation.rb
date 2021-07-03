@@ -39,7 +39,7 @@ module ROM
       # @return [ROM::Relation]
       #
       # @api public
-      def build
+      memoize def build
         constant.use(:registry_reader, relations: components.relations.map(&:id))
 
         trigger("relations.class.ready", relation: constant, adapter: adapter)
@@ -88,6 +88,7 @@ module ROM
          schema: schema,
          inflector: inflector,
          schemas: configuration.schemas,
+         associations: configuration.associations.new(id, items: schema.associations),
          mappers: configuration.mappers.new(id, adapter: adapter),
          commands: configuration.commands.new(id, adapter: adapter),
          **plugin_options}

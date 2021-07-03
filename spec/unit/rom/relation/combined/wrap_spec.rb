@@ -21,7 +21,8 @@ RSpec.describe ROM::Relation::Combined, "#wrap" do
 
   it "returns a new graph with new root as a wrap relation" do
     posts_assoc = double(:posts_assoc)
-    allow(users.schema).to receive(:associations).and_return(posts: posts_assoc)
+
+    allow(users).to receive(:associations).and_return(posts: posts_assoc)
 
     expect(posts_assoc).to receive(:wrap).and_return(posts)
 

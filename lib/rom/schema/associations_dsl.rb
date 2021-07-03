@@ -185,11 +185,11 @@ module ROM
 
       # Return an association set for a schema
       #
-      # @return [AssociationSet]
+      # @return [Array<Association::Definition]
       #
       # @api private
       def call
-        AssociationSet[source.relation].build(registry)
+        registry.values
       end
 
       private

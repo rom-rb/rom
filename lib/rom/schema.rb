@@ -6,7 +6,6 @@ require "rom/constants"
 require "rom/attribute"
 require "rom/schema/dsl"
 require "rom/schema/inferrer"
-require "rom/association_set"
 require "rom/support/notifications"
 require "rom/support/memoizable"
 
@@ -36,7 +35,7 @@ module ROM
   class Schema
     include Memoizable
 
-    EMPTY_ASSOCIATION_SET = AssociationSet.build(EMPTY_HASH).freeze
+    EMPTY_ASSOCIATION_SET = EMPTY_HASH.freeze
 
     DEFAULT_INFERRER = Inferrer.new(enabled: false).freeze
 
@@ -67,7 +66,7 @@ module ROM
     option :attributes, default: -> { EMPTY_ARRAY }
 
     # @!attribute [r] associations
-    #   @return [AssociationSet] Optional association set (this is adapter-specific)
+    #   @return [Runtime::Resolver] Optional association set (this is adapter-specific)
     option :associations, default: -> { EMPTY_ASSOCIATION_SET }
 
     # @!attribute [r] inferrer
@@ -376,18 +375,6 @@ module ROM
 
       initialize_primary_key_names
 
-      self
-    end
-
-    # Finalize associations defined in a schema
-    #
-    # @param [RelationRegistry] relations
-    #
-    # @return [self]
-    #
-    # @api private
-    def finalize_associations!(*)
-      set!(:associations, yield) if associations.any?
       self
     end
 

@@ -23,6 +23,7 @@ module ROM
   GatewayAlreadyDefinedError = Class.new(StandardError)
   SchemaAlreadyDefinedError = Class.new(StandardError)
   RelationAlreadyDefinedError = Class.new(StandardError)
+  AssociationAlreadyDefinedError = Class.new(StandardError)
   CommandAlreadyDefinedError = Class.new(StandardError)
   MapperAlreadyDefinedError = Class.new(StandardError)
   MapperMisconfiguredError = Class.new(StandardError)

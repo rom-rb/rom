@@ -21,7 +21,6 @@ require "rom/relation/combined"
 require "rom/relation/wrap"
 require "rom/relation/materializable"
 require "rom/runtime/resolver"
-require "rom/association_set"
 
 require "rom/types"
 require "rom/schema"
@@ -150,6 +149,12 @@ module ROM
     #   @return [Runtime::Resolver] Relation schemas
     option :schemas, type: Runtime::Resolver[:schemas], default: -> {
       Runtime::Resolver.new(:schemas)._update(self.class.components)
+    }
+
+    # @!attribute [r] associations
+    #   @return [Runtime::Resolver] Relation associations
+    option :associations, type: Runtime::Resolver[:associations], default: -> {
+      Runtime::Resolver.new(:associations, namespace: name)
     }
 
     # @!attribute [r] schema
@@ -465,15 +470,6 @@ module ROM
         end
 
       new(dataset, **options, **new_options)
-    end
-
-    # Return schema's association set (empty by default)
-    #
-    # @return [AssociationSet] Schema's association set (empty by default)
-    #
-    # @api public
-    def associations
-      schema.associations
     end
 
     # Returns AST for the wrapped relation

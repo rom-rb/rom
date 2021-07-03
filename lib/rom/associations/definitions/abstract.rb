@@ -123,7 +123,7 @@ module ROM
         #
         # @api public
         def aliased?
-          options.key?(:as)
+          !options[:as].nil?
         end
 
         # Return association class for a given definition object

@@ -20,7 +20,7 @@ RSpec.describe ROM::Relation, "#wrap" do
   end
 
   before do
-    allow(users.schema).to receive(:associations).and_return(users_assocs_set)
+    allow(users).to receive(:associations).and_return(users_assocs_set)
   end
 
   context "with a list of assoc names" do
