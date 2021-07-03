@@ -29,6 +29,7 @@
 - Schemas are now 1st class components accessible via runtime container and decoupled from relations (via #644) (@solnic)
 - `Relation.dataset` receives canonical schema object now, rather than relation class (via #644) (@solnic)
 - Relation classes no holder hold their schemas as class variables (via #644) (@solnic)
+- Gateways are now lazy-loadable (via #645) (@solnic)
 
 [Compare v5.2.4...master](https://github.com/rom-rb/rom/compare/v5.2.4...master)
 
