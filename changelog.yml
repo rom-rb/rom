@@ -42,6 +42,7 @@
     class (via #644) (@solnic)"
   - 'Relation classes no holder hold their schemas as class variables (via #644) (@solnic)'
   - 'Gateways are now lazy-loadable (via #645) (@solnic)'
+  - 'Associations are now decoupled from schemas and lazy-loaded (via #646) (@solnic)'
 - version: 5.2.4
   summary: 
   date: '2020-05-08'
