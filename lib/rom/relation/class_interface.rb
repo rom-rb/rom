@@ -29,6 +29,12 @@ module ROM
         relations schema
       ].freeze
 
+      # @api private
+      def inherited(klass)
+        super
+        klass.instance_variable_set("@dataset", dataset) if dataset
+      end
+
       # Return adapter-specific relation subclass
       #
       # @example
@@ -56,7 +62,7 @@ module ROM
       #
       # @api public
       def dataset(&block)
-        if defined?(@dataset)
+        if defined?(@dataset) && !block
           @dataset
         else
           @dataset = block || DEFAULT_DATASET_PROC
