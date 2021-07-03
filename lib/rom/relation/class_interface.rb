@@ -20,10 +20,7 @@ module ROM
     # @api public
     module ClassInterface
       extend Notifications::Listener
-
       include Components
-
-      DEFAULT_DATASET_PROC = -> * { self }.freeze
 
       INVALID_RELATIONS_NAMES = %i[
         relations schema
@@ -32,7 +29,6 @@ module ROM
       # @api private
       def inherited(klass)
         super
-        klass.instance_variable_set("@dataset", dataset) if dataset
       end
 
       # Return adapter-specific relation subclass
@@ -61,12 +57,12 @@ module ROM
       #   end
       #
       # @api public
-      def dataset(&block)
-        if defined?(@dataset) && !block
-          @dataset
-        else
-          @dataset = block || DEFAULT_DATASET_PROC
+      def dataset(id = default_dataset_name, &block)
+        if (existing = components.datasets(id: id).first)
+          components.delete(:datasets, existing)
         end
+
+        components.add(:datasets, id: id, constant: self, provider: self, block: block)
       end
 
       # Specify canonical schema for a relation
@@ -106,11 +102,20 @@ module ROM
 
           raise InvalidRelationName, relation if invalid_relation_name?(relation)
 
+          if components.datasets(id: ds_name).empty?
+            dataset(ds_name)
+          end
+
           name = Name[relation, ds_name]
+
+          if (existing = components.schemas(id: name.dataset).first)
+            components.delete(:schemas, existing)
+          end
 
           components.add(
             :schemas,
             id: name.dataset,
+            provider: self,
             name: name,
             infer: infer,
             view: view,
@@ -269,7 +274,8 @@ module ROM
       #
       # @api private
       def default_name(inflector = Inflector)
-        if (schema = components.schemas.first)
+        # TODO: inherited schemas should be replaced
+        if (schema = components.schemas(view: false, provider: self).last)
           schema.name
         else
           Name[inflector.underscore(name).tr("/", "_").to_sym]
@@ -277,13 +283,8 @@ module ROM
       end
 
       # @api private
-      def default_schema
-        components.schemas.first.build
-      end
-
-      # @api private
       def default_dataset_name(inflector = Inflector)
-        inflector.underscore(inflector.demodulize(name)).tr("/", "_").to_sym
+        schema_opts[:dataset] || default_name(inflector).dataset
       end
 
       # @api private

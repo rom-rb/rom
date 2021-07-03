@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
+require "dry/core/memoizable"
 require "dry/core/class_attributes"
 
 require "rom/struct"
 require "rom/constants"
 require "rom/initializer"
-require "rom/support/memoizable"
 require "rom/support/inflector"
 
 require "rom/relation/class_interface"
@@ -44,8 +44,8 @@ module ROM
     extend ClassInterface
 
     include Relation::Commands
-    include Memoizable
 
+    include Dry::Core::Memoizable
     extend Dry::Core::ClassAttributes
 
     defines :adapter, :schema_opts, :schema_class,
@@ -130,11 +130,6 @@ module ROM
     include Materializable
     include Pipeline
 
-    # @!attribute [r] dataset
-    #   @return [Object] dataset used by the relation provided by relation's gateway
-    #   @api public
-    param :dataset
-
     # @!attribute [r] inflector
     #   @return [Dry::Inflector] String inflector
     #   @api private
@@ -144,6 +139,17 @@ module ROM
     #   @return [Object] The relation name
     #   @api public
     option :name, default: -> { self.class.default_name(inflector) }
+
+    # @!attribute [r] associations
+    #   @return [Runtime::Resolver] Relation associations
+    option :datasets, type: Runtime::Resolver[:datasets], default: -> {
+      Runtime::Resolver.new(:datasets)
+    }
+
+    # @!attribute [r] dataset
+    #   @return [Object] dataset used by the relation provided by relation's gateway
+    #   @api public
+    option :dataset, default: -> { datasets[name.dataset] }
 
     # @!attribute [r] schemas
     #   @return [Runtime::Resolver] Relation schemas
@@ -207,6 +213,15 @@ module ROM
     #   @return [Hash] Meta data stored in a hash
     #   @api private
     option :meta, reader: true, default: -> { EMPTY_HASH }
+
+    # @api public
+    def self.new(dataset = nil, **opts)
+      if dataset
+        super(**opts, dataset: dataset)
+      else
+        super(**opts)
+      end
+    end
 
     # Return schema attribute
     #
@@ -446,7 +461,7 @@ module ROM
           options.merge(new_opts)
         end
 
-      self.class.new(dataset, **opts)
+      self.class.new(**opts, dataset: dataset)
     end
 
     undef_method :with

@@ -20,6 +20,7 @@ module ROM
 
       MISSING_ELEMENT_ERRORS = {
         schemas: SchemaMissingError,
+        datasets: DatasetMissingError,
         relations: RelationMissingError,
         associations: RelationMissingError,
         commands: CommandNotFoundError,

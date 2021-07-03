@@ -30,12 +30,7 @@ module ROM
     attr_reader :cache
 
     # @api private
-    def initialize(
-      components: Components::Registry.new,
-      auto_register: EMPTY_HASH,
-      cache: Cache.new,
-      config: Configurable::Config.new
-    )
+    def initialize(components:, config:, auto_register: EMPTY_HASH, cache: Cache.new)
       @plugins = []
       @cache = cache
       @config = config

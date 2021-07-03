@@ -5,6 +5,8 @@ require "forwardable"
 require "rom/support/inflector"
 require "rom/support/notifications"
 require "rom/support/configurable"
+
+require "rom/components"
 require "rom/setup"
 require "rom/configuration_dsl"
 
@@ -47,7 +49,11 @@ module ROM
       @notifications = Notifications.event_bus(:configuration)
 
       config.gateways = Config.new
-      @setup = Setup.new(config: config.gateways)
+
+      @setup = Setup.new(
+        components: Components::Registry.new(owner: self),
+        config: config.gateways
+      )
 
       configure(*args, &block)
     end

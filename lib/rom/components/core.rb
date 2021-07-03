@@ -24,6 +24,14 @@ module ROM
 
       defines :id
 
+      # @!attribute [r] owner
+      #   @return [Object] Component's owner
+      option :owner
+
+      # @!attribute [r] provider
+      #   @return [Object] Component's original provider
+      option :provider, optional: true
+
       # @!attribute [r] constant
       #   @return [Class] Component's target class
       #   @api public
@@ -55,12 +63,6 @@ module ROM
       def build(**)
         raise NotImplementedError
       end
-
-      # @api public
-      def to_resolver
-        Resolver.new(configuration) { build }
-      end
-      alias_method :to_proc, :to_resolver
 
       # @api public
       def trigger(event, payload)
@@ -103,8 +105,17 @@ module ROM
       end
 
       # @api public
-      def components
-        configuration.components
+      memoize def components
+        configuration.components.update(local_components)
+      end
+
+      # @api public
+      memoize def local_components
+        if constant.respond_to?(:components)
+          constant.components
+        else
+          Components::Registry.new(owner: owner)
+        end
       end
 
       # @api public

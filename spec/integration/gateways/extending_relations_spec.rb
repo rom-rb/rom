@@ -11,8 +11,6 @@ RSpec.describe "Gateways / Extending Relations" do
     module ROM
       module Memory
         class Relation < ROM::Relation
-          schema(:users) {}
-
           def self.freaking_awesome?
             true
           end

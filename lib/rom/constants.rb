@@ -21,6 +21,7 @@ module ROM
 
   EnvAlreadyFinalizedError = Class.new(StandardError)
   GatewayAlreadyDefinedError = Class.new(StandardError)
+  DatasetAlreadyDefinedError = Class.new(StandardError)
   SchemaAlreadyDefinedError = Class.new(StandardError)
   RelationAlreadyDefinedError = Class.new(StandardError)
   AssociationAlreadyDefinedError = Class.new(StandardError)
@@ -60,6 +61,8 @@ module ROM
   end
 
   GatewayMissingError = Class.new(ElementNotFoundError)
+
+  DatasetMissingError = Class.new(ElementNotFoundError)
 
   SchemaMissingError = Class.new(ElementNotFoundError)
 

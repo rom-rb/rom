@@ -6,6 +6,13 @@ SPEC_ROOT = root = Pathname(__FILE__).dirname
 
 require_relative "support/coverage" if ENV["COVERAGE"] == "true"
 
+# rubocop:disable Lint/SuppressedException
+begin
+  require "pry-byebug"
+rescue LoadError
+end
+# rubocop:enable Lint/SuppressedException
+
 require "warning"
 
 Warning.ignore(/zeitwerk/)
@@ -30,13 +37,6 @@ end
 Dir[root.join("shared/**/*.rb").to_s].sort.each do |f|
   require f
 end
-
-# rubocop:disable Lint/SuppressedException
-begin
-  require "pry-byebug"
-rescue LoadError
-end
-# rubocop:enable Lint/SuppressedException
 
 module SpecProfiler
   def report(*)
