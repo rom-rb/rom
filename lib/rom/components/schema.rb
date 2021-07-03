@@ -76,7 +76,6 @@ module ROM
           end
 
           schema.finalize_attributes!(gateway: gateway, relations: relations)
-          schema.finalize_associations!(relations: relations)
           schema.finalize!
         end
       end

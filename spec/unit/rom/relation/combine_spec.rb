@@ -52,9 +52,9 @@ RSpec.describe ROM::Relation, "#combine" do
   end
 
   before do
-    allow(users.schema).to receive(:associations).and_return(users_assocs_set)
-    allow(tasks.schema).to receive(:associations).and_return(tasks_assocs_set)
-    allow(posts.schema).to receive(:associations).and_return(posts_assocs_set)
+    allow(users).to receive(:associations).and_return(users_assocs_set)
+    allow(tasks).to receive(:associations).and_return(tasks_assocs_set)
+    allow(posts).to receive(:associations).and_return(posts_assocs_set)
   end
 
   context "with a list of assoc names" do

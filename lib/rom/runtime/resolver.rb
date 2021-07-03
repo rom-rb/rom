@@ -21,6 +21,7 @@ module ROM
       MISSING_ELEMENT_ERRORS = {
         schemas: SchemaMissingError,
         relations: RelationMissingError,
+        associations: RelationMissingError,
         commands: CommandNotFoundError,
         mappers: MapperMissingError
       }.freeze
@@ -75,7 +76,12 @@ module ROM
       # @api private
       def preload
         opts[:items].each do |id, object|
-          configuration.components.add(type, id: id, namespace: namespace, object: object)
+          # TODO: unify this
+          if object
+            configuration.components.add(type, id: id, namespace: namespace, object: object)
+          else
+            configuration.components.add(type, namespace: namespace, object: id)
+          end
         end
       end
 
@@ -109,6 +115,13 @@ module ROM
               component(key).build(**component_options)
             end
           else
+            # TODO: this needs to go away by introducing Association#inverse_of(another)
+            #       and use it in the associates sql plugin
+            if type == :associations
+              assoc = detect { |c| c.definition.target.relation == id }
+              return self[assoc.as] if assoc&.aliased?
+            end
+
             raise MISSING_ELEMENT_ERRORS[type].new(key)
           end
         else
@@ -137,7 +150,8 @@ module ROM
 
       # @api public
       def root?(key)
-        type != :relations && configuration.components.relations.map(&:id).include?(key)
+        (type != :relations && type != :associations) &&
+          configuration.components.relations.map(&:id).include?(key)
       end
 
       # @api public

@@ -14,10 +14,9 @@ RSpec.describe ROM::Schema::AssociationsDSL do
 
   describe "#call" do
     it "returns a configured association set" do
-      association_set = dsl.call
+      associations = dsl.call
 
-      expect(association_set.type).to eql("ROM::AssociationSet[:users]")
-      expect(association_set.key?(:posts)).to be(true)
+      expect(associations.map(&:name)).to include(:posts)
     end
 
     context "using custom inflector" do
@@ -29,10 +28,10 @@ RSpec.describe ROM::Schema::AssociationsDSL do
 
       let(:args) { [*super(), inflector] }
 
-      it do
-        association_set = dsl.call
-        expect(association_set.type).to eql("ROM::AssociationSet[:users]")
-        expect(association_set[:labels].options[:through].assoc_name).to eql(:tag)
+      specify do
+        associations = dsl.call
+
+        expect(associations.last.options[:through].assoc_name).to eql(:tag)
       end
     end
   end
