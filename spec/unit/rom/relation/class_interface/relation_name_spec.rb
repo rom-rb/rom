@@ -2,7 +2,7 @@
 
 require "rom/relation"
 
-RSpec.describe ROM::Relation, ".relation_name" do
+RSpec.describe ROM::Relation, ".default_name" do
   context "when schema is defined" do
     subject(:relation_class) do
       Class.new(ROM::Relation) do
@@ -24,7 +24,7 @@ RSpec.describe ROM::Relation, ".relation_name" do
         end
       end
 
-      expect(Test::Users.relation_name.to_sym).to eql(:users)
+      expect(Test::Users.default_name.to_sym).to eql(:test_users)
     end
   end
 end

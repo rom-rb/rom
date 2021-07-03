@@ -36,6 +36,7 @@ module ROM
       attr_reader :handlers
 
       DUPLICATE_ERRORS = {
+        schemas: RelationAlreadyDefinedError,
         relations: RelationAlreadyDefinedError,
         commands: CommandAlreadyDefinedError,
         mappers: MapperAlreadyDefinedError

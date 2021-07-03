@@ -13,7 +13,7 @@ RSpec.describe ROM::Relation, "#[]" do
 
     relation = Test::Users.new([])
 
-    expect(relation[:id]).to be(Test::Users.schema[:id])
-    expect(relation[:name]).to be(Test::Users.schema[:name])
+    expect(relation[:id]).to be(relation.schema[:id])
+    expect(relation[:name]).to be(relation.schema[:name])
   end
 end

@@ -21,13 +21,12 @@ module ROM
 
       # @!attribute [r] new_schema
       #   @return [Proc] The schema proc returned by the schema DSL
-      attr_reader :new_schema
+      attr_reader :schema_block
 
       # @api private
-      def initialize(name, schema, &block)
+      def initialize(name, &block)
         @name = name
-        @schema = schema
-        @new_schema = nil
+        @schema_block = nil
         @relation_block = nil
         instance_eval(&block)
       end
@@ -40,7 +39,7 @@ module ROM
       #
       # @api public
       def schema(&block)
-        @new_schema = -> relations { @schema.with(relations: relations).instance_exec(&block) }
+        @schema_block = block
       end
 
       # Define a relation block for a relation view
@@ -60,7 +59,7 @@ module ROM
       #
       # @api private
       def call
-        [name, new_schema, relation_block]
+        [name, schema_block, relation_block]
       end
     end
   end

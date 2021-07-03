@@ -14,7 +14,7 @@ if ENV["USE_DRY_INITIALIZER_MASTER"].eql?("true")
   gem "dry-initializer", github: "dry-rb/dry-initializer", branch: "master"
 end
 
-gem "rom-sql", github: "rom-rb/rom-sql", branch: "master"
+gem "rom-sql", github: "rom-rb/rom-sql", branch: "update-to-rom6"
 
 gem "dry-core", github: "dry-rb/dry-core", branch: "master"
 gem "dry-monitor", github: "dry-rb/dry-monitor", branch: "master"

@@ -4,18 +4,22 @@ require "rom/core"
 require "rom/memory"
 
 RSpec.describe ROM::Relation, ".view" do
-  subject(:relation) { relation_class.new(ROM::Memory::Dataset.new([])) }
-
-  let(:registry) do
-    {tasks: tasks}
+  subject(:relation) do
+    rom.relations[:users]
   end
 
   let(:tasks) do
     Class.new(ROM::Relation[:memory]) do
-      schema do
+      schema(:tasks) do
         attribute :title, ROM::Types::String
       end
-    end.new([])
+    end
+  end
+
+  let(:rom) do
+    ROM.container(:memory) { |config|
+      config.register_relation(relation_class, tasks)
+    }
   end
 
   it "returns view method name" do
@@ -51,7 +55,7 @@ RSpec.describe ROM::Relation, ".view" do
 
     it "auto-projects the relation via schema" do
       new_rel = relation_class.new([{name: "Jane"}, {name: "Joe"}])
-      names_schema = relation_class.schemas[:names]
+      names_schema = relation.schemas[:names]
 
       expect(names_schema).to receive(:call).with(relation).and_return(new_rel)
       expect(relation.names).to eql(new_rel)
@@ -59,7 +63,7 @@ RSpec.describe ROM::Relation, ".view" do
 
     it "auto-projects a restricted relation via schema" do
       new_rel = relation_class.new([{id: 2}])
-      ids_schema = relation_class.schemas[:ids_for_names]
+      ids_schema = relation.schemas[:ids_for_names]
 
       expect(ids_schema).to receive(:call).with(relation.restrict(name: ["Jane"])).and_return(new_rel)
       expect(relation.ids_for_names(["Jane"])).to eql(new_rel)
@@ -67,13 +71,6 @@ RSpec.describe ROM::Relation, ".view" do
   end
 
   context "with an explicit schema" do
-    before do
-      # this is normally called automatically during setup
-      ROM::Notifications.trigger(
-        "configuration.relations.object.registered", relation: relation, registry: registry
-      )
-    end
-
     include_context "relation with views" do
       let(:relation_class) do
         Class.new(ROM::Memory::Relation) do
@@ -117,25 +114,16 @@ RSpec.describe ROM::Relation, ".view" do
   end
 
   context "with an inferred schema" do
-    before do
-      # this is normally called automatically during setup
-      schema = relation_class.schema_proc.call.finalize_attributes!
-      relation_class.set_schema!(schema)
-
-      ROM::Notifications.trigger(
-        "configuration.relations.object.registered", relation: relation, registry: registry
-      )
-    end
-
     include_context "relation with views" do
       let(:relation_class) do
         attributes_inferrer = proc {
-          [[define_attribute(:Integer, name: :id), define_attribute(:String, name: :name)],
-           []]
+          [[define_attribute(:Integer, name: :id), define_attribute(:String, name: :name)], []]
         }
 
         Class.new(ROM::Memory::Relation) do
-          schema_inferrer ROM::Schema::DEFAULT_INFERRER.with(attributes_inferrer: attributes_inferrer)
+          schema_inferrer ROM::Schema::DEFAULT_INFERRER.with(
+            attributes_inferrer: attributes_inferrer
+          )
 
           schema(:users, infer: true)
 

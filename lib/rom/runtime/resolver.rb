@@ -18,6 +18,7 @@ module ROM
       attr_reader :type, :namespace, :configuration, :cache, :opts
 
       MISSING_ELEMENT_ERRORS = {
+        schemas: SchemaMissingError,
         relations: RelationMissingError,
         commands: CommandNotFoundError,
         mappers: MapperMissingError
@@ -28,6 +29,14 @@ module ROM
         -> (items, **opts) {
           items.is_a?(self) ? items : new(type, items: items, **opts)
         }
+      end
+
+      # @api private
+      def self.new(type, **opts)
+        resolver = super
+        configuration = resolver.configuration
+        configuration.register(type, resolver) unless configuration.key?(type)
+        resolver
       end
 
       # @api private
@@ -47,7 +56,7 @@ module ROM
 
       # @api public
       def each
-        keys.each { |key| yield(self[key]) }
+        ids.each { |id| yield(self[id]) }
       end
 
       # @api public
@@ -56,9 +65,15 @@ module ROM
       end
 
       # @api private
+      def _update(components)
+        configuration.components.update(components)
+        self
+      end
+
+      # @api private
       def preload
-        opts[:items].each do |key, object|
-          configuration.components.add(type, id: key, namespace: namespace, object: object)
+        opts[:items].each do |id, object|
+          configuration.components.add(type, id: id, namespace: namespace, object: object)
         end
       end
 

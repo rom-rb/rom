@@ -23,22 +23,17 @@ module ROM
 
       include Components
 
-      subscribe("configuration.relations.object.registered") do |event|
-        relation = event[:relation]
-        registry = event[:registry]
-
-        schemas = relation.schemas.reduce({}) do |h, (a, e)|
-          h.update(a => e.is_a?(Proc) ? relation.class.instance_exec(registry, &e) : e)
-        end
-
-        relation.schemas.update(schemas)
-        relation
-      end
-
       DEFAULT_DATASET_PROC = -> * { self }.freeze
+
       INVALID_RELATIONS_NAMES = %i[
         relations schema
       ].freeze
+
+      # @api private
+      def inherited(klass)
+        super
+        klass.instance_variable_set("@dataset", dataset) if dataset
+      end
 
       # Return adapter-specific relation subclass
       #
@@ -67,7 +62,7 @@ module ROM
       #
       # @api public
       def dataset(&block)
-        if defined?(@dataset)
+        if defined?(@dataset) && !block
           @dataset
         else
           @dataset = block || DEFAULT_DATASET_PROC
@@ -94,12 +89,16 @@ module ROM
       #
       # @param [Symbol] dataset An optional dataset name
       # @param [Boolean] infer Whether to do an automatic schema inferring
+      # @param [Boolean, Symbol] view Whether this is a view schema
       #
       # @api public
-      def schema(dataset = nil, as: nil, infer: false, &block)
-        if defined?(@schema) && !block && !infer
-          @schema
-        elsif block || infer
+      def schema(dataset = nil, as: nil, infer: false, view: false, &block)
+        if view
+          components.add(
+            :schemas,
+            id: view, view: true, name: Name[view], relation_class: self, block: block
+          )
+        else
           raise MissingSchemaClassError, self unless schema_class
 
           ds_name = dataset || schema_opts.fetch(:dataset, default_name.dataset)
@@ -107,42 +106,24 @@ module ROM
 
           raise InvalidRelationName, relation if invalid_relation_name?(relation)
 
-          # TODO: such legacy very wow - this should be removed eventually
-          @relation_name = Name[relation, ds_name]
+          name = Name[relation, ds_name]
 
-          schema_proc = proc do |**kwargs, &inner_block|
-            schema_dsl.new(
-              relation_name,
-              schema_class: schema_class,
-              attr_class: schema_attr_class,
-              inferrer: schema_inferrer.with(enabled: infer),
-              &block
-            ).call(**kwargs, &inner_block)
-          end
-
-          # TODO: remove this eventually. Schemas are now evaluated using components
-          #       during finalization, storing schema_proc is no longer needed
-          @schema_proc = components.add(:schemas, id: relation, proc: schema_proc, relation: self)
+          components.add(
+            :schemas,
+            id: name.dataset,
+            name: name,
+            infer: infer,
+            view: view,
+            constant: schema_class,
+            relation_class: self,
+            dsl_class: schema_dsl,
+            attr_class: schema_attr_class,
+            inferrer: schema_inferrer,
+            adapter: adapter,
+            gateway_name: gateway,
+            block: block
+          )
         end
-      end
-      # @api private
-      attr_reader :schema_proc
-
-      # Assign a schema to a relation class
-      #
-      # @param [Schema] schema
-      #
-      # @return [Schema]
-      #
-      # @api private
-      def set_schema!(schema)
-        @schema = schema
-      end
-
-      # TODO: this could be deprecated / moved to rom/compat
-      # @return [Name] Qualified relation name
-      def relation_name
-        @relation_name || Name[Inflector.underscore(Inflector.demodulize(name)).to_sym]
       end
 
       # Define a relation view with a specific schema
@@ -199,19 +180,21 @@ module ROM
           raise ArgumentError, "schema attribute names must be provided as the second argument"
         end
 
-        name, new_schema_fn, relation_block =
+        name, schema_block, relation_block =
           if args.size == 1
-            ViewDSL.new(*args, schema, &block).call
+            ViewDSL.new(*args, &block).call
           else
             [*args, block]
           end
 
-        schemas[name] =
+        block =
           if args.size == 2
             -> _ { schema.project(*args[1]) }
           else
-            new_schema_fn
+            schema_block
           end
+
+        schema(view: name, &block)
 
         if relation_block.arity > 0
           auto_curry_guard do
@@ -265,6 +248,7 @@ module ROM
         Curried
       end
 
+      # TODO: move to rom/compat
       # @api private
       def view_methods
         ancestor_methods = ancestors.reject { |klass| klass == self }
@@ -273,9 +257,10 @@ module ROM
         instance_methods - ancestor_methods + auto_curried_methods.to_a
       end
 
-      # @api private
-      def schemas
-        @schemas ||= {}
+      # TODO: this could be deprecated / moved to rom/compat
+      # @return [Name] Qualified relation name
+      def relation_name
+        default_name
       end
 
       # Return default relation name used in schemas
@@ -284,17 +269,21 @@ module ROM
       #
       # @api private
       def default_name(inflector = Inflector)
-        Name[inflector.underscore(name).tr("/", "_").to_sym]
+        if (schema = components.schemas.first)
+          schema.name
+        else
+          Name[inflector.underscore(name).tr("/", "_").to_sym]
+        end
       end
 
       # @api private
-      def default_schema(klass = self, inflector: Inflector)
-        klass.schema ||
-          if (schema_comp = klass.components.schemas.detect { |c| c.relation == klass })
-            klass.set_schema!(schema_comp.(inflector: inflector))
-          else
-            klass.schema_class.define(klass.default_name)
-          end
+      def default_schema
+        components.schemas.first.build
+      end
+
+      # @api private
+      def default_dataset_name(inflector = Inflector)
+        inflector.underscore(inflector.demodulize(name)).tr("/", "_").to_sym
       end
 
       # @api private
@@ -304,6 +293,7 @@ module ROM
 
       private
 
+      # @api private
       def invalid_relation_name?(relation)
         INVALID_RELATIONS_NAMES.include?(relation.to_sym)
       end

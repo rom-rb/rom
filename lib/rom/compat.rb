@@ -21,14 +21,18 @@ module ROM
     class Relation < Core
       undef :id
 
+      def default_name
+        if constant.respond_to?(:default_name)
+          constant.default_name
+        else
+          ROM::Relation::Name[Inflector.underscore(constant.name)]
+        end
+      end
+
       def id
         return options[:id] if options[:id]
 
-        if constant.respond_to?(:relation_name)
-          constant.relation_name
-        else
-          Inflector.underscore(constant.name)
-        end.to_sym
+        default_name.relation
       end
     end
 

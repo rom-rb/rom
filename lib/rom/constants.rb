@@ -21,6 +21,7 @@ module ROM
 
   EnvAlreadyFinalizedError = Class.new(StandardError)
   GatewayAlreadyDefinedError = Class.new(StandardError)
+  SchemaAlreadyDefinedError = Class.new(StandardError)
   RelationAlreadyDefinedError = Class.new(StandardError)
   CommandAlreadyDefinedError = Class.new(StandardError)
   MapperAlreadyDefinedError = Class.new(StandardError)
@@ -58,6 +59,8 @@ module ROM
   end
 
   GatewayMissingError = Class.new(ElementNotFoundError)
+
+  SchemaMissingError = Class.new(ElementNotFoundError)
 
   RelationMissingError = Class.new(ElementNotFoundError)
 

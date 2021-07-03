@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "rom/constants"
+require "rom/runtime/resolver"
 
 module ROM
   module Plugins
@@ -27,7 +28,7 @@ module ROM
           super
           return if klass.instance_methods.include?(:__registry__)
 
-          klass.option :__registry__, default: -> { EMPTY_REGISTRY }
+          klass.option :__registry__, default: -> { Runtime::Resolver.new(:relations) }
         end
 
         private

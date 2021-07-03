@@ -8,7 +8,6 @@ RSpec.describe ROM::Relation, "#map_to" do
     ROM::Relation.new(
       dataset,
       name: ROM::Relation::Name[:users],
-      schema: ROM::Relation.default_schema,
       mappers: mappers
     )
   end
