@@ -26,6 +26,9 @@
 - [internal] Command compiler is no longer coupled to gateway and notifications (via #640) (@solnic)
 - Custom commands are now lazily-resolved at runtime, which simplifies and speeds up setup and finalization (via #641) (@solnic)
 - Mappers are now lazy-resolved at runtime which speeds up setup and finalization (via #642) (@solnic)
+- Schemas are now 1st class components accessible via runtime container and decoupled from relations (via #644) (@solnic)
+- `Relation.dataset` receives canonical schema object now, rather than relation class (via #644) (@solnic)
+- Relation classes no holder hold their schemas as class variables (via #644) (@solnic)
 
 [Compare v5.2.4...master](https://github.com/rom-rb/rom/compare/v5.2.4...master)
 
