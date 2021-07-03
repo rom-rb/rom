@@ -3,7 +3,12 @@
 require "rom/compat"
 
 RSpec.describe ROM::Setup, "#auto_registration" do
-  subject(:setup) { ROM::Setup.new }
+  subject(:setup) do
+    ROM::Setup.new(
+      components: ROM::Components::Registry.new(owner: self),
+      config: ROM::Configurable::Config.new
+    )
+  end
 
   let!(:loaded_features) { $LOADED_FEATURES.dup }
 

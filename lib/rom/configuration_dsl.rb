@@ -24,7 +24,7 @@ module ROM
       defaults = {inflector: inflector, adapter: default_adapter(options[:gateway])}
 
       klass = Relation.build_class(name, defaults.merge(options))
-      klass.schema_opts(dataset: name, relation: name)
+      klass.schema_opts(dataset: name, relation: name, **options)
 
       if block
         klass.class_eval(&block)

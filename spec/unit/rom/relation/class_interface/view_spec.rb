@@ -24,10 +24,10 @@ RSpec.describe ROM::Relation, ".view" do
 
   it "returns view method name" do
     klass = Class.new(ROM::Relation[:memory]) {
-      schema { attribute :id, ROM::Types::Integer }
+      schema(:users) { attribute :id, ROM::Types::Integer }
     }
 
-    name = klass.view(:by_id, klass.schema) { self }
+    name = klass.view(:by_id, []) { self }
 
     expect(name).to be(:by_id)
   end

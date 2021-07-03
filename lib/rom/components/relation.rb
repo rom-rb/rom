@@ -56,12 +56,7 @@ module ROM
 
         trigger("relations.schema.set", payload)
 
-        trigger(
-          "relations.dataset.allocated",
-          dataset: dataset, relation: constant, schema: schema, adapter: adapter
-        )
-
-        relation = constant.new(dataset, **relation_options)
+        relation = constant.new(**relation_options)
 
         trigger("relations.object.registered", registry: relations, relation: relation)
 
@@ -71,14 +66,8 @@ module ROM
       private
 
       # @api private
-      memoize def schema
-        component = components.schemas(id: name.dataset).first
-        component.build
-      end
-
-      # @api private
-      memoize def dataset
-        gateway.dataset(name.dataset).instance_exec(schema, &constant.dataset)
+      def schema
+        configuration.schemas[name.dataset]
       end
 
       # @api private
@@ -87,6 +76,7 @@ module ROM
          name: name,
          schema: schema,
          inflector: inflector,
+         datasets: configuration.datasets,
          schemas: configuration.schemas,
          associations: configuration.associations.new(id, items: schema.associations),
          mappers: configuration.mappers.new(id, adapter: adapter),

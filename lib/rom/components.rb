@@ -2,10 +2,11 @@
 
 require "rom/constants"
 require "rom/components/gateway"
+require "rom/components/dataset"
 require "rom/components/schema"
-require "rom/components/command"
 require "rom/components/relation"
 require "rom/components/association"
+require "rom/components/command"
 require "rom/components/mapper"
 
 module ROM
@@ -13,10 +14,11 @@ module ROM
   #
   # @api public
   module Components
-    CORE_TYPES = %i[gateways schemas relations associations commands mappers].freeze
+    CORE_TYPES = %i[gateways datasets schemas relations associations commands mappers].freeze
 
     HANDLERS = {
       gateways: Gateway,
+      datasets: Dataset,
       relations: Relation,
       associations: Association,
       commands: Command,
@@ -26,10 +28,20 @@ module ROM
 
     # @api public
     def components
-      @components ||= Registry.new
+      @components ||=
+        begin
+          registry = Registry.new(owner: self)
+          registry.update(superclass.components) if superclass.respond_to?(:components)
+          registry
+        end
     end
 
     class Registry
+      include Enumerable
+
+      # @api private
+      attr_reader :owner
+
       # @api private
       attr_reader :types
 
@@ -41,6 +53,7 @@ module ROM
 
       DUPLICATE_ERRORS = {
         gateways: GatewayAlreadyDefinedError,
+        datasets: DatasetAlreadyDefinedError,
         schemas: RelationAlreadyDefinedError,
         relations: RelationAlreadyDefinedError,
         associations: AssociationAlreadyDefinedError,
@@ -49,10 +62,18 @@ module ROM
       }.freeze
 
       # @api private
-      def initialize(types: CORE_TYPES.dup, handlers: HANDLERS)
+      def initialize(owner:, types: CORE_TYPES.dup, handlers: HANDLERS)
+        @owner = owner
         @types = types
         @store = types.map { |type| [type, EMPTY_ARRAY.dup] }.to_h
         @handlers = handlers
+      end
+
+      # @api private
+      def each
+        store.each { |type, components|
+          components.each { |component| yield(type, component) }
+        }
       end
 
       # @api private
@@ -61,21 +82,30 @@ module ROM
       end
 
       # @api private
+      def keys(type)
+        self[type].map(&:key)
+      end
+
+      # @api private
       def update(other)
-        store.each { |type, items| items.concat(other[type]) }
+        other.each do |type, component|
+          next if keys(type).include?(component.key)
+          add(type, item: component.with(owner: owner, provider: component.owner))
+        end
         self
       end
 
       # @api private
-      def add(type, **options)
-        component = handlers.fetch(type).new(**options)
+      def delete(type, item)
+        self[type].delete(item)
+        self
+      end
 
-        # TODO: this needs a nicer abstraction
-        # TODO: respond_to? is only needed because auto_register specs use POROs :(
-        update(component.constant.components) if component.constant.respond_to?(:components)
+      # @api private
+      def add(type, item: nil, **options)
+        component = item || handlers.fetch(type).new(**options, owner: owner)
 
-        # TODO: schemas not fully supported yet
-        if type != :schemas && store[type].map(&:key).include?(component.key)
+        if keys(type).include?(component.key)
           raise DUPLICATE_ERRORS[type], "+#{component.id}+ is already defined"
         end
 

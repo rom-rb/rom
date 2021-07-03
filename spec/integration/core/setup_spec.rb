@@ -36,6 +36,7 @@ RSpec.describe "Configuring ROM" do
     it "configures rom schema to store relations" do
       users_schema = users_relation.schema
       tasks_schema = tasks_relation.schema
+
       expect(users_schema.relations[:users]).to eql(users_relation)
       expect(tasks_schema.relations[:tasks]).to eql(tasks_relation)
     end
