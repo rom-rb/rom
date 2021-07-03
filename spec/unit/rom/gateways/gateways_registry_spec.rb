@@ -3,16 +3,17 @@
 require "spec_helper"
 
 RSpec.describe ROM::Configuration do
-  subject(:config) { ROM::Configuration.new(*params, &block) }
+  subject(:configuration) { ROM::Configuration.new(*params, &block) }
 
   let(:block) { proc {} }
-  let(:gateways) { config.gateways }
+  let(:container) { ROM.container(configuration) }
+  let(:gateways) { container.gateways }
 
   context "with an adapter identifier" do
     let(:params) { [:memory] }
 
     it "configures the gateways hash" do
-      expect(gateways.keys).to eql([:default])
+      expect(gateways.ids).to eql([:default])
       expect(gateways[:default]).to be_kind_of(ROM::Memory::Gateway)
       expect(gateways[:default].config.name).to be(:default)
     end
@@ -47,7 +48,7 @@ RSpec.describe ROM::Configuration do
     let(:params) { [default: :memory] }
 
     it "configures the gateways hash" do
-      expect(gateways.keys).to eql([:default])
+      expect(gateways.ids).to eql([:default])
       expect(gateways[:default]).to be_kind_of(ROM::Memory::Gateway)
     end
   end
@@ -56,7 +57,7 @@ RSpec.describe ROM::Configuration do
     let(:params) { [foo: :memory, default: :memory] }
 
     it "configures the gateways hash" do
-      expect(gateways.keys).to eq(%i[foo default])
+      expect(gateways.ids).to eq(%i[foo default])
       expect(gateways[:default]).to be_kind_of(ROM::Memory::Gateway)
       expect(gateways[:foo]).to be_kind_of(ROM::Memory::Gateway)
       expect(gateways[:default]).not_to be(gateways[:foo])
@@ -82,10 +83,10 @@ RSpec.describe ROM::Configuration do
       let(:params) { [foo: [:test, "foo"], bar: [:test, ["bar"]]] }
 
       it "configures the gateway instance" do
-        expect(gateways.config.foo.adapter).to be(:test)
-        expect(gateways.config.foo.args).to match_array(%w[foo])
-        expect(gateways.config.bar.adapter).to be(:test)
-        expect(gateways.config.bar.args).to match_array(%w[bar])
+        expect(configuration.config.gateways.foo.adapter).to be(:test)
+        expect(configuration.config.gateways.foo.args).to match_array(%w[foo])
+        expect(configuration.config.gateways.bar.adapter).to be(:test)
+        expect(configuration.config.gateways.bar.args).to match_array(%w[bar])
       end
     end
 
@@ -93,7 +94,7 @@ RSpec.describe ROM::Configuration do
       let(:params) { [:test, "foo"] }
 
       it "configures the gateway instance" do
-        expect(gateways.config.default.args).to match_array(["foo"])
+        expect(configuration.config.gateways.default.args).to match_array(["foo"])
       end
     end
   end
@@ -117,7 +118,7 @@ RSpec.describe ROM::Configuration do
     let(:params) { [gateway] }
 
     it "configures the gateways hash" do
-      expect(gateways.keys).to eq([:default])
+      expect(gateways.ids).to eq([:default])
       expect(gateways[:default]).to be(gateway)
     end
   end

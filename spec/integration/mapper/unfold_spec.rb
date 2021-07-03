@@ -8,7 +8,7 @@ RSpec.describe "Mapper definition DSL" do
   before do
     configuration.relation(:users)
 
-    users = configuration.gateways[:default].dataset(:users)
+    users = container.gateways[:default].dataset(:users)
 
     users.insert(name: "Joe",  roles: ["admin", "user", "user", nil])
     users.insert(name: "Jane", roles: "user")

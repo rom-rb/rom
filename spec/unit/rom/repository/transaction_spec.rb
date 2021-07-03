@@ -69,7 +69,7 @@ RSpec.describe ROM::Repository, "#transaction" do
     end
 
     let(:alt_conn) do
-      configuration.gateways[:alt].connection
+      rom.gateways[:alt].connection
     end
 
     before do

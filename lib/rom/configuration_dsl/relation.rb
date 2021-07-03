@@ -15,13 +15,17 @@ module ROM
       #
       # @api private
       def self.build_class(name, options = EMPTY_HASH)
-        inflector = options.fetch(:inflector) { Inflector }
+        inflector = options.fetch(:inflector)
+
         class_name = "ROM::Relation[#{inflector.camelize(name)}]"
+
+        gateway = options.fetch(:gateway, :default)
         adapter = options.fetch(:adapter)
 
-        Dry::Core::ClassBuilder.new(name: class_name,
-                                    parent: ROM::Relation[adapter]).call do |klass|
-          klass.gateway(options.fetch(:gateway, :default))
+        parent = ROM::Relation[adapter]
+
+        Dry::Core::ClassBuilder.new(name: class_name, parent: parent).call do |klass|
+          klass.gateway(gateway)
         end
       end
     end

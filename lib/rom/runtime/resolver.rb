@@ -4,6 +4,7 @@ require "delegate"
 
 require "rom/constants"
 require "rom/cache"
+require "rom/command_compiler"
 
 require_relative "configuration"
 
@@ -58,6 +59,7 @@ module ROM
       def each
         ids.each { |id| yield(self[id]) }
       end
+      alias_method :each_value, :each
 
       # @api public
       def empty?

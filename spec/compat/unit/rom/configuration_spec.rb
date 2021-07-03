@@ -25,6 +25,21 @@ RSpec.describe ROM::Configuration do
     end
   end
 
+  describe "#[]" do
+    it "returns a gateway if it is defined" do
+      gateway = ROM::Gateway.setup(:memory)
+      configuration = ROM::Configuration.new(gateway: gateway)
+
+      expect(configuration[:gateway]).to be(gateway)
+    end
+
+    it "raises error if gateway is not defined" do
+      configuration = ROM::Configuration.new
+
+      expect { configuration[:not_here] }.to raise_error(KeyError, /not_here/)
+    end
+  end
+
   describe "setting inflector" do
     example "is supported" do
       inflector = double(:inflector)
