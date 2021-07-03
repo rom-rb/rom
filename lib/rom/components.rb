@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "rom/constants"
+require "rom/components/gateway"
 require "rom/components/schema"
 require "rom/components/command"
 require "rom/components/relation"
@@ -11,9 +12,10 @@ module ROM
   #
   # @api public
   module Components
-    CORE_TYPES = %i[schemas relations commands mappers].freeze
+    CORE_TYPES = %i[gateways schemas relations commands mappers].freeze
 
     HANDLERS = {
+      gateways: Gateway,
       relations: Relation,
       commands: Command,
       mappers: Mapper,
@@ -36,6 +38,7 @@ module ROM
       attr_reader :handlers
 
       DUPLICATE_ERRORS = {
+        gateways: GatewayAlreadyDefinedError,
         schemas: RelationAlreadyDefinedError,
         relations: RelationAlreadyDefinedError,
         commands: CommandAlreadyDefinedError,

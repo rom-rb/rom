@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "rom/repository"
+
 RSpec.describe "Repository with multi-adapters configuration" do
   include_context "repository / db_uri"
 
@@ -7,7 +9,7 @@ RSpec.describe "Repository with multi-adapters configuration" do
     ROM::Configuration.new(default: [:sql, db_uri], memory: [:memory])
   }
 
-  let(:sql_conn) { configuration.gateways[:default].connection }
+  let(:sql_conn) { rom.gateways[:default].connection }
 
   let(:rom) { ROM.container(configuration) }
 
@@ -71,8 +73,8 @@ RSpec.describe "Repository with multi-adapters configuration" do
     configuration.register_relation(Test::Users)
     configuration.register_relation(Test::Tasks)
 
-    user_id = configuration.gateways[:default].dataset(:users).insert(name: "Jane")
-    configuration.gateways[:memory].dataset(:tasks).insert(user_id: user_id, title: "Jane Task")
+    user_id = rom.gateways[:default].dataset(:users).insert(name: "Jane")
+    rom.gateways[:memory].dataset(:tasks).insert(user_id: user_id, title: "Jane Task")
   end
 
   specify "ᕕ⁞ ᵒ̌ 〜 ᵒ̌ ⁞ᕗ" do

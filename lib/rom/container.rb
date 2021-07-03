@@ -3,7 +3,6 @@
 require "dry/container"
 
 require "rom/runtime/configuration"
-require "rom/runtime/resolver"
 
 module ROM
   # ROM container is an isolated environment with no global state where all
@@ -106,13 +105,21 @@ module ROM
     # @api private
     def self.new(configuration)
       super().tap do |container|
-        runtime_config = Runtime::Configuration.new(
-          configuration: configuration, container: container
-        )
-
-        container.register(:configuration, runtime_config)
-        container.register(:gateways, runtime_config.gateways)
+        container.register(:configuration, memoize: true) do
+          Runtime::Configuration.new(
+            configuration: configuration, container: container
+          )
+        end
       end
+    end
+
+    # Return runtime configuration with component resolvers
+    #
+    # @return [Runtime::Configuration]
+    #
+    # @api public
+    def configuration
+      self[:configuration]
     end
 
     # Return registered gateways
@@ -121,16 +128,16 @@ module ROM
     #
     # @api public
     def gateways
-      self[:gateways]
+      configuration.gateways
     end
 
-    # Return mapper registry for all relations
+    # Return relation registry
     #
-    # @return [Hash<Symbol=>MapperRegistry]
+    # @return [RelationRegistry]
     #
     # @api public
-    def mappers
-      self[:configuration].mappers
+    def schemas
+      configuration.schemas
     end
 
     # Return relation registry
@@ -139,7 +146,16 @@ module ROM
     #
     # @api public
     def relations
-      self[:configuration].relations
+      configuration.relations
+    end
+
+    # Return mapper registry for all relations
+    #
+    # @return [Hash<Symbol=>MapperRegistry]
+    #
+    # @api public
+    def mappers
+      configuration.mappers
     end
 
     # Return command registry
@@ -148,7 +164,7 @@ module ROM
     #
     # @api public
     def commands
-      self[:configuration].commands
+      configuration.commands
     end
 
     # Disconnect all gateways

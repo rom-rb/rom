@@ -65,6 +65,13 @@ module ROM
         self.class.new(dup_settings(settings))
       end
 
+      # TODO: move to rom/compat
+      #
+      # @api private
+      def use_logger(logger)
+        self.logger = logger
+      end
+
       private
 
       def dup_settings(settings)

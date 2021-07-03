@@ -21,7 +21,7 @@ RSpec.shared_context "changeset / database setup" do
     end
   end
 
-  let(:conn) { configuration.gateways[:default].connection }
+  let(:conn) { rom.gateways[:default].connection }
 
   let(:rom) { ROM.container(configuration) }
 

@@ -21,9 +21,9 @@ module ROM
     #
     # @api public
     def relation(name, options = EMPTY_HASH, &block)
-      klass_opts = {adapter: default_adapter}.merge(options)
+      defaults = {inflector: inflector, adapter: default_adapter(options[:gateway])}
 
-      klass = Relation.build_class(name, klass_opts)
+      klass = Relation.build_class(name, defaults.merge(options))
       klass.schema_opts(dataset: name, relation: name)
 
       if block
@@ -60,7 +60,7 @@ module ROM
     #
     # @api public
     def commands(relation, &block)
-      CommandDSL.new(self, relation: relation, adapter: default_adapter, &block)
+      CommandDSL.new(self, relation: relation, &block)
     end
 
     # Mapper definition DSL
@@ -103,6 +103,11 @@ module ROM
     # @api private
     def plugin_registry
       ROM.plugin_registry
+    end
+
+    # @api private
+    def default_adapter(gateway)
+      config.gateways[gateway || :default].adapter
     end
   end
 end

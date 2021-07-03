@@ -21,7 +21,7 @@ RSpec.shared_context "repository / database setup" do
   end
 
   let(:conn) do
-    configuration.gateways[:default].connection
+    rom.gateways[:default].connection
   end
 
   let(:rom) do

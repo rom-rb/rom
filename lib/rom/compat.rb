@@ -21,6 +21,8 @@ module ROM
     class Relation < Core
       undef :id
 
+      undef :default_name
+
       def default_name
         if constant.respond_to?(:default_name)
           constant.default_name
@@ -80,8 +82,6 @@ module ROM
   class Configuration
     def_delegators :@setup, :auto_registration
 
-    alias_method :environment, :gateways
-
     # @api public
     # @deprecated
     def inflector=(inflector)
@@ -90,6 +90,7 @@ module ROM
     end
 
     # @api private
+    # @deprecated
     def relation_classes(gateway = nil)
       classes = setup.components.relations.map(&:constant)
 
@@ -99,10 +100,23 @@ module ROM
       classes.select { |rel| rel.gateway == gw_name }
     end
 
+    # @api public
+    # @deprecated
+    def [](key)
+      gateways.fetch(key)
+    end
+
+    # @api public
+    # @deprecated
+    def gateways
+      @gateways ||= setup.components.gateways.map(&:build).map { |gw| [gw.config.name, gw] }.to_h
+    end
+    alias_method :environment, :gateways
+
     # @api private
     # @deprecated
     def gateways_map
-      @gateways_map ||= gateways.to_a.map(&:reverse).to_h
+      @gateways_map ||= gateways.map(&:reverse).to_h
     end
 
     # @api private
@@ -119,7 +133,7 @@ module ROM
     # @api public
     # @deprecated
     def method_missing(name, *)
-      gateways.fetch(name) { super }
+      gateways[name] || super
     end
   end
 
@@ -134,7 +148,7 @@ module ROM
       end
 
       # @api private
-      def create_class(relation:, **, &block)
+      def create_class(relation: nil, **, &block)
         klass = super
         klass.extend_for_relation(relation) if relation && klass.restrictable
         klass

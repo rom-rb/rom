@@ -34,9 +34,9 @@ module ROM
     #   @return [Notifications] Notification bus instance
     attr_reader :notifications
 
-    def_delegators :@setup, :cache, :gateways, :relations,
-      :register_relation, :register_command, :register_mapper,
-      :register_plugin, :auto_register, :components, :plugins
+    def_delegators :@setup, :cache,
+      :register_relation, :register_command, :register_mapper, :register_plugin,
+      :auto_register, :components, :plugins
 
     # Initialize a new configuration
     #
@@ -69,6 +69,10 @@ module ROM
       # while setup loads components and then triggers finalization
       setup.load_adapters
 
+      # Register gateway components in case some custom configuration needs a gateway
+      # already
+      setup.register_gateways
+
       # TODO: this is tricky because if you want to tweak the config in the block
       #       you end up doing `config.config.foo = "bar"` so it would be good
       #       to yield configuration object + its config or rename this whole class
@@ -77,9 +81,6 @@ module ROM
 
       # No more changes allowed
       config.freeze
-
-      # Load gateways after yielding config because gateways *need finalized config*
-      setup.load_gateways
 
       self
     end
@@ -127,32 +128,6 @@ module ROM
       end
 
       self
-    end
-
-    # Return gateway identified by name
-    #
-    # @return [Gateway]
-    #
-    # @api private
-    def [](name)
-      gateways.fetch(name)
-    end
-
-    # @api private
-    def default_gateway
-      @default_gateway ||= gateways[:default] if gateways.key?(:default)
-    end
-
-    # @api private
-    def default_adapter
-      @default_adapter ||= adapter_for_gateway(default_gateway) || ROM.adapters.keys.first
-    end
-
-    # @api private
-    def adapter_for_gateway(gateway)
-      ROM.adapters.select do |_key, value|
-        value.const_defined?(:Gateway) && gateway.is_a?(value.const_get(:Gateway))
-      end.keys.first
     end
 
     private

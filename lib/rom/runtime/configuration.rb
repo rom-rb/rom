@@ -3,6 +3,7 @@
 require "delegate"
 
 require "rom/constants"
+require "rom/components"
 
 module ROM
   module Runtime
@@ -23,6 +24,12 @@ module ROM
         @container = container
       end
 
+      Components::CORE_TYPES.each do |type|
+        define_method(type) do
+          resolver(type)
+        end
+      end
+
       # @api private
       def register(type, resolver)
         container.register(type, resolver)
@@ -36,12 +43,6 @@ module ROM
       # @api private
       def key?(key)
         container.key?(key)
-      end
-
-      %i[schemas relations commands mappers].each do |type|
-        define_method(type) do
-          resolver(type)
-        end
       end
 
       # @api private

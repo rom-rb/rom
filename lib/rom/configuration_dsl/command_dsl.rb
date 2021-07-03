@@ -11,10 +11,10 @@ module ROM
       attr_reader :configuration, :relation, :adapter
 
       # @api private
-      def initialize(configuration, relation:, adapter: nil, &block)
+      def initialize(configuration, relation:, &block)
         @configuration = configuration
         @relation = relation
-        @adapter = adapter
+        @adapter = resolve_adapter
         instance_exec(&block)
       end
 
@@ -30,6 +30,13 @@ module ROM
       def define(name, options = EMPTY_HASH, &block)
         constant = Command.build_class(name, relation, {adapter: adapter}.merge(options), &block)
         configuration.components.add(:commands, constant: constant)
+      end
+
+      private
+
+      # @api private
+      def resolve_adapter
+        configuration.components.relations(id: relation).first.adapter
       end
     end
   end
