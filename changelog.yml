@@ -43,6 +43,8 @@
   - 'Relation classes no holder hold their schemas as class variables (via #644) (@solnic)'
   - 'Gateways are now lazy-loadable (via #645) (@solnic)'
   - 'Associations are now decoupled from schemas and lazy-loaded (via #646) (@solnic)'
+  - 'Plugin API is now internally simplified which resulted in faster runtime. It''s
+    also no longer required to register plugin types upfront (via #648) (@solnic)'
 - version: 5.2.4
   summary: 
   date: '2020-05-08'
