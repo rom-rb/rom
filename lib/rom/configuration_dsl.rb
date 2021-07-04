@@ -89,9 +89,11 @@ module ROM
     # @api public
     def plugin(adapter, spec, &block)
       type, name = spec.flatten(1)
-      plugin = plugin_registry[type].adapter(adapter).fetch(name) do
-        plugin_registry[type].fetch(name)
-      end
+
+      # TODO: plugin types are singularized, so this is not consistent
+      #       with the configuration DSL for plugins that uses plural
+      #       names of the components - this should be unified
+      plugin = plugin_registry[Inflector.singularize(type)].adapter(adapter).fetch(name)
 
       if block
         register_plugin(plugin.configure(&block))

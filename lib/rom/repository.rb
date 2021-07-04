@@ -10,8 +10,6 @@ require "rom/container"
 require "rom/repository/class_interface"
 require "rom/repository/session"
 
-ROM::Plugins.register(:repository, adapter: false)
-
 module ROM
   # Abstract repository class to inherit from
   #

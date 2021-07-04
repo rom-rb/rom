@@ -96,4 +96,10 @@ RSpec.shared_context "repository / plugins" do
       end
     end
   end
+
+  around do |example|
+    keys = ROM.plugin_registry.keys
+    example.run
+    (ROM.plugin_registry.keys - keys).each { |key| ROM.plugin_registry._container.delete(key) }
+  end
 end

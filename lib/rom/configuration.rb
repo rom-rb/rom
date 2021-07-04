@@ -104,7 +104,7 @@ module ROM
       # we're making sure that only plugins that are enabled in this configuration
       # will be triggered
       global_listeners = Notifications.listeners.to_a
-        .reject { |(src, *)| plugin_registry.mods.include?(src) }.to_h
+        .reject { |(src, *)| plugin_registry.map(&:mod).include?(src) }.to_h
 
       plugin_listeners = Notifications.listeners.to_a
         .select { |(src, *)| plugins.map(&:mod).include?(src) }.to_h

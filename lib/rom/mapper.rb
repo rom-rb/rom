@@ -47,6 +47,7 @@ module ROM
       name = processor.name.split("::").last.downcase.to_sym
       processors.update(name => processor)
     end
+    require "rom/processor/transformer"
 
     # Prepares an array of headers for a potentially multistep mapper
     #

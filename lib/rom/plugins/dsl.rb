@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
+require "rom/constants"
+
 module ROM
-  module Global
-    # plugin registration DSL
+  module Plugins
+    # Plugin registration DSL
     #
     # @private
-    class PluginDSL
+    class DSL
       # Default options passed to plugin registration
       #
       # @return [Hash]
@@ -29,13 +31,13 @@ module ROM
 
       # Register a plugin
       #
-      # @param [Symbol] name of the plugin
-      # @param [Module] mod to include
+      # @param [Symbol] name Name of a plugin
+      # @param [Module] mod Plugin module
       # @param [Hash] options
       #
       # @api public
       def register(name, mod, options = EMPTY_HASH)
-        registry.register(name, mod, defaults.merge(options))
+        registry.register(name, mod: mod, **defaults, **options)
       end
 
       # Register plugins for a specific adapter
