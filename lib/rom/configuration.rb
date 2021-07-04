@@ -1,18 +1,17 @@
 # frozen_string_literal: true
 
-require "forwardable"
-
 require "rom/support/inflector"
 require "rom/support/notifications"
 require "rom/support/configurable"
 
+require "rom/constants"
+require "rom/loader"
 require "rom/components"
-require "rom/setup"
 require "rom/configuration_dsl"
 
 module ROM
+  # @api public
   class Configuration
-    extend Forwardable
     extend Notifications
 
     register_event("configuration.relations.class.ready")
@@ -23,22 +22,20 @@ module ROM
     register_event("configuration.relations.dataset.allocated")
     register_event("configuration.commands.class.before_build")
 
-    include ROM::ConfigurationDSL
+    include ConfigurationDSL
     include Configurable
 
-    NoDefaultAdapterError = Class.new(StandardError)
-
-    # @!attribute [r] setup
-    #   @return [Setup] Setup object which manages component and plugins
-    attr_reader :setup
-
-    # @!attribute [r] notifications
-    #   @return [Notifications] Notification bus instance
+    # @return [Notifications] Notification bus instance
+    # @api private
     attr_reader :notifications
 
-    def_delegators :@setup, :cache,
-      :register_relation, :register_command, :register_mapper, :register_plugin,
-      :auto_register, :components, :plugins
+    # @return [Components::Registry] All registered components
+    # @api private
+    attr_reader :components
+
+    # @return [Array] All registered plugins
+    # @api private
+    attr_reader :plugins
 
     # Initialize a new configuration
     #
@@ -47,13 +44,9 @@ module ROM
     # @api private
     def initialize(*args, &block)
       @notifications = Notifications.event_bus(:configuration)
-
-      config.gateways = Config.new
-
-      @setup = Setup.new(
-        components: Components::Registry.new(owner: self),
-        config: config.gateways
-      )
+      @components = Components::Registry.new(owner: self)
+      @auto_register = {root_directory: nil, components: components}
+      @plugins = []
 
       configure(*args, &block)
     end
@@ -67,17 +60,17 @@ module ROM
     #
     # @api private
     def configure(*args)
+      config.gateways = Config.new
+
       infer_config(*args) unless args.empty?
 
       config.inflector = Inflector
 
-      # Load adapters explicitly here to ensure their plugins are present already
-      # while setup loads components and then triggers finalization
-      setup.load_adapters
+      # Load adapters explicitly here to ensure their plugins are present for later use
+      load_adapters
 
-      # Register gateway components in case some custom configuration needs a gateway
-      # already
-      setup.register_gateways
+      # Register gateway components in case some custom configuration needs them
+      register_gateways
 
       # TODO: this is tricky because if you want to tweak the config in the block
       #       you end up doing `config.config.foo = "bar"` so it would be good
@@ -85,36 +78,74 @@ module ROM
       #       because it's a configuration *DSL* that builds up a config object too
       yield(self) if block_given?
 
-      # No more changes allowed
-      config.freeze
-
       self
     end
 
+    # Enable auto-registration
+    #
+    # @param [String, Pathname] directory The root path to components
+    # @param [Hash] options
+    # @option options [Boolean,String] :namespace Toggle root namespace
+    #
+    # @return [Configuration]
+    #
+    # @api public
+    def auto_register(directory, options = {})
+      @auto_register.update(options).update(root_directory: directory)
+      self
+    end
+
+    # Register relation class(es) explicitly
+    #
+    # @param [Array<Relation>] *klasses One or more relation classes
+    # @param [Hash] **opts Default options for relation(s) that are being registered
+    #
+    # @api public
+    def register_relation(*klasses, **opts)
+      klasses.each do |klass|
+        components.add(:relations, constant: klass, **opts)
+      end
+
+      components.relations
+    end
+
+    # Register mapper class(es) explicitly
+    #
+    # @param [Array] *klasses One or more mapper classes
+    #
+    # @api public
+    def register_mapper(*klasses)
+      klasses.each do |klass|
+        components.add(:mappers, constant: klass)
+      end
+
+      components[:mappers]
+    end
+
+    # Register command class(es) explicitly
+    #
+    # @param [Array] *klasses One or more command classes
+    #
+    # @api public
+    def register_command(*klasses)
+      klasses.each do |klass|
+        components.add(:commands, constant: klass)
+      end
+
+      components.commands
+    end
+
+    # This is called automatically in configure block
+    #
+    # After finalization it is no longer possible to alter the configuration
+    #
     # @api private
     def finalize
+      # No more config changes allowed
+      config.freeze
       attach_listeners
-      setup.finalize
+      loader.() # this is noop when auto_register's root is nil
       self
-    end
-
-    # @api private
-    def attach_listeners
-      # Anything can attach globally to certain events, including plugins, so here
-      # we're making sure that only plugins that are enabled in this configuration
-      # will be triggered
-      global_listeners = Notifications.listeners.to_a
-        .reject { |(src, *)| plugin_registry.map(&:mod).include?(src) }.to_h
-
-      plugin_listeners = Notifications.listeners.to_a
-        .select { |(src, *)| plugins.map(&:mod).include?(src) }.to_h
-
-      listeners.update(global_listeners).update(plugin_listeners)
-    end
-
-    # @api private
-    def listeners
-      notifications.listeners
     end
 
     # Apply a plugin to the configuration
@@ -138,8 +169,19 @@ module ROM
 
     private
 
-    # This infers config based on arguments passed to either ROM.container
-    # or Configuration.ne
+    # This register gateway components based on the configuration
+    #
+    # It is private unlike the rest of register_ methods because
+    # it's called automatically doing configuration phase
+    #
+    # @api private
+    def register_gateways
+      config.gateways.each do |id, gateway_config|
+        components.add(:gateways, id: id, config: gateway_config)
+      end
+    end
+
+    # This infers config using arguments passed to the constructor
     #
     # @api private
     def infer_config(*args)
@@ -168,6 +210,41 @@ module ROM
           config.send("#{key}=", value)
         end
       end
+    end
+
+    # @api private
+    def attach_listeners
+      # Anything can attach globally to certain events, including plugins, so here
+      # we're making sure that only plugins that are enabled in this configuration
+      # will be triggered
+      global_listeners = Notifications.listeners.to_a
+        .reject { |(src, *)| plugin_registry.map(&:mod).include?(src) }.to_h
+
+      plugin_listeners = Notifications.listeners.to_a
+        .select { |(src, *)| plugins.map(&:mod).include?(src) }.to_h
+
+      listeners.update(global_listeners).update(plugin_listeners)
+    end
+
+    # @api private
+    def listeners
+      notifications.listeners
+    end
+
+    # @api private
+    def load_adapters
+      config.gateways.each { |_, gateway_config| gateway_config.adapter }.uniq.each do |adapter|
+        Gateway.class_from_symbol(adapter)
+      rescue AdapterLoadError
+        # TODO: we probably want to remove this. It's perfectly fine to have an adapter
+        #       defined in another location. Auto-require was done for convenience but
+        #       making it mandatory to have that file seems odd now.
+      end
+    end
+
+    # @api private
+    def loader
+      @loader ||= Loader.new(@auto_register.fetch(:root_directory), **@auto_register)
     end
   end
 end

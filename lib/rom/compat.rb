@@ -1,22 +1,16 @@
 # frozen_string_literal: true
 
-require_relative "compat/setup"
-
 require "rom/support/inflector"
 require "rom/command"
 
-require "rom/setup"
 require "rom/configuration"
+require "rom/compat/auto_registration"
 
 require "rom/components/relation"
 require "rom/components/command"
 require "rom/components/mapper"
 
 module ROM
-  class Setup
-    attr_accessor :inflector
-  end
-
   module Components
     class Relation < Core
       undef :id
@@ -79,25 +73,57 @@ module ROM
     end
   end
 
+  # @api public
   class Configuration
-    def_delegators :@setup, :auto_registration
-
     # @api public
     # @deprecated
     def inflector=(inflector)
-      setup.inflector = inflector
       config.inflector = inflector
+    end
+
+    # Enable auto-registration for a given configuration object
+    #
+    # @param [String, Pathname] directory The root path to components
+    # @param [Hash] options
+    # @option options [Boolean, String] :namespace Toggle root namespace
+    #                                              or provide a custom namespace name
+    #
+    # @return [Setup]
+    #
+    # @deprecated
+    #
+    # @see Configuration#auto_register
+    #
+    # @api public
+    def auto_registration(directory, **options)
+      auto_registration = AutoRegistration.new(directory, inflector: inflector, **options)
+      auto_registration.relations.each { |r| register_relation(r) }
+      auto_registration.commands.each { |r| register_command(r) }
+      auto_registration.mappers.each { |r| register_mapper(r) }
+      self
     end
 
     # @api private
     # @deprecated
     def relation_classes(gateway = nil)
-      classes = setup.components.relations.map(&:constant)
+      classes = components.relations.map(&:constant)
 
       return classes unless gateway
 
       gw_name = gateway.is_a?(Symbol) ? gateway : gateways_map[gateway]
       classes.select { |rel| rel.gateway == gw_name }
+    end
+
+    # @api public
+    # @deprecated
+    def command_classes
+      components.commands.map(&:constant)
+    end
+
+    # @api public
+    # @deprecated
+    def mapper_classes
+      components.mappers.map(&:constant)
     end
 
     # @api public
@@ -109,7 +135,7 @@ module ROM
     # @api public
     # @deprecated
     def gateways
-      @gateways ||= setup.components.gateways.map(&:build).map { |gw| [gw.config.name, gw] }.to_h
+      @gateways ||= components.gateways.map(&:build).map { |gw| [gw.config.name, gw] }.to_h
     end
     alias_method :environment, :gateways
 
