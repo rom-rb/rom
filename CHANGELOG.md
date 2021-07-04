@@ -31,6 +31,7 @@
 - Relation classes no holder hold their schemas as class variables (via #644) (@solnic)
 - Gateways are now lazy-loadable (via #645) (@solnic)
 - Associations are now decoupled from schemas and lazy-loaded (via #646) (@solnic)
+- Plugin API is now internally simplified which resulted in faster runtime. It's also no longer required to register plugin types upfront (via #648) (@solnic)
 
 [Compare v5.2.4...master](https://github.com/rom-rb/rom/compare/v5.2.4...master)
 
