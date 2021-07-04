@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "rom/relation"
 require "rom/memory/types"
 require "rom/memory/schema"
 

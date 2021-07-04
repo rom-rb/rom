@@ -46,9 +46,9 @@ RSpec.describe "ROM::PluginRegistry" do
   end
 
   around do |example|
-    orig_plugins = ROM.plugin_registry
+    keys = ROM.plugin_registry.keys
     example.run
-    ROM.instance_variable_set("@plugin_registry", orig_plugins)
+    (ROM.plugin_registry.keys - keys).each { |key| ROM.plugin_registry._container.delete(key) }
   end
 
   it "makes configuration plugins available" do

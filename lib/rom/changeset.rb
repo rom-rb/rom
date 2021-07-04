@@ -183,5 +183,3 @@ require "rom/changeset/update"
 require "rom/changeset/delete"
 
 require "rom/plugins"
-
-ROM::Plugins.register(:changeset, adapter: false)

@@ -6,6 +6,7 @@ require "rom-repository"
 RSpec.describe ROM::Repository, ".command" do
   include_context "repository / database"
   include_context "relations"
+  include_context "repository / plugins"
 
   it "allows configuring a create command" do
     repo = Class.new(ROM::Repository[:users]) do
@@ -128,8 +129,6 @@ RSpec.describe ROM::Repository, ".command" do
   end
 
   describe "using plugins" do
-    include_context "repository / plugins"
-
     before do
       conn.alter_table :users do
         add_column :created_at, :timestamp, null: false

@@ -2,10 +2,10 @@
 
 require "dry/effects"
 
-require "rom/plugin_registry"
-require "rom/global/plugin_dsl"
 require "rom/configuration"
-require "rom/configuration_dsl/relation"
+require "rom/plugins/container"
+require "rom/plugins/dsl"
+require "rom/container"
 
 module ROM
   # Globally accessible public interface exposed via ROM module
@@ -21,7 +21,7 @@ module ROM
       super
 
       rom.instance_variable_set("@adapters", {})
-      rom.instance_variable_set("@plugin_registry", PluginRegistry.new)
+      rom.instance_variable_set("@plugin_registry", Plugins::Container.new)
     end
 
     # An internal adapter identifier => adapter module map used by setup
@@ -31,9 +31,9 @@ module ROM
     # @api private
     attr_reader :adapters
 
-    # An internal identifier => plugin map used by the setup
+    # An internal plugin registry
     #
-    # @return [Hash]
+    # @return [Plugins]
     #
     # @api private
     attr_reader :plugin_registry
@@ -62,7 +62,7 @@ module ROM
     #
     # @api public
     def plugins(*args, &block)
-      PluginDSL.new(plugin_registry, *args, &block)
+      Plugins::DSL.new(plugin_registry, *args, &block)
     end
 
     # Register adapter namespace under a specified identifier
