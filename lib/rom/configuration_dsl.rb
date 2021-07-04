@@ -96,9 +96,9 @@ module ROM
       plugin = plugin_registry[Inflector.singularize(type)].adapter(adapter).fetch(name)
 
       if block
-        register_plugin(plugin.configure(&block))
+        plugins << plugin.configure(&block)
       else
-        register_plugin(plugin)
+        plugins << plugin
       end
     end
 

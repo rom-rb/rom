@@ -2,12 +2,9 @@
 
 require "rom/compat"
 
-RSpec.describe ROM::Setup, "#auto_registration" do
-  subject(:setup) do
-    ROM::Setup.new(
-      components: ROM::Components::Registry.new(owner: self),
-      config: ROM::Configurable::Config.new
-    )
+RSpec.describe ROM::Configuration, "#auto_registration" do
+  subject(:configuration) do
+    ROM::Configuration.new
   end
 
   let!(:loaded_features) { $LOADED_FEATURES.dup }
@@ -23,48 +20,48 @@ RSpec.describe ROM::Setup, "#auto_registration" do
   context "with default component_dirs" do
     context "with namespace turned on" do
       before do
-        setup.auto_registration(SPEC_ROOT.join("compat/fixtures/lib/persistence").to_s)
+        configuration.auto_registration(SPEC_ROOT.join("compat/fixtures/lib/persistence").to_s)
       end
 
       describe "#relations" do
         it "loads files and returns constants" do
-          expect(setup.relation_classes).to eql([Persistence::Relations::Users])
+          expect(configuration.relation_classes).to eql([Persistence::Relations::Users])
         end
       end
 
       describe "#commands" do
         it "loads files and returns constants" do
-          expect(setup.command_classes).to eql([Persistence::Commands::CreateUser])
+          expect(configuration.command_classes).to eql([Persistence::Commands::CreateUser])
         end
       end
 
       describe "#mappers" do
         it "loads files and returns constants" do
-          expect(setup.mapper_classes).to eql([Persistence::Mappers::UserList])
+          expect(configuration.mapper_classes).to eql([Persistence::Mappers::UserList])
         end
       end
     end
 
     context "with namespace turned off" do
       before do
-        setup.auto_registration(SPEC_ROOT.join("compat/fixtures/app"), namespace: false)
+        configuration.auto_registration(SPEC_ROOT.join("compat/fixtures/app"), namespace: false)
       end
 
       describe "#relations" do
         it "loads files and returns constants" do
-          expect(setup.relation_classes).to eql([Users])
+          expect(configuration.relation_classes).to eql([Users])
         end
       end
 
       describe "#commands" do
         it "loads files and returns constants" do
-          expect(setup.command_classes).to eql([CreateUser])
+          expect(configuration.command_classes).to eql([CreateUser])
         end
       end
 
       describe "#mappers" do
         it "loads files and returns constants" do
-          expect(setup.mapper_classes).to eql([UserList])
+          expect(configuration.mapper_classes).to eql([UserList])
         end
       end
     end
@@ -73,7 +70,7 @@ RSpec.describe ROM::Setup, "#auto_registration" do
   context "with custom component_dirs" do
     context "with namespace turned on" do
       before do
-        setup.auto_registration(
+        configuration.auto_registration(
           SPEC_ROOT.join("compat/fixtures/lib/persistence").to_s,
           component_dirs: {
             relations: :my_relations,
@@ -85,26 +82,26 @@ RSpec.describe ROM::Setup, "#auto_registration" do
 
       describe "#relations" do
         it "loads files and returns constants" do
-          expect(setup.relation_classes).to eql([Persistence::MyRelations::Users])
+          expect(configuration.relation_classes).to eql([Persistence::MyRelations::Users])
         end
       end
 
       describe "#commands" do
         it "loads files and returns constants" do
-          expect(setup.command_classes).to eql([Persistence::MyCommands::CreateUser])
+          expect(configuration.command_classes).to eql([Persistence::MyCommands::CreateUser])
         end
       end
 
       describe "#mappers" do
         it "loads files and returns constants" do
-          expect(setup.mapper_classes).to eql([Persistence::MyMappers::UserList])
+          expect(configuration.mapper_classes).to eql([Persistence::MyMappers::UserList])
         end
       end
     end
 
     context "with namespace turned off" do
       before do
-        setup.auto_registration(
+        configuration.auto_registration(
           SPEC_ROOT.join("compat/fixtures/app"),
           component_dirs: {
             relations: :my_relations,
@@ -117,19 +114,19 @@ RSpec.describe ROM::Setup, "#auto_registration" do
 
       describe "#relations" do
         it "loads files and returns constants" do
-          expect(setup.relation_classes).to eql([Users])
+          expect(configuration.relation_classes).to eql([Users])
         end
       end
 
       describe "#commands" do
         it "loads files and returns constants" do
-          expect(setup.command_classes).to eql([CreateUser])
+          expect(configuration.command_classes).to eql([CreateUser])
         end
       end
 
       describe "#mappers" do
         it "loads files and returns constants" do
-          expect(setup.mapper_classes).to eql([UserList])
+          expect(configuration.mapper_classes).to eql([UserList])
         end
       end
     end
@@ -137,7 +134,7 @@ RSpec.describe ROM::Setup, "#auto_registration" do
     describe "custom namespace" do
       context "when namespace has subnamespace" do
         before do
-          setup.auto_registration(
+          configuration.auto_registration(
             SPEC_ROOT.join("compat/fixtures/custom_namespace"),
             component_dirs: {
               relations: :relations,
@@ -150,19 +147,19 @@ RSpec.describe ROM::Setup, "#auto_registration" do
 
         describe "#relations" do
           it "loads files and returns constants" do
-            expect(setup.relation_classes).to eql([My::Namespace::Relations::Customers])
+            expect(configuration.relation_classes).to eql([My::Namespace::Relations::Customers])
           end
         end
 
         describe "#commands" do
           it "loads files and returns constants" do
-            expect(setup.command_classes).to eql([My::Namespace::Commands::CreateCustomer])
+            expect(configuration.command_classes).to eql([My::Namespace::Commands::CreateCustomer])
           end
         end
 
         describe "#mappers" do
           it "loads files and returns constants" do
-            expect(setup.mapper_classes).to eql([My::Namespace::Mappers::CustomerList])
+            expect(configuration.mapper_classes).to eql([My::Namespace::Mappers::CustomerList])
           end
         end
 
@@ -177,14 +174,14 @@ RSpec.describe ROM::Setup, "#auto_registration" do
           end
 
           it "starts with the deepest constant" do
-            expect(setup.relation_classes).to eql([My::Namespace::Relations::Customers])
+            expect(configuration.relation_classes).to eql([My::Namespace::Relations::Customers])
           end
         end
       end
 
       context "when namespace has wrong subnamespace" do
         subject(:registration) do
-          setup.auto_registration(
+          configuration.auto_registration(
             SPEC_ROOT.join("compat/fixtures/wrong"),
             component_dirs: {
               relations: :relations,
@@ -210,7 +207,7 @@ RSpec.describe ROM::Setup, "#auto_registration" do
 
       context "when namespace does not implement subnamespace" do
         before do
-          setup.auto_registration(
+          configuration.auto_registration(
             SPEC_ROOT.join("compat/fixtures/custom"),
             component_dirs: {
               relations: :relations,
@@ -223,19 +220,19 @@ RSpec.describe ROM::Setup, "#auto_registration" do
 
         describe "#relations" do
           it "loads files and returns constants" do
-            expect(setup.relation_classes).to eql([My::Namespace::Users])
+            expect(configuration.relation_classes).to eql([My::Namespace::Users])
           end
         end
 
         describe "#commands" do
           it "loads files and returns constants" do
-            expect(setup.command_classes).to eql([My::Namespace::CreateUser])
+            expect(configuration.command_classes).to eql([My::Namespace::CreateUser])
           end
         end
 
         describe "#mappers" do
           it "loads files and returns constants" do
-            expect(setup.mapper_classes).to eql([My::Namespace::UserList])
+            expect(configuration.mapper_classes).to eql([My::Namespace::UserList])
           end
         end
       end
@@ -248,8 +245,8 @@ RSpec.describe ROM::Setup, "#auto_registration" do
         end
 
         before do
-          setup.inflector = inflector
-          setup.auto_registration(
+          configuration.inflector = inflector
+          configuration.auto_registration(
             SPEC_ROOT.join("compat/fixtures/xml_space"),
             component_dirs: {
               relations: :xml_relations,
@@ -261,19 +258,19 @@ RSpec.describe ROM::Setup, "#auto_registration" do
 
         describe "#relations" do
           it "loads files and returns constants" do
-            expect(setup.relation_classes).to eql([XMLSpace::XMLRelations::Customers])
+            expect(configuration.relation_classes).to eql([XMLSpace::XMLRelations::Customers])
           end
         end
 
         describe "#commands" do
           it "loads files and returns constants" do
-            expect(setup.command_classes).to eql([XMLSpace::XMLCommands::CreateCustomer])
+            expect(configuration.command_classes).to eql([XMLSpace::XMLCommands::CreateCustomer])
           end
         end
 
         describe "#mappers" do
           it "loads files and returns constants" do
-            expect(setup.mapper_classes).to eql([XMLSpace::XMLMappers::CustomerList])
+            expect(configuration.mapper_classes).to eql([XMLSpace::XMLMappers::CustomerList])
           end
         end
       end

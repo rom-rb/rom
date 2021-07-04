@@ -19,6 +19,7 @@ module ROM
       attr_reader :type, :namespace, :configuration, :cache, :opts
 
       MISSING_ELEMENT_ERRORS = {
+        gateways: GatewayMissingError,
         schemas: SchemaMissingError,
         datasets: DatasetMissingError,
         relations: RelationMissingError,
