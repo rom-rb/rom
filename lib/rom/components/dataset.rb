@@ -8,10 +8,13 @@ module ROM
     class Dataset < Core
       id :dataset
 
-      option :constant, type: Types.Instance(Class)
-      alias_method :relation_class, :constant
+      # @!attribute [r] gateway
+      #   @return [Symbol] Gateway identifier
+      option :gateway, inferrable: true, type: Types::Strict::Symbol
 
-      option :block, optional: true, type: Types.Interface(:call)
+      # @!attribute [r] gateway
+      #   @return [Proc] Optional dataset evaluation block
+      option :block, optional: true, type: Types.Interface(:to_proc)
 
       # @api public
       def namespace
@@ -19,13 +22,8 @@ module ROM
       end
 
       # @api public
-      def id
-        options[:id]
-      end
-
-      # @api public
       memoize def build
-        datasets.reduce(canonical_dataset) { |dataset, component|
+        datasets.reduce(_gateway.dataset(id)) { |dataset, component|
           if component.block
             dataset.instance_exec(schema, &component.block)
           else
@@ -37,24 +35,13 @@ module ROM
       private
 
       # @api private
-      memoize def canonical_dataset
-        dataset = gateway.dataset(id)
-
-        if block
-          dataset.instance_exec(schema, &block)
-        else
-          dataset
-        end
+      memoize def datasets
+        provider.components.datasets
       end
 
       # @api private
       def schema
         configuration.schemas[id]
-      end
-
-      # @api private
-      def datasets
-        local_components.datasets(provider: relation_class.superclass)
       end
     end
   end

@@ -48,9 +48,7 @@ module ROM
     include Dry::Core::Memoizable
     extend Dry::Core::ClassAttributes
 
-    defines :adapter, :schema_opts, :schema_class,
-            :schema_attr_class, :schema_inferrer, :schema_dsl,
-            :wrap_class
+    defines :adapter, :schema_class, :schema_attr_class, :schema_inferrer, :schema_dsl, :wrap_class
 
     # @!method self.gateway
     #  Manage the gateway
@@ -118,7 +116,6 @@ module ROM
     auto_struct false
     struct_namespace ROM::Struct
 
-    schema_opts EMPTY_HASH
     schema_dsl Schema::DSL
     schema_attr_class Attribute
     schema_class Schema
@@ -136,9 +133,9 @@ module ROM
     option :inflector, reader: true, default: -> { Inflector }
 
     # @!attribute [r] name
-    #   @return [Object] The relation name
+    #   @return [Name] The relation name
     #   @api public
-    option :name, default: -> { self.class.default_name(inflector) }
+    option :name, default: -> { self.class.infer_name(self) }
 
     # @!attribute [r] associations
     #   @return [Runtime::Resolver] Relation associations

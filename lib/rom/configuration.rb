@@ -1,18 +1,32 @@
 # frozen_string_literal: true
 
+require "dry/core/equalizer"
+
 require "rom/support/inflector"
 require "rom/support/notifications"
 require "rom/support/configurable"
 
 require "rom/constants"
+require "rom/gateway"
 require "rom/loader"
 require "rom/components"
-require "rom/configuration_dsl"
+require "rom/components/dsl"
 
 module ROM
   # @api public
   class Configuration
+    include Dry::Equalizer(:config)
+
     extend Notifications
+
+    DEFAULT_CLASS_NAMESPACE = "ROM"
+
+    DEFAULT_CLASS_NAME_INFERRER = -> (name, type:, inflector:, class_namespace: nil, **opts) {
+      [class_namespace,
+       inflector.pluralize(inflector.camelize(type)),
+       inflector.camelize(name)
+      ].compact.join("::")
+    }.freeze
 
     register_event("configuration.relations.class.ready")
     register_event("configuration.relations.object.registered")
@@ -22,7 +36,7 @@ module ROM
     register_event("configuration.relations.dataset.allocated")
     register_event("configuration.commands.class.before_build")
 
-    include ConfigurationDSL
+    include Components::DSL
     include Configurable
 
     # @return [Notifications] Notification bus instance
@@ -51,9 +65,14 @@ module ROM
       configure(*args, &block)
     end
 
-    # @api public
+    # @api private
     def inflector
       config.inflector
+    end
+
+    # @api private
+    def class_name_inferrer
+      config.components.class_name_inferrer
     end
 
     # This is called internally when you pass a block to ROM.container
@@ -61,10 +80,15 @@ module ROM
     # @api private
     def configure(*args)
       config.gateways = Config.new
+      config.components = Config.new
 
       infer_config(*args) unless args.empty?
 
+      # defaults
       config.inflector = Inflector
+
+      config.components.class_name_inferrer = DEFAULT_CLASS_NAME_INFERRER
+      config.components.class_namespace = DEFAULT_CLASS_NAMESPACE
 
       # Load adapters explicitly here to ensure their plugins are present for later use
       load_adapters
@@ -98,12 +122,11 @@ module ROM
     # Register relation class(es) explicitly
     #
     # @param [Array<Relation>] *klasses One or more relation classes
-    # @param [Hash] **opts Default options for relation(s) that are being registered
     #
     # @api public
-    def register_relation(*klasses, **opts)
+    def register_relation(*klasses)
       klasses.each do |klass|
-        components.add(:relations, constant: klass, **opts)
+        components.add(:relations, constant: klass, provider: self)
       end
 
       components.relations
@@ -116,7 +139,7 @@ module ROM
     # @api public
     def register_mapper(*klasses)
       klasses.each do |klass|
-        components.add(:mappers, constant: klass)
+        components.add(:mappers, constant: klass, provider: self)
       end
 
       components[:mappers]
@@ -129,7 +152,7 @@ module ROM
     # @api public
     def register_command(*klasses)
       klasses.each do |klass|
-        components.add(:commands, constant: klass)
+        components.add(:commands, constant: klass, provider: self)
       end
 
       components.commands
@@ -161,13 +184,18 @@ module ROM
       when Array then plugin.each { |p| use(p) }
       when Hash then plugin.to_a.each { |p| use(*p) }
       else
-        ROM.plugin_registry[:configuration].fetch(plugin).apply_to(self, options)
+        plugin_registry[:configuration].fetch(plugin).apply_to(self, options)
       end
 
       self
     end
 
     private
+
+    # @api private
+    def plugin_registry
+      ROM.plugin_registry
+    end
 
     # This register gateway components based on the configuration
     #

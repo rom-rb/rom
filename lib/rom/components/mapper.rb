@@ -8,33 +8,23 @@ module ROM
     class Mapper < Core
       id :mapper
 
+      # @!attribute [r] relation_id
+      #   @return [Symbol]
+      option :relation_id, type: Types::Strict::Symbol, inferrable: true
+
       # @!attribute [r] base_relation
       #   @return [Symbol] The base relation identifier
       #   @api public
       option :base_relation, type: Types.Instance(Symbol), optional: true, reader: false
 
+      # @!attribute [r] constant
+      #   @return [Class] Component's target class
+      option :constant, optional: true, type: Types.Interface(:new)
+
       # @!attribute [r] object
       #   @return [Class] Pre-initialized object that should be used instead of the constant
       #   @api public
       option :object, optional: true
-
-      # Relation registry id
-      #
-      # @return [Symbol]
-      #
-      # @api public
-      def relation_id
-        options[:base_relation] || constant.base_relation
-      end
-
-      # Registry id
-      #
-      # @return [Symbol]
-      #
-      # @api public
-      def id
-        options[:id] || constant.id
-      end
 
       # Registry namespace
       #

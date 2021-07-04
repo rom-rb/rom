@@ -13,10 +13,10 @@ RSpec.describe ROM::Relation, ".schema" do
       end
     end
 
-    relation_name = ROM::Relation::Name[:test_users]
+    relation_name = ROM::Relation::Name[:users]
 
     schema = ROM::Memory::Schema.define(
-      ROM::Relation::Name.new(:test_users),
+      ROM::Relation::Name.new(:users),
       attributes: [
         {type: ROM::Memory::Types::Integer.meta(primary_key: true, source: relation_name),
          options: {name: :id}},
@@ -256,8 +256,8 @@ RSpec.describe ROM::Relation, ".schema" do
       end
     end
 
-    expect(Test::Users.relation_name.dataset).to be(:users)
-    expect(Test::Users.relation_name.relation).to be(:users)
+    expect(Test::Users.new([]).name.dataset).to be(:users)
+    expect(Test::Users.new([]).name.relation).to be(:users)
   end
 
   it "sets dataset and respects custom register_as" do
@@ -268,8 +268,8 @@ RSpec.describe ROM::Relation, ".schema" do
       end
     end
 
-    expect(Test::Users.relation_name.dataset).to be(:users)
-    expect(Test::Users.relation_name.relation).to be(:test_users)
+    expect(Test::Users.new([]).name.dataset).to be(:users)
+    expect(Test::Users.new([]).name.relation).to be(:test_users)
   end
 
   it "raises error when schema_class is missing" do
@@ -315,7 +315,7 @@ RSpec.describe ROM::Relation, ".schema" do
 
       expect(schema[:admin]).to eql(
         ROM::Attribute.new(
-          ROM::Types::Bool.meta(source: ROM::Relation::Name[:test_users]),
+          ROM::Types::Bool.meta(source: ROM::Relation::Name[:users]),
           name: :admin
         )
       )
@@ -351,7 +351,7 @@ RSpec.describe ROM::Relation, ".schema" do
       expect(schema[:name].type)
         .to eql(
           to_s_on_read.optional.meta(
-            source: ROM::Relation::Name[:rom_memory_relation],
+            source: ROM::Relation::Name[:relation],
             read: to_s.optional
           )
         )

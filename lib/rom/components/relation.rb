@@ -8,24 +8,13 @@ module ROM
     class Relation < Core
       id :relation
 
-      # @!attribute [r] name
-      #   @return [Symbol] Relation name
-      option :name, type: Types.Instance(ROM::Relation::Name), default: -> { default_name }
+      # @!attribute [r] constant
+      #   @return [Class] Component's target class
+      option :constant, type: Types.Interface(:new)
 
-      # Registry id
-      #
-      # @return [Symbol]
-      #
-      # @api public
-      def id
-        options[:id] || name.relation
-      end
-      alias_method :relation_id, :id
-
-      # @api private
-      def default_name
-        constant.default_name
-      end
+      # @!attribute [r] gateway
+      #   @return [Symbol] Gateway identifier
+      option :gateway, inferrable: true, type: Types::Strict::Symbol
 
       # Registry namespace
       #
@@ -63,6 +52,11 @@ module ROM
         relation
       end
 
+      # @api private
+      memoize def name
+        constant.infer_name(self)
+      end
+
       private
 
       # @api private
@@ -72,16 +66,21 @@ module ROM
 
       # @api private
       def relation_options
-        {__registry__: relations,
-         name: name,
+        {name: name,
          schema: schema,
          inflector: inflector,
          datasets: configuration.datasets,
          schemas: configuration.schemas,
-         associations: configuration.associations.new(id, items: schema.associations),
+         associations: associations,
          mappers: configuration.mappers.new(id, adapter: adapter),
          commands: configuration.commands.new(id, adapter: adapter),
-         **plugin_options}
+         __registry__: relations, # TODO: rename
+         **plugin_options} # TODO: rename
+      end
+
+      # @api private
+      def associations
+        configuration.associations.new(id, provider: constant, items: schema.associations)
       end
     end
   end

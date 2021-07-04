@@ -14,13 +14,19 @@ RSpec.describe "Commands" do
     end.new(users_dataset)
   end
 
-  describe ".build_class" do
+  describe "custom command component" do
     it "creates a command class constant" do
-      klass = ROM::ConfigurationDSL::Command.build_class(:create, :users, adapter: :memory) {
-        def super?
-          true
+      config = ROM::Configuration.new do |config|
+        config.commands(:users, adapter: :memory) do
+          define(:create) do
+            def super?
+              true
+            end
+          end
         end
-      }
+      end
+
+      klass = config.components.commands(id: :create).first.constant
 
       expect(klass.name).to eql("ROM::Memory::Commands::Create[Users]")
       expect(klass.register_as).to eql(:create)

@@ -80,11 +80,16 @@ module ROM
         opts[:items].each do |id, object|
           # TODO: unify this
           if object
-            configuration.components.add(type, id: id, namespace: namespace, object: object)
+            configuration.components.add(type, id: id, provider: provider, namespace: namespace, object: object)
           else
-            configuration.components.add(type, namespace: namespace, object: id)
+            configuration.components.add(type, provider: provider, namespace: namespace, object: id)
           end
         end
+      end
+
+      # @api private
+      def provider
+        opts[:provider] || configuration
       end
 
       # @api private

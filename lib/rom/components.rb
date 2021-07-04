@@ -26,14 +26,15 @@ module ROM
       schemas: Schema
     }.freeze
 
+    # @api private
+    def inherited(klass)
+      super
+      klass.components.update(components)
+    end
+
     # @api public
     def components
-      @components ||=
-        begin
-          registry = Registry.new(owner: self)
-          registry.update(superclass.components) if superclass.respond_to?(:components)
-          registry
-        end
+      @components ||= registry = Registry.new(owner: self)
     end
 
     class Registry
@@ -54,7 +55,7 @@ module ROM
       DUPLICATE_ERRORS = {
         gateways: GatewayAlreadyDefinedError,
         datasets: DatasetAlreadyDefinedError,
-        schemas: RelationAlreadyDefinedError,
+        schemas: SchemaAlreadyDefinedError,
         relations: RelationAlreadyDefinedError,
         associations: AssociationAlreadyDefinedError,
         commands: CommandAlreadyDefinedError,
@@ -82,17 +83,27 @@ module ROM
       end
 
       # @api private
-      def keys(type)
-        self[type].map(&:key)
+      def add(type, item: nil, **options)
+        component = item || build(type, **options)
+
+        if (other = store[type].detect { |c| c.key == component.key })
+          raise(
+            DUPLICATE_ERRORS[type],
+            "#{owner}: +#{component.key}+ is already defined by #{other.provider}"
+          )
+        end
+
+        store[type] << component
+
+        component
       end
 
       # @api private
-      def update(other)
-        other.each do |type, component|
-          next if keys(type).include?(component.key)
-          add(type, item: component.with(owner: owner, provider: component.owner))
-        end
-        self
+      def replace(type, item: nil, **options)
+        component = item || build(type, **options)
+        delete(type, item) if keys(type).include?(component.key)
+        store[type] << component
+        component
       end
 
       # @api private
@@ -102,16 +113,22 @@ module ROM
       end
 
       # @api private
-      def add(type, item: nil, **options)
-        component = item || handlers.fetch(type).new(**options, owner: owner)
-
-        if keys(type).include?(component.key)
-          raise DUPLICATE_ERRORS[type], "+#{component.id}+ is already defined"
+      def update(other)
+        other.each do |type, component|
+          next if keys(type).include?(component.key)
+          add(type, item: component.with(owner: owner))
         end
+        self
+      end
 
-        store[type] << component
+      # @api private
+      def build(type, **options)
+        handlers.fetch(type).new(**options, owner: owner)
+      end
 
-        component
+      # @api private
+      def keys(type)
+        self[type].map(&:key)
       end
 
       CORE_TYPES.each do |type|

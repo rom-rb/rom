@@ -47,11 +47,16 @@ RSpec.describe "Commands" do
     end
 
     it "applies to generated classes" do
-      klass = ROM::ConfigurationDSL::Command.build_class(
-        :create_super, :users, type: :create, adapter: :memory
-      )
-      configuration.register_command(klass)
+      configuration.commands(:users, adapter: :memory) do
+        define(:create_super, type: :create) do
+          def super?
+            true
+          end
+        end
+      end
+
       command = container.commands[:users][:create_super]
+
       expect(command).to be_super_command
     end
   end

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "rom/relation/name"
+
 require_relative "core"
 
 module ROM
@@ -9,49 +10,29 @@ module ROM
     class Schema < Core
       id :schema
 
-      # @!attribute [r] id
-      #   @return [Symbol] Registry local id
-      option :id, type: Types::Strict::Symbol
+      # @!attribute [r] as
+      #   @return [Symbol] Alias that should be used as the relation name
+      option :as, optional: true, type: Types::Strict::Symbol
 
       # @!attribute [r] view
       #   @return [Symbol]
-      option :view, type: Types::Strict::Bool.default(false)
+      option :view, type: Types::Strict::Bool, default: -> { false }
 
-      # @!attribute [r] name
-      #   @return [Symbol] Relation name
-      option :name, type: Types.Instance(ROM::Relation::Name)
-
-      # @!attribute [r] gateway_name
+      # @!attribute [r] gateway
       #   @return [Symbol] Gateway identifier
-      option :gateway_name, optional: true, type: Types::Strict::Symbol
+      option :gateway, inferrable: true, type: Types::Strict::Symbol
 
       # @!attribute [r] adapter
       #   @return [Symbol] Adapter identifier
-      option :adapter, optional: true, type: Types::Strict::Symbol
+      option :adapter, inferrable: true, type: Types::Strict::Symbol
 
       # @!attribute [r] infer
-      #   @return [Boolean] A proc for evaluation via schema DSL
-      option :infer, optional: true, type: Types::Strict::Bool.default(false)
+      #   @return [Boolean] Whether the inferrer should be enabled or not
+      option :infer, type: Types::Strict::Bool, default: -> { false }
 
       # @!attribute [r] block
       #   @return [Class] A proc for evaluation via schema DSL
       option :block, type: Types.Interface(:call)
-
-      # @!attribute [r] dsl_class
-      #   @return [Class] The DSL class
-      option :dsl_class, optional: true
-
-      # @!attribute [r] attr_class
-      #   @return [Class] Schema's DSL attribute class
-      option :attr_class, optional: true
-
-      # @!attribute [r] relation_class
-      #   @return [Class]
-      option :relation_class, type: Types.Instance(Class)
-
-      # @!attribute [r] inferrer
-      #   @return [Inferrer] Schema's inferrer
-      option :inferrer, optional: true, reader: false
 
       # @api public
       def namespace
@@ -60,7 +41,7 @@ module ROM
 
       # @api private
       def canonical_schema
-        id = components.schemas(relation_class: relation_class).first.id
+        id = components.schemas(provider: provider).first.id
         configuration.schemas[id]
       end
 
@@ -71,19 +52,19 @@ module ROM
         else
           schema = dsl.()
 
-          schema.finalize_attributes!(gateway: gateway, relations: relations)
+          schema.finalize_attributes!(gateway: _gateway, relations: relations)
           schema.finalize!
         end
       end
 
       # @api private
-      def gateway
-        gateways[gateway_name] if gateways.key?(gateway_name)
+      memoize def name
+        ROM::Relation::Name[as || id, id]
       end
 
       # @api private
       def dsl(**opts)
-        dsl_class.new(**dsl_options, **opts)
+        provider.schema_dsl.new(**dsl_options, **opts)
       end
 
       # @api private
@@ -91,23 +72,28 @@ module ROM
         view.equal?(true)
       end
 
+      # @api private
+      def _gateway
+        super if gateway?
+      end
+
       private
 
       # @api private
       def dsl_options
         {relation: name,
-         adapter: adapter,
          definition: block,
-         schema_class: constant,
-         attr_class: attr_class,
          plugins: plugins,
          inflector: inflector,
+         adapter: provider.adapter,
+         schema_class: provider.schema_class,
+         attr_class: provider.schema_attr_class,
          inferrer: inferrer}
       end
 
       # @api private
       def inferrer
-        options[:inferrer].with(enabled: infer)
+        provider.schema_inferrer.with(enabled: infer)
       end
     end
   end

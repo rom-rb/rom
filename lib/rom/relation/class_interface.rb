@@ -22,15 +22,6 @@ module ROM
       extend Notifications::Listener
       include Components
 
-      INVALID_RELATIONS_NAMES = %i[
-        relations schema
-      ].freeze
-
-      # @api private
-      def inherited(klass)
-        super
-      end
-
       # Return adapter-specific relation subclass
       #
       # @example
@@ -57,12 +48,8 @@ module ROM
       #   end
       #
       # @api public
-      def dataset(id = default_dataset_name, &block)
-        if (existing = components.datasets(id: id).first)
-          components.delete(:datasets, existing)
-        end
-
-        components.add(:datasets, id: id, constant: self, provider: self, block: block)
+      def dataset(id = nil, **options, &block)
+        components.replace(:datasets, id: id, provider: self, block: block, **options)
       end
 
       # Specify canonical schema for a relation
@@ -88,46 +75,26 @@ module ROM
       # @param [Boolean, Symbol] view Whether this is a view schema
       #
       # @api public
-      def schema(dataset = nil, as: nil, infer: false, view: false, &block)
+      INVALID_IDS = %i[relations schema].freeze
+
+      def schema(id = nil, view: false, **options, &block)
         if view
           components.add(
-            :schemas,
-            id: view, view: true, name: Name[view], relation_class: self, block: block
+            :schemas, id: view, view: true, provider: self, name: Name[view], **options, block: block
           )
         else
+          component = components.replace(
+            :schemas, id: id, provider: self, **options, block: block
+          )
+
           raise MissingSchemaClassError, self unless schema_class
 
-          ds_name = dataset || schema_opts.fetch(:dataset, default_name.dataset)
-          relation = as || schema_opts.fetch(:relation, ds_name)
+          # TODO: this can go away by simply skipping readers in case of clashes
+          raise InvalidRelationName, id if INVALID_IDS.include?(component.id)
 
-          raise InvalidRelationName, relation if invalid_relation_name?(relation)
-
-          if components.datasets(id: ds_name).empty?
-            dataset(ds_name)
+          if components.datasets(id: component.name.dataset).empty?
+            dataset(component.name.dataset, gateway: component.gateway)
           end
-
-          name = Name[relation, ds_name]
-
-          if (existing = components.schemas(id: name.dataset).first)
-            components.delete(:schemas, existing)
-          end
-
-          components.add(
-            :schemas,
-            id: name.dataset,
-            provider: self,
-            name: name,
-            infer: infer,
-            view: view,
-            constant: schema_class,
-            relation_class: self,
-            dsl_class: schema_dsl,
-            attr_class: schema_attr_class,
-            inferrer: schema_inferrer,
-            adapter: adapter,
-            gateway_name: gateway,
-            block: block
-          )
         end
       end
 
@@ -253,50 +220,56 @@ module ROM
         Curried
       end
 
-      # TODO: move to rom/compat
       # @api private
-      def view_methods
-        ancestor_methods = ancestors.reject { |klass| klass == self }
-          .map(&:instance_methods).flatten(1)
-
-        instance_methods - ancestor_methods + auto_curried_methods.to_a
+      def default_name
+        Name[id_from_class]
       end
 
-      # TODO: this could be deprecated / moved to rom/compat
-      # @return [Name] Qualified relation name
-      def relation_name
-        default_name
+      # @api private
+      def infer_option(option, component:)
+        meth = :"infer_#{option}"
+        send(meth, component) if respond_to?(meth)
       end
 
-      # Return default relation name used in schemas
-      #
-      # @return [Name]
-      #
       # @api private
-      def default_name(inflector = Inflector)
-        # TODO: inherited schemas should be replaced
+      def infer_name(component)
         if (schema = components.schemas(view: false, provider: self).last)
           schema.name
         else
-          Name[inflector.underscore(name).tr("/", "_").to_sym]
+          Name[id_from_class]
         end
       end
 
       # @api private
-      def default_dataset_name(inflector = Inflector)
-        schema_opts[:dataset] || default_name(inflector).dataset
+      def infer_id(component)
+        case component.type
+        when :relation
+          components.schemas(view: false, provider: self).last&.name.relation
+        when :schema
+          if component.option?(:name)
+            component.name.relation
+          else
+            id_from_class
+            Inflector.underscore((name || superclass.name).split("::").last).to_sym
+          end
+        else
+          id_from_class
+        end
       end
 
       # @api private
-      def name
-        super || superclass.name
+      def infer_adapter(component)
+        adapter or raise(MissingAdapterIdentifierError, self)
       end
 
-      private
+      # @api private
+      def infer_gateway(component)
+        gateway
+      end
 
       # @api private
-      def invalid_relation_name?(relation)
-        INVALID_RELATIONS_NAMES.include?(relation.to_sym)
+      def id_from_class
+        Inflector.underscore((name || superclass.name).split("::").last).to_sym
       end
     end
   end
