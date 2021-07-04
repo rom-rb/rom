@@ -1,4 +1,4 @@
-# frozen_string_literal: true
+# frozen_string_literal: tru
 
 require "spec_helper"
 
@@ -7,13 +7,15 @@ RSpec.describe "ROM::PluginRegistry" do
 
   before do
     Test::ConfigurationPlugin = Module.new
-    Test::CommandPlugin     = Module.new
-    Test::MapperPlugin      = Module.new
-    Test::RelationPlugin    = Module.new do
+    Test::CommandPlugin = Module.new
+    Test::MapperPlugin = Module.new
+
+    Test::RelationPlugin = Module.new do
       def plugged_in
         "a relation"
       end
     end
+
     Test::SchemaPlugin = Module.new do
       def self.apply(schema, **)
         schema.attributes.concat(
@@ -22,7 +24,9 @@ RSpec.describe "ROM::PluginRegistry" do
         )
       end
     end
+
     Test::SchemaDSLExt = Module.new
+
     Test::SchemaDSLExt::DSL = Module.new do
       def build_type(*)
         super.meta(plugged_in: true)
@@ -30,12 +34,12 @@ RSpec.describe "ROM::PluginRegistry" do
     end
 
     ROM.plugins do
-      register :registration,   Test::ConfigurationPlugin, type: :configuration
-      register :publisher,      Test::CommandPlugin,       type: :command
-      register :pager,          Test::RelationPlugin,      type: :relation
-      register :translater,     Test::MapperPlugin,        type: :mapper
-      register :datestamps,     Test::SchemaPlugin,        type: :schema
-      register :schema_dsl_ext, Test::SchemaDSLExt,        type: :schema
+      register :registration, Test::ConfigurationPlugin, type: :configuration
+      register :publisher, Test::CommandPlugin, type: :command
+      register :pager, Test::RelationPlugin, type: :relation
+      register :translater, Test::MapperPlugin, type: :mapper
+      register :datestamps, Test::SchemaPlugin, type: :schema
+      register :schema_dsl_ext, Test::SchemaDSLExt, type: :schema
     end
 
     configuration
@@ -170,7 +174,7 @@ RSpec.describe "ROM::PluginRegistry" do
   it "applies plugins to schemas" do
     rel_name = ROM::Relation::Name[:users]
 
-    users = ROM::Schema::DSL.new(rel_name) {
+    users = ROM::Schema::DSL.new(relation: rel_name, adapter: :memory) {
       attribute :id, ROM::Types::Integer
       attribute :name, ROM::Types::String
 
@@ -183,12 +187,12 @@ RSpec.describe "ROM::PluginRegistry" do
   it "applies extensions to schema DSL" do
     rel_name = ROM::Relation::Name[:users]
 
-    users = ROM::Schema::DSL.new(rel_name) {
+    users = ROM::Schema::DSL.new(relation: rel_name, adapter: :memory) {
       use :schema_dsl_ext
 
       attribute :id, ROM::Types::Integer
     }.call
 
-    expect(users[:id].meta[:plugged_in]).to be true
+    expect(users[:id].meta[:plugged_in]).to be(true)
   end
 end

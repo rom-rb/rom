@@ -69,11 +69,7 @@ module ROM
         if view?
           canonical_schema.instance_eval(&block)
         else
-          plugins = self.plugins
-
-          schema = dsl.call(inflector: inflector) do
-            plugins.each { |plugin| app_plugin(plugin) }
-          end
+          schema = dsl.()
 
           schema.finalize_attributes!(gateway: gateway, relations: relations)
           schema.finalize!
@@ -87,7 +83,7 @@ module ROM
 
       # @api private
       def dsl(**opts)
-        dsl_class.new(name, **dsl_options, **opts, &block)
+        dsl_class.new(**dsl_options, **opts)
       end
 
       # @api private
@@ -99,7 +95,14 @@ module ROM
 
       # @api private
       def dsl_options
-        {schema_class: constant, attr_class: attr_class, inferrer: inferrer}
+        {relation: name,
+         adapter: adapter,
+         definition: block,
+         schema_class: constant,
+         attr_class: attr_class,
+         plugins: plugins,
+         inflector: inflector,
+         inferrer: inferrer}
       end
 
       # @api private

@@ -4,7 +4,7 @@ RSpec.describe ROM::Plugins::Schema::Timestamps do
   let(:relation) { ROM::Relation::Name[:users] }
 
   let(:schema_dsl) do
-    ROM::Schema::DSL.new(relation)
+    ROM::Schema::DSL.new(relation: relation, adapter: :memory)
   end
 
   subject(:schema) { schema_dsl.call }

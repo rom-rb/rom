@@ -1,30 +1,36 @@
 # frozen_string_literal: true
 
-require "dry/core/equalizer"
+require "rom/support/inflector"
 
+require "rom/initializer"
 require "rom/types"
 require "rom/attribute"
 require "rom/schema/associations_dsl"
-require "rom/support/inflector"
 
 module ROM
   class Schema
     # Schema DSL exposed as `schema { .. }` in relation classes
     #
     # @api public
-    class DSL < BasicObject
-      KERNEL_METHODS = %i[extend method].freeze
-      KERNEL_METHODS.each { |m| define_method(m, ::Kernel.instance_method(m)) }
-
+    class DSL
       extend Initializer
 
       # @!attribute [r] relation
       #   @return [Relation::Name] The name of the schema's relation
-      param :relation
+      option :relation
+
+      # @!attribute [r] adapter
+      #   @return [Symbol] The adapter identifier used in gateways
+      option :adapter
 
       # @!attribute [r] inferrer
       #   @return [Inferrer] Optional attribute inferrer
       option :inferrer, default: -> { DEFAULT_INFERRER }
+
+      # @!attribute [r] inflector
+      #   @return [Dry::Inflector] String inflector
+      #   @api private
+      option :inflector, default: -> { Inflector }
 
       # @!attribute [r] schema_class
       #   @return [Class] Schema class that should be instantiated
@@ -34,44 +40,29 @@ module ROM
       #   @return [Class] Attribute class that should be used
       option :attr_class, default: -> { Attribute }
 
-      # @!attribute [r] adapter
-      #   @return [Symbol] The adapter identifier used in gateways
-      option :adapter, default: -> { :default }
+      # @!attribute [r] plugins
+      #   @return [Class] Plugins enabled by default through configuration
+      option :plugins, default: -> { EMPTY_HASH.dup }
 
       # @!attribute [r] attributes
       #   @return [Hash<Symbol, Hash>] A hash with attribute names as
       #   keys and attribute representations as values.
       #
       #   @see [Schema.build_attribute_info]
-      attr_reader :attributes
-
-      # @!attribute [r] plugins
-      #   @return [Hash] A hash with schema plugins enabled in a schema
-      attr_reader :plugins
+      option :attributes, default: -> { EMPTY_HASH.dup }
 
       # @!attribute [r] definition
-      #   @return [Proc] Definition block passed to DSL
-      attr_reader :definition
-
-      # @!attribute [r] associations_dsl
-      #   @return [AssociationDSL] Associations defined within a block
-      attr_reader :associations_dsl
-
-      # @!attribute [r] inflector
-      #   @return [Dry::Inflector] String inflector
-      #   @api private
-      attr_reader :inflector
+      #   @return [Class] An optional block that will be evaluated as part of this DSL
+      option :definition, type: Types.Instance(Proc), default: -> { Proc.new {} }
 
       # @api private
-      def initialize(*, &block)
-        super
-
-        @attributes = {}
-        @plugins = {}
-
-        @definition = block
+      def self.new(**options, &block)
+        if block
+          super(definition: block, **options)
+        else
+          super
+        end
       end
-      ruby2_keywords(:initialize) if respond_to?(:ruby2_keywords, true)
 
       # Defines a relation attribute with its type and options.
       #
@@ -84,11 +75,24 @@ module ROM
       # @api public
       def attribute(name, type_or_options, options = EMPTY_HASH)
         if attributes.key?(name)
-          ::Kernel.raise ::ROM::AttributeAlreadyDefinedError,
-                         "Attribute #{name.inspect} already defined"
+          raise(
+            ::ROM::AttributeAlreadyDefinedError,
+            "Attribute #{name.inspect} already defined"
+          )
         end
 
         attributes[name] = build_attribute_info(name, type_or_options, options)
+      end
+
+      # Specify which key(s) should be the primary key
+      #
+      # @api public
+      def primary_key(*names)
+        names.each do |name|
+          attributes[name][:type] =
+            attributes[name][:type].meta(primary_key: true)
+        end
+        self
       end
 
       # Define associations for a relation
@@ -122,6 +126,69 @@ module ROM
       # @api public
       def associations(&block)
         @associations_dsl = AssociationsDSL.new(relation, inflector, &block)
+      end
+
+      # Enable a plugin in the schema DSL
+      #
+      # @param [Symbol] plugin_name Plugin name
+      # @param [Hash] options Plugin options
+      #
+      # @api public
+      def use(plugin_name, **options)
+        apply_plugin(::ROM.plugin_registry[:schema].fetch(plugin_name, adapter), **options)
+      end
+
+      # @api private
+      def call
+        plugins.each do |plugin|
+          apply_plugin(plugin)
+        end
+
+        instance_eval(&definition) if definition
+
+        schema_class.define(relation, **opts) do |schema|
+          applied_plugins.each do |(plugin, options)|
+            plugin.apply_to(schema, **options)
+          end
+        end
+      end
+
+      private
+
+      # @api private
+      def apply_plugin(plugin, **options)
+        plugin.extend_dsl(self)
+        applied_plugins << [plugin, plugin.config.to_h.merge(options)]
+      end
+
+      # @api private
+      def plugin_options(name)
+        applied_plugins.detect { |(plugin, options)| options if plugin.name == name }.last
+      end
+
+      # @api private
+      def applied_plugins
+        @applied_plugins ||= []
+      end
+
+      # Return schema opts
+      #
+      # @return [Hash]
+      #
+      # @api private
+      def opts
+        opts = {
+          attributes: attributes.values,
+          inferrer: inferrer,
+          attr_class: attr_class,
+          inflector: inflector
+        }
+
+        if @associations_dsl
+          {**opts, associations: @associations_dsl.call}
+        else
+          opts
+        end
       end
 
       # Builds a representation of the information needed to create an
@@ -158,75 +225,6 @@ module ROM
         end.meta(Attribute::META_OPTIONS.map { |opt|
                    [opt, options[opt]] if options.key?(opt)
                  } .compact.to_h)
-      end
-
-      # Specify which key(s) should be the primary key
-      #
-      # @api public
-      def primary_key(*names)
-        names.each do |name|
-          attributes[name][:type] =
-            attributes[name][:type].meta(primary_key: true)
-        end
-        self
-      end
-
-      # Enables for the schema
-      #
-      # @param [Symbol] plugin_name Plugin name
-      # @param [Hash] options Plugin options
-      #
-      # @api public
-      def use(plugin_name, options = ::ROM::EMPTY_HASH)
-        plugin = ::ROM.plugin_registry[:schema].fetch(plugin_name, adapter)
-        app_plugin(plugin, options)
-      end
-
-      # @api private
-      def app_plugin(plugin, options = ::ROM::EMPTY_HASH)
-        plugin.extend_dsl(self)
-        @plugins[plugin.name] = [plugin, plugin.config.to_hash.merge(options)]
-      end
-
-      # @api private
-      def call(inflector: Inflector, &block)
-        @inflector = inflector
-
-        instance_exec(&block) if block
-        instance_exec(&definition) if definition
-
-        schema_class.define(relation, **opts) do |schema|
-          plugins.values.each do |plugin, options|
-            plugin.apply_to(schema, **options)
-          end
-        end
-      end
-
-      # @api private
-      def plugin_options(plugin)
-        @plugins[plugin][1]
-      end
-
-      private
-
-      # Return schema opts
-      #
-      # @return [Hash]
-      #
-      # @api private
-      def opts
-        opts = {
-          attributes: attributes.values,
-          inferrer: inferrer,
-          attr_class: attr_class,
-          inflector: Inflector
-        }
-
-        if associations_dsl
-          {**opts, associations: associations_dsl.call}
-        else
-          opts
-        end
       end
     end
   end

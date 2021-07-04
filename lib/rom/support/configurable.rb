@@ -51,9 +51,10 @@ module ROM
       end
 
       # @api private
-      def to_hash
+      def to_h
         settings
       end
+      alias_method :to_hash, :to_h
 
       # @api private
       def respond_to_missing?(_name, _include_private = false)
