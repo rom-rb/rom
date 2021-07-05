@@ -22,7 +22,7 @@ module ROM
 
           components.add(
             :relations,
-            id: relation, constant: constant, gateway: gateway, provider: provider
+            id: relation, constant: constant, gateway: gateway, provider: self
           )
         end
 
