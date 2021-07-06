@@ -13,6 +13,8 @@ require "rom/relation/class_interface"
 require "rom/auto_curry"
 require "rom/pipeline"
 
+require "rom/runtime/resolver"
+
 require "rom/relation/loaded"
 require "rom/relation/curried"
 require "rom/relation/commands"
@@ -20,7 +22,6 @@ require "rom/relation/composite"
 require "rom/relation/combined"
 require "rom/relation/wrap"
 require "rom/relation/materializable"
-require "rom/runtime/resolver"
 
 require "rom/types"
 require "rom/schema"
@@ -37,6 +38,8 @@ module ROM
   #
   # @api public
   class Relation
+    extend ROM.Components(:dataset, :schema)
+
     # Default no-op output schema which is called in `Relation#each`
     NOOP_OUTPUT_SCHEMA = -> tuple { tuple }.freeze
 

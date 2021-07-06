@@ -2,8 +2,6 @@
 
 require_relative "core"
 
-require "rom/relation"
-
 module ROM
   module Components
     module DSL
@@ -17,12 +15,14 @@ module ROM
         def call
           constant = build_class do |dsl|
             class_exec(&dsl.block) if dsl.block
-
-            schema(dsl.relation, gateway: dsl.gateway) if components.schemas.empty?
+            if components.schemas.empty?
+              schema(dsl.relation, gateway: dsl.gateway)
+            end
           end
 
           components.add(
-            :relations, id: relation, constant: constant, gateway: gateway, provider: self
+            :relations,
+            id: relation, constant: constant, gateway: gateway, provider: provider
           )
         end
 
@@ -47,7 +47,7 @@ module ROM
 
         # @api private
         def adapter
-          configuration.config.gateways[gateway].adapter
+          config.gateways[gateway].adapter if config.gateways.key?(gateway)
         end
       end
     end

@@ -5,13 +5,12 @@ require "set"
 require "dry/effects"
 
 require "rom/support/inflector"
+require "rom/support/notifications"
 
 require "rom/constants"
-require "rom/components"
 require "rom/relation/name"
 require "rom/relation/view_dsl"
 require "rom/schema"
-require "rom/support/notifications"
 
 module ROM
   class Relation
@@ -20,7 +19,6 @@ module ROM
     # @api public
     module ClassInterface
       extend Notifications::Listener
-      include Components
 
       # Return adapter-specific relation subclass
       #
@@ -35,67 +33,6 @@ module ROM
         ROM.adapters.fetch(adapter).const_get(:Relation)
       rescue KeyError
         raise AdapterNotPresentError.new(adapter, :relation)
-      end
-
-      # Set or get custom dataset block
-      #
-      # This block will be evaluated when a relation is instantiated and registered
-      # in a relation registry.
-      #
-      # @example
-      #   class Users < ROM::Relation[:memory]
-      #     dataset { sort_by(:id) }
-      #   end
-      #
-      # @api public
-      def dataset(id = nil, **options, &block)
-        components.replace(:datasets, id: id, provider: self, block: block, **options)
-      end
-
-      # Specify canonical schema for a relation
-      #
-      # With a schema defined commands will set up a type-safe input handler
-      # automatically
-      #
-      # @example
-      #   class Users < ROM::Relation[:sql]
-      #     schema do
-      #       attribute :id, Types::Serial
-      #       attribute :name, Types::String
-      #     end
-      #   end
-      #
-      #   # access schema from a finalized relation
-      #   users.schema
-      #
-      # @return [Schema]
-      #
-      # @param [Symbol] dataset An optional dataset name
-      # @param [Boolean] infer Whether to do an automatic schema inferring
-      # @param [Boolean, Symbol] view Whether this is a view schema
-      #
-      # @api public
-      INVALID_IDS = %i[relations schema].freeze
-
-      def schema(id = nil, view: false, **options, &block)
-        if view
-          components.add(
-            :schemas, id: view, view: true, provider: self, name: Name[view], **options, block: block
-          )
-        else
-          component = components.replace(
-            :schemas, id: id, provider: self, **options, block: block
-          )
-
-          raise MissingSchemaClassError, self unless schema_class
-
-          # TODO: this can go away by simply skipping readers in case of clashes
-          raise InvalidRelationName, id if INVALID_IDS.include?(component.id)
-
-          if components.datasets(id: component.name.dataset).empty?
-            dataset(component.name.dataset, gateway: component.gateway)
-          end
-        end
       end
 
       # Define a relation view with a specific schema

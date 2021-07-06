@@ -2,6 +2,7 @@
 
 require "dry/core/class_builder"
 
+require "rom/constants"
 require "rom/initializer"
 
 module ROM
@@ -12,13 +13,14 @@ module ROM
         extend Initializer
 
         # @api private
-        option :configuration
+        option :provider
+        alias_method :configuration, :provider
 
         # @api private
         option :gateway, default: -> { :default }
 
         # @api private
-        option :block
+        option :block, optional: true
 
         # @api private
         def initialize(**options, &block)
@@ -40,22 +42,22 @@ module ROM
 
         # @api private
         def components
-          configuration.components
+          provider.components
         end
 
         # @api private
         def inflector
-          configuration.inflector
+          provider.inflector
         end
 
         # @api private
         def class_name_inferrer
-          configuration.class_name_inferrer
+          provider.class_name_inferrer
         end
 
         # @api private
         def config
-          configuration.config
+          provider.config
         end
       end
     end
