@@ -14,6 +14,8 @@
   - 'New component API that replaces internal implementation of the finalization code
     and makes it possible to extend ROM with arbitrary component types (see #637)
     (@solnic)'
+  - 'Generic Component API which allows you to turn any class or object into a DSL
+    that can define rom components (via #650) (@solnic)'
   changed:
   - "`rom-core`, `rom-changeset` and `rom-repository` have been merged into `rom`
     gem (@solnic)"
@@ -45,6 +47,8 @@
   - 'Associations are now decoupled from schemas and lazy-loaded (via #646) (@solnic)'
   - 'Plugin API is now internally simplified which resulted in faster runtime. It''s
     also no longer required to register plugin types upfront (via #648) (@solnic)'
+  - 'Configuring auto_register stores its config under `config.auto_register` (via
+    #650) (@solnic)'
 - version: 5.2.4
   summary: 
   date: '2020-05-08'
