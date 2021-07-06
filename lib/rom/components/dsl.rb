@@ -97,8 +97,8 @@ module ROM
       # Mapper definition DSL
       #
       # @api public
-      def mappers(&block)
-        dsl(DSL::Mapper, block: block).()
+      def mappers(*_args, **options, &block)
+        dsl(DSL::Mapper, block: block, **options).()
         components.mappers
       end
 
