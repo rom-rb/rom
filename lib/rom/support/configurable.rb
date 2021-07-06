@@ -51,8 +51,16 @@ module ROM
       end
 
       # @api private
-      def to_h
-        settings
+      def to_h(hash = settings)
+        hash.map do |key, value|
+          case value
+          when Config then [key, value.to_h]
+          when Hash then [key, to_h(hash)]
+          when Array then [key, value.map { |item| item }]
+          else
+            [key, value]
+          end
+        end.to_h
       end
       alias_method :to_hash, :to_h
 

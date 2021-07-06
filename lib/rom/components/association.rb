@@ -8,6 +8,8 @@ module ROM
     class Association < Core
       id :association
 
+      option :gateway, inferrable: true, type: Types.Instance(Symbol)
+
       option :object
       alias_method :definition, :object
 
@@ -34,18 +36,7 @@ module ROM
 
       # @api private
       def association_class
-        adapter_namespace.const_get(:Associations).const_get(definition.type)
-      end
-
-      # @api private
-      def adapter_namespace
-        ROM.adapters[gateway.config.adapter]
-      end
-
-      # @api private
-      def gateway_name
-        # TODO: there's a nicer way to do that by actually passing gateway as an option
-        components.relations(id: definition.source.to_sym).first.constant.gateway
+        ROM.adapters[adapter].const_get(:Associations).const_get(definition.type)
       end
     end
   end

@@ -41,7 +41,7 @@ RSpec.describe ROM::Global, "#container" do
       end
 
       expect { configuration.register_relation(users, users2) }.to raise_error(
-        ROM::RelationAlreadyDefinedError, /\+users\+ is already defined/
+        ROM::RelationAlreadyDefinedError, /\+relations\.users\+ is already defined/
       )
     end
 
@@ -63,7 +63,7 @@ RSpec.describe ROM::Global, "#container" do
       configuration.register_relation(users)
 
       expect { configuration.register_mapper(users_mapper, users_mapper_2) }.to raise_error(
-        ROM::MapperAlreadyDefinedError, /\+users\+ is already defined/
+        ROM::MapperAlreadyDefinedError, /\+mappers\.users\.users\+ is already defined/
       )
     end
 

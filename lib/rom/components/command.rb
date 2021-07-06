@@ -8,14 +8,13 @@ module ROM
     class Command < Core
       id :command
 
-      # Registry id
-      #
-      # @return [Symbol]
-      #
-      # @api public
-      def id
-        options[:id] || constant.register_as || constant.default_name
-      end
+      # @!attribute [r] constant
+      #   @return [Class] Component's target class
+      option :constant, type: Types.Interface(:new)
+
+      # @!attribute [r] relation_id
+      #   @return [Symbol]
+      option :relation_id, type: Types::Strict::Symbol, inferrable: true
 
       # Registry namespace
       #
@@ -24,13 +23,6 @@ module ROM
       # @api public
       def namespace
         "commands.#{relation_id}"
-      end
-
-      # @return [Symbol]
-      #
-      # @api public
-      def relation_id
-        constant.relation
       end
 
       # @api public

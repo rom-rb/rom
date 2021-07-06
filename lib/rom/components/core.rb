@@ -24,6 +24,24 @@ module ROM
 
       defines :id
 
+      # @api private
+      def self.option(name, **options)
+        if options[:inferrable]
+          super(name, reader: false, optional: true, **options)
+          define_method(name) { read(name) }
+        else
+          super
+        end
+      end
+
+      # @!attribute [r] id
+      #   @return [Symbol] Local registry id
+      option :id, inferrable: true, type: Types::Strict::Symbol
+
+      # @!attribute [r] namespace
+      #   @return [String] Registry namespace
+      option :namespace, optional: true, reader: false, type: Types::Strict::String
+
       # @!attribute [r] owner
       #   @return [Object] Component's owner
       option :owner
@@ -32,21 +50,14 @@ module ROM
       #   @return [Object] Component's original provider
       option :provider, optional: true
 
-      # @!attribute [r] constant
-      #   @return [Class] Component's target class
-      #   @api public
-      option :constant, optional: true, type: Types.Interface(:new)
-      alias_method :relation, :constant
+      # @!attribute [r] adapter
+      #   @return [Class] Component's adapter
+      option :adapter, inferrable: true, type: Types::Strict::Symbol
 
-      # @!attribute [r] id
-      #   @return [Symbol] Local registry id
-      #   @api public
-      option :id, optional: true, reader: false, type: Types::Symbol
-
-      # @!attribute [r] namespace
-      #   @return [String] Registry namespace
-      #   @api public
-      option :namespace, optional: true, reader: false, type: Types::String
+      # @api public
+      def type
+        self.class.id
+      end
 
       # Default container key
       #
@@ -111,18 +122,17 @@ module ROM
 
       # @api public
       memoize def local_components
-        if constant.respond_to?(:components)
-          constant.components
-        else
-          Components::Registry.new(owner: owner)
-        end
-      end
+        registry = Components::Registry.new(owner: owner)
 
-      # @api public
-      def adapter
-        relation.adapter or raise(
-          MissingAdapterIdentifierError, "+#{constant}+ is missing the adapter identifier"
-        )
+        if provider != configuration && provider.respond_to?(:components)
+          registry.update(provider.components)
+        end
+
+        if respond_to?(:constant) && constant.respond_to?(:components)
+          registry.update(constant.components)
+        end
+
+        registry
       end
 
       # @api private
@@ -142,18 +152,37 @@ module ROM
         plugins.map(&:config).map(&:to_hash).reduce(:merge) || EMPTY_HASH
       end
 
-      private
-
       # @api private
-      def gateway
-        gateways.fetch(gateway_name) do
-          raise "+#{gateway_name.inspect}+ gateway not found for #{constant}"
-        end
+      def option?(name)
+        !options[name].nil?
       end
 
       # @api private
-      def gateway_name
-        options[:gateway] || relation.gateway
+      memoize def read(name)
+        value = options[name] || owner.infer_option(name, component: self)
+
+        if value
+          options[name] = instance_variable_set(:"@#{name}", value)
+        else
+          raise ArgumentError, "#{owner} cannot infer #{name.inspect} for #{type.inspect} component"
+        end
+
+        value
+      end
+
+      # @api public
+      def gateway?
+        # TODO: this needs to be encapsulated
+        configuration.config.gateways.key?(gateway)
+      end
+
+      private
+
+      # @api private
+      def _gateway
+        gateways.fetch(gateway) do
+          raise "+#{gateway.inspect}+ gateway not found for #{constant}"
+        end
       end
     end
   end

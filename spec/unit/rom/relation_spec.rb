@@ -59,10 +59,10 @@ RSpec.describe ROM::Relation do
           end
         end
 
-        it "returns name based on module and class" do
+        it "returns name based on class" do
           relation = Test::Test::SuperRelation.new([])
 
-          expect(relation.name).to eql(ROM::Relation::Name[:test_test_super_relation])
+          expect(relation.name).to eql(ROM::Relation::Name[:super_relation])
         end
       end
 
@@ -76,7 +76,7 @@ RSpec.describe ROM::Relation do
         it "returns name based only on class" do
           relation = Test::SuperRelation.new([])
 
-          expect(relation.name).to eql(ROM::Relation::Name[:test_super_relation])
+          expect(relation.name).to eql(ROM::Relation::Name[:super_relation])
         end
       end
 
@@ -94,7 +94,7 @@ RSpec.describe ROM::Relation do
         it "sets custom relation schema" do
           relation = Test::DescendantRelation.new([])
 
-          expect(relation.name).to eql(ROM::Relation::Name[:test_descendant_relation])
+          expect(relation.name).to eql(ROM::Relation::Name[:descendant_relation])
         end
       end
     end
@@ -124,14 +124,6 @@ RSpec.describe ROM::Relation do
         end
       end
 
-      let(:relation_name_string) do
-        module Test
-          class Relations < ROM::Relation[:memory]
-            schema("relations") {}
-          end
-        end
-      end
-
       let(:relation_name_schema) do
         module Test
           class Relations < ROM::Relation[:memory]
@@ -143,18 +135,14 @@ RSpec.describe ROM::Relation do
       it "raises an exception when is symbol" do
         expect {
           relation_name_symbol
-        }.to raise_error(ROM::InvalidRelationName)
-      end
-
-      it "raises an exception when is string" do
-        expect {
-          relation_name_string
+          Test::Relations.new
         }.to raise_error(ROM::InvalidRelationName)
       end
 
       it "raises an exception when schema name is schema" do
         expect {
           relation_name_schema
+          Test::Relations.new
         }.to raise_error(ROM::InvalidRelationName)
       end
     end
@@ -184,7 +172,7 @@ RSpec.describe ROM::Relation do
 
   describe "#with" do
     it "returns a new instance with the original dataset and given custom options" do
-      relation = Class.new(ROM::Relation) {
+      relation = Class.new(ROM::Relation[:memory]) {
         schema(:users) {}
         option :custom
       }.new([], custom: true)
@@ -230,7 +218,7 @@ RSpec.describe ROM::Relation do
 
   describe "#schema" do
     it "returns an empty schema by default" do
-      relation = Class.new(ROM::Relation) {
+      relation = Class.new(ROM::Relation[:memory]) {
         schema(:test_some_relation) {}
       }.new([])
 
@@ -244,7 +232,7 @@ RSpec.describe ROM::Relation do
       before do
         module Test
           class Attribute < ROM::Attribute; end
-          class Relation < ROM::Relation
+          class Relation < ROM::Relation[:memory]
             schema_attr_class Test::Attribute
           end
         end

@@ -13,6 +13,8 @@ require "rom/relation/class_interface"
 require "rom/auto_curry"
 require "rom/pipeline"
 
+require "rom/runtime/resolver"
+
 require "rom/relation/loaded"
 require "rom/relation/curried"
 require "rom/relation/commands"
@@ -20,7 +22,6 @@ require "rom/relation/composite"
 require "rom/relation/combined"
 require "rom/relation/wrap"
 require "rom/relation/materializable"
-require "rom/runtime/resolver"
 
 require "rom/types"
 require "rom/schema"
@@ -37,6 +38,8 @@ module ROM
   #
   # @api public
   class Relation
+    extend ROM.Components(:dataset, :schema)
+
     # Default no-op output schema which is called in `Relation#each`
     NOOP_OUTPUT_SCHEMA = -> tuple { tuple }.freeze
 
@@ -48,9 +51,7 @@ module ROM
     include Dry::Core::Memoizable
     extend Dry::Core::ClassAttributes
 
-    defines :adapter, :schema_opts, :schema_class,
-            :schema_attr_class, :schema_inferrer, :schema_dsl,
-            :wrap_class
+    defines :adapter, :schema_class, :schema_attr_class, :schema_inferrer, :schema_dsl, :wrap_class
 
     # @!method self.gateway
     #  Manage the gateway
@@ -118,7 +119,6 @@ module ROM
     auto_struct false
     struct_namespace ROM::Struct
 
-    schema_opts EMPTY_HASH
     schema_dsl Schema::DSL
     schema_attr_class Attribute
     schema_class Schema
@@ -136,9 +136,9 @@ module ROM
     option :inflector, reader: true, default: -> { Inflector }
 
     # @!attribute [r] name
-    #   @return [Object] The relation name
+    #   @return [Name] The relation name
     #   @api public
-    option :name, default: -> { self.class.default_name(inflector) }
+    option :name, default: -> { self.class.infer_name(self) }
 
     # @!attribute [r] associations
     #   @return [Runtime::Resolver] Relation associations

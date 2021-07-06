@@ -137,6 +137,11 @@ module ROM
     end
 
     # @api private
+    def self.infer_option(name, component:)
+      component.provider.infer_option(name, component: component)
+    end
+
+    # @api private
     def initialize(*)
       super
 

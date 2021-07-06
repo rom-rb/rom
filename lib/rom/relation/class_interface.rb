@@ -5,13 +5,12 @@ require "set"
 require "dry/effects"
 
 require "rom/support/inflector"
+require "rom/support/notifications"
 
 require "rom/constants"
-require "rom/components"
 require "rom/relation/name"
 require "rom/relation/view_dsl"
 require "rom/schema"
-require "rom/support/notifications"
 
 module ROM
   class Relation
@@ -20,16 +19,6 @@ module ROM
     # @api public
     module ClassInterface
       extend Notifications::Listener
-      include Components
-
-      INVALID_RELATIONS_NAMES = %i[
-        relations schema
-      ].freeze
-
-      # @api private
-      def inherited(klass)
-        super
-      end
 
       # Return adapter-specific relation subclass
       #
@@ -44,91 +33,6 @@ module ROM
         ROM.adapters.fetch(adapter).const_get(:Relation)
       rescue KeyError
         raise AdapterNotPresentError.new(adapter, :relation)
-      end
-
-      # Set or get custom dataset block
-      #
-      # This block will be evaluated when a relation is instantiated and registered
-      # in a relation registry.
-      #
-      # @example
-      #   class Users < ROM::Relation[:memory]
-      #     dataset { sort_by(:id) }
-      #   end
-      #
-      # @api public
-      def dataset(id = default_dataset_name, &block)
-        if (existing = components.datasets(id: id).first)
-          components.delete(:datasets, existing)
-        end
-
-        components.add(:datasets, id: id, constant: self, provider: self, block: block)
-      end
-
-      # Specify canonical schema for a relation
-      #
-      # With a schema defined commands will set up a type-safe input handler
-      # automatically
-      #
-      # @example
-      #   class Users < ROM::Relation[:sql]
-      #     schema do
-      #       attribute :id, Types::Serial
-      #       attribute :name, Types::String
-      #     end
-      #   end
-      #
-      #   # access schema from a finalized relation
-      #   users.schema
-      #
-      # @return [Schema]
-      #
-      # @param [Symbol] dataset An optional dataset name
-      # @param [Boolean] infer Whether to do an automatic schema inferring
-      # @param [Boolean, Symbol] view Whether this is a view schema
-      #
-      # @api public
-      def schema(dataset = nil, as: nil, infer: false, view: false, &block)
-        if view
-          components.add(
-            :schemas,
-            id: view, view: true, name: Name[view], relation_class: self, block: block
-          )
-        else
-          raise MissingSchemaClassError, self unless schema_class
-
-          ds_name = dataset || schema_opts.fetch(:dataset, default_name.dataset)
-          relation = as || schema_opts.fetch(:relation, ds_name)
-
-          raise InvalidRelationName, relation if invalid_relation_name?(relation)
-
-          if components.datasets(id: ds_name).empty?
-            dataset(ds_name)
-          end
-
-          name = Name[relation, ds_name]
-
-          if (existing = components.schemas(id: name.dataset).first)
-            components.delete(:schemas, existing)
-          end
-
-          components.add(
-            :schemas,
-            id: name.dataset,
-            provider: self,
-            name: name,
-            infer: infer,
-            view: view,
-            constant: schema_class,
-            relation_class: self,
-            dsl_class: schema_dsl,
-            attr_class: schema_attr_class,
-            inferrer: schema_inferrer,
-            adapter: adapter,
-            gateway_name: gateway,
-            block: block
-          )
-        end
       end
 
       # Define a relation view with a specific schema
@@ -253,50 +157,56 @@ module ROM
         Curried
       end
 
-      # TODO: move to rom/compat
       # @api private
-      def view_methods
-        ancestor_methods = ancestors.reject { |klass| klass == self }
-          .map(&:instance_methods).flatten(1)
-
-        instance_methods - ancestor_methods + auto_curried_methods.to_a
+      def default_name
+        Name[id_from_class]
       end
 
-      # TODO: this could be deprecated / moved to rom/compat
-      # @return [Name] Qualified relation name
-      def relation_name
-        default_name
+      # @api private
+      def infer_option(option, component:)
+        meth = :"infer_#{option}"
+        send(meth, component) if respond_to?(meth)
       end
 
-      # Return default relation name used in schemas
-      #
-      # @return [Name]
-      #
       # @api private
-      def default_name(inflector = Inflector)
-        # TODO: inherited schemas should be replaced
+      def infer_name(component)
         if (schema = components.schemas(view: false, provider: self).last)
           schema.name
         else
-          Name[inflector.underscore(name).tr("/", "_").to_sym]
+          Name[id_from_class]
         end
       end
 
       # @api private
-      def default_dataset_name(inflector = Inflector)
-        schema_opts[:dataset] || default_name(inflector).dataset
+      def infer_id(component)
+        case component.type
+        when :relation
+          components.schemas(view: false, provider: self).last&.name.relation
+        when :schema
+          if component.option?(:name)
+            component.name.relation
+          else
+            id_from_class
+            Inflector.underscore((name || superclass.name).split("::").last).to_sym
+          end
+        else
+          id_from_class
+        end
       end
 
       # @api private
-      def name
-        super || superclass.name
+      def infer_adapter(component)
+        adapter or raise(MissingAdapterIdentifierError, self)
       end
 
-      private
+      # @api private
+      def infer_gateway(component)
+        gateway
+      end
 
       # @api private
-      def invalid_relation_name?(relation)
-        INVALID_RELATIONS_NAMES.include?(relation.to_sym)
+      def id_from_class
+        Inflector.underscore((name || superclass.name).split("::").last).to_sym
       end
     end
   end

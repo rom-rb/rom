@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "rom/support/inflector"
+require "rom/relation"
 require "rom/command"
 
 require "rom/configuration"
@@ -12,26 +13,6 @@ require "rom/components/mapper"
 
 module ROM
   module Components
-    class Relation < Core
-      undef :id
-
-      undef :default_name
-
-      def default_name
-        if constant.respond_to?(:default_name)
-          constant.default_name
-        else
-          ROM::Relation::Name[Inflector.underscore(constant.name)]
-        end
-      end
-
-      def id
-        return options[:id] if options[:id]
-
-        default_name.relation
-      end
-    end
-
     class Command < Core
       undef :id
       undef :relation_id
@@ -160,6 +141,16 @@ module ROM
     # @deprecated
     def method_missing(name, *)
       gateways[name] || super
+    end
+  end
+
+  class Relation
+    # @api private
+    def self.view_methods
+      ancestor_methods = ancestors.reject { |klass| klass == self }
+        .map(&:instance_methods).flatten(1)
+
+      instance_methods - ancestor_methods + auto_curried_methods.to_a
     end
   end
 
