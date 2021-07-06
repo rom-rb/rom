@@ -10,14 +10,23 @@ require "rom/constants"
 require "rom/gateway"
 require "rom/loader"
 require "rom/components"
-require "rom/components/dsl"
 
 module ROM
   # @api public
   class Configuration
-    include Dry::Equalizer(:config)
-
     extend Notifications
+
+    include Dry::Equalizer(:config)
+    include Configurable
+
+    include ROM.Components(
+      :dataset,
+      :schema,
+      :relation,
+      :mappers,
+      :commands,
+      :plugin
+    )
 
     DEFAULT_CLASS_NAMESPACE = "ROM"
 
@@ -36,20 +45,9 @@ module ROM
     register_event("configuration.relations.dataset.allocated")
     register_event("configuration.commands.class.before_build")
 
-    include Components::DSL
-    include Configurable
-
     # @return [Notifications] Notification bus instance
     # @api private
     attr_reader :notifications
-
-    # @return [Components::Registry] All registered components
-    # @api private
-    attr_reader :components
-
-    # @return [Array] All registered plugins
-    # @api private
-    attr_reader :plugins
 
     # Initialize a new configuration
     #
@@ -58,9 +56,7 @@ module ROM
     # @api private
     def initialize(*args, &block)
       @notifications = Notifications.event_bus(:configuration)
-      @components = Components::Registry.new(owner: self)
       @auto_register = {root_directory: nil, components: components}
-      @plugins = []
 
       configure(*args, &block)
     end

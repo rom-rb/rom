@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "dry/effects"
+
 require_relative "dsl"
 
 module ROM
@@ -18,11 +20,21 @@ module ROM
       end
 
       # @api private
+      def included(provider)
+        super
+        @provider = provider
+        provider.include(mod)
+        provider.include(Components)
+        freeze
+      end
+
+      # @api private
       def extended(provider)
         super
         @provider = provider
         provider.extend(mod)
         provider.extend(Components)
+        freeze
       end
 
       # @api private
@@ -30,6 +42,8 @@ module ROM
         @mod ||=
           begin
             mod = Module.new {
+              include Dry::Effects::Handler.Reader(:configuration)
+
               private
 
               # @api private

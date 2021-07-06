@@ -172,7 +172,8 @@ module ROM
 
       # @api public
       def gateway?
-        gateways.key?(gateway)
+        # TODO: this needs to be encapsulated
+        configuration.config.gateways.key?(gateway)
       end
 
       private

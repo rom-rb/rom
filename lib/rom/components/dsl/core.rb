@@ -14,7 +14,6 @@ module ROM
 
         # @api private
         option :provider
-        alias_method :configuration, :provider
 
         # @api private
         option :gateway, default: -> { :default }

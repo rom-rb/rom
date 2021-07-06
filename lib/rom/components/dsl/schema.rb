@@ -37,6 +37,8 @@ module ROM
             if components.datasets(id: component.name.dataset).empty?
               provider.dataset(component.name.dataset, gateway: component.gateway)
             end
+
+            component
           end
         end
       end

@@ -20,7 +20,7 @@ module ROM
         #   end
         #
         # @api public
-        def call(**options)
+        def call
           components.replace(:datasets, id: id, provider: provider, block: block, **options)
         end
       end

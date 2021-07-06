@@ -41,8 +41,24 @@ RSpec.describe ROM::Components do
         class Repo
           extend ROM.Components(:dataset, :schema)
 
+          def self.adapter
+            :memory
+          end
+
           def self.schema_class
             ROM::Schema
+          end
+
+          def self.schema_inferrer
+            ROM::Schema::DEFAULT_INFERRER
+          end
+
+          def self.schema_attr_class
+            ROM::Attribute
+          end
+
+          def self.schema_dsl
+            ROM::Schema::DSL
           end
 
           def self.infer_option(option, component:)

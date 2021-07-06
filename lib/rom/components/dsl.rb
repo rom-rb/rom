@@ -26,7 +26,7 @@ module ROM
       #
       # @api public
       def dataset(id = nil, **options, &block)
-        dsl(DSL::Dataset, id: id, block: block).(**options)
+        dsl(DSL::Dataset, id: id, block: block, **options).()
       end
 
       # Specify a relation schema
@@ -91,6 +91,7 @@ module ROM
       # @api public
       def commands(relation, **options, &block)
         dsl(DSL::Command, relation: relation, block: block, **options).()
+        components.commands
       end
 
       # Mapper definition DSL
@@ -98,6 +99,7 @@ module ROM
       # @api public
       def mappers(&block)
         dsl(DSL::Mapper, block: block).()
+        components.mappers
       end
 
       # Configures a plugin for a specific adapter to be enabled for all relations
@@ -130,6 +132,8 @@ module ROM
         else
           plugins << plugin
         end
+
+        plugin
       end
 
       # @api private
