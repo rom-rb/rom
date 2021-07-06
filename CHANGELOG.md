@@ -9,6 +9,7 @@
 - .transaction methods now accept keyword arguments. `Repository#transaction` accepts gateway to use. `Repository::Root#transaction` uses a gateway of the root relation by default (#620 closed by #621) (@flash-gordon)
 - Backward-compatibility extension that you can load via `require "rom/compat"` (via #634 refs #607) (@solnic)
 - New component API that replaces internal implementation of the finalization code and makes it possible to extend ROM with arbitrary component types (see #637) (@solnic)
+- Generic Component API which allows you to turn any class or object into a DSL that can define rom components (via #650) (@solnic)
 
 ### Fixed
 
@@ -32,6 +33,7 @@
 - Gateways are now lazy-loadable (via #645) (@solnic)
 - Associations are now decoupled from schemas and lazy-loaded (via #646) (@solnic)
 - Plugin API is now internally simplified which resulted in faster runtime. It's also no longer required to register plugin types upfront (via #648) (@solnic)
+- Configuring auto_register stores its config under `config.auto_register` (via #650) (@solnic)
 
 [Compare v5.2.4...master](https://github.com/rom-rb/rom/compare/v5.2.4...master)
 
