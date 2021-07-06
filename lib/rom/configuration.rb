@@ -56,7 +56,10 @@ module ROM
     # @api private
     def initialize(*args, &block)
       @notifications = Notifications.event_bus(:configuration)
-      @auto_register = {root_directory: nil, components: components}
+
+      config.gateways = Config.new
+      config.components = Config.new
+      config.auto_register = Config.new
 
       configure(*args, &block)
     end
@@ -75,9 +78,6 @@ module ROM
     #
     # @api private
     def configure(*args)
-      config.gateways = Config.new
-      config.components = Config.new
-
       infer_config(*args) unless args.empty?
 
       # defaults
@@ -110,8 +110,8 @@ module ROM
     # @return [Configuration]
     #
     # @api public
-    def auto_register(directory, options = {})
-      @auto_register.update(options).update(root_directory: directory)
+    def auto_register(directory, **options)
+      load_config(config.auto_register, options.merge(root_directory: directory))
       self
     end
 
@@ -163,7 +163,7 @@ module ROM
       # No more config changes allowed
       config.freeze
       attach_listeners
-      loader.() # this is noop when auto_register's root is nil
+      loader.() if config.auto_register.key?(:root_directory)
       self
     end
 
@@ -268,7 +268,11 @@ module ROM
 
     # @api private
     def loader
-      @loader ||= Loader.new(@auto_register.fetch(:root_directory), **@auto_register)
+      @loader ||= Loader.new(
+        config.auto_register.root_directory,
+        components: components,
+        **config.auto_register
+      )
     end
   end
 end
