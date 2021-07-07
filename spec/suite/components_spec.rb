@@ -26,7 +26,7 @@ RSpec.describe ROM::Components do
       schema = provider.schema(:users)
 
       provider.with_configuration(ROM::Runtime::Configuration.new) do
-        expect(schema.build).to be_a(provider.schema_class)
+        expect(schema.build).to be_a(schema_class)
       end
     end
   end
@@ -36,6 +36,10 @@ RSpec.describe ROM::Components do
       Test::Repo
     end
 
+    let(:schema_class) do
+      provider.schema_class
+    end
+
     before do
       module Test
         class Repo
@@ -43,6 +47,10 @@ RSpec.describe ROM::Components do
 
           def self.adapter
             :memory
+          end
+
+          def self.gateway
+            :default
           end
 
           def self.schema_class
@@ -62,9 +70,7 @@ RSpec.describe ROM::Components do
           end
 
           def self.infer_option(option, component:)
-            case option
-            when :gateway then :default
-            end
+            send(option)
           end
         end
       end
@@ -78,35 +84,24 @@ RSpec.describe ROM::Components do
       Test::Repo.new
     end
 
+    let(:schema_class) do
+      provider.config.schema.schema_class
+    end
+
     before do
       module Test
         class Repo
           include ROM.Components(:dataset, :schema)
+          include Dry::Configurable
 
-          def adapter
-            :memory
-          end
+          setting :adapter, :memory
+          setting :gateway, :default
 
-          def schema_class
-            ROM::Schema
-          end
-
-          def schema_inferrer
-            ROM::Schema::DEFAULT_INFERRER
-          end
-
-          def schema_attr_class
-            ROM::Attribute
-          end
-
-          def schema_dsl
-            ROM::Schema::DSL
-          end
-
-          def infer_option(option, component:)
-            case option
-            when :gateway then :default
-            end
+          setting :schema do
+            setting :schema_class, ROM::Schema
+            setting :inferrer, ROM::Schema::DEFAULT_INFERRER
+            setting :attr_class, ROM::Attribute
+            setting :dsl_class, ROM::Schema::DSL
           end
         end
       end

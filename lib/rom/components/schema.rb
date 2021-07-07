@@ -10,9 +10,13 @@ module ROM
     class Schema < Core
       id :schema
 
+      # @!attribute [r] constant
+      #   @return [Class] Component's target class
+      option :constant, type: Types.Interface(:new), inferrable: true
+
       # @!attribute [r] as
       #   @return [Symbol] Alias that should be used as the relation name
-      option :as, optional: true, type: Types::Strict::Symbol
+      option :as, type: Types::Strict::Symbol, optional: true
 
       # @!attribute [r] view
       #   @return [Symbol]
@@ -20,19 +24,31 @@ module ROM
 
       # @!attribute [r] gateway
       #   @return [Symbol] Gateway identifier
-      option :gateway, inferrable: true, type: Types::Strict::Symbol
+      option :gateway, type: Types::Strict::Symbol, inferrable: true
 
       # @!attribute [r] adapter
       #   @return [Symbol] Adapter identifier
-      option :adapter, inferrable: true, type: Types::Strict::Symbol
+      option :adapter, type: Types::Strict::Symbol, inferrable: true
+
+      # @!attribute [r] block
+      #   @return [Class] A proc for evaluation via schema DSL
+      option :block, type: Types.Interface(:call)
+
+      # @!attribute [r] attr_class
+      #   @return [Class]
+      option :attr_class, type: Types.Instance(Class), inferrable: true
+
+      # @!attribute [r] dsl_class
+      #   @return [Class]
+      option :dsl_class, type: Types.Interface(:new), inferrable: true
 
       # @!attribute [r] infer
       #   @return [Boolean] Whether the inferrer should be enabled or not
       option :infer, type: Types::Strict::Bool, default: -> { false }
 
-      # @!attribute [r] block
-      #   @return [Class] A proc for evaluation via schema DSL
-      option :block, type: Types.Interface(:call)
+      # @!attribute [r] inferrer
+      #   @return [#with]
+      option :inferrer, type: Types.Interface(:with), inferrable: true
 
       # @api public
       def namespace
@@ -64,7 +80,7 @@ module ROM
 
       # @api private
       def dsl(**opts)
-        provider.schema_dsl.new(**dsl_options, **opts)
+        dsl_class.new(**dsl_options, **opts)
       end
 
       # @api private
@@ -82,18 +98,13 @@ module ROM
       # @api private
       def dsl_options
         {relation: name,
+         schema_class: constant,
+         attr_class: attr_class,
+         adapter: adapter, # TODO: decouple Schema::DSL from adapter
          definition: block,
          plugins: plugins,
          inflector: inflector,
-         adapter: provider.adapter,
-         schema_class: provider.schema_class,
-         attr_class: provider.schema_attr_class,
-         inferrer: inferrer}
-      end
-
-      # @api private
-      def inferrer
-        provider.schema_inferrer.with(enabled: infer)
+         inferrer: inferrer.with(enabled: infer)}
       end
     end
   end

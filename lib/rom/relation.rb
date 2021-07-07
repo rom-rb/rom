@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "dry/configurable"
+
 require "dry/core/memoizable"
 require "dry/core/class_attributes"
 
@@ -119,12 +121,16 @@ module ROM
     auto_struct false
     struct_namespace ROM::Struct
 
-    schema_dsl Schema::DSL
-    schema_attr_class Attribute
-    schema_class Schema
-    schema_inferrer Schema::DEFAULT_INFERRER
-
     wrap_class Relation::Wrap
+
+    extend Dry::Configurable
+
+    setting :schema do
+      setting :constant, default: Schema
+      setting :dsl_class, default: Schema::DSL
+      setting :attr_class, default: Attribute
+      setting :inferrer, default: Schema::DEFAULT_INFERRER
+    end
 
     include Dry::Equalizer(:name, :dataset)
     include Materializable

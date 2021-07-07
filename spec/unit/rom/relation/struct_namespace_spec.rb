@@ -33,7 +33,7 @@ RSpec.describe ROM::Relation, "#struct_namespace" do
 
   context "setting at runtime" do
     subject(:relation) do
-      Class.new(ROM::Relation) do
+      Class.new(ROM::Relation[:memory]) do
         schema(:users) do
           attribute :id, ROM::Types::Integer
           attribute :name, ROM::Types::String
@@ -64,7 +64,7 @@ RSpec.describe ROM::Relation, "#struct_namespace" do
 
   context "using default setting" do
     subject(:relation) do
-      Class.new(ROM::Relation) do
+      Class.new(ROM::Relation[:memory]) do
         struct_namespace Test::Entities
 
         schema(:users) do

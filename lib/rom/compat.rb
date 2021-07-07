@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "rom/support/inflector"
+
 require "rom/relation"
 require "rom/command"
 
@@ -145,6 +146,42 @@ module ROM
   end
 
   class Relation
+    # This is needed to be able to infer default setting values from
+    # deprecated class-level attrs
+    SETTING_DEFAULT_PROC = -> (name, value, klass) {
+      klass.respond_to?(name) ? klass.__send__(name) : value
+    }
+
+    SETTING_DEFAULTS = {
+      "schema.constant"   => [:schema_class, Schema],
+      "schema.dsl_class"  => [:schema_dsl, Schema::DSL],
+      "schema.attr_class" => [:schema_attr_class, Attribute],
+      "schema.inferrer"   => [:schema_inferrer, Schema::DEFAULT_INFERRER]
+    }
+
+    # This way of configuring components is deprecated but the fallback
+    # mechanism makes it possible to start using the new settings API
+    # while using class attrs at the same time.
+    SETTING_DEFAULTS.each do |_, (class_attr, default)|
+      public_send(class_attr, default)
+    end
+
+    # @api private
+    def self.define_settings(mappings)
+      SETTING_DEFAULTS.group_by { |k, (*)| k.split(".").first.to_sym }.each do |root, mapping|
+        setting(root) do
+          mapping.each do |(path, (class_attr, value))|
+            key = path.split(".").last.to_sym
+
+            setting(key, default: SETTING_DEFAULT_PROC.curry.(class_attr, value))
+          end
+        end
+      end
+    end
+
+    define_settings(SETTING_DEFAULTS)
+
+    # This is used by the deprecated command => relation view delegation syntax
     # @api private
     def self.view_methods
       ancestor_methods = ancestors.reject { |klass| klass == self }

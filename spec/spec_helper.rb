@@ -28,6 +28,7 @@ require "dry/core/deprecations"
 Dry::Core::Deprecations.set_logger!(SPEC_ROOT.join("../log/deprecations.log"))
 
 require "rom/core"
+require "rom/compat"
 require "rom-changeset"
 
 Dir[root.join("support/**/*.rb").to_s].sort.each do |f|
