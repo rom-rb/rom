@@ -11,7 +11,7 @@ module ROM
       class Relation < Core
         option :relation
 
-        configure(relation: :name)
+        configure(:gateway, relation: :name)
 
         # @api private
         def call
@@ -44,7 +44,6 @@ module ROM
           case option
           when :id then relation
           when :adapter then adapter
-          when :gateway then gateway
           end
         end
 

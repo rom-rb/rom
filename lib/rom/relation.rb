@@ -128,6 +128,7 @@ module ROM
     setting :component do
       setting :inflector, default: Inflector
       setting :name, default: :relation, constructor: Name
+      setting :gateway, default: :default
     end
 
     setting :schema do
