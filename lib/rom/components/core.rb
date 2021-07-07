@@ -159,6 +159,8 @@ module ROM
 
       # @api private
       memoize def provider_config
+        # TODO: this needs to be encapsulated because it evaluates the entire config
+        #       prematurely
         provider.respond_to?(:config) ? provider.config.to_h : EMPTY_HASH
       end
 

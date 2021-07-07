@@ -52,12 +52,12 @@ module ROM
         relation
       end
 
-      # @api private
-      memoize def name
-        constant.infer_name(self)
-      end
-
       private
+
+      # @api private
+      def name
+        constant.config.component.name
+      end
 
       # @api private
       def schema

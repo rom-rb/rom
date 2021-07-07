@@ -111,7 +111,7 @@ RSpec.describe ROM::Configuration, "#auto_register" do
     end
 
     it "loads files and returns constants" do
-      inflector.extend(ROM::ZeitwerkCompatibility)
+      inflector.extend(ROM::InflectorMethods)
 
       setup.auto_register(
         SPEC_ROOT.join("fixtures/custom/xml_space"),

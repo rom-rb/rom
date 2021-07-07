@@ -251,7 +251,7 @@ RSpec.describe ROM::Relation do
   describe "#input_schema" do
     it "returns a schema hash type" do
       relation = Class.new(ROM::Relation[:memory]) do
-        schema { attribute :id, ROM::Types::Coercible::Integer }
+        schema(:users) { attribute :id, ROM::Types::Coercible::Integer }
       end.new([])
 
       expect(relation.input_schema[id: "1"]).to eql(id: 1)

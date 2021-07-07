@@ -32,7 +32,7 @@ module ROM
 
       case reason
       when :inferrence
-        super("#{provider.name} failed to infer #{key} setting")
+        super("#{provider} failed to infer #{key} setting")
       else
         super("#{provider.name} #{key} setting is not valid")
       end

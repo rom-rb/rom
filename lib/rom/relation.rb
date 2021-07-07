@@ -125,6 +125,11 @@ module ROM
 
     extend Dry::Configurable
 
+    setting :component do
+      setting :inflector, default: Inflector
+      setting :name, default: :relation, constructor: Name
+    end
+
     setting :schema do
       setting :constant, default: Schema
       setting :dsl_class, default: Schema::DSL
@@ -132,19 +137,42 @@ module ROM
       setting :inferrer, default: Schema::DEFAULT_INFERRER
     end
 
+    # @api private
+    def self.inherited(klass)
+      super
+      return unless klass.adapter
+      klass.configure
+    end
+
+    # @api private
+    def self.configure(options = EMPTY_HASH, &block)
+      if block
+        super
+      else
+        # TODO: Figure out how to handle anonymous classes w/o name.
+        #       Maybe this behavior should become deprecated
+        config.component.name = name if name
+      end
+    end
+
     include Dry::Equalizer(:name, :dataset)
     include Materializable
     include Pipeline
 
-    # @!attribute [r] inflector
-    #   @return [Dry::Inflector] String inflector
+    # @!attribute [r] config
+    #   @return [Dry::Configurable::Config]
     #   @api private
-    option :inflector, reader: true, default: -> { Inflector }
+    option :config, default: -> { self.class.config }
 
     # @!attribute [r] name
     #   @return [Name] The relation name
     #   @api public
-    option :name, default: -> { self.class.infer_name(self) }
+    option :name, default: -> { config.component.name }
+
+    # @!attribute [r] inflector
+    #   @return [Dry::Inflector] The default inflector
+    #   @api public
+    option :inflector, default: -> { config.component.inflector }
 
     # @!attribute [r] associations
     #   @return [Runtime::Resolver] Relation associations
@@ -172,7 +200,7 @@ module ROM
     # @!attribute [r] schema
     #   @return [Runtime::Resolver] The canonical schema
     option :schema, default: -> {
-      schemas.key?(name.dataset) ? schemas[name.dataset] : Schema.new(name)
+      (name && schemas.key?(name.dataset)) ? schemas[name.dataset] : Schema.new(Name[self.class])
     }
 
     # @!attribute [r] input_schema

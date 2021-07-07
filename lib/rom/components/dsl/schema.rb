@@ -33,6 +33,8 @@ module ROM
             # TODO: this can go away by simply skipping readers in case of clashes
             raise InvalidRelationName, id if INVALID_IDS.include?(component.id)
 
+            provider.config.component.name = component.name
+
             # TODO: this should go away
             if components.datasets(id: component.name.dataset).empty?
               provider.dataset(component.name.dataset, gateway: component.gateway)

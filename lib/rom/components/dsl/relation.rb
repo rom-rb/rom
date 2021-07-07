@@ -11,10 +11,13 @@ module ROM
       class Relation < Core
         option :relation
 
+        configure(relation: :name)
+
         # @api private
         def call
           constant = build_class do |dsl|
             class_exec(&dsl.block) if dsl.block
+
             if components.schemas.empty?
               schema(dsl.relation, gateway: dsl.gateway)
             end
