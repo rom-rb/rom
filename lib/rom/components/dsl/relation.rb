@@ -42,7 +42,6 @@ module ROM
         # @api private
         def infer_option(option, component:)
           case option
-          when :id then relation
           when :adapter then adapter
           end
         end
