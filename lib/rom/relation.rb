@@ -53,7 +53,7 @@ module ROM
     include Dry::Core::Memoizable
     extend Dry::Core::ClassAttributes
 
-    defines :adapter, :schema_class, :schema_attr_class, :schema_inferrer, :schema_dsl, :wrap_class
+    defines :adapter, :wrap_class
 
     # @!method self.gateway
     #  Manage the gateway
