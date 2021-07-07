@@ -163,6 +163,7 @@ module ROM
     # mechanism makes it possible to start using the new settings API
     # while using class attrs at the same time.
     SETTING_DEFAULTS.each do |_, (class_attr, default)|
+      defines(class_attr)
       public_send(class_attr, default)
     end
 
