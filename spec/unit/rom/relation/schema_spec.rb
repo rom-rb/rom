@@ -278,7 +278,7 @@ RSpec.describe ROM::Relation, ".schema" do
     end
 
     expect { Test::Users.schema(:test) {} }
-      .to raise_error(ROM::MissingSchemaClassError, "Test::Users relation is missing schema_class")
+      .to raise_error(ROM::ConfigError, "Test::Users failed to infer schema.constant setting")
   end
 
   describe "#schema" do

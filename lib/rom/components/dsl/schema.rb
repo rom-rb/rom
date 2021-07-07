@@ -28,7 +28,7 @@ module ROM
               :schemas, id: id, provider: provider, **options, block: block
             )
 
-            raise MissingSchemaClassError, provider unless provider.schema_class
+            raise MissingSchemaClassError, provider unless component.constant
 
             # TODO: this can go away by simply skipping readers in case of clashes
             raise InvalidRelationName, id if INVALID_IDS.include?(component.id)
