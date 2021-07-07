@@ -5,23 +5,10 @@ require "spec_helper"
 RSpec.describe "Mapper definition DSL" do
   include_context "container"
 
-  before do
-    configuration.relation(:users)
-
-    users = container.gateways[:default].dataset(:users)
-    users.insert(
-      user_id: 1,
-      user_name: "Joe",
-      user_email: "joe@doe.com",
-      contact_skype: "joe",
-      contact_phone: "1234567890"
-    )
-  end
-
   describe "prefix" do
-    subject(:mapped_users) { container.relations[:users].map_with(:users).to_a }
-
     it "applies new prefix to the attributes following it" do
+      configuration.relation(:users)
+
       configuration.mappers do
         define(:users) do
           prefix :user
@@ -36,6 +23,16 @@ RSpec.describe "Mapper definition DSL" do
           end
         end
       end
+
+      users_relation.insert(
+        user_id: 1,
+        user_name: "Joe",
+        user_email: "joe@doe.com",
+        contact_skype: "joe",
+        contact_phone: "1234567890"
+      )
+
+      mapped_users = users_relation.map_with(:users).to_a
 
       expect(mapped_users).to eql [
         {

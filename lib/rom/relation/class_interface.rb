@@ -158,39 +158,20 @@ module ROM
       end
 
       # @api private
-      def default_name
-        Name[id_from_class]
-      end
-
-      # @api private
       def infer_option(option, component:)
         meth = :"infer_#{option}"
         send(meth, component) if respond_to?(meth)
       end
 
       # @api private
-      def infer_name(component)
-        if (schema = components.schemas(view: false, provider: self).last)
-          schema.name
-        else
-          Name[id_from_class]
-        end
-      end
-
-      # @api private
       def infer_id(component)
         case component.type
-        when :relation
-          components.schemas(view: false, provider: self).last&.name.relation
         when :schema
-          if component.option?(:name)
-            component.name.relation
-          else
-            id_from_class
-            Inflector.underscore((name || superclass.name).split("::").last).to_sym
-          end
-        else
-          id_from_class
+          component.provider.config.component.name.dataset
+        when :relation
+          component.constant.config.component.name.relation
+        when :dataset
+          :default
         end
       end
 
@@ -202,11 +183,6 @@ module ROM
       # @api private
       def infer_gateway(component)
         gateway
-      end
-
-      # @api private
-      def id_from_class
-        Inflector.underscore((name || superclass.name).split("::").last).to_sym
       end
     end
   end

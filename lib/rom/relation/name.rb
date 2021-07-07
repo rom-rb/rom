@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
-require "dry/core/equalizer"
 require "concurrent/map"
+require "dry/core/equalizer"
+require "rom/support/inflector"
 
 module ROM
   class Relation
@@ -23,16 +24,23 @@ module ROM
       # @return [ROM::Relation::Name]
       #
       # @api private
-      def self.[](*args)
+      def self.call(*args)
         cache.fetch_or_store(args.hash) do
           relation, dataset, aliaz = args
 
-          if relation.is_a?(Name)
-            relation
+          case relation
+          when self then relation
+          when Symbol then new(relation, dataset, aliaz)
+          when Class, String then new(Inflector.component_id(relation).to_sym)
           else
-            new(relation, dataset, aliaz)
+            # raise ?
           end
         end
+      end
+
+      class << self
+        # @api private
+        alias_method :[], :call
       end
 
       # @api private
