@@ -185,7 +185,7 @@ module ROM
 
       # @api private
       def infer_adapter(component)
-        adapter or raise(MissingAdapterIdentifierError, self)
+        config.component.adapter or raise(MissingAdapterIdentifierError, self)
       end
 
       # @api private
