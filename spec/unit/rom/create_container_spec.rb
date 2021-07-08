@@ -90,12 +90,13 @@ RSpec.describe ROM::Global, "#container" do
         relation :users
       end
 
-      user_mapper_no_relation = Class.new(ROM::Mapper) do
+      others_mapper = Class.new(ROM::Mapper) do
         register_as :users
+        relation :others
       end
 
       configuration.register_mapper(users_mapper)
-      configuration.register_mapper(user_mapper_no_relation)
+      configuration.register_mapper(others_mapper)
 
       expect { container }.not_to raise_error
     end

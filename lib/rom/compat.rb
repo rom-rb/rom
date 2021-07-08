@@ -22,27 +22,6 @@ module ROM
         Inflector.component_id(component.constant).to_sym
       end
     end
-
-    class Mapper < Core
-      undef :id
-      undef :relation_id
-
-      def id
-        return options[:id] if options[:id]
-
-        if constant.respond_to?(:id)
-          constant.id
-        else
-          Inflector.underscore(constant.name)
-        end
-      end
-
-      def relation_id
-        return options[:base_relation] if options[:base_relation]
-
-        constant.base_relation if constant.respond_to?(:base_relation)
-      end
-    end
   end
 
   # @api public

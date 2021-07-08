@@ -3,7 +3,6 @@
 require "dry/core/class_attributes"
 require "dry/transformer"
 
-require "rom/support/component"
 require "rom/processor/transformer"
 
 module ROM
@@ -12,7 +11,18 @@ module ROM
   # @api public
   class Transformer < Dry::Transformer[Processor::Transformer::Functions]
     extend Dry::Core::ClassAttributes
-    extend Component
+
+    # @api private
+    def self.infer_option(option, component:)
+      case option
+      when :id
+        component.constant.register_as ||
+          component.constant.relation ||
+          Inflector.component_id(component.constant.name).to_sym
+      when :relation_id
+        component.constant.relation
+      end
+    end
 
     # @!method self.register_as
     #  Get or set registration name
@@ -76,13 +86,6 @@ module ROM
       define! do
         map_array(&block)
       end
-    end
-
-    # This is needed to make transformers compatible with rom setup
-    #
-    # @api private
-    def self.base_relation
-      relation
     end
 
     # Build a mapper instance

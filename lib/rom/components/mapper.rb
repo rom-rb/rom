@@ -12,11 +12,6 @@ module ROM
       #   @return [Symbol]
       option :relation_id, type: Types::Strict::Symbol, inferrable: true
 
-      # @!attribute [r] base_relation
-      #   @return [Symbol] The base relation identifier
-      #   @api public
-      option :base_relation, type: Types.Instance(Symbol), optional: true, reader: false
-
       # @!attribute [r] constant
       #   @return [Class] Component's target class
       option :constant, optional: true, type: Types.Interface(:new)
