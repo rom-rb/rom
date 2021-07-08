@@ -8,7 +8,7 @@ RSpec.describe ROM::Global, "#container" do
 
     it "can register multiple relations with same dataset" do
       apples = Class.new(ROM::Relation[:memory]) do
-        schema(:fruits, as: :apples) {}
+        schema(:fruits, as: :apples)
 
         def apple?
           true
@@ -16,7 +16,7 @@ RSpec.describe ROM::Global, "#container" do
       end
 
       oranges = Class.new(ROM::Relation[:memory]) do
-        schema(:fruits, as: :oranges) {}
+        schema(:fruits, as: :oranges)
 
         def orange?
           true

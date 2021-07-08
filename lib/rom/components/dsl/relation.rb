@@ -11,22 +11,31 @@ module ROM
       class Relation < Core
         option :relation
 
-        configure(:gateway, relation: :name)
+        option :dataset, default: -> { relation }
+
+        configure(:gateway, relation: :id, dataset: :dataset)
 
         # @api private
         def call
-          constant = build_class do |dsl|
-            class_exec(&dsl.block) if dsl.block
-
-            if components.schemas.empty?
-              schema(dsl.relation, gateway: dsl.gateway)
-            end
-          end
-
+          # TODO: deprecate `schema(:foo, as: :bar)` syntax because it's confusing as it actually
+          # configures relation, not schema, to use a specific dataset (:foo) and a custom id (:bar)
+          # This is why we have this awkward `schema.dataset` here
           components.add(
             :relations,
-            id: relation, constant: constant, gateway: gateway, provider: provider
+            id: relation,
+            dataset: schema.dataset,
+            gateway: gateway,
+            constant: constant,
+            provider: self
           )
+        end
+
+        # @api private
+        memoize def constant
+          build_class do |dsl|
+            class_exec(&dsl.block) if dsl.block
+            schema(dsl.dataset, as: dsl.relation, gateway: dsl.gateway) if components.schemas.empty?
+          end
         end
 
         # @api private
@@ -37,6 +46,11 @@ module ROM
         # @api private
         def class_parent
           ROM::Relation[adapter]
+        end
+
+        # @api private
+        def schema
+          constant.components.schemas.first
         end
 
         # @api private

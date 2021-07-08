@@ -126,9 +126,10 @@ module ROM
     extend Dry::Configurable
 
     setting :component do
-      setting :inflector, default: Inflector
-      setting :name, default: :relation, constructor: Name
+      setting :id, default: :relation
+      setting :dataset
       setting :gateway, default: :default
+      setting :inflector, default: Inflector
     end
 
     setting :schema do
@@ -148,11 +149,11 @@ module ROM
     # @api private
     def self.configure(options = EMPTY_HASH, &block)
       if block
-        super
+        super(&block).update(options)
       else
-        # TODO: Figure out how to handle anonymous classes w/o name.
-        #       Maybe this behavior should become deprecated
-        config.component.name = name if name
+        # By default this turns `MyApp::Relations::Users` into :users
+        config.component.id = config.component.inflector.component_id(name).to_sym
+        config.component.dataset = config.component.id
       end
     end
 
@@ -168,7 +169,7 @@ module ROM
     # @!attribute [r] name
     #   @return [Name] The relation name
     #   @api public
-    option :name, default: -> { config.component.name }
+    option :name, default: -> { Name[config.component.id, config.component.dataset] }
 
     # @!attribute [r] inflector
     #   @return [Dry::Inflector] The default inflector

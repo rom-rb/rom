@@ -167,11 +167,19 @@ module ROM
       def infer_id(component)
         case component.type
         when :schema
-          component.provider.config.component.name.dataset
+          component.provider.config.component.dataset
         when :relation
-          component.constant.config.component.name.relation
+          component.constant.config.component.id
         when :dataset
-          :default
+          component.provider.config.component.id
+        end
+      end
+
+      # @api private
+      def infer_dataset(component)
+        case component.type
+        when :relation
+          component.constant.config.component.dataset
         end
       end
 
