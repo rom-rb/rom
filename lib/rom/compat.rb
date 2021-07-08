@@ -146,6 +146,8 @@ module ROM
   end
 
   class Relation
+    extend Dry::Core::ClassAttributes
+
     SETTING_MAPPING = {
       auto_map: [],
       auto_struct: [],

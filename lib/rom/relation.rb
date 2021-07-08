@@ -40,20 +40,16 @@ module ROM
   #
   # @api public
   class Relation
+    extend Dry::Configurable
     extend ROM.Components(:dataset, :schema)
-
-    # Default no-op output schema which is called in `Relation#each`
-    NOOP_OUTPUT_SCHEMA = -> tuple { tuple }.freeze
-
     extend Initializer
     extend ClassInterface
 
+    include Dry::Core::Memoizable
     include Relation::Commands
 
-    include Dry::Core::Memoizable
-    extend Dry::Core::ClassAttributes
-
-    extend Dry::Configurable
+    # Default no-op output schema which is called in `Relation#each`
+    NOOP_OUTPUT_SCHEMA = -> tuple { tuple }.freeze
 
     setting :auto_map, default: true
     setting :auto_struct, default: false
