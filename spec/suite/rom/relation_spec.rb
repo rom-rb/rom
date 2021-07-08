@@ -83,6 +83,21 @@ RSpec.describe ROM::Relation do
     end
   end
 
+  describe "#dataset" do
+    it "returns dataset inferred from gateway" do
+      pending "TODO: dataset inference"
+
+      module Test
+        class Users < ROM::Relation[:memory]
+        end
+      end
+
+      relation = Test::Users.new
+
+      expect(relation.dataset).to be_empty
+    end
+  end
+
   describe "#schema" do
     it "returns schema inferred from demodulized class name" do
       module Test

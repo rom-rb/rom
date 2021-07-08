@@ -54,6 +54,11 @@ module ROM
       #   @return [Class] Component's adapter
       option :adapter, inferrable: true, type: Types::Strict::Symbol
 
+      # @!attribute [r] abstract
+      #   @return [Boolean]
+      option :abstract, type: Types::Strict::Bool, default: -> { false }
+      alias_method :abstract?, :abstract
+
       # @api public
       def type
         self.class.id
@@ -184,7 +189,7 @@ module ROM
         if value
           options[name] = instance_variable_set(:"@#{name}", value)
         else
-          raise ConfigError.new(name, self, :inferrence)
+          raise ConfigError.new(name, self, :inferrence) unless abstract?
         end
 
         value
