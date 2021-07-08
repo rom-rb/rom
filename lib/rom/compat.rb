@@ -23,25 +23,6 @@ module ROM
       end
     end
 
-    class Command < Core
-      undef :id
-      undef :relation_id
-
-      def id
-        return options[:id] if options[:id]
-
-        if constant.respond_to?(:register_as)
-          constant.register_as || constant.default_name
-        else
-          Inflector.underscore(constant.name)
-        end
-      end
-
-      def relation_id
-        constant.relation if constant.respond_to?(:relation)
-      end
-    end
-
     class Mapper < Core
       undef :id
       undef :relation_id
