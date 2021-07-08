@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "dry/core/class_attributes"
+require "dry/configurable"
 require "dry/transformer"
 
 require "rom/processor/transformer"
@@ -10,7 +10,12 @@ module ROM
   #
   # @api public
   class Transformer < Dry::Transformer[Processor::Transformer::Functions]
-    extend Dry::Core::ClassAttributes
+    extend Dry::Configurable
+
+    setting :component do
+      setting :id
+      setting :relation
+    end
 
     # @api private
     def self.infer_option(option, component:)
@@ -23,25 +28,6 @@ module ROM
         component.constant.relation
       end
     end
-
-    # @!method self.register_as
-    #  Get or set registration name
-    #
-    #  @overload register_as
-    #    Return the registration name
-    #    @return [Symbol]
-    #
-    #  @overload register_as(name)
-    #    Configure registration name
-    #
-    #    @example
-    #      class MyMapper < ROM::Transformer
-    #        relation :users
-    #        register_as :my_mapper
-    #      end
-    #
-    #    @param name [Symbol] The registration name
-    defines :register_as
 
     # Configure relation for the transformer
     #
@@ -62,11 +48,13 @@ module ROM
     # @option options :as [Symbol] Mapper identifier
     #
     # @api public
-    def self.relation(name = Undefined, options = EMPTY_HASH)
-      return @relation if name.equal?(Undefined) && defined?(@relation)
-
-      register_as(options.fetch(:as, name))
-      @relation = name
+    def self.relation(name = Undefined, as: name)
+      if name == Undefined
+        config.component.relation
+      else
+        config.component.relation = name
+        config.component.id = as
+      end
     end
 
     # Define transformation pipeline

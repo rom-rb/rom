@@ -2,6 +2,8 @@
 
 require "rom/support/inflector"
 
+require "rom/mapper"
+require "rom/transformer"
 require "rom/relation"
 require "rom/command"
 
@@ -12,6 +14,8 @@ require "rom/components"
 
 module ROM
   module Components
+    undef :infer_option
+
     # @api private
     def infer_option(option, component:)
       if component.provider && component.provider != self
@@ -117,11 +121,6 @@ module ROM
   module SettingProxy
     extend Dry::Core::ClassAttributes
 
-    # @api private
-    def setting_mapping
-      const_get(:SETTING_MAPPING)
-    end
-
     # Delegate to config when accessing deprecated class attributes
     #
     # @api private
@@ -152,20 +151,22 @@ module ROM
   class Relation
     class << self
       prepend SettingProxy
-    end
 
-    SETTING_MAPPING = {
-      auto_map: [],
-      auto_struct: [],
-      struct_namespace: [],
-      wrap_class: [],
-      adapter: [:component, :adapter],
-      gateway: [:component, :gateway],
-      schema_class: [:schema, :constant],
-      schema_dsl: [:schema, :dsl_class],
-      schema_attr_class: [:schema, :attr_class],
-      schema_inferrer: [:schema, :inferrer]
-    }.freeze
+      def setting_mapping
+        @setting_mapping ||= {
+          auto_map: [],
+          auto_struct: [],
+          struct_namespace: [],
+          wrap_class: [],
+          adapter: [:component, :adapter],
+          gateway: [:component, :gateway],
+          schema_class: [:schema, :constant],
+          schema_dsl: [:schema, :dsl_class],
+          schema_attr_class: [:schema, :attr_class],
+          schema_inferrer: [:schema, :inferrer]
+        }.freeze
+      end
+    end
 
     # This is used by the deprecated command => relation view delegation syntax
     # @api private
@@ -177,21 +178,36 @@ module ROM
     end
   end
 
+  Transformer.class_eval do
+    class << self
+      prepend SettingProxy
+
+      def setting_mapping
+        @setting_mapping ||= {
+          relation: [:component, :relation],
+          register_as: [:component, :id]
+        }.freeze
+      end
+    end
+  end
+
   class Mapper
     class << self
       prepend SettingProxy
-    end
 
-    SETTING_MAPPING = {
-      relation: [:component, :relation],
-      register_as: [:component, :id],
-      inherit_header: [],
-      reject_keys: [],
-      symbolize_keys: [],
-      copy_keys: [],
-      prefix: [],
-      prefix_separator: []
-    }.freeze
+      def setting_mapping
+        @setting_mapper ||= {
+          relation: [:component, :relation],
+          register_as: [:component, :id],
+          inherit_header: [],
+          reject_keys: [],
+          symbolize_keys: [],
+          copy_keys: [],
+          prefix: [],
+          prefix_separator: []
+        }.freeze
+      end
+    end
   end
 
   class Command
