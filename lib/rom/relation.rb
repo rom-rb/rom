@@ -55,25 +55,6 @@ module ROM
 
     defines :adapter, :wrap_class
 
-    # @!method self.gateway
-    #  Manage the gateway
-    #
-    #  @overload gateway
-    #    Return the gateway key that the relation is associated with
-    #    @return [Symbol]
-    #
-    #  @overload gateway(gateway_key)
-    #    Link the relation to a gateway. Change this setting if the
-    #    relation is defined on a non-default gateway
-    #
-    #    @example
-    #      class Users < ROM::Relation[:sql]
-    #        gateway :custom
-    #      end
-    #
-    #    @param [Symbol] gateway_key
-    defines :gateway
-
     # @!method self.auto_map
     #   Whether or not a relation and its compositions should be auto-mapped
     #
@@ -114,8 +95,6 @@ module ROM
     #    @param [Module] namespace
     #
     defines :struct_namespace
-
-    gateway :default
 
     auto_map true
     auto_struct false
@@ -631,7 +610,7 @@ module ROM
     #
     # @api private
     def gateway
-      self.class.gateway
+      config.component.gateway
     end
 
     # Return a foreign key name for the provided relation name

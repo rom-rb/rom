@@ -189,8 +189,8 @@ module ROM
       end
 
       # @api private
-      def infer_gateway(component)
-        gateway
+      def infer_gateway(_)
+        config.component.gateway
       end
     end
   end
