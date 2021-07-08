@@ -147,6 +147,10 @@ module ROM
 
   class Relation
     SETTING_MAPPING = {
+      auto_map: [],
+      auto_struct: [],
+      struct_namespace: [],
+      wrap_class: [],
       adapter: [:component, :adapter],
       gateway: [:component, :gateway],
       schema_class: [:schema, :constant],
@@ -161,11 +165,23 @@ module ROM
     def self.method_missing(name, *args, &block)
       return super unless SETTING_MAPPING.key?(name)
 
-      if args.any?
-        ns, key = SETTING_MAPPING[name]
-        config[ns][key] = args.first
+      mapping = SETTING_MAPPING[name]
+      ns, key = mapping
+
+      if args.empty?
+        if mapping.empty?
+          config[name]
+        else
+          config[ns][key]
+        end
       else
-        SETTING_MAPPING[name].reduce(config.to_h) { |a, e| a[e] }
+        value = args.first
+
+        if mapping.empty?
+          config[name] = value
+        else
+          config[ns][key] = value
+        end
       end
     end
 

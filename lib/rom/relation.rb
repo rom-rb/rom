@@ -53,56 +53,12 @@ module ROM
     include Dry::Core::Memoizable
     extend Dry::Core::ClassAttributes
 
-    defines :wrap_class
-
-    # @!method self.auto_map
-    #   Whether or not a relation and its compositions should be auto-mapped
-    #
-    #   @overload auto_map
-    #     Return auto_map setting value
-    #     @return [Boolean]
-    #
-    #   @overload auto_map(value)
-    #     Set auto_map value
-    defines :auto_map
-
-    # @!method self.auto_struct
-    #   Whether or not tuples should be auto-mapped to structs
-    #
-    #   @overload auto_struct
-    #     Return auto_struct setting value
-    #     @return [Boolean]
-    #
-    #   @overload auto_struct(value)
-    #     Set auto_struct value
-    defines :auto_struct
-
-    # @!method self.struct_namespace
-    #  Get or set a namespace for auto-generated struct classes.
-    #  By default, new struct classes are created within ROM::Struct
-    #
-    #   @example using custom namespace
-    #     class Users < ROM::Relation[:sql]
-    #       struct_namespace Entities
-    #     end
-    #
-    #     users.by_pk(1).one! # => #<Entities::User id=1 name="Jane Doe">
-    #
-    #  @overload struct_namespace
-    #    @return [Module] Default struct namespace
-    #
-    #  @overload struct_namespace(namespace)
-    #    @param [Module] namespace
-    #
-    defines :struct_namespace
-
-    auto_map true
-    auto_struct false
-    struct_namespace ROM::Struct
-
-    wrap_class Relation::Wrap
-
     extend Dry::Configurable
+
+    setting :auto_map, default: true
+    setting :auto_struct, default: false
+    setting :struct_namespace, default: ROM::Struct
+    setting :wrap_class, default: Relation::Wrap
 
     setting :component do
       setting :id, default: :relation
@@ -200,17 +156,17 @@ module ROM
     # @!attribute [r] auto_map
     #   @return [TrueClass,FalseClass] Whether or not a relation and its compositions should be auto-mapped
     #   @api private
-    option :auto_map, default: -> { self.class.auto_map }
+    option :auto_map, default: -> { config.auto_map }
 
     # @!attribute [r] auto_struct
     #   @return [TrueClass,FalseClass] Whether or not tuples should be auto-mapped to structs
     #   @api private
-    option :auto_struct, default: -> { self.class.auto_struct }
+    option :auto_struct, default: -> { config.auto_struct }
 
     # @!attribute [r] struct_namespace
     #   @return [Module] Custom struct namespace
     #   @api private
-    option :struct_namespace, reader: false, default: -> { self.class.struct_namespace }
+    option :struct_namespace, reader: false, default: -> { config.struct_namespace }
 
     # @!attribute [r] mappers
     #   @return [MapperRegistry] an optional mapper registry (empty by default)
@@ -667,7 +623,7 @@ module ROM
     #
     # @api private
     def wrap_class
-      self.class.wrap_class
+      config.wrap_class
     end
   end
 end
