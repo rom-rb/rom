@@ -336,23 +336,25 @@ RSpec.describe ROM::Relation, ".schema" do
     end
 
     it "builds optional read types automatically" do
-      to_s = ROM::Types::String.constructor(:to_s.to_proc)
-      to_s_on_read = ROM::Types::String.meta(read: to_s)
+      module Test
+        CoercibleString = ROM::Types::String.constructor(:to_s.to_proc)
 
-      Test::Users = Class.new(ROM::Relation[:memory]) do
-        schema do
-          attribute :id, ROM::Types::Integer.meta(primary_key: true)
-          attribute :name, to_s_on_read.optional
+        class Users < ROM::Relation[:memory]
+          schema do
+            attribute :id, Types::Integer.meta(primary_key: true)
+            attribute :name, Types::String.optional.meta(read: CoercibleString)
+          end
         end
       end
 
-      schema = Test::Users.new([]).schema
+      relation = Test::Users.new([])
+      schema = relation.schema
 
       expect(schema[:name].type)
         .to eql(
-          to_s_on_read.optional.meta(
-            source: ROM::Relation::Name[:relation],
-            read: to_s.optional
+          Types::String.optional.meta(
+            source: relation.name,
+            read: Test::CoercibleString.optional
           )
         )
     end

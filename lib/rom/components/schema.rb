@@ -74,9 +74,15 @@ module ROM
       end
 
       # @api private
-      memoize def name
-        ROM::Relation::Name[as || id, id]
+      def relation_id
+        as || id
       end
+
+      # @api private
+      def name
+        ROM::Relation::Name[relation_id, dataset]
+      end
+      alias_method :dataset, :id
 
       # @api private
       def dsl(**opts)
@@ -97,7 +103,7 @@ module ROM
 
       # @api private
       def dsl_options
-        {relation: name,
+        {relation: name, # TODO: Schema#name could now probably just be a symbol id
          schema_class: constant,
          attr_class: attr_class,
          adapter: adapter, # TODO: decouple Schema::DSL from adapter

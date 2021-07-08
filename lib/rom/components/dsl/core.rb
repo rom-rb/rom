@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "dry/core/memoizable"
 require "dry/core/class_builder"
 
 require "rom/constants"
@@ -11,6 +12,7 @@ module ROM
       # @private
       class Core
         extend Dry::Core::ClassAttributes
+        include Dry::Core::Memoizable
         extend Initializer
 
         # @api private

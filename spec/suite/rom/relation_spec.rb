@@ -42,16 +42,43 @@ RSpec.describe ROM::Relation do
       expect(relation.name.relation).to be(:people)
     end
 
-    it "returns name that's explicitly configured" do
+    it "returns name that's explicitly configured through custom id" do
       module Test
         class Users < ROM::Relation[:memory]
-          config.component.name = Name[:people, :users]
+          config.component.id = :people
         end
       end
 
       relation = Test::Users.new([])
 
       expect(relation.name.dataset).to be(:users)
+      expect(relation.name.relation).to be(:people)
+    end
+
+    it "returns name that's explicitly configured through custom dataset" do
+      module Test
+        class Users < ROM::Relation[:memory]
+          config.component.dataset = :people
+        end
+      end
+
+      relation = Test::Users.new([])
+
+      expect(relation.name.dataset).to be(:people)
+      expect(relation.name.relation).to be(:users)
+    end
+
+    it "returns name that's explicitly configured through custom id and dataset" do
+      module Test
+        class Users < ROM::Relation[:memory]
+          config.component.id = :people
+          config.component.dataset = :humans
+        end
+      end
+
+      relation = Test::Users.new([])
+
+      expect(relation.name.dataset).to be(:humans)
       expect(relation.name.relation).to be(:people)
     end
   end

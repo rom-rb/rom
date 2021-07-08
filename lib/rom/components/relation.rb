@@ -9,12 +9,16 @@ module ROM
       id :relation
 
       # @!attribute [r] constant
-      #   @return [Class] Component's target class
+      #   @return [.new] Relation instance builder (typically a class)
       option :constant, type: Types.Interface(:new)
 
       # @!attribute [r] gateway
-      #   @return [Symbol] Gateway identifier
-      option :gateway, inferrable: true, type: Types::Strict::Symbol
+      #   @return [Symbol] The default gateway id
+      option :gateway, type: Types::Strict::Symbol, inferrable: true
+
+      # @!attribute [r] dataset
+      #   @return [Symbol] The default dataset id
+      option :dataset, type: Types::Strict::Symbol, inferrable: true
 
       # Registry namespace
       #
@@ -55,19 +59,8 @@ module ROM
       private
 
       # @api private
-      def name
-        constant.config.component.name
-      end
-
-      # @api private
-      def schema
-        configuration.schemas[name.dataset]
-      end
-
-      # @api private
       def relation_options
-        {name: name,
-         schema: schema,
+        {schema: schema,
          inflector: inflector,
          datasets: configuration.datasets,
          schemas: configuration.schemas,
@@ -76,6 +69,11 @@ module ROM
          commands: configuration.commands.new(id, adapter: adapter),
          __registry__: relations, # TODO: rename
          **plugin_options} # TODO: rename
+      end
+
+      # @api private
+      def schema
+        configuration.schemas[dataset]
       end
 
       # @api private
