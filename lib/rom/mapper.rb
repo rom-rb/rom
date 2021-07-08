@@ -8,15 +8,21 @@ module ROM
   #
   # @private
   class Mapper
-    include DSL
+    extend Dry::Configurable
     include Dry::Equalizer(:transformers, :header)
+    include DSL
 
-    defines :relation, :register_as, :symbolize_keys, :copy_keys,
-            :prefix, :prefix_separator, :inherit_header, :reject_keys
+    setting :inherit_header, default: true
+    setting :reject_keys, default: false
+    setting :prefix_separator, default: "_"
+    setting :symbolize_keys
+    setting :copy_keys
+    setting :prefix
 
-    inherit_header true
-    reject_keys false
-    prefix_separator "_"
+    setting :component do
+      setting :id
+      setting :relation
+    end
 
     # @api private
     def self.infer_option(option, component:)

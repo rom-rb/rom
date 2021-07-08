@@ -26,7 +26,7 @@ module ROM
       #
       # @api public
       def dataset(id = nil, **options, &block)
-        dsl(DSL::Dataset, id: id, block: block, **options).()
+        __dsl__(DSL::Dataset, id: id, block: block, **options).()
       end
 
       # Specify a relation schema
@@ -52,7 +52,7 @@ module ROM
       #
       # @api public
       def schema(id = nil, view: false, **options, &block)
-        dsl(DSL::Schema, id: id, relation: self, view: view, block: block).(**options)
+        __dsl__(DSL::Schema, id: id, relation: self, view: view, block: block).(**options)
       end
 
       # Relation definition DSL
@@ -66,7 +66,7 @@ module ROM
       #
       # @api public
       def relation(relation, **options, &block)
-        dsl(DSL::Relation, relation: relation, block: block, **options).()
+        __dsl__(DSL::Relation, relation: relation, block: block, **options).()
       end
 
       # Command definition DSL
@@ -90,7 +90,7 @@ module ROM
       #
       # @api public
       def commands(relation, **options, &block)
-        dsl(DSL::Command, relation: relation, block: block, **options).()
+        __dsl__(DSL::Command, relation: relation, block: block, **options).()
         components.commands
       end
 
@@ -98,7 +98,7 @@ module ROM
       #
       # @api public
       def mappers(*_args, **options, &block)
-        dsl(DSL::Mapper, block: block, **options).()
+        __dsl__(DSL::Mapper, block: block, **options).()
         components.mappers
       end
 
@@ -149,7 +149,7 @@ module ROM
       private
 
       # @api private
-      def dsl(type, **options)
+      def __dsl__(type, **options)
         type.new(**options, provider: self)
       end
     end

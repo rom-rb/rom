@@ -114,29 +114,21 @@ module ROM
     end
   end
 
-  class Relation
+  module SettingProxy
     extend Dry::Core::ClassAttributes
 
-    SETTING_MAPPING = {
-      auto_map: [],
-      auto_struct: [],
-      struct_namespace: [],
-      wrap_class: [],
-      adapter: [:component, :adapter],
-      gateway: [:component, :gateway],
-      schema_class: [:schema, :constant],
-      schema_dsl: [:schema, :dsl_class],
-      schema_attr_class: [:schema, :attr_class],
-      schema_inferrer: [:schema, :inferrer]
-    }.freeze
+    # @api private
+    def setting_mapping
+      const_get(:SETTING_MAPPING)
+    end
 
     # Delegate to config when accessing deprecated class attributes
     #
     # @api private
-    def self.method_missing(name, *args, &block)
-      return super unless SETTING_MAPPING.key?(name)
+    def method_missing(name, *args, &block)
+      return super unless setting_mapping.key?(name)
 
-      mapping = SETTING_MAPPING[name]
+      mapping = setting_mapping[name]
       ns, key = mapping
 
       if args.empty?
@@ -155,6 +147,25 @@ module ROM
         end
       end
     end
+  end
+
+  class Relation
+    class << self
+      prepend SettingProxy
+    end
+
+    SETTING_MAPPING = {
+      auto_map: [],
+      auto_struct: [],
+      struct_namespace: [],
+      wrap_class: [],
+      adapter: [:component, :adapter],
+      gateway: [:component, :gateway],
+      schema_class: [:schema, :constant],
+      schema_dsl: [:schema, :dsl_class],
+      schema_attr_class: [:schema, :attr_class],
+      schema_inferrer: [:schema, :inferrer]
+    }.freeze
 
     # This is used by the deprecated command => relation view delegation syntax
     # @api private
@@ -164,6 +175,23 @@ module ROM
 
       instance_methods - ancestor_methods + auto_curried_methods.to_a
     end
+  end
+
+  class Mapper
+    class << self
+      prepend SettingProxy
+    end
+
+    SETTING_MAPPING = {
+      relation: [:component, :relation],
+      register_as: [:component, :id],
+      inherit_header: [],
+      reject_keys: [],
+      symbolize_keys: [],
+      copy_keys: [],
+      prefix: [],
+      prefix_separator: []
+    }.freeze
   end
 
   class Command
