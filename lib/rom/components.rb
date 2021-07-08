@@ -16,7 +16,7 @@ module ROM
     # @api private
     def inherited(klass)
       super
-      klass.components.update(components)
+      klass.components.update(components, abstract: true)
     end
 
     # @api public

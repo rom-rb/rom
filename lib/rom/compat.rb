@@ -8,12 +8,21 @@ require "rom/command"
 require "rom/configuration"
 require "rom/compat/auto_registration"
 
-require "rom/components/relation"
-require "rom/components/command"
-require "rom/components/mapper"
+require "rom/components"
 
 module ROM
   module Components
+    # @api private
+    def infer_option(option, component:)
+      if component.provider && component.provider != self
+        component.provider.infer_option(option, component: component)
+      elsif component.option?(:constant) && component.constant.respond_to?(:infer_option)
+        component.constant.infer_option(option, component: component)
+      elsif component.option?(:constant)
+        Inflector.component_id(component.constant).to_sym
+      end
+    end
+
     class Command < Core
       undef :id
       undef :relation_id
