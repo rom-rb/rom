@@ -272,9 +272,9 @@ RSpec.describe ROM::Relation, ".schema" do
     expect(Test::Users.new([]).name.relation).to be(:test_users)
   end
 
-  it "raises error when schema_class is missing" do
+  it "raises error when schema.constant is missing" do
     class Test::Users < ROM::Relation[:memory]
-      schema_class nil
+      config.schema.constant = nil
     end
 
     expect { Test::Users.schema(:test) {} }
