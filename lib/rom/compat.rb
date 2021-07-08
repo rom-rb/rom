@@ -147,6 +147,7 @@ module ROM
 
   class Relation
     SETTING_MAPPING = {
+      adapter: [:component, :adapter],
       gateway: [:component, :gateway],
       schema_class: [:schema, :constant],
       schema_dsl: [:schema, :dsl_class],

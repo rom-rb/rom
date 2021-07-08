@@ -53,7 +53,7 @@ module ROM
     include Dry::Core::Memoizable
     extend Dry::Core::ClassAttributes
 
-    defines :adapter, :wrap_class
+    defines :wrap_class
 
     # @!method self.auto_map
     #   Whether or not a relation and its compositions should be auto-mapped
@@ -107,6 +107,7 @@ module ROM
     setting :component do
       setting :id, default: :relation
       setting :dataset
+      setting :adapter
       setting :gateway, default: :default
       setting :inflector, default: Inflector
     end
@@ -601,7 +602,7 @@ module ROM
     #
     # @api private
     def adapter
-      self.class.adapter
+      config.component.adapter
     end
 
     # Return name of the source gateway of this relation
