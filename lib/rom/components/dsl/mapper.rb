@@ -65,7 +65,7 @@ module ROM
         # @api public
         def register(relation, mappers)
           mappers.map do |id, mapper|
-            components.add(:mappers, id: id, base_relation: relation, object: mapper)
+            components.add(:mappers, id: id, relation_id: relation, object: mapper)
           end
         end
 

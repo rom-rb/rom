@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "rom/constants"
-require "rom/support/component"
 require "rom/mapper/dsl"
 
 module ROM
@@ -9,8 +8,6 @@ module ROM
   #
   # @private
   class Mapper
-    extend Component
-
     include DSL
     include Dry::Equalizer(:transformers, :header)
 
@@ -20,6 +17,18 @@ module ROM
     inherit_header true
     reject_keys false
     prefix_separator "_"
+
+    # @api private
+    def self.infer_option(option, component:)
+      case option
+      when :id
+        component.constant.register_as ||
+          component.constant.relation ||
+          Inflector.component_id(component.constant.name).to_sym
+      when :relation_id
+        component.constant.relation || component.constant.base_relation
+      end
+    end
 
     # @return [Object] transformers object built by a processor
     #
@@ -68,14 +77,6 @@ module ROM
     # @api private
     def self.build(header = self.header, processor = :transformer)
       new(header, processor)
-    end
-
-    # @api private
-    def self.registry(descendants)
-      descendants.each_with_object({}) do |klass, h|
-        name = klass.register_as || klass.relation
-        (h[klass.base_relation] ||= {})[name] = klass.build
-      end
     end
 
     # @api private
