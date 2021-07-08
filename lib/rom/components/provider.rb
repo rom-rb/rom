@@ -47,7 +47,7 @@ module ROM
               private
 
               # @api private
-              def dsl(type, **options)
+              def __dsl__(type, **options)
                 type.new(**options, provider: self)
               end
             }
