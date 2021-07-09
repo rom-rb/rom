@@ -11,9 +11,9 @@ module ROM
     module DSL
       # @private
       class Core
-        extend Dry::Core::ClassAttributes
-        include Dry::Core::Memoizable
         extend Initializer
+
+        include Dry::Core::Memoizable
 
         # @api private
         option :provider
@@ -24,14 +24,19 @@ module ROM
         # @api private
         option :block, optional: true
 
-        defines :configure
+        # @api private
+        def self.config(*options, **mappings)
+          if defined?(@config) && (options.empty? && mappings.empty?)
+            @config
+          else
+            @config = [options.product(options).to_h, **mappings].reduce(:merge)
+          end
+        end
 
         # @api private
-        def self.configure(*names, **mappings)
-          if names.any? || mappings.any?
-            return super((super() || EMPTY_HASH).merge(names.zip(names).to_h.merge(mappings)))
-          end
+        def self.inherited(klass)
           super
+          klass.instance_variable_set(:@config, EMPTY_HASH)
         end
 
         # @api private
@@ -46,7 +51,7 @@ module ROM
         # @api private
         def build_class(name: class_name, parent: class_parent, **options, &block)
           Dry::Core::ClassBuilder.new(name: name, parent: parent).call do |klass|
-            klass.config.component.update(component_options) unless component_options.empty?
+            klass.config.update(component_options)
             klass.class_exec(self, &block) if block
           end
         end
@@ -54,8 +59,22 @@ module ROM
         private
 
         # @api private
-        def component_options
-          self.class.configure&.map { |source, target| [target, options[source]] }.to_h
+        def component_options(mapping = self.class.config)
+          return {mapping => options[mapping]} if mapping.is_a?(Symbol)
+
+          res = mapping.map { |src, trg|
+            case trg
+            when Hash
+              {src => component_options(trg)}
+            when Array
+              {src => trg.map { |m| component_options(m) }.reduce(:merge)}
+            when nil
+              component_options(src => src)
+            else
+              {trg => options[src]} unless options[src].nil?
+            end
+          }
+          res.compact.reduce(:merge) || EMPTY_HASH
         end
 
         # @api private

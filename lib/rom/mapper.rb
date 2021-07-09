@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "dry/configurable"
+
 require "rom/constants"
 require "rom/mapper/dsl"
 
