@@ -11,8 +11,6 @@ require "rom/components"
 
 module ROM
   module Components
-    undef :infer_option
-
     # @api private
     def infer_option(option, component:)
       if component.provider && component.provider != self

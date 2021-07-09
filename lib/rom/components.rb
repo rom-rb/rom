@@ -29,15 +29,5 @@ module ROM
     def plugins
       @plugins ||= []
     end
-
-    # @api private
-    def infer_option(option, component:)
-      if component.provider && component.provider != self
-        component.provider.infer_option(option, component: component)
-      elsif component.option?(:constant)
-        # TODO: this could be transparent so that this conditional wouldn't be needed
-        component.constant.infer_option(option, component: component)
-      end
-    end
   end
 end
