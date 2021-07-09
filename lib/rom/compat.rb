@@ -151,11 +151,53 @@ module ROM
     class << self
       prepend SettingProxy
 
+      # Configure relation for the transformer
+      #
+      # @example with a custom name
+      #   class UsersMapper < ROM::Transformer
+      #     relation :users, as: :json_serializer
+      #
+      #     map do
+      #       rename_keys user_id: :id
+      #       deep_stringify_keys
+      #     end
+      #   end
+      #
+      #   users.map_with(:json_serializer)
+      #
+      # @param name [Symbol]
+      # @param options [Hash]
+      # @option options :as [Symbol] Mapper identifier
+      #
+      # @deprecated
+      #
+      # @api public
+      def relation(name = Undefined, as: name)
+        if name == Undefined
+          config.component.relation_id
+        else
+          config.component.relation_id = name
+          config.component.id = as
+        end
+      end
+
       def setting_mapping
         @setting_mapping ||= {
-          relation: [:component, :relation],
-          register_as: [:component, :id]
+          register_as: [:component, :id],
+          relation: [:component, :relation_id]
         }.freeze
+      end
+
+      # @api private
+      def infer_option(option, component:)
+        case option
+        when :id
+          component.constant.register_as ||
+            component.constant.relation ||
+            Inflector.component_id(component.constant.name).to_sym
+        when :relation_id
+          component.constant.relation || component.constant.base_relation
+        end
       end
     end
   end
@@ -168,8 +210,8 @@ module ROM
 
       def setting_mapping
         @setting_mapper ||= {
-          relation: [:component, :relation],
           register_as: [:component, :id],
+          relation: [:component, :relation_id],
           inherit_header: [],
           reject_keys: [],
           symbolize_keys: [],
@@ -177,6 +219,18 @@ module ROM
           prefix: [],
           prefix_separator: []
         }.freeze
+      end
+
+      # @api private
+      def infer_option(option, component:)
+        case option
+        when :id
+          component.constant.register_as ||
+            component.constant.relation ||
+            Inflector.component_id(component.constant.name).to_sym
+        when :relation_id
+          component.constant.relation || component.constant.base_relation
+        end
       end
     end
   end
