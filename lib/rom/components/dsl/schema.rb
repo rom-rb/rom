@@ -33,8 +33,8 @@ module ROM
             # TODO: this can go away by simply skipping readers in case of clashes
             raise InvalidRelationName, id if INVALID_IDS.include?(component.id)
 
-            provider.config.component.id = component.relation_id
-            provider.config.component.dataset = component.dataset
+            provider_config.component.id = component.relation_id
+            provider_config.component.dataset = component.dataset
 
             # TODO: this should go away
             if components.datasets(id: component.dataset).empty?
@@ -49,7 +49,11 @@ module ROM
 
         # @api private
         def resolve_gateway
-          config.component.respond_to?(:gateway) ? config.component.gateway : :default
+          if provider_config.component.respond_to?(:gateway)
+            provider_config.component.gateway
+          else
+            :default
+          end
         end
       end
     end

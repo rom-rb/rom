@@ -13,7 +13,7 @@ module ROM
 
         option :dataset, default: -> { relation }
 
-        config(component: [:dataset, :gateway, relation: :id])
+        settings(component: [:dataset, :gateway, relation: :id])
 
         # @api private
         def call
@@ -44,7 +44,7 @@ module ROM
             relation,
             type: :relation,
             inflector: inflector,
-            **config.components
+            **provider_config.components
           ]
         end
 
@@ -67,7 +67,7 @@ module ROM
 
         # @api private
         def adapter
-          config.gateways[gateway].adapter if config.gateways.key?(gateway)
+          provider_config.gateways[gateway].adapter if provider_config.gateways.key?(gateway)
         end
       end
     end

@@ -25,7 +25,7 @@ module ROM
 
         nested(true)
 
-        config(:input, component: [:adapter, {relation: :relation_id}])
+        settings(:input, component: [:adapter, {relation: :relation_id}])
 
         # Define a command class
         #
@@ -58,7 +58,7 @@ module ROM
             inflector: inflector,
             adapter: adapter,
             command_type: command_type,
-            **config.components
+            **provider_config.components
           ]
         end
 

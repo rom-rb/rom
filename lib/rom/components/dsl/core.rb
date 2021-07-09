@@ -29,25 +29,27 @@ module ROM
         # @api private
         option :block, optional: true
 
+        # Specifies which DSL options map to component's settings
+        #
         # @api private
-        def self.config(*options, **mappings)
-          if defined?(@config) && (options.empty? && mappings.empty?)
-            @config
+        def self.settings(*keys, **mappings)
+          if defined?(@settings) && (keys.empty? && mappings.empty?)
+            @settings
           else
-            @config = [options.product(options).to_h, **mappings].reduce(:merge)
+            @settings = [keys.product(keys).to_h, **mappings].reduce(:merge)
           end
         end
 
         # @api private
         def self.inherited(klass)
           super
-          klass.instance_variable_set(:@config, EMPTY_HASH)
+          klass.instance_variable_set(:@settings, EMPTY_HASH)
         end
 
         # @api private
         def build_class(name: class_name, parent: class_parent, **options, &block)
           Dry::Core::ClassBuilder.new(name: name, parent: parent).call do |klass|
-            klass.config.update(component_options)
+            klass.config.update(resolve_config)
             klass.class_exec(self, &block) if block
           end
         end
@@ -55,21 +57,22 @@ module ROM
         private
 
         # @api private
-        def component_options(mapping = self.class.config)
+        def resolve_config(mapping = self.class.settings)
           return {mapping => options[mapping]} if mapping.is_a?(Symbol)
 
           res = mapping.map { |src, trg|
             case trg
             when Hash
-              {src => component_options(trg)}
+              {src => resolve_config(trg)}
             when Array
-              {src => trg.map { |m| component_options(m) }.reduce(:merge)}
+              {src => trg.map { |m| resolve_config(m) }.reduce(:merge)}
             when nil
-              component_options(src => src)
+              resolve_config(src => src)
             else
               {trg => options[src]} unless options[src].nil?
             end
           }
+
           res.compact.reduce(:merge) || EMPTY_HASH
         end
 
@@ -89,7 +92,7 @@ module ROM
         end
 
         # @api private
-        def config
+        def provider_config
           provider.config
         end
       end
