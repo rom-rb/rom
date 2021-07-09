@@ -40,7 +40,12 @@ module ROM
 
         # @api private
         def class_name
-          class_name_inferrer[relation, type: :relation, inflector: inflector, **config.components]
+          class_name_inferrer[
+            relation,
+            type: :relation,
+            inflector: inflector,
+            **config.components
+          ]
         end
 
         # @api private

@@ -30,11 +30,24 @@ module ROM
 
     DEFAULT_CLASS_NAMESPACE = "ROM"
 
-    DEFAULT_CLASS_NAME_INFERRER = -> (name, type:, inflector:, class_namespace: nil, **opts) {
-      [class_namespace,
-       inflector.pluralize(inflector.camelize(type)),
-       inflector.camelize(name)
-      ].compact.join("::")
+    CLASS_NAME_INFERRERS = {
+      relation: -> (name, type:, inflector:, class_namespace:, **) {
+        [class_namespace,
+         inflector.pluralize(inflector.camelize(type)),
+         inflector.camelize(name)
+        ].compact.join("::")
+      },
+      command: -> (name, inflector:, adapter:, command_type:, class_namespace:, **) {
+          [class_namespace,
+           inflector.classify(adapter),
+           "Commands",
+           "#{command_type}[#{inflector.pluralize(inflector.classify(name))}]"
+          ].join("::")
+      }
+    }
+
+    DEFAULT_CLASS_NAME_INFERRER = -> (name, type:, **opts) {
+      CLASS_NAME_INFERRERS.fetch(type).(name, type: type, **opts)
     }.freeze
 
     register_event("configuration.relations.class.ready")
