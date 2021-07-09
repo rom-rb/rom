@@ -23,19 +23,7 @@ module ROM
 
     setting :component do
       setting :id
-      setting :relation
-    end
-
-    # @api private
-    def self.infer_option(option, component:)
-      case option
-      when :id
-        component.constant.register_as ||
-          component.constant.relation ||
-          Inflector.component_id(component.constant.name).to_sym
-      when :relation_id
-        component.constant.relation || component.constant.base_relation
-      end
+      setting :relation_id
     end
 
     # @return [Object] transformers object built by a processor

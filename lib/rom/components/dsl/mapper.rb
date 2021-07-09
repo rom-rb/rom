@@ -25,16 +25,11 @@ module ROM
         # @return [Class]
         #
         # @api public
-        def define(id, parent: nil, inherit_header: ROM::Mapper.inherit_header, **options, &block)
-          name = class_name(id)
+        def define(id, parent: id, inherit_header: ROM::Mapper.inherit_header, **options, &block)
+          class_opts = {name: class_name(id), parent: class_parent(parent)}
 
-          parent = class_parent(parent)
-
-          constant = build_class(name: name, parent: parent) do |dsl|
-            register_as(id)
-            relation(id)
-            inherit_header(inherit_header)
-
+          constant = build_class(**class_opts) do |dsl|
+            config.update(inherit_header: inherit_header, component: {id: id, relation_id: parent})
             class_eval(&block) if block
           end
 
