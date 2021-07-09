@@ -24,9 +24,7 @@ module ROM
         # @api private
         def call
           if options[:view]
-            components.add(
-              :schemas, id: id || view, view: true, provider: provider, **options, block: block
-            )
+            components.add(:schemas, provider: provider, **options)
           else
             component = components.replace(
               :schemas, id: id, provider: provider, **options, block: block
