@@ -10,6 +10,8 @@
 - Backward-compatibility extension that you can load via `require "rom/compat"` (via #634 refs #607) (@solnic)
 - New component API that replaces internal implementation of the finalization code and makes it possible to extend ROM with arbitrary component types (see #637) (@solnic)
 - Generic Component API which allows you to turn any class or object into a DSL that can define rom components (via #650) (@solnic)
+- New settings API for components using dry-configurable (via #651) (@solnic)
+- Support for defining abstract components via `config.component.abstract` in which case they won't be initialized for runtime usage (via #651) (@solnic)
 
 ### Fixed
 
