@@ -11,6 +11,8 @@ module ROM
       #
       # @private
       class Mapper < Core
+        key(:mappers)
+
         nested(true)
 
         # Define a mapper class
@@ -29,7 +31,7 @@ module ROM
             class_eval(&block) if block
           end
 
-          components.add(:mappers, constant: constant, provider: self, **options)
+          add(constant: constant, provider: self)
         end
 
         # @api private

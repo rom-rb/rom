@@ -7,6 +7,8 @@ module ROM
     module DSL
       # @private
       class Dataset < Core
+        key :datasets
+
         option :id
 
         # Set or get custom dataset block
@@ -21,7 +23,7 @@ module ROM
         #
         # @api public
         def call
-          components.replace(:datasets, provider: provider, **options)
+          replace(provider: provider)
         end
       end
     end

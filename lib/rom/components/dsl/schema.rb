@@ -9,6 +9,8 @@ module ROM
       #
       # @private
       class Schema < Core
+        key :schemas
+
         INVALID_IDS = %i[relations schema].freeze
 
         option :id
@@ -24,9 +26,9 @@ module ROM
         # @api private
         def call
           if options[:view]
-            components.add(:schemas, provider: provider, **options)
+            add(provider: provider)
           else
-            component = components.replace(:schemas, provider: provider, **options)
+            component = replace(provider: provider)
 
             raise MissingSchemaClassError, provider unless component.constant
 

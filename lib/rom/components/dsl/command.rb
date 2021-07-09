@@ -9,6 +9,8 @@ module ROM
       #
       # @private
       class Command < Core
+        key :commands
+
         # @!attribute [r] relation
         #   @return [Symbol] Relation id
         option :relation, type: Types::Strict::Symbol
@@ -45,9 +47,7 @@ module ROM
             class_exec(&block) if block
           end
 
-          components.add(
-            :commands, relation_id: relation, constant: constant, provider: self, **options
-          )
+          add(relation_id: relation, constant: constant, provider: self)
         end
 
         # @api private

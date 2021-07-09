@@ -9,6 +9,8 @@ module ROM
       #
       # @private
       class Relation < Core
+        key :relations
+
         option :relation
 
         option :dataset, default: -> { relation }
@@ -20,14 +22,7 @@ module ROM
           # TODO: deprecate `schema(:foo, as: :bar)` syntax because it's confusing as it actually
           # configures relation, not schema, to use a specific dataset (:foo) and a custom id (:bar)
           # This is why we have this awkward `schema.dataset` here
-          components.add(
-            :relations,
-            id: relation,
-            dataset: schema.dataset,
-            gateway: gateway,
-            constant: constant,
-            provider: self
-          )
+          add(id: relation, dataset: schema.dataset, constant: constant, provider: provider)
         end
 
         # @api private

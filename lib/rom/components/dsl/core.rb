@@ -14,7 +14,7 @@ module ROM
         extend Initializer
         extend Dry::Core::ClassAttributes
 
-        defines(:nested)
+        defines(:key, :nested)
 
         include Dry::Core::Memoizable
 
@@ -52,6 +52,21 @@ module ROM
             klass.config.update(resolve_config)
             klass.class_exec(self, &block) if block
           end
+        end
+
+        # @api private
+        def key
+          self.class.key
+        end
+
+        # @api private
+        def add(**options)
+          components.add(key, **self.options, **options)
+        end
+
+        # @api private
+        def replace(**options)
+          components.replace(key, **self.options, **options)
         end
 
         private
