@@ -103,7 +103,7 @@ module ROM
             schema_block
           end
 
-        schema(view: name, &block)
+        schema(name, view: true, &block)
 
         if relation_block.arity > 0
           auto_curry_guard do

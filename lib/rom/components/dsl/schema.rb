@@ -13,13 +13,17 @@ module ROM
 
         option :id
 
-        option :view
+        option :as, default: -> { id }
 
-        option :relation
+        option :view, default: -> { false }
+
+        option :infer, default: -> { false }
+
+        option :gateway, default: -> { resolve_gateway }
 
         # @api private
-        def call(**options)
-          if view
+        def call
+          if options[:view]
             components.add(
               :schemas, id: id || view, view: true, provider: provider, **options, block: block
             )
@@ -43,6 +47,13 @@ module ROM
 
             component
           end
+        end
+
+        private
+
+        # @api private
+        def resolve_gateway
+          config.component.respond_to?(:gateway) ? config.component.gateway : :default
         end
       end
     end

@@ -23,13 +23,9 @@ module ROM
           resolve_adapter
         }
 
-        config(:input, component: [:adapter, {relation: :relation_id}])
+        nested(true)
 
-        # @api private
-        def call
-          instance_exec(&block)
-          self
-        end
+        config(:input, component: [:adapter, {relation: :relation_id}])
 
         # Define a command class
         #

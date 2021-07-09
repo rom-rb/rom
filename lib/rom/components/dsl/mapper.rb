@@ -11,11 +11,7 @@ module ROM
       #
       # @private
       class Mapper < Core
-        # @api private
-        def call
-          instance_exec(&block)
-          self
-        end
+        nested(true)
 
         # Define a mapper class
         #
@@ -38,11 +34,7 @@ module ROM
 
         # @api private
         def class_parent(parent_id)
-          if parent_id
-            components.mappers(relation_id: parent_id).first&.constant || ROM::Mapper
-          else
-            ROM::Mapper
-          end
+          components.get(:mappers, relation_id: parent_id)&.constant || ROM::Mapper
         end
 
         # @api private

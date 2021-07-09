@@ -12,8 +12,13 @@ module ROM
       # @private
       class Core
         extend Initializer
+        extend Dry::Core::ClassAttributes
+
+        defines(:nested)
 
         include Dry::Core::Memoizable
+
+        nested false
 
         # @api private
         option :provider
@@ -37,15 +42,6 @@ module ROM
         def self.inherited(klass)
           super
           klass.instance_variable_set(:@config, EMPTY_HASH)
-        end
-
-        # @api private
-        def initialize(**options, &block)
-          if block
-            super(**options, block: block)
-          else
-            super
-          end
         end
 
         # @api private
