@@ -26,9 +26,7 @@ module ROM
           if options[:view]
             components.add(:schemas, provider: provider, **options)
           else
-            component = components.replace(
-              :schemas, id: id, provider: provider, **options, block: block
-            )
+            component = components.replace(:schemas, provider: provider, **options)
 
             raise MissingSchemaClassError, provider unless component.constant
 
