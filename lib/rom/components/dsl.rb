@@ -26,7 +26,7 @@ module ROM
       #
       # @api public
       def dataset(id = nil, **options, &block)
-        __dsl__(DSL::Dataset, id: id, block: block, **options).()
+        __dsl__(DSL::Dataset, id: id, **options, &block)
       end
 
       # Specify a relation schema
@@ -51,8 +51,8 @@ module ROM
       # @param [Boolean, Symbol] view Whether this is a view schema
       #
       # @api public
-      def schema(id = nil, view: false, **options, &block)
-        __dsl__(DSL::Schema, id: id, relation: self, view: view, block: block).(**options)
+      def schema(id = nil, **options, &block)
+        __dsl__(DSL::Schema, id: id, **options, &block)
       end
 
       # Relation definition DSL
@@ -66,7 +66,7 @@ module ROM
       #
       # @api public
       def relation(relation, **options, &block)
-        __dsl__(DSL::Relation, relation: relation, block: block, **options).()
+        __dsl__(DSL::Relation, relation: relation, **options, &block)
       end
 
       # Command definition DSL
@@ -90,15 +90,14 @@ module ROM
       #
       # @api public
       def commands(relation, **options, &block)
-        __dsl__(DSL::Command, relation: relation, block: block, **options).()
-        components.commands
+        __dsl__(DSL::Command, relation: relation, **options, &block)
       end
 
       # Mapper definition DSL
       #
       # @api public
       def mappers(*_args, **options, &block)
-        __dsl__(DSL::Mapper, block: block, **options).()
+        __dsl__(DSL::Mapper, **options, &block)
         components.mappers
       end
 
@@ -149,8 +148,14 @@ module ROM
       private
 
       # @api private
-      def __dsl__(type, **options)
-        type.new(**options, provider: self)
+      def __dsl__(type, **options, &block)
+        if type.nested
+          dsl = type.new(provider: self, **options)
+          dsl.instance_exec(&block)
+          dsl
+        else
+          type.new(provider: self, block: block, **options).()
+        end
       end
     end
   end
