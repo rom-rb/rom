@@ -13,7 +13,7 @@ module ROM
 
         option :dataset, default: -> { relation }
 
-        configure(:gateway, relation: :id, dataset: :dataset)
+        config(component: [:dataset, :gateway, relation: :id])
 
         # @api private
         def call

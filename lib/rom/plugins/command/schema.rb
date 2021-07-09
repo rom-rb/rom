@@ -23,14 +23,14 @@ module ROM
           # @api public
           def build(relation, **options)
             if relation.schema? && !options.key?(:input)
-              relation_input = relation.input_schema
-              command_input = input
+              schema = relation.input_schema
+              input = config.input
 
               composed_input =
-                if command_input.equal?(ROM::Command.input)
-                  relation_input
+                if input.equal?(ROM::Command.config.input)
+                  schema
                 else
-                  -> tuple { relation_input[command_input[tuple]] }
+                  -> tuple { schema[input[tuple]] }
                 end
 
               super(relation, **options, input: composed_input)

@@ -27,8 +27,8 @@ Warning.process { |w| raise w } if ENV["FAIL_ON_WARNINGS"].eql?("true")
 require "dry/core/deprecations"
 Dry::Core::Deprecations.set_logger!(SPEC_ROOT.join("../log/deprecations.log"))
 
-require "rom/core"
 require "rom/compat"
+require "rom/core"
 require "rom-changeset"
 
 Dir[root.join("support/**/*.rb").to_s].sort.each do |f|

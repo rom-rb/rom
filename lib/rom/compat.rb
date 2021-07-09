@@ -1,11 +1,8 @@
 # frozen_string_literal: true
 
-require "rom/support/inflector"
+require "dry/core/class_attributes"
 
-require "rom/mapper"
-require "rom/transformer"
-require "rom/relation"
-require "rom/command"
+require "rom/support/inflector"
 
 require "rom/configuration"
 require "rom/compat/auto_registration"
@@ -148,35 +145,7 @@ module ROM
     end
   end
 
-  class Relation
-    class << self
-      prepend SettingProxy
-
-      def setting_mapping
-        @setting_mapping ||= {
-          auto_map: [],
-          auto_struct: [],
-          struct_namespace: [],
-          wrap_class: [],
-          adapter: [:component, :adapter],
-          gateway: [:component, :gateway],
-          schema_class: [:schema, :constant],
-          schema_dsl: [:schema, :dsl_class],
-          schema_attr_class: [:schema, :attr_class],
-          schema_inferrer: [:schema, :inferrer]
-        }.freeze
-      end
-    end
-
-    # This is used by the deprecated command => relation view delegation syntax
-    # @api private
-    def self.view_methods
-      ancestor_methods = ancestors.reject { |klass| klass == self }
-        .map(&:instance_methods).flatten(1)
-
-      instance_methods - ancestor_methods + auto_curried_methods.to_a
-    end
-  end
+  require "rom/transformer"
 
   Transformer.class_eval do
     class << self
@@ -190,6 +159,8 @@ module ROM
       end
     end
   end
+
+  require "rom/mapper"
 
   class Mapper
     class << self
@@ -210,7 +181,11 @@ module ROM
     end
   end
 
+  require "rom/command"
+
   class Command
+    extend Dry::Core::ClassAttributes
+
     module Restrictable
       extend ROM::Notifications::Listener
 
@@ -229,7 +204,19 @@ module ROM
     end
 
     class << self
-      prepend(Restrictable)
+      prepend Restrictable
+      prepend SettingProxy
+
+      def setting_mapping
+        @setting_mapper ||= {
+          adapter: [:component, :adapter],
+          relation: [:component, :relation_id],
+          register_as: [:component, :id],
+          restrictable: [],
+          result: [],
+          input: []
+        }.freeze
+      end
     end
 
     # Extend a command class with relation view methods
@@ -261,6 +248,38 @@ module ROM
           RUBY
         end
       end
+    end
+  end
+
+  require "rom/relation"
+
+  class Relation
+    class << self
+      prepend SettingProxy
+
+      def setting_mapping
+        @setting_mapping ||= {
+          auto_map: [],
+          auto_struct: [],
+          struct_namespace: [],
+          wrap_class: [],
+          adapter: [:component, :adapter],
+          gateway: [:component, :gateway],
+          schema_class: [:schema, :constant],
+          schema_dsl: [:schema, :dsl_class],
+          schema_attr_class: [:schema, :attr_class],
+          schema_inferrer: [:schema, :inferrer]
+        }.freeze
+      end
+    end
+
+    # This is used by the deprecated command => relation view delegation syntax
+    # @api private
+    def self.view_methods
+      ancestor_methods = ancestors.reject { |klass| klass == self }
+        .map(&:instance_methods).flatten(1)
+
+      instance_methods - ancestor_methods + auto_curried_methods.to_a
     end
   end
 end

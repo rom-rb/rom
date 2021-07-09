@@ -84,7 +84,7 @@ RSpec.describe ROM::Commands::Graph do
         end
       end
 
-      define(:create, id: :create_many) do
+      define(:create_many, type: :create) do
         before :associate
 
         def associate(tasks, user)

@@ -13,11 +13,17 @@ module ROM
         #   @return [Symbol] Relation id
         option :relation, type: Types::Strict::Symbol
 
+        # @!attribute [r] input
+        #   @return [#call] Input processor
+        option :input, type: Types.Interface(:call), optional: true
+
         # @!attribute [r] adapter
         #   @return [Symbol] Relation id
         option :adapter, type: Types::Strict::Symbol, optional: true, default: -> {
           resolve_adapter
         }
+
+        config(:input, component: [:adapter, {relation: :relation_id}])
 
         # @api private
         def call
@@ -39,8 +45,7 @@ module ROM
           parent = adapter_namespace.const_get(command_type)
 
           constant = build_class(name: class_name(command_type), parent: parent) do |dsl|
-            register_as(id)
-            relation(dsl.relation)
+            config.update(type: type, component: {id: id}, **options)
             class_exec(&block) if block
           end
 
