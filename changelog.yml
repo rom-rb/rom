@@ -16,6 +16,9 @@
     (@solnic)'
   - 'Generic Component API which allows you to turn any class or object into a DSL
     that can define rom components (via #650) (@solnic)'
+  - 'New settings API for components using dry-configurable (via #651) (@solnic)'
+  - 'Support for defining abstract components via `config.component.abstract` in which
+    case they won''t be initialized for runtime usage (via #651) (@solnic)'
   changed:
   - "`rom-core`, `rom-changeset` and `rom-repository` have been merged into `rom`
     gem (@solnic)"
