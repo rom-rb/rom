@@ -56,11 +56,14 @@ module ROM
 
         # @api private
         def class_name(command_type)
-          ["ROM",
-           inflector.classify(adapter),
-           "Commands",
-           "#{command_type}[#{inflector.pluralize(inflector.classify(relation))}]"
-          ].join("::")
+          class_name_inferrer[
+            relation,
+            type: :command,
+            inflector: inflector,
+            adapter: adapter,
+            command_type: command_type,
+            **config.components
+          ]
         end
 
         # @api private
