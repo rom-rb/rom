@@ -47,7 +47,7 @@ module ROM
             class_exec(&block) if block
           end
 
-          add(relation_id: relation, constant: constant, provider: self)
+          add(relation_id: relation, constant: constant)
         end
 
         # @api private
@@ -65,17 +65,6 @@ module ROM
         # @api private
         def adapter_namespace
           ROM::Command.adapter_namespace(adapter)
-        end
-
-        # @api private
-        def infer_option(option, component:)
-          case option
-          # id in the DSL is also resolved as command sub-class so we need to delegate
-          # inferring to the class itself in case it defines its custom id
-          when :id then component.constant.infer_option(option, component: component)
-          when :relation_id then relation
-          when :adapter then adapter
-          end
         end
 
         private

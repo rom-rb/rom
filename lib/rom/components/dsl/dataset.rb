@@ -23,7 +23,7 @@ module ROM
         #
         # @api public
         def call
-          replace(provider: provider)
+          replace
         end
       end
     end

@@ -26,9 +26,9 @@ module ROM
         # @api private
         def call
           if options[:view]
-            add(provider: provider)
+            add
           else
-            component = replace(provider: provider)
+            component = replace
 
             raise MissingSchemaClassError, provider unless component.constant
 

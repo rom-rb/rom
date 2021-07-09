@@ -22,7 +22,7 @@ module ROM
           # TODO: deprecate `schema(:foo, as: :bar)` syntax because it's confusing as it actually
           # configures relation, not schema, to use a specific dataset (:foo) and a custom id (:bar)
           # This is why we have this awkward `schema.dataset` here
-          add(id: relation, dataset: schema.dataset, constant: constant, provider: provider)
+          add(id: relation, dataset: schema.dataset, constant: constant)
         end
 
         # @api private
@@ -51,13 +51,6 @@ module ROM
         # @api private
         def schema
           constant.components.schemas.first
-        end
-
-        # @api private
-        def infer_option(option, component:)
-          case option
-          when :adapter then adapter
-          end
         end
 
         # @api private

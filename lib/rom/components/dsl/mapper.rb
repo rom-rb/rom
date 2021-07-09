@@ -31,7 +31,7 @@ module ROM
             class_eval(&block) if block
           end
 
-          add(constant: constant, provider: self)
+          add(constant: constant)
         end
 
         # @api private
@@ -55,14 +55,6 @@ module ROM
         def register(relation, mappers)
           mappers.map do |id, mapper|
             components.add(:mappers, id: id, relation_id: relation, object: mapper)
-          end
-        end
-
-        # @api private
-        def infer_option(option, component:)
-          case option
-          when :id then component.constant.register_as
-          when :relation_id then component.constant.base_relation
           end
         end
       end
