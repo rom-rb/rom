@@ -9,9 +9,15 @@ module ROM
       #
       # @private
       class Command < Core
+        key :commands
+
         # @!attribute [r] relation
         #   @return [Symbol] Relation id
         option :relation, type: Types::Strict::Symbol
+
+        # @!attribute [r] input
+        #   @return [#call] Input processor
+        option :input, type: Types.Interface(:call), optional: true
 
         # @!attribute [r] adapter
         #   @return [Symbol] Relation id
@@ -19,11 +25,9 @@ module ROM
           resolve_adapter
         }
 
-        # @api private
-        def call
-          instance_exec(&block)
-          self
-        end
+        nested(true)
+
+        settings(:input, component: [:adapter, {relation: :relation_id}])
 
         # Define a command class
         #
@@ -39,39 +43,28 @@ module ROM
           parent = adapter_namespace.const_get(command_type)
 
           constant = build_class(name: class_name(command_type), parent: parent) do |dsl|
-            register_as(id)
-            relation(dsl.relation)
+            config.update(type: type, component: {id: id}, **options)
             class_exec(&block) if block
           end
 
-          components.add(
-            :commands, relation_id: relation, constant: constant, provider: self, **options
-          )
+          add(relation_id: relation, constant: constant)
         end
 
         # @api private
         def class_name(command_type)
-          ["ROM",
-           inflector.classify(adapter),
-           "Commands",
-           "#{command_type}[#{inflector.pluralize(inflector.classify(relation))}]"
-          ].join("::")
+          class_name_inferrer[
+            relation,
+            type: :command,
+            inflector: inflector,
+            adapter: adapter,
+            command_type: command_type,
+            **provider_config.components
+          ]
         end
 
         # @api private
         def adapter_namespace
           ROM::Command.adapter_namespace(adapter)
-        end
-
-        # @api private
-        def infer_option(option, component:)
-          case option
-          # id in the DSL is also resolved as command sub-class so we need to delegate
-          # inferring to the class itself in case it defines its custom id
-          when :id then component.constant.infer_option(option, component: component)
-          when :relation_id then relation
-          when :adapter then adapter
-          end
         end
 
         private

@@ -11,11 +11,9 @@ module ROM
       #
       # @private
       class Mapper < Core
-        # @api private
-        def call
-          instance_exec(&block)
-          self
-        end
+        key(:mappers)
+
+        nested(true)
 
         # Define a mapper class
         #
@@ -25,29 +23,20 @@ module ROM
         # @return [Class]
         #
         # @api public
-        def define(id, parent: nil, inherit_header: ROM::Mapper.inherit_header, **options, &block)
-          name = class_name(id)
+        def define(id, parent: id, inherit_header: ROM::Mapper.inherit_header, **options, &block)
+          class_opts = {name: class_name(id), parent: class_parent(parent)}
 
-          parent = class_parent(parent)
-
-          constant = build_class(name: name, parent: parent) do |dsl|
-            register_as(id)
-            relation(id)
-            inherit_header(inherit_header)
-
+          constant = build_class(**class_opts) do |dsl|
+            config.update(inherit_header: inherit_header, component: {id: id, relation_id: parent})
             class_eval(&block) if block
           end
 
-          components.add(:mappers, constant: constant, provider: self, **options)
+          add(constant: constant)
         end
 
         # @api private
         def class_parent(parent_id)
-          if parent_id
-            components.mappers(relation_id: parent_id).first&.constant || ROM::Mapper
-          else
-            ROM::Mapper
-          end
+          components.get(:mappers, relation_id: parent_id)&.constant || ROM::Mapper
         end
 
         # @api private
@@ -65,15 +54,7 @@ module ROM
         # @api public
         def register(relation, mappers)
           mappers.map do |id, mapper|
-            components.add(:mappers, id: id, base_relation: relation, object: mapper)
-          end
-        end
-
-        # @api private
-        def infer_option(option, component:)
-          case option
-          when :id then component.constant.register_as
-          when :relation_id then component.constant.base_relation
+            components.add(:mappers, id: id, relation_id: relation, object: mapper)
           end
         end
       end

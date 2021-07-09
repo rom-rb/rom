@@ -1,55 +1,24 @@
 # frozen_string_literal: true
 
+require "dry/core/class_attributes"
+
 require "rom/support/inflector"
-require "rom/relation"
-require "rom/command"
 
 require "rom/configuration"
 require "rom/compat/auto_registration"
 
-require "rom/components/relation"
-require "rom/components/command"
-require "rom/components/mapper"
+require "rom/components"
 
 module ROM
   module Components
-    class Command < Core
-      undef :id
-      undef :relation_id
-
-      def id
-        return options[:id] if options[:id]
-
-        if constant.respond_to?(:register_as)
-          constant.register_as || constant.default_name
-        else
-          Inflector.underscore(constant.name)
-        end
-      end
-
-      def relation_id
-        constant.relation if constant.respond_to?(:relation)
-      end
-    end
-
-    class Mapper < Core
-      undef :id
-      undef :relation_id
-
-      def id
-        return options[:id] if options[:id]
-
-        if constant.respond_to?(:id)
-          constant.id
-        else
-          Inflector.underscore(constant.name)
-        end
-      end
-
-      def relation_id
-        return options[:base_relation] if options[:base_relation]
-
-        constant.base_relation if constant.respond_to?(:base_relation)
+    # @api private
+    def infer_option(option, component:)
+      if component.provider && component.provider != self
+        component.provider.infer_option(option, component: component)
+      elsif component.option?(:constant) && component.constant.respond_to?(:infer_option)
+        component.constant.infer_option(option, component: component)
+      elsif component.option?(:constant)
+        Inflector.component_id(component.constant).to_sym
       end
     end
   end
@@ -144,17 +113,131 @@ module ROM
     end
   end
 
-  class Relation
-    # @api private
-    def self.view_methods
-      ancestor_methods = ancestors.reject { |klass| klass == self }
-        .map(&:instance_methods).flatten(1)
+  module SettingProxy
+    extend Dry::Core::ClassAttributes
 
-      instance_methods - ancestor_methods + auto_curried_methods.to_a
+    # Delegate to config when accessing deprecated class attributes
+    #
+    # @api private
+    def method_missing(name, *args, &block)
+      return super unless setting_mapping.key?(name)
+
+      mapping = setting_mapping[name]
+      ns, key = mapping
+
+      if args.empty?
+        if mapping.empty?
+          config[name]
+        else
+          config[ns][key]
+        end
+      else
+        value = args.first
+
+        if mapping.empty?
+          config[name] = value
+        else
+          config[ns][key] = value
+        end
+      end
     end
   end
 
+  require "rom/transformer"
+
+  Transformer.class_eval do
+    class << self
+      prepend SettingProxy
+
+      # Configure relation for the transformer
+      #
+      # @example with a custom name
+      #   class UsersMapper < ROM::Transformer
+      #     relation :users, as: :json_serializer
+      #
+      #     map do
+      #       rename_keys user_id: :id
+      #       deep_stringify_keys
+      #     end
+      #   end
+      #
+      #   users.map_with(:json_serializer)
+      #
+      # @param name [Symbol]
+      # @param options [Hash]
+      # @option options :as [Symbol] Mapper identifier
+      #
+      # @deprecated
+      #
+      # @api public
+      def relation(name = Undefined, as: name)
+        if name == Undefined
+          config.component.relation_id
+        else
+          config.component.relation_id = name
+          config.component.id = as
+        end
+      end
+
+      def setting_mapping
+        @setting_mapping ||= {
+          register_as: [:component, :id],
+          relation: [:component, :relation_id]
+        }.freeze
+      end
+
+      # @api private
+      def infer_option(option, component:)
+        case option
+        when :id
+          component.constant.register_as ||
+            component.constant.relation ||
+            Inflector.component_id(component.constant.name).to_sym
+        when :relation_id
+          component.constant.relation || component.constant.base_relation
+        end
+      end
+    end
+  end
+
+  require "rom/mapper"
+
+  class Mapper
+    class << self
+      prepend SettingProxy
+
+      def setting_mapping
+        @setting_mapper ||= {
+          register_as: [:component, :id],
+          relation: [:component, :relation_id],
+          inherit_header: [],
+          reject_keys: [],
+          symbolize_keys: [],
+          copy_keys: [],
+          prefix: [],
+          prefix_separator: []
+        }.freeze
+      end
+
+      # @api private
+      def infer_option(option, component:)
+        case option
+        when :id
+          component.constant.register_as ||
+            component.constant.relation ||
+            Inflector.component_id(component.constant.name).to_sym
+        when :relation_id
+          component.constant.relation || component.constant.base_relation
+        end
+      end
+    end
+  end
+
+  require "rom/command"
+
   class Command
+    extend Dry::Core::ClassAttributes
+
     module Restrictable
       extend ROM::Notifications::Listener
 
@@ -173,7 +256,19 @@ module ROM
     end
 
     class << self
-      prepend(Restrictable)
+      prepend Restrictable
+      prepend SettingProxy
+
+      def setting_mapping
+        @setting_mapper ||= {
+          adapter: [:component, :adapter],
+          relation: [:component, :relation_id],
+          register_as: [:component, :id],
+          restrictable: [],
+          result: [],
+          input: []
+        }.freeze
+      end
     end
 
     # Extend a command class with relation view methods
@@ -205,6 +300,38 @@ module ROM
           RUBY
         end
       end
+    end
+  end
+
+  require "rom/relation"
+
+  class Relation
+    class << self
+      prepend SettingProxy
+
+      def setting_mapping
+        @setting_mapping ||= {
+          auto_map: [],
+          auto_struct: [],
+          struct_namespace: [],
+          wrap_class: [],
+          adapter: [:component, :adapter],
+          gateway: [:component, :gateway],
+          schema_class: [:schema, :constant],
+          schema_dsl: [:schema, :dsl_class],
+          schema_attr_class: [:schema, :attr_class],
+          schema_inferrer: [:schema, :inferrer]
+        }.freeze
+      end
+    end
+
+    # This is used by the deprecated command => relation view delegation syntax
+    # @api private
+    def self.view_methods
+      ancestor_methods = ancestors.reject { |klass| klass == self }
+        .map(&:instance_methods).flatten(1)
+
+      instance_methods - ancestor_methods + auto_curried_methods.to_a
     end
   end
 end

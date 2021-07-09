@@ -19,6 +19,26 @@ module ROM
     end
   end
 
+  ConfigError = Class.new(StandardError) do
+    attr_reader :name, :component, :provider
+
+    # @api private
+    def initialize(name, component, reason = :inferrence)
+      @name = name
+      @component = component
+      @provider = component.provider
+
+      key = "#{component.type}.#{name}"
+
+      case reason
+      when :inferrence
+        super("#{provider} failed to infer #{key} setting")
+      else
+        super("#{provider.name} #{key} setting is not valid")
+      end
+    end
+  end
+
   EnvAlreadyFinalizedError = Class.new(StandardError)
   GatewayAlreadyDefinedError = Class.new(StandardError)
   DatasetAlreadyDefinedError = Class.new(StandardError)

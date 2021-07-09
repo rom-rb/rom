@@ -93,9 +93,9 @@ RSpec.describe "Commands / Update" do
       end
 
       relation = container.relations[:users]
+      command = relation.commands[:update_one]
 
-      expect(relation.commands.update_one.new(relation).input)
-        .to be(relation.commands.update_one.input)
+      expect(command.new(relation).input).to be(command.input)
     end
   end
 end

@@ -54,6 +54,11 @@ module ROM
       #   @return [Class] Component's adapter
       option :adapter, inferrable: true, type: Types::Strict::Symbol
 
+      # @!attribute [r] abstract
+      #   @return [Boolean]
+      option :abstract, type: Types::Strict::Bool, default: -> { false }
+      alias_method :abstract?, :abstract
+
       # @api public
       def type
         self.class.id
@@ -158,13 +163,33 @@ module ROM
       end
 
       # @api private
+      memoize def provider_config
+        # TODO: this needs to be encapsulated because it evaluates the entire config
+        #       prematurely
+        provider.respond_to?(:config) ? provider.config.to_h : EMPTY_HASH
+      end
+
+      # @api private
       memoize def read(name)
-        value = options[name] || owner.infer_option(name, component: self)
+        # First see if the value was provided explicitly
+        value = options[name]
+
+        # Then try to read it from the provider's configuration
+        value ||= provider_config[type]&.fetch(name) { provider_config[name] }
+
+        # If the value is a proc, call it by passing the provider - this makes it
+        # possible to have a fallback mechanism implemented in a parent class.
+        # ie Relation can fallback to its class attributes that are deprecated now.
+        # This means `Relation.schema_class` can be the fallback for config.schema.constant
+        evaled = value.is_a?(Proc) ? value.(provider) : value
+
+        # Last resort - delegate inference to the provider itself
+        value = evaled || owner.infer_option(name, component: self)
 
         if value
           options[name] = instance_variable_set(:"@#{name}", value)
         else
-          raise ArgumentError, "#{owner} cannot infer #{name.inspect} for #{type.inspect} component"
+          raise ConfigError.new(name, self, :inferrence) unless abstract?
         end
 
         value

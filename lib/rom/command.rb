@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "dry/core/class_attributes"
+require "dry/configurable"
 
 require "rom/types"
 require "rom/initializer"
@@ -24,7 +24,7 @@ module ROM
   #
   # @api public
   class Command
-    extend Dry::Core::ClassAttributes
+    extend Dry::Configurable
     extend Initializer
     extend ClassInterface
 
@@ -32,165 +32,19 @@ module ROM
     include Commands
     include Pipeline::Operator
 
-    # @!method self.adapter
-    #   Get or set adapter identifier
-    #
-    #   @overload adapter
-    #     Get adapter identifier
-    #
-    #     @example
-    #       ROM::Memory::Commands::Create.adapter
-    #       # => :memory
-    #
-    #     @return [Symbol]
-    #
-    #   @overload adapter(identifier)
-    #     Set adapter identifier. This must always match actual adapter identifier
-    #     that was used to register an adapter.
-    #
-    #     @example
-    #       module MyAdapter
-    #         class CreateCommand < ROM::Commands::Memory::Create
-    #           adapter :my_adapter
-    #         end
-    #       end
-    #
-    # @api public
-    defines :adapter
+    setting :restrictable
+    setting :result
+    setting :input
+    setting :type
 
-    # @!method self.relation
-    #   Get or set relation identifier
-    #
-    #   @overload relation
-    #     Get relation identifier
-    #
-    #     @example
-    #       class CreateUser < ROM::Commands::Create[:memory]
-    #         relation :users
-    #       end
-    #
-    #       CreateUser.relation
-    #       # => :users
-    #
-    #     @return [Symbol]
-    #
-    #   @overload relation(identifier)
-    #     Set relation identifier.
-    #
-    #     @example
-    #       class CreateUser < ROM::Commands::Create[:memory]
-    #         relation :users
-    #       end
-    #
-    # @api public
-    defines :relation
+    setting :component do
+      setting :id
+      setting :relation_id
+      setting :adapter
+    end
 
-    # @!method self.result
-    #   Get or set result type
-    #
-    #   @overload result
-    #     Get result type
-    #
-    #     @example
-    #       class CreateUser < ROM::Commands::Create[:memory]
-    #         result :one
-    #       end
-    #
-    #       CreateUser.result
-    #       # => :one
-    #
-    #     @return [Symbol]
-    #
-    #   @overload result(identifier)
-    #     Set result type
-    #
-    #     @example
-    #       class CreateUser < ROM::Commands::Create[:memory]
-    #         result :one
-    #       end
-    #
-    # @api public
-    defines :result
-
-    # @!method self.input
-    #   Get or set input processing function. This is typically set during setup
-    #   to relation's input_schema
-    #
-    #   @overload input
-    #     Get input processing function
-    #
-    #     @example
-    #       class CreateUser < ROM::Commands::Create[:memory]
-    #         input -> tuple { .. }
-    #       end
-    #
-    #       CreateUser.input
-    #       # Your custom function
-    #
-    #     @return [Proc,#call]
-    #
-    #   @overload input(identifier)
-    #     Set input processing function
-    #
-    #     @example
-    #       class CreateUser < ROM::Commands::Create[:memory]
-    #         input -> tuple { .. }
-    #       end
-    #
-    # @api public
-    defines :input
-
-    # @!method self.register_as
-    #   Get or set identifier that should be used to register a command in a container
-    #
-    #   @overload register_as
-    #     Get registration identifier
-    #
-    #     @example
-    #       class CreateUser < ROM::Commands::Create[:memory]
-    #         register_as :create_user
-    #       end
-    #
-    #       CreateUser.register_as
-    #       # => :create_user
-    #
-    #     @return [Symbol]
-    #
-    #   @overload register_as(identifier)
-    #     Set registration identifier
-    #
-    #     @example
-    #       class CreateUser < ROM::Commands::Create[:memory]
-    #         register_as :create_user
-    #       end
-    #
-    # @api public
-    defines :register_as
-
-    # @!method self.restrictable
-    #   @overload restrictable
-    #     Check if a command class is restrictable
-    #
-    #     @example
-    #       class UpdateUser < ROM::Commands::Update[:memory]
-    #         restrictable true
-    #       end
-    #
-    #       CreateUser.restrictable
-    #       # => true
-    #
-    #     @return [FalseClass, TrueClass]
-    #
-    #   @overload restrictable(value)
-    #     Set if a command is restrictable
-    #
-    #     @example
-    #       class UpdateUser < ROM::Commands::Update[:memory]
-    #         restrictable true
-    #       end
-    #
-    # @api public
-    defines :restrictable
+    config.input = Hash
+    config.result = :many
 
     # @!attribute [r] relation
     #   @return [Relation] Command's relation
@@ -203,17 +57,21 @@ module ROM
     #   @return [Symbol] The command type, one of :create, :update or :delete
     option :type, type: CommandType, optional: true
 
+    # @!attribute [r] config
+    #   @return [Dry::Configurable::Config]
+    option :config, default: -> { self.class.config }
+
     # @!attribute [r] source
     #   @return [Relation] The source relation
     option :source, default: -> { relation }
 
     # @!attribute [r] result
     #   @return [Symbol] Result type, either :one or :many
-    option :result, type: Result
+    option :result, type: Result, default: -> { config.result }
 
     # @!attribute [r] input
     #   @return [Proc, #call] Tuple processing function, typically uses Relation#input_schema
-    option :input
+    option :input, default: -> { config.input }
 
     # @!attribute [r] curry_args
     #   @return [Array] Curried args
@@ -226,9 +84,6 @@ module ROM
     # @!attribute [r] after
     #   @return [Array<Hash>] An array with after hooks configuration
     option :after, Types::Coercible::Array, reader: false, default: -> { self.class.after }
-
-    input Hash
-    result :many
 
     # Return name of this command's relation
     #
@@ -438,7 +293,7 @@ module ROM
     #
     # @api private
     def restrictible?
-      self.class.restrictable.equal?(true)
+      config.restrictable.equal?(true)
     end
 
     # Yields tuples for insertion or return an enumerator

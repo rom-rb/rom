@@ -27,31 +27,6 @@ RSpec.describe ROM::Mapper do
   let(:jane) { user_model.new(id: 1, name: "Jane") }
   let(:joe) { user_model.new(id: 2, name: "Joe") }
 
-  describe ".registry" do
-    it "builds mapper class registry for base and virtual relations" do
-      users = Class.new(ROM::Mapper) { relation(:users) }
-      entity = Class.new(ROM::Mapper) do
-        relation(:users)
-        register_as(:entity)
-      end
-      active = Class.new(users) { relation(:active) }
-      admins = Class.new(users) { relation(:admins) }
-      custom = Class.new(users) { register_as(:custom) }
-
-      registry = ROM::Mapper.registry([users, entity, active, admins, custom])
-
-      expect(registry).to eql(
-        users: {
-          users: users.build,
-          entity: entity.build,
-          active: active.build,
-          admins: admins.build,
-          custom: custom.build
-        }
-      )
-    end
-  end
-
   describe ".relation" do
     it "inherits from parent" do
       base = Class.new(ROM::Mapper) { relation(:users) }

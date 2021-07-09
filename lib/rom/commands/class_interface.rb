@@ -71,7 +71,7 @@ module ROM
       #
       # @api public
       def build(relation, **options)
-        new(relation, **self.options, **options)
+        new(relation, **options)
       end
 
       # Create a command class with a specific type
@@ -244,15 +244,6 @@ module ROM
       # @api private
       def default_name
         Inflector.underscore(Inflector.demodulize(name)).to_sym
-      end
-
-      # Return default options based on class macros
-      #
-      # @return [Hash]
-      #
-      # @api private
-      def options
-        {input: input, result: result, before: before, after: after}
       end
     end
   end

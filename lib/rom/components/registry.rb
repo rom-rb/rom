@@ -72,10 +72,17 @@ module ROM
       end
 
       # @api private
+      def get(type, **opts)
+        public_send(type, **opts).first
+      end
+
+      # @api private
       def add(type, item: nil, **options)
         component = item || build(type, **options)
 
-        if (other = store[type].detect { |c| c.key == component.key })
+        if include?(type, component)
+          other = get(type, key: component.key)
+
           raise(
             DUPLICATE_ERRORS[type],
             "#{owner}: +#{component.key}+ is already defined by #{other.provider}"
@@ -90,7 +97,7 @@ module ROM
       # @api private
       def replace(type, item: nil, **options)
         component = item || build(type, **options)
-        delete(type, item) if keys(type).include?(component.key)
+        delete(type, item) if include?(type, component)
         store[type] << component
         component
       end
@@ -102,10 +109,10 @@ module ROM
       end
 
       # @api private
-      def update(other)
+      def update(other, **options)
         other.each do |type, component|
-          next if keys(type).include?(component.key)
-          add(type, item: component.with(owner: owner))
+          next if include?(type, component)
+          add(type, item: component.with(owner: owner, **options))
         end
         self
       end
@@ -113,6 +120,11 @@ module ROM
       # @api private
       def build(type, **options)
         handlers.fetch(type).new(**options, owner: owner)
+      end
+
+      # @api private
+      def include?(type, component)
+        !component.abstract? && keys(type).include?(component.key)
       end
 
       # @api private

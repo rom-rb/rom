@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "dry/configurable"
+
 require "dry/core/memoizable"
 require "dry/core/class_attributes"
 
@@ -38,107 +40,73 @@ module ROM
   #
   # @api public
   class Relation
+    extend Dry::Configurable
     extend ROM.Components(:dataset, :schema)
+    extend Initializer
+    extend ClassInterface
+
+    include Dry::Core::Memoizable
+    include Relation::Commands
 
     # Default no-op output schema which is called in `Relation#each`
     NOOP_OUTPUT_SCHEMA = -> tuple { tuple }.freeze
 
-    extend Initializer
-    extend ClassInterface
+    setting :auto_map, default: true
+    setting :auto_struct, default: false
+    setting :struct_namespace, default: ROM::Struct
+    setting :wrap_class, default: Relation::Wrap
 
-    include Relation::Commands
+    setting :component do
+      setting :id, default: :relation
+      setting :dataset
+      setting :adapter
+      setting :gateway, default: :default
+      setting :inflector, default: Inflector
+    end
 
-    include Dry::Core::Memoizable
-    extend Dry::Core::ClassAttributes
+    setting :schema do
+      setting :constant, default: Schema
+      setting :dsl_class, default: Schema::DSL
+      setting :attr_class, default: Attribute
+      setting :inferrer, default: Schema::DEFAULT_INFERRER
+    end
 
-    defines :adapter, :schema_class, :schema_attr_class, :schema_inferrer, :schema_dsl, :wrap_class
+    # @api private
+    def self.inherited(klass)
+      super
+      return unless klass.adapter
+      klass.configure
+    end
 
-    # @!method self.gateway
-    #  Manage the gateway
-    #
-    #  @overload gateway
-    #    Return the gateway key that the relation is associated with
-    #    @return [Symbol]
-    #
-    #  @overload gateway(gateway_key)
-    #    Link the relation to a gateway. Change this setting if the
-    #    relation is defined on a non-default gateway
-    #
-    #    @example
-    #      class Users < ROM::Relation[:sql]
-    #        gateway :custom
-    #      end
-    #
-    #    @param [Symbol] gateway_key
-    defines :gateway
-
-    # @!method self.auto_map
-    #   Whether or not a relation and its compositions should be auto-mapped
-    #
-    #   @overload auto_map
-    #     Return auto_map setting value
-    #     @return [Boolean]
-    #
-    #   @overload auto_map(value)
-    #     Set auto_map value
-    defines :auto_map
-
-    # @!method self.auto_struct
-    #   Whether or not tuples should be auto-mapped to structs
-    #
-    #   @overload auto_struct
-    #     Return auto_struct setting value
-    #     @return [Boolean]
-    #
-    #   @overload auto_struct(value)
-    #     Set auto_struct value
-    defines :auto_struct
-
-    # @!method self.struct_namespace
-    #  Get or set a namespace for auto-generated struct classes.
-    #  By default, new struct classes are created within ROM::Struct
-    #
-    #   @example using custom namespace
-    #     class Users < ROM::Relation[:sql]
-    #       struct_namespace Entities
-    #     end
-    #
-    #     users.by_pk(1).one! # => #<Entities::User id=1 name="Jane Doe">
-    #
-    #  @overload struct_namespace
-    #    @return [Module] Default struct namespace
-    #
-    #  @overload struct_namespace(namespace)
-    #    @param [Module] namespace
-    #
-    defines :struct_namespace
-
-    gateway :default
-
-    auto_map true
-    auto_struct false
-    struct_namespace ROM::Struct
-
-    schema_dsl Schema::DSL
-    schema_attr_class Attribute
-    schema_class Schema
-    schema_inferrer Schema::DEFAULT_INFERRER
-
-    wrap_class Relation::Wrap
+    # @api private
+    def self.configure(options = EMPTY_HASH, &block)
+      if block
+        super(&block).update(options)
+      else
+        # By default this turns `MyApp::Relations::Users` into :users
+        config.component.id = config.component.inflector.component_id(name).to_sym
+        config.component.dataset = config.component.id
+      end
+    end
 
     include Dry::Equalizer(:name, :dataset)
     include Materializable
     include Pipeline
 
-    # @!attribute [r] inflector
-    #   @return [Dry::Inflector] String inflector
+    # @!attribute [r] config
+    #   @return [Dry::Configurable::Config]
     #   @api private
-    option :inflector, reader: true, default: -> { Inflector }
+    option :config, default: -> { self.class.config }
 
     # @!attribute [r] name
     #   @return [Name] The relation name
     #   @api public
-    option :name, default: -> { self.class.infer_name(self) }
+    option :name, default: -> { Name[config.component.id, config.component.dataset] }
+
+    # @!attribute [r] inflector
+    #   @return [Dry::Inflector] The default inflector
+    #   @api public
+    option :inflector, default: -> { config.component.inflector }
 
     # @!attribute [r] associations
     #   @return [Runtime::Resolver] Relation associations
@@ -166,7 +134,7 @@ module ROM
     # @!attribute [r] schema
     #   @return [Runtime::Resolver] The canonical schema
     option :schema, default: -> {
-      schemas.key?(name.dataset) ? schemas[name.dataset] : Schema.new(name)
+      (name && schemas.key?(name.dataset)) ? schemas[name.dataset] : Schema.new(Name[self.class])
     }
 
     # @!attribute [r] input_schema
@@ -184,17 +152,17 @@ module ROM
     # @!attribute [r] auto_map
     #   @return [TrueClass,FalseClass] Whether or not a relation and its compositions should be auto-mapped
     #   @api private
-    option :auto_map, default: -> { self.class.auto_map }
+    option :auto_map, default: -> { config.auto_map }
 
     # @!attribute [r] auto_struct
     #   @return [TrueClass,FalseClass] Whether or not tuples should be auto-mapped to structs
     #   @api private
-    option :auto_struct, default: -> { self.class.auto_struct }
+    option :auto_struct, default: -> { config.auto_struct }
 
     # @!attribute [r] struct_namespace
     #   @return [Module] Custom struct namespace
     #   @api private
-    option :struct_namespace, reader: false, default: -> { self.class.struct_namespace }
+    option :struct_namespace, reader: false, default: -> { config.struct_namespace }
 
     # @!attribute [r] mappers
     #   @return [MapperRegistry] an optional mapper registry (empty by default)
@@ -586,7 +554,7 @@ module ROM
     #
     # @api private
     def adapter
-      self.class.adapter
+      config.component.adapter
     end
 
     # Return name of the source gateway of this relation
@@ -595,7 +563,7 @@ module ROM
     #
     # @api private
     def gateway
-      self.class.gateway
+      config.component.gateway
     end
 
     # Return a foreign key name for the provided relation name
@@ -651,7 +619,7 @@ module ROM
     #
     # @api private
     def wrap_class
-      self.class.wrap_class
+      config.wrap_class
     end
   end
 end

@@ -9,36 +9,52 @@ module ROM
       #
       # @private
       class Schema < Core
+        key :schemas
+
         INVALID_IDS = %i[relations schema].freeze
 
         option :id
 
-        option :view
+        option :as, default: -> { id }
 
-        option :relation
+        option :view, default: -> { false }
+
+        option :infer, default: -> { false }
+
+        option :gateway, default: -> { resolve_gateway }
 
         # @api private
-        def call(**options)
-          if view
-            components.add(
-              :schemas, id: id || view, view: true, provider: provider, **options, block: block
-            )
+        def call
+          if options[:view]
+            add
           else
-            component = components.replace(
-              :schemas, id: id, provider: provider, **options, block: block
-            )
+            component = replace
 
-            raise MissingSchemaClassError, provider unless provider.schema_class
+            raise MissingSchemaClassError, provider unless component.constant
 
             # TODO: this can go away by simply skipping readers in case of clashes
             raise InvalidRelationName, id if INVALID_IDS.include?(component.id)
 
+            provider_config.component.id = component.relation_id
+            provider_config.component.dataset = component.dataset
+
             # TODO: this should go away
-            if components.datasets(id: component.name.dataset).empty?
-              provider.dataset(component.name.dataset, gateway: component.gateway)
+            if components.datasets(id: component.dataset).empty?
+              provider.dataset(component.dataset, gateway: component.gateway)
             end
 
             component
+          end
+        end
+
+        private
+
+        # @api private
+        def resolve_gateway
+          if provider_config.component.respond_to?(:gateway)
+            provider_config.component.gateway
+          else
+            :default
           end
         end
       end

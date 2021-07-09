@@ -27,7 +27,7 @@ module ROM
 
           klass.instance_variable_set("@attributes", nil)
           klass.instance_variable_set("@header", nil)
-          klass.instance_variable_set("@dsl", nil)
+          klass.instance_variable_set("@attribute_dsl", nil)
         end
 
         # include a registered plugin in this mapper
@@ -61,12 +61,12 @@ module ROM
         #
         # @api private
         def header
-          @header ||= dsl.header
+          @header ||= attribute_dsl.header
         end
 
         # @api private
         def respond_to_missing?(name, _include_private = false)
-          dsl.respond_to?(name) || super
+          attribute_dsl.respond_to?(name) || super
         end
 
         private
@@ -89,8 +89,8 @@ module ROM
         # @api private
         def attributes
           @attributes ||=
-            if superclass.respond_to?(:attributes, true) && inherit_header
-              superclass.attributes.dup
+            if superclass.respond_to?(:attributes, true) && config.inherit_header
+              superclass.__send__(:attributes).dup
             else
               []
             end
@@ -99,16 +99,16 @@ module ROM
         # Create the attribute DSL instance used by the mapper class
         #
         # @api private
-        def dsl
-          @dsl ||= AttributeDSL.new(attributes, options)
+        def attribute_dsl
+          @attribute_dsl ||= AttributeDSL.new(attributes, config.to_h)
         end
 
         # Delegate Attribute DSL method to the dsl instance
         #
         # @api private
         def method_missing(name, *args, &block)
-          if dsl.respond_to?(name)
-            dsl.public_send(name, *args, &block)
+          if attribute_dsl.respond_to?(name)
+            attribute_dsl.public_send(name, *args, &block)
           else
             super
           end

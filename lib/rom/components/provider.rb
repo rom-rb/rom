@@ -43,21 +43,23 @@ module ROM
           begin
             mod = Module.new {
               include Dry::Effects::Handler.Reader(:configuration)
-
-              private
-
-              # @api private
-              def dsl(type, **options)
-                type.new(**options, provider: self)
-              end
             }
+
+            define_dsl_method(mod, :__dsl__)
+
             types.each do |type|
-              mod.define_method(type) { |*args, **opts, &block|
-                DSL.instance_method(type).bind(self).(*args, **opts, &block)
-              }
+              define_dsl_method(mod, type)
             end
+
             mod
           end
+      end
+
+      # @private
+      def define_dsl_method(mod, name)
+        mod.define_method(name) { |*args, **opts, &block|
+          DSL.instance_method(name).bind(self).(*args, **opts, &block)
+        }
       end
     end
   end

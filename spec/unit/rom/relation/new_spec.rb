@@ -4,7 +4,7 @@ require "rom/relation"
 
 RSpec.describe ROM::Relation, "#new" do
   subject(:relation) do
-    Class.new(ROM::Relation) do
+    Class.new(ROM::Relation[:memory]) do
       schema(:users) do
         attribute :id, ROM::Types::String, read: ROM::Types::Coercible::Integer
         attribute :name, ROM::Types::String

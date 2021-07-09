@@ -6,6 +6,8 @@ gemspec
 
 eval_gemfile "Gemfile.devtools"
 
+gem "dry-configurable", github: "dry-rb/dry-configurable", branch: "master"
+
 if ENV["USE_DRY_TRANSFORMER_MASTER"].eql?("true")
   gem "dry-transformer", github: "dry-rb/dry-transformer", branch: "master"
 end

@@ -103,7 +103,7 @@ module ROM
             schema_block
           end
 
-        schema(view: name, &block)
+        schema(name, view: true, &block)
 
         if relation_block.arity > 0
           auto_curry_guard do
@@ -158,55 +158,39 @@ module ROM
       end
 
       # @api private
-      def default_name
-        Name[id_from_class]
-      end
-
-      # @api private
       def infer_option(option, component:)
         meth = :"infer_#{option}"
         send(meth, component) if respond_to?(meth)
       end
 
       # @api private
-      def infer_name(component)
-        if (schema = components.schemas(view: false, provider: self).last)
-          schema.name
-        else
-          Name[id_from_class]
+      def infer_id(component)
+        case component.type
+        when :schema
+          component.provider.config.component.dataset
+        when :relation
+          component.constant.config.component.id
+        when :dataset
+          component.provider.config.component.id
         end
       end
 
       # @api private
-      def infer_id(component)
+      def infer_dataset(component)
         case component.type
         when :relation
-          components.schemas(view: false, provider: self).last&.name.relation
-        when :schema
-          if component.option?(:name)
-            component.name.relation
-          else
-            id_from_class
-            Inflector.underscore((name || superclass.name).split("::").last).to_sym
-          end
-        else
-          id_from_class
+          component.constant.config.component.dataset
         end
       end
 
       # @api private
       def infer_adapter(component)
-        adapter or raise(MissingAdapterIdentifierError, self)
+        config.component.adapter or raise(MissingAdapterIdentifierError, self)
       end
 
       # @api private
-      def infer_gateway(component)
-        gateway
-      end
-
-      # @api private
-      def id_from_class
-        Inflector.underscore((name || superclass.name).split("::").last).to_sym
+      def infer_gateway(_)
+        config.component.gateway
       end
     end
   end

@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
+require "dry/configurable"
+
 require "rom/constants"
-require "rom/support/component"
 require "rom/mapper/dsl"
 
 module ROM
@@ -9,17 +10,21 @@ module ROM
   #
   # @private
   class Mapper
-    extend Component
-
-    include DSL
+    extend Dry::Configurable
     include Dry::Equalizer(:transformers, :header)
+    include DSL
 
-    defines :relation, :register_as, :symbolize_keys, :copy_keys,
-            :prefix, :prefix_separator, :inherit_header, :reject_keys
+    setting :inherit_header, default: true
+    setting :reject_keys, default: false
+    setting :prefix_separator, default: "_"
+    setting :symbolize_keys
+    setting :copy_keys
+    setting :prefix
 
-    inherit_header true
-    reject_keys false
-    prefix_separator "_"
+    setting :component do
+      setting :id
+      setting :relation_id
+    end
 
     # @return [Object] transformers object built by a processor
     #
@@ -68,14 +73,6 @@ module ROM
     # @api private
     def self.build(header = self.header, processor = :transformer)
       new(header, processor)
-    end
-
-    # @api private
-    def self.registry(descendants)
-      descendants.each_with_object({}) do |klass, h|
-        name = klass.register_as || klass.relation
-        (h[klass.base_relation] ||= {})[name] = klass.build
-      end
     end
 
     # @api private
