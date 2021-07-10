@@ -43,11 +43,12 @@ module ROM
           parent = adapter_namespace.const_get(command_type)
 
           constant = build_class(name: class_name(command_type), parent: parent) do |dsl|
-            config.update(type: type, component: {id: id}, **options)
+            config.component.id = id
+            config.update(type: type, **options)
             class_exec(&block) if block
           end
 
-          add(relation_id: relation, constant: constant)
+          add(relation_id: relation, constant: constant, provider: constant)
         end
 
         # @api private
@@ -58,7 +59,7 @@ module ROM
             inflector: inflector,
             adapter: adapter,
             command_type: command_type,
-            **provider_config.components
+            **config.components
           ]
         end
 

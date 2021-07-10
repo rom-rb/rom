@@ -6,29 +6,18 @@ module ROM
   module Components
     # @api public
     class Mapper < Core
-      id :mapper
-
       # @!attribute [r] relation_id
       #   @return [Symbol]
       option :relation_id, type: Types::Strict::Symbol, inferrable: true
 
       # @!attribute [r] constant
       #   @return [Class] Component's target class
-      option :constant, optional: true, type: Types.Interface(:new)
+      option :constant, type: Types.Interface(:new), optional: true
 
       # @!attribute [r] object
       #   @return [Class] Pre-initialized object that should be used instead of the constant
       #   @api public
       option :object, optional: true
-
-      # Registry namespace
-      #
-      # @return [String]
-      #
-      # @api public
-      def namespace
-        options[:namespace] || "mappers.#{relation_id}"
-      end
 
       # @api public
       def build

@@ -93,10 +93,10 @@ module ROM
         backend.ignore(dir)
       end
 
-      backend.on_load do |_, const, path|
+      backend.on_load do |_, constant, path|
         if (type = path_to_component_type(path))
           begin
-            components.add(type, constant: const)
+            components.add(type, constant: constant, provider: constant)
           rescue StandardError => e
             raise "Failed to load #{const} from #{path}: #{e.message}"
           end

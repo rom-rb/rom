@@ -36,7 +36,11 @@ module ROM
       #
       # @api public
       def [](name)
-        public_send(name)
+        if frozen?
+          settings.fetch(name)
+        else
+          public_send(name)
+        end
       end
 
       # @api private
@@ -65,8 +69,17 @@ module ROM
       alias_method :to_hash, :to_h
 
       # @api private
-      def respond_to_missing?(_name, _include_private = false)
-        true
+      def respond_to_missing?(name, *)
+        if frozen?
+          key?(name)
+        else
+          true
+        end
+      end
+
+      # @api private
+      def respond_to?(name, *)
+        super || key?(name)
       end
 
       # @api private

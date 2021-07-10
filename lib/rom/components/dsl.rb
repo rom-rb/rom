@@ -135,26 +135,16 @@ module ROM
         plugin
       end
 
-      # @api private
-      def infer_option(option, component:)
-        if component.provider && component.provider != self
-          component.provider.infer_option(option, component: component)
-        elsif component.option?(:constant)
-          # TODO: this could be transparent so that this conditional wouldn't be needed
-          component.constant.infer_option(option, component: component)
-        end
-      end
-
       private
 
       # @api private
       def __dsl__(type, **options, &block)
         if type.nested
-          dsl = type.new(provider: self, **options)
+          dsl = type.new(owner: self, **options)
           dsl.instance_exec(&block)
           dsl
         else
-          type.new(provider: self, block: block, **options).()
+          type.new(owner: self, block: block, **options).()
         end
       end
     end

@@ -10,19 +10,6 @@ require "rom/compat/auto_registration"
 require "rom/components"
 
 module ROM
-  module Components
-    # @api private
-    def infer_option(option, component:)
-      if component.provider && component.provider != self
-        component.provider.infer_option(option, component: component)
-      elsif component.option?(:constant) && component.constant.respond_to?(:infer_option)
-        component.constant.infer_option(option, component: component)
-      elsif component.option?(:constant)
-        Inflector.component_id(component.constant).to_sym
-      end
-    end
-  end
-
   # @api public
   class Configuration
     # @api public
@@ -185,18 +172,6 @@ module ROM
           relation: [:component, :relation_id]
         }.freeze
       end
-
-      # @api private
-      def infer_option(option, component:)
-        case option
-        when :id
-          component.constant.register_as ||
-            component.constant.relation ||
-            Inflector.component_id(component.constant.name).to_sym
-        when :relation_id
-          component.constant.relation || component.constant.base_relation
-        end
-      end
     end
   end
 
@@ -217,18 +192,6 @@ module ROM
           prefix: [],
           prefix_separator: []
         }.freeze
-      end
-
-      # @api private
-      def infer_option(option, component:)
-        case option
-        when :id
-          component.constant.register_as ||
-            component.constant.relation ||
-            Inflector.component_id(component.constant.name).to_sym
-        when :relation_id
-          component.constant.relation || component.constant.base_relation
-        end
       end
     end
   end

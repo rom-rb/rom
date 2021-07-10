@@ -20,21 +20,21 @@ module ROM
   end
 
   ConfigError = Class.new(StandardError) do
-    attr_reader :name, :component, :provider
+    attr_reader :name, :component, :owner
 
     # @api private
     def initialize(name, component, reason = :inferrence)
       @name = name
       @component = component
-      @provider = component.provider
+      @owner = component.owner
 
       key = "#{component.type}.#{name}"
 
       case reason
       when :inferrence
-        super("#{provider} failed to infer #{key} setting")
+        super("Failed to infer +#{key}+ setting for #{component.provider}")
       else
-        super("#{provider.name} #{key} setting is not valid")
+        super("#{owner.name} #{key} setting is not valid")
       end
     end
   end

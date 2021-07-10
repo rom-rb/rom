@@ -31,7 +31,7 @@ module ROM
             class_eval(&block) if block
           end
 
-          add(constant: constant)
+          add(provider: constant, constant: constant)
         end
 
         # @api private
@@ -54,7 +54,14 @@ module ROM
         # @api public
         def register(relation, mappers)
           mappers.map do |id, mapper|
-            components.add(:mappers, id: id, relation_id: relation, object: mapper)
+            components.add(
+              :mappers,
+              id: id,
+              relation_id: relation,
+              object: mapper,
+              provider: owner,
+              namespace: "mappers.#{relation}"
+            )
           end
         end
       end

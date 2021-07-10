@@ -6,24 +6,13 @@ module ROM
   module Components
     # @api public
     class Command < Core
-      id :command
-
-      # @!attribute [r] constant
-      #   @return [Class] Component's target class
-      option :constant, type: Types.Interface(:new)
-
       # @!attribute [r] relation_id
       #   @return [Symbol]
       option :relation_id, type: Types::Strict::Symbol, inferrable: true
 
-      # Registry namespace
-      #
-      # @return [String]
-      #
-      # @api public
-      def namespace
-        "commands.#{relation_id}"
-      end
+      # @!attribute [r] constant
+      #   @return [Class] Component's target class
+      option :constant, type: Types.Interface(:new)
 
       # @api public
       def build(**opts)

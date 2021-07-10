@@ -80,14 +80,14 @@ module ROM
       def add(type, item: nil, **options)
         component = item || build(type, **options)
 
-        if include?(type, component)
-          other = get(type, key: component.key)
+        # if include?(type, component)
+        #   other = get(type, key: component.key)
 
-          raise(
-            DUPLICATE_ERRORS[type],
-            "#{owner}: +#{component.key}+ is already defined by #{other.provider}"
-          )
-        end
+        #   raise(
+        #     DUPLICATE_ERRORS[type],
+        #     "#{owner}: +#{component.key}+ is already defined by #{other.owner}"
+        #   )
+        # end
 
         store[type] << component
 
@@ -111,7 +111,6 @@ module ROM
       # @api private
       def update(other, **options)
         other.each do |type, component|
-          next if include?(type, component)
           add(type, item: component.with(owner: owner, **options))
         end
         self

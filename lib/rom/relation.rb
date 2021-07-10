@@ -58,13 +58,21 @@ module ROM
 
     setting :component do
       setting :id, default: :relation
-      setting :dataset
+      setting :dataset, default: :relation
       setting :adapter
       setting :gateway, default: :default
       setting :inflector, default: Inflector
+      setting :abstract, default: true
+    end
+
+    setting :dataset do
+      setting :id, default: -> (config) { config.component.id }
+      setting :namespace, default: "datasets"
+      setting :abstract, default: true
     end
 
     setting :schema do
+      setting :id, default: -> (config) { config.component.id }
       setting :constant, default: Schema
       setting :dsl_class, default: Schema::DSL
       setting :attr_class, default: Attribute
@@ -74,15 +82,16 @@ module ROM
     # @api private
     def self.inherited(klass)
       super
-      return unless klass.adapter
-      klass.configure
+      klass.configure(config.to_h)
     end
 
     # @api private
-    def self.configure(options = EMPTY_HASH, &block)
-      if block
-        super(&block).update(options)
-      else
+    def self.configure(defaults = EMPTY_HASH, &block)
+      config.update(defaults)
+
+      super(&block) if block
+
+      if name
         # By default this turns `MyApp::Relations::Users` into :users
         config.component.id = config.component.inflector.component_id(name).to_sym
         config.component.dataset = config.component.id
@@ -111,7 +120,7 @@ module ROM
     # @!attribute [r] associations
     #   @return [Runtime::Resolver] Relation associations
     option :datasets, type: Runtime::Resolver[:datasets], default: -> {
-      Runtime::Resolver.new(:datasets)
+      Runtime::Resolver.new(:datasets)._update(self.class.components)
     }
 
     # @!attribute [r] dataset
@@ -125,16 +134,16 @@ module ROM
       Runtime::Resolver.new(:schemas)._update(self.class.components)
     }
 
+    # @!attribute [r] schema
+    #   @return [Runtime::Resolver] The canonical schema
+    option :schema, default: -> {
+      schemas.key?(name.dataset) ? schemas[name.dataset] : Schema.new(name)
+    }
+
     # @!attribute [r] associations
     #   @return [Runtime::Resolver] Relation associations
     option :associations, type: Runtime::Resolver[:associations], default: -> {
       Runtime::Resolver.new(:associations, namespace: name)
-    }
-
-    # @!attribute [r] schema
-    #   @return [Runtime::Resolver] The canonical schema
-    option :schema, default: -> {
-      (name && schemas.key?(name.dataset)) ? schemas[name.dataset] : Schema.new(Name[self.class])
     }
 
     # @!attribute [r] input_schema

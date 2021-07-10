@@ -8,8 +8,6 @@ module ROM
   module Components
     # @api public
     class Schema < Core
-      id :schema
-
       # @!attribute [r] constant
       #   @return [Class] Component's target class
       option :constant, type: Types.Interface(:new), inferrable: true
@@ -49,11 +47,6 @@ module ROM
       # @!attribute [r] inferrer
       #   @return [#with]
       option :inferrer, type: Types.Interface(:with), inferrable: true
-
-      # @api public
-      def namespace
-        "schemas"
-      end
 
       # @api private
       def canonical_schema

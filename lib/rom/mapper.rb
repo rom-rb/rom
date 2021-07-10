@@ -3,6 +3,7 @@
 require "dry/configurable"
 
 require "rom/constants"
+require "rom/components"
 require "rom/mapper/dsl"
 
 module ROM
@@ -10,6 +11,7 @@ module ROM
   #
   # @private
   class Mapper
+    extend ROM.Components
     extend Dry::Configurable
     include Dry::Equalizer(:transformers, :header)
     include DSL
@@ -22,8 +24,9 @@ module ROM
     setting :prefix
 
     setting :component do
-      setting :id
+      setting :id, default: -> (config) { config.component.relation_id }
       setting :relation_id
+      setting :namespace, default: -> (config) { "mappers.#{config.component.relation_id}" }
     end
 
     # @return [Object] transformers object built by a processor

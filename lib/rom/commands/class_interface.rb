@@ -226,15 +226,6 @@ module ROM
         end
       end
 
-      # @api private
-      def infer_option(option, component:)
-        case option
-        when :id then register_as || default_name
-        when :relation_id then relation
-        when :adapter then adapter
-        end
-      end
-
       # Return default name of the command class based on its name
       #
       # During setup phase this is used by defalut as `register_as` option

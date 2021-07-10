@@ -6,9 +6,7 @@ module ROM
   module Components
     # @api public
     class Association < Core
-      id :association
-
-      option :gateway, inferrable: true, type: Types.Instance(Symbol)
+      option :gateway, type: Types.Instance(Symbol), inferrable: true
 
       option :object
       alias_method :definition, :object

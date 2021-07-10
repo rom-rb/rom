@@ -21,7 +21,7 @@ module ROM
         nested false
 
         # @api private
-        option :provider
+        option :owner
 
         # @api private
         option :gateway, default: -> { :default }
@@ -69,6 +69,11 @@ module ROM
           components.replace(key, **self.options, **options)
         end
 
+        # @api private
+        def config
+          owner.config
+        end
+
         private
 
         # @api private
@@ -93,22 +98,17 @@ module ROM
 
         # @api private
         def components
-          provider.components
+          owner.components
         end
 
         # @api private
         def inflector
-          provider.inflector
+          owner.inflector
         end
 
         # @api private
         def class_name_inferrer
-          provider.class_name_inferrer
-        end
-
-        # @api private
-        def provider_config
-          provider.config
+          owner.class_name_inferrer
         end
       end
     end
