@@ -12,6 +12,8 @@
 - Generic Component API which allows you to turn any class or object into a DSL that can define rom components (via #650) (@solnic)
 - New settings API for components using dry-configurable (via #651) (@solnic)
 - Support for defining abstract components via `config.component.abstract` in which case they won't be initialized for runtime usage (via #651) (@solnic)
+- Top-level configuration defaults for each component type (ie default gateway for all relations etc.) (via #652) (@solnic)
+- Inferring default settings can be customized by implementing `infer_option` in your runtime class that's extended by `ROM.Components` although in most cases just using the configuration should suffice (via #652) (@solnic)
 
 ### Fixed
 
@@ -36,6 +38,7 @@
 - Associations are now decoupled from schemas and lazy-loaded (via #646) (@solnic)
 - Plugin API is now internally simplified which resulted in faster runtime. It's also no longer required to register plugin types upfront (via #648) (@solnic)
 - Configuring auto_register stores its config under `config.auto_register` (via #650) (@solnic)
+- [REVISIT] configuring custom gateway for a relation via DSL requires passing it as an option rather than specifying it within the block. It kinda-worked previously because the adapter was defaulting to the first one found. I'm quite sure this was more like a bug than a feature. This behavior could be restored in rom/compat though - it's a matter of defaulting to the first adapter found when gateway was not explicitly specified, meaning the new default should be set to `Undefined` rather than `:default` so that we can detect when it was not specified and act accordingly. This will only make sense when there's just *one adapter available* (via bedb330f0ec195d9acacf4481dad3a705e8a36af) (@solnic)
 
 [Compare v5.2.4...master](https://github.com/rom-rb/rom/compare/v5.2.4...master)
 
