@@ -24,9 +24,6 @@ module ROM
         option :owner
 
         # @api private
-        option :gateway, default: -> { :default }
-
-        # @api private
         option :block, optional: true
 
         # Specifies which DSL options map to component's settings

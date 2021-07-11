@@ -11,6 +11,8 @@ module ROM
 
         option :id
 
+        option :gateway, default: -> { resolve_gateway }
+
         option :abstract, default: -> { id.nil? }
 
         # Set or get custom dataset block
@@ -26,6 +28,13 @@ module ROM
         # @api public
         def call
           add(provider: owner)
+        end
+
+        private
+
+        # @api private
+        def resolve_gateway
+          config.component.gateway
         end
       end
     end

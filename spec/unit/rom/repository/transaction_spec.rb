@@ -85,9 +85,7 @@ RSpec.describe ROM::Repository, "#transaction" do
 
       alt_conn[:customers].insert(full_name: "Joe Black", user_id: joe_id)
 
-      configuration.relation(:customers) do
-        gateway :alt
-
+      configuration.relation(:customers, gateway: :alt) do
         schema(infer: true) do
           associations do
             has_one :user
@@ -101,8 +99,6 @@ RSpec.describe ROM::Repository, "#transaction" do
     end
 
     example "running transaction blocks with two connections" do
-      pending "TODO: broken"
-
       customer_repo.transaction(gateway: :default) do |outer|
         user = user_repo.create(name: "Jane")
 

@@ -8,11 +8,11 @@ module ROM
     class Dataset < Core
       # @!attribute [r] gateway
       #   @return [Symbol] Gateway identifier
-      option :gateway, inferrable: true, type: Types::Strict::Symbol
+      option :gateway, type: Types::Strict::Symbol, inferrable: true
 
       # @!attribute [r] gateway
       #   @return [Proc] Optional dataset evaluation block
-      option :block, optional: true, type: Types.Interface(:to_proc)
+      option :block, type: Types.Interface(:to_proc), optional: true
 
       # @api public
       memoize def build

@@ -65,8 +65,8 @@ module ROM
       #   end
       #
       # @api public
-      def relation(relation, **options, &block)
-        __dsl__(DSL::Relation, relation: relation, **options, &block)
+      def relation(id, **options, &block)
+        __dsl__(DSL::Relation, id: id, **options, &block)
       end
 
       # Command definition DSL

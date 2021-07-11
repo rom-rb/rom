@@ -33,11 +33,7 @@ module ROM
 
         # @api private
         def resolve_gateway
-          if config.component.respond_to?(:gateway)
-            config.component.gateway
-          else
-            :default
-          end
+          config.component.gateway
         end
       end
     end
