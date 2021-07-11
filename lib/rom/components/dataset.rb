@@ -6,20 +6,13 @@ module ROM
   module Components
     # @api public
     class Dataset < Core
-      id :dataset
-
       # @!attribute [r] gateway
       #   @return [Symbol] Gateway identifier
-      option :gateway, inferrable: true, type: Types::Strict::Symbol
+      option :gateway, type: Types::Strict::Symbol, inferrable: true
 
       # @!attribute [r] gateway
       #   @return [Proc] Optional dataset evaluation block
-      option :block, optional: true, type: Types.Interface(:to_proc)
-
-      # @api public
-      def namespace
-        "datasets"
-      end
+      option :block, type: Types.Interface(:to_proc), optional: true
 
       # @api public
       memoize def build
@@ -36,7 +29,7 @@ module ROM
 
       # @api private
       memoize def datasets
-        provider.components.datasets
+        provider.components.datasets(abstract: true)
       end
 
       # @api private

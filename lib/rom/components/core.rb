@@ -22,7 +22,13 @@ module ROM
       include Dry::Core::Memoizable
       include Dry::Effects.Reader(:configuration)
 
-      defines :id
+      defines :type
+
+      # @api private
+      def self.inherited(klass)
+        super
+        klass.type(Inflector.component_id(klass).to_sym)
+      end
 
       # @api private
       def self.option(name, **options)
@@ -36,32 +42,32 @@ module ROM
 
       # @!attribute [r] id
       #   @return [Symbol] Local registry id
-      option :id, inferrable: true, type: Types::Strict::Symbol
+      option :id, type: Types::Strict::Symbol, inferrable: true
 
       # @!attribute [r] namespace
       #   @return [String] Registry namespace
-      option :namespace, optional: true, reader: false, type: Types::Strict::String
-
-      # @!attribute [r] owner
-      #   @return [Object] Component's owner
-      option :owner
-
-      # @!attribute [r] provider
-      #   @return [Object] Component's original provider
-      option :provider, optional: true
+      option :namespace, type: Types::Strict::String, inferrable: true
 
       # @!attribute [r] adapter
       #   @return [Class] Component's adapter
-      option :adapter, inferrable: true, type: Types::Strict::Symbol
+      option :adapter, type: Types::Strict::Symbol, inferrable: true
 
       # @!attribute [r] abstract
       #   @return [Boolean]
       option :abstract, type: Types::Strict::Bool, default: -> { false }
       alias_method :abstract?, :abstract
 
+      # @!attribute [r] owner
+      #   @return [Object] Component's owner
+      option :owner, optional: true
+
+      # @!attribute [r] provider
+      #   @return [Object] Component's provider
+      option :provider
+
       # @api public
       def type
-        self.class.id
+        self.class.type
       end
 
       # Default container key
@@ -69,7 +75,7 @@ module ROM
       # @return [String]
       #
       # @api public
-      def key
+      memoize def key
         "#{namespace}.#{id}"
       end
 
@@ -122,22 +128,7 @@ module ROM
 
       # @api public
       memoize def components
-        configuration.components.update(local_components)
-      end
-
-      # @api public
-      memoize def local_components
-        registry = Components::Registry.new(owner: owner)
-
-        if provider != configuration && provider.respond_to?(:components)
-          registry.update(provider.components)
-        end
-
-        if respond_to?(:constant) && constant.respond_to?(:components)
-          registry.update(constant.components)
-        end
-
-        registry
+        configuration.components.update(provider.components)
       end
 
       # @api private
@@ -149,7 +140,7 @@ module ROM
 
       # @api public
       def plugins
-        configuration.plugins.select { |plugin| plugin.type == self.class.id }
+        configuration.plugins.select { |plugin| plugin.type == type }
       end
 
       # @api public
@@ -163,33 +154,19 @@ module ROM
       end
 
       # @api private
-      memoize def provider_config
-        # TODO: this needs to be encapsulated because it evaluates the entire config
-        #       prematurely
-        provider.respond_to?(:config) ? provider.config.to_h : EMPTY_HASH
-      end
-
-      # @api private
       memoize def read(name)
         # First see if the value was provided explicitly
-        value = options[name]
+        value =
+          if option?(name)
+            options[name]
+          else
+            provider.infer_option(name, type: type, owner: owner)
+          end
 
-        # Then try to read it from the provider's configuration
-        value ||= provider_config[type]&.fetch(name) { provider_config[name] }
-
-        # If the value is a proc, call it by passing the provider - this makes it
-        # possible to have a fallback mechanism implemented in a parent class.
-        # ie Relation can fallback to its class attributes that are deprecated now.
-        # This means `Relation.schema_class` can be the fallback for config.schema.constant
-        evaled = value.is_a?(Proc) ? value.(provider) : value
-
-        # Last resort - delegate inference to the provider itself
-        value = evaled || owner.infer_option(name, component: self)
-
-        if value
+        if value != Undefined
           options[name] = instance_variable_set(:"@#{name}", value)
         else
-          raise ConfigError.new(name, self, :inferrence) unless abstract?
+          raise ConfigError.new(name, self, :inferrence)
         end
 
         value

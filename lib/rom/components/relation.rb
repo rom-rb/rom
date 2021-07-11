@@ -6,8 +6,6 @@ module ROM
   module Components
     # @api public
     class Relation < Core
-      id :relation
-
       # @!attribute [r] constant
       #   @return [.new] Relation instance builder (typically a class)
       option :constant, type: Types.Interface(:new)
@@ -20,15 +18,6 @@ module ROM
       #   @return [Symbol] The default dataset id
       option :dataset, type: Types::Strict::Symbol, inferrable: true
 
-      # Registry namespace
-      #
-      # @return [String]
-      #
-      # @api public
-      def namespace
-        "relations"
-      end
-
       # @return [ROM::Relation]
       #
       # @api public
@@ -38,6 +27,16 @@ module ROM
         trigger("relations.class.ready", relation: constant, adapter: adapter)
 
         apply_plugins
+
+        if components.schemas(provider: provider).empty?
+          components.add(
+            :schemas, id: dataset, as: id, infer: true, provider: provider
+          )
+        end
+
+        if components.datasets(provider: provider).empty?
+          components.add(:datasets, id: dataset, gateway: gateway, provider: provider)
+        end
 
         payload = {
           schema: schema,
@@ -73,12 +72,13 @@ module ROM
 
       # @api private
       def schema
-        configuration.schemas[dataset]
+        schema_id = components.get(:schemas, provider: provider).id
+        configuration.schemas[schema_id]
       end
 
       # @api private
       def associations
-        configuration.associations.new(id, provider: constant, items: schema.associations)
+        configuration.associations.new(id, provider: provider, items: schema.associations)
       end
     end
   end

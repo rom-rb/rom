@@ -69,11 +69,6 @@ module ROM
     # @api private
     def initialize(*args, &block)
       @notifications = Notifications.event_bus(:configuration)
-
-      config.gateways = Config.new
-      config.components = Config.new
-      config.auto_register = Config.new
-
       configure(*args, &block)
     end
 
@@ -91,13 +86,22 @@ module ROM
     #
     # @api private
     def configure(*args)
-      infer_config(*args) unless args.empty?
-
-      # defaults
+      # Global defaults
       config.inflector = Inflector
+      config.auto_register.root_directory = nil
+      config.gateways = Config.new
 
+      # Component defaults
       config.components.class_name_inferrer = DEFAULT_CLASS_NAME_INFERRER
       config.components.class_namespace = DEFAULT_CLASS_NAMESPACE
+
+      Components::CORE_TYPES.each do |type|
+        config.components[inflector.singularize(type)].namespace = inflector.component_id(type)
+      end
+
+      # Load config from the arguments passed to the constructor.
+      # This *may* override defaults and it's a feature.
+      infer_config(*args) unless args.empty?
 
       # Load adapters explicitly here to ensure their plugins are present for later use
       load_adapters
@@ -135,7 +139,7 @@ module ROM
     # @api public
     def register_relation(*klasses)
       klasses.each do |klass|
-        components.add(:relations, constant: klass, provider: self)
+        components.add(:relations, constant: klass, provider: klass)
       end
 
       components.relations
@@ -148,7 +152,7 @@ module ROM
     # @api public
     def register_mapper(*klasses)
       klasses.each do |klass|
-        components.add(:mappers, constant: klass, provider: self)
+        components.add(:mappers, constant: klass, provider: klass)
       end
 
       components[:mappers]
@@ -161,7 +165,7 @@ module ROM
     # @api public
     def register_command(*klasses)
       klasses.each do |klass|
-        components.add(:commands, constant: klass, provider: self)
+        components.add(:commands, constant: klass, provider: klass)
       end
 
       components.commands
@@ -214,7 +218,10 @@ module ROM
     # @api private
     def register_gateways
       config.gateways.each do |id, gateway_config|
-        components.add(:gateways, id: id, config: gateway_config)
+        components.add(
+          :gateways,
+          id: id, namespace: "gateways", provider: self, config: gateway_config
+        )
       end
     end
 

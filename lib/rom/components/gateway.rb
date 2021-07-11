@@ -6,18 +6,7 @@ module ROM
   module Components
     # @api public
     class Gateway < Core
-      id :gateway
-
       option :config
-
-      # Relation registry id
-      #
-      # @return [Symbol]
-      #
-      # @api public
-      def namespace
-        "gateways"
-      end
 
       # @return [Symbol]
       #

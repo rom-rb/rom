@@ -5,6 +5,7 @@ require "dry/configurable"
 require "rom/types"
 require "rom/initializer"
 require "rom/pipeline"
+require "rom/components"
 
 require "rom/commands/class_interface"
 require "rom/commands/composite"
@@ -24,6 +25,7 @@ module ROM
   #
   # @api public
   class Command
+    extend ROM.Components
     extend Dry::Configurable
     extend Initializer
     extend ClassInterface
@@ -41,6 +43,7 @@ module ROM
       setting :id
       setting :relation_id
       setting :adapter
+      setting :namespace, default: -> (config) { "commands.#{config.component.relation_id}" }
     end
 
     config.input = Hash

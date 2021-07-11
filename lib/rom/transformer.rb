@@ -3,6 +3,7 @@
 require "dry/configurable"
 require "dry/transformer"
 
+require "rom/components"
 require "rom/processor/transformer"
 
 module ROM
@@ -10,11 +11,13 @@ module ROM
   #
   # @api public
   class Transformer < Dry::Transformer[Processor::Transformer::Functions]
+    extend ROM.Components
     extend Dry::Configurable
 
     setting :component do
-      setting :id
+      setting :id, default: -> (config) { config.component.relation_id }
       setting :relation_id
+      setting :namespace, default: -> (config) { "mappers.#{config.component.relation_id}" }
     end
 
     # Define transformation pipeline
