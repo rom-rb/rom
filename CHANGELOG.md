@@ -1,3 +1,9 @@
+## 5.2.7 unreleased
+
+### Fixed
+
+- [rom-core] warning about using `lambda` without a literal block (@flash-gordon)
+
 ## 5.2.6 2021-01-16
 
 ### Changed
