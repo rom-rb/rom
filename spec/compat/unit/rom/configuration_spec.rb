@@ -7,9 +7,9 @@ RSpec.describe ROM::Configuration do
   describe "#method_missing" do
     it "returns a gateway if it is defined" do
       gateway = ROM::Gateway.setup(:memory)
-      configuration = ROM::Configuration.new(gateway: gateway)
+      configuration = ROM::Configuration.new(gw: gateway)
 
-      expect(configuration.gateway).to be(gateway)
+      expect(configuration.gw).to be(gateway)
     end
 
     it "exposes gateways in the block" do

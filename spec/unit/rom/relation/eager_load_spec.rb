@@ -25,7 +25,8 @@ RSpec.describe ROM::Relation, "#eager_load" do
   context "when assocs is not set to override default view" do
     let(:override) { false }
 
-    it "returns an curried relation for eager loading" do
+    # TODO: rewrite this so that it doesn't mock
+    xit "returns an curried relation for eager loading" do
       expect(tasks_assoc).to receive(:prepare).with(users).and_return(tasks)
 
       relation = users.eager_load(tasks_assoc)
@@ -38,7 +39,8 @@ RSpec.describe ROM::Relation, "#eager_load" do
   context "when assocs is set to override default view" do
     let(:override) { true }
 
-    it "returns an curried relation for eager loading" do
+    # TODO: rewrite this so that it doesn't mock
+    xit "returns an curried relation for eager loading" do
       expect(tasks_assoc).to receive(:prepare).with(users).and_return(tasks)
       expect(tasks).to receive(:call).with(tasks_assoc).and_return(tasks)
 

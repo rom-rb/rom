@@ -9,12 +9,6 @@ module ROM
       class Dataset < Core
         key :datasets
 
-        option :id
-
-        option :gateway, default: -> { resolve_gateway }
-
-        option :abstract, default: -> { id.nil? }
-
         # Set or get custom dataset block
         #
         # This block will be evaluated when a relation is instantiated and registered
@@ -27,14 +21,13 @@ module ROM
         #
         # @api public
         def call
-          add(provider: owner)
+          config.update(gateway: gateway)
+          add
         end
 
-        private
-
         # @api private
-        def resolve_gateway
-          config.component.gateway
+        def gateway
+          provider.config.component.gateway
         end
       end
     end

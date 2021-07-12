@@ -4,10 +4,11 @@ require "dry/core/class_attributes"
 
 require "rom/support/inflector"
 
-require "rom/configuration"
-require "rom/compat/auto_registration"
-
+require "rom/core"
+require "rom/registry"
 require "rom/components"
+require "rom/compat/auto_registration"
+require "rom/configuration"
 
 module ROM
   # @api public
@@ -43,12 +44,12 @@ module ROM
     # @api private
     # @deprecated
     def relation_classes(gateway = nil)
-      classes = components.relations.map(&:constant)
-
-      return classes unless gateway
-
-      gw_name = gateway.is_a?(Symbol) ? gateway : gateways_map[gateway]
-      classes.select { |rel| rel.gateway == gw_name }
+      if gateway
+        gid = gateway.is_a?(Symbol) ? gateway : gateway.config.id
+        components.relations.select { |r| r.config[:gateway] == gid }
+      else
+        components.relations
+      end.map(&:constant)
     end
 
     # @api public
@@ -72,7 +73,11 @@ module ROM
     # @api public
     # @deprecated
     def gateways
-      @gateways ||= components.gateways.map(&:build).map { |gw| [gw.config.name, gw] }.to_h
+      @gateways ||=
+        begin
+          register_gateways
+          registry.gateways.map { |gateway| [gateway.config.id, gateway] }.to_h
+        end
     end
     alias_method :environment, :gateways
 
@@ -97,6 +102,37 @@ module ROM
     # @deprecated
     def method_missing(name, *)
       gateways[name] || super
+    end
+  end
+
+  # @api public
+  class Registry
+    # @api public
+    # @deprecated
+    def map_with(*ids)
+      with(opts: {map_with: ids})
+    end
+
+    # @api private
+    def build(key, &block)
+      item = resolver.call(key, &block)
+
+      if commands? && (mappers = opts[:map_with])
+        item >> mappers.map { |mapper| item.relation.mappers[mapper] }.reduce(:>>)
+      else
+        item
+      end
+    end
+
+    # @api private
+    def respond_to_missing?(name, *)
+      super || key?(name)
+    end
+
+    # @api public
+    # @deprecated
+    def method_missing(name, *args, &block)
+      fetch(name) { super }
     end
   end
 

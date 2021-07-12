@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "dry/configurable"
 require "dry/core/equalizer"
 
 require "rom/constants"
@@ -33,6 +34,8 @@ module ROM
   #
   # @api public
   class Schema
+    extend Dry::Configurable
+
     include Memoizable
 
     EMPTY_ASSOCIATION_SET = EMPTY_HASH.freeze
@@ -56,6 +59,19 @@ module ROM
 
     include Dry::Equalizer(:name, :attributes, :associations)
     include Enumerable
+
+    setting :component do
+      setting :id
+      setting :adapter
+      setting :namespace, default: "schemas"
+      setting :gateway, default: :default
+      setting :view, default: false
+      setting :infer, default: false
+      setting :constant, default: Schema
+      setting :dsl_class, default: Schema::DSL
+      setting :attr_class, default: Attribute
+      setting :inferrer, default: Schema::DEFAULT_INFERRER
+    end
 
     # @!attribute [r] name
     #   @return [Symbol] The name of this schema

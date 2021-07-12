@@ -24,9 +24,9 @@ module ROM
     setting :prefix
 
     setting :component do
-      setting :id, default: -> (config) { config.component.relation_id }
+      setting :id
       setting :relation_id
-      setting :namespace, default: -> (config) { "mappers.#{config.component.relation_id}" }
+      setting :namespace, default: "mappers"
     end
 
     # @return [Object] transformers object built by a processor

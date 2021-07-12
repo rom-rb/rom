@@ -14,14 +14,17 @@ module ROM
         extend Initializer
         extend Dry::Core::ClassAttributes
 
-        defines(:key, :nested)
+        defines(:key, :type, :nested)
 
         include Dry::Core::Memoizable
 
         nested false
 
         # @api private
-        option :owner
+        option :provider
+
+        # @api private
+        option :config, optional: true, default: -> { EMPTY_HASH }
 
         # @api private
         option :block, optional: true
@@ -33,7 +36,7 @@ module ROM
           if defined?(@settings) && (keys.empty? && mappings.empty?)
             @settings
           else
-            @settings = [keys.product(keys).to_h, **mappings].reduce(:merge)
+            @settings = [keys.zip(keys).to_h, **mappings].reduce(:merge)
           end
         end
 
@@ -41,12 +44,25 @@ module ROM
         def self.inherited(klass)
           super
           klass.instance_variable_set(:@settings, EMPTY_HASH)
+          klass.type(Inflector.component_id(klass).to_sym)
         end
 
         # @api private
-        def build_class(name: class_name, parent: class_parent, **options, &block)
+        def build_class(name: class_name, parent: class_parent, &block)
           Dry::Core::ClassBuilder.new(name: name, parent: parent).call do |klass|
-            klass.config.update(resolve_config)
+            klass.config.update(component: config)
+
+            defaults = (klass.settings & component_types)
+              .map { |type|
+                [
+                  type,
+                  merge_configs(provider.config[type], klass.config[type], fallback: klass.config)
+                ]
+              }
+              .to_h
+
+            klass.config.update(defaults)
+
             klass.class_exec(self, &block) if block
           end
         end
@@ -57,36 +73,49 @@ module ROM
         end
 
         # @api private
-        def add(**options)
-          components.add(key, **self.options, **options)
+        def type
+          self.class.type
         end
 
         # @api private
-        def replace(**options)
-          components.replace(key, **self.options, **options)
+        def component_types
+          %i[gateway dataset schema relation association mapper]
         end
 
         # @api private
-        def config
-          owner.config
+        def add(config: EMPTY_HASH, **options)
+          components.add(key, config: self.config.merge(config), block: block, **options)
+        end
+
+        # @api private
+        memoize def config
+          merge_configs(provider.config[type], _config, fallback: provider.config)
+            .then { |defaults| defaults.merge(resolve_config(defaults)) }
         end
 
         private
 
         # @api private
-        def resolve_config(mapping = self.class.settings)
-          return {mapping => options[mapping]} if mapping.is_a?(Symbol)
+        def merge_configs(left, right, fallback:)
+          [left, right].map(&:to_h).map(&:compact).reduce(:merge).then { |defaults|
+            defaults.transform_values { |value| value.is_a?(Proc) ? value.(fallback) : value }
+          }
+        end
+
+        # @api private
+        def resolve_config(config, mapping = self.class.settings)
+          return {mapping => config[mapping]} if mapping.is_a?(Symbol)
 
           res = mapping.map { |src, trg|
             case trg
             when Hash
-              {src => resolve_config(trg)}
+              {src => resolve_config(config, trg)}
             when Array
-              {src => trg.map { |m| resolve_config(m) }.reduce(:merge)}
+              {src => trg.map { |m| resolve_config(config, m) }.reduce(:merge)}
             when nil
-              resolve_config(src => src)
+              resolve_config(config, {src => src})
             else
-              {trg => options[src]} unless options[src].nil?
+              {trg => config[src]} unless config[src].nil?
             end
           }
 
@@ -94,18 +123,23 @@ module ROM
         end
 
         # @api private
+        def _config
+          options[:config]
+        end
+
+        # @api private
         def components
-          owner.components
+          provider.components
         end
 
         # @api private
         def inflector
-          owner.inflector
+          provider.inflector
         end
 
         # @api private
         def class_name_inferrer
-          owner.class_name_inferrer
+          provider.class_name_inferrer
         end
       end
     end

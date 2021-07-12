@@ -1,10 +1,7 @@
 # frozen_string_literal: true
 
-require "rom/support/inflector"
-
 require "rom/initializer"
-require "rom/runtime/resolver"
-require "rom/commands"
+require "rom/commands/graph"
 require "rom/command_proxy"
 
 module ROM
@@ -18,19 +15,6 @@ module ROM
   class CommandCompiler
     extend Initializer
 
-    # @api private
-    def self.registry
-      Hash.new { |h, k| h[k] = {} }
-    end
-
-    # @!attribute [r] relations
-    #   @return [ROM::RelationRegistry] Relations used with a given compiler
-    option :relations
-
-    # @!attribute [r] commands
-    #   @return [ROM::Registry] Command registries with custom commands
-    option :commands, default: -> { Runtime::Resolver.new(:commands) }
-
     # @!attribute [r] id
     #   @return [Symbol] The command registry identifier
     option :id, optional: true
@@ -41,7 +25,7 @@ module ROM
 
     # @!attribute [r] registry
     #   @return [Hash] local registry where commands will be stored during compilation
-    option :registry, optional: true, default: -> { self.class.registry }
+    option :registry, default: -> { Registry.new }
 
     # @!attribute [r] plugins
     #   @return [Array<Symbol>] a list of optional plugins that will be enabled for commands
@@ -54,11 +38,6 @@ module ROM
     # @!attribute [r] cache
     #   @return [Cache] local cache instance
     option :cache, default: -> { Cache.new }
-
-    # @!attribute [r] inflector
-    #   @return [Dry::Inflector] String inflector
-    #   @api private
-    option :inflector, default: -> { Inflector }
 
     # Return a specific command command_class for a given adapter and relation AST
     #
@@ -84,13 +63,13 @@ module ROM
       cache.fetch_or_store(args.hash) do
         id, adapter, ast, plugins, plugins_options, meta = args
 
-        component = commands.configuration.components.commands(id: id).first
+        component = registry.components.get(:commands, id: id)
 
         command_class =
           if component
             component.constant
           else
-            Command.adapter_namespace(adapter).const_get(inflector.classify(id))
+            Command.adapter_namespace(adapter).const_get(Inflector.classify(id))
           end
 
         plugins_with_opts = Array(plugins)
@@ -106,10 +85,10 @@ module ROM
         )
 
         graph_opts = compiler.visit(ast)
-        command = ROM::Commands::Graph.build(registry, graph_opts)
+        command = ROM::Commands::Graph.build(registry.root.commands, graph_opts)
 
         if command.graph?
-          root = inflector.singularize(command.name.relation).to_sym
+          root = Inflector.singularize(command.name.relation).to_sym
           CommandProxy.new(command, root)
         elsif command.lazy?
           command.unwrap
@@ -126,6 +105,11 @@ module ROM
       __send__(:"visit_#{name}", node, *args)
     end
 
+    # @api private
+    def relations
+      registry.root.relations
+    end
+
     private
 
     # @api private
@@ -133,13 +117,13 @@ module ROM
       name, header, rel_meta = node
       other = header.map { |attr| visit(attr, name) }.compact
 
-      register_command(name, rel_meta, parent_relation)
+      key = register_command(name, rel_meta, parent_relation)
 
       default_mapping =
         if rel_meta[:combine_command_class] == :many
           name
         else
-          {inflector.singularize(name).to_sym => name}
+          {Inflector.singularize(name).to_sym => name}
         end
 
       mapping =
@@ -158,9 +142,9 @@ module ROM
         end
 
       if other.empty?
-        [mapping, command_class]
+        [mapping, key]
       else
-        [mapping, [command_class, other]]
+        [mapping, [key, other]]
       end
     end
 
@@ -183,17 +167,23 @@ module ROM
     #
     # @api private
     def register_command(rel_name, rel_meta, parent_relation = nil)
-      relation = relations[rel_name]
-
-      klass = command_class.create_class(
-        relation: relation,
+      options = {
+        rel_name: rel_name,
         meta: meta,
         rel_meta: rel_meta,
         parent_relation: parent_relation,
         plugins: plugins
-      )
+      }
 
-      registry[rel_name][command_class] = klass.build(relation)
+      key = "commands.#{rel_name}.#{id}-compiled-#{options.hash}"
+
+      registry.fetch(key) do
+        command_class
+          .create_class(relation: relations[rel_name], **options)
+          .build(relations[rel_name])
+      end
+
+      key
     end
   end
 end

@@ -8,78 +8,72 @@ module ROM
   module Components
     # @api public
     class Schema < Core
-      # @!attribute [r] constant
-      #   @return [Class] Component's target class
-      option :constant, type: Types.Interface(:new), inferrable: true
+      alias_method :dataset, :id
 
-      # @!attribute [r] as
-      #   @return [Symbol] Alias that should be used as the relation name
-      option :as, type: Types::Strict::Symbol, optional: true
+      # @api public
+      def key
+        root = "#{namespace}.#{relation_id}"
 
-      # @!attribute [r] view
-      #   @return [Symbol]
-      option :view, type: Types::Strict::Bool, default: -> { false }
-
-      # @!attribute [r] gateway
-      #   @return [Symbol] Gateway identifier
-      option :gateway, type: Types::Strict::Symbol, inferrable: true
-
-      # @!attribute [r] adapter
-      #   @return [Symbol] Adapter identifier
-      option :adapter, type: Types::Strict::Symbol, inferrable: true
-
-      # @!attribute [r] block
-      #   @return [Class] A proc for evaluation via schema DSL
-      option :block, type: Types.Interface(:call)
-
-      # @!attribute [r] attr_class
-      #   @return [Class]
-      option :attr_class, type: Types.Instance(Class), inferrable: true
-
-      # @!attribute [r] dsl_class
-      #   @return [Class]
-      option :dsl_class, type: Types.Interface(:new), inferrable: true
-
-      # @!attribute [r] infer
-      #   @return [Boolean] Whether the inferrer should be enabled or not
-      option :infer, type: Types::Strict::Bool, default: -> { false }
-
-      # @!attribute [r] inferrer
-      #   @return [#with]
-      option :inferrer, type: Types.Interface(:with), inferrable: true
-
-      # @api private
-      def canonical_schema
-        id = components.schemas(provider: provider).first.id
-        configuration.schemas[id]
+        if view?
+          "#{root}.#{id}"
+        else
+          root
+        end
       end
 
       # @api public
       def build
         if view?
-          canonical_schema.instance_eval(&block)
+          registry.schemas[relation_id].instance_eval(&block)
         else
-          schema = dsl.()
+          relations = registry.relations
+          inferrer = config[:inferrer].with(enabled: config[:infer])
 
-          schema.finalize_attributes!(gateway: _gateway, relations: relations)
+          schema = config[:dsl_class].new(
+            relation: name, plugins: plugins, **config, inferrer: inferrer, &block
+          ).()
+
+          if gateway?
+            schema.finalize_attributes!(gateway: gateway, relations: relations)
+          else
+            schema.finalize_attributes!(relations: relations)
+          end
+
+          schema.associations.each do |definition|
+            registry.components.add(
+              :associations,
+              definition: definition,
+              config: {
+                adapter: adapter,
+                namespace: "associations.#{relation_id}"
+              }
+            )
+          end
+
           schema.finalize!
+
+          schema
         end
       end
 
       # @api private
+      def adapter
+        config[:adapter]
+      end
+
+      # @api private
+      def as
+        config[:as]
+      end
+
+      # @api private
       def relation_id
-        as || id
+        config.fetch(:relation_id) { as || id }
       end
 
       # @api private
       def name
-        ROM::Relation::Name[relation_id, dataset]
-      end
-      alias_method :dataset, :id
-
-      # @api private
-      def dsl(**opts)
-        dsl_class.new(**dsl_options, **opts)
+        ROM::Relation::Name[relation_id, id]
       end
 
       # @api private
@@ -88,22 +82,8 @@ module ROM
       end
 
       # @api private
-      def _gateway
-        super if gateway?
-      end
-
-      private
-
-      # @api private
-      def dsl_options
-        {relation: name, # TODO: Schema#name could now probably just be a symbol id
-         schema_class: constant,
-         attr_class: attr_class,
-         adapter: adapter, # TODO: decouple Schema::DSL from adapter
-         definition: block,
-         plugins: plugins,
-         inflector: inflector,
-         inferrer: inferrer.with(enabled: infer)}
+      def view
+        config[:view]
       end
     end
   end

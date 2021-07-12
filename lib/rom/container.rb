@@ -2,8 +2,6 @@
 
 require "dry/container"
 
-require "rom/runtime/configuration"
-
 module ROM
   # ROM container is an isolated environment with no global state where all
   # components are registered. Container objects provide access to your
