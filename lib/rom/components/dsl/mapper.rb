@@ -31,7 +31,7 @@ module ROM
             class_eval(&block) if block
           end
 
-          add(provider: constant, constant: constant)
+          add(constant: constant, config: {id: id, relation_id: parent, **options})
         end
 
         # @api private
@@ -56,11 +56,8 @@ module ROM
           mappers.map do |id, mapper|
             components.add(
               :mappers,
-              id: id,
-              relation_id: relation,
               object: mapper,
-              provider: owner,
-              namespace: "mappers.#{relation}"
+              config: {id: id, relation_id: relation, namespace: "mappers.#{relation}"}
             )
           end
         end

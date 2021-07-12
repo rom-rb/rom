@@ -4,10 +4,9 @@ require "dry/core/class_attributes"
 
 require "rom/support/inflector"
 
-require "rom/configuration"
-require "rom/compat/auto_registration"
-
+require "rom/core"
 require "rom/components"
+require "rom/compat/auto_registration"
 
 module ROM
   # @api public

@@ -5,11 +5,9 @@ require_relative "core"
 module ROM
   module Components
     module DSL
-      # Setup DSL-specific relation extensions
-      #
       # @private
-      class Schema < Core
-        key :schemas
+      class Gateway < Core
+        key :gateways
 
         # @api private
         def call

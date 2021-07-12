@@ -2,6 +2,7 @@
 
 require "rom/relation/name"
 
+require "rom/components/dsl/gateway"
 require "rom/components/dsl/dataset"
 require "rom/components/dsl/schema"
 require "rom/components/dsl/relation"
@@ -89,8 +90,9 @@ module ROM
       #   end
       #
       # @api public
-      def commands(relation, **options, &block)
-        __dsl__(DSL::Command, relation: relation, **options, &block)
+      def commands(relation_id, **options, &block)
+        __dsl__(DSL::Command, relation_id: relation_id, **options, &block)
+        components.commands
       end
 
       # Mapper definition DSL
@@ -135,16 +137,21 @@ module ROM
         plugin
       end
 
+      # @api public
+      def gateway(id, **options, &block)
+        __dsl__(DSL::Gateway, id: id, **options, &block)
+      end
+
       private
 
       # @api private
       def __dsl__(type, **options, &block)
         if type.nested
-          dsl = type.new(owner: self, **options)
+          dsl = type.new(provider: self, config: options)
           dsl.instance_exec(&block)
           dsl
         else
-          type.new(owner: self, block: block, **options).()
+          type.new(provider: self, block: block, config: options).()
         end
       end
     end

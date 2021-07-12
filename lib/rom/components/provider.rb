@@ -34,6 +34,7 @@ module ROM
         @provider = provider
         provider.extend(mod)
         provider.extend(Components)
+        yield if block_given?
         freeze
       end
 

@@ -15,8 +15,6 @@ require "rom/relation/class_interface"
 require "rom/auto_curry"
 require "rom/pipeline"
 
-require "rom/runtime/resolver"
-
 require "rom/relation/loaded"
 require "rom/relation/curried"
 require "rom/relation/commands"
@@ -26,7 +24,6 @@ require "rom/relation/wrap"
 require "rom/relation/materializable"
 
 require "rom/types"
-require "rom/schema"
 
 module ROM
   # Base relation class
@@ -59,6 +56,7 @@ module ROM
     setting :component do
       setting :id, default: :relation
       setting :dataset, default: :relation
+      setting :namespace, default: "relations"
       setting :adapter
       setting :gateway, default: :default
       setting :inflector, default: Inflector
@@ -112,16 +110,18 @@ module ROM
     #   @api public
     option :name, default: -> { Name[config.component.id, config.component.dataset] }
 
+    # @!attribute [r] registry
+    #   @return [Registry] Runtime registry
+    option :registry
+
     # @!attribute [r] inflector
     #   @return [Dry::Inflector] The default inflector
     #   @api public
     option :inflector, default: -> { config.component.inflector }
 
-    # @!attribute [r] associations
-    #   @return [Runtime::Resolver] Relation associations
-    option :datasets, type: Runtime::Resolver[:datasets], default: -> {
-      Runtime::Resolver.new(:datasets)._update(self.class.components)
-    }
+    # @!attribute [r] datasets
+    #   @return [registry] Relation associations
+    option :datasets, default: -> { registry.datasets }
 
     # @!attribute [r] dataset
     #   @return [Object] dataset used by the relation provided by relation's gateway
@@ -129,22 +129,18 @@ module ROM
     option :dataset, default: -> { datasets[name.dataset] }
 
     # @!attribute [r] schemas
-    #   @return [Runtime::Resolver] Relation schemas
-    option :schemas, type: Runtime::Resolver[:schemas], default: -> {
-      Runtime::Resolver.new(:schemas)._update(self.class.components)
-    }
+    #   @return [Runtime::registry] Relation schemas
+    option :schemas, default: -> { registry.schemas }
 
     # @!attribute [r] schema
-    #   @return [Runtime::Resolver] The canonical schema
+    #   @return [Runtime::registry] The canonical schema
     option :schema, default: -> {
       schemas.key?(name.dataset) ? schemas[name.dataset] : Schema.new(name)
     }
 
     # @!attribute [r] associations
-    #   @return [Runtime::Resolver] Relation associations
-    option :associations, type: Runtime::Resolver[:associations], default: -> {
-      Runtime::Resolver.new(:associations, namespace: name)
-    }
+    #   @return [Runtime::registry] Relation associations
+    option :associations, default: -> { registry.associations }
 
     # @!attribute [r] input_schema
     #   @return [Object#[]] tuple processing function, uses schema or defaults to Hash[]
@@ -175,16 +171,12 @@ module ROM
 
     # @!attribute [r] mappers
     #   @return [MapperRegistry] an optional mapper registry (empty by default)
-    option :mappers, type: Runtime::Resolver[:mappers], default: -> {
-      Runtime::Resolver.new(:mappers, namespace: name, adapter: adapter)
-    }
+    option :mappers, default: -> { registry.mappers }
 
     # @!attribute [r] commands
     #   @return [CommandRegistry] Command registry
     #   @api private
-    option :commands, default: -> {
-      Runtime::Resolver.new(:commands, namespace: name, adapter: adapter)
-    }
+    option :commands, default: -> { registry.commands }
 
     # @!attribute [r] meta
     #   @return [Hash] Meta data stored in a hash

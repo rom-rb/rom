@@ -6,17 +6,11 @@ module ROM
   module Components
     # @api public
     class Dataset < Core
-      # @!attribute [r] gateway
-      #   @return [Symbol] Gateway identifier
-      option :gateway, type: Types::Strict::Symbol, inferrable: true
-
-      # @!attribute [r] gateway
-      #   @return [Proc] Optional dataset evaluation block
-      option :block, type: Types.Interface(:to_proc), optional: true
-
       # @api public
-      memoize def build
-        datasets.reduce(_gateway.dataset(id)) { |dataset, component|
+      def build
+        return block.(provider) unless gateway?
+
+        datasets.reduce(gateway.dataset(id)) { |dataset, component|
           if component.block
             dataset.instance_exec(schema, &component.block)
           else
@@ -28,8 +22,8 @@ module ROM
       private
 
       # @api private
-      memoize def datasets
-        provider.components.datasets(abstract: true)
+      def datasets
+        provider.components.datasets
       end
 
       # @api private

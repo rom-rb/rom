@@ -3,7 +3,7 @@
 require "rom/support/inflector"
 
 require "rom/initializer"
-require "rom/runtime/resolver"
+require "rom/resolver"
 require "rom/commands"
 require "rom/command_proxy"
 
@@ -28,8 +28,8 @@ module ROM
     option :relations
 
     # @!attribute [r] commands
-    #   @return [ROM::Registry] Command registries with custom commands
-    option :commands, default: -> { Runtime::Resolver.new(:commands) }
+    #   @return [Resolver] Command registries with custom commands
+    option :commands, default: -> { Resolver.new }
 
     # @!attribute [r] id
     #   @return [Symbol] The command registry identifier
