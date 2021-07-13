@@ -7,6 +7,7 @@ require "rom/support/inflector"
 require "rom/core"
 require "rom/components"
 require "rom/compat/auto_registration"
+require "rom/configuration"
 
 module ROM
   # @api public
@@ -71,7 +72,7 @@ module ROM
     # @api public
     # @deprecated
     def gateways
-      @gateways ||= components.gateways.map(&:build).map { |gw| [gw.config.name, gw] }.to_h
+      @gateways ||= registry.gateways.map { |gateway| [gateway.config[:id], gateway] }.to_h
     end
     alias_method :environment, :gateways
 

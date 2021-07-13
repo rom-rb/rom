@@ -15,12 +15,12 @@ module ROM
 
     attr_reader :config, :components, :container, :resolver, :notifications, :opts
 
-    def initialize(config:, components: [], notifications: nil, **opts)
+    def initialize(config:, components: [], container: Container.new, notifications: nil, **opts)
       @config = config
       @components = components
       @notifications = notifications
       @resolver = Resolver.new(components: components, **opts)
-      @container = Container.new
+      @container = container
       @opts = opts
     end
 
@@ -56,15 +56,38 @@ module ROM
 
     # @api public
     def resolve(key, &block)
-      with_registry(self) { resolver.call(key, &block) }
+      case key
+      when String, Symbol
+        qualified_key = [namespace, key].compact.join(".")
+
+        return container[qualified_key] if container.key?(qualified_key)
+
+        item = with_registry(self) { resolver.call(key, &block) }
+
+        container.register(qualified_key, item)
+
+        item
+      when Array
+        MapperCompiler.new[key]
+      end
     end
     alias_method :[], :resolve
 
     # @api private
     def new(**opts)
       self.class.new(
-        config: config, components: components, notifications: notifications, **@opts, **opts
+        config: config,
+        container: container,
+        components: components,
+        notifications: notifications,
+        **@opts,
+        **opts
       )
+    end
+
+    # @api private
+    def namespaced(namespace)
+      new(namespace: [self.namespace, namespace].compact.join("."))
     end
 
     # @api private

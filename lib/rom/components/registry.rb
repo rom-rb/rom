@@ -67,6 +67,11 @@ module ROM
       end
 
       # @api private
+      def to_a
+        flat_map { |_, components| components }
+      end
+
+      # @api private
       def [](type)
         store[type]
       end

@@ -32,7 +32,7 @@ module ROM
 
         # @api private
         def adapter
-          config[:adapter]
+          config.fetch(:adapter) { provider.config.gateways[config[:gateway]].adapter }
         end
 
         # @api private

@@ -31,7 +31,10 @@ module ROM
             class_eval(&block) if block
           end
 
-          add(constant: constant, config: {id: id, relation_id: parent, **options})
+          add(
+            constant: constant,
+            config: {id: id, namespace: "mappers.#{parent}", relation_id: parent, **options}
+          )
         end
 
         # @api private

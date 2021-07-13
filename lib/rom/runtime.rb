@@ -202,7 +202,7 @@ module ROM
       config.freeze
       attach_listeners
       loader.() if config.auto_register.key?(:root_directory)
-      self
+      registry
     end
 
     # Apply a plugin to the configuration
@@ -239,10 +239,7 @@ module ROM
     # @api private
     def register_gateways
       config.gateways.each do |id, gateway_config|
-        components.add(
-          :gateways,
-          id: id, namespace: "gateways", provider: self, config: gateway_config
-        )
+        gateway(id, **gateway_config)
       end
     end
 

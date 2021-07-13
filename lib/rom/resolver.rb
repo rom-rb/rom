@@ -11,8 +11,8 @@ module ROM
 
     # @api private
     def initialize(components: EMPTY_ARRAY, namespace: nil)
-      @components = components
-      @namespace = namespace
+      @components = Array(components)
+      @namespace = namespace ? String(namespace) : namespace
     end
 
     # @api private
@@ -25,9 +25,13 @@ module ROM
     # @api private
     def each
       if namespace
-        components.public_send(namespace).each { |component| yield(component) }
+        components.each do |component|
+          yield(component) if component.namespace.start_with?(namespace)
+        end
       else
-        components.each { |_, component| yield(component) }
+        components.each do |component|
+          yield(component)
+        end
       end
     end
 
@@ -47,16 +51,27 @@ module ROM
 
     # @api private
     def call(key, &fallback)
-      comp = detect { |comp| comp.key == [namespace, key].compact.join(".") }
+      qualified_key = [namespace, key].compact.join(".")
+
+      comp = detect { |comp| comp.key == qualified_key }
 
       if comp
         comp.build
       elsif fallback
         fallback.()
+      elsif root?(key)
+        namespaced(qualified_key)
       else
-        # TODO: add auto-resolving
+        raise "+#{qualified_key}+ not found"
       end
     end
     alias_method :[], :call
+
+    private
+
+    # @api private
+    def root?(key)
+      map(&:relation_id).uniq.include?(key)
+    end
   end
 end

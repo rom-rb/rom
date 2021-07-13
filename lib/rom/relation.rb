@@ -132,7 +132,9 @@ module ROM
     # @!attribute [r] dataset
     #   @return [Object] dataset used by the relation provided by relation's gateway
     #   @api public
-    option :dataset, default: -> { datasets[name.dataset] }
+    option :dataset, default: -> {
+      datasets.resolve(name.dataset) { registry.gateways[gateway].dataset(name.dataset) }
+    }
 
     # @!attribute [r] schemas
     #   @return [Runtime::registry] Relation schemas
@@ -175,7 +177,7 @@ module ROM
 
     # @!attribute [r] mappers
     #   @return [MapperRegistry] an optional mapper registry (empty by default)
-    option :mappers, default: -> { registry.mappers }
+    option :mappers, default: -> { registry.mappers.namespaced(config.component.id) }
 
     # @!attribute [r] commands
     #   @return [CommandRegistry] Command registry
