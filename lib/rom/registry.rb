@@ -45,13 +45,18 @@ module ROM
     end
 
     # @api private
+    def keys
+      resolver.keys
+    end
+
+    # @api private
     def key?(key)
-      resolver.map(&:key).include?(key)
+      resolver.key?(key)
     end
 
     # @api public
-    def resolve(key)
-      with_registry(self) { resolver.call(key) }
+    def resolve(key, &block)
+      with_registry(self) { resolver.call(key, &block) }
     end
     alias_method :[], :resolve
 

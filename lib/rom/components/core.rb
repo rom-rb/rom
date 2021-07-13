@@ -88,6 +88,11 @@ module ROM
       end
 
       # @api private
+      def local_components
+        EMPTY_ARRAY
+      end
+
+      # @api private
       def apply_plugins
         plugins.each do |plugin|
           plugin.apply_to(constant)

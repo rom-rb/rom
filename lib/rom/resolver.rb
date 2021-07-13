@@ -32,11 +32,27 @@ module ROM
     end
 
     # @api private
-    def call(key)
+    def key?(key)
+      if namespace
+        keys.include?("#{namespace}.#{key}") || keys.include?(key)
+      else
+        keys.include?(key)
+      end
+    end
+
+    # @api private
+    def keys
+      map(&:key)
+    end
+
+    # @api private
+    def call(key, &fallback)
       comp = detect { |comp| comp.key == [namespace, key].compact.join(".") }
 
       if comp
         comp.build
+      elsif fallback
+        fallback.()
       else
         # TODO: add auto-resolving
       end

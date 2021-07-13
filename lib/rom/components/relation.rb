@@ -31,6 +31,11 @@ module ROM
       def adapter
         config[:adapter]
       end
+
+      # @api private
+      def local_components
+        constant.components
+      end
     end
   end
 end

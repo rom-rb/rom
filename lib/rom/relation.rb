@@ -65,12 +65,18 @@ module ROM
 
     setting :dataset do
       setting :id, default: -> (config) { config.component.id }
+      setting :adapter, default: -> (config) { config.component.adapter }
       setting :namespace, default: "datasets"
       setting :abstract, default: true
     end
 
     setting :schema do
       setting :id, default: -> (config) { config.component.id }
+      setting :adapter, default: -> (config) { config.component.adapter }
+      setting :view, default: false
+      setting :infer, default: false
+      setting :gateway, default: :default
+      setting :namespace, default: "schemas"
       setting :constant, default: Schema
       setting :dsl_class, default: Schema::DSL
       setting :attr_class, default: Attribute
@@ -134,9 +140,7 @@ module ROM
 
     # @!attribute [r] schema
     #   @return [Runtime::registry] The canonical schema
-    option :schema, default: -> {
-      schemas.key?(name.dataset) ? schemas[name.dataset] : Schema.new(name)
-    }
+    option :schema, default: -> { schemas.resolve(name.dataset) { Schema.new(name) } }
 
     # @!attribute [r] associations
     #   @return [Runtime::registry] Relation associations

@@ -52,6 +52,44 @@ RSpec.describe ROM::Runtime do
     expect(users.dataset).to be_a(ROM::Memory::Dataset)
   end
 
+  it "can define a relation with a schema" do
+    runtime.gateway(:default, adapter: :memory)
+
+    relation = runtime.relation(:users, adapter: :memory) do
+      schema { attribute(:id, ROM::Types::Integer) }
+    end
+
+    expect(relation.config[:id]).to be(:users)
+    expect(relation.config[:dataset]).to be(:users)
+    expect(relation.config[:gateway]).to be(:default)
+
+    users = registry["relations.users"]
+
+    expect(users).to be_a(ROM::Memory::Relation)
+    expect(users.schema).to be_a(ROM::Schema)
+    expect(users.schema[:id]).to be_a(ROM::Attribute)
+  end
+
+  it "can define a relation with a schema with its own dataset id" do
+    pending "TODO"
+
+    runtime.gateway(:default, adapter: :memory)
+
+    relation = runtime.relation(:people, adapter: :memory) do
+      schema(:users) { attribute(:id, ROM::Types::Integer) }
+    end
+
+    expect(relation.config[:id]).to be(:people)
+    expect(relation.config[:dataset]).to be(:users)
+    expect(relation.config[:gateway]).to be(:default)
+
+    users = registry["relations.people"]
+
+    expect(users).to be_a(ROM::Memory::Relation)
+    expect(users.schema).to be_a(ROM::Schema)
+    expect(users.schema[:id]).to be_a(ROM::Attribute)
+  end
+
   it "can define commands" do
     runtime.relation(:users, adapter: :memory)
 

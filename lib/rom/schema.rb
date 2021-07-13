@@ -62,6 +62,8 @@ module ROM
 
     setting :component do
       setting :id
+      setting :adapter
+      setting :namespace, default: "schemas"
       setting :gateway, default: :default
       setting :view, default: false
       setting :infer, default: false

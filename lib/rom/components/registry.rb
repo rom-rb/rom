@@ -91,6 +91,8 @@ module ROM
 
         store[type] << component
 
+        update(component.local_components)
+
         component
       end
 
