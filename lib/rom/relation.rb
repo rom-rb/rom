@@ -133,7 +133,9 @@ module ROM
     #   @return [Object] dataset used by the relation provided by relation's gateway
     #   @api public
     option :dataset, default: -> {
-      datasets.resolve(name.dataset) { registry.gateways[gateway].dataset(name.dataset) }
+      datasets.fetch(name.dataset) do
+        registry.gateways[gateway].dataset(name.dataset)
+      end
     }
 
     # @!attribute [r] schemas
@@ -142,7 +144,7 @@ module ROM
 
     # @!attribute [r] schema
     #   @return [Runtime::registry] The canonical schema
-    option :schema, default: -> { schemas.resolve(name.dataset) { Schema.new(name) } }
+    option :schema, default: -> { schemas.fetch(name.dataset) { Schema.new(name) } }
 
     # @!attribute [r] associations
     #   @return [Runtime::registry] Relation associations
@@ -176,8 +178,8 @@ module ROM
     option :struct_namespace, reader: false, default: -> { config.struct_namespace }
 
     # @!attribute [r] mappers
-    #   @return [MapperRegistry] an optional mapper registry (empty by default)
-    option :mappers, default: -> { registry.mappers.namespaced(config.component.id) }
+    #   @return [Registry] an optional mapper registry (empty by default)
+    option :mappers, default: -> { registry.mappers.scoped(config.component.id) }
 
     # @!attribute [r] commands
     #   @return [CommandRegistry] Command registry

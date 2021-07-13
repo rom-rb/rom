@@ -1,45 +1,49 @@
 # frozen_string_literal: true
 
+require "dry/core/memoizable"
+
 require "rom/constants"
 
 module ROM
   # @api private
   class Resolver
+    include Dry::Core::Memoizable
     include Enumerable
 
-    attr_reader :components, :namespace
+    attr_reader :components
 
     # @api private
-    def initialize(components: EMPTY_ARRAY, namespace: nil)
-      @components = Array(components)
-      @namespace = namespace ? String(namespace) : namespace
+    def initialize(components)
+      @components = components
     end
 
     # @api private
-    def namespaced(namespace)
-      self.class.new(components: components, namespace: namespace)
-    end
+    def call(key, &fallback)
+      comp = get(key)
 
-    # @api private
-    def each
-      if namespace
-        components.each do |component|
-          yield(component) if component.namespace.start_with?(namespace)
-        end
+      if comp
+        comp.build
+      elsif fallback
+        fallback.()
       else
-        components.each do |component|
-          yield(component)
-        end
+        raise "+#{key}+ not found"
       end
+    end
+    alias_method :[], :call
+
+    # @api private
+    def get(key)
+      detect { |comp| comp.key == key }
+    end
+
+    # @api private
+    def each(&block)
+      components.each { |_, component| yield(component) }
     end
 
     # @api private
     def key?(key)
-      if namespace
-        keys.include?("#{namespace}.#{key}") || keys.include?(key)
-      else
-        keys.include?(key)
-      end
+      keys.include?(key)
     end
 
     # @api private
@@ -50,31 +54,6 @@ module ROM
     # @api private
     def keys
       map(&:key)
-    end
-
-    # @api private
-    def call(key, &fallback)
-      qualified_key = [namespace, key].compact.join(".")
-
-      comp = detect { |comp| comp.key == qualified_key }
-
-      if comp
-        comp.build
-      elsif fallback
-        fallback.()
-      elsif root?(key)
-        namespaced(qualified_key)
-      else
-        raise "+#{qualified_key}+ not found"
-      end
-    end
-    alias_method :[], :call
-
-    private
-
-    # @api private
-    def root?(key)
-      select { |c| c.respond_to?(:relation_id) }.map(&:relation_id).uniq.include?(key)
     end
   end
 end

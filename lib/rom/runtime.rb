@@ -73,7 +73,7 @@ module ROM
     # @api private
     def initialize(*args, &block)
       @notifications = Notifications.event_bus(:configuration)
-      @registry = Registry.new(config: config, notifications: notifications, components: components)
+      @registry = Registry.new(config: config, components: components, notifications: notifications)
       configure(*args, &block)
     end
 
