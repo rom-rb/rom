@@ -28,7 +28,7 @@ module ROM
 
       # @api private
       def setup
-        ROM::Gateway.setup(adapter, config)
+        ROM::Gateway.setup(adapter, *config[:args], **config)
       end
     end
   end

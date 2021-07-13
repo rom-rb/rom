@@ -295,7 +295,7 @@ module ROM
 
     # @api private
     def load_adapters
-      config.gateways.each { |_, gateway_config| gateway_config.adapter }.uniq.each do |adapter|
+      config.gateways.map(&:last).map(&:adapter).uniq.each do |adapter|
         Gateway.class_from_symbol(adapter)
       rescue AdapterLoadError
         # TODO: we probably want to remove this. It's perfectly fine to have an adapter

@@ -17,9 +17,7 @@ module ROM
 
     # @api private
     def namespaced(namespace)
-      self.class.new(
-        components: components, namespace: namespace
-      )
+      self.class.new(components: components, namespace: namespace)
     end
 
     # @api private
@@ -42,6 +40,11 @@ module ROM
       else
         keys.include?(key)
       end
+    end
+
+    # @api private
+    def ids
+      map(&:id)
     end
 
     # @api private
@@ -71,7 +74,7 @@ module ROM
 
     # @api private
     def root?(key)
-      map(&:relation_id).uniq.include?(key)
+      select { |c| c.respond_to?(:relation_id) }.map(&:relation_id).uniq.include?(key)
     end
   end
 end

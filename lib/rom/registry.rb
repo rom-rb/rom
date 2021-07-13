@@ -26,7 +26,7 @@ module ROM
 
     # @api private
     def each(&block)
-      resolver.each(&block)
+      container.keys.each { |key| yield resolve(key) }
     end
 
     # @api private
@@ -49,6 +49,10 @@ module ROM
       resolver.keys
     end
 
+    def ids
+      resolver.ids
+    end
+
     # @api private
     def key?(key)
       resolver.key?(key)
@@ -57,10 +61,18 @@ module ROM
     # @api public
     def resolve(key, &block)
       case key
-      when String, Symbol
+      when Symbol
         qualified_key = [namespace, key].compact.join(".")
 
         return container[qualified_key] if container.key?(qualified_key)
+
+        item = with_registry(self) { resolver.call(key, &block) }
+
+        container.register(qualified_key, item)
+
+        item
+      when String
+        return container[key] if container.key?(key)
 
         item = with_registry(self) { resolver.call(key, &block) }
 
@@ -123,6 +135,20 @@ module ROM
     # @api private
     def associations
       new(namespace: __method__)
+    end
+
+    # Disconnect all gateways
+    #
+    # @example
+    #   rom = ROM.container(:sql, 'sqlite://my_db.sqlite')
+    #   rom.relations[:users].insert(name: "Jane")
+    #   rom.disconnect
+    #
+    # @return [Hash<Symbol=>Gateway>] a hash with disconnected gateways
+    #
+    # @api public
+    def disconnect
+      container.keys.grep(/gateways/).each { |key| self[key].disconnect }
     end
   end
 end

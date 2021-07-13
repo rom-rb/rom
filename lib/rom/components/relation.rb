@@ -14,7 +14,9 @@ module ROM
       #
       # @api public
       def build
-        constant.use(:registry_reader, relations: registry.relations.map(&:id))
+        relation_ids = registry.components.relations.map(&:id)
+
+        constant.use(:registry_reader, relations: relation_ids)
 
         trigger("relations.class.ready", relation: constant, adapter: adapter)
 
