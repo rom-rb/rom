@@ -3,9 +3,11 @@
 require "dry/container"
 require "dry/core/memoizable"
 
+require_relative "cache"
 require_relative "constants"
 require_relative "initializer"
 require_relative "resolver"
+require_relative "inferrer"
 
 module ROM
   class Registry
@@ -27,6 +29,8 @@ module ROM
 
     option :resolver, default: -> { Resolver.new(components) }
 
+    option :inferrer, default: -> { Inferrer.new }
+
     option :notifications, optional: true
 
     option :type, optional: true
@@ -34,6 +38,8 @@ module ROM
     option :path, default: -> { EMPTY_ARRAY }
 
     option :root, default: -> { self }
+
+    option :opts, default: -> { EMPTY_HASH }
 
     # @api public
     def fetch(key, &block)
@@ -51,16 +57,26 @@ module ROM
           container.register(key, item)
         }
       when Array
-        MapperCompiler.new[key]
+        with_registry(self) { inferrer.call(key, type, **opts) }
       end
     end
     alias_method :[], :fetch
 
     # @api private
+    def register(key, item)
+      container.register([*path, key].join("."), item)
+    end
+
+    # @api private
     def relation_scope?(key)
       if !key?(key) && (mappers? || commands?)
-        components.relations.map(&:id).include?(key)
+        relation_ids.include?(key)
       end
+    end
+
+    # @api private
+    def relation_ids
+      components.relations.map(&:id)
     end
 
     # @api private
@@ -100,12 +116,17 @@ module ROM
 
     # @api private
     def keys
-      resolver.keys
+      (resolver.keys + container.keys).uniq
     end
 
     # @api private
     def key?(key)
-      resolver.key?([*path, key].join("."))
+      keys.include?([*path, key].join("."))
+    end
+
+    # @api private
+    def inspect
+      "#<#{self.class} />"
     end
 
     # Disconnect all gateways

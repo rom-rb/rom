@@ -1,10 +1,7 @@
 # frozen_string_literal: true
 
-require "rom/support/inflector"
-
 require "rom/initializer"
-require "rom/resolver"
-require "rom/commands"
+require "rom/commands/graph"
 require "rom/command_proxy"
 
 module ROM
@@ -18,19 +15,6 @@ module ROM
   class CommandCompiler
     extend Initializer
 
-    # @api private
-    def self.registry
-      Hash.new { |h, k| h[k] = {} }
-    end
-
-    # @!attribute [r] relations
-    #   @return [ROM::RelationRegistry] Relations used with a given compiler
-    option :relations
-
-    # @!attribute [r] commands
-    #   @return [Resolver] Command registries with custom commands
-    option :commands, default: -> { Resolver.new }
-
     # @!attribute [r] id
     #   @return [Symbol] The command registry identifier
     option :id, optional: true
@@ -41,7 +25,7 @@ module ROM
 
     # @!attribute [r] registry
     #   @return [Hash] local registry where commands will be stored during compilation
-    option :registry, optional: true, default: -> { self.class.registry }
+    option :registry
 
     # @!attribute [r] plugins
     #   @return [Array<Symbol>] a list of optional plugins that will be enabled for commands
@@ -54,11 +38,6 @@ module ROM
     # @!attribute [r] cache
     #   @return [Cache] local cache instance
     option :cache, default: -> { Cache.new }
-
-    # @!attribute [r] inflector
-    #   @return [Dry::Inflector] String inflector
-    #   @api private
-    option :inflector, default: -> { Inflector }
 
     # Return a specific command command_class for a given adapter and relation AST
     #
@@ -84,13 +63,13 @@ module ROM
       cache.fetch_or_store(args.hash) do
         id, adapter, ast, plugins, plugins_options, meta = args
 
-        component = commands.configuration.components.commands(id: id).first
+        component = registry.components.get(:commands, id: id)
 
         command_class =
           if component
             component.constant
           else
-            Command.adapter_namespace(adapter).const_get(inflector.classify(id))
+            Command.adapter_namespace(adapter).const_get(Inflector.classify(id))
           end
 
         plugins_with_opts = Array(plugins)
@@ -106,7 +85,7 @@ module ROM
         )
 
         graph_opts = compiler.visit(ast)
-        command = ROM::Commands::Graph.build(registry, graph_opts)
+        command = ROM::Commands::Graph.build(registry.root.commands, graph_opts)
 
         if command.graph?
           root = inflector.singularize(command.name.relation).to_sym
@@ -126,6 +105,11 @@ module ROM
       __send__(:"visit_#{name}", node, *args)
     end
 
+    # @api private
+    def relations
+      registry.root.relations
+    end
+
     private
 
     # @api private
@@ -139,7 +123,7 @@ module ROM
         if rel_meta[:combine_command_class] == :many
           name
         else
-          {inflector.singularize(name).to_sym => name}
+          {Inflector.singularize(name).to_sym => name}
         end
 
       mapping =
@@ -158,9 +142,9 @@ module ROM
         end
 
       if other.empty?
-        [mapping, command_class]
+        [mapping, id]
       else
-        [mapping, [command_class, other]]
+        [mapping, [id, other]]
       end
     end
 
@@ -193,7 +177,7 @@ module ROM
         plugins: plugins
       )
 
-      registry[rel_name][command_class] = klass.build(relation)
+      registry.register(id, klass.build(relation))
     end
   end
 end

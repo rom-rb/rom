@@ -148,7 +148,9 @@ module ROM
 
     # @!attribute [r] associations
     #   @return [Runtime::registry] Relation associations
-    option :associations, default: -> { registry.associations }
+    option :associations, default: -> do
+      registry.associations.scoped(config.component.id)
+    end
 
     # @!attribute [r] input_schema
     #   @return [Object#[]] tuple processing function, uses schema or defaults to Hash[]
@@ -179,12 +181,16 @@ module ROM
 
     # @!attribute [r] mappers
     #   @return [Registry] an optional mapper registry (empty by default)
-    option :mappers, default: -> { registry.mappers.scoped(config.component.id) }
+    option :mappers, default: -> do
+      registry.mappers.scoped(config.component.id, opts: {adapter: adapter})
+    end
 
     # @!attribute [r] commands
     #   @return [CommandRegistry] Command registry
     #   @api private
-    option :commands, default: -> { registry.commands }
+    option :commands, default: -> do
+      registry.commands.scoped(config.component.id, opts: {adapter: adapter})
+    end
 
     # @!attribute [r] meta
     #   @return [Hash] Meta data stored in a hash

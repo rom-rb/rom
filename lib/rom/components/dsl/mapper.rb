@@ -31,10 +31,14 @@ module ROM
             class_eval(&block) if block
           end
 
-          add(
-            constant: constant,
-            config: {id: id, namespace: "mappers.#{parent}", relation_id: parent, **options}
+          # Update component config via constant because it could've been changed
+          config.update(
+            **constant.config.component.to_h.compact,
+            relation_id: parent,
+            namespace: "mappers.#{parent}"
           )
+
+          add(constant: constant)
         end
 
         # @api private

@@ -32,6 +32,9 @@ module ROM
             class_exec(&block) if block
           end
 
+          # Update component config via constant because it could've been changed
+          config.update(constant.config.component.to_h)
+
           add(constant: constant, config: {id: id, **options})
         end
 

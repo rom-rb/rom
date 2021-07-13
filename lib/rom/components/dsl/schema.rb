@@ -11,6 +11,8 @@ module ROM
       class Schema < Core
         key :schemas
 
+        settings(:as, :adapter)
+
         # @api private
         def call
           add
