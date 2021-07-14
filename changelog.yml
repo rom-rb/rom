@@ -19,11 +19,6 @@
   - 'New settings API for components using dry-configurable (via #651) (@solnic)'
   - 'Support for defining abstract components via `config.component.abstract` in which
     case they won''t be initialized for runtime usage (via #651) (@solnic)'
-  - 'Top-level configuration defaults for each component type (ie default gateway
-    for all relations etc.) (via #652) (@solnic)'
-  - 'Inferring default settings can be customized by implementing `infer_option` in
-    your runtime class that''s extended by `ROM.Components` although in most cases
-    just using the configuration should suffice (via #652) (@solnic)'
   - 'Ability to provide top-level component configuration ie default gateway, adapter,
     inflector etc. (via #653) (@solnic)'
   - 'Ability to configure gateways using configuration DSL (via #653) (@solnic)'
