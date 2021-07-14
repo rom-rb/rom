@@ -117,7 +117,7 @@ module ROM
       name, header, rel_meta = node
       other = header.map { |attr| visit(attr, name) }.compact
 
-      register_command(name, rel_meta, parent_relation)
+      key = register_command(name, rel_meta, parent_relation)
 
       default_mapping =
         if rel_meta[:combine_command_class] == :many
@@ -142,9 +142,9 @@ module ROM
         end
 
       if other.empty?
-        [mapping, id]
+        [mapping, key]
       else
-        [mapping, [id, other]]
+        [mapping, [key, other]]
       end
     end
 
@@ -167,17 +167,23 @@ module ROM
     #
     # @api private
     def register_command(rel_name, rel_meta, parent_relation = nil)
-      relation = relations[rel_name]
-
-      klass = command_class.create_class(
-        relation: relation,
+      options = {
+        rel_name: rel_name,
         meta: meta,
         rel_meta: rel_meta,
         parent_relation: parent_relation,
         plugins: plugins
-      )
+      }
 
-      registry.register(id, klass.build(relation))
+      key = "commands.#{rel_name}.#{id}.compiled-#{options.hash}"
+
+      registry.fetch(key) do
+        command_class
+          .create_class(relation: relations[rel_name], **options)
+          .build(relations[rel_name])
+      end
+
+      key
     end
   end
 end
