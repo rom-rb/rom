@@ -1,7 +1,7 @@
 ---
 - version: unreleased
-  summary:
-  date:
+  summary: 
+  date: 
   fixed:
   - 'Setup works under MRI 3.0.0 (issue #622 fixed via #623) (@v-kolesnikov)'
   added:
@@ -19,8 +19,17 @@
   - 'New settings API for components using dry-configurable (via #651) (@solnic)'
   - 'Support for defining abstract components via `config.component.abstract` in which
     case they won''t be initialized for runtime usage (via #651) (@solnic)'
-  - "Top-level configuration defaults for each component type (ie default gateway for all relations etc.) (via #652) (@solnic)"
-  - "Inferring default settings can be customized by implementing `infer_option` in your runtime class that's extended by `ROM.Components` although in most cases just using the configuration should suffice (via #652) (@solnic)"
+  - 'Top-level configuration defaults for each component type (ie default gateway
+    for all relations etc.) (via #652) (@solnic)'
+  - 'Inferring default settings can be customized by implementing `infer_option` in
+    your runtime class that''s extended by `ROM.Components` although in most cases
+    just using the configuration should suffice (via #652) (@solnic)'
+  - 'Ability to provide top-level component configuration ie default gateway, adapter,
+    inflector etc. (via #653) (@solnic)'
+  - 'Ability to configure gateways using configuration DSL (via #653) (@solnic)'
+  - 'Ability to define schemas without relations (via #653) (@solnic)'
+  - 'Relation view schemas that are defined via `Relation.view` DSL are now registered
+    too, which makes them more accessible/reusable (via #653) (@solnic)'
   changed:
   - "`rom-core`, `rom-changeset` and `rom-repository` have been merged into `rom`
     gem (@solnic)"
@@ -54,16 +63,30 @@
     also no longer required to register plugin types upfront (via #648) (@solnic)'
   - 'Configuring auto_register stores its config under `config.auto_register` (via
     #650) (@solnic)'
-  - "[REVISIT] configuring custom gateway for a relation via DSL requires passing it as an option rather than specifying it within the block. It kinda-worked previously because the adapter was defaulting to the first one
- found. I'm quite sure this was more like a bug than a feature. This behavior could be restored in rom/compat though - it's a matter of defaulting to the first adapter found when gateway was not explicitly specified, meaning the
-new default should be set to `Undefined` rather than `:default` so that we can detect when it was not specified and act accordingly. This will only make sense when there's just *one adapter available* (via bedb330f0ec195d9acacf4481dad3a705e8a36af) (@solnic)"
+  - "[REVISIT] configuring custom gateway for a relation via DSL requires passing
+    it as an option rather than specifying it within the block. It kinda-worked previously
+    because the adapter was defaulting to the first one found. I'm quite sure this
+    was more like a bug than a feature. This behavior could be restored in rom/compat
+    though - it's a matter of defaulting to the first adapter found when gateway was
+    not explicitly specified, meaning the new default should be set to `Undefined`
+    rather than `:default` so that we can detect when it was not specified and act
+    accordingly. This will only make sense when there's just *one adapter available*
+    (via bedb330f0ec195d9acacf4481dad3a705e8a36af) (@solnic)"
+  - "`ROM::Configuration` is deprecated and it was replaced by `ROM::Runtime` (via
+    #653) (@solnic)"
+  - "`ROM.container` is deprecated and it was replaced by `ROM.runtime` (via #653)
+    (@solnic)"
+  - "[internal] `ROM::Container` is deprecated and it was replaced by `ROM::Registry`
+    (via #653) (@solnic)"
+  - "[internal] Commands that are compiled at runtime are now cached in the runtime
+    registry (via #653) (@solnic)"
 - version: 5.2.4
-  summary:
+  summary: 
   date: '2020-05-08'
   fixed:
   - "[rom] Bumped rom-changeset version (@flash-gordon)"
 - version: 5.2.3
-  summary:
+  summary: 
   date: '2020-05-07'
   fixed:
   - "[rom-core] Constructor types were fired twice when updating data (@flash-gordon)"
@@ -71,13 +94,13 @@ new default should be set to `Undefined` rather than `:default` so that we can d
     was not evaluated in the context of a changeset object (fixed via #592) (@timriley
     + @solnic)"
 - version: 5.2.2
-  summary:
+  summary: 
   date: '2020-02-03'
   fixed:
   - "[rom-core] Constructor types were fired twice when writing data (@flash-gordon)"
   added:
   - "[rom-repository] `Repository#transaction` accepts transaction options now (@ianks)"
-  changed:
+  changed: 
 - version: 5.2.1
   date: '2020-01-11'
   summary: This release contains keyword fixes reported by Ruby 2.7.
