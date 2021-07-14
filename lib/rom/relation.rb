@@ -160,7 +160,7 @@ module ROM
     # @!attribute [r] schema
     #   @return [Runtime::registry] The canonical schema
     option :schema, default: -> do
-      schemas.fetch(config.component.id) { Schema.new(name) }
+      schemas.infer(config.component.id, gateway: gateway, **config.schema.to_h)
     end
 
     # @!attribute [r] associations
