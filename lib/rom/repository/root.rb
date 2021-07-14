@@ -13,7 +13,7 @@ module ROM
     #     commands :create, update: :by_pk, delete: :by_pk
     #   end
     #
-    #   rom = ROM.container(:sql, 'sqlite::memory') do |conf|
+    #   rom = ROM.runtime(:sql, 'sqlite::memory') do |conf|
     #     conf.default.create_table(:users) do
     #       primary_key :id
     #       column :name, String

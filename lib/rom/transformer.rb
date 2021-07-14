@@ -15,9 +15,9 @@ module ROM
     extend Dry::Configurable
 
     setting :component do
-      setting :id, default: -> (config) { config.component.relation_id }
+      setting :id
       setting :relation_id
-      setting :namespace, default: -> (config) { "mappers.#{config.component.relation_id}" }
+      setting :namespace, default: "mappers"
     end
 
     # Define transformation pipeline

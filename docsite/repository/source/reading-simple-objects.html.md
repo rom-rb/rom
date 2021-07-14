@@ -7,7 +7,7 @@ It's best to create multiple Repository classes that each focus on a segment of 
 
 ```ruby
 # Assuming a database with tables 'users' and 'projects'
-rom = ROM.container(:sql, 'sqlite::memory') do |config|
+rom = ROM.runtime(:sql, 'sqlite::memory') do |config|
   config.relation(:users) do
     schema(infer: true)
     auto_struct true
@@ -59,7 +59,7 @@ This short example demonstrates using selector methods, `#one`, and `#to_a`.
 ```ruby
 require 'rom-repository'
 
-rom = ROM.container(:sql, 'sqlite::memory') do |config|
+rom = ROM.runtime(:sql, 'sqlite::memory') do |config|
   config.default.connection.create_table(:users) do
     primary_key :id
     column :name, String, null: false

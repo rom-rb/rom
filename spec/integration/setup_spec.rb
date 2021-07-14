@@ -4,7 +4,7 @@ require "rom/memory"
 
 RSpec.describe "Setting up rom suite" do
   subject(:rom) do
-    ROM.container(:memory) do |config|
+    ROM.runtime(:memory) do |config|
       config.register_relation(Test::Users)
     end
   end
@@ -30,7 +30,7 @@ RSpec.describe "Setting up rom suite" do
     end
 
     let(:configuration) { ROM::Configuration.new(:memory) }
-    let(:container) { ROM.container(configuration) }
+    let(:container) { ROM.runtime(configuration) }
 
     subject(:schema) { container.relations[:users].schema }
 

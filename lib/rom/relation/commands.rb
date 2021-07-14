@@ -42,7 +42,7 @@ module ROM
           if commands.key?(type)
             commands[type]
           else
-            commands[type, adapter, to_ast, use, plugins_options, opts]
+            commands[[type, adapter, to_ast, use, plugins_options, opts]]
           end
 
         command =

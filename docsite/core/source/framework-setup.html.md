@@ -66,7 +66,7 @@ end
 
 configuration = ROM::Configuration.new(:memory)
 configuration.auto_register('root_dir/lib/persistence/')
-container = ROM.container(configuration)
+container = ROM.runtime(configuration)
 ```
 
 ^INFO
@@ -93,7 +93,7 @@ Notice that the directory structure is different from our module structure. Sinc
 ```ruby
 configuration = ROM::Configuration.new(:memory)
 configuration.auto_register('/path/to/lib', namespace: 'Persistence')
-container = ROM.container(configuration)
+container = ROM.runtime(configuration)
 ```
 
 Keep in mind with this namespace strategy, each component must be located under a module matching the components name:
@@ -163,7 +163,7 @@ end
 ```ruby
 configuration = ROM::Configuration.new(:memory)
 configuration.auto_register('/path/to/lib', namespace: false)
-container = ROM.container(configuration)
+container = ROM.runtime(configuration)
 ```
 
 ## Relations

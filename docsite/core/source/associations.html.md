@@ -34,7 +34,7 @@ to understand:
 - `tasks_for_users` is an association **function** which returns all tasks matching particular users
 - `user_id` is **our combine-key**, it **must be included** in the resulting data and it's used
   to merge results into nested data structures
-  
+
 Let's translate this to actual relations using the memory adapter:
 
 ``` ruby
@@ -45,9 +45,9 @@ class Users < ROM::Relation[:memory]
   schema do
     attribute :id, Types::Int
     attribute :name, Types::String
-    
+
     primary_key :id
-    
+
     associations do
       has_many :tasks, combine_key: :user_id, override: true, view: :for_users
     end
@@ -59,7 +59,7 @@ class Tasks < ROM::Relation[:memory]
     attribute :id, Types::Int
     attribute :user_id, Types::Int
     attribute :title, Types::String
-    
+
     primary_key :id
   end
 
@@ -68,7 +68,7 @@ class Tasks < ROM::Relation[:memory]
   end
 end
 
-rom = ROM.container(:memory) do |config|
+rom = ROM.runtime(:memory) do |config|
   config.register_relation(Users, Tasks)
 end
 
@@ -105,7 +105,7 @@ previous example to this:
 ``` ruby
 require "rom"
 
-ROM.container(:sql, 'sqlite::memory') do |config|
+ROM.runtime(:sql, 'sqlite::memory') do |config|
   config.gateways[:default].create_table(:users) do
     primary_key :id
     column :name, String
@@ -128,7 +128,7 @@ ROM.container(:sql, 'sqlite::memory') do |config|
   class Tasks < ROM::Relation[:sql]
     schema(infer: true)
   end
-  
+
   config.register_relation(Users, Tasks)
 end
 

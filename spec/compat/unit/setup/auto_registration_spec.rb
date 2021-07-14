@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "rom/compat"
+require "ostruct"
 
 RSpec.describe ROM::Configuration, "#auto_registration" do
   subject(:configuration) do
@@ -8,6 +9,25 @@ RSpec.describe ROM::Configuration, "#auto_registration" do
   end
 
   let!(:loaded_features) { $LOADED_FEATURES.dup }
+
+  # RUBY RUBY RUBY LALALA
+  around do |example|
+    class Object
+      def config
+        OpenStruct.new(component: {})
+      end
+      def components
+        []
+      end
+    end
+
+    example.run
+
+    class Object
+      undef :config
+      undef :components
+    end
+  end
 
   after do
     %i[Persistence Users CreateUser UserList My XMLSpace].each do |const|

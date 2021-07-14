@@ -44,7 +44,7 @@ RSpec.describe "Configuring ROM" do
 
   context "without schema" do
     it "builds empty registries if there is no schema" do
-      container = ROM.container(:memory)
+      container = ROM.runtime(:memory)
       expect(container.relations).to be_empty
       expect(container.mappers).to be_empty
     end
@@ -52,7 +52,7 @@ RSpec.describe "Configuring ROM" do
 
   describe "defining classes" do
     let(:container) do
-      ROM.container(:memory) do |config|
+      ROM.runtime(:memory) do |config|
         class Test::UserRelation < ROM::Relation[:memory]
           schema(:users) do
             attribute :name, ROM::Types::String
@@ -101,7 +101,7 @@ RSpec.describe "Configuring ROM" do
       pending "TODO: restore relation setting validation"
 
       expect {
-        ROM.container(:memory) { |config| config.register_relation(Test::BrokenRelation) }
+        ROM.runtime(:memory) { |config| config.register_relation(Test::BrokenRelation) }
           .relations.users
       }.to raise_error(ROM::MissingAdapterIdentifierError, /Test::BrokenRelation/)
     end
@@ -116,7 +116,7 @@ RSpec.describe "Configuring ROM" do
         end
       end
 
-      container = ROM.container(:memory) do |rom|
+      container = ROM.runtime(:memory) do |rom|
         rom.relation(:users) do
           def by_name(name)
             restrict(name: name)
@@ -169,7 +169,7 @@ RSpec.describe "Configuring ROM" do
         end
       end
 
-      container = ROM.container(configuration)
+      container = ROM.runtime(configuration)
 
       container.commands[:users].create.call(name: "Jane")
 
@@ -186,7 +186,7 @@ RSpec.describe "Configuring ROM" do
     end
 
     2.times do
-      ROM.container(:memory) { |c| c.register_relation(Test::UserRelation) }
+      ROM.runtime(:memory) { |c| c.register_relation(Test::UserRelation) }
     end
   end
 
@@ -202,7 +202,7 @@ RSpec.describe "Configuring ROM" do
 
       configuration.relation(:users)
 
-      container = ROM.container(configuration)
+      container = ROM.runtime(configuration)
 
       users = container.relations[:users]
 

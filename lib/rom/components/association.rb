@@ -6,28 +6,26 @@ module ROM
   module Components
     # @api public
     class Association < Core
-      option :gateway, type: Types.Instance(Symbol), inferrable: true
-
-      option :object
-      alias_method :definition, :object
-
-      # Registry namespace
-      #
-      # @return [String]
-      #
-      # @api public
-      def namespace
-        options[:namespace]
-      end
+      option :definition
 
       # @api public
-      def id
+      memoize def id
         definition.aliased? ? definition.as : definition.name
       end
 
       # @api public
-      memoize def build
-        association_class.new(definition, relations)
+      def name
+        definition.name
+      end
+
+      # @api public
+      def as
+        definition.as
+      end
+
+      # @api public
+      def build
+        association_class.new(definition, registry.relations)
       end
 
       private
@@ -35,6 +33,11 @@ module ROM
       # @api private
       def association_class
         ROM.adapters[adapter].const_get(:Associations).const_get(definition.type)
+      end
+
+      # @api private
+      def adapter
+        config[:adapter]
       end
     end
   end

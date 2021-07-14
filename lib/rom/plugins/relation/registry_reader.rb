@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "rom/constants"
-require "rom/runtime/resolver"
 
 module ROM
   module Plugins
@@ -23,20 +22,12 @@ module ROM
           define_readers!
         end
 
-        # @api private
-        def included(klass)
-          super
-          return if klass.instance_methods.include?(:__registry__)
-
-          klass.option :__registry__, default: -> { Runtime::Resolver.new(:relations) }
-        end
-
         private
 
         # @api private
         def define_readers!
           relations.each do |name|
-            define_method(name) { __registry__[name] }
+            define_method(name) { registry.relations[name] }
           end
         end
       end

@@ -16,7 +16,7 @@ We're going to define `:users` that have many `:tasks`. To keep things simpler l
 ``` ruby
 require 'rom'
 
-rom = ROM.container(:sql, 'sqlite::memory') do |conf|
+rom = ROM.runtime(:sql, 'sqlite::memory') do |conf|
   conf.default.create_table(:users) do
     primary_key :id
     column :name, String, null: false

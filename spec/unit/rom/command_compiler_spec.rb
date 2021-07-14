@@ -4,22 +4,22 @@ require "spec_helper"
 
 RSpec.describe "ROM::CommandCompiler" do
   subject(:compiler) do
-    ROM::CommandCompiler.new(relations: relations)
+    ROM::CommandCompiler.new(registry: registry.commands.scoped(:users))
   end
 
   include_context "gateway only"
   include_context "users and tasks"
 
   let(:users) do
-    Class.new(ROM::Memory::Relation) {
+    klass = Class.new(ROM::Memory::Relation) {
       def by_id(id)
         restrict(id: id)
       end
-    }.new(users_dataset)
+    }
+    klass.dataset { users_dataset }
+    klass
   end
 
-  let(:gateways) { {default: gateway} }
-  let(:relations) { {users: users} }
   let(:users_ast) do
     [:users,
      [[:attribute,
@@ -33,9 +33,17 @@ RSpec.describe "ROM::CommandCompiler" do
     Class.new(ROM::Commands::Create[:memory])
   end
 
+  def registry
+    ROM::Registry.new.tap do |reg|
+      reg.components.add(
+        :relations, constant: users, config: {**users.config.component.to_h, id: :users}
+      )
+    end
+  end
+
   describe "#[]" do
     let(:second_compiler) do
-      ROM::CommandCompiler.new(relations: relations)
+      ROM::CommandCompiler.new(registry: registry.commands.scoped(:users))
     end
 
     let(:options) { {} }
@@ -63,14 +71,12 @@ RSpec.describe "ROM::CommandCompiler" do
     end
 
     describe "setting input from relation" do
-      let(:name) do
-        ROM::Attribute.new(ROM::Types::String.constructor { |v| "relation[#{v}]" }, name: :name)
-      end
-
       let(:users) do
-        users = super()
-        schema = users.schema.append(name)
-        users.with(schema: schema)
+        super().tap do |klass|
+          klass.schema do
+            attribute :name, ROM::Types::String.constructor { |v| "relation[#{v}]" }
+          end
+        end
       end
 
       it "uses input schema from relation and does it once" do

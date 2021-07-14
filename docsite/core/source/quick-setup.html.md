@@ -21,17 +21,17 @@ Call `ROM.container` with the adapter symbol and configuration details for that 
 
 ```ruby
 # This creates a rom-sql adapter backed by SQLite in-memory database
-ROM.container(:sql, 'sqlite::memory') do |config|
+ROM.runtime(:sql, 'sqlite::memory') do |config|
   # define relations and commands here...
 end
 
 # You can provide additional connection options too
-ROM.container(:sql, 'postgres://localhost/my_db', extensions: [:pg_json, :pg_timestamptz]) do |config|
+ROM.runtime(:sql, 'postgres://localhost/my_db', extensions: [:pg_json, :pg_timestamptz]) do |config|
   # define relations and commands here...
 end
 
 # ROM also comes with a very barebones in-memory adapter.
-ROM.container(:memory, 'memory://test') do |config|
+ROM.runtime(:memory, 'memory://test') do |config|
   # define relations and commands here...
 end
 ```
@@ -43,7 +43,7 @@ Sometimes you have multiple data sources. You can provide multiple [gateway](/le
 ```ruby
 # Example: an old mysql database, “tasks”, and a new database “task_master”
 # This registers two rom-sql adapters and then labels postgres with “default” and mysql with “legacy”
-ROM.container(
+ROM.runtime(
   default: [:sql, 'postgres://localhost/task_master'], # gateway 1
   legacy: [:sql, 'mysql2://localhost/tasks']           # gateway 2
 ) do |config|
@@ -55,10 +55,10 @@ If there is only one adapter provided, then its identifier is automatically set 
 
 ```ruby
 # This setup call...
-ROM.container(:sql, 'sqlite::memory')
+ROM.runtime(:sql, 'sqlite::memory')
 
 # is equivalent to this one:
-ROM.container(default: [:sql, 'sqlite::memory'])
+ROM.runtime(default: [:sql, 'sqlite::memory'])
 ```
 
 ## Access the container
@@ -66,7 +66,7 @@ ROM.container(default: [:sql, 'sqlite::memory'])
 `ROM.container` always returns the finalized environment container **object**. This object is not global, and it must be managed either by you or a framework that you use.
 
 ```ruby
-rom = ROM.container(:sql, 'sqlite::memory') do |config|
+rom = ROM.runtime(:sql, 'sqlite::memory') do |config|
   # define relations and commands here...
 end
 ```

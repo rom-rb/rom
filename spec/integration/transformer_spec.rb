@@ -9,7 +9,7 @@ RSpec.describe ROM::Transformer do
   end
 
   let(:rom) do
-    ROM.container(:memory) do |config|
+    ROM.runtime(:memory) do |config|
       config.relation(:users)
 
       config.register_mapper(default_mapper)

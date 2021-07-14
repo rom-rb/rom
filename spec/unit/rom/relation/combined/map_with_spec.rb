@@ -34,6 +34,8 @@ RSpec.describe ROM::Relation::Combined, "#map_with" do
   end
 
   it "returns a new graph with custom model" do
+    pending "TODO: move to rom/compat"
+
     expect(relation.map_with(:task_list).to_a)
       .to eql([
         {id: 1, name: "Jane", task_list: ["Jane's Task"]},

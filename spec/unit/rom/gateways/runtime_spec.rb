@@ -2,11 +2,11 @@
 
 require "spec_helper"
 
-RSpec.describe ROM::Configuration do
-  subject(:configuration) { ROM::Configuration.new(*params, &block) }
+RSpec.describe ROM::Runtime do
+  subject(:configuration) { ROM::Runtime.new(*params, &block) }
 
   let(:block) { proc {} }
-  let(:container) { ROM.container(configuration) }
+  let(:container) { ROM.runtime(configuration) }
   let(:gateways) { container.gateways }
 
   context "with an adapter identifier" do
@@ -23,9 +23,8 @@ RSpec.describe ROM::Configuration do
     let(:params) { [:memory] }
 
     let(:block) do
-      proc do |config|
-        # TODO: ugh
-        config.config.gateways.default.my_setting = "test"
+      proc do |runtime|
+        runtime.config.gateways.default.my_setting = "test"
       end
     end
 

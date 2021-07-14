@@ -11,7 +11,7 @@ RSpec.describe "Repository with multi-adapters configuration" do
 
   let(:sql_conn) { rom.gateways[:default].connection }
 
-  let(:rom) { ROM.container(configuration) }
+  let(:rom) { ROM.runtime(configuration) }
 
   let(:users) { rom.relations[:sql_users] }
   let(:tasks) { rom.relations[:memory_tasks] }

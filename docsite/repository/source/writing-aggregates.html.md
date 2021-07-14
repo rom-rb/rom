@@ -16,7 +16,7 @@ Let's say we have `:users` with `:tasks` and we'd like to persist a nested data 
 ``` ruby
 require 'rom-repository'
 
-rom = ROM.container(:sql, 'sqlite::memory') do |config|
+rom = ROM.runtime(:sql, 'sqlite::memory') do |config|
   config.default.create_table(:users) do
     primary_key :id
     column :name, String, null: false

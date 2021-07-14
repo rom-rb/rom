@@ -71,7 +71,7 @@ class UserRepo < ROM::Repository[:users]
   commands :create, update: :by_pk, delete: :by_pk
 end
 
-rom = ROM.container(config)
+rom = ROM.runtime(config)
 repo = UserRepo.new(rom)
 
 class Context

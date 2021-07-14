@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-require "dry/effects"
-
-require "rom/configuration"
+require "rom/runtime"
 require "rom/plugins/container"
 require "rom/plugins/dsl"
 require "rom/container"
@@ -12,8 +10,6 @@ module ROM
   #
   # @api public
   module Global
-    include Dry::Effects::Handler.Reader(:configuration)
-
     # Set base global registries in ROM constant
     #
     # @api private
@@ -39,18 +35,13 @@ module ROM
     attr_reader :plugin_registry
 
     # @api public
-    def container(*args, &block)
-      configuration =
-        case args.first
-        when Configuration
-          args.first
-        else
-          Configuration.new(*args, &block)
-        end
-
-      with_configuration(configuration) do
-        Container.new(configuration.finalize)
-      end
+    def runtime(*args, &block)
+      case args.first
+      when Runtime
+        args.first
+      else
+        Runtime.new(*args, &block)
+      end.finalize
     end
 
     # Global plugin setup DSL

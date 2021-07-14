@@ -31,7 +31,10 @@ module ROM
             class_eval(&block) if block
           end
 
-          add(provider: constant, constant: constant)
+          # Update component config via constant because it could've been changed
+          config.update(**constant.config.component.to_h.compact, relation_id: parent)
+
+          add(constant: constant)
         end
 
         # @api private
@@ -52,16 +55,9 @@ module ROM
         # @return [Array<Components::Mapper>]
         #
         # @api public
-        def register(relation, mappers)
+        def register(relation_id, mappers)
           mappers.map do |id, mapper|
-            components.add(
-              :mappers,
-              id: id,
-              relation_id: relation,
-              object: mapper,
-              provider: owner,
-              namespace: "mappers.#{relation}"
-            )
+            add(object: mapper, config: {id: id, relation_id: relation_id})
           end
         end
       end
