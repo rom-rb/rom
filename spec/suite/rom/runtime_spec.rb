@@ -91,6 +91,8 @@ RSpec.describe ROM::Runtime do
   end
 
   it "can define commands" do
+    runtime.gateway(:default, adapter: :memory)
+
     runtime.relation(:users, adapter: :memory)
 
     commands = runtime.commands(:users, adapter: :memory) do

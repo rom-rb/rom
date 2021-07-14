@@ -8,15 +8,17 @@ module ROM
     class Dataset < Core
       # @api public
       def build
-        return block.(schema) unless gateway?
-
-        datasets.reduce(gateway.dataset(id)) { |dataset, component|
-          if component.block
-            dataset.instance_exec(schema, &component.block)
-          else
-            dataset
-          end
-        }
+        if gateway?
+          datasets.reduce(gateway.dataset(id)) { |dataset, component|
+            if component.block
+              dataset.instance_exec(schema, &component.block)
+            else
+              dataset
+            end
+          }
+        else
+          schema ? block.(schema) : block.()
+        end
       end
 
       # @api public
@@ -34,12 +36,12 @@ module ROM
 
       # @api private
       def schema
-        registry.schemas[schema_key]
+        registry.schemas[schema_key] if schema_key
       end
 
       # @api private
       def schema_key
-        registry.components.get(:schemas, dataset: id).key
+        registry.components.get(:schemas, dataset: id)&.key
       end
     end
   end
