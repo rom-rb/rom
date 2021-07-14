@@ -16,7 +16,7 @@ module ROM
         # @api private
         def call
           # TODO: move this to rom/compat
-          provider.config.component.update(config[:provider])
+          provider.config.component.update(config[:provider]) unless _config[:view]
           add
         end
       end

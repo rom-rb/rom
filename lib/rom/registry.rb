@@ -55,7 +55,9 @@ module ROM
     def fetch(key, &block)
       case key
       when Symbol
-        if relation_scope?(key)
+        if root?(key)
+          fetch(path.join("."), &block)
+        elsif relation_scope?(key)
           scoped(key)
         else
           fetch([*path, key].join("."), &block)
@@ -68,6 +70,12 @@ module ROM
         }
       when Array
         with_registry(self) { inferrer.call(key, type, **opts) }
+      else
+        if key.respond_to?(:to_sym)
+          fetch(key.to_sym, &block)
+        else
+          raise MISSING_ELEMENT_ERRORS[type].new(key)
+        end
       end
     rescue KeyError => e
       raise MISSING_ELEMENT_ERRORS[type].new(key)
@@ -134,6 +142,11 @@ module ROM
     # @api private
     def key?(key)
       keys.include?([*path, key].join("."))
+    end
+
+    # @api private
+    def root?(key)
+      path.last == key
     end
 
     # @api private

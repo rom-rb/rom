@@ -383,7 +383,7 @@ module ROM
     #
     # @api private
     def finalize_attributes!(gateway: nil, relations: nil)
-      inferrer.(self, gateway).each { |key, value| set!(key, value) }
+      inferrer.(self, gateway).each { |key, value| set!(key, value) } if gateway
 
       set!(:relations, relations) if relations
 

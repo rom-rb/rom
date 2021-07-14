@@ -8,17 +8,21 @@ module ROM
   module Components
     # @api public
     class Schema < Core
-      alias_method :dataset, :id
-
       # @api public
       def key
-        "#{namespace}.#{relation_id}"
+        root = "#{namespace}.#{relation_id}"
+
+        if view?
+          "#{root}.#{id}"
+        else
+          root
+        end
       end
 
       # @api public
       def build
         if view?
-          registry.schemas[dataset].instance_eval(&block)
+          registry.schemas[relation_id].instance_eval(&block)
         else
           relations = registry.relations
           inferrer = config[:inferrer].with(enabled: config[:infer])
@@ -29,6 +33,8 @@ module ROM
 
           if gateway?
             schema.finalize_attributes!(gateway: gateway, relations: relations)
+          else
+            schema.finalize_attributes!(relations: relations)
           end
 
           schema.associations.each do |definition|
@@ -60,17 +66,22 @@ module ROM
 
       # @api private
       def relation_id
-        as || id
+        config.fetch(:relation_id) { as || id }
       end
 
       # @api private
       def name
-        ROM::Relation::Name[relation_id, dataset]
+        ROM::Relation::Name[relation_id, id]
       end
 
       # @api private
       def view?
-        config[:view].equal?(true)
+        view.equal?(true)
+      end
+
+      # @api private
+      def view
+        config[:view]
       end
     end
   end

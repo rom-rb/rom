@@ -155,11 +155,15 @@ module ROM
 
     # @!attribute [r] schemas
     #   @return [Runtime::registry] Relation schemas
-    option :schemas, default: -> { registry.schemas }
+    option :schemas, default: -> do
+      registry.schemas.scoped(config.component.id)
+    end
 
     # @!attribute [r] schema
     #   @return [Runtime::registry] The canonical schema
-    option :schema, default: -> { schemas.fetch(name.dataset) { Schema.new(name) } }
+    option :schema, default: -> do
+      schemas.fetch(config.component.id) { Schema.new(name) }
+    end
 
     # @!attribute [r] associations
     #   @return [Runtime::registry] Relation associations

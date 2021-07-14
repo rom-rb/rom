@@ -15,7 +15,7 @@ module ROM
 
         # @api private
         def call
-          add(constant: constant)
+          add(constant: constant, config: {adapter: adapter})
         end
 
         # @api private

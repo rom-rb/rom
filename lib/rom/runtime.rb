@@ -153,6 +153,11 @@ module ROM
       self
     end
 
+    # @api private
+    def register_constant(type, constant)
+      components.add(type, constant: constant, config: constant.config.component.to_h)
+    end
+
     # Register relation class(es) explicitly
     #
     # @param [Array<Relation>] *klasses One or more relation classes
@@ -160,7 +165,7 @@ module ROM
     # @api public
     def register_relation(*klasses)
       klasses.each do |klass|
-        components.add(:relations, constant: klass, provider: klass)
+        register_constant(:relations, klass)
       end
 
       components.relations
