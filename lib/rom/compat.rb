@@ -9,8 +9,15 @@ require "rom/registry"
 require "rom/components"
 require "rom/compat/auto_registration"
 require "rom/configuration"
+require "rom/global"
 
 module ROM
+  # @api public
+  module Global
+    # @api deprecated
+    alias_method :container, :runtime
+  end
+
   # @api public
   class Configuration
     # @api public
@@ -113,6 +120,7 @@ module ROM
       with(opts: {map_with: ids})
     end
 
+    undef :build
     # @api private
     def build(key, &block)
       item = resolver.call(key, &block)

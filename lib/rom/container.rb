@@ -24,7 +24,7 @@ module ROM
   #   common type of setup that's used by framework integrations
   #
   # @example in-line setup
-  #   rom = ROM.container(:sql, 'sqlite::memory') do |config|
+  #   rom = ROM.runtime(:sql, 'sqlite::memory') do |config|
   #     config.default.create_table :users do
   #       primary_key :id
   #       column :name, String, null: false
@@ -62,7 +62,7 @@ module ROM
   #
   #   config.register_relation(Users)
   #
-  #   rom = ROM.container(config)
+  #   rom = ROM.runtime(config)
   #
   #   rom.relations[:users].insert(name: "Jane")
   #
@@ -88,7 +88,7 @@ module ROM
   #     end
   #   end
   #
-  #   rom = ROM.container(config)
+  #   rom = ROM.runtime(config)
   #
   #   rom.relations[:users].insert(name: "Jane")
   #
@@ -168,7 +168,7 @@ module ROM
     # Disconnect all gateways
     #
     # @example
-    #   rom = ROM.container(:sql, 'sqlite://my_db.sqlite')
+    #   rom = ROM.runtime(:sql, 'sqlite://my_db.sqlite')
     #   rom.relations[:users].insert(name: "Jane")
     #   rom.disconnect
     #

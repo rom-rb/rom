@@ -12,7 +12,7 @@ You can quickly create a schema inside the setup block. Let's configure our SQL 
 ```ruby
 require 'rom'
 
-rom = ROM.container(:sql, 'sqlite::memory') do |conf|
+rom = ROM.runtime(:sql, 'sqlite::memory') do |conf|
   conf.default.create_table(:users) do
     primary_key :id
     column :name, String, null: false

@@ -6,7 +6,7 @@ RSpec.describe ROM::Runtime do
   subject(:configuration) { ROM::Runtime.new(*params, &block) }
 
   let(:block) { proc {} }
-  let(:container) { ROM.container(configuration) }
+  let(:container) { ROM.runtime(configuration) }
   let(:gateways) { container.gateways }
 
   context "with an adapter identifier" do

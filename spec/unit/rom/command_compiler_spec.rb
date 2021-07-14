@@ -7,10 +7,6 @@ RSpec.describe "ROM::CommandCompiler" do
     ROM::CommandCompiler.new(registry: registry.commands.scoped(:users))
   end
 
-  let(:registry) do
-    ROM::Registry.new
-  end
-
   include_context "gateway only"
   include_context "users and tasks"
 

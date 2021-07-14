@@ -35,7 +35,7 @@ module ROM
     attr_reader :plugin_registry
 
     # @api public
-    def container(*args, &block)
+    def runtime(*args, &block)
       case args.first
       when Runtime
         args.first

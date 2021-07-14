@@ -25,7 +25,7 @@ RSpec.shared_context "repository / database setup" do
   end
 
   let(:rom) do
-    ROM.container(configuration)
+    ROM.runtime(configuration)
   end
 
   let(:logger) do

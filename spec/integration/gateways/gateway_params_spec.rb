@@ -6,7 +6,7 @@ RSpec.describe ROM, ".container" do
   end
 
   let(:container) do
-    ROM.container(conf)
+    ROM.runtime(conf)
   end
 
   let(:gateway) do

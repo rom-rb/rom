@@ -23,7 +23,7 @@ RSpec.shared_context "changeset / database setup" do
 
   let(:conn) { rom.gateways[:default].connection }
 
-  let(:rom) { ROM.container(configuration) }
+  let(:rom) { ROM.runtime(configuration) }
 
   let(:logger) do
     Logger.new(File.open("./log/test.log", "a"))

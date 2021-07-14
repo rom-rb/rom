@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.shared_context "container" do
-  let(:container) { ROM.container(configuration) }
+  let(:container) { ROM.runtime(configuration) }
   let(:configuration) { ROM::Configuration.new(:memory) }
   let(:gateway) { container.gateways[:default] }
   let(:users_relation) { container.relations[:users] }

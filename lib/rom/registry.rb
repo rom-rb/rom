@@ -189,7 +189,7 @@ module ROM
     # Disconnect all gateways
     #
     # @example
-    #   rom = ROM.container(:sql, 'sqlite://my_db.sqlite')
+    #   rom = ROM.runtime(:sql, 'sqlite://my_db.sqlite')
     #   rom.relations[:users].insert(name: "Jane")
     #   rom.disconnect
     #

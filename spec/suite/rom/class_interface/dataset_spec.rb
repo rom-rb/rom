@@ -18,7 +18,7 @@ RSpec.describe ROM::Relation, ".dataset" do
   end
 
   context "part of runtime" do
-    let(:rom) { ROM.container(configuration) }
+    let(:rom) { ROM.runtime(configuration) }
 
     let(:configuration) { ROM::Configuration.new }
 
