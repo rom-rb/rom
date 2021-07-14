@@ -127,14 +127,11 @@ module ROM
       # Load adapters explicitly here to ensure their plugins are present for later use
       load_adapters
 
-      # Register gateway components in case some custom configuration needs them
-      register_gateways
-
-      # TODO: this is tricky because if you want to tweak the config in the block
-      #       you end up doing `config.config.foo = "bar"` so it would be good
-      #       to yield configuration object + its config or rename this whole class
-      #       because it's a configuration *DSL* that builds up a config object too
+      # Allow customizations now
       yield(self) if block_given?
+
+      # Register gateway components based on current config
+      register_gateways
 
       self
     end

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "core"
+require "rom/open_struct"
 
 module ROM
   module Components
@@ -17,7 +18,7 @@ module ROM
 
         # TODO: this is here to keep backward compatibility
         config.update(name: id)
-        gateway.instance_variable_set(:"@config", config)
+        gateway.instance_variable_set(:"@config", ROM::OpenStruct.new(config))
 
         gateway.use_logger(config[:logger]) if config.key?(:logger)
 
