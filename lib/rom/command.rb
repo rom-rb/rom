@@ -43,7 +43,8 @@ module ROM
       setting :id
       setting :relation_id
       setting :adapter
-      setting :namespace, default: -> (config) { "commands.#{config.component.relation_id}" }
+      setting :gateway, default: :default
+      setting :namespace, default: "commands"
     end
 
     config.input = Hash

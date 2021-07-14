@@ -4,10 +4,11 @@ require "dry/core/class_attributes"
 
 require "rom/support/inflector"
 
-require "rom/configuration"
-require "rom/compat/auto_registration"
-
+require "rom/core"
+require "rom/registry"
 require "rom/components"
+require "rom/compat/auto_registration"
+require "rom/configuration"
 
 module ROM
   # @api public
@@ -72,7 +73,7 @@ module ROM
     # @api public
     # @deprecated
     def gateways
-      @gateways ||= components.gateways.map(&:build).map { |gw| [gw.config.name, gw] }.to_h
+      @gateways ||= registry.gateways.map { |gateway| [gateway.config[:id], gateway] }.to_h
     end
     alias_method :environment, :gateways
 
@@ -97,6 +98,19 @@ module ROM
     # @deprecated
     def method_missing(name, *)
       gateways[name] || super
+    end
+  end
+
+  class Registry
+    # @api private
+    def respond_to_missing?(name, *)
+      super || key?(name)
+    end
+
+    # @api public
+    # @deprecated
+    def method_missing(name, *args, &block)
+      fetch(name) { super }
     end
   end
 

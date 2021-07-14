@@ -175,6 +175,8 @@ RSpec.describe ROM::Commands::Graph do
     end
 
     it "sends data through the pipeline" do
+      pending "TODO: move map_with to rom/compat"
+
       expect(command.call).to eql(
         Test::User.new(
           name: "Jane",

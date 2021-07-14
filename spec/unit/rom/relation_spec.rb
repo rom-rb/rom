@@ -176,6 +176,8 @@ RSpec.describe ROM::Relation do
 
   describe "#with" do
     it "returns a new instance with the original dataset and given custom options" do
+      pending "TODO: move to spec/compat"
+
       relation = Class.new(ROM::Relation[:memory]) {
         schema(:users) {}
         option :custom

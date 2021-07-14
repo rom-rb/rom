@@ -34,7 +34,8 @@ module ROM
 
       # @!attribute [r] schema_class
       #   @return [Class] Schema class that should be instantiated
-      option :schema_class, default: -> { Schema }
+      option :constant, default: -> { Schema }
+      alias_method :schema_class, :constant
 
       # @!attribute [r] attr_class
       #   @return [Class] Attribute class that should be used

@@ -30,7 +30,7 @@ module ROM
       include Enumerable
 
       # @api private
-      attr_reader :owner
+      attr_reader :provider
 
       # @api private
       attr_reader :types
@@ -52,8 +52,8 @@ module ROM
       }.freeze
 
       # @api private
-      def initialize(owner:, types: CORE_TYPES.dup, handlers: HANDLERS)
-        @owner = owner
+      def initialize(provider:, types: CORE_TYPES.dup, handlers: HANDLERS)
+        @provider = provider
         @types = types
         @store = types.map { |type| [type, EMPTY_ARRAY.dup] }.to_h
         @handlers = handlers
@@ -64,6 +64,11 @@ module ROM
         store.each { |type, components|
           components.each { |component| yield(type, component) }
         }
+      end
+
+      # @api private
+      def to_a
+        flat_map { |_, components| components }
       end
 
       # @api private
@@ -85,11 +90,13 @@ module ROM
 
         #   raise(
         #     DUPLICATE_ERRORS[type],
-        #     "#{owner}: +#{component.key}+ is already defined by #{other.owner}"
+        #     "#{provider}: +#{component.key}+ is already defined by #{other.provider}"
         #   )
         # end
 
         store[type] << component
+
+        update(component.local_components)
 
         component
       end
@@ -111,14 +118,14 @@ module ROM
       # @api private
       def update(other, **options)
         other.each do |type, component|
-          add(type, item: component.with(owner: owner, **options))
+          add(type, item: component.with(provider: provider, **options))
         end
         self
       end
 
       # @api private
       def build(type, **options)
-        handlers.fetch(type).new(**options, owner: owner)
+        handlers.fetch(type).new(**options, provider: provider)
       end
 
       # @api private

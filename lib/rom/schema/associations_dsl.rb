@@ -27,7 +27,7 @@ module ROM
       attr_reader :inflector
 
       # @!attribute [r] registry
-      #   @return [RelationRegistry] Relations registry from a rom container
+      #   @return [Hash]
       attr_reader :registry
 
       # @api private
@@ -194,6 +194,7 @@ module ROM
 
       private
 
+      # @api private
       def build(definition, target, options)
         definition.new(source, target, **options, inflector: inflector)
       end

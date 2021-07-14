@@ -11,23 +11,7 @@ module ROM
       class Command < Core
         key :commands
 
-        # @!attribute [r] relation
-        #   @return [Symbol] Relation id
-        option :relation, type: Types::Strict::Symbol
-
-        # @!attribute [r] input
-        #   @return [#call] Input processor
-        option :input, type: Types.Interface(:call), optional: true
-
-        # @!attribute [r] adapter
-        #   @return [Symbol] Relation id
-        option :adapter, type: Types::Strict::Symbol, optional: true, default: -> {
-          resolve_adapter
-        }
-
         nested(true)
-
-        settings(:input, component: [:adapter, {relation: :relation_id}])
 
         # Define a command class
         #
@@ -48,18 +32,21 @@ module ROM
             class_exec(&block) if block
           end
 
-          add(relation_id: relation, constant: constant, provider: constant)
+          # Update component config via constant because it could've been changed
+          config.update(constant.config.component.to_h)
+
+          add(constant: constant, config: {adapter: adapter, **options})
         end
 
         # @api private
         def class_name(command_type)
           class_name_inferrer[
-            relation,
+            config[:relation_id],
             type: :command,
             inflector: inflector,
             adapter: adapter,
             command_type: command_type,
-            **config.components
+            class_namespace: provider.config.class_namespace
           ]
         end
 
@@ -68,11 +55,9 @@ module ROM
           ROM::Command.adapter_namespace(adapter)
         end
 
-        private
-
         # @api private
-        def resolve_adapter
-          components.relations(id: relation).first&.adapter
+        def adapter
+          _config.fetch(:adapter) { provider.config.gateways[config[:gateway]].adapter }
         end
       end
     end

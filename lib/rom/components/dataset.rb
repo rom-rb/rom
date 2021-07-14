@@ -6,35 +6,47 @@ module ROM
   module Components
     # @api public
     class Dataset < Core
-      # @!attribute [r] gateway
-      #   @return [Symbol] Gateway identifier
-      option :gateway, type: Types::Strict::Symbol, inferrable: true
-
-      # @!attribute [r] gateway
-      #   @return [Proc] Optional dataset evaluation block
-      option :block, type: Types.Interface(:to_proc), optional: true
+      # @api public
+      def build
+        if gateway?
+          datasets.reduce(gateway.dataset(id)) { |dataset, component|
+            if component.block
+              dataset.instance_exec(schema, &component.block)
+            else
+              dataset
+            end
+          }
+        else
+          schema ? block.(schema) : block.()
+        end
+      end
 
       # @api public
-      memoize def build
-        datasets.reduce(_gateway.dataset(id)) { |dataset, component|
-          if component.block
-            dataset.instance_exec(schema, &component.block)
-          else
-            dataset
-          end
-        }
+      def abstract
+        config[:abstract]
+      end
+
+      # @api adapter
+      def adapter
+        config[:adapter]
       end
 
       private
 
       # @api private
-      memoize def datasets
-        provider.components.datasets(abstract: true)
+      def datasets
+        # TODO: ensure abstract components don't get added multiple times
+        provider.components.datasets(abstract: true, adapter: adapter).uniq(&:id).select { |ds| ds.id != id }
       end
 
       # @api private
       def schema
-        configuration.schemas[id]
+        registry.schemas[schema_key] if schema_key
+      end
+
+      # @api private
+      def schema_key
+        registry.components.get(:schemas, dataset: id)&.key
       end
     end
   end

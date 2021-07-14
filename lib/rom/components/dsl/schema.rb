@@ -11,29 +11,13 @@ module ROM
       class Schema < Core
         key :schemas
 
-        option :id
-
-        option :as, default: -> { id }
-
-        option :view, default: -> { false }
-
-        option :infer, default: -> { false }
-
-        option :gateway, default: -> { resolve_gateway }
-
-        settings(component: {id: :dataset, as: :id})
+        settings(:as, :adapter, provider: [:id, {id: :dataset, as: :id}])
 
         # @api private
         def call
-          owner.config.update(resolve_config) unless view
-          add(provider: owner)
-        end
-
-        private
-
-        # @api private
-        def resolve_gateway
-          config.component.gateway
+          # TODO: move this to rom/compat
+          provider.config.component.update(config[:provider]) unless _config[:view]
+          add
         end
       end
     end

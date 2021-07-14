@@ -11,28 +11,28 @@ module ROM
       class Relation < Core
         key :relations
 
-        option :id, type: Types::Strict::Symbol
-
-        option :dataset, default: -> { id }
-
-        option :gateway, default: -> { :default }
-
-        settings(component: [:id, :dataset, :gateway])
+        settings(id: :dataset)
 
         # @api private
         def call
-          # TODO: deprecate `schema(:foo, as: :bar)` syntax because it's confusing as it actually
-          # configures relation, not schema, to use a specific dataset (:foo) and a custom id (:bar)
-          # This is why we have this awkward `schema.dataset` here
-          add(dataset: schema.dataset, constant: constant, provider: constant)
+          add(constant: constant, config: {adapter: adapter})
         end
 
         # @api private
         memoize def constant
           build_class do |dsl|
             class_exec(&dsl.block) if dsl.block
-            schema(dsl.dataset, as: dsl.id) if components.schemas.empty?
           end
+        end
+
+        # @api private
+        def id
+          config[:id]
+        end
+
+        # @api private
+        def adapter
+          config.fetch(:adapter) { provider.config.gateways[config[:gateway]].adapter }
         end
 
         # @api private
@@ -41,23 +41,13 @@ module ROM
             id,
             type: :relation,
             inflector: inflector,
-            **config.components
+            class_namespace: provider.config.class_namespace
           ]
         end
 
         # @api private
         def class_parent
           ROM::Relation[adapter]
-        end
-
-        # @api private
-        def schema
-          constant.components.schemas.first
-        end
-
-        # @api private
-        def adapter
-          config.gateways[gateway].adapter if config.gateways.key?(gateway)
         end
       end
     end
