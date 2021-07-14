@@ -32,11 +32,7 @@ module ROM
           end
 
           # Update component config via constant because it could've been changed
-          config.update(
-            **constant.config.component.to_h.compact,
-            relation_id: parent,
-            namespace: "mappers.#{parent}"
-          )
+          config.update(**constant.config.component.to_h.compact, relation_id: parent)
 
           add(constant: constant)
         end
@@ -59,13 +55,9 @@ module ROM
         # @return [Array<Components::Mapper>]
         #
         # @api public
-        def register(relation, mappers)
+        def register(relation_id, mappers)
           mappers.map do |id, mapper|
-            components.add(
-              :mappers,
-              object: mapper,
-              config: {id: id, relation_id: relation, namespace: "mappers.#{relation}"}
-            )
+            add(object: mapper, config: {id: id, relation_id: relation_id})
           end
         end
       end

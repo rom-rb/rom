@@ -16,6 +16,11 @@ module ROM
       option :object, optional: true
 
       # @api public
+      def namespace
+        "#{super}.#{relation_id}"
+      end
+
+      # @api public
       def build
         object || constant.build
       end

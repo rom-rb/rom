@@ -123,8 +123,6 @@ RSpec.describe ROM::Memory::Relation do
 
   describe "#mappers" do
     it "uses custom mapper compiler" do
-      pending "TODO: move to rom/compat"
-
       expect(relation.mappers.compiler).to be_instance_of(ROM::Memory::MapperCompiler)
     end
   end

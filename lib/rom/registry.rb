@@ -103,6 +103,16 @@ module ROM
     end
 
     # @api private
+    memoize def namespace
+      path.join(".")
+    end
+
+    # @api private
+    memoize def compiler
+      inferrer.compiler(type, **opts)
+    end
+
+    # @api private
     def relation_ids
       components.relations.map(&:id)
     end
@@ -144,7 +154,9 @@ module ROM
 
     # @api private
     def keys
-      (resolver.keys + container.keys).uniq
+      all = (resolver.keys + container.keys).uniq
+      return all if path.empty?
+      all.select { |key| key.start_with?(namespace) }
     end
 
     # @api private
@@ -164,7 +176,7 @@ module ROM
 
     # @api private
     def inspect
-      "#<#{self.class} />"
+      "#<#{self.class} keys=#{keys.inspect}/>"
     end
 
     # Disconnect all gateways
