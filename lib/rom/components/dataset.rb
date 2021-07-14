@@ -26,12 +26,17 @@ module ROM
         config[:abstract]
       end
 
+      # @api adapter
+      def adapter
+        config[:adapter]
+      end
+
       private
 
       # @api private
       def datasets
         # TODO: ensure abstract components don't get added multiple times
-        provider.components.datasets(abstract: true).uniq(&:id).select { |ds| ds.id != id }
+        provider.components.datasets(abstract: true, adapter: adapter).uniq(&:id).select { |ds| ds.id != id }
       end
 
       # @api private

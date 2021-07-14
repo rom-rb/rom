@@ -55,6 +55,7 @@ module ROM
     setting :auto_struct, default: false
     setting :struct_namespace, default: ROM::Struct
     setting :wrap_class, default: Relation::Wrap
+    setting :plugins, default: EMPTY_ARRAY
 
     setting :component do
       setting :id, default: :relation

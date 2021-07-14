@@ -11,6 +11,11 @@ module ROM
       option :constant, type: Types.Interface(:new)
 
       # @api public
+      def namespace
+        "#{super}.#{relation_id}"
+      end
+
+      # @api public
       def build(**opts)
         relation = registry.relations[relation_id]
 

@@ -39,11 +39,6 @@ module ROM
         end
 
         # @api private
-        memoize def config
-          super.tap { |cfg| cfg[:namespace] = "#{cfg[:namespace]}.#{cfg[:relation_id]}" }
-        end
-
-        # @api private
         def class_name(command_type)
           class_name_inferrer[
             config[:relation_id],

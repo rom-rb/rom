@@ -107,6 +107,8 @@ RSpec.describe "Commands / Create" do
     end
 
     it "uses registered mapper to process the result for :one result" do
+      pending "TODO: move this behavior to rom/compat"
+
       command = container.commands[:users].map_with(:user_entity).create
       result = command[attributes]
 
@@ -114,6 +116,8 @@ RSpec.describe "Commands / Create" do
     end
 
     it "with two composed commands respects the :result option" do
+      pending "TODO: move this behavior to rom/compat"
+
       mapper_input = nil
 
       mapper = proc do |tuples|
@@ -139,6 +143,8 @@ RSpec.describe "Commands / Create" do
     end
 
     it "uses registered mapper to process the result for :many results" do
+      pending "TODO: move this behavior to rom/compat"
+
       configuration.commands(:users) do
         define(:create_many, type: :create)
       end

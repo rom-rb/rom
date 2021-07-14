@@ -30,7 +30,7 @@ module ROM
           inferrer = config[:inferrer].with(enabled: config[:infer])
 
           schema = config[:dsl_class].new(
-            relation: name, **config, inferrer: inferrer, &block
+            relation: name, plugins: plugins, **config, inferrer: inferrer, &block
           ).()
 
           if gateway?
