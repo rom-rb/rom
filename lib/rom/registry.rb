@@ -17,6 +17,16 @@ module ROM
     include Dry::Effects::Handler.Reader(:registry)
     include Enumerable
 
+    MISSING_ELEMENT_ERRORS = {
+      gateways: GatewayMissingError,
+      schemas: SchemaMissingError,
+      datasets: DatasetMissingError,
+      relations: RelationMissingError,
+      associations: RelationMissingError,
+      commands: CommandNotFoundError,
+      mappers: MapperMissingError
+    }.freeze
+
     class Container
       include Dry::Container::Mixin
     end
@@ -59,6 +69,8 @@ module ROM
       when Array
         with_registry(self) { inferrer.call(key, type, **opts) }
       end
+    rescue KeyError => e
+      raise MISSING_ELEMENT_ERRORS[type].new(key)
     end
     alias_method :[], :fetch
 

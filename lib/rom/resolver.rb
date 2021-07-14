@@ -26,7 +26,7 @@ module ROM
       elsif fallback
         fallback.()
       else
-        raise "+#{key}+ not found"
+        raise KeyError, "+#{key}+ not found"
       end
     end
     alias_method :[], :call

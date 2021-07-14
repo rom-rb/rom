@@ -37,11 +37,13 @@ module ROM
     memoize def compiler(type, adapter:)
       case type
       when :mappers
-        if ROM.adapters[adapter].const_defined?(:MapperCompiler)
-          ROM.adapters[adapter]::MapperCompiler
-        else
-          MapperCompiler
-        end.new(cache: cache)
+        # TODO: move this to config
+        adapter_ns = ROM.adapters[adapter] || ROM
+
+        klass = adapter_ns.const_defined?(:MapperCompiler) ?
+          adapter_ns::MapperCompiler : MapperCompiler
+
+        klass.new(cache: cache)
       when :commands
         CommandCompiler.new(cache: cache.namespaced(:commands), registry: registry)
       end
