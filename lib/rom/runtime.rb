@@ -178,7 +178,7 @@ module ROM
     # @api public
     def register_mapper(*klasses)
       klasses.each do |klass|
-        components.add(:mappers, constant: klass, provider: klass)
+        register_constant(:mappers, klass)
       end
 
       components[:mappers]
@@ -191,7 +191,7 @@ module ROM
     # @api public
     def register_command(*klasses)
       klasses.each do |klass|
-        components.add(:commands, constant: klass, provider: klass)
+        register_constant(:commands, klass)
       end
 
       components.commands
