@@ -111,7 +111,7 @@ module ROM
 
       # @api public
       def gateway?
-        !gateway.nil?
+        registry.gateways.key?(config[:gateway])
       end
 
       # @api public

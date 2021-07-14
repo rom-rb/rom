@@ -11,10 +11,12 @@ module ROM
       class Schema < Core
         key :schemas
 
-        settings(:as, :adapter)
+        settings(:as, :adapter, provider: [:id, {id: :dataset, as: :id}])
 
         # @api private
         def call
+          # TODO: move this to rom/compat
+          provider.config.component.update(config[:provider])
           add
         end
       end

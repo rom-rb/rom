@@ -22,6 +22,15 @@ module ROM
 
         relation = constant.new(inflector: inflector, registry: registry, **plugin_options)
 
+        trigger(
+          "relations.schema.set",
+          schema: relation.schema,
+          adapter: adapter,
+          gateway: config[:gateway],
+          relation: constant,
+          registry: registry
+        )
+
         trigger("relations.object.registered", registry: registry, relation: relation)
 
         relation

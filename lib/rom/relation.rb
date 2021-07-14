@@ -25,6 +25,9 @@ require "rom/relation/materializable"
 
 require "rom/types"
 
+require "rom/registry"
+require "rom/components"
+
 module ROM
   # Base relation class
   #
@@ -106,6 +109,18 @@ module ROM
     include Materializable
     include Pipeline
 
+    # TODO: this should be a common API included via Components::Provider
+    #
+    # @api private
+    def self.registry(**options)
+      Registry.new(
+        config: config,
+        components: components,
+        notifications: Notifications.event_bus(:configuration),
+        **options
+      )
+    end
+
     # @!attribute [r] config
     #   @return [Dry::Configurable::Config]
     #   @api private
@@ -117,8 +132,8 @@ module ROM
     option :name, default: -> { Name[config.component.id, config.component.dataset] }
 
     # @!attribute [r] registry
-    #   @return [Registry] Runtime registry
-    option :registry
+    #   @return [Registry] Registry with runtime dependency resolving
+    option :registry, default: -> { self.class.registry(config: config) }
 
     # @!attribute [r] inflector
     #   @return [Dry::Inflector] The default inflector

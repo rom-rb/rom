@@ -27,7 +27,9 @@ module ROM
             relation: name, **config, inferrer: inferrer, &block
           ).()
 
-          schema.finalize_attributes!(gateway: gateway, relations: relations)
+          if gateway?
+            schema.finalize_attributes!(gateway: gateway, relations: relations)
+          end
 
           schema.associations.each do |definition|
             registry.components.add(
@@ -42,22 +44,8 @@ module ROM
 
           schema.finalize!
 
-          trigger(
-            "relations.schema.set",
-            schema: schema,
-            adapter: adapter,
-            gateway: config[:gateway],
-            relation: relation_class,
-            registry: registry
-          )
-
           schema
         end
-      end
-
-      # @api private
-      def relation_class
-        provider.components.get(:relations, id: relation_id).constant
       end
 
       # @api private
