@@ -82,6 +82,13 @@ module ROM
     end
     alias_method :[], :fetch
 
+    # @api public
+    def infer(id, config)
+      fetch(id) do
+        components.add(type, config: {**config.to_h, id: id}).build
+      end
+    end
+
     # @api private
     def register(key, item)
       container.register([*path, key].join("."), item)

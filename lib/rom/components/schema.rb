@@ -8,6 +8,8 @@ module ROM
   module Components
     # @api public
     class Schema < Core
+      alias_method :dataset, :id
+
       # @api public
       def key
         root = "#{namespace}.#{relation_id}"

@@ -147,11 +147,9 @@ module ROM
     # @!attribute [r] dataset
     #   @return [Object] dataset used by the relation provided by relation's gateway
     #   @api public
-    option :dataset, default: -> {
-      datasets.fetch(name.dataset) do
-        registry.gateways[gateway].dataset(name.dataset)
-      end
-    }
+    option :dataset, default: -> do
+      datasets.infer(name.dataset, gateway: gateway, **config.dataset.to_h)
+    end
 
     # @!attribute [r] schemas
     #   @return [Runtime::registry] Relation schemas

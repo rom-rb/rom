@@ -8,7 +8,7 @@ module ROM
     class Dataset < Core
       # @api public
       def build
-        return block.(provider) unless gateway?
+        return block.(schema) unless gateway?
 
         datasets.reduce(gateway.dataset(id)) { |dataset, component|
           if component.block
@@ -19,16 +19,27 @@ module ROM
         }
       end
 
+      # @api public
+      def abstract
+        config[:abstract]
+      end
+
       private
 
       # @api private
       def datasets
-        provider.components.datasets
+        # TODO: ensure abstract components don't get added multiple times
+        provider.components.datasets(abstract: true).uniq(&:id).select { |ds| ds.id != id }
       end
 
       # @api private
       def schema
-        configuration.schemas[id]
+        registry.schemas[schema_key]
+      end
+
+      # @api private
+      def schema_key
+        registry.components.get(:schemas, dataset: id).key
       end
     end
   end
