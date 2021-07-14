@@ -35,7 +35,7 @@ module ROM
           # Update component config via constant because it could've been changed
           config.update(constant.config.component.to_h)
 
-          add(constant: constant, config: {id: id, adapter: adapter, **options})
+          add(constant: constant, config: {adapter: adapter, **options})
         end
 
         # @api private
