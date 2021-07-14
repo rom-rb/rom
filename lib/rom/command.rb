@@ -43,6 +43,7 @@ module ROM
       setting :id
       setting :relation_id
       setting :adapter
+      setting :gateway, default: :default
       setting :namespace, default: "commands"
     end
 

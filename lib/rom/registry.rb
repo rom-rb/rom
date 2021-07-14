@@ -5,6 +5,7 @@ require "dry/core/memoizable"
 
 require_relative "cache"
 require_relative "constants"
+require_relative "components/registry"
 require_relative "initializer"
 require_relative "resolver"
 require_relative "inferrer"
@@ -33,7 +34,7 @@ module ROM
 
     option :config
 
-    option :components
+    option :components, default: -> { Components::Registry.new(provider: self) }
 
     option :container, default: -> { Container.new }
 
@@ -153,7 +154,12 @@ module ROM
 
     # @api private
     def root?(key)
-      path.last == key
+      path.last == key && !mappers? # TODO: move mappers-specific behavior to rom/compat
+    end
+
+    # @api public
+    def empty?
+      keys.empty?
     end
 
     # @api private

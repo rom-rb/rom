@@ -35,7 +35,7 @@ module ROM
           # Update component config via constant because it could've been changed
           config.update(constant.config.component.to_h)
 
-          add(constant: constant, config: {id: id, **options})
+          add(constant: constant, config: {id: id, adapter: adapter, **options})
         end
 
         # @api private
@@ -49,7 +49,7 @@ module ROM
             config[:relation_id],
             type: :command,
             inflector: inflector,
-            adapter: config[:adapter],
+            adapter: adapter,
             command_type: command_type,
             class_namespace: provider.config.class_namespace
           ]
@@ -57,7 +57,12 @@ module ROM
 
         # @api private
         def adapter_namespace
-          ROM::Command.adapter_namespace(config[:adapter])
+          ROM::Command.adapter_namespace(adapter)
+        end
+
+        # @api private
+        def adapter
+          _config.fetch(:adapter) { provider.config.gateways[config[:gateway]].adapter }
         end
       end
     end

@@ -5,6 +5,7 @@ require "dry/core/class_attributes"
 require "rom/support/inflector"
 
 require "rom/core"
+require "rom/registry"
 require "rom/components"
 require "rom/compat/auto_registration"
 require "rom/configuration"
@@ -97,6 +98,19 @@ module ROM
     # @deprecated
     def method_missing(name, *)
       gateways[name] || super
+    end
+  end
+
+  class Registry
+    # @api private
+    def respond_to_missing?(name, *)
+      super || key?(name)
+    end
+
+    # @api public
+    # @deprecated
+    def method_missing(name, *args, &block)
+      fetch(name) { super }
     end
   end
 

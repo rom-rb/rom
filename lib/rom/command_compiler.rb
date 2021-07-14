@@ -25,7 +25,7 @@ module ROM
 
     # @!attribute [r] registry
     #   @return [Hash] local registry where commands will be stored during compilation
-    option :registry
+    option :registry, default: -> { Registry.new(components: [], config: {})}
 
     # @!attribute [r] plugins
     #   @return [Array<Symbol>] a list of optional plugins that will be enabled for commands
