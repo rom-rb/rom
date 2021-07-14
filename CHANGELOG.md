@@ -14,6 +14,10 @@
 - Support for defining abstract components via `config.component.abstract` in which case they won't be initialized for runtime usage (via #651) (@solnic)
 - Top-level configuration defaults for each component type (ie default gateway for all relations etc.) (via #652) (@solnic)
 - Inferring default settings can be customized by implementing `infer_option` in your runtime class that's extended by `ROM.Components` although in most cases just using the configuration should suffice (via #652) (@solnic)
+- Ability to provide top-level component configuration ie default gateway, adapter, inflector etc. (via #653) (@solnic)
+- Ability to configure gateways using configuration DSL (via #653) (@solnic)
+- Ability to define schemas without relations (via #653) (@solnic)
+- Relation view schemas that are defined via `Relation.view` DSL are now registered too, which makes them more accessible/reusable (via #653) (@solnic)
 
 ### Fixed
 
@@ -39,6 +43,10 @@
 - Plugin API is now internally simplified which resulted in faster runtime. It's also no longer required to register plugin types upfront (via #648) (@solnic)
 - Configuring auto_register stores its config under `config.auto_register` (via #650) (@solnic)
 - [REVISIT] configuring custom gateway for a relation via DSL requires passing it as an option rather than specifying it within the block. It kinda-worked previously because the adapter was defaulting to the first one found. I'm quite sure this was more like a bug than a feature. This behavior could be restored in rom/compat though - it's a matter of defaulting to the first adapter found when gateway was not explicitly specified, meaning the new default should be set to `Undefined` rather than `:default` so that we can detect when it was not specified and act accordingly. This will only make sense when there's just *one adapter available* (via bedb330f0ec195d9acacf4481dad3a705e8a36af) (@solnic)
+- `ROM::Configuration` is deprecated and it was replaced by `ROM::Runtime` (via #653) (@solnic)
+- `ROM.container` is deprecated and it was replaced by `ROM.runtime` (via #653) (@solnic)
+- [internal] `ROM::Container` is deprecated and it was replaced by `ROM::Registry` (via #653) (@solnic)
+- [internal] Commands that are compiled at runtime are now cached in the runtime registry (via #653) (@solnic)
 
 [Compare v5.2.4...master](https://github.com/rom-rb/rom/compare/v5.2.4...master)
 
