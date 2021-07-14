@@ -5,7 +5,7 @@
 
 ### Added
 
-- You can now configure a custom inflector via `ROM::Configuration` (PR #591) (@flash-gordon)
+- You can now configure a custom inflector via configuration (PR #591) (@flash-gordon)
 - .transaction methods now accept keyword arguments. `Repository#transaction` accepts gateway to use. `Repository::Root#transaction` uses a gateway of the root relation by default (#620 closed by #621) (@flash-gordon)
 - Backward-compatibility extension that you can load via `require "rom/compat"` (via #634 refs #607) (@solnic)
 - New component API that replaces internal implementation of the finalization code and makes it possible to extend ROM with arbitrary component types (see #637) (@solnic)
