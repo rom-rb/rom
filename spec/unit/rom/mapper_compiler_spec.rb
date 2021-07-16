@@ -8,7 +8,11 @@ RSpec.describe ROM::MapperCompiler, "#call" do
   end
 
   let(:ast) do
-    ROM::Relation.new([], schema: define_schema(:users, id: :Integer, name: :String)).to_ast
+    ROM::Relation.new(
+      [],
+      name: ROM::Relation::Name[:relation],
+      schema: define_schema(:users, id: :Integer, name: :String)
+    ).to_ast
   end
 
   let(:data) do

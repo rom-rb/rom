@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-require "dry/configurable"
-
+require "rom/support/configurable"
 require "rom/types"
 require "rom/initializer"
 require "rom/pipeline"
@@ -26,7 +25,7 @@ module ROM
   # @api public
   class Command
     extend ROM.Components
-    extend Dry::Configurable
+    extend ROM::Configurable
     extend Initializer
     extend ClassInterface
 
@@ -40,8 +39,9 @@ module ROM
     setting :type
 
     setting :component do
+      setting :type, default: :command
       setting :id
-      setting :relation_id
+      setting :relation
       setting :adapter
       setting :gateway, default: :default
       setting :namespace, default: "commands"

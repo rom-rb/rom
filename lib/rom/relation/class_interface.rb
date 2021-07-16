@@ -103,7 +103,7 @@ module ROM
             schema_block
           end
 
-        schema(id: name, relation_id: config.component.id, view: true, &block)
+        schema(id: name, relation: config.component.id, view: true, &block)
 
         if relation_block.arity > 0
           auto_curry_guard do
@@ -149,7 +149,9 @@ module ROM
       #
       # @api public
       def use(plugin, **options)
-        ROM.plugin_registry[:relation].fetch(plugin, adapter).apply_to(self, **options)
+        ROM.plugin_registry[:relation]
+          .fetch(plugin, config.component.adapter)
+          .apply_to(self, **options)
       end
 
       # @api private

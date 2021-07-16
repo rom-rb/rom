@@ -80,6 +80,8 @@ RSpec.describe "Configuring ROM" do
     end
 
     it "sets up registries based on class definitions" do
+      pending "TODO: make inferring relation id from class name configurable and disable in compat"
+
       expect(container.relations.users).to be_kind_of(Test::UserRelation)
       expect(container.relations.users.tasks).to eql(container.relations.tasks)
 

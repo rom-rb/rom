@@ -30,17 +30,13 @@ module ROM
         #   @return [Relation::Name] the target relation name
         param :target
 
-        # @!attribute [r] relation
-        #   @return [Symbol] an optional relation identifier for the target
-        option :relation, Types::Strict::Symbol, optional: true
-
-        # @!attribute [r] result
-        #   @return [Symbol] either :one or :many
-        option :result, Types::Strict::Symbol, default: -> { self.class.result }
-
         # @!attribute [r] name
         #   @return [Symbol] The name of an association
         option :name, Types::Strict::Symbol, default: -> { target.to_sym }
+
+        # @!attribute [r] relation
+        #   @return [Symbol] an optional relation identifier for the target
+        option :relation, Types::Strict::Symbol, default: -> { name }
 
         # @!attribute [r] alias
         #   @return [Symbol] An optional association alias
@@ -50,13 +46,17 @@ module ROM
         #   @return [Symbol] an optional association alias name
         option :foreign_key, Types::Optional::Strict::Symbol, optional: true
 
+        # @!attribute [r] result
+        #   @return [Symbol] either :one or :many
+        option :result, Types::Strict::Symbol, default: -> { self.class.result }
+
         # @!attribute [r] view
         #   @return [Symbol] An optional view that should be used to extend assoc relation
         option :view, optional: true
 
         # @!attribute [r] override
         #   @return [TrueClass,FalseClass] Whether custom view should override default one or not
-        option :override, optional: true, default: -> { false }
+        option :override, default: -> { false }
 
         # @!attribute [r] combine_keys
         #   @return [Hash<Symbol=>Symbol>] Override inferred combine keys

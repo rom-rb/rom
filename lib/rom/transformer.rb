@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require "dry/configurable"
 require "dry/transformer"
 
+require "rom/support/configurable"
 require "rom/components"
 require "rom/processor/transformer"
 
@@ -12,11 +12,12 @@ module ROM
   # @api public
   class Transformer < Dry::Transformer[Processor::Transformer::Functions]
     extend ROM.Components
-    extend Dry::Configurable
+    extend ROM::Configurable
 
     setting :component do
+      setting :type, default: :mapper
       setting :id
-      setting :relation_id
+      setting :relation
       setting :namespace, default: "mappers"
     end
 

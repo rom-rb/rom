@@ -27,19 +27,17 @@ module ROM
           class_opts = {name: class_name(id), parent: class_parent(parent)}
 
           constant = build_class(**class_opts) do |dsl|
-            config.update(inherit_header: inherit_header, component: {id: id, relation_id: parent})
+            config.update(inherit_header: inherit_header)
+            config.component.update(id: id, relation: parent)
             class_eval(&block) if block
           end
 
-          # Update component config via constant because it could've been changed
-          config.update(**constant.config.component.to_h.compact, relation_id: parent)
-
-          add(constant: constant)
+          add(constant: constant, config: constant.config.component)
         end
 
         # @api private
-        def class_parent(parent_id)
-          components.get(:mappers, relation_id: parent_id)&.constant || ROM::Mapper
+        def class_parent(parent)
+          components.get(:mappers, relation: parent)&.constant || ROM::Mapper
         end
 
         # @api private
@@ -55,9 +53,9 @@ module ROM
         # @return [Array<Components::Mapper>]
         #
         # @api public
-        def register(relation_id, mappers)
+        def register(relation, mappers)
           mappers.map do |id, mapper|
-            add(object: mapper, config: {id: id, relation_id: relation_id})
+            add(object: mapper, config: config.merge(id: id, relation: relation))
           end
         end
       end

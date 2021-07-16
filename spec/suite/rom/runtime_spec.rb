@@ -15,7 +15,7 @@ RSpec.describe ROM::Runtime do
     dataset = runtime.dataset(:users) { [1, 2] }
 
     expect(dataset.config[:id]).to be(:users)
-    expect(dataset.config[:gateway]).to be(nil)
+    expect(dataset.config[:gateway]).to be(:default)
 
     expect(registry["datasets.users"]).to eql([1, 2])
   end
@@ -30,8 +30,8 @@ RSpec.describe ROM::Runtime do
   it "can define a schema" do
     schema = runtime.schema(:users, adapter: :memory)
 
-    expect(schema.config[:id]).to be(:users)
-    expect(schema.config[:gateway]).to be(:default)
+    expect(schema.config.id).to be(:users)
+    expect(schema.config.gateway).to be(:default)
 
     expect(registry["schemas.users"]).to be_a(ROM::Schema)
   end
@@ -81,7 +81,7 @@ RSpec.describe ROM::Runtime do
     expect(relation.config[:gateway]).to be(:default)
 
     users = registry["relations.people"]
-    schema = registry["schemas.users"]
+    schema = registry["schemas.people"]
 
     expect(users).to be_a(ROM::Memory::Relation)
     expect(users.name.dataset).to be(:users)
@@ -104,9 +104,9 @@ RSpec.describe ROM::Runtime do
 
     component = commands.first
 
-    expect(component.config[:id]).to be(:create)
-    expect(component.config[:adapter]).to be(:memory)
-    expect(component.config[:relation_id]).to be(:users)
+    expect(component.config.id).to be(:create)
+    expect(component.config.adapter).to be(:memory)
+    expect(component.config.relation).to be(:users)
 
     command = registry["commands.users.create"]
 
@@ -124,18 +124,19 @@ RSpec.describe ROM::Runtime do
     users_mapper, tasks_mapper = mappers.to_a
 
     expect(users_mapper.id).to be(:users)
-    expect(users_mapper.relation_id).to be(:users)
+    expect(users_mapper.relation).to be(:users)
 
     expect(tasks_mapper.id).to be(:tasks)
-    expect(tasks_mapper.relation_id).to be(:tasks)
+    expect(tasks_mapper.relation).to be(:tasks)
   end
 
   it "can define a local plugin" do
-    pending "FIXME: configuring a local plugin should copy the canonical plugin"
-
-    plugin = runtime.plugin(:memory, schemas: :timestamps)
+    plugin = runtime.plugin(:memory, schemas: :timestamps) { |config|
+      config.attributes = %w[foo bar]
+    }
 
     expect(plugin.key).to eql("schema.timestamps")
     expect(plugin).to_not be(ROM.plugin_registry[plugin.key])
+    expect(plugin.config.attributes).to eql(%w[foo bar])
   end
 end

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require "dry/configurable"
 require "dry/core/equalizer"
 
+require "rom/support/configurable"
 require "rom/constants"
 require "rom/attribute"
 require "rom/schema/dsl"
@@ -34,7 +34,7 @@ module ROM
   #
   # @api public
   class Schema
-    extend Dry::Configurable
+    extend Configurable
 
     include Memoizable
 
@@ -61,7 +61,10 @@ module ROM
     include Enumerable
 
     setting :component do
+      setting :type, default: :schema
       setting :id
+      setting :as
+      setting :relation
       setting :adapter
       setting :namespace, default: "schemas"
       setting :gateway, default: :default

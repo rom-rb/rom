@@ -8,29 +8,16 @@ module ROM
   module Components
     # @api public
     class Schema < Core
-      alias_method :dataset, :id
-
-      # @api public
-      def key
-        root = "#{namespace}.#{relation_id}"
-
-        if view?
-          "#{root}.#{id}"
-        else
-          root
-        end
-      end
-
       # @api public
       def build
         if view?
-          registry.schemas[relation_id].instance_eval(&block)
+          registry.schemas[relation].instance_eval(&block)
         else
           relations = registry.relations
           inferrer = config[:inferrer].with(enabled: config[:infer])
 
           schema = config[:dsl_class].new(
-            relation: name, plugins: plugins, **config, inferrer: inferrer, &block
+            **config, relation: name, plugins: plugins, inferrer: inferrer, &block
           ).()
 
           if gateway?
@@ -39,14 +26,12 @@ module ROM
             schema.finalize_attributes!(relations: relations)
           end
 
+          # TODO: schemas should no longer create associations
           schema.associations.each do |definition|
-            registry.components.add(
+            components.add(
               :associations,
               definition: definition,
-              config: {
-                adapter: adapter,
-                namespace: "associations.#{relation_id}"
-              }
+              config: assoc_config.inherit(definition.options)
             )
           end
 
@@ -56,34 +41,47 @@ module ROM
         end
       end
 
+      # @api public
+      def key
+        root = "#{namespace}.#{relation}"
+
+        if view?
+          "#{root}.#{id}"
+        else
+          root
+        end
+      end
+
+      # @api private
+      memoize def assoc_config
+        provider.config.association.update(adapter: adapter, namespace: "associations.#{relation}")
+      end
+
+      # TODO: schema's should not depend on Name objects
+      #
+      # @api private
+      def name
+        ROM::Relation::Name[relation, id]
+      end
+
       # @api private
       def adapter
-        config[:adapter]
+        config.adapter
       end
 
       # @api private
       def as
-        config[:as]
+        config.as
       end
 
       # @api private
-      def relation_id
-        config.fetch(:relation_id) { as || id }
-      end
-
-      # @api private
-      def name
-        ROM::Relation::Name[relation_id, id]
+      def relation
+        config.relation
       end
 
       # @api private
       def view?
-        view.equal?(true)
-      end
-
-      # @api private
-      def view
-        config[:view]
+        config.view.equal?(true)
       end
     end
   end

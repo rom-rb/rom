@@ -111,7 +111,7 @@ RSpec.describe ROM::Relation do
       it "returns name based on dataset" do
         relation = Test::TestAdapter::Relation.new([])
 
-        expect(relation.name).to eql(ROM::Relation::Name[:foo_bar])
+        expect(relation.name).to eql(ROM::Relation::Name[:relation, :foo_bar])
       end
     end
 
@@ -278,7 +278,7 @@ RSpec.describe ROM::Relation do
 
   describe "#auto_map?" do
     it "returns true by default" do
-      relation = ROM::Relation.new([])
+      relation = ROM::Relation.new
 
       expect(relation).to be_auto_map
     end
@@ -292,13 +292,13 @@ RSpec.describe ROM::Relation do
 
   describe "#auto_struct?" do
     it "returns false by default" do
-      relation = ROM::Relation.new([])
+      relation = ROM::Relation.new
 
       expect(relation).not_to be_auto_struct
     end
 
     it "returns true when auto_struct is enabled" do
-      relation = ROM::Relation.new([], auto_struct: true)
+      relation = ROM::Relation.new(auto_struct: true)
 
       expect(relation).to be_auto_struct
     end

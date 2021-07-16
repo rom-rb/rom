@@ -203,9 +203,9 @@ module ROM
       # @api public
       def relation(name = Undefined, as: name)
         if name == Undefined
-          config.component.relation_id
+          config.component.relation
         else
-          config.component.relation_id = name
+          config.component.relation = name
           config.component.id = as
         end
       end
@@ -213,7 +213,7 @@ module ROM
       def setting_mapping
         @setting_mapping ||= {
           register_as: [:component, :id],
-          relation: [:component, :relation_id]
+          relation: [:component, :relation]
         }.freeze
       end
     end
@@ -228,7 +228,7 @@ module ROM
       def setting_mapping
         @setting_mapper ||= {
           register_as: [:component, :id],
-          relation: [:component, :relation_id],
+          relation: [:component, :relation],
           inherit_header: [],
           reject_keys: [],
           symbolize_keys: [],
@@ -269,7 +269,7 @@ module ROM
       def setting_mapping
         @setting_mapper ||= {
           adapter: [:component, :adapter],
-          relation: [:component, :relation_id],
+          relation: [:component, :relation],
           register_as: [:component, :id],
           restrictable: [],
           result: [],

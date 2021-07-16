@@ -69,8 +69,8 @@ module ROM
         if associations? && !resolver.key?(key)
           components
             .associations(namespace: namespace)
-            .detect { |assoc| key == "#{namespace}.#{assoc.definition.name}" }
-            .then { |assoc| return fetch(assoc.as) if assoc }
+            .detect { |assoc| key == "#{namespace}.#{assoc.config.name}" }
+            .then { |assoc| return fetch(assoc.config.as) if assoc }
         end
 
         with_registry(root) { build(key, &block) }.tap { |item|
@@ -91,9 +91,9 @@ module ROM
     alias_method :[], :fetch
 
     # @api public
-    def infer(id, config)
-      fetch(id) do
-        components.add(type, config: {**config.to_h, id: id}).build
+    def infer(config)
+      fetch(config.id || config.type) do
+        components.add(type, config: config.inherit(self.config.component)).build
       end
     end
 

@@ -15,7 +15,7 @@ RSpec.describe ROM::Runtime do
     it "configures the gateways hash" do
       expect(gateways.ids).to eql([:default])
       expect(gateways[:default]).to be_kind_of(ROM::Memory::Gateway)
-      expect(gateways[:default].config.name).to be(:default)
+      expect(gateways[:default].name).to be(:default)
     end
   end
 
@@ -29,7 +29,7 @@ RSpec.describe ROM::Runtime do
     end
 
     it "sets gateway's custom config" do
-      expect(gateways[:default].config.name).to eql(:default)
+      expect(gateways[:default].name).to eql(:default)
       expect(gateways[:default].config.my_setting).to eql("test")
     end
   end
@@ -38,7 +38,7 @@ RSpec.describe ROM::Runtime do
     let(:params) { [:memory, my_setting: "test"] }
 
     it "sets gateway's custom config" do
-      expect(gateways[:default].config.name).to eql(:default)
+      expect(gateways[:default].name).to eql(:default)
       expect(gateways[:default].config.my_setting).to eql("test")
     end
   end

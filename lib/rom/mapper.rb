@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "dry/configurable"
+require "rom/support/configurable"
 
 require "rom/constants"
 require "rom/components"
@@ -12,7 +12,7 @@ module ROM
   # @private
   class Mapper
     extend ROM.Components
-    extend Dry::Configurable
+    extend ROM::Configurable
     include Dry::Equalizer(:transformers, :header)
     include DSL
 
@@ -24,8 +24,9 @@ module ROM
     setting :prefix
 
     setting :component do
+      setting :type, default: :mapper
       setting :id
-      setting :relation_id
+      setting :relation
       setting :namespace, default: "mappers"
     end
 

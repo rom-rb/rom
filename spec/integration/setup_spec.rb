@@ -23,13 +23,7 @@ RSpec.describe "Setting up rom suite" do
   end
 
   describe "configuring plugins for schemas" do
-    after do
-      ROM.plugin_registry[:schema]
-        .fetch(:timestamps)
-        .instance_variable_set(:@config, nil)
-    end
-
-    let(:configuration) { ROM::Configuration.new(:memory) }
+    let(:configuration) { ROM::Runtime.new(:memory) }
     let(:container) { ROM.runtime(configuration) }
 
     subject(:schema) { container.relations[:users].schema }

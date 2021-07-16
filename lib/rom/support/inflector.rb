@@ -12,7 +12,7 @@ module ROM
     # Default for inferring ids from class names
     def component_id(value)
       name = (value.is_a?(Class) ? (value.name || value.superclass.name) : value).to_s
-      underscore(demodulize(name))
+      underscore(demodulize(name)).to_sym
     end
   end
 

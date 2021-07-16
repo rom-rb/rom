@@ -36,7 +36,7 @@ RSpec.describe "ROM::CommandCompiler" do
   def registry
     ROM::Registry.new.tap do |reg|
       reg.components.add(
-        :relations, constant: users, config: {**users.config.component.to_h, id: :users}
+        :relations, constant: users, config: users.config.component.merge(id: :users)
       )
     end
   end

@@ -11,37 +11,26 @@ module ROM
       class Relation < Core
         key :relations
 
-        settings(id: :dataset)
-
         # @api private
         def call
-          add(constant: constant, config: {adapter: adapter})
+          add(constant: constant, config: constant.config.component)
         end
 
         # @api private
         memoize def constant
           build_class do |dsl|
+            config.component.adapter = dsl.adapter if dsl.adapter
             class_exec(&dsl.block) if dsl.block
           end
         end
 
         # @api private
-        def id
-          config[:id]
-        end
-
-        # @api private
-        def adapter
-          config.fetch(:adapter) { provider.config.gateways[config[:gateway]].adapter }
-        end
-
-        # @api private
-        def class_name
+        memoize def class_name
           class_name_inferrer[
-            id,
+            config.id,
             type: :relation,
             inflector: inflector,
-            class_namespace: provider.config.class_namespace
+            class_namespace: provider.class_namespace
           ]
         end
 

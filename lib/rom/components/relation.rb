@@ -38,7 +38,7 @@ module ROM
 
       # @api public
       def adapter
-        config[:adapter]
+        config.adapter
       end
 
       # @api private

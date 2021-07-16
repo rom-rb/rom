@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require "dry/configurable"
 
 require "dry/core/memoizable"
 require "dry/core/class_attributes"
 
+require "rom/support/configurable"
 require "rom/struct"
 require "rom/constants"
 require "rom/initializer"
@@ -40,7 +40,7 @@ module ROM
   #
   # @api public
   class Relation
-    extend Dry::Configurable
+    extend ROM::Configurable
     extend ROM.Components(:dataset, :schema)
     extend Initializer
     extend ClassInterface
@@ -58,51 +58,52 @@ module ROM
     setting :plugins, default: EMPTY_ARRAY
 
     setting :component do
-      setting :id, default: :relation
-      setting :dataset, default: :relation
-      setting :namespace, default: "relations"
+      setting :type, default: :relation
+      setting :id
+      setting :dataset
       setting :adapter
       setting :gateway, default: :default
       setting :inflector, default: Inflector
       setting :abstract, default: true
+      setting :namespace, default: "relations"
     end
 
     setting :dataset do
-      setting :id, default: -> (config) { config.component.id }
-      setting :adapter, default: -> (config) { config.component.adapter }
-      setting :namespace, default: "datasets"
-      setting :abstract, default: true
+      setting :type
+      setting :id
+      setting :adapter
+      setting :gateway
+      setting :namespace
+      setting :abstract
     end
 
-    setting :schema do
-      setting :id, default: -> (config) { config.component.id }
-      setting :adapter, default: -> (config) { config.component.adapter }
-      setting :view, default: false
-      setting :infer, default: false
-      setting :gateway, default: :default
-      setting :namespace, default: "schemas"
-      setting :constant, default: Schema
-      setting :dsl_class, default: Schema::DSL
-      setting :attr_class, default: Attribute
-      setting :inferrer, default: Schema::DEFAULT_INFERRER
-    end
+    setting :schema, import: Schema.settings[:component]
 
     # @api private
     def self.inherited(klass)
       super
-      klass.configure(config.to_h)
-    end
 
-    # @api private
-    def self.configure(defaults = EMPTY_HASH, &block)
-      config.update(defaults)
+      adapter = config.component.adapter
 
-      super(&block) if block
+      klass.configure do |config|
+        # Relations that inherit from an adapter subclass are not considered abstract anymore
+        # You can override it later inside your class' config of course
+        if adapter
+          config.component.abstract = false
 
-      if name
-        # By default this turns `MyApp::Relations::Users` into :users
-        config.component.id = config.component.inflector.component_id(name).to_sym
-        config.component.dataset = config.component.id
+          # Use klass' name to set defaults
+          #
+          # ie `Relations::Users` assumes :users id and a corresponding dataset (table in case of SQL)
+          #
+          # TODO: make this behavior configurable?
+          #
+          if klass.name
+            config.component.id = config.component.inflector.component_id(klass.name).to_sym
+            config.component.dataset = config.component.id
+          else
+            config.component.id = :anonymous
+          end
+        end
       end
     end
 
@@ -149,7 +150,7 @@ module ROM
     #   @return [Object] dataset used by the relation provided by relation's gateway
     #   @api public
     option :dataset, default: -> do
-      datasets.infer(name.dataset, gateway: gateway, **config.dataset.to_h)
+      datasets.infer(config.dataset.inherit(**config.component, id: config.component.dataset, abstract: false))
     end
 
     # @!attribute [r] schemas
@@ -161,7 +162,7 @@ module ROM
     # @!attribute [r] schema
     #   @return [Runtime::registry] The canonical schema
     option :schema, default: -> do
-      schemas.infer(config.component.id, gateway: gateway, **config.schema.to_h)
+      schemas.infer(config.schema.inherit(**config.component, relation: config.component.id))
     end
 
     # @!attribute [r] associations

@@ -3,19 +3,19 @@
 require "spec_helper"
 require "rom/compat"
 
-RSpec.describe ROM::Configuration do
+RSpec.describe ROM::Runtime do
   it "is configurable via settings hash" do
-    configuration = ROM::Configuration.new(:memory, "something", infer_schema: false)
+    runtime = ROM::Runtime.new(:memory, "something", infer_schema: false)
 
-    expect(configuration.config.gateways.default.infer_schema).to be(false)
+    expect(runtime.config.gateways.default.infer_schema).to be(false)
 
-    configuration = ROM::Configuration.new(:memory, infer_schema: false)
+    runtime = ROM::Runtime.new(:memory, infer_schema: false)
 
-    expect(configuration.config.gateways.default.infer_schema).to be(false)
+    expect(runtime.config.gateways.default.infer_schema).to be(false)
 
-    configuration = ROM::Configuration.new(default: [:memory, infer_schema: false])
+    runtime = ROM::Runtime.new(default: [:memory, infer_schema: false])
 
-    expect(configuration.config.gateways.default.infer_schema).to be(false)
+    expect(runtime.config.gateways.default.infer_schema).to be(false)
   end
 
   describe "defining components when adapter was not registered" do

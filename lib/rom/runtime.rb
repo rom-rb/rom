@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "rom/open_struct"
 require "dry/core/equalizer"
 
 require "rom/support/inflector"
@@ -12,12 +13,16 @@ require "rom/loader"
 require "rom/components"
 require "rom/registry"
 
+require "rom/schema"
+require "rom/relation"
+require "rom/mapper"
+require "rom/command"
+
 module ROM
   # @api public
   class Runtime
     extend Notifications
 
-    include Dry::Equalizer(:config)
     include Configurable
 
     include ROM.Components(
@@ -52,6 +57,86 @@ module ROM
       CLASS_NAME_INFERRERS.fetch(type).(name, type: type, **opts)
     }.freeze
 
+    # Global defaults
+    setting :plugins, default: EMPTY_ARRAY, reader: true
+
+    setting :inflector, default: Inflector, reader: true
+
+    setting :gateways, default: EMPTY_HASH
+
+    setting :class_name_inferrer, default: DEFAULT_CLASS_NAME_INFERRER, reader: true
+
+    setting :class_namespace, default: DEFAULT_CLASS_NAMESPACE, reader: true
+
+    setting :auto_register do
+      setting :root_directory
+      setting :namespace
+      setting :component_dirs, default: {
+        relations: :relations, mappers: :mappers, commands: :commands
+      }
+      setting :inflector, default: Inflector
+    end
+
+    # Defaults for all component types
+    setting :component do
+      setting :type
+      setting :adapter
+      setting :abstract, default: true
+      setting :gateway, default: :default
+      setting :inflector, default: Inflector
+    end
+
+    # Gateway defaults
+    setting :gateway do
+      setting :type, default: :gateway
+      setting :id, default: :default
+      setting :namespace, default: "gateways"
+      setting :adapter
+      setting :logger
+      setting :args, default: EMPTY_ARRAY
+      setting :opts, default: EMPTY_HASH
+    end
+
+    # Dataset defaults
+    setting :dataset do
+      setting :type, default: :dataset
+      setting :id
+      setting :namespace, default: "datasets"
+      setting :adapter
+      setting :gateway, default: :default
+      setting :abstract
+    end
+
+    # Association defaults
+    setting :association do
+      setting :type, default: :association
+      setting :id
+      setting :namespace, default: "associations"
+      setting :adapter
+      setting :as
+      setting :name
+      setting :relation
+      setting :source
+      setting :target
+      setting :foreign_key
+      setting :result
+      setting :view
+      setting :override
+      setting :combine_keys
+    end
+
+    # Import schema defaults
+    setting :schema, import: Schema.settings[:component]
+
+    # Import relation defaults
+    setting :relation, import: Relation.settings[:component]
+
+    # Import command defaults
+    setting :command, import: Command.settings[:component]
+
+    # Import mapper defaults
+    setting :mapper, import: Mapper.settings[:component]
+
     register_event("configuration.relations.class.ready")
     register_event("configuration.relations.object.registered")
     register_event("configuration.relations.registry.created")
@@ -64,62 +149,28 @@ module ROM
     # @api private
     attr_reader :notifications
 
-    attr_reader :registry
-
     # Initialize a new configuration
     #
     # @return [Configuration]
     #
     # @api private
     def initialize(*args, &block)
+      super()
       @notifications = Notifications.event_bus(:configuration)
-      @registry = Registry.new(config: config, components: components, notifications: notifications)
       configure(*args, &block)
     end
 
-    # @api private
-    def inflector
-      config.inflector
-    end
-
-    # @api private
-    def class_name_inferrer
-      config.class_name_inferrer
-    end
-
-    # @api private
-    def plugins
-      config.plugins
+    # @api public
+    def registry
+      @registry ||= Registry.new(
+        config: config, components: components, notifications: notifications
+      )
     end
 
     # This is called internally when you pass a block to ROM.container
     #
     # @api private
     def configure(*args)
-      # Global defaults
-      config.plugins = []
-      config.inflector = Inflector
-      config.auto_register.root_directory = nil
-      config.gateways = Config.new
-      config.class_name_inferrer = DEFAULT_CLASS_NAME_INFERRER
-      config.class_namespace = DEFAULT_CLASS_NAMESPACE
-
-      # Core component defaults
-      Components::CORE_TYPES.each do |type|
-        key = inflector.singularize(type)
-        config[key].namespace = type.to_s
-        const_name = inflector.classify(type).to_sym
-
-        if (ROM.const_defined?(const_name) && (constant = ROM.const_get(const_name)))
-          if constant.respond_to?(:config) && (constant.config.to_h.key?(:component))
-            load_config(config[key], constant.config.component.to_h)
-          end
-        end
-      end
-
-      # Gateway defaults
-      config.gateway.id = :default
-
       # Load config from the arguments passed to the constructor.
       # This *may* override defaults and it's a feature.
       infer_config(*args) unless args.empty?
@@ -146,13 +197,13 @@ module ROM
     #
     # @api public
     def auto_register(directory, **options)
-      load_config(config.auto_register, options.merge(root_directory: directory))
+      config.auto_register.update(root_directory: directory, **options)
       self
     end
 
     # @api private
     def register_constant(type, constant)
-      components.add(type, constant: constant, config: constant.config.component.to_h)
+      components.add(type, constant: constant, config: constant.config.component)
     end
 
     # Register relation class(es) explicitly
@@ -241,7 +292,12 @@ module ROM
     # @api private
     def register_gateways
       config.gateways.each do |id, gateway_config|
-        gateway(id, **gateway_config) unless components.get(:gateways, id: id)
+        hash = gateway_config.to_h
+        keys = hash.keys - config.gateway.keys
+        args = hash[:args] || EMPTY_ARRAY
+        opts = keys.zip(hash.values_at(*keys)).to_h
+
+        gateway(id, **config.gateway.merge(args: args, opts: opts, **hash), id: id)
       end
     end
 
@@ -249,6 +305,8 @@ module ROM
     #
     # @api private
     def infer_config(*args)
+      config.gateways = ROM::OpenStruct.new
+
       gateways_config = args.first.is_a?(Hash) ? args.first : {default: args}
 
       gateways_config.each do |name, value|
@@ -256,23 +314,15 @@ module ROM
 
         adapter, *rest = args
 
-        if rest.size > 1 && rest.last.is_a?(Hash)
-          load_config(config.gateways[name], {adapter: adapter, args: rest[0..-1], **rest.last})
-        else
-          options = rest.first.is_a?(Hash) ? rest.first : {args: rest.flatten(1)}
-          load_config(config.gateways[name], {adapter: adapter, **options})
-        end
-      end
-    end
+        options =
+          if rest.size > 1 && rest.last.is_a?(Hash)
+            {adapter: adapter, args: rest[0..-1], **rest.last}
+          else
+            options = rest.first.is_a?(Hash) ? rest.first : {args: rest.flatten(1)}
+            {adapter: adapter, **options}
+          end
 
-    # @api private
-    def load_config(config, hash)
-      hash.each do |key, value|
-        if value.is_a?(Hash)
-          load_config(config[key], value)
-        else
-          config.send("#{key}=", value)
-        end
+        config.gateways[name] = ROM::OpenStruct.new(options)
       end
     end
 
@@ -297,7 +347,7 @@ module ROM
 
     # @api private
     def load_adapters
-      config.gateways.map(&:last).map(&:adapter).uniq.each do |adapter|
+      config.gateways.map { |key| config.gateways[key] }.map(&:adapter).uniq do |adapter|
         Gateway.class_from_symbol(adapter)
       rescue AdapterLoadError
         # TODO: we probably want to remove this. It's perfectly fine to have an adapter

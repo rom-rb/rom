@@ -66,8 +66,8 @@ module ROM
       #   end
       #
       # @api public
-      def relation(id, **options, &block)
-        __dsl__(DSL::Relation, id: id, **options, &block)
+      def relation(id, dataset: id, **options, &block)
+        __dsl__(DSL::Relation, id: id, dataset: dataset, **options, &block)
       end
 
       # Command definition DSL
@@ -90,8 +90,8 @@ module ROM
       #   end
       #
       # @api public
-      def commands(relation_id, **options, &block)
-        __dsl__(DSL::Command, relation_id: relation_id, **options, &block)
+      def commands(relation, **options, &block)
+        __dsl__(DSL::Command, relation: relation, **options, &block)
         components.commands
       end
 
@@ -126,13 +126,11 @@ module ROM
         # TODO: plugin types are singularized, so this is not consistent
         #       with the configuration DSL for plugins that uses plural
         #       names of the components - this should be unified
-        plugin = ROM.plugin_registry[Inflector.singularize(type)].adapter(adapter).fetch(name)
+        plugin = ROM
+          .plugin_registry[Inflector.singularize(type)].adapter(adapter).fetch(name)
+          .configure(&block)
 
-        if block
-          plugins << plugin.configure(&block)
-        else
-          plugins << plugin
-        end
+        plugins << plugin
 
         plugin
       end
@@ -145,13 +143,16 @@ module ROM
       private
 
       # @api private
-      def __dsl__(type, **options, &block)
-        if type.nested
-          dsl = type.new(provider: self, config: options)
+      def __dsl__(klass, **options, &block)
+        type_config = config[klass.type].merge(options).inherit(config.component)
+
+        if klass.nested
+          dsl = klass.new(provider: self, config: type_config)
           dsl.instance_exec(&block)
           dsl
         else
-          type.new(provider: self, block: block, config: options).()
+
+          klass.new(provider: self, config: type_config, block: block).()
         end
       end
     end

@@ -57,12 +57,12 @@ module ROM
 
       # @api public
       def id
-        config[:id]
+        config.id
       end
 
       # @api public
       def namespace
-        config[:namespace]
+        config.namespace
       end
 
       # This method is meant to return a run-time component instance
@@ -85,6 +85,11 @@ module ROM
       # @api public
       def inflector
         registry.config.inflector
+      end
+
+      # @api private
+      def components
+        provider.components
       end
 
       # @api private

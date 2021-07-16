@@ -16,23 +16,23 @@ module ROM
       option :object, optional: true
 
       # @api public
-      def id
-        config[:id] || relation_id
-      end
-
-      # @api public
-      def namespace
-        "#{super}.#{relation_id}"
-      end
-
-      # @api public
       def build
         object || constant.build
       end
 
-      # @api private
-      def relation_id
-        config[:relation_id]
+      # @api public
+      def id
+        config.id || relation
+      end
+
+      # @api public
+      def relation
+        config.relation
+      end
+
+      # @api public
+      def namespace
+        "#{super}.#{relation}"
       end
     end
   end
