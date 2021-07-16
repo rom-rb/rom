@@ -6,8 +6,9 @@ require "rom/support/inflector"
 
 require "rom/core"
 require "rom/registry"
-require "rom/components"
+require_relative "components/provider"
 require "rom/compat/auto_registration"
+require "rom/container"
 require "rom/configuration"
 require "rom/global"
 

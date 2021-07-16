@@ -14,9 +14,9 @@ module ROM
           registry.schemas[relation].instance_eval(&block)
         else
           relations = registry.relations
-          inferrer = config[:inferrer].with(enabled: config[:infer])
+          inferrer = config.inferrer.with(enabled: config.infer)
 
-          schema = config[:dsl_class].new(
+          schema = config.dsl_class.new(
             **config, relation: name, plugins: plugins, inferrer: inferrer, &block
           ).()
 

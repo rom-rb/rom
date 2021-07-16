@@ -35,7 +35,7 @@ module ROM
 
       # @!attribute [r] config
       #   @return [Object] Component's config
-      option :config
+      option :config, type: Types.Instance(Dry::Configurable::Config)
 
       # @!attribute [r] gateway
       #   @return [Proc] Optional dataset evaluation block

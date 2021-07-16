@@ -1,38 +1,33 @@
 # frozen_string_literal: true
 
-require "rom/open_struct"
 require "dry/core/equalizer"
 
 require "rom/support/inflector"
 require "rom/support/notifications"
-require "rom/support/configurable"
 
+require "rom/core"
+require "rom/components/provider"
+
+require "rom/open_struct"
 require "rom/constants"
 require "rom/gateway"
 require "rom/loader"
-require "rom/components"
-require "rom/registry"
-
-require "rom/schema"
-require "rom/relation"
-require "rom/mapper"
-require "rom/command"
 
 module ROM
   # @api public
   class Runtime
     extend Notifications
 
-    include Configurable
-
-    include ROM.Components(
+    include ROM::Provider(
       :gateway,
       :dataset,
       :schema,
       :relation,
-      :mappers,
-      :commands,
-      :plugin
+      :association,
+      :mapper,
+      :command,
+      :plugin,
+      type: :component
     )
 
     DEFAULT_CLASS_NAMESPACE = "ROM"
@@ -77,66 +72,6 @@ module ROM
       setting :inflector, default: Inflector
     end
 
-    # Defaults for all component types
-    setting :component do
-      setting :type
-      setting :adapter
-      setting :abstract, default: true
-      setting :gateway, default: :default
-      setting :inflector, default: Inflector
-    end
-
-    # Gateway defaults
-    setting :gateway do
-      setting :type, default: :gateway
-      setting :id, default: :default
-      setting :namespace, default: "gateways"
-      setting :adapter
-      setting :logger
-      setting :args, default: EMPTY_ARRAY
-      setting :opts, default: EMPTY_HASH
-    end
-
-    # Dataset defaults
-    setting :dataset do
-      setting :type, default: :dataset
-      setting :id
-      setting :namespace, default: "datasets"
-      setting :adapter
-      setting :gateway, default: :default
-      setting :abstract
-    end
-
-    # Association defaults
-    setting :association do
-      setting :type, default: :association
-      setting :id
-      setting :namespace, default: "associations"
-      setting :adapter
-      setting :as
-      setting :name
-      setting :relation
-      setting :source
-      setting :target
-      setting :foreign_key
-      setting :result
-      setting :view
-      setting :override
-      setting :combine_keys
-    end
-
-    # Import schema defaults
-    setting :schema, import: Schema.settings[:component]
-
-    # Import relation defaults
-    setting :relation, import: Relation.settings[:component]
-
-    # Import command defaults
-    setting :command, import: Command.settings[:component]
-
-    # Import mapper defaults
-    setting :mapper, import: Mapper.settings[:component]
-
     register_event("configuration.relations.class.ready")
     register_event("configuration.relations.object.registered")
     register_event("configuration.relations.registry.created")
@@ -160,11 +95,10 @@ module ROM
       configure(*args, &block)
     end
 
-    # @api public
+    # @return [Registry] Runtime component registry
+    # @api private
     def registry
-      @registry ||= Registry.new(
-        config: config, components: components, notifications: notifications
-      )
+      @registry ||= super(config: config, notifications: notifications)
     end
 
     # This is called internally when you pass a block to ROM.container

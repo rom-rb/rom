@@ -3,6 +3,7 @@
 require "dry/container"
 require "dry/core/memoizable"
 
+require_relative "core"
 require_relative "cache"
 require_relative "constants"
 require_relative "components/registry"
@@ -129,7 +130,7 @@ module ROM
       with(path: path + scope, **options)
     end
 
-    Components::CORE_TYPES.each do |type|
+    CORE_COMPONENTS.each do |type|
       define_method(type) do
         scoped(__method__, type: __method__)
       end

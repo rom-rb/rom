@@ -4,12 +4,13 @@ require "rom/support/configurable"
 require "rom/types"
 require "rom/initializer"
 require "rom/pipeline"
-require "rom/components"
 
 require "rom/commands/class_interface"
 require "rom/commands/composite"
 require "rom/commands/graph"
 require "rom/commands/lazy"
+
+require_relative "components/provider"
 
 module ROM
   # Abstract command class
@@ -24,8 +25,7 @@ module ROM
   #
   # @api public
   class Command
-    extend ROM.Components
-    extend ROM::Configurable
+    extend ROM::Provider(type: :command)
     extend Initializer
     extend ClassInterface
 
@@ -37,15 +37,6 @@ module ROM
     setting :result
     setting :input
     setting :type
-
-    setting :component do
-      setting :type, default: :command
-      setting :id
-      setting :relation
-      setting :adapter
-      setting :gateway, default: :default
-      setting :namespace, default: "commands"
-    end
 
     config.input = Hash
     config.result = :many

@@ -150,6 +150,17 @@ module ROM
       def settings
         _settings
       end
+
+      # @api public
+      def configure(namespace = nil, &block)
+        if namespace
+          super(&nil)
+          block.(config[namespace])
+        else
+          super(&block)
+        end
+        self
+      end
     end
   end
 end

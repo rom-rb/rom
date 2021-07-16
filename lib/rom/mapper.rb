@@ -1,18 +1,17 @@
 # frozen_string_literal: true
 
-require "rom/support/configurable"
+require "rom/core"
 
-require "rom/constants"
-require "rom/components"
-require "rom/mapper/dsl"
+require_relative "mapper/dsl"
+require_relative "components/provider"
 
 module ROM
   # Mapper is a simple object that uses transformers to load relations
   #
   # @private
   class Mapper
-    extend ROM.Components
-    extend ROM::Configurable
+    extend ROM::Provider(type: :mapper)
+
     include Dry::Equalizer(:transformers, :header)
     include DSL
 
@@ -22,13 +21,6 @@ module ROM
     setting :symbolize_keys
     setting :copy_keys
     setting :prefix
-
-    setting :component do
-      setting :type, default: :mapper
-      setting :id
-      setting :relation
-      setting :namespace, default: "mappers"
-    end
 
     # @return [Object] transformers object built by a processor
     #

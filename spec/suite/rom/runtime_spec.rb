@@ -4,7 +4,9 @@ require "rom/runtime"
 
 RSpec.describe ROM::Runtime do
   subject(:runtime) do
-    ROM::Runtime.new
+    ROM::Runtime.new { |config|
+      config.component.adapter = :memory
+    }
   end
 
   let(:registry) do
@@ -21,14 +23,14 @@ RSpec.describe ROM::Runtime do
   end
 
   it "can define a dataset with a gateway" do
-    runtime.gateway(:default, adapter: :memory)
-    runtime.dataset(:users, gateway: :default)
+    runtime.gateway(:default)
+    runtime.dataset(:users)
 
     expect(registry["datasets.users"]).to be_a(ROM::Memory::Dataset)
   end
 
   it "can define a schema" do
-    schema = runtime.schema(:users, adapter: :memory)
+    schema = runtime.schema(:users)
 
     expect(schema.config.id).to be(:users)
     expect(schema.config.gateway).to be(:default)
@@ -37,10 +39,10 @@ RSpec.describe ROM::Runtime do
   end
 
   it "can define a relation" do
-    runtime.gateway(:default, adapter: :memory)
-    runtime.dataset(:users, adapter: :memory, gateway: :default)
+    runtime.gateway(:default)
+    runtime.dataset(:users)
 
-    relation = runtime.relation(:users, adapter: :memory)
+    relation = runtime.relation(:users)
 
     expect(relation.config[:id]).to be(:users)
     expect(relation.config[:dataset]).to be(:users)
@@ -53,9 +55,9 @@ RSpec.describe ROM::Runtime do
   end
 
   it "can define a relation with a schema" do
-    runtime.gateway(:default, adapter: :memory)
+    runtime.gateway(:default)
 
-    relation = runtime.relation(:users, adapter: :memory) do
+    relation = runtime.relation(:users) do
       schema { attribute(:id, ROM::Types::Integer) }
     end
 
@@ -71,9 +73,9 @@ RSpec.describe ROM::Runtime do
   end
 
   it "can define a relation with a schema with its own dataset id" do
-    runtime.gateway(:default, adapter: :memory)
+    runtime.gateway(:default)
 
-    relation = runtime.relation(:people, adapter: :memory) do
+    relation = runtime.relation(:people) do
       schema(:users) { attribute(:id, ROM::Types::Integer) }
     end
 
@@ -92,11 +94,11 @@ RSpec.describe ROM::Runtime do
   end
 
   it "can define commands" do
-    runtime.gateway(:default, adapter: :memory)
+    runtime.gateway(:default)
 
-    runtime.relation(:users, adapter: :memory)
+    runtime.relation(:users)
 
-    commands = runtime.commands(:users, adapter: :memory) do
+    commands = runtime.commands(:users) do
       define(:create)
     end
 

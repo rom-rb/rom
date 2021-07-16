@@ -151,7 +151,6 @@ module ROM
           dsl.instance_exec(&block)
           dsl
         else
-
           klass.new(provider: self, config: type_config, block: block).()
         end
       end

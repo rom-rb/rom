@@ -25,8 +25,8 @@ require "rom/relation/materializable"
 
 require "rom/types"
 
-require "rom/registry"
-require "rom/components"
+require_relative "registry"
+require_relative "components/provider"
 
 module ROM
   # Base relation class
@@ -40,8 +40,7 @@ module ROM
   #
   # @api public
   class Relation
-    extend ROM::Configurable
-    extend ROM.Components(:dataset, :schema)
+    extend ROM::Provider(:dataset, :schema, type: :relation)
     extend Initializer
     extend ClassInterface
 
@@ -56,28 +55,6 @@ module ROM
     setting :struct_namespace, default: ROM::Struct
     setting :wrap_class, default: Relation::Wrap
     setting :plugins, default: EMPTY_ARRAY
-
-    setting :component do
-      setting :type, default: :relation
-      setting :id
-      setting :dataset
-      setting :adapter
-      setting :gateway, default: :default
-      setting :inflector, default: Inflector
-      setting :abstract, default: true
-      setting :namespace, default: "relations"
-    end
-
-    setting :dataset do
-      setting :type
-      setting :id
-      setting :adapter
-      setting :gateway
-      setting :namespace
-      setting :abstract
-    end
-
-    setting :schema, import: Schema.settings[:component]
 
     # @api private
     def self.inherited(klass)
@@ -110,18 +87,6 @@ module ROM
     include Dry::Equalizer(:name, :dataset)
     include Materializable
     include Pipeline
-
-    # TODO: this should be a common API included via Components::Provider
-    #
-    # @api private
-    def self.registry(**options)
-      Registry.new(
-        config: config,
-        components: components,
-        notifications: Notifications.event_bus(:configuration),
-        **options
-      )
-    end
 
     # @!attribute [r] config
     #   @return [Dry::Configurable::Config]

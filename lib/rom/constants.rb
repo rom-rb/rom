@@ -6,6 +6,16 @@ require "dry/core/constants"
 module ROM
   include Dry::Core::Constants
 
+  CORE_COMPONENTS = %i[
+    gateways
+    datasets
+    schemas
+    relations
+    associations
+    mappers
+    commands
+  ].freeze
+
   AdapterLoadError = Class.new(StandardError)
 
   # Exception raised when a component is configured with an adapter that's not loaded

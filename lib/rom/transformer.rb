@@ -2,17 +2,15 @@
 
 require "dry/transformer"
 
-require "rom/support/configurable"
-require "rom/components"
-require "rom/processor/transformer"
+require_relative "components/provider"
+require_relative "processor/transformer"
 
 module ROM
   # Transformer is a data mapper which uses `Dry::Transformer`'s DSL to define transformations.
   #
   # @api public
   class Transformer < Dry::Transformer[Processor::Transformer::Functions]
-    extend ROM.Components
-    extend ROM::Configurable
+    extend ROM::Provider(type: :mapper)
 
     setting :component do
       setting :type, default: :mapper
