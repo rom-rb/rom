@@ -12,13 +12,6 @@ module ROM
   class Transformer < Dry::Transformer[Processor::Transformer::Functions]
     extend ROM::Provider(type: :mapper)
 
-    setting :component do
-      setting :type, default: :mapper
-      setting :id
-      setting :relation
-      setting :namespace, default: "mappers"
-    end
-
     # Define transformation pipeline
     #
     # @example

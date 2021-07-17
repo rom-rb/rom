@@ -127,9 +127,37 @@ RSpec.describe ROM::Runtime do
 
     expect(users_mapper.id).to be(:users)
     expect(users_mapper.relation).to be(:users)
+    expect(users_mapper.namespace).to eql("mappers.users")
 
     expect(tasks_mapper.id).to be(:tasks)
     expect(tasks_mapper.relation).to be(:tasks)
+    expect(tasks_mapper.namespace).to eql("mappers.tasks")
+  end
+
+  it "can define mappers in a custom namespace" do
+    mappers = runtime.mappers(:serializers) do
+      define(:users)
+      define(:tasks)
+      define(:json, parent: :tasks)
+    end
+
+    expect(mappers.size).to be(3)
+
+    users_mapper, tasks_mapper, json_mapper = mappers.to_a
+
+    expect(users_mapper.id).to be(:users)
+    expect(users_mapper.relation).to be(:users)
+    expect(users_mapper.namespace).to eql("mappers.serializers.users")
+
+    expect(tasks_mapper.id).to be(:tasks)
+    expect(tasks_mapper.relation).to be(:tasks)
+    expect(tasks_mapper.namespace).to eql("mappers.serializers.tasks")
+    expect(tasks_mapper.key).to eql("mappers.serializers.tasks.tasks")
+
+    expect(json_mapper.id).to be(:json)
+    expect(json_mapper.relation).to be(:tasks)
+    expect(json_mapper.namespace).to eql("mappers.serializers.tasks")
+    expect(json_mapper.key).to eql("mappers.serializers.tasks.json")
   end
 
   it "can define a local plugin" do

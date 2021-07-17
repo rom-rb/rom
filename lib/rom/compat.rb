@@ -161,7 +161,7 @@ module ROM
         if mapping.empty?
           config[name]
         else
-          config[ns][key]
+          config[ns][Array(key).first]
         end
       else
         value = args.first
@@ -169,8 +169,10 @@ module ROM
         if mapping.empty?
           config[name] = value
         else
-          config[ns][key] = value
+          Array(key).each { |k| config[ns][k] = value }
         end
+
+        value
       end
     end
   end
@@ -207,6 +209,7 @@ module ROM
           config.component.relation
         else
           config.component.relation = name
+          config.component.namespace = name
           config.component.id = as
         end
       end
@@ -214,7 +217,7 @@ module ROM
       def setting_mapping
         @setting_mapping ||= {
           register_as: [:component, :id],
-          relation: [:component, :relation]
+          relation: [:component, [:id, :relation, :namespace]]
         }.freeze
       end
     end
@@ -227,16 +230,14 @@ module ROM
       prepend SettingProxy
 
       def setting_mapping
-        @setting_mapper ||= {
-          register_as: [:component, :id],
-          relation: [:component, :relation],
+        @setting_mapper ||= ROM::Transformer.setting_mapping.merge(
           inherit_header: [],
           reject_keys: [],
           symbolize_keys: [],
           copy_keys: [],
           prefix: [],
           prefix_separator: []
-        }.freeze
+        ).freeze
       end
     end
   end
@@ -270,7 +271,7 @@ module ROM
       def setting_mapping
         @setting_mapper ||= {
           adapter: [:component, :adapter],
-          relation: [:component, :relation],
+          relation: [:component, %i[relation namespace]],
           register_as: [:component, :id],
           restrictable: [],
           result: [],

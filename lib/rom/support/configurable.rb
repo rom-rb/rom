@@ -56,15 +56,15 @@ module ROM
         hash =
           if inherit?
             self[:inherit][:paths]
-              .map(&other.method(:lookup))
+              .map { |path| Array(path).reduce(other) { |config, key| config[key] } }
               .map(&:to_h)
               .reduce { |left, right| left.merge(right) { |key, *vals| _compose(key, *vals) } }
-          else
-            other.to_h
-          end.compact
+          end
+
+        hash ||= other.to_h.compact
 
         if hash.empty?
-          hash
+          merge(hash)
         else
           merge(hash.slice(*(_empty_keys - _compose_keys)))
             .merge(hash.slice(*_compose_keys)) { |key, *vals| _compose(key, *vals.reverse) }
@@ -72,8 +72,23 @@ module ROM
       end
 
       # @api private
+      def append(other)
+        merge!(other.to_h.slice(*_compose_keys)) { |key, *vals| _compose(key, *vals) }
+      end
+
+      # @api private
+      def merge!(other, &block)
+        update(values.merge(other.to_h.slice(*keys), &block))
+      end
+
+      # @api private
+      def merge(other, &block)
+        pristine.update(values.merge(other.to_h.slice(*keys), &block))
+      end
+
+      # @api private
       def _empty_keys
-        keys - values.compact.keys
+        keys.select { |key| Array(self[key]).empty? }
       end
 
       # @api private
@@ -92,22 +107,12 @@ module ROM
       end
 
       # @api private
-      def lookup(path)
-        Array(path).reduce(self) { |config, key| config[key] }
-      end
-
-      # @api private
       def _compose(key, lv, rv)
         if _compose_keys.include?(key)
           _settings[key].constructor.([lv, rv].compact)
         else
           rv
         end
-      end
-
-      # @api private
-      def merge(other, &block)
-        pristine.update(values.merge(other.to_h.slice(*keys), &block))
       end
 
       # @api private

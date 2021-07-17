@@ -137,6 +137,10 @@ module ROM
 
     # @api private
     def register_constant(type, constant)
+      if config.key?(constant.config.component.type)
+        constant.config.component.inherit!(config[constant.config.component.type])
+      end
+
       components.add(type, constant: constant, config: constant.config.component)
     end
 

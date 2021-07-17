@@ -23,12 +23,15 @@ module ROM
         # @return [Class]
         #
         # @api public
-        def define(id, parent: id, inherit_header: ROM::Mapper.inherit_header, **options, &block)
+        def define(id, parent: id, **options, &block)
           class_opts = {name: class_name(id), parent: class_parent(parent)}
 
           constant = build_class(**class_opts) do |dsl|
-            config.update(inherit_header: inherit_header)
+            config.update(options)
+
             config.component.update(id: id, relation: parent)
+            config.component.append(namespace: parent) if dsl.config.namespace != parent
+
             class_eval(&block) if block
           end
 
@@ -53,9 +56,12 @@ module ROM
         # @return [Array<Components::Mapper>]
         #
         # @api public
-        def register(relation, mappers)
+        def register(namespace, mappers)
           mappers.map do |id, mapper|
-            add(object: mapper, config: config.merge(id: id, relation: relation))
+            add(
+              object: mapper,
+              config: config.merge(id: id, relation: namespace).append(namespace: namespace)
+            )
           end
         end
       end

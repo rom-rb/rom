@@ -90,16 +90,16 @@ module ROM
       #   end
       #
       # @api public
-      def commands(relation, **options, &block)
-        __dsl__(DSL::Command, relation: relation, **options, &block)
+      def commands(namespace, **options, &block)
+        __dsl__(DSL::Command, namespace: namespace, relation: namespace, **options, &block)
         components.commands
       end
 
       # Mapper definition DSL
       #
       # @api public
-      def mappers(*_args, **options, &block)
-        __dsl__(DSL::Mapper, **options, &block)
+      def mappers(namespace = nil, **options, &block)
+        __dsl__(DSL::Mapper, namespace: namespace, relation: namespace, **options, &block)
         components.mappers
       end
 
@@ -144,7 +144,10 @@ module ROM
 
       # @api private
       def __dsl__(klass, **options, &block)
-        type_config = config[klass.type].merge(options).inherit(config.component)
+        type_config = config[klass.type]
+          .merge(options.compact)
+          .inherit(**config.component)
+          .inherit(config[klass.type])
 
         if klass.nested
           dsl = klass.new(provider: self, config: type_config)

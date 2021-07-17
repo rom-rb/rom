@@ -60,20 +60,23 @@ module ROM
   require_relative "schema"
   require_relative "command"
   require_relative "mapper"
+  require_relative "transformer"
 
   configs = {
-    schema: ROM::Schema,
-    relation: ROM::Relation,
-    command: ROM::Command,
-    mapper: ROM::Mapper
+    schema: [ROM::Schema],
+    relation: [ROM::Relation],
+    command: [ROM::Command],
+    mapper: [ROM::Mapper, ROM::Transformer]
   }
 
-  configs.each do |key, constant|
-    constant.config.component.inherit!(config.component)
-    config[key].inherit!(constant.config.component)
+  configs.each do |key, items|
+    items.each do |constant|
+      constant.config.component.inherit!(config.component)
+      config[key].inherit!(constant.config.component)
+    end
   end
 
-  configs.each_value(&:configure)
+  configs.values.flatten(1).each(&:configure)
 
   # Register core plugins
   plugins do

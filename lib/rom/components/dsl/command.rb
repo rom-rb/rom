@@ -27,8 +27,11 @@ module ROM
           parent = adapter_namespace.const_get(command_type)
 
           constant = build_class(name: class_name(command_type), parent: parent) do |dsl|
+            config.update(options)
+
             config.component.update(dsl.config)
             config.component.update(id: id, adapter: dsl.adapter)
+
             class_exec(&block) if block
           end
 

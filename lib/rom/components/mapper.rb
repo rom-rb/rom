@@ -21,18 +21,8 @@ module ROM
       end
 
       # @api public
-      def id
-        config.id || relation
-      end
-
-      # @api public
       def relation
         config.relation
-      end
-
-      # @api public
-      def namespace
-        "#{super}.#{relation}"
       end
     end
   end

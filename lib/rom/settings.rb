@@ -6,6 +6,11 @@ require_relative "support/configurable"
 module ROM
   extend Configurable
 
+  # @api private
+  module Settings
+    Namespace = -> (args) { Array(args).flatten(1).uniq.join(".") }
+  end
+
   # Defaults for all component types
   setting :component do
     setting :type
@@ -85,9 +90,13 @@ module ROM
 
   # Command defaults
   setting :command do
+    setting :inherit do
+      setting :paths, default: EMPTY_ARRAY
+      setting :compose, default: %i[namespace]
+    end
     setting :type, default: :command
     setting :id
-    setting :namespace, default: "commands"
+    setting :namespace, default: "commands", constructor: Settings::Namespace
     setting :relation
     setting :adapter
     setting :gateway
@@ -95,9 +104,13 @@ module ROM
 
   # Command defaults
   setting :mapper do
+    setting :inherit do
+      setting :paths, default: EMPTY_ARRAY
+      setting :compose, default: %i[namespace]
+    end
     setting :type, default: :mapper
     setting :id
-    setting :namespace, default: "mappers"
+    setting :namespace, default: "mappers", constructor: Settings::Namespace
     setting :relation
     setting :adapter
   end

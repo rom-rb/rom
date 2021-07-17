@@ -26,11 +26,6 @@ module ROM
         constant.build(relation)
       end
 
-      # @api public
-      def namespace
-        "#{super}.#{config.relation}"
-      end
-
       # @api private
       def adapter
         config.adapter
