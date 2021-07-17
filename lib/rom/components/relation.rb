@@ -14,13 +14,13 @@ module ROM
       #
       # @api public
       def build
-        constant.use(:registry_reader, relations: registry.relation_ids)
+        constant.use(:registry_reader, relations: resolver.relation_ids)
 
         trigger("relations.class.ready", relation: constant, adapter: adapter)
 
         apply_plugins
 
-        relation = constant.new(inflector: inflector, registry: registry, **plugin_options)
+        relation = constant.new(inflector: inflector, resolver: resolver, **plugin_options)
 
         trigger(
           "relations.schema.set",
@@ -28,10 +28,10 @@ module ROM
           adapter: adapter,
           gateway: config[:gateway],
           relation: constant,
-          registry: registry
+          resolver: resolver
         )
 
-        trigger("relations.object.registered", registry: registry, relation: relation)
+        trigger("relations.object.registered", resolver: resolver, relation: relation)
 
         relation
       end

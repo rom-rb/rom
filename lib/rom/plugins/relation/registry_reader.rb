@@ -27,7 +27,7 @@ module ROM
         # @api private
         def define_readers!
           relations.each do |name|
-            define_method(name) { registry.relations[name] }
+            define_method(name) { resolver.relations[name] }
           end
         end
       end

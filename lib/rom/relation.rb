@@ -25,7 +25,7 @@ require "rom/relation/materializable"
 
 require "rom/types"
 
-require_relative "registry"
+require_relative "resolver"
 require_relative "components/provider"
 
 module ROM
@@ -98,9 +98,9 @@ module ROM
     #   @api public
     option :name, default: -> { Name[config.component.id, config.component.dataset] }
 
-    # @!attribute [r] registry
-    #   @return [Registry] Registry with runtime dependency resolving
-    option :registry, default: -> { self.class.registry(config: config) }
+    # @!attribute [r] resolver
+    #   @return [resolver] resolver with runtime dependency resolving
+    option :resolver, default: -> { self.class.resolver(config: config) }
 
     # @!attribute [r] inflector
     #   @return [Dry::Inflector] The default inflector
@@ -108,8 +108,8 @@ module ROM
     option :inflector, default: -> { config.component.inflector }
 
     # @!attribute [r] datasets
-    #   @return [registry] Relation associations
-    option :datasets, default: -> { registry.datasets }
+    #   @return [resolver] Relation associations
+    option :datasets, default: -> { resolver.datasets }
 
     # @!attribute [r] dataset
     #   @return [Object] dataset used by the relation provided by relation's gateway
@@ -119,21 +119,21 @@ module ROM
     end
 
     # @!attribute [r] schemas
-    #   @return [Runtime::registry] Relation schemas
+    #   @return [Runtime::resolver] Relation schemas
     option :schemas, default: -> do
-      registry.schemas.scoped(config.component.id)
+      resolver.schemas.scoped(config.component.id)
     end
 
     # @!attribute [r] schema
-    #   @return [Runtime::registry] The canonical schema
+    #   @return [Runtime::resolver] The canonical schema
     option :schema, default: -> do
       schemas.infer(config.schema.inherit(**config.component, relation: config.component.id))
     end
 
     # @!attribute [r] associations
-    #   @return [Runtime::registry] Relation associations
+    #   @return [Runtime::resolver] Relation associations
     option :associations, default: -> do
-      registry.associations.scoped(config.component.id)
+      resolver.associations.scoped(config.component.id)
     end
 
     # @!attribute [r] input_schema
@@ -164,16 +164,16 @@ module ROM
     option :struct_namespace, reader: false, default: -> { config.struct_namespace }
 
     # @!attribute [r] mappers
-    #   @return [Registry] an optional mapper registry (empty by default)
+    #   @return [resolver] an optional mapper resolver (empty by default)
     option :mappers, default: -> do
-      registry.mappers.scoped(config.component.id, opts: {adapter: adapter})
+      resolver.mappers.scoped(config.component.id, opts: {adapter: adapter})
     end
 
     # @!attribute [r] commands
-    #   @return [CommandRegistry] Command registry
+    #   @return [Commandresolver] Command resolver
     #   @api private
     option :commands, default: -> do
-      registry.commands.scoped(config.component.id, opts: {adapter: adapter})
+      resolver.commands.scoped(config.component.id, opts: {adapter: adapter})
     end
 
     # @!attribute [r] meta
@@ -491,7 +491,7 @@ module ROM
       mappers[to_ast]
     end
 
-    # Maps relation with custom mappers available in the registry
+    # Maps relation with custom mappers available via resolver
     #
     # When `auto_map` is enabled, your mappers will be applied after performing
     # default auto-mapping. This means that you can compose complex relations

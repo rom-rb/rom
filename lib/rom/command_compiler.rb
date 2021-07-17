@@ -3,6 +3,7 @@
 require "rom/initializer"
 require "rom/commands/graph"
 require "rom/command_proxy"
+require "rom/resolver"
 
 module ROM
   # Builds commands for relations.
@@ -16,16 +17,16 @@ module ROM
     extend Initializer
 
     # @!attribute [r] id
-    #   @return [Symbol] The command registry identifier
+    #   @return [Symbol] The command resolver identifier
     option :id, optional: true
 
     # @!attribute [r] command_class
     #   @return [Symbol] The command command_class
     option :command_class, optional: true
 
-    # @!attribute [r] registry
-    #   @return [Hash] local registry where commands will be stored during compilation
-    option :registry, default: -> { Registry.new }
+    # @!attribute [r] resolver
+    #   @return [Resolver]
+    option :resolver, default: -> { Resolver.new }
 
     # @!attribute [r] plugins
     #   @return [Array<Symbol>] a list of optional plugins that will be enabled for commands
@@ -41,7 +42,7 @@ module ROM
 
     # Return a specific command command_class for a given adapter and relation AST
     #
-    # This class holds its own registry where all generated commands are being
+    # This class holds its own resolver where all generated commands are being
     # stored
     #
     # CommandProxy is returned for complex command graphs as they expect root
@@ -63,7 +64,7 @@ module ROM
       cache.fetch_or_store(args.hash) do
         id, adapter, ast, plugins, plugins_options, meta = args
 
-        component = registry.components.get(:commands, id: id)
+        component = resolver.components.get(:commands, id: id)
 
         command_class =
           if component
@@ -85,7 +86,7 @@ module ROM
         )
 
         graph_opts = compiler.visit(ast)
-        command = ROM::Commands::Graph.build(registry.root.commands, graph_opts)
+        command = ROM::Commands::Graph.build(resolver.root.commands, graph_opts)
 
         if command.graph?
           root = Inflector.singularize(command.name.relation).to_sym
@@ -107,7 +108,7 @@ module ROM
 
     # @api private
     def relations
-      registry.root.relations
+      resolver.root.relations
     end
 
     private
@@ -159,7 +160,7 @@ module ROM
     # relation. Additional plugins will be enabled if they are configured for
     # this compiler.
     #
-    # @param [Symbol] rel_name A relation identifier from the container registry
+    # @param [Symbol] rel_name A relation identifier from the container resolver
     # @param [Hash] rel_meta Meta information from relation AST
     # @param [Symbol] parent_relation Optional parent relation identifier
     #
@@ -177,7 +178,7 @@ module ROM
 
       key = "commands.#{rel_name}.#{id}-compiled-#{options.hash}"
 
-      registry.fetch(key) do
+      resolver.fetch(key) do
         command_class
           .create_class(relation: relations[rel_name], **options)
           .build(relations[rel_name])

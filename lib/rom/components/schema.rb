@@ -11,9 +11,9 @@ module ROM
       # @api public
       def build
         if view?
-          registry.schemas[relation].instance_eval(&block)
+          resolver.schemas[relation].instance_eval(&block)
         else
-          relations = registry.relations
+          relations = resolver.relations
           inferrer = config.inferrer.with(enabled: config.infer)
 
           schema = config.dsl_class.new(

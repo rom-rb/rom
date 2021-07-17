@@ -95,10 +95,10 @@ module ROM
       configure(*args, &block)
     end
 
-    # @return [Registry] Runtime component registry
+    # @return [Resolver] Runtime component resolver
     # @api private
-    def registry
-      @registry ||= super(config: config, notifications: notifications)
+    def resolver
+      @resolver ||= super(config: config, notifications: notifications)
     end
 
     # This is called internally when you pass a block to ROM.container
@@ -189,7 +189,7 @@ module ROM
       config.freeze
       attach_listeners
       loader.() if config.auto_register.key?(:root_directory)
-      registry
+      resolver
     end
 
     # Apply a plugin to the configuration

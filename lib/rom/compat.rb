@@ -5,7 +5,7 @@ require "dry/core/class_attributes"
 require "rom/support/inflector"
 
 require "rom/core"
-require "rom/registry"
+require "rom/resolver"
 require_relative "components/provider"
 require "rom/compat/auto_registration"
 require "rom/container"
@@ -84,7 +84,7 @@ module ROM
       @gateways ||=
         begin
           register_gateways
-          registry.gateways.map { |gateway| [gateway.config.id, gateway] }.to_h
+          resolver.gateways.map { |gateway| [gateway.config.id, gateway] }.to_h
         end
     end
     alias_method :environment, :gateways
@@ -114,7 +114,7 @@ module ROM
   end
 
   # @api public
-  class Registry
+  class Resolver
     # @api public
     # @deprecated
     def map_with(*ids)
@@ -124,7 +124,7 @@ module ROM
     undef :build
     # @api private
     def build(key, &block)
-      item = resolver.call(key, &block)
+      item = components.(key, &block)
 
       if commands? && (mappers = opts[:map_with])
         item >> mappers.map { |mapper| item.relation.mappers[mapper] }.reduce(:>>)

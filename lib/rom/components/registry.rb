@@ -53,6 +53,19 @@ module ROM
       end
 
       # @api private
+      def call(key, &fallback)
+        comp = detect { |_, component| component.key == key }&.last
+
+        if comp
+          comp.build
+        elsif fallback
+          fallback.()
+        else
+          raise KeyError, "+#{key}+ not found"
+        end
+      end
+
+      # @api private
       def [](type)
         store[type]
       end
@@ -115,8 +128,17 @@ module ROM
       end
 
       # @api private
-      def keys(type)
-        self[type].map(&:key)
+      def key?(key)
+        keys.include?(key)
+      end
+
+      # @api private
+      def keys(type = nil)
+        if type
+          self[type].map(&:key)
+        else
+          to_a.map(&:key)
+        end
       end
 
       CORE_COMPONENTS.each do |type|

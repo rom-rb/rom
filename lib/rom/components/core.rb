@@ -14,7 +14,7 @@ module ROM
     #
     # @api public
     class Core
-      include Dry::Effects.Reader(:registry)
+      include Dry::Effects.Reader(:resolver)
 
       extend Initializer
       extend Dry::Core::ClassAttributes
@@ -74,17 +74,17 @@ module ROM
 
       # @api public
       def trigger(event, payload)
-        registry.trigger("configuration.#{event}", payload)
+        resolver.trigger("configuration.#{event}", payload)
       end
 
       # @api public
       def notifications
-        registry.notifications
+        resolver.notifications
       end
 
       # @api public
       def inflector
-        registry.config.inflector
+        resolver.config.inflector
       end
 
       # @api private
@@ -106,7 +106,7 @@ module ROM
 
       # @api public
       def plugins
-        registry.plugins.select { |plugin| plugin.type == type }
+        resolver.plugins.select { |plugin| plugin.type == type }
       end
 
       # @api public
@@ -116,12 +116,12 @@ module ROM
 
       # @api public
       def gateway?
-        registry.gateways.key?(config[:gateway])
+        resolver.gateways.key?(config[:gateway])
       end
 
       # @api public
       def gateway
-        registry.gateways[config[:gateway]]
+        resolver.gateways[config[:gateway]]
       end
     end
   end

@@ -4,7 +4,7 @@ require "rom/support/configurable"
 
 require "rom/core"
 require "rom/settings"
-require "rom/registry"
+require "rom/resolver"
 
 require_relative "dsl"
 require_relative "registry"
@@ -37,8 +37,8 @@ module ROM
         end
 
         # @api private
-        def registry(**options)
-          ROM::Registry.new(
+        def resolver(**options)
+          Resolver.new(
             config: config,
             components: components,
             notifications: Notifications.event_bus(:configuration),

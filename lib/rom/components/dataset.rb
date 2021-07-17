@@ -44,12 +44,12 @@ module ROM
 
       # @api private
       def schema
-        registry.schemas[schema_key] if schema_key
+        resolver.schemas[schema_key] if schema_key
       end
 
       # @api private
       def schema_key
-        registry.components.get(:schemas, id: id)&.key
+        resolver.components.get(:schemas, id: id)&.key
       end
     end
   end
