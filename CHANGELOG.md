@@ -16,6 +16,9 @@
 - Ability to configure gateways using configuration DSL (via #653) (@solnic)
 - Ability to define schemas without relations (via #653) (@solnic)
 - Relation view schemas that are defined via `Relation.view` DSL are now registered too, which makes them more accessible/reusable (via #653) (@solnic)
+- Global configuration that can provide default settings for all your components. ie a default adapter, gateway etc. (via #654) (@solnic)
+- Support for custom namespaces under which commands and mappers can be registered (via #654) (@solnic)
+- [experimental] New `ROM.components` API for registering custom component types (via #654) (@solnic)
 
 ### Fixed
 
@@ -45,6 +48,7 @@
 - `ROM.container` is deprecated and it was replaced by `ROM.runtime` (via #653) (@solnic)
 - [internal] `ROM::Container` is deprecated and it was replaced by `ROM::Registry` (via #653) (@solnic)
 - [internal] Commands that are compiled at runtime are now cached in the runtime registry (via #653) (@solnic)
+- Plugin configurations **are no longer global** which means that you can configure the same plugin with different default settings for different component groups or different runtimes in the same Ruby process (via #654) (@solnic)
 
 [Compare v5.2.4...master](https://github.com/rom-rb/rom/compare/v5.2.4...master)
 
