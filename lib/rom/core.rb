@@ -76,7 +76,7 @@ module ROM
     end
   end
 
-  configs.values.flatten(1).each(&:configure)
+  configs.values.flatten(1).each(&:configure).each(&:finalize!)
 
   # Register core plugins
   plugins do
@@ -86,4 +86,6 @@ module ROM
     register :schema, ROM::Plugins::Command::Schema, type: :command
     register :timestamps, ROM::Plugins::Command::Timestamps, type: :command
   end
+
+  finalize!
 end
