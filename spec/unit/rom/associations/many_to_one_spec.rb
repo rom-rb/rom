@@ -14,11 +14,11 @@ RSpec.describe ROM::Associations::ManyToOne do
   end
 
   let(:users) do
-    ROM::Relation.new([], name: ROM::Relation::Name[:users])
+    Class.new(ROM::Relation[:memory]).new(name: ROM::Relation::Name[:users])
   end
 
   let(:groups) do
-    ROM::Relation.new([], name: ROM::Relation::Name[:groups])
+    Class.new(ROM::Relation[:memory]).new(name: ROM::Relation::Name[:groups])
   end
 
   describe "#override?" do

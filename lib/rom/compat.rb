@@ -5,9 +5,10 @@ require "dry/core/class_attributes"
 require "rom/support/inflector"
 
 require "rom/core"
-require "rom/registry"
-require "rom/components"
+require "rom/resolver"
+require_relative "components/provider"
 require "rom/compat/auto_registration"
+require "rom/container"
 require "rom/configuration"
 require "rom/global"
 
@@ -83,7 +84,7 @@ module ROM
       @gateways ||=
         begin
           register_gateways
-          registry.gateways.map { |gateway| [gateway.config.id, gateway] }.to_h
+          resolver.gateways.map { |gateway| [gateway.config.id, gateway] }.to_h
         end
     end
     alias_method :environment, :gateways
@@ -113,7 +114,7 @@ module ROM
   end
 
   # @api public
-  class Registry
+  class Resolver
     # @api public
     # @deprecated
     def map_with(*ids)
@@ -123,7 +124,7 @@ module ROM
     undef :build
     # @api private
     def build(key, &block)
-      item = resolver.call(key, &block)
+      item = components.(key, &block)
 
       if commands? && (mappers = opts[:map_with])
         item >> mappers.map { |mapper| item.relation.mappers[mapper] }.reduce(:>>)
@@ -160,7 +161,7 @@ module ROM
         if mapping.empty?
           config[name]
         else
-          config[ns][key]
+          config[ns][Array(key).first]
         end
       else
         value = args.first
@@ -168,8 +169,10 @@ module ROM
         if mapping.empty?
           config[name] = value
         else
-          config[ns][key] = value
+          Array(key).each { |k| config[ns][k] = value }
         end
+
+        value
       end
     end
   end
@@ -203,9 +206,10 @@ module ROM
       # @api public
       def relation(name = Undefined, as: name)
         if name == Undefined
-          config.component.relation_id
+          config.component.relation
         else
-          config.component.relation_id = name
+          config.component.relation = name
+          config.component.namespace = name
           config.component.id = as
         end
       end
@@ -213,7 +217,7 @@ module ROM
       def setting_mapping
         @setting_mapping ||= {
           register_as: [:component, :id],
-          relation: [:component, :relation_id]
+          relation: [:component, [:id, :relation, :namespace]]
         }.freeze
       end
     end
@@ -226,16 +230,14 @@ module ROM
       prepend SettingProxy
 
       def setting_mapping
-        @setting_mapper ||= {
-          register_as: [:component, :id],
-          relation: [:component, :relation_id],
+        @setting_mapper ||= ROM::Transformer.setting_mapping.merge(
           inherit_header: [],
           reject_keys: [],
           symbolize_keys: [],
           copy_keys: [],
           prefix: [],
           prefix_separator: []
-        }.freeze
+        ).freeze
       end
     end
   end
@@ -269,7 +271,7 @@ module ROM
       def setting_mapping
         @setting_mapper ||= {
           adapter: [:component, :adapter],
-          relation: [:component, :relation_id],
+          relation: [:component, %i[relation namespace]],
           register_as: [:component, :id],
           restrictable: [],
           result: [],

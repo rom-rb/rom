@@ -14,7 +14,7 @@ module ROM
     #
     # @api public
     class Core
-      include Dry::Effects.Reader(:registry)
+      include Dry::Effects.Reader(:resolver)
 
       extend Initializer
       extend Dry::Core::ClassAttributes
@@ -35,7 +35,7 @@ module ROM
 
       # @!attribute [r] config
       #   @return [Object] Component's config
-      option :config
+      option :config, type: Types.Instance(Dry::Configurable::Config)
 
       # @!attribute [r] gateway
       #   @return [Proc] Optional dataset evaluation block
@@ -57,12 +57,12 @@ module ROM
 
       # @api public
       def id
-        config[:id]
+        config.id
       end
 
       # @api public
       def namespace
-        config[:namespace]
+        config.namespace
       end
 
       # This method is meant to return a run-time component instance
@@ -74,17 +74,22 @@ module ROM
 
       # @api public
       def trigger(event, payload)
-        registry.trigger("configuration.#{event}", payload)
+        resolver.trigger("configuration.#{event}", payload)
       end
 
       # @api public
       def notifications
-        registry.notifications
+        resolver.notifications
       end
 
       # @api public
       def inflector
-        registry.config.inflector
+        resolver.config.inflector
+      end
+
+      # @api private
+      def components
+        provider.components
       end
 
       # @api private
@@ -101,7 +106,7 @@ module ROM
 
       # @api public
       def plugins
-        registry.plugins.select { |plugin| plugin.type == type }
+        resolver.plugins.select { |plugin| plugin.type == type }
       end
 
       # @api public
@@ -111,12 +116,12 @@ module ROM
 
       # @api public
       def gateway?
-        registry.gateways.key?(config[:gateway])
+        resolver.gateways.key?(config[:gateway])
       end
 
       # @api public
       def gateway
-        registry.gateways[config[:gateway]]
+        resolver.gateways[config[:gateway]]
       end
     end
   end

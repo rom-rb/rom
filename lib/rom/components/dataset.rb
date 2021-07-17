@@ -12,8 +12,10 @@ module ROM
           blocks.reduce(gateway.dataset(id)) { |ds, blk|
             ds.instance_exec(schema, &blk)
           }
-        else
+        elsif block
           schema ? block.(schema) : block.()
+        else
+          EMPTY_ARRAY
         end
       end
 
@@ -42,12 +44,12 @@ module ROM
 
       # @api private
       def schema
-        registry.schemas[schema_key] if schema_key
+        resolver.schemas[schema_key] if schema_key
       end
 
       # @api private
       def schema_key
-        registry.components.get(:schemas, dataset: id)&.key
+        resolver.components.get(:schemas, id: id)&.key
       end
     end
   end

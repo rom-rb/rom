@@ -1,39 +1,17 @@
 # frozen_string_literal: true
 
 require "rom/constants"
-
-require_relative "gateway"
-require_relative "dataset"
-require_relative "schema"
-require_relative "relation"
-require_relative "association"
-require_relative "command"
-require_relative "mapper"
+require "rom/core"
 
 module ROM
   # @api private
   module Components
-    CORE_TYPES = %i[gateways datasets schemas relations associations commands mappers].freeze
-
     # @api public
     class Registry
-      HANDLERS = {
-        gateways: Gateway,
-        datasets: Dataset,
-        relations: Relation,
-        associations: Association,
-        commands: Command,
-        mappers: Mapper,
-        schemas: Schema
-      }.freeze
-
       include Enumerable
 
       # @api private
       attr_reader :provider
-
-      # @api private
-      attr_reader :types
 
       # @api private
       attr_reader :store
@@ -52,11 +30,14 @@ module ROM
       }.freeze
 
       # @api private
-      def initialize(provider:, types: CORE_TYPES.dup, handlers: HANDLERS)
+      def initialize(provider:, handlers: ROM.components)
         @provider = provider
-        @types = types
-        @store = types.map { |type| [type, EMPTY_ARRAY.dup] }.to_h
         @handlers = handlers
+      end
+
+      # @api private
+      def store
+        @store ||= handlers.map { |handler| [handler.namespace, EMPTY_ARRAY.dup] }.to_h
       end
 
       # @api private
@@ -69,6 +50,19 @@ module ROM
       # @api private
       def to_a
         flat_map { |_, components| components }
+      end
+
+      # @api private
+      def call(key, &fallback)
+        comp = detect { |_, component| component.key == key }&.last
+
+        if comp
+          comp.build
+        elsif fallback
+          fallback.()
+        else
+          raise KeyError, "+#{key}+ not found"
+        end
       end
 
       # @api private
@@ -125,7 +119,7 @@ module ROM
 
       # @api private
       def build(type, **options)
-        handlers.fetch(type).new(**options, provider: provider)
+        handlers[type].build(**options, provider: provider)
       end
 
       # @api private
@@ -134,11 +128,20 @@ module ROM
       end
 
       # @api private
-      def keys(type)
-        self[type].map(&:key)
+      def key?(key)
+        keys.include?(key)
       end
 
-      CORE_TYPES.each do |type|
+      # @api private
+      def keys(type = nil)
+        if type
+          self[type].map(&:key)
+        else
+          to_a.map(&:key)
+        end
+      end
+
+      CORE_COMPONENTS.each do |type|
         define_method(type) do |**opts|
           all = self[type]
           return all if opts.empty?

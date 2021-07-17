@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
-require "rom/runtime"
+require "rom/components"
 require "rom/plugins/container"
 require "rom/plugins/dsl"
-require "rom/container"
 
 module ROM
   # Globally accessible public interface exposed via ROM module
@@ -26,6 +25,13 @@ module ROM
     #
     # @api private
     attr_reader :adapters
+
+    # An internal component handler registry
+    #
+    # @return [Plugins]
+    #
+    # @api private
+    attr_reader :handlers
 
     # An internal plugin registry
     #

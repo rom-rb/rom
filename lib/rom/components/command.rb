@@ -11,18 +11,13 @@ module ROM
       option :constant, type: Types.Interface(:new)
 
       # @api public
-      def namespace
-        "#{super}.#{relation_id}"
-      end
-
-      # @api public
       def build
-        relation = registry.relations[relation_id]
+        relation = resolver.relations[config.relation]
 
         trigger(
           "commands.class.before_build",
           command: constant,
-          gateway: registry.gateways[relation.gateway],
+          gateway: resolver.gateways[relation.gateway],
           dataset: relation.dataset,
           relation: relation,
           adapter: adapter
@@ -32,13 +27,8 @@ module ROM
       end
 
       # @api private
-      def relation_id
-        config[:relation_id]
-      end
-
-      # @api private
       def adapter
-        config[:adapter]
+        config.adapter
       end
     end
   end

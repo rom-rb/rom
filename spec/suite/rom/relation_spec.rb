@@ -3,6 +3,19 @@
 require "rom/relation"
 
 RSpec.describe ROM::Relation do
+  describe "#adapter" do
+    it "returns adapter inferred from parent class" do
+      module Test
+        class Users < ROM::Relation[:memory]
+        end
+      end
+
+      relation = Test::Users.new
+
+      expect(relation.adapter).to be(:memory)
+    end
+  end
+
   describe "#name" do
     it "returns name inferred from demodulized class name" do
       module Test
@@ -26,7 +39,7 @@ RSpec.describe ROM::Relation do
       relation = Test::Users.new([])
 
       expect(relation.name.dataset).to be(:people)
-      expect(relation.name.relation).to be(:people)
+      expect(relation.name.relation).to be(:users)
     end
 
     it "returns name inferred from schema with an alias" do
@@ -85,8 +98,6 @@ RSpec.describe ROM::Relation do
 
   describe "#dataset" do
     it "returns dataset inferred from gateway" do
-      pending "TODO: dataset inference"
-
       module Test
         class Users < ROM::Relation[:memory]
         end
@@ -124,10 +135,10 @@ RSpec.describe ROM::Relation do
       relation = Test::Users.new([])
 
       expect(relation.name.dataset).to be(:people)
-      expect(relation.name.relation).to be(:people)
+      expect(relation.name.relation).to be(:users)
 
       expect(relation.schema.name.dataset).to be(:people)
-      expect(relation.schema.name.relation).to be(:people)
+      expect(relation.schema.name.relation).to be(:users)
     end
   end
 end

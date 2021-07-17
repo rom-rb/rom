@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
-require "dry/configurable"
-
+require "rom/support/configurable"
 require "rom/types"
 require "rom/initializer"
 require "rom/pipeline"
-require "rom/components"
 
 require "rom/commands/class_interface"
 require "rom/commands/composite"
 require "rom/commands/graph"
 require "rom/commands/lazy"
+
+require_relative "components/provider"
 
 module ROM
   # Abstract command class
@@ -25,8 +25,7 @@ module ROM
   #
   # @api public
   class Command
-    extend ROM.Components
-    extend Dry::Configurable
+    extend ROM::Provider(type: :command)
     extend Initializer
     extend ClassInterface
 
@@ -38,14 +37,6 @@ module ROM
     setting :result
     setting :input
     setting :type
-
-    setting :component do
-      setting :id
-      setting :relation_id
-      setting :adapter
-      setting :gateway, default: :default
-      setting :namespace, default: "commands"
-    end
 
     config.input = Hash
     config.result = :many

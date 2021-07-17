@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 require "rom/initializer"
-require "rom/constants"
-require "rom/support/configurable"
+require "rom/open_struct"
 
 module ROM
   # Plugin is a simple object used to store plugin configurations
@@ -10,8 +9,6 @@ module ROM
   # @private
   class Plugin
     extend Initializer
-
-    include Configurable
 
     # @!attribute [r] name
     #   @return [Symbol] plugin name
@@ -33,6 +30,10 @@ module ROM
     # @api private
     option :adapter, optional: true
 
+    # @!attribute [r] config
+    #   @return [Symbol] Plugin optional config
+    option :config, default: -> { ROM::OpenStruct.new }
+
     # Plugin registry key
     #
     # @return [String]
@@ -40,6 +41,16 @@ module ROM
     # @api private
     def key
       [adapter, type, name].compact.join(".")
+    end
+
+    # Configure plugin
+    #
+    # @api public
+    def configure
+      return self unless block_given?
+      new_config = ROM::OpenStruct.new(config.to_h.clone)
+      yield(new_config)
+      with(config: new_config.freeze)
     end
 
     # Apply this plugin to the target

@@ -104,7 +104,7 @@ module ROM
           if klass.instance_method(:initialize).arity.zero?
             klass.new
           else
-            if args.size.equal?(1) && args.first.is_a?(Configurable::Config)
+            if args.size.equal?(1) && args.first.respond_to?(:args)
               if args.first.respond_to?(:args)
                 setup(gateway_or_scheme, *args.first.args)
               else
@@ -156,7 +156,7 @@ module ROM
     #
     # @api public
     def name
-      config.name
+      config.id
     end
 
     # Returns the adapter, defined for the class

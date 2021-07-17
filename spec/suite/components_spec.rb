@@ -43,7 +43,7 @@ RSpec.describe ROM::Components do
     before do
       module Test
         class Repo
-          extend ROM.Components(:dataset, :schema)
+          extend ROM.Provider(:dataset, :schema)
 
           def self.adapter
             :memory
@@ -91,7 +91,7 @@ RSpec.describe ROM::Components do
     before do
       module Test
         class Repo
-          include ROM.Components(:dataset, :schema)
+          include ROM.Provider(:dataset, :schema)
           include Dry::Configurable
 
           setting :adapter, :memory

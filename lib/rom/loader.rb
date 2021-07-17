@@ -96,9 +96,9 @@ module ROM
       backend.on_load do |_, constant, path|
         if (type = path_to_component_type(path))
           begin
-            components.add(type, constant: constant, config: constant.config.component.to_h)
+            components.add(type, constant: constant, config: constant.config.component)
           rescue StandardError => e
-            raise "Failed to load #{const} from #{path}: #{e.message}"
+            raise "Failed to load #{constant} from #{path}: #{e.message}"
           end
         end
       end

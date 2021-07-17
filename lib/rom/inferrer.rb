@@ -12,7 +12,7 @@ module ROM
   # @api private
   class Inferrer
     include Dry::Core::Memoizable
-    include Dry::Effects::Reader(:registry)
+    include Dry::Effects::Reader(:resolver)
 
     attr_reader :cache, :config
 
@@ -45,7 +45,7 @@ module ROM
 
         klass.new(cache: cache)
       when :commands
-        CommandCompiler.new(cache: cache.namespaced(:commands), registry: registry)
+        CommandCompiler.new(cache: cache.namespaced(:commands), resolver: resolver)
       end
     end
   end

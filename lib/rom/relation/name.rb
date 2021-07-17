@@ -72,6 +72,7 @@ module ROM
         @dataset = dataset || relation
         @key = aliaz || relation
         @aliaz = aliaz
+        freeze
       end
 
       # @api private

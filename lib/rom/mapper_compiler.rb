@@ -4,7 +4,6 @@ require "dry/core/class_attributes"
 
 require "rom/constants"
 require "rom/initializer"
-require "rom/mapper"
 require "rom/struct"
 require "rom/struct_compiler"
 require "rom/cache"

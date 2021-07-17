@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "rom/compat"
-require "ostruct"
 
 RSpec.describe ROM::Configuration, "#auto_registration" do
   subject(:configuration) do
@@ -14,7 +13,7 @@ RSpec.describe ROM::Configuration, "#auto_registration" do
   around do |example|
     class Object
       def config
-        OpenStruct.new(component: {})
+        ROM.config
       end
       def components
         []

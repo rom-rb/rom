@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require "dry/configurable"
 
 require "dry/core/memoizable"
 require "dry/core/class_attributes"
 
+require "rom/support/configurable"
 require "rom/struct"
 require "rom/constants"
 require "rom/initializer"
@@ -25,8 +25,8 @@ require "rom/relation/materializable"
 
 require "rom/types"
 
-require "rom/registry"
-require "rom/components"
+require_relative "resolver"
+require_relative "components/provider"
 
 module ROM
   # Base relation class
@@ -40,8 +40,7 @@ module ROM
   #
   # @api public
   class Relation
-    extend Dry::Configurable
-    extend ROM.Components(:dataset, :schema)
+    extend ROM::Provider(:dataset, :schema, type: :relation)
     extend Initializer
     extend ClassInterface
 
@@ -57,70 +56,37 @@ module ROM
     setting :wrap_class, default: Relation::Wrap
     setting :plugins, default: EMPTY_ARRAY
 
-    setting :component do
-      setting :id, default: :relation
-      setting :dataset, default: :relation
-      setting :namespace, default: "relations"
-      setting :adapter
-      setting :gateway, default: :default
-      setting :inflector, default: Inflector
-      setting :abstract, default: true
-    end
-
-    setting :dataset do
-      setting :id, default: -> (config) { config.component.id }
-      setting :adapter, default: -> (config) { config.component.adapter }
-      setting :namespace, default: "datasets"
-      setting :abstract, default: true
-    end
-
-    setting :schema do
-      setting :id, default: -> (config) { config.component.id }
-      setting :adapter, default: -> (config) { config.component.adapter }
-      setting :view, default: false
-      setting :infer, default: false
-      setting :gateway, default: :default
-      setting :namespace, default: "schemas"
-      setting :constant, default: Schema
-      setting :dsl_class, default: Schema::DSL
-      setting :attr_class, default: Attribute
-      setting :inferrer, default: Schema::DEFAULT_INFERRER
-    end
-
     # @api private
     def self.inherited(klass)
       super
-      klass.configure(config.to_h)
-    end
 
-    # @api private
-    def self.configure(defaults = EMPTY_HASH, &block)
-      config.update(defaults)
+      adapter = config.component.adapter
 
-      super(&block) if block
+      klass.configure do |config|
+        # Relations that inherit from an adapter subclass are not considered abstract anymore
+        # You can override it later inside your class' config of course
+        if adapter
+          config.component.abstract = false
 
-      if name
-        # By default this turns `MyApp::Relations::Users` into :users
-        config.component.id = config.component.inflector.component_id(name).to_sym
-        config.component.dataset = config.component.id
+          # Use klass' name to set defaults
+          #
+          # ie `Relations::Users` assumes :users id and a corresponding dataset (table in case of SQL)
+          #
+          # TODO: make this behavior configurable?
+          #
+          if klass.name
+            config.component.id = config.component.inflector.component_id(klass.name).to_sym
+            config.component.dataset = config.component.id
+          else
+            config.component.id = :anonymous
+          end
+        end
       end
     end
 
     include Dry::Equalizer(:name, :dataset)
     include Materializable
     include Pipeline
-
-    # TODO: this should be a common API included via Components::Provider
-    #
-    # @api private
-    def self.registry(**options)
-      Registry.new(
-        config: config,
-        components: components,
-        notifications: Notifications.event_bus(:configuration),
-        **options
-      )
-    end
 
     # @!attribute [r] config
     #   @return [Dry::Configurable::Config]
@@ -132,9 +98,9 @@ module ROM
     #   @api public
     option :name, default: -> { Name[config.component.id, config.component.dataset] }
 
-    # @!attribute [r] registry
-    #   @return [Registry] Registry with runtime dependency resolving
-    option :registry, default: -> { self.class.registry(config: config) }
+    # @!attribute [r] resolver
+    #   @return [resolver] resolver with runtime dependency resolving
+    option :resolver, default: -> { self.class.resolver(config: config) }
 
     # @!attribute [r] inflector
     #   @return [Dry::Inflector] The default inflector
@@ -142,32 +108,32 @@ module ROM
     option :inflector, default: -> { config.component.inflector }
 
     # @!attribute [r] datasets
-    #   @return [registry] Relation associations
-    option :datasets, default: -> { registry.datasets }
+    #   @return [resolver] Relation associations
+    option :datasets, default: -> { resolver.datasets }
 
     # @!attribute [r] dataset
     #   @return [Object] dataset used by the relation provided by relation's gateway
     #   @api public
     option :dataset, default: -> do
-      datasets.infer(name.dataset, gateway: gateway, **config.dataset.to_h)
+      datasets.infer(config.dataset.inherit(**config.component, id: config.component.dataset, abstract: false))
     end
 
     # @!attribute [r] schemas
-    #   @return [Runtime::registry] Relation schemas
+    #   @return [Runtime::resolver] Relation schemas
     option :schemas, default: -> do
-      registry.schemas.scoped(config.component.id)
+      resolver.schemas.scoped(config.component.id)
     end
 
     # @!attribute [r] schema
-    #   @return [Runtime::registry] The canonical schema
+    #   @return [Runtime::resolver] The canonical schema
     option :schema, default: -> do
-      schemas.infer(config.component.id, gateway: gateway, **config.schema.to_h)
+      schemas.infer(config.schema.inherit(**config.component, relation: config.component.id))
     end
 
     # @!attribute [r] associations
-    #   @return [Runtime::registry] Relation associations
+    #   @return [Runtime::resolver] Relation associations
     option :associations, default: -> do
-      registry.associations.scoped(config.component.id)
+      resolver.associations.scoped(config.component.id)
     end
 
     # @!attribute [r] input_schema
@@ -198,16 +164,16 @@ module ROM
     option :struct_namespace, reader: false, default: -> { config.struct_namespace }
 
     # @!attribute [r] mappers
-    #   @return [Registry] an optional mapper registry (empty by default)
+    #   @return [resolver] an optional mapper resolver (empty by default)
     option :mappers, default: -> do
-      registry.mappers.scoped(config.component.id, opts: {adapter: adapter})
+      resolver.mappers.scoped(config.component.id, opts: {adapter: adapter})
     end
 
     # @!attribute [r] commands
-    #   @return [CommandRegistry] Command registry
+    #   @return [Commandresolver] Command resolver
     #   @api private
     option :commands, default: -> do
-      registry.commands.scoped(config.component.id, opts: {adapter: adapter})
+      resolver.commands.scoped(config.component.id, opts: {adapter: adapter})
     end
 
     # @!attribute [r] meta
@@ -525,7 +491,7 @@ module ROM
       mappers[to_ast]
     end
 
-    # Maps relation with custom mappers available in the registry
+    # Maps relation with custom mappers available via resolver
     #
     # When `auto_map` is enabled, your mappers will be applied after performing
     # default auto-mapping. This means that you can compose complex relations

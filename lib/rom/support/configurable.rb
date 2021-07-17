@@ -1,148 +1,171 @@
 # frozen_string_literal: true
 
+require "dry/configurable"
+require "rom/constants"
+require "rom/types"
+
 module ROM
-  # This extension is only used for environment objects to configure arbitrary options, each
-  # adapter can use them according to what they need.
+  # Component settings API
   #
-  # @api private
+  # @see https://dry-rb.org/gems/dry-configurable
+  #
+  # @api public
   module Configurable
-    class Config
+    # @api private
+    def self.included(klass)
+      super
+
+      klass.class_eval do
+        include(Dry::Configurable)
+
+        class << self
+          prepend(ClassMethods)
+        end
+      end
+    end
+
+    # @api private
+    def self.extended(klass)
+      super
+
+      klass.class_eval do
+        extend(Dry::Configurable)
+
+        class << self
+          prepend(ClassMethods)
+        end
+      end
+    end
+
+    # @api private
+    class Dry::Configurable::Config
       include Enumerable
 
-      WRITER_REGEXP = /=$/.freeze
-
-      # @!attribute [r] settings
-      #   @return [Hash] A hash with defined settings
-      attr_reader :settings
+      # @api private
+      def each(&block)
+        values.each(&block)
+      end
 
       # @api private
-      def initialize(settings = {})
-        @settings = settings
+      def inherit!(other)
+        update(inherit(other))
       end
 
-      # @api public
-      def each(&block)
-        settings.each(&block)
-      end
+      # @api private
+      def inherit(other)
+        hash =
+          if inherit?
+            self[:inherit][:paths]
+              .map { |path| Array(path).reduce(other) { |config, key| config[key] } }
+              .map(&:to_h)
+              .reduce { |left, right| left.merge(right) { |key, *vals| _compose(key, *vals) } }
+          end
 
-      # @api public
-      def each_key(&block)
-        settings.each_key(&block)
-      end
+        hash ||= other.to_h.compact
 
-      # Return a setting
-      #
-      # @return [Mixed]
-      #
-      # @api public
-      def [](name)
-        if frozen?
-          settings.fetch(name)
+        if hash.empty?
+          merge(hash)
         else
-          public_send(name)
+          merge(hash.slice(*(_empty_keys - _compose_keys)))
+            .merge(hash.slice(*_compose_keys)) { |key, *vals| _compose(key, *vals.reverse) }
         end
       end
 
       # @api private
-      def key?(name)
-        settings.key?(name)
+      def append(other)
+        merge!(other.to_h.slice(*_compose_keys)) { |key, *vals| _compose(key, *vals) }
       end
 
       # @api private
-      def freeze
-        settings.freeze
-        super
+      def merge!(other, &block)
+        update(values.merge(other.to_h.slice(*keys), &block))
       end
 
       # @api private
-      def to_h(hash = settings)
-        hash.map do |key, value|
-          case value
-          when Config then [key, value.to_h]
-          when Hash then [key, to_h(hash)]
-          when Array then [key, value.map { |item| item }]
-          else
-            [key, value]
-          end
-        end.to_h
+      def merge(other, &block)
+        pristine.update(values.merge(other.to_h.slice(*keys), &block))
+      end
+
+      # @api private
+      def _empty_keys
+        keys.select { |key| Array(self[key]).empty? }
+      end
+
+      # @api private
+      def _compose_keys
+        inherit? ? self[:inherit][:compose] : EMPTY_ARRAY
+      end
+
+      # @api private
+      def inherit?
+        key?(:inherit)
+      end
+
+      # @api private
+      def empty?
+        values.compact.empty?
+      end
+
+      # @api private
+      def _compose(key, lv, rv)
+        if _compose_keys.include?(key)
+          _settings[key].constructor.([lv, rv].compact)
+        else
+          rv
+        end
+      end
+
+      # @api private
+      def key?(key)
+        _settings.key?(key)
+      end
+
+      # @api private
+      def keys
+        _settings.keys
+      end
+
+      # @api private
+      def fetch(*args, &block)
+        values.fetch(*args, &block)
+      end
+
+      # @api private
+      def to_h
+        values
       end
       alias_method :to_hash, :to_h
-
-      # @api private
-      def respond_to_missing?(name, *)
-        if frozen?
-          key?(name)
-        else
-          true
-        end
-      end
-
-      # @api private
-      def respond_to?(name, *)
-        super || key?(name)
-      end
-
-      # @api private
-      def dup
-        self.class.new(dup_settings(settings))
-      end
-
-      # TODO: move to rom/compat
-      #
-      # @api private
-      def use_logger(logger)
-        self.logger = logger
-      end
-
-      private
-
-      def dup_settings(settings)
-        settings.each_with_object({}) do |(key, value), new_settings|
-          if value.is_a?(self.class)
-            new_settings[key] = value.dup
-          else
-            new_settings[key] = value
-          end
-        end
-      end
-
-      # @api private
-      def method_missing(meth, *args, &_block)
-        return settings.fetch(meth, nil) if frozen?
-
-        name = meth.to_s
-        key = name.gsub(WRITER_REGEXP, "").to_sym
-
-        if writer?(name)
-          settings[key] = args.first
-        else
-          settings.fetch(key) { settings[key] = self.class.new }
-        end
-      end
-
-      # @api private
-      def writer?(name)
-        !WRITER_REGEXP.match(name).nil?
-      end
     end
 
-    # Return config instance
-    #
-    # @return [Config]
-    #
-    # @api private
-    def config
-      @config ||= Config.new
-    end
-
-    # Yield config instance
-    #
-    # @return [self]
-    #
     # @api public
-    def configure
-      yield(config)
-      self
+    module ClassMethods
+      # @api public
+      def setting(name, import: nil, **options)
+        if import
+          # TODO: it would be great if this could just be import.with(name: name)
+          settings << import.class.new(
+            name, input: import.input, default: import.default, **import.options
+          )
+        else
+          super(name, **options)
+        end
+      end
+
+      # @api public
+      def settings
+        _settings
+      end
+
+      # @api public
+      def configure(namespace = nil, &block)
+        if namespace
+          super(&nil)
+          block.(config[namespace])
+        else
+          super(&block)
+        end
+        self
+      end
     end
   end
 end

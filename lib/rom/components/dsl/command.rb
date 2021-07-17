@@ -27,21 +27,21 @@ module ROM
           parent = adapter_namespace.const_get(command_type)
 
           constant = build_class(name: class_name(command_type), parent: parent) do |dsl|
-            config.component.id = id
-            config.update(type: type, **options)
+            config.update(options)
+
+            config.component.update(dsl.config)
+            config.component.update(id: id, adapter: dsl.adapter)
+
             class_exec(&block) if block
           end
 
-          # Update component config via constant because it could've been changed
-          config.update(constant.config.component.to_h)
-
-          add(constant: constant, config: {adapter: adapter, **options})
+          add(constant: constant, config: constant.config.component)
         end
 
         # @api private
         def class_name(command_type)
           class_name_inferrer[
-            config[:relation_id],
+            config[:relation],
             type: :command,
             inflector: inflector,
             adapter: adapter,
@@ -53,11 +53,6 @@ module ROM
         # @api private
         def adapter_namespace
           ROM::Command.adapter_namespace(adapter)
-        end
-
-        # @api private
-        def adapter
-          _config.fetch(:adapter) { provider.config.gateways[config[:gateway]].adapter }
         end
       end
     end

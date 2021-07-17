@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require "dry/configurable"
 require "dry/core/equalizer"
 
+require "rom/components/provider"
 require "rom/constants"
 require "rom/attribute"
 require "rom/schema/dsl"
@@ -34,7 +34,7 @@ module ROM
   #
   # @api public
   class Schema
-    extend Dry::Configurable
+    extend ROM::Provider(:association, type: :schema)
 
     include Memoizable
 
@@ -60,17 +60,11 @@ module ROM
     include Dry::Equalizer(:name, :attributes, :associations)
     include Enumerable
 
-    setting :component do
-      setting :id
-      setting :adapter
-      setting :namespace, default: "schemas"
-      setting :gateway, default: :default
-      setting :view, default: false
-      setting :infer, default: false
-      setting :constant, default: Schema
-      setting :dsl_class, default: Schema::DSL
-      setting :attr_class, default: Attribute
-      setting :inferrer, default: Schema::DEFAULT_INFERRER
+    configure(:component) do |config|
+      config.constant = self
+      config.dsl_class = DSL
+      config.attr_class = Attribute
+      config.inferrer = DEFAULT_INFERRER
     end
 
     # @!attribute [r] name

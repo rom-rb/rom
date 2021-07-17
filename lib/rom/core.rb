@@ -1,14 +1,84 @@
 # frozen_string_literal: true
 
-# register core plugins
-require "rom/plugins"
+# Global interface
+require_relative "global"
 
-# global interface
-require "rom/global"
+# Global default settings
+require_relative "settings"
 
+# Core components
+require_relative "components/gateway"
+require_relative "components/dataset"
+require_relative "components/schema"
+require_relative "components/relation"
+require_relative "components/association"
+require_relative "components/command"
+require_relative "components/mapper"
+
+# Core plugins
+require_relative "plugins"
+
+# Global ROM interface for core setup
+#
+# @api public
 module ROM
   extend Global
+  extend self
 
+  # Global component setup
+  #
+  # @example
+  #   ROM.components do
+  #     register :cache, handler: MyApp::MyCacheHandler
+  #   end
+  #
+  # @api public
+  def components(&block)
+    if defined?(@_components)
+      @_components.instance_eval(&block) if block
+      @_components
+    else
+      require_relative "components"
+      @_components = Components
+      components(&block)
+    end
+  end
+
+  # Register core component handlers
+  components do
+    register :gateway, Components::Gateway
+    register :dataset, Components::Dataset
+    register :schema, Components::Schema
+    register :relation, Components::Relation
+    register :association, Components::Association
+    register :command, Components::Command
+    register :mapper, Components::Mapper
+  end
+
+  # TODO: this will be automated eventually
+  require_relative "relation"
+  require_relative "schema"
+  require_relative "command"
+  require_relative "mapper"
+  require_relative "transformer"
+
+  configs = {
+    schema: [ROM::Schema],
+    relation: [ROM::Relation],
+    command: [ROM::Command],
+    mapper: [ROM::Mapper, ROM::Transformer]
+  }
+
+  configs.each do |key, items|
+    items.each do |constant|
+      constant.config.component.inherit!(config.component)
+      config[key].inherit!(constant.config.component)
+    end
+  end
+
+  configs.values.flatten(1).each(&:configure).each(&:finalize!)
+
+  # Register core plugins
   plugins do
     register :timestamps, ROM::Plugins::Schema::Timestamps, type: :schema
     register :registry_reader, ROM::Plugins::Relation::RegistryReader, type: :relation
@@ -16,4 +86,6 @@ module ROM
     register :schema, ROM::Plugins::Command::Schema, type: :command
     register :timestamps, ROM::Plugins::Command::Timestamps, type: :command
   end
+
+  finalize!
 end
