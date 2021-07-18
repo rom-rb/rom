@@ -14,9 +14,6 @@ module ROM
       attr_reader :provider
 
       # @api private
-      attr_reader :store
-
-      # @api private
       attr_reader :handlers
 
       DUPLICATE_ERRORS = {

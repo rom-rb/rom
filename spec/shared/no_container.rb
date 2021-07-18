@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require "rom/memory"
-
 RSpec.shared_context "no container" do
+  require "rom/memory"
+
   let(:gateway) { ROM::Memory::Gateway.new }
 
   let(:users_dataset) { gateway.dataset(:users) }

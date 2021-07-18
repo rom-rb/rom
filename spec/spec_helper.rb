@@ -2,19 +2,12 @@
 
 require "pathname"
 
-SPEC_ROOT = root = Pathname(__FILE__).dirname
-
-require_relative "support/coverage" if ENV["COVERAGE"] == "true"
-
-# rubocop:disable Lint/SuppressedException
-begin
-  require "pry-byebug"
-rescue LoadError
-end
-# rubocop:enable Lint/SuppressedException
+SPEC_ROOT = Pathname(__FILE__).dirname
 
 require "warning"
 
+Warning.ignore(/equalizer/)
+Warning.ignore(/byebug/)
 Warning.ignore(/zeitwerk/)
 Warning.ignore(/pry-byebug/)
 Warning.ignore(/sequel/)
@@ -24,32 +17,26 @@ Warning.ignore(/__FILE__/)
 Warning.ignore(/__LINE__/)
 Warning.process { |w| raise w } if ENV["FAIL_ON_WARNINGS"].eql?("true")
 
+# rubocop:disable Lint/SuppressedException
+begin
+  require "pry-byebug"
+rescue LoadError
+end
+# rubocop:enable Lint/SuppressedException
+
 require "dry/core/deprecations"
 Dry::Core::Deprecations.set_logger!(SPEC_ROOT.join("../log/deprecations.log"))
 
-require "rom/compat"
+require_relative "support/types"
+
 require "rom/core"
-require "rom-changeset"
+require "rom/compat"
+require "rom/memory"
 
-Dir[root.join("support/**/*.rb").to_s].sort.each do |f|
-  require f unless f.include?("coverage")
+Dir[SPEC_ROOT.join("shared/**/*.rb")].sort.each do |file|
+  require "#{file}"
 end
 
-Dir[root.join("shared/**/*.rb").to_s].sort.each do |f|
-  require f
-end
-
-module SpecProfiler
-  def report(*)
-    require "hotch"
-
-    Hotch() do
-      super
-    end
-  end
-end
-
-# Namespace holding all objects created during specs
 module Test
   def self.remove_constants
     constants.each(&method(:remove_const))
@@ -57,24 +44,35 @@ module Test
 end
 
 RSpec.configure do |config|
-  config.after do
-    Test.remove_constants
+  if ENV["PROFILE"] == "true"
+    require_relative "support/spec_profiler"
+    config.reporter.extend(SpecProfiler)
   end
 
-  config.around do |example|
-    ConstantLeakFinder.find(example)
-  end
-
-  config.disable_monkey_patching!
-  config.filter_run_when_matching :focus
-  config.warnings = true
-
-  config.reporter.extend(SpecProfiler) if ENV["PROFILE"] == "true"
-
+  require_relative "support/helpers/schema_helpers"
   config.include(SchemaHelpers)
+
+  require_relative "support/helpers/mapper_registry"
   config.include(MapperRegistry)
 
   config.after do
     gateway.disconnect if respond_to?(:gateway) && gateway.respond_to?(:disconnect)
+    Test.remove_constants
+  end
+
+  config.define_derived_metadata file_path: %r{/suite/} do |metadata|
+    metadata[:group] = metadata[:file_path]
+      .split("/")
+      .then { |parts| parts[parts.index("suite") + 1] }
+      .to_sym
+  end
+
+  %i[rom legacy compat].each do |group|
+    # rubocop:disable Lint/SuppressedException
+    config.when_first_matching_example_defined group: group do
+      require_relative "support/#{group}"
+    rescue LoadError
+    end
+    # rubocop:enable Lint/SuppressedException
   end
 end

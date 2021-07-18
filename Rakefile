@@ -5,15 +5,20 @@ require "bundler/gem_tasks"
 require "rspec/core"
 require "rspec/core/rake_task"
 
-RSpec::Core::RakeTask.new("spec:all") do |t|
-  t.pattern = ["spec/unit/**/*_spec.rb", "spec/integration/**/*_spec.rb"]
+RSpec::Core::RakeTask.new("spec:rom") do |t|
+  t.pattern = ["spec/suite/rom/**/*_spec.rb"]
+end
+
+RSpec::Core::RakeTask.new("spec:legacy") do |t|
+  t.pattern = ["spec/suite/legacy/**/*_spec.rb"]
 end
 
 RSpec::Core::RakeTask.new("spec:compat") do |t|
-  t.pattern = ["spec/compat/**/*_spec.rb"]
+  t.pattern = ["spec/suite/compat/**/*_spec.rb"]
 end
 
-task "spec" => ["spec:all", "spec:compat"]
+desc "Run all spec examples from all groups"
+task spec: ["spec:rom", "spec:legacy", "spec:compat"]
 
 task default: :spec
 

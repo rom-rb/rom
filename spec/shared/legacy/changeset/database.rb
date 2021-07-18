@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "sequel"
-
 RSpec.shared_context "changeset / db_uri" do
   let(:base_db_uri) do
     ENV.fetch("BASE_DB_URI", "postgres@localhost/rom")
@@ -16,6 +14,8 @@ RSpec.shared_context "changeset / database setup" do
   include_context "changeset / db_uri"
 
   let(:configuration) do
+    require "rom/sql"
+
     ROM::Configuration.new(:sql, db_uri) do |config|
       config.plugin(:sql, relation: :auto_restrictions)
     end
@@ -27,11 +27,6 @@ RSpec.shared_context "changeset / database setup" do
 
   let(:logger) do
     Logger.new(File.open("./log/test.log", "a"))
-  end
-
-  before :all do
-    Sequel.database_timezone = :utc
-    Sequel.application_timezone = :utc
   end
 
   before do

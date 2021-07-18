@@ -2,7 +2,7 @@
 
 require "rom/repository"
 
-RSpec.describe "ROM repository" do
+RSpec.describe "ROM repository", group: :legacy do
   include_context "repository / database"
   include_context "relations"
   include_context "repo"
