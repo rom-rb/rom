@@ -2,15 +2,14 @@
 
 require "dry/core/class_attributes"
 
-require "rom/support/inflector"
-
 require "rom/core"
 require "rom/resolver"
-require_relative "components/provider"
-require "rom/compat/auto_registration"
 require "rom/container"
 require "rom/configuration"
 require "rom/global"
+
+require_relative "compat/auto_registration"
+require_relative "compat/components/dsl/schema"
 
 module ROM
   # @api public
