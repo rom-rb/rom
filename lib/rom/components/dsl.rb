@@ -6,6 +6,7 @@ require "rom/components/dsl/gateway"
 require "rom/components/dsl/dataset"
 require "rom/components/dsl/schema"
 require "rom/components/dsl/relation"
+require "rom/components/dsl/association"
 require "rom/components/dsl/command"
 require "rom/components/dsl/mapper"
 
@@ -53,7 +54,7 @@ module ROM
       #
       # @api public
       def schema(id = nil, **options, &block)
-        __dsl__(DSL::Schema, id: id, **options, &block)
+        __dsl__(DSL::Schema, id: id, dataset: id, **options, &block)
       end
 
       # Relation definition DSL
@@ -68,6 +69,36 @@ module ROM
       # @api public
       def relation(id, dataset: id, **options, &block)
         __dsl__(DSL::Relation, id: id, dataset: dataset, **options, &block)
+      end
+
+      # Define associations for a relation
+      #
+      # @example
+      #   class Users < ROM::Relation[:sql]
+      #     associations do
+      #       has_many :tasks
+      #       has_many :posts
+      #       has_many :posts, as: :priority_posts, view: :prioritized
+      #       belongs_to :account
+      #     end
+      #   end
+      #
+      #   class Posts < ROM::Relation[:sql]
+      #     associations do
+      #       belongs_to :users, as: :author
+      #     end
+      #
+      #     view(:prioritized) do
+      #       where { priority <= 3 }
+      #     end
+      #   end
+      #
+      # @return [Array<Components::Association>]
+      #
+      # @api public
+      def associations(source: nil, namespace: source, **options, &block)
+        __dsl__(DSL::Association, source: source, namespace: namespace, **options, &block)
+        components.associations
       end
 
       # Command definition DSL
@@ -130,7 +161,7 @@ module ROM
           .plugin_registry[Inflector.singularize(type)].adapter(adapter).fetch(name)
           .configure(&block)
 
-        plugins << plugin
+        config.component.plugins << plugin
 
         plugin
       end
@@ -143,15 +174,18 @@ module ROM
       private
 
       # @api private
-      def __dsl__(klass, **options, &block)
-        type_config = config[klass.type]
+      def __dsl__(klass, type: klass.type, **options, &block)
+        base_config = config[type].dup
+
+        type_config = base_config
           .merge(options.compact)
           .inherit(**config.component)
-          .inherit(config[klass.type])
+          .inherit(base_config)
 
-        if klass.nested
+        if klass.nested && block
           dsl = klass.new(provider: self, config: type_config)
-          dsl.instance_exec(&block)
+          dsl.configure
+          dsl.instance_eval(&block)
           dsl
         else
           klass.new(provider: self, config: type_config, block: block).()

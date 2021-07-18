@@ -49,7 +49,7 @@ module ROM
 
       # @api private
       def schema_key
-        resolver.components.get(:schemas, id: id)&.key
+        resolver.components.get(:schemas, dataset: id)&.key
       end
     end
   end

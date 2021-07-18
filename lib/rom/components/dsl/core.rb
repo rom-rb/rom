@@ -27,23 +27,16 @@ module ROM
         option :config, optional: true, default: -> { EMPTY_HASH }
 
         # @api private
-        option :block, optional: true
+        option :plugins, optional: true, reader: false, default: -> {
+          config.key?(:plugins) ? config.plugins.dup : EMPTY_ARRAY
+        }
 
-        # Specifies which DSL options map to component's settings
-        #
         # @api private
-        def self.settings(*keys, **mappings)
-          if defined?(@settings) && (keys.empty? && mappings.empty?)
-            @settings
-          else
-            @settings = [keys.zip(keys).to_h, **mappings].reduce(:merge)
-          end
-        end
+        option :block, optional: true
 
         # @api private
         def self.inherited(klass)
           super
-          klass.instance_variable_set(:@settings, EMPTY_HASH)
           klass.type(Inflector.component_id(klass).to_sym)
         end
 
@@ -66,10 +59,40 @@ module ROM
         end
 
         # @api private
-        def add(**options)
-          components.add(key, block: block, config: config, **options)
+        def call(**options)
+          components.add(key, config: configure, block: block, **options)
         end
-        alias_method :call, :add
+
+        # @api private
+        def configure
+          config.freeze
+        end
+
+        # Enable a plugin in a DSL
+        #
+        # @param [Symbol] name Plugin name
+        # @param [Hash] options Plugin options
+        #
+        # @api public
+        def use(name, **options)
+          plugin = ::ROM.plugin_registry[type].fetch(name, adapter).configure do |config|
+            config.update(options)
+          end
+          plugin.enable(self).apply
+          self
+        end
+
+        # @api private
+        def plugins
+          options[:plugins].select { |plugin| plugin.type == type }
+        end
+
+        # @api private
+        def plugin(name, **options)
+          plugin = plugins.detect { |plugin| plugin.name == name }
+          plugin.config.update(options) unless options.empty?
+          plugin
+        end
 
         private
 
@@ -80,17 +103,24 @@ module ROM
 
         # @api private
         def inflector
-          provider.inflector
+          provider.config.component.inflector
         end
 
         # @api private
         def class_name_inferrer
-          provider.class_name_inferrer
+          provider.config.class_name_inferrer
         end
 
         # @api private
         memoize def adapter
-          config.adapter || provider.config.gateways[config.gateway]&.fetch(:adapter)
+          config.adapter || gateway_adapter
+        end
+
+        # @api private
+        def gateway_adapter
+          if provider.config.key?(:gateways)
+            provider.config.gateways[config.gateway]&.fetch(:adapter)
+          end
         end
       end
     end

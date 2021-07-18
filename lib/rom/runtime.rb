@@ -53,8 +53,6 @@ module ROM
     }.freeze
 
     # Global defaults
-    setting :plugins, default: EMPTY_ARRAY, reader: true
-
     setting :inflector, default: Inflector, reader: true
 
     setting :gateways, default: EMPTY_HASH
@@ -292,6 +290,11 @@ module ROM
         #       defined in another location. Auto-require was done for convenience but
         #       making it mandatory to have that file seems odd now.
       end
+    end
+
+    # @api private
+    def plugins
+      config.component.plugins
     end
 
     # @api private

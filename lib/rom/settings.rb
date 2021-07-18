@@ -9,6 +9,7 @@ module ROM
   # @api private
   module Settings
     Namespace = -> (args) { Array(args).flatten(1).uniq.join(".") }
+    Plugins = -> (args) { Array[args].flatten.uniq(&:name).map(&:dup) }
   end
 
   # Defaults for all component types
@@ -17,6 +18,7 @@ module ROM
     setting :adapter
     setting :gateway, default: :default
     setting :inflector, default: Inflector
+    setting :plugins, default: EMPTY_ARRAY, constructor: Settings::Plugins
   end
 
   # Gateway defaults
@@ -26,8 +28,8 @@ module ROM
     setting :namespace, default: "gateways"
     setting :adapter
     setting :logger
-    setting :args, default: EMPTY_ARRAY
-    setting :opts, default: EMPTY_HASH
+    setting :args, default: EMPTY_ARRAY, constructor: :dup.to_proc
+    setting :opts, default: EMPTY_HASH, constructor: :dup.to_proc
   end
 
   # Dataset defaults
@@ -42,23 +44,34 @@ module ROM
 
   # Schema defaults
   setting :schema do
+    setting :inherit do
+      setting :paths, default: EMPTY_ARRAY, constructor: :dup.to_proc
+      setting :compose, default: %i[plugins]
+    end
     setting :type, default: :schema
     setting :id
-    setting :namespace, default: "schemas"
-    setting :as
-    setting :relation
+    setting :namespace, default: "schemas", constructor: Settings::Namespace
+    setting :dataset
+    setting :as # TODO: move to rom/compat
+    setting :relation # TODO: move to rom/compat
     setting :adapter
     setting :gateway
     setting :view, default: false
     setting :infer, default: false
     setting :constant
-    setting :dsl_class
+    setting :dsl_class # TODO: move to rom/compat
     setting :attr_class
     setting :inferrer
+    setting :attributes, default: EMPTY_ARRAY, constructor: :dup.to_proc
+    setting :plugins, default: EMPTY_ARRAY, constructor: Settings::Plugins
   end
 
   # Relation defaults
   setting :relation do
+    setting :inherit do
+      setting :paths, default: EMPTY_ARRAY, constructor: :dup.to_proc
+      setting :compose, default: %i[plugins]
+    end
     setting :type, default: :relation
     setting :abstract, default: true
     setting :id
@@ -67,13 +80,14 @@ module ROM
     setting :adapter
     setting :inflector
     setting :gateway
+    setting :plugins, default: EMPTY_ARRAY, constructor: Settings::Plugins
   end
 
   # Association defaults
   setting :association do
     setting :type, default: :association
     setting :id
-    setting :namespace, default: "associations"
+    setting :namespace, default: "associations", constructor: Settings::Namespace
     setting :inflector
     setting :adapter
     setting :as
@@ -81,6 +95,7 @@ module ROM
     setting :relation
     setting :source
     setting :target
+    setting :through
     setting :foreign_key
     setting :result
     setting :view
@@ -91,7 +106,7 @@ module ROM
   # Command defaults
   setting :command do
     setting :inherit do
-      setting :paths, default: EMPTY_ARRAY
+      setting :paths, default: EMPTY_ARRAY, constructor: :dup.to_proc
       setting :compose, default: %i[namespace]
     end
     setting :type, default: :command
@@ -105,7 +120,7 @@ module ROM
   # Command defaults
   setting :mapper do
     setting :inherit do
-      setting :paths, default: EMPTY_ARRAY
+      setting :paths, default: EMPTY_ARRAY, constructor: :dup.to_proc
       setting :compose, default: %i[namespace]
     end
     setting :type, default: :mapper

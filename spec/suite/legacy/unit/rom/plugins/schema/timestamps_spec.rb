@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 RSpec.describe ROM::Plugins::Schema::Timestamps do
+  subject(:schema) { schema_dsl.call }
+
   let(:relation) { ROM::Relation::Name[:users] }
 
   let(:schema_dsl) do
     ROM::Schema::DSL.new(relation: relation, adapter: :memory)
   end
-
-  subject(:schema) { schema_dsl.call }
 
   it "adds timestamp attributes" do
     ts_attribute = lambda do |name|
@@ -22,6 +22,7 @@ RSpec.describe ROM::Plugins::Schema::Timestamps do
 
   it "supports custom names" do
     schema_dsl.use :timestamps
+
     schema_dsl.timestamps :created_on, :updated_on
 
     expect(schema.to_h.keys).to eql(%i[created_on updated_on])
@@ -29,6 +30,7 @@ RSpec.describe ROM::Plugins::Schema::Timestamps do
 
   it "supports custom types" do
     schema_dsl.use :timestamps, type: ROM::Types::Date
+
     dt_attribute = lambda do |name|
       ROM::Attribute.new(ROM::Types::Date.meta(source: relation), name: name)
     end

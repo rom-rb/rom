@@ -324,16 +324,14 @@ RSpec.describe ROM::Relation, ".schema" do
     end
 
     it "raises an error on double definition" do
-      class Test::Users < ROM::Relation[:memory]
-        schema do
-          attribute :id, Types::Integer.meta(primary_key: true)
-          attribute :name, Types::String
-          attribute :id, Types::Integer
-        end
-      end
-
       expect {
-        Test::Users.new([])
+        class Test::Users < ROM::Relation[:memory]
+          schema do
+            attribute :id, Types::Integer.meta(primary_key: true)
+            attribute :name, Types::String
+            attribute :id, Types::Integer
+          end
+        end
       }.to raise_error(ROM::AttributeAlreadyDefinedError, /:id already defined/)
     end
 

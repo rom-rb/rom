@@ -15,11 +15,6 @@ module ROM
         association_class.new(definition, resolver.relations)
       end
 
-      # @api public
-      def id
-        config.as || config.name
-      end
-
       private
 
       # @api private

@@ -8,75 +8,52 @@ module ROM
   module Components
     # @api public
     class Schema < Core
+      # @api private
+      option :name, type: Types.Instance(ROM::Relation::Name), default: -> {
+        ROM::Relation::Name[config.id, config.dataset]
+      }
+
       # @api public
       def build
         if view?
-          resolver.schemas[relation].instance_eval(&block)
+          resolver.schemas[config.relation].instance_eval(&block)
         else
-          relations = resolver.relations
-          inferrer = config.inferrer.with(enabled: config.infer)
-
-          schema = config.dsl_class.new(
-            **config, relation: name, plugins: plugins, inferrer: inferrer, &block
-          ).()
+          schema = config.constant.define(name, **config, inferrer: inferrer, resolver: resolver)
 
           if gateway?
-            schema.finalize_attributes!(gateway: gateway, relations: relations)
+            schema.finalize_attributes!(gateway: gateway)
           else
-            schema.finalize_attributes!(relations: relations)
-          end
-
-          # TODO: schemas should no longer create associations
-          schema.associations.each do |definition|
-            components.add(
-              :associations,
-              definition: definition,
-              config: assoc_config.inherit(definition.options)
-            )
+            schema.finalize_attributes!
           end
 
           schema.finalize!
-
-          schema
         end
       end
 
+      # TODO: once schemas can be nested, this will go away
+      #
       # @api public
       def key
-        root = "#{namespace}.#{relation}"
-
         if view?
-          "#{root}.#{id}"
+          "#{namespace}.#{config.relation}.#{id}"
         else
-          root
+          super
         end
       end
 
       # @api private
-      memoize def assoc_config
-        provider.config.association.update(adapter: adapter, namespace: "associations.#{relation}")
+      def inferrer
+        config.inferrer.with(enabled: config.infer)
       end
 
-      # TODO: schema's should not depend on Name objects
-      #
       # @api private
-      def name
-        ROM::Relation::Name[relation, id]
+      def dataset
+        config.dataset
       end
 
       # @api private
       def adapter
         config.adapter
-      end
-
-      # @api private
-      def as
-        config.as
-      end
-
-      # @api private
-      def relation
-        config.relation
       end
 
       # @api private

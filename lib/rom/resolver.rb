@@ -30,9 +30,9 @@ module ROM
       include Dry::Container::Mixin
     end
 
-    option :config, default: -> { Runtime.new.config }
+    option :config, default: -> { ROM.config }
 
-    option :components, default: -> { Components::Registry.new(provider: self) }
+    option :components, default: -> { Components::Registry.new(provider: Runtime.new) }
 
     option :container, default: -> { Container.new }
 
@@ -87,10 +87,25 @@ module ROM
     alias_method :[], :fetch
 
     # @api public
-    def infer(config)
-      fetch(config.id || config.type) do
-        components.add(type, config: config.inherit(self.config.component)).build
+    def infer(id, **options)
+      fetch(id || :anonymous) do
+        infer_component(id: id, **options).build
       end
+    end
+
+    # @api private
+    def infer_component(**options)
+      provider.public_send(handler.key, **config[handler.key].inherit(**config.component, **options))
+    end
+
+    # @api private
+    def provider
+      components.provider
+    end
+
+    # @api private
+    def handler
+      components.handlers[type]
     end
 
     # @api private
@@ -126,8 +141,8 @@ module ROM
     end
 
     CORE_COMPONENTS.each do |type|
-      define_method(type) do
-        scoped(__method__, type: __method__)
+      define_method(type) do |**options|
+        scoped(__method__, type: __method__, **options)
       end
 
       define_method(:"#{type}?") do
@@ -142,7 +157,7 @@ module ROM
 
     # @api private
     def plugins
-      config.plugins
+      config.component.plugins
     end
 
     # @api private

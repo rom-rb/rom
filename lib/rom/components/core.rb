@@ -84,7 +84,7 @@ module ROM
 
       # @api public
       def inflector
-        resolver.config.inflector
+        config.inflector
       end
 
       # @api private

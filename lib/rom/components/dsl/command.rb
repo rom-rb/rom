@@ -35,7 +35,7 @@ module ROM
             class_exec(&block) if block
           end
 
-          add(constant: constant, config: constant.config.component)
+          call(constant: constant, config: constant.config.component)
         end
 
         # @api private

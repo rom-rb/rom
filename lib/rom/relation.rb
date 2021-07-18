@@ -40,7 +40,7 @@ module ROM
   #
   # @api public
   class Relation
-    extend ROM::Provider(:dataset, :schema, type: :relation)
+    extend ROM::Provider(:dataset, :schema, :association, type: :relation)
     extend Initializer
     extend ClassInterface
 
@@ -99,7 +99,7 @@ module ROM
     option :name, default: -> { Name[config.component.id, config.component.dataset] }
 
     # @!attribute [r] resolver
-    #   @return [resolver] resolver with runtime dependency resolving
+    #   @return [resolver] Resolver with runtime dependency resolving
     option :resolver, default: -> { self.class.resolver(config: config) }
 
     # @!attribute [r] inflector
@@ -109,32 +109,24 @@ module ROM
 
     # @!attribute [r] datasets
     #   @return [resolver] Relation associations
-    option :datasets, default: -> { resolver.datasets }
+    option :datasets, default: -> { resolver.datasets(config: config) }
 
     # @!attribute [r] dataset
     #   @return [Object] dataset used by the relation provided by relation's gateway
     #   @api public
-    option :dataset, default: -> do
-      datasets.infer(config.dataset.inherit(**config.component, id: config.component.dataset, abstract: false))
-    end
+    option :dataset, default: -> { datasets.infer(config.component.dataset) }
 
     # @!attribute [r] schemas
     #   @return [Runtime::resolver] Relation schemas
-    option :schemas, default: -> do
-      resolver.schemas.scoped(config.component.id)
-    end
+    option :schemas, default: -> { resolver.schemas.scoped(config.component.id, config: config) }
 
     # @!attribute [r] schema
     #   @return [Runtime::resolver] The canonical schema
-    option :schema, default: -> do
-      schemas.infer(config.schema.inherit(**config.component, relation: config.component.id))
-    end
+    option :schema, default: -> { schemas.infer(config.component.id) }
 
     # @!attribute [r] associations
     #   @return [Runtime::resolver] Relation associations
-    option :associations, default: -> do
-      resolver.associations.scoped(config.component.id)
-    end
+    option :associations, default: -> { resolver.associations.scoped(config.component.id) }
 
     # @!attribute [r] input_schema
     #   @return [Object#[]] tuple processing function, uses schema or defaults to Hash[]

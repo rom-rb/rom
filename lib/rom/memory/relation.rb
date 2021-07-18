@@ -19,6 +19,7 @@ module ROM
 
       adapter :memory
       schema_class Memory::Schema
+      schema_dsl Schema::DSL
 
       # @!method take(amount)
       #   @param (see Dataset#take)
