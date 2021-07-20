@@ -27,6 +27,10 @@ end
 require "dry/core/deprecations"
 Dry::Core::Deprecations.set_logger!(SPEC_ROOT.join("../log/deprecations.log"))
 
+# This workarounds potential issues with RSpec's global state handling
+require "dry/effects"
+Dry::Effects.load_extensions(:rspec)
+
 require_relative "support/types"
 
 require "rom/core"
