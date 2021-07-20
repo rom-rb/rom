@@ -33,10 +33,6 @@ Dry::Effects.load_extensions(:rspec)
 
 require_relative "support/types"
 
-require "rom/core"
-require "rom/compat"
-require "rom/memory"
-
 Dir[SPEC_ROOT.join("shared/**/*.rb")].sort.each do |file|
   require "#{file}"
 end
