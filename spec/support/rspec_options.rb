@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.configure do |config|
   # When no filter given, search and run focused tests
   config.filter_run_when_matching :focus

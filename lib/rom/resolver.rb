@@ -81,7 +81,7 @@ module ROM
           raise MISSING_ELEMENT_ERRORS[type].new(key)
         end
       end
-    rescue KeyError => e
+    rescue KeyError
       raise MISSING_ELEMENT_ERRORS[type].new(key)
     end
     alias_method :[], :fetch

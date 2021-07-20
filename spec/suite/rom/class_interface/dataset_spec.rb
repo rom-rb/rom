@@ -6,8 +6,6 @@ require "rom/relation"
 RSpec.describe ROM::Relation, ".dataset" do
   context "standalone class" do
     it "defines a default dataset component" do
-      pending "TODO: this requires gateway inference"
-
       relation = Class.new(ROM::Relation) {
         dataset { [] }
       }.new
