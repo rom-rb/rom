@@ -21,17 +21,17 @@ module ROM
 
       # @api private
       def blocks
-        [block, *datasets.map(&:block)].compact
+        [*datasets.map(&:block), block].compact
       end
 
       # @api public
       def abstract
-        config[:abstract]
+        config.abstract
       end
 
       # @api adapter
       def adapter
-        config[:adapter]
+        config.adapter
       end
 
       private

@@ -93,6 +93,50 @@ RSpec.describe ROM::Runtime do
     expect(users.schema[:id]).to be_a(ROM::Attribute)
   end
 
+  it "can define a relation with a schema and a dataset" do
+    runtime.gateway(:default)
+
+    relation = runtime.relation(:people) do
+      schema do
+        attribute(:uuid, ROM::Types::String)
+        attribute(:name, ROM::Types::String)
+      end
+
+      dataset do |schema|
+        insert(schema.map(&:name).map { |name| {name => "#{name}-value"} }.reduce(:merge))
+      end
+    end
+
+    expect(relation.config.id).to be(:people)
+    expect(relation.config.gateway).to be(:default)
+
+    users = resolver["relations.people"]
+
+    expect(users.to_a).to eql([{uuid: "uuid-value", name: "name-value"}])
+  end
+
+  it "can define a relation inheriting an abstract dataset" do
+    runtime.gateway(:default)
+
+    runtime.dataset(id: :joe, abstract: true) do
+      insert(name: "Joe")
+    end
+
+    runtime.dataset(id: :jane, abstract: true) do
+      insert(name: "Jane")
+    end
+
+    relation = runtime.relation(:people) do
+      dataset do |schema|
+        order(:name)
+      end
+    end
+
+    users = resolver["relations.people"]
+
+    expect(users.to_a).to eql([{name: "Jane"}, {name: "Joe"}])
+  end
+
   it "can define commands" do
     runtime.gateway(:default)
 
