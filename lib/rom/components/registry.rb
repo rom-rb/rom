@@ -109,7 +109,10 @@ module ROM
       # @api private
       def update(other, **options)
         other.each do |type, component|
-          add(type, item: component.with(provider: provider, **options))
+          add(
+            type,
+            item: component.with(provider: provider, config: component.config.merge(options))
+          )
         end
         self
       end
