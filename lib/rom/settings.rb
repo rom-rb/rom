@@ -15,6 +15,7 @@ module ROM
   # Defaults for all component types
   setting :component do
     setting :type
+    setting :abstract, default: false
     setting :adapter
     setting :gateway, default: :default
     setting :inflector, default: Inflector
@@ -35,7 +36,7 @@ module ROM
   # Dataset defaults
   setting :dataset do
     setting :type, default: :dataset
-    setting :abstract, default: true
+    setting :abstract
     setting :id
     setting :namespace, default: "datasets"
     setting :adapter
@@ -73,7 +74,7 @@ module ROM
       setting :compose, default: %i[plugins]
     end
     setting :type, default: :relation
-    setting :abstract, default: true
+    setting :abstract
     setting :id
     setting :namespace, default: "relations"
     setting :dataset

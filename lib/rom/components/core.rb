@@ -46,6 +46,13 @@ module ROM
         self.class.type
       end
 
+      # @api public
+      def abstract
+        config.abstract
+      end
+      alias_method :abstract?, :abstract
+
+
       # Default container key
       #
       # @return [String]

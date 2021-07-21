@@ -134,6 +134,7 @@ RSpec.describe ROM::Runtime do
 
     users = resolver["relations.people"]
 
+    expect(runtime.components.get(:datasets, id: :people)).to_not be_abstract
     expect(users.to_a).to eql([{name: "Jane"}, {name: "Joe"}])
   end
 

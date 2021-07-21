@@ -24,11 +24,6 @@ module ROM
         [*datasets.map(&:block), block].compact
       end
 
-      # @api public
-      def abstract
-        config.abstract
-      end
-
       # @api adapter
       def adapter
         config.adapter
