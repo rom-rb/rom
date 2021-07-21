@@ -24,19 +24,18 @@ module ROM
       # @api public
       module Timestamps
         DEFAULT_TIMESTAMPS = %i[created_at updated_at].freeze
+        DEFAULT_TYPE = ROM::Types::Time
 
         # @api private
-        def self.apply(schema, type: Types::Time, attributes: DEFAULT_TIMESTAMPS)
-          attrs = attributes.map do |name|
-            ROM::Schema.build_attribute_info(
-              type.meta(source: schema.name),
-              name: name
-            )
+        def self.apply(schema, **options)
+          attributes = options.fetch(:attributes, DEFAULT_TIMESTAMPS)
+          attrs_type = options.fetch(:type, DEFAULT_TYPE)
+
+          attributes.each do |name|
+            schema.attribute(name, attrs_type)
           end
 
-          schema.attributes.concat(
-            schema.class.attributes(attrs, schema.attr_class)
-          )
+          schema
         end
 
         # @api private
@@ -51,10 +50,7 @@ module ROM
           #
           # @api public
           def timestamps(*names)
-            options = plugin_options(:timestamps)
-            options[:attributes] = names unless names.empty?
-
-            self
+            plugin(:timestamps).config.update(attributes: names)
           end
         end
       end

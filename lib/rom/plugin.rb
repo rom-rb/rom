@@ -34,6 +34,10 @@ module ROM
     #   @return [Symbol] Plugin optional config
     option :config, default: -> { ROM::OpenStruct.new }
 
+    # @!attribute [r] dsl
+    #   @return [Module,nil] Optional DSL extensions
+    option :dsl, default: -> { mod.const_defined?(:DSL) ? mod.const_get(:DSL) : nil }
+
     # Plugin registry key
     #
     # @return [String]
@@ -47,10 +51,36 @@ module ROM
     #
     # @api public
     def configure
-      return self unless block_given?
-      new_config = ROM::OpenStruct.new(config.to_h.clone)
-      yield(new_config)
-      with(config: new_config.freeze)
+      plugin = dup
+      yield(plugin.config) if block_given?
+      plugin
+    end
+
+    # @api private
+    def dup
+      with(config: ROM::OpenStruct.new(config.to_h.clone))
+    end
+
+    # @api private
+    def enable(target)
+      target.extend(dsl) if dsl
+      config.enabled = true
+      config.target = target
+      self
+    end
+
+    # @api private
+    def enabled?
+      config.key?(:enabled) && config.enabled == true
+    end
+
+    # @api private
+    def apply
+      if enabled?
+        apply_to(config.target, **config.to_h)
+      else
+        raise "Cannot apply a plugin because it was not enabled for any target"
+      end
     end
 
     # Apply this plugin to the target
@@ -60,7 +90,7 @@ module ROM
     # @api private
     def apply_to(target, **options)
       if mod.respond_to?(:apply)
-        mod.apply(target, **options)
+        mod.apply(target, **config, **options)
       elsif mod.respond_to?(:new)
         target.include(mod.new(**options))
       elsif target.is_a?(::Module)

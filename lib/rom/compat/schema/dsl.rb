@@ -11,6 +11,10 @@ module ROM
   class Schema
     # Schema DSL exposed as `schema { .. }` in relation classes
     #
+    # @see Components::DSL::Schema
+    #
+    # @deprecated
+    #
     # @api public
     class DSL
       extend Initializer
@@ -22,10 +26,6 @@ module ROM
       # @!attribute [r] adapter
       #   @return [Symbol] The adapter identifier used in gateways
       option :adapter
-
-      # @!attribute [r] inferrer
-      #   @return [Inferrer] Optional attribute inferrer
-      option :inferrer, default: -> { DEFAULT_INFERRER }
 
       # @!attribute [r] inflector
       #   @return [Dry::Inflector] String inflector
@@ -43,7 +43,7 @@ module ROM
 
       # @!attribute [r] plugins
       #   @return [Class] Plugins enabled by default through configuration
-      option :plugins, default: -> { EMPTY_HASH.dup }
+      option :plugins, default: -> { EMPTY_ARRAY.dup }
 
       # @!attribute [r] attributes
       #   @return [Hash<Symbol, Hash>] A hash with attribute names as
@@ -68,21 +68,23 @@ module ROM
       # Defines a relation attribute with its type and options.
       #
       # When only options are given, type is left as nil. It makes
-      # sense when it is used alongside an schema inferrer, which will
+      # sense when it is used alongside a schema inferrer, which will
       # populate the type.
       #
       # @see Relation.schema
       #
       # @api public
       def attribute(name, type_or_options, options = EMPTY_HASH)
-        if attributes.key?(name)
+        if attributes.include?(name)
           raise(
             ::ROM::AttributeAlreadyDefinedError,
             "Attribute #{name.inspect} already defined"
           )
         end
 
-        attributes[name] = build_attribute_info(name, type_or_options, options)
+        build_attribute_info(name, type_or_options, options).tap do |attr_info|
+          attributes[name] = attr_info
+        end
       end
 
       # Specify which key(s) should be the primary key
@@ -90,8 +92,7 @@ module ROM
       # @api public
       def primary_key(*names)
         names.each do |name|
-          attributes[name][:type] =
-            attributes[name][:type].meta(primary_key: true)
+          attributes[name][:type] = attributes[name][:type].meta(primary_key: true)
         end
         self
       end
@@ -126,51 +127,74 @@ module ROM
       #
       # @api public
       def associations(&block)
-        @associations_dsl = AssociationsDSL.new(relation, inflector, &block)
+        if block
+          __assoc_dsl__.instance_eval(&block)
+        else
+          __assoc_dsl__.registry.values
+        end
+      end
+
+      # @api private
+      def __assoc_dsl__
+        @__assoc_dsl__ ||= AssociationsDSL.new(relation, inflector)
       end
 
       # Enable a plugin in the schema DSL
       #
-      # @param [Symbol] plugin_name Plugin name
+      # @param [Symbol] name Plugin name
       # @param [Hash] options Plugin options
       #
       # @api public
-      def use(plugin_name, **options)
-        apply_plugin(::ROM.plugin_registry[:schema].fetch(plugin_name, adapter), **options)
+      def use(name, **options)
+        plugin = ::ROM.plugin_registry[:schema].fetch(name, adapter).configure do |config|
+          config.update(options)
+        end
+        plugins << plugin.enable(self)
+        self
+      end
+
+      # @api public
+      def plugin(name, **options)
+        plugin = plugins.detect { |plugin| plugin.name == name }
+        plugin.config.update(options) unless options.empty?
+        plugin
       end
 
       # @api private
       def call
-        plugins.each do |plugin|
-          apply_plugin(plugin)
-        end
+        schema_class.define(relation, **config)
+      end
 
-        instance_eval(&definition) if definition
+      # @api private
+      def config
+        @config ||=
+          begin
+            # Enable available plugin's
+            plugins.each do |plugin|
+              plugin.enable(self) unless plugin.enabled?
+            end
 
-        schema_class.define(relation, **opts) do |schema|
-          applied_plugins.each do |(plugin, options)|
-            plugin.apply_to(schema, **options)
+            # Apply custom definition block if it exists
+            instance_eval(&definition) if definition
+
+            # Apply plugin defaults
+            plugins.each do |plugin|
+              plugin.apply_to(self)
+            end
+
+            attributes.freeze
+            associations.freeze
+
+            opts.freeze
           end
-        end
+      end
+
+      # @api public
+      def inspect
+        %(<##{self.class} relation=#{relation} attributes=#{attributes} plugins=#{plugins}>)
       end
 
       private
-
-      # @api private
-      def apply_plugin(plugin, **options)
-        plugin.extend_dsl(self)
-        applied_plugins << [plugin, plugin.config.to_h.merge(options)]
-      end
-
-      # @api private
-      def plugin_options(name)
-        applied_plugins.detect { |(plugin, options)| options if plugin.name == name }.last
-      end
-
-      # @api private
-      def applied_plugins
-        @applied_plugins ||= []
-      end
 
       # Return schema opts
       #
@@ -178,18 +202,10 @@ module ROM
       #
       # @api private
       def opts
-        opts = {
-          attributes: attributes.values,
-          inferrer: inferrer,
-          attr_class: attr_class,
-          inflector: inflector
-        }
-
-        if @associations_dsl
-          {**opts, associations: @associations_dsl.call}
-        else
-          opts
-        end
+        {attributes: attributes.values,
+         associations: associations,
+         attr_class: attr_class,
+         plugins: plugins}
       end
 
       # Builds a representation of the information needed to create an
@@ -217,15 +233,25 @@ module ROM
       #
       # @api private
       def build_type(type, options = EMPTY_HASH)
-        if options[:read]
-          type.meta(source: relation, read: options[:read])
-        elsif type.optional? && type.meta[:read]
-          type.meta(source: relation, read: type.meta[:read].optional)
+        meta = Attribute::META_OPTIONS
+          .map { |opt| [opt, options[opt]] if options.key?(opt) }
+          .compact
+          .to_h
+
+        base =
+          if options[:read]
+            type.meta(source: relation, read: options[:read])
+          elsif type.optional? && type.meta[:read]
+            type.meta(source: relation, read: type.meta[:read].optional)
+          else
+            type.meta(source: relation)
+          end
+
+        if meta.empty?
+          base
         else
-          type.meta(source: relation)
-        end.meta(Attribute::META_OPTIONS.map { |opt|
-                   [opt, options[opt]] if options.key?(opt)
-                 } .compact.to_h)
+          base.meta(meta)
+        end
       end
     end
   end

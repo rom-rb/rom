@@ -108,6 +108,16 @@ module ROM
           options
         end
 
+        # @api public
+        def id
+          aliased? ? as : name
+        end
+
+        # @api public
+        def to_h
+          {id: id, **options}
+        end
+
         # Return true if association's default relation view should be overridden by a custom one
         #
         # @return [Boolean]

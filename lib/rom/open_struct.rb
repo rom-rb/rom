@@ -21,7 +21,7 @@ module ROM
     # @api private
     def initialize(attributes = EMPTY_HASH, &block)
       @__keys__ = Set.new
-      attributes.each { |key, value| __set__(key, value) }
+      __load__(attributes)
     end
 
     # @api public
@@ -34,6 +34,11 @@ module ROM
       map { |key, value| [key, value] }.to_h
     end
     alias_method :to_hash, :to_h
+
+    # @api public
+    def update(other)
+      __load__(other)
+    end
 
     # @api public
     def fetch(key, &block)
@@ -82,6 +87,11 @@ module ROM
       else
         super
       end
+    end
+
+    # @api private
+    def __load__(attributes)
+      Hash(attributes).each { |key, value| __set__(key, value) }
     end
 
     # @api private

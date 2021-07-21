@@ -76,11 +76,11 @@ RSpec.describe ROM::Runtime do
     runtime.gateway(:default)
 
     relation = runtime.relation(:people) do
-      schema(:users) { attribute(:id, ROM::Types::Integer) }
+      schema(dataset: :users) { attribute(:id, ROM::Types::Integer) }
     end
 
-    expect(relation.config[:id]).to be(:people)
-    expect(relation.config[:gateway]).to be(:default)
+    expect(relation.config.id).to be(:people)
+    expect(relation.config.gateway).to be(:default)
 
     users = resolver["relations.people"]
     schema = resolver["schemas.people"]
@@ -158,6 +158,39 @@ RSpec.describe ROM::Runtime do
     expect(json_mapper.relation).to be(:tasks)
     expect(json_mapper.namespace).to eql("mappers.serializers.tasks")
     expect(json_mapper.key).to eql("mappers.serializers.tasks.json")
+  end
+
+  it "can define top-level associations" do
+    associations = runtime.associations(source: :users) do
+      has_many :tasks
+    end
+
+    expect(associations.size).to be(1)
+
+    tasks, * = associations
+
+    expect(tasks.id).to be(:tasks)
+    expect(tasks.key).to eql("associations.users.tasks")
+  end
+
+  it "can define relation associations" do
+    runtime.relation(:users) do
+      associations do
+        has_many :tasks
+      end
+    end
+
+    associations = runtime.components.associations
+
+    expect(associations.size).to be(1)
+
+    tasks, * = associations
+
+    expect(tasks.id).to be(:tasks)
+    expect(tasks.key).to eql("associations.users.tasks")
+
+    expect(resolver.relations[:users].associations[:tasks])
+      .to be_a(ROM::Memory::Associations::OneToMany)
   end
 
   it "can define a local plugin" do

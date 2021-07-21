@@ -35,7 +35,7 @@ module ROM
             class_eval(&block) if block
           end
 
-          add(constant: constant, config: constant.config.component)
+          call(constant: constant, config: constant.config.component)
         end
 
         # @api private
@@ -58,7 +58,7 @@ module ROM
         # @api public
         def register(namespace, mappers)
           mappers.map do |id, mapper|
-            add(
+            call(
               object: mapper,
               config: config.merge(id: id, relation: namespace).append(namespace: namespace)
             )

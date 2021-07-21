@@ -5,7 +5,6 @@ require "dry/core/equalizer"
 require "rom/components/provider"
 require "rom/constants"
 require "rom/attribute"
-require "rom/schema/dsl"
 require "rom/schema/inferrer"
 require "rom/support/notifications"
 require "rom/support/memoizable"
@@ -62,7 +61,6 @@ module ROM
 
     configure(:component) do |config|
       config.constant = self
-      config.dsl_class = DSL
       config.attr_class = Attribute
       config.inferrer = DEFAULT_INFERRER
     end
@@ -70,6 +68,14 @@ module ROM
     # @!attribute [r] name
     #   @return [Symbol] The name of this schema
     param :name
+
+    # @!attribute [r] resolver
+    #   @return [resolver] Resolver with runtime dependency resolving
+    option :resolver, default: -> { self.class.resolver }
+
+    # @!attribute [r] relations
+    #   @return [resolver] Runtime relation resolver
+    option :relations, default: -> { resolver.relations }
 
     # @!attribute [r] attributes
     #   @return [Array] Array with schema attributes
@@ -82,9 +88,6 @@ module ROM
     # @!attribute [r] inferrer
     #   @return [#call] An optional inferrer object used in `finalize!`
     option :inferrer, default: -> { DEFAULT_INFERRER }
-
-    # @api private
-    option :relations, default: -> { EMPTY_HASH }
 
     # @!attribute [r] canonical
     #   @return [Symbol] The canonical schema which is carried in all schema instances
@@ -376,10 +379,8 @@ module ROM
     # @return [self]
     #
     # @api private
-    def finalize_attributes!(gateway: nil, relations: nil)
+    def finalize_attributes!(gateway: nil)
       inferrer.(self, gateway).each { |key, value| set!(key, value) }
-
-      set!(:relations, relations) if relations
 
       yield if block_given?
 

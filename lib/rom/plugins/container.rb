@@ -4,7 +4,6 @@ require "dry/container"
 
 require "rom/constants"
 require "rom/plugin"
-require "rom/schema_plugin"
 
 module ROM
   module Plugins
@@ -15,15 +14,11 @@ module ROM
       include Dry::Container::Mixin
       include Enumerable
 
-      TYPES = {
-        schema: SchemaPlugin
-      }.freeze
-
       # @api private
       def register(name, type:, **options)
-        plugin = TYPES.fetch(type, Plugin).new(name: name, type: type, **options)
-
-        super(plugin.key, plugin)
+        Plugin.new(name: name, type: type, **options).tap do |plugin|
+          super(plugin.key, plugin)
+        end
       end
 
       # @api private

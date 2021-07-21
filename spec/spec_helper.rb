@@ -37,6 +37,11 @@ Dir[SPEC_ROOT.join("shared/**/*.rb")].sort.each do |file|
   require "#{file}"
 end
 
+# TODO: each spec file should require its dependencies. Maybe we'll get there one day
+require "rom/core"
+require "rom/compat" # TODO: move this to support/compat eventually.
+require "rom/memory"
+
 module Test
   def self.remove_constants
     constants.each(&method(:remove_const))

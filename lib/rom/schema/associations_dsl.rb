@@ -35,7 +35,7 @@ module ROM
         @source = source
         @inflector = inflector
         @registry = {}
-        instance_exec(&block)
+        instance_exec(&block) if block
       end
 
       # Establish a one-to-many association

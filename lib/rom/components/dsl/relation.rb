@@ -13,7 +13,7 @@ module ROM
 
         # @api private
         def call
-          add(constant: constant, config: constant.config.component)
+          super(constant: constant, config: constant.config.component)
         end
 
         # @api private

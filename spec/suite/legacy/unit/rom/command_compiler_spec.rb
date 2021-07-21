@@ -36,7 +36,7 @@ RSpec.describe "ROM::CommandCompiler" do
   def resolver
     ROM::Resolver.new.tap do |reg|
       reg.components.add(
-        :relations, constant: users, config: users.config.component.merge(id: :users)
+        :relations, constant: users, config: users.config.component.update(id: :users)
       )
     end
   end
@@ -73,7 +73,7 @@ RSpec.describe "ROM::CommandCompiler" do
     describe "setting input from relation" do
       let(:users) do
         super().tap do |klass|
-          klass.schema do
+          klass.schema(:users) do
             attribute :name, ROM::Types::String.constructor { |v| "relation[#{v}]" }
           end
         end
