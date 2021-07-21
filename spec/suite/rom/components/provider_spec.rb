@@ -25,5 +25,41 @@ RSpec.describe ROM::Components::Provider do
 
       expect(Test::Child.resolver.datasets[:ds]).to eql(%i[hello world])
     end
+
+    it "allows defining anonymous multiple abstract components" do
+      module Test
+        class Parent
+          extend ROM.Provider(:gateway, :dataset, type: :component)
+
+          config.component.adapter = :memory
+          config.dataset.abstract = true
+
+          gateway(:default)
+
+          dataset do
+            insert(:world)
+          end
+
+          dataset do
+            insert(:hello)
+          end
+        end
+
+        class Child < Parent
+          dataset(id: :ds, abstract: false) do
+            reverse
+          end
+        end
+      end
+
+      expect(Test::Child.components.datasets.size).to be(3)
+
+      dataset = Test::Child.components.get(:datasets, id: :ds)
+
+      expect(dataset).to_not be_abstract
+      expect(dataset.id).to be(:ds)
+
+      expect(Test::Child.resolver.datasets[:ds]).to eql(%i[hello world])
+    end
   end
 end
