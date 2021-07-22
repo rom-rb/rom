@@ -96,7 +96,7 @@ module ROM
       # @return [Array<Components::Association>]
       #
       # @api public
-      def associations(source: nil, namespace: source, **options, &block)
+      def associations(source: config.component.id, namespace: source, **options, &block)
         __dsl__(DSL::Association, source: source, namespace: namespace, **options, &block)
         components.associations
       end
@@ -175,12 +175,7 @@ module ROM
 
       # @api private
       def __dsl__(klass, type: klass.type, **options, &block)
-        base_config = config[type].dup
-
-        type_config = base_config
-          .merge(options.compact)
-          .inherit(**config.component)
-          .inherit(base_config)
+        type_config = config[type].join(options, :right).inherit!(config.component)
 
         if klass.nested && block
           dsl = klass.new(provider: self, config: type_config)

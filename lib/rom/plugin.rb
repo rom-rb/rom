@@ -8,7 +8,13 @@ module ROM
   #
   # @private
   class Plugin
+    include Dry::Equalizer(:type, :name, :mod, :adapter, :config, :dsl)
     extend Initializer
+
+    # @!attribute [r] type
+    #   @return [Symbol] plugin type
+    # @api private
+    option :type
 
     # @!attribute [r] name
     #   @return [Symbol] plugin name
@@ -19,11 +25,6 @@ module ROM
     #   @return [Module] a module representing the plugin
     # @api private
     option :mod
-
-    # @!attribute [r] type
-    #   @return [Symbol] plugin type
-    # @api private
-    option :type
 
     # @!attribute [r] adapter
     #   @return [Symbol] plugin adapter

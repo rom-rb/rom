@@ -30,7 +30,7 @@ module ROM
             config.update(options)
 
             config.component.update(id: id, relation: parent)
-            config.component.append(namespace: parent) if dsl.config.namespace != parent
+            config.component.join!({namespace: parent}, :right) if dsl.config.namespace != parent
 
             class_eval(&block) if block
           end
@@ -60,7 +60,7 @@ module ROM
           mappers.map do |id, mapper|
             call(
               object: mapper,
-              config: config.merge(id: id, relation: namespace).append(namespace: namespace)
+              config: config.join({id: id, relation: namespace, namespace: namespace}, :right)
             )
           end
         end

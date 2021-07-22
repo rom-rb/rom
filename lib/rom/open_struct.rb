@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require "set"
+
+require "dry/core/equalizer"
 require_relative "constants"
 
 module ROM
@@ -10,6 +12,8 @@ module ROM
   #
   # @api public
   class OpenStruct
+    include Dry::Equalizer(:__keys__, :to_h, inspect: false)
+
     include Enumerable
 
     IVAR = -> v { :"@#{v}" }

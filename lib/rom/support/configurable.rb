@@ -19,7 +19,8 @@ module ROM
         include(Dry::Configurable)
 
         class << self
-          prepend(ClassMethods)
+          prepend(Methods)
+          prepend(Methods::DSL)
         end
       end
     end
@@ -32,13 +33,14 @@ module ROM
         extend(Dry::Configurable)
 
         class << self
-          prepend(ClassMethods)
+          prepend(Methods)
+          prepend(Methods::DSL)
         end
       end
     end
 
     # @api private
-    class Dry::Configurable::Config
+    module ConfigMethods
       include Enumerable
 
       # @api private
@@ -53,66 +55,41 @@ module ROM
 
       # @api private
       def inherit(other)
-        hash =
-          if inherit?
-            self[:inherit][:paths]
-              .map { |path| Array(path).reduce(other) { |config, key| config[key] } }
-              .map(&:to_h)
-              .reduce { |left, right| left.merge(right) { |key, *vals| _compose(key, *vals) } }
+        hash = values.merge(other.to_h.slice(*keys)) { |key, left, right|
+          if _constructors[key].is_a?(Constructors::Inherit)
+            _constructors[key].(left, right)
+          else
+            left.nil? ? right : left
           end
-
-        hash ||= other.to_h.compact
-
-        if hash.empty?
-          merge(hash)
-        else
-          merge(hash.slice(*(_empty_keys - _compose_keys)))
-            .merge(hash.slice(*_compose_keys)) { |key, *vals| _compose(key, *vals.reverse) }
-        end
+        }
+        merge(hash)
       end
 
       # @api private
-      def append(other)
-        merge!(other.to_h.slice(*_compose_keys)) { |key, *vals| _compose(key, *vals) }
+      def join!(other, direction = :left)
+        update(join(other, direction))
       end
 
       # @api private
-      def merge!(other, &block)
-        update(values.merge(other.to_h.slice(*keys), &block))
+      def join(other, direction = :left)
+        hash = values.merge(other.to_h.slice(*keys)) { |key, left, right|
+          if _constructors[key].is_a?(Constructors::Join)
+            _constructors[key].(left, right, direction)
+          else
+            direction == :left ? left : right
+          end
+        }
+        merge(hash)
       end
 
       # @api private
-      def merge(other, &block)
-        pristine.update(values.merge(other.to_h.slice(*keys), &block))
-      end
-
-      # @api private
-      def _empty_keys
-        keys.select { |key| Array(self[key]).empty? }
-      end
-
-      # @api private
-      def _compose_keys
-        inherit? ? self[:inherit][:compose] : EMPTY_ARRAY
-      end
-
-      # @api private
-      def inherit?
-        key?(:inherit)
+      def merge(other)
+        dup.update(values.merge(other))
       end
 
       # @api private
       def empty?
         values.compact.empty?
-      end
-
-      # @api private
-      def _compose(key, lv, rv)
-        if _compose_keys.include?(key)
-          _settings[key].constructor.([lv, rv].compact)
-        else
-          rv
-        end
       end
 
       # @api private
@@ -135,27 +112,59 @@ module ROM
         values
       end
       alias_method :to_hash, :to_h
+
+      # @api private
+      def freeze
+        _constructors
+        super
+      end
+
+      # @api private
+      def _constructors
+        @_constructors ||= _settings.map { |setting| [setting.name, setting.constructor] }.to_h
+      end
+      alias_method :to_hash, :to_h
     end
 
-    # @api public
-    module ClassMethods
-      # @api public
-      def setting(name, import: nil, **options)
-        if import
-          # TODO: it would be great if this could just be import.with(name: name)
-          settings << import.class.new(
-            name, input: import.input, default: import.default, **import.options
-          )
-        else
-          super(name, **options)
+    module Constructors
+      class Default < Struct.new(:name)
+        def call(*args)
+          return if args.compact.empty?
+          block_given? ? yield(*args) : args.first
+        end
+        alias_method :[], :call
+      end
+
+      class Inherit < Default
+        def call(*args)
+          super { |left, right|
+            case left
+            when nil then right
+            when Hash then right.merge(left)
+            when Array then (right.map(&:dup) + left.map(&:dup)).uniq
+            else
+              left
+            end
+          }
         end
       end
 
-      # @api public
-      def settings
-        _settings
+      class Join < Default
+        def call(*args)
+          super { |left, right, direction|
+            case direction
+            when :left then [right, left]
+            when :right then [left, right]
+            else
+              raise ArgumentError, "+#{direction}+ direction is not supported"
+            end.compact.join(".")
+          }
+        end
       end
+    end
 
+    # @api public
+    module Methods
       # @api public
       def configure(namespace = nil, &block)
         if namespace
@@ -166,6 +175,39 @@ module ROM
         end
         self
       end
+
+      # @api private
+      module DSL
+        # @api private
+        def setting(name, import: nil, inherit: false, join: false, default: Undefined, **options)
+          if import
+            setting_import(name, import, **options)
+          elsif inherit
+            setting(name, default: default, constructor: Constructors::Inherit.new(name), **options)
+          elsif join
+            setting(name, default: default, constructor: Constructors::Join.new(name), **options)
+          else
+            super(name, default: default, **options)
+          end
+        end
+
+        # @api private
+        def setting_import(name, setting)
+          # TODO: it would be great if this could just be import.with(name: name)
+          settings << setting.class.new(
+            name, input: setting.input, default: setting.default, **setting.options
+          )
+        end
+
+        # @api private
+        def settings
+          _settings
+        end
+      end
     end
+
+    # TODO: either extend functionality of dry-configurable or don't use it here after all
+    Dry::Configurable::DSL.prepend(Methods::DSL)
+    Dry::Configurable::Config.prepend(ConfigMethods)
   end
 end

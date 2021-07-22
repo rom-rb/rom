@@ -111,7 +111,7 @@ module ROM
         other.each do |type, component|
           add(
             type,
-            item: component.with(provider: provider, config: component.config.merge(options))
+            item: component.with(provider: provider, config: component.config.join(options, :right))
           )
         end
         self

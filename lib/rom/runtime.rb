@@ -136,7 +136,7 @@ module ROM
     # @api private
     def register_constant(type, constant)
       if config.key?(constant.config.component.type)
-        constant.config.component.inherit!(config[constant.config.component.type])
+        constant.config.component.join!(config[constant.config.component.type])
       end
 
       components.add(type, constant: constant, config: constant.config.component)
@@ -228,12 +228,12 @@ module ROM
     # @api private
     def register_gateways
       config.gateways.each do |id, gateway_config|
-        hash = gateway_config.to_h
-        keys = hash.keys - config.gateway.keys
-        args = hash[:args] || EMPTY_ARRAY
-        opts = keys.zip(hash.values_at(*keys)).to_h
+        base = gateway_config.to_h
+        keys = base.keys - config.gateway.keys
+        args = base[:args] || EMPTY_ARRAY
+        opts = keys.zip(base.values_at(*keys)).to_h
 
-        gateway(id, **config.gateway.merge(args: args, opts: opts, **hash), id: id)
+        gateway(id, **base, args: args, opts: opts)
       end
     end
 

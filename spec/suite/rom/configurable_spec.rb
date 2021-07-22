@@ -2,7 +2,7 @@
 
 require "rom/support/configurable"
 
-RSpec.describe ROM::Configurable do
+RSpec.describe ROM::Configurable, :isolation do
   subject(:component) do
     Test::Component.new
   end
@@ -51,7 +51,6 @@ RSpec.describe ROM::Configurable do
 
       expect(child.config.dataset.adapter).to be(nil)
       expect(child.config.dataset.gateway).to be(:main)
-
     end
   end
 
@@ -70,131 +69,100 @@ RSpec.describe ROM::Configurable do
       end
     end
 
-    describe "#inherit!" do
+    describe "#inherit" do
       it "updates child config using parent config" do
         parent do
-          setting(:component) do
-            setting(:adapter)
-            setting(:gateway, default: "main")
-          end
-
-          setting(:dataset) do
-            setting(:adapter, default: :memory)
-          end
+          setting(:gateway, default: "main")
+          setting(:adapter, default: :memory)
+          setting(:abstract, default: false)
         end
 
         child do
-          setting(:inherit) do
-            setting(:paths, default: %i[component dataset])
-            setting(:compose, default: [])
-          end
-
-          setting(:adapter)
-          setting(:gateway)
-        end
-
-        child.config.inherit!(parent.config)
-
-        expect(child.config.adapter).to be(:memory)
-        expect(child.config.gateway).to eql("main")
-      end
-    end
-
-    describe "#inherit" do
-      it "inherits parent config into a duped child config" do
-        parent do
-          setting(:component) do
-            setting(:custom, default: "not-inheritable")
-            setting(:gateway, default: "main")
-          end
-
-          setting(:dataset) do
-            setting(:adapter, default: :memory)
-          end
-        end
-
-        child do
-          setting(:inherit) do
-            setting(:paths, default: %i[component dataset])
-            setting(:compose, default: [])
-          end
-
-          setting(:adapter)
-          setting(:gateway)
+          setting(:gateway, inherit: true)
+          setting(:adapter, inherit: true)
+          setting(:abstract, inherit: true)
         end
 
         merged = child.config.inherit(parent.config)
 
-        expect(merged.adapter).to be(:memory)
         expect(merged.gateway).to eql("main")
-
-        expect(child.config.adapter).to be(nil)
-        expect(child.config.gateway).to be(nil)
+        expect(merged.adapter).to be(:memory)
+        expect(merged.abstract).to be(false)
       end
 
-      it "inherits composable values" do
-        module Test
-          Namespace = ROM::Types::String.constructor do |input|
-            Array(input).join(".") if input
-          end
-        end
-
+      it "joins array values" do
         parent do
-          setting(:component) do
-            setting(:namespace, default: "root")
-          end
-
-          setting(:dataset) do
-            setting(:id, default: "parent")
-            setting(:namespace, default: "datasets")
-          end
+          setting(:plugins, inherit: true)
         end
 
         child do
-          setting(:inherit) do
-            setting(:paths, default: %i[component dataset])
-            setting(:compose, default: %i[namespace])
-          end
-
-          setting(:id, default: "child")
-          setting(:namespace, constructor: Test::Namespace)
+          setting(:plugins, inherit: true)
         end
 
-        child.config.inherit!(parent.config)
+        parent.config.plugins = [:one, :two]
+        child.config.plugins = [:two, :three]
 
-        expect(child.config.id).to eql("child")
-        expect(child.config.namespace).to eql("root.datasets")
+        merged = child.config.inherit(parent.config)
+
+        expect(parent.config.plugins).to eql([:one, :two])
+        expect(child.config.plugins).to eql([:two, :three])
+
+        expect(merged.plugins).to eql([:one, :two, :three])
       end
 
-      it "inherits composable values with an existing value" do
-        module Test
-          Namespace = ROM::Types::String.constructor do |input|
-            Array(input).join(".") if input
-          end
-        end
-
+      it "merges hash values" do
         parent do
-          setting(:component) do
-            setting(:namespace, default: "root")
-          end
-
-          setting(:dataset) do
-            setting(:namespace, default: "datasets")
-          end
+          setting(:opts, inherit: true)
         end
 
         child do
-          setting(:inherit) do
-            setting(:paths, default: %i[component dataset])
-            setting(:compose, default: %i[namespace])
-          end
-
-          setting(:namespace, constructor: Test::Namespace, default: "users")
+          setting(:opts, inherit: true)
         end
 
-        child.config.inherit!(parent.config)
+        parent.config.opts = {one: 1, two: 2}
+        child.config.opts = {three: 3}
 
-        expect(child.config.namespace).to eql("root.datasets.users")
+        merged = child.config.inherit(parent.config)
+
+        expect(parent.config.opts).to eql(one: 1, two: 2)
+        expect(child.config.opts).to eql(three: 3)
+
+        expect(merged.opts).to eql(one: 1, two: 2, three: 3)
+      end
+    end
+
+    describe "#join" do
+      before do
+        parent do
+          setting(:namespace, join: true)
+        end
+
+        child do
+          setting(:namespace, join: true)
+        end
+      end
+
+      it "joins strings using default separator" do
+        parent.config.namespace = "parent"
+        child.config.namespace = "child"
+
+        left = child.config.join(parent.config)
+        right = parent.config.join(child.config, :right)
+
+        expect(left.namespace).to eql("parent.child")
+        expect(right.namespace).to eql("parent.child")
+      end
+
+      it "works with hashes" do
+        child.config.namespace = "child"
+
+        hash = {namespace: "other"}
+
+        left = child.config.join(hash)
+        right = child.config.join(hash, :right)
+
+        expect(left.namespace).to eql("other.child")
+        expect(right.namespace).to eql("child.other")
       end
     end
 

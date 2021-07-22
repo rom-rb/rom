@@ -21,17 +21,15 @@ module ROM
               components.add(key, name: name, config: config, block: block)
             else
               dsl_config = backend.config
+              associations = dsl_config[:associations]
 
-              component = components.add(key, name: name, config: config.merge(dsl_config))
+              component = components.add(key, name: name, config: config.join(dsl_config, :right))
 
-              dsl_config[:associations].each do |definition|
+              associations.each do |definition|
                 components.add(
                   :associations,
-                  id: definition.id,
                   definition: definition,
-                  config: dsl_assoc_config.update(
-                    namespace: "associations.#{relation}", **definition.to_h
-                  )
+                  config: dsl_assoc_config.join({namespace: relation, **definition.to_h}, :right)
                 )
               end
 
@@ -93,6 +91,10 @@ module ROM
 
             if provider.config.component.type == :relation
               provider.config.component.inherit!(config)
+            end
+
+            if config.view
+              config.join!({namespace: relation}, :right)
             end
 
             super

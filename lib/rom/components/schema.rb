@@ -30,17 +30,6 @@ module ROM
         end
       end
 
-      # TODO: once schemas can be nested, this will go away
-      #
-      # @api public
-      def key
-        if view?
-          "#{namespace}.#{config.relation}.#{id}"
-        else
-          super
-        end
-      end
-
       # @api private
       def inferrer
         config.inferrer.with(enabled: config.infer)

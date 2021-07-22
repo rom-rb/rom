@@ -20,20 +20,13 @@ module ROM
           backend.instance_eval(&block)
 
           backend.call.each do |definition|
-            assoc_config = config.merge(id: definition.id, namespace: namespace, **definition.to_h)
-
-            components.add(key, definition: definition, config: assoc_config)
+            components.add(key, definition: definition, config: config.join(definition, :right))
           end
         end
 
         # @api private
         def backend
           @backend ||= ROM::Schema::AssociationsDSL.new(source, inflector)
-        end
-
-        # @api private
-        def namespace
-          [provider.config.association.namespace, source]
         end
 
         # @api private

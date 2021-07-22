@@ -27,8 +27,12 @@ module ROM
         option :config, optional: true, default: -> { EMPTY_HASH }
 
         # @api private
-        option :plugins, optional: true, reader: false, default: -> {
-          config.key?(:plugins) ? config.plugins.dup : EMPTY_ARRAY
+        option :plugins, default: -> {
+          if config.key?(:plugins)
+            config.plugins.select { |plugin| plugin.type == type }
+          else
+            EMPTY_ARRAY
+          end
         }
 
         # @api private
@@ -80,11 +84,6 @@ module ROM
           end
           plugin.enable(self).apply
           self
-        end
-
-        # @api private
-        def plugins
-          options[:plugins].select { |plugin| plugin.type == type }
         end
 
         # @api private
