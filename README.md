@@ -104,7 +104,7 @@ Become a sponsor and get your logo on our README on Github with a link to your s
 There are other gems within the rom ecosystem that you will find useful:
 
 * [rom-factory](https://github.com/rom-rb/rom-factory) struct generator with support for persistence
-* (WIP) [rom-migrator](https://github.com/rom-rb/rom-migrator) common APIs for database migrations
+* (NOT IN PROGRESS) [rom-migrator](https://github.com/rom-rb/rom-migrator) common APIs for database migrations
 
 ## Adapters
 
