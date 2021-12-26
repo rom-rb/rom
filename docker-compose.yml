@@ -5,7 +5,7 @@ services:
     build:
       context: .
       args:
-        RUBY_VERSION: ${RUBY_VERSION:-3.0}
+        RUBY_VERSION: ${RUBY_VERSION:-3.1}
     env_file: [.env, .env.local]
     entrypoint: /bin/bash -c '(bundle check || bundle) && tail -f Gemfile'
     volumes:
