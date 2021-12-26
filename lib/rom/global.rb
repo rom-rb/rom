@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 require "rom/components"
-require "rom/plugins/container"
-require "rom/plugins/dsl"
 
 module ROM
   # Globally accessible public interface exposed via ROM module
@@ -16,7 +14,6 @@ module ROM
       super
 
       rom.instance_variable_set("@adapters", {})
-      rom.instance_variable_set("@plugin_registry", Plugins::Container.new)
     end
 
     # An internal adapter identifier => adapter module map used by setup
@@ -33,12 +30,11 @@ module ROM
     # @api private
     attr_reader :handlers
 
-    # An internal plugin registry
-    #
-    # @return [Plugins]
-    #
     # @api private
-    attr_reader :plugin_registry
+    # @deprecated
+    def plugin_registry
+      plugins
+    end
 
     # @api public
     def runtime(*args, &block)
@@ -48,18 +44,6 @@ module ROM
       else
         Runtime.new(*args, &block)
       end.finalize
-    end
-
-    # Global plugin setup DSL
-    #
-    # @example
-    #   ROM.plugins do
-    #     register :publisher, Plugin::Publisher, type: :command
-    #   end
-    #
-    # @api public
-    def plugins(*args, &block)
-      Plugins::DSL.new(plugin_registry, *args, &block)
     end
 
     # Register adapter namespace under a specified identifier

@@ -44,13 +44,13 @@ RSpec.describe "ROM::PluginRegistry" do
   end
 
   around do |example|
-    keys = ROM.plugin_registry.keys
+    keys = ROM.plugins.keys
     example.run
-    (ROM.plugin_registry.keys - keys).each { |key| ROM.plugin_registry._container.delete(key) }
+    (ROM.plugins.keys - keys).each { |key| ROM.plugins._container.delete(key) }
   end
 
   it "makes configuration plugins available" do
-    expect(ROM.plugin_registry[:configuration].fetch(:registration).mod)
+    expect(ROM.plugins[:configuration].fetch(:registration).mod)
       .to eq Test::ConfigurationPlugin
   end
 

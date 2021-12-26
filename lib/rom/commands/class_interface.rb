@@ -120,7 +120,7 @@ module ROM
       #
       # @api public
       def use(plugin, **options)
-        ROM.plugin_registry[:command].fetch(plugin, adapter).apply_to(self, **options)
+        ROM.plugins[:command].fetch(plugin, adapter).apply_to(self, **options)
       end
 
       # Set before-execute hooks
