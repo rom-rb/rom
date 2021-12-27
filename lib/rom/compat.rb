@@ -12,9 +12,14 @@ require_relative "compat/auto_registration"
 require_relative "compat/components/dsl/schema"
 
 module ROM
+  # @api private
+  # @deprecated
+  alias_method :plugin_registry, :plugins
+
   # @api public
   module Global
-    # @api deprecated
+    # @api public
+    # @deprecated
     alias_method :container, :runtime
   end
 

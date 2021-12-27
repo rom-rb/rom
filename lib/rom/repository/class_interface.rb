@@ -120,7 +120,7 @@ module ROM
 
       # @api public
       def use(plugin, **options)
-        ROM.plugin_registry[:repository].fetch(plugin).apply_to(self, **options)
+        ROM.plugins[:repository].fetch(plugin).apply_to(self, **options)
       end
 
       private

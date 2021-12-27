@@ -44,6 +44,25 @@ module ROM
     end
   end
 
+  # Global plugin setup
+  #
+  # @example
+  #   ROM.plugins do
+  #     register :publisher, Plugin::Publisher, type: :command
+  #   end
+  #
+  # @api public
+  def plugins(*args, &block)
+    if defined?(@_plugins)
+      @_plugins.dsl(*args, &block) if block
+      @_plugins
+    else
+      require_relative "plugins"
+      @_plugins = Plugins
+      plugins(*args, &block)
+    end
+  end
+
   # Register core component handlers
   components do
     register :gateway, Components::Gateway

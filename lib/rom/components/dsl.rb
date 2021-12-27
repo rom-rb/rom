@@ -158,7 +158,7 @@ module ROM
         #       with the configuration DSL for plugins that uses plural
         #       names of the components - this should be unified
         plugin = ROM
-          .plugin_registry[Inflector.singularize(type)].adapter(adapter).fetch(name)
+          .plugins[Inflector.singularize(type)].adapter(adapter).fetch(name)
           .configure(&block)
 
         config.component.plugins << plugin

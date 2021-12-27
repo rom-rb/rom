@@ -149,7 +149,7 @@ module ROM
       #
       # @api public
       def use(plugin, **options)
-        ROM.plugin_registry[:relation]
+        ROM.plugins[:relation]
           .fetch(plugin, config.component.adapter)
           .apply_to(self, **options)
       end

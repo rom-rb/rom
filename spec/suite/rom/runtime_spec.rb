@@ -244,7 +244,7 @@ RSpec.describe ROM::Runtime do
     }
 
     expect(plugin.key).to eql("schema.timestamps")
-    expect(plugin).to_not be(ROM.plugin_registry[plugin.key])
+    expect(plugin).to_not be(ROM.plugins[plugin.key])
     expect(plugin.config.attributes).to eql(%w[foo bar])
   end
 end
