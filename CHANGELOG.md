@@ -52,6 +52,8 @@
 - [internal] Commands that are compiled at runtime are now cached in the runtime registry (via #653) (@solnic)
 - Plugin configurations **are no longer global** which means that you can configure the same plugin with different default settings for different component groups or different runtimes in the same Ruby process (via #654) (@solnic)
 - `Schema::DSL` is now deprecated. Adapters that need customized schema DSL behavior can provide plugins instead (via #656) (@solnic)
+- `ROM.plugins` returns global plugin registry when called without a block (via #660) (@solnic)
+- [internal] `ROM.plugin_registry` is deprecated, use `ROM.plugins` instead (via #660) (@solnic)
 
 [Compare v5.2.4...master](https://github.com/rom-rb/rom/compare/v5.2.4...master)
 
