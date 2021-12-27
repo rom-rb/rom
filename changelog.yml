@@ -89,6 +89,10 @@
     or different runtimes in the same Ruby process (via #654) (@solnic)'
   - "`Schema::DSL` is now deprecated. Adapters that need customized schema DSL behavior
     can provide plugins instead (via #656) (@solnic)"
+  - "`ROM.plugins` returns global plugin registry when called without a block (via
+    #660) (@solnic)"
+  - "[internal] `ROM.plugin_registry` is deprecated, use `ROM.plugins` instead (via
+    #660) (@solnic)"
 - version: 5.2.4
   summary: 
   date: '2020-05-08'
