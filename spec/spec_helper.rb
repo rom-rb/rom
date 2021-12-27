@@ -8,6 +8,7 @@ SPEC_ROOT = Pathname(__FILE__).dirname
 
 require "warning"
 
+Warning.ignore(/not initialized/)
 Warning.ignore(/equalizer/)
 Warning.ignore(/byebug/)
 Warning.ignore(/zeitwerk/)
