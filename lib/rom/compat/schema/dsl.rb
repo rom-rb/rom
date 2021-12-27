@@ -146,7 +146,7 @@ module ROM
       #
       # @api public
       def use(name, **options)
-        plugin = ::ROM.plugin_registry[:schema].fetch(name, adapter).configure do |config|
+        plugin = ::ROM.plugins[:schema].fetch(name, adapter).configure do |config|
           config.update(options)
         end
         plugins << plugin.enable(self)

@@ -79,7 +79,7 @@ module ROM
         #
         # @api public
         def use(name, **options)
-          plugin = ::ROM.plugin_registry[type].fetch(name, adapter).configure do |config|
+          plugin = ::ROM.plugins[type].fetch(name, adapter).configure do |config|
             config.update(options)
           end
           plugin.enable(self).apply

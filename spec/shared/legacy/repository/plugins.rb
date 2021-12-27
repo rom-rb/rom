@@ -98,8 +98,8 @@ RSpec.shared_context "repository / plugins" do
   end
 
   around do |example|
-    keys = ROM.plugin_registry.keys
+    keys = ROM.plugins.keys
     example.run
-    (ROM.plugin_registry.keys - keys).each { |key| ROM.plugin_registry._container.delete(key) }
+    (ROM.plugins.keys - keys).each { |key| ROM.plugins._container.delete(key) }
   end
 end

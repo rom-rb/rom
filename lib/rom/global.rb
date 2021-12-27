@@ -30,12 +30,6 @@ module ROM
     # @api private
     attr_reader :handlers
 
-    # @api private
-    # @deprecated
-    def plugin_registry
-      plugins
-    end
-
     # @api public
     def runtime(*args, &block)
       case args.first

@@ -217,7 +217,7 @@ module ROM
 
     # @api private
     def plugin_registry
-      ROM.plugin_registry
+      ROM.plugins
     end
 
     # This register gateway components based on the configuration

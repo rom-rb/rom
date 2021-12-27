@@ -115,7 +115,7 @@ module ROM
     #
     # @api public
     def self.use(plugin, **options)
-      ROM.plugin_registry[:changeset].fetch(plugin).apply_to(self, **options)
+      ROM.plugins[:changeset].fetch(plugin).apply_to(self, **options)
     end
 
     # Return a new changeset with provided relation
