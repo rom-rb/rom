@@ -4,9 +4,9 @@ Gem::Specification.new do |gem|
   gem.name        = "rom"
   gem.summary     = "Persistence and mapping toolkit for Ruby"
   gem.description = gem.summary
-  gem.author      = "Piotr Solnica"
-  gem.email       = "piotr.solnica+oss@gmail.com"
-  gem.homepage    = "http://rom-rb.org"
+  gem.author      = "Peter Solnica"
+  gem.email       = "peter@solnica.online"
+  gem.homepage    = "https://rom-rb.org"
   gem.version     = ROM::VERSION.dup
   gem.files       = Dir["CHANGELOG.md", "LICENSE", "README.md", "lib/**/*"]
   gem.license     = "MIT"
