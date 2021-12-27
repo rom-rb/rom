@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+ENV["TZ"] = "UTC"
+
 require "pathname"
 
 SPEC_ROOT = Pathname(__FILE__).dirname
