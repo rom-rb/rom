@@ -21,6 +21,7 @@
 - [experimental] New `ROM.components` API for registering custom component types (via #654) (@solnic)
 - Top-level `associations` DSL (via #656) (@solnic)
 - Support for configuring plugins on a per-component *instance* basis, which means that implementing plugins is now simpler and more powerful (via #656) (@solnic)
+- New relation setting: `component.infer_id_from_class` (via #661) (@solnic)
 
 ### Fixed
 
