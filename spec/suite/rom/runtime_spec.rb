@@ -126,8 +126,8 @@ RSpec.describe ROM::Runtime do
       insert(name: "Jane")
     end
 
-    relation = runtime.relation(:people) do
-      dataset do |schema|
+    runtime.relation(:people) do
+      dataset do |_schema|
         order(:name)
       end
     end
