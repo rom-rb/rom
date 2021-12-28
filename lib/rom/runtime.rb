@@ -136,7 +136,15 @@ module ROM
     # @api private
     def register_constant(type, constant)
       if config.key?(constant.config.component.type)
-        constant.config.component.join!(config[constant.config.component.type])
+        parent_config = config[constant.config.component.type]
+        const_config = constant.config.component
+
+        const_config.inherit!(parent_config).join!(parent_config)
+
+        # TODO: make this work with all components
+        if const_config.key?(:infer_id_from_class) && const_config.infer_id_from_class
+          const_config.id = const_config.inflector.component_id(constant.name)&.to_sym
+        end
       end
 
       components.add(type, constant: constant, config: constant.config.component)
