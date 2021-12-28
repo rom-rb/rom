@@ -62,6 +62,7 @@ module ROM
     setting :type, default: :relation
     setting :abstract
     setting :id
+    setting :infer_id_from_class, inherit: true
     setting :namespace, default: "relations"
     setting :dataset
     setting :adapter
