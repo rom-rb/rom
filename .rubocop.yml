@@ -48,7 +48,11 @@ Lint/BooleanSymbol:
 
 Lint/ConstantDefinitionInBlock:
   Exclude:
-    - "spec/**/*_spec.rb"
+    - "spec/suite/**/*"
+
+Lint/EmptyBlock:
+  Exclude:
+    - "spec/suite/**/*"
 
 Lint/RaiseException:
   Enabled: false
