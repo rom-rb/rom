@@ -37,7 +37,7 @@ Dry::Effects.load_extensions(:rspec)
 require_relative "support/types"
 
 Dir[SPEC_ROOT.join("shared/**/*.rb")].sort.each do |file|
-  require "#{file}"
+  require file.to_s
 end
 
 # TODO: each spec file should require its dependencies. Maybe we'll get there one day
