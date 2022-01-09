@@ -98,6 +98,10 @@ Metrics/CyclomaticComplexity:
   Enabled: true
   Max: 12
 
+Metrics/PerceivedComplexity:
+  Enabled: true
+  Max: 10
+
 Style/AccessorGrouping:
   Enabled: false
 
@@ -158,6 +162,9 @@ Style/LambdaCall:
   Enabled: false
 
 Style/ParallelAssignment:
+  Enabled: false
+
+Style/RaiseArgs:
   Enabled: false
 
 Style/StabbyLambdaParentheses:
