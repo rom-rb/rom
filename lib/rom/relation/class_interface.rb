@@ -84,8 +84,11 @@ module ROM
       # @return [Symbol] view method name
       #
       # @api public
+      #
+      # rubocop:disable Metrics/AbcSize
+      # rubocop:disable Metrics/PerceivedComplexity
       def view(*args, &block)
-        if args.size == 1 && block.arity > 0
+        if args.size == 1 && block.arity.positive?
           raise ArgumentError, "schema attribute names must be provided as the second argument"
         end
 
@@ -105,7 +108,7 @@ module ROM
 
         schema(id: name, relation: config.component.id, view: true, &block)
 
-        if relation_block.arity > 0
+        if relation_block.arity.positive?
           auto_curry_guard do
             define_method(name, &relation_block)
 
@@ -121,6 +124,8 @@ module ROM
 
         name
       end
+      # rubocop:enable Metrics/AbcSize
+      # rubocop:enable Metrics/PerceivedComplexity
 
       # Dynamically define a method that will forward to the dataset and wrap
       # response in the relation itself
