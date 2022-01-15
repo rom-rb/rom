@@ -32,6 +32,7 @@ jobs:
         # TODO: re-add both as a separate workflow because it's just too slow
         # - jruby
         # - truffleruby
+        group: [rom, compat, legacy]
         include:
         - ruby: '3.0'
           coverage: 'false'
@@ -46,6 +47,7 @@ jobs:
       CODACY_RUN_LOCAL: "${{matrix.coverage}}"
       CODACY_PROJECT_TOKEN: "${{secrets.CODACY_PROJECT_TOKEN}}"
       APT_DEPS: libpq-dev libsqlite3-dev
+      SPEC_GROUP: "${{matrix.group}}"
     services:
       postgres:
         image: postgres:10.8
@@ -67,8 +69,8 @@ jobs:
       with:
         ruby-version: "${{matrix.ruby}}"
         bundler-cache: true
-    - name: Run all tests
-      run: bundle exec rake
+    - name: Run tests
+      run: bundle exec rake spec:$SPEC_GROUP
     - name: Run codacy-coverage-reporter
       uses: codacy/codacy-coverage-reporter-action@master
       if: env.COVERAGE == 'true' && env.COVERAGE_TOKEN != ''
