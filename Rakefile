@@ -9,16 +9,12 @@ RSpec::Core::RakeTask.new("spec:rom") do |t|
   t.pattern = ["spec/suite/rom/**/*_spec.rb"]
 end
 
-RSpec::Core::RakeTask.new("spec:legacy") do |t|
-  t.pattern = ["spec/suite/legacy/**/*_spec.rb"]
-end
-
 RSpec::Core::RakeTask.new("spec:compat") do |t|
   t.pattern = ["spec/suite/compat/**/*_spec.rb"]
 end
 
 desc "Run all spec examples from all groups"
-task spec: ["spec:rom", "spec:legacy", "spec:compat"]
+task spec: ["spec:rom", "spec:compat"]
 
 task default: :spec
 

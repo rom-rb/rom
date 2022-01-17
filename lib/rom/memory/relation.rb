@@ -17,9 +17,8 @@ module ROM
       include Enumerable
       include Memory
 
-      adapter :memory
-      schema_class Memory::Schema
-      schema_dsl Schema::DSL
+      config.component.adapter = :memory
+      config.schema.constant = Memory::Schema
 
       # @!method take(amount)
       #   @param (see Dataset#take)

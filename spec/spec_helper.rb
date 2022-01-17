@@ -34,16 +34,16 @@ Dry::Core::Deprecations.set_logger!(SPEC_ROOT.join("../log/deprecations.log"))
 require "dry/effects"
 Dry::Effects.load_extensions(:rspec)
 
-require_relative "support/types"
+# TODO: each spec file should require its dependencies. Maybe we'll get there one day
+require "rom"
+require "rom/sql"
+require "rom/memory"
+require "rom/repository"
+require "rom/changeset"
 
 Dir[SPEC_ROOT.join("shared/**/*.rb")].sort.each do |file|
   require file.to_s
 end
-
-# TODO: each spec file should require its dependencies. Maybe we'll get there one day
-require "rom/core"
-require "rom/compat" # TODO: move this to support/compat eventually.
-require "rom/memory"
 
 module Test
   def self.remove_constants
@@ -75,11 +75,10 @@ RSpec.configure do |config|
       .to_sym
   end
 
-  %i[rom legacy compat].each do |group|
+  %i[rom compat].each do |group|
     # rubocop:disable Lint/SuppressedException
     config.when_first_matching_example_defined group: group do
       require_relative "support/#{group}"
-    rescue LoadError
     end
     # rubocop:enable Lint/SuppressedException
   end

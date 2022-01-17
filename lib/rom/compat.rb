@@ -4,8 +4,8 @@ require "dry/core/class_attributes"
 
 require "rom/core"
 require "rom/resolver"
+require "rom/runtime"
 require "rom/container"
-require "rom/configuration"
 require "rom/global"
 
 require_relative "compat/auto_registration"
@@ -23,8 +23,10 @@ module ROM
     alias_method :container, :runtime
   end
 
+  Configuration = Runtime
+
   # @api public
-  class Configuration
+  class Runtime
     # @api public
     # @deprecated
     def inflector=(inflector)

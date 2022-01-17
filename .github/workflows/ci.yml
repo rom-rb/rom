@@ -32,7 +32,7 @@ jobs:
         # TODO: re-add both as a separate workflow because it's just too slow
         # - jruby
         # - truffleruby
-        group: [rom, compat, legacy]
+        group: [rom, compat]
         include:
         - ruby: '3.0'
           coverage: 'false'

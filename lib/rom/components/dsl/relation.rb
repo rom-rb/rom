@@ -21,6 +21,10 @@ module ROM
           build_class do |dsl|
             config.component.adapter = dsl.adapter if dsl.adapter
             class_exec(&dsl.block) if dsl.block
+
+            if (schema_dataset = components.schemas.first&.config&.dataset)
+              config.component.dataset = schema_dataset
+            end
           end
         end
 

@@ -9,11 +9,15 @@ module ROM
   module Components
     module DSL
       # @private
+      #
+      # rubocop:disable Metrics/AbcSize
+      # rubocop:disable Metrics/CyclomaticComplexity
+      # rubocop:disable Metrics/PerceivedComplexity
       class Schema < Core
         mod = Module.new do
           # @api private
           def call
-            return super unless config.dsl_class
+            return super unless config.dsl_class || config.view
 
             configure
 
@@ -35,6 +39,13 @@ module ROM
 
               component
             end
+          end
+
+          # @api public
+          #
+          # @deprecated
+          def associations(&block)
+            backend.associations(&block)
           end
 
           private
@@ -64,26 +75,24 @@ module ROM
 
           # @api private
           def configure
-            if !config.view
-              if provider.config.component.type == :relation
-                provider.config.component.update(dataset: config.dataset) if config.dataset
-                provider.config.component.update(id: config.as) if config.as
+            if !config.view && provider.config.component.type == :relation
+              provider.config.component.update(dataset: config.dataset) if config.dataset
+              provider.config.component.update(id: config.as) if config.as
 
-                if provider.config.component.id == :anonymous
-                  provider.config.component.update(id: config.id)
-                end
+              if provider.config.component.id == :anonymous
+                provider.config.component.update(id: config.id)
+              end
 
-                if config.id.nil?
-                  config.update(id: provider.config.component.id)
-                end
+              if config.id.nil?
+                config.update(id: provider.config.component.id)
+              end
 
-                if config.relation.nil?
-                  config.update(relation: provider.config.component.id)
-                end
+              if config.relation.nil?
+                config.update(relation: provider.config.component.id)
+              end
 
-                if config.adapter.nil?
-                  config.update(adapter: provider.config.component.adapter)
-                end
+              if config.adapter.nil?
+                config.update(adapter: provider.config.component.adapter)
               end
             end
 
@@ -110,6 +119,9 @@ module ROM
             config.inferrer.with(enabled: config.infer)
           end
         end
+        # rubocop:enable Metrics/AbcSize
+        # rubocop:enable Metrics/CyclomaticComplexity
+        # rubocop:enable Metrics/PerceivedComplexity
 
         prepend(mod)
       end

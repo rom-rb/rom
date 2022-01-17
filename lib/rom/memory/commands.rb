@@ -12,7 +12,8 @@ module ROM
       #
       # @api public
       class Create < ROM::Commands::Create
-        adapter :memory
+        config.component.adapter = :memory
+
         use :schema
 
         # @see ROM::Commands::Create#execute
@@ -29,7 +30,8 @@ module ROM
       #
       # @api public
       class Update < ROM::Commands::Update
-        adapter :memory
+        config.component.adapter = :memory
+
         use :schema
 
         # @see ROM::Commands::Update#execute
@@ -43,7 +45,7 @@ module ROM
       #
       # @api public
       class Delete < ROM::Commands::Delete
-        adapter :memory
+        config.component.adapter = :memory
 
         # @see ROM::Commands::Delete#execute
         def execute

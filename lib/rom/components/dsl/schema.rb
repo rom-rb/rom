@@ -38,7 +38,7 @@ module ROM
         # @api public
         def primary_key(*names)
           names.each do |name|
-            attr_index[name][:type] = attr_index[name][:type].meta(primary_key: true)
+            attributes[name][:type] = attributes[name][:type].meta(primary_key: true)
           end
           self
         end
@@ -54,7 +54,7 @@ module ROM
 
           # Apply plugin defaults
           plugins.each do |plugin|
-            plugin.apply_to(self) unless plugin.applied?
+            plugin.apply_to(self)
           end
 
           configure
@@ -65,6 +65,17 @@ module ROM
         # @api private
         def configure
           config.update(attributes: attributes.values)
+
+          # TODO: make this simpler
+          config.update(inferrer: config.inferrer.with(enabled: config.infer))
+
+          if !config.view && provider.config.component.type == :relation
+            provider.config.component.update(dataset: config.dataset) if config.dataset
+            provider.config.component.update(id: config.as) if config.as
+          end
+
+          provider.config.schema.infer = config.infer
+
           super
         end
 
@@ -98,13 +109,16 @@ module ROM
             .compact
             .to_h
 
+          # TODO: this should be probably moved to rom/compat
+          source = ROM::Relation::Name[relation]
+
           base =
             if options[:read]
-              type.meta(source: relation, read: options[:read])
+              type.meta(source: source, read: options[:read])
             elsif type.optional? && type.meta[:read]
-              type.meta(source: relation, read: type.meta[:read].optional)
+              type.meta(source: source, read: type.meta[:read].optional)
             else
-              type.meta(source: relation)
+              type.meta(source: source)
             end
 
           if meta.empty?
@@ -112,6 +126,11 @@ module ROM
           else
             base.meta(meta)
           end
+        end
+
+        # @api private
+        def relation
+          config.id
         end
       end
     end

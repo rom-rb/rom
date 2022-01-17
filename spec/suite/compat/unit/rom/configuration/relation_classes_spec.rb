@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "rom/configuration"
 require "rom/compat"
 
 RSpec.describe ROM::Configuration, "#relation_classes" do

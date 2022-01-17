@@ -47,9 +47,9 @@ RSpec.describe ROM::Configurable, :isolation do
       child.config.dataset.gateway = :main
 
       expect(parent.config.component.adapter).to be(:memory)
-      expect(parent.config.component.gateway).to be(:default)
+      expect(parent.config.component.gateway).to be(:main)
 
-      expect(child.config.dataset.adapter).to be(nil)
+      expect(child.config.dataset.adapter).to be(:memory)
       expect(child.config.dataset.gateway).to be(:main)
     end
   end

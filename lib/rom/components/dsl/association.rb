@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "rom/schema/associations_dsl"
+require "rom/relation/name"
 
 require_relative "core"
 
@@ -31,7 +32,14 @@ module ROM
 
         # @api private
         def source
-          config.source || config.id
+          if provider.config.component.key?(:id)
+            # TODO: decouple associations DSL from Relation::Name
+            ROM::Relation::Name[
+              provider.config.component.id, provider.config.component.dataset
+            ]
+          else
+            config.source
+          end
         end
       end
     end

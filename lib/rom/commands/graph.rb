@@ -35,8 +35,8 @@ module ROM
       # Graph results are mappable through `combine` operation in mapper DSL
       #
       # @example
-      #   create_user = rom.commands[:users].create
-      #   create_task = rom.commands[:tasks].create
+      #   create_user = rom.commands[:users][:create]
+      #   create_task = rom.commands[:tasks][:create]
       #
       #   command = create_user
       #     .curry(name: 'Jane')

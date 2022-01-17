@@ -44,12 +44,13 @@ module ROM
         end
 
         def initialize_timestamp_attributes(klass)
-          klass.defines :timestamp_columns, :datestamp_columns
-          klass.timestamp_columns Set.new
-          klass.datestamp_columns Set.new
+          klass.setting :timestamp_columns, default: Set.new, reader: true
+          klass.setting :datestamp_columns, default: Set.new, reader: true
+
           klass.before :set_timestamps
-          klass.timestamp_columns klass.timestamp_columns.merge(timestamps) if timestamps.any?
-          klass.datestamp_columns klass.datestamp_columns.merge(datestamps) if datestamps.any?
+
+          klass.config.timestamp_columns = klass.timestamp_columns.merge(timestamps) if timestamps.any?
+          klass.config.datestamp_columns = klass.datestamp_columns.merge(datestamps) if datestamps.any?
         end
 
         module InstanceMethods
@@ -116,7 +117,7 @@ module ROM
           #
           # @api public
           def timestamps(*names)
-            timestamp_columns timestamp_columns.merge(names)
+            config.timestamp_columns = timestamp_columns.merge(names)
           end
           alias_method :timestamp, :timestamps
 
@@ -138,7 +139,7 @@ module ROM
           #
           # @api public
           def datestamps(*names)
-            datestamp_columns datestamp_columns.merge(names)
+            config.datestamp_columns = datestamp_columns.merge(names)
           end
           alias_method :datestamp, :datestamps
         end
