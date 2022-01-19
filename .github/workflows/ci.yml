@@ -48,7 +48,7 @@ jobs:
       CODACY_PROJECT_TOKEN: "${{secrets.CODACY_PROJECT_TOKEN}}"
       APT_DEPS: libpq-dev libsqlite3-dev
     services:
-      db:
+      postgres:
         image: postgres:10.8
         env:
           POSTGRES_USER: runner
