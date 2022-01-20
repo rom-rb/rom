@@ -10,7 +10,7 @@ module ROM
     #
     # @abstract
     class Delete < Command
-      restrictable true
+      config.restrictable = true
     end
   end
 end

@@ -28,7 +28,7 @@ module ROM
     #  @overload gateway(adapter)
     #    @example
     #      class MyGateway < ROM::Gateway
-    #        adapter :my_adapter
+    #        config.component.adapter = :my_adapter
     #      end
     #
     #    @param [Symbol] adapter The adapter identifier

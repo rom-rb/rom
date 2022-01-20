@@ -30,10 +30,10 @@ RSpec.describe ROM::Components::DSL, "#schema" do
 
     expect(id).to be_a(ROM::Attribute)
     expect(id.primitive).to eql(Integer)
-    expect(id.meta[:source]).to be(:users)
+    expect(id.meta[:source].relation).to be(:users)
 
     expect(name).to be_a(ROM::Attribute)
     expect(name.primitive).to eql(String)
-    expect(name.meta[:source]).to be(:users)
+    expect(name.meta[:source].relation).to be(:users)
   end
 end

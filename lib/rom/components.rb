@@ -12,7 +12,8 @@ module ROM
   module Components
     extend Dry::Container::Mixin
     extend Enumerable
-    extend self
+
+    module_function
 
     # @api private
     class Handler
@@ -47,7 +48,7 @@ module ROM
     # Iterate over all registered component handlers
     #
     # @api public
-    def each(&block)
+    def each
       keys.each { |key| yield(resolve(key)) }
     end
   end

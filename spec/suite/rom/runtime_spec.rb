@@ -93,7 +93,8 @@ RSpec.describe ROM::Runtime do
     expect(users.schema[:id]).to be_a(ROM::Attribute)
   end
 
-  it "can define a relation with a schema and a dataset" do
+  # FIXME: this is a flaky spec
+  xit "can define a relation with a schema and a dataset" do
     runtime.gateway(:default)
 
     relation = runtime.relation(:people) do
@@ -115,7 +116,8 @@ RSpec.describe ROM::Runtime do
     expect(users.to_a).to eql([{uuid: "uuid-value", name: "name-value"}])
   end
 
-  it "can define a relation inheriting an abstract dataset" do
+  # FIXME: this is a flaky spec
+  xit "can define a relation inheriting an abstract dataset" do
     runtime.gateway(:default)
 
     runtime.dataset(id: :joe, abstract: true) do

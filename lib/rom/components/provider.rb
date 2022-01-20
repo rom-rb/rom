@@ -60,6 +60,7 @@ module ROM
 
       # @api private
       def initialize(features, type: nil)
+        super()
         @provider = nil
         @type = type
         @features = features

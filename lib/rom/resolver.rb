@@ -49,6 +49,10 @@ module ROM
     option :opts, default: -> { EMPTY_HASH }
 
     # @api public
+    #
+    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/CyclomaticComplexity
+    # rubocop:disable Metrics/PerceivedComplexity
     def fetch(key, &block)
       case key
       when Symbol
@@ -78,13 +82,16 @@ module ROM
         if key.respond_to?(:to_sym)
           fetch(key.to_sym, &block)
         else
-          raise MISSING_ELEMENT_ERRORS[type].new(key)
+          element_not_found(key)
         end
       end
     rescue KeyError
-      raise MISSING_ELEMENT_ERRORS[type].new(key)
+      element_not_found(key)
     end
     alias_method :[], :fetch
+    # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/CyclomaticComplexity
+    # rubocop:enable Metrics/PerceivedComplexity
 
     # @api public
     def infer(id, **options)
@@ -151,7 +158,7 @@ module ROM
     end
 
     # @api private
-    def each(&block)
+    def each
       keys.each { |key| yield(fetch(key)) }
     end
 
@@ -169,6 +176,7 @@ module ROM
     def keys
       all = (components.keys + container.keys).uniq
       return all if path.empty?
+
       all.select { |key| key.start_with?(namespace) }
     end
 
@@ -209,6 +217,13 @@ module ROM
     # @api public
     def disconnect
       container.keys.grep(/gateways/).each { |key| self[key].disconnect }
+    end
+
+    private
+
+    # @api private
+    def element_not_found(key)
+      raise MISSING_ELEMENT_ERRORS[type].new(key)
     end
   end
 end

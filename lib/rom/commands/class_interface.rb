@@ -88,10 +88,14 @@ module ROM
         klass = Dry::Core::ClassBuilder.new(name: type.name, parent: type).call
 
         result = meta.fetch(:result, :one)
-        klass.result(rel_meta.fetch(:combine_type, result))
+        klass.config.result = rel_meta.fetch(:combine_type, result)
 
         meta.each do |name, value|
-          klass.public_send(name, value)
+          if klass.respond_to?(name)
+            klass.public_send(name, value)
+          else
+            klass.config[name] = value
+          end
         end
 
         plugins.each do |plugin, options|
@@ -121,6 +125,15 @@ module ROM
       # @api public
       def use(plugin, **options)
         ROM.plugins[:command].fetch(plugin, adapter).apply_to(self, **options)
+      end
+
+      # Return configured adapter identifier
+      #
+      # @return [Symbol]
+      #
+      # @api public
+      def adapter
+        config.component.adapter
       end
 
       # Set before-execute hooks
