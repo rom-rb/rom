@@ -50,7 +50,8 @@ module ROM
             plugin.enable(self) unless plugin.enabled?
           end
 
-          instance_eval(&block) if block
+          # Evaluate block only if it's not a schema defined by Relation.view DSL
+          instance_eval(&block) if block && !config.view
 
           # Apply plugin defaults
           plugins.each do |plugin|
@@ -59,7 +60,7 @@ module ROM
 
           configure
 
-          components.add(key, config: config)
+          components.add(key, config: config, block: config.view ? block : nil)
         end
 
         # @api private

@@ -40,7 +40,7 @@ module ROM
   #
   # @api public
   class Relation
-    extend ROM::Provider(:dataset, :schema, :association, type: :relation)
+    extend ROM::Provider(:dataset, :schema, :view, :association, type: :relation)
     extend Initializer
     extend ClassInterface
 

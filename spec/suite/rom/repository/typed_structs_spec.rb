@@ -12,8 +12,6 @@ RSpec.describe "ROM repository with typed structs" do
 
   context "typed projections" do
     before do
-      pending "TODO: rework `view` DSL"
-
       configuration.relation(:books) do
         schema(:books, infer: true)
 

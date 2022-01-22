@@ -25,15 +25,13 @@ RSpec.describe ROM::Relation, ".view" do
   end
 
   it "returns view method name" do
-    pending "TODO: rework `view` DSL"
-
     klass = Class.new(ROM::Relation[:memory]) {
       config.component.id = :users
 
       schema { attribute :id, ROM::Types::Integer }
     }
 
-    name = klass.view(:by_id, []) { self }
+    name = klass.view(:by_id) { self }
 
     expect(name).to be(:by_id)
   end
@@ -42,13 +40,13 @@ RSpec.describe ROM::Relation, ".view" do
     klass = Class.new(ROM::Relation[:memory])
 
     expect { klass.view(:broken) { |r| r } }
-      .to raise_error(ArgumentError, "schema attribute names must be provided as the second argument")
+      .to raise_error(
+        ArgumentError, "schema attribute names must be provided as the second argument"
+      )
   end
 
   shared_context "relation with views" do
     before do
-      pending "TODO: rework `view` DSL"
-
       relation << {id: 1, name: "Joe"}
       relation << {id: 2, name: "Jane"}
     end
@@ -131,6 +129,8 @@ RSpec.describe ROM::Relation, ".view" do
         }
 
         Class.new(ROM::Memory::Relation) do
+          config.component.id = :users
+
           config.schema.inferrer = ROM::Schema::DEFAULT_INFERRER.with(
             attributes_inferrer: attributes_inferrer
           )
