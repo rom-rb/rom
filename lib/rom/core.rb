@@ -23,7 +23,8 @@ require_relative "plugins"
 # @api public
 module ROM
   extend Global
-  extend self
+
+  module_function
 
   # Global component setup
   #
