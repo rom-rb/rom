@@ -71,6 +71,14 @@ module ROM
     setting :plugins, default: EMPTY_ARRAY, inherit: true
   end
 
+  # Relation view defaults
+  setting :view do
+    setting :type, default: :view
+    setting :id
+    setting :namespace, default: "views", join: true
+    setting :args, default: [].freeze
+  end
+
   # Association defaults
   setting :association do
     setting :type, default: :association

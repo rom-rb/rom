@@ -38,7 +38,7 @@ module ROM
       option :config, type: Types.Instance(Dry::Configurable::Config)
 
       # @!attribute [r] gateway
-      #   @return [Proc] Optional dataset evaluation block
+      #   @return [Proc] Optional component evaluation block
       option :block, type: Types.Interface(:to_proc), optional: true
 
       # @api public

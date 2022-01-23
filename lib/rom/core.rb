@@ -11,6 +11,7 @@ require_relative "components/gateway"
 require_relative "components/dataset"
 require_relative "components/schema"
 require_relative "components/relation"
+require_relative "components/view"
 require_relative "components/association"
 require_relative "components/command"
 require_relative "components/mapper"
@@ -23,7 +24,8 @@ require_relative "plugins"
 # @api public
 module ROM
   extend Global
-  extend self
+
+  module_function
 
   # Global component setup
   #
@@ -69,6 +71,7 @@ module ROM
     register :dataset, Components::Dataset
     register :schema, Components::Schema
     register :relation, Components::Relation
+    register :view, Components::View
     register :association, Components::Association
     register :command, Components::Command
     register :mapper, Components::Mapper

@@ -11,6 +11,7 @@ module ROM
     datasets
     schemas
     relations
+    views
     associations
     mappers
     commands
