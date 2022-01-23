@@ -51,6 +51,10 @@ RSpec.describe ROM::Relation, ".view" do
       relation << {id: 2, name: "Jane"}
     end
 
+    it "registers view objects" do
+      expect(rom["views.users.names"]).to eql(relation.names)
+    end
+
     it "appends foreign attributes" do
       expect(relation.schemas[:foreign_attributes].map(&:name)).to eql(%i[id name title])
     end

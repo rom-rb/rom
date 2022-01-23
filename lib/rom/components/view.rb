@@ -19,6 +19,13 @@ module ROM
       # @return [ROM::Relation]
       #
       # @api private
+      def build
+        resolver.relations[relation_id].public_send(config.id)
+      end
+
+      # @return [Symbol]
+      #
+      # @api private
       def define(constant)
         _name = config.id
         _relation_block = relation_block
