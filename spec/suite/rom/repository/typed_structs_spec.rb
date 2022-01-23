@@ -54,12 +54,12 @@ RSpec.describe "ROM repository with typed structs" do
       end
 
       configuration.commands(:books) do
-        define(:create) { result(:one) }
+        define(:create) { config.result = :one }
       end
     end
 
     # FIXME: this is flaky
-    xit "loads typed structs" do
+    it "loads typed structs" do
       created_book = repo.create(title: :'Hello World', created_at: Time.now)
 
       expect(created_book).to be_kind_of(Dry::Struct)
