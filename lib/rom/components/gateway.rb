@@ -17,6 +17,11 @@ module ROM
         gateway
       end
 
+      # @api private
+      def adapter
+        config.adapter
+      end
+
       private
 
       # @api private
@@ -26,11 +31,6 @@ module ROM
         else
           ROM::Gateway.setup(adapter, *config.args)
         end
-      end
-
-      # @api private
-      def adapter
-        config.adapter
       end
 
       # @api private

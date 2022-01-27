@@ -5,6 +5,8 @@ require "rom/relation"
 RSpec.describe ROM::Relation, "#schema" do
   subject(:relation) do
     Class.new(ROM::Relation) do
+      config.component.id = :users
+
       schema(:users) do
         attribute :id, Types::String
       end

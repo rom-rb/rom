@@ -10,7 +10,7 @@ module ROM
     class Schema < Core
       # @api private
       option :name, type: Types.Instance(ROM::Relation::Name), default: -> {
-        ROM::Relation::Name[config.id, config.dataset]
+        ROM::Relation::Name[config.relation, config.dataset]
       }
 
       # @api public

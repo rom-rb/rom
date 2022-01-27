@@ -122,7 +122,9 @@ module ROM
 
     # @!attribute [r] schema
     #   @return [Runtime::resolver] The canonical schema
-    option :schema, default: -> { schemas.infer(config.component.id) }
+    option :schema, default: -> {
+      schemas.first || schemas.infer(config.component.id)
+    }
 
     # @!attribute [r] associations
     #   @return [Runtime::resolver] Relation associations
