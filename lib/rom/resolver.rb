@@ -26,6 +26,124 @@ module ROM
       mappers: MapperMissingError
     }.freeze
 
+    module Nestable
+      # @api public
+      def fetch(key, &block)
+        if relation_namespace?(key)
+          super(namespace, &block)
+        elsif relation_scope_key?(key)
+          scoped(key)
+        else
+          super(key, &block)
+        end
+      end
+      alias_method :[], :fetch
+
+      private
+
+      # @api private
+      def relation_namespace?(key)
+        # TODO: stop nesting canonical mappers under relation's id ie `mappers.users.users`
+        path.last == key && !mappers?
+      end
+
+      # @api private
+      def relation_scope_key?(key)
+        !key?(key) && relation_ids.include?(key)
+      end
+    end
+
+    # @api public
+    class Relations < Resolver
+    end
+
+    # @api public
+    class Commands < Resolver
+      prepend Nestable
+    end
+
+    # @api public
+    class Mappers < Resolver
+      prepend Nestable
+    end
+
+    # @api public
+    class Datasets < Resolver
+      prepend Nestable
+
+      # @api private
+      def infer_component(**options)
+        return super unless provider_type == :relation
+
+        comp = components.get(:datasets, relation_id: config.component.id, abstract: false)
+
+        comp || super(**options, id: config.component.dataset, relation_id: config.component.id)
+      end
+    end
+
+    # @api public
+    class Schemas < Resolver
+      prepend Nestable
+
+      # @api private
+      def infer_component(**options)
+        return super unless provider_type == :relation
+
+        comp = components.get(:schemas, relation: config.component.id, abstract: false)
+
+        comp || super(**options, relation_id: config.component.id)
+      end
+    end
+
+    # @api public
+    class Views < Resolver
+      prepend Nestable
+    end
+
+    # @api public
+    class Associations < Resolver
+      # @api public
+      def fetch(key, &block)
+        super(key) {
+          components.key?(key) ? super(key, &block) : fetch_aliased_association(key)
+        }
+      end
+      alias_method :[], :fetch
+
+      private
+
+      # @api private
+      def fetch_aliased_association(key)
+        components
+          .associations(namespace: namespace)
+          .detect { |assoc| key == "#{namespace}.#{assoc.config.name}" }
+          .then { |assoc| fetch(assoc.config.as) if assoc }
+      end
+    end
+
+    CORE_COMPONENTS.each do |type|
+      define_method(type) do |**options|
+        resolver = scoped(__method__, type: __method__, **options)
+
+        klass =
+          case type
+          when :relations then Relations
+          when :commands then Commands
+          when :mappers then Mappers
+          when :datasets then Datasets
+          when :schemas then Schemas
+          when :views then Views
+          when :associations then Associations
+          end
+
+        klass ? klass.new(**resolver.options) : resolver
+      end
+
+      define_method(:"#{type}?") do
+        self.type == type
+      end
+    end
+
     class Container
       include Dry::Container::Mixin
     end
@@ -49,29 +167,12 @@ module ROM
     option :opts, default: -> { EMPTY_HASH }
 
     # @api public
-    #
-    # rubocop:disable Metrics/AbcSize
-    # rubocop:disable Metrics/CyclomaticComplexity
-    # rubocop:disable Metrics/PerceivedComplexity
     def fetch(key, &block)
       case key
       when Symbol
-        if root?(key)
-          fetch(path.join("."), &block)
-        elsif relation_scope?(key)
-          scoped(key)
-        else
-          fetch([*path, key].join("."), &block)
-        end
+        fetch("#{namespace}.#{key}", &block)
       when String
         return container[key] if container.key?(key)
-
-        if associations? && !components.key?(key)
-          components
-            .associations(namespace: namespace)
-            .detect { |assoc| key == "#{namespace}.#{assoc.config.name}" }
-            .then { |assoc| return fetch(assoc.config.as) if assoc }
-        end
 
         with_resolver(root) { build(key, &block) }.tap { |item|
           container.register(key, item)
@@ -89,43 +190,28 @@ module ROM
       element_not_found(key)
     end
     alias_method :[], :fetch
-    # rubocop:enable Metrics/AbcSize
-    # rubocop:enable Metrics/CyclomaticComplexity
-    # rubocop:enable Metrics/PerceivedComplexity
 
     # @api public
     def infer(id, **options)
       fetch(id) do
-        infer_component(id: id, **options).build
+        inferred_config = config[handler.key].inherit(**config.component, **options)
+        infer_component(id: id, **inferred_config).build
       end
     end
 
     # @api private
-    # rubocop:disable Metrics/AbcSize
     def infer_component(**options)
-      inferred_config = config[handler.key].inherit(**config.component, **options)
-
-      if type == :datasets && config.component.type == :relation
-        comp = provider.components.datasets(relation_id: config.component.id, abstract: false).first
-
-        comp || provider.public_send(
-          handler.key,
-          **inferred_config, id: config.component.dataset, relation_id: config.component.id
-        )
-      elsif type == :schemas && config.component.type == :relation
-        comp = components.schemas(relation: config.component.id, abstract: false).first
-
-        comp ||
-          provider.public_send(handler.key, **inferred_config, relation_id: config.component.id)
-      else
-        provider.public_send(handler.key, **inferred_config)
-      end
+      provider.public_send(handler.key, **options)
     end
-    # rubocop:enable Metrics/AbcSize
 
     # @api private
     def provider
       components.provider
+    end
+
+    # @api private
+    def provider_type
+      config.component.type
     end
 
     # @api private
@@ -139,13 +225,6 @@ module ROM
     end
 
     # @api private
-    def relation_scope?(key)
-      if !key?(key) && (mappers? || commands?)
-        relation_ids.include?(key)
-      end
-    end
-
-    # @api private
     memoize def namespace
       path.join(".")
     end
@@ -156,23 +235,13 @@ module ROM
     end
 
     # @api private
-    def relation_ids
+    memoize def relation_ids
       components.relations.map(&:id)
     end
 
     # @api private
     def scoped(*scope, **options)
       with(path: path + scope, **options)
-    end
-
-    CORE_COMPONENTS.each do |type|
-      define_method(type) do |**options|
-        scoped(__method__, type: __method__, **options)
-      end
-
-      define_method(:"#{type}?") do
-        self.type == type
-      end
     end
 
     # @api private
@@ -187,7 +256,7 @@ module ROM
 
     # @api private
     def trigger(event, payload)
-      notifications.trigger(event, payload) if notifications
+      notifications&.trigger(event, payload)
     end
 
     # @api private
@@ -205,12 +274,7 @@ module ROM
 
     # @api private
     def key?(key)
-      keys.include?([*path, key].join("."))
-    end
-
-    # @api private
-    def root?(key)
-      path.last == key && !mappers? # TODO: move mappers-specific behavior to rom/compat
+      keys.include?("#{namespace}.#{key}")
     end
 
     # @api public
@@ -220,7 +284,7 @@ module ROM
 
     # @api private
     def inspect
-      %(#<#{self.class} type=#{type || "root"} adapters=#{components.gateways.map(&:adapter)} keys=#{keys}>)
+      %(#<#{self.class} adapters=#{components.gateways.map(&:adapter)} keys=#{keys}>)
     end
 
     # Disconnect all gateways

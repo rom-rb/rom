@@ -117,7 +117,7 @@ module ROM
 
     # @!attribute [r] datasets
     #   @return [resolver] Relation associations
-    option :datasets, default: -> { resolver.datasets(config: config) }
+    option :datasets, default: -> { resolver.datasets.scoped(config.component.id, config: config) }
 
     # @!attribute [r] dataset
     #   @return [Object] dataset used by the relation provided by relation's gateway
