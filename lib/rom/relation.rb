@@ -107,15 +107,6 @@ module ROM
     #   @api public
     option :inflector, default: -> { config.component.inflector }
 
-    # @!attribute [r] datasets
-    #   @return [resolver] Relation associations
-    option :datasets, default: -> { resolver.datasets(config: config) }
-
-    # @!attribute [r] dataset
-    #   @return [Object] dataset used by the relation provided by relation's gateway
-    #   @api public
-    option :dataset, default: -> { datasets.infer(config.component.dataset) }
-
     # @!attribute [r] schemas
     #   @return [Runtime::resolver] Relation schemas
     option :schemas, default: -> { resolver.schemas.scoped(config.component.id, config: config) }
@@ -123,6 +114,15 @@ module ROM
     # @!attribute [r] schema
     #   @return [Runtime::resolver] The canonical schema
     option :schema, default: -> { schemas.infer(config.component.id) }
+
+    # @!attribute [r] datasets
+    #   @return [resolver] Relation associations
+    option :datasets, default: -> { resolver.datasets(config: config) }
+
+    # @!attribute [r] dataset
+    #   @return [Object] dataset used by the relation provided by relation's gateway
+    #   @api public
+    option :dataset, default: -> { datasets.infer(config.component.id) }
 
     # @!attribute [r] associations
     #   @return [Runtime::resolver] Relation associations

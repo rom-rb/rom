@@ -12,6 +12,8 @@ RSpec.describe "ROM::CommandCompiler" do
 
   let(:users) do
     klass = Class.new(ROM::Memory::Relation) {
+      config.component.id = :users
+
       def by_id(id)
         restrict(id: id)
       end
@@ -71,15 +73,11 @@ RSpec.describe "ROM::CommandCompiler" do
     end
 
     describe "setting input from relation" do
-      let(:users) do
-        super().tap do |klass|
-          klass.schema(:users) do
-            attribute :name, ROM::Types::String.constructor { |v| "relation[#{v}]" }
-          end
-        end
-      end
-
       it "uses input schema from relation and does it once" do
+        users.schema(:users) do
+          attribute :name, ROM::Types::String.constructor { |v| "relation[#{v}]" }
+        end
+
         expect(command.input[{id: 1, name: "John"}][:name]).to eql("relation[John]")
       end
     end

@@ -95,15 +95,33 @@ module ROM
 
     # @api public
     def infer(id, **options)
-      fetch(id || :anonymous) do
+      fetch(id) do
         infer_component(id: id, **options).build
       end
     end
 
     # @api private
+    # rubocop:disable Metrics/AbcSize
     def infer_component(**options)
-      provider.public_send(handler.key, **config[handler.key].inherit(**config.component, **options))
+      inferred_config = config[handler.key].inherit(**config.component, **options)
+
+      if type == :datasets && config.component.type == :relation
+        comp = provider.components.datasets(relation_id: config.component.id, abstract: false).first
+
+        comp || provider.public_send(
+          handler.key,
+          **inferred_config, id: config.component.dataset, relation_id: config.component.id
+        )
+      elsif type == :schemas && config.component.type == :relation
+        comp = components.schemas(relation: config.component.id, abstract: false).first
+
+        comp ||
+          provider.public_send(handler.key, **inferred_config, relation_id: config.component.id)
+      else
+        provider.public_send(handler.key, **inferred_config)
+      end
     end
+    # rubocop:enable Metrics/AbcSize
 
     # @api private
     def provider

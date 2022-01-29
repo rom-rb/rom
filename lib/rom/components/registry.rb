@@ -51,7 +51,7 @@ module ROM
 
       # @api private
       def call(key, &fallback)
-        comp = detect { |_, component| component.key == key }&.last
+        comp = detect { |_, component| component.key == key && !component.abstract? }&.last
 
         if comp
           comp.build

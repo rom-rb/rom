@@ -3,6 +3,7 @@
 require_relative "support/inflector"
 require_relative "support/configurable"
 
+# rubocop:disable Metrics/ModuleLength
 module ROM
   extend Configurable
 
@@ -19,6 +20,7 @@ module ROM
   # Gateway defaults
   setting :gateway do
     setting :type, default: :gateway
+    setting :abstract
     setting :id, default: :default
     setting :namespace, default: "gateways"
     setting :adapter
@@ -32,6 +34,7 @@ module ROM
     setting :type, default: :dataset
     setting :abstract
     setting :id
+    setting :relation_id
     setting :namespace, default: "datasets"
     setting :adapter
     setting :gateway
@@ -41,6 +44,7 @@ module ROM
   setting :schema do
     setting :type, default: :schema
     setting :id
+    setting :abstract
     setting :namespace, default: "schemas", join: true
     setting :dataset
     setting :as # TODO: move to rom/compat
@@ -61,7 +65,7 @@ module ROM
   setting :relation do
     setting :type, default: :relation
     setting :abstract
-    setting :id
+    setting :id, default: :anonymous
     setting :infer_id_from_class, inherit: true
     setting :namespace, default: "relations"
     setting :dataset
@@ -74,6 +78,7 @@ module ROM
   # Relation view defaults
   setting :view do
     setting :type, default: :view
+    setting :abstract
     setting :id
     setting :namespace, default: "views", join: true
     setting :args, default: [].freeze
@@ -88,6 +93,7 @@ module ROM
     setting :adapter
     setting :as
     setting :name
+    setting :abstract
     setting :relation
     setting :source
     setting :target
@@ -96,12 +102,13 @@ module ROM
     setting :result
     setting :view
     setting :override
-    setting :combine_keys
+    setting :combine_keys, default: {}
   end
 
   # Command defaults
   setting :command do
     setting :type, default: :command
+    setting :abstract
     setting :id
     setting :namespace, default: "commands", join: true
     setting :relation
@@ -112,6 +119,7 @@ module ROM
   # Command defaults
   setting :mapper do
     setting :type, default: :mapper
+    setting :abstract
     setting :id
     setting :namespace, default: "mappers", join: true
     setting :relation
@@ -123,3 +131,4 @@ module ROM
     _settings
   end
 end
+# rubocop:enable Metrics/ModuleLength

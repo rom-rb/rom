@@ -64,13 +64,19 @@ module ROM
         end
 
         # @api private
+        # rubocop:disable Metrics/AbcSize
         def configure
           config.update(attributes: attributes.values)
 
           # TODO: make this simpler
-          config.update(inferrer: config.inferrer.with(enabled: config.infer))
+          config.update(
+            relation: relation_id,
+            inferrer: config.inferrer.with(enabled: config.infer)
+          )
 
-          if !config.view && provider.config.component.type == :relation
+          if !view? && relation?
+            config.join!({namespace: relation_id}, :right) if config.id != relation_id
+
             provider.config.component.update(dataset: config.dataset) if config.dataset
             provider.config.component.update(id: config.as) if config.as
           end
@@ -79,6 +85,7 @@ module ROM
 
           super
         end
+        # rubocop:enable Metrics/AbcSize
 
         private
 
@@ -111,7 +118,7 @@ module ROM
             .to_h
 
           # TODO: this should be probably moved to rom/compat
-          source = ROM::Relation::Name[relation]
+          source = ROM::Relation::Name[relation_id, config.dataset]
 
           base =
             if options[:read]
@@ -130,8 +137,18 @@ module ROM
         end
 
         # @api private
-        def relation
-          config.id
+        def relation_id
+          relation? ? provider.config.component.id : config.id
+        end
+
+        # @api private
+        def relation?
+          provider.config.component.type == :relation
+        end
+
+        # @api private
+        def view?
+          config.view.equal?(true)
         end
       end
     end
