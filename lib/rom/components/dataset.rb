@@ -29,18 +29,27 @@ module ROM
         config.adapter
       end
 
+      # @api adapter
+      def relation_id
+        config.relation_id
+      end
+
       private
 
       # @api private
+      # rubocop:disable Metrics/AbcSize
       memoize def schema
-        if config.id == config.relation_id
+        if id == relation_id
           resolver.schemas[id] if resolver.schemas.key?(id)
-        elsif config.relation_id
-          resolver["schemas.#{config.relation_id}.#{id}"]
+        elsif relation_id
+          resolver.fetch("schemas.#{relation_id}.#{id}") {
+            resolver.fetch("schemas.#{relation_id}")
+          }
         elsif resolver.schemas.key?(id)
           resolver.schemas[id]
         end
       end
+      # rubocop:enable Metrics/AbcSize
 
       # @api private
       memoize def dataset_components

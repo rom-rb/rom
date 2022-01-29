@@ -46,6 +46,11 @@ module ROM
       end
 
       # @api private
+      def relation
+        config.relation
+      end
+
+      # @api private
       def view?
         config.view.equal?(true)
       end
