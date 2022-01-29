@@ -101,9 +101,20 @@ module ROM
     end
 
     # @api private
+    # rubocop:disable Metrics/AbcSize
     def infer_component(**options)
-      provider.public_send(handler.key, **config[handler.key].inherit(**config.component, **options))
+      inferred_config = config[handler.key].inherit(**config.component, **options)
+
+      if type == :datasets && config.component.type == :relation
+        comp = provider.components.datasets(id: config.component.dataset).first
+
+        comp ||
+          provider.public_send(handler.key, **inferred_config, relation_id: config.component.id)
+      else
+        provider.public_send(handler.key, **inferred_config)
+      end
     end
+    # rubocop:enable Metrics/AbcSize
 
     # @api private
     def provider

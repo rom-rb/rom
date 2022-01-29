@@ -21,7 +21,7 @@ module ROM
 
       # @api private
       def blocks
-        [*datasets.map(&:block), block].compact
+        [*dataset_components.map(&:block), block].compact
       end
 
       # @api adapter
@@ -32,18 +32,19 @@ module ROM
       private
 
       # @api private
-      def datasets
+      memoize def schema
+        if config.id == config.relation_id
+          resolver.schemas[id] if resolver.schemas.key?(id)
+        elsif config.relation_id
+          resolver["schemas.#{config.relation_id}.#{id}"]
+        elsif resolver.schemas.key?(id)
+          resolver.schemas[id]
+        end
+      end
+
+      # @api private
+      memoize def dataset_components
         provider.components.datasets(abstract: true, adapter: adapter)
-      end
-
-      # @api private
-      def schema
-        resolver.schemas[schema_key] if schema_key
-      end
-
-      # @api private
-      def schema_key
-        resolver.components.get(:schemas, dataset: id)&.key
       end
     end
   end

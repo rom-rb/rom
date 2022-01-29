@@ -64,6 +64,7 @@ module ROM
         end
 
         # @api private
+        # rubocop:disable Metrics/AbcSize
         def configure
           config.update(attributes: attributes.values)
 
@@ -84,6 +85,7 @@ module ROM
 
           super
         end
+        # rubocop:enable Metrics/AbcSize
 
         private
 

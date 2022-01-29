@@ -9,7 +9,7 @@ RSpec.describe ROM::Components::Provider do
         class Parent
           extend ROM.Provider(:dataset, type: :component)
 
-          dataset(id: :ds) do
+          dataset(:ds) do
             %i[hello world]
           end
         end

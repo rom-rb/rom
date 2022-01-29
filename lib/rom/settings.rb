@@ -32,6 +32,7 @@ module ROM
     setting :type, default: :dataset
     setting :abstract
     setting :id
+    setting :relation_id
     setting :namespace, default: "datasets"
     setting :adapter
     setting :gateway
