@@ -34,13 +34,13 @@ RSpec.describe ROM::Relation, "#schema" do
     expect(relation.schema.name.relation).to be(:users)
   end
 
-  context "with a resolver" do
+  context "with a registry" do
     subject(:relation) do
-      resolver.relations[:users]
+      registry.relations[:users]
     end
 
-    let(:resolver) do
-      runtime.resolver
+    let(:registry) do
+      runtime.registry
     end
 
     let(:runtime) do

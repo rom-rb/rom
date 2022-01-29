@@ -4,8 +4,8 @@ require "rom/memory"
 
 RSpec.describe "Using in-memory gateways for cross-gateway access" do
   let(:runtime) { ROM::Runtime.new(left: :memory, right: :memory, main: :memory) }
-  let(:resolver) { runtime.finalize }
-  let(:gateways) { resolver.gateways }
+  let(:registry) { runtime.finalize }
+  let(:gateways) { registry.gateways }
 
   it "works" do
     runtime.relation(:users, gateway: :left) do
@@ -28,15 +28,15 @@ RSpec.describe "Using in-memory gateways for cross-gateway access" do
       end
     end
 
-    resolver.relations[:users]
-    resolver.relations[:tasks]
+    registry.relations[:users]
+    registry.relations[:tasks]
 
     gateways[:left][:users] << {user_id: 1, name: "Joe"}
     gateways[:left][:users] << {user_id: 2, name: "Jane"}
     gateways[:right][:tasks] << {user_id: 1, title: "Have fun"}
     gateways[:right][:tasks] << {user_id: 2, title: "Have fun"}
 
-    user_and_tasks = resolver.relations[:users_and_tasks]
+    user_and_tasks = registry.relations[:users_and_tasks]
       .by_user("Jane")
       .map_with(:users_and_tasks)
 

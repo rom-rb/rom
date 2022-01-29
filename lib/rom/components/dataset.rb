@@ -40,13 +40,13 @@ module ROM
       # rubocop:disable Metrics/AbcSize
       memoize def schema
         if id == relation_id
-          resolver.schemas[id] if resolver.schemas.key?(id)
+          registry.schemas[id] if registry.schemas.key?(id)
         elsif relation_id
-          resolver.fetch("schemas.#{relation_id}.#{id}") {
-            resolver.fetch("schemas.#{relation_id}")
+          registry.fetch("schemas.#{relation_id}.#{id}") {
+            registry.fetch("schemas.#{relation_id}")
           }
-        elsif resolver.schemas.key?(id)
-          resolver.schemas[id]
+        elsif registry.schemas.key?(id)
+          registry.schemas[id]
         end
       end
       # rubocop:enable Metrics/AbcSize

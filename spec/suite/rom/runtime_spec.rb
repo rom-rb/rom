@@ -9,8 +9,8 @@ RSpec.describe ROM::Runtime do
     }
   end
 
-  let(:resolver) do
-    runtime.resolver
+  let(:registry) do
+    runtime.registry
   end
 
   it "can define a dataset" do
@@ -19,14 +19,14 @@ RSpec.describe ROM::Runtime do
     expect(dataset.config[:id]).to be(:users)
     expect(dataset.config[:gateway]).to be(:default)
 
-    expect(resolver["datasets.users"]).to eql([1, 2])
+    expect(registry["datasets.users"]).to eql([1, 2])
   end
 
   it "can define a dataset with a gateway" do
     runtime.gateway(:default)
     runtime.dataset(:users)
 
-    expect(resolver["datasets.users"]).to be_a(ROM::Memory::Dataset)
+    expect(registry["datasets.users"]).to be_a(ROM::Memory::Dataset)
   end
 
   it "can define a schema" do
@@ -35,7 +35,7 @@ RSpec.describe ROM::Runtime do
     expect(schema.config.id).to be(:users)
     expect(schema.config.gateway).to be(:default)
 
-    expect(resolver["schemas.users"]).to be_a(ROM::Schema)
+    expect(registry["schemas.users"]).to be_a(ROM::Schema)
   end
 
   it "can define a relation" do
@@ -48,7 +48,7 @@ RSpec.describe ROM::Runtime do
     expect(relation.config.dataset).to be(:users)
     expect(relation.config.gateway).to be(:default)
 
-    users = resolver["relations.users"]
+    users = registry["relations.users"]
 
     expect(users).to be_a(ROM::Memory::Relation)
     expect(users.dataset).to be_a(ROM::Memory::Dataset)
@@ -65,7 +65,7 @@ RSpec.describe ROM::Runtime do
     expect(relation.config.dataset).to be(:users)
     expect(relation.config.gateway).to be(:default)
 
-    users = resolver["relations.users"]
+    users = registry["relations.users"]
 
     expect(users).to be_a(ROM::Memory::Relation)
     expect(users.schema).to be_a(ROM::Schema)
@@ -82,8 +82,8 @@ RSpec.describe ROM::Runtime do
     expect(relation.config.id).to be(:people)
     expect(relation.config.gateway).to be(:default)
 
-    users = resolver["relations.people"]
-    schema = resolver["schemas.people"]
+    users = registry["relations.people"]
+    schema = registry["schemas.people"]
 
     expect(users).to be_a(ROM::Memory::Relation)
     expect(users.name.dataset).to be(:users)
@@ -111,7 +111,7 @@ RSpec.describe ROM::Runtime do
     expect(relation.config.id).to be(:people)
     expect(relation.config.gateway).to be(:default)
 
-    users = resolver["relations.people"]
+    users = registry["relations.people"]
 
     expect(users.to_a).to eql([{uuid: "uuid-value", name: "name-value"}])
   end
@@ -134,7 +134,7 @@ RSpec.describe ROM::Runtime do
       end
     end
 
-    users = resolver["relations.people"]
+    users = registry["relations.people"]
 
     expect(runtime.components.get(:datasets, id: :people)).to_not be_abstract
     expect(users.to_a).to eql([{name: "Jane"}, {name: "Joe"}])
@@ -157,7 +157,7 @@ RSpec.describe ROM::Runtime do
     expect(component.config.adapter).to be(:memory)
     expect(component.config.relation).to be(:users)
 
-    command = resolver["commands.users.create"]
+    command = registry["commands.users.create"]
 
     expect(command).to be_a(ROM::Memory::Commands::Create)
   end
@@ -236,7 +236,7 @@ RSpec.describe ROM::Runtime do
     expect(tasks.id).to be(:tasks)
     expect(tasks.key).to eql("associations.users.tasks")
 
-    expect(resolver.relations[:users].associations[:tasks])
+    expect(registry.relations[:users].associations[:tasks])
       .to be_a(ROM::Memory::Associations::OneToMany)
   end
 

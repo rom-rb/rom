@@ -7,7 +7,7 @@ RSpec.describe "Setting up ROM with multiple runtimes" do
     {one: ROM::Runtime.new(:memory), two: ROM::Runtime.new(:memory)}
   end
 
-  let(:resolvers) do
+  let(:registries) do
     {one: runtime[:one].finalize, two: runtime[:two].finalize}
   end
 
@@ -37,17 +37,17 @@ RSpec.describe "Setting up ROM with multiple runtimes" do
       runtime[:one].register_command(Test::CreateUser)
       runtime[:one].register_mapper(Test::UserMapper)
 
-      expect(resolvers[:one].relations[:users]).to be_kind_of Test::Users
-      expect(resolvers[:one].commands[:users][:create]).to be_kind_of Test::CreateUser
-      expect(resolvers[:one].mappers[:users][:entity]).to be_kind_of Test::UserMapper
+      expect(registries[:one].relations[:users]).to be_kind_of Test::Users
+      expect(registries[:one].commands[:users][:create]).to be_kind_of Test::CreateUser
+      expect(registries[:one].mappers[:users][:entity]).to be_kind_of Test::UserMapper
 
-      expect { resolvers[:two].relations[:users] }.to raise_error(
+      expect { registries[:two].relations[:users] }.to raise_error(
         ROM::ElementNotFoundError
       )
-      expect { resolvers[:two].commands[:users][:create] }.to raise_error(
+      expect { registries[:two].commands[:users][:create] }.to raise_error(
         ROM::ElementNotFoundError
       )
-      expect { resolvers[:two].commands[:users][:create] }.to raise_error(
+      expect { registries[:two].commands[:users][:create] }.to raise_error(
         ROM::ElementNotFoundError
       )
     end
@@ -99,8 +99,8 @@ RSpec.describe "Setting up ROM with multiple runtimes" do
       runtime[:two].register_relation(Test::Tasks)
 
       expect(
-        resolvers[:one].relations[:users].schema.associations
-      ).not_to be(resolvers[:two].relations[:users].associations)
+        registries[:one].relations[:users].schema.associations
+      ).not_to be(registries[:two].relations[:users].associations)
     end
   end
 end

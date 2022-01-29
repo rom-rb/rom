@@ -9,14 +9,14 @@ RSpec.describe "Repository with multi-adapters configuration" do
     ROM::Runtime.new(default: [:sql, db_uri], memory: [:memory])
   }
 
-  let(:sql_conn) { resolver.gateways[:default].connection }
+  let(:sql_conn) { registry.gateways[:default].connection }
 
-  let(:resolver) { runtime.finalize }
+  let(:registry) { runtime.finalize }
 
-  let(:users) { resolver.relations[:sql_users] }
-  let(:tasks) { resolver.relations[:memory_tasks] }
+  let(:users) { registry.relations[:sql_users] }
+  let(:tasks) { registry.relations[:memory_tasks] }
 
-  let(:repo) { Test::Repository.new(resolver) }
+  let(:repo) { Test::Repository.new(registry) }
 
   before do
     %i[tags tasks books posts_labels posts users labels
@@ -77,8 +77,8 @@ RSpec.describe "Repository with multi-adapters configuration" do
     runtime.register_relation(Test::Users)
     runtime.register_relation(Test::Tasks)
 
-    user_id = resolver.gateways[:default].dataset(:users).insert(name: "Jane")
-    resolver.gateways[:memory].dataset(:tasks).insert(user_id: user_id, title: "Jane Task")
+    user_id = registry.gateways[:default].dataset(:users).insert(name: "Jane")
+    registry.gateways[:memory].dataset(:tasks).insert(user_id: user_id, title: "Jane Task")
   end
 
   specify "ᕕ⁞ ᵒ̌ 〜 ᵒ̌ ⁞ᕗ" do

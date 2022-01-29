@@ -14,7 +14,7 @@ module ROM
       #
       # @api public
       def build
-        constant.use(:registry_reader, relations: resolver.relation_ids)
+        constant.use(:registry_reader, relations: registry.relation_ids)
 
         # Define view methods if there are any registered view components for this relation
         local_components.views(relation_id: id).each do |view|
@@ -25,7 +25,7 @@ module ROM
 
         apply_plugins
 
-        relation = constant.new(inflector: inflector, resolver: resolver, **plugin_options)
+        relation = constant.new(inflector: inflector, registry: registry, **plugin_options)
 
         trigger(
           "relations.schema.set",
@@ -33,10 +33,10 @@ module ROM
           adapter: adapter,
           gateway: config[:gateway],
           relation: constant,
-          resolver: resolver
+          registry: registry
         )
 
-        trigger("relations.object.registered", resolver: resolver, relation: relation)
+        trigger("relations.object.registered", registry: registry, relation: relation)
 
         relation
       end

@@ -4,7 +4,7 @@ require "spec_helper"
 
 RSpec.describe "ROM::CommandCompiler" do
   subject(:compiler) do
-    ROM::CommandCompiler.new(resolver: resolver.commands.scoped(:users))
+    ROM::CommandCompiler.new(registry: registry.commands.scoped(:users))
   end
 
   include_context "gateway only"
@@ -35,8 +35,8 @@ RSpec.describe "ROM::CommandCompiler" do
     Class.new(ROM::Commands::Create[:memory])
   end
 
-  def resolver
-    ROM::Resolver.new.tap do |reg|
+  def registry
+    ROM::Registries::Root.new.tap do |reg|
       reg.components.add(
         :relations, constant: users, config: users.config.component.update(id: :users)
       )
@@ -45,7 +45,7 @@ RSpec.describe "ROM::CommandCompiler" do
 
   describe "#[]" do
     let(:second_compiler) do
-      ROM::CommandCompiler.new(resolver: resolver.commands.scoped(:users))
+      ROM::CommandCompiler.new(registry: registry.commands.scoped(:users))
     end
 
     let(:options) { {} }

@@ -3,7 +3,7 @@
 require "dry/core/class_attributes"
 
 require "rom/core"
-require "rom/resolver"
+require "rom/registries/root"
 require "rom/runtime"
 require "rom/container"
 require "rom/global"
@@ -90,7 +90,7 @@ module ROM
       @gateways ||=
         begin
           register_gateways
-          resolver.gateways.map { |gateway| [gateway.config.id, gateway] }.to_h
+          registry.gateways.map { |gateway| [gateway.config.id, gateway] }.to_h
         end
     end
     alias_method :environment, :gateways
@@ -120,7 +120,7 @@ module ROM
   end
 
   # @api public
-  class Resolver
+  class Registries::Root
     # @api public
     # @deprecated
     def map_with(*ids)

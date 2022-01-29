@@ -12,7 +12,7 @@ module ROM
 
       # @api public
       def build
-        association_class.new(definition, resolver.relations)
+        association_class.new(definition, registry.relations)
       end
 
       private
