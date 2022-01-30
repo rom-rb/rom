@@ -34,6 +34,11 @@ module ROM
     #   @return [Pathname] The root path
     param :root_directory, type: PathnameType.optional
 
+    # @!attribute [r] auto_load
+    #   @return [Boolean]
+    #     Whether files should be auto-loadable
+    option :auto_load, type: Types::Strict::Bool, default: -> { false }
+
     # @!attribute [r] namespace
     #   @return [Boolean,String]
     #     The name of the top level namespace or true/false which
@@ -60,11 +65,33 @@ module ROM
     def call
       return if @loaded || root_directory.nil?
 
-      setup and backend.eager_load
+      setup
+
+      backend.eager_load unless auto_load
+
       @loaded = true
     end
 
+    # @api private
+    def auto_load_component_file(type, key)
+      return unless component_dirs.include?(type)
+
+      const_parts = key.split(".").map { |name| inflector.camelize(name) }
+      const_parts.unshift(namespace_const_name) if namespace_const_name
+      const_name = const_parts.join("::")
+
+      inflector.constantize(const_name)
+    end
+
     private
+
+    # @api private
+    def namespace_const_name
+      case namespace
+      when true
+        inflector.classify(root_directory.basename)
+      end
+    end
 
     # @api private
     def backend
@@ -78,10 +105,14 @@ module ROM
 
       case namespace
       when true
-        backend.push_dir(root_directory.join("..").realpath)
+        top_directory = root_directory.join("..").realpath
 
-        component_dirs.each_value do |dir|
-          backend.collapse(root_directory.join(dir).join("**/*"))
+        backend.push_dir(top_directory)
+
+        others = top_directory.children.select(&:directory?).reject { |dir| dir == root_directory }
+
+        others.each do |dir|
+          backend.ignore(dir)
         end
       when false
         backend.push_dir(root_directory)

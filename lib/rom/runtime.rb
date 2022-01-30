@@ -63,6 +63,7 @@ module ROM
 
     setting :auto_register do
       setting :root_directory
+      setting :auto_load
       setting :namespace
       setting :component_dirs, default: {
         relations: :relations, mappers: :mappers, commands: :commands
@@ -96,7 +97,13 @@ module ROM
     # @return [Resolver] Runtime component resolver
     # @api private
     def resolver
-      @resolver ||= super(config: config, notifications: notifications)
+      @resolver ||=
+        begin
+          options = {config: config, notifications: notifications}
+          options[:loader] = loader if config.auto_register.auto_load
+
+          super(**options)
+        end
     end
 
     # This is called internally when you pass a block to ROM.container
@@ -124,6 +131,7 @@ module ROM
     # @param [String, Pathname] directory The root path to components
     # @param [Hash] options
     # @option options [Boolean,String] :namespace Toggle root namespace
+    # @option options [Boolean] :auto_load Toggle auto-loading via Zeitwerk
     #
     # @return [Configuration]
     #

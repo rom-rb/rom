@@ -156,6 +156,8 @@ module ROM
 
     option :inferrer, default: -> { Inferrer.new }
 
+    option :loader, optional: true
+
     option :notifications, optional: true
 
     option :type, optional: true
@@ -173,6 +175,8 @@ module ROM
         fetch("#{namespace}.#{key}", &block)
       when String
         return container[key] if container.key?(key)
+
+        loader&.auto_load_component_file(type, key)
 
         with_resolver(root) { build(key, &block) }.tap { |item|
           container.register(key, item)
