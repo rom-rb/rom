@@ -131,6 +131,7 @@ module ROM
     # @param [String, Pathname] directory The root path to components
     # @param [Hash] options
     # @option options [Boolean,String] :namespace Toggle root namespace
+    # @option options [Boolean] :auto_load Toggle auto-loading via Zeitwerk
     #
     # @return [Configuration]
     #
