@@ -4,10 +4,10 @@ RSpec.describe "Repository with additional dependencies injected" do
   include_context "repository / db_uri"
 
   let(:configuration) {
-    ROM::Runtime.new(default: [:sql, db_uri], memory: [:memory])
+    ROM::Setup.new(default: [:sql, db_uri], memory: [:memory])
   }
 
-  let(:rom) { ROM.runtime(configuration) }
+  let(:rom) { ROM.setup(configuration) }
 
   describe "keyword constructor params" do
     describe "direct injection in single subclass" do

@@ -74,7 +74,7 @@ module ROM
     option :registry, default: -> { self.class.registry }
 
     # @!attribute [r] relations
-    #   @return [registry] Runtime relation registry
+    #   @return [registry] Setup relation registry
     option :relations, default: -> { registry.relations }
 
     # @!attribute [r] attributes
@@ -82,7 +82,7 @@ module ROM
     option :attributes, default: -> { EMPTY_ARRAY }
 
     # @!attribute [r] associations
-    #   @return [Runtime::Registry::Root] Optional association set (this is adapter-specific)
+    #   @return [Setup::Registry::Root] Optional association set (this is adapter-specific)
     option :associations, default: -> { EMPTY_ASSOCIATION_SET }
 
     # @!attribute [r] inferrer

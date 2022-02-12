@@ -14,9 +14,9 @@ RSpec.describe ROM::Relation, ".dataset" do
     end
   end
 
-  context "part of runtime" do
-    let(:runtime) { ROM::Runtime.new }
-    let(:registry) { runtime.finalize }
+  context "part of setup" do
+    let(:setup) { ROM::Setup.new }
+    let(:registry) { setup.finalize }
 
     it "defines a default dataset component" do
       klass = Class.new(ROM::Relation) {
@@ -25,7 +25,7 @@ RSpec.describe ROM::Relation, ".dataset" do
         dataset { [] }
       }
 
-      runtime.register_relation(klass)
+      setup.register_relation(klass)
 
       relation = registry.relations[:relation]
 

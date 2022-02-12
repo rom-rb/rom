@@ -59,7 +59,7 @@ RSpec.describe ROM::Repository, "#transaction" do
 
   context "options: gateway" do
     let(:configuration) do
-      ROM::Runtime.new(
+      ROM::Setup.new(
         default: [:sql, db_uri],
         alt: [:sql, db_uri],
       )

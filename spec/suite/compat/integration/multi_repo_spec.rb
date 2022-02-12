@@ -7,7 +7,7 @@ RSpec.describe "Using in-memory gateways for cross-gateway access" do
     ROM::Configuration.new(left: :memory, right: :memory, main: :memory)
   end
 
-  let(:container) { ROM.runtime(configuration) }
+  let(:container) { ROM.setup(configuration) }
   let(:gateways) { container.gateways }
 
   it "works" do

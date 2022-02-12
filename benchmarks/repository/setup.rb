@@ -113,7 +113,7 @@ class UserRepo < ROM::Repository[:users]
   end
 end
 
-ROM_ENV = ROM.runtime(setup)
+ROM_ENV = ROM.setup(setup)
 
 COUNT = ENV.fetch("COUNT", 1000).to_i
 

@@ -1,20 +1,20 @@
 # frozen_string_literal: true
 
-require "rom/runtime"
+require "rom/setup"
 
-RSpec.describe ROM::Runtime do
-  subject(:runtime) do
-    ROM::Runtime.new { |runtime|
-      runtime.config.component.adapter = :memory
+RSpec.describe ROM::Setup do
+  subject(:setup) do
+    ROM::Setup.new { |setup|
+      setup.config.component.adapter = :memory
     }
   end
 
   let(:registry) do
-    runtime.registry
+    setup.registry
   end
 
   it "can define a dataset" do
-    dataset = runtime.dataset(:users) { [1, 2] }
+    dataset = setup.dataset(:users) { [1, 2] }
 
     expect(dataset.config[:id]).to be(:users)
     expect(dataset.config[:gateway]).to be(:default)
@@ -23,14 +23,14 @@ RSpec.describe ROM::Runtime do
   end
 
   it "can define a dataset with a gateway" do
-    runtime.gateway(:default)
-    runtime.dataset(:users)
+    setup.gateway(:default)
+    setup.dataset(:users)
 
     expect(registry["datasets.users"]).to be_a(ROM::Memory::Dataset)
   end
 
   it "can define a schema" do
-    schema = runtime.schema(:users)
+    schema = setup.schema(:users)
 
     expect(schema.config.id).to be(:users)
     expect(schema.config.gateway).to be(:default)
@@ -39,10 +39,10 @@ RSpec.describe ROM::Runtime do
   end
 
   it "can define a relation" do
-    runtime.gateway(:default)
-    runtime.dataset(:users)
+    setup.gateway(:default)
+    setup.dataset(:users)
 
-    relation = runtime.relation(:users)
+    relation = setup.relation(:users)
 
     expect(relation.config.id).to be(:users)
     expect(relation.config.dataset).to be(:users)
@@ -55,9 +55,9 @@ RSpec.describe ROM::Runtime do
   end
 
   it "can define a relation with a schema" do
-    runtime.gateway(:default)
+    setup.gateway(:default)
 
-    relation = runtime.relation(:users) do
+    relation = setup.relation(:users) do
       schema { attribute(:id, ROM::Types::Integer) }
     end
 
@@ -73,9 +73,9 @@ RSpec.describe ROM::Runtime do
   end
 
   it "can define a relation with a schema with its own dataset id" do
-    runtime.gateway(:default)
+    setup.gateway(:default)
 
-    relation = runtime.relation(:people) do
+    relation = setup.relation(:people) do
       schema(dataset: :users) { attribute(:id, ROM::Types::Integer) }
     end
 
@@ -95,9 +95,9 @@ RSpec.describe ROM::Runtime do
 
   # FIXME: this is a flaky spec
   xit "can define a relation with a schema and a dataset" do
-    runtime.gateway(:default)
+    setup.gateway(:default)
 
-    relation = runtime.relation(:people) do
+    relation = setup.relation(:people) do
       schema do
         attribute(:uuid, ROM::Types::String)
         attribute(:name, ROM::Types::String)
@@ -118,17 +118,17 @@ RSpec.describe ROM::Runtime do
 
   # FIXME: this is a flaky spec
   xit "can define a relation inheriting an abstract dataset" do
-    runtime.gateway(:default)
+    setup.gateway(:default)
 
-    runtime.dataset(id: :joe, abstract: true) do
+    setup.dataset(id: :joe, abstract: true) do
       insert(name: "Joe")
     end
 
-    runtime.dataset(id: :jane, abstract: true) do
+    setup.dataset(id: :jane, abstract: true) do
       insert(name: "Jane")
     end
 
-    runtime.relation(:people) do
+    setup.relation(:people) do
       dataset do |_schema|
         order(:name)
       end
@@ -136,16 +136,16 @@ RSpec.describe ROM::Runtime do
 
     users = registry["relations.people"]
 
-    expect(runtime.components.get(:datasets, id: :people)).to_not be_abstract
+    expect(setup.components.get(:datasets, id: :people)).to_not be_abstract
     expect(users.to_a).to eql([{name: "Jane"}, {name: "Joe"}])
   end
 
   it "can define commands" do
-    runtime.gateway(:default)
+    setup.gateway(:default)
 
-    runtime.relation(:users)
+    setup.relation(:users)
 
-    commands = runtime.commands(:users) do
+    commands = setup.commands(:users) do
       define(:create)
     end
 
@@ -163,7 +163,7 @@ RSpec.describe ROM::Runtime do
   end
 
   it "can define mappers" do
-    mappers = runtime.mappers do
+    mappers = setup.mappers do
       define(:users)
       define(:tasks)
     end
@@ -182,7 +182,7 @@ RSpec.describe ROM::Runtime do
   end
 
   it "can define mappers in a custom namespace" do
-    mappers = runtime.mappers(:serializers) do
+    mappers = setup.mappers(:serializers) do
       define(:users)
       define(:tasks)
       define(:json, parent: :tasks)
@@ -208,7 +208,7 @@ RSpec.describe ROM::Runtime do
   end
 
   it "can define top-level associations" do
-    associations = runtime.associations(source: :users) do
+    associations = setup.associations(source: :users) do
       has_many :tasks
     end
 
@@ -221,13 +221,13 @@ RSpec.describe ROM::Runtime do
   end
 
   it "can define relation associations" do
-    runtime.relation(:users) do
+    setup.relation(:users) do
       associations do
         has_many :tasks
       end
     end
 
-    associations = runtime.components.associations
+    associations = setup.components.associations
 
     expect(associations.size).to be(1)
 
@@ -241,7 +241,7 @@ RSpec.describe ROM::Runtime do
   end
 
   it "can define a local plugin" do
-    plugin = runtime.plugin(:memory, schemas: :timestamps) { |config|
+    plugin = setup.plugin(:memory, schemas: :timestamps) { |config|
       config.attributes = %w[foo bar]
     }
 

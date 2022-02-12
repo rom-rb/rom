@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require "rom/runtime"
+require "rom/setup"
 
 RSpec.shared_context "runtime" do
-  let(:runtime) { ROM::Runtime.new(:memory) }
-  let(:registry) { runtime.finalize }
+  let(:runtime) { ROM::Setup.new(:memory) }
+  let(:registry) { setup.finalize }
   let(:gateway) { registry.gateways[:default] }
   let(:users_relation) { registry.relations[:users] }
   let(:tasks_relation) { registry.relations[:tasks] }

@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-require "rom/runtime"
+require "rom/setup"
 
-RSpec.describe ROM::Runtime, "auto loading" do
-  subject(:runtime) do
-    ROM::Runtime.new(:memory)
+RSpec.describe ROM::Setup, "auto loading" do
+  subject(:setup) do
+    ROM::Setup.new(:memory)
   end
 
   let(:registry) do
-    runtime.registry
+    setup.registry
   end
 
   around do |example|
@@ -27,7 +27,7 @@ RSpec.describe ROM::Runtime, "auto loading" do
 
   context "auto-loading with a namespace" do
     it "auto-loads relation definition file" do
-      runtime.auto_register(
+      setup.auto_register(
         SPEC_ROOT.join("fixtures/auto_loading/persistence"), auto_load: false
       ).finalize
 
@@ -39,7 +39,7 @@ RSpec.describe ROM::Runtime, "auto loading" do
 
   context "auto-loading without a namespace" do
     it "auto-loads component definition files" do
-      runtime.auto_register(
+      setup.auto_register(
         SPEC_ROOT.join("fixtures/auto_loading/app"), namespace: false, auto_load: true
       ).finalize
 

@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require "rom/runtime"
+require "rom/setup"
 
 RSpec.describe "Setting up ROM with multiple runtimes" do
   let(:runtime) do
-    {one: ROM::Runtime.new(:memory), two: ROM::Runtime.new(:memory)}
+    {one: ROM::Setup.new(:memory), two: ROM::Setup.new(:memory)}
   end
 
   let(:registries) do

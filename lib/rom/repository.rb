@@ -22,7 +22,7 @@ module ROM
   # against the root relation.
   #
   # @example
-  #   rom = ROM.runtime(:sql, 'sqlite::memory') do |conf|
+  #   rom = ROM.setup(:sql, 'sqlite::memory') do |conf|
   #     conf.default.create_table(:users) do
   #       primary_key :id
   #       column :name, String

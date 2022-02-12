@@ -108,11 +108,11 @@ module ROM
     option :inflector, default: -> { config.component.inflector }
 
     # @!attribute [r] schemas
-    #   @return [Runtime::registry] Relation schemas
+    #   @return [Setup::registry] Relation schemas
     option :schemas, default: -> { registry.schemas.scoped(config.component.id, config: config) }
 
     # @!attribute [r] schema
-    #   @return [Runtime::registry] The canonical schema
+    #   @return [Setup::registry] The canonical schema
     option :schema, default: -> { schemas.infer(config.component.id) }
 
     # @!attribute [r] datasets
@@ -125,7 +125,7 @@ module ROM
     option :dataset, default: -> { datasets.infer(config.component.id) }
 
     # @!attribute [r] associations
-    #   @return [Runtime::registry] Relation associations
+    #   @return [Setup::registry] Relation associations
     option :associations, default: -> { registry.associations.scoped(config.component.id) }
 
     # @!attribute [r] input_schema

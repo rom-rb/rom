@@ -1,20 +1,20 @@
 # frozen_string_literal: true
 
-require "rom/runtime"
+require "rom/setup"
 
-RSpec.describe ROM::Runtime do
+RSpec.describe ROM::Setup do
   it "is configurable via settings hash" do
-    runtime = ROM::Runtime.new(:memory, "something", infer_schema: false)
+    setup = ROM::Setup.new(:memory, "something", infer_schema: false)
 
-    expect(runtime.config.gateways.default.infer_schema).to be(false)
+    expect(setup.config.gateways.default.infer_schema).to be(false)
 
-    runtime = ROM::Runtime.new(:memory, infer_schema: false)
+    setup = ROM::Setup.new(:memory, infer_schema: false)
 
-    expect(runtime.config.gateways.default.infer_schema).to be(false)
+    expect(setup.config.gateways.default.infer_schema).to be(false)
 
-    runtime = ROM::Runtime.new(default: [:memory, infer_schema: false])
+    setup = ROM::Setup.new(default: [:memory, infer_schema: false])
 
-    expect(runtime.config.gateways.default.infer_schema).to be(false)
+    expect(setup.config.gateways.default.infer_schema).to be(false)
   end
 
   describe "defining components when adapter was not registered" do

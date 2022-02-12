@@ -14,14 +14,14 @@ RSpec.shared_context "changeset / database setup" do
   include_context "changeset / db_uri"
 
   let(:configuration) do
-    ROM::Runtime.new(:sql, db_uri) do |config|
+    ROM::Setup.new(:sql, db_uri) do |config|
       config.plugin(:sql, relation: :auto_restrictions)
     end
   end
 
   let(:conn) { rom.gateways[:default].connection }
 
-  let(:rom) { ROM.runtime(configuration) }
+  let(:rom) { ROM.setup(configuration) }
 
   let(:logger) do
     Logger.new(File.open("./log/test.log", "a"))
