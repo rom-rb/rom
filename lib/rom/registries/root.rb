@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require "dry/container"
 require "dry/core/memoizable"
 
 require_relative "../core"
 require_relative "../constants"
 require_relative "../initializer"
 require_relative "../inferrer"
+require_relative "container"
 
 module ROM
   module Registries
@@ -16,16 +16,6 @@ module ROM
       include Dry::Core::Memoizable
       include Dry::Effects::Handler.Reader(:registry)
       include Enumerable
-
-      MISSING_ELEMENT_ERRORS = {
-        gateways: GatewayMissingError,
-        schemas: SchemaMissingError,
-        datasets: DatasetMissingError,
-        relations: RelationMissingError,
-        associations: RelationMissingError,
-        commands: CommandNotFoundError,
-        mappers: MapperMissingError
-      }.freeze
 
       CORE_COMPONENTS.each do |type|
         require_relative "#{type}"
@@ -50,10 +40,6 @@ module ROM
         define_method(:"#{type}?") do
           self.type == type
         end
-      end
-
-      class Container
-        include Dry::Container::Mixin
       end
 
       option :config, default: -> { ROM.config }
