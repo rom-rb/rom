@@ -17,6 +17,26 @@ module ROM
       include Dry::Effects::Handler.Reader(:registry)
       include Enumerable
 
+      option :config, default: -> { ROM.config }
+
+      option :components, default: -> { Components::Registry.new(provider: Runtime.new) }
+
+      option :container, default: -> { Container.new }
+
+      option :inferrer, default: -> { Inferrer.new }
+
+      option :loader, optional: true
+
+      option :notifications, optional: true
+
+      option :type, optional: true
+
+      option :path, default: -> { EMPTY_ARRAY }
+
+      option :root, default: -> { self }
+
+      option :opts, default: -> { EMPTY_HASH }
+
       CORE_COMPONENTS.each do |type|
         require_relative "#{type}"
 
@@ -41,26 +61,6 @@ module ROM
           self.type == type
         end
       end
-
-      option :config, default: -> { ROM.config }
-
-      option :components, default: -> { Components::Registry.new(provider: Runtime.new) }
-
-      option :container, default: -> { Container.new }
-
-      option :inferrer, default: -> { Inferrer.new }
-
-      option :loader, optional: true
-
-      option :notifications, optional: true
-
-      option :type, optional: true
-
-      option :path, default: -> { EMPTY_ARRAY }
-
-      option :root, default: -> { self }
-
-      option :opts, default: -> { EMPTY_HASH }
 
       # @api public
       def fetch(key, &block)
