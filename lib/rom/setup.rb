@@ -15,7 +15,7 @@ require "rom/loader"
 
 module ROM
   # @api public
-  class Runtime
+  class Setup
     extend Notifications
 
     include ROM::Provider(
@@ -94,7 +94,7 @@ module ROM
       configure(*args, &block)
     end
 
-    # @return [Registry::Root] Runtime component registry
+    # @return [Registry::Root] Setup component registry
     # @api private
     def registry
       @registry ||=

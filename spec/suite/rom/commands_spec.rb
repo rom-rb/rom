@@ -16,7 +16,7 @@ RSpec.describe "Commands" do
 
   describe "custom command component" do
     it "creates a command class constant" do
-      config = ROM::Runtime.new do |config|
+      config = ROM::Setup.new do |config|
         config.commands(:users, adapter: :memory) do
           define(:create) do
             def super?

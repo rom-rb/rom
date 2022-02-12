@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-require "rom/runtime"
+require "rom/setup"
 
 RSpec.shared_context "container" do
-  let(:runtime) { ROM::Runtime.new(:memory) }
-  let(:registry) { runtime.finalize }
-  let(:configuration) { runtime }
+  let(:setup) { ROM::Setup.new(:memory) }
+  let(:registry) { setup.finalize }
+  let(:configuration) { setup }
   let(:container) { registry }
   let(:gateway) { registry.gateways[:default] }
   let(:users_relation) { container.relations[:users] }

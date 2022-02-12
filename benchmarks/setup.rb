@@ -242,7 +242,7 @@ setup.register_relation(Relations::Tags)
 setup.register_relation(Relations::Posts)
 setup.register_relation(Relations::UsersPosts)
 
-ROM_ENV = ROM.runtime(setup)
+ROM_ENV = ROM.setup(setup)
 
 VERIFY = ENV.fetch("VERIFY") { false }
 COUNT = ENV.fetch("COUNT", 1000).to_i

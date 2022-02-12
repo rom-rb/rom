@@ -5,13 +5,13 @@ require "rom/repository"
 RSpec.describe "Repository with multi-adapters configuration" do
   include_context "repository / db_uri"
 
-  let(:runtime) {
-    ROM::Runtime.new(default: [:sql, db_uri], memory: [:memory])
+  let(:setup) {
+    ROM::Setup.new(default: [:sql, db_uri], memory: [:memory])
   }
 
   let(:sql_conn) { registry.gateways[:default].connection }
 
-  let(:registry) { runtime.finalize }
+  let(:registry) { setup.finalize }
 
   let(:users) { registry.relations[:sql_users] }
   let(:tasks) { registry.relations[:memory_tasks] }
@@ -74,8 +74,8 @@ RSpec.describe "Repository with multi-adapters configuration" do
       end
     end
 
-    runtime.register_relation(Test::Users)
-    runtime.register_relation(Test::Tasks)
+    setup.register_relation(Test::Users)
+    setup.register_relation(Test::Tasks)
 
     user_id = registry.gateways[:default].dataset(:users).insert(name: "Jane")
     registry.gateways[:memory].dataset(:tasks).insert(user_id: user_id, title: "Jane Task")

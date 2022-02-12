@@ -3,26 +3,26 @@
 require "rom/memory"
 
 RSpec.describe "Using in-memory gateways for cross-gateway access" do
-  let(:runtime) { ROM::Runtime.new(left: :memory, right: :memory, main: :memory) }
-  let(:registry) { runtime.finalize }
+  let(:setup) { ROM::Setup.new(left: :memory, right: :memory, main: :memory) }
+  let(:registry) { setup.finalize }
   let(:gateways) { registry.gateways }
 
   it "works" do
-    runtime.relation(:users, gateway: :left) do
+    setup.relation(:users, gateway: :left) do
       def by_name(name)
         restrict(name: name)
       end
     end
 
-    runtime.relation(:tasks, gateway: :right)
+    setup.relation(:tasks, gateway: :right)
 
-    runtime.relation(:users_and_tasks, gateway: :main) do
+    setup.relation(:users_and_tasks, gateway: :main) do
       def by_user(name)
         join(users.by_name(name), tasks)
       end
     end
 
-    runtime.mappers do
+    setup.mappers do
       define(:users_and_tasks) do
         group tasks: [:title]
       end

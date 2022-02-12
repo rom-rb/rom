@@ -19,7 +19,7 @@ module ROM
 
       option :config, default: -> { ROM.config }
 
-      option :components, default: -> { Components::Registry.new(provider: Runtime.new) }
+      option :components, default: -> { Components::Registry.new(provider: Setup.new) }
 
       option :container, default: -> { Container.new }
 
@@ -183,7 +183,7 @@ module ROM
       # Disconnect all gateways
       #
       # @example
-      #   rom = ROM.runtime(:sql, 'sqlite://my_db.sqlite')
+      #   rom = ROM.setup(:sql, 'sqlite://my_db.sqlite')
       #   rom.relations[:users].insert(name: "Jane")
       #   rom.disconnect
       #

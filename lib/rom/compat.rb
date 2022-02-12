@@ -4,7 +4,7 @@ require "dry/core/class_attributes"
 
 require "rom/core"
 require "rom/registries/root"
-require "rom/runtime"
+require "rom/setup"
 require "rom/container"
 require "rom/global"
 
@@ -20,13 +20,13 @@ module ROM
   module Global
     # @api public
     # @deprecated
-    alias_method :container, :runtime
+    alias_method :container, :setup
   end
 
-  Configuration = Runtime
+  Configuration = Setup
 
   # @api public
-  class Runtime
+  class Setup
     # @api public
     # @deprecated
     def inflector=(inflector)

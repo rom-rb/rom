@@ -14,7 +14,7 @@ RSpec.shared_context "repository / database setup" do
   include_context "repository / db_uri"
 
   let(:configuration) do
-    ROM::Runtime.new(:sql, db_uri) do |config|
+    ROM::Setup.new(:sql, db_uri) do |config|
       config.plugin(:sql, relation: :auto_restrictions)
     end
   end
@@ -24,7 +24,7 @@ RSpec.shared_context "repository / database setup" do
   end
 
   let(:rom) do
-    ROM.runtime(configuration)
+    ROM.setup(configuration)
   end
 
   let(:logger) do

@@ -19,8 +19,8 @@ RSpec.describe ROM::Relation, ".view" do
   end
 
   let(:rom) do
-    ROM.runtime(:memory) { |runtime|
-      runtime.register_relation(relation_class, tasks)
+    ROM.setup(:memory) { |setup|
+      setup.register_relation(relation_class, tasks)
     }
   end
 

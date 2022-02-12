@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "spec_helper"
+require "rom/compat"
 
 RSpec.describe ROM::Configuration do
   subject(:config) { ROM::Configuration.new(*params) }

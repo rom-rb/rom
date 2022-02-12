@@ -1,35 +1,35 @@
 # frozen_string_literal: true
 
-require "rom/runtime"
+require "rom/setup"
 
 RSpec.describe "Plugins / schema / :timestamps" do
-  subject(:schema) { container.relations[:users].schema }
+  subject(:schema) { registry.relations[:users].schema }
 
-  let(:runtime) { ROM::Runtime.new(:memory) }
-  let(:container) { ROM.runtime(runtime) }
+  let(:setup) { ROM::Setup.new(:memory) }
+  let(:registry) { setup.finalize }
 
   it "allows setting timestamps in all schemas" do
-    runtime.plugin(:memory, schemas: :timestamps)
+    setup.plugin(:memory, schemas: :timestamps)
 
-    runtime.relation(:users)
+    setup.relation(:users)
 
     expect(schema.to_h.keys).to eql(%i[created_at updated_at])
   end
 
   it "accepts options" do
-    runtime.plugin(:memory, schemas: :timestamps) do |p|
+    setup.plugin(:memory, schemas: :timestamps) do |p|
       p.attributes = %i[created_on updated_on]
     end
 
-    runtime.relation(:users)
+    setup.relation(:users)
 
     expect(schema.to_h.keys).to eql(%i[created_on updated_on])
   end
 
   it "extends schema dsl" do
-    runtime.plugin(:memory, schemas: :timestamps)
+    setup.plugin(:memory, schemas: :timestamps)
 
-    runtime.relation(:users) do
+    setup.relation(:users) do
       schema do
         timestamps :created_on, :updated_on
       end

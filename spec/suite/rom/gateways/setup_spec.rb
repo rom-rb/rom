@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require "rom/runtime"
+require "rom/setup"
 
-RSpec.describe ROM::Runtime do
-  subject(:configuration) { ROM::Runtime.new(*params, &block) }
+RSpec.describe ROM::Setup do
+  subject(:setup) { ROM::Setup.new(*params, &block) }
 
   let(:block) { proc {} }
-  let(:container) { ROM.runtime(configuration) }
-  let(:gateways) { container.gateways }
+  let(:registry) { ROM.setup(setup) }
+  let(:gateways) { registry.gateways }
 
   context "with an adapter identifier" do
     let(:params) { [:memory] }
@@ -23,8 +23,8 @@ RSpec.describe ROM::Runtime do
     let(:params) { [:memory] }
 
     let(:block) do
-      proc do |runtime|
-        runtime.config.gateways.default.my_setting = "test"
+      proc do |setup|
+        setup.config.gateways.default.my_setting = "test"
       end
     end
 
@@ -82,10 +82,10 @@ RSpec.describe ROM::Runtime do
       let(:params) { [foo: [:test, "foo"], bar: [:test, ["bar"]]] }
 
       it "configures the gateway instance" do
-        expect(configuration.config.gateways.foo.adapter).to be(:test)
-        expect(configuration.config.gateways.foo.args).to match_array(%w[foo])
-        expect(configuration.config.gateways.bar.adapter).to be(:test)
-        expect(configuration.config.gateways.bar.args).to match_array(%w[bar])
+        expect(setup.config.gateways.foo.adapter).to be(:test)
+        expect(setup.config.gateways.foo.args).to match_array(%w[foo])
+        expect(setup.config.gateways.bar.adapter).to be(:test)
+        expect(setup.config.gateways.bar.args).to match_array(%w[bar])
       end
     end
 
@@ -93,7 +93,7 @@ RSpec.describe ROM::Runtime do
       let(:params) { [:test, "foo"] }
 
       it "configures the gateway instance" do
-        expect(configuration.config.gateways.default.args).to match_array(["foo"])
+        expect(setup.config.gateways.default.args).to match_array(["foo"])
       end
     end
   end

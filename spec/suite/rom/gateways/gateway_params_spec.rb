@@ -2,11 +2,11 @@
 
 RSpec.describe ROM, ".container" do
   let(:conf) do
-    ROM::Runtime.new(:test_adapter, :param, option: :option)
+    ROM::Setup.new(:test_adapter, :param, option: :option)
   end
 
   let(:container) do
-    ROM.runtime(conf)
+    ROM.setup(conf)
   end
 
   let(:gateway) do

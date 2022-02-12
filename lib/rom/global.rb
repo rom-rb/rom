@@ -31,12 +31,12 @@ module ROM
     attr_reader :handlers
 
     # @api public
-    def runtime(*args, &block)
+    def setup(*args, &block)
       case args.first
-      when Runtime
+      when Setup
         args.first
       else
-        Runtime.new(*args, &block)
+        Setup.new(*args, &block)
       end.finalize
     end
 

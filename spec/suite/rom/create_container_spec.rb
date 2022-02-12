@@ -107,7 +107,7 @@ RSpec.describe ROM::Global, "#container" do
   end
 
   context "empty setup" do
-    let(:container) { ROM.runtime }
+    let(:container) { ROM.setup }
 
     it "builds empty gateways" do
       expect(container.gateways.keys).to be_empty

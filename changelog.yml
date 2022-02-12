@@ -1,7 +1,7 @@
 ---
 - version: unreleased
-  summary: 
-  date: 
+  summary:
+  date:
   fixed:
   - 'Setup works under MRI 3.0.0 (issue #622 fixed via #623) (@v-kolesnikov)'
   added:
@@ -77,7 +77,7 @@
     rather than `:default` so that we can detect when it was not specified and act
     accordingly. This will only make sense when there's just *one adapter available*
     (via bedb330f0ec195d9acacf4481dad3a705e8a36af) (@solnic)"
-  - "`ROM::Configuration` is deprecated and it was replaced by `ROM::Runtime` (via
+  - "`ROM::Configuration` is deprecated and it was replaced by `ROM::Setup` (via
     #653) (@solnic)"
   - "`ROM.container` is deprecated and it was replaced by `ROM.runtime` (via #653)
     (@solnic)"
@@ -95,12 +95,12 @@
   - "[internal] `ROM.plugin_registry` is deprecated, use `ROM.plugins` instead (via
     #660) (@solnic)"
 - version: 5.2.4
-  summary: 
+  summary:
   date: '2020-05-08'
   fixed:
   - "[rom] Bumped rom-changeset version (@flash-gordon)"
 - version: 5.2.3
-  summary: 
+  summary:
   date: '2020-05-07'
   fixed:
   - "[rom-core] Constructor types were fired twice when updating data (@flash-gordon)"
@@ -108,13 +108,13 @@
     was not evaluated in the context of a changeset object (fixed via #592) (@timriley
     + @solnic)"
 - version: 5.2.2
-  summary: 
+  summary:
   date: '2020-02-03'
   fixed:
   - "[rom-core] Constructor types were fired twice when writing data (@flash-gordon)"
   added:
   - "[rom-repository] `Repository#transaction` accepts transaction options now (@ianks)"
-  changed: 
+  changed:
 - version: 5.2.1
   date: '2020-01-11'
   summary: This release contains keyword fixes reported by Ruby 2.7.

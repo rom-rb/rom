@@ -44,7 +44,7 @@ RSpec.describe "Configuring ROM" do
 
   context "without schema" do
     it "builds empty registries if there is no schema" do
-      container = ROM.runtime(:memory)
+      container = ROM.setup(:memory)
       expect(container.relations).to be_empty
       expect(container.mappers).to be_empty
     end
@@ -52,7 +52,7 @@ RSpec.describe "Configuring ROM" do
 
   describe "defining classes" do
     let(:container) do
-      ROM.runtime(:memory) do |config|
+      ROM.setup(:memory) do |config|
         class Test::UserRelation < ROM::Relation[:memory]
           schema(:users) do
             attribute :name, ROM::Types::String
@@ -103,7 +103,7 @@ RSpec.describe "Configuring ROM" do
       pending "TODO: restore relation setting validation"
 
       expect {
-        ROM.runtime(:memory) { |config| config.register_relation(Test::BrokenRelation) }
+        ROM.setup(:memory) { |config| config.register_relation(Test::BrokenRelation) }
           .relations[:users]
       }.to raise_error(ROM::MissingAdapterIdentifierError, /Test::BrokenRelation/)
     end
@@ -118,7 +118,7 @@ RSpec.describe "Configuring ROM" do
         end
       end
 
-      container = ROM.runtime(:memory) do |rom|
+      container = ROM.setup(:memory) do |rom|
         rom.relation(:users) do
           def by_name(name)
             restrict(name: name)
@@ -153,7 +153,7 @@ RSpec.describe "Configuring ROM" do
         end
       end
 
-      configuration = ROM::Runtime.new(:memory)
+      configuration = ROM::Setup.new(:memory)
 
       configuration.relation(:users) do
         def by_name(name)
@@ -171,7 +171,7 @@ RSpec.describe "Configuring ROM" do
         end
       end
 
-      container = ROM.runtime(configuration)
+      container = ROM.setup(configuration)
 
       container.commands[:users][:create].call(name: "Jane")
 
@@ -188,7 +188,7 @@ RSpec.describe "Configuring ROM" do
     end
 
     2.times do
-      ROM.runtime(:memory) { |c| c.register_relation(Test::UserRelation) }
+      ROM.setup(:memory) { |c| c.register_relation(Test::UserRelation) }
     end
   end
 
@@ -196,7 +196,7 @@ RSpec.describe "Configuring ROM" do
     it "allows setting instrumentation for relations" do
       Test::Notifications = double(:notifications)
 
-      configuration = ROM::Runtime.new(:memory)
+      configuration = ROM::Setup.new(:memory)
 
       configuration.plugin(:memory, relations: :instrumentation) do |p|
         p.notifications = Test::Notifications
@@ -204,7 +204,7 @@ RSpec.describe "Configuring ROM" do
 
       configuration.relation(:users)
 
-      container = ROM.runtime(configuration)
+      container = ROM.setup(configuration)
 
       users = container.relations[:users]
 

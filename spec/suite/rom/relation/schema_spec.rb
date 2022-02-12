@@ -40,11 +40,11 @@ RSpec.describe ROM::Relation, "#schema" do
     end
 
     let(:registry) do
-      runtime.registry
+      setup.registry
     end
 
-    let(:runtime) do
-      ROM::Runtime.new(:memory)
+    let(:setup) do
+      ROM::Setup.new(:memory)
     end
 
     let(:schema) do
@@ -52,7 +52,7 @@ RSpec.describe ROM::Relation, "#schema" do
     end
 
     it "returns an inferred empty schema by default" do
-      runtime.relation(:users)
+      setup.relation(:users)
 
       expect(schema).to be_empty
       expect(schema.name.relation).to be(:users)
@@ -60,7 +60,7 @@ RSpec.describe ROM::Relation, "#schema" do
     end
 
     it "returns explictly defined schema" do
-      runtime.relation(:users) do
+      setup.relation(:users) do
         schema do
           attribute :id, ROM::Types::Integer
           attribute :name, ROM::Types::Integer
@@ -73,7 +73,7 @@ RSpec.describe ROM::Relation, "#schema" do
     end
 
     it "returns explictly defined schema with a custom dataset" do
-      runtime.relation(:users) do
+      setup.relation(:users) do
         schema(:people) do
           attribute :id, ROM::Types::Integer
           attribute :name, ROM::Types::Integer

@@ -3,23 +3,23 @@
 require "rom/core"
 
 RSpec.describe ROM::Components::DSL, "#schema" do
-  subject(:runtime) do
-    ROM::Runtime.new
+  subject(:setup) do
+    ROM::Setup.new
   end
 
   let(:schema) do
-    runtime.registry["schemas.users"]
+    setup.registry["schemas.users"]
   end
 
   it "defines an empty schema by default" do
-    runtime.schema(:users)
+    setup.schema(:users)
 
     expect(schema.name.dataset).to be(:users)
     expect(schema).to be_empty
   end
 
   it "defines an empty schema with attributes" do
-    runtime.schema(:users) do
+    setup.schema(:users) do
       attribute(:id, Types::Integer)
       attribute(:name, Types::String)
     end
