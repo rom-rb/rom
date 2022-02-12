@@ -118,7 +118,7 @@ module ROM
       load_adapters
 
       # Allow customizations now
-      yield(self) if block_given?
+      yield(self, config) if block_given?
 
       # Register gateway components based on current config
       register_gateways
