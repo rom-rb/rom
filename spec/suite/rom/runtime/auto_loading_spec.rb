@@ -7,8 +7,8 @@ RSpec.describe ROM::Runtime, "auto loading" do
     ROM::Runtime.new(:memory)
   end
 
-  let(:resolver) do
-    runtime.resolver
+  let(:registry) do
+    runtime.registry
   end
 
   around do |example|
@@ -31,9 +31,9 @@ RSpec.describe ROM::Runtime, "auto loading" do
         SPEC_ROOT.join("fixtures/auto_loading/persistence"), auto_load: false
       ).finalize
 
-      expect(resolver.relations[:tasks]).to be_a(Persistence::Relations::Tasks)
-      expect(resolver.mappers[:tasks][:listing]).to be_a(Persistence::Mappers::Tasks::Listing)
-      expect(resolver.commands[:tasks][:create]).to be_a(Persistence::Commands::Tasks::Create)
+      expect(registry.relations[:tasks]).to be_a(Persistence::Relations::Tasks)
+      expect(registry.mappers[:tasks][:listing]).to be_a(Persistence::Mappers::Tasks::Listing)
+      expect(registry.commands[:tasks][:create]).to be_a(Persistence::Commands::Tasks::Create)
     end
   end
 
@@ -43,9 +43,9 @@ RSpec.describe ROM::Runtime, "auto loading" do
         SPEC_ROOT.join("fixtures/auto_loading/app"), namespace: false, auto_load: true
       ).finalize
 
-      expect(resolver.relations[:users]).to be_a(Relations::Users)
-      expect(resolver.mappers[:users][:listing]).to be_a(Mappers::Users::Listing)
-      expect(resolver.commands[:users][:create]).to be_a(Commands::Users::Create)
+      expect(registry.relations[:users]).to be_a(Relations::Users)
+      expect(registry.mappers[:users][:listing]).to be_a(Mappers::Users::Listing)
+      expect(registry.commands[:users][:create]).to be_a(Commands::Users::Create)
     end
   end
 end

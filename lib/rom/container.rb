@@ -111,7 +111,7 @@ module ROM
       end
     end
 
-    # Return runtime configuration with component resolvers
+    # Return runtime configuration with component registries
     #
     # @return [Runtime::Configuration]
     #

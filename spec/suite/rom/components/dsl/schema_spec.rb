@@ -8,7 +8,7 @@ RSpec.describe ROM::Components::DSL, "#schema" do
   end
 
   let(:schema) do
-    runtime.resolver["schemas.users"]
+    runtime.registry["schemas.users"]
   end
 
   it "defines an empty schema by default" do

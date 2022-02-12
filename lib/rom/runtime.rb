@@ -94,10 +94,10 @@ module ROM
       configure(*args, &block)
     end
 
-    # @return [Resolver] Runtime component resolver
+    # @return [Registry::Root] Runtime component registry
     # @api private
-    def resolver
-      @resolver ||=
+    def registry
+      @registry ||=
         begin
           options = {config: config, notifications: notifications}
           options[:loader] = loader if config.auto_register.auto_load
@@ -207,7 +207,7 @@ module ROM
       config.freeze
       attach_listeners
       loader.() if config.auto_register.key?(:root_directory)
-      resolver
+      registry
     end
 
     # Apply a plugin to the configuration

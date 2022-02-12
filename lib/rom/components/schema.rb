@@ -16,9 +16,9 @@ module ROM
       # @api public
       def build
         if view?
-          resolver.schemas[config.relation].instance_eval(&block)
+          registry.schemas[config.relation].instance_eval(&block)
         else
-          schema = config.constant.define(name, **config, inferrer: inferrer, resolver: resolver)
+          schema = config.constant.define(name, **config, inferrer: inferrer, registry: registry)
 
           if gateway?
             schema.finalize_attributes!(gateway: gateway)

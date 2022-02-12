@@ -69,20 +69,20 @@ module ROM
     #   @return [Symbol] The name of this schema
     param :name
 
-    # @!attribute [r] resolver
-    #   @return [resolver] Resolver with runtime dependency resolving
-    option :resolver, default: -> { self.class.resolver }
+    # @!attribute [r] registry
+    #   @return [registry] Registry::Root with runtime dependency resolving
+    option :registry, default: -> { self.class.registry }
 
     # @!attribute [r] relations
-    #   @return [resolver] Runtime relation resolver
-    option :relations, default: -> { resolver.relations }
+    #   @return [registry] Runtime relation registry
+    option :relations, default: -> { registry.relations }
 
     # @!attribute [r] attributes
     #   @return [Array] Array with schema attributes
     option :attributes, default: -> { EMPTY_ARRAY }
 
     # @!attribute [r] associations
-    #   @return [Runtime::Resolver] Optional association set (this is adapter-specific)
+    #   @return [Runtime::Registry::Root] Optional association set (this is adapter-specific)
     option :associations, default: -> { EMPTY_ASSOCIATION_SET }
 
     # @!attribute [r] inferrer

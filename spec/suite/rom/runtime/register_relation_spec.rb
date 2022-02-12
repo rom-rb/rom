@@ -7,8 +7,8 @@ RSpec.describe ROM::Runtime, "#register_relation" do
     ROM::Runtime.new
   end
 
-  let(:resolver) do
-    runtime.resolver
+  let(:registry) do
+    runtime.registry
   end
 
   it "registers a relation class using provided component's id" do
@@ -16,7 +16,7 @@ RSpec.describe ROM::Runtime, "#register_relation" do
 
     runtime.register_relation(Users)
 
-    expect(resolver["relations.users"]).to be_instance_of(Users)
+    expect(registry["relations.users"]).to be_instance_of(Users)
   end
 
   it "registers a relation class with component's id inferred from the class name" do
@@ -26,6 +26,6 @@ RSpec.describe ROM::Runtime, "#register_relation" do
 
     runtime.register_relation(Users)
 
-    expect(resolver["relations.users"]).to be_instance_of(Users)
+    expect(registry["relations.users"]).to be_instance_of(Users)
   end
 end

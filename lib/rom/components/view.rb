@@ -20,7 +20,7 @@ module ROM
       #
       # @api private
       def build
-        resolver.relations[relation_id].public_send(config.id)
+        registry.relations[relation_id].public_send(config.id)
       end
 
       # @return [Symbol]
