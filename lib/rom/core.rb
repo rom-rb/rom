@@ -19,6 +19,17 @@ require_relative "components/mapper"
 # Core plugins
 require_relative "plugins"
 
+# Set up ROM
+#
+# @api public
+def ROM(*args, &block)
+  if block
+    ROM.setup(*args, &block)
+  else
+    ROM::Setup.new(*args)
+  end
+end
+
 # Global ROM interface for core setup
 #
 # @api public

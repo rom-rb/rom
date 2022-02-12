@@ -3,7 +3,7 @@
 require "rom/setup"
 
 RSpec.shared_context "runtime" do
-  let(:runtime) { ROM::Setup.new(:memory) }
+  let(:runtime) { ROM(:memory) }
   let(:registry) { setup.finalize }
   let(:gateway) { registry.gateways[:default] }
   let(:users_relation) { registry.relations[:users] }
