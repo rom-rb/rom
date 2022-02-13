@@ -79,6 +79,17 @@ module ROM
             .to_h { |plugin| [plugin.name, plugin] }
         end
 
+        # @api private
+        def enable_plugins
+          config.plugins.map! do |plugin|
+            if plugin.type == type
+              plugin.configure.enable(respond_to?(:constant) ? constant : self)
+            else
+              plugin
+            end
+          end
+        end
+
         private
 
         # @api private

@@ -12,18 +12,7 @@ module ROM
 
       # @api public
       def build
-        relation = registry.relations[config.relation]
-
-        trigger(
-          "commands.class.before_build",
-          command: constant,
-          gateway: registry.gateways[relation.gateway],
-          dataset: relation.dataset,
-          relation: relation,
-          adapter: adapter
-        )
-
-        constant.build(relation)
+        gateway.command(constant, relation: registry.relations[config.relation])
       end
 
       # @api private

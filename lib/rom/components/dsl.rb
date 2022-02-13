@@ -204,19 +204,27 @@ module ROM
       # @return [Plugin]
       #
       # @api public
-      def plugin(adapter, spec, &block)
-        type, name = spec.flatten(1)
+      def plugin(*args, &block)
+        case args.size
+        when 2
+          adapter, spec = args
+          type, name = spec.flatten(1)
 
-        # TODO: plugin types are singularized, so this is not consistent
-        #       with the configuration DSL for plugins that uses plural
-        #       names of the components - this should be unified
-        plugin = ROM
-          .plugins[Inflector.singularize(type)].adapter(adapter).fetch(name)
-          .configure(&block)
+          # TODO: plugin types are singularized, so this is not consistent
+          #       with the configuration DSL for plugins that uses plural
+          #       names of the components - this should be unified
+          plugin = ROM
+            .plugins[Inflector.singularize(type)].adapter(adapter).fetch(name)
+            .configure(&block)
 
-        config.component.plugins << plugin
+          config.component.plugins << plugin
 
-        plugin
+          plugin
+        when 1
+          plugin(self.adapter, *args)
+        else
+          raise ArgumentError, "+plugin+ accepts either 1 or 2 arguments (#{args.size} given)"
+        end
       end
 
       # @api public
@@ -230,24 +238,15 @@ module ROM
       def __dsl__(klass, type: klass.type, **options, &block)
         type_config = config[type].join(options, :right).inherit!(config.component)
 
-        plugins =
-          if type_config.key?(:plugins)
-            type_config.plugins
-          else
-            EMPTY_ARRAY
-          end
-
-        type_plugins = plugins.select { |plugin| plugin.type == type }
-
         if klass.nested && block
           dsl = klass.new(provider: self, config: type_config)
-          type_plugins.each { |plugin| plugin.enable(dsl) }
+          dsl.enable_plugins
           dsl.configure
           dsl.instance_eval(&block)
           dsl
         else
           dsl = klass.new(provider: self, config: type_config, block: block)
-          type_plugins.each { |plugin| plugin.enable(dsl) }
+          dsl.enable_plugins
           dsl.()
         end
       end

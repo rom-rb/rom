@@ -43,11 +43,11 @@ RSpec.describe "ROM repository with typed structs" do
   context "read-write type coercions" do
     before do
       configuration.relation(:books) do
-        schema(:books, infer: true) do
-          attribute :title,
-                    ROM::Types::Coercible::String.meta(
-                      read: ROM::Types::Symbol.constructor { |s| (s + "!").to_sym }
-                    )
+        schema(infer: true) do
+          attribute(
+            :title,
+            ROM::Types::Coercible::String, read: ROM::Types::Symbol.constructor { |s| :"#{s}!" }
+          )
         end
       end
 
@@ -56,14 +56,13 @@ RSpec.describe "ROM repository with typed structs" do
       end
     end
 
-    # FIXME: this is flaky
     it "loads typed structs" do
-      created_book = repo.create(title: :'Hello World', created_at: Time.now)
+      created_book = repo.create(title: "Hello World", created_at: Time.now)
 
       expect(created_book).to be_kind_of(Dry::Struct)
 
       expect(created_book.id).to be_kind_of(Integer)
-      expect(created_book.title).to eql(:'Hello World!')
+      expect(created_book.title).to eql(:"Hello World!")
       expect(created_book.created_at).to be_kind_of(Time)
 
       book = repo.books.to_a.first

@@ -5,7 +5,6 @@ require "set"
 require "dry/effects"
 
 require "rom/support/inflector"
-require "rom/support/notifications"
 
 require "rom/constants"
 require "rom/relation/name"
@@ -17,7 +16,6 @@ module ROM
     #
     # @api public
     module ClassInterface
-      include Plugins::ClassMethods
       extend Notifications::Listener
 
       # Return adapter-specific relation subclass
