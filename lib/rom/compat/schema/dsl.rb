@@ -41,10 +41,6 @@ module ROM
       #   @return [Class] Attribute class that should be used
       option :attr_class, default: -> { Attribute }
 
-      # @!attribute [r] plugins
-      #   @return [Class] Plugins enabled by default through configuration
-      option :plugins, default: -> { EMPTY_ARRAY.dup }
-
       # @!attribute [r] attributes
       #   @return [Hash<Symbol, Hash>] A hash with attribute names as
       #   keys and attribute representations as values.
@@ -55,6 +51,10 @@ module ROM
       # @!attribute [r] definition
       #   @return [Class] An optional block that will be evaluated as part of this DSL
       option :definition, type: Types.Instance(Proc), default: -> { Proc.new {} }
+
+      # @!attribute [r] plugins
+      #   @return [Array<Plugin>]
+      option :plugins, default: -> { EMPTY_ARRAY }
 
       # @api private
       def self.new(**options, &block)
@@ -155,7 +155,7 @@ module ROM
 
       # @api public
       def plugin(name, **options)
-        plugin = plugins.detect { |plugin| plugin.name == name }
+        plugin = plugins.detect { |pl| pl.name == name }
         plugin.config.update(options) unless options.empty?
         plugin
       end
@@ -179,7 +179,7 @@ module ROM
 
             # Apply plugin defaults
             plugins.each do |plugin|
-              plugin.apply_to(self)
+              plugin.__send__(:apply_to, self)
             end
 
             attributes.freeze

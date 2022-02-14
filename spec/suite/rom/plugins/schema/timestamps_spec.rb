@@ -17,8 +17,8 @@ RSpec.describe "Plugins / schema / :timestamps" do
   end
 
   it "accepts options" do
-    setup.plugin(:memory, schemas: :timestamps) do |p|
-      p.attributes = %i[created_on updated_on]
+    setup.plugin(:memory, schemas: :timestamps) do |config|
+      config.attributes = %i[created_on updated_on]
     end
 
     setup.relation(:users)

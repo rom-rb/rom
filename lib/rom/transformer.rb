@@ -2,6 +2,8 @@
 
 require "dry/transformer"
 
+require "rom/plugins/class_methods"
+
 require_relative "components/provider"
 require_relative "processor/transformer"
 
@@ -11,6 +13,7 @@ module ROM
   # @api public
   class Transformer < Dry::Transformer[Processor::Transformer::Functions]
     extend ROM::Provider(type: :mapper)
+    extend Plugins::ClassMethods
 
     # Define transformation pipeline
     #

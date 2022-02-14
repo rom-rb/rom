@@ -17,6 +17,7 @@ module ROM
     #
     # @api public
     module ClassInterface
+      include Plugins::ClassMethods
       extend Notifications::Listener
 
       # Return adapter-specific relation subclass
@@ -51,19 +52,6 @@ module ROM
             end
           RUBY
         end
-      end
-
-      # Include a registered plugin in this relation class
-      #
-      # @param [Symbol] plugin
-      # @param [Hash] options
-      # @option options [Symbol] :adapter (:default) first adapter to check for plugin
-      #
-      # @api public
-      def use(plugin, **options)
-        ROM.plugins[:relation]
-          .fetch(plugin, config.component.adapter)
-          .apply_to(self, **options)
       end
 
       # @api private

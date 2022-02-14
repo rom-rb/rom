@@ -39,6 +39,9 @@ module ROM
     #   @return [Module,nil] Optional DSL extensions
     option :dsl, default: -> { mod.const_defined?(:DSL) ? mod.const_get(:DSL) : nil }
 
+    # These opts are excluded when passing to mod's `apply`
+    INTERNAL_OPTS = %i[enabled applied target].freeze
+
     # Plugin registry key
     #
     # @return [String]
@@ -51,8 +54,9 @@ module ROM
     # Configure plugin
     #
     # @api public
-    def configure
+    def configure(**options)
       plugin = dup
+      plugin.config.update(options)
       yield(plugin.config) if block_given?
       plugin
     end
@@ -71,17 +75,33 @@ module ROM
     end
 
     # @api private
+    def apply
+      if enabled?
+        apply_to(config.target, **apply_opts)
+        config.applied = true
+        config.freeze
+        freeze
+        self
+      else
+        raise "Cannot apply a plugin because it was not enabled for any target"
+      end
+    end
+
+    # @api private
     def enabled?
       config.key?(:enabled) && config.enabled == true
     end
 
     # @api private
-    def apply
-      if enabled?
-        apply_to(config.target, **config.to_h)
-      else
-        raise "Cannot apply a plugin because it was not enabled for any target"
-      end
+    def applied?
+      config.key?(:applied) && config.applied == true
+    end
+
+    private
+
+    # @api private
+    def apply_opts
+      config.to_h.except(*INTERNAL_OPTS)
     end
 
     # Apply this plugin to the target
@@ -94,9 +114,17 @@ module ROM
         mod.apply(target, **config, **options)
       elsif mod.respond_to?(:new)
         target.include(mod.new(**options))
-      elsif target.is_a?(::Module)
-        target.include(mod)
+      elsif mod.is_a?(::Module)
+        # Target can be either a component class, like a Relation class, or a DSL object
+        # If it's the former, just include the module, if it's the latter, assume it defines
+        # a component constant and include it there
+        if target.is_a?(Class)
+          target.include(mod)
+        elsif target.respond_to?(:constant)
+          target.constant.include(mod)
+        end
       end
+      self
     end
   end
 end

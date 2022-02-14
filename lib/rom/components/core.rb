@@ -52,7 +52,6 @@ module ROM
       end
       alias_method :abstract?, :abstract
 
-
       # Default container key
       #
       # @return [String]
@@ -106,14 +105,31 @@ module ROM
 
       # @api private
       def apply_plugins
-        plugins.each do |plugin|
-          plugin.apply_to(constant)
+        applied = plugins.reject(&:applied?).map do |plugin|
+          plugin.enable(constant) unless plugin.enabled?
+          plugin.apply unless plugin.applied?
+          plugin.name
         end
+
+        # This is unfortunate, but it was possible to enable plugins for a component
+        # type *AFTER* components have been created, this keeps this behavior
+        provider_plugins
+          .reject { |plugin| applied.include?(plugin.name) }
+          .each { |plugin|
+            plugin.enable(constant) unless plugin.enabled?
+            plugin.apply unless plugin.applied?
+            config.plugins << plugin
+          }
       end
 
-      # @api public
+      # @api private
       def plugins
-        registry.plugins.select { |plugin| plugin.type == type }
+        config.plugins.select { |plugin| plugin.type == type }
+      end
+
+      # @api private
+      def provider_plugins
+        provider.config.component.plugins.select { |plugin| plugin.type == type }
       end
 
       # @api public

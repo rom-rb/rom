@@ -190,13 +190,13 @@ module ROM
       # Configures a plugin for a specific adapter to be enabled for all relations
       #
       # @example
-      #   config = ROM::Configuration.new(:sql, 'sqlite::memory')
+      #   setup = ROM::Setup.new(:sql, 'sqlite::memory')
       #
-      #   config.plugin(:sql, relations: :instrumentation) do |p|
+      #   setup.plugin(:sql, relations: :instrumentation) do |p|
       #     p.notifications = MyNotificationsBackend
       #   end
       #
-      #   config.plugin(:sql, relations: :pagination)
+      #   setup.plugin(:sql, relations: :pagination)
       #
       # @param [Symbol] adapter The adapter identifier
       # @param [Hash<Symbol=>Symbol>] spec Component identifier => plugin identifier
@@ -230,13 +230,25 @@ module ROM
       def __dsl__(klass, type: klass.type, **options, &block)
         type_config = config[type].join(options, :right).inherit!(config.component)
 
+        plugins =
+          if type_config.key?(:plugins)
+            type_config.plugins
+          else
+            EMPTY_ARRAY
+          end
+
+        type_plugins = plugins.select { |plugin| plugin.type == type }
+
         if klass.nested && block
           dsl = klass.new(provider: self, config: type_config)
+          type_plugins.each { |plugin| plugin.enable(dsl) }
           dsl.configure
           dsl.instance_eval(&block)
           dsl
         else
-          klass.new(provider: self, config: type_config, block: block).()
+          dsl = klass.new(provider: self, config: type_config, block: block)
+          type_plugins.each { |plugin| plugin.enable(dsl) }
+          dsl.()
         end
       end
     end

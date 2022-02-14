@@ -10,6 +10,7 @@ require "rom/constants"
 require "rom/initializer"
 require "rom/support/inflector"
 
+require "rom/plugins/class_methods"
 require "rom/relation/class_interface"
 
 require "rom/auto_curry"
@@ -41,6 +42,7 @@ module ROM
   # @api public
   class Relation
     extend ROM::Provider(:dataset, :schema, :view, :association, type: :relation)
+    extend Plugins::ClassMethods
     extend Initializer
     extend ClassInterface
 
@@ -54,7 +56,6 @@ module ROM
     setting :auto_struct, default: false
     setting :struct_namespace, default: ROM::Struct
     setting :wrap_class, default: Relation::Wrap
-    setting :plugins, default: EMPTY_ARRAY
 
     # @api private
     def self.inherited(klass)

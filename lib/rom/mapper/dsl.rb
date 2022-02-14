@@ -30,19 +30,6 @@ module ROM
           klass.instance_variable_set("@attribute_dsl", nil)
         end
 
-        # include a registered plugin in this mapper
-        #
-        # @param [Symbol] plugin
-        # @param [Hash] options
-        # @option options [Symbol] :adapter (:default) first adapter to check for plugin
-        #
-        # @api public
-        def use(plugin, options = {})
-          adapter = options.fetch(:adapter, :default)
-
-          ROM.plugins[:mapper].fetch(plugin, adapter).apply_to(self)
-        end
-
         # Return base_relation used for creating mapper registry
         #
         # This is used to "gather" mappers under same root name

@@ -249,4 +249,14 @@ RSpec.describe ROM::Setup do
     expect(plugin).to_not be(ROM.plugins[plugin.key])
     expect(plugin.config.attributes).to eql(%w[foo bar])
   end
+
+  it "can define a local plugin after a component was registered" do
+    setup.relation(:users, adapter: :memory)
+
+    setup.plugin(:memory, relations: :instrumentation) do |config|
+      config.notifications = double(:notifications)
+    end
+
+    expect(registry.relations[:users]).to respond_to(:notifications)
+  end
 end

@@ -81,6 +81,7 @@ module ROM
           end
         end
       end
+      alias_method :[], :fetch
 
       # @api private
       def key?(name)
