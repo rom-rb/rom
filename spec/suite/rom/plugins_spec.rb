@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-require "spec_helper"
-
-RSpec.describe "ROM::PluginRegistry" do
+RSpec.describe ROM::Plugins do
   include_context "container"
 
   before do
