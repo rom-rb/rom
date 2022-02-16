@@ -101,7 +101,7 @@ module ROM
 
     # @api private
     def apply_opts
-      config.to_h.except(*INTERNAL_OPTS)
+      (opts = config.to_h).slice(*(opts.keys - INTERNAL_OPTS))
     end
 
     # Apply this plugin to the target
