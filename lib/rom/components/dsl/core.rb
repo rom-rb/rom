@@ -3,6 +3,7 @@
 require "dry/core/memoizable"
 require "dry/core/class_builder"
 
+require "rom/plugins/class_methods"
 require "rom/constants"
 require "rom/initializer"
 
@@ -13,6 +14,7 @@ module ROM
       class Core
         extend Initializer
         extend Dry::Core::ClassAttributes
+        include Plugins::ClassMethods
 
         defines(:key, :type, :nested)
 
@@ -25,15 +27,6 @@ module ROM
 
         # @api private
         option :config, optional: true, default: -> { EMPTY_HASH }
-
-        # @api private
-        option :plugins, default: -> {
-          if config.key?(:plugins)
-            config.plugins.select { |plugin| plugin.type == type }
-          else
-            EMPTY_ARRAY
-          end
-        }
 
         # @api private
         option :block, optional: true
@@ -72,25 +65,18 @@ module ROM
           config.freeze
         end
 
-        # Enable a plugin in a DSL
-        #
-        # @param [Symbol] name Plugin name
-        # @param [Hash] options Plugin options
-        #
-        # @api public
-        def use(name, **options)
-          plugin = ::ROM.plugins[type].fetch(name, adapter).configure do |config|
-            config.update(options)
-          end
-          plugin.enable(self).apply
-          self
+        # @api private
+        def plugin(name, **options)
+          plugin = enabled_plugins[name]
+          plugin.config.update(options) unless options.empty?
+          plugin
         end
 
         # @api private
-        def plugin(name, **options)
-          plugin = plugins.detect { |plugin| plugin.name == name }
-          plugin.config.update(options) unless options.empty?
-          plugin
+        def enabled_plugins
+          config.plugins
+            .select { |plugin| plugin.type == type }
+            .to_h { |plugin| [plugin.name, plugin] }
         end
 
         private

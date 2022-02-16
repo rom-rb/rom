@@ -67,7 +67,7 @@ module ROM
               attributes: attributes,
               inferrer: inferrer,
               inflector: inflector,
-              plugins: plugins,
+              plugins: config.plugins,
               relation: name,
               definition: block
             )

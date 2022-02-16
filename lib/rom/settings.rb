@@ -114,6 +114,7 @@ module ROM
     setting :relation
     setting :adapter
     setting :gateway
+    setting :plugins, default: EMPTY_ARRAY, inherit: true
   end
 
   # Command defaults
@@ -124,6 +125,7 @@ module ROM
     setting :namespace, default: "mappers", join: true
     setting :relation
     setting :adapter
+    setting :plugins, default: EMPTY_ARRAY, inherit: true
   end
 
   # @api private

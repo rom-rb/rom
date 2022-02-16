@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "rom/core"
+require "rom/plugins/class_methods"
 
 require_relative "mapper/dsl"
 require_relative "components/provider"
@@ -11,6 +12,7 @@ module ROM
   # @private
   class Mapper
     extend ROM::Provider(type: :mapper)
+    extend Plugins::ClassMethods
 
     include Dry::Equalizer(:transformers, :header)
     include DSL

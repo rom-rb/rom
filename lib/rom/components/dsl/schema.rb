@@ -45,17 +45,11 @@ module ROM
 
         # @api private
         def call
-          # Enable available plugin's
-          plugins.each do |plugin|
-            plugin.enable(self) unless plugin.enabled?
-          end
-
           # Evaluate block only if it's not a schema defined by Relation.view DSL
           instance_eval(&block) if block && !config.view
 
-          # Apply plugin defaults
-          plugins.each do |plugin|
-            plugin.apply_to(self)
+          enabled_plugins.each_value do |plugin|
+            plugin.apply unless plugin.applied?
           end
 
           configure

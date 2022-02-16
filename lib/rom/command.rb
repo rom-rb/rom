@@ -4,6 +4,7 @@ require "rom/support/configurable"
 require "rom/types"
 require "rom/initializer"
 require "rom/pipeline"
+require "rom/plugins/class_methods"
 
 require "rom/commands/class_interface"
 require "rom/commands/composite"
@@ -26,6 +27,7 @@ module ROM
   # @api public
   class Command
     extend ROM::Provider(type: :command)
+    extend Plugins::ClassMethods
     extend Initializer
     extend ClassInterface
 

@@ -50,7 +50,7 @@ module ROM
           #
           # @api public
           def timestamps(*names)
-            plugin(:timestamps).config.update(attributes: names)
+            plugin(:timestamps, attributes: names).apply
           end
         end
       end

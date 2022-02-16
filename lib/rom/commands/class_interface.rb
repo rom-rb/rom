@@ -109,24 +109,6 @@ module ROM
         end
       end
 
-      # Use a configured plugin in this relation
-      #
-      # @example
-      #   class CreateUser < ROM::Commands::Create[:memory]
-      #     use :pagintion
-      #
-      #     per_page 30
-      #   end
-      #
-      # @param [Symbol] plugin
-      # @param [Hash] options
-      # @option options [Symbol] :adapter (:default) first adapter to check for plugin
-      #
-      # @api public
-      def use(plugin, **options)
-        ROM.plugins[:command].fetch(plugin, adapter).apply_to(self, **options)
-      end
-
       # Return configured adapter identifier
       #
       # @return [Symbol]
