@@ -90,7 +90,7 @@ If you start iterating over a relation via `Relation#each`, the relation will ge
 
 ``` ruby
 users.each do |user|
- puts user[:name]
+  puts user[:name]
 end
 # Jane Doe
 # John Doe
