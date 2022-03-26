@@ -34,17 +34,19 @@ module ROM
 
     CLASS_NAME_INFERRERS = {
       relation: -> (name, type:, inflector:, class_namespace:, **) {
-        [class_namespace,
-         inflector.pluralize(inflector.camelize(type)),
-         inflector.camelize(name)
+        [
+          class_namespace,
+          inflector.pluralize(inflector.camelize(type)),
+          inflector.camelize(name)
         ].compact.join("::")
       },
       command: -> (name, inflector:, adapter:, command_type:, class_namespace:, **) {
-          [class_namespace,
-           inflector.classify(adapter),
-           "Commands",
-           "#{command_type}[#{inflector.pluralize(inflector.classify(name))}]"
-          ].join("::")
+        [
+          class_namespace,
+          inflector.classify(adapter),
+          "Commands",
+          "#{command_type}[#{inflector.pluralize(inflector.classify(name))}]"
+        ].join("::")
       }
     }.freeze
 
