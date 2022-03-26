@@ -46,7 +46,7 @@ module ROM
            "#{command_type}[#{inflector.pluralize(inflector.classify(name))}]"
           ].join("::")
       }
-    }
+    }.freeze
 
     DEFAULT_CLASS_NAME_INFERRER = -> (name, type:, **opts) {
       CLASS_NAME_INFERRERS.fetch(type).(name, type: type, **opts)
