@@ -202,4 +202,25 @@ RSpec.describe ROM::Plugins do
 
     expect(schema[:id].meta[:plugged_in]).to be(true)
   end
+
+  context "enabling default plugins via config" do
+    around do |example|
+      ROM.config.schema.plugins << :timestamps
+      example.run
+      ROM.config.schema.plugins = []
+    end
+
+    it "applies plugins to schemas by default" do
+      schema = Class.new(ROM::Relation) {
+        config.component.id = :users
+
+        schema do
+          attribute :id, ROM::Types::Integer
+          attribute :name, ROM::Types::String
+        end
+      }.new.schema
+
+      expect(schema.to_h.keys).to eql %i[id name created_at updated_at]
+    end
+  end
 end
