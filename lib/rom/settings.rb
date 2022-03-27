@@ -61,6 +61,7 @@ module ROM
     setting :inferrer
     setting :attributes, default: EMPTY_ARRAY, constructor: :dup.to_proc
     setting :plugins, default: EMPTY_ARRAY, inherit: true
+    setting :options, default: EMPTY_HASH, constructor: :dup.to_proc
   end
 
   # Relation defaults

@@ -18,7 +18,9 @@ module ROM
         if view?
           registry.schemas[config.relation].instance_eval(&block)
         else
-          schema = config.constant.define(name, **config, inferrer: inferrer, registry: registry)
+          schema = config.constant.define(
+            name, **config, **config.options, inferrer: inferrer, registry: registry
+          )
 
           if gateway?
             schema.finalize_attributes!(gateway: gateway)
