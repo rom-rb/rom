@@ -7,6 +7,7 @@ require "rom/registries/root"
 require "rom/setup"
 require "rom/container"
 require "rom/global"
+require "rom/support/notifications"
 
 require_relative "compat/auto_registration"
 require_relative "compat/components/dsl/schema"
@@ -15,6 +16,70 @@ module ROM
   # @api private
   # @deprecated
   alias_method :plugin_registry, :plugins
+
+  require "rom/components/core"
+
+  class Components::Core
+    # @api private
+    def trigger(event, payload)
+      registry.trigger("configuration.#{event}", payload)
+    end
+
+    # @api private
+    def notifications
+      registry.notifications
+    end
+  end
+
+  require "rom/components/relation"
+
+  class Components::Relation < Components::Core
+    mod = Module.new do
+      def build
+        relation = super
+
+        trigger("relations.class.ready", relation: constant, adapter: adapter)
+
+        trigger(
+          "relations.schema.set",
+          schema: relation.schema,
+          adapter: adapter,
+          gateway: config[:gateway],
+          relation: constant,
+          registry: registry
+        )
+
+        trigger("relations.object.registered", registry: registry, relation: relation)
+
+        relation
+      end
+    end
+
+    prepend(mod)
+  end
+
+  require "rom/components/command"
+
+  class Components::Command < Components::Core
+    mod = Module.new do
+      def build
+        relation = registry.relations[config.relation]
+
+        trigger(
+          "commands.class.before_build",
+          command: constant,
+          gateway: registry.gateways[relation.gateway],
+          dataset: relation.dataset,
+          relation: relation,
+          adapter: adapter
+        )
+
+        super
+      end
+    end
+
+    prepend(mod)
+  end
 
   # @api public
   module Global
@@ -27,6 +92,55 @@ module ROM
 
   # @api public
   class Setup
+    extend Notifications
+
+    register_event("configuration.relations.class.ready")
+    register_event("configuration.relations.object.registered")
+    register_event("configuration.relations.registry.created")
+    register_event("configuration.relations.schema.allocated")
+    register_event("configuration.relations.schema.set")
+    register_event("configuration.relations.dataset.allocated")
+    register_event("configuration.commands.class.before_build")
+
+    mod = Module.new do
+      # @api public
+      def finalize
+        super { attach_listeners }
+      end
+    end
+
+    prepend(mod)
+
+    # @api public
+    # @deprecated
+    def notifications
+      @notifications ||= Notifications.event_bus(:configuration)
+    end
+
+    # @api private
+    def attach_listeners
+      # Anything can attach globally to certain events, including plugins, so here
+      # we're making sure that only plugins that are enabled in this configuration
+      # will be triggered
+      global_listeners = Notifications.listeners.to_a
+        .reject { |(src, *)| plugin_registry.map(&:mod).include?(src) }.to_h
+
+      plugin_listeners = Notifications.listeners.to_a
+        .select { |(src, *)| plugins.map(&:mod).include?(src) }.to_h
+
+      listeners.update(global_listeners).update(plugin_listeners)
+    end
+
+    # @api private
+    def listeners
+      notifications.listeners
+    end
+
+    # @api private
+    def registry_options
+      {config: config, notifications: notifications}
+    end
+
     # @api public
     # @deprecated
     def inflector=(inflector)
@@ -121,6 +235,14 @@ module ROM
 
   # @api public
   class Registries::Root
+    option :notifications, optional: true
+
+    # @api private
+    # @api deprecated
+    def trigger(event, payload)
+      notifications&.trigger(event, payload)
+    end
+
     # @api public
     # @deprecated
     def map_with(*ids)

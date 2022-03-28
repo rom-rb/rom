@@ -2,8 +2,9 @@
 
 require "dry/core/class_attributes"
 
-require "rom/transaction"
-require "rom/support/notifications"
+require_relative "support/notifications"
+require_relative "transaction"
+require_relative "components/provider"
 
 module ROM
   # Abstract gateway class
@@ -17,6 +18,8 @@ module ROM
   class Gateway
     extend Dry::Core::ClassAttributes
     extend Notifications::Listener
+
+    extend ROM::Provider(:plugin, type: :gateway)
 
     # @!method self.adapter
     #  Get or set gateway's adapter identifier
@@ -84,46 +87,42 @@ module ROM
     # @return [Gateway] a specific gateway subclass
     #
     # @api public
+    #
+    # rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity
     def self.setup(gateway_or_scheme, *args)
-      gateway =
-        case gateway_or_scheme
-        when Gateway
-          unless args.empty?
-            raise ArgumentError, "Can't accept arguments when passing an instance"
-          end
-
-          gateway_or_scheme
-        when String
-          raise ArgumentError, <<-STRING.gsub(/^ {10}/, "")
-            URIs without an explicit scheme are not supported anymore.
-            See https://github.com/rom-rb/rom/blob/master/CHANGELOG.md
-          STRING
-        when Symbol
-          klass = class_from_symbol(gateway_or_scheme)
-
-          if klass.instance_method(:initialize).arity.zero?
-            klass.new
-          else
-            if args.size.equal?(1) && args.first.respond_to?(:args)
-              if args.first.respond_to?(:args)
-                setup(gateway_or_scheme, *args.first.args)
-              else
-                klass.new(**config)
-              end
-            else
-              if args.last.is_a?(Hash)
-                klass.new(*args[0..-2], **args.last)
-              else
-                klass.new(*args)
-              end
-            end
-          end
-        else
-          gateway_or_scheme
+      case gateway_or_scheme
+      when Gateway
+        unless args.empty?
+          raise ArgumentError, "Can't accept arguments when passing an instance"
         end
 
-      gateway
+        gateway_or_scheme
+      when String
+        raise ArgumentError, <<-STRING.gsub(/^ {10}/, "")
+          URIs without an explicit scheme are not supported anymore.
+          See https://github.com/rom-rb/rom/blob/master/CHANGELOG.md
+        STRING
+      when Symbol
+        klass = class_from_symbol(gateway_or_scheme)
+
+        if klass.instance_method(:initialize).arity.zero?
+          klass.new
+        elsif args.size.equal?(1) && args.first.respond_to?(:args)
+          if args.first.respond_to?(:args)
+            setup(gateway_or_scheme, *args.first.args)
+          else
+            klass.new(**config)
+          end
+        elsif args.last.is_a?(Hash)
+          klass.new(*args[0..-2], **args.last)
+        else
+          klass.new(*args)
+        end
+      else
+        gateway_or_scheme
+      end
     end
+    # rubocop:enable Metrics/AbcSize, Metrics/PerceivedComplexity
 
     class << self
       ruby2_keywords(:setup) if respond_to?(:ruby2_keywords, true)
@@ -212,6 +211,15 @@ module ROM
     # @api public
     def transaction(**opts, &block)
       transaction_runner(**opts).run(**opts, &block)
+    end
+
+    # Build a command instance
+    #
+    # @return [Command]
+    #
+    # @api public
+    def command(klass, relation:, **opts)
+      klass.build(relation, **opts)
     end
 
     private

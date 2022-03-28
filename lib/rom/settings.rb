@@ -27,6 +27,7 @@ module ROM
     setting :logger
     setting :args, default: EMPTY_ARRAY, constructor: :dup.to_proc
     setting :opts, default: EMPTY_HASH, constructor: :dup.to_proc
+    setting :plugins, default: EMPTY_ARRAY, inherit: true
   end
 
   # Dataset defaults
@@ -38,6 +39,7 @@ module ROM
     setting :namespace, default: "datasets"
     setting :adapter
     setting :gateway
+    setting :plugins, default: EMPTY_ARRAY, inherit: true
   end
 
   # Schema defaults
@@ -59,6 +61,7 @@ module ROM
     setting :inferrer
     setting :attributes, default: EMPTY_ARRAY, constructor: :dup.to_proc
     setting :plugins, default: EMPTY_ARRAY, inherit: true
+    setting :options, default: EMPTY_HASH, constructor: :dup.to_proc
   end
 
   # Relation defaults
@@ -82,6 +85,7 @@ module ROM
     setting :id
     setting :namespace, default: "views", join: true
     setting :args, default: [].freeze
+    setting :plugins, default: EMPTY_ARRAY, inherit: true
   end
 
   # Association defaults
@@ -103,6 +107,7 @@ module ROM
     setting :view
     setting :override
     setting :combine_keys, default: {}
+    setting :plugins, default: EMPTY_ARRAY, inherit: true
   end
 
   # Command defaults

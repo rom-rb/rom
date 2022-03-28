@@ -93,8 +93,7 @@ RSpec.describe ROM::Setup do
     expect(users.schema[:id]).to be_a(ROM::Attribute)
   end
 
-  # FIXME: this is a flaky spec
-  xit "can define a relation with a schema and a dataset" do
+  it "can define a relation with a schema and a dataset" do
     setup.gateway(:default)
 
     relation = setup.relation(:people) do
@@ -116,8 +115,7 @@ RSpec.describe ROM::Setup do
     expect(users.to_a).to eql([{uuid: "uuid-value", name: "name-value"}])
   end
 
-  # FIXME: this is a flaky spec
-  xit "can define a relation inheriting an abstract dataset" do
+  it "can define a relation inheriting an abstract dataset" do
     setup.gateway(:default)
 
     setup.dataset(id: :joe, abstract: true) do
@@ -221,6 +219,8 @@ RSpec.describe ROM::Setup do
   end
 
   it "can define relation associations" do
+    setup.gateway(:default)
+
     setup.relation(:users) do
       associations do
         has_many :tasks
@@ -241,6 +241,8 @@ RSpec.describe ROM::Setup do
   end
 
   it "can define a local plugin" do
+    setup.gateway(:default)
+
     plugin = setup.plugin(:memory, schemas: :timestamps) { |config|
       config.attributes = %w[foo bar]
     }

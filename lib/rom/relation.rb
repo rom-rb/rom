@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
-
 require "dry/core/memoizable"
 require "dry/core/class_attributes"
 
-require "rom/support/configurable"
 require "rom/struct"
 require "rom/constants"
 require "rom/initializer"

@@ -79,16 +79,6 @@ module ROM
       end
 
       # @api public
-      def trigger(event, payload)
-        registry.trigger("configuration.#{event}", payload)
-      end
-
-      # @api public
-      def notifications
-        registry.notifications
-      end
-
-      # @api public
       def inflector
         config.inflector
       end
@@ -105,20 +95,22 @@ module ROM
 
       # @api private
       def apply_plugins
-        applied = plugins.reject(&:applied?).map do |plugin|
+        already_applied = plugins.reject(&:applied?).map do |plugin|
           plugin.enable(constant) unless plugin.enabled?
           plugin.apply unless plugin.applied?
           plugin.name
         end
 
-        # This is unfortunate, but it was possible to enable plugins for a component
-        # type *AFTER* components have been created, this keeps this behavior
-        provider_plugins
-          .reject { |plugin| applied.include?(plugin.name) }
-          .each { |plugin|
-            plugin.enable(constant) unless plugin.enabled?
-            plugin.apply unless plugin.applied?
-            config.plugins << plugin
+        apply_external_plugins(gateway_plugins, already_applied) if gateway?
+        apply_external_plugins(provider_plugins, already_applied)
+      end
+
+      # @api private
+      def apply_external_plugins(plugins, already_applied)
+        plugins
+          .reject { |plugin| already_applied.include?(plugin.name) }
+          .each { |external_plugin|
+            config.plugins << external_plugin.configure.enable(constant).apply
           }
       end
 
@@ -128,13 +120,18 @@ module ROM
       end
 
       # @api private
+      def gateway_plugins
+        gateway.config.plugins.select { |plugin| plugin.type == type }
+      end
+
+      # @api private
       def provider_plugins
         provider.config.component.plugins.select { |plugin| plugin.type == type }
       end
 
       # @api public
       def plugin_options
-        plugins.map(&:config).map(&:to_hash).reduce(:merge) || EMPTY_HASH
+        plugins.map(&:plugin_options).reduce(:merge) || EMPTY_HASH
       end
 
       # @api public

@@ -77,7 +77,7 @@ module ROM
     # @api private
     def apply
       if enabled?
-        apply_to(config.target, **apply_opts)
+        apply_to(config.target, **plugin_options)
         config.applied = true
         config.freeze
         freeze
@@ -97,12 +97,12 @@ module ROM
       config.key?(:applied) && config.applied == true
     end
 
-    private
-
     # @api private
-    def apply_opts
+    def plugin_options
       (opts = config.to_h).slice(*(opts.keys - INTERNAL_OPTS))
     end
+
+    private
 
     # Apply this plugin to the target
     #

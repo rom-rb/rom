@@ -1,11 +1,6 @@
 # frozen_string_literal: true
 
-require "rom/support/notifications"
-
-require "rom/changeset/create"
-require "rom/changeset/update"
-require "rom/changeset/delete"
-
+require "rom/changeset"
 require "rom/changeset/extensions/relation"
 
 module ROM
@@ -21,10 +16,9 @@ module ROM
           delete: ROM::Changeset::Delete
         }.freeze
 
-        extend Notifications::Listener
-
-        subscribe("configuration.relations.class.ready") do |event|
-          event[:relation].include(InstanceMethods)
+        # @api private
+        def self.apply(target, **)
+          target.include(InstanceMethods)
         end
 
         # Relation instance methods provided by the Changeset plugin

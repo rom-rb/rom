@@ -40,6 +40,14 @@ RSpec.describe "Configuring ROM" do
       expect(users_schema.relations[:users]).to eql(users_relation)
       expect(tasks_schema.relations[:tasks]).to eql(tasks_relation)
     end
+
+    describe "schemas registry" do
+      it "returns canonical schema" do
+        users = container.relations[:users]
+
+        expect(container.schemas.canonical(users)).to eql(users.schema)
+      end
+    end
   end
 
   context "without schema" do

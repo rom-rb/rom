@@ -27,8 +27,6 @@ module ROM
 
       option :loader, optional: true
 
-      option :notifications, optional: true
-
       option :type, optional: true
 
       option :path, default: -> { EMPTY_ARRAY }
@@ -145,11 +143,6 @@ module ROM
       # @api private
       def plugins
         config.component.plugins
-      end
-
-      # @api private
-      def trigger(event, payload)
-        notifications&.trigger(event, payload)
       end
 
       # @api private

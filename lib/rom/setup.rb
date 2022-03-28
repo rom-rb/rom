@@ -3,7 +3,6 @@
 require "dry/core/equalizer"
 
 require "rom/support/inflector"
-require "rom/support/notifications"
 
 require "rom/core"
 require "rom/components/provider"
@@ -16,8 +15,6 @@ require "rom/loader"
 module ROM
   # @api public
   class Setup
-    extend Notifications
-
     include ROM::Provider(
       :gateway,
       :dataset,
@@ -34,19 +31,21 @@ module ROM
 
     CLASS_NAME_INFERRERS = {
       relation: -> (name, type:, inflector:, class_namespace:, **) {
-        [class_namespace,
-         inflector.pluralize(inflector.camelize(type)),
-         inflector.camelize(name)
+        [
+          class_namespace,
+          inflector.pluralize(inflector.camelize(type)),
+          inflector.camelize(name)
         ].compact.join("::")
       },
       command: -> (name, inflector:, adapter:, command_type:, class_namespace:, **) {
-          [class_namespace,
-           inflector.classify(adapter),
-           "Commands",
-           "#{command_type}[#{inflector.pluralize(inflector.classify(name))}]"
-          ].join("::")
+        [
+          class_namespace,
+          inflector.classify(adapter),
+          "Commands",
+          "#{command_type}[#{inflector.pluralize(inflector.classify(name))}]"
+        ].join("::")
       }
-    }
+    }.freeze
 
     DEFAULT_CLASS_NAME_INFERRER = -> (name, type:, **opts) {
       CLASS_NAME_INFERRERS.fetch(type).(name, type: type, **opts)
@@ -71,18 +70,6 @@ module ROM
       setting :inflector, default: Inflector
     end
 
-    register_event("configuration.relations.class.ready")
-    register_event("configuration.relations.object.registered")
-    register_event("configuration.relations.registry.created")
-    register_event("configuration.relations.schema.allocated")
-    register_event("configuration.relations.schema.set")
-    register_event("configuration.relations.dataset.allocated")
-    register_event("configuration.commands.class.before_build")
-
-    # @return [Notifications] Notification bus instance
-    # @api private
-    attr_reader :notifications
-
     # Initialize a new configuration
     #
     # @return [Configuration]
@@ -90,7 +77,6 @@ module ROM
     # @api private
     def initialize(*args, &block)
       super()
-      @notifications = Notifications.event_bus(:configuration)
       configure(*args, &block)
     end
 
@@ -99,7 +85,7 @@ module ROM
     def registry
       @registry ||=
         begin
-          options = {config: config, notifications: notifications}
+          options = registry_options
           options[:loader] = loader if config.auto_register.auto_load
 
           super(**options)
@@ -205,7 +191,7 @@ module ROM
     def finalize
       # No more config changes allowed
       config.freeze
-      attach_listeners
+      yield if block_given?
       loader.() if config.auto_register.key?(:root_directory)
       registry
     end
@@ -279,25 +265,6 @@ module ROM
     end
 
     # @api private
-    def attach_listeners
-      # Anything can attach globally to certain events, including plugins, so here
-      # we're making sure that only plugins that are enabled in this configuration
-      # will be triggered
-      global_listeners = Notifications.listeners.to_a
-        .reject { |(src, *)| plugin_registry.map(&:mod).include?(src) }.to_h
-
-      plugin_listeners = Notifications.listeners.to_a
-        .select { |(src, *)| plugins.map(&:mod).include?(src) }.to_h
-
-      listeners.update(global_listeners).update(plugin_listeners)
-    end
-
-    # @api private
-    def listeners
-      notifications.listeners
-    end
-
-    # @api private
     def load_adapters
       config.gateways.map { |key| config.gateways[key] }.map(&:adapter).uniq do |adapter|
         Gateway.class_from_symbol(adapter)
@@ -320,6 +287,11 @@ module ROM
         components: components,
         **config.auto_register
       )
+    end
+
+    # @api private
+    def registry_options
+      {config: config}
     end
   end
 end

@@ -36,4 +36,14 @@ RSpec.describe ROM::Components::DSL, "#schema" do
     expect(name.primitive).to eql(String)
     expect(name.meta[:source].relation).to be(:users)
   end
+
+  it "uses default options from config" do
+    inferrer = double(:inferrer)
+
+    setup.schema(:users) do
+      config.options[:primary_key_name] = :foo
+    end
+
+    expect(schema.primary_key_name).to be(:foo)
+  end
 end
