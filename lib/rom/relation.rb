@@ -156,9 +156,19 @@ module ROM
 
     # @!attribute [r] mappers
     #   @return [registry] an optional mapper registry (empty by default)
-    option :mappers, default: -> do
-      registry.mappers.scoped(config.component.id, opts: {adapter: adapter})
-    end
+    option :mappers,
+      -> mappers {
+        if mappers.is_a?(Hash)
+          registry.mappers
+            .scoped(config.component.id, opts: {adapter: config.component.adapter})
+            .import(mappers)
+        else
+          mappers
+        end
+      },
+      default: -> {
+        registry.mappers.scoped(config.component.id, opts: {adapter: adapter})
+      }
 
     # @!attribute [r] commands
     #   @return [Commandregistry] Command registry

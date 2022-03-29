@@ -17,10 +17,6 @@ RSpec.describe ROM::Relation, "#map_to" do
     [{id: 1, name: "Jane"}, {id: 2, name: "Joe"}]
   end
 
-  before do
-    pending "TODO: move to rom/compat"
-  end
-
   context "without custom mappers" do
     let(:mappers) { {} }
 

@@ -25,14 +25,10 @@ RSpec.describe ROM::Relation, "#map_with" do
     end
 
     it "sends the relation through custom mappers" do
-      pending "TODO: move to spec/compat"
-
       expect(relation.map_with(:name_list, :upcase_names).to_a).to match_array(%w[JANE JOE])
     end
 
     it "does not use the default mapper" do
-      pending "TODO: move to spec/compat"
-
       expect(relation.map_with(:identity).to_a).to eql(dataset)
     end
   end
@@ -47,8 +43,6 @@ RSpec.describe ROM::Relation, "#map_with" do
     end
 
     it "sends the relation through custom mappers" do
-      pending "TODO: move to spec/compat"
-
       expect(relation.map_with(:name_list).to_a).to match_array(%w[Jane Joe])
     end
   end

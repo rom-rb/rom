@@ -118,8 +118,6 @@ RSpec.describe ROM::Relation do
       let(:mappers) { {name_list: name_list, upcaser: upcaser} }
 
       it "sends relation through mappers" do
-        pending "TODO: move to rom/compat"
-
         relation = users.map_with(:name_list, :upcaser).by_name("Jane")
 
         expect(relation.call.to_a).to eql(["JANE"])
