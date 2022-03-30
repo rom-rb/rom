@@ -24,7 +24,7 @@ RSpec.describe "Commands" do
     it "adds restrictions" do
       klass = ROM::Command.create_class(
         type: ROM::Memory::Commands::Update,
-        relation: container.relations.users,
+        relation: container.relations.users
       )
 
       expect(klass.instance_methods).to include(:by_id)

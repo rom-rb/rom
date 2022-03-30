@@ -61,7 +61,7 @@ RSpec.describe ROM::Repository, "#transaction" do
     let(:configuration) do
       ROM::Setup.new(
         default: [:sql, db_uri],
-        alt: [:sql, db_uri],
+        alt: [:sql, db_uri]
       )
     end
 
