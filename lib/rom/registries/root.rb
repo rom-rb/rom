@@ -36,7 +36,7 @@ module ROM
       option :opts, default: -> { EMPTY_HASH }
 
       CORE_COMPONENTS.each do |type|
-        require_relative "#{type}"
+        require_relative type.to_s
 
         define_method(type) do |**options|
           registry = scoped(__method__, type: __method__, **options)
