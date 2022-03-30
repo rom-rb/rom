@@ -56,8 +56,8 @@ module ROM
       # @api private
       def name_error_message(attempted)
         "required file does not define expected constant name; either " \
-        "register your constant explicitly of try following the path" \
-        "naming convention like:\n\n\t- #{attempted.join("\n\t- ")}\n"
+          "register your constant explicitly of try following the path" \
+          "naming convention like:\n\n\t- #{attempted.join("\n\t- ")}\n"
       end
 
       # @api private
