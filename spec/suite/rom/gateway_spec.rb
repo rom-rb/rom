@@ -134,5 +134,5 @@ RSpec.describe ROM::Gateway do
         ROM::MissingAdapterIdentifierError, /Test::CustomGateway/
       )
     end
-  end # describe #adapter
+  end
 end
