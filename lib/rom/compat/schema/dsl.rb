@@ -50,7 +50,7 @@ module ROM
 
       # @!attribute [r] definition
       #   @return [Class] An optional block that will be evaluated as part of this DSL
-      option :definition, type: Types.Instance(Proc), default: -> { Proc.new {} }
+      option :definition, type: Types.Instance(Proc), default: -> { proc {} }
 
       # @!attribute [r] plugins
       #   @return [Array<Plugin>]
