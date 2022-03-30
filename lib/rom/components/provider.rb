@@ -114,8 +114,7 @@ module ROM
       # @api private
       def mod
         @mod ||=
-          begin
-            Module.new.tap do |mod|
+          Module.new.tap do |mod|
               define_dsl_method(mod, :__dsl__)
 
               features.each do |type|
@@ -134,7 +133,7 @@ module ROM
                 end
               end
             end
-          end
+          
       end
 
       # @api private
