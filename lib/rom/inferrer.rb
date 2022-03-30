@@ -44,7 +44,7 @@ module ROM
   adapter_ns::MapperCompiler
                 else
   MapperCompiler
-end
+                end
 
         klass.new(cache: cache)
       when :commands
