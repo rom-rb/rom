@@ -51,7 +51,7 @@ RSpec.describe ROM::Mapper do
     end
 
     context "prefixed attribute using custom separator" do
-      let(:attributes) { [[:name, {from: :'u.name'}]] }
+      let(:attributes) { [[:name, {from: :"u.name"}]] }
       let(:options) { {prefix: :u, prefix_separator: "."} }
 
       it "adds an aliased attribute for the header using configured :prefix" do
