@@ -67,7 +67,7 @@ module ROM
       end
 
       # @api private
-      def define_configure_method(type, features, &block)
+      def define_configure_method(type, features)
         yield Module.new {
                 define_method(:configure) do |*args, &block|
                   # Inherit global defaults
