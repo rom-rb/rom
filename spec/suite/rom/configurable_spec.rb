@@ -21,11 +21,13 @@ RSpec.describe ROM::Configurable, :isolation do
 
   def parent(&block)
     return Test::Parent unless block
+
     Test::Parent.class_eval(&block)
   end
 
   def child(&block)
     return Test::Child unless block
+
     Test::Child.class_eval(&block)
   end
 

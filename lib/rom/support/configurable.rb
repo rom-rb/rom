@@ -130,6 +130,7 @@ module ROM
 Default = Struct.new(:name) do
         def call(*args)
           return if args.compact.empty?
+
           block_given? ? yield(*args) : args.first
         end
         alias_method :[], :call
