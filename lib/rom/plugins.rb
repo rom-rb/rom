@@ -76,7 +76,7 @@ module ROM
         elsif _adapter && key?(name)
           fetch(name, _adapter)
         else
-            key = "#{type}.#{name}"
+          key = "#{type}.#{name}"
             container.resolve(key)
         end
       end

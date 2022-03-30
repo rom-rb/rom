@@ -69,17 +69,17 @@ module ROM
       # @api private
       def define_configure_method(type, features, &block)
         yield Module.new {
-            define_method(:configure) do |*args, &block|
-              # Inherit global defaults
-              config.component.inherit!(**ROM.config[type], type: type)
+                define_method(:configure) do |*args, &block|
+                  # Inherit global defaults
+                  config.component.inherit!(**ROM.config[type], type: type)
 
-              # Inherit global defaults for individual features
-              features.each do |name|
-                config[name].inherit!(**ROM.config[name]) if ROM.config.key?(name)
-              end
+                  # Inherit global defaults for individual features
+                  features.each do |name|
+                    config[name].inherit!(**ROM.config[name]) if ROM.config.key?(name)
+                  end
 
-              super(*args, &block)
-            end
+                  super(*args, &block)
+                end
               }
       end
 
@@ -115,7 +115,7 @@ module ROM
       def mod
         @mod ||=
           Module.new.tap do |mod|
-              define_dsl_method(mod, :__dsl__)
+            define_dsl_method(mod, :__dsl__)
 
               features.each do |type|
                 if ROM.components.key?(type)

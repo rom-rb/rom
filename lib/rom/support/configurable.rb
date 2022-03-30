@@ -127,41 +127,41 @@ module ROM
     end
 
     module Constructors
-Default = Struct.new(:name) do
+      Default = Struct.new(:name) do
         def call(*args)
           return if args.compact.empty?
 
           block_given? ? yield(*args) : args.first
         end
-        alias_method :[], :call
-end
-
-class Inherit < Default
-  def call(*args)
-    super { |left, right|
-      case left
-      when nil then right
-      when Hash then right.merge(left)
-      when Array then (right.map(&:dup) + left.map(&:dup)).uniq
-      else
-        left
+              alias_method :[], :call
       end
-    }
-  end
-end
 
-class Join < Default
-  def call(*args)
-    super { |left, right, direction|
-      case direction
-      when :left then [right, left]
-      when :right then [left, right]
-      else
-        raise ArgumentError, "+#{direction}+ direction is not supported"
-      end.compact.join(".")
-    }
-  end
-end
+      class Inherit < Default
+        def call(*args)
+          super { |left, right|
+            case left
+            when nil then right
+            when Hash then right.merge(left)
+            when Array then (right.map(&:dup) + left.map(&:dup)).uniq
+            else
+              left
+            end
+          }
+        end
+      end
+
+      class Join < Default
+        def call(*args)
+          super { |left, right, direction|
+            case direction
+            when :left then [right, left]
+            when :right then [left, right]
+            else
+              raise ArgumentError, "+#{direction}+ direction is not supported"
+            end.compact.join(".")
+          }
+        end
+      end
     end
 
     # @api public

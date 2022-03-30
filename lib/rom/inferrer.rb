@@ -41,9 +41,9 @@ module ROM
         adapter_ns = ROM.adapters[adapter] || ROM
 
         klass = if adapter_ns.const_defined?(:MapperCompiler)
-  adapter_ns::MapperCompiler
+                  adapter_ns::MapperCompiler
                 else
-  MapperCompiler
+                  MapperCompiler
                 end
 
         klass.new(cache: cache)
