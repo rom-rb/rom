@@ -12,7 +12,6 @@ RSpec.describe ROM::Relation, "#map_to" do
     )
   end
 
-
   let(:dataset) do
     [{id: 1, name: "Jane"}, {id: 2, name: "Joe"}]
   end
