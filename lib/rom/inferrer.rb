@@ -40,8 +40,11 @@ module ROM
         # TODO: move this to config
         adapter_ns = ROM.adapters[adapter] || ROM
 
-        klass = adapter_ns.const_defined?(:MapperCompiler) ?
-          adapter_ns::MapperCompiler : MapperCompiler
+        klass = if adapter_ns.const_defined?(:MapperCompiler)
+  adapter_ns::MapperCompiler
+else
+  MapperCompiler
+end
 
         klass.new(cache: cache)
       when :commands
