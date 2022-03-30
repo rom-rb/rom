@@ -10,13 +10,13 @@ on:
       - "Rakefile"
       - "Gemfile*"
       - ".rubocop.yml"
-  # pull_request:
-  #   branches:
-  #     - "main"
-  #     - "master"
-  #   types:
-  #     - "opened"
-  #     - "synchronize"
+  pull_request:
+    branches:
+      - "main"
+      - "master"
+    types:
+      - "opened"
+      - "synchronize"
   workflow_dispatch:
 jobs:
   run:
