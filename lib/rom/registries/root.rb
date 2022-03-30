@@ -196,7 +196,7 @@ module ROM
 
       # @api private
       def element_not_found(key)
-        raise MISSING_ELEMENT_ERRORS.fetch(type).new(key)
+        raise MISSING_ELEMENT_ERRORS.fetch(type), key
       end
     end
   end
