@@ -1,7 +1,6 @@
 # This is a config synced from rom-rb/template-gem repo
-
 AllCops:
-  TargetRubyVersion: 2.5
+  TargetRubyVersion: 3.0
   NewCops: enable
   Exclude:
     - spec/support/coverage.rb
@@ -33,7 +32,7 @@ Layout/SpaceInsideHashLiteralBraces:
   EnforcedStyleForEmptyBraces: no_space
 
 Layout/LineLength:
-  Max: 100
+  Max: 120
   Exclude:
     - "spec/**/*_spec.rb"
 
@@ -47,12 +46,7 @@ Lint/BooleanSymbol:
   Enabled: false
 
 Lint/ConstantDefinitionInBlock:
-  Exclude:
-    - "spec/suite/**/*"
-
-Lint/EmptyBlock:
-  Exclude:
-    - "spec/suite/**/*"
+  Enabled: false
 
 Lint/RaiseException:
   Enabled: false
@@ -92,15 +86,11 @@ Metrics/BlockLength:
   Enabled: false
 
 Metrics/AbcSize:
-  Max: 26
+  Max: 25
 
 Metrics/CyclomaticComplexity:
   Enabled: true
   Max: 12
-
-Metrics/PerceivedComplexity:
-  Enabled: true
-  Max: 10
 
 Style/AccessorGrouping:
   Enabled: false
@@ -131,8 +121,7 @@ Style/BlockDelimiters:
   Enabled: false
 
 Style/ClassAndModuleChildren:
-  Exclude:
-    - "spec/**/*_spec.rb"
+  Enabled: false
 
 Style/ConditionalAssignment:
   Enabled: false
@@ -162,9 +151,6 @@ Style/LambdaCall:
   Enabled: false
 
 Style/ParallelAssignment:
-  Enabled: false
-
-Style/RaiseArgs:
   Enabled: false
 
 Style/StabbyLambdaParentheses:
