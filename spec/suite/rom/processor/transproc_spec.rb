@@ -19,7 +19,7 @@ RSpec.describe ROM::Processor::Transformer do
   end
 
   context "coercing values" do
-    let(:attributes) { [[:name, type: :string], [:age, type: :integer]] }
+    let(:attributes) { [[:name, {type: :string}], [:age, {type: :integer}]] }
     let(:relation) { [{name: :Jane, age: "1"}, {name: :Joe, age: "2"}] }
 
     it "returns tuples" do
@@ -50,7 +50,7 @@ RSpec.describe ROM::Processor::Transformer do
 
   context "renaming keys" do
     let(:attributes) do
-      [[:name, from: "name"]]
+      [[:name, {from: "name"}]]
     end
 
     let(:options) do
@@ -74,7 +74,7 @@ RSpec.describe ROM::Processor::Transformer do
     end
 
     let(:attributes) do
-      [["b", from: "a"], ["c", from: "b"]]
+      [["b", {from: "a"}], ["c", {from: "b"}]]
     end
 
     let(:relation) do
@@ -131,7 +131,7 @@ RSpec.describe ROM::Processor::Transformer do
     let(:attributes) do
       [
         ["name"],
-        ["tasks", type: :array, group: true, header: [["title"]]]
+        ["tasks", {type: :array, group: true, header: [["title"]]}]
       ]
     end
 
@@ -162,7 +162,7 @@ RSpec.describe ROM::Processor::Transformer do
     end
 
     context "when no mapping is needed" do
-      let(:attributes) { [["name"], ["task", type: :hash, header: [[:title]]]] }
+      let(:attributes) { [["name"], ["task", {type: :hash, header: [[:title]]}]] }
 
       it "returns tuples" do
         expect(transformer[relation]).to eql(relation)
@@ -180,10 +180,10 @@ RSpec.describe ROM::Processor::Transformer do
 
         let(:attributes) do
           [[
-            "user", type: :hash, header: [
+            "user", {type: :hash, header: [
               ["name"],
-              ["task", type: :hash, header: [["title"]]]
-            ]
+              ["task", {type: :hash, header: [["title"]]}]
+            ]}
           ]]
         end
 
@@ -202,10 +202,10 @@ RSpec.describe ROM::Processor::Transformer do
 
         let(:attributes) do
           [[
-            "user", type: :hash, header: [
+            "user", {type: :hash, header: [
               ["name"],
-              ["task", type: :hash, header: [["title"]]]
-            ]
+              ["task", {type: :hash, header: [["title"]]}]
+            ]}
           ]]
         end
 
@@ -220,7 +220,7 @@ RSpec.describe ROM::Processor::Transformer do
         let(:attributes) do
           [
             ["name"],
-            [:task, from: "task", type: :hash, header: [[:title, from: "title"]]]
+            [:task, {from: "task", type: :hash, header: [[:title, {from: "title"}]]}]
           ]
         end
 
@@ -235,8 +235,8 @@ RSpec.describe ROM::Processor::Transformer do
       context "when all attributes need renaming" do
         let(:attributes) do
           [
-            [:name, from: "name"],
-            [:task, from: "task", type: :hash, header: [[:title, from: "title"]]]
+            [:name, {from: "name"}],
+            [:task, {from: "task", type: :hash, header: [[:title, {from: "title"}]]}]
           ]
         end
 
@@ -262,7 +262,7 @@ RSpec.describe ROM::Processor::Transformer do
       let(:attributes) do
         [
           ["name"],
-          ["task", type: :hash, wrap: true, header: [["title"]]]
+          ["task", {type: :hash, wrap: true, header: [["title"]]}]
         ]
       end
 
@@ -277,10 +277,10 @@ RSpec.describe ROM::Processor::Transformer do
     context "with deeply wrapped tuples" do
       let(:attributes) do
         [
-          ["user", type: :hash, wrap: true, header: [
+          ["user", {type: :hash, wrap: true, header: [
             ["name"],
-            ["task", type: :hash, wrap: true, header: [["title"]]]
-          ]]
+            ["task", {type: :hash, wrap: true, header: [["title"]]}]
+          ]}]
         ]
       end
 
@@ -297,7 +297,7 @@ RSpec.describe ROM::Processor::Transformer do
         let(:attributes) do
           [
             ["name"],
-            ["task", type: :hash, wrap: true, header: [[:title, from: "title"]]]
+            ["task", {type: :hash, wrap: true, header: [[:title, {from: "title"}]]}]
           ]
         end
 
@@ -312,8 +312,8 @@ RSpec.describe ROM::Processor::Transformer do
       context "when all attributes require renaming" do
         let(:attributes) do
           [
-            [:name, from: "name"],
-            [:task, type: :hash, wrap: true, header: [[:title, from: "title"]]]
+            [:name, {from: "name"}],
+            [:task, {type: :hash, wrap: true, header: [[:title, {from: "title"}]]}]
           ]
         end
 
@@ -338,7 +338,7 @@ RSpec.describe ROM::Processor::Transformer do
     context "when no mapping is needed" do
       let(:attributes) do
         [
-          ["user", type: :hash, unwrap: true, header: [["name"], ["task"]]]
+          ["user", {type: :hash, unwrap: true, header: [["name"], ["task"]]}]
         ]
       end
 
@@ -354,7 +354,7 @@ RSpec.describe ROM::Processor::Transformer do
       context "without renaming the rest of the wrap" do
         let(:attributes) do
           [
-            ["user", type: :hash, unwrap: true, header: [["task"]]]
+            ["user", {type: :hash, unwrap: true, header: [["task"]]}]
           ]
         end
 
@@ -369,7 +369,7 @@ RSpec.describe ROM::Processor::Transformer do
       context "with renaming the rest of the wrap" do
         let(:attributes) do
           [
-            ["man", from: "user", type: :hash, unwrap: true, header: [["task"]]]
+            ["man", {from: "user", type: :hash, unwrap: true, header: [["task"]]}]
           ]
         end
 
@@ -385,11 +385,11 @@ RSpec.describe ROM::Processor::Transformer do
     context "deeply" do
       let(:attributes) do
         [
-          ["user", type: :hash, unwrap: true, header: [
+          ["user", {type: :hash, unwrap: true, header: [
             ["name"],
             ["title"],
-            ["task", type: :hash, unwrap: true, header: [["title"]]]
-          ]]
+            ["task", {type: :hash, unwrap: true, header: [["title"]]}]
+          ]}]
         ]
       end
 
@@ -416,7 +416,7 @@ RSpec.describe ROM::Processor::Transformer do
       let(:attributes) do
         [
           ["name"],
-          ["tasks", type: :array, group: true, header: [["title"]]]
+          ["tasks", {type: :array, group: true, header: [["title"]]}]
         ]
       end
 
@@ -435,7 +435,7 @@ RSpec.describe ROM::Processor::Transformer do
         let(:attributes) do
           [
             ["name"],
-            ["tasks", type: :array, group: true, header: [[:title, from: "title"]]]
+            ["tasks", {type: :array, group: true, header: [[:title, {from: "title"}]]}]
           ]
         end
 
@@ -452,8 +452,8 @@ RSpec.describe ROM::Processor::Transformer do
       context "when all attributes require renaming" do
         let(:attributes) do
           [
-            [:name, from: "name"],
-            [:tasks, type: :array, group: true, header: [[:title, from: "title"]]]
+            [:name, {from: "name"}],
+            [:tasks, {type: :array, group: true, header: [[:title, {from: "title"}]]}]
           ]
         end
 
@@ -480,10 +480,10 @@ RSpec.describe ROM::Processor::Transformer do
       let(:attributes) do
         [
           [:name],
-          [:tasks, type: :array, group: true, header: [
+          [:tasks, {type: :array, group: true, header: [
             [:title],
-            [:tags, type: :array, group: true, header: [[:tag]]]
-          ]]
+            [:tags, {type: :array, group: true, header: [[:tag]]}]
+          ]}]
         ]
       end
 

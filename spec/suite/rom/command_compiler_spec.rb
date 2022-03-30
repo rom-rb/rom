@@ -25,10 +25,10 @@ RSpec.describe "ROM::CommandCompiler" do
   let(:users_ast) do
     [:users,
      [[:attribute,
-       [:id, [:nominal, [Integer, {}]], primary_key: true]],
+       [:id, [:nominal, [Integer, {}]], {primary_key: true}]],
       [:attribute,
        [:name, [:nominal, [String, {}]], {source: :users}]]],
-     dataset: :users]
+     {dataset: :users}]
   end
 
   let(:command_class) do

@@ -18,13 +18,13 @@ RSpec.describe ROM::Attribute, "#to_ast" do
     specify do
       expect(
         to_attr.(type).to_ast
-      ).to eql([:attribute, [:id, type.to_ast, alias: nil]])
+      ).to eql([:attribute, [:id, type.to_ast, {alias: nil}]])
     end
   end
 
   example "wrapped type" do
     expect(attribute.wrapped(:users).to_ast)
       .to eql([:attribute, [:id, ROM::Types::Integer.to_ast,
-                            wrapped: true, alias: :users_id]])
+                            {wrapped: true, alias: :users_id}]])
   end
 end
