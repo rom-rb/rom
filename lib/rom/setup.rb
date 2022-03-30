@@ -75,9 +75,9 @@ module ROM
     # @return [Configuration]
     #
     # @api private
-    def initialize(*args, &block)
+    def initialize(...)
       super()
-      configure(*args, &block)
+      configure(...)
     end
 
     # @return [Registry::Root] Setup component registry

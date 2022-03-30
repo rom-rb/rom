@@ -103,8 +103,8 @@ module ROM
       end
 
       # @api private
-      def fetch(*args, &block)
-        values.fetch(*args, &block)
+      def fetch(...)
+        values.fetch(...)
       end
 
       # @api private
