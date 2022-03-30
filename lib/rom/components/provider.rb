@@ -80,7 +80,7 @@ module ROM
 
               super(*args, &block)
             end
-          }
+              }
       end
 
       # @api private
@@ -132,7 +132,7 @@ module ROM
                   define_dsl_method(mod, type)
                 end
               end
-            end
+          end
           
       end
 

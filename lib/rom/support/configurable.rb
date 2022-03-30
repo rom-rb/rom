@@ -133,7 +133,7 @@ Default = Struct.new(:name) do
           block_given? ? yield(*args) : args.first
         end
         alias_method :[], :call
-      end
+end
 
       class Inherit < Default
         def call(*args)
