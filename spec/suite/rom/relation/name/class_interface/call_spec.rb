@@ -15,6 +15,10 @@ RSpec.describe ROM::Relation::Name, ".[]" do
     )
   end
 
+  it "raises when invalid arg was passed" do
+    expect { ROM::Relation::Name[312] }.to raise_error(ArgumentError, "+312+ is not supported")
+  end
+
   it "returns name object when it was passed in as arg" do
     name = ROM::Relation::Name[:users]
     expect(ROM::Relation::Name[name]).to be(name)

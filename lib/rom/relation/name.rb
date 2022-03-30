@@ -33,7 +33,7 @@ module ROM
           when Symbol then new(relation, dataset, aliaz)
           when Class, String then new(Inflector.component_id(relation).to_sym)
           else
-            # raise ?
+            raise ArgumentError, "+#{relation}+ is not supported"
           end
         end
       end
