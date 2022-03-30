@@ -42,7 +42,7 @@ module ROM
 
         klass = if adapter_ns.const_defined?(:MapperCompiler)
   adapter_ns::MapperCompiler
-else
+                else
   MapperCompiler
 end
 
