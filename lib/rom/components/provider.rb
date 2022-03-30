@@ -133,7 +133,7 @@ module ROM
                 end
               end
           end
-          
+
       end
 
       # @api private
