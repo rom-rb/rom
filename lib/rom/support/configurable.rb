@@ -127,7 +127,7 @@ module ROM
     end
 
     module Constructors
-      class Default < Struct.new(:name)
+Default = Struct.new(:name) do
         def call(*args)
           return if args.compact.empty?
           block_given? ? yield(*args) : args.first
