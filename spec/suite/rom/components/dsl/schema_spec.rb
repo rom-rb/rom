@@ -38,8 +38,6 @@ RSpec.describe ROM::Components::DSL, "#schema" do
   end
 
   it "uses default options from config" do
-    inferrer = double(:inferrer)
-
     setup.schema(:users) do
       config.options[:primary_key_name] = :foo
     end
