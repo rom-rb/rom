@@ -20,12 +20,10 @@ Warning.ignore(/__FILE__/)
 Warning.ignore(/__LINE__/)
 Warning.process { |w| raise w } if ENV["FAIL_ON_WARNINGS"].eql?("true")
 
-# rubocop:disable Lint/SuppressedException
 begin
   require "pry-byebug"
 rescue LoadError
 end
-# rubocop:enable Lint/SuppressedException
 
 require "dry/core/deprecations"
 Dry::Core::Deprecations.set_logger!(SPEC_ROOT.join("../log/deprecations.log"))
@@ -76,10 +74,8 @@ RSpec.configure do |config|
   end
 
   %i[rom compat].each do |group|
-    # rubocop:disable Lint/SuppressedException
     config.when_first_matching_example_defined group: group do
       require_relative "support/#{group}"
     end
-    # rubocop:enable Lint/SuppressedException
   end
 end
