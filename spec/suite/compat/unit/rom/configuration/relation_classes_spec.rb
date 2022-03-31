@@ -11,9 +11,9 @@ RSpec.describe ROM::Configuration, "#relation_classes" do
 
     rel_default = Class.new(ROM::Relation[:memory]) { schema(:users) {} }
     rel_custom = Class.new(ROM::Relation[:memory]) {
-                   gateway :custom
-                                                     schema(:others) {}
-}
+      gateway :custom
+      schema(:others) {}
+    }
 
     conf.register_relation(rel_default)
     conf.register_relation(rel_custom)

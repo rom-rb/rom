@@ -77,7 +77,7 @@ module ROM
           fetch(name, _adapter)
         else
           key = "#{type}.#{name}"
-            container.resolve(key)
+          container.resolve(key)
         end
       end
       alias_method :[], :fetch

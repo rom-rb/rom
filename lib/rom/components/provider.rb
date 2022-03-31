@@ -117,23 +117,22 @@ module ROM
           Module.new.tap do |mod|
             define_dsl_method(mod, :__dsl__)
 
-              features.each do |type|
-                if ROM.components.key?(type)
-                  handler = ROM.components[type]
+            features.each do |type|
+              if ROM.components.key?(type)
+                handler = ROM.components[type]
 
-                  [handler.key, handler.namespace]
-                    .select { |name|
-                      DSL.instance_methods.include?(name)
-                    }
-                    .each { |name|
-                      define_dsl_method(mod, name)
-                    }
-                else
-                  define_dsl_method(mod, type)
-                end
+                [handler.key, handler.namespace]
+                  .select { |name|
+                    DSL.instance_methods.include?(name)
+                  }
+                  .each { |name|
+                    define_dsl_method(mod, name)
+                  }
+              else
+                define_dsl_method(mod, type)
               end
+            end
           end
-
       end
 
       # @api private

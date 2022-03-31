@@ -132,7 +132,7 @@ module ROM
 
           block_given? ? yield(*args) : args.first
         end
-              alias_method :[], :call
+        alias_method :[], :call
       end
 
       class Inherit < Default
