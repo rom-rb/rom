@@ -12,7 +12,7 @@ RSpec.describe ROM::Setup do
 
     expect(setup.config.gateways.default.infer_schema).to be(false)
 
-    setup = ROM::Setup.new(default: [:memory, infer_schema: false])
+    setup = ROM::Setup.new(default: [:memory, {infer_schema: false}])
 
     expect(setup.config.gateways.default.infer_schema).to be(false)
   end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe ROM::Registries::Root do
   subject(:registry) do
     ROM::Registries::Root.new

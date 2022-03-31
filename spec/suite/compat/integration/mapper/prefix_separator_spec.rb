@@ -15,7 +15,7 @@ RSpec.describe "Mapper definition DSL" do
       user_name: "Joe",
       user_email: "joe@doe.com",
       "user.skype" => "joe",
-      :'user.phone' => "1234567890"
+      :"user.phone" => "1234567890"
     )
   end
 

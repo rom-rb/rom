@@ -103,8 +103,8 @@ module ROM
       end
 
       # @api private
-      def fetch(*args, &block)
-        values.fetch(*args, &block)
+      def fetch(...)
+        values.fetch(...)
       end
 
       # @api private
@@ -123,13 +123,13 @@ module ROM
       def _constructors
         @_constructors ||= _settings.map { |setting| [setting.name, setting.constructor] }.to_h
       end
-      alias_method :to_hash, :to_h
     end
 
     module Constructors
-      class Default < Struct.new(:name)
+      Default = Struct.new(:name) do
         def call(*args)
           return if args.compact.empty?
+
           block_given? ? yield(*args) : args.first
         end
         alias_method :[], :call

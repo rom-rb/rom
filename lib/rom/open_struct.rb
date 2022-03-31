@@ -23,7 +23,7 @@ module ROM
     attr_reader :__keys__
 
     # @api private
-    def initialize(attributes = EMPTY_HASH, &block)
+    def initialize(attributes = EMPTY_HASH)
       @__keys__ = Set.new
       __load__(attributes)
     end

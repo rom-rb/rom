@@ -34,7 +34,7 @@ RSpec.describe ROM::Relation::Combined do
 
   it_behaves_like "materializable relation" do
     let(:mapper) do
-      t(:combine, [[:tasks, name: :name]])
+      t(:combine, [[:tasks, {name: :name}]])
     end
 
     let(:relation) do

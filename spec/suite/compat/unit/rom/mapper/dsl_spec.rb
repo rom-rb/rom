@@ -30,7 +30,7 @@ RSpec.describe ROM::Mapper do
     end
 
     context "aliased attribute" do
-      let(:attributes) { [[:name, from: :user_name]] }
+      let(:attributes) { [[:name, {from: :user_name}]] }
 
       it "adds an aliased attribute for the header" do
         mapper.attribute :name, from: :user_name
@@ -40,7 +40,7 @@ RSpec.describe ROM::Mapper do
     end
 
     context "prefixed attribute" do
-      let(:attributes) { [[:name, from: :user_name]] }
+      let(:attributes) { [[:name, {from: :user_name}]] }
       let(:options) { {prefix: :user} }
 
       it "adds an aliased attribute for the header using configured :prefix" do
@@ -51,7 +51,7 @@ RSpec.describe ROM::Mapper do
     end
 
     context "prefixed attribute using custom separator" do
-      let(:attributes) { [[:name, from: :'u.name']] }
+      let(:attributes) { [[:name, {from: :"u.name"}]] }
       let(:options) { {prefix: :u, prefix_separator: "."} }
 
       it "adds an aliased attribute for the header using configured :prefix" do
@@ -62,7 +62,7 @@ RSpec.describe ROM::Mapper do
     end
 
     context "symbolized attribute" do
-      let(:attributes) { [[:name, from: "name"]] }
+      let(:attributes) { [[:name, {from: "name"}]] }
       let(:options) { {symbolize_keys: true} }
 
       it "adds an attribute with symbolized alias" do
@@ -74,7 +74,7 @@ RSpec.describe ROM::Mapper do
   end
 
   describe "copy_keys" do
-    let(:attributes) { [[:name, type: :string]] }
+    let(:attributes) { [[:name, {type: :string}]] }
     let(:options) { {copy_keys: true} }
 
     it "sets copy_keys for the header" do
@@ -86,7 +86,7 @@ RSpec.describe ROM::Mapper do
   end
 
   describe "reject_keys" do
-    let(:attributes) { [[:name, type: :string]] }
+    let(:attributes) { [[:name, {type: :string}]] }
     let(:options) { {reject_keys: true} }
 
     it "sets reject_keys for the header" do
@@ -99,7 +99,7 @@ RSpec.describe ROM::Mapper do
 
   describe "overriding inherited attributes" do
     context "when name matches" do
-      let(:attributes) { [[:name, type: :string]] }
+      let(:attributes) { [[:name, {type: :string}]] }
 
       it "excludes the inherited attribute" do
         parent.attribute :name
@@ -111,7 +111,7 @@ RSpec.describe ROM::Mapper do
     end
 
     context "when alias matches" do
-      let(:attributes) { [[:name, from: "name", type: :string]] }
+      let(:attributes) { [[:name, {from: "name", type: :string}]] }
 
       it "excludes the inherited attribute" do
         parent.attribute "name"
@@ -125,7 +125,7 @@ RSpec.describe ROM::Mapper do
     context "when name in a wrapped attribute matches" do
       let(:attributes) do
         [
-          [:city, type: :hash, wrap: true, header: [[:name, from: :city_name]]]
+          [:city, {type: :hash, wrap: true, header: [[:name, {from: :city_name}]]}]
         ]
       end
 
@@ -143,7 +143,7 @@ RSpec.describe ROM::Mapper do
     context "when name in a grouped attribute matches" do
       let(:attributes) do
         [
-          [:tags, type: :array, group: true, header: [[:name, from: :tag_name]]]
+          [:tags, {type: :array, group: true, header: [[:name, {from: :tag_name}]]}]
         ]
       end
 
@@ -161,7 +161,7 @@ RSpec.describe ROM::Mapper do
     context "when name in a hash attribute matches" do
       let(:attributes) do
         [
-          [:city, type: :hash, header: [[:name, from: :city_name]]]
+          [:city, {type: :hash, header: [[:name, {from: :city_name}]]}]
         ]
       end
 
@@ -179,7 +179,7 @@ RSpec.describe ROM::Mapper do
     context "when name of an array attribute matches" do
       let(:attributes) do
         [
-          [:tags, type: :array, header: [[:name, from: :tag_name]]]
+          [:tags, {type: :array, header: [[:name, {from: :tag_name}]]}]
         ]
       end
 
@@ -196,7 +196,7 @@ RSpec.describe ROM::Mapper do
   end
 
   describe "#exclude" do
-    let(:attributes) { [[:name, from: "name"]] }
+    let(:attributes) { [[:name, {from: "name"}]] }
 
     it "removes an attribute from the inherited header" do
       mapper.attribute :name, from: "name"
@@ -206,7 +206,7 @@ RSpec.describe ROM::Mapper do
 
   describe "#embedded" do
     context "when :type is set to :hash" do
-      let(:attributes) { [[:city, type: :hash, header: [[:name]]]] }
+      let(:attributes) { [[:city, {type: :hash, header: [[:name]]}]] }
 
       it "adds an embedded hash attribute" do
         mapper.embedded :city, type: :hash do
@@ -218,7 +218,7 @@ RSpec.describe ROM::Mapper do
     end
 
     context "when :type is set to :array" do
-      let(:attributes) { [[:tags, type: :array, header: [[:name]]]] }
+      let(:attributes) { [[:tags, {type: :array, header: [[:name]]}]] }
 
       it "adds an embedded array attribute" do
         mapper.embedded :tags, type: :array do
@@ -231,7 +231,7 @@ RSpec.describe ROM::Mapper do
   end
 
   describe "#wrap" do
-    let(:attributes) { [[:city, type: :hash, wrap: true, header: [[:name]]]] }
+    let(:attributes) { [[:city, {type: :hash, wrap: true, header: [[:name]]}]] }
 
     it "adds an wrapped hash attribute using a block to define attributes" do
       mapper.wrap :city do
@@ -262,7 +262,7 @@ RSpec.describe ROM::Mapper do
   end
 
   describe "#group" do
-    let(:attributes) { [[:tags, type: :array, group: true, header: [[:name]]]] }
+    let(:attributes) { [[:tags, {type: :array, group: true, header: [[:name]]}]] }
 
     it "adds a group attribute using a block to define attributes" do
       mapper.group :tags do
@@ -300,16 +300,16 @@ RSpec.describe ROM::Mapper do
     context "when no attribute overrides top-level setting" do
       let(:attributes) do
         [
-          [:name, from: :user_name],
-          [:address, from: :user_address, type: :hash, header: [
-            [:city, from: :user_city]
-          ]],
-          [:contact, type: :hash, wrap: true, header: [
-            [:mobile, from: :user_mobile]
-          ]],
-          [:tasks, type: :array, group: true, header: [
-            [:title, from: :user_title]
-          ]]
+          [:name, {from: :user_name}],
+          [:address, {from: :user_address, type: :hash, header: [
+            [:city, {from: :user_city}]
+          ]}],
+          [:contact, {type: :hash, wrap: true, header: [
+            [:mobile, {from: :user_mobile}]
+          ]}],
+          [:tasks, {type: :array, group: true, header: [
+            [:title, {from: :user_title}]
+          ]}]
         ]
       end
 
@@ -335,19 +335,19 @@ RSpec.describe ROM::Mapper do
     context "when an attribute overrides top-level setting" do
       let(:attributes) do
         [
-          [:name, from: :user_name],
-          [:birthday, from: :user_birthday, type: :hash, header: [
-            [:year, from: :bd_year],
-            [:month, from: :bd_month],
-            [:day, from: :bd_day]
-          ]],
-          [:address, from: :user_address, type: :hash, header: [[:city]]],
-          [:contact, type: :hash, wrap: true, header: [
-            [:mobile, from: :contact_mobile]
-          ]],
-          [:tasks, type: :array, group: true, header: [
-            [:title, from: :task_title]
-          ]]
+          [:name, {from: :user_name}],
+          [:birthday, {from: :user_birthday, type: :hash, header: [
+            [:year, {from: :bd_year}],
+            [:month, {from: :bd_month}],
+            [:day, {from: :bd_day}]
+          ]}],
+          [:address, {from: :user_address, type: :hash, header: [[:city]]}],
+          [:contact, {type: :hash, wrap: true, header: [
+            [:mobile, {from: :contact_mobile}]
+          ]}],
+          [:tasks, {type: :array, group: true, header: [
+            [:title, {from: :task_title}]
+          ]}]
         ]
       end
 
@@ -386,7 +386,7 @@ RSpec.describe ROM::Mapper do
       let(:attributes) do
         [
           [:name],
-          [:tasks, type: :array, group: true, header: task_mapper.header]
+          [:tasks, {type: :array, group: true, header: task_mapper.header}]
         ]
       end
 
@@ -406,7 +406,7 @@ RSpec.describe ROM::Mapper do
       let(:attributes) do
         [
           [:name],
-          [:task, type: :hash, wrap: true, header: task_mapper.header]
+          [:task, {type: :hash, wrap: true, header: task_mapper.header}]
         ]
       end
 
@@ -426,7 +426,7 @@ RSpec.describe ROM::Mapper do
       let(:attributes) do
         [
           [:name],
-          [:task, type: :hash, header: task_mapper.header]
+          [:task, {type: :hash, header: task_mapper.header}]
         ]
       end
 
@@ -443,7 +443,7 @@ RSpec.describe ROM::Mapper do
     let(:attributes) do
       [
         [:title],
-        [:tasks, combine: true, type: :array, header: [[:title]]]
+        [:tasks, {combine: true, type: :array, header: [[:title]]}]
       ]
     end
 
@@ -461,7 +461,7 @@ RSpec.describe ROM::Mapper do
       expected_header = ROM::Header.coerce(
         [
           [:title],
-          [:tasks, combine: true, type: :array, header: []]
+          [:tasks, {combine: true, type: :array, header: []}]
         ]
       )
 

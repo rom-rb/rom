@@ -38,6 +38,7 @@ RSpec.describe ROM::Relation, "#combine_with" do
       schema(:tags) {}
 
       attr_accessor :tasks
+
       forward :map
 
       def for_tasks(tasks)

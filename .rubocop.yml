@@ -1,8 +1,7 @@
 # This is a config synced from rom-rb/template-gem repo
-
 AllCops:
-  TargetRubyVersion: 2.5
-  NewCops: enable
+  TargetRubyVersion: 2.7
+  NewCops: disable
   Exclude:
     - spec/support/coverage.rb
     - spec/support/warnings.rb
@@ -33,7 +32,7 @@ Layout/SpaceInsideHashLiteralBraces:
   EnforcedStyleForEmptyBraces: no_space
 
 Layout/LineLength:
-  Max: 100
+  Max: 120
   Exclude:
     - "spec/**/*_spec.rb"
 
@@ -46,13 +45,19 @@ Lint/AmbiguousBlockAssociation:
 Lint/BooleanSymbol:
   Enabled: false
 
+Lint/MissingSuper:
+  Enabled: false
+
 Lint/ConstantDefinitionInBlock:
-  Exclude:
-    - "spec/suite/**/*"
+  Enabled: false
 
 Lint/EmptyBlock:
   Exclude:
-    - "spec/suite/**/*"
+  - "spec/**/*.rb"
+
+Lint/EmptyClass:
+  Exclude:
+  - "spec/**/*.rb"
 
 Lint/RaiseException:
   Enabled: false
@@ -64,6 +69,26 @@ Lint/SuppressedException:
   Exclude:
     - "spec/spec_helper.rb"
 
+Lint/UselessMethodDefinition:
+  Exclude:
+    - "lib/rom/struct.rb"
+
+Lint/UnderscorePrefixedVariableName:
+  Enabled: false
+
+Lint/ToEnumArguments:
+  Exclude:
+    - "lib/rom/command.rb"
+
+Naming/MethodParameterName:
+  Enabled: false
+
+Naming/AccessorMethodName:
+  Enabled: false
+
+Naming/VariableNumber:
+  Enabled: false
+
 Naming/PredicateName:
   Enabled: false
 
@@ -73,11 +98,6 @@ Naming/FileName:
 
 Naming/MethodName:
   Enabled: false
-
-Naming/MethodParameterName:
-  Enabled: true
-  Exclude:
-    - "spec/**/*.rb"
 
 Naming/MemoizedInstanceVariableName:
   Enabled: false
@@ -92,15 +112,17 @@ Metrics/BlockLength:
   Enabled: false
 
 Metrics/AbcSize:
-  Max: 26
+  Max: 36
 
 Metrics/CyclomaticComplexity:
   Enabled: true
   Max: 12
 
 Metrics/PerceivedComplexity:
-  Enabled: true
-  Max: 10
+  Max: 14
+
+Metrics/ParameterLists:
+  Enabled: false
 
 Style/AccessorGrouping:
   Enabled: false
@@ -131,8 +153,7 @@ Style/BlockDelimiters:
   Enabled: false
 
 Style/ClassAndModuleChildren:
-  Exclude:
-    - "spec/**/*_spec.rb"
+  Enabled: false
 
 Style/ConditionalAssignment:
   Enabled: false
@@ -164,9 +185,6 @@ Style/LambdaCall:
 Style/ParallelAssignment:
   Enabled: false
 
-Style/RaiseArgs:
-  Enabled: false
-
 Style/StabbyLambdaParentheses:
   Enabled: false
 
@@ -180,11 +198,28 @@ Style/StringLiteralsInInterpolation:
   EnforcedStyle: double_quotes
 
 Style/SymbolArray:
-  Exclude:
-    - "spec/**/*_spec.rb"
+  Enabled: false
+
+Style/OptionalBooleanParameter:
+  Enabled: false
+
+Style/MultilineBlockChain:
+  Enabled: false
+
+Style/DocumentDynamicEvalDefinition:
+  Enabled: false
 
 Style/TrailingUnderscoreVariable:
   Enabled: false
 
 Style/MultipleComparison:
+  Enabled: false
+
+Style/StringConcatenation:
+  Enabled: false
+
+Style/OpenStructUse:
+  Enabled: false
+
+Style/MapToHash:
   Enabled: false

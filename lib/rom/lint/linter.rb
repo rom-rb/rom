@@ -45,8 +45,6 @@ module ROM
         true # for assertions
       end
 
-      private
-
       # Return a list a lint methods
       #
       # @return [String]
@@ -55,6 +53,8 @@ module ROM
       def self.lints
         public_instance_methods(true).grep(/^lint_/).map(&:to_s)
       end
+
+      private
 
       # Raise a failure if a lint verification fails
       #

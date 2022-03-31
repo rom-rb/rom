@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Commands
   module Users
     class Create < ROM::Memory::Commands::Create

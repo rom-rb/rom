@@ -35,7 +35,7 @@ RSpec.describe ROM::Setup do
   end
 
   context "with custom adapter settings" do
-    let(:params) { [:memory, my_setting: "test"] }
+    let(:params) { [:memory, {my_setting: "test"}] }
 
     it "sets gateway's custom config" do
       expect(gateways[:default].name).to eql(:default)

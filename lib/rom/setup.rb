@@ -75,9 +75,9 @@ module ROM
     # @return [Configuration]
     #
     # @api private
-    def initialize(*args, &block)
+    def initialize(...)
       super()
-      configure(*args, &block)
+      configure(...)
     end
 
     # @return [Registry::Root] Setup component registry
@@ -254,7 +254,7 @@ module ROM
 
         options =
           if rest.size > 1 && rest.last.is_a?(Hash)
-            {adapter: adapter, args: rest[0..-1], **rest.last}
+            {adapter: adapter, args: rest[0..], **rest.last}
           else
             options = rest.first.is_a?(Hash) ? rest.first : {args: rest.flatten(1)}
             {adapter: adapter, **options}

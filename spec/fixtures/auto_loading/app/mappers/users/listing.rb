@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Mappers
   module Users
     class Listing < ROM::Transformer

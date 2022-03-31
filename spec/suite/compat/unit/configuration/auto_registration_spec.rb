@@ -15,6 +15,7 @@ RSpec.describe ROM::Configuration, "#auto_registration" do
       def config
         ROM.config
       end
+
       def components
         []
       end

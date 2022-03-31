@@ -6,7 +6,7 @@ RSpec.describe ROM::StructCompiler, "#call" do
   subject(:struct_compiler) { ROM::StructCompiler.new }
 
   def attr_ast(name, type, **_opts)
-    [name, ROM::Types.const_get(type).to_ast, alias: false, wrapped: false]
+    [name, ROM::Types.const_get(type).to_ast, {alias: false, wrapped: false}]
   end
 
   let(:input) do
@@ -39,7 +39,7 @@ RSpec.describe ROM::StructCompiler, "#call" do
       expect(user[:id]).to be(1)
       expect(user[:name]).to eql("Jane")
 
-      expect(Hash[user]).to eql(id: 1, name: "Jane")
+      expect(user.to_h).to eql(id: 1, name: "Jane")
 
       expect(user.inspect).to eql('#<ROM::Struct::User id=1 name="Jane">')
       expect(user.to_s).to match(/\A#<ROM::Struct::User:0x[0-9a-f]+>\z/)
@@ -78,8 +78,8 @@ RSpec.describe ROM::StructCompiler, "#call" do
 
   context "with constrained types" do
     let(:input) do
-      [:posts, [[:attribute, [:id, ROM::Types::Strict::Integer.to_ast, alias: false, wrapped: false]],
-                [:attribute, [:status, ROM::Types::Strict::String.enum(%(Foo Bar)).to_ast, alias: false, wrapped: false]]]]
+      [:posts, [[:attribute, [:id, ROM::Types::Strict::Integer.to_ast, {alias: false, wrapped: false}]],
+                [:attribute, [:status, ROM::Types::Strict::String.enum(%(Foo Bar)).to_ast, {alias: false, wrapped: false}]]]]
     end
 
     let(:struct) do

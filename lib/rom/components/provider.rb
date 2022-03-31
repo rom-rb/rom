@@ -67,20 +67,20 @@ module ROM
       end
 
       # @api private
-      def define_configure_method(type, features, &block)
+      def define_configure_method(type, features)
         yield Module.new {
-            define_method(:configure) do |*args, &block|
-              # Inherit global defaults
-              config.component.inherit!(**ROM.config[type], type: type)
+                define_method(:configure) do |*args, &block|
+                  # Inherit global defaults
+                  config.component.inherit!(**ROM.config[type], type: type)
 
-              # Inherit global defaults for individual features
-              features.each do |name|
-                config[name].inherit!(**ROM.config[name]) if ROM.config.key?(name)
-              end
+                  # Inherit global defaults for individual features
+                  features.each do |name|
+                    config[name].inherit!(**ROM.config[name]) if ROM.config.key?(name)
+                  end
 
-              super(*args, &block)
-            end
-          }
+                  super(*args, &block)
+                end
+              }
       end
 
       # @api private
@@ -114,24 +114,22 @@ module ROM
       # @api private
       def mod
         @mod ||=
-          begin
-            Module.new.tap do |mod|
-              define_dsl_method(mod, :__dsl__)
+          Module.new.tap do |mod|
+            define_dsl_method(mod, :__dsl__)
 
-              features.each do |type|
-                if ROM.components.key?(type)
-                  handler = ROM.components[type]
+            features.each do |type|
+              if ROM.components.key?(type)
+                handler = ROM.components[type]
 
-                  [handler.key, handler.namespace]
-                    .select { |name|
-                      DSL.instance_methods.include?(name)
-                    }
-                    .each { |name|
-                      define_dsl_method(mod, name)
-                    }
-                else
-                  define_dsl_method(mod, type)
-                end
+                [handler.key, handler.namespace]
+                  .select { |name|
+                    DSL.instance_methods.include?(name)
+                  }
+                  .each { |name|
+                    define_dsl_method(mod, name)
+                  }
+              else
+                define_dsl_method(mod, type)
               end
             end
           end

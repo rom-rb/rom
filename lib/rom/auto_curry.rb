@@ -47,7 +47,7 @@ module ROM
       mod.module_eval do
         define_method(name) do |*args, &mblock|
           response =
-            if arity < 0 || arity == args.size
+            if arity.negative? || arity == args.size
               super(*args, &mblock)
             else
               self.class.curried.new(self, view: name, curry_args: args, arity: arity)

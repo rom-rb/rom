@@ -73,13 +73,11 @@ module ROM
           else
             fetch(name)
           end
+        elsif _adapter && key?(name)
+          fetch(name, _adapter)
         else
-          if _adapter && key?(name)
-            fetch(name, _adapter)
-          else
-            key = "#{type}.#{name}"
-            container.resolve(key)
-          end
+          key = "#{type}.#{name}"
+          container.resolve(key)
         end
       end
       alias_method :[], :fetch

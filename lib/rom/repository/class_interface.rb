@@ -68,7 +68,7 @@ module ROM
       def inherited(klass)
         super
 
-        return if self === Repository
+        return if equal?(Repository)
 
         klass.extend(::Dry::Core::Cache)
         klass.commands(*commands)
