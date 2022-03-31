@@ -123,7 +123,6 @@ module ROM
       def _constructors
         @_constructors ||= _settings.map { |setting| [setting.name, setting.constructor] }.to_h
       end
-      alias_method :to_hash, :to_h
     end
 
     module Constructors
