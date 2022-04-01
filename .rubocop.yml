@@ -2,6 +2,7 @@
 AllCops:
   TargetRubyVersion: 2.7
   NewCops: disable
+  SuggestExtensions: false
   Exclude:
     - spec/support/coverage.rb
     - spec/support/warnings.rb
@@ -67,7 +68,7 @@ Lint/StructNewOverride:
 
 Lint/SuppressedException:
   Exclude:
-    - "spec/spec_helper.rb"
+    - "spec/**/*.rb"
 
 Lint/UselessMethodDefinition:
   Exclude:
@@ -103,6 +104,9 @@ Naming/MemoizedInstanceVariableName:
   Enabled: false
 
 Metrics/MethodLength:
+  Enabled: false
+
+Metrics/ModuleLength:
   Enabled: false
 
 Metrics/ClassLength:
@@ -222,4 +226,22 @@ Style/OpenStructUse:
   Enabled: false
 
 Style/MapToHash:
+  Enabled: false
+
+Style/FormatStringToken:
+  Enabled: false
+
+Style/StructInheritance:
+  Enabled: false
+
+Style/PreferredHashMethods:
+  Enabled: false
+
+Style/DoubleNegation:
+  Enabled: false
+
+Style/MissingRespondToMissing:
+  Enabled: false
+
+Style/CombinableLoops:
   Enabled: false
