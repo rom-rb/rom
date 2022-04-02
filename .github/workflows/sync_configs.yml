@@ -7,16 +7,16 @@ on:
     paths:
       - "changelog.yml"
     branches:
-      - "master"
+      - "main"
   pull_request:
     branches:
-      - "master"
+      - "main"
     types: [closed]
 
 jobs:
   sync:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true || github.event_name == 'push'
+    if: github.event.pull_request.merged == true
     name: Update
     env:
       GITHUB_LOGIN: rom-bot
@@ -36,7 +36,7 @@ jobs:
       - name: Set up Ruby
         uses: actions/setup-ruby@v1
         with:
-          ruby-version: "2.7"
+          ruby-version: "2.6"
       - name: Install dependencies
         run: gem install ossy --no-document
       - name: Update changelog.yml from commit
@@ -49,5 +49,5 @@ jobs:
           git commit -m "Update CHANGELOG.md" || echo "nothing to commit"
       - name: Push changes
         run: |
-          git pull --rebase origin master
-          git push https://rom-bot:${{secrets.GH_PAT}}@github.com/${{github.repository}}.git HEAD:master
+          git pull --rebase origin main
+          git push https://rom-bot:${{secrets.GH_PAT}}@github.com/${{github.repository}}.git HEAD:main
