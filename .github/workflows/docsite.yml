@@ -1,4 +1,4 @@
-# this file is managed by rom-rb/devtools project
+# This file is synced from rom-rb/template-gem repo
 
 name: docsite
 
@@ -8,7 +8,7 @@ on:
       - docsite/**
       - .github/workflows/docsite.yml
     branches:
-      - master
+      - main
       - release-**
     tags:
 
@@ -51,7 +51,7 @@ jobs:
 
             git push --all "https://rom-bot:${{secrets.GH_PAT}}@github.com/$GITHUB_REPOSITORY.git"
 
-            git checkout master
+            git checkout main
           else
             echo "no need to update branches"
           fi
@@ -60,3 +60,4 @@ jobs:
           GITHUB_LOGIN: rom-bot
           GITHUB_TOKEN: ${{secrets.GH_PAT}}
         run: ossy github workflow rom-rb/rom-rb.org ci
+
