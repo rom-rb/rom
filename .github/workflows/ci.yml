@@ -36,14 +36,14 @@ jobs:
         include:
         - ruby: '3.0'
           coverage: 'false'
-          use_dry_transformer_master: 'true'
-          use_rom_sql_master: 'true'
+          use_dry_transformer_main: 'true'
+          use_rom_sql_main: 'true'
     env:
       COVERAGE: "${{matrix.coverage}}"
       COVERAGE_TOKEN: "${{secrets.CODACY_PROJECT_TOKEN}}"
       BASE_DB_URI: localhost/rom_repository
-      USE_DRY_TRANSFORMER_MASTER: "${{matrix.use_dry_transformer_master}}"
-      USE_ROM_SQL_MASTER: "${{matrix.use_rom_sql_master}}"
+      USE_DRY_TRANSFORMER_MAIN: "${{matrix.use_dry_transformer_main}}"
+      USE_ROM_SQL_MAIN: "${{matrix.use_rom_sql_main}}"
       CODACY_RUN_LOCAL: "${{matrix.coverage}}"
       CODACY_PROJECT_TOKEN: "${{secrets.CODACY_PROJECT_TOKEN}}"
       APT_DEPS: libpq-dev libsqlite3-dev
