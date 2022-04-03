@@ -15,7 +15,7 @@ on:
     - project.yml
   pull_request:
     branches:
-    - master
+    - main
   create:
 
 jobs:
