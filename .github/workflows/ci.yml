@@ -1,5 +1,5 @@
 ---
-name: CI
+name: ci
 
 on:
   push:
@@ -34,7 +34,7 @@ jobs:
         # - truffleruby
         group: [rom, compat]
         include:
-        - ruby: '3.0'
+        - ruby: '3.1'
           coverage: 'false'
           use_dry_transformer_main: 'true'
           use_rom_sql_main: 'true'
