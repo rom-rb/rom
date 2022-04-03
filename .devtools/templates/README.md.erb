@@ -10,7 +10,7 @@
 [![CI Status](https://github.com/rom-rb/rom/workflows/ci/badge.svg)][actions]
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/f473a2496d6e41ed94d3fc1e96c4a486)][codacy]
 [![Codacy Badge](https://api.codacy.com/project/badge/Coverage/f473a2496d6e41ed94d3fc1e96c4a486)][codacy]
-[![Inline docs](http://inch-ci.org/github/rom-rb/rom.svg?branch=master&style=flat)][inchpages]
+[![Inline docs](http://inch-ci.org/github/rom-rb/rom.svg?branch=main&style=flat)][inchpages]
 [![OpenCollective](https://opencollective.com/rom/backers/badge.svg)](#backers)
 [![OpenCollective](https://opencollective.com/rom/sponsors/badge.svg)](#sponsors)
 
@@ -20,9 +20,9 @@ the full power of your database.
 
 Main rom gem provides following components:
 
-* [core](https://github.com/rom-rb/rom/blob/master/core/README.md) - Core and Adapter APIs
-* [changeset](https://github.com/rom-rb/rom/blob/master/changeset/README.md) - Changeset objects integrated with rom-core
-* [repository](https://github.com/rom-rb/rom/blob/master/repository/README.md) - Additional repository abstraction integrated with rom-core
+* [core](https://github.com/rom-rb/rom/blob/main/core/README.md) - Core and Adapter APIs
+* [changeset](https://github.com/rom-rb/rom/blob/main/changeset/README.md) - Changeset objects integrated with rom-core
+* [repository](https://github.com/rom-rb/rom/blob/main/repository/README.md) - Additional repository abstraction integrated with rom-core
 
 Learn more:
 

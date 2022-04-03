@@ -56,7 +56,7 @@
 - `ROM.plugins` returns global plugin registry when called without a block (via #660) (@solnic)
 - [internal] `ROM.plugin_registry` is deprecated, use `ROM.plugins` instead (via #660) (@solnic)
 
-[Compare v5.2.4...master](https://github.com/rom-rb/rom/compare/v5.2.4...master)
+[Compare v5.2.4...main](https://github.com/rom-rb/rom/compare/v5.2.4...main)
 
 ## 5.2.4 2020-05-08
 
@@ -300,4 +300,4 @@ Yanked and republished as 5.2.1
 
 ## 4.0.0 2017-10-18
 
-This release turns `rom` gem into a meta gem which depends on `rom-core`, `rom-mapper`, `rom-repository` and `rom-changeset'`. See [CHANGELOG](https://github.com/rom-rb/rom/blob/master/core/CHANGELOG.md#v400-2017-10-18) in core for more information.
+This release turns `rom` gem into a meta gem which depends on `rom-core`, `rom-mapper`, `rom-repository` and `rom-changeset'`. See [CHANGELOG](https://github.com/rom-rb/rom/blob/main/core/CHANGELOG.md#v400-2017-10-18) in core for more information.

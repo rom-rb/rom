@@ -32,7 +32,7 @@
 - <%= log %>
 <% end %>
 <% end %>
-<% curr_ver = r.date ? "v#{r.version}" : 'master' %>
+<% curr_ver = r.date ? "v#{r.version}" : 'main' %>
 <% prev_rel = releases[idx + 1] %>
 <% if prev_rel %>
 <% ver_range = "v#{prev_rel.version}...#{curr_ver}" %>

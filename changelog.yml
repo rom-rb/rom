@@ -248,5 +248,5 @@
 - version: 4.0.0
   date: '2017-10-18'
   summary: This release turns `rom` gem into a meta gem which depends on `rom-core`,
-    `rom-mapper`, `rom-repository` and `rom-changeset'`. See [CHANGELOG](https://github.com/rom-rb/rom/blob/master/core/CHANGELOG.md#v400-2017-10-18)
+    `rom-mapper`, `rom-repository` and `rom-changeset'`. See [CHANGELOG](https://github.com/rom-rb/rom/blob/main/core/CHANGELOG.md#v400-2017-10-18)
     in core for more information.

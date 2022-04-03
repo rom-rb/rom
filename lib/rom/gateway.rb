@@ -100,7 +100,7 @@ module ROM
       when String
         raise ArgumentError, <<-STRING.gsub(/^ {10}/, "")
           URIs without an explicit scheme are not supported anymore.
-          See https://github.com/rom-rb/rom/blob/master/CHANGELOG.md
+          See https://github.com/rom-rb/rom/blob/main/CHANGELOG.md
         STRING
       when Symbol
         klass = class_from_symbol(gateway_or_scheme)
