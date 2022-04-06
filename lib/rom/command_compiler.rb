@@ -179,12 +179,23 @@ module ROM
       key = "commands.#{rel_name}.#{id}-compiled-#{options.hash}"
 
       registry.fetch(key) do
-        command_class
-          .create_class(relation: relations[rel_name], **options)
-          .build(relations[rel_name])
+        relation = relations[rel_name]
+        klass = command_class.create_class(relation: relation, **options)
+
+        if gateways.key?(relation.gateway)
+          # TODO: add explicit specs covering this case
+          gateways[relation.gateway].command(klass, relation: relation, **options)
+        else
+          klass.build(relation, **options)
+        end
       end
 
       key
+    end
+
+    # @api private
+    def gateways
+      registry.root.gateways
     end
   end
 end
