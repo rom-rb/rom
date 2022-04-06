@@ -126,7 +126,7 @@ module ROM
     end
 
     module Constructors
-      Default = Struct.new(:name) do
+      Default = ::Struct.new(:name) do
         def call(*args)
           return if args.compact.empty?
 
