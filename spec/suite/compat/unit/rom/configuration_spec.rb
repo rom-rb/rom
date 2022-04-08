@@ -4,6 +4,12 @@ require "rom/compat"
 
 RSpec.describe ROM::Configuration do
   describe "#method_missing" do
+    it "returns the default gateway" do
+      configuration = ROM::Configuration.new(:memory)
+
+      expect(configuration.default).to be_instance_of(ROM::Memory::Gateway)
+    end
+
     it "returns a gateway if it is defined" do
       gateway = ROM::Gateway.setup(:memory)
       configuration = ROM::Configuration.new(gw: gateway)
