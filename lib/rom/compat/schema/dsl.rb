@@ -171,6 +171,7 @@ module ROM
           begin
             # Enable available plugin's
             plugins.each do |plugin|
+              next unless plugin.type == :schema
               plugin.enable(self) unless plugin.enabled?
             end
 
@@ -179,6 +180,7 @@ module ROM
 
             # Apply plugin defaults
             plugins.each do |plugin|
+              next unless plugin.type == :schema
               plugin.__send__(:apply_to, self)
             end
 

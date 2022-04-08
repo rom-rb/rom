@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "rom/relation"
+require_relative "schema/dsl"
 
 module ROM
   class Relation
@@ -31,5 +32,7 @@ module ROM
 
       instance_methods - ancestor_methods + auto_curried_methods.to_a
     end
+
+    config.schema.dsl_class = ROM::Schema::DSL
   end
 end
