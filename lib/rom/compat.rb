@@ -7,6 +7,7 @@
 require "rom/core"
 
 # old api patches
+require_relative "compat/global"
 require_relative "compat/auto_registration"
 require_relative "compat/setting_proxy"
 require_relative "compat/setup"
