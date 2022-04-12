@@ -6,9 +6,11 @@ module ROM
   module SettingProxy
     extend Dry::Core::ClassAttributes
 
+    private
+
     # @api private
     def respond_to_missing?(name, include_all = false)
-      super || setting_map.key?(name)
+      super || setting_mapping.key?(name)
     end
 
     # Delegate to config when accessing deprecated class attributes
