@@ -17,7 +17,7 @@ module ROM
         constant.use(:changeset)
         constant.use(:registry_reader, relations: registry.relation_ids)
 
-        # Define view methods if there are any registered view components for this relation
+       # Define view methods if there are any registered view components for this relation
         local_components.views(relation_id: id).each do |view|
           view.define(constant)
         end

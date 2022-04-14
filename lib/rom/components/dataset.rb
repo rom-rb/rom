@@ -9,9 +9,7 @@ module ROM
       # @api public
       def build
         if gateway?
-          blocks.reduce(gateway.dataset(id)) { |ds, blk|
-            ds.instance_exec(schema, &blk)
-          }
+          blocks.reduce(gateway.dataset(id)) { |ds, blk| evaluate_block(ds, blk) }
         elsif block
           schema ? block.(schema) : block.()
         else
@@ -22,6 +20,11 @@ module ROM
       # @api private
       def blocks
         [*dataset_components.map(&:block), block].compact
+      end
+
+      # @api private
+      def evaluate_block(ds, block)
+        ds.instance_exec(schema, &block)
       end
 
       # @api adapter
