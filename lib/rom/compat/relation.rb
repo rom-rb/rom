@@ -24,6 +24,8 @@ module ROM
       end
     end
 
+    extend Notifications::Listener
+
     # This is used by the deprecated command => relation view delegation syntax
     # @api private
     def self.view_methods

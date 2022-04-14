@@ -21,6 +21,11 @@ module ROM
       def finalize
         super { attach_listeners }
       end
+
+      # @api private
+      def registry_options
+        super.merge(notifications: notifications)
+      end
     end
 
     prepend(mod)
@@ -48,11 +53,6 @@ module ROM
     # @api private
     def listeners
       notifications.listeners
-    end
-
-    # @api private
-    def registry_options
-      {config: config, notifications: notifications}
     end
 
     # @api public

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "rom/components/core"
+require "rom/components/dataset"
 require "rom/components/relation"
 require "rom/components/command"
 
@@ -17,21 +18,42 @@ module ROM
     end
   end
 
+  class Components::Dataset < Components::Core
+    mod = Module.new do
+      # @api private
+      def evaluate_block(ds, block)
+        ds.instance_exec(relation_constant, &block)
+      end
+
+      def relation_constant
+        registry.components.get(:relations, id: relation_id).constant
+      end
+    end
+
+    prepend(mod)
+  end
+
   class Components::Relation < Components::Core
     mod = Module.new do
       def build
-        relation = super
+        schema = local_components.get(:schemas, id: id)&.build
+
+        if schema
+          trigger(
+            "relations.schema.set",
+            schema: schema,
+            adapter: adapter,
+            gateway: config[:gateway],
+            relation: constant,
+            registry: registry
+          )
+        end
 
         trigger("relations.class.ready", relation: constant, adapter: adapter)
 
-        trigger(
-          "relations.schema.set",
-          schema: relation.schema,
-          adapter: adapter,
-          gateway: config[:gateway],
-          relation: constant,
-          registry: registry
-        )
+        components.update(local_components)
+
+        relation = super
 
         trigger("relations.object.registered", registry: registry, relation: relation)
 
