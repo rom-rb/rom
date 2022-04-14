@@ -40,7 +40,6 @@ module ROM
       private
 
       # @api private
-      # rubocop:disable Metrics/AbcSize
       memoize def schema
         if id == relation_id
           registry.schemas[id] if registry.schemas.key?(id)
@@ -52,8 +51,6 @@ module ROM
           registry.schemas[id]
         end
       end
-      # rubocop:enable Metrics/AbcSize
-
       # @api private
       memoize def dataset_components
         provider.components.datasets(abstract: true, adapter: adapter)

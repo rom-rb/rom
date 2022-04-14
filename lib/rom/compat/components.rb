@@ -38,14 +38,16 @@ module ROM
       def build
         schema = local_components.get(:schemas, id: id)&.build
 
-        trigger(
-          "relations.schema.set",
-          schema: schema,
-          adapter: adapter,
-          gateway: config[:gateway],
-          relation: constant,
-          registry: registry
-        ) if schema
+        if schema
+          trigger(
+            "relations.schema.set",
+            schema: schema,
+            adapter: adapter,
+            gateway: config[:gateway],
+            relation: constant,
+            registry: registry
+          )
+        end
 
         trigger("relations.class.ready", relation: constant, adapter: adapter)
 
