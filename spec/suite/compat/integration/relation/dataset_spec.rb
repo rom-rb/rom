@@ -19,13 +19,29 @@ RSpec.describe "ROM::Relation.dataset" do
         end
       end
     end
+
+    configuration.relation(:tasks) do
+      schema do
+        attribute :id, ROM::Types::Integer
+        attribute :title, ROM::Types::String
+      end
+
+      dataset do |schema|
+        [schema]
+      end
+    end
   end
 
   let(:users) do
     container.relations[:users]
   end
 
+  let(:tasks) do
+    container.relations[:tasks]
+  end
+
   it "allows defining custom dataset" do
     expect(users.dataset).to eql([users.schema, users.class])
+    expect(tasks.dataset).to eql([tasks.schema])
   end
 end

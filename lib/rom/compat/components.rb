@@ -22,7 +22,11 @@ module ROM
     mod = Module.new do
       # @api private
       def evaluate_block(ds, block)
-        ds.instance_exec(relation_constant, &block)
+        if block.parameters.flatten.include?(:schema)
+          super
+        else
+          ds.instance_exec(relation_constant, &block)
+        end
       end
 
       def relation_constant
