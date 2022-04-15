@@ -8,13 +8,11 @@ a couple of extra steps required for the upgrade.
 
 ### Added
 
-- ROM(...) shortcut method for setting up rom registries (@solnic)
+- New settings API for components using dry-configurable (via #651) (@solnic)
+- ROM(...) shortcut method for setting up rom, ie `ROM(:sql, "sqlite::memory")` (@solnic)
 - You can now configure a custom inflector via configuration (PR #591) (@flash-gordon)
-- .transaction methods now accept keyword arguments. `Repository#transaction` accepts gateway to use. `Repository::Root#transaction` uses a gateway of the root relation by default (#620 closed by #621) (@flash-gordon)
-- Backward-compatibility extension that you can load via `require "rom/compat"` (via #634 refs #607) (@solnic)
 - New component API that replaces internal implementation of the finalization code and makes it possible to extend ROM with arbitrary component types (see #637) (@solnic)
 - Generic Component API which allows you to turn any class or object into a DSL that can define rom components (via #650) (@solnic)
-- New settings API for components using dry-configurable (via #651) (@solnic)
 - Support for defining abstract components via `config.component.abstract` in which case they won't be initialized for runtime usage (via #651) (@solnic)
 - Ability to provide top-level component configuration ie default gateway, adapter, inflector etc. (via #653) (@solnic)
 - Ability to configure gateways using configuration DSL (via #653) (@solnic)
@@ -22,10 +20,12 @@ a couple of extra steps required for the upgrade.
 - Relation view schemas that are defined via `Relation.view` DSL are now registered too, which makes them more accessible/reusable (via #653) (@solnic)
 - Global configuration that can provide default settings for all your components. ie a default adapter, gateway etc. (via #654) (@solnic)
 - Support for custom namespaces under which commands and mappers can be registered (via #654) (@solnic)
-- [experimental] New `ROM.components` API for registering custom component types (via #654) (@solnic)
 - Top-level `associations` DSL (via #656) (@solnic)
 - Support for configuring plugins on a per-component *instance* basis, which means that implementing plugins is now simpler and more powerful (via #656) (@solnic)
 - New relation setting: `component.infer_id_from_class` (via #661) (@solnic)
+- [experimental] New `ROM.components` API for registering custom component types (via #654) (@solnic)
+- .transaction methods now accept keyword arguments. `Repository#transaction` accepts gateway to use. `Repository::Root#transaction` uses a gateway of the root relation by default (#620 closed by #621) (@flash-gordon)
+- Backward-compatibility extension that you can load via `require "rom/compat"` (via #634 refs #607) (@solnic)
 
 ### Fixed
 
@@ -33,14 +33,13 @@ a couple of extra steps required for the upgrade.
 
 ### Changed
 
-- `rom-core`, `rom-changeset` and `rom-repository` have been merged into `rom` gem (@solnic)
-- `Schema#[]` and `Relation#[]` now raise an error if a given attribute is not unique (issue #529 fixed via #543) (@waiting-for-dev)
-- Configuration values are no longer being frozen during setup process (issue #616 fixed via #617) (@v-kolesnikov)
+- [BREAKING] `rom-core`, `rom-changeset` and `rom-repository` have been merged into `rom` gem (@solnic)
 - [BREAKING] `Setup#auto_registration` was renamed to `Setup#auto_register`. You can restore the original method via rom/compat extension (via #634 refs #607) (@solnic)
 - [BREAKING] `Configuration#method_missing` no longer resolves gateways by default. This functionality was moved to rom/compat (@solnic)
-- [internal] auto registration is now powered by Zeitwerk (via #634 refs #607) (@solnic)
-- Plugin event listeners are no longer global which makes it possible to have plugin with different configs in a single process (via #639) (@solnic)
-- [internal] Command compiler is no longer coupled to gateway and notifications (via #640) (@solnic)
+- [BREAKING] `ROM::Configuration` is deprecated and it was replaced by `ROM::Setup`. It can be restored via rom/compat (via #653) (@solnic)
+- `ROM.container` is deprecated and it was replaced by `ROM.runtime` (via #653) (@solnic)
+- `Schema#[]` and `Relation#[]` now raise an error if a given attribute is not unique (issue #529 fixed via #543) (@waiting-for-dev)
+- Configuration values are no longer being frozen during setup process (issue #616 fixed via #617) (@v-kolesnikov)
 - Custom commands are now lazily-resolved at runtime, which simplifies and speeds up setup and finalization (via #641) (@solnic)
 - Mappers are now lazy-resolved at runtime which speeds up setup and finalization (via #642) (@solnic)
 - Schemas are now 1st class components accessible via runtime container and decoupled from relations (via #644) (@solnic)
@@ -50,15 +49,16 @@ a couple of extra steps required for the upgrade.
 - Associations are now decoupled from schemas and lazy-loaded (via #646) (@solnic)
 - Plugin API is now internally simplified which resulted in faster runtime. It's also no longer required to register plugin types upfront (via #648) (@solnic)
 - Configuring auto_register stores its config under `config.auto_register` (via #650) (@solnic)
-- [REVISIT] configuring custom gateway for a relation via DSL requires passing it as an option rather than specifying it within the block. It kinda-worked previously because the adapter was defaulting to the first one found. I'm quite sure this was more like a bug than a feature. This behavior could be restored in rom/compat though - it's a matter of defaulting to the first adapter found when gateway was not explicitly specified, meaning the new default should be set to `Undefined` rather than `:default` so that we can detect when it was not specified and act accordingly. This will only make sense when there's just *one adapter available* (via bedb330f0ec195d9acacf4481dad3a705e8a36af) (@solnic)
-- `ROM::Configuration` is deprecated and it was replaced by `ROM::Setup` (via #653) (@solnic)
-- `ROM.container` is deprecated and it was replaced by `ROM.runtime` (via #653) (@solnic)
-- [internal] `ROM::Container` is deprecated and it was replaced by `ROM::Registry` (via #653) (@solnic)
-- [internal] Commands that are compiled at runtime are now cached in the runtime registry (via #653) (@solnic)
+- [internal] auto registration is now powered by Zeitwerk (via #634 refs #607) (@solnic)
+- Plugin event listeners are no longer global which makes it possible to have plugin with different configs in a single process (via #639) (@solnic)
+- [internal] Command compiler is no longer coupled to gateway and notifications (via #640) (@solnic)
 - Plugin configurations **are no longer global** which means that you can configure the same plugin with different default settings for different component groups or different runtimes in the same Ruby process (via #654) (@solnic)
 - `Schema::DSL` is now deprecated. Adapters that need customized schema DSL behavior can provide plugins instead (via #656) (@solnic)
 - `ROM.plugins` returns global plugin registry when called without a block (via #660) (@solnic)
+- [internal] `ROM::Container` is deprecated and it was replaced by `ROM::Registries::Root`. It can be restored via rom/compat (via #653) (@solnic)
+- [internal] Commands that are compiled at runtime are now cached in the runtime registry (via #653) (@solnic)
 - [internal] `ROM.plugin_registry` is deprecated, use `ROM.plugins` instead (via #660) (@solnic)
+- [REVISIT] configuring custom gateway for a relation via DSL requires passing it as an option rather than specifying it within the block. It kinda-worked previously because the adapter was defaulting to the first one found. I'm quite sure this was more like a bug than a feature. This behavior could be restored in rom/compat though - it's a matter of defaulting to the first adapter found when gateway was not explicitly specified, meaning the new default should be set to `Undefined` rather than `:default` so that we can detect when it was not specified and act accordingly. This will only make sense when there's just *one adapter available* (via bedb330f0ec195d9acacf4481dad3a705e8a36af) (@solnic)
 
 [Compare v5.2.4...v6.0.0.alpha1](https://github.com/rom-rb/rom/compare/v5.2.4...v6.0.0.alpha1)
 
