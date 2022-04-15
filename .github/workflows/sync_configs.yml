@@ -6,6 +6,7 @@ on:
   push:
     paths:
       - "changelog.yml"
+      - "sync_configs.yml"
     branches:
       - "main"
   pull_request:
