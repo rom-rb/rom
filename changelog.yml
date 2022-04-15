@@ -1,6 +1,8 @@
 ---
 - version: 6.0.0.alpha1
-  summary:
+  summary: |
+    This is a major release but it's backward compatible. Please see [the upgrade guide](https://github.com/rom-rb/rom/wiki/6.0-Upgrade-Guide) as there are
+    a couple of extra steps required for the upgrade.
   date: '2022-04-15'
   fixed:
   - 'Setup works under MRI 3.0.0 (issue #622 fixed via #623) (@v-kolesnikov)'
