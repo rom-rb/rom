@@ -16,7 +16,6 @@ on:
 jobs:
   sync:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true
     name: Update
     env:
       GITHUB_LOGIN: rom-bot
@@ -36,7 +35,7 @@ jobs:
       - name: Set up Ruby
         uses: actions/setup-ruby@v1
         with:
-          ruby-version: "2.6"
+          ruby-version: "2.7"
       - name: Install dependencies
         run: gem install ossy --no-document
       - name: Update changelog.yml from commit
