@@ -1,7 +1,7 @@
 ---
-- version: unreleased
+- version: 6.0.0.alpha1
   summary:
-  date:
+  date: '2022-04-15'
   fixed:
   - 'Setup works under MRI 3.0.0 (issue #622 fixed via #623) (@v-kolesnikov)'
   added:
