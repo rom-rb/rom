@@ -8,7 +8,7 @@
   - 'Setup works under MRI 3.0.0 (issue #622 fixed via #623) (@v-kolesnikov)'
   added:
   - 'New settings API for components using dry-configurable (via #651) (@solnic)'
-  - "ROM(...) shortcut method for setting up rom, ie `ROM(:sql, "sqlite::memory")` (@solnic)"
+  - 'ROM(...) shortcut method for setting up rom, ie `ROM(:sql, "sqlite::memory")` (@solnic)'
   - 'You can now configure a custom inflector via configuration (PR #591) (@flash-gordon)'
   - 'New component API that replaces internal implementation of the finalization code
     and makes it possible to extend ROM with arbitrary component types (see #637)
