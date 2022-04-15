@@ -2,6 +2,9 @@
 
 ## 6.0.0.alpha1 2022-04-15
 
+This is a major release but it's backward compatible. Please see [the upgrade guide](https://github.com/rom-rb/rom/wiki/6.0-Upgrade-Guide) as there are
+a couple of extra steps required for the upgrade.
+
 
 ### Added
 
