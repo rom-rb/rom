@@ -88,7 +88,7 @@ module ROM
     include Pipeline
 
     # @!attribute [r] config
-    #   @return [Dry::Configurable::Config]
+    #   @return [ROM::Configurable::Config]
     #   @api private
     option :config, default: -> { self.class.config }
 

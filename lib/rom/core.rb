@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "dry/core"
-require "dry/configurable"
 
 # Global interface
 require_relative "global"

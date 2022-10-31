@@ -35,7 +35,7 @@ module ROM
 
       # @!attribute [r] config
       #   @return [Object] Component's config
-      option :config, type: Types.Instance(Dry::Configurable::Config)
+      option :config, type: Types.Instance(ROM::Configurable::Config)
 
       # @!attribute [r] gateway
       #   @return [Proc] Optional component evaluation block

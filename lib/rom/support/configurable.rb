@@ -2,24 +2,36 @@
 
 require "rom/constants"
 require "rom/types"
+require "rom/support/configurable/dsl"
+require "rom/support/configurable/config"
+require "rom/support/configurable/class_methods"
+require "rom/support/configurable/instance_methods"
+require "rom/support/configurable/setting"
+require "rom/support/configurable/errors"
 
 module ROM
   # Component settings API
-  #
-  # @see https://dry-rb.org/gems/dry-configurable
   #
   # @api public
   module Configurable
     # @api private
     def self.included(klass)
+      raise AlreadyIncluded if klass.include?(InstanceMethods)
+
       super
 
-      klass.class_eval do
-        include(Dry::Configurable)
+      klass.extend(ClassMethods)
+      klass.extend(ExtensionMethods)
+      klass.include(InstanceMethods)
+      klass.prepend(Initializer)
 
+      klass.class_eval do
         class << self
-          prepend(Methods)
-          prepend(Methods::DSL)
+          undef :config
+          undef :configure
+
+          # prepend(Methods)
+          prepend(ExtensionMethods::DSL)
         end
       end
     end
@@ -28,19 +40,20 @@ module ROM
     def self.extended(klass)
       super
 
-      klass.class_eval do
-        extend(Dry::Configurable)
+      klass.extend(ClassMethods)
+      klass.extend(ExtensionMethods)
 
+      klass.class_eval do
         class << self
-          prepend(Methods)
-          prepend(Methods::DSL)
+          # prepend(Methods)
+          prepend(ExtensionMethods::DSL)
         end
       end
     end
 
     # @api private
     module ConfigMethods
-      include Enumerable
+      include ::Enumerable
 
       # @api private
       def each(&block)
@@ -163,7 +176,7 @@ module ROM
     end
 
     # @api public
-    module Methods
+    module ExtensionMethods
       # @api public
       def configure(namespace = nil, &block)
         if namespace
@@ -197,11 +210,16 @@ module ROM
             name, input: setting.input, default: setting.default, **setting.options
           )
         end
+
+        # @api private
+        def settings
+          _settings
+        end
       end
     end
 
     # TODO: either extend functionality of dry-configurable or don't use it here after all
-    Dry::Configurable::DSL.prepend(Methods::DSL)
-    Dry::Configurable::Config.prepend(ConfigMethods)
+    DSL.prepend(ExtensionMethods::DSL)
+    Config.prepend(ConfigMethods)
   end
 end

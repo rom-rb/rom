@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "rom/container"
 require "rom/initializer"
 require "rom/plugins"
 require "rom/struct"

@@ -55,7 +55,7 @@ module ROM
     option :type, type: CommandType, optional: true
 
     # @!attribute [r] config
-    #   @return [Dry::Configurable::Config]
+    #   @return [ROM::Configurable::Config]
     option :config, default: -> { self.class.config }
 
     # @!attribute [r] source
