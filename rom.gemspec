@@ -22,6 +22,7 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency "concurrent-ruby", "~> 1.1"
   gem.add_runtime_dependency "zeitwerk", "~> 2.6"
   gem.add_runtime_dependency "dry-core", ">= 1.0.0.rc1", "< 2"
+  gem.add_runtime_dependency "dry-configurable", ">= 1.0.0.rc1", "< 2"
   gem.add_runtime_dependency "dry-inflector", "~> 0.2"
   gem.add_runtime_dependency "dry-types", "~> 1.5"
   gem.add_runtime_dependency "dry-struct", "~> 1.4"

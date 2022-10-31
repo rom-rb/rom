@@ -14,6 +14,7 @@ if ENV["USE_DRY_INITIALIZER_MAIN"].eql?("true")
   gem "dry-initializer", github: "dry-rb/dry-initializer", branch: "main"
 end
 
+gem "dry-configurable", github: "dry-rb/dry-configurable", branch: "main"
 gem "dry-core", github: "dry-rb/dry-core", branch: "main"
 gem "dry-logic", github: "dry-rb/dry-logic", branch: "main"
 gem "dry-effects", github: "dry-rb/dry-effects", branch: "main"

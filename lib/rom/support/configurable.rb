@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "dry/configurable"
 require "rom/constants"
 require "rom/types"
 
@@ -197,11 +196,6 @@ module ROM
           settings << setting.class.new(
             name, input: setting.input, default: setting.default, **setting.options
           )
-        end
-
-        # @api private
-        def settings
-          _settings
         end
       end
     end
