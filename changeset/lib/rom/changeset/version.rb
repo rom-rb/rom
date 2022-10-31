@@ -2,6 +2,6 @@
 
 module ROM
   class Changeset
-    VERSION = '5.2.3'
+    VERSION = '5.3.0'
   end
 end
