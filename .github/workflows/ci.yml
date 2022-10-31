@@ -6,6 +6,9 @@ name: ci
     - ".github/workflows/ci.yml"
     - ".github/workflows/custom/ci.yml"
     - lib/**
+    - core/**
+    - changeset/**
+    - repository/**
     - "*.gemspec"
     - spec/**
     - Rakefile
