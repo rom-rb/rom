@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'dry/equalizer'
-
 module ROM
   class Relation
     # Materializes a relation and exposes interface to access the data.

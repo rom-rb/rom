@@ -9,9 +9,7 @@ require 'pry'
 require 'rom-repository'
 require 'rom-changeset'
 require 'pry-byebug'
-require 'dry/monitor/logger'
-require 'dry/monitor/notifications'
-require 'dry/monitor/sql/logger'
+require 'dry/monitor'
 
 config = ROM::Configuration.new(:sql, 'postgres://localhost/rom_console')
 notifications = Dry::Monitor::Notifications.new(:console)

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'dry/container'
-
 require 'rom/cache'
 
 module ROM
@@ -99,7 +97,7 @@ module ROM
   #
   # @api public
   class Container
-    include Dry::Container::Mixin
+    include Dry::Core::Container::Mixin
     include Dry::Equalizer(:gateways, :relations, :mappers, :commands)
 
     # @api private

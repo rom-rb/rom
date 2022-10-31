@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'dry/equalizer'
-
 require 'rom/initializer'
 
 require 'rom/relation/loaded'

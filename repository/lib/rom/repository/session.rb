@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'dry/equalizer'
-
 module ROM
   # TODO: finish this in 1.1.0
   #

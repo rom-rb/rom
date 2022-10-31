@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'dry/core/class_attributes'
 require 'transproc/transformer'
 
 require 'rom/processor/transproc'

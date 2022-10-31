@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'dry/core/constants'
-
 # Constants and errors common in the whole library
 module ROM
   include Dry::Core::Constants

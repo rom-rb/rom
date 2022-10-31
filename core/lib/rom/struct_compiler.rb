@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 require 'rom/support/inflector'
-require 'dry/core/class_builder'
-require 'dry/types/compiler'
 
 require 'rom/initializer'
 require 'rom/types'

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'dry/core/class_attributes'
-
 module ROM
   class Repository
     # A specialized repository type dedicated to work with a root relation

@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'dry/types'
 require 'rom/support/inflector'
 
 module SchemaHelpers

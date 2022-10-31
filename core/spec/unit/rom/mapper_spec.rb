@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'dry/equalizer'
 require 'ostruct'
 
 RSpec.describe ROM::Mapper do

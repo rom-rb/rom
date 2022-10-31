@@ -30,7 +30,6 @@ require 'rom-repository'
 
 LOGGER = Logger.new(File.open('./log/test.log', 'a'))
 
-require 'dry/core/deprecations'
 Dry::Core::Deprecations.set_logger!(SPEC_ROOT.join('../log/deprecations.log'))
 
 # Make inference errors quiet

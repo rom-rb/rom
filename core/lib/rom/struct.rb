@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'dry/struct'
-
 module ROM
   # Simple data-struct class
   #

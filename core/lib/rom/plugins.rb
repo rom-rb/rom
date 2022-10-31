@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'dry/container'
 require 'rom/plugin'
 
 module ROM
@@ -8,7 +7,7 @@ module ROM
   #
   # @api private
   module Plugins
-    extend ::Dry::Container::Mixin
+    extend ::Dry::Core::Container::Mixin
 
     class << self
       # @api private

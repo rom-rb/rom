@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
-require 'dry/equalizer'
-require 'dry/core/cache'
-require 'dry/core/class_builder'
-
 require 'rom/initializer'
 require 'rom/cache'
 require 'rom/constants'

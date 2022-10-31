@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'dry/core/cache'
-require 'dry/core/class_attributes'
-
 require 'rom/initializer'
 require 'rom/struct'
 require 'rom/container'

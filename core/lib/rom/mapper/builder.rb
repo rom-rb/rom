@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'dry/core/class_builder'
-
 module ROM
   class Mapper
     # Setup DSL-specific mapper extensions

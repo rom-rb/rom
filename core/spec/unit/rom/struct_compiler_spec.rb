@@ -135,7 +135,7 @@ RSpec.describe ROM::StructCompiler, '#call' do
 
       expect {
         user.upcased_middle_name
-      }.to raise_error(ROM::Struct::MissingAttribute, /attribute not loaded\?/)
+      }.to raise_error(ROM::Struct::MissingAttribute)
     end
 
     it 'works with implicit coercions' do
@@ -155,7 +155,7 @@ RSpec.describe ROM::StructCompiler, '#call' do
 
       expect {
         user.name
-      }.to raise_error(ROM::Struct::MissingAttribute, /attribute not loaded\?/)
+      }.to raise_error(ROM::Struct::MissingAttribute)
     end
   end
 end

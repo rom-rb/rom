@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
-require 'dry/equalizer'
-require 'dry/core/constants'
+require 'dry/core'
+require 'dry/types'
+require 'dry/struct'
+require 'dry/inflector'
 
 require 'rom/constants'
 
