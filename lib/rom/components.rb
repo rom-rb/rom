@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "dry/container"
-
 require_relative "initializer"
 require_relative "types"
 
@@ -10,8 +8,8 @@ module ROM
   #
   # @api public
   module Components
-    extend Dry::Container::Mixin
-    extend Enumerable
+    extend ::Dry::Core::Container::Mixin
+    extend ::Enumerable
 
     module_function
 

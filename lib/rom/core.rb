@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "dry/core"
+
 # Global interface
 require_relative "global"
 
