@@ -32,9 +32,6 @@ jobs:
         - '2.7'
         include:
         - ruby: '3.1'
-          coverage: 'true'
-        - ruby: '3.1'
-          coverage: 'true'
           use_dry_transformer_master: 'true'
           use_use_rom_sql_master: 'true'
     env:
