@@ -20,13 +20,12 @@ Gem::Specification.new do |gem|
     'bug_tracker_uri' => 'https://github.com/rom-rb/rom/issues'
   }
 
-  gem.required_ruby_version = '>= 2.4.0'
+  gem.required_ruby_version = '>= 2.7.0'
 
   gem.add_runtime_dependency 'concurrent-ruby', '~> 1.1'
-  gem.add_runtime_dependency 'dry-core', '~> 0.4'
+  gem.add_runtime_dependency 'dry-core', '>= 1.0.0.rc1', '< 2'
+  gem.add_runtime_dependency 'dry-configurable', '>= 1.0.0.rc1', '< 2'
   gem.add_runtime_dependency 'dry-inflector', '~> 0.1'
-  gem.add_runtime_dependency 'dry-container', '~> 0.7'
-  gem.add_runtime_dependency 'dry-equalizer', '~> 0.2'
   gem.add_runtime_dependency 'dry-types', '~> 1.0'
   gem.add_runtime_dependency 'dry-struct', '~> 1.0'
   gem.add_runtime_dependency 'dry-initializer', '~> 3.0', '>= 3.0.1'
