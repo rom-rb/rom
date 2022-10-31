@@ -16,19 +16,27 @@ if ENV['USE_TRANSPROC_MASTER'].eql?('true')
   gem 'transproc', github: 'solnic/transproc', branch: 'master'
 end
 
+gem 'dry-configurable', github: 'dry-rb/dry-configurable', branch: 'main'
+gem 'dry-core', github: 'dry-rb/dry-core', branch: 'main'
+gem 'dry-logic', github: 'dry-rb/dry-logic', branch: 'main'
+gem 'dry-types', github: 'dry-rb/dry-types', branch: 'main'
+gem 'dry-struct', github: 'dry-rb/dry-struct', branch: 'main'
+
 group :sql do
   gem 'sequel', '~> 5.0'
   gem 'sqlite3', platforms: :ruby
   gem 'jdbc-sqlite3', platforms: :jruby
   gem 'jdbc-postgres', platforms: :jruby
   gem 'pg', platforms: :ruby
-  gem 'dry-monitor'
+  gem 'dry-events', github: 'dry-rb/dry-events', branch: 'main'
+  gem 'dry-monitor', github: 'dry-rb/dry-monitor', branch: 'main'
 
-  if ENV['USE_ROM_SQL_MASTER'].eql?('true')
-    gem 'rom-sql', github: 'rom-rb/rom-sql', branch: 'master'
-  else
-    gem 'rom-sql', '~> 3.0'
-  end
+  # if ENV['USE_ROM_SQL_MASTER'].eql?('true')
+  #   gem 'rom-sql', github: 'rom-rb/rom-sql', branch: 'master'
+  # else
+  #   gem 'rom-sql', '~> 3.0'
+  # end
+  gem 'rom-sql', github: 'rom-rb/rom-sql', branch: 'release-3.6'
 end
 
 group :test do
