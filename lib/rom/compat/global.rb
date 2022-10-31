@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "rom/container"
 require "rom/global"
 
 module ROM

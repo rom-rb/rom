@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "dry/container"
-
 module ROM
   # ROM container is an isolated environment with no global state where all
   # components are registered. Container objects provide access to your
@@ -97,8 +95,8 @@ module ROM
   #
   # @api public
   class Container
-    include Dry::Container::Mixin
-    include Dry::Equalizer(:gateways, :relations, :mappers, :commands)
+    include ::Dry::Core::Container::Mixin
+    include ::Dry::Equalizer(:gateways, :relations, :mappers, :commands)
 
     # @api private
     def self.new(configuration)

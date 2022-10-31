@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "dry/container"
-
 require "rom/constants"
 require "rom/plugin"
 
@@ -18,8 +16,8 @@ module ROM
   #
   # @api public
   module Plugins
-    extend Dry::Container::Mixin
-    extend Enumerable
+    extend ::Dry::Core::Container::Mixin
+    extend ::Enumerable
 
     module_function
 
@@ -42,7 +40,7 @@ module ROM
     # @api private
     def resolve(key)
       super
-    rescue Dry::Container::Error
+    rescue ::Dry::Core::Container::Error
       raise ROM::UnknownPluginError, "+#{key}+ plugin was not found"
     end
 
