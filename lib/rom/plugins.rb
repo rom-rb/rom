@@ -40,7 +40,7 @@ module ROM
     # @api private
     def resolve(key)
       super
-    rescue ::Dry::Core::Container::Error
+    rescue ::Dry::Core::Container::KeyError
       raise ROM::UnknownPluginError, "+#{key}+ plugin was not found"
     end
 
