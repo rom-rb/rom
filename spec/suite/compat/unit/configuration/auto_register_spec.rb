@@ -13,11 +13,19 @@ RSpec.describe ROM::Configuration, "#auto_register" do
   end
 
   def zeitwerk_teardown
-    Zeitwerk::Registry.loaders.each(&:unload)
-    Zeitwerk::Registry.loaders.clear
-    Zeitwerk::Registry.loaders_managing_gems.clear
-    Zeitwerk::ExplicitNamespace.cpaths.clear
-    Zeitwerk::ExplicitNamespace.tracer.disable
+    # From zeitwerk's own test/support/loader_test
+    # adjusted to work with dry-rb gem loaders
+
+    Zeitwerk::Registry.loaders.reject! do |loader|
+      test_loader = loader.dirs.any? { |dir| dir.include?("/spec/") || dir.include?(Dir.tmpdir) }
+
+      if test_loader
+        loader.unregister
+        true
+      else
+        false
+      end
+    end
   end
 
   context "with default component dirs and namespace turned on" do
