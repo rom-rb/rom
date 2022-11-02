@@ -18,6 +18,7 @@ end
 
 gem 'dry-configurable', github: 'dry-rb/dry-configurable', branch: 'main'
 gem 'dry-core', github: 'dry-rb/dry-core', branch: 'main'
+gem 'dry-inflector', github: 'dry-rb/dry-inflector', branch: 'main'
 gem 'dry-logic', github: 'dry-rb/dry-logic', branch: 'main'
 gem 'dry-types', github: 'dry-rb/dry-types', branch: 'main'
 gem 'dry-struct', github: 'dry-rb/dry-struct', branch: 'main'
