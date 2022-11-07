@@ -21,7 +21,7 @@ Gem::Specification.new do |gem|
   }
 
   gem.add_runtime_dependency 'dry-initializer', '~> 3.0', '>= 3.0.1'
-  gem.add_runtime_dependency 'dry-core', '>= 1.0.0.rc1', '< 2'
+  gem.add_runtime_dependency 'dry-core', '~> 1.0'
   gem.add_runtime_dependency 'rom-core', '~> 5.3', '>= 5.3.0'
 
   gem.add_development_dependency 'rake', '~> 11.2'

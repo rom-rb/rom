@@ -20,7 +20,7 @@ Gem::Specification.new do |gem|
     'bug_tracker_uri' => 'https://github.com/rom-rb/rom/issues'
   }
 
-  gem.add_runtime_dependency 'dry-core', '>= 1.0.0.rc1', '< 2'
+  gem.add_runtime_dependency 'dry-core', '~> 1.0'
   gem.add_runtime_dependency 'rom-core', '~> 5.3'
   gem.add_runtime_dependency 'transproc', '~> 1.0', '>= 1.1.0'
 
