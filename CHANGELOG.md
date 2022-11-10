@@ -1,8 +1,14 @@
-## 5.2.7 unreleased
+## 5.3.0
+
+### Changed
+
+- [rom] Upgraded to the latest versions of dry-* (@flash-gordon)
 
 ### Fixed
 
 - [rom-core] warning about using `lambda` without a literal block (@flash-gordon)
+
+[Compare v5.2.6...release-5.3](https://github.com/rom-rb/rom/compare/v5.2.6...v5.3.0)
 
 ## 5.2.6 2021-01-16
 
