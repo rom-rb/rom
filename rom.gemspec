@@ -26,6 +26,6 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency "dry-types", "~> 1.5"
   gem.add_runtime_dependency "dry-struct", "~> 1.4"
   gem.add_runtime_dependency "dry-initializer", "~> 3.1"
-  gem.add_runtime_dependency "dry-transformer", "~> 0.1", ">= 0.1.2"
+  gem.add_runtime_dependency "dry-transformer", "~> 1.0"
   gem.add_runtime_dependency "dry-effects", "~> 0.4"
 end

@@ -10,8 +10,6 @@ eval_gemfile "Gemfile.devtools"
 #   gem "dry-transformer", github: "dry-rb/dry-transformer", branch: "main"
 # end
 
-gem "dry-transformer", github: "dry-rb/dry-transformer", branch: "main"
-
 if ENV["USE_DRY_INITIALIZER_MAIN"].eql?("true")
   gem "dry-initializer", github: "dry-rb/dry-initializer", branch: "main"
 end
