@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "dry/transformer/all"
-
 require "rom/processor"
 require "rom/processor/composer"
 

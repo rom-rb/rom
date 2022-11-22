@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require "dry/transformer/all"
-require "dry/transformer/registry"
-
 module ROM
   class Changeset
     # Dry::Transformer Registry useful for pipe

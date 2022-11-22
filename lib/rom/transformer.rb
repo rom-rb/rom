@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "dry/transformer"
-
 require "rom/plugins/class_methods"
 
 require_relative "components/provider"
