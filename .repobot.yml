@@ -4,7 +4,7 @@ sources:
   - repo: rom-rb/template-gem
     sync:
       - "!.github/workflows/ci.yml.erb"
-      - ".action_hero.yml.erb"
+      - ".repobot.yml.erb"
       - ".devtools/templates/*.sync:${{dir}}/${{name}}"
       - ".github/**/*.*"
       - "spec/support/*"
@@ -15,6 +15,6 @@ sources:
       - "Gemfile.devtools"
       - ".rspec"
       - ".rubocop.yml"
-  - repo: action-hero/workflows
+  - repo: repobot-app/workflows
     sync:
       - ".github/workflows/*.yml"
