@@ -7,6 +7,15 @@ module ROM
   module Initializer
     # @api private
     module DefineWithHook
+      # Prevent interference from Object#with from
+      # ActiveSuport 7.1 core extensions.
+      #
+      # @api private
+      def self.extended(klass)
+        klass.define_method(:with) {}
+        klass.undef_method(:with)
+      end
+
       # @api private
       def param(*)
         super.tap { __define_with__ }

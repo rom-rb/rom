@@ -47,6 +47,15 @@ module ROM
     #
     # @api private
     module Proxy
+      # Prevent interference from Object#with from
+      # ActiveSuport 7.1 core extensions.
+      #
+      # @api private
+      def self.included(klass)
+        klass.define_method(:with) {}
+        klass.undef_method(:with)
+      end
+
       # @api private
       def respond_to_missing?(name, include_private = false)
         left.respond_to?(name) || super
