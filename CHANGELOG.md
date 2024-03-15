@@ -62,6 +62,51 @@ a couple of extra steps required for the upgrade.
 
 [Compare v5.2.4...v6.0.0.alpha1](https://github.com/rom-rb/rom/compare/v5.2.4...v6.0.0.alpha1)
 
+## 5.3.1 2024-03-15
+
+### Changed
+
+- [rom-core] workaround for compatibility with `Object#with` added in ActiveSupport 7.1 (@rykov + @flash-gordon)
+
+[Compare v5.3.0...v5.3.1](https://github.com/rom-rb/rom/compare/v5.3.0...v5.3.1)
+
+## 5.3.0 2022-11-11
+
+### Changed
+
+- [rom] Upgraded to the latest versions of dry-* (@flash-gordon)
+
+### Fixed
+
+- [rom-core] warning about using `lambda` without a literal block (@flash-gordon)
+
+[Compare v5.2.6...v5.3.0](https://github.com/rom-rb/rom/compare/v5.2.6...v5.3.0)
+
+## 5.2.6 2021-01-16
+
+### Changed
+
+- [rom] Dependency on `rom-core` was bumped to `>= 5.2.5` (@solnic)
+
+### Fixed
+
+- [rom-core] Setup works under MRI 3.0.0 (issue #622 fixed via #623) (@v-kolesnikov)
+
+[Compare v5.2.5...v5.2.6](https://github.com/rom-rb/rom/compare/v5.2.5...v5.2.6)
+
+## 5.2.5 2020-12-30
+
+### Fixed
+
+- [rom-core] auto-registration sorts files now which fixes some (rare) issues with file loading (@v-kolesnikov)
+- [rom-core] configuration values are no longer being frozen during finalization of the setup (@v-kolesnikov)
+
+### Changed
+
+- [rom] Dependency on `rom-core` was bumped to `>= 5.2.4` (@solnic)
+
+[Compare v5.2.4...v5.2.5](https://github.com/rom-rb/rom/compare/v5.2.4...v5.2.5)
+
 ## 5.2.4 2020-05-08
 
 
