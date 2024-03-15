@@ -47,9 +47,13 @@ module ROM
 
     # @api private
     def self.extended(base)
-      base.extend(Dry::Initializer[undefined: false])
-      base.extend(DefineWithHook)
-      base.include(InstanceMethods)
+      base.module_eval do
+        undef_method(:with) if method_defined?(:with)
+
+        extend(Dry::Initializer[undefined: false])
+        extend(DefineWithHook)
+        include(InstanceMethods)
+      end
     end
 
     # @api private
