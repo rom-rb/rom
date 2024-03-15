@@ -60,9 +60,10 @@ a couple of extra steps required for the upgrade.
 - [internal] `ROM.plugin_registry` is deprecated, use `ROM.plugins` instead (via #660) (@solnic)
 - [REVISIT] configuring custom gateway for a relation via DSL requires passing it as an option rather than specifying it within the block. It kinda-worked previously because the adapter was defaulting to the first one found. I'm quite sure this was more like a bug than a feature. This behavior could be restored in rom/compat though - it's a matter of defaulting to the first adapter found when gateway was not explicitly specified, meaning the new default should be set to `Undefined` rather than `:default` so that we can detect when it was not specified and act accordingly. This will only make sense when there's just *one adapter available* (via bedb330f0ec195d9acacf4481dad3a705e8a36af) (@solnic)
 
-[Compare v5.2.4...v6.0.0.alpha1](https://github.com/rom-rb/rom/compare/v5.2.4...v6.0.0.alpha1)
+[Compare v5.3.1...v6.0.0.alpha1](https://github.com/rom-rb/rom/compare/v5.3.1...v6.0.0.alpha1)
 
 ## 5.3.1 2024-03-15
+
 
 ### Changed
 
@@ -72,29 +73,32 @@ a couple of extra steps required for the upgrade.
 
 ## 5.3.0 2022-11-11
 
-### Changed
-
-- [rom] Upgraded to the latest versions of dry-* (@flash-gordon)
 
 ### Fixed
 
 - [rom-core] warning about using `lambda` without a literal block (@flash-gordon)
 
+### Changed
+
+- [rom] Upgraded to the latest versions of dry-* (@flash-gordon)
+
 [Compare v5.2.6...v5.3.0](https://github.com/rom-rb/rom/compare/v5.2.6...v5.3.0)
 
 ## 5.2.6 2021-01-16
 
-### Changed
-
-- [rom] Dependency on `rom-core` was bumped to `>= 5.2.5` (@solnic)
 
 ### Fixed
 
 - [rom-core] Setup works under MRI 3.0.0 (issue #622 fixed via #623) (@v-kolesnikov)
 
+### Changed
+
+- [rom] Dependency on `rom-core` was bumped to `>= 5.2.5` (@solnic)
+
 [Compare v5.2.5...v5.2.6](https://github.com/rom-rb/rom/compare/v5.2.5...v5.2.6)
 
 ## 5.2.5 2020-12-30
+
 
 ### Fixed
 
@@ -103,7 +107,7 @@ a couple of extra steps required for the upgrade.
 
 ### Changed
 
-- [rom] Dependency on `rom-core` was bumped to `>= 5.2.4` (@solnic)
+- - [rom] Dependency on `rom-core` was bumped to `>= 5.2.4` (@solnic)
 
 [Compare v5.2.4...v5.2.5](https://github.com/rom-rb/rom/compare/v5.2.4...v5.2.5)
 
