@@ -94,6 +94,29 @@
     rather than `:default` so that we can detect when it was not specified and act
     accordingly. This will only make sense when there's just *one adapter available*
     (via bedb330f0ec195d9acacf4481dad3a705e8a36af) (@solnic)"
+- version: 5.3.1
+  date: '2024-03-15'
+  changed:
+    - "[rom-core] workaround for compatibility with `Object#with` added in ActiveSupport 7.1 (@rykov + @flash-gordon)"
+- version: 5.3.0
+  date: '2022-11-11'
+  fixed:
+    - "[rom-core] warning about using `lambda` without a literal block (@flash-gordon)"
+  changed:
+    - "[rom] Upgraded to the latest versions of dry-* (@flash-gordon)"
+- version: 5.2.6
+  date: '2021-01-16'
+  fixed:
+    - "[rom-core] Setup works under MRI 3.0.0 (issue #622 fixed via #623) (@v-kolesnikov)"
+  changed:
+    - "[rom] Dependency on `rom-core` was bumped to `>= 5.2.5` (@solnic)"
+- version: 5.2.5
+  date: '2020-12-30'
+  fixed:
+    - "[rom-core] auto-registration sorts files now which fixes some (rare) issues with file loading (@v-kolesnikov)"
+    - "[rom-core] configuration values are no longer being frozen during finalization of the setup (@v-kolesnikov)"
+  changed:
+    - "- [rom] Dependency on `rom-core` was bumped to `>= 5.2.4` (@solnic)"
 - version: 5.2.4
   summary:
   date: '2020-05-08'
