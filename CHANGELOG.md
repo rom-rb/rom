@@ -1,4 +1,12 @@
-## 5.3.0
+## 5.3.1 2024-03-15
+
+### Changed
+
+- [rom-core] workaround for compatibility with `Object#with` added in ActiveSupport 7.1 (@rykov + @flash-gordon)
+
+[Compare v5.3.0...v5.3.1](https://github.com/rom-rb/rom/compare/v5.3.0...v5.3.1)
+
+## 5.3.0 2022-11-11
 
 ### Changed
 
@@ -8,7 +16,7 @@
 
 - [rom-core] warning about using `lambda` without a literal block (@flash-gordon)
 
-[Compare v5.2.6...release-5.3](https://github.com/rom-rb/rom/compare/v5.2.6...v5.3.0)
+[Compare v5.2.6...v5.3.0](https://github.com/rom-rb/rom/compare/v5.2.6...v5.3.0)
 
 ## 5.2.6 2021-01-16
 
