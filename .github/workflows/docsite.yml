@@ -24,7 +24,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: "3.3.x"
+          ruby-version: "3.3.0"
       - name: Set up git user
         run: |
           git config --local user.email "rom-bot@rom-rb.org"
