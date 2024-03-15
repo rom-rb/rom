@@ -26,15 +26,16 @@ jobs:
       fail-fast: false
       matrix:
         ruby:
+        - '3.3'
+        - '3.2'
         - '3.1'
         - '3.0'
-        - '2.7'
         # TODO: re-add both as a separate workflow because it's just too slow
         # - jruby
         # - truffleruby
         group: [rom, compat]
         include:
-        - ruby: '3.1'
+        - ruby: '3.3'
           coverage: 'false'
           use_dry_transformer_main: 'true'
           use_rom_sql_main: 'true'
@@ -50,18 +51,19 @@ jobs:
       SPEC_GROUP: "${{matrix.group}}"
     services:
       postgres:
-        image: postgres:10.8
+        image: postgres:16.2
         env:
           POSTGRES_USER: runner
           POSTGRES_PASSWORD: ''
           POSTGRES_DB: rom_repository
+          POSTGRES_HOST_AUTH_METHOD: trust
         ports:
         - 5432:5432
         options: "--health-cmd pg_isready --health-interval 10s --health-timeout 5s
           --health-retries 5"
     steps:
     - name: Checkout
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
     - name: Install package dependencies
       run: "[ -e $APT_DEPS ] || sudo apt-get install -y --no-install-recommends $APT_DEPS"
     - name: Set up Ruby

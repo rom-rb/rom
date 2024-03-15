@@ -24,7 +24,7 @@ jobs:
       - name: Set up Ruby
         uses: actions/setup-ruby@v1
         with:
-          ruby-version: "2.6.x"
+          ruby-version: "3.3.x"
       - name: Set up git user
         run: |
           git config --local user.email "rom-bot@rom-rb.org"
@@ -60,4 +60,3 @@ jobs:
           GITHUB_LOGIN: rom-bot
           GITHUB_TOKEN: ${{secrets.GH_PAT}}
         run: ossy github workflow rom-rb/rom-rb.org ci
-
