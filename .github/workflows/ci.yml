@@ -27,11 +27,12 @@ jobs:
       fail-fast: false
       matrix:
         ruby:
+        - '3.3'
+        - '3.2'
         - '3.1'
         - '3.0'
-        - '2.7'
         include:
-        - ruby: '3.1'
+        - ruby: '3.3'
           use_dry_transformer_master: 'true'
           use_use_rom_sql_master: 'true'
     env:
@@ -44,7 +45,7 @@ jobs:
       CODACY_PROJECT_TOKEN: "${{secrets.CODACY_PROJECT_TOKEN}}"
       APT_DEPS: libpq-dev libsqlite3-dev
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: Install package dependencies
       run: "[ -e $APT_DEPS ] || sudo apt-get install -y --no-install-recommends $APT_DEPS"
     - name: Set up Ruby
@@ -67,11 +68,12 @@ jobs:
         coverage-reports: coverage/coverage.xml
     services:
       db:
-        image: postgres:10.8
+        image: postgres:16.2
         env:
           POSTGRES_USER: runner
           POSTGRES_PASSWORD: ''
           POSTGRES_DB: rom_repository
+          POSTGRES_HOST_AUTH_METHOD: trust
         ports:
         - 5432:5432
         options: "--health-cmd pg_isready --health-interval 10s --health-timeout 5s
@@ -84,13 +86,13 @@ jobs:
       GITHUB_LOGIN: rom-bot
       GITHUB_TOKEN: "${{secrets.GH_PAT}}"
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: Install package dependencies
       run: "[ -e $APT_DEPS ] || sudo apt-get install -y --no-install-recommends $APT_DEPS"
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 2.6
+        ruby-version: 3.3
     - name: Install dependencies
       run: gem install ossy --no-document
     - name: Trigger release workflow
