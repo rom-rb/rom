@@ -34,7 +34,7 @@ jobs:
           git config --local user.email "rom-bot@rom-rb.org"
           git config --local user.name "rom-bot"
       - name: Set up Ruby
-        uses: actions/setup-ruby@v1
+        uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.3"
       - name: Install dependencies
