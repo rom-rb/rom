@@ -98,7 +98,7 @@ Notice that:
 - We specified `:user_id` as our combine-key, so that data can be merged into a nested data structure via `combine` method
 
 This model is used by all adapters, even when you don't see it, it is there. In
-rom-sql default association views are generated for you, which is the whole magic
+`rom-sql` default association views are generated for you, which is the whole magic
 behind associations in SQL, this is why in case of SQL, we could translate our
 previous example to this:
 
