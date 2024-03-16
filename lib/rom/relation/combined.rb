@@ -148,6 +148,7 @@ module ROM
                 "#{self.class}#command doesn't work with #{type.inspect} command type yet"
         end
       end
+      ruby2_keywords(:command) if respond_to?(:ruby2_keywords, true)
 
       private
 
