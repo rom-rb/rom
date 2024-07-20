@@ -14,13 +14,9 @@ module ROM
         EMPTY_REGISTRY = RelationRegistry.build(EMPTY_HASH).freeze
 
         # @api private
-        attr_reader :relations
-
-        # @api private
-        def initialize(relations:)
+        def initialize(klass:, relation_readers_module:)
           super()
-          @relations = relations
-          define_readers!
+          klass.include relation_readers_module
         end
 
         # @api private
@@ -29,15 +25,6 @@ module ROM
           return if klass.instance_methods.include?(:__registry__)
 
           klass.option :__registry__, default: -> { EMPTY_REGISTRY }
-        end
-
-        private
-
-        # @api private
-        def define_readers!
-          relations.each do |name|
-            define_method(name) { __registry__[name] }
-          end
         end
       end
     end
