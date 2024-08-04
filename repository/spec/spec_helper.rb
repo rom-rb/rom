@@ -56,6 +56,8 @@ RSpec.configure do |config|
 
   config.after do
     Test.remove_constants
+    ROM::Repository::RelationReader.relation_readers(nil)
+    ROM::Repository::RelationReader.relation_cache(Concurrent::Hash.new)
   end
 
   Dir[SPEC_ROOT.join('support/*.rb').to_s].each do |f|
