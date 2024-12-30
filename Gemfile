@@ -54,7 +54,7 @@ group :tools do
 end
 
 group :benchmarks do
-  gem 'hotch', platforms: :ruby
+  # gem 'hotch', platforms: :ruby
   gem 'benchmark-ips'
   gem 'activerecord', '~> 5.0'
 end
