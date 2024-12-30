@@ -21,10 +21,11 @@ Warning.process { |w| raise w } if ENV['FAIL_ON_WARNINGS'].eql?('true')
 require 'rom-sql'
 require 'rom-repository'
 
-begin
-  require 'pry'
-  require 'pry-byebug'
+%w[pry-byebug debug pry].each do |gem|
+  require gem
 rescue LoadError
+else
+  break
 end
 
 LOGGER = Logger.new(File.open('./log/test.log', 'a'))

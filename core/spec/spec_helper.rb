@@ -18,10 +18,11 @@ Warning.process { |w| raise w } if ENV['FAIL_ON_WARNINGS'].eql?('true')
 
 Dry::Core::Deprecations.set_logger!(SPEC_ROOT.join('../log/deprecations.log'))
 
-begin
-  require 'pry'
-  require 'pry-byebug'
+%w[pry-byebug debug pry].each do |gem|
+  require gem
 rescue LoadError
+else
+  break
 end
 
 module SpecProfiler

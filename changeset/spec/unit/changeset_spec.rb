@@ -171,8 +171,13 @@ RSpec.describe ROM::Changeset do
       subject(:changeset) { ROM::Changeset::Create.new(relation).data(name: 'Jane') }
 
       specify do
-        expect(changeset.inspect)
-          .to eql('#<ROM::Changeset::Create relation=:users data={:name=>"Jane"}>')
+        if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('3.4.0')
+          expect(changeset.inspect)
+            .to eql('#<ROM::Changeset::Create relation=:users data={name: "Jane"}>')
+        else
+          expect(changeset.inspect)
+            .to eql('#<ROM::Changeset::Create relation=:users data={:name=>"Jane"}>')
+        end
       end
     end
 

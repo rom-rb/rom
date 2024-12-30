@@ -27,20 +27,20 @@ jobs:
       fail-fast: false
       matrix:
         ruby:
+        - '3.4'
         - '3.3'
         - '3.2'
         - '3.1'
-        - '3.0'
         include:
-        - ruby: '3.3'
+        - ruby: '3.4'
           use_dry_transformer_master: 'true'
-          use_use_rom_sql_master: 'true'
+          use_dry_initializer_main: 'true'
     env:
       COVERAGE: "${{matrix.coverage}}"
       COVERAGE_TOKEN: "${{secrets.CODACY_PROJECT_TOKEN}}"
       BASE_DB_URI: localhost/rom_repository
       USE_DRY_TRANSFORMER_MASTER: "${{matrix.use_dry_transformer_master}}"
-      USE_ROM_SQL_MASTER: "${{matrix.use_rom_sql_master}}"
+      USE_DRY_INITIALIZER_MAIN: "${{matrix.use_dry_initializer_main}}"
       CODACY_RUN_LOCAL: "${{matrix.coverage}}"
       CODACY_PROJECT_TOKEN: "${{secrets.CODACY_PROJECT_TOKEN}}"
       APT_DEPS: libpq-dev libsqlite3-dev

@@ -5,11 +5,16 @@ require 'bundler'
 
 Bundler.setup
 
-require 'pry'
 require 'rom-repository'
 require 'rom-changeset'
-require 'pry-byebug'
 require 'dry/monitor'
+
+%w[pry-byebug debug pry].each do |gem|
+  require gem
+rescue LoadError
+else
+  break
+end
 
 config = ROM::Configuration.new(:sql, 'postgres://localhost/rom_console')
 notifications = Dry::Monitor::Notifications.new(:console)

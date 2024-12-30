@@ -16,6 +16,10 @@ if ENV['USE_TRANSPROC_MASTER'].eql?('true')
   gem 'transproc', github: 'solnic/transproc', branch: 'master'
 end
 
+if ENV['USE_DRY_INITIALIZER_MAIN'].eql?('true')
+  gem 'dry-initializer', github: 'dry-rb/dry-initializer', branch: 'main'
+end
+
 group :sql do
   gem 'sequel', '~> 5.0'
   gem 'sqlite3', platforms: :ruby
@@ -49,8 +53,12 @@ group :docs do
 end
 
 group :tools do
-  gem 'pry'
-  gem 'pry-byebug', platforms: :ruby
+  if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('3.4.0')
+    gem 'debug', platforms: :ruby
+  else
+    gem 'pry'
+    gem 'pry-byebug', platforms: :ruby
+  end
 end
 
 group :benchmarks do
