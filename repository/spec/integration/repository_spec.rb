@@ -384,6 +384,7 @@ RSpec.describe 'ROM repository' do
 
   describe 'using a custom model for a node' do
     before do
+      require 'ostruct'
       class Test::Post < OpenStruct; end
     end
 
