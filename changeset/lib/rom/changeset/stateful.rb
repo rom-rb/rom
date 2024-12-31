@@ -266,9 +266,9 @@ module ROM
       end
 
       # @api private
-      def method_missing(meth, *args, &block)
+      def method_missing(meth, *args, **kwargs, &block)
         if __data__.respond_to?(meth)
-          response = __data__.__send__(meth, *args, &block)
+          response = __data__.__send__(meth, *args, **kwargs, &block)
 
           if response.is_a?(__data__.class)
             with(__data__: response)
@@ -279,7 +279,6 @@ module ROM
           super
         end
       end
-      ruby2_keywords(:method_missing) if respond_to?(:ruby2_keywords, true)
     end
   end
 end

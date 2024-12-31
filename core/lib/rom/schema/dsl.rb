@@ -55,7 +55,7 @@ module ROM
       attr_reader :associations_dsl
 
       # @api private
-      def initialize(*, &block)
+      def initialize(*, **, &block)
         super
 
         @attributes = {}
@@ -63,7 +63,6 @@ module ROM
 
         @definition = block
       end
-      ruby2_keywords(:initialize) if respond_to?(:ruby2_keywords, true)
 
       # Defines a relation attribute with its type and options.
       #

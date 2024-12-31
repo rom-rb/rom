@@ -9,12 +9,11 @@ module ROM
   # @api public
   class AssociationSet < ROM::Registry
     # @api private
-    def initialize(*)
+    def initialize(...)
       super
       elements.values.each do |assoc|
         elements[assoc.name] = assoc if assoc.aliased? && !key?(assoc.name)
       end
     end
-    ruby2_keywords(:initialize) if respond_to?(:ruby2_keywords, true)
   end
 end

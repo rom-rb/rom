@@ -253,8 +253,8 @@ module ROM
         Module.new do
           relation_class.view_methods.each do |meth|
             module_eval <<-RUBY, __FILE__, __LINE__ + 1
-              def #{meth}(*args)
-                response = relation.public_send(:#{meth}, *args)
+              def #{meth}(*args, **kwargs)
+                response = relation.public_send(:#{meth}, *args, **kwargs)
 
                 if response.is_a?(relation.class)
                   new(response)

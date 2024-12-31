@@ -78,7 +78,7 @@ module ROM
     # @return [Gateway] a specific gateway subclass
     #
     # @api public
-    def self.setup(gateway_or_scheme, *args)
+    def self.setup(gateway_or_scheme, *args, **kwargs)
       case gateway_or_scheme
       when String
         raise ArgumentError, <<-STRING.gsub(/^ {10}/, '')
@@ -91,17 +91,13 @@ module ROM
         if klass.instance_method(:initialize).arity.zero?
           klass.new
         else
-          klass.new(*args)
+          klass.new(*args, **kwargs)
         end
       else
         raise ArgumentError, "Can't accept arguments when passing an instance" unless args.empty?
 
         gateway_or_scheme
       end
-    end
-
-    class << self
-      ruby2_keywords(:setup) if respond_to?(:ruby2_keywords, true)
     end
 
     # Get gateway subclass for a specific adapter

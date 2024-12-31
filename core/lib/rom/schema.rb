@@ -160,12 +160,11 @@ module ROM
     end
 
     # @api private
-    def initialize(*)
+    def initialize(*, **)
       super
 
       yield(self) if block_given?
     end
-    ruby2_keywords(:initialize) if respond_to?(:ruby2_keywords, true)
 
     # Abstract method for creating a new relation based on schema definition
     #

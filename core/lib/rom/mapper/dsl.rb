@@ -105,14 +105,13 @@ module ROM
         # Delegate Attribute DSL method to the dsl instance
         #
         # @api private
-        def method_missing(name, *args, &block)
+        def method_missing(name, *args, **kwargs, &block)
           if dsl.respond_to?(name)
-            dsl.public_send(name, *args, &block)
+            dsl.public_send(name, *args, **kwargs, &block)
           else
             super
           end
         end
-        ruby2_keywords(:method_missing) if respond_to?(:ruby2_keywords, true)
       end
     end
   end

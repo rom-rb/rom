@@ -18,11 +18,10 @@ module ROM
     option :cache, default: -> { Cache.new }
 
     # @api private
-    def initialize(*)
+    def initialize(*, **)
       super
       @cache = cache.namespaced(:structs)
     end
-    ruby2_keywords(:initialize) if respond_to?(:ruby2_keywords, true)
 
     # Build a struct class based on relation header ast
     #

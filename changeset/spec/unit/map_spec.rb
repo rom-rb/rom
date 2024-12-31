@@ -82,11 +82,10 @@ RSpec.describe ROM::Changeset, '.map' do
           { **t, three: t.fetch(:three) { next_value } }
         end
 
-        def initialize(*)
+        def initialize(...)
           super
           @counter = 0
         end
-        ruby2_keywords(:initialize) if respond_to?(:ruby2_keywords, true)
 
         def default_command_type
           :test

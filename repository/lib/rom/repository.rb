@@ -104,11 +104,10 @@ module ROM
     # Initializes a new repository object
     #
     # @api private
-    def initialize(*)
+    def initialize(*, **)
       super
       @relations = {}
     end
-    ruby2_keywords(:initialize) if respond_to?(:ruby2_keywords, true)
 
     # Open a database transaction
     #

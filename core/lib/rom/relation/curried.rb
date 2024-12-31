@@ -105,9 +105,9 @@ module ROM
       end
 
       # @api private
-      def method_missing(meth, *args, &block)
+      def method_missing(meth, *args, **kwargs, &block)
         if relation.respond_to?(meth)
-          response = relation.__send__(meth, *args, &block)
+          response = relation.__send__(meth, *args, **kwargs, &block)
 
           super if response.is_a?(self.class)
 
@@ -120,7 +120,6 @@ module ROM
           super
         end
       end
-      ruby2_keywords(:method_missing) if respond_to?(:ruby2_keywords, true)
     end
   end
 end

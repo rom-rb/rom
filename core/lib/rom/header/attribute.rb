@@ -113,7 +113,7 @@ module ROM
       attr_reader :header
 
       # @api private
-      def initialize(*)
+      def initialize(*, **)
         super
         @header = meta.fetch(:header)
       end

@@ -8,18 +8,16 @@ module ROM
     # @api private
     module DefineWithHook
       # @api private
-      def param(*)
+      def param(*, **)
         super.tap { __define_with__ }
       end
-      ruby2_keywords(:param) if respond_to?(:ruby2_keywords, true)
 
       # @api private
-      def option(*)
+      def option(*, **)
         super.tap do
           __define_with__ unless method_defined?(:with)
         end
       end
-      ruby2_keywords(:option) if respond_to?(:ruby2_keywords, true)
 
       # @api private
       def __define_with__

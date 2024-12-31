@@ -62,9 +62,9 @@ module ROM
       end
 
       # @api private
-      def method_missing(name, *args, &block)
+      def method_missing(name, *args, **kwargs, &block)
         if left.respond_to?(name)
-          response = left.__send__(name, *args, &block)
+          response = left.__send__(name, *args, **kwargs, &block)
 
           if decorate?(response)
             self.class.new(response, right)
@@ -75,7 +75,6 @@ module ROM
           super
         end
       end
-      ruby2_keywords(:method_missing) if respond_to?(:ruby2_keywords, true)
     end
 
     # Base composite class with left-to-right pipeline behavior

@@ -42,13 +42,20 @@ module ROM
 
       return unless public_instance_methods.include?(name) && arity != 0
 
-      mod = Module.new
+      mod = ::Module.new
 
       mod.module_eval do
-        define_method(name) do |*args, &mblock|
+        define_method(name) do |*args, **kwargs, &mblock|
+          kwargs_size =
+            if kwargs.empty?
+              0
+            else
+              1
+            end
+
           response =
-            if arity < 0 || arity == args.size
-              super(*args, &mblock)
+            if arity < 0 || arity == (args.size + kwargs_size)
+              super(*args, **kwargs, &mblock)
             else
               self.class.curried.new(self, view: name, curry_args: args, arity: arity)
             end
@@ -59,7 +66,6 @@ module ROM
             response
           end
         end
-        ruby2_keywords(name) if respond_to?(:ruby2_keywords, true)
       end
 
       auto_curried_methods << name

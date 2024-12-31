@@ -34,7 +34,7 @@ group :sql do
   # else
   #   gem 'rom-sql', '~> 3.0'
   # end
-  gem 'rom-sql', github: 'rom-rb/rom-sql', branch: 'release-3.6'
+  gem 'rom-sql', github: 'rom-rb/rom-sql', branch: 'release-3.7'
 end
 
 group :test do

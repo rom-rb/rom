@@ -83,9 +83,9 @@ module ROM
       private
 
       # @api private
-      def method_missing(name, *args, &block)
+      def method_missing(name, *args, **kwargs, &block)
         if command.respond_to?(name)
-          response = command.public_send(name, *args, &block)
+          response = command.public_send(name, *args, **kwargs, &block)
 
           if response.instance_of?(command.class)
             self.class.new(response, evaluator, command_proc)
@@ -96,7 +96,6 @@ module ROM
           super
         end
       end
-      ruby2_keywords(:method_missing) if respond_to?(:ruby2_keywords, true)
     end
   end
 end

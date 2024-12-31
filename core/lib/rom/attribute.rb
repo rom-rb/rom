@@ -405,9 +405,9 @@ module ROM
     private
 
     # @api private
-    def method_missing(meth, *args, &block)
+    def method_missing(meth, *args, **kwargs, &block)
       if type.respond_to?(meth)
-        response = type.__send__(meth, *args, &block)
+        response = type.__send__(meth, *args, **kwargs, &block)
 
         if response.is_a?(type.class)
           self.class.new(response, **options)
@@ -418,6 +418,5 @@ module ROM
         super
       end
     end
-    ruby2_keywords(:method_missing) if respond_to?(:ruby2_keywords, true)
   end
 end
