@@ -140,7 +140,7 @@ module ROM
       # @raise NotImplementedError when type is not `:create`
       #
       # @api public
-      def command(type, *args)
+      def command(type, **)
         if type == :create
           super
         else
