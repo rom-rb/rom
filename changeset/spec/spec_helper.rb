@@ -34,9 +34,15 @@ LOGGER = Logger.new(File.open('./log/test.log', 'a'))
 Dry::Core::Deprecations.set_logger!(SPEC_ROOT.join('../log/deprecations.log'))
 
 # Make inference errors quiet
-class ROM::SQL::Schema::Inferrer
-  def self.on_error(*args)
-    # shush
+module ROM
+  module SQL
+    module Schema
+      class Inferrer
+        def self.on_error(*args)
+          # shush
+        end
+      end
+    end
   end
 end
 

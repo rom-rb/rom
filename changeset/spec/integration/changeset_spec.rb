@@ -125,7 +125,7 @@ RSpec.describe 'Using changesets' do
         private
 
         def extend_tuple(tuple)
-          tuple.merge(title: tuple[:title] + ", yes really")
+          tuple.merge(title: "#{tuple[:title]}, yes really")
         end
       end
 
@@ -197,7 +197,7 @@ RSpec.describe 'Using changesets' do
         private
 
         def extend_tuple(tuple)
-          tuple.merge(title: tuple[:title] + ', yes really')
+          tuple.merge(title: "#{tuple[:title]}, yes really")
         end
       end
 

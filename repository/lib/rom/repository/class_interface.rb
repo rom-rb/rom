@@ -104,9 +104,20 @@ module ROM
             type, *view = Array(spec).flatten
 
             if !view.empty?
-              define_restricted_command_method(type, view, mapper: mapper, use: use, plugins_options: plugins_options)
+              define_restricted_command_method(
+                type,
+                view,
+                mapper: mapper,
+                use: use,
+                plugins_options: plugins_options
+              )
             else
-              define_command_method(type, mapper: mapper, use: use, plugins_options: plugins_options)
+              define_command_method(
+                type,
+                mapper: mapper,
+                use: use,
+                plugins_options: plugins_options
+              )
             end
           end
         else

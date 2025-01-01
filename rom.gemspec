@@ -1,4 +1,6 @@
-require File.expand_path('../lib/rom/version', __FILE__)
+# frozen_string_literal: true
+
+require File.expand_path('lib/rom/version', __dir__)
 
 Gem::Specification.new do |gem|
   gem.name        = 'rom'
@@ -11,15 +13,15 @@ Gem::Specification.new do |gem|
   gem.files       = Dir['CHANGELOG.md', 'LICENSE', 'README.md', 'lib/**/*']
   gem.license     = 'MIT'
   gem.metadata    = {
-    'source_code_uri'   => 'https://github.com/rom-rb/rom',
+    'source_code_uri' => 'https://github.com/rom-rb/rom',
     'documentation_uri' => 'https://api.rom-rb.org/rom/',
-    'mailing_list_uri'  => 'https://discourse.rom-rb.org/',
-    'bug_tracker_uri'   => 'https://github.com/rom-rb/rom/issues',
+    'mailing_list_uri' => 'https://discourse.rom-rb.org/',
+    'bug_tracker_uri' => 'https://github.com/rom-rb/rom/issues'
   }
 
+  gem.add_runtime_dependency 'rom-changeset', '~> 5.3', '>= 5.3.0'
   gem.add_runtime_dependency 'rom-core', '~> 5.3', '>= 5.3.3'
   gem.add_runtime_dependency 'rom-repository', '~> 5.3', '>= 5.3.1'
-  gem.add_runtime_dependency 'rom-changeset', '~> 5.3', '>= 5.3.0'
 
   gem.add_development_dependency 'rake', '~> 13.0'
   gem.add_development_dependency 'rspec', '~> 3.5'

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 SimpleCov.command_name "spec:#{SPEC_ROOT.join('..').basename}"
 
 SimpleCov.root(SPEC_ROOT.join('../..').to_s)

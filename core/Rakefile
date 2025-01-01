@@ -14,11 +14,10 @@ task :"spec:isolation" do
   end
 end
 
+desc 'Run CI tasks'
 if RUBY_ENGINE != 'ruby'
-  desc 'Run CI tasks'
   task ci: %i[spec lint]
 else
-  desc 'Run CI tasks'
   task ci: %i[spec lint spec:isolation]
 end
 

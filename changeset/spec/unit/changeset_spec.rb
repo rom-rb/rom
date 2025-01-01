@@ -72,7 +72,9 @@ RSpec.describe ROM::Changeset do
     it 'uses piped data for diff' do
       expect(relation).to receive(:one).and_return(jane)
 
-      changeset = ROM::Changeset::Update.new(relation).data(name: 'Jane').map { |t| { name: t[:name].upcase } }
+      changeset = ROM::Changeset::Update.new(relation).data(name: 'Jane').map do |t|
+        { name: t[:name].upcase }
+      end
 
       expect(changeset).to be_diff
     end

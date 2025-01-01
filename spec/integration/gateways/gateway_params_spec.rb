@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Gateways / keyword arguments" do
+RSpec.describe 'Gateways / keyword arguments' do
   before do
     @adapter = Module.new
     class @adapter::Gateway

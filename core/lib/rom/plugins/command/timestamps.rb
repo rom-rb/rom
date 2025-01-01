@@ -24,6 +24,7 @@ module ROM
       # @api public
       class Timestamps < Module
         attr_reader :timestamps, :datestamps
+
         def initialize(timestamps: [], datestamps: [])
           @timestamps = store_attributes(timestamps)
           @datestamps = store_attributes(datestamps)
@@ -117,7 +118,7 @@ module ROM
           def timestamps(*names)
             timestamp_columns timestamp_columns.merge(names)
           end
-          alias timestamp timestamps
+          alias_method :timestamp, :timestamps
 
           # Set up attributes to datestamp when the command is called
           #
@@ -139,7 +140,7 @@ module ROM
           def datestamps(*names)
             datestamp_columns datestamp_columns.merge(names)
           end
-          alias datestamp datestamps
+          alias_method :datestamp, :datestamps
         end
       end
     end

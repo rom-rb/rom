@@ -10,8 +10,12 @@ RSpec.shared_context 'seeds' do
 
     conn[:tags].insert task_id: task_id, name: 'red'
 
-    jane_post_id = conn[:posts].insert author_id: jane_id, title: 'Hello From Jane', body: 'Jane Post'
-    joe_post_id = conn[:posts].insert author_id: joe_id, title: 'Hello From Joe', body: 'Joe Post'
+    jane_post_id = conn[:posts].insert(
+      author_id: jane_id,
+      title: 'Hello From Jane',
+      body: 'Jane Post'
+    )
+    joe_post_id = conn[:posts].insert(author_id: joe_id, title: 'Hello From Joe', body: 'Joe Post')
 
     red_id = conn[:labels].insert name: 'red'
     green_id = conn[:labels].insert name: 'green'

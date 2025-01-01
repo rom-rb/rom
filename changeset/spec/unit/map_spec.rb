@@ -23,8 +23,12 @@ RSpec.describe ROM::Changeset, '.map' do
       end
 
       it 'sets up custom data pipe' do
-        expect(changeset.to_h)
-          .to eql(name: 'Jane', address_street: 'Street 1', address_city: 'NYC', address_country: 'US')
+        expect(changeset.to_h).to eql(
+          name: 'Jane',
+          address_street: 'Street 1',
+          address_city: 'NYC',
+          address_country: 'US'
+        )
       end
     end
 
@@ -35,11 +39,11 @@ RSpec.describe ROM::Changeset, '.map' do
       end
 
       it 'sets up custom data pipe' do
-        expect(changeset.to_a)
-          .to eql([
-            { name: 'Jane', address_street: 'Street 1', address_city: 'NYC', address_country: 'US' },
-            { name: 'Joe', address_street: 'Street 2', address_city: 'KRK', address_country: 'PL' }
-          ])
+        expect(changeset.to_a).to eql([
+          { name: 'Jane', address_street: 'Street 1', address_city: 'NYC',
+            address_country: 'US' },
+          { name: 'Joe', address_street: 'Street 2', address_city: 'KRK', address_country: 'PL' }
+        ])
       end
     end
   end

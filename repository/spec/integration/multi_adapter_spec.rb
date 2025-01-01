@@ -15,8 +15,10 @@ RSpec.describe 'Repository with multi-adapters configuration' do
   let(:repo) { Test::Repository.new(rom) }
 
   before do
-    %i[tags tasks books posts_labels posts users labels
-     reactions messages].each { |table| sql_conn.drop_table?(table) }
+    %i[
+      tags tasks books posts_labels posts users labels
+      reactions messages
+    ].each { |table| sql_conn.drop_table?(table) }
 
     sql_conn.create_table :users do
       primary_key :id

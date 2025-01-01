@@ -188,7 +188,7 @@ module ROM
       #
       # @api public
       def view(*args, &block)
-        if args.size == 1 && block.arity > 0
+        if args.size == 1 && block.arity.positive?
           raise ArgumentError, 'schema attribute names must be provided as the second argument'
         end
 
@@ -206,7 +206,7 @@ module ROM
             new_schema_fn
           end
 
-        if relation_block.arity > 0
+        if relation_block.arity.positive?
           auto_curry_guard do
             define_method(name, &relation_block)
 

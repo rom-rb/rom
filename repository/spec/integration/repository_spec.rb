@@ -138,7 +138,10 @@ RSpec.describe 'ROM repository' do
   end
 
   it 'loads an aggregate with multiple nodes and deeply nested assoc options' do
-    jane = repo.root.combine(:books, posts: [{ author: { labels: :posts } }]).where(name: 'Jane').one
+    jane = repo.root.combine(
+      :books,
+      posts: [{ author: { labels: :posts } }]
+    ).where(name: 'Jane').one
 
     expect(jane.books).to be_empty
 
@@ -315,8 +318,10 @@ RSpec.describe 'ROM repository' do
         end
 
         it 'returns a nested hash for an aggregate' do
-          expect(repo.root.combine(:posts).limit(1).one)
-            .to eql(id: 1, name: 'Jane', posts: [{ id: 1, author_id: 1, title: 'Hello From Jane', body: 'Jane Post' }])
+          expect(repo.root.combine(:posts).limit(1).one).to eql(
+            id: 1, name: 'Jane',
+            posts: [{ id: 1, author_id: 1, title: 'Hello From Jane', body: 'Jane Post' }]
+          )
         end
       end
     end
@@ -385,7 +390,9 @@ RSpec.describe 'ROM repository' do
   describe 'using a custom model for a node' do
     before do
       require 'ostruct'
-      class Test::Post < OpenStruct; end
+      module Test
+        class Post < OpenStruct; end
+      end
     end
 
     it 'uses provided model for the member type' do

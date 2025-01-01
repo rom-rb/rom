@@ -28,7 +28,6 @@ require 'rom/container'
 require 'rom/create_container'
 
 # register known plugin types
-require 'rom/schema_plugin'
 
 ROM::Plugins.register(:command)
 ROM::Plugins.register(:mapper)

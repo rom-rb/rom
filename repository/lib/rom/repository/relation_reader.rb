@@ -44,7 +44,12 @@ module ROM
         @relations = relations
         mutex.synchronize do
           unless self.class.relation_readers
-            self.class.relation_readers(build_relation_readers(relations, self.class.relation_cache))
+            self.class.relation_readers(
+              build_relation_readers(
+                relations,
+                self.class.relation_cache
+              )
+            )
           end
         end
         klass.include self.class.relation_readers
@@ -55,7 +60,6 @@ module ROM
         super
         klass.include(InstanceMethods)
       end
-
 
       private
 

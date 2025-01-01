@@ -7,7 +7,7 @@ module ROM
   # @api private
   module Configurable
     class Config
-      WRITER_REGEXP = /=$/.freeze
+      WRITER_REGEXP = /=$/
 
       # @!attribute [r] settings
       #   @return [Hash] A hash with defined settings

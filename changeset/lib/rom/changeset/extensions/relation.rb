@@ -11,14 +11,16 @@ module ROM
       # Changeset extenions for combined relations
       #
       # @api public
-      class Relation::Graph
-        # Build a changeset for a combined relation
-        #
-        # @raise NotImplementedError
-        #
-        # @api public
-        def changeset(*)
-          raise NotImplementedError, "Changeset doesn't support combined relations yet"
+      module Relation
+        class Graph
+          # Build a changeset for a combined relation
+          #
+          # @raise NotImplementedError
+          #
+          # @api public
+          def changeset(*)
+            raise NotImplementedError, "Changeset doesn't support combined relations yet"
+          end
         end
       end
     end

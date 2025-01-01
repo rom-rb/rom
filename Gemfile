@@ -1,13 +1,15 @@
+# frozen_string_literal: true
+
 source 'https://rubygems.org'
 
 git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 
 gemspec
 
-eval_gemfile "Gemfile.devtools"
+eval_gemfile 'Gemfile.devtools'
 
 unless defined?(COMPONENTS)
-  COMPONENTS = %w(core repository changeset)
+  COMPONENTS = %w[core repository changeset].freeze
 end
 
 COMPONENTS.each do |component|
@@ -23,13 +25,13 @@ if ENV['USE_DRY_INITIALIZER_MAIN'].eql?('true')
 end
 
 group :sql do
-  gem 'sequel', '~> 5.0'
-  gem 'sqlite3', platforms: :ruby
-  gem 'jdbc-sqlite3', platforms: :jruby
-  gem 'jdbc-postgres', platforms: :jruby
-  gem 'pg', platforms: :ruby
   gem 'dry-events', '~> 1.0'
   gem 'dry-monitor', '~> 1.0'
+  gem 'jdbc-postgres', platforms: :jruby
+  gem 'jdbc-sqlite3', platforms: :jruby
+  gem 'pg', platforms: :ruby
+  gem 'sequel', '~> 5.0'
+  gem 'sqlite3', platforms: :ruby
 
   # if ENV['USE_ROM_SQL_MASTER'].eql?('true')
   #   gem 'rom-sql', github: 'rom-rb/rom-sql', branch: 'master'
@@ -40,8 +42,8 @@ group :sql do
 end
 
 group :test do
-  gem 'rspec', '~> 3.6'
   gem 'codacy-coverage', require: false
+  gem 'rspec', '~> 3.6'
   gem 'simplecov', platforms: :ruby
   gem 'warning'
 end
@@ -65,6 +67,6 @@ end
 
 group :benchmarks do
   # gem 'hotch', platforms: :ruby
-  gem 'benchmark-ips'
   gem 'activerecord', '~> 5.0'
+  gem 'benchmark-ips'
 end

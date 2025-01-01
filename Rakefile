@@ -1,10 +1,12 @@
-require "bundler/gem_tasks"
+# frozen_string_literal: true
 
-SPEC_RESULTS = {}
+require 'bundler/gem_tasks'
+
+SPEC_RESULTS = {}.freeze
 
 desc 'Run all specs'
 task :spec do
-  %w(core repository changeset rom).map do |name|
+  %w[core repository changeset rom].map do |name|
     Rake::Task["spec:#{name}"].execute
   end
 
@@ -40,4 +42,4 @@ task default: :spec
 begin
   require 'yard-junk/rake'
   YardJunk::Rake.define_task(:text)
-rescue LoadError;end
+rescue LoadError; end

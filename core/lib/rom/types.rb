@@ -8,7 +8,6 @@ module ROM
   #
   # @api public
   #
-  # rubocop:disable Naming/MethodName
   module Types
     include Dry::Types(default: :nominal)
 
@@ -44,11 +43,9 @@ module ROM
     # @api public
     def Coercible.JSONHash(symbol_keys: false, type: Types::Hash)
       Types.Constructor(type) do |value|
-        begin
-          ::JSON.parse(value.to_s, symbolize_names: symbol_keys)
-        rescue ::JSON::ParserError
-          value
-        end
+        ::JSON.parse(value.to_s, symbolize_names: symbol_keys)
+      rescue ::JSON::ParserError
+        value
       end
     end
 

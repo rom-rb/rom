@@ -123,7 +123,10 @@ RSpec.describe ROM::Repository, '.command' do
     struct_definition = [:users, [repo.users.schema[:id].to_read_ast,
                                   repo.users.schema[:name].to_read_ast]]
 
-    expect(user).to be_an_instance_of repo.users.mappers.compiler.struct_compiler[*struct_definition, ROM::Struct]
+    expect(user).to be_an_instance_of repo.users.mappers.compiler.struct_compiler[
+      *struct_definition,
+      ROM::Struct
+    ]
   end
 
   describe 'using plugins' do
@@ -153,7 +156,10 @@ RSpec.describe ROM::Repository, '.command' do
 
     it 'allows to pass options to plugins' do
       repo = Class.new(ROM::Repository[:users]) do
-        commands :create, update: :by_pk, use: %i[modify_name timestamps], plugins_options: { modify_name: { reverse: true } }
+        commands :create,
+                 update: :by_pk,
+                 use: %i[modify_name timestamps],
+                 plugins_options: { modify_name: { reverse: true } }
       end.new(rom)
 
       user = repo.create(name: 'Jane')

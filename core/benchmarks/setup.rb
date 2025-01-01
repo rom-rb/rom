@@ -92,7 +92,14 @@ class Verifier
   end
 end
 
-DATABASE_URL = ENV.fetch('DATABASE_URL', RUBY_ENGINE == 'jruby' ? 'jdbc:postgresql://localhost/rom' : 'postgres://localhost/rom')
+DATABASE_URL = ENV.fetch(
+  'DATABASE_URL',
+  if RUBY_ENGINE == 'jruby'
+    'jdbc:postgresql://localhost/rom'
+  else
+    'postgres://localhost/rom'
+  end
+)
 
 setup = ROM::Configuration.new(:sql, DATABASE_URL)
 
@@ -244,7 +251,7 @@ setup.register_relation(Relations::UsersPosts)
 
 ROM_ENV = ROM.container(setup)
 
-VERIFY = ENV.fetch('VERIFY') { false }
+VERIFY = ENV.fetch('VERIFY', false)
 COUNT = ENV.fetch('COUNT', 1000).to_i
 
 USER_SEED = COUNT.times.map { |i|

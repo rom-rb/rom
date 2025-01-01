@@ -21,8 +21,10 @@ RSpec.shared_context 'database' do
   include_context 'database setup'
 
   before do
-    %i[tags tasks books posts_labels posts users labels
-     reactions messages].each { |table| conn.drop_table?(table) }
+    %i[
+      tags tasks books posts_labels posts users labels
+      reactions messages
+    ].each { |table| conn.drop_table?(table) }
 
     conn.create_table :users do
       primary_key :id
