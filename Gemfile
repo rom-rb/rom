@@ -4,6 +4,8 @@ git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 
 gemspec
 
+eval_gemfile "Gemfile.devtools"
+
 unless defined?(COMPONENTS)
   COMPONENTS = %w(core repository changeset)
 end

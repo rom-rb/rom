@@ -1,0 +1,18 @@
+# frozen_string_literal: true
+
+# this file is managed by rom-rb/devtools project
+
+gem "rake", ">= 13.0.0"
+
+group :test do
+  gem "simplecov", require: false, platforms: :ruby
+  gem "simplecov-cobertura", require: false, platforms: :ruby
+  gem "rexml", require: false
+
+  gem "warning"
+end
+
+group :tools do
+  # this is the same version that we use on codacy
+  gem "rubocop", "1.69.2"
+end
