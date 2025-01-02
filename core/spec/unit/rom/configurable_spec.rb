@@ -3,9 +3,9 @@
 require 'spec_helper'
 
 RSpec.describe ROM::Configurable do
-  let (:klass) { Class.new { include ROM::Configurable } }
-  let (:object) { klass.new }
-  let (:config) { object.config }
+  let(:klass) { Class.new { include ROM::Configurable } }
+  let(:object) { klass.new }
+  let(:config) { object.config }
 
   it 'exposes the config property' do
     expect { config }.not_to raise_error

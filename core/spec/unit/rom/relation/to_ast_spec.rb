@@ -46,7 +46,7 @@ RSpec.describe ROM::Relation, '#to_ast' do
           users.schema[:id].to_read_ast,
           users.schema[:name].to_read_ast
         ],
-        { dataset: :users, alias: nil, model: false, struct_namespace: ROM::Struct }
+        dataset: :users, alias: nil, model: false, struct_namespace: ROM::Struct
       ]]
     )
   end
@@ -67,10 +67,10 @@ RSpec.describe ROM::Relation, '#to_ast' do
               tasks.schema[:user_id].to_read_ast,
               tasks.schema[:title].to_read_ast
             ],
-            { dataset: :tasks, alias: nil, model: false, struct_namespace: ROM::Struct }
+            dataset: :tasks, alias: nil, model: false, struct_namespace: ROM::Struct
           ]]
         ],
-        { dataset: :users, alias: nil, model: false, struct_namespace: ROM::Struct }
+        dataset: :users, alias: nil, model: false, struct_namespace: ROM::Struct
       ]]
     )
   end
@@ -94,10 +94,10 @@ RSpec.describe ROM::Relation, '#to_ast' do
               users_schema[:id].to_read_ast,
               users_schema[:name].to_read_ast
             ],
-            { dataset: :users, alias: nil, model: false, struct_namespace: ROM::Struct }
+            dataset: :users, alias: nil, model: false, struct_namespace: ROM::Struct
           ]]
         ],
-        { dataset: :tasks, alias: nil, model: false, struct_namespace: ROM::Struct }
+        dataset: :tasks, alias: nil, model: false, struct_namespace: ROM::Struct
       ]]
     )
   end

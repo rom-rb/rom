@@ -11,7 +11,9 @@ RSpec.shared_context 'models' do
         class User
           include Dry::Equalizer(:id, :name)
 
-          attr_reader :id, :name
+          attr_reader :id
+
+          attr_reader :name
 
           def initialize(attrs)
             @id = attrs[:id]
@@ -22,7 +24,11 @@ RSpec.shared_context 'models' do
         class Task
           include Dry::Equalizer(:id, :user_id, :title)
 
-          attr_reader :id, :user_id, :title
+          attr_reader :id
+
+          attr_reader :user_id
+
+          attr_reader :title
 
           def initialize(attrs)
             @id = attrs[:id]
@@ -34,7 +40,9 @@ RSpec.shared_context 'models' do
         class Tag
           include Dry::Equalizer(:id, :task_id, :name)
 
-          attr_reader :id, :task_id, :name
+          attr_reader :id
+          attr_reader :task_id
+          attr_reader :name
 
           def initialize(attrs)
             @id = attrs[:id]

@@ -8,7 +8,11 @@ module ROM
     #
     # @private
     module ModelDSL
-      attr_reader :attributes, :builder, :klass
+      attr_reader :attributes
+
+      attr_reader :builder
+
+      attr_reader :klass
 
       DEFAULT_TYPE = :poro
 

@@ -24,12 +24,12 @@ module ROM
       attr_reader :new_schema
 
       # @api private
-      def initialize(name, schema, &block)
+      def initialize(name, schema, &)
         @name = name
         @schema = schema
         @new_schema = nil
         @relation_block = nil
-        instance_eval(&block)
+        instance_eval(&)
       end
 
       # Define a schema for a relation view
@@ -50,8 +50,8 @@ module ROM
       # @see Relation::ClassInterface.view
       #
       # @api public
-      def relation(&block)
-        @relation_block = proc(&block)
+      def relation(&)
+        @relation_block = proc(&)
       end
 
       # Return procs captured by the DSL

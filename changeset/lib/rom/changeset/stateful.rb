@@ -131,8 +131,8 @@ module ROM
       # @return [Changeset]
       #
       # @api public
-      def map(*steps, &block)
-        extend(*steps, for_diff: true, &block)
+      def map(*steps, &)
+        extend(*steps, for_diff: true, &)
       end
 
       # Pipe changeset's data using custom steps define on the pipe.
@@ -150,10 +150,10 @@ module ROM
       # @api public
       def extend(*steps, **options, &block)
         if block
-          if !steps.empty?
-            extend(*steps, **options).extend(**options, &block)
-          else
+          if steps.empty?
             with(pipe: pipe.compose(Pipe.new(block).bind(self), **options))
+          else
+            extend(*steps, **options).extend(**options, &block)
           end
         else
           with(pipe: steps.reduce(pipe.with(**options)) { |a, e| a.compose(pipe[e], **options) })
@@ -266,9 +266,9 @@ module ROM
       end
 
       # @api private
-      def method_missing(meth, *args, **kwargs, &block)
+      def method_missing(meth, ...)
         if __data__.respond_to?(meth)
-          response = __data__.__send__(meth, *args, **kwargs, &block)
+          response = __data__.__send__(meth, ...)
 
           if response.is_a?(__data__.class)
             with(__data__: response)

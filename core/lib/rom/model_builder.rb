@@ -19,7 +19,11 @@ module ROM
   class ModelBuilder
     attr_reader :name
 
-    attr_reader :const_name, :namespace, :klass
+    attr_reader :const_name
+
+    attr_reader :namespace
+
+    attr_reader :klass
 
     # Return model builder subclass based on type
     #

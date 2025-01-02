@@ -8,7 +8,9 @@ module ROM
   #
   # @api private
   class CommandProxy
-    attr_reader :command, :root
+    attr_reader :command
+
+    attr_reader :root
 
     # @api private
     def initialize(command, root = Inflector.singularize(command.name.relation).to_sym)

@@ -10,7 +10,9 @@ module ROM
   class Environment
     include Configurable
 
-    attr_reader :gateways, :gateways_map
+    attr_reader :gateways
+
+    attr_reader :gateways_map
 
     # @api private
     def initialize(*args)

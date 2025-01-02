@@ -188,8 +188,8 @@ module ROM
     # @yield [Attribute]
     #
     # @api public
-    def each(&block)
-      attributes.each(&block)
+    def each(&)
+      attributes.each(&)
     end
 
     # Check if schema has any attributes
@@ -457,20 +457,19 @@ module ROM
 
     # @api private
     def count_index
-      map(&:name).map { |name| [name, count { |attr| attr.name == name }] }.to_h
+      map(&:name).to_h { |name| [name, count { |attr| attr.name == name }] }
     end
 
     # @api private
     def name_index
-      map { |attr| [attr.name, attr] }.to_h
+      to_h { |attr| [attr.name, attr] }
     end
 
     # @api private
     def source_index
       select(&:source)
         .group_by(&:source)
-        .map { |src, grp| [src.to_sym, grp.map { |attr| [attr.name, attr] }.to_h] }
-        .to_h
+        .to_h { |src, grp| [src.to_sym, grp.to_h { |attr| [attr.name, attr] }] }
     end
 
     # @api private

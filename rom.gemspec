@@ -16,12 +16,13 @@ Gem::Specification.new do |gem|
     'source_code_uri' => 'https://github.com/rom-rb/rom',
     'documentation_uri' => 'https://api.rom-rb.org/rom/',
     'mailing_list_uri' => 'https://discourse.rom-rb.org/',
-    'bug_tracker_uri' => 'https://github.com/rom-rb/rom/issues'
+    'bug_tracker_uri' => 'https://github.com/rom-rb/rom/issues',
+    'rubygems_mfa_required' => 'true'
   }
 
-  gem.add_runtime_dependency 'rom-changeset', '~> 5.3', '>= 5.3.0'
-  gem.add_runtime_dependency 'rom-core', '~> 5.3', '>= 5.3.3'
-  gem.add_runtime_dependency 'rom-repository', '~> 5.3', '>= 5.3.1'
+  gem.add_dependency 'rom-changeset', '~> 5.3', '>= 5.3.0'
+  gem.add_dependency 'rom-core', '~> 5.3', '>= 5.3.3'
+  gem.add_dependency 'rom-repository', '~> 5.3', '>= 5.3.1'
 
   gem.add_development_dependency 'rake', '~> 13.0'
   gem.add_development_dependency 'rspec', '~> 3.5'

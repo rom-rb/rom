@@ -78,7 +78,9 @@ rom = ROM.container(config)
 repo = UserRepo.new(rom)
 
 class Context
-  attr_reader :rom, :repo
+  attr_reader :rom
+
+  attr_reader :repo
 
   def initialize(rom, repo)
     @rom = rom

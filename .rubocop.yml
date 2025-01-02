@@ -20,6 +20,13 @@ Layout/SpaceInLambdaLiteral:
 Lint/BooleanSymbol:
   Enabled: false
 
+Lint/ConstantDefinitionInBlock:
+  Exclude:
+    - "spec/**/*_spec.rb"
+    - "core/spec/**/*_spec.rb"
+    - "repository/spec/**/*_spec.rb"
+    - "changeset/spec/**/*_spec.rb"
+
 Lint/SuppressedException:
   Exclude:
     - "spec/spec_helper.rb"
@@ -53,6 +60,9 @@ Naming/MethodName:
 Naming/PredicateName:
   Enabled: false
 
+Style/AccessorGrouping:
+  EnforcedStyle: separated
+
 Style/AccessModifierDeclarations:
   Enabled: false
 
@@ -69,6 +79,9 @@ Style/BlockDelimiters:
 Style/ClassAndModuleChildren:
   Exclude:
     - "spec/**/*_spec.rb"
+    - "core/spec/**/*_spec.rb"
+    - "repository/spec/**/*_spec.rb"
+    - "changeset/spec/**/*_spec.rb"
 
 Style/ConditionalAssignment:
   Enabled: false
@@ -87,6 +100,9 @@ Style/FormatString:
 
 Style/GuardClause:
   Enabled: false
+
+Style/HashAsLastArrayItem:
+  EnforcedStyle: no_braces
 
 Style/IfUnlessModifier:
   Enabled: false

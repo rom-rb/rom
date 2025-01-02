@@ -9,7 +9,7 @@ RSpec.describe ROM::Mapper::ModelDSL do
         include ROM::Mapper::ModelDSL
 
         def initialize
-          @attributes = [[:name], [:title, { exclude: true }]]
+          @attributes = [[:name], [:title, exclude: true]]
           @builder = ->(attrs) { Struct.new(*attrs) }
         end
       end

@@ -54,7 +54,6 @@ module ROM
       attr_reader :dataset
 
       attr_reader :aliaz
-
       attr_reader :key
 
       # @api private

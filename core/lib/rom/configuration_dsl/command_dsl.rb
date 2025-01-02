@@ -8,7 +8,11 @@ module ROM
     #
     # @private
     class CommandDSL
-      attr_reader :relation, :adapter, :command_classes
+      attr_reader :relation
+
+      attr_reader :adapter
+
+      attr_reader :command_classes
 
       # @api private
       def initialize(relation, adapter = nil, &)

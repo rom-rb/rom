@@ -22,9 +22,23 @@ module ROM
   #
   # @private
   class Finalize
-    attr_reader :gateways, :repo_adapter,
-                :relation_classes, :mapper_classes, :mapper_objects,
-                :command_classes, :plugins, :config, :notifications
+    attr_reader :gateways
+
+    attr_reader :repo_adapter
+
+    attr_reader :relation_classes
+
+    attr_reader :mapper_classes
+
+    attr_reader :mapper_objects
+
+    attr_reader :command_classes
+
+    attr_reader :plugins
+
+    attr_reader :config
+
+    attr_reader :notifications
 
     # @api private
     def initialize(options)

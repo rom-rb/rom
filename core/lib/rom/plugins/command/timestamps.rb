@@ -23,7 +23,9 @@ module ROM
       #
       # @api public
       class Timestamps < Module
-        attr_reader :timestamps, :datestamps
+        attr_reader :timestamps
+
+        attr_reader :datestamps
 
         def initialize(timestamps: [], datestamps: [])
           @timestamps = store_attributes(timestamps)

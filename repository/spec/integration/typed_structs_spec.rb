@@ -39,7 +39,7 @@ RSpec.describe 'ROM repository with typed structs' do
         schema(:books, infer: true) do
           attribute :title,
                     ROM::Types::Coercible::String.meta(
-                      read: ROM::Types::Symbol.constructor { |s| "#{s}!".to_sym }
+                      read: ROM::Types::Symbol.constructor { |s| :"#{s}!" }
                     )
         end
       end

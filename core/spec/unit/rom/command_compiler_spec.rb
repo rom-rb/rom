@@ -27,7 +27,7 @@ RSpec.describe 'ROM::CommandCompiler' do
      [[:attribute,
        [:id, [:nominal, [Integer, {}]], primary_key: true]],
       [:attribute,
-       [:name, [:nominal, [String, {}]], { source: :users }]]],
+       [:name, [:nominal, [String, {}]], source: :users]]],
      dataset: :users]
   end
 
@@ -76,7 +76,7 @@ RSpec.describe 'ROM::CommandCompiler' do
       end
 
       it 'uses input schema from relation and does it once' do
-        expect(command.input[{ id: 1, name: 'John' }][:name]).to eql("relation[John]")
+        expect(command.input[{ id: 1, name: 'John' }][:name]).to eql('relation[John]')
       end
     end
   end

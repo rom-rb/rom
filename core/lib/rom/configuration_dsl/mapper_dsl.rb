@@ -8,7 +8,11 @@ module ROM
     #
     # @private
     class MapperDSL
-      attr_reader :configuration, :mapper_classes, :defined_mappers
+      attr_reader :configuration
+
+      attr_reader :mapper_classes
+
+      attr_reader :defined_mappers
 
       # @api private
       def initialize(configuration, mapper_classes, block)

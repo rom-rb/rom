@@ -16,7 +16,17 @@ module ROM
     class AttributeDSL
       include ModelDSL
 
-      attr_reader :attributes, :options, :copy_keys, :symbolize_keys, :reject_keys, :steps
+      attr_reader :attributes
+
+      attr_reader :options
+
+      attr_reader :copy_keys
+
+      attr_reader :symbolize_keys
+
+      attr_reader :reject_keys
+
+      attr_reader :steps
 
       # @param [Array] attributes accumulator array
       # @param [Hash] options
@@ -88,7 +98,7 @@ module ROM
       end
 
       def exclude(name)
-        attributes << [name, { exclude: true }]
+        attributes << [name,  exclude: true]
       end
 
       # Perform transformations sequentially
@@ -101,8 +111,8 @@ module ROM
       #   end
       #
       # @api public
-      def step(options = EMPTY_HASH, &block)
-        steps << new(options, &block)
+      def step(options = EMPTY_HASH, &)
+        steps << new(options, &)
       end
 
       # Define an embedded attribute
@@ -330,8 +340,8 @@ module ROM
       #   @option options [Symbol] :type The type, either :array (default) or :hash
       #
       # @api public
-      def combine(name, options, &block)
-        dsl = new(options, &block)
+      def combine(name, options, &)
+        dsl = new(options, &)
 
         attr_opts = {
           type: options.fetch(:type, :array),
@@ -409,8 +419,8 @@ module ROM
       # Used by embedded, wrap and group
       #
       # @api private
-      def attributes_from_block(name, options, &block)
-        dsl = new(options, &block)
+      def attributes_from_block(name, options, &)
+        dsl = new(options, &)
         header = dsl.header
         add_attribute(name, options.update(header: header))
         header.each { |attr| remove(attr.key) unless name == attr.key }
