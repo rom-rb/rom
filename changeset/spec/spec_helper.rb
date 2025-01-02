@@ -36,7 +36,7 @@ Dry::Core::Deprecations.set_logger!(SPEC_ROOT.join('../log/deprecations.log'))
 # Make inference errors quiet
 module ROM
   module SQL
-    module Schema
+    class Schema
       class Inferrer
         def self.on_error(*args)
           # shush
