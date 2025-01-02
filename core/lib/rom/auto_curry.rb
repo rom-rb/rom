@@ -5,6 +5,33 @@ module ROM
   #
   # @api private
   module AutoCurry
+    # @api private
+    class Wrapper < ::Module
+      def initialize(name, arity, &block)
+        define_method(name) do |*args, **kwargs, &mblock|
+          kwargs_size =
+            if kwargs.empty?
+              0
+            else
+              1
+            end
+
+          response =
+            if arity.negative? || arity.eql?(args.size + kwargs_size)
+              super(*args, **kwargs, &mblock)
+            else
+              self.class.curried.new(self, view: name, curry_args: args, arity: arity)
+            end
+
+          if block
+            response.instance_exec(&block)
+          else
+            response
+          end
+        end
+      end
+    end
+
     def self.extended(klass)
       klass.define_singleton_method(:method_added) do |name|
         return if auto_curry_busy?
@@ -37,40 +64,18 @@ module ROM
     # @param [Symbol] name The name of a method
     #
     # @api private
-    def auto_curry(name, &block)
+    def auto_curry(name, &)
       arity = instance_method(name).arity
 
-      return unless public_instance_methods.include?(name) && arity != 0
+      if public_instance_methods.include?(name) && arity != 0
+        mod = Wrapper.new(name, arity, &)
 
-      mod = ::Module.new
+        auto_curried_methods << name
 
-      mod.module_eval do
-        define_method(name) do |*args, **kwargs, &mblock|
-          kwargs_size =
-            if kwargs.empty?
-              0
-            else
-              1
-            end
-
-          response =
-            if arity < 0 || arity == (args.size + kwargs_size)
-              super(*args, **kwargs, &mblock)
-            else
-              self.class.curried.new(self, view: name, curry_args: args, arity: arity)
-            end
-
-          if block
-            response.instance_exec(&block)
-          else
-            response
-          end
-        end
+        prepend(mod)
+      else
+        self
       end
-
-      auto_curried_methods << name
-
-      prepend(mod)
     end
   end
 end
