@@ -1,46 +1,28 @@
 # this file is managed by rom-rb/devtools project
 
 AllCops:
+  NewCops: enable
   TargetRubyVersion: 3.1
 
-Style/EachWithObject:
-  Enabled: false
+Layout/FirstArrayElementIndentation:
+  EnforcedStyle: consistent
 
-Style/StringLiterals:
-  Enabled: true
-  EnforcedStyle: single_quotes
-
-Style/Alias:
-  Enabled: true
-  EnforcedStyle: prefer_alias_method
-
-Style/LambdaCall:
-  Enabled: false
-
-Style/StabbyLambdaParentheses:
-  Enabled: false
-
-Style/FormatString:
-  Enabled: false
-
-Style/Documentation:
-  Enabled: false
-
-Layout/SpaceInLambdaLiteral:
-  Enabled: false
+Layout/LineLength:
+  Max: 100
 
 Layout/MultilineMethodCallIndentation:
   Enabled: true
   EnforcedStyle: indented
 
-Metrics/LineLength:
-  Max: 100
+Layout/SpaceInLambdaLiteral:
+  Enabled: false
 
-Metrics/MethodLength:
-  Max: 22
+Lint/BooleanSymbol:
+  Enabled: false
 
-Metrics/ClassLength:
-  Max: 150
+Lint/SuppressedException:
+  Exclude:
+    - "spec/spec_helper.rb"
 
 Metrics/AbcSize:
   Max: 20
@@ -48,52 +30,77 @@ Metrics/AbcSize:
 Metrics/BlockLength:
   Enabled: false
 
+Metrics/ClassLength:
+  Max: 150
+
 Metrics/CyclomaticComplexity:
   Enabled: true
   Max: 10
 
-Lint/BooleanSymbol:
-  Enabled: false
-
-Style/AccessModifierDeclarations:
-  Enabled: false
-
-Style/BlockDelimiters:
-  Enabled: false
-
-Layout/FirstArrayElementIndentation:
-  EnforcedStyle: consistent
-
-Style/ClassAndModuleChildren:
-  Exclude:
-    - "spec/**/*_spec.rb"
-
-Lint/SuppressedException:
-  Exclude:
-    - "spec/spec_helper.rb"
-
-Naming/PredicateName:
-  Enabled: false
+Metrics/MethodLength:
+  Max: 22
 
 Naming/FileName:
   Exclude:
     - "lib/dry-*.rb"
 
-Style/SymbolArray:
+Naming/MemoizedInstanceVariableName:
+  Enabled: false
+
+Naming/MethodName:
+  Enabled: false
+
+Naming/PredicateName:
+  Enabled: false
+
+Style/AccessModifierDeclarations:
+  Enabled: false
+
+Style/Alias:
+  Enabled: true
+  EnforcedStyle: prefer_alias_method
+
+Style/AsciiComments:
+  Enabled: false
+
+Style/BlockDelimiters:
+  Enabled: false
+
+Style/ClassAndModuleChildren:
   Exclude:
     - "spec/**/*_spec.rb"
 
 Style/ConditionalAssignment:
   Enabled: false
 
-Naming/MethodName:
-  Enabled: false
-
-Style/AsciiComments:
-  Enabled: false
-
 Style/DateTime:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Style/EachWithObject:
+  Enabled: false
+
+Style/FormatString:
+  Enabled: false
+
+Style/GuardClause:
   Enabled: false
 
 Style/IfUnlessModifier:
   Enabled: false
+
+Style/LambdaCall:
+  Enabled: false
+
+Style/StabbyLambdaParentheses:
+  Enabled: false
+
+Style/StringLiterals:
+  Enabled: true
+  EnforcedStyle: single_quotes
+
+Style/SymbolArray:
+  Exclude:
+    - "spec/**/*_spec.rb"
