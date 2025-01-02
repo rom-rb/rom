@@ -41,7 +41,8 @@ module ROM
     #
     # @param [String, Pathname] directory The root path to components
     # @param [Hash] options
-    # @option options [Boolean, String] :namespace Enable/disable namespace or provide a custom namespace name
+    # @option options [Boolean, String] :namespace Enable/disable
+    #                                              namespace or provide a custom namespace name
     #
     # @return [Setup]
     #

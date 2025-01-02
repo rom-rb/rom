@@ -91,12 +91,12 @@ module ROM
     end
 
     # @api private
-    def set_compiler(compiler)
+    def set_compiler(compiler) # rubocop:disable Naming/AccessorMethodName
       options[:compiler] = @compiler = compiler
     end
 
     # @api private
-    def set_mappers(mappers)
+    def set_mappers(mappers) # rubocop:disable Naming/AccessorMethodName
       options[:mappers] = @mappers = mappers
     end
 

@@ -56,16 +56,22 @@ module ROM
                     "Relation with name #{key.inspect} registered more than once"
             end
 
-            klass.use(:registry_reader, klass: klass,
-                                        relation_readers_module: relation_readers_module)
+            klass.use(
+              :registry_reader,
+              klass: klass,
+              relation_readers_module: relation_readers_module
+            )
 
-            notifications.trigger('configuration.relations.class.ready', relation: klass,
-                                                                         adapter: klass.adapter)
+            notifications.trigger(
+              'configuration.relations.class.ready',
+              relation: klass,
+              adapter: klass.adapter
+            )
 
             relations[key] = build_relation(klass, registry)
           end
 
-          registry.each do |_, relation|
+          registry.each_value do |relation|
             notifications.trigger(
               'configuration.relations.object.registered',
               relation: relation, registry: registry

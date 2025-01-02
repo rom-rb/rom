@@ -234,10 +234,10 @@ module ROM
       # @api public
       def forward(*methods)
         methods.each do |method|
-          class_eval <<-RUBY, __FILE__, __LINE__ + 1
-            def #{method}(*args, &block)
-              new(dataset.__send__(:#{method}, *args, &block))
-            end
+          class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
+            def #{method}(...)                        # def super_query(...)
+              new(dataset.__send__(:#{method}, ...))  #   new(dataset.__send__(:super_query, ...))
+            end                                       # end
           RUBY
         end
       end

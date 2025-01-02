@@ -9,7 +9,7 @@ module ROM
     # Schema DSL exposed as `schema { .. }` in relation classes
     #
     # @api public
-    class DSL < BasicObject
+    class DSL < ::BasicObject
       KERNEL_METHODS = %i[extend method].freeze
       KERNEL_METHODS.each { |m| define_method(m, ::Kernel.instance_method(m)) }
 
@@ -185,7 +185,7 @@ module ROM
         instance_exec(&definition) if definition
 
         schema_class.define(relation, **opts) do |schema|
-          plugins.values.each do |plugin, options|
+          plugins.each_value do |plugin, options|
             plugin.apply_to(schema, **options)
           end
         end

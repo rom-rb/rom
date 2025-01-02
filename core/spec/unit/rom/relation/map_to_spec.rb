@@ -23,7 +23,9 @@ RSpec.describe ROM::Relation, '#map_to' do
     let(:mappers) { {} }
 
     it 'instantiates custom model when auto_struct is enabled' do
-      expect(relation.with(auto_struct: true).map_to(OpenStruct).first).to be_instance_of(OpenStruct)
+      expect(
+        relation.with(auto_struct: true).map_to(OpenStruct).first
+      ).to be_instance_of(OpenStruct)
     end
 
     it 'instantiates custom model when auto_struct is disabled' do

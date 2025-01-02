@@ -44,11 +44,9 @@ module ROM
     # @!attribute [r] globs
     #   @return [Hash] File globbing functions for each component dir
     option :globs, default: lambda {
-      Hash[
-        component_dirs.map { |component, path|
-          [component, directory.join("#{path}/**/*.rb")]
-        }
-      ]
+      component_dirs.transform_values { |path|
+        directory.join("#{path}/**/*.rb")
+      }
     }
 
     # Load relation files

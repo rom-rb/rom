@@ -138,6 +138,9 @@ Style/MapIntoArray:
   Exclude:
     - "core/spec/**/*.rb"
 
+Style/NumberedParametersLimit:
+  Max: 2
+
 Style/OpenStructUse:
   Exclude:
     - "core/spec/**/*.rb"

@@ -43,10 +43,10 @@ module ROM
       # @yield [Hash]
       #
       # @api public
-      def each
+      def each(&)
         return to_enum unless block_given?
 
-        collection.each { |tuple| yield(tuple) }
+        collection.each(&)
       end
 
       # Returns a single tuple from the relation if there is one.

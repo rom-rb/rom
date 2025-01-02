@@ -161,12 +161,13 @@ module ROM
     }
 
     # @!attribute [r] auto_map
-    #   @return [TrueClass,FalseClass] Whether or not a relation and its compositions should be auto-mapped
+    #   @return [true, false] Whether or not a relation and its
+    #                         compositions should be auto-mapped
     #   @api private
     option :auto_map, default: -> { self.class.auto_map }
 
     # @!attribute [r] auto_struct
-    #   @return [TrueClass,FalseClass] Whether or not tuples should be auto-mapped to structs
+    #   @return [true, false] Whether or not tuples should be auto-mapped to structs
     #   @api private
     option :auto_struct, default: -> { self.class.auto_struct }
 
@@ -424,7 +425,7 @@ module ROM
         if new_opts.empty?
           options
         elsif new_opts.key?(:schema)
-          options.merge(new_opts).reject { |k, _| %i[input_schema output_schema].include?(k) }
+          options.merge(new_opts).except(:input_schema, :output_schema)
         else
           options.merge(new_opts)
         end

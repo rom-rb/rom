@@ -136,7 +136,9 @@ RSpec.describe ROM::Relation, '.view' do
         }
 
         Class.new(ROM::Memory::Relation) do
-          schema_inferrer ROM::Schema::DEFAULT_INFERRER.with(attributes_inferrer: attributes_inferrer)
+          schema_inferrer ROM::Schema::DEFAULT_INFERRER.with(
+            attributes_inferrer: attributes_inferrer
+          )
 
           schema(:users, infer: true)
 

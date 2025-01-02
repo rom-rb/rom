@@ -41,14 +41,14 @@ module ROM
       # @return [Dataset]
       #
       # @api public
-      def restrict(criteria = nil)
-        return find_all { |tuple| yield(tuple) } unless criteria
+      def restrict(criteria = nil, &)
+        return find_all(&) unless criteria
 
         find_all do |tuple|
           criteria.all? do |k, v|
             case v
-            when Array then v.include?(tuple[k])
-            when Regexp then tuple[k].match(v)
+            when ::Array then v.include?(tuple[k])
+            when ::Regexp then tuple[k].match(v)
             else tuple[k].eql?(v)
             end
           end

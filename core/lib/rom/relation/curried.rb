@@ -5,6 +5,9 @@ require 'rom/initializer'
 require 'rom/pipeline'
 require 'rom/relation/name'
 require 'rom/relation/materializable'
+require 'rom/relation/graph'
+require 'rom/relation/wrap'
+require 'rom/relation/composite'
 
 module ROM
   class Relation
@@ -18,6 +21,8 @@ module ROM
     # @api public
     class Curried
       extend Initializer
+
+      WRAPS = [Relation, Graph, Wrap, Composite].freeze
 
       include Dry::Equalizer(:relation, :options)
       include Materializable
@@ -112,7 +117,7 @@ module ROM
 
           super if response.is_a?(self.class)
 
-          if response.is_a?(Relation) || response.is_a?(Graph) || response.is_a?(Wrap) || response.is_a?(Composite)
+          if WRAPS.any? { |klass| response.is_a?(klass) }
             __new__(response)
           else
             response

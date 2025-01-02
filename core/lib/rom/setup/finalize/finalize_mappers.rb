@@ -5,7 +5,9 @@ require 'rom/registry'
 module ROM
   class Finalize
     class FinalizeMappers
-      attr_reader :mapper_classes, :mapper_objects, :registry_hash
+      attr_reader :mapper_classes
+      attr_reader :mapper_objects
+      attr_reader :registry_hash
 
       # @api private
       def initialize(mapper_classes, mapper_objects)
@@ -40,16 +42,16 @@ module ROM
       private
 
       def check_duplicate_registered_mappers
-        mapper_relation_register = mapper_classes.map { |mapper_class| [mapper_class.relation, mapper_class.register_as].compact }
-        return if mapper_relation_register.uniq.count == mapper_classes.count
+        duplicates = mapper_classes.map { [_1.relation, _1.register_as] }.tally.select { _2 > 1 }
 
-        mapper_relation_register.select { |relation_register_as| mapper_relation_register.count(relation_register_as) > 1 }
-          .uniq
-          .each do |duplicated_mappers|
-            raise MapperAlreadyDefinedError,
-                  "Mapper with `register_as #{duplicated_mappers.last.inspect}` registered more " \
-                  "than once for relation #{duplicated_mappers.first.inspect}"
-          end
+        case duplicates.first
+        in [rel, as], _
+          raise MapperAlreadyDefinedError,
+                "Mapper with `register_as #{as.inspect}` registered more " \
+                "than once for relation #{rel.inspect}"
+        else
+          nil
+        end
       end
 
       def build_mappers(relation_name)

@@ -39,7 +39,7 @@ module ROM
     subscribe('configuration.relations.registry.created') do |event|
       registry = event[:registry]
 
-      registry.each do |_, relation|
+      registry.each_value do |relation|
         unless relation.schema.frozen?
           relation.schema.finalize_associations!(relations: registry)
           relation.schema.finalize!

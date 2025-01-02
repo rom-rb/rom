@@ -62,18 +62,23 @@ module ROM
     end
 
     # @api private
-    def map
-      new_elements = elements.each_with_object({}) do |(name, element), h|
-        h[name] = yield(element)
-      end
+    def map(&)
+      new_elements = elements.transform_values(&)
       self.class.new(new_elements, **options)
     end
 
     # @api private
-    def each
+    def each(&)
       return to_enum unless block_given?
 
-      elements.each { |element| yield(element) }
+      elements.each(&)
+    end
+
+    # @api private
+    def each_value(&)
+      return to_enum(:each_value) unless block_given?
+
+      elements.each_value(&)
     end
 
     # @api private
