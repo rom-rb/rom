@@ -36,7 +36,8 @@ module ROM
     #   @return [Notifications] Notification bus instance
     attr_reader :notifications
 
-    def_delegators :@setup, :register_relation, :register_command, :register_mapper, :register_plugin,
+    def_delegators :@setup, :register_relation, :register_command,
+                   :register_mapper, :register_plugin,
                    :command_classes, :mapper_classes,
                    :auto_registration
 
@@ -89,7 +90,7 @@ module ROM
     # Hook for respond_to? used internally
     #
     # @api private
-    def respond_to?(name, include_all = false)
+    def respond_to?(name, ...)
       gateways.key?(name) || super
     end
 
@@ -122,12 +123,17 @@ module ROM
 
     private
 
+    # @api private
+    def respond_to_missing?(name, ...)
+      gateways.key?(name) || super
+    end
+
     # Returns gateway if method is a name of a registered gateway
     #
     # @return [Gateway]
     #
     # @api private
-    def method_missing(name, *)
+    def method_missing(name, ...)
       gateways.fetch(name) { super }
     end
   end

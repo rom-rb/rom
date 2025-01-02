@@ -35,11 +35,11 @@ module ROM
       map! combination cycle delete_if keep_if permutation reject!
       select! sort_by!
     ].each do |method|
-      class_eval <<-RUBY, __FILE__, __LINE__ + 1
-        def #{method}(*args, &block)
-          return to_enum unless block
-          self.class.new(data.send(:#{method}, *args, &block), **options)
-        end
+      class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
+        def #{method}(*args, &)                                          # def map!(*args, &)
+          return to_enum unless block_given?                             #   return to_enum unless block_given?
+          self.class.new(data.__send__(:#{method}, *args, &), **options) #   self.class.new(data.__send__(:map!, *args, &), **options)
+        end                                                              # end
       RUBY
     end
   end

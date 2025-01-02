@@ -80,8 +80,8 @@ module ROM
     # @yield [Attribute]
     #
     # @api private
-    def each
-      attributes.each_value { |attribute| yield(attribute) }
+    def each(&)
+      attributes.each_value(&)
     end
 
     # Return if there are any aliased attributes

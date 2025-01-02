@@ -17,7 +17,7 @@ module ROM
 
         # @see ROM::Commands::Create#execute
         def execute(tuples)
-          Array([tuples]).flatten.map { |tuple|
+          [tuples].flatten.map { |tuple|
             attributes = input[tuple]
             relation.insert(attributes.to_h)
             attributes

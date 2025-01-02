@@ -4,7 +4,9 @@ require 'rom/relation/combined'
 
 RSpec.describe ROM::Relation::Combined, '#map_with' do
   subject(:relation) do
-    ROM::Relation::Combined.new(users, [tasks.to_node(:tasks, type: :many, keys: { id: :user_id }).for_users])
+    ROM::Relation::Combined.new(
+      users, [tasks.to_node(:tasks, type: :many, keys: { id: :user_id }).for_users]
+    )
   end
 
   let(:users) do

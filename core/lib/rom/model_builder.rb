@@ -94,10 +94,10 @@ module ROM
 
         @klass.send(:attr_reader, *attrs)
 
-        @klass.class_eval <<-RUBY, __FILE__, __LINE__ + 1
-          def initialize(params)
-            #{attrs.map { |name| "@#{name} = params[:#{name}]" }.join("\n")}
-          end
+        @klass.class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
+          def initialize(params)                                             # def initialize(params)
+            #{attrs.map { |name| "@#{name} = params[:#{name}]" }.join("\n")} #   @name = params[:name]
+          end                                                                # end
         RUBY
 
         self

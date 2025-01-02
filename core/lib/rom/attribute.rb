@@ -23,7 +23,8 @@ module ROM
     META_OPTIONS = %i[primary_key foreign_key source target relation].freeze
 
     # @!attribute [r] type
-    #   @return [Dry::Types::Nominal, Dry::Types::Sum, Dry::Types::Constrained] The attribute's type object
+    #   @return [Dry::Types::Nominal, Dry::Types::Sum, Dry::Types::Constrained] The attribute's
+    #                                                                           type object
     param :type
 
     # @!attribute [r] name

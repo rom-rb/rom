@@ -92,7 +92,8 @@ RSpec.describe ROM::CreateContainer, '#finalize' do
       expect { container }.not_to raise_error
     end
 
-    it "doesn't raise an error when registering same mapper twice for different relation when no relation specify" do
+    it "doesn't raise an error when registering same mapper " \
+       'twice for different relation when no relation specify' do
       configuration
 
       users_mapper = Class.new(ROM::Mapper) do

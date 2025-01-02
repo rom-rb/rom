@@ -91,10 +91,10 @@ module ROM
       # @param [Boolean] infer Whether to do an automatic schema inferring
       #
       # @api public
-      def schema(dataset = nil, as: nil, infer: false, &block)
-        if defined?(@schema) && !block && !infer
+      def schema(dataset = nil, as: nil, infer: false, &)
+        if defined?(@schema) && !block_given? && !infer
           @schema
-        elsif block || infer
+        elsif block_given? || infer
           raise MissingSchemaClassError, self unless schema_class
 
           ds_name = dataset || schema_opts.fetch(:dataset, default_name.dataset)
@@ -110,7 +110,7 @@ module ROM
               schema_class: schema_class,
               attr_class: schema_attr_class,
               inferrer: schema_inferrer.with(enabled: infer),
-              &block
+              &
             ).call(*args, &inner_block)
           end
         end

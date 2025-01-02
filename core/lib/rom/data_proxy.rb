@@ -77,18 +77,18 @@ module ROM
         # FIXME: we should probably raise if one of the non-forwardable methods
         #       was provided
         (methods - NON_FORWARDABLE).each do |method_name|
-          class_eval <<-RUBY, __FILE__, __LINE__ + 1
-            def #{method_name}(*args, &block)
-              response = data.public_send(#{method_name.inspect}, *args, &block)
-
-              if response.equal?(data)
-                self
-              elsif response.is_a?(data.class)
-                self.class.new(response)
-              else
-                response
-              end
-            end
+          class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
+            def #{method_name}(...)                              # def find_all(...)
+              response = data.public_send(:#{method_name}, ...)  #   response = data.public_send(:find_all, ...)
+                                                                 #
+              if response.equal?(data)                           #   if response.equal?(data)
+                self                                             #     self
+              elsif response.is_a?(data.class)                   #   elsif response.is_a?(data.class)
+                self.class.new(response)                         #     self.class.new(response)
+              else                                               #   else
+                response                                         #     response
+              end                                                #   end
+            end                                                  # end
           RUBY
         end
       end

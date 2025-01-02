@@ -265,7 +265,7 @@ module ROM
     # This method will apply before/after hooks automatically
     #
     # @api public
-    def call(*args, &block)
+    def call(*args, &)
       tuples =
         if hooks?
           prepared =
@@ -275,7 +275,7 @@ module ROM
               apply_hooks(before_hooks, *args)
             end
 
-          result = prepared ? execute(prepared, &block) : execute(&block)
+          result = prepared ? execute(prepared, &) : execute(&)
 
           if curried?
             if !args.empty?
@@ -286,10 +286,10 @@ module ROM
               apply_hooks(after_hooks, result)
             end
           else
-            apply_hooks(after_hooks, result, *args[1..args.size - 1])
+            apply_hooks(after_hooks, result, *args.drop(1))
           end
         else
-          execute(*(curry_args + args), &block)
+          execute(*(curry_args + args), &)
         end
 
       if one?

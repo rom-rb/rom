@@ -59,11 +59,11 @@ module ROM
       chunk collect collect_concat drop_while find_all flat_map
       grep map reject select sort sort_by take_while
     ].each do |method|
-      class_eval <<-RUBY, __FILE__, __LINE__ + 1
-        def #{method}(*args, &block)
-          return to_enum unless block
-          self.class.new(super(*args, &block), **options)
-        end
+      class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
+        def #{method}(...)                         # def collect(...)
+          return to_enum unless block_given?       #   return to_enum unless block_given?
+          self.class.new(super(...), **options)    #   self.class.new(super(...), **options)
+        end                                        # end
       RUBY
     end
   end

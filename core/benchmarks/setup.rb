@@ -13,6 +13,7 @@ require 'logger'
 begin
   require 'byebug'
 rescue LoadError
+  # ignore
 end
 
 require_relative 'gc_suite'
@@ -277,7 +278,7 @@ USER_POST_SEED = POST_SEED.map { |post|
   end
 }.flatten
 
-def seed
+def seed # rubocop:disable Metrics/AbcSize
   hr
 
   puts "SEEDING #{USER_SEED.count} users"

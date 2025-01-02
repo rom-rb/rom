@@ -22,19 +22,20 @@ module ROM
       #   result[:created_at]  #=> Time.now.utc
       #
       # @api public
-      class Timestamps < Module
+      class Timestamps < ::Module
         attr_reader :timestamps
 
         attr_reader :datestamps
 
         def initialize(timestamps: [], datestamps: [])
+          super()
           @timestamps = store_attributes(timestamps)
           @datestamps = store_attributes(datestamps)
         end
 
         # @api private
         def store_attributes(attr)
-          attr.is_a?(Array) ? attr : Array[attr]
+          attr.is_a?(Array) ? attr : [attr]
         end
 
         # @api private

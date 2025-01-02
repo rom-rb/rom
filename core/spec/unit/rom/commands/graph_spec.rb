@@ -100,7 +100,7 @@ RSpec.describe ROM::Commands::Graph do
         before :associate
 
         def associate(tags, tasks)
-          Array([tasks]).flatten.map { |task|
+          [tasks].flatten.map { |task|
             tags.map { |tag| tag.merge(task: task[:title]) }
           }.flatten
         end

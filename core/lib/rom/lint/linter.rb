@@ -52,7 +52,7 @@ module ROM
       # @return [String]
       #
       # @api private
-      def self.lints
+      private_class_method def self.lints
         public_instance_methods(true).grep(/^lint_/).map(&:to_s)
       end
 

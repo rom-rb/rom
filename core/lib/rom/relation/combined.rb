@@ -95,7 +95,7 @@ module ROM
       # @return [Relation]
       #
       # @api public
-      def node(name, &block)
+      def node(name, &)
         if name.is_a?(Symbol) && !nodes.map { |n| n.name.key }.include?(name)
           raise ArgumentError, "#{name.inspect} is not a valid aggregate node name"
         end
@@ -107,7 +107,7 @@ module ROM
           when Hash
             other, *rest = name.flatten(1)
             if other == node.name.key
-              nodes.detect { |n| n.name.key == other }.node(*rest, &block)
+              nodes.detect { |n| n.name.key == other }.node(*rest, &)
             else
               node
             end

@@ -42,4 +42,6 @@ task default: :spec
 begin
   require 'yard-junk/rake'
   YardJunk::Rake.define_task(:text)
-rescue LoadError; end
+rescue LoadError
+  # ignore
+end

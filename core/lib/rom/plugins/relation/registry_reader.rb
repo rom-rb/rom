@@ -15,6 +15,7 @@ module ROM
 
         # @api private
         def initialize(klass:, relation_readers_module:)
+          super()
           klass.include relation_readers_module
         end
 

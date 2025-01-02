@@ -67,8 +67,10 @@ module ROM
         # @option opts [Symbol] :as The name of the association (defaults to target)
         # @option opts [Symbol] :relation The name of the target relation (defaults to target)
         # @option opts [Symbol] :foreign_key The name of a custom foreign key
-        # @option opts [Symbol] :view The name of a custom relation view on the target's relation side
-        # @option opts [TrueClass,FalseClass] :override Whether provided :view should override association's default view
+        # @option opts [Symbol] :view The name of a custom relation view
+        #                             on the target's relation side
+        # @option opts [true, false] :override Whether provided :view should override
+        #                                      association's default view
         #
         # @api public
         def self.new(source, target, **opts)
