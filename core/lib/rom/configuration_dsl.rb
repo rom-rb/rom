@@ -48,8 +48,8 @@ module ROM
     #   end
     #
     # @api public
-    def commands(name, &block)
-      register_command(*CommandDSL.new(name, default_adapter, &block).command_classes)
+    def commands(name, &)
+      register_command(*CommandDSL.new(name, default_adapter, &).command_classes)
     end
 
     # Mapper definition DSL

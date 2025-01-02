@@ -51,11 +51,11 @@ def puts(*)
   super unless VERIFY
 end
 
-def run(title, &block)
+def run(title, &)
   if VERIFY
-    Verifier.run(&block)
+    Verifier.run(&)
   else
-    benchmark(title, &block)
+    benchmark(title, &)
   end
 end
 
@@ -78,8 +78,8 @@ class Verifier
     yield self
   end
 
-  def self.run(&block)
-    new(&block)
+  def self.run(&)
+    new(&)
   end
 
   def report(name)

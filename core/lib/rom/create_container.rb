@@ -44,7 +44,7 @@ module ROM
   # @api private
   class InlineCreateContainer < CreateContainer
     # @api private
-    def initialize(*args, &block)
+    def initialize(*args, &)
       case args.first
       when Configuration
         environment = args.first.environment
@@ -53,7 +53,7 @@ module ROM
         environment = args.first
         setup = args[1]
       else
-        configuration = Configuration.new(*args, &block)
+        configuration = Configuration.new(*args, &)
         environment = configuration.environment
         setup = configuration.setup
       end
@@ -63,7 +63,7 @@ module ROM
   end
 
   # @api private
-  def self.container(*args, &block)
-    InlineCreateContainer.new(*args, &block).container
+  def self.container(...)
+    InlineCreateContainer.new(...).container
   end
 end

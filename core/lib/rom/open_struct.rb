@@ -24,7 +24,7 @@ module ROM
     private
 
     # @api private
-    def method_missing(meth, *args, &block)
+    def method_missing(meth, *args, &)
       ivar = IVAR[meth]
 
       if instance_variables.include?(ivar)

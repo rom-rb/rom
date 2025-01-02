@@ -8,7 +8,7 @@ RSpec::Core::RakeTask.new(:spec)
 task default: [:ci]
 
 desc 'Run specs in isolation'
-task :"spec:isolation" do
+task :'spec:isolation' do
   FileList['spec/**/*_spec.rb'].each do |spec|
     sh 'rspec', spec
   end

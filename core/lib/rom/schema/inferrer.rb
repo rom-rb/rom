@@ -27,7 +27,7 @@ module ROM
       MissingAttributesError = Class.new(StandardError) do
         def initialize(name, attributes)
           super(
-            "Following attributes in #{Relation::Name[name].relation.inspect} schema cannot "\
+            "Following attributes in #{Relation::Name[name].relation.inspect} schema cannot " \
             "be inferred and have to be defined explicitly: #{attributes.map(&:inspect).join(', ')}"
           )
         end

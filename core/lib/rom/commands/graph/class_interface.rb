@@ -43,7 +43,7 @@ module ROM
             end
 
           command = registry[relation][name]
-          tuple_path = Array[*path] << key
+          tuple_path = [*path] << key
           input_proc = InputEvaluator.build(tuple_path, nodes)
 
           command = command.curry(input_proc, opts)

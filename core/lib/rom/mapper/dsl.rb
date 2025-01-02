@@ -105,9 +105,9 @@ module ROM
         # Delegate Attribute DSL method to the dsl instance
         #
         # @api private
-        def method_missing(name, *args, **kwargs, &block)
+        def method_missing(name, ...)
           if dsl.respond_to?(name)
-            dsl.public_send(name, *args, **kwargs, &block)
+            dsl.public_send(name, ...)
           else
             super
           end

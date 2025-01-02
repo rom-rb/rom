@@ -21,10 +21,10 @@ module ROM
       attr_reader :registry
 
       # @api private
-      def initialize(registry, defaults = EMPTY_HASH, &block)
+      def initialize(registry, defaults = EMPTY_HASH, &)
         @registry = registry
         @defaults = defaults
-        instance_exec(&block)
+        instance_exec(&)
       end
 
       # Register a plugin
@@ -43,8 +43,8 @@ module ROM
       # @param [Symbol] type The adapter identifier
       #
       # @api public
-      def adapter(type, &block)
-        self.class.new(registry, adapter: type, &block)
+      def adapter(type, &)
+        self.class.new(registry, adapter: type, &)
       end
     end
   end

@@ -62,9 +62,9 @@ module ROM
       end
 
       # @api private
-      def method_missing(name, *args, **kwargs, &block)
+      def method_missing(name, ...)
         if left.respond_to?(name)
-          response = left.__send__(name, *args, **kwargs, &block)
+          response = left.__send__(name, ...)
 
           if decorate?(response)
             self.class.new(response, right)

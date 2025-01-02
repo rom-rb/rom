@@ -11,11 +11,11 @@ module ROM
       attr_reader :relation, :adapter, :command_classes
 
       # @api private
-      def initialize(relation, adapter = nil, &block)
+      def initialize(relation, adapter = nil, &)
         @relation = relation
         @adapter = adapter
         @command_classes = []
-        instance_exec(&block)
+        instance_exec(&)
       end
 
       # Define a command class
@@ -27,9 +27,9 @@ module ROM
       # @return [Class] generated class
       #
       # @api public
-      def define(name, options = EMPTY_HASH, &block)
+      def define(name, options = EMPTY_HASH, &)
         @command_classes << Command.build_class(
-          name, relation, { adapter: adapter }.merge(options), &block
+          name, relation, { adapter: adapter }.merge(options), &
         )
       end
     end

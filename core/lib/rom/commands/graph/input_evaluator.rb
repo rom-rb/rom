@@ -48,7 +48,7 @@ module ROM
         #
         # @api private
         def self.exclude_proc(excluded_keys)
-          -> input { input.reject { |k, _| excluded_keys.include?(k) } }
+          -> input { input.except(*excluded_keys) }
         end
 
         # Initialize a new input evaluator

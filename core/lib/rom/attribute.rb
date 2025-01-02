@@ -405,9 +405,9 @@ module ROM
     private
 
     # @api private
-    def method_missing(meth, *args, **kwargs, &block)
+    def method_missing(meth, ...)
       if type.respond_to?(meth)
-        response = type.__send__(meth, *args, **kwargs, &block)
+        response = type.__send__(meth, ...)
 
         if response.is_a?(type.class)
           self.class.new(response, **options)

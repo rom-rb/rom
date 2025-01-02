@@ -12,7 +12,7 @@ module ROM
     class << self
       # @api private
       def register(entity_type, plugin_type: Plugin, adapter: true)
-        super(entity_type, plugin_type: plugin_type, adapter: adapter)
+        super
       end
     end
   end

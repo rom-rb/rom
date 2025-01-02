@@ -29,8 +29,13 @@ module ROM
       # @return [Class]
       #
       # @api public
-      def define(name, options = EMPTY_HASH, &block)
-        @defined_mappers << Mapper::Builder.build_class(name, (@mapper_classes + @defined_mappers), options, &block)
+      def define(name, options = EMPTY_HASH, &)
+        @defined_mappers << Mapper::Builder.build_class(
+          name,
+          @mapper_classes + @defined_mappers,
+          options,
+          &
+        )
         self
       end
 

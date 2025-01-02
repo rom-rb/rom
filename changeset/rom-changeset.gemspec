@@ -17,12 +17,13 @@ Gem::Specification.new do |gem|
     'source_code_uri' => 'https://github.com/rom-rb/rom/tree/master/changeset',
     'documentation_uri' => 'https://api.rom-rb.org/rom/',
     'mailing_list_uri' => 'https://discourse.rom-rb.org/',
-    'bug_tracker_uri' => 'https://github.com/rom-rb/rom/issues'
+    'bug_tracker_uri' => 'https://github.com/rom-rb/rom/issues',
+    'rubygems_mfa_required' => 'true'
   }
 
-  gem.add_runtime_dependency 'dry-core', '~> 1.0'
-  gem.add_runtime_dependency 'rom-core', '~> 5.3'
-  gem.add_runtime_dependency 'transproc', '~> 1.0', '>= 1.1.0'
+  gem.add_dependency 'dry-core', '~> 1.0'
+  gem.add_dependency 'rom-core', '~> 5.3'
+  gem.add_dependency 'transproc', '~> 1.0', '>= 1.1.0'
 
   gem.add_development_dependency 'rake', '~> 11.2'
   gem.add_development_dependency 'rspec', '~> 3.5'

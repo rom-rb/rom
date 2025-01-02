@@ -94,10 +94,10 @@ module ROM
     end
 
     # @api private
-    def build_class(name, parent, ns, &block)
+    def build_class(name, parent, ns, &)
       Dry::Core::ClassBuilder
         .new(name: class_name(name), parent: parent, namespace: ns)
-        .call(&block)
+        .call(&)
     end
 
     # @api private

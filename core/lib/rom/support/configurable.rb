@@ -59,7 +59,7 @@ module ROM
       end
 
       # @api private
-      def method_missing(meth, *args, &_block)
+      def method_missing(meth, *args, &)
         return settings.fetch(meth, nil) if frozen?
 
         name = meth.to_s

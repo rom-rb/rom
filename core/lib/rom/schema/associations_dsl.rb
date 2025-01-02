@@ -21,10 +21,10 @@ module ROM
       attr_reader :registry
 
       # @api private
-      def initialize(source, &block)
+      def initialize(source, &)
         @source = source
         @registry = {}
-        instance_exec(&block)
+        instance_exec(&)
       end
 
       # Establish a one-to-many association

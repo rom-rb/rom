@@ -157,10 +157,10 @@ module ROM
             default_mapping
           end
 
-        if !other.empty?
-          [mapping, [type, other]]
-        else
+        if other.empty?
           [mapping, type]
+        else
+          [mapping, [type, other]]
         end
       else
         registry[name][id] = commands[name][id]
@@ -241,11 +241,7 @@ module ROM
           singular_name if relation.associations.key?(singular_name)
         end
 
-      if assoc_name
-        klass.associates(assoc_name)
-      else
-        klass.associates(parent_relation)
-      end
+      klass.associates(assoc_name || parent_relation)
     end
   end
 end

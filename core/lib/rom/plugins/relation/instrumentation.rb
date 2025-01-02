@@ -45,8 +45,13 @@ module ROM
         # Execute a block using instrumentation
         #
         # @api public
-        def instrument(&block)
-          notifications.instrument(self.class.adapter, name: name.relation, **notification_payload(self), &block)
+        def instrument(&)
+          notifications.instrument(
+            self.class.adapter,
+            name: name.relation,
+            **notification_payload(self),
+            &
+          )
         end
 
         private

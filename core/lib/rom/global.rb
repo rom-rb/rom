@@ -40,8 +40,8 @@ module ROM
     #   end
     #
     # @api public
-    def plugins(*args, &block)
-      PluginDSL.new(plugin_registry, *args, &block)
+    def plugins(...)
+      PluginDSL.new(plugin_registry, ...)
     end
 
     # Register adapter namespace under a specified identifier

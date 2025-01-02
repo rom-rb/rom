@@ -142,8 +142,8 @@ module ROM
     #   # => #<ROM::Struct::User id=1 name="Jane">
     #
     # @api public
-    def transaction(*args, &block)
-      container.gateways[:default].transaction(*args, &block)
+    def transaction(...)
+      container.gateways[:default].transaction(...)
     end
 
     # Return a string representation of a repository object

@@ -50,7 +50,8 @@ module ROM
         all_args = curry_args + args
 
         if all_args.empty?
-          raise ArgumentError, "curried #{relation.class}##{view} relation was called without any arguments"
+          raise ArgumentError,
+                "curried #{relation.class}##{view} relation was called without any arguments"
         end
 
         if args.empty?
@@ -105,9 +106,9 @@ module ROM
       end
 
       # @api private
-      def method_missing(meth, *args, **kwargs, &block)
+      def method_missing(meth, ...)
         if relation.respond_to?(meth)
-          response = relation.__send__(meth, *args, **kwargs, &block)
+          response = relation.__send__(meth, ...)
 
           super if response.is_a?(self.class)
 

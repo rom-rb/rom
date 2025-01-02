@@ -83,9 +83,9 @@ module ROM
       private
 
       # @api private
-      def method_missing(name, *args, **kwargs, &block)
+      def method_missing(name, ...)
         if command.respond_to?(name)
-          response = command.public_send(name, *args, **kwargs, &block)
+          response = command.public_send(name, ...)
 
           if response.instance_of?(command.class)
             self.class.new(response, evaluator, command_proc)

@@ -8,17 +8,17 @@ RSpec::Core::RakeTask.new(:spec)
 task default: [:ci]
 
 desc 'Run specs in isolation'
-task :"spec:isolation" do
+task :'spec:isolation' do
   FileList['spec/**/*_spec.rb'].each do |spec|
     sh "COVERAGE=false bundle exec rspec #{spec}"
   end
 end
 
 desc 'Run CI tasks'
-if RUBY_ENGINE != 'ruby'
-  task ci: %i[spec lint]
-else
+if RUBY_ENGINE == 'ruby'
   task ci: %i[spec lint spec:isolation]
+else
+  task ci: %i[spec lint]
 end
 
 Rake::TestTask.new(:lint) do |test|
