@@ -144,7 +144,9 @@ module ROM
     # @!attribute [r] name
     #   @return [Object] The relation name
     #   @api public
-    option :name, default: -> { self.class.schema ? self.class.schema.name : self.class.default_name }
+    option :name, default: lambda {
+      self.class.schema ? self.class.schema.name : self.class.default_name
+    }
 
     # @!attribute [r] input_schema
     #   @return [Object#[]] tuple processing function, uses schema or defaults to Hash[]
@@ -191,12 +193,14 @@ module ROM
     #
     # @example accessing canonical attribute
     #   users[:id]
-    #   # => #<ROM::SQL::Attribute[Integer] primary_key=true name=:id source=ROM::Relation::Name(users)>
+    #   # => #<ROM::SQL::Attribute[Integer] primary_key=true
+    #   #     name=:id source=ROM::Relation::Name(users)>
     #
     # @example accessing joined attribute
     #   tasks_with_users = tasks.join(users).select_append(tasks[:title])
     #   tasks_with_users[:title, :tasks]
-    #   # => #<ROM::SQL::Attribute[String] primary_key=false name=:title source=ROM::Relation::Name(tasks)>
+    #   # => #<ROM::SQL::Attribute[String] primary_key=false
+    #   #     name=:title source=ROM::Relation::Name(tasks)>
     #
     # @return [Attribute]
     #
@@ -214,11 +218,11 @@ module ROM
     # @return [Enumerator] if block is not provided
     #
     # @api public
-    def each
+    def each(&)
       return to_enum unless block_given?
 
       if auto_map?
-        mapper.(dataset.map { |tuple| output_schema[tuple] }).each { |struct| yield(struct) }
+        mapper.(dataset.map { |tuple| output_schema[tuple] }).each(&)
       else
         dataset.each { |tuple| yield(output_schema[tuple]) }
       end
@@ -420,7 +424,7 @@ module ROM
         if new_opts.empty?
           options
         elsif new_opts.key?(:schema)
-          options.merge(new_opts).reject { |k, _| k == :input_schema || k == :output_schema }
+          options.merge(new_opts).reject { |k, _| %i[input_schema output_schema].include?(k) }
         else
           options.merge(new_opts)
         end
@@ -476,7 +480,8 @@ module ROM
 
     # @api private
     def meta_ast
-      meta = self.meta.merge(dataset: name.dataset, alias: name.aliaz, struct_namespace: options[:struct_namespace])
+      meta = self.meta.merge(dataset: name.dataset, alias: name.aliaz,
+                             struct_namespace: options[:struct_namespace])
       meta[:model] = false unless auto_struct? || meta[:model]
       meta
     end

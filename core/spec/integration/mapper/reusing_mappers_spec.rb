@@ -34,7 +34,10 @@ RSpec.describe 'Reusing mappers' do
     end
 
     mapper = Test::TaskMapper.build
-    relation = [{ title: 'Task One', priority: { value: '1' } }, { title: 'Task Two', priority: { value: '2' } }]
+    relation = [
+      { title: 'Task One', priority: { value: '1' } },
+      { title: 'Task Two', priority: { value: '2' } }
+    ]
     result = mapper.call(relation)
 
     expect(result).to eql([

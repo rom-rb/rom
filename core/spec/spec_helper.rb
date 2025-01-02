@@ -21,6 +21,7 @@ Dry::Core::Deprecations.set_logger!(SPEC_ROOT.join('../log/deprecations.log'))
 %w[pry-byebug debug pry].each do |gem|
   require gem
 rescue LoadError
+  # ignore
 else
   break
 end

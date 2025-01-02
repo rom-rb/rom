@@ -80,7 +80,7 @@ conf.register_command(CreateTags)
 rom = ROM.container(conf)
 
 books = rom.relations[:books]
-tags = rom.relations[:tags]
+_tags = rom.relations[:tags]
 
 book = rom.relations[:books].changeset(:create, title: 'Hello World')
 

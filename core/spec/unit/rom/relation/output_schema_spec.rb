@@ -17,8 +17,11 @@ RSpec.describe ROM::Relation, '#output_schema' do
   end
 
   it 'returns output_schema based on canonical schema' do
-    expect(relation.output_schema)
-      .to eql(ROM::Schema::HASH_SCHEMA.schema(id: schema[:id].to_read_type, name: schema[:name].type))
+    expect(relation.output_schema).to eql(
+      ROM::Schema::HASH_SCHEMA.schema(
+        id: schema[:id].to_read_type, name: schema[:name].type
+      )
+    )
   end
 
   it 'returns output_schema based on projected schema' do

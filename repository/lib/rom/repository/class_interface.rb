@@ -22,7 +22,14 @@ module ROM
       # @api public
       def [](name)
         fetch_or_store(name) do
-          klass = Class.new(self < Repository::Root ? self : Repository::Root)
+          base =
+            if self < Repository::Root # rubocop:disable Style/MinMaxComparison
+              self
+            else
+              Repository::Root
+            end
+
+          klass = ::Class.new(base)
           klass.root(name)
           klass
         end
@@ -103,17 +110,17 @@ module ROM
           @commands.each do |spec|
             type, *view = Array(spec).flatten
 
-            if !view.empty?
-              define_restricted_command_method(
+            if view.empty?
+              define_command_method(
                 type,
-                view,
                 mapper: mapper,
                 use: use,
                 plugins_options: plugins_options
               )
             else
-              define_command_method(
+              define_restricted_command_method(
                 type,
+                view,
                 mapper: mapper,
                 use: use,
                 plugins_options: plugins_options

@@ -11,6 +11,7 @@ RSpec.describe ROM::Gateway do
         attr_reader :args
 
         def initialize(*args)
+          super()
           @args = args
         end
       end
@@ -134,5 +135,5 @@ RSpec.describe ROM::Gateway do
         ROM::MissingAdapterIdentifierError, /Test::CustomGateway/
       )
     end
-  end # describe #adapter
+  end
 end

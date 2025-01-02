@@ -10,7 +10,7 @@ RSpec.describe ROM::CreateContainer, '#finalize' do
       configuration
 
       apples = Class.new(ROM::Relation[:memory]) do
-        schema(:fruits, as: :apples) {}
+        schema(:fruits, as: :apples) { nil }
 
         def apple?
           true
@@ -18,7 +18,7 @@ RSpec.describe ROM::CreateContainer, '#finalize' do
       end
 
       oranges = Class.new(ROM::Relation[:memory]) do
-        schema(:fruits, as: :oranges) {}
+        schema(:fruits, as: :oranges) { nil }
 
         def orange?
           true
@@ -37,11 +37,11 @@ RSpec.describe ROM::CreateContainer, '#finalize' do
       configuration
 
       users = Class.new(ROM::Relation[:memory]) do
-        schema(:guests, as: :users) {}
+        schema(:guests, as: :users) { nil }
       end
 
       users2 = Class.new(ROM::Relation[:memory]) do
-        schema(:admins, as: :users) {}
+        schema(:admins, as: :users) { nil }
       end
 
       configuration.register_relation(users)
@@ -60,13 +60,13 @@ RSpec.describe ROM::CreateContainer, '#finalize' do
         relation :users
       end
 
-      users_mapper_2 = Class.new(ROM::Mapper) do
+      users_mapper2 = Class.new(ROM::Mapper) do
         register_as :users
         relation :users
       end
 
       configuration.register_mapper(users_mapper)
-      configuration.register_mapper(users_mapper_2)
+      configuration.register_mapper(users_mapper2)
 
       expect { container }.to raise_error(
         ROM::MapperAlreadyDefinedError, /register_as :users/

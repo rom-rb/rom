@@ -26,12 +26,14 @@ module ROM
     attr_reader :__memoized__
 
     # @api private
-    class Memoizer < Module
+    class Memoizer < ::Module
       attr_reader :klass
+
       attr_reader :names
 
       # @api private
       def initialize(klass, names)
+        super()
         @names = names
         @klass = klass
         define_memoizable_names!

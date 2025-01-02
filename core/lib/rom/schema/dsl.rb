@@ -111,8 +111,8 @@ module ROM
       # @return [AssociationDSL]
       #
       # @api public
-      def associations(&block)
-        @associations_dsl = AssociationsDSL.new(relation, &block)
+      def associations(&)
+        @associations_dsl = AssociationsDSL.new(relation, &)
       end
 
       # Builds a representation of the information needed to create an
@@ -146,7 +146,9 @@ module ROM
           type.meta(source: relation, read: type.meta[:read].optional)
         else
           type.meta(source: relation)
-        end.meta(Attribute::META_OPTIONS.map { |opt| [opt, options[opt]] if options.key?(opt) }.compact.to_h)
+        end.meta(Attribute::META_OPTIONS.map { |opt|
+                   [opt, options[opt]] if options.key?(opt)
+                 }.compact.to_h)
       end
 
       # Specify which key(s) should be the primary key

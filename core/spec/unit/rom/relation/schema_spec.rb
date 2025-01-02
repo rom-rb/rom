@@ -54,8 +54,12 @@ RSpec.describe ROM::Relation, '.schema' do
 
     schema = Test::Users.schema_proc.call
 
-    expect(schema.to_output_hash)
-      .to eql(ROM::Schema::HASH_SCHEMA.schema(id: schema[:id].type, date: schema[:date].meta[:read]))
+    expect(schema.to_output_hash).to eql(
+      ROM::Schema::HASH_SCHEMA.schema(
+        id: schema[:id].type,
+        date: schema[:date].meta[:read]
+      )
+    )
   end
 
   it 'allows setting composite primary key using `primary_key` macro' do
@@ -270,7 +274,7 @@ RSpec.describe ROM::Relation, '.schema' do
       schema_class nil
     end
 
-    expect { Test::Users.schema(:test) {} }
+    expect { Test::Users.schema(:test) { nil } }
       .to raise_error(ROM::MissingSchemaClassError, 'Test::Users relation is missing schema_class')
   end
 

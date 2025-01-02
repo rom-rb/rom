@@ -24,6 +24,7 @@ require 'rom-repository'
 %w[pry-byebug debug pry].each do |gem|
   require gem
 rescue LoadError
+  # ignore
 else
   break
 end

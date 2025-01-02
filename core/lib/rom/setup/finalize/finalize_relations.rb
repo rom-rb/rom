@@ -56,9 +56,11 @@ module ROM
                     "Relation with name #{key.inspect} registered more than once"
             end
 
-            klass.use(:registry_reader, klass: klass, relation_readers_module: relation_readers_module)
+            klass.use(:registry_reader, klass: klass,
+                                        relation_readers_module: relation_readers_module)
 
-            notifications.trigger('configuration.relations.class.ready', relation: klass, adapter: klass.adapter)
+            notifications.trigger('configuration.relations.class.ready', relation: klass,
+                                                                         adapter: klass.adapter)
 
             relations[key] = build_relation(klass, registry)
           end
@@ -116,7 +118,12 @@ module ROM
           dataset: dataset, relation: klass, adapter: klass.adapter
         )
 
-        options = { __registry__: registry, mappers: mapper_registry(rel_key, klass), schema: schema, **plugin_options }
+        options = {
+          __registry__: registry,
+          mappers: mapper_registry(rel_key, klass),
+          schema: schema,
+          **plugin_options
+        }
 
         klass.new(dataset, **options)
       end

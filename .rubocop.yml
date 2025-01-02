@@ -4,6 +4,13 @@ AllCops:
   NewCops: enable
   TargetRubyVersion: 3.1
 
+Gemspec/RequiredRubyVersion:
+  Exclude:
+    - "rom.gemspec"
+    - "repository/rom-repository.gemspec"
+    - "changeset/rom-changeset.gemspec"
+    - "core/rom-core.gemspec"
+
 Layout/FirstArrayElementIndentation:
   EnforcedStyle: consistent
 
@@ -22,10 +29,24 @@ Lint/BooleanSymbol:
 
 Lint/ConstantDefinitionInBlock:
   Exclude:
-    - "spec/**/*_spec.rb"
-    - "core/spec/**/*_spec.rb"
-    - "repository/spec/**/*_spec.rb"
-    - "changeset/spec/**/*_spec.rb"
+    - "spec/**/*.rb"
+    - "core/spec/**/*.rb"
+    - "repository/spec/**/*.rb"
+    - "changeset/spec/**/*.rb"
+
+Lint/EmptyBlock:
+  Exclude:
+    - "spec/**/*.rb"
+    - "core/spec/**/*.rb"
+    - "repository/spec/**/*.rb"
+    - "changeset/spec/**/*.rb"
+
+Lint/EmptyClass:
+  Exclude:
+    - "spec/**/*.rb"
+    - "core/spec/**/*.rb"
+    - "repository/spec/**/*.rb"
+    - "changeset/spec/**/*.rb"
 
 Lint/SuppressedException:
   Exclude:
@@ -55,6 +76,9 @@ Naming/MemoizedInstanceVariableName:
   Enabled: false
 
 Naming/MethodName:
+  Enabled: false
+
+Naming/MethodParameterName:
   Enabled: false
 
 Naming/PredicateName:
@@ -109,6 +133,16 @@ Style/IfUnlessModifier:
 
 Style/LambdaCall:
   Enabled: false
+
+Style/MapIntoArray:
+  Exclude:
+    - "core/spec/**/*.rb"
+
+Style/OpenStructUse:
+  Exclude:
+    - "core/spec/**/*.rb"
+    - "repository/spec/**/*.rb"
+    - "changeset/spec/**/*.rb"
 
 Style/StabbyLambdaParentheses:
   Enabled: false

@@ -24,6 +24,7 @@ module ROM
 
       # @api private
       def initialize
+        super
         @connection = Storage.new
       end
 

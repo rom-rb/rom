@@ -31,7 +31,4 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'dry-struct', '~> 1.0'
   gem.add_dependency 'dry-types', '~> 1.6'
   gem.add_dependency 'transproc', '~> 1.0', '>= 1.1.0'
-
-  gem.add_development_dependency 'rake', '~> 10.3'
-  gem.add_development_dependency 'rspec', '~> 3.5'
 end

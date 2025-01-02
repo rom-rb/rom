@@ -13,6 +13,7 @@ module ROM
     #
     # @api private
     def self.inherited(processor)
+      super
       Mapper.register_processor(processor)
     end
 

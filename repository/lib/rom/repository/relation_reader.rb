@@ -3,8 +3,8 @@
 module ROM
   class Repository
     # @api private
-    class RelationReader < Module
-      extend Dry::Core::ClassAttributes
+    class RelationReader < ::Module
+      extend ::Dry::Core::ClassAttributes
 
       # @api private
       attr_reader :klass
@@ -15,14 +15,14 @@ module ROM
       defines :relation_readers
 
       defines :mutex
-      mutex(Mutex.new)
+      mutex(::Mutex.new)
 
       defines :relation_cache
-      relation_cache(Concurrent::Hash.new)
+      relation_cache(::Concurrent::Hash.new)
 
       module InstanceMethods
         # @api private
-        def set_relation(name)
+        def set_relation(name) # rubocop:disable Naming/AccessorMethodName
           container
             .relations[name]
             .with(auto_struct: auto_struct, struct_namespace: struct_namespace)
@@ -36,11 +36,13 @@ module ROM
 
       # @api private
       def mutex
-        ROM::Repository::RelationReader.mutex
+        ::ROM::Repository::RelationReader.mutex
       end
 
       # @api private
       def initialize(klass, relations)
+        super()
+
         @relations = relations
         mutex.synchronize do
           unless self.class.relation_readers
@@ -65,7 +67,7 @@ module ROM
 
       # @api private
       def build_relation_readers(relations, relation_cache)
-        Module.new do
+        ::Module.new do
           relations.each do |name|
             define_method(name) do
               relation_reader(name, relation_cache)

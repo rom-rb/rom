@@ -18,4 +18,5 @@ begin
     task.options << '--display-cop-names'
   end
 rescue LoadError
+  # ignore
 end

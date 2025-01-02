@@ -84,6 +84,7 @@ module ROM
 
       # @api private
       def initialize(mapper, header)
+        super()
         @mapper = mapper
         @header = header
         @model = header.model

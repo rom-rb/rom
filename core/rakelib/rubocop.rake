@@ -16,4 +16,5 @@ begin
     end
   end
 rescue LoadError
+  # ignore
 end

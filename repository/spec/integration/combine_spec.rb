@@ -65,7 +65,7 @@ RSpec.describe ROM::Relation, '#combine' do
     let(:message) { ':poztz is not a valid aggregate node name' }
 
     it 'raises arg error ' do
-      expect { combined.node(:poztz) {} }.to raise_error(ArgumentError, message)
+      expect { combined.node(:poztz) { nil } }.to raise_error(ArgumentError, message)
     end
   end
 end

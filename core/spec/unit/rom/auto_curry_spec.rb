@@ -15,16 +15,16 @@ RSpec.describe ROM::AutoCurry do
 
       def initialize(*); end
 
-      def arity_0
+      def arity0
         0
       end
 
-      def arity_1(x)
-        x
+      def arity1(foo)
+        foo
       end
 
-      def arity_2(x, y)
-        [x, y]
+      def arity2(foo, bar)
+        [foo, bar]
       end
 
       def arity_many(*args)
@@ -35,11 +35,11 @@ RSpec.describe ROM::AutoCurry do
         yield(arg)
       end
 
-      def repeated(x); end
+      def repeated(xyz); end
 
       undef repeated
 
-      def repeated(x); end
+      def repeated(xyz); end
 
       protected
 
@@ -51,21 +51,21 @@ RSpec.describe ROM::AutoCurry do
 
   it 'registers auto-curried methods' do
     expect(object.class.auto_curried_methods)
-      .to eql(%i[arity_1 arity_2 arity_many yielding_block repeated].to_set)
+      .to eql(%i[arity1 arity2 arity_many yielding_block repeated].to_set)
   end
 
   it 'auto-curries method with arity == 0' do
-    expect(object.arity_0).to be(0)
+    expect(object.arity0).to be(0)
   end
 
   it 'auto-curries method with arity == 1' do
-    expect(object.arity_1).to be_instance_of(klass)
-    expect(object.arity_1(1)).to be(1)
+    expect(object.arity1).to be_instance_of(klass)
+    expect(object.arity1(1)).to be(1)
   end
 
   it 'auto-curries method with arity > 0' do
-    expect(object.arity_2).to be_instance_of(klass)
-    expect(object.arity_2(1, 2)).to eql([1, 2])
+    expect(object.arity2).to be_instance_of(klass)
+    expect(object.arity2(1, 2)).to eql([1, 2])
   end
 
   it 'auto-curries method with arity < 0' do

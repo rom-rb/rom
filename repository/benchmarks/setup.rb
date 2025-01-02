@@ -11,7 +11,12 @@ require 'rom-repository'
 require 'active_record'
 require 'logger'
 require 'hotch'
-begin; require 'byebug'; rescue LoadError; end
+begin
+  require 'byebug'
+rescue LoadError
+  # ignore
+end
+
 require_relative 'gc_suite'
 
 def benchmark(title)
