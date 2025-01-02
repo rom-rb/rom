@@ -15,6 +15,7 @@ module ROM
     # Global class-level API for relation classes
     #
     # @api public
+    # rubocop:disable Metrics/ModuleLength
     module ClassInterface
       extend Notifications::Listener
 
@@ -91,6 +92,7 @@ module ROM
       # @param [Boolean] infer Whether to do an automatic schema inferring
       #
       # @api public
+      # rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity
       def schema(dataset = nil, as: nil, infer: false, &)
         if defined?(@schema) && !block_given? && !infer
           @schema
@@ -115,6 +117,7 @@ module ROM
           end
         end
       end
+      # rubocop:enable Metrics/AbcSize, Metrics/PerceivedComplexity
 
       # Assign a schema to a relation class
       #
@@ -187,6 +190,7 @@ module ROM
       # @return [Symbol] view method name
       #
       # @api public
+      # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/PerceivedComplexity
       def view(*args, &block)
         if args.size == 1 && block.arity.positive?
           raise ArgumentError, 'schema attribute names must be provided as the second argument'
@@ -222,6 +226,7 @@ module ROM
 
         name
       end
+      # rubocop:enable Metrics/AbcSize, Metrics/MethodLength, Metrics/PerceivedComplexity
 
       # Dynamically define a method that will forward to the dataset and wrap
       # response in the relation itself
@@ -319,5 +324,6 @@ module ROM
         INVALID_RELATIONS_NAMES.include?(relation.to_sym)
       end
     end
+    # rubocop:enable Metrics/ModuleLength
   end
 end

@@ -18,7 +18,7 @@ module ROM
     # @api public
     class Linter
       # A failure raised by +complain+
-      Failure = Class.new(StandardError)
+      Failure = ::Class.new(::StandardError)
 
       # Iterate over all lint methods
       #

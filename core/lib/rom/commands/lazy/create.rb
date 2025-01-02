@@ -14,6 +14,7 @@ module ROM
         # @return [Hash,Array<Hash>]
         #
         # @api public
+        # rubocop:disable Metrics/AbcSize
         def call(*args)
           first = args.first
           last = args.last
@@ -29,6 +30,7 @@ module ROM
             command.call(input, *args[1..size - 1])
           end
         end
+        # rubocop:enable Metrics/AbcSize
       end
     end
   end

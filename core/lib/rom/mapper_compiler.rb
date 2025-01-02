@@ -42,6 +42,7 @@ module ROM
       __send__("visit_#{name}", node)
     end
 
+    # rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity
     def visit_relation(node)
       rel_name, header, meta_options = node
       name = meta_options[:combine_name] || meta_options[:alias] || rel_name
@@ -68,6 +69,7 @@ module ROM
         options
       end
     end
+    # rubocop:enable Metrics/AbcSize, Metrics/PerceivedComplexity
 
     def visit_attribute(node)
       name, _, meta_options = node

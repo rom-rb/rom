@@ -26,6 +26,7 @@ module ROM
       #
       # @api public
       def initialize(dataset, data)
+        super()
         @dataset = dataset
         @data = data
       end
@@ -35,7 +36,7 @@ module ROM
       # @api public
       def lint_each
         result = []
-        dataset.each do |tuple|
+        dataset.each do |tuple| # rubocop:disable Style/MapIntoArray
           result << tuple
         end
         return if result == data

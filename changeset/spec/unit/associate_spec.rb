@@ -16,7 +16,7 @@ RSpec.describe ROM::Changeset, '#associate' do
   end
 
   before do
-    [:todos, :projects, :people].each { |table| conn.drop_table?(table) }
+    %i[todos projects people].each { |table| conn.drop_table?(table) }
 
     conn.create_table :people do
       primary_key :id

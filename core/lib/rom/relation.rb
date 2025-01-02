@@ -24,6 +24,7 @@ require 'rom/association_set'
 require 'rom/types'
 require 'rom/schema'
 
+# rubocop:disable Metrics/ClassLength
 module ROM
   # Base relation class
   #
@@ -644,3 +645,4 @@ module ROM
     end
   end
 end
+# rubocop:enable Metrics/ClassLength

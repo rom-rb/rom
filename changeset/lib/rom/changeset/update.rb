@@ -62,6 +62,8 @@ module ROM
       # @return [Hash]
       #
       # @api public
+      #
+      # rubocop:disable Metrics/AbcSize
       def diff
         @diff ||=
           begin
@@ -73,9 +75,10 @@ module ROM
             new_tuple = data_tuple.to_a.select { |k, _| data_keys.include?(k) }
             ori_tuple = source.to_a.select { |k, _| data_keys.include?(k) }
 
-            Hash[new_tuple - (new_tuple & ori_tuple)]
+            (new_tuple - (new_tuple & ori_tuple)).to_h
           end
       end
+      # rubocop:enable Metrics/AbcSize
     end
   end
 end

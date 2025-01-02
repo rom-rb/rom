@@ -15,6 +15,8 @@ module ROM
       # @return [Object]
       #
       # @api public
+      #
+      # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       def call(*args)
         response = left.call(*args)
 
@@ -35,6 +37,7 @@ module ROM
         end
       end
       alias_method :[], :call
+      # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
       # @api private
       def graph?

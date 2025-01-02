@@ -26,6 +26,8 @@ module ROM
       # @return [Hash]
       #
       # @api private
+      #
+      # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       def run!
         commands = @command_classes.map do |klass|
           relation = @relations[klass.relation]
@@ -60,6 +62,7 @@ module ROM
 
         registry
       end
+      # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
     end
   end
 end

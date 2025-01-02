@@ -31,6 +31,7 @@ module ROM
   # schemas are merged, and we know which attributes belong to which relation.
   #
   # @api public
+  # rubocop:disable Metrics/ClassLength
   class Schema
     include Memoizable
 
@@ -207,7 +208,11 @@ module ROM
     #
     # @api public
     def to_h
-      each_with_object({}) { |attr, h| h[attr.name] = attr }
+      if block_given?
+        super
+      else
+        super { [_1.name, _1] }
+      end
     end
 
     # Return attribute
@@ -389,7 +394,7 @@ module ROM
     # @return [self]
     #
     # @api private
-    def finalize_attributes!(gateway: nil, relations: nil)
+    def finalize_attributes!(gateway: nil, **)
       inferrer.(self, gateway).each { |key, value| set!(key, value) }
 
       yield if block_given?
@@ -406,7 +411,7 @@ module ROM
     # @return [self]
     #
     # @api private
-    def finalize_associations!(relations:)
+    def finalize_associations!(**)
       set!(:associations, yield) if associations.any?
       self
     end
@@ -420,7 +425,7 @@ module ROM
     # @api private
     def to_output_hash
       HASH_SCHEMA.schema(
-        map { |attr| [attr.key, attr.to_read_type] }.to_h
+        to_h { |attr| [attr.key, attr.to_read_type] }
       )
     end
 
@@ -434,7 +439,7 @@ module ROM
     # @api private
     def to_input_hash
       HASH_SCHEMA.schema(
-        map { |attr| [attr.name, attr.to_write_type] }.to_h
+        to_h { |attr| [attr.name, attr.to_write_type] }
       )
     end
 
@@ -457,7 +462,7 @@ module ROM
 
     # @api private
     def count_index
-      map(&:name).to_h { |name| [name, count { |attr| attr.name == name }] }
+      to_h { |attr| [attr.name, count { |a| a.name.eql?(attr.name) }] }
     end
 
     # @api private
@@ -487,4 +492,5 @@ module ROM
 
     memoize :count_index, :name_index, :source_index, :to_ast, :to_input_hash, :to_output_hash
   end
+  # rubocop:enable Metrics/ClassLength
 end

@@ -94,7 +94,8 @@ module ROM
             end
           rescue KeyError
             raise ArgumentError,
-                  "+#{type.inspect}+ is not a valid changeset type. Must be one of: #{TYPES.keys.inspect}"
+                  "+#{type.inspect}+ is not a valid changeset type. " \
+                  "Must be one of: #{TYPES.keys.inspect}"
           end
         end
       end

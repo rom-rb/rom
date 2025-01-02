@@ -25,6 +25,7 @@ module ROM
         end
 
         # @api private
+        # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/PerceivedComplexity
         def build_command(registry, spec, other, path)
           cmd_opts, nodes = other
 
@@ -58,6 +59,7 @@ module ROM
             command
           end
         end
+        # rubocop:enable Metrics/AbcSize, Metrics/MethodLength, Metrics/PerceivedComplexity
       end
     end
   end

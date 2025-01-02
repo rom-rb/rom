@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Style/MultilineBlockChain
 RSpec.describe ROM::Relation, '#combine_with' do
   include_context 'gateway only'
   include_context 'users and tasks'
@@ -170,3 +171,4 @@ RSpec.describe ROM::Relation, '#combine_with' do
     expect(result).to match_array(expected)
   end
 end
+# rubocop:enable Style/MultilineBlockChain

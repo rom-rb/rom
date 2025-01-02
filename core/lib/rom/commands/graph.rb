@@ -49,6 +49,8 @@ module ROM
       # @return [Array] nested array with command results
       #
       # @api public
+      #
+      # rubocop:disable Metrics/PerceivedComplexity
       def call(*args)
         left = root.call(*args)
 
@@ -73,6 +75,7 @@ module ROM
           [left, right]
         end
       end
+      # rubocop:enable Metrics/PerceivedComplexity
 
       # @api private
       def graph?

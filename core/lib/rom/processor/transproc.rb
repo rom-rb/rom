@@ -13,6 +13,7 @@ module ROM
     # @see https://github.com/solnic/transproc too
     #
     # @private
+    # rubocop:disable Metrics/ClassLength
     class Transproc < Processor
       include ::Transproc::Composer
 
@@ -97,6 +98,7 @@ module ROM
       # @return [Transproc::Function]
       #
       # @api private
+      # rubocop:disable Metrics/AbcSize
       def to_transproc
         compose(t(:identity)) do |ops|
           combined = header.combined
@@ -106,6 +108,7 @@ module ROM
           ops << header.postprocessed.map { |attr| visit(attr, true) }
         end
       end
+      # rubocop:enable Metrics/AbcSize
 
       private
 
@@ -131,6 +134,8 @@ module ROM
       # @param [Header::Attribute] attribute
       #
       # @api private
+      #
+      # rubocop:disable Metrics/AbcSize
       def visit_attribute(attribute)
         coercer = attribute.meta[:coercer]
         if attribute.union?
@@ -144,6 +149,7 @@ module ROM
           t(:map_value, attribute.name, t(:"to_#{attribute.type}"))
         end
       end
+      # rubocop:enable Metrics/AbcSize
 
       # Visit hash attribute
       #
@@ -233,7 +239,7 @@ module ROM
       #                             function that is applied to the whole relation
       #
       # @api private
-      def visit_group(attribute, preprocess = false)
+      def visit_group(attribute, preprocess = false) # rubocop:disable Style/OptionalBooleanParameter
         if preprocess
           name = attribute.name
           header = attribute.header
@@ -263,7 +269,7 @@ module ROM
       #                             function that is applied to the whole relation
       #
       # @api private
-      def visit_ungroup(attribute, preprocess = false)
+      def visit_ungroup(attribute, preprocess = false) # rubocop:disable Style/OptionalBooleanParameter
         if preprocess
           name = attribute.name
           header = attribute.header
@@ -291,7 +297,7 @@ module ROM
       #                             function that is applied to the whole relation
       #
       # @api private
-      def visit_fold(attribute, preprocess = false)
+      def visit_fold(attribute, preprocess = false) # rubocop:disable Style/OptionalBooleanParameter
         if preprocess
           name = attribute.name
           keys = attribute.tuple_keys
@@ -313,7 +319,8 @@ module ROM
       #                             function that is applied to the whole relation
       #
       # @api private
-      def visit_unfold(attribute, preprocess = false)
+      # rubocop:disable Metrics/AbcSize
+      def visit_unfold(attribute, preprocess = false) # rubocop:disable Style/OptionalBooleanParameter
         return unless preprocess
 
         name = attribute.name
@@ -332,6 +339,7 @@ module ROM
           ops << t(:ungroup, name, [key])
         end
       end
+      # rubocop:enable Metrics/AbcSize
 
       # Visit excluded attribute
       #
@@ -412,5 +420,6 @@ module ROM
         Functions[*args]
       end
     end
+    # rubocop:enable Metrics/ClassLength
   end
 end

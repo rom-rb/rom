@@ -139,6 +139,7 @@ module ROM
       # @return [Dry::Types::Type] Type instance
       #
       # @api private
+      # rubocop:disable Metrics/AbcSize
       def build_type(type, options = EMPTY_HASH)
         if options[:read]
           type.meta(source: relation, read: options[:read])
@@ -150,6 +151,7 @@ module ROM
                    [opt, options[opt]] if options.key?(opt)
                  }.compact.to_h)
       end
+      # rubocop:enable Metrics/AbcSize
 
       # Specify which key(s) should be the primary key
       #

@@ -95,6 +95,7 @@ module ROM
       # @return [Relation]
       #
       # @api public
+      # rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity
       def node(name, &)
         if name.is_a?(Symbol) && !nodes.map { |n| n.name.key }.include?(name)
           raise ArgumentError, "#{name.inspect} is not a valid aggregate node name"
@@ -118,6 +119,7 @@ module ROM
 
         with_nodes(new_nodes)
       end
+      # rubocop:enable Metrics/AbcSize, Metrics/PerceivedComplexity
 
       # Return a `:create` command that can insert data from a nested hash.
       #

@@ -78,6 +78,7 @@ module ROM
       end
 
       # @api private
+      # rubocop:disable Metrics/AbcSize
       def merge_attributes(defined, inferred)
         type_lookup = lambda do |attrs, name|
           attrs.find { |a| a.name == name }.type
@@ -99,6 +100,7 @@ module ROM
           defined_names.include?(attr.name)
         end
       end
+      # rubocop:enable Metrics/AbcSize
     end
   end
 end

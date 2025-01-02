@@ -13,6 +13,7 @@ module ROM
     # TODO: break this madness down into smaller pieces
     #
     # @api private
+    # rubocop:disable Metrics/ClassLength
     class AttributeDSL
       include ModelDSL
 
@@ -486,5 +487,6 @@ module ROM
         end
       end
     end
+    # rubocop:enable Metrics/ClassLength
   end
 end

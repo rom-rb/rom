@@ -30,7 +30,7 @@ module ROM
 
       # @api private
       def fetch_or_store(*args, &)
-        cache.fetch_or_store([namespace, args.hash].hash, &)
+        cache.fetch_or_store([namespace, args].hash, &)
       end
 
       # @api private

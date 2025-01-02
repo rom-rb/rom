@@ -265,6 +265,8 @@ module ROM
     # This method will apply before/after hooks automatically
     #
     # @api public
+    #
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/PerceivedComplexity
     def call(*args, &)
       tuples =
         if hooks?
@@ -298,6 +300,8 @@ module ROM
         tuples
       end
     end
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength, Metrics/PerceivedComplexity
+
     alias_method :[], :call
 
     # Curry this command with provided args

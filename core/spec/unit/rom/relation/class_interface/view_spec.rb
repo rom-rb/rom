@@ -62,7 +62,9 @@ RSpec.describe ROM::Relation, '.view' do
       new_rel = relation_class.new([{ id: 2 }])
       ids_schema = relation_class.schemas[:ids_for_names]
 
-      expect(ids_schema).to receive(:call).with(relation.restrict(name: ['Jane'])).and_return(new_rel)
+      expect(ids_schema).to receive(:call).with(
+        relation.restrict(name: ['Jane'])
+      ).and_return(new_rel)
       expect(relation.ids_for_names(['Jane'])).to eql(new_rel)
     end
   end

@@ -128,6 +128,8 @@ module ROM
     private
 
     # @api private
+    #
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/PerceivedComplexity
     def visit_relation(node, parent_relation = nil)
       name, header, meta = node
       other = header.map { |attr| visit(attr, name) }.compact
@@ -167,6 +169,7 @@ module ROM
         [name, id]
       end
     end
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength, Metrics/PerceivedComplexity
 
     # @api private
     def visit_attribute(*_args)
@@ -187,6 +190,8 @@ module ROM
     # @return [ROM::Command]
     #
     # @api private
+    #
+    # rubocop:disable Metrics/AbcSize
     def register_command(rel_name, type, rel_meta, parent_relation = nil)
       relation = relations[rel_name]
 
@@ -216,6 +221,7 @@ module ROM
         registry[rel_name][type] = klass.build(relation)
       end
     end
+    # rubocop:enable Metrics/AbcSize
 
     # Return default result type
     #

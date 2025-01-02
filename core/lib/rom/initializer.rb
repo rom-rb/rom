@@ -32,13 +32,13 @@ module ROM
         undef_method(:with) if method_defined?(:with)
 
         class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
-          def with(**new_options)
-            if new_options.empty?
-              self
-            else
-              self.class.new(#{seq_names}**options, **new_options)
-            end
-          end
+          def with(**new_options)                                  # def with(**new_options)
+            if new_options.empty?                                  #   if new_options.empty?
+              self                                                 #     self
+            else                                                   #   else
+              self.class.new(#{seq_names}**options, **new_options) #     self.class.new(relation, **options, **new_options)
+            end                                                    #   end
+          end                                                      # end
         RUBY
       end
     end

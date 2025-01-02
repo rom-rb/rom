@@ -87,7 +87,7 @@ module ROM
       #
       # @return [Pipe]
       def self.default_pipe(context)
-        !pipes.empty? ? pipes.map { |p| p.bind(context) }.reduce(:>>) : EMPTY_PIPE
+        pipes.empty? ? EMPTY_PIPE : pipes.map { |p| p.bind(context) }.reduce(:>>)
       end
 
       # @api private

@@ -5,7 +5,8 @@ require File.expand_path('lib/rom/changeset/version', __dir__)
 Gem::Specification.new do |gem|
   gem.name          = 'rom-changeset'
   gem.summary       = 'Changeset abstraction for rom-rb'
-  gem.description   = 'rom-changeset adds support for preprocessing data on top of rom-rb repositories'
+  gem.description   = 'rom-changeset adds support for preprocessing data on ' \
+                      'top of rom-rb repositories'
   gem.author        = 'Piotr Solnica'
   gem.email         = 'piotr.solnica+oss@gmail.com'
   gem.homepage      = 'http://rom-rb.org'

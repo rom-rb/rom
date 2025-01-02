@@ -14,6 +14,7 @@ module ROM
         # @return [Hash, Array<Hash>]
         #
         # @api public
+        # rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity
         def call(*args)
           first = args.first
           last = args.last
@@ -40,6 +41,7 @@ module ROM
             end
           end
         end
+        # rubocop:enable Metrics/AbcSize, Metrics/PerceivedComplexity
       end
     end
   end

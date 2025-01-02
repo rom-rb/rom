@@ -73,7 +73,7 @@ module ROM
       def inherited(klass)
         super
 
-        return if self === Repository
+        return if self === Repository # rubocop:disable Style/CaseEquality
 
         klass.extend(::Dry::Core::Cache)
         klass.commands(*commands)
@@ -103,6 +103,8 @@ module ROM
       # @return [Array<Symbol>] A list of defined command names
       #
       # @api public
+      #
+      # rubocop:disable Metrics/MethodLength
       def commands(*names, mapper: nil, use: nil, plugins_options: EMPTY_HASH, **opts)
         if names.any? || opts.any?
           @commands = names + opts.to_a
@@ -131,6 +133,7 @@ module ROM
           @commands ||= []
         end
       end
+      # rubocop:enable Metrics/MethodLength
 
       # @api public
       def use(plugin, **options)

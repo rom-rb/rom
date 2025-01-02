@@ -68,6 +68,7 @@ module ROM
         # @param [Integer] index Optional index
         #
         # @return [Hash]
+        # rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity
         def call(input, index = nil)
           value =
             begin
@@ -88,6 +89,7 @@ module ROM
             value
           end
         end
+        # rubocop:enable Metrics/AbcSize, Metrics/PerceivedComplexity
       end
     end
   end

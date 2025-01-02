@@ -19,6 +19,7 @@ module ROM
       # @return [Dataset]
       #
       # @api public
+      # rubocop:disable Metrics/AbcSize
       def join(*args)
         left, right = args.size > 1 ? args : [self, args.first]
 
@@ -33,6 +34,7 @@ module ROM
 
         self.class.new(tuples, **options)
       end
+      # rubocop:enable Metrics/AbcSize
 
       # Restrict a dataset
       #

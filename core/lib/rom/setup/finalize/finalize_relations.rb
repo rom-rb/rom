@@ -40,6 +40,8 @@ module ROM
       # @return [Hash]
       #
       # @api private
+      #
+      # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       def run!
         relation_registry = RelationRegistry.new do |registry, relations|
           relation_readers_module = BuildRelationReaders.build(relation_names)
@@ -85,10 +87,13 @@ module ROM
 
         relation_registry
       end
+      # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
       # @return [ROM::Relation]
       #
       # @api private
+      #
+      # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
       def build_relation(klass, registry)
         # TODO: raise a meaningful error here and add spec covering the case
         #       where klass' gateway points to non-existant repo
@@ -133,6 +138,7 @@ module ROM
 
         klass.new(dataset, **options)
       end
+      # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
 
       # @api private
       def mapper_registry(rel_key, rel_class)

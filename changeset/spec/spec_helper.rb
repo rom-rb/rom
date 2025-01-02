@@ -21,6 +21,7 @@ Warning.process { |w| raise w } if ENV['FAIL_ON_WARNINGS'].eql?('true')
 %w[pry-byebug debug pry].each do |gem|
   require gem
 rescue LoadError
+  # ignore
 else
   break
 end

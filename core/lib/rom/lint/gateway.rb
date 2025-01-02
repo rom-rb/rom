@@ -35,6 +35,7 @@ module ROM
       # @param [Class] gateway
       # @param [String] uri optional
       def initialize(identifier, gateway, uri = nil)
+        super()
         @identifier = identifier
         @gateway = gateway
         @uri = uri
@@ -89,7 +90,8 @@ module ROM
       # Lint: Ensure +gateway_instance+ returns adapter name
       def lint_adapter_reader
         if gateway_instance.adapter != identifier
-          complain "#{gateway_instance} must have the adapter identifier set to #{identifier.inspect}"
+          complain "#{gateway_instance} must have the adapter " \
+                   "identifier set to #{identifier.inspect}"
         end
       rescue MissingAdapterIdentifierError
         complain "#{gateway_instance} is missing the adapter identifier"

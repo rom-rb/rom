@@ -71,6 +71,9 @@ Metrics/MethodLength:
 Naming/FileName:
   Exclude:
     - "lib/dry-*.rb"
+    - "changeset/lib/rom-changeset.rb"
+    - "core/lib/rom-core.rb"
+    - "repository/lib/rom-repository.rb"
 
 Naming/MemoizedInstanceVariableName:
   Enabled: false
