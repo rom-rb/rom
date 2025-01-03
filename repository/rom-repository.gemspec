@@ -22,6 +22,6 @@ Gem::Specification.new do |gem|
   }
 
   gem.add_dependency 'dry-core', '~> 1.0'
-  gem.add_dependency 'dry-initializer', '~> 3.0', '>= 3.0.1'
-  gem.add_dependency 'rom-core', '~> 5.3', '>= 5.3.3'
+  gem.add_dependency 'dry-initializer', '~> 3.2'
+  gem.add_dependency 'rom-core', '~> 5.4'
 end

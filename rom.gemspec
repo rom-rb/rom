@@ -20,7 +20,7 @@ Gem::Specification.new do |gem|
     'rubygems_mfa_required' => 'true'
   }
 
-  gem.add_dependency 'rom-changeset', '~> 5.3', '>= 5.3.0'
-  gem.add_dependency 'rom-core', '~> 5.3', '>= 5.3.3'
-  gem.add_dependency 'rom-repository', '~> 5.3', '>= 5.3.1'
+  gem.add_dependency 'rom-changeset', '~> 5.4'
+  gem.add_dependency 'rom-core', '~> 5.4'
+  gem.add_dependency 'rom-repository', '~> 5.4'
 end

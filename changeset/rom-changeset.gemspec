@@ -23,6 +23,6 @@ Gem::Specification.new do |gem|
   }
 
   gem.add_dependency 'dry-core', '~> 1.0'
-  gem.add_dependency 'rom-core', '~> 5.3'
-  gem.add_dependency 'transproc', '~> 1.0', '>= 1.1.0'
+  gem.add_dependency 'rom-core', '~> 5.4'
+  gem.add_dependency 'transproc', '~> 1.1'
 end

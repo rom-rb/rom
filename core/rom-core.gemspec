@@ -27,8 +27,8 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'dry-configurable', '~> 1.0'
   gem.add_dependency 'dry-core', '~> 1.0'
   gem.add_dependency 'dry-inflector', '~> 1.0'
-  gem.add_dependency 'dry-initializer', '~> 3.0', '>= 3.2.0'
+  gem.add_dependency 'dry-initializer', '~> 3.2'
   gem.add_dependency 'dry-struct', '~> 1.0'
   gem.add_dependency 'dry-types', '~> 1.6'
-  gem.add_dependency 'transproc', '~> 1.0', '>= 1.1.0'
+  gem.add_dependency 'transproc', '~> 1.1'
 end
