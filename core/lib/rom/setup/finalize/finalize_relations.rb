@@ -9,18 +9,6 @@ module ROM
     class FinalizeRelations
       attr_reader :notifications
 
-      module BuildRelationReaders
-        def self.build(relations)
-          Module.new do
-            relations.each do |name|
-              define_method(name) do
-                __registry__[name]
-              end
-            end
-          end
-        end
-      end
-
       # Build relation registry of specified descendant classes
       #
       # This is used by the setup
@@ -44,7 +32,6 @@ module ROM
       # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       def run!
         relation_registry = RelationRegistry.new do |registry, relations|
-          relation_readers_module = BuildRelationReaders.build(relation_names)
           @relation_classes.each do |klass|
             unless klass.adapter
               raise MissingAdapterIdentifierError,
@@ -58,11 +45,7 @@ module ROM
                     "Relation with name #{key.inspect} registered more than once"
             end
 
-            klass.use(
-              :registry_reader,
-              klass: klass,
-              relation_readers_module: relation_readers_module
-            )
+            klass.use(:registry_reader, relations: relation_names)
 
             notifications.trigger(
               'configuration.relations.class.ready',
