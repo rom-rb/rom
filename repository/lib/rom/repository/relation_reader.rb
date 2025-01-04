@@ -3,7 +3,7 @@
 module ROM
   class Repository
     # @api private
-    class RelationReader < Module
+    class RelationReader < ::Module
       # @api private
       attr_reader :klass
 
@@ -22,6 +22,7 @@ module ROM
 
       # @api private
       def initialize(klass, relations)
+        super()
         @klass = klass
         @relations = relations
         define_readers!

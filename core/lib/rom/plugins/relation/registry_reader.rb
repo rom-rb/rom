@@ -18,6 +18,7 @@ module ROM
 
         # @api private
         def initialize(relations:)
+          super()
           @relations = relations
           define_readers!
         end
