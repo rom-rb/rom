@@ -14,9 +14,9 @@ module ROM
         EMPTY_REGISTRY = RelationRegistry.build(EMPTY_HASH).freeze
 
         # @api private
-        def initialize(klass:, relation_readers_module:)
+        def initialize(readers:)
           super()
-          klass.include relation_readers_module
+          include readers
         end
 
         # @api private

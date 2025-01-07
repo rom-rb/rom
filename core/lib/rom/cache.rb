@@ -46,7 +46,7 @@ module ROM
 
     # @api private
     def initialize
-      @objects = Concurrent::Map.new
+      @objects = ::Concurrent::Map.new
       @namespaced = {}
     end
 

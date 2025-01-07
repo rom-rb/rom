@@ -80,8 +80,9 @@ module ROM
 
     # @!method self.relation_reader
     #   Get or set relation reader module
-    #   @return [RelationReader]
+    #   @return [Module]
     defines :relation_reader
+    relation_reader RelationReader
 
     struct_namespace ROM::Struct
 
