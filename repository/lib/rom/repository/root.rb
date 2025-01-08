@@ -43,9 +43,10 @@ module ROM
       #     @return [Symbol]
       defines :root
 
-      # @!attribute [r] root
-      #   @return [Relation] The root relation
-      attr_reader :root
+      # @api public
+      def self.new(*args, **kwargs)
+        super(*args, **kwargs, root: root)
+      end
 
       # Sets descendant root relation
       #
@@ -53,12 +54,6 @@ module ROM
       def self.inherited(klass)
         super
         klass.root(root)
-      end
-
-      # @see Repository#initialize
-      def initialize(*, **)
-        super
-        @root = prepare_relation(self.class.root)
       end
     end
   end

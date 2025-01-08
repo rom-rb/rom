@@ -59,17 +59,21 @@ module ROM
       end
 
       # @api private
-      def initialize(relations:, cache:)
+      def initialize(relations:, cache:, root: Undefined)
         super()
 
-        add_readers(relations, cache)
+        add_readers(relations, cache, root)
       end
 
       # @api private
-      def add_readers(relations, cache)
+      def add_readers(relations, cache, root)
         include cache.fetch_or_store(:relation_readers) {
           Readers.new(relations)
         }
+
+        unless Undefined.equal?(root)
+          define_method(:root) { |**kwargs| public_send(root, **kwargs) }
+        end
       end
     end
   end

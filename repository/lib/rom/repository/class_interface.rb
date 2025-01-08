@@ -56,13 +56,14 @@ module ROM
       #   @option options [Boolean] :auto_struct Enable/Disable auto-struct mapping
       #
       # @api public
-      def new(container = nil, **options)
+      def new(container = nil, root: Undefined, **options)
         container ||= options.fetch(:container)
 
         unless self < relation_reader
           include relation_reader.new(
             relations: container.relations.elements.keys,
-            cache: container.cache
+            cache: container.cache,
+            root: root
           )
         end
 
