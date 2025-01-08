@@ -347,9 +347,9 @@ module ROM
     # @return [Schema]
     #
     # @api public
-    def uniq(&block)
-      if block
-        new(attributes.uniq(&block))
+    def uniq(&)
+      if block_given?
+        new(attributes.uniq(&))
       else
         new(attributes.uniq(&:name))
       end

@@ -10,7 +10,7 @@ module ROM
     #
     # @api public
     class DSL < ::BasicObject
-      KERNEL_METHODS = %i[extend method].freeze
+      KERNEL_METHODS = %i[extend method block_given?].freeze
       KERNEL_METHODS.each { |m| define_method(m, ::Kernel.instance_method(m)) }
 
       extend Initializer
@@ -182,8 +182,8 @@ module ROM
       end
 
       # @api private
-      def call(&block)
-        instance_exec(&block) if block
+      def call(&)
+        instance_exec(&) if block_given?
         instance_exec(&definition) if definition
 
         schema_class.define(relation, **opts) do |schema|

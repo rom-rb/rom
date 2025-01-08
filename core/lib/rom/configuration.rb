@@ -50,12 +50,12 @@ module ROM
     # @return [Configuration]
     #
     # @api private
-    def initialize(*args, &block)
+    def initialize(*args, &)
       @environment = Environment.new(*args)
       @notifications = Notifications.event_bus(:configuration)
       @setup = Setup.new(notifications)
 
-      block&.call(self)
+      yield self if block_given?
     end
 
     # Apply a plugin to the configuration

@@ -12,9 +12,9 @@ module ROM
       # @param [String] name
       #
       # @api private
-      def define_test_method(name, &block)
+      def define_test_method(name, &)
         define_method "test_#{name}" do
-          instance_eval(&block)
+          instance_eval(&)
         rescue ROM::Lint::Linter::Failure => e
           raise Minitest::Assertion, e.message
         end

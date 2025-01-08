@@ -77,8 +77,8 @@ module ROM
   # @see http://dry-rb.org/gems/dry-types dry-types
   #
   # @api public
-  class Struct < Dry::Struct
-    MissingAttribute = Class.new(NameError) do
+  class Struct < ::Dry::Struct
+    MissingAttribute = ::Class.new(::NameError) do
       def initialize(&block)
         super
         @message_proc = block
@@ -107,7 +107,7 @@ module ROM
 
     def method_missing(*)
       super
-    rescue NameError => e
+    rescue ::NameError => e
       raise(MissingAttribute.new { "#{e.message} (attribute not loaded?)" })
     end
   end

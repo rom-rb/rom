@@ -89,11 +89,11 @@ module ROM
       # @api public
       def attribute(name, options = EMPTY_HASH, &block)
         with_attr_options(name, options) do |attr_options|
-          if options[:type] && block
+          if options[:type] && block_given?
             raise ArgumentError,
                   "can't specify type and block at the same time"
           end
-          attr_options[:coercer] = block if block
+          attr_options[:coercer] = block if block_given?
           add_attribute(name, attr_options)
         end
       end
@@ -140,7 +140,7 @@ module ROM
       #                                  its attributes
       #
       # @api public
-      def embedded(name, options, &block)
+      def embedded(name, options, &)
         with_attr_options(name) do |attr_options|
           mapper = options[:mapper]
 
@@ -150,7 +150,7 @@ module ROM
               mapper, name, embedded_options.update(attr_options)
             )
           else
-            dsl = new(options, &block)
+            dsl = new(options, &)
             attr_options.update(options)
             add_attribute(
               name, { header: dsl.header, type: :array }.update(attr_options)
@@ -178,7 +178,7 @@ module ROM
       # @see AttributeDSL#embedded
       #
       # @api public
-      def wrap(*args, &block)
+      def wrap(*args, &)
         ensure_mapper_configuration('wrap', args, block_given?)
 
         with_name_or_options(*args) do |name, options, mapper|
@@ -187,7 +187,7 @@ module ROM
           if mapper
             attributes_from_mapper(mapper, name, wrap_options)
           else
-            dsl(name, wrap_options, &block)
+            dsl(name, wrap_options, &)
           end
         end
       end
@@ -211,14 +211,14 @@ module ROM
       # @see AttributeDSL#embedded
       #
       # @api public
-      def unwrap(*args, &block)
+      def unwrap(*args, &)
         with_name_or_options(*args) do |name, options, mapper|
           unwrap_options = { type: :hash, unwrap: true }.update(options)
 
           if mapper
             attributes_from_mapper(mapper, name, unwrap_options)
           else
-            dsl(name, unwrap_options, &block)
+            dsl(name, unwrap_options, &)
           end
         end
       end
@@ -240,7 +240,7 @@ module ROM
       # @see AttributeDSL#embedded
       #
       # @api public
-      def group(*args, &block)
+      def group(*args, &)
         ensure_mapper_configuration('group', args, block_given?)
 
         with_name_or_options(*args) do |name, options, mapper|
@@ -249,7 +249,7 @@ module ROM
           if mapper
             attributes_from_mapper(mapper, name, group_options)
           else
-            dsl(name, group_options, &block)
+            dsl(name, group_options, &)
           end
         end
       end
@@ -265,10 +265,10 @@ module ROM
       # @see AttributeDSL#embedded
       #
       # @api public
-      def ungroup(*args, &block)
+      def ungroup(*args, &)
         with_name_or_options(*args) do |name, options, *|
           ungroup_options = { type: :array, ungroup: true }.update(options)
-          dsl(name, ungroup_options, &block)
+          dsl(name, ungroup_options, &)
         end
       end
 
@@ -285,10 +285,10 @@ module ROM
       # @see AttributeDSL#embedded
       #
       # @api public
-      def fold(*args, &block)
+      def fold(*args, &)
         with_name_or_options(*args) do |name, *|
           fold_options = { type: :array, fold: true }
-          dsl(name, fold_options, &block)
+          dsl(name, fold_options, &)
         end
       end
 
@@ -407,9 +407,9 @@ module ROM
       # This is used by embedded, wrap and group
       #
       # @api private
-      def dsl(name_or_attrs, options, &block)
-        if block
-          attributes_from_block(name_or_attrs, options, &block)
+      def dsl(name_or_attrs, options, &)
+        if block_given?
+          attributes_from_block(name_or_attrs, options, &)
         else
           attributes_from_hash(name_or_attrs, options)
         end
@@ -467,9 +467,9 @@ module ROM
       # Embedded, wrap and group can override top-level options like `prefix`
       #
       # @api private
-      def new(options, &block)
+      def new(options, &)
         dsl = self.class.new([], @options.merge(options))
-        dsl.instance_exec(&block) unless block.nil?
+        dsl.instance_exec(&) if block_given?
         dsl
       end
 

@@ -73,9 +73,9 @@ module ROM
       # @return [Array<Pipe>, Transproc::Function>]
       #
       # @api public
-      def self.extend(*, &block)
-        if block
-          map(use_for_diff: false, &block)
+      def self.extend(*, &)
+        if block_given?
+          map(use_for_diff: false, &)
         else
           super
         end
@@ -148,12 +148,12 @@ module ROM
       # @return [Changeset]
       #
       # @api public
-      def extend(*steps, **options, &block)
-        if block
+      def extend(*steps, **options, &)
+        if block_given?
           if steps.empty?
-            with(pipe: pipe.compose(Pipe.new(block).bind(self), **options))
+            with(pipe: pipe.compose(Pipe.new(proc(&)).bind(self), **options))
           else
-            extend(*steps, **options).extend(**options, &block)
+            extend(*steps, **options).extend(**options, &)
           end
         else
           with(pipe: steps.reduce(pipe.with(**options)) { |a, e| a.compose(pipe[e], **options) })

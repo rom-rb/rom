@@ -19,11 +19,11 @@ module ROM
     #   end
     #
     # @api public
-    def relation(name, options = EMPTY_HASH, &block)
+    def relation(name, options = EMPTY_HASH, &)
       klass_opts = { adapter: default_adapter }.merge(options)
       klass = Relation.build_class(name, klass_opts)
       klass.schema_opts(dataset: name, relation: name)
-      klass.class_eval(&block) if block
+      klass.class_eval(&) if block_given?
       register_relation(klass)
       klass
     end
@@ -76,14 +76,14 @@ module ROM
     # @return [Plugin]
     #
     # @api public
-    def plugin(adapter, spec, &block)
+    def plugin(adapter, spec, &)
       type, name = spec.flatten(1)
       plugin = plugin_registry[type].adapter(adapter).fetch(name) do
         plugin_registry[type].fetch(name)
       end
 
-      if block
-        register_plugin(plugin.configure(&block))
+      if block_given?
+        register_plugin(plugin.configure(&))
       else
         register_plugin(plugin)
       end

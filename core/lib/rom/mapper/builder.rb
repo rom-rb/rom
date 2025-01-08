@@ -11,7 +11,7 @@ module ROM
       # This is used by Setup#mappers DSL
       #
       # @api private
-      def self.build_class(name, mapper_registry, options = EMPTY_HASH, &block)
+      def self.build_class(name, mapper_registry, options = EMPTY_HASH, &)
         class_name = "ROM::Mapper[#{name}]"
 
         parent = options[:parent]
@@ -29,7 +29,7 @@ module ROM
           klass.relation(name)
           klass.inherit_header(inherit_header)
 
-          klass.class_eval(&block) if block
+          klass.class_eval(&) if block_given?
         end
       end
     end

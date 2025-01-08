@@ -84,12 +84,12 @@ module ROM
       # @return [Class, Object]
       #
       # @api public
-      def create_class(name, type, &block)
+      def create_class(name, type, &)
         klass = Dry::Core::ClassBuilder
           .new(name: "#{Inflector.classify(type)}[:#{name}]", parent: type)
           .call
 
-        if block
+        if block_given?
           yield(klass)
         else
           klass

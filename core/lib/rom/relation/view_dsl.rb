@@ -39,8 +39,8 @@ module ROM
       # @see Relation::ClassInterface.view
       #
       # @api public
-      def schema(&block)
-        @new_schema = -> relations { @schema.with(relations: relations).instance_exec(&block) }
+      def schema(&)
+        @new_schema = -> relations { @schema.with(relations: relations).instance_exec(&) }
       end
 
       # Define a relation block for a relation view

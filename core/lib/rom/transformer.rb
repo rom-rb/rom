@@ -70,9 +70,9 @@ module ROM
     # @return [self]
     #
     # @api public
-    def self.map(&block)
+    def self.map(&)
       define! do
-        map_array(&block)
+        map_array(&)
       end
     end
 

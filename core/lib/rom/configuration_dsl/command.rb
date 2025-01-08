@@ -13,7 +13,7 @@ module ROM
       # This is used by Setup#commands DSL and its `define` block
       #
       # @api private
-      def self.build_class(name, relation, options = EMPTY_HASH, &block)
+      def self.build_class(name, relation, options = EMPTY_HASH, &)
         type = options.fetch(:type) { name }
         command_type = Inflector.classify(type)
         adapter = options.fetch(:adapter)
@@ -23,7 +23,7 @@ module ROM
         Dry::Core::ClassBuilder.new(name: class_name, parent: parent).call do |klass|
           klass.register_as(name)
           klass.relation(relation)
-          klass.class_eval(&block) if block
+          klass.class_eval(&) if block_given?
         end
       end
 
