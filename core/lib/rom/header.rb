@@ -54,9 +54,7 @@ module ROM
       if input.instance_of?(self)
         input
       else
-        attributes = input.each_with_object({}) { |pair, h|
-          h[pair.first] = Attribute.coerce(pair)
-        }
+        attributes = input.to_h { [_1.first, Attribute.coerce(_1)] }
 
         new(attributes, options)
       end

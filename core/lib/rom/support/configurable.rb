@@ -39,11 +39,11 @@ module ROM
       private
 
       def dup_settings(settings)
-        settings.each_with_object({}) do |(key, value), new_settings|
+        settings.to_h do |key, value|
           if value.is_a?(self.class)
-            new_settings[key] = value.dup
+            [key, value.dup]
           else
-            new_settings[key] = value
+            [key, value]
           end
         end
       end

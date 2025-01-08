@@ -19,21 +19,21 @@ module ROM
         @registry_hash = [@mapper_classes.map(&:base_relation) + @mapper_objects.keys]
           .flatten
           .uniq
-          .each_with_object({}) { |n, h| h[n] = {} }
+          .to_h { [_1, {}] }
       end
 
       # @api private
       def run!
         cache = Cache.new
 
-        mappers = registry_hash.each_with_object({}) do |(relation_name, relation_mappers), h|
+        mappers = registry_hash.to_h do |relation_name, relation_mappers|
           relation_mappers.update(build_mappers(relation_name))
 
           if mapper_objects.key?(relation_name)
             relation_mappers.update(mapper_objects[relation_name])
           end
 
-          h[relation_name] = MapperRegistry.new(relation_mappers, cache: cache)
+          [relation_name, MapperRegistry.new(relation_mappers, cache: cache)]
         end
 
         Registry.new(mappers, cache: cache)
@@ -57,7 +57,7 @@ module ROM
       def build_mappers(relation_name)
         mapper_classes
           .select { |klass| klass.base_relation == relation_name }
-          .each_with_object({}) { |klass, h| h[klass.register_as || klass.relation] = klass.build }
+          .to_h { |k| [k.register_as || k.relation, k.build] }
       end
     end
   end
