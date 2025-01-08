@@ -8,6 +8,8 @@
 
 - [rom-core] Ruby 3.1 is now the minimum supported version (@flash-gordon)
 
+[Compare v5.3.2...v5.4.0](https://github.com/rom-rb/rom/compare/v5.3.2...v5.4.0)
+
 ## 5.3.2 2024-05-06
 
 ### Fixed
