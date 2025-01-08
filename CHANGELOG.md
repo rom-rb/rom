@@ -1,9 +1,12 @@
-## 5.3.3 2024-08-02
+## 5.4.0 2025-01-08
 
 ### Fixed
 
-- [rom-core] reduce memory usage when defining relation readers for repositories (issue #694 fixed via #695) (@DangerDawson)
-- [rom-repository] optimize the repository relations reader (issue #694 fixed via #695) (@DangerDawson)
+- [rom-repository] reduce memory allocation for relations reader in repository and regisry reader (issue #694 fixed via #695 and #695 and #697) (@flash-gordon)
+
+### Changed
+
+- [rom-core] Ruby 3.1 is now the minimum supported version (@flash-gordon)
 
 ## 5.3.2 2024-05-06
 
