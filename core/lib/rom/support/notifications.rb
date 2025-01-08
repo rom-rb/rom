@@ -36,7 +36,7 @@ module ROM
   #   end
   #
   module Notifications
-    LISTENERS_HASH = Hash.new { |h, k| h[k] = [] }
+    LISTENERS_HASH = ::Hash.new { |h, k| h[k] = [] }
 
     # Extension used for classes that can trigger events
     #
@@ -75,7 +75,7 @@ module ROM
     #
     # @api public
     class Event
-      include Dry::Equalizer(:id, :payload)
+      include ::Dry::Equalizer(:id, :payload)
 
       # @!attribute [r] id
       #   @return [Symbol] The event identifier
@@ -99,18 +99,14 @@ module ROM
       # @param [String,Symbol] name
       #
       # @api public
-      def [](name)
-        @payload.fetch(name)
-      end
+      def [](name) = @payload.fetch(name)
 
       # Coerce an event to a hash
       #
       # @return [Hash]
       #
       # @api public
-      def to_h
-        @payload
-      end
+      def to_h = @payload
       alias_method :to_hash, :to_h
 
       # Get or set a payload

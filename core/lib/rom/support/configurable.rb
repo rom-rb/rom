@@ -23,28 +23,18 @@ module ROM
       # @return [Mixed]
       #
       # @api public
-      def [](name)
-        public_send(name)
-      end
+      def [](name) = public_send(name)
 
       # @api private
-      def key?(name)
-        settings.key?(name)
-      end
+      def key?(name) = settings.key?(name)
 
-      def to_hash
-        settings
-      end
+      def to_hash = settings
 
       # @api private
-      def respond_to_missing?(_name, _include_private = false)
-        true
-      end
+      def respond_to_missing?(_name, _include_private = false) = true
 
       # @api private
-      def dup
-        self.class.new(dup_settings(settings))
-      end
+      def dup = self.class.new(dup_settings(settings))
 
       private
 

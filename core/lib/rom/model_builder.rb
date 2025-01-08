@@ -36,7 +36,7 @@ module ROM
       case type
       when :poro then PORO
       else
-        raise ArgumentError, "#{type.inspect} is not a supported model type"
+        raise ::ArgumentError, "#{type.inspect} is not a supported model type"
       end
     end
 
@@ -45,9 +45,7 @@ module ROM
     # @return [Class]
     #
     # @api private
-    def self.call(*args)
-      new(*args).call
-    end
+    def self.call(*args) = new(*args).call
 
     # @api private
     def initialize(options = {})
@@ -70,9 +68,7 @@ module ROM
     # Define a model class constant
     #
     # @api private
-    def define_const
-      namespace.const_set(const_name, klass)
-    end
+    def define_const = namespace.const_set(const_name, klass)
 
     # Build a model class supporting specific attributes
     #
@@ -90,9 +86,9 @@ module ROM
     # @private
     class PORO < ModelBuilder
       def define_class(attrs)
-        @klass = Class.new
+        @klass = ::Class.new
 
-        @klass.send(:attr_reader, *attrs)
+        @klass.attr_reader(*attrs)
 
         @klass.class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
           def initialize(params)                                             # def initialize(params)

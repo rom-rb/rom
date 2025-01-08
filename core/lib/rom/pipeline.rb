@@ -19,16 +19,12 @@ module ROM
       # @return [Relation::Composite]
       #
       # @api public
-      def >>(other)
-        composite_class.new(self, other)
-      end
+      def >>(other) = composite_class.new(self, other)
 
       private
 
       # @api private
-      def composite_class
-        raise NotImplementedError
-      end
+      def composite_class = raise ::NotImplementedError
     end
 
     include Operator
@@ -57,9 +53,7 @@ module ROM
       # Check if response from method missing should be decorated
       #
       # @api private
-      def decorate?(response)
-        response.is_a?(left.class)
-      end
+      def decorate?(response) = response.is_a?(left.class)
 
       # @api private
       def method_missing(name, ...)
@@ -108,9 +102,7 @@ module ROM
       # Compose this composite with another object
       #
       # @api public
-      def >>(other)
-        self.class.new(self, other)
-      end
+      def >>(other) = self.class.new(self, other)
     end
   end
 end

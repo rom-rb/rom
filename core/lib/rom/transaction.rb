@@ -4,7 +4,7 @@ module ROM
   # @api private
   class Transaction
     # @api private
-    Rollback = Class.new(StandardError)
+    Rollback = ::Class.new(::StandardError)
 
     # @api private
     def run(_opts = EMPTY_HASH)
@@ -16,9 +16,7 @@ module ROM
     # Unconditionally roll back the current transaction
     #
     # @api public
-    def rollback!
-      raise Rollback
-    end
+    def rollback! = raise(Rollback)
 
     # @api private
     NoOp = Transaction.new.freeze

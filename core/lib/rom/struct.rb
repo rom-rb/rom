@@ -84,9 +84,7 @@ module ROM
         @message_proc = block
       end
 
-      def message
-        @message_proc.call
-      end
+      def message = @message_proc.call
     end
 
     # Return attribute value
@@ -94,14 +92,10 @@ module ROM
     # @param [Symbol] name The attribute name
     #
     # @api public
-    def fetch(name)
-      __send__(name)
-    end
+    def fetch(name) = __send__(name)
 
     # @api private
-    def respond_to_missing?(*)
-      super
-    end
+    def respond_to_missing?(*) = super
 
     private
 

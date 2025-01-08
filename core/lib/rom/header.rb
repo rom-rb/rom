@@ -10,8 +10,8 @@ module ROM
   #
   # @private
   class Header
-    include Enumerable
-    include Dry::Equalizer(:attributes, :model)
+    include ::Enumerable
+    include ::Dry::Equalizer(:attributes, :model)
 
     # @return [Class] optional model associated with a header
     #
@@ -80,88 +80,68 @@ module ROM
     # @yield [Attribute]
     #
     # @api private
-    def each(&)
-      attributes.each_value(&)
-    end
+    def each(&) = attributes.each_value(&)
 
     # Return if there are any aliased attributes
     #
     # @api private
-    def aliased?
-      any?(&:aliased?)
-    end
+    def aliased? = any?(&:aliased?)
 
     # Return attribute keys
     #
     # An attribute key corresponds to tuple attribute names
     #
     # @api private
-    def keys
-      attributes.keys
-    end
+    def keys = attributes.keys
 
     # Return attribute identified by its name
     #
     # @return [Attribute]
     #
     # @api private
-    def [](name)
-      attributes.fetch(name)
-    end
+    def [](name) = attributes.fetch(name)
 
     # Return all Combined attributes
     #
     # @return [Array<Combined>]
     #
     # @api private
-    def combined
-      by_type(Combined)
-    end
+    def combined = by_type(Combined)
 
     # Returns all attributes that require preprocessing
     #
     # @return [Array<Group,Fold>]
     #
     # @api private
-    def preprocessed
-      by_type(Group, Fold)
-    end
+    def preprocessed = by_type(Group, Fold)
 
     # Returns all attributes that require postprocessing
     #
     # @return [Array<Ungroup,Unfold>]
     #
     # @api private
-    def postprocessed
-      by_type(Ungroup, Unfold)
-    end
+    def postprocessed = by_type(Ungroup, Unfold)
 
     # Return all Wrap attributes
     #
     # @return [Array<Wrap>]
     #
     # @api private
-    def wraps
-      by_type(Wrap)
-    end
+    def wraps = by_type(Wrap)
 
     # Return all non-primitive attributes that don't require mapping
     #
     # @return [Array<Group,Fold,Ungroup,Unfold,Wrap,Unwrap>]
     #
     # @api private
-    def non_primitives
-      preprocessed + wraps
-    end
+    def non_primitives = preprocessed + wraps
 
     # Return all primitive attributes that require mapping
     #
     # @return [Array<Attribute>]
     #
     # @api private
-    def primitives
-      to_a - non_primitives
-    end
+    def primitives = to_a - non_primitives
 
     private
 

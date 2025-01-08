@@ -34,9 +34,7 @@ module ROM
       # @see Relation#map_to
       #
       # @api public
-      def map_to(klass)
-        self >> left.map_to(klass).mapper
-      end
+      def map_to(klass) = self >> left.map_to(klass).mapper
 
       private
 
@@ -45,9 +43,7 @@ module ROM
       # @see Pipeline::Proxy#decorate?
       #
       # @api private
-      def decorate?(response)
-        super || response.is_a?(Graph)
-      end
+      def decorate?(response) = super || response.is_a?(Graph)
     end
   end
 end

@@ -83,9 +83,7 @@ module ROM
     # @return [TrueClass,FalseClass]
     #
     # @api public
-    def primary_key?
-      meta[:primary_key].equal?(true)
-    end
+    def primary_key? = meta[:primary_key].equal?(true)
 
     # Return true if this attribute type is a foreign key
     #
@@ -106,9 +104,7 @@ module ROM
     # @return [TrueClass,FalseClass]
     #
     # @api public
-    def foreign_key?
-      meta[:foreign_key].equal?(true)
-    end
+    def foreign_key? = meta[:foreign_key].equal?(true)
 
     # Return true if this attribute has a configured alias
     #
@@ -129,9 +125,7 @@ module ROM
     # @return [TrueClass,FalseClass]
     #
     # @api public
-    def aliased?
-      !self.alias.nil?
-    end
+    def aliased? = !self.alias.nil?
 
     # Return source relation of this attribute type
     #
@@ -152,9 +146,7 @@ module ROM
     # @return [Symbol, Relation::Name]
     #
     # @api public
-    def source
-      meta[:source]
-    end
+    def source = meta[:source]
 
     # Return target relation of this attribute type
     #
@@ -175,9 +167,7 @@ module ROM
     # @return [NilClass, Symbol, Relation::Name]
     #
     # @api public
-    def target
-      meta[:target]
-    end
+    def target = meta[:target]
 
     # Return tuple key
     #
@@ -200,9 +190,7 @@ module ROM
     # @return [Symbol]
     #
     # @api public
-    def key
-      self.alias || name
-    end
+    def key = self.alias || name
 
     # Return new attribute type with provided alias
     #
@@ -230,9 +218,7 @@ module ROM
     # @return [Attribute]
     #
     # @api public
-    def aliased(name)
-      with(alias: name)
-    end
+    def aliased(name) = with(alias: name)
     alias_method :as, :aliased
 
     # Return new attribute type with an alias using provided prefix
@@ -277,9 +263,7 @@ module ROM
     # correctly in places like auto-mapping.
     #
     # @api public
-    def wrapped?
-      meta[:wrapped].equal?(true)
-    end
+    def wrapped? = meta[:wrapped].equal?(true)
 
     # Return attribute type wrapped for the specified relation name
     #
@@ -338,27 +322,21 @@ module ROM
     # @return [TrueClass, FalseClass]
     #
     # @api private
-    def read?
-      !meta[:read].nil?
-    end
+    def read? = !meta[:read].nil?
 
     # Return read type
     #
     # @return [Dry::Types::Type]
     #
     # @api private
-    def to_read_type
-      read? ? meta[:read] : type
-    end
+    def to_read_type = read? ? meta[:read] : type
 
     # Return write type
     #
     # @return [Dry::Types::Type]
     #
     # @api private
-    def to_write_type
-      type
-    end
+    def to_write_type = type
 
     # Return nullable attribute
     #

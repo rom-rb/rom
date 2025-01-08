@@ -42,9 +42,7 @@ module ROM
     end
 
     # @api private
-    def [](type)
-      types.fetch(singularize(type))
-    end
+    def [](type) = types.fetch(singularize(type))
 
     # Old API compatibility
     #
@@ -64,7 +62,7 @@ module ROM
   #
   # @api private
   class PluginsContainer < Registry
-    include Dry::Equalizer(:elements, :type)
+    include ::Dry::Equalizer(:elements, :type)
 
     # @!attribute [r] plugin_type
     #   @return [Class] Typically ROM::PluginBase or its descendant
@@ -82,9 +80,7 @@ module ROM
     end
 
     # @api private
-    def plugin_type
-      Plugins[type][:plugin_type]
-    end
+    def plugin_type = Plugins[type][:plugin_type]
   end
 
   # Store a set of registries grouped by adapter
@@ -114,9 +110,7 @@ module ROM
     # @return [AdapterRegistry]
     #
     # @api private
-    def adapter(name)
-      registries[name]
-    end
+    def adapter(name) = registries[name]
 
     # @api private
     def register(name, mod, options)

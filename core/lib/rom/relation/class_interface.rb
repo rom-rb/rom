@@ -277,9 +277,7 @@ module ROM
       end
 
       # @api private
-      def curried
-        Curried
-      end
+      def curried = Curried
 
       # @api private
       def view_methods
@@ -314,9 +312,7 @@ module ROM
       end
 
       # @api private
-      def name
-        super || superclass.name
-      end
+      def name = super || superclass.name
 
       private
 

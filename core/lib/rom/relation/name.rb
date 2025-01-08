@@ -15,7 +15,7 @@ module ROM
     #
     # @api private
     class Name
-      include Dry::Equalizer(:relation, :dataset, :key)
+      include ::Dry::Equalizer(:relation, :dataset, :key)
 
       # Coerce an object to a Name instance
       #
@@ -65,14 +65,10 @@ module ROM
       end
 
       # @api private
-      def as(aliaz)
-        self.class[relation, dataset, aliaz]
-      end
+      def as(aliaz) = self.class[relation, dataset, aliaz]
 
       # @api private
-      def aliased?
-        aliaz && aliaz != relation
-      end
+      def aliased? = aliaz && aliaz != relation
 
       # Return relation name
       #
@@ -94,18 +90,14 @@ module ROM
       # @return [Symbol]
       #
       # @api private
-      def to_sym
-        relation
-      end
+      def to_sym = relation
 
       # Return inspected relation
       #
       # @return [String]
       #
       # @api private
-      def inspect
-        "#{self.class.name}(#{self})"
-      end
+      def inspect = "#{self.class.name}(#{self})"
     end
   end
 end

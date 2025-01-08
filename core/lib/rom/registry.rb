@@ -8,10 +8,10 @@ module ROM
   # @api private
   class Registry
     extend Initializer
-    extend Dry::Core::Cache
+    extend ::Dry::Core::Cache
 
-    include Enumerable
-    include Dry::Equalizer(:elements)
+    include ::Enumerable
+    include ::Dry::Equalizer(:elements)
 
     # @!attribute [r] elements
     #   @return [Hash] Internal hash for storing registry objects
@@ -33,9 +33,7 @@ module ROM
     # Create a registry without options
     #
     # @api private
-    def self.build(elements = {})
-      new(elements, **{})
-    end
+    def self.build(elements = {}) = new(elements, **{})
 
     # @api private
     def self.[](identifier)
@@ -47,19 +45,13 @@ module ROM
     end
 
     # @api private
-    def self.element_not_found_error
-      ElementNotFoundError
-    end
+    def self.element_not_found_error = ElementNotFoundError
 
     # @api private
-    def merge(other)
-      self.class.new(Hash(other), **options)
-    end
+    def merge(other) = self.class.new(Hash(other), **options)
 
     # @api private
-    def to_hash
-      elements
-    end
+    def to_hash = elements
 
     # @api private
     def map(&)
@@ -82,9 +74,7 @@ module ROM
     end
 
     # @api private
-    def key?(name)
-      !name.nil? && elements.key?(name.to_sym)
-    end
+    def key?(name) = !name.nil? && elements.key?(name.to_sym)
 
     # @api private
     def fetch(key)
@@ -98,9 +88,7 @@ module ROM
     end
     alias_method :[], :fetch
 
-    def type
-      self.class.name
-    end
+    def type = self.class.name
 
     # @api private
     def respond_to_missing?(name, include_private = false)
@@ -110,8 +98,6 @@ module ROM
     private
 
     # @api private
-    def method_missing(name, *)
-      elements.fetch(name) { super }
-    end
+    def method_missing(name, *) = elements.fetch(name) { super }
   end
 end

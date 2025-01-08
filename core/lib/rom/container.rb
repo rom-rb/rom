@@ -125,36 +125,28 @@ module ROM
     # @return [Hash<Symbol=>Gateway>]
     #
     # @api public
-    def gateways
-      self[:gateways]
-    end
+    def gateways = self[:gateways]
 
     # Return mapper registry for all relations
     #
     # @return [Hash<Symbol=>MapperRegistry]
     #
     # @api public
-    def mappers
-      self[:mappers]
-    end
+    def mappers = self[:mappers]
 
     # Return relation registry
     #
     # @return [RelationRegistry]
     #
     # @api public
-    def relations
-      self[:relations]
-    end
+    def relations = self[:relations]
 
     # Return command registry
     #
     # @return [Hash<Symbol=>CommandRegistry]
     #
     # @api public
-    def commands
-      self[:commands]
-    end
+    def commands = self[:commands]
 
     # Disconnect all gateways
     #
@@ -166,8 +158,6 @@ module ROM
     # @return [Hash<Symbol=>Gateway>] a hash with disconnected gateways
     #
     # @api public
-    def disconnect
-      gateways.each_value(&:disconnect)
-    end
+    def disconnect = gateways.each_value(&:disconnect)
   end
 end

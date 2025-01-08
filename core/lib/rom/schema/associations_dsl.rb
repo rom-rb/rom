@@ -177,9 +177,7 @@ module ROM
       # @return [AssociationSet]
       #
       # @api private
-      def call
-        AssociationSet[source.relation].build(registry)
-      end
+      def call = AssociationSet[source.relation].build(registry)
 
       private
 
@@ -198,9 +196,7 @@ module ROM
       end
 
       # @api private
-      def dataset_name(name)
-        Inflector.pluralize(name).to_sym
-      end
+      def dataset_name(name) = Inflector.pluralize(name).to_sym
     end
   end
 end

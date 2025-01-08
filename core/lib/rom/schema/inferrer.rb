@@ -24,7 +24,7 @@ module ROM
       #     @return [Class(ROM::Attribute)]
       defines :attributes_inferrer, :attr_class
 
-      MissingAttributesError = Class.new(StandardError) do
+      MissingAttributesError = ::Class.new(::StandardError) do
         def initialize(name, attributes)
           super(
             "Following attributes in #{Relation::Name[name].relation.inspect} schema cannot " \
@@ -39,7 +39,7 @@ module ROM
 
       attr_class Attribute
 
-      include Dry::Equalizer(:options)
+      include ::Dry::Equalizer(:options)
 
       # @!attribute [r] attr_class
       #   @return [Class(ROM::Attribute)]

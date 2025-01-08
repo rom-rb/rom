@@ -8,8 +8,8 @@ module ROM
     #
     # @api public
     class Loaded
-      include Enumerable
-      include Dry::Equalizer(:source, :collection)
+      include ::Enumerable
+      include ::Dry::Equalizer(:source, :collection)
 
       # Coerce loaded relation to an array
       #
@@ -93,9 +93,7 @@ module ROM
       # @raise KeyError when provided key doesn't exist in any of the tuples
       #
       # @api public
-      def pluck(key)
-        map { |tuple| tuple.fetch(key) }
-      end
+      def pluck(key) = map { |tuple| tuple.fetch(key) }
 
       # Pluck primary key values
       #
@@ -110,25 +108,19 @@ module ROM
       # @return [Array]
       #
       # @api public
-      def primary_keys
-        pluck(source.primary_key)
-      end
+      def primary_keys = pluck(source.primary_key)
 
       # Return if loaded relation is empty
       #
       # @return [TrueClass,FalseClass]
       #
       # @api public
-      def empty?
-        collection.empty?
-      end
+      def empty? = collection.empty?
 
       # Return a loaded relation with a new collection
       #
       # @api public
-      def new(collection)
-        self.class.new(source, collection)
-      end
+      def new(collection) = self.class.new(source, collection)
     end
   end
 end

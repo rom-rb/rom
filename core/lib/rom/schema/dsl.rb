@@ -194,9 +194,7 @@ module ROM
       end
 
       # @api private
-      def plugin_options(plugin)
-        @plugins[plugin][1]
-      end
+      def plugin_options(plugin) = @plugins[plugin][1]
 
       private
 

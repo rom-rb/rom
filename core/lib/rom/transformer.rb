@@ -9,8 +9,8 @@ module ROM
   # transformations.
   #
   # @api public
-  class Transformer < Transproc::Transformer[ROM::Processor::Transproc::Functions]
-    extend Dry::Core::ClassAttributes
+  class Transformer < Transproc::Transformer[::ROM::Processor::Transproc::Functions]
+    extend ::Dry::Core::ClassAttributes
 
     # @!method self.register_as
     #  Get or set registration name
@@ -79,17 +79,13 @@ module ROM
     # This is needed to make transformers compatible with rom setup
     #
     # @api private
-    def self.base_relation
-      relation
-    end
+    def self.base_relation = relation
 
     # Build a mapper instance
     #
     # @return [Transformer]
     #
     # @api public
-    def self.build
-      new
-    end
+    def self.build = new
   end
 end

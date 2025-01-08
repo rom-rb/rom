@@ -327,18 +327,14 @@ module ROM
     # @return [Command::Graph]
     #
     # @api public
-    def combine(*others)
-      Graph.new(self, others)
-    end
+    def combine(*others) = Graph.new(self, others)
 
     # Check if this command is curried
     #
     # @return [TrueClass, FalseClass]
     #
     # @api public
-    def curried?
-      !curry_args.empty?
-    end
+    def curried? = !curry_args.empty?
 
     # Return a new command with appended before hooks
     #
@@ -367,18 +363,14 @@ module ROM
     # @return [Array]
     #
     # @api public
-    def before_hooks
-      options[:before]
-    end
+    def before_hooks = options[:before]
 
     # List of after hooks
     #
     # @return [Array]
     #
     # @api public
-    def after_hooks
-      options[:after]
-    end
+    def after_hooks = options[:after]
 
     # Return a new command with other source relation
     #
@@ -394,54 +386,42 @@ module ROM
     # Check if this command has any hooks
     #
     # @api private
-    def hooks?
-      !before_hooks.empty? || !after_hooks.empty?
-    end
+    def hooks? = !before_hooks.empty? || !after_hooks.empty?
 
     # Check if this command is lazy
     #
     # @return [false]
     #
     # @api private
-    def lazy?
-      false
-    end
+    def lazy? = false
 
     # Check if this command is a graph
     #
     # @return [false]
     #
     # @api private
-    def graph?
-      false
-    end
+    def graph? = false
 
     # Check if this command returns a single tuple
     #
     # @return [TrueClass,FalseClass]
     #
     # @api private
-    def one?
-      result.equal?(:one)
-    end
+    def one? = result.equal?(:one)
 
     # Check if this command returns many tuples
     #
     # @return [TrueClass,FalseClass]
     #
     # @api private
-    def many?
-      result.equal?(:many)
-    end
+    def many? = result.equal?(:many)
 
     # Check if this command is restrictible through relation
     #
     # @return [TrueClass,FalseClass]
     #
     # @api private
-    def restrictible?
-      self.class.restrictable.equal?(true)
-    end
+    def restrictible? = self.class.restrictable.equal?(true)
 
     # Yields tuples for insertion or return an enumerator
     #
@@ -463,9 +443,7 @@ module ROM
     # @return [Class]
     #
     # @api private
-    def composite_class
-      Command::Composite
-    end
+    def composite_class = Command::Composite
 
     # Apply provided hooks
     #

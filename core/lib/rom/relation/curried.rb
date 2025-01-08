@@ -89,9 +89,7 @@ module ROM
       # @return [true]
       #
       # @api private
-      def curried?
-        true
-      end
+      def curried? = true
 
       # @api private
       def respond_to_missing?(name, include_private = false)
@@ -106,9 +104,7 @@ module ROM
       end
 
       # @api private
-      def composite_class
-        Relation::Composite
-      end
+      def composite_class = Relation::Composite
 
       # @api private
       def method_missing(meth, ...)

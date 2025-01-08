@@ -63,7 +63,5 @@ module ROM
   end
 
   # @api private
-  def self.container(...)
-    InlineCreateContainer.new(...).container
-  end
+  def self.container(...) = InlineCreateContainer.new(...).container
 end

@@ -90,8 +90,6 @@ module ROM
     end
 
     # @api private
-    def plugin_registry
-      ROM.plugin_registry
-    end
+    def plugin_registry = ::ROM.plugin_registry
   end
 end

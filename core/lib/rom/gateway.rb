@@ -172,15 +172,11 @@ module ROM
     #         the transaction was rolled back
     #
     # @api public
-    def transaction(opts = EMPTY_HASH, &)
-      transaction_runner(opts).run(opts, &)
-    end
+    def transaction(opts = EMPTY_HASH, &) = transaction_runner(opts).run(opts, &)
 
     private
 
     # @api private
-    def transaction_runner(_)
-      Transaction::NoOp
-    end
+    def transaction_runner(_) = Transaction::NoOp
   end
 end

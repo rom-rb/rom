@@ -24,7 +24,6 @@ require 'rom/association_set'
 require 'rom/types'
 require 'rom/schema'
 
-# rubocop:disable Metrics/ClassLength
 module ROM
   # Base relation class
   #
@@ -207,9 +206,7 @@ module ROM
     # @return [Attribute]
     #
     # @api public
-    def [](name)
-      schema[name]
-    end
+    def [](name) = schema[name]
 
     # Yields relation tuples
     #
@@ -254,9 +251,7 @@ module ROM
     # @return [Relation]
     #
     # @api public
-    def combine(*args)
-      combine_with(*nodes(*args))
-    end
+    def combine(*args) = combine_with(*nodes(*args))
 
     # Composes with other relations
     #
@@ -265,9 +260,7 @@ module ROM
     # @return [Relation::Graph]
     #
     # @api public
-    def combine_with(*others)
-      Combined.new(self, others)
-    end
+    def combine_with(*others) = Combined.new(self, others)
 
     # @api private
     def nodes(*args)
@@ -320,9 +313,7 @@ module ROM
     # @return [Relation::Curried]
     #
     # @api private
-    def preload_assoc(assoc, other)
-      assoc.preload(self, other)
-    end
+    def preload_assoc(assoc, other) = assoc.preload(self, other)
 
     # Wrap other relations using association names
     #
@@ -345,63 +336,49 @@ module ROM
     # @return [Relation::Wrap]
     #
     # @api public
-    def wrap_around(*others)
-      wrap_class.new(self, others)
-    end
+    def wrap_around(*others) = wrap_class.new(self, others)
 
     # Loads a relation
     #
     # @return [Relation::Loaded]
     #
     # @api public
-    def call
-      Loaded.new(self)
-    end
+    def call = Loaded.new(self)
 
     # Materializes a relation into an array
     #
     # @return [Array<Hash>]
     #
     # @api public
-    def to_a
-      to_enum.to_a
-    end
+    def to_a = to_enum.to_a
 
     # Returns if this relation is curried
     #
     # @return [false]
     #
     # @api private
-    def curried?
-      false
-    end
+    def curried? = false
 
     # Returns if this relation is a graph
     #
     # @return [false]
     #
     # @api private
-    def graph?
-      false
-    end
+    def graph? = false
 
     # Return if this is a wrap relation
     #
     # @return [false]
     #
     # @api private
-    def wrap?
-      false
-    end
+    def wrap? = false
 
     # Returns true if a relation has schema defined
     #
     # @return [TrueClass, FalseClass]
     #
     # @api private
-    def schema?
-      !schema.empty?
-    end
+    def schema? = !schema.empty?
 
     # Return a new relation with provided dataset and additional options
     #
@@ -462,23 +439,17 @@ module ROM
     # @return [AssociationSet] Schema's association set (empty by default)
     #
     # @api public
-    def associations
-      schema.associations
-    end
+    def associations = schema.associations
 
     # Returns AST for the wrapped relation
     #
     # @return [Array]
     #
     # @api public
-    def to_ast
-      [:relation, [name.relation, attr_ast, meta_ast]]
-    end
+    def to_ast = [:relation, [name.relation, attr_ast, meta_ast]]
 
     # @api private
-    def attr_ast
-      schema.map(&:to_read_ast)
-    end
+    def attr_ast = schema.map(&:to_read_ast)
 
     # @api private
     def meta_ast
@@ -489,19 +460,13 @@ module ROM
     end
 
     # @api private
-    def auto_map?
-      (auto_map || auto_struct) && !meta[:combine_type]
-    end
+    def auto_map? = (auto_map || auto_struct) && !meta[:combine_type]
 
     # @api private
-    def auto_struct?
-      auto_struct && !meta[:combine_type]
-    end
+    def auto_struct? = auto_struct && !meta[:combine_type]
 
     # @api private
-    def mapper
-      mappers[to_ast]
-    end
+    def mapper = mappers[to_ast]
 
     # Maps relation with custom mappers available in the registry
     #
@@ -529,9 +494,7 @@ module ROM
     # @return [Relation::Composite] Mapped relation
     #
     # @api public
-    def map_with(*names, **opts)
-      super(*names).with(opts)
-    end
+    def map_with(*names, **opts) = super(*names).with(opts)
 
     # Return a new relation that will map its tuples to instances of the provided class
     #
@@ -557,25 +520,19 @@ module ROM
     # @return [Relation]
     #
     # @api public
-    def as(aliaz)
-      with(name: name.as(aliaz))
-    end
+    def as(aliaz) = with(name: name.as(aliaz))
 
     # @return [Symbol] The wrapped relation's adapter identifier ie :sql or :http
     #
     # @api private
-    def adapter
-      self.class.adapter
-    end
+    def adapter = self.class.adapter
 
     # Return name of the source gateway of this relation
     #
     # @return [Symbol]
     #
     # @api private
-    def gateway
-      self.class.gateway
-    end
+    def gateway = self.class.gateway
 
     # Return all registered relation schemas
     #
@@ -584,9 +541,7 @@ module ROM
     # @return [Hash<Symbol=>Schema>]
     #
     # @api public
-    def schemas
-      self.class.schemas
-    end
+    def schemas = self.class.schemas
 
     # Return a foreign key name for the provided relation name
     #
@@ -631,18 +586,13 @@ module ROM
     # @return [Class]
     #
     # @api private
-    def composite_class
-      Relation::Composite
-    end
+    def composite_class = Relation::Composite
 
     # Return configured "wrap" relation class used in Relation#wrap
     #
     # @return [Class]
     #
     # @api private
-    def wrap_class
-      self.class.wrap_class
-    end
+    def wrap_class = self.class.wrap_class
   end
 end
-# rubocop:enable Metrics/ClassLength

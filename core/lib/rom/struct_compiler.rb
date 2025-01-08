@@ -101,8 +101,6 @@ module ROM
     end
 
     # @api private
-    def class_name(name)
-      Inflector.classify(name)
-    end
+    def class_name(name) = Inflector.classify(name)
   end
 end

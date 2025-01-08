@@ -42,18 +42,14 @@ module ROM
       # @return [Graph]
       #
       # @api public
-      def with_nodes(nodes)
-        self.class.new(root, nodes)
-      end
+      def with_nodes(nodes) = self.class.new(root, nodes)
 
       # Return if this is a graph relation
       #
       # @return [true]
       #
       # @api private
-      def graph?
-        true
-      end
+      def graph? = true
 
       # Map graph tuples via custom mappers
       #
@@ -80,9 +76,7 @@ module ROM
       # @see Relation#mapper
       #
       # @api private
-      def mapper
-        mappers[to_ast]
-      end
+      def mapper = mappers[to_ast]
 
       # @api private
       memoize def to_ast
@@ -97,9 +91,7 @@ module ROM
       end
 
       # @api private
-      def composite_class
-        Relation::Composite
-      end
+      def composite_class = Relation::Composite
     end
   end
 end

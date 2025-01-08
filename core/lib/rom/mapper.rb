@@ -9,7 +9,7 @@ module ROM
   # @private
   class Mapper
     include DSL
-    include Dry::Equalizer(:transformers, :header)
+    include ::Dry::Equalizer(:transformers, :header)
 
     defines :relation, :register_as, :symbolize_keys, :copy_keys,
             :prefix, :prefix_separator, :inherit_header, :reject_keys
@@ -86,9 +86,7 @@ module ROM
     # @return [Class] optional model that is instantiated by a mapper
     #
     # @api private
-    def model
-      header.model
-    end
+    def model = header.model
 
     # Process a relation using the transformers
     #

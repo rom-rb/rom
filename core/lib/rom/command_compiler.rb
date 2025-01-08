@@ -172,9 +172,7 @@ module ROM
     # rubocop:enable Metrics/AbcSize, Metrics/MethodLength, Metrics/PerceivedComplexity
 
     # @api private
-    def visit_attribute(*_args)
-      nil
-    end
+    def visit_attribute(*_args) = nil
 
     # Build a command object for a specific relation
     #
@@ -228,9 +226,7 @@ module ROM
     # @return [Symbol]
     #
     # @api private
-    def result
-      meta.fetch(:result, :one)
-    end
+    def result = meta.fetch(:result, :one)
 
     # Sets up `associates` plugin for a given command class and relation
     #

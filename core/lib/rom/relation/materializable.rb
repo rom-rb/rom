@@ -11,9 +11,7 @@ module ROM
       # @return [Array]
       #
       # @api public
-      def to_a
-        call.to_a
-      end
+      def to_a = call.to_a
       alias_method :to_ary, :to_a
 
       # Yield relation tuples
@@ -34,9 +32,7 @@ module ROM
       # @see Loaded#one
       #
       # @api public
-      def one
-        call.one
-      end
+      def one = call.one
 
       # Delegate to loaded relation and return one object
       #
@@ -45,18 +41,14 @@ module ROM
       # @see Loaded#one
       #
       # @api public
-      def one!
-        call.one!
-      end
+      def one! = call.one!
 
       # Return first tuple from a relation coerced to an array
       #
       # @return [Object]
       #
       # @api public
-      def first
-        to_a.first
-      end
+      def first = to_a.first
     end
   end
 end

@@ -19,18 +19,12 @@ module ROM
     end
 
     # @api private
-    def call(input)
-      command.call(root => input)
-    end
+    def call(input) = command.call(root => input)
 
     # @api private
-    def >>(other)
-      self.class.new(command >> other)
-    end
+    def >>(other) = self.class.new(command >> other)
 
     # @api private
-    def restrictible?
-      command.restrictible?
-    end
+    def restrictible? = command.restrictible?
   end
 end

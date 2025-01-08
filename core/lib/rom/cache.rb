@@ -24,9 +24,7 @@ module ROM
       end
 
       # @api private
-      def [](key)
-        cache[[namespace, key].hash]
-      end
+      def [](key) = cache[[namespace, key].hash]
 
       # @api private
       def fetch_or_store(*args, &)
@@ -34,14 +32,10 @@ module ROM
       end
 
       # @api private
-      def size
-        cache.size
-      end
+      def size = cache.size
 
       # @api private
-      def inspect
-        %(#<#{self.class} size=#{size}>)
-      end
+      def inspect = %(#<#{self.class} size=#{size}>)
     end
 
     # @api private
@@ -50,19 +44,13 @@ module ROM
       @namespaced = {}
     end
 
-    def [](key)
-      cache[key]
-    end
+    def [](key) = objects[key]
 
     # @api private
-    def fetch_or_store(*args, &)
-      objects.fetch_or_store(args.hash, &)
-    end
+    def fetch_or_store(*args, &) = objects.fetch_or_store(args.hash, &)
 
     # @api private
-    def size
-      objects.size
-    end
+    def size = objects.size
 
     # @api private
     def namespaced(namespace)

@@ -56,9 +56,7 @@ module ROM
       # @return [Proc]
       #
       # @api private
-      def row_proc
-        -> tuple { tuple }
-      end
+      def row_proc = -> tuple { tuple }
 
       # Forward provided methods to the underlaying data object
       #

@@ -34,9 +34,7 @@ module ROM
     option :compiler, optional: true
 
     # @api private
-    def self.element_not_found_error
-      CommandNotFoundError
-    end
+    def self.element_not_found_error = CommandNotFoundError
 
     # Return a command from the registry
     #
@@ -86,9 +84,7 @@ module ROM
     # @return [CommandRegistry]
     #
     # @api public
-    def map_with(mapper_name)
-      with(mapper: mappers[mapper_name])
-    end
+    def map_with(mapper_name) = with(mapper: mappers[mapper_name])
 
     # @api private
     def set_compiler(compiler) # rubocop:disable Naming/AccessorMethodName

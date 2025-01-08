@@ -27,7 +27,7 @@ module ROM
   # @api public
   module EnumerableDataset
     extend DataProxy::ClassMethods
-    include Enumerable
+    include ::Enumerable
 
     # Coerce a dataset to an array
     #

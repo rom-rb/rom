@@ -59,9 +59,7 @@ module ROM
       # @return [Array]
       #
       # @api private
-      def call
-        [name, new_schema, relation_block]
-      end
+      def call = [name, new_schema, relation_block]
     end
   end
 end

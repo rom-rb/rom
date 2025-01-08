@@ -20,9 +20,9 @@ module ROM
     register_event('configuration.relations.dataset.allocated')
     register_event('configuration.commands.class.before_build')
 
-    include ROM::ConfigurationDSL
+    include ::ROM::ConfigurationDSL
 
-    NoDefaultAdapterError = Class.new(StandardError)
+    NoDefaultAdapterError = ::Class.new(::StandardError)
 
     # @!attribute [r] environment
     #   @return [Environment] Environment object with gateways
@@ -67,9 +67,9 @@ module ROM
     #
     # @api public
     def use(plugin, options = {})
-      if plugin.is_a?(Array)
+      if plugin.is_a?(::Array)
         plugin.each { |p| use(p) }
-      elsif plugin.is_a?(Hash)
+      elsif plugin.is_a?(::Hash)
         plugin.to_a.each { |p| use(*p) }
       else
         ROM.plugin_registry[:configuration].fetch(plugin).apply_to(self, options)
@@ -83,16 +83,12 @@ module ROM
     # @return [Gateway]
     #
     # @api private
-    def [](name)
-      gateways.fetch(name)
-    end
+    def [](name) = gateways.fetch(name)
 
     # Hook for respond_to? used internally
     #
     # @api private
-    def respond_to?(name, ...)
-      gateways.key?(name) || super
-    end
+    def respond_to?(name, ...) = gateways.key?(name) || super
 
     # @api private
     def default_gateway
@@ -124,17 +120,13 @@ module ROM
     private
 
     # @api private
-    def respond_to_missing?(name, ...)
-      gateways.key?(name) || super
-    end
+    def respond_to_missing?(name, ...) = gateways.key?(name) || super
 
     # Returns gateway if method is a name of a registered gateway
     #
     # @return [Gateway]
     #
     # @api private
-    def method_missing(name, ...)
-      gateways.fetch(name) { super }
-    end
+    def method_missing(name, ...) = gateways.fetch(name) { super }
   end
 end

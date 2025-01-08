@@ -40,25 +40,19 @@ module ROM
       # @abstract
       #
       # @api private
-      def relation
-        raise NotImplementedError
-      end
+      def relation = raise ::NotImplementedError
 
       # Return if this is a wrap relation
       #
       # @return [true]
       #
       # @api private
-      def wrap?
-        true
-      end
+      def wrap? = true
 
       private
 
       # @api private
-      def decorate?(other)
-        super || other.is_a?(Combined)
-      end
+      def decorate?(other) = super || other.is_a?(Combined)
     end
   end
 end

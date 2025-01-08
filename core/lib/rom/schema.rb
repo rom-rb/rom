@@ -180,27 +180,21 @@ module ROM
     # @return [Relation]
     #
     # @api public
-    def call(relation)
-      relation
-    end
+    def call(relation) = relation
 
     # Iterate over schema's attributes
     #
     # @yield [Attribute]
     #
     # @api public
-    def each(&)
-      attributes.each(&)
-    end
+    def each(&) = attributes.each(&)
 
     # Check if schema has any attributes
     #
     # @return [TrueClass, FalseClass]
     #
     # @api public
-    def empty?
-      attributes.empty?
-    end
+    def empty? = attributes.empty?
 
     # Coerce schema into a <AttributeName=>Attribute> Hash
     #
@@ -254,9 +248,7 @@ module ROM
     # @return [Schema]
     #
     # @api public
-    def exclude(*names)
-      project(*(map(&:name) - names))
-    end
+    def exclude(*names) = project(*(map(&:name) - names))
 
     # Project a schema with renamed attributes
     #
@@ -313,9 +305,7 @@ module ROM
     # @return [Array<Attribute>]
     #
     # @api public
-    def primary_key
-      select(&:primary_key?)
-    end
+    def primary_key = select(&:primary_key?)
 
     # Merge with another schema
     #
@@ -324,9 +314,7 @@ module ROM
     # @return [Schema]
     #
     # @api public
-    def merge(other)
-      append(*other)
-    end
+    def merge(other) = append(*other)
     alias_method :+, :merge
 
     # Append more attributes to the schema
@@ -371,9 +359,7 @@ module ROM
     # @return [Boolean]
     #
     # @api public
-    def canonical?
-      equal?(canonical)
-    end
+    def canonical? = equal?(canonical)
 
     # Finalize a schema
     #
@@ -448,9 +434,7 @@ module ROM
     # @return [Array]
     #
     # @api public
-    def to_ast
-      [:schema, [name, attributes.map(&:to_ast)]]
-    end
+    def to_ast = [:schema, [name, attributes.map(&:to_ast)]]
 
     # @api private
     def set!(key, value)
@@ -466,9 +450,7 @@ module ROM
     end
 
     # @api private
-    def name_index
-      to_h { |attr| [attr.name, attr] }
-    end
+    def name_index = to_h { |attr| [attr.name, attr] }
 
     # @api private
     def source_index

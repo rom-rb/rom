@@ -49,9 +49,9 @@ module ROM
     # @api public
     def auto_registration(directory, **options)
       auto_registration = AutoRegistration.new(directory, **options)
-      auto_registration.relations.map { |r| register_relation(r) }
-      auto_registration.commands.map { |r| register_command(r) }
-      auto_registration.mappers.map { |r| register_mapper(r) }
+      auto_registration.relations.each { |r| register_relation(r) }
+      auto_registration.commands.each { |r| register_command(r) }
+      auto_registration.mappers.each { |r| register_mapper(r) }
       self
     end
 

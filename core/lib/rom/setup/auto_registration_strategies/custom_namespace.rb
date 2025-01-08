@@ -60,9 +60,7 @@ module ROM
       end
 
       # @api private
-      def filename
-        Pathname(file).basename('.rb')
-      end
+      def filename = Pathname(file).basename('.rb')
 
       # @api private
       def ns_const
@@ -70,9 +68,7 @@ module ROM
       end
 
       # @api private
-      def path_arr
-        file_path << filename
-      end
+      def path_arr = file_path << filename
 
       # @api private
       def file_path

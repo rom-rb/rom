@@ -8,9 +8,7 @@ module ROM
     # @api private
     module DefineWithHook
       # @api private
-      def param(*, **)
-        super.tap { __define_with__ }
-      end
+      def param(*, **) = super.tap { __define_with__ }
 
       # @api private
       def option(*, **)
