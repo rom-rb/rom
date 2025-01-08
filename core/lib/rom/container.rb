@@ -110,6 +110,16 @@ module ROM
       end
     end
 
+    # @api private
+    attr_reader :cache
+
+    # @api private
+    def initialize
+      super
+
+      @cache = Cache.new
+    end
+
     # Return registered gateways
     #
     # @return [Hash<Symbol=>Gateway>]

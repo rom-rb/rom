@@ -59,9 +59,11 @@ module ROM
       def new(container = nil, **options)
         container ||= options.fetch(:container)
 
-        unless relation_reader
-          relation_reader(RelationReader.new(self, container.relations.elements.keys))
-          include(relation_reader)
+        unless self < relation_reader
+          include relation_reader.new(
+            relations: container.relations.elements.keys,
+            cache: container.cache
+          )
         end
 
         super(**options, container: container)

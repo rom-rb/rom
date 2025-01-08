@@ -12,7 +12,7 @@ RSpec.describe 'repository plugin' do
         target.prepend(self)
       end
 
-      def set_relation(*)
+      def prepare_relation(*)
         super.where { `1 = 0` }
       end
     end

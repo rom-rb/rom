@@ -4,45 +4,72 @@ module ROM
   class Repository
     # @api private
     class RelationReader < ::Module
-      # @api private
-      attr_reader :klass
-
-      # @api private
-      attr_reader :relations
-
       module InstanceMethods
+        private
+
         # @api private
-        def set_relation(name) # rubocop:disable Naming/AccessorMethodName
+        def prepare_relation(name, **)
           container
             .relations[name]
-            .with(auto_struct: auto_struct)
-            .struct_namespace(struct_namespace)
+            .with(
+              auto_struct: auto_struct,
+              struct_namespace: struct_namespace
+            )
+        end
+
+        # @api private
+        def relation_reader(cache, ...)
+          cache_key = relation_cache_key(...)
+          cache.fetch_or_store(*cache_key) { prepare_relation(...) }
+        end
+
+        # @api private
+        def relation_cache_key(name, **)
+          [name, auto_struct, struct_namespace]
         end
       end
 
       # @api private
-      def initialize(klass, relations)
-        super()
-        @klass = klass
-        @relations = relations
-        define_readers!
-      end
+      class Readers < ::Module
+        # @api private
+        attr_reader :cache
 
-      # @api private
-      def included(klass)
-        super
-        klass.include(InstanceMethods)
-      end
+        def initialize(relations)
+          super()
 
-      private
+          include InstanceMethods
 
-      # @api private
-      def define_readers!
-        relations.each do |name|
-          define_method(name) do
-            @relations[name] ||= set_relation(name)
+          define_readers(relations)
+        end
+
+        # @api private
+        def define_readers(relations)
+          cache = Cache.new
+          relations.each do |name|
+            define_readers_for_relation(cache, name)
           end
         end
+
+        # @api private
+        def define_readers_for_relation(cache, name)
+          define_method(name) do |**kwargs|
+            relation_reader(cache, name, **kwargs)
+          end
+        end
+      end
+
+      # @api private
+      def initialize(relations:, cache:)
+        super()
+
+        add_readers(relations, cache)
+      end
+
+      # @api private
+      def add_readers(relations, cache)
+        include cache.fetch_or_store(:relation_readers) {
+          Readers.new(relations)
+        }
       end
     end
   end

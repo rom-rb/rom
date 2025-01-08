@@ -58,7 +58,7 @@ module ROM
       # @see Repository#initialize
       def initialize(*, **)
         super
-        @root = set_relation(self.class.root)
+        @root = prepare_relation(self.class.root)
       end
     end
   end
