@@ -8,6 +8,7 @@ group :test do
   gem "simplecov", require: false, platforms: :ruby
   gem "simplecov-cobertura", require: false, platforms: :ruby
   gem "rexml", require: false
+  gem "tempfile"
 
   gem "warning"
 end
