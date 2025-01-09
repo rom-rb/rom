@@ -1,3 +1,9 @@
+## 5.4.1 2025-01-09
+
+### Fixed
+
+- [rom-repository] `set_relation` is deprecated and will be removed in 6.0.0 (issue #698 fixed via #699) (@flash-gordon)
+
 ## 5.4.0 2025-01-08
 
 ### Fixed
