@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'pathname'
+require 'tempfile'
 
 SPEC_ROOT = Pathname(__FILE__).dirname
 

@@ -423,4 +423,41 @@ RSpec.describe 'ROM repository' do
 
     expect(post).to be(post_from_user)
   end
+
+  context 'using #prepare_relation' do
+    let(:repo_class) do
+      Class.new(ROM::Repository[:users]) do
+        def prepare_relation(name, custom: 'default')
+          super.select_append { `'#{custom}'`.as(:extra_column) }
+        end
+      end
+    end
+
+    it 'is uses modified relation' do
+      expect(repo.users.to_a.map(&:extra_column)).to eql(%w[default default])
+      expect(repo.users(custom: 'custom').to_a.map(&:extra_column)).to eql(%w[custom custom])
+    end
+  end
+
+  context 'using #set_relation' do
+    let(:log_file) do
+      Tempfile.new('dry_deprecations')
+    end
+
+    before do
+      Dry::Core::Deprecations.set_logger!(log_file)
+    end
+
+    let(:repo_class) do
+      Class.new(ROM::Repository[:users]) do
+        def custom_users
+          set_relation(:users).select_append { `'modified'`.as(:modified) }
+        end
+      end
+    end
+
+    it "constructs a relation but it's deprecated" do
+      expect(repo.custom_users.to_a.map(&:modified)).to eql(%w[modified modified])
+    end
+  end
 end

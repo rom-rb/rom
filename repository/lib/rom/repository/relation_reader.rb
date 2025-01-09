@@ -5,9 +5,11 @@ module ROM
     # @api private
     class RelationReader < ::Module
       module InstanceMethods
+        extend ::Dry::Core::Deprecations[:'rom-repository']
+
         private
 
-        # @api private
+        # @api public
         def prepare_relation(name, **)
           container
             .relations[name]
@@ -18,14 +20,20 @@ module ROM
         end
 
         # @api private
+        def set_relation(name) # rubocop:disable Naming/AccessorMethodName
+          prepare_relation(name)
+        end
+        deprecate :set_relation, :prepare_relation
+
+        # @api private
         def relation_reader(cache, ...)
           cache_key = relation_cache_key(...)
           cache.fetch_or_store(*cache_key) { prepare_relation(...) }
         end
 
         # @api private
-        def relation_cache_key(name, **)
-          [name, auto_struct, struct_namespace]
+        def relation_cache_key(name, **kwargs)
+          [name, auto_struct, struct_namespace, kwargs]
         end
       end
 
