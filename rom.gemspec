@@ -22,5 +22,5 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency 'rom-changeset', '~> 5.4'
   gem.add_dependency 'rom-core', '~> 5.4'
-  gem.add_dependency 'rom-repository', '~> 5.4', '>= 5.4.1'
+  gem.add_dependency 'rom-repository', '~> 5.4', '>= 5.4.2'
 end
