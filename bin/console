@@ -8,6 +8,7 @@ Bundler.setup
 require 'rom-repository'
 require 'rom-changeset'
 require 'dry/monitor'
+require 'dry/monitor/sql/logger'
 
 %w[pry-byebug debug pry].each do |gem|
   require gem
@@ -97,4 +98,4 @@ class Context
   end
 end
 
-Pry.start(Context.new(rom, repo))
+binding.irb

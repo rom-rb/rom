@@ -1,3 +1,9 @@
+## 5.4.2 2025-01-19
+
+### Fixed
+
+- [rom-repository] Fix warning about redefined `set_relation` method (@flash-gordon)
+
 ## 5.4.1 2025-01-09
 
 ### Fixed
