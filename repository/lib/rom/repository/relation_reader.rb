@@ -20,9 +20,6 @@ module ROM
         end
 
         # @api private
-        def set_relation(name) # rubocop:disable Naming/AccessorMethodName
-          prepare_relation(name)
-        end
         deprecate :set_relation, :prepare_relation
 
         # @api private
