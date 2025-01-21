@@ -18,16 +18,16 @@ module ROM
 
     # @api private
     def respond_to_missing?(meth, include_private = false)
-      super || instance_variables.include?(IVAR[meth])
+      instance_variable_defined?(IVAR[meth]) || super
     end
 
     private
 
     # @api private
-    def method_missing(meth, *args, &)
+    def method_missing(meth, *, &)
       ivar = IVAR[meth]
 
-      if instance_variables.include?(ivar)
+      if instance_variable_defined?(ivar)
         instance_variable_get(ivar)
       else
         super

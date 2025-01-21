@@ -50,7 +50,7 @@ module ROM
     # @return [Configuration]
     #
     # @api private
-    def initialize(*args, &)
+    def initialize(*args)
       @environment = Environment.new(*args)
       @notifications = Notifications.event_bus(:configuration)
       @setup = Setup.new(notifications)
@@ -66,7 +66,7 @@ module ROM
     # @return [Configuration]
     #
     # @api public
-    def use(plugin, options = {})
+    def use(plugin, options = EMPTY_HASH)
       if plugin.is_a?(::Array)
         plugin.each { |p| use(p) }
       elsif plugin.is_a?(::Hash)

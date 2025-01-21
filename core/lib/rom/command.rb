@@ -255,7 +255,7 @@ module ROM
     # @api private
     def execute(*)
       raise(
-        NotImplementedError,
+        ::NotImplementedError,
         "#{self.class}##{__method__} must be implemented"
       )
     end
@@ -277,7 +277,12 @@ module ROM
               apply_hooks(before_hooks, *args)
             end
 
-          result = prepared ? execute(prepared, &) : execute(&)
+          result =
+            if prepared
+              execute(prepared, &)
+            else
+              execute(&)
+            end
 
           if curried?
             if !args.empty?

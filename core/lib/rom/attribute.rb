@@ -345,7 +345,11 @@ module ROM
     # @api public
     def optional
       sum = self.class.new(super, **options)
-      read? ? sum.meta(read: meta[:read].optional) : sum
+      if read?
+        sum.meta(read: meta[:read].optional)
+      else
+        sum
+      end
     end
 
     # @api private

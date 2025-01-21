@@ -26,7 +26,7 @@ module ROM
 
     # @api private
     def configure_gateways(*args)
-      normalized_gateway_args = normalize_gateway_args(*args)
+      normalized_gateway_args = normalize_gateway_args(args)
       normalized_gateways = normalize_gateways(normalized_gateway_args)
 
       @gateways, @gateways_map = normalized_gateways.values_at(:gateways, :map)
@@ -38,8 +38,12 @@ module ROM
     end
 
     # @api private
-    def normalize_gateway_args(*args)
-      args.first.is_a?(Hash) ? args.first : { default: args }
+    def normalize_gateway_args(args)
+      if args.first.is_a?(::Hash)
+        args.first
+      else
+        { default: args }
+      end
     end
 
     # Build gateways using the setup interface

@@ -60,7 +60,7 @@ module ROM
           if parts.any?
             Inflector.constantize(parts.join('::'))
           else
-            Object
+            ::Object
           end
       end
     end

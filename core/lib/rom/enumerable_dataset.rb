@@ -43,7 +43,7 @@ module ROM
     #
     # @api private
     def self.included(klass)
-      return unless klass.is_a?(Class)
+      return unless klass.is_a?(::Class)
 
       klass.class_eval do
         extend Initializer

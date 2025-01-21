@@ -22,18 +22,14 @@ module ROM
     option :cache, default: -> { Cache.new }
 
     # @api private
-    def self.new(*args, **kwargs)
-      if args.empty? && kwargs.empty?
-        super({}, **{})
-      else
-        super
-      end
+    def self.new(elements = {}, *, **)
+      super
     end
 
     # Create a registry without options
     #
     # @api private
-    def self.build(elements = {}) = new(elements, **{})
+    def self.build(elements = {}) = new(elements)
 
     # @api private
     def self.[](identifier)
@@ -78,7 +74,7 @@ module ROM
 
     # @api private
     def fetch(key)
-      raise ArgumentError, 'key cannot be nil' if key.nil?
+      raise ::ArgumentError, 'key cannot be nil' if key.nil?
 
       elements.fetch(key.to_sym) do
         return yield if block_given?

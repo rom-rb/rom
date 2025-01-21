@@ -115,7 +115,7 @@ module ROM
     # @api private
     def type
       @_type ||= Commands.const_get(Inflector.classify(id))[adapter]
-    rescue NameError
+    rescue ::NameError
       nil
     end
 
@@ -172,7 +172,7 @@ module ROM
     # rubocop:enable Metrics/AbcSize, Metrics/MethodLength, Metrics/PerceivedComplexity
 
     # @api private
-    def visit_attribute(*_args) = nil
+    def visit_attribute(*) = nil
 
     # Build a command object for a specific relation
     #
