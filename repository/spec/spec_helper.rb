@@ -17,6 +17,11 @@ Warning.ignore(/mysql2/)
 Warning.ignore(/rspec-core/)
 Warning.ignore(/__FILE__/)
 Warning.ignore(/__LINE__/)
+
+if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('3.4')
+  Warning[:strict_unused_block] = true
+end
+
 Warning.process { |w| raise w } if ENV['FAIL_ON_WARNINGS'].eql?('true')
 
 require 'rom-sql'
