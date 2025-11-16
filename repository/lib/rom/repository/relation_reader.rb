@@ -4,6 +4,10 @@ module ROM
   class Repository
     # @api private
     class RelationReader < ::Module
+      def self.added_to?(klass)
+        klass < InstanceMethods
+      end
+
       module InstanceMethods
         extend ::Dry::Core::Deprecations[:'rom-repository']
 

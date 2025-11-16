@@ -59,7 +59,7 @@ module ROM
       def new(container = nil, root: Undefined, **options)
         container ||= options.fetch(:container)
 
-        if ancestors.none? { |ancestor| ancestor.is_a?(relation_reader) }
+        unless relation_reader.added_to?(self)
           include relation_reader.new(
             relations: container.relations.elements.keys,
             cache: container.cache,
