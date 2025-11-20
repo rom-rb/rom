@@ -2,17 +2,23 @@
 
 - [rom-repository] Fix another memory leak in relation reader (via #702) (@pat + @flash-gordon)
 
+[Compare v5.4.2...v5.4.3](https://github.com/rom-rb/rom/compare/v5.4.2...v5.4.3)
+
 ## 5.4.2 2025-01-19
 
 ### Fixed
 
 - [rom-repository] Fix warning about redefined `set_relation` method (@flash-gordon)
 
+[Compare v5.4.1...v5.4.2](https://github.com/rom-rb/rom/compare/v5.4.1...v5.4.2)
+
 ## 5.4.1 2025-01-09
 
 ### Fixed
 
 - [rom-repository] `set_relation` is deprecated and will be removed in 6.0.0 (issue #698 fixed via #699) (@flash-gordon)
+
+[Compare v5.4.0...v5.4.1](https://github.com/rom-rb/rom/compare/v5.4.0...v5.4.1)
 
 ## 5.4.0 2025-01-08
 
