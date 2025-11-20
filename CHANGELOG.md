@@ -1,3 +1,7 @@
+## 5.4.3 2025-11-20
+
+- [rom-repository] Fix another memory leak in relation reader (via #702) (@pat + @flash-gordon)
+
 ## 5.4.2 2025-01-19
 
 ### Fixed
