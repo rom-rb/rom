@@ -16,13 +16,13 @@ jobs:
   update-docs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5
         with:
           fetch-depth: 0
       - run: |
           git fetch --no-tags --prune --depth=1 origin +refs/heads/*:refs/remotes/origin/*
       - name: Set up Ruby
-        uses: actions/setup-ruby@v1
+        uses: actions/setup-ruby@e932e7af67fc4a8fc77bd86b744acd4e42fe3543
         with:
           ruby-version: "2.6.x"
       - name: Set up git user
