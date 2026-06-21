@@ -17,9 +17,9 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GH_PAT }}
     steps:
       - name: Checkout ${{github.repository}}
-        uses: actions/checkout@v1
+        uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5
       - name: Checkout devtools
-        uses: actions/checkout@v2
+        uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5
         with:
           repository: rom-rb/devtools
           path: tmp/devtools
@@ -28,7 +28,7 @@ jobs:
           git config --local user.email "rom-bot@rom-rb.org"
           git config --local user.name "rom-bot"
       - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
+        uses: ruby/setup-ruby@9eb537ca036ebaed86729dcb9309076e4c5c3b74
         with:
           ruby-version: 2.6
       - name: Install dependencies
