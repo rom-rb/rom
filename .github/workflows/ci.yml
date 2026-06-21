@@ -45,11 +45,11 @@ jobs:
       CODACY_PROJECT_TOKEN: "${{secrets.CODACY_PROJECT_TOKEN}}"
       APT_DEPS: libpq-dev libsqlite3-dev
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5
     - name: Install package dependencies
       run: "[ -e $APT_DEPS ] || sudo apt-get install -y --no-install-recommends $APT_DEPS"
     - name: Set up Ruby
-      uses: ruby/setup-ruby@v1
+      uses: ruby/setup-ruby@9eb537ca036ebaed86729dcb9309076e4c5c3b74
       with:
         ruby-version: "${{matrix.ruby}}"
     - name: Install latest bundler
@@ -61,7 +61,7 @@ jobs:
     - name: Run all tests
       run: bundle exec rake
     - name: Run codacy-coverage-reporter
-      uses: codacy/codacy-coverage-reporter-action@master
+      uses: codacy/codacy-coverage-reporter-action@6904bd01e29ada115135b5eca20125758ccae53b
       if: github.ref == 'refs/heads/master' && env.COVERAGE == 'true' && env.COVERAGE_TOKEN != ''
       with:
         project-token: "${{secrets.CODACY_PROJECT_TOKEN}}"
@@ -86,11 +86,11 @@ jobs:
       GITHUB_LOGIN: rom-bot
       GITHUB_TOKEN: "${{secrets.GH_PAT}}"
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5
     - name: Install package dependencies
       run: "[ -e $APT_DEPS ] || sudo apt-get install -y --no-install-recommends $APT_DEPS"
     - name: Set up Ruby
-      uses: ruby/setup-ruby@v1
+      uses: ruby/setup-ruby@9eb537ca036ebaed86729dcb9309076e4c5c3b74
       with:
         ruby-version: 3.3
     - name: Install dependencies
