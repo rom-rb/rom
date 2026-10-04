@@ -27,12 +27,11 @@ jobs:
       fail-fast: false
       matrix:
         ruby:
+        - '4.0'
         - '3.4'
         - '3.3'
-        - '3.2'
-        - '3.1'
         include:
-        - ruby: '3.4'
+        - ruby: '4.0'
           use_dry_transformer_master: 'true'
           use_dry_initializer_main: 'true'
     env:
