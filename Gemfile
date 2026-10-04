@@ -43,6 +43,7 @@ end
 
 group :test do
   gem 'codacy-coverage', require: false
+  gem 'ostruct'
   gem 'rspec', '~> 3.6'
   gem 'simplecov', platforms: :ruby
   gem 'warning'
