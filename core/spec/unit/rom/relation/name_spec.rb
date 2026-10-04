@@ -4,7 +4,7 @@ require 'rom/relation/name'
 
 RSpec.describe ROM::Relation::Name do
   describe '.[]' do
-    before { ROM::Relation::Name.cache.clear }
+    before { ROM::Relation::Name.cache.objects.clear }
 
     it 'returns a new name from args' do
       expect(ROM::Relation::Name[:users]).to eql(

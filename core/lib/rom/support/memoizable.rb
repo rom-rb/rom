@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'rom/cache'
+
 module ROM
   # @api private
   module Memoizable
@@ -52,7 +54,7 @@ module ROM
             end
           else
             define_method(name) do |*args|
-              __memoized__[:"#{name}_#{args.hash}"] ||= super(*args)
+              __memoized__[:"#{name}_#{Cache.key(args)}"] ||= super(*args)
             end
           end
         end

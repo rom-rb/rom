@@ -31,7 +31,7 @@ module ROM
     end
 
     def call(ast)
-      cache.fetch_or_store(ast.hash) { Mapper.build(Header.coerce(*visit(ast))) }
+      cache.fetch_or_store(ast) { Mapper.build(Header.coerce(*visit(ast))) }
     end
     alias_method :[], :call
 

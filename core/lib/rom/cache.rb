@@ -9,6 +9,29 @@ module ROM
   class Cache
     attr_reader :objects
 
+    # Returns a cache key for the given object, expected to be a splat of args received directly
+    # from a cache caller.
+    #
+    # Cache keying happens here so we have a chance to apply workarounds for different Ruby
+    # implementations.
+    #
+    # Currently, this works around an issue with JRuby, where `Hash#hash` often returns the same
+    # value for hashes that differ only by a module or class value. This impacts Rom relation ASTs,
+    # which may differ only by their struct namespace.
+    #
+    # @api private
+    def self.key(obj) = normalize(obj).hash
+
+    # @api private
+    def self.normalize(obj)
+      case obj
+      when ::Array then obj.map { normalize(_1) }
+      when ::Hash then [::Hash, obj.map { |key, value| [normalize(key), normalize(value)] }]
+      else obj
+      end
+    end
+    private_class_method :normalize
+
     # @api private
     class Namespaced
       # @api private
@@ -24,11 +47,11 @@ module ROM
       end
 
       # @api private
-      def [](key) = cache[[namespace, key].hash]
+      def [](key) = cache[Cache.key([namespace, key])]
 
       # @api private
       def fetch_or_store(*args, &)
-        cache.fetch_or_store([namespace, args].hash, &)
+        cache.fetch_or_store(Cache.key([namespace, args]), &)
       end
 
       # @api private
@@ -47,7 +70,7 @@ module ROM
     def [](key) = objects[key]
 
     # @api private
-    def fetch_or_store(*args, &) = objects.fetch_or_store(args.hash, &)
+    def fetch_or_store(*args, &) = objects.fetch_or_store(Cache.key(args), &)
 
     # @api private
     def size = objects.size
