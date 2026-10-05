@@ -52,7 +52,7 @@ module ROM
             end
           else
             define_method(name) do |*args|
-              __memoized__[:"#{name}_#{args.hash}"] ||= super(*args)
+              __memoized__[[name, args]] ||= super(*args)
             end
           end
         end

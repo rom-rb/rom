@@ -22,7 +22,7 @@ module ROM
       if args[0].is_a?(::Symbol)
         super
       else
-        cache.fetch_or_store(args.hash) { compiler.(*args) }
+        cache.fetch_or_store(*args) { compiler.(*args) }
       end
     end
   end

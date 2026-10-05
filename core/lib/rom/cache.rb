@@ -5,6 +5,10 @@ require 'concurrent/map'
 module ROM
   # Thread-safe cache used by various rom components
   #
+  # Entries are keyed by the arguments themselves rather than by their `#hash`, so two keys
+  # whose hashes collide are still told apart by `#eql?`. JRuby's `Hash#hash` collides for
+  # hashes that differ only by a module, which is how relation ASTs differ by struct namespace.
+  #
   # @api private
   class Cache
     attr_reader :objects
@@ -24,11 +28,11 @@ module ROM
       end
 
       # @api private
-      def [](key) = cache[[namespace, key].hash]
+      def [](key) = cache[[namespace, key]]
 
       # @api private
       def fetch_or_store(*args, &)
-        cache.fetch_or_store([namespace, args].hash, &)
+        cache.fetch_or_store([namespace, args], &)
       end
 
       # @api private
@@ -47,7 +51,7 @@ module ROM
     def [](key) = objects[key]
 
     # @api private
-    def fetch_or_store(*args, &) = objects.fetch_or_store(args.hash, &)
+    def fetch_or_store(*args, &) = objects.fetch_or_store(args, &)
 
     # @api private
     def size = objects.size

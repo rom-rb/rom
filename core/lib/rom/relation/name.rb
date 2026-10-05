@@ -23,7 +23,7 @@ module ROM
       #
       # @api private
       def self.[](*args)
-        cache.fetch_or_store(args.hash) do
+        cache.fetch_or_store(args) do
           relation, dataset, aliaz = args
 
           if relation.is_a?(Name)
