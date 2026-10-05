@@ -87,7 +87,7 @@ module ROM
     #
     # @api private
     def call(*args)
-      cache.fetch_or_store(args.hash) do
+      cache.fetch_or_store(*args) do
         type, adapter, ast, plugins, plugins_options, meta = args
 
         compiler = with(
